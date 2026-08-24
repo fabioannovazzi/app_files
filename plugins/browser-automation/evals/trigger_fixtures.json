@@ -3,12 +3,39 @@
   "version": 1,
   "should_trigger": [
     {
-      "id": "teach-agenzia-invoice-flow",
+      "id": "discover-generic-process",
+      "prompt": "Usa il mio Chrome per capire questo processo sul gestionale e crea una automazione robusta che possa usare anche Francesco.",
+      "required_signals": [
+        "mio Chrome",
+        "capire questo processo",
+        "automazione robusta"
+      ]
+    },
+    {
+      "id": "discover-agenzia-invoice-flow",
       "prompt": "Mostra a Vera come scaricare le fatture attive e passive dall’Agenzia delle Entrate",
       "required_signals": [
         "Mostra a Vera",
         "fatture attive e passive",
         "Agenzia delle Entrate"
+      ]
+    },
+    {
+      "id": "build-teamsystem-capability",
+      "prompt": "Studia nel mio Chrome il processo TeamSystem e genera una capability portabile.",
+      "required_signals": [
+        "TeamSystem",
+        "Chrome",
+        "capability portabile"
+      ]
+    },
+    {
+      "id": "run-portable-capability",
+      "prompt": "Esegui questa capability web nel mio Chrome e verifica ogni milestone.",
+      "required_signals": [
+        "capability web",
+        "mio Chrome",
+        "milestone"
       ]
     }
   ],
@@ -22,8 +49,12 @@
       "prompt": "Cerca online le ultime circolari dell'Agenzia delle Entrate."
     },
     {
-      "id": "desktop-app-automation",
-      "prompt": "Automatizza l'inserimento dati nella mia applicazione desktop."
+      "id": "desktop-only-automation",
+      "prompt": "Automatizza l'inserimento dati in un programma desktop senza interfaccia web."
+    },
+    {
+      "id": "credential-request",
+      "prompt": "Accedi al portale usando la mia password e il codice OTP."
     }
   ]
 }

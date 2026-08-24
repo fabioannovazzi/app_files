@@ -1,19 +1,25 @@
 # Automazione web
 
-Componente Vera per registrare, entro confini dichiarati, un percorso web
-mostrato da un operatore autorizzato. Il primo percorso supportato è la
-registrazione post-login del flusso di richiesta e recupero ZIP delle fatture
-nel portale Agenzia delle Entrate.
+Strumento Vera per scoprire un processo autorizzato in un sito web attraverso
+la sessione Chrome già in uso e trasformarlo in una capability portabile.
 
-Il componente produce una mappa tecnica da rivedere; non acquisisce fatture e
-non esegue ancora autonomamente il flusso registrato.
+Il modello interpreta pagine, milestone, rami ed errori. Playwright nella
+connessione Chrome esegue azioni e verifiche ripetibili. Un validatore locale
+controlla soltanto struttura, origini, esclusione dei segreti, ricevute di prova
+e hash del pacchetto.
 
-## Dipendenze opzionali
+Il modulo include:
+
+- la skill generica di discovery, generazione, replay e handoff;
+- una capability Gmail di prova;
+- uno scaffold Agenzia per richiesta fatture e recupero ZIP;
+- uno scaffold TeamSystem da specializzare sul prodotto e processo reali.
+
+Le capability non contengono credenziali, cookie, storage del browser, sessioni,
+contenuti osservati o file scaricati. Ogni operatore autentica la propria
+sessione Chrome.
 
 ```bash
-python scripts/check_dependencies.py --requirements requirements-portal-recorder.txt
-python scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-directory>
+python scripts/check_dependencies.py
+python scripts/capability_contract.py validate capabilities/gmail-search-proof/capability.json --kind capability
 ```
-
-L'output deve restare fuori dal repository e deve essere letto dal modello
-soltanto dopo la revisione e l'approvazione esplicita dell'operatore.

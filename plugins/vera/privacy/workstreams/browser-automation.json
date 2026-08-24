@@ -9,8 +9,8 @@
     "skills",
     "scripts",
     "references",
-    "requirements.txt",
-    "requirements-portal-recorder.txt"
+    "capabilities",
+    "requirements.txt"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -20,53 +20,74 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "agenzia-flow-implementation-recording",
-        "purpose": "Review an operator-approved sanitized map of the supported post-login Agenzia invoice journey so an automation can later be developed from observed controls and transitions",
-        "content": "Only after the operator reviews and approves the JSON: sanitized control roles and labels outside tabular data, Agenzia HTTPS origins and paths with queries, fragments and identifier-shaped path segments removed, sanitized interactive-control inventories, hashed suggested download names, filename suffixes, timestamps, capture warnings and the declared capture boundary. The recording excludes typed or selected values, credentials, one-time codes, cookies, browser storage, HTML, screenshots, request and response bodies, download paths, invoice bytes and invoice contents; human review remains required because deterministic redaction does not guarantee anonymization",
+        "id": "bounded-live-browser-process-discovery",
+        "purpose": "Let the model interpret and navigate the exact authorized post-login web process from targeted control and state metadata while authoring or replaying a process-specific capability",
+        "content": "Target-site origin and query-free path; selected control roles, accessible names, labels and placeholders; headings outside tables and grids; generic visible state markers; declared runtime input values needed for the process; action outcomes; branches; and generic download-event metadata. The default live route does not request full authenticated-page snapshots, table or grid rows, form values, message or invoice content, screenshots, network bodies, account identifiers, credentials, one-time codes, cookies, tokens, browser storage, session URLs, or reusable login state. If one specific private data class or screenshot is genuinely necessary, the workflow identifies that exact data and purpose and requires separate operator confirmation before reading it",
         "runtime_profiles": [
           "openai-codex"
+        ]
+      },
+      {
+        "id": "portable-browser-process-capability",
+        "purpose": "Review, validate, run, or hand off a process-specific capability without transferring the discovery account or browser session",
+        "content": "Capability identity and version, target site and allowed origins, process objective and exclusions, declared input references without observed values, semantic milestones, locator candidates, side-effect classifications, postconditions, recovery instructions, environment-scoped validation receipts, known limits, and deterministic hashes. Portable bundles exclude credentials, cookies, browser storage, session URLs, page HTML, screenshots, network bodies, downloaded business files, discovery records, observed private values, and account identifiers",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
         ]
       }
     ]
   },
   "external_boundaries": [
     {
-      "id": "codex-agenzia-invoice-flow-teaching",
+      "id": "codex-existing-chrome-process-discovery-and-replay",
       "kind": "external_connector",
-      "destination": "The authorized operator's Agenzia delle Entrate account in a dedicated temporary visible Google Chrome profile controlled locally through Playwright after personal authentication",
-      "purpose": "Let an authorized operator demonstrate the supported post-login invoice request and ZIP-retrieval journey so a later automation can be developed from observed UI structure",
-      "content": "The human's authentication and taxpayer or delegated-profile selection remain inside the visible browser before recording starts. During recording, the operator's clicks, changes, navigations and download action are sent to the Agenzia portal in the ordinary browser session; locally, the recorder retains only sanitized control metadata, origin-and-path page transitions, bounded interactive-control inventories, hashed suggested download names, filename suffixes, timestamps and boundary warnings. It does not retain entered values, credentials, cookies, storage, HTML, screenshots, network bodies, invoice files or invoice contents",
+      "destination": "The authorized operator's existing Google Chrome profile and the explicitly bounded website origins connected through the ChatGPT Chrome extension",
+      "purpose": "Discover or replay one authorized browser process with model-led interpretation and Playwright actions while preserving operator-owned authentication",
+      "content": "The workflow opens a fresh task tab in the connected Chrome profile unless the operator explicitly identifies an existing tab. The selected Codex model receives targeted control and generic state metadata, the target origin and query-free path, declared process inputs, transition outcomes, branches, and generic download-event metadata. Playwright actions send the declared navigation, filters, values, and other authorized interactions to the target website in the ordinary browser session. Authentication and profile or workspace selection remain with the operator. Full authenticated-page snapshots, business rows, message or invoice content, screenshots, network bodies, browser state, credentials, and downloaded business bytes are excluded by default and never placed in the portable capability",
       "optional": true,
       "requires_confirmation": true,
       "runtime_profiles": [
         "openai-codex"
       ],
       "controls": [
-        "Use this route only after the operator explicitly asks to show or teach Vera the supported Agenzia invoice flow; that route choice does not approve separate sharing of the resulting recording.",
-        "Require the human to authenticate personally and select the correct taxpayer or delegated profile in visible Chrome. Vera never requests, enters, reads or stores credentials, PINs, SPID/CIE/CNS material, QR codes, one-time codes, cookies, tokens or session URLs.",
-        "Create an explicit headed Playwright page before authentication instructions. On Windows, normalize its Chrome DevTools window bounds, require a visible non-empty top-level Chrome window owned by the browser process launched for this recorder, and require the operator to confirm that the blank Chrome window is actually visible before portal navigation; unrelated or background-only Chrome processes and absent human confirmation stop the recorder before authentication.",
-        "Start recording only after the operator says authentication is complete and no credential screen is visible; stop if an observed page or control event leaves the exact Agenzia HTTPS host boundary.",
-        "Record only fixed value-free control metadata, query-free and fragment-free sanitized page paths, bounded control inventories and hashed suggested download names. Suppress text inside tables and grids and never persist HTML, screenshots, traces, HAR, browser state, typed or selected values, network headers or bodies, download paths or invoice bytes.",
-        "Use a fresh temporary Chrome profile and Playwright-managed downloads, close the browser under recorder control, and delete the temporary profile and download bytes when the session ends.",
-        "Write one owner-only JSON file outside the Git workspace, mark it as requiring human review, and do not read it into model context or share it until the operator has reviewed and explicitly approved it.",
-        "Treat the approved recording only as implementation evidence. It does not establish authority, invoice completeness, professional relevance, a reusable authenticated session, or an executable automation."
+        "Use the live boundary only when the operator explicitly requests discovery or execution on an authorized site, account, and process; bind the run to declared origins, start state, end state, inputs, outputs, and side effects.",
+        "Use the installed Chrome control skill and the existing extension profile. Create a fresh task tab unless the operator explicitly identifies one existing tab; never enumerate unrelated tabs or launch a standalone Playwright browser, temporary profile, alternate browser controller, or repeated visibility probe.",
+        "Authentication and account, taxpayer, company, or workspace selection belong to the operator. Vera never asks for, inspects, types, stores, or transfers a username when used for secret entry, password, PIN, one-time code, SPID/CIE/CNS material, QR code, cookie, token, browser storage, session URL, or reusable login state.",
+        "Query only targeted control roles, accessible names, labels, placeholders, headings outside tables or grids, query-free paths, and generic state markers by default. If one specific private data class or screenshot is necessary, identify the exact data and purpose and require separate operator confirmation before reading it.",
+        "Confirm at action time immediately before submitting, sending, signing, paying, publishing, deleting, changing access, uploading private data, or another material external side effect; ordinary read-only and reversible exploration does not require repeated confirmation.",
+        "Use Computer Use only for a genuine operating-system or non-browser gap. It must not replace the Chrome extension or Playwright as the browser controller.",
+        "Write sanitized discovery records and sealed handoff bundles only to fresh owner-only local directories outside the Git workspace and published folders; never persist raw page content or overwrite an earlier bundle.",
+        "Send only the sealed capability folder. The receiving operator authenticates in their own Chrome and validates locally; no browser state, discovery evidence, observed private value, account identifier, or downloaded business file travels with the capability."
       ]
     }
   ],
   "security_controls": [
     {
-      "id": "privacy-bounded-agenzia-flow-recording",
-      "control": "The local recorder creates an explicit headed page and, on Windows, proves a visible Chrome top-level desktop window owned by the launched browser process and requires the operator to confirm that the blank Chrome window is actually visible before portal navigation and authentication. It accepts only exact Agenzia HTTPS origins after authentication, strips URL queries, fragments and identifier-shaped path segments, captures a fixed allowlist of value-free control metadata, suppresses tabular text, hashes suggested download names, never requests download paths or bytes, uses a disposable Chrome profile, rejects forbidden output keys and writes one owner-only review-required JSON file without overwriting an earlier recording."
+      "id": "model-led-browser-extension-runtime",
+      "control": "The workflow binds to the existing Chrome extension profile, creates a fresh task tab by default, uses the model for semantic page and branch interpretation, uses Playwright for bounded actions and assertions, and reserves Computer Use for non-browser gaps. A connected Chrome binding replaces the old launcher and visibility ritual; unavailable Chrome produces one setup instruction rather than repeated launch attempts."
     },
     {
-      "id": "recording-is-not-executable-automation",
-      "control": "The workflow and manifest consistently describe the JSON as reviewed implementation evidence only. No command consumes it to authenticate, navigate, request, retrieve, sign, submit, or download on the operator's behalf."
+      "id": "targeted-model-context-by-default",
+      "control": "Authenticated discovery queries targeted control and generic state metadata rather than full page snapshots, table or grid rows, form values, message or invoice content, or screenshots. Reading one necessary private data class or screenshot requires a separate exact disclosure and operator confirmation."
+    },
+    {
+      "id": "portable-capability-secret-and-evidence-exclusion",
+      "control": "The standard-library validator rejects forbidden secret and capture fields, email-address literals, unbounded or query-bearing origins, missing semantic locators, consequential actions without action-time confirmation, private-evidence retention, and portable bundles that claim to contain discovery evidence. Sealing is deterministic, owner-only, and non-overwriting."
+    },
+    {
+      "id": "environment-scoped-validation",
+      "control": "A capability may claim validated_local only with two complete passed runs from the declared start state, no locator edits during either run, all milestones completed, and no private evidence retained. The status is explicitly environment-specific and the receiving operator must validate again."
+    },
+    {
+      "id": "scaffolds-do-not-claim-live-support",
+      "control": "The Agenzia and TeamSystem source packages remain scaffold until authorized live discovery supplies actual controls, branches, postconditions and clean replay evidence. Brand or process names alone cannot be described as executable support."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-21",
+    "reviewed_at": "2026-08-24",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "596712662e3881f0ef2b8fa972c1984c2cc99d65a4ad478c5e6ee42c8c70c135"
+    "source_fingerprint": "6e8e259ae17debd22e283efa9d9427121e6fff454ae29a19d686666d033ed729"
   }
 }

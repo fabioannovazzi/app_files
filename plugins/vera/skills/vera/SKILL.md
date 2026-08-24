@@ -208,12 +208,13 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
-- `browser-automation`: a Codex Desktop-only recording workflow for an
-  authorized operator to show or teach Vera the Agenzia delle Entrate
-  active/passive invoice-request and ZIP-retrieval journey in a visible local
-  Chrome session after personal authentication. It records only a sanitized,
-  review-required implementation map and does not acquire invoices, retain
-  credentials, or create an executable automation;
+- `browser-automation`: a Codex Desktop developer and execution workflow that
+  reuses the authorized operator's connected Chrome profile, explores one
+  bounded web process with model-led interpretation, turns observed controls
+  and branches into a process-specific intelligent Playwright capability, and
+  validates clean replay before portable handoff. It applies to Agenzia delle
+  Entrate, TeamSystem, Gmail, or another browser-based gestionale; authentication
+  remains with each operator and no session or secret is transferred;
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound

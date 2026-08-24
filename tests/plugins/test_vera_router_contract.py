@@ -65,30 +65,25 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     assert catalogued_skills == expected_skills
 
 
-def test_vera_routes_paolo_agenzia_teaching_request_to_browser_automation() -> None:
+def test_vera_routes_generic_browser_process_discovery_to_browser_automation() -> None:
     router = _read_text(ROUTER_PATH)
     catalog = _read_text(CATALOG_PATH)
     wrapper = _read_text(BROWSER_AUTOMATION_WRAPPER_PATH)
     cards = json.loads(_read_text(MARKETPLACE_CARDS_PATH))["skills"]
 
     exact_request = (
-        "Mostra a Vera come scaricare le fatture attive "
-        "e passive dall’Agenzia delle Entrate"
+        "Usa il mio Chrome per capire questo processo sul gestionale e crea "
+        "una automazione robusta che possa usare anche Francesco."
     )
 
-    assert "show or teach Vera the Agenzia delle Entrate" in " ".join(router.split())
-    assert "active/passive invoice-request and ZIP-retrieval" in catalog
-    assert "Agenzia procedure" in wrapper
-    assert (
-        "registratore locale del modulo Automazione web"
-        in cards["browser-automation"]["instructions"]
-    )
+    assert "Agenzia delle Entrate, TeamSystem, Gmail" in " ".join(router.split())
+    assert "model interprets the live UI" in catalog
+    assert "connected Chrome extension" in wrapper
+    assert "capability portatile" in cards["browser-automation"]["instructions"]
     assert exact_request in _read_text(
         ROOT / "plugins" / "browser-automation" / "evals" / "trigger_fixtures.json"
     )
-    assert "Never look for `requirements.txt` or `scripts/`" in " ".join(
-        wrapper.split()
-    )
+    assert "Never look for runtime scripts inside this wrapper directory" in " ".join(wrapper.split())
 
 
 def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() -> None:

@@ -149,6 +149,18 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
         not in vera_entries
     )
     assert (
+        "modules/browser-automation/scripts/capability_contract.py" in vera_entries
+    )
+    for capability_id in (
+        "gmail-search-proof",
+        "agenzia-invoice-zip",
+        "teamsystem-process",
+    ):
+        assert (
+            f"modules/browser-automation/capabilities/{capability_id}/capability.json"
+            in vera_entries
+        )
+    assert (
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs" not in vera_entries
     )
     assert (

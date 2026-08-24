@@ -1,2 +1,0 @@
-# Optional dependency for the visible Agenzia flow recorder.
-playwright>=1.48.0

@@ -1,0 +1,172 @@
+{
+  "schema_version": "browser-capability/v1",
+  "capability_id": "agenzia-invoice-zip",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "site": {
+    "name": "Agenzia delle Entrate - Fatture e Corrispettivi",
+    "allowed_origins": [
+      "https://ivaservizi.agenziaentrate.gov.it"
+    ],
+    "start_url": "https://ivaservizi.agenziaentrate.gov.it/"
+  },
+  "process": {
+    "name": "Request active or passive invoices and retrieve ZIP",
+    "objective": "Select the authorized taxpayer profile, request a bounded invoice population, and retrieve the completed ZIP when available.",
+    "out_of_scope": [
+      "Authentication or delegated-authority decisions by the model",
+      "Taxpayer selection without operator confirmation",
+      "Invoice completeness or professional review",
+      "Any payment, filing, signature, or submission outside the declared download request"
+    ]
+  },
+  "runtime": {
+    "browser": "existing_chrome",
+    "controller": "chrome_extension",
+    "semantic_driver": "model",
+    "mechanical_driver": "playwright",
+    "os_fallback": "computer_use_non_browser_only"
+  },
+  "authority": {
+    "operator_authorized": true,
+    "authentication": "operator_only",
+    "secret_policy": "never_request_read_store",
+    "consequential_actions": "confirm_at_action_time"
+  },
+  "inputs": [
+    {
+      "name": "invoice-direction",
+      "type": "enum",
+      "required": true,
+      "sensitivity": "non_sensitive",
+      "purpose": "Choose active invoices, passive invoices, or the supported combined scope."
+    },
+    {
+      "name": "date-from",
+      "type": "date",
+      "required": true,
+      "sensitivity": "private_runtime_only",
+      "purpose": "Start of the authorized invoice period."
+    },
+    {
+      "name": "date-to",
+      "type": "date",
+      "required": true,
+      "sensitivity": "private_runtime_only",
+      "purpose": "End of the authorized invoice period."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "invoice-zip",
+      "type": "download",
+      "content": "ZIP returned by the portal for the declared request; business bytes remain outside the capability."
+    },
+    {
+      "name": "run-summary",
+      "type": "summary",
+      "content": "Milestone and download-event evidence without taxpayer or invoice content."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "reach-authorized-profile",
+      "intent": "Resume after the operator has authenticated and selected the correct taxpayer or delegated profile.",
+      "preconditions": [
+        "The operator is authorized for the selected profile.",
+        "No authentication or secret-entry screen is visible."
+      ],
+      "actions": [],
+      "success_evidence": [
+        {
+          "kind": "visible_text",
+          "value": "UNRESOLVED_BY_LIVE_DISCOVERY"
+        }
+      ],
+      "recovery": [
+        "Run authorized live discovery; do not infer profile controls from this scaffold."
+      ]
+    },
+    {
+      "id": "request-invoice-population",
+      "intent": "Enter the declared direction and period and create the bounded export request.",
+      "preconditions": [
+        "The requested scope and dates have been confirmed.",
+        "Live discovery has identified the real controls and whether request creation is consequential."
+      ],
+      "actions": [],
+      "success_evidence": [
+        {
+          "kind": "visible_text",
+          "value": "UNRESOLVED_BY_LIVE_DISCOVERY"
+        }
+      ],
+      "recovery": [
+        "Discover active and passive branches separately when the portal exposes different journeys.",
+        "Confirm at action time before creating a portal request if the action has an external side effect."
+      ]
+    },
+    {
+      "id": "retrieve-completed-zip",
+      "intent": "Find the completed request and download the ZIP through the browser download event.",
+      "preconditions": [
+        "The request is complete or the delayed retrieval branch has been reached."
+      ],
+      "actions": [],
+      "success_evidence": [
+        {
+          "kind": "download",
+          "value": "UNRESOLVED_BY_LIVE_DISCOVERY"
+        }
+      ],
+      "recovery": [
+        "Model delayed availability as a separate resumable branch during live discovery.",
+        "Keep downloaded invoice bytes outside discovery and capability artifacts."
+      ]
+    }
+  ],
+  "completion": {
+    "required_milestones": [
+      "reach-authorized-profile",
+      "request-invoice-population",
+      "retrieve-completed-zip"
+    ],
+    "evidence_to_record": [
+      "Authorized post-login profile state was verified.",
+      "The bounded request reached its portal-defined completion state.",
+      "The browser emitted the expected ZIP download event."
+    ]
+  },
+  "privacy": {
+    "model_data": [
+      "Visible post-login page content needed to interpret the selected invoice process",
+      "DOM and accessibility metadata for controls within the allowed origin",
+      "Declared runtime inputs and generic download-event metadata"
+    ],
+    "portable_artifact_excludes": [
+      "credentials",
+      "cookies",
+      "browser_storage",
+      "session_urls",
+      "page_html",
+      "screenshots",
+      "network_bodies",
+      "downloaded_file_bytes",
+      "observed_private_values"
+    ],
+    "private_evidence_retained": false
+  },
+  "validation": {
+    "environment_scope": "not_validated",
+    "runs": [],
+    "known_limits": [
+      "No successful authenticated live discovery is currently available in repository evidence.",
+      "Real controls, portal branches, additional origins, request completion timing, and download evidence remain unknown."
+    ]
+  },
+  "provenance": {
+    "source": "developer_scaffold",
+    "discovery_record_sha256": null,
+    "portable_bundle_contains_private_evidence": false
+  }
+}

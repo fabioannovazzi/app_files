@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: Use when an authorized operator wants Vera to record a supported visible-browser procedure for later automation development; currently the post-login Agenzia delle Entrate active/passive invoice request and ZIP-retrieval journey.
+description: Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through their existing Chrome session.
 ---
 
 ## Cowork execution contract
@@ -49,4 +49,4 @@ override this Cowork contract.
 
 # Automazione web
 
-The current Agenzia teaching recorder requires a local visible Chrome session and the packaged Playwright script, which are not included in this Cowork package. Explain that boundary and continue only with useful scope preparation. Do not request credentials, substitute a video, claim that a recording or executable automation was created, or operate an authenticated portal session.
+Live process discovery, replay, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied capability JSON and may run the packaged deterministic contract validator when local Python is already available, but it must not claim live discovery or validation. Continue with useful process scoping or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.

@@ -71,9 +71,6 @@ COWORK_OMITTED_PATHS = frozenset(
     {
         "modules/client-file-preparation/COME_USARE_LO_ZIP.md",
         "modules/client-file-preparation/INSTALLA_PLUGIN_CODEX.md",
-        "modules/browser-automation/references/agenzia_invoice_flow_recording.md",
-        "modules/browser-automation/requirements-portal-recorder.txt",
-        "modules/browser-automation/scripts/record_agenzia_invoice_flow.py",
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
     }
 )
@@ -923,17 +920,20 @@ def _studio_archive_cowork_skill(source: str, reference: bytes) -> str:
 
 
 def _browser_automation_cowork_skill(source: str) -> str:
-    """Project the current local-browser recorder as an explicit unavailable route."""
+    """Project live Chrome work as unavailable while preserving artifact review."""
 
     return (
         f"{_skill_frontmatter(source)}\n\n"
         "# Automazione web\n\n"
-        "The current Agenzia teaching recorder requires a local visible Chrome "
-        "session and the packaged Playwright script, which are not included in "
-        "this Cowork package. Explain that boundary and continue only with useful "
-        "scope preparation. Do not request credentials, substitute a video, claim "
-        "that a recording or executable automation was created, or operate an "
-        "authenticated portal session.\n"
+        "Live process discovery, replay, and validation require Codex Desktop, "
+        "the connected Chrome extension, and its Playwright browser runtime; "
+        "those capabilities are unavailable in this Cowork package. Cowork may "
+        "inspect, explain, or edit a supplied capability JSON and may run the "
+        "packaged deterministic contract validator when local Python is already "
+        "available, but it must not claim live discovery or validation. Continue "
+        "with useful process scoping or capability review. Do not request "
+        "credentials, substitute a video or standalone browser, or operate an "
+        "authenticated website.\n"
     )
 
 

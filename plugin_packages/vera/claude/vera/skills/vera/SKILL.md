@@ -186,12 +186,13 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
-- `browser-automation`: a Claude Desktop-only recording workflow for an
-  authorized operator to show or teach Vera the Agenzia delle Entrate
-  active/passive invoice-request and ZIP-retrieval journey in a visible local
-  Chrome session after personal authentication. It records only a sanitized,
-  review-required implementation map and does not acquire invoices, retain
-  credentials, or create an executable automation;
+- `browser-automation`: a Claude Desktop developer and execution workflow that
+  reuses the authorized operator's connected Chrome profile, explores one
+  bounded web process with model-led interpretation, turns observed controls
+  and branches into a process-specific intelligent Playwright capability, and
+  validates clean replay before portable handoff. It applies to Agenzia delle
+  Entrate, TeamSystem, Gmail, or another browser-based gestionale; authentication
+  remains with each operator and no session or secret is transferred;
 - `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance

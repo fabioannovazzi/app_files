@@ -159,9 +159,9 @@
     },
     "browser-automation": {
       "display_name": "Automazione web",
-      "short_description": "Registra un percorso web autorizzato",
-      "default_prompt": "Usa $browser-automation per registrare come richiedo e recupero le fatture dall’Agenzia dopo che ho effettuato personalmente l'accesso.",
-      "instructions": "Un operatore autorizzato effettua personalmente l'accesso e mostra in una finestra Chrome visibile il percorso Agenzia supportato. Vera usa in Codex Desktop il registratore locale del modulo Automazione web e conserva soltanto una mappa tecnica sanificata e da rivedere, mai credenziali, cookie, valori digitati, schermate, HTML, fatture o ZIP. La registrazione è materiale per sviluppare e verificare un'automazione futura: non acquisisce fatture, non crea una sessione riutilizzabile e non costituisce ancora un'automazione eseguibile."
+      "short_description": "Scopre e automatizza un processo web",
+      "default_prompt": "Usa $browser-automation nel mio Chrome autorizzato per scoprire questo processo e generare una capability portabile e verificabile.",
+      "instructions": "Indica il sito, il processo e l'esito atteso. In Codex Desktop Vera riusa il profilo Chrome collegato dall'operatore: il modello interpreta pagine, rami e cambiamenti da controlli e stati mirati, mentre Playwright esegue azioni e verifiche ripetibili. L'operatore effettua personalmente l'autenticazione e conferma soltanto le azioni conseguenziali. La capability portatile contiene milestone, locator, postcondizioni, recovery e prove di replay, ma non credenziali, cookie, storage, sessioni, valori osservati, contenuti della pagina o file scaricati. Gli esempi inclusi sono una prova Gmail validata localmente e scaffold Agenzia e TeamSystem che restano non eseguibili finché una discovery live autorizzata non li completa."
     },
     "studio-archive": {
       "display_name": "Archivio clienti",
