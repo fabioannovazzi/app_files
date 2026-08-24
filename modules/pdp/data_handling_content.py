@@ -300,8 +300,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             ],
         },
         "closing": (
-            "Ogni processo spiega quali dati restano locali, quali arrivano al modello "
-            "e quali restano esclusi."
+            "Ogni processo spiega quali dati restano locali e quali arrivano al modello."
         ),
     },
     "fr": {
