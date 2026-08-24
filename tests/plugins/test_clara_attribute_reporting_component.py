@@ -129,7 +129,9 @@ def test_clara_dependency_checker_delegates_to_attribute_component(
     result = checker.main(["--module", "attribute-reporting"])
 
     assert result == 0
-    assert calls == [([str(runtime_python), str(component_checker)], component_root, False)]
+    assert calls == [
+        ([str(runtime_python), str(component_checker)], component_root, False)
+    ]
 
 
 def test_clara_package_entries_embed_attribute_reporting_and_vendor_runtime() -> None:
@@ -168,42 +170,21 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
 
-    assert 'href="/static/shared/attribute-reporting/cashmere/index.html"' in page
+    assert 'href="../clara-retailer-signals/index.html?lang=en"' in page
+    assert 'href="../clara-brand-fit/index.html?lang=en"' in page
+    assert page.count('"functions.retailerSignals"') == 6
+    assert page.count('"functions.brandFit"') == 6
+    assert '"clara-retailer-signals"' in function_copy
+    assert "The comparison describes captured data" in function_copy
+    assert '"clara-brand-fit"' in function_copy
     assert (
-        'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'
-        in page
+        "The comparison uses stored data and is not a live shelf check."
+        in function_copy
     )
-    assert "The installed version does not yet collect new data" in page
-    assert "New products are those the retailer presents as new" in page
-    assert "Retailer Signals and Brand Fit are available now" not in page
-    assert "brand's presence at the retailer and its catalogue" in page
-    assert "brand-owned catalogue in the stored database snapshot" not in page
-    assert "It uses stored data, not a live shelf check." in page
-    assert "neither the user nor the server needs a model API key" not in page
-    for key in (
-        "retail.title",
-        "retail.copy",
-        "retail.flow.collect",
-        "retail.flow.map",
-        "retail.flow.analyze",
-        "retail.flow.report",
-        "retail.retailer_signals.title",
-        "retail.retailer_signals.copy.before",
-        "retail.retailer_signals.copy.link",
-        "retail.retailer_signals.copy.after",
-        "retail.brand_fit.title",
-        "retail.brand_fit.copy.before",
-        "retail.brand_fit.copy.link",
-        "retail.brand_fit.copy.after",
-        "capabilities.attributes.kicker",
-        "capabilities.attributes.title",
-        "capabilities.attributes.copy",
-        "capabilities.attributes.local",
-        "capabilities.attributes.prompt",
-    ):
-        assert page.count(f'"{key}"') == 6
-        assert f'data-i18n="{key}"' in page
 
     retailer_example = (
         ROOT / "static" / "shared" / "attribute-reporting" / "cashmere" / "index.html"

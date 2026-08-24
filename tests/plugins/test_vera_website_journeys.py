@@ -333,7 +333,6 @@ DISCARDED_PUBLIC_PHRASES = (
     "ready_to_file always remains false",
     "generare il dossier non significa accettare il cliente",
     "non sostituisce",
-    "giudizio professionale",
     "il professionista decide",
     "professional judgment remains",
     "vera doesn't",
@@ -796,8 +795,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         expected_common_module_count + expected_jurisdiction_module_count
     )
     assert (
-        jurisdiction.count('class="module-row"')
-        == expected_jurisdiction_module_count
+        jurisdiction.count('class="module-row"') == expected_jurisdiction_module_count
     )
     assert core.count('data-primary-workflow-link="') == 2
     assert jurisdiction.count('data-jurisdiction-item="it"') == 7
@@ -1146,17 +1144,17 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
         "A private index on the Mac.",
         "No model decides which documents to index or ignore.",
         "No embedding database is created.",
-        "Retrieval is mechanical. Interpretation uses Codex.",
+        "Retrieval is mechanical. Interpretation uses the selected model.",
         "A model then attempts to transcribe text from images",
         "the result needs visual confirmation.",
         "Email stays in Gmail and does not enter the document index.",
-        "OpenAI’s Gmail connector",
-        "searches the required messages at that moment in read-only mode.",
+        "Connect the read-only Gmail connector available in the selected runtime separately.",
+        "Vera searches the required messages at that moment.",
         "Computer Use",
         "Documents are always available. Gmail and WhatsApp only on request.",
-        "Gmail works in ChatGPT or Codex.",
-        "The local archive and WhatsApp Desktop require Codex",
-        "You can continue in ChatGPT with Gmail and material supplied in the conversation",
+        "The Studio Archive run and connected-file search work in Codex and Cowork.",
+        "Gmail uses the connector for the selected account",
+        "WhatsApp Desktop remains a Codex-specific route.",
         "On-screen inspection only when requested",
         "Opening it may mark messages as read",
         "The chat stays in WhatsApp.",

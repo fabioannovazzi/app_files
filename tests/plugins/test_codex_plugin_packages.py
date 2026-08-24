@@ -533,9 +533,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     passive_invoice_manifest = projected_manifests[
         "modules/passive-invoice-audit/.codex-plugin/plugin.json"
     ]
-    assert passive_invoice_manifest["author"]["name"] == (
-        "Fabio Annovazzi · Mparanza"
-    )
+    assert passive_invoice_manifest["author"]["name"] == ("Fabio Annovazzi · Mparanza")
     assert passive_invoice_manifest["interface"]["developerName"] == (
         "Fabio Annovazzi · Mparanza"
     )
@@ -2709,13 +2707,19 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     shell = (ROOT / "static" / "shared" / "plugin-page-shell.css").read_text(
         encoding="utf-8"
     )
+    scale = (ROOT / "static" / "shared" / "function-page-scale.css").read_text(
+        encoding="utf-8"
+    )
     journey_shell = (ROOT / "static" / "shared" / "vera-journey.css").read_text(
         encoding="utf-8"
     )
 
-    assert "--plugin-hero-title-size: 2.875rem;" in shell
-    assert "--plugin-section-title-size: 2.125rem;" in shell
-    assert "--plugin-lead-size: 1.1875rem;" in shell
+    assert "--function-title-size: 2.875rem;" in scale
+    assert "--function-section-title-size: 2.125rem;" in scale
+    assert "--function-lead-size: 1.1875rem;" in scale
+    assert "--plugin-hero-title-size: var(--function-title-size);" in shell
+    assert "--plugin-section-title-size: var(--function-section-title-size);" in shell
+    assert "--plugin-lead-size: var(--function-lead-size);" in shell
     assert "font-size: var(--plugin-hero-title-size)" in shell
     assert "font-size: var(--plugin-section-title-size)" in shell
     assert "font-size: var(--plugin-lead-size)" in shell
@@ -3484,8 +3488,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 24
-    assert core.count('class="module-row"') == 24
+    assert core.count(" data-module-link") == 37
+    assert core.count('class="module-row"') == 37
     assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -4143,8 +4147,8 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
         in studio
     )
     assert "To choose a client, the model receives every record’s label" in studio
-    assert "The same reduced sample and run" in journal
-    assert "One index, the same limits, and the same run" in check_entries
+    assert "The same reduced sample in every mode" in journal
+    assert "One index and the same limits in every mode" in check_entries
     assert "The local-folder route scans" in archive_organization
     assert "Local-folder organization works in Codex and Cowork" in (
         archive_organization
@@ -4291,7 +4295,7 @@ def test_homepage_routes_deep_research_validator_through_vera() -> None:
 
     assert '"href": "/static/shared/deep-research-validator/index.html"' not in source
     assert "../deep-research-validator/index.html" in page
-    assert "Validate Deep Research" in page
+    assert "Validazione ricerca" in page
 
 
 def test_check_entries_page_matches_plugin_site_pattern() -> None:
@@ -5171,7 +5175,9 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "/?lang=it",
             "Vera",
             (
-                "#core",
+                "#area-clients",
+                "#area-accounting",
+                "#area-outputs",
                 "#jurisdiction",
             ),
         ),
@@ -5180,8 +5186,20 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "/",
             "Clara",
             (
-                "#functions",
-                "#workflow",
+                "#area-deliverables",
+                "#area-recordings",
+                "#area-retail",
+                "#area-analysis",
+            ),
+        ),
+        (
+            "lucia",
+            "/?lang=it",
+            "Lucia",
+            (
+                "#area-research",
+                "#area-matters",
+                "#area-studio",
             ),
         ),
     ),
@@ -5200,7 +5218,7 @@ def test_companion_headers_share_product_navigation(
     )[0]
     link_hrefs = tuple(
         re.findall(
-            r'<a\b(?=[^>]*\bdata-i18n="nav\.[^"]+")[^>]*\bhref="([^"]+)"',
+            r'<a\b(?=[^>]*\bdata-i18n="[^"]+")[^>]*\bhref="([^"]+)"',
             header,
         )
     )
@@ -5244,7 +5262,7 @@ def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
     assert ".product-nav__menu[data-menu-open] > .product-nav__links" in stylesheet
     assert ".product-nav__language-list button" in stylesheet
     assert "min-height: 44px;" in stylesheet
-    assert "@media (max-width: 840px)" in stylesheet
+    assert "@media (max-width: 1080px)" in stylesheet
     assert "@media (max-width: 380px)" in stylesheet
     assert stylesheet.count("flex: 0 0 auto;") >= 3
     assert "[data-product-nav-menu-trigger]" in script
@@ -5522,27 +5540,27 @@ def test_product_pages_use_direct_product_explanations_for_hero_and_metadata(
 
     direct_leads = {
         "en": {
-            "clara": "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+            "clara": "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
             "vera": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
             "lucia": "Lucia adds legal research, source validation, matter opening, professional communication, and firm websites to Codex.",
         },
         "it": {
-            "clara": "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+            "clara": "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
             "vera": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
             "lucia": "Lucia aggiunge a Codex ricerca legale, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio.",
         },
         "fr": {
-            "clara": "Clara ajoute à Codex les présentations, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
+            "clara": "Clara ajoute à Codex les présentations, les vidéos de recherche narrées, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
             "vera": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
             "lucia": "Lucia ajoute à Codex la recherche juridique, la vérification des sources, l'ouverture de dossier, la communication professionnelle et le site du cabinet.",
         },
         "de": {
-            "clara": "Clara ergänzt Codex um Präsentationen, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
+            "clara": "Clara ergänzt Codex um Präsentationen, vertonte Forschungsvideos, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
             "vera": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
             "lucia": "Lucia ergänzt Codex um juristische Recherche, Quellenprüfung, Aktenanlage, professionelle Kommunikation und Kanzlei-Websites.",
         },
         "es": {
-            "clara": "Clara añade a Codex presentaciones, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
+            "clara": "Clara añade a Codex presentaciones, vídeos de investigación narrados, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
             "vera": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
             "lucia": "Lucia añade a Codex investigación jurídica, comprobación de fuentes, apertura de asuntos, comunicación profesional y sitios web del despacho.",
         },
