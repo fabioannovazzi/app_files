@@ -541,6 +541,16 @@
       margin-top: 2.4cqh;
     }
 
+    .privacy-grid .example-card {
+      min-height: 23cqh;
+      padding: 2.3cqh 1.45cqw;
+    }
+
+    .privacy-grid .example-card p {
+      font-size: .9cqw;
+      line-height: 1.38;
+    }
+
     .boundary {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -837,7 +847,7 @@
       <div class="slide-body">
         <p class="eyebrow reveal" style="--i:0">Una sperimentazione pratica</p>
         <h1 class="reveal" style="--i:1">Costruire Vera <span class="accent">con i commercialisti.</span></h1>
-        <p class="lede reveal" style="--i:2">Provare Vera sul lavoro vero, capire cosa va migliorato e usare il tuo feedback per fare uno strumento più utile.</p>
+        <p class="lede reveal" style="--i:2">Provare Vera sul lavoro vero e usare il tuo feedback per fare uno strumento più utile.</p>
       </div>
       <footer class="slide-foot slide-foot--end">
         <span class="slide-number">01 / 09</span>
@@ -943,18 +953,18 @@
         <span class="chapter">Privacy e GDPR</span>
       </header>
       <div class="slide-body">
-        <p class="eyebrow reveal" style="--i:0">Dove restano i dati</p>
-        <h2 class="reveal" style="--i:1">I dati restano sul tuo computer.</h2>
+        <p class="eyebrow reveal" style="--i:0">Come Vera gestisce i dati</p>
+        <h2 class="reveal" style="--i:1">Vera esegue operazioni locali. Il modello riceve i dati necessari al processo.</h2>
         <div class="privacy-grid">
-          <article class="example-card reveal" style="--i:1"><h3>Vera gira sul tuo computer</h3><p>Vera è codice e file di testo che <a class="body-link" href="https://mparanza.com/data-handling?lang=it" target="_blank" rel="noopener noreferrer">girano sul tuo computer</a>.</p></article>
-          <article class="example-card reveal" style="--i:2"><h3>Nessun dato sul nostro server</h3><p>File e dati di lavoro <a class="body-link" href="https://mparanza.com/zero-retention" target="_blank" rel="noopener noreferrer">restano sul tuo computer</a>.</p></article>
-          <article class="example-card reveal" style="--i:3"><h3>DPA solo con OpenAI</h3><p>Non serve un ulteriore DPA con Mparanza.</p></article>
+          <article class="example-card reveal" style="--i:1"><h3>Elaborazione locale</h3><p>Il plugin esegue <a class="body-link" href="https://mparanza.com/data-handling?lang=it" target="_blank" rel="noopener noreferrer">localmente e in modo deterministico</a> ordinamenti, calcoli, riconciliazioni, filtri e aggregazioni.</p></article>
+          <article class="example-card reveal" style="--i:2"><h3>Dati al modello</h3><p>Ogni processo dichiara che cosa viene elaborato localmente, che cosa arriva al modello e che cosa resta escluso. Vera, in generale, non anonimizza: farlo può rendere più difficile l’analisi.</p></article>
+          <article class="example-card reveal" style="--i:3"><h3>DPA</h3><p>Se si caricano dati personali, serve un DPA con il provider del modello. Vera non invia i dati del cliente o del lavoro al server di Mparanza LLC.</p></article>
         </div>
       </div>
       <footer class="slide-foot slide-foot--end">
         <span class="slide-number">06 / 09</span>
       </footer>
-      <aside class="speaker-notes">Vera è codice e file di testo che girano sul computer dell’utente. File e dati del caso restano locali. Il DPA è solo con OpenAI; non serve un ulteriore DPA con Mparanza.</aside>
+      <aside class="speaker-notes">Il punto non è promettere che tutto resta sul computer. Il plugin esegue localmente e in modo deterministico ordinamenti, calcoli, riconciliazioni, filtri e aggregazioni; il modello riceve i dati necessari al singolo processo. Ogni processo dichiara che cosa viene elaborato localmente, che cosa arriva al modello e che cosa resta escluso. Vera, in generale, non anonimizza i dati perché farlo può rendere più difficile l’analisi. Se si caricano dati personali, serve un DPA con il provider del modello. Vera non invia i dati del cliente o del lavoro al server di Mparanza LLC.</aside>
     </section>
 
     <section class="slide" id="esempi" data-title="Che cosa fa Vera" data-slide-title="Che cosa fa Vera" data-chapter="esempi" aria-hidden="true">
