@@ -608,7 +608,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.5.0"
+    assert manifest["version"] == "0.5.1"
     assert {
         "chrome-extension",
         "playwright",

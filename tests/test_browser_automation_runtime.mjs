@@ -826,7 +826,7 @@ test("executeCapability recovers one nested structured extraction field without 
   assert.equal(request.recovery_target.field_name, "sender");
   assert.equal(
     request.constraints.permitted_change,
-    "one_bounded_structured_field_locator_candidate",
+    "one_bounded_structured_field_locator_candidate_or_resolved_action_root",
   );
   assert.deepEqual(capability, originalCapability);
   const proposals = JSON.parse(
@@ -840,6 +840,101 @@ test("executeCapability recovers one nested structured extraction field without 
     value: ".sender-summary:visible",
     exact: false,
   });
+});
+
+test("executeCapability recovers a self-nested extraction field by reusing the resolved action root", async () => {
+  const capability = syntheticCapability({
+    delivery: "model_and_artifact",
+    sensitivity: "non_sensitive",
+  });
+  capability.outputs = [
+    {
+      name: "before-state",
+      type: "record",
+      sensitivity: "non_sensitive",
+      delivery: "model_and_artifact",
+      description: "Semantic trigger state before expansion.",
+      fields: [{ name: "control-name", type: "text", required: true }],
+    },
+  ];
+  capability.entry_milestone = "collect";
+  capability.milestones = [capability.milestones[1]];
+  const action = capability.milestones[0].actions[0];
+  const rootCandidate = candidate("role", "Billing Address", "button");
+  action.id = "extract-before-state";
+  action.intent = "Capture the semantic trigger state before expansion.";
+  action.locator_candidates = [rootCandidate];
+  action.output_ref = "before-state";
+  action.extract = {
+    mode: "single",
+    fields: [
+      {
+        name: "control-name",
+        locator_candidates: [structuredClone(rootCandidate)],
+        read: { kind: "inner_text", attribute: null },
+        required: true,
+      },
+    ],
+    max_items: 1,
+    limit_input_ref: null,
+    empty_allowed: false,
+    dedupe_by: [],
+  };
+  action.postcondition.output_ref = "before-state";
+  action.postcondition.kind = "output_count";
+  action.postcondition.comparator = "gte";
+  action.postcondition.expected = 1;
+  capability.completion = {
+    terminal_milestones: ["collect"],
+    required_outputs: ["before-state"],
+  };
+  const originalCapability = structuredClone(capability);
+  const registry = {
+    [locatorKey("role", "button", "Billing Address")]: [
+      new FakeNode({ text: "Billing Address", attributes: { "aria-expanded": "false" } }),
+    ],
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  let request = null;
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "resolved-root-recovery"),
+    runId: "resolved-root-recovery-run",
+    recoveryHandler: async (candidateRequest) => {
+      request = candidateRequest;
+      return {
+        use_resolved_action_root: true,
+        rationale: "The field is the already resolved Billing Address control itself.",
+        uncertainty: "The repair remains run-local until operator review.",
+      };
+    },
+  });
+
+  assert.equal(summary.result, "passed");
+  assert.equal(summary.recovery_proposal_count, 1);
+  assert.equal(request.recovery_target.kind, "extraction_field_locator");
+  assert.equal(request.recovery_target.field_name, "control-name");
+  assert.equal(
+    request.constraints.permitted_change,
+    "one_bounded_structured_field_locator_candidate_or_resolved_action_root",
+  );
+  assert.deepEqual(summary.delivered_outputs["before-state"], {
+    "control-name": "Billing Address",
+  });
+  assert.deepEqual(capability, originalCapability);
+  const proposals = JSON.parse(
+    await readFile(summary.recovery_proposals_path, "utf8"),
+  );
+  assert.equal(proposals.schema_version, "browser-recovery-proposals/v2");
+  assert.equal(proposals.proposals[0].resolution, "resolved_action_root");
+  assert.equal(proposals.proposals[0].candidate, null);
+  assert.equal(proposals.proposals[0].candidate_index, null);
+  assert.equal(proposals.proposals[0].candidate_sha256, null);
 });
 
 test("executeCapability never invokes model recovery for consequential actions", async () => {
