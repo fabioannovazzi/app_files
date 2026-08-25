@@ -107,11 +107,11 @@
     },
     {
       "id": "portable-capability-secret-and-evidence-exclusion",
-      "control": "The standard-library validator rejects forbidden secret and capture fields, email-address literals, unbounded or query-bearing origins, missing semantic locators, consequential actions without action-time confirmation, private-evidence retention, and portable bundles that claim to contain discovery evidence. Sealing is deterministic, owner-only, and non-overwriting."
+      "control": "The standard-library validator rejects forbidden secret and capture fields, email-address literals, unbounded or query-bearing origins, missing semantic locators, consequential actions without action-time confirmation, private-evidence retention, and portable bundles that claim to contain discovery evidence. HTTPS remains mandatory for non-loopback origins; local synthetic processes may use HTTP only for the exact loopback hosts 127.0.0.1, localhost, or ::1 with an explicit valid port. Sealing is deterministic, owner-only, and non-overwriting."
     },
     {
       "id": "environment-scoped-validation",
-      "control": "A capability may claim validated_local only when the finalizer verifies two distinct passed machine receipts with the same execution contract, reviewed discovery, capability version, declared terminal, required outputs, and environment, with no model recovery, locator edits or retained private evidence. Changing the runtime boundary invalidates prior validation evidence. Gmail is therefore a non-executable draft under the Chrome-only native-gap contract until renewed authoring review and two new clean replays; its no-result branch also remains unobserved."
+      "control": "A capability may claim validated_local only when the finalizer verifies two distinct passed machine receipts with the same execution contract, reviewed discovery, capability version, declared terminal, required outputs, and environment, with no model recovery, locator edits or retained private evidence. Changing the runtime boundary invalidates prior validation evidence. The Windows acceptance run observed a Gmail no-results terminal path and an intermittent extraction failure for a valid non-empty query; the revised draft distinguishes mailbox-ready, results-available, no-results, and transient/loading states and allows one bounded recovery wait. Gmail remains a non-executable draft under the Chrome-only native-gap contract until renewed authoring review and two new clean replays."
     },
     {
       "id": "bounded-model-locator-recovery",
@@ -134,6 +134,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "654244cc8b0a7cb9b62501ba48cc472245db60c337fc436bdca4f3f5c26e49d1"
+    "source_fingerprint": "2c7471540a59ff22c1d1d97712b7032057c2cb1d9679e7be40c7b2f13633a612"
   }
 }

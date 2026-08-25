@@ -29,6 +29,7 @@ __all__ = [
     "main",
     "promote_capability",
     "seal_capability",
+    "validate_origin",
     "validate_capability",
     "validate_discovery_record",
     "validate_recovery_proposals",
@@ -436,13 +437,25 @@ def execution_contract_sha256(capability: Mapping[str, Any]) -> str:
     return sha256_payload(execution_contract_payload(capability))
 
 
-def _validate_origin(value: Any, *, scope: str, errors: list[str]) -> str | None:
+def validate_origin(value: Any, *, scope: str, errors: list[str]) -> str | None:
+    """Validate an HTTPS origin or an explicit port-bound loopback HTTP origin."""
+
     if not _non_empty_text(value):
         errors.append(f"{scope} must be a non-empty origin")
         return None
     parsed = urlsplit(value)
-    local_host = parsed.hostname in {"127.0.0.1", "localhost", "::1"}
-    if parsed.scheme != "https" and not (parsed.scheme == "http" and local_host):
+    try:
+        port = parsed.port
+    except ValueError:
+        port = None
+        errors.append(f"{scope} must use a valid port")
+    loopback_http = (
+        parsed.scheme == "http"
+        and parsed.hostname in {"127.0.0.1", "localhost", "::1"}
+        and port is not None
+        and port > 0
+    )
+    if parsed.scheme != "https" and not loopback_http:
         errors.append(f"{scope} must use HTTPS, except for loopback development")
     if not parsed.hostname or parsed.username or parsed.password:
         errors.append(f"{scope} must be an origin without embedded credentials")
@@ -472,7 +485,7 @@ def _validate_site(value: Any, *, scope: str, errors: list[str]) -> set[str]:
         errors.append(f"{scope}.allowed_origins must be a non-empty array")
     else:
         for index, origin in enumerate(origins):
-            normalized = _validate_origin(
+            normalized = validate_origin(
                 origin,
                 scope=f"{scope}.allowed_origins[{index}]",
                 errors=errors,
@@ -1654,7 +1667,7 @@ def _validate_observation(value: Any, *, index: int, errors: list[str]) -> None:
     for field in ("intent", "action", "outcome"):
         if not _non_empty_text(observation.get(field)):
             errors.append(f"{scope}.{field} must be non-empty")
-    _validate_origin(observation.get("origin"), scope=f"{scope}.origin", errors=errors)
+    validate_origin(observation.get("origin"), scope=f"{scope}.origin", errors=errors)
     path = observation.get("path")
     if (
         not isinstance(path, str)
@@ -1848,7 +1861,7 @@ def validate_run_receipt(payload: Any) -> list[str]:
                     if locator_record.get("kind") not in ALLOWED_LOCATORS:
                         errors.append(f"{scope}.locator_candidate.kind is invalid")
             if action.get("origin") is not None:
-                _validate_origin(
+                validate_origin(
                     action["origin"], scope=f"{scope}.origin", errors=errors
                 )
             path = action.get("path")
@@ -2065,7 +2078,7 @@ def validate_recovery_proposals(payload: Any) -> list[str]:
                 )
         elif field_name is not None:
             errors.append(f"{scope}.field_name must be null for action recovery")
-        _validate_origin(proposal.get("origin"), scope=f"{scope}.origin", errors=errors)
+        validate_origin(proposal.get("origin"), scope=f"{scope}.origin", errors=errors)
         path = proposal.get("path")
         if (
             not isinstance(path, str)

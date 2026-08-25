@@ -125,7 +125,7 @@ def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
     payload = _checked_in_capability("gmail-search-export")
 
     assert payload["status"] == "draft"
-    assert payload["version"] == "0.5.0"
+    assert payload["version"] == "0.6.0"
     assert payload["validation"]["receipts"] == []
     assert payload["validation"]["environment_scope"] == "not_validated"
     assert payload["provenance"]["source"] == "live_discovery_unreviewed"
@@ -133,7 +133,6 @@ def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
     assert payload["outputs"][0]["delivery"] == "artifact_only"
     assert {field["name"] for field in payload["outputs"][0]["fields"]} == {
         "sender",
-        "subject",
         "displayed-date",
     }
     submit = next(
@@ -147,9 +146,17 @@ def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
     assert postcondition["kind"] == "url_includes"
     assert postcondition["value"] == "#search/{{query}}"
     assert postcondition["locator_candidates"] == []
+    assert {milestone["id"] for milestone in payload["milestones"]} >= {
+        "open-gmail",
+        "collect-results",
+        "no-results",
+        "search-transient",
+    }
     serialized = json.dumps(payload)
     assert "@" not in serialized
     assert "message bodies" in serialized
+    assert '"name": "subject"' not in serialized
+    assert ".bog:visible" not in serialized
 
 
 def test_agenzia_and_teamsystem_do_not_claim_unobserved_execution() -> None:
@@ -618,7 +625,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.5.2"
+    assert manifest["version"] == "0.5.3"
     assert {
         "chrome-extension",
         "playwright",

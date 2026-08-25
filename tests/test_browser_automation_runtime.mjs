@@ -50,6 +50,7 @@ class FakeLocator {
   async isVisible() { return this.nodes.some((node) => node.visible); }
   async isEnabled() { return this.nodes.some((node) => node.visible && node.enabled); }
   async waitFor() {
+    await this.tab.onLocatorWait?.();
     if (!(await this.isVisible())) throw new Error("not visible");
   }
   async count() { return this.nodes.length; }
@@ -89,6 +90,7 @@ class FakePlaywright extends FakeLocator {
 class FakeTab {
   constructor(registry, startUrl = "https://example.com/") {
     this.currentUrl = startUrl;
+    this.onLocatorWait = null;
     this.playwright = new FakePlaywright(this, registry);
   }
 
@@ -350,6 +352,67 @@ function resultRegistry(tab) {
   };
 }
 
+async function gmailCapability() {
+  const capability = JSON.parse(
+    await readFile(
+      new URL(
+        "../plugins/browser-automation/capabilities/gmail-search-export/capability.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
+  capability.status = "discovered";
+  capability.provenance.source = "authorized_live_discovery";
+  capability.provenance.discovery_approval_id = "synthetic-gmail-review";
+  capability.provenance.discovery_approved_at = "2026-08-25T18:00:00+02:00";
+  return capability;
+}
+
+function gmailRow(sender, displayedDate = "Aug 25") {
+  return new FakeNode({
+    children: {
+      [locatorKey("css", null, "span[email]:visible")]: [new FakeNode({ text: sender })],
+      [locatorKey("css", null, ".yW:visible")]: [new FakeNode({ text: sender })],
+      [locatorKey("css", null, "td.xW span:visible")]: [
+        new FakeNode({ text: displayedDate }),
+      ],
+    },
+  });
+}
+
+function gmailRegistry(onSearch) {
+  const search = new FakeNode({
+    onAction: ({ kind, value, tab }) => {
+      if (kind === "press" && value === "Enter") {
+        tab.currentUrl = "https://mail.google.com/mail/u/0/#search/synthetic-private-query";
+        onSearch();
+      }
+    },
+  });
+  return {
+    [locatorKey("role", "textbox", "Search mail")]: [search],
+  };
+}
+
+async function runGmailCapability(capability, registry, runId) {
+  const tab = new FakeTab(registry, "https://mail.google.com/mail/u/0/");
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "gmail-runtime-state-test-"));
+  return {
+    tab,
+    parent,
+    execute: () => executeCapability({
+      tab,
+      capability,
+      inputs: { query: "synthetic-private-query", "max-results": 10 },
+      runDirectory: join(parent, runId),
+      runId,
+      environment: { locale: "en-US", origin_ui: "Synthetic Gmail" },
+    }),
+  };
+}
+
 test("executeCapability drives actions, extracts records, and emits hash-linked evidence", async () => {
   const capability = syntheticCapability();
   const tab = new FakeTab({});
@@ -398,6 +461,161 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
   );
   assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
   assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+});
+
+test("gmail capability detects mailbox readiness through an accessible search control", async () => {
+  const capability = await gmailCapability();
+  const registry = gmailRegistry(() => {
+    registry[locatorKey("text", null, "No emails matched your search")] = [
+      new FakeNode({ text: "No emails matched your search" }),
+    ];
+  });
+  const run = await runGmailCapability(capability, registry, "gmail-mailbox-ready");
+
+  const summary = await run.execute();
+
+  const receipt = JSON.parse(await readFile(summary.receipt_path, "utf8"));
+  const readiness = receipt.action_results.find(
+    (result) => result.action_id === "wait-gmail-search",
+  );
+  assert.equal(readiness.locator_candidate.kind, "role");
+  assert.equal(readiness.locator_candidate.index, 0);
+  assert.equal(summary.terminal_milestone, "no-results");
+});
+
+test("gmail capability detects results and falls back across reviewed row DOM variants", async () => {
+  const capability = await gmailCapability();
+  const privateSubject = "Synthetic confidential subject";
+  const validRows = [gmailRow("Synthetic sender")];
+  const registry = gmailRegistry(() => {
+    registry[locatorKey("role", "row", null)] = [new FakeNode()];
+    registry[locatorKey("css", null, "tr.zA:visible")] = validRows;
+  });
+  const run = await runGmailCapability(capability, registry, "gmail-results-available");
+
+  const summary = await run.execute();
+
+  assert.equal(summary.terminal_milestone, "collect-results");
+  assert.deepEqual(summary.completed_milestones, [
+    "open-gmail",
+    "submit-search",
+    "collect-results",
+  ]);
+  assert.deepEqual(summary.delivered_outputs, {});
+  const outputsText = await readFile(summary.outputs_path, "utf8");
+  const outputs = JSON.parse(outputsText);
+  assert.deepEqual(outputs.messages[0], {
+    sender: "Synthetic sender",
+    "displayed-date": "Aug 25",
+  });
+  const receiptText = await readFile(summary.receipt_path, "utf8");
+  const receipt = JSON.parse(receiptText);
+  const extraction = receipt.action_results.find(
+    (result) => result.action_id === "extract-gmail-results",
+  );
+  assert.equal(extraction.locator_candidate.index, 1);
+  assert.equal(extraction.locator_candidate.kind, "css");
+  assert.equal(receiptText.includes("synthetic-private-query"), false);
+  assert.equal(receiptText.includes(privateSubject), false);
+  assert.equal(outputsText.includes("synthetic-private-query"), false);
+  assert.equal(outputsText.includes(privateSubject), false);
+});
+
+test("gmail capability retries metadata extraction after row descendants settle", async () => {
+  const capability = await gmailCapability();
+  const privateSubject = "Synthetic settled subject";
+  const row = gmailRow("Synthetic sender");
+  const senderKey = locatorKey("css", null, "span[email]:visible");
+  const senderFallbackKey = locatorKey("css", null, ".yW:visible");
+  row.children[senderKey] = [];
+  row.children[senderFallbackKey] = [];
+  const registry = gmailRegistry(() => {
+    registry[locatorKey("role", "row", null)] = [row];
+  });
+  const run = await runGmailCapability(capability, registry, "gmail-extraction-retry");
+  let settleCalls = 0;
+  run.tab.playwright.waitForTimeout = async () => {
+    settleCalls += 1;
+    row.children[senderKey] = [new FakeNode({ text: "Synthetic sender" })];
+  };
+
+  const summary = await run.execute();
+
+  assert.equal(summary.terminal_milestone, "collect-results");
+  assert.equal(settleCalls, 1);
+  const receiptText = await readFile(summary.receipt_path, "utf8");
+  const outputsText = await readFile(summary.outputs_path, "utf8");
+  assert.equal(receiptText.includes(privateSubject), false);
+  assert.equal(outputsText.includes(privateSubject), false);
+});
+
+test("gmail capability detects an accessible no-results state without reading rows", async () => {
+  const capability = await gmailCapability();
+  const registry = gmailRegistry(() => {
+    registry[locatorKey("text", null, "No messages matched your search")] = [
+      new FakeNode({ text: "No messages matched your search" }),
+    ];
+  });
+  const run = await runGmailCapability(capability, registry, "gmail-no-results");
+
+  const summary = await run.execute();
+
+  assert.equal(summary.terminal_milestone, "no-results");
+  assert.deepEqual(summary.completed_milestones, [
+    "open-gmail",
+    "submit-search",
+    "no-results",
+  ]);
+  const outputs = JSON.parse(await readFile(summary.outputs_path, "utf8"));
+  assert.deepEqual(outputs.messages, []);
+});
+
+test("gmail capability retries one transient loading state before extracting results", async () => {
+  const capability = await gmailCapability();
+  const rows = [gmailRow("Synthetic sender")];
+  let locatorWaits = 0;
+  const registry = gmailRegistry(() => {
+    registry[locatorKey("role", "progressbar", null)] = [new FakeNode()];
+  });
+  const run = await runGmailCapability(capability, registry, "gmail-transient-retry");
+  run.tab.onLocatorWait = () => {
+    locatorWaits += 1;
+    if (locatorWaits === 5) {
+      registry[locatorKey("role", "progressbar", null)] = [];
+      registry[locatorKey("role", "row", null)] = rows;
+    }
+  };
+
+  const summary = await run.execute();
+
+  assert.equal(summary.terminal_milestone, "collect-results");
+  assert.deepEqual(summary.completed_milestones, [
+    "open-gmail",
+    "submit-search",
+    "search-transient",
+    "collect-results",
+  ]);
+});
+
+test("gmail capability fails closed when loading never resolves", async () => {
+  const capability = await gmailCapability();
+  const registry = gmailRegistry(() => {
+    registry[locatorKey("role", "progressbar", null)] = [new FakeNode()];
+  });
+  const run = await runGmailCapability(capability, registry, "gmail-persistent-loading");
+  let caught = null;
+
+  try {
+    await run.execute();
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.ok(caught instanceof Error);
+  assert.equal(caught.code, "locator_resolution_failed");
+  assert.equal(caught.runSummary.recovery_request.action.action_id, "wait-gmail-result-state");
+  const receiptText = await readFile(caught.runSummary.receipt_path, "utf8");
+  assert.equal(receiptText.includes("synthetic-private-query"), false);
 });
 
 test("executeCapability accepts an exact input-templated route in an encoded URL", async () => {

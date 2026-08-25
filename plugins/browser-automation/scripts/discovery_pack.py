@@ -24,6 +24,7 @@ from capability_pipeline import (
     sha256_payload,
     validate_capability,
     validate_discovery_record,
+    validate_origin,
 )
 
 __all__ = [
@@ -155,25 +156,6 @@ def _walk_private_material(value: Any, *, scope: str, errors: list[str]) -> None
         errors.append(f"{scope} contains an email address; use an input reference")
 
 
-def _validate_origin(value: Any, *, scope: str, errors: list[str]) -> str | None:
-    if not _non_empty_text(value):
-        errors.append(f"{scope} must be a non-empty origin")
-        return None
-    parsed = urlsplit(value)
-    local_host = parsed.hostname in {"127.0.0.1", "localhost", "::1"}
-    if parsed.scheme != "https" and not (parsed.scheme == "http" and local_host):
-        errors.append(f"{scope} must use HTTPS, except for loopback development")
-    if not parsed.hostname or parsed.username or parsed.password:
-        errors.append(f"{scope} must be an origin without embedded credentials")
-    if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
-        errors.append(f"{scope} must not contain a path, query, or fragment")
-    return (
-        f"{parsed.scheme}://{parsed.netloc}"
-        if parsed.scheme and parsed.netloc
-        else None
-    )
-
-
 def _validate_site(value: Any, *, errors: list[str]) -> set[str]:
     site = _exact_keys(
         value,
@@ -191,7 +173,7 @@ def _validate_site(value: Any, *, errors: list[str]) -> set[str]:
         errors.append("site.allowed_origins must be a non-empty array")
     else:
         for index, origin in enumerate(origins):
-            normalized = _validate_origin(
+            normalized = validate_origin(
                 origin, scope=f"site.allowed_origins[{index}]", errors=errors
             )
             if normalized:
@@ -347,7 +329,7 @@ def _validate_state(
     )
     if state is None:
         return
-    origin = _validate_origin(
+    origin = validate_origin(
         state.get("origin"), scope=f"{scope}.origin", errors=errors
     )
     if origin and origin not in allowed_origins:

@@ -117,7 +117,7 @@ def _discovery(*, approved: bool) -> dict[str, object]:
                         "exact": False,
                     }
                 ],
-                "action": "Inspect only the declared sender, subject, and displayed-date fields.",
+                "action": "Inspect only the declared sender and displayed-date fields.",
                 "outcome": "The bounded fields were available without opening a message.",
                 "uncertainties": ["Repeated-row locators may vary by Gmail release."],
             },
@@ -137,6 +137,23 @@ def _discovery(*, approved: bool) -> dict[str, object]:
                 "action": "Inspect only the generic no-result marker.",
                 "outcome": "The empty-result branch was distinguishable.",
                 "uncertainties": ["Empty-state text may be localized."],
+            },
+            {
+                "milestone_id": "search-transient",
+                "intent": "Observe one bounded retry while Gmail is loading.",
+                "origin": "https://mail.google.com",
+                "path": "/mail/u/0/",
+                "controls": [
+                    {
+                        "kind": "role",
+                        "role": "progressbar",
+                        "value": None,
+                        "exact": False,
+                    }
+                ],
+                "action": "Wait once for a terminal result state without reading rows.",
+                "outcome": "The transient state resolved within the bounded retry.",
+                "uncertainties": ["Persistent loading must fail closed."],
             },
         ],
         "branches": ["No-result and non-empty-result branches differ."],
@@ -174,7 +191,6 @@ def _receipt(
             [
                 {
                     "sender": "Synthetic sender",
-                    "subject": "Synthetic subject",
                     "displayed-date": "2026-08-24",
                 }
             ]
@@ -379,7 +395,7 @@ def _download_receipt(
             )
     return {
         "schema_version": "browser-run-receipt/v1",
-        "runtime_version": "browser-capability-runtime/10",
+        "runtime_version": "browser-capability-runtime/11",
         "run_id": run_id,
         "capability_id": capability["capability_id"],
         "capability_version": capability["version"],
@@ -432,7 +448,6 @@ def _write_run_evidence(
             [
                 {
                     "sender": "Synthetic sender",
-                    "subject": "Synthetic subject",
                     "displayed-date": "2026-08-24",
                 }
             ]
@@ -467,7 +482,7 @@ def _recovery_proposals(capability: dict[str, object]) -> dict[str, object]:
     }
     return {
         "schema_version": "browser-recovery-proposals/v2",
-        "runtime_version": "browser-capability-runtime/10",
+        "runtime_version": "browser-capability-runtime/11",
         "run_id": "recovered-run",
         "capability_id": capability["capability_id"],
         "capability_version": capability["version"],
@@ -568,7 +583,6 @@ def test_gmail_capability_draft_is_useful_but_not_locally_validated() -> None:
     assert payload["status"] == "draft"
     assert payload["outputs"][0]["fields"] == [
         {"name": "sender", "type": "text", "required": True},
-        {"name": "subject", "type": "text", "required": True},
         {"name": "displayed-date", "type": "text", "required": False},
     ]
     assert {item["id"] for item in payload["milestones"]} >= {
@@ -607,6 +621,55 @@ def test_validator_rejects_secrets_email_literals_and_cross_origin_urls() -> Non
     assert any(
         "allowed origin" in item for item in pipeline.validate_capability(cross_origin)
     )
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "http://127.0.0.1:38421",
+        "http://localhost:38422",
+        "http://[::1]:38423",
+    ],
+)
+def test_capability_and_discovery_validators_accept_port_bound_loopback_http(
+    origin: str,
+) -> None:
+    pipeline = _pipeline()
+    capability = _capability("gmail-search-export")
+    capability["site"] = {
+        "name": "Synthetic local process",
+        "allowed_origins": [origin],
+        "start_url": f"{origin}/",
+    }
+    capability["milestones"][0]["actions"][0]["target_origin"] = origin
+    discovery = _discovery(approved=False)
+    discovery["site"] = copy.deepcopy(capability["site"])
+    for observation in discovery["observations"]:
+        observation["origin"] = origin
+
+    assert pipeline.validate_capability(capability) == []
+    assert pipeline.validate_discovery_record(discovery) == []
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "http://example.test:38421",
+        "http://192.168.1.10:38421",
+        "http://127.0.0.1",
+        "http://localhost",
+        "http://[::1]",
+    ],
+)
+def test_origin_validator_rejects_non_loopback_or_portless_http(origin: str) -> None:
+    pipeline = _pipeline()
+    errors: list[str] = []
+
+    pipeline.validate_origin(origin, scope="site.allowed_origins[0]", errors=errors)
+
+    assert errors == [
+        "site.allowed_origins[0] must use HTTPS, except for loopback development"
+    ]
 
 
 def test_validator_enforces_runtime_semantics_and_action_confirmation() -> None:
@@ -658,7 +721,9 @@ def test_validator_rejects_unscoped_css_only_transition_state() -> None:
     pipeline = _pipeline()
     capability = _capability("gmail-search-export")
     transition = capability["milestones"][1]["transitions"][0]["when"]
-    transition["locator_candidates"][0]["value"] = "tr.zA"
+    transition["locator_candidates"] = [
+        {"kind": "css", "role": None, "value": "tr.zA", "exact": False}
+    ]
 
     errors = pipeline.validate_capability(capability)
 
@@ -1231,7 +1296,6 @@ def test_finalizer_rejects_clean_receipts_with_different_outputs(
         "messages": [
             {
                 "sender": "Different synthetic sender",
-                "subject": "Synthetic subject",
                 "displayed-date": "2026-08-24",
             }
         ]
@@ -1356,7 +1420,6 @@ def test_finalizer_rejects_hash_consistent_output_with_wrong_field_type(
         "messages": [
             {
                 "sender": 42,
-                "subject": "Synthetic subject",
                 "displayed-date": "2026-08-24",
             }
         ]

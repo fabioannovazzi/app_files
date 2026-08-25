@@ -109,6 +109,11 @@ Inputs are typed references such as `query`, `date-from`, or `client-code`,
 never values copied from the discovery account. Private input values remain in
 the live browser task. Receipts contain input hashes, not values.
 
+Every non-loopback allowed origin uses HTTPS. A local synthetic process may use
+HTTP only as `http://127.0.0.1:<port>`, `http://localhost:<port>`, or
+`http://[::1]:<port>` with an explicit port. The discovery record, developer
+evidence, capability, and receipt validators reject every other HTTP origin.
+
 ## Locator order
 
 Prefer role and accessible name, then label, placeholder, stable test ID, or

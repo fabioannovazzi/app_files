@@ -72,7 +72,31 @@
           "locator_candidates": [
             {
               "exact": true,
+              "kind": "role",
+              "role": "textbox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "searchbox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "combobox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
               "kind": "placeholder",
+              "role": null,
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "label",
               "role": null,
               "value": "Search mail"
             }
@@ -87,7 +111,31 @@
             "locator_candidates": [
               {
                 "exact": true,
+                "kind": "role",
+                "role": "textbox",
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
+                "kind": "role",
+                "role": "searchbox",
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
+                "kind": "role",
+                "role": "combobox",
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
                 "kind": "placeholder",
+                "role": null,
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
+                "kind": "label",
                 "role": null,
                 "value": "Search mail"
               }
@@ -134,7 +182,31 @@
           "locator_candidates": [
             {
               "exact": true,
+              "kind": "role",
+              "role": "textbox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "searchbox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "combobox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
               "kind": "placeholder",
+              "role": null,
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "label",
               "role": null,
               "value": "Search mail"
             }
@@ -149,7 +221,31 @@
             "locator_candidates": [
               {
                 "exact": true,
+                "kind": "role",
+                "role": "textbox",
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
+                "kind": "role",
+                "role": "searchbox",
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
+                "kind": "role",
+                "role": "combobox",
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
                 "kind": "placeholder",
+                "role": null,
+                "value": "Search mail"
+              },
+              {
+                "exact": true,
+                "kind": "label",
                 "role": null,
                 "value": "Search mail"
               }
@@ -172,7 +268,31 @@
           "locator_candidates": [
             {
               "exact": true,
+              "kind": "role",
+              "role": "textbox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "searchbox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "role",
+              "role": "combobox",
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
               "kind": "placeholder",
+              "role": null,
+              "value": "Search mail"
+            },
+            {
+              "exact": true,
+              "kind": "label",
               "role": null,
               "value": "Search mail"
             }
@@ -197,7 +317,7 @@
       "intent": "Submit the operator-supplied Gmail search expression.",
       "preconditions": [
         "The search expression has been supplied for this run.",
-        "Reading visible sender, subject, and displayed date metadata has been authorized for this process."
+        "Reading visible sender and displayed date metadata has been authorized for this process."
       ],
       "transitions": [
         {
@@ -210,13 +330,19 @@
             "locator_candidates": [
               {
                 "exact": false,
+                "kind": "role",
+                "role": "row",
+                "value": null
+              },
+              {
+                "exact": false,
                 "kind": "css",
                 "role": null,
                 "value": "tr.zA:visible"
               }
             ],
             "output_ref": null,
-            "timeout_ms": 10000,
+            "timeout_ms": 5000,
             "value": null
           }
         },
@@ -226,10 +352,68 @@
           "when": {
             "comparator": null,
             "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No emails matched your search"
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No emails"
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No messages matched your search"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 5000,
+            "value": null
+          }
+        },
+        {
+          "next_milestone": "search-transient",
+          "terminal": false,
+          "when": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": false,
+                "kind": "role",
+                "role": "progressbar",
+                "value": null
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "Loading"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 1000,
+            "value": null
+          }
+        },
+        {
+          "next_milestone": "search-transient",
+          "terminal": false,
+          "when": {
+            "comparator": null,
+            "expected": null,
             "kind": "always",
             "locator_candidates": [],
             "output_ref": null,
-            "timeout_ms": 10000,
+            "timeout_ms": 1000,
             "value": null
           }
         }
@@ -243,7 +427,6 @@
           "extract": {
             "dedupe_by": [
               "sender",
-              "subject",
               "displayed-date"
             ],
             "empty_allowed": false,
@@ -276,23 +459,13 @@
                     "exact": false,
                     "kind": "css",
                     "role": null,
-                    "value": ".bog:visible"
-                  }
-                ],
-                "name": "subject",
-                "read": {
-                  "attribute": null,
-                  "kind": "inner_text"
-                },
-                "required": true
-              },
-              {
-                "locator_candidates": [
+                    "value": "td.xW span:visible"
+                  },
                   {
                     "exact": false,
                     "kind": "css",
                     "role": null,
-                    "value": "td.xW span:visible"
+                    "value": "td.xW:visible"
                   }
                 ],
                 "name": "displayed-date",
@@ -309,20 +482,20 @@
           },
           "id": "extract-gmail-results",
           "input_ref": null,
-          "intent": "Extract sender, subject, and displayed date without opening messages.",
+          "intent": "Extract sender and displayed date without opening messages or reading subjects.",
           "key": null,
           "locator_candidates": [
-            {
-              "exact": false,
-              "kind": "css",
-              "role": null,
-              "value": "tr.zA:visible"
-            },
             {
               "exact": false,
               "kind": "role",
               "role": "row",
               "value": null
+            },
+            {
+              "exact": false,
+              "kind": "css",
+              "role": null,
+              "value": "tr.zA:visible"
             }
           ],
           "operation": "extract",
@@ -370,14 +543,26 @@
           "extract": null,
           "id": "verify-empty-gmail-results",
           "input_ref": null,
-          "intent": "Verify structurally that Gmail remains ready and no visible result row is present, without reading localized page text.",
+          "intent": "Verify Gmail's accessible no-results state without reading any message row.",
           "key": null,
           "locator_candidates": [
             {
-              "exact": true,
-              "kind": "placeholder",
+              "exact": false,
+              "kind": "text",
               "role": null,
-              "value": "Search mail"
+              "value": "No emails matched your search"
+            },
+            {
+              "exact": false,
+              "kind": "text",
+              "role": null,
+              "value": "No emails"
+            },
+            {
+              "exact": false,
+              "kind": "text",
+              "role": null,
+              "value": "No messages matched your search"
             }
           ],
           "operation": "wait_for",
@@ -399,7 +584,7 @@
       "id": "no-results",
       "intent": "Complete with an empty structured result set when Gmail shows no matching conversations.",
       "preconditions": [
-        "The result-row transition completed its bounded wait without finding a visible Gmail result row."
+        "A declared accessible Gmail no-results marker is visible and no result row will be read."
       ],
       "transitions": [
         {
@@ -416,20 +601,171 @@
           }
         }
       ]
+    },
+    {
+      "actions": [
+        {
+          "confirmation": "none",
+          "effect": "read_only",
+          "extract": null,
+          "id": "wait-gmail-result-state",
+          "input_ref": null,
+          "intent": "Wait once for Gmail's transient loading state to resolve to results or an accessible no-results marker.",
+          "key": null,
+          "locator_candidates": [
+            {
+              "exact": false,
+              "kind": "role",
+              "role": "row",
+              "value": null
+            },
+            {
+              "exact": false,
+              "kind": "text",
+              "role": null,
+              "value": "No emails matched your search"
+            },
+            {
+              "exact": false,
+              "kind": "text",
+              "role": null,
+              "value": "No emails"
+            },
+            {
+              "exact": false,
+              "kind": "text",
+              "role": null,
+              "value": "No messages matched your search"
+            },
+            {
+              "exact": false,
+              "kind": "css",
+              "role": null,
+              "value": "tr.zA:visible"
+            }
+          ],
+          "operation": "wait_for",
+          "output_ref": null,
+          "path": null,
+          "postcondition": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": false,
+                "kind": "role",
+                "role": "row",
+                "value": null
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No emails matched your search"
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No emails"
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No messages matched your search"
+              },
+              {
+                "exact": false,
+                "kind": "css",
+                "role": null,
+                "value": "tr.zA:visible"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 10000,
+            "value": null
+          },
+          "target_origin": null,
+          "timeout_ms": 10000
+        }
+      ],
+      "id": "search-transient",
+      "intent": "Bound one retry while Gmail is loading or has not yet exposed a terminal result state.",
+      "preconditions": [
+        "The mailbox is ready and the exact search route is active.",
+        "Neither result rows nor an accessible no-results marker appeared during the initial bounded probe."
+      ],
+      "transitions": [
+        {
+          "next_milestone": "collect-results",
+          "terminal": false,
+          "when": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": false,
+                "kind": "role",
+                "role": "row",
+                "value": null
+              },
+              {
+                "exact": false,
+                "kind": "css",
+                "role": null,
+                "value": "tr.zA:visible"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 1000,
+            "value": null
+          }
+        },
+        {
+          "next_milestone": "no-results",
+          "terminal": false,
+          "when": {
+            "comparator": null,
+            "expected": null,
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No emails matched your search"
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No emails"
+              },
+              {
+                "exact": false,
+                "kind": "text",
+                "role": null,
+                "value": "No messages matched your search"
+              }
+            ],
+            "output_ref": null,
+            "timeout_ms": 1000,
+            "value": null
+          }
+        }
+      ]
     }
   ],
   "outputs": [
     {
       "delivery": "artifact_only",
-      "description": "Visible Gmail search-result metadata written to outputs.json without emitting record values in the model response.",
+      "description": "Visible Gmail sender and displayed-date metadata written to outputs.json without storing search text, subjects, message content, or emitting record values in the model response.",
       "fields": [
         {
           "name": "sender",
-          "required": true,
-          "type": "text"
-        },
-        {
-          "name": "subject",
           "required": true,
           "type": "text"
         },
@@ -448,7 +784,7 @@
     "model_data": [
       "Capability instructions, action outcomes, branch result, output record count, hashes, and sanitized errors",
       "During discovery only, the exact private result fields named by the operator may enter the selected model context after a separate query-specific authorization; observed values are not written to the discovery record or portable capability",
-      "Sender, subject, and displayed date values remain in the owner-only outputs.json artifact unless the operator separately requests model interpretation",
+      "Sender and displayed date values remain in the owner-only outputs.json artifact unless the operator separately requests model interpretation; raw Gmail search text, message subjects, and message content are not read into or written to receipts or artifacts",
       "For bounded locator recovery, the current model receives the action intent and contract, declared locator candidates, current origin and query-free path, postcondition kind, and a sanitized failure hash, but not the Gmail query or output values"
     ],
     "portable_artifact_excludes": [
@@ -466,7 +802,7 @@
   },
   "process": {
     "name": "Gmail search-result metadata export",
-    "objective": "Run an operator-supplied Gmail search and write sender, subject, and displayed date metadata for the bounded visible result set to a private local JSON artifact.",
+    "objective": "Run an operator-supplied Gmail search and write sender and displayed date metadata for the bounded visible result set to a private local JSON artifact without storing the search text or message subjects.",
     "out_of_scope": [
       "Open or read message bodies",
       "Send, draft, label, archive, move, or delete mail",
@@ -501,13 +837,13 @@
     "environment_scope": "not_validated",
     "execution_contract_sha256": null,
     "known_limits": [
-      "The exact-query URL postcondition and runtime/10 receipt semantics create a new unreviewed draft lineage; prior receipts do not validate this execution contract.",
+      "The four-state Gmail readiness contract and runtime/11 bounded extraction retry create a new unreviewed draft lineage; prior receipts do not validate this execution contract.",
       "Search submission fails closed unless the current Gmail URL, after bounded percent-decoding, contains the exact #search/{{query}} route; inbox-root rows cannot satisfy this proof.",
+      "Mailbox ready, results available, accessible no-results, and transient/loading are separate states; a persistent transient state fails closed after one bounded retry.",
       "The Gmail row and field locators were observed in one authorized account, but this updated contract requires renewed query-scoped authoring review and two clean runtime replays.",
-      "The structural no-result fallback waits for the declared result-row timeout and does not depend on localized Gmail copy.",
-      "The empty-result branch was not exercised in the exact query-scoped discovery session and remains an explicit unvalidated branch."
+      "The accessible no-results labels may vary by locale; a new semantic variant requires bounded model-led recovery and operator review before persistence."
     ],
     "receipts": []
   },
-  "version": "0.5.0"
+  "version": "0.6.0"
 }
