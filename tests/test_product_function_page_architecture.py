@@ -134,17 +134,20 @@ def test_italy_function_pages_honor_the_requested_language() -> None:
         assert 'const safeLang = "it";' not in page
 
 
-def test_lucia_and_vera_share_the_research_function_pages() -> None:
+def test_lucia_and_vera_share_the_user_facing_research_function_page() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
     lucia = PRODUCT_PAGES["lucia"].read_text(encoding="utf-8")
 
-    for href in (
-        "../quesito-legale-fiscale/index.html",
+    shared_href = "../quesito-legale-fiscale/index.html"
+    assert f'href="{shared_href}"' in vera
+    assert f'href="{shared_href}?lang=it"' in lucia
+
+    for internal_href in (
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
     ):
-        assert f'href="{href}"' in vera
-        assert f'href="{href}?lang=it"' in lucia
+        assert f'href="{internal_href}"' not in vera
+        assert f'href="{internal_href}?lang=it"' in lucia
 
 
 def test_lucia_and_vera_shared_studio_pages_are_product_neutral() -> None:
@@ -239,47 +242,44 @@ def test_product_directories_pass_the_exact_area_to_function_pages() -> None:
         assert 'url.searchParams.set("area", area);' in page
 
 
-def test_vera_names_the_country_section_as_area_four() -> None:
+def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
 
-    for text in (
-        '<article class="workstream" id="jurisdiction" data-jurisdiction-section hidden>',
-        'data-i18n="jurisdiction.index">Area 4</span>',
-        'data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h3>',
-        "La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.",
-        '"jurisdiction.index": "Area 4"',
-        '"jurisdiction.index": "Domaine 4"',
-        '"jurisdiction.index": "Bereich 4"',
-        '"jurisdiction.index": "Área 4"',
-    ):
-        assert text in vera
-    assert "country-pack-head" not in vera
-    assert "Funzioni disponibili per l’Italia" not in vera
+    assert 'id="jurisdiction"' not in vera
+    assert 'href="#jurisdiction"' not in vera
+    assert "data-jurisdiction-section" not in vera
+    assert "data-jurisdiction-nav" not in vera
+    assert vera.count('data-jurisdiction-item="it"') == 7
+    assert 'id="area-matters"' in vera
+    assert 'id="area-analysis"' in vera
+    assert 'id="area-studio"' in vera
 
 
-def test_vera_navigation_links_to_the_four_work_areas() -> None:
+def test_vera_navigation_links_to_the_five_user_job_areas() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
     navigation_css = (SHARED / "product-navigation.css").read_text(encoding="utf-8")
 
     for href, key in (
         ("#area-clients", "nav.clients"),
+        ("#area-matters", "nav.matters"),
         ("#area-accounting", "nav.accounting"),
-        ("#area-outputs", "nav.outputs"),
-        ("#jurisdiction", "nav.jurisdiction"),
+        ("#area-analysis", "nav.analysis"),
+        ("#area-studio", "nav.studio"),
     ):
         assert f'href="{href}"' in vera
         assert f'data-i18n="{key}"' in vera
 
     for label in (
-        "Clienti e fascicoli",
-        "Controlli e analisi",
-        "Report, comunicazione e ricerca",
-        "Formati, enti e procedure italiane",
-        "Clients and files",
-        "Functions available for the United Kingdom",
-        "Fonctions disponibles pour Genève",
-        "Verfügbare Funktionen für Zürich",
-        "Funciones disponibles para el mercado seleccionado",
+        "Clienti, incarichi e documenti",
+        "Pratiche e adempimenti",
+        "Controlli e riconciliazioni",
+        "Pianificazione, analisi e report",
+        "Ricerca, comunicazione e sviluppo dello studio",
+        "Clients, engagements, and documents",
+        "Matters and compliance",
+        "Dossiers et obligations",
+        "Verfahren und Pflichten",
+        "Expedientes y obligaciones",
     ):
         assert label in vera
 
