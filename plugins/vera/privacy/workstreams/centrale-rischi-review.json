@@ -1,0 +1,92 @@
+{
+  "schema_version": 3,
+  "workstream": "centrale-rischi-review",
+  "display_name": "Centrale Rischi Review",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "scripts",
+    "assets"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "centrale-rischi-mapping-inspection",
+        "purpose": "Establish the exact exposure table, columns, duration classes, risk families, report perimeter and reviewed recipe before calculation",
+        "content": "User instructions; supplied export and sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete supplied CSV or Excel population is read locally to inventory tables. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in previews and are not automatically anonymized or pseudonymized. Source roles and value meaning remain model-led and professionally reviewed rather than keyword-classified.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "centrale-rischi-post-calculation-review",
+        "purpose": "Interpret exact calculated CR facts and identify observations, hypotheses, questions, missing evidence and limitations",
+        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 guarantees, up to 20 supplied prejudicial events, coverage, controls, source IDs and hashes, and limitations. Raw source populations, absolute paths and original filenames are excluded from this projection by default.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "centrale-rischi-commentary",
+        "purpose": "Prepare a metric-linked professional-review draft without changing calculated facts",
+        "content": "The bounded calculated context plus draft observations and hypotheses tied to existing metric IDs, professional questions and limitations. The finalizer validates schema, blocks failed controls, and checks metric-reference closure; duration meaning, exposure-family meaning, materiality, causation, credit judgment and professional approval remain model-led or professional judgments.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "client-engagement-path-isolation",
+      "control": "Every Codex inspector, calculation and finalization writer requires a digest-valid Studio Archive centrale-rischi-review context, accepts only exact receipted inputs or current-run outputs, and writes only below that run's output directory."
+    },
+    {
+      "id": "explicit-reviewed-value-mapping",
+      "control": "The inspector does not assign a table role, maturity class or exposure family. Calculation requires an inventory-bound recipe with a named, timestamped reviewed mapping that exhaustively maps each observed duration and risk-category value."
+    },
+    {
+      "id": "exact-calculation-boundary",
+      "control": "Dates and monetary values must parse exactly. The runner calculates overruns per row only after a reviewed suffering classification and applies max(used minus operational granted, zero) only to non-suffering rows, without offsetting another operation or intermediary. Utilization is reported by reviewed risk category rather than as one indiscriminate cross-category ratio. Declared control totals outside tolerance block the analysis."
+    },
+    {
+      "id": "missing-evidence-fail-visible",
+      "control": "Pregiudizievoli, multi-month movements and financial-statement ratios remain explicitly unavailable when required evidence is absent; the workflow never substitutes model inference or a universal credit threshold."
+    },
+    {
+      "id": "bounded-post-calculation-model-context",
+      "control": "The deterministic post-calculation projection excludes raw source populations, absolute paths and original filenames and exposes only calculated metrics, bounded series, bounded exceptions, coverage, controls, lineage IDs and limitations."
+    },
+    {
+      "id": "metric-reference-closure",
+      "control": "Final observations and hypotheses must reference existing metric IDs. The finalizer validates shape and reference closure while preserving draft_pending_professional_review and never assigning source meaning, materiality, causation, credit judgment or approval."
+    },
+    {
+      "id": "acquisition-adapter-separation",
+      "control": "Portal navigation, browser automation, PEC retrieval and PDF extraction are upstream evidence-acquisition routes, not part of the calculation contract. Their own receipts and review are required before a normalized export becomes a workflow input."
+    },
+    {
+      "id": "pdf-layout-provenance",
+      "control": "A PDF-derived normalization must retain the source document hash, page, row or region locator, current-versus-previous record status and available validity dates. The initial engine rejects a PDF-derived recipe without the required provenance mappings and does not treat linear text extraction as a validated parser."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-25",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "f5f025b665528d70d3bcd76867d0e55aa39455616cdce419517b0b9bee009b13"
+  }
+}
