@@ -3448,16 +3448,13 @@ def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_pr
     assert "window.location.replace" not in page
 
 
-def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
+def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
     core_start = page.index('id="core"')
     core_end = page.index("</section>", core_start)
-    italy_start = page.index('id="jurisdiction"')
-    italy_end = page.index("</section>", italy_start)
     core = page[core_start:core_end]
-    italy = page[italy_start:italy_end]
 
     for module_link in (
         "../new-client/index.html#journey",
@@ -3473,13 +3470,13 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../comunicazione-professionale/index.html",
         "../presenza-digitale-studio/index.html",
         "../report-builder/index.html",
-        "../prompt-optimizer/index.html",
-        "../deep-research-validator/index.html",
+        "../quesito-legale-fiscale/index.html",
         "../studio-archive/index.html",
         "../browser-automation/index.html",
     ):
         assert f'href="{module_link}"' in core
     for module_link in (
+        "../bilancio-xbrl-it/index.html",
         "../bandi-agevolazioni/index.html",
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
@@ -3487,27 +3484,34 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
-        assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 37
-    assert core.count('class="module-row"') == 37
-    assert italy.count('data-jurisdiction-item="it"') == 7
-    assert italy.count('data-jurisdiction-item="en"') == 1
-    assert italy.count('data-jurisdiction-item="fr"') == 1
-    assert italy.count('data-jurisdiction-item="de"') == 1
-    for area_id in ("area-clients", "area-accounting", "area-outputs"):
+        module = re.search(
+            rf'<a class="module-row"[^>]+href="{re.escape(module_link)}"[^>]*>',
+            core,
+        )
+        assert module is not None
+        assert 'data-jurisdiction-item="it"' in module.group(0)
+    assert core.count(" data-module-link") == 26
+    assert core.count('class="module-row"') == 26
+    assert core.count('data-jurisdiction-item="it"') == 7
+    for language in ("en", "fr", "de"):
+        assert f'data-jurisdiction-item="{language}"' not in core
+    for area_id in (
+        "area-clients",
+        "area-matters",
+        "area-accounting",
+        "area-analysis",
+        "area-studio",
+    ):
         assert f'<article class="workstream" id="{area_id}">' in core
     assert 'id="modello"' not in page
     assert 'id="core"' in page
-    assert 'id="jurisdiction"' in page
+    assert 'id="jurisdiction"' not in page
     assert 'id="video"' not in page
     assert 'id="installa"' in page
     assert "Core multilingue + pacchetto Italia" not in page
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
-    assert "FatturaPA" in italy
-    assert (
-        'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
-        'de: "CH-ZH", es: null };'
-    ) in page
+    assert "FatturaPA" in core
+    assert "const jurisdictionsByPage" not in page
     assert "item.hidden = item.dataset.jurisdictionItem !== lang" in page
     assert (
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
@@ -3586,8 +3590,7 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.financialAnalysis.title",
         "module.communication.title",
         "module.report.title",
-        "module.prompt.title",
-        "module.research.title",
+        "module.question.title",
     )
     for title_key in title_keys:
         assert page.count(f'data-i18n="{title_key}"') == 1
@@ -3607,41 +3610,39 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_vera_page_groups_client_file_workflows_and_explains_boundaries() -> None:
+def test_vera_page_lists_client_file_workflows_without_an_extra_subgroup() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    group = re.search(
-        r'<div class="module-cluster"[^>]+data-vera-workflow-group="client-file".*?</div>',
-        page,
-        flags=re.DOTALL,
-    )
-    organization = re.search(
-        r'<a[^>]+id="archive-organization".*?</a>',
+    area = re.search(
+        r'<article class="workstream" id="area-clients">.*?</article>',
         page,
         flags=re.DOTALL,
     )
 
-    assert group is not None
-    assert organization is not None
-    group_markup = group.group(0)
-    assert 'data-i18n="group.clientFile.title"' in group_markup
-    assert 'data-i18n="group.clientFile.copy"' in group_markup
-    assert "Archiviazione e ricerca nel fascicolo cliente" in group_markup
-    assert "fonti importate" in group_markup
-    assert "decisioni" in group_markup
-    assert "output verificati" in group_markup
-    assert "non vengono copiate o modificate" in group_markup
-    assert group_markup.index('id="new-client"') < group_markup.index(
+    assert area is not None
+    area_markup = area.group(0)
+    assert "module-cluster" not in area_markup
+    assert "group.clientFile" not in page
+    assert area_markup.index('id="new-client"') < area_markup.index(
         'id="studio-archive"'
     )
-    assert group_markup.index('id="studio-archive"') < group_markup.index(
+    assert area_markup.index('id="studio-archive"') < area_markup.index(
         'id="archive-organization"'
     )
-    assert 'id="browser-automation"' not in group_markup
-    assert 'href="../archive-organization/index.html"' in organization.group(0)
-    assert 'data-i18n="module.archiveOrganization.title"' in organization.group(0)
-    assert 'data-i18n="module.archiveOrganization"' in organization.group(0)
+    for workflow_id, href in (
+        ("new-client", "../new-client/index.html#journey"),
+        ("studio-archive", "../studio-archive/index.html"),
+        ("archive-organization", "../archive-organization/index.html"),
+    ):
+        workflow = re.search(
+            rf'<a[^>]+id="{workflow_id}".*?</a>',
+            area_markup,
+            flags=re.DOTALL,
+        )
+        assert workflow is not None
+        assert f'href="{href}"' in workflow.group(0)
+        assert "<p" not in workflow.group(0)
 
 
 def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
@@ -4285,7 +4286,7 @@ def test_registro_imprese_sari_page_explains_the_practice_plan_journey() -> None
         assert snippet in page
 
 
-def test_homepage_routes_deep_research_validator_through_vera() -> None:
+def test_homepage_does_not_expose_the_internal_deep_research_validator() -> None:
     source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
         encoding="utf-8"
     )
@@ -4294,8 +4295,8 @@ def test_homepage_routes_deep_research_validator_through_vera() -> None:
     )
 
     assert '"href": "/static/shared/deep-research-validator/index.html"' not in source
-    assert "../deep-research-validator/index.html" in page
-    assert "Validazione ricerca" in page
+    assert 'href="../deep-research-validator/index.html"' not in page
+    assert 'href="../quesito-legale-fiscale/index.html"' in page
 
 
 def test_check_entries_page_matches_plugin_site_pattern() -> None:
@@ -5176,9 +5177,10 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "Vera",
             (
                 "#area-clients",
+                "#area-matters",
                 "#area-accounting",
-                "#area-outputs",
-                "#jurisdiction",
+                "#area-analysis",
+                "#area-studio",
             ),
         ),
         (
@@ -5361,7 +5363,7 @@ def test_companion_overview_video_follows_the_intended_product_story(
     )
     if companion == "vera":
         assert page.index('id="installa"') < page.index('id="core"')
-        assert page.index('id="core"') < page.index('id="jurisdiction"')
+        assert 'id="jurisdiction"' not in page
         assert 'id="assurance"' not in page
         assert "data-featured-video" not in page
         assert 'id="video"' not in page
@@ -5770,7 +5772,9 @@ def test_vera_module_links_preserve_language_without_changing_market() -> None:
     assert 'url.searchParams.set("lang", lang)' in page
     assert "link.dataset.nativeLanguage" in page
     assert ": withLanguage(link.dataset.baseHref, lang)" in page
-    assert "es: null" in page
+    assert 'es: "../new-client/index.html#file-preparation"' in page
+    assert "const jurisdictionsByPage" not in page
+    assert "item.hidden = item.dataset.jurisdictionItem !== lang" in page
     assert "window.location.replace" not in page
 
 

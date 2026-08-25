@@ -776,86 +776,77 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
     ) == _catalog_workflow_names(
         catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
     )
-    assert set(re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)) == (
-        _catalog_workflow_names(
-            catalog, "Cross-cutting answer assurance", "Developer governance"
-        )
-    )
+    assert not re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)
+    for internal_href in (
+        "../prompt-optimizer/index.html",
+        "../deep-research-validator/index.html",
+    ):
+        assert f'href="{internal_href}"' not in core
 
 
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    jurisdiction = _article_markup(page, "jurisdiction")
-    common_workstreams = core.replace(jurisdiction, "")
-    expected_common_module_count = 27
-    expected_jurisdiction_module_count = 10
+    expected_module_count = 26
+    module_hrefs = re.findall(
+        r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
+    )
 
-    assert core.count('class="module-row"') == (
-        expected_common_module_count + expected_jurisdiction_module_count
-    )
-    assert (
-        jurisdiction.count('class="module-row"') == expected_jurisdiction_module_count
-    )
+    assert core.count('class="module-row"') == expected_module_count
+    assert len(module_hrefs) == expected_module_count
+    assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert jurisdiction.count('data-jurisdiction-item="it"') == 7
-    assert jurisdiction.count('data-jurisdiction-item="en"') == 1
-    assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
-    assert jurisdiction.count('data-jurisdiction-item="de"') == 1
+    assert core.count('data-jurisdiction-item="it"') == 7
+    for language in ("en", "fr", "de"):
+        assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
         "../new-client/index.html#journey",
-        "../avviso-intake/index.html",
+        "../studio-archive/index.html",
+        "../archive-organization/index.html",
         "../dati-fiscali-strutturati/index.html",
         "../email-cliente/index.html",
+        "../avviso-intake/index.html",
         "../fatture-xml-check/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
-        "../archive-organization/index.html",
-        "../studio-archive/index.html",
+        "../bilancio-xbrl-it/index.html",
+        "../concordato-plan-review/index.html",
+        "../browser-automation/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
+        "../passive-invoice-audit/index.html",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
-        "../bilancio-xbrl-it/index.html",
+        "../sales-plan/index.html",
+        "../variance-analysis/index.html",
         "../financial-analysis/index.html",
-        "../bandi-agevolazioni/index.html",
-        "../concordato-plan-review/index.html",
         "../report-builder/index.html",
+        "../report-enti-locali/index.html",
+        "../bandi-agevolazioni/index.html",
         "../quesito-legale-fiscale/index.html",
-        "../prompt-optimizer/index.html",
-        "../deep-research-validator/index.html",
+        "../comunicazione-professionale/index.html",
+        "../presenza-digitale-studio/index.html",
     ):
         assert f'href="{expected_href}"' in core
     assert core.index('id="new-client"') < core.index('id="studio-archive"')
     assert core.index('id="studio-archive"') < core.index('id="archive-organization"')
-    for expected_href in (
-        "../fatture-xml-check/index.html",
-        "../report-enti-locali/index.html",
-        "../concordato-plan-review/index.html",
-        "../previdenza-inps/index.html",
-        "../registro-imprese-sari/index.html",
-        "../new-client/uk.html",
-        "../new-client/geneva.html",
-        "../new-client/zurich.html",
-    ):
-        assert f'href="{expected_href}"' in jurisdiction
-
-    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in common_workstreams
-    assert 'data-jurisdiction-item="it"' in common_workstreams
+    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
+    assert 'data-jurisdiction-item="it"' in core
     assert (
         'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>'
-        in common_workstreams
+        in core
     )
-    assert "Controllo scritture · FatturaPA" not in common_workstreams
-    assert "FatturaPA" in jurisdiction
+    assert "Controllo scritture · FatturaPA" not in core
     for area_href in (
         "#area-clients",
+        "#area-matters",
         "#area-accounting",
-        "#area-outputs",
-        "#jurisdiction",
+        "#area-analysis",
+        "#area-studio",
     ):
         assert f'href="{area_href}"' in page
-    assert page.index('id="core"') < page.index('id="jurisdiction"')
+    assert 'id="jurisdiction"' not in page
+    assert 'href="#jurisdiction"' not in page
     assert 'href="#video"' not in page
     assert 'id="video"' not in page
 
@@ -883,10 +874,12 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Riordino della cartella cliente",
         "Estrazione dati fiscali",
         "Richiesta documenti e chiarimenti",
-        "Controllo FatturaPA XML",
         "Esame avvisi e cartelle",
+        "Controllo FatturaPA XML",
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
+        "Bilancio OIC e XBRL",
+        "Revisione concordato preventivo",
         "Automazione web",
         "Campionamento scritture contabili",
         "Controllo scritture",
@@ -895,23 +888,13 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
         "Analisi scostamenti",
-        "Bilancio OIC e XBRL",
         "Analisi finanziaria e due diligence",
+        "Preparazione report finanziario",
+        "Report finanziario enti locali",
         "Bandi e agevolazioni",
-        "Revisione concordato preventivo",
+        "Risposta a quesiti legali e fiscali",
         "Comunicazione professionale",
         "Sito dello studio",
-        "Preparazione report finanziario",
-        "Risposta a quesiti legali e fiscali",
-        "Ottimizzazione prompt",
-        "Validazione ricerca",
-        "Bilancio OIC e XBRL",
-        "Bandi e agevolazioni",
-        "Controllo FatturaPA XML",
-        "Report finanziario enti locali",
-        "Revisione concordato preventivo",
-        "Revisione pratica INPS",
-        "Pratiche Registro Imprese",
     ]
     expected_runtime_labels = {
         "module.newClient.title": "Apertura del fascicolo cliente",
@@ -929,8 +912,6 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
         "module.question.title": "Risposta a quesiti legali e fiscali",
-        "module.prompt.title": "Ottimizzazione prompt",
-        "module.research.title": "Validazione ricerca",
     }
 
     # The public directory and marketplace use one canonical naming contract.
@@ -968,7 +949,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 34
+    assert len(labels) == 26
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1391,15 +1372,15 @@ def test_vera_hub_names_the_two_processing_categories() -> None:
 @pytest.mark.parametrize(
     "labels",
     (
-        ("Area 1", "Area 2", "Area 3"),
-        ("Area 1", "Area 2", "Area 3"),
-        ("Domaine 1", "Domaine 2", "Domaine 3"),
-        ("Bereich 1", "Bereich 2", "Bereich 3"),
-        ("Área 1", "Área 2", "Área 3"),
+        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5"),
+        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5"),
+        ("Domaine 1", "Domaine 2", "Domaine 3", "Domaine 4", "Domaine 5"),
+        ("Bereich 1", "Bereich 2", "Bereich 3", "Bereich 4", "Bereich 5"),
+        ("Área 1", "Área 2", "Área 3", "Área 4", "Área 5"),
     ),
 )
 def test_vera_hub_explains_work_area_numbers_in_every_language(
-    labels: tuple[str, str, str],
+    labels: tuple[str, str, str, str, str],
 ) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
@@ -1419,7 +1400,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 37
+    expected_module_link_count = 26
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

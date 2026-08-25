@@ -209,35 +209,6 @@
     .workstream-head p { max-width: 650px; color: var(--blue); }
     .module-directory { border-top: 2px solid var(--navy); }
 
-    .module-cluster {
-      margin-bottom: clamp(30px, 4vw, 46px);
-    }
-
-    .module-cluster__head {
-      display: grid;
-      grid-template-columns: minmax(230px, 0.72fr) minmax(0, 1.28fr) 32px;
-      gap: 28px;
-      align-items: baseline;
-      padding: 20px 4px 18px;
-      border-bottom: 1px solid var(--cyan);
-    }
-
-    .module-cluster__head h4 {
-      color: var(--navy);
-      font-size: 0.78rem;
-      font-weight: 750;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-    }
-
-    .module-cluster__head p {
-      max-width: 690px;
-      color: var(--blue);
-      font-size: 0.95rem;
-    }
-
-    .module-cluster .module-row:last-child { border-bottom-color: var(--navy); }
-
     .module-row {
       min-height: 104px;
       padding: 24px 4px;
@@ -970,7 +941,6 @@
       .comms-step::before { margin-bottom: 28px; }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
-      .module-cluster__head { grid-template-columns: 1fr; gap: 8px; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
       .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
@@ -1019,10 +989,11 @@
           <span class="product-nav__menu-icon" aria-hidden="true"></span>
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
-          <a href="#area-clients" data-i18n="nav.clients">Clienti e fascicoli</a>
-          <a href="#area-accounting" data-i18n="nav.accounting">Controlli e analisi</a>
-          <a href="#area-outputs" data-i18n="nav.outputs">Report, comunicazione e ricerca</a>
-          <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Formati, enti e procedure italiane</a>
+          <a href="#area-clients" data-i18n="nav.clients">Clienti</a>
+          <a href="#area-matters" data-i18n="nav.matters">Pratiche</a>
+          <a href="#area-accounting" data-i18n="nav.accounting">Controlli</a>
+          <a href="#area-analysis" data-i18n="nav.analysis">Analisi e report</a>
+          <a href="#area-studio" data-i18n="nav.studio">Studio e ricerca</a>
         </nav>
       </div>
       <details class="product-nav__language" data-product-nav-disclosure>
@@ -1089,30 +1060,22 @@
         <article class="workstream" id="area-clients">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.clients.index">Area 1</span>
-            <h3 data-i18n="stream.clients.title">Clienti e fascicoli</h3>
+            <h3 data-i18n="stream.clients.title">Clienti, incarichi e documenti</h3>
+            <p data-i18n="stream.clients.copy">Apre il rapporto di lavoro, conserva il fascicolo e prepara le informazioni da chiedere o estrarre.</p>
           </header>
           <div class="module-directory">
-            <div class="module-cluster" role="group" aria-labelledby="client-file-group-title" data-vera-workflow-group="client-file">
-              <header class="module-cluster__head">
-                <h4 id="client-file-group-title" data-i18n="group.clientFile.title">Gestione del fascicolo cliente</h4>
-                <p data-i18n="group.clientFile.copy">Tre funzioni distinte per aprire e conservare il fascicolo, ritrovare le fonti e modificare l’ordine dei file.</p>
-              </header>
-              <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
-                <h4 data-i18n="module.newClient.title">Apertura del fascicolo cliente</h4>
-                <p data-i18n="module.newClient">Prepara il fascicolo di avvio dai documenti ricevuti: identità, incarico, privacy, antiriciclaggio, informazioni mancanti e monitoraggio. Il professionista rivede il dossier; Vera non firma o invia documenti e non attiva il rapporto.</p>
-                <span class="module-row__arrow" aria-hidden="true">↗</span>
-              </a>
-              <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
-                <h4 data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</h4>
-                <p data-i18n="module.archive">Registra cliente, incarico, fonti importate, lavorazioni, decisioni e output verificati in un fascicolo che può essere ripreso. Cerca anche nei file locali o Google Drive, in Gmail e in una chat WhatsApp verificata; le fonti consultate non vengono copiate o modificate.</p>
-                <span class="module-row__arrow" aria-hidden="true">↗</span>
-              </a>
-              <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
-                <h4 data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</h4>
-                <p data-i18n="module.archiveOrganization">Parte da uno snapshot del fascicolo e propone categorie, nomi, spostamenti, duplicati e anomalie. Modifica i file soltanto dopo revisione e approvazione separata; registra ogni operazione e può ripristinarla.</p>
-                <span class="module-row__arrow" aria-hidden="true">↗</span>
-              </a>
-            </div>
+            <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
+              <h4 data-i18n="module.newClient.title">Apertura del fascicolo cliente</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
+              <h4 data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
+              <h4 data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
             <a class="module-row" href="../dati-fiscali-strutturati/index.html" data-module-link data-vera-subordinate-workflow="dati-fiscali-strutturati">
               <h4 data-i18n="module.newClient.includes.data">Estrazione dati fiscali</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1121,12 +1084,22 @@
               <h4 data-i18n="module.newClient.includes.email">Richiesta documenti e chiarimenti</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-subordinate-workflow="fatture-xml-check" hidden>
-              <h4 data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
+          </div>
+        </article>
+
+        <article class="workstream" id="area-matters">
+          <header class="workstream-head">
+            <span class="stream-number" data-i18n="stream.matters.index">Area 2</span>
+            <h3 data-i18n="stream.matters.title">Pratiche e adempimenti</h3>
+            <p data-i18n="stream.matters.copy">Gestisce una pratica, un obbligo o un passaggio operativo collegato a enti, portali e formati professionali.</p>
+          </header>
+          <div class="module-directory">
             <a class="module-row" id="notice-intake" href="../avviso-intake/index.html" data-module-link data-vera-workflow="avviso-intake">
               <h4 data-i18n="module.notice.title">Esame avvisi e cartelle</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-subordinate-workflow="fatture-xml-check" hidden>
+              <h4 data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="previdenza-inps" hidden>
@@ -1135,6 +1108,14 @@
             </a>
             <a class="module-row" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="registro-imprese-sari" hidden>
               <h4>Pratiche Registro Imprese</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
+              <h4>Bilancio OIC e XBRL</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
+              <h4>Revisione concordato preventivo</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="browser-automation" href="../browser-automation/index.html" data-module-link data-vera-workflow="browser-automation">
@@ -1146,8 +1127,9 @@
 
         <article class="workstream" id="area-accounting">
           <header class="workstream-head">
-            <span class="stream-number" data-i18n="stream.accounting.index">Area 2</span>
-            <h3 data-i18n="stream.accounting.title">Controlli e analisi</h3>
+            <span class="stream-number" data-i18n="stream.accounting.index">Area 3</span>
+            <h3 data-i18n="stream.accounting.title">Controlli e riconciliazioni</h3>
+            <p data-i18n="stream.accounting.copy">Controlla popolazioni, scritture, fatture e riconciliazioni senza mescolare il controllo con l’interpretazione professionale.</p>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link data-vera-workflow="journal-sampling">
@@ -1170,6 +1152,16 @@
               <h4 data-i18n="module.reconciliation.title">Riconciliazione partite aperte</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+          </div>
+        </article>
+
+        <article class="workstream" id="area-analysis">
+          <header class="workstream-head">
+            <span class="stream-number" data-i18n="stream.analysis.index">Area 4</span>
+            <h3 data-i18n="stream.analysis.title">Pianificazione, analisi e report</h3>
+            <p data-i18n="stream.analysis.copy">Trasforma dati confermati in piani, analisi finanziarie e report con basi, assunzioni e riconciliazioni visibili.</p>
+          </header>
+          <div class="module-directory">
             <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link data-vera-workflow="sales-plan">
               <h4 data-i18n="module.plan.title">Preparazione piano vendite</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1178,29 +1170,34 @@
               <h4 data-i18n="module.variance.title">Analisi scostamenti</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
-              <h4>Bilancio OIC e XBRL</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
             <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link data-vera-workflow="financial-analysis">
               <h4 data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
+              <h4 data-i18n="module.report.title">Preparazione report finanziario</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../report-enti-locali/index.html" data-module-link data-jurisdiction-item="it" hidden>
+              <h4>Report finanziario enti locali</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
         </article>
 
-        <article class="workstream" id="area-outputs">
+        <article class="workstream" id="area-studio">
           <header class="workstream-head">
-            <span class="stream-number" data-i18n="stream.outputs.index">Area 3</span>
-            <h3 data-i18n="stream.outputs.title">Report, comunicazione e ricerca</h3>
+            <span class="stream-number" data-i18n="stream.studio.index">Area 5</span>
+            <h3 data-i18n="stream.studio.title">Ricerca, comunicazione e sviluppo dello studio</h3>
+            <p data-i18n="stream.studio.copy">Prepara risposte professionali, opportunità, comunicazioni e presenza digitale dello studio.</p>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
               <h4>Bandi e agevolazioni</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
-              <h4>Revisione concordato preventivo</h4>
+            <a class="module-row" href="../quesito-legale-fiscale/index.html" data-module-link data-vera-workflow="quesito-legale-fiscale">
+              <h4 data-i18n="module.question.title">Risposta a quesiti legali e fiscali</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="professional-communication" href="../comunicazione-professionale/index.html" data-module-link data-vera-workflow="comunicazione-professionale">
@@ -1211,71 +1208,6 @@
               <h4 data-i18n="module.website.title">Sito dello studio</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
-              <h4 data-i18n="module.report.title">Preparazione report finanziario</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
-            <a class="module-row" href="../quesito-legale-fiscale/index.html" data-module-link data-vera-workflow="quesito-legale-fiscale">
-              <h4 data-i18n="module.question.title">Risposta a quesiti legali e fiscali</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
-            <a class="module-row" href="../prompt-optimizer/index.html" data-module-link data-vera-assurance-workflow="prompt-optimizer">
-              <h4 data-i18n="module.prompt.title">Ottimizzazione prompt</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
-            <a class="module-row" href="../deep-research-validator/index.html" data-module-link data-vera-assurance-workflow="deep-research-validator">
-              <h4 data-i18n="module.research.title">Validazione ricerca</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </article>
-        <article class="workstream" id="jurisdiction" data-jurisdiction-section hidden>
-          <header class="workstream-head">
-            <span class="stream-number" data-i18n="jurisdiction.index">Area 4</span>
-            <h3 data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h3>
-            <p data-i18n="jurisdiction.copy">La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.</p>
-          </header>
-          <div class="module-directory">
-        <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h4>Bilancio OIC e XBRL</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h4>Bandi e agevolazioni</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-jurisdiction-item="it" hidden>
-          <h4>Controllo FatturaPA XML</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../report-enti-locali/index.html" data-module-link data-jurisdiction-item="it" hidden>
-          <h4>Report finanziario enti locali</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h4>Revisione concordato preventivo</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h4>Revisione pratica INPS</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" id="registro-imprese-sari" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h4>Pratiche Registro Imprese</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../new-client/uk.html" data-module-link data-native-language="en" data-jurisdiction-item="en" hidden>
-          <h4>Prepare a new client file · United Kingdom</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../new-client/geneva.html" data-module-link data-native-language="fr" data-jurisdiction-item="fr" hidden>
-          <h4>Préparer le dossier d’un nouveau client · Genève</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="module-row" href="../new-client/zurich.html" data-module-link data-native-language="de" data-jurisdiction-item="de" hidden>
-          <h4>Neue Mandantenakte vorbereiten · Zürich</h4>
-          <span class="module-row__arrow" aria-hidden="true">↗</span>
-        </a>
           </div>
         </article>
       </div>
@@ -1303,13 +1235,14 @@
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
         "nav.capabilities": "Cosa fa",
-        "nav.clients": "Clienti e fascicoli",
-        "nav.accounting": "Controlli e analisi",
-        "nav.outputs": "Report, comunicazione e ricerca",
+        "nav.clients": "Clienti",
+        "nav.matters": "Pratiche",
+        "nav.accounting": "Controlli",
+        "nav.analysis": "Analisi e report",
+        "nav.studio": "Studio e ricerca",
         "nav.communication": "Comunicazione",
         "nav.website": "Sito",
         "nav.assurance": "Metodo",
-        "nav.jurisdiction": "Formati, enti e procedure italiane",
         "nav.data": "Dati",
         "language.label": "Lingua",
         "hero.eyebrow": "Assistente AI per commercialisti",
@@ -1322,18 +1255,20 @@
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
         "stream.clients.index": "Area 1",
-        "stream.clients.title": "Clienti e fascicoli",
-        "stream.clients.copy": "Dalla corrispondenza e dai documenti ricevuti a un primo fascicolo riutilizzabile.",
-        "group.clientFile.title": "Gestione del fascicolo cliente",
-        "group.clientFile.copy": "Tre funzioni distinte per aprire e conservare il fascicolo, ritrovare le fonti e modificare l’ordine dei file.",
-        "stream.accounting.index": "Area 2",
-        "stream.accounting.title": "Controlli e analisi",
-        "stream.accounting.copy": "Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.",
-        "stream.outputs.index": "Area 3",
-        "stream.outputs.title": "Report, comunicazione e ricerca",
-        "stream.outputs.copy": "Dalle fonti al report, dalla richiesta alla validazione.",
-        "stream.research.title": "Formula e verifica la ricerca",
-        "stream.research.copy": "Dalla richiesta iniziale a una base di ricerca controllabile.",
+        "stream.clients.title": "Clienti, incarichi e documenti",
+        "stream.clients.copy": "Apre il rapporto di lavoro, conserva il fascicolo e prepara le informazioni da chiedere o estrarre.",
+        "stream.matters.index": "Area 2",
+        "stream.matters.title": "Pratiche e adempimenti",
+        "stream.matters.copy": "Gestisce una pratica, un obbligo o un passaggio operativo collegato a enti, portali e formati professionali.",
+        "stream.accounting.index": "Area 3",
+        "stream.accounting.title": "Controlli e riconciliazioni",
+        "stream.accounting.copy": "Controlla popolazioni, scritture, fatture e riconciliazioni senza mescolare il controllo con l’interpretazione professionale.",
+        "stream.analysis.index": "Area 4",
+        "stream.analysis.title": "Pianificazione, analisi e report",
+        "stream.analysis.copy": "Trasforma dati confermati in piani, analisi finanziarie e report con basi, assunzioni e riconciliazioni visibili.",
+        "stream.studio.index": "Area 5",
+        "stream.studio.title": "Ricerca, comunicazione e sviluppo dello studio",
+        "stream.studio.copy": "Prepara risposte professionali, opportunità, comunicazioni e presenza digitale dello studio.",
         "module.newClient.title": "Apertura del fascicolo cliente",
         "module.newClient": "Prepara il fascicolo di avvio dai documenti ricevuti: identità, incarico, privacy, antiriciclaggio, informazioni mancanti e monitoraggio. Il professionista rivede il dossier; Vera non firma o invia documenti e non attiva il rapporto.",
         "module.newClient.includesLabel": "Funzioni incluse",
@@ -1351,9 +1286,6 @@
         "module.sampling": "Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.",
         "module.entries.title": "Controllo scritture",
         "module.entries": "Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.",
-        "jurisdiction.index": "Area 4",
-        "jurisdiction.title": "Formati, enti e procedure italiane",
-        "jurisdiction.copy": "La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.",
         "module.bank.title": "Riconciliazione banca-contabilità",
         "module.bank": "Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.",
         "module.reconciliation.title": "Riconciliazione partite aperte",
@@ -1460,13 +1392,14 @@
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
         "nav.capabilities": "What it does",
-        "nav.clients": "Clients and files",
-        "nav.accounting": "Checks and analysis",
-        "nav.outputs": "Reports, communication, and research",
+        "nav.clients": "Clients",
+        "nav.matters": "Matters",
+        "nav.accounting": "Checks",
+        "nav.analysis": "Analysis and reports",
+        "nav.studio": "Firm and research",
         "nav.communication": "Communication",
         "nav.website": "Website",
         "nav.assurance": "Method",
-        "nav.jurisdiction": "Functions available for the United Kingdom",
         "nav.data": "Data",
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
@@ -1479,18 +1412,20 @@
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
         "stream.clients.index": "Area 1",
-        "stream.clients.title": "Clients and files",
-        "stream.clients.copy": "From live correspondence and incoming documents to a reusable work file.",
-        "group.clientFile.title": "Client file management",
-        "group.clientFile.copy": "Three separate functions to open and preserve the file, find evidence in it, and change how its documents are arranged.",
-        "stream.accounting.index": "Area 2",
-        "stream.accounting.title": "Checks and analysis",
-        "stream.accounting.copy": "From the journal to entries, banks, open items, the Plan, variance analysis and financial analysis.",
-        "stream.outputs.index": "Area 3",
-        "stream.outputs.title": "Reports, communication, and research",
-        "stream.outputs.copy": "From sources to a report, from the question to validation.",
-        "stream.research.title": "Frame and verify research",
-        "stream.research.copy": "From the initial question to a controllable research base.",
+        "stream.clients.title": "Clients, engagements, and documents",
+        "stream.clients.copy": "Open the working relationship, preserve the client file, and prepare information to request or extract.",
+        "stream.matters.index": "Area 2",
+        "stream.matters.title": "Matters and compliance",
+        "stream.matters.copy": "Handle a matter, obligation, or operational step involving authorities, portals, and professional formats.",
+        "stream.accounting.index": "Area 3",
+        "stream.accounting.title": "Checks and reconciliations",
+        "stream.accounting.copy": "Check populations, entries, invoices, and reconciliations without conflating the control with professional interpretation.",
+        "stream.analysis.index": "Area 4",
+        "stream.analysis.title": "Planning, analysis, and reporting",
+        "stream.analysis.copy": "Turn confirmed data into plans, financial analysis, and reports with visible bases, assumptions, and reconciliations.",
+        "stream.studio.index": "Area 5",
+        "stream.studio.title": "Research, communication, and firm development",
+        "stream.studio.copy": "Prepare professional answers, opportunities, communications, and the firm’s digital presence.",
         "module.newClient.title": "Open a new client file · United Kingdom",
         "module.newClient": "Prepare the initial file from the documents received: identity, engagement, privacy, AML, missing evidence, and monitoring. The professional reviews the dossier; Vera does not sign or send documents and does not activate the relationship.",
         "module.newClient.includesLabel": "Included workflows",
@@ -1508,9 +1443,6 @@
         "module.sampling": "Qualifies the journal layout, then normalizes the population and builds a reproducible sample. Unreliable fields stop the run.",
         "module.entries.title": "Check entries against supporting documents",
         "module.entries": "Connects entries and support only when the relationship is verifiable; weak candidates remain exceptions.",
-        "jurisdiction.index": "Area 4",
-        "jurisdiction.title": "Functions available for the United Kingdom",
-        "jurisdiction.copy": "Vera organizes the incoming tax folder, missing material, firm memo and client request.",
         "module.bank.title": "Reconcile bank and accounting records",
         "module.bank": "Compares bank and accounting data after a confirmed mapping and closes only relationships that satisfy the reconciliation contract.",
         "module.reconciliation.title": "Reconcile open items",
@@ -1617,13 +1549,14 @@
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
         "nav.capabilities": "Ce qu’elle fait",
-        "nav.clients": "Clients et dossiers",
-        "nav.accounting": "Contrôles et analyses",
-        "nav.outputs": "Rapports, communication et recherche",
+        "nav.clients": "Clients",
+        "nav.matters": "Dossiers",
+        "nav.accounting": "Contrôles",
+        "nav.analysis": "Analyses et rapports",
+        "nav.studio": "Cabinet et recherche",
         "nav.communication": "Communication",
         "nav.website": "Site web",
         "nav.assurance": "Méthode",
-        "nav.jurisdiction": "Fonctions disponibles pour Genève",
         "nav.data": "Données",
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
@@ -1636,18 +1569,20 @@
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
         "stream.clients.index": "Domaine 1",
-        "stream.clients.title": "Clients et dossiers",
-        "stream.clients.copy": "Des échanges et documents reçus à un dossier de travail réutilisable.",
-        "group.clientFile.title": "Gestion du dossier client",
-        "group.clientFile.copy": "Trois fonctions distinctes pour ouvrir et conserver le dossier, retrouver ses sources et modifier le classement des documents.",
-        "stream.accounting.index": "Domaine 2",
-        "stream.accounting.title": "Contrôles et analyses",
-        "stream.accounting.copy": "Du journal aux écritures, aux banques, aux postes ouverts, au Plan, à l’analyse des écarts et à l’analyse financière.",
-        "stream.outputs.index": "Domaine 3",
-        "stream.outputs.title": "Rapports, communication et recherche",
-        "stream.outputs.copy": "Des sources au rapport, de la question à la validation.",
-        "stream.research.title": "Cadrer et vérifier la recherche",
-        "stream.research.copy": "De la question initiale à une base de recherche contrôlable.",
+        "stream.clients.title": "Clients, missions et documents",
+        "stream.clients.copy": "Ouvre la relation de travail, conserve le dossier client et prépare les informations à demander ou à extraire.",
+        "stream.matters.index": "Domaine 2",
+        "stream.matters.title": "Dossiers et obligations",
+        "stream.matters.copy": "Traite un dossier, une obligation ou une étape opérationnelle liée aux autorités, portails et formats professionnels.",
+        "stream.accounting.index": "Domaine 3",
+        "stream.accounting.title": "Contrôles et rapprochements",
+        "stream.accounting.copy": "Contrôle les populations, écritures, factures et rapprochements sans confondre le contrôle avec l’interprétation professionnelle.",
+        "stream.analysis.index": "Domaine 4",
+        "stream.analysis.title": "Planification, analyses et rapports",
+        "stream.analysis.copy": "Transforme des données confirmées en plans, analyses financières et rapports avec des bases, hypothèses et rapprochements visibles.",
+        "stream.studio.index": "Domaine 5",
+        "stream.studio.title": "Recherche, communication et développement du cabinet",
+        "stream.studio.copy": "Prépare des réponses professionnelles, des opportunités, des communications et la présence numérique du cabinet.",
         "module.newClient.title": "Ouvrir le dossier d’un nouveau client · Genève",
         "module.newClient": "Prépare le dossier initial à partir des documents reçus : identité, mission, confidentialité, AML, pièces manquantes et suivi. Le professionnel revoit le dossier ; Vera ne signe ni n’envoie de documents et n’active pas la relation.",
         "module.newClient.includesLabel": "Fonctions incluses",
@@ -1665,9 +1600,6 @@
         "module.sampling": "Qualifie la structure du journal, puis normalise la population et construit un échantillon reproductible. Des champs non fiables arrêtent le traitement.",
         "module.entries.title": "Vérifier les écritures avec les justificatifs",
         "module.entries": "Relie écritures et justificatifs uniquement lorsque la relation est vérifiable ; les candidats faibles restent des exceptions.",
-        "jurisdiction.index": "Domaine 4",
-        "jurisdiction.title": "Fonctions disponibles pour Genève",
-        "jurisdiction.copy": "Vera organise les documents reçus, les pièces manquantes, le mémo du cabinet et la demande au client.",
         "module.bank.title": "Rapprocher les relevés bancaires et la comptabilité",
         "module.bank": "Compare banque et comptabilité après confirmation du mapping et ne clôt que les relations conformes au contrat de rapprochement.",
         "module.reconciliation.title": "Rapprocher les postes ouverts",
@@ -1774,13 +1706,14 @@
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
         "nav.capabilities": "Was sie kann",
-        "nav.clients": "Mandanten und Akten",
-        "nav.accounting": "Kontrollen und Analysen",
-        "nav.outputs": "Berichte, Kommunikation und Recherche",
+        "nav.clients": "Mandanten",
+        "nav.matters": "Verfahren",
+        "nav.accounting": "Kontrollen",
+        "nav.analysis": "Analyse und Berichte",
+        "nav.studio": "Kanzlei und Recherche",
         "nav.communication": "Kommunikation",
         "nav.website": "Website",
         "nav.assurance": "Methode",
-        "nav.jurisdiction": "Verfügbare Funktionen für Zürich",
         "nav.data": "Daten",
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
@@ -1793,18 +1726,20 @@
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
         "stream.clients.index": "Bereich 1",
-        "stream.clients.title": "Mandanten und Akten",
-        "stream.clients.copy": "Von Korrespondenz und eingegangenen Dokumenten zur wiederverwendbaren Arbeitsakte.",
-        "group.clientFile.title": "Mandantenakte verwalten",
-        "group.clientFile.copy": "Drei getrennte Funktionen, um die Akte anzulegen und zu erhalten, Nachweise darin zu finden und die Ablage der Dokumente zu ändern.",
-        "stream.accounting.index": "Bereich 2",
-        "stream.accounting.title": "Kontrollen und Analysen",
-        "stream.accounting.copy": "Vom Journal zu Buchungen, Banken, offenen Posten, zum Plan, zur Abweichungsanalyse und zur Finanzanalyse.",
-        "stream.outputs.index": "Bereich 3",
-        "stream.outputs.title": "Berichte, Kommunikation und Recherche",
-        "stream.outputs.copy": "Von den Quellen zum Bericht, von der Frage zur Validierung.",
-        "stream.research.title": "Recherche eingrenzen und prüfen",
-        "stream.research.copy": "Von der Ausgangsfrage zu einer kontrollierbaren Recherchegrundlage.",
+        "stream.clients.title": "Mandanten, Mandate und Dokumente",
+        "stream.clients.copy": "Eröffnet die Arbeitsbeziehung, erhält die Mandantenakte und bereitet anzufordernde oder zu extrahierende Informationen vor.",
+        "stream.matters.index": "Bereich 2",
+        "stream.matters.title": "Verfahren und Pflichten",
+        "stream.matters.copy": "Bearbeitet Verfahren, Pflichten und operative Schritte mit Behörden, Portalen und berufsbezogenen Formaten.",
+        "stream.accounting.index": "Bereich 3",
+        "stream.accounting.title": "Kontrollen und Abstimmungen",
+        "stream.accounting.copy": "Prüft Grundgesamtheiten, Buchungen, Rechnungen und Abstimmungen, ohne die Prüfung mit der beruflichen Würdigung zu vermischen.",
+        "stream.analysis.index": "Bereich 4",
+        "stream.analysis.title": "Planung, Analyse und Berichte",
+        "stream.analysis.copy": "Überführt bestätigte Daten in Pläne, Finanzanalysen und Berichte mit sichtbaren Grundlagen, Annahmen und Abstimmungen.",
+        "stream.studio.index": "Bereich 5",
+        "stream.studio.title": "Recherche, Kommunikation und Kanzleientwicklung",
+        "stream.studio.copy": "Erstellt fachliche Antworten, Fördermöglichkeiten, Kommunikation und den digitalen Auftritt der Kanzlei.",
         "module.newClient.title": "Neue Mandantenakte anlegen · Zürich",
         "module.newClient": "Bereitet aus den eingegangenen Unterlagen die Anfangsakte vor: Identität, Mandat, Datenschutz, AML, fehlende Nachweise und Überwachung. Der Berufsträger prüft das Dossier; Vera unterschreibt oder versendet keine Dokumente und aktiviert das Mandat nicht.",
         "module.newClient.includesLabel": "Enthaltene Workflows",
@@ -1822,9 +1757,6 @@
         "module.sampling": "Qualifiziert das Journalformat, normalisiert danach die Grundgesamtheit und erstellt eine reproduzierbare Stichprobe. Unzuverlässige Felder stoppen den Lauf.",
         "module.entries.title": "Buchungen mit Belegen prüfen",
         "module.entries": "Verknüpft Buchungen und Belege nur bei nachweisbarer Beziehung; schwache Kandidaten bleiben Ausnahmen.",
-        "jurisdiction.index": "Bereich 4",
-        "jurisdiction.title": "Verfügbare Funktionen für Zürich",
-        "jurisdiction.copy": "Vera ordnet eingegangene Unterlagen, fehlende Nachweise, Kanzleivermerk und Mandantenanfrage.",
         "module.bank.title": "Bank und Buchhaltung abstimmen",
         "module.bank": "Vergleicht Bank und Buchhaltung nach bestätigtem Mapping und schließt nur Beziehungen, die den Abstimmungsvertrag erfüllen.",
         "module.reconciliation.title": "Offene Posten abstimmen",
@@ -1931,13 +1863,14 @@
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
         "nav.capabilities": "Qué hace",
-        "nav.clients": "Clientes y expedientes",
-        "nav.accounting": "Controles y análisis",
-        "nav.outputs": "Informes, comunicación e investigación",
+        "nav.clients": "Clientes",
+        "nav.matters": "Expedientes",
+        "nav.accounting": "Controles",
+        "nav.analysis": "Análisis e informes",
+        "nav.studio": "Despacho e investigación",
         "nav.communication": "Comunicación",
         "nav.website": "Sitio web",
         "nav.assurance": "Método",
-        "nav.jurisdiction": "Funciones disponibles para el mercado seleccionado",
         "nav.data": "Datos",
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
@@ -1950,18 +1883,20 @@
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
         "stream.clients.index": "Área 1",
-        "stream.clients.title": "Clientes y expedientes",
-        "stream.clients.copy": "De la correspondencia y los documentos recibidos a un expediente de trabajo reutilizable.",
-        "group.clientFile.title": "Gestión del expediente del cliente",
-        "group.clientFile.copy": "Tres funciones distintas para abrir y conservar el expediente, encontrar sus fuentes y cambiar cómo se ordenan los documentos.",
-        "stream.accounting.index": "Área 2",
-        "stream.accounting.title": "Controles y análisis",
-        "stream.accounting.copy": "Del diario a los asientos, los bancos, las partidas abiertas, el Plan, el análisis de desviaciones y el análisis financiero.",
-        "stream.outputs.index": "Área 3",
-        "stream.outputs.title": "Informes, comunicación e investigación",
-        "stream.outputs.copy": "De las fuentes al informe, de la pregunta a la validación.",
-        "stream.research.title": "Delimitar y verificar la investigación",
-        "stream.research.copy": "De la pregunta inicial a una base de investigación controlable.",
+        "stream.clients.title": "Clientes, encargos y documentos",
+        "stream.clients.copy": "Inicia la relación de trabajo, conserva el expediente y prepara la información que debe solicitarse o extraerse.",
+        "stream.matters.index": "Área 2",
+        "stream.matters.title": "Expedientes y obligaciones",
+        "stream.matters.copy": "Gestiona un expediente, una obligación o un paso operativo relacionado con organismos, portales y formatos profesionales.",
+        "stream.accounting.index": "Área 3",
+        "stream.accounting.title": "Controles y conciliaciones",
+        "stream.accounting.copy": "Comprueba poblaciones, asientos, facturas y conciliaciones sin confundir el control con la interpretación profesional.",
+        "stream.analysis.index": "Área 4",
+        "stream.analysis.title": "Planificación, análisis e informes",
+        "stream.analysis.copy": "Convierte datos confirmados en planes, análisis financieros e informes con bases, supuestos y conciliaciones visibles.",
+        "stream.studio.index": "Área 5",
+        "stream.studio.title": "Investigación, comunicación y desarrollo del despacho",
+        "stream.studio.copy": "Prepara respuestas profesionales, oportunidades, comunicaciones y la presencia digital del despacho.",
         "module.newClient.title": "Abrir el expediente de un nuevo cliente",
         "module.newClient": "Prepara el expediente inicial a partir de los documentos recibidos: identidad, encargo, privacidad, AML, evidencias que faltan y seguimiento. El profesional revisa el dossier; Vera no firma ni envía documentos y no activa la relación.",
         "module.newClient.includesLabel": "Flujos incluidos",
@@ -1979,9 +1914,6 @@
         "module.sampling": "Cualifica el formato del diario, normaliza después la población y construye una muestra reproducible. Los campos no fiables detienen la ejecución.",
         "module.entries.title": "Comprobar los asientos con los documentos justificativos",
         "module.entries": "Relaciona asientos y justificantes solo cuando el vínculo es verificable; los candidatos débiles siguen siendo excepciones.",
-        "jurisdiction.index": "Área 4",
-        "jurisdiction.title": "Funciones disponibles para el mercado seleccionado",
-        "jurisdiction.copy": "Esta sección aparece cuando hay un flujo específico disponible para el mercado de esta página.",
         "module.bank.title": "Conciliar los registros bancarios y contables",
         "module.bank": "Compara banco y contabilidad tras confirmar el mapeo y solo cierra relaciones que cumplen el contrato de conciliación.",
         "module.reconciliation.title": "Conciliar partidas abiertas",
@@ -2097,7 +2029,6 @@
     const openGraphDescription = document.querySelector('meta[property="og:description"]');
     const openGraphLocale = document.getElementById("og-locale");
     const openGraphLocales = { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES" };
-    const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", de: "CH-ZH", es: null };
     const newClientPages = {
       it: "../new-client/index.html#journey",
       en: "../new-client/uk.html",
@@ -2174,9 +2105,6 @@
         button.classList.toggle("is-active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
       });
-      const jurisdiction = jurisdictionsByPage[lang];
-      document.querySelector("[data-jurisdiction-section]").hidden = !jurisdiction;
-      document.querySelector("[data-jurisdiction-nav]").hidden = !jurisdiction;
       document.querySelectorAll("[data-jurisdiction-item]").forEach((item) => {
         item.hidden = item.dataset.jurisdictionItem !== lang;
       });
