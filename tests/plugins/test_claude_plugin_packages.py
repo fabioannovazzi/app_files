@@ -596,7 +596,7 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         "modules/archive-organization/skills/archive-organization/SKILL.md"
     ]
     audit = cowork_instruction_docs[
-        "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
+        "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
     ]
     journal = cowork_instruction_docs[
         "modules/journal-sampling/skills/journal-sampling/SKILL.md"
@@ -677,7 +677,7 @@ def test_cowork_projects_every_host_review_gate_to_pending_review(
     cowork_instruction_docs,
 ) -> None:
     projected_review_skills = (
-        "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md",
+        "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
         "modules/check-entries/skills/check-entries/SKILL.md",
         "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
         "modules/deep-research-validator/skills/deep-research-validator/SKILL.md",

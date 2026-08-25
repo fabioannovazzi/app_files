@@ -21,7 +21,7 @@ def _check_entries_payload_digest(payload: dict[str, object]) -> str:
 
 def _review_payload(plugin: str) -> dict[str, object]:
     item_types = {
-        "audit-reconciliation": "missing_evidence_review",
+        "open-item-reconciliation": "missing_evidence_review",
         "journal-bank-reconciliation": "unmatched_bank",
         "check-entries": "mismatch",
     }
@@ -81,10 +81,10 @@ def _review_payload(plugin: str) -> dict[str, object]:
     ("plugin", "validate_tool", "render_tool", "case_tool"),
     [
         (
-            "audit-reconciliation",
-            "validate_audit_reconciliation_review",
-            "render_audit_reconciliation_review",
-            "get_audit_reconciliation_case_context",
+            "open-item-reconciliation",
+            "validate_open_item_reconciliation_review",
+            "render_open_item_reconciliation_review",
+            "get_open_item_reconciliation_case_context",
         ),
         (
             "journal-bank-reconciliation",

@@ -133,7 +133,7 @@ def test_client_engagement_accepts_only_selected_client_input(tmp_path: Path) ->
     context = build_client_engagement_context(
         studio_client_folder=folder,
         engagement_id="audit-2026",
-        workflow_id="audit-reconciliation",
+        workflow_id="open-item-reconciliation",
         run_id="run-001",
         input_dir=input_dir,
         workspace_root=workspace_root,
@@ -146,7 +146,7 @@ def test_client_engagement_accepts_only_selected_client_input(tmp_path: Path) ->
         / "engagements"
         / "audit-2026"
         / "runs"
-        / "audit-reconciliation"
+        / "open-item-reconciliation"
         / "run-001"
     )
     assert validate_client_engagement_context(context) == context
@@ -161,7 +161,7 @@ def test_client_engagement_rejects_other_client_input(tmp_path: Path) -> None:
         build_client_engagement_context(
             studio_client_folder=folder,
             engagement_id="audit-2026",
-            workflow_id="audit-reconciliation",
+            workflow_id="open-item-reconciliation",
             run_id="run-001",
             input_dir=other_client_input,
             workspace_root=tmp_path / "Vera Work",

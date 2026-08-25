@@ -183,7 +183,7 @@ def test_build_evidence_bundle_writes_core_artifacts(tmp_path: Path) -> None:
         "--output-dir",
     ]
     assert [case["plugin"] for case in template_payload["cases"]] == [
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "concordato-plan-review",
@@ -199,14 +199,14 @@ def test_build_evidence_bundle_writes_core_artifacts(tmp_path: Path) -> None:
     )
     assert "## Commands" in readme_path.read_text(encoding="utf-8")
     plan_text = plan_path.read_text(encoding="utf-8")
-    assert "case-audit-reconciliation-001" in plan_text
+    assert "case-open-item-reconciliation-001" in plan_text
     assert "--preflight-customer-validation-case" in plan_text
     assert "--record-customer-validation-case" in plan_text
     assert "--infer-case-metadata-from-run" in plan_text
     assert "--require-customer-validation" in plan_text
     checklist_text = checklist_path.read_text(encoding="utf-8")
     assert "Real Customer Validation Checklist" in checklist_text
-    assert "case-audit-reconciliation-001" in checklist_text
+    assert "case-open-item-reconciliation-001" in checklist_text
     assert "--preflight-customer-validation-case" in checklist_text
     assert "--record-customer-validation-case" in checklist_text
     assert "--infer-case-metadata-from-run" in checklist_text
@@ -216,8 +216,8 @@ def test_build_evidence_bundle_writes_core_artifacts(tmp_path: Path) -> None:
     assert "Browser Write-Back Gallery" in dashboard_text
     assert "Customer Validation Checklist" in dashboard_text
     assert "Plugin Adoption Matrix" in dashboard_text
-    assert "audit-reconciliation" in dashboard_text
-    assert "tests/plugins/test_audit_reconciliation_plugin.py" in dashboard_text
+    assert "open-item-reconciliation" in dashboard_text
+    assert "tests/plugins/test_open_item_reconciliation_plugin.py" in dashboard_text
     assert "Adopted OpenAI Lessons" in dashboard_text
     assert "ask_material_questions_only" in dashboard_text
     assert "Do not ask the user to type continue" in dashboard_text

@@ -16,7 +16,7 @@ SAVE_TOOLS = {
     "deep-research-validator": "save_deep_research_decisions",
     "client-file-preparation": "save_client_file_preparation_decisions",
     "new-client": "save_new_client_decisions",
-    "audit-reconciliation": "save_audit_reconciliation_decisions",
+    "open-item-reconciliation": "save_open_item_reconciliation_decisions",
     "journal-sampling": "save_journal_sampling_decisions",
     "journal-bank-reconciliation": "save_journal_bank_decisions",
     "report-builder": "save_report_builder_decisions",
@@ -29,7 +29,7 @@ APPLY_TOOLS = {
     "deep-research-validator": "apply_deep_research_decisions",
     "client-file-preparation": "apply_client_file_preparation_decisions",
     "new-client": "apply_new_client_decisions",
-    "audit-reconciliation": "apply_audit_reconciliation_decisions",
+    "open-item-reconciliation": "apply_open_item_reconciliation_decisions",
     "journal-sampling": "apply_journal_sampling_decisions",
     "journal-bank-reconciliation": "apply_journal_bank_decisions",
     "report-builder": "apply_report_builder_decisions",
@@ -784,9 +784,9 @@ TARGETS: list[dict[str, Any]] = [
         },
     },
     {
-        "plugin": "audit-reconciliation",
-        "asset": "audit-reconciliation-review-widget.html",
-        "title": "Audit Reconciliation Review",
+        "plugin": "open-item-reconciliation",
+        "asset": "open-item-reconciliation-review-widget.html",
+        "title": "Open-item Reconciliation Review",
         "reviewTitle": "Reconciliation Evidence Review",
         "queueTitle": "Reconciliation Rows",
         "detailTitle": "Row Vs Evidence",
@@ -826,7 +826,7 @@ TARGETS: list[dict[str, Any]] = [
         "search": "Search match, account, counterparty, evidence, blocker",
         "panels": ["Reconciliation row", "Evidence", "Exception"],
         "demo": {
-            "review_type": "audit_reconciliation_review",
+            "review_type": "open_item_reconciliation_review",
             "items": [
                 {
                     "id": "match-1",
@@ -2800,9 +2800,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "bulkProfessionalSkipped": "{applied} sichere Empfehlungen angewendet. {skipped} professionelle Entscheidungen muessen einzeln geprueft werden.",
         },
     },
-    "audit-reconciliation": {
+    "open-item-reconciliation": {
         "es": {
-            "title": "Revisión de conciliación de auditoría",
+            "title": "Revisión de partidas abiertas",
             "reviewTitle": "Revisión de evidencias de conciliación",
             "queueTitle": "Líneas de conciliación",
             "detailTitle": "Línea y evidencia",
@@ -2810,7 +2810,7 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "search": "Buscar coincidencia, cuenta, contraparte, evidencia, bloqueo",
         },
         "it": {
-            "title": "Revisione riconciliazione audit",
+            "title": "Revisione partite aperte",
             "reviewTitle": "Revisione evidenze riconciliazione",
             "queueTitle": "Righe riconciliazione",
             "detailTitle": "Riga ed evidenza",
@@ -2818,7 +2818,7 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "search": "Cerca match, conto, controparte, evidenza, blocco",
         },
         "fr": {
-            "title": "Revue rapprochement audit",
+            "title": "Revue des postes ouverts",
             "reviewTitle": "Revue des justificatifs de rapprochement",
             "queueTitle": "Lignes de rapprochement",
             "detailTitle": "Ligne et justificatif",
@@ -2826,7 +2826,7 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "search": "Chercher match, compte, contrepartie, justificatif, blocage",
         },
         "de": {
-            "title": "Audit-Abstimmung Review",
+            "title": "Prüfung offener Posten",
             "reviewTitle": "Abstimmungsnachweise pruefen",
             "queueTitle": "Abstimmungszeilen",
             "detailTitle": "Zeile und Nachweis",
@@ -5186,7 +5186,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "widget_state_load_js": "          current[itemId] = decision;",
     }
     if target["plugin"] in {
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "journal-bank-reconciliation",
         "check-entries",
     }:
@@ -5257,7 +5257,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       };
     }""",
         }
-    if target["plugin"] == "audit-reconciliation":
+    if target["plugin"] == "open-item-reconciliation":
         return {
             **legacy,
             "demo_command_js": (

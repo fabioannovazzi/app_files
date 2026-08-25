@@ -199,7 +199,11 @@ them without changing the capability catalog:
   based gestionale; authentication remains with each operator and no session or
   secret is transferred;
 - `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
-- `audit-reconciliation`: open-item and accounting-evidence reconciliation;
+- `open-item-reconciliation`: test a population reported as open at a cut-off
+  and determine which items are closed, partly closed, or still open from the
+  available accounting evidence. Route direct bank-statement-to-journal or
+  ledger matching to `journal-bank-reconciliation`, even when both workflows
+  use bank and ledger evidence;
 - `management-control-pack`: client-bound connectorless management reporting
   from explicitly supplied accounting exports. Local deterministic code reads
   the complete mapped populations, calculates exact P&L, Budget, aging, cash,

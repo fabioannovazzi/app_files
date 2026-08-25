@@ -177,7 +177,7 @@ Recommended order:
 1. `new-client`
 2. `check-entries`
 3. `journal-bank-reconciliation`
-4. `audit-reconciliation`
+4. `open-item-reconciliation`
 5. `journal-sampling`
 6. `deep-research-validator`
 7. `prompt-optimizer`
@@ -243,7 +243,7 @@ Example routes:
 | `new-client` | MCP review widget first; Markdown/static fallback | Client file, professional relationship, AML review, monitoring, and history; document preparation is handled by its `client-file-preparation` engine |
 | `check-entries` | Local review UI | Entry-to-evidence comparisons and exceptions |
 | `journal-bank-reconciliation` | Local review UI | Matches, unmatched rows, weak evidence, exceptions |
-| `audit-reconciliation` | Local review UI | Open items, evidence categories, review samples |
+| `open-item-reconciliation` | Local review UI | Open items, evidence categories, review samples |
 | `journal-sampling` | Local review UI | Parsed journal rows, sample criteria, selected entries |
 | `deep-research-validator` | Local review UI | Claims, citations, source snippets, validation findings |
 | `prompt-optimizer` | Plan-mode choices first | Research angle, source posture, final prompt review |

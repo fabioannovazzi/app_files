@@ -36,7 +36,7 @@ assurance risk. It is not a substitute for missing evidence.
 
 | Workflow | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Audit Reconciliation | gap | gap | gap | gap | gap | pass | pass | gap |
+| Open-item Reconciliation | gap | gap | gap | gap | gap | pass | pass | gap |
 | Journal Sampling | pass | pass | gap | gap | pass | selective N/A | pass | bounded pass |
 | Check Entries | pass | pass | pass | gap | pass | pass | pass | gap |
 | Journal-Bank | pass | pass | pass | gap | pass | pass | pass | gap |
@@ -47,7 +47,7 @@ This baseline was established by inspecting production code, focused tests,
 workflow instructions, and retained evaluation evidence. Documentation alone
 did not count as implementation evidence.
 
-### Audit Reconciliation
+### Open-item Reconciliation
 
 Pre-parser role/adapter qualification, exact source and decision receipts,
 strict Decimal parsing and abstention, one-to-one evidence-use controls,
@@ -335,7 +335,7 @@ declared execution contract.
   without a reviewed case that needs it.
 - Do not move customer-concentration interpretation from Clara Commercial DD
   into Vera.
-- Do not force Clara's full assurance envelope into Audit Reconciliation or
+- Do not force Clara's full assurance envelope into Open-item Reconciliation or
   Report Builder. Package-neutral receipts, ledgers, replay, exact output
   closure, and independent readiness remain required.
 - Do not mechanize Concordato legal or tax relevance, evidence sufficiency, or

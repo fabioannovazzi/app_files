@@ -525,7 +525,7 @@ def test_static_png_gallery_includes_first_class_table_examples() -> None:
     assert "period / year_over_year_by_period_small_multiples</div>" not in index_html
     assert " / index" not in index_html
     assert "__index.png" not in index_html
-    assert "audit-reconciliation" not in index_html
+    assert "open-item-reconciliation" not in index_html
     assert "new-client" not in index_html
     assert "openai-data-analytics-capability-review" not in index_html
 

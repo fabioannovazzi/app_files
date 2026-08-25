@@ -77,12 +77,12 @@ TARGETS = [
         "render_client_file_preparation_review",
     ),
     Target(
-        "audit-reconciliation",
-        "save_audit_reconciliation_decisions",
-        "Audit Reconciliation",
-        "audit_reconciliation",
-        "validate_audit_reconciliation_review",
-        "render_audit_reconciliation_review",
+        "open-item-reconciliation",
+        "save_open_item_reconciliation_decisions",
+        "Open-item Reconciliation",
+        "open_item_reconciliation",
+        "validate_open_item_reconciliation_review",
+        "render_open_item_reconciliation_review",
     ),
     Target(
         "journal-sampling",

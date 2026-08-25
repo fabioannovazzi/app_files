@@ -47,7 +47,7 @@ or skips:
 
 | Workflow | Result |
 | --- | --- |
-| Audit Reconciliation | 308/308 |
+| Open-item Reconciliation | 308/308 |
 | Journal Sampling | 161/161 |
 | Check Entries | 189/189 |
 | Journal-Bank Reconciliation | 318/318; Node-backed cases enabled |
@@ -58,7 +58,7 @@ Additional gates:
 
 | Gate | Result | Evidence SHA-256 |
 | --- | --- | --- |
-| Audit Reconciliation full workflow | 308 passed | `36ae3330adc852cc945db2e6cec6dadbc0016c5cb0d94bad01639512655d41cd` |
+| Open-item Reconciliation full workflow | 308 passed | `36ae3330adc852cc945db2e6cec6dadbc0016c5cb0d94bad01639512655d41cd` |
 | Journal Sampling full workflow | 161 passed | `cd4182022689b43a3f967cce2f8f47fb419b39890a4832b8d6ddf61f09053946` |
 | Check Entries full workflow | 189 passed | `a1ef7ead40b76cd6c9a1637de4c0f8917216369e25ca00c9c63830a2a453de07` |
 | Journal-Bank full workflow | 318 passed; no skips | `c76f9b2b743b0fe7c7a8e9e92bf2b524af37ee463d3422d6b3a613e985168ebe` |

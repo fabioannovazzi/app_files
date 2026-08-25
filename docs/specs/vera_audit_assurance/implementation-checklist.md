@@ -12,7 +12,7 @@ The authoritative scope and acceptance criteria are in
 - [x] Inspect Clara M1-M7 scope and reusable controls.
 - [x] Identify unsafe journal amount/side reconstruction paths.
 - [x] Identify binary-float monetary paths.
-- [x] Identify case-origin Audit Reconciliation terminology.
+- [x] Identify case-origin Open-item Reconciliation terminology.
 - [x] Run the focused pre-change accounting-workflow regression suite.
 - [x] Complete module-by-module duplication and test-coverage inventory.
 - [x] Record the final migration matrix.
@@ -61,7 +61,7 @@ numeric fields, invalid units, and changed source bytes. These public cases
 validate bounded transport and sampling mechanics, not double-entry completeness
 or professional sample-design judgment.
 
-## V3 - Audit Reconciliation
+## V3 - Open-item Reconciliation
 
 - [x] Remove or explicitly scope `All.A` case vocabulary.
 - [x] Make filename/source-role classification advisory.

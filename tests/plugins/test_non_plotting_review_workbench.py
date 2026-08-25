@@ -48,9 +48,9 @@ WORKBENCH_WIDGETS = [
         "New Client Review",
     ),
     (
-        "audit-reconciliation",
-        "assets/audit-reconciliation-review-widget.html",
-        "Audit Reconciliation Review",
+        "open-item-reconciliation",
+        "assets/open-item-reconciliation-review-widget.html",
+        "Open-item Reconciliation Review",
     ),
     (
         "journal-sampling",
@@ -99,9 +99,9 @@ REVIEW_SAVE_TOOLS = [
         "document_inventory",
     ),
     (
-        "audit-reconciliation",
-        "save_audit_reconciliation_decisions",
-        "apply_audit_reconciliation_decisions",
+        "open-item-reconciliation",
+        "save_open_item_reconciliation_decisions",
+        "apply_open_item_reconciliation_decisions",
         "closure_evidence_review",
     ),
     (
@@ -145,7 +145,7 @@ GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS = [
     for tool in REVIEW_SAVE_TOOLS
     if tool[0]
     not in {
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "concordato-plan-review",
@@ -237,7 +237,7 @@ REVIEW_RENDER_TOOLS = {
     "deep-research-validator": "render_deep_research_review",
     "client-file-preparation": "render_client_file_preparation_review",
     "new-client": "render_new_client_review",
-    "audit-reconciliation": "render_audit_reconciliation_review",
+    "open-item-reconciliation": "render_open_item_reconciliation_review",
     "journal-sampling": "render_journal_sampling_review",
     "journal-bank-reconciliation": "render_journal_bank_review",
     "report-builder": "render_report_builder_review",
@@ -250,7 +250,7 @@ REVIEW_ITEM_LIMITS = {
     "deep-research-validator": 2500,
     "client-file-preparation": 2500,
     "new-client": 2500,
-    "audit-reconciliation": 2500,
+    "open-item-reconciliation": 2500,
     "journal-sampling": 2500,
     "journal-bank-reconciliation": 2500,
     "report-builder": 3000,
@@ -283,15 +283,15 @@ def test_non_plotting_review_assets_match_generator(
     ) + "\n"
 
 
-def test_audit_reconciliation_widget_preflights_external_checkpoint_before_apply() -> (
+def test_open_item_reconciliation_widget_preflights_external_checkpoint_before_apply() -> (
     None
 ):
     widget = (
         ROOT
         / "plugins"
-        / "audit-reconciliation"
+        / "open-item-reconciliation"
         / "assets"
-        / "audit-reconciliation-review-widget.html"
+        / "open-item-reconciliation-review-widget.html"
     ).read_text(encoding="utf-8")
     apply_handler = widget.split("async function handleApplyDecisions()", 1)[1].split(
         "function copyDecisionJson", 1
@@ -935,7 +935,7 @@ def test_non_plotting_review_render_tools_validate_payload_before_rendering(
     valid_result = responses[1]["result"]
     valid_payload = valid_result["structuredContent"]
     if plugin in {
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "journal-bank-reconciliation",
         "check-entries",
     }:
