@@ -29,6 +29,12 @@ skill to imitate a missing operational workflow.
 - `bilancio-xbrl-it`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
+- `browser-automation`: run a generic capability factory on an authorized
+  operator's existing Chrome so the operator can demonstrate a browser process,
+  let the model explore safe reversible paths, or combine both; produce a
+  separately reviewed sanitized developer pack for a developer who cannot
+  access the system, then author, replay, validate, and hand off one site- and
+  process-specific capability without transferring authentication state.
 - `check-entries`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
@@ -92,11 +98,6 @@ skill to imitate a missing operational workflow.
   price-volume-mix variances when the data contract supports them; and produce
   reviewable waterfall, bridge, small-multiple, and drilldown plots without
   assigning semantic causes or materiality automatically.
-- `browser-automation`: in Codex Desktop, record a review-required sanitized
-  implementation map while an authorized operator demonstrates the supported
-  post-login Agenzia active/passive invoice-request and ZIP-retrieval journey
-  in visible Chrome; this does not acquire invoices or create an executable
-  automation.
 - `studio-archive`: create or resume a durable client engagement; use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.

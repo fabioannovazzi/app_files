@@ -286,10 +286,12 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
     assert "model.engagement.agenzia" not in studio_page
     for snippet in (
         '"browser-automation"',
-        "Only after the operator opens and reviews the file",
-        "control roles and labels outside tables",
-        "credentials, PINs, one-time codes, cookies",
-        "Sanitization reduces exposure but does not guarantee anonymization",
+        "process-specific",
+        "connected Chrome session",
+        "full authenticated-page snapshots",
+        "separate confirmation",
+        "discovery records",
+        "account identifiers",
     ):
         assert snippet in browser_automation_copy
     for contradictory_exclusion in (

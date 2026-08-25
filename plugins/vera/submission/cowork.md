@@ -68,9 +68,9 @@ The files referenced below are synthetic and live under `samples/cowork/`.
 - Each prompt completes with only a connected folder and Cowork file tools.
 - Local MCP servers may improve review interaction but are not required for the
   three review prompts.
-- No plugin updater, feedback transmission, guarded WhatsApp control,
-  Automazione web recorder, native Google Drive OAuth, live INPS capture, filing,
-  sending, signing, payment, or submission occurs.
+- No plugin updater, feedback transmission, guarded WhatsApp control, live
+  Automazione web Chrome discovery or replay, native Google Drive OAuth, live
+  INPS capture, filing, sending, signing, payment, or submission occurs.
 - Studio Archive can create and resume its portable client, engagement, input,
   run, lifecycle, and artifact ledger in the exact connected studio folder.
 - Local Studio Archive indexing runs only when its declared dependencies are

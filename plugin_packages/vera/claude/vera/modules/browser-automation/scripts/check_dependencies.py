@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check Browser Automation core or selected optional dependencies."""
+"""Check Browser Automation's dependency-free local contract runtime."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path
 __all__ = ["main"]
 
 LOGGER = logging.getLogger(__name__)
-PACKAGE_IMPORTS = {"playwright": "playwright"}
+PACKAGE_IMPORTS: dict[str, str] = {}
 
 
 def _requirement_name(line: str) -> str:

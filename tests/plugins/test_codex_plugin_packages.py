@@ -548,7 +548,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.163"
+    assert manifest["version"] == "0.1.164"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Trasforma questi export contabili in un pacchetto di controllo di gestione "
@@ -1339,6 +1339,37 @@ def test_accounting_bundle_contains_only_vera_and_its_modules() -> None:
         module_path = f"/plugins/vera/modules/{module_name}/"
         assert any(module_path in name for name in standard_entries)
         assert not any(f"/plugins/{module_name}/" in name for name in standard_entries)
+
+
+def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    entries = builder.expected_zip_entries(vera)
+    prefix = "vera-codex-plugin/plugins/vera/modules/browser-automation/"
+
+    for relative_path in (
+        "scripts/capability_pipeline.py",
+        "scripts/capability_runtime.mjs",
+        "scripts/discovery_pack.py",
+        "scripts/discovery_runtime.mjs",
+        "references/capability-contract.md",
+        "references/discovery-playbook.md",
+        "capabilities/gmail-search-export/capability.json",
+        "capabilities/agenzia-invoice-zip/capability.json",
+        "capabilities/teamsystem-process/capability.json",
+    ):
+        assert f"{prefix}{relative_path}" in entries
+        assert (
+            entries[f"{prefix}{relative_path}"]
+            == (ROOT / "plugins" / "browser-automation" / relative_path).read_bytes()
+        )
+    assert f"{prefix}scripts/capability_contract.py" not in entries
+    for retired_path in (
+        "scripts/record_agenzia_invoice_flow.py",
+        "references/agenzia_invoice_flow_recording.md",
+        "requirements-portal-recorder.txt",
+    ):
+        assert f"{prefix}{retired_path}" not in entries
 
 
 def test_vera_package_separates_plan_from_financial_analysis_engines() -> None:

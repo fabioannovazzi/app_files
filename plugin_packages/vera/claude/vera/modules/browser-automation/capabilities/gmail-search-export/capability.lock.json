@@ -1,0 +1,15 @@
+{
+  "capability_id": "gmail-search-export",
+  "execution_contract_sha256": "93bc210dda5a36ab3c30d812ecec3dfdd577f5e13c2a4f61bbf2d9123b04e296",
+  "files": {
+    "README.md": "6da6dba7adf17a1f6055796bdf828fd10219660b7e0cb96ff427a140312674a4",
+    "capability.json": "0683adc6625dbe10a303ab8faad35861db69c38f44e3789d9ba9947a71c8b114",
+    "receipts/gmail-reviewed-clean-one.json": "47ba98a05245be073aaf27b1c322da1b02be4e95edc581e9ad77e8c4a1324905",
+    "receipts/gmail-reviewed-clean-two.json": "c11f69a3a0edee506b8e918dc29a518f9e9fa87938aaf7d357669bb97038242b",
+    "run-locks/gmail-reviewed-clean-one.json": "f45d7fb76a77fb6a05d699bb88b399267b77aef5af8f231ea1c58cd38c22222d",
+    "run-locks/gmail-reviewed-clean-two.json": "f6ec618887fd604c176af5527c9aa70f542db1d13ddfa902ee10dd982ca06b9f"
+  },
+  "schema_version": "browser-capability-lock/v2",
+  "status": "validated_local",
+  "version": "0.3.1"
+}

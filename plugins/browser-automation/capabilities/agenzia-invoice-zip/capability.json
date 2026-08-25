@@ -1,0 +1,157 @@
+{
+  "schema_version": "browser-capability/v2",
+  "capability_id": "agenzia-invoice-zip",
+  "version": "0.3.0",
+  "status": "scaffold",
+  "site": {
+    "name": "Agenzia delle Entrate - Fatture e Corrispettivi",
+    "allowed_origins": ["https://ivaservizi.agenziaentrate.gov.it"],
+    "start_url": "https://ivaservizi.agenziaentrate.gov.it/"
+  },
+  "process": {
+    "name": "Request active or passive invoices and retrieve ZIP",
+    "objective": "Select the authorized taxpayer profile, request a bounded invoice population, and retrieve the completed ZIP when available.",
+    "out_of_scope": [
+      "Authentication or delegated-authority decisions by the model",
+      "Taxpayer selection without operator confirmation",
+      "Invoice completeness or professional review",
+      "Any payment, filing, signature, or submission outside the declared download request"
+    ]
+  },
+  "runtime": {
+    "browser": "existing_chrome",
+    "controller": "chrome_extension",
+    "semantic_driver": "model",
+    "mechanical_driver": "playwright",
+    "os_fallback": "computer_use_non_browser_only"
+  },
+  "authority": {
+    "operator_authorized": true,
+    "authentication": "operator_only",
+    "secret_policy": "never_request_read_store",
+    "consequential_actions": "confirm_at_action_time"
+  },
+  "inputs": [
+    {
+      "name": "invoice-direction",
+      "type": "enum",
+      "required": true,
+      "sensitivity": "non_sensitive",
+      "purpose": "Choose active invoices, passive invoices, or the supported combined scope.",
+      "enum_values": ["active", "passive", "combined"]
+    },
+    {
+      "name": "date-from",
+      "type": "date",
+      "required": true,
+      "sensitivity": "private_runtime_only",
+      "purpose": "Start of the authorized invoice period.",
+      "enum_values": []
+    },
+    {
+      "name": "date-to",
+      "type": "date",
+      "required": true,
+      "sensitivity": "private_runtime_only",
+      "purpose": "End of the authorized invoice period.",
+      "enum_values": []
+    }
+  ],
+  "outputs": [
+    {
+      "name": "invoice-zip",
+      "type": "download_set",
+      "sensitivity": "private",
+      "delivery": "artifact_only",
+      "description": "ZIP files returned by the portal for the declared request; business bytes remain outside the portable capability.",
+      "fields": []
+    },
+    {
+      "name": "run-summary",
+      "type": "summary",
+      "sensitivity": "private",
+      "delivery": "model_summary",
+      "description": "Milestone and download-event evidence without taxpayer or invoice content.",
+      "fields": []
+    }
+  ],
+  "entry_milestone": "reach-authorized-profile",
+  "milestones": [
+    {
+      "id": "reach-authorized-profile",
+      "intent": "Resume after the operator has authenticated and selected the correct taxpayer or delegated profile.",
+      "preconditions": [
+        "The operator is authorized for the selected profile.",
+        "No authentication or secret-entry screen is visible."
+      ],
+      "actions": [],
+      "transitions": [
+        {
+          "when": {"kind": "always", "locator_candidates": [], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000},
+          "next_milestone": "request-invoice-population",
+          "terminal": false
+        }
+      ]
+    },
+    {
+      "id": "request-invoice-population",
+      "intent": "Enter the declared direction and period and create the bounded export request.",
+      "preconditions": [
+        "The requested scope and dates have been confirmed.",
+        "Live discovery has identified the real controls and whether request creation is consequential."
+      ],
+      "actions": [],
+      "transitions": [
+        {
+          "when": {"kind": "always", "locator_candidates": [], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000},
+          "next_milestone": "retrieve-completed-zip",
+          "terminal": false
+        }
+      ]
+    },
+    {
+      "id": "retrieve-completed-zip",
+      "intent": "Find the completed request and download the ZIP through the browser download event.",
+      "preconditions": ["The request is complete or the delayed retrieval branch has been reached."],
+      "actions": [],
+      "transitions": [
+        {
+          "when": {"kind": "always", "locator_candidates": [], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000},
+          "next_milestone": null,
+          "terminal": true
+        }
+      ]
+    }
+  ],
+  "completion": {
+    "terminal_milestones": ["retrieve-completed-zip"],
+    "required_outputs": ["invoice-zip", "run-summary"]
+  },
+  "privacy": {
+    "model_data": [
+      "During authorized discovery, the declared process objective, query-free path, targeted control roles, accessible names, labels, placeholders, state changes, branches, postconditions and uncertainties needed to interpret the selected invoice process",
+      "During execution, declared runtime inputs needed for the invoice request, action outcomes, output counts and hashes, and generic download-event metadata",
+      "For bounded locator recovery, the current model receives the action intent and contract, declared locator candidates, current origin and query-free path, postcondition kind, and a sanitized failure hash, but not runtime input or downloaded-file values"
+    ],
+    "portable_artifact_excludes": [
+      "credentials", "cookies", "browser_storage", "session_urls", "page_html", "screenshots", "network_bodies", "downloaded_file_bytes", "observed_private_values"
+    ],
+    "private_evidence_retained": false
+  },
+  "validation": {
+    "environment_scope": "not_validated",
+    "execution_contract_sha256": null,
+    "receipts": [],
+    "known_limits": [
+      "No successful authenticated live discovery is currently available in repository evidence.",
+      "Real controls, portal branches, additional origins, request completion timing, and download evidence remain unknown."
+    ]
+  },
+  "provenance": {
+    "source": "developer_scaffold",
+    "discovery_record_sha256": null,
+    "discovery_approval_id": null,
+    "discovery_approved_at": null,
+    "portable_bundle_contains_private_evidence": false
+  }
+}

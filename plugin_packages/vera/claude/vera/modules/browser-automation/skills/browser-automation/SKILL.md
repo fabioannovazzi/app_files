@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: Use when an authorized operator wants Vera to record how a supported web procedure is performed in a visible browser so a reviewed automation can be developed from observed controls and transitions. The current supported procedure is the post-login Agenzia delle Entrate active/passive invoice request and ZIP-retrieval journey; do not use for ordinary web research, Studio Archive retrieval, desktop-app automation, or autonomous portal operation.
+description: "Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
 ---
 
 ## Cowork execution contract
@@ -49,4 +49,4 @@ override this Cowork contract.
 
 # Automazione web
 
-The current Agenzia teaching recorder requires a local visible Chrome session and the packaged Playwright script, which are not included in this Cowork package. Explain that boundary and continue only with useful scope preparation. Do not request credentials, substitute a video, claim that a recording or executable automation was created, or operate an authenticated portal session.
+Live process discovery, execution, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied sanitized developer pack or capability JSON and may run the packaged deterministic evidence or capability pipeline when local Python is already available, but it must not claim live discovery or validation. Continue with useful process scoping, developer-pack review, or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.

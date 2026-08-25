@@ -1,121 +1,306 @@
 ---
 name: browser-automation
-description: Use when an authorized operator wants Vera to record how a supported web procedure is performed in a visible browser so a reviewed automation can be developed from observed controls and transitions. The current supported procedure is the post-login Agenzia delle Entrate active/passive invoice request and ZIP-retrieval journey; do not use for ordinary web research, Studio Archive retrieval, desktop-app automation, or autonomous portal operation.
+description: "Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
 ---
 
 # Automazione web
 
-The current workflow records a bounded implementation map. It does not acquire
-invoices, create an executable automation, or establish a reusable portal
-connection. Use Italian for every user-facing message in this workflow.
+Run a generic capability factory on an authorized operator's computer, then
+turn the observed process into a portable, intelligent capability that another
+operator can run in their own Chrome session. This exists specifically for the
+case where the developer cannot access the target system: the operator can
+demonstrate the process, let the model explore it, or combine both. The first
+deliverable is a sanitized reviewed developer pack; the final deliverable is a
+working process-specific capability. Neither deliverable is a browser session,
+macro, video recording, or credential transfer.
 
-## Supported procedure: Agenzia invoice flow
+Read `references/capability-contract.md` completely before building, changing,
+validating, or running a capability. For a new or changed process, also read
+`references/discovery-playbook.md` completely.
 
-Use this procedure when an authorized operator asks to show or teach Vera how
-active or passive invoices and their ZIP are requested and retrieved from the
-Agenzia delle Entrate portal.
+Before the first local pipeline helper in a run, execute
+`python scripts/check_dependencies.py` from this module. The core uses only the
+Python standard library; this check must not install packages or access the
+network. `requirements.txt` therefore declares no third-party runtime package.
 
-1. State that the operator must use their own authority, login, taxpayer
-   profile, and delegation. Never ask for or enter a username, password, PIN,
-   SPID/CIE/CNS material, QR code, one-time code, cookie, token, or session URL.
-2. From this component directory, run:
+The local deterministic scripts own only dependency readiness, executable JSON
+dispatch, typed runtime inputs, structured output shape, origin bounds,
+postcondition mechanics, forbidden secret and capture fields, validation-receipt
+rules, hashes, owner-only permissions, and non-overwriting bundle output. They
+do not decide what a page means, which process matters, which branch to follow,
+whether a locator is semantically correct, or whether a professional result is
+sound.
 
-   ```bash
-   python scripts/check_dependencies.py --requirements requirements-portal-recorder.txt
-   ```
+## Required browser runtime
 
-3. Create a fresh owner-only temporary output directory outside the Git
-   workspace. Start the recorder in a PTY so the process remains alive across
-   the operator's checkpoints:
+Use the installed `chrome:control-chrome` skill and follow it completely. The
+connected Chrome extension and its in-skill `tab.playwright` API are the browser
+controller. Reuse the operator's existing Chrome binding and profile. Create a
+fresh task tab in that profile unless the operator explicitly identifies an
+existing tab to claim; do not enumerate or inspect unrelated open tabs.
+Do not start a standalone Playwright browser, temporary browser profile, CDP
+launcher, recorder process, or second browser surface.
 
-   ```bash
-   python scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-directory>
-   ```
+If Chrome is connected, its enumerated or claimed tab is sufficient proof that
+the browser is available. Do not ask the operator to say `visibile`, open a
+neutral page first, or repeat a visibility checkpoint. If the extension is not
+connected, give the single concrete setup instruction from the Chrome skill and
+stop; do not cycle through launch attempts.
 
-4. At the optional private-term prompt, send an empty line by default. Never
-   ask the operator to put private redaction terms in chat. Custom terms must be
-   typed directly into the local terminal.
-5. The recorder opens a dedicated ephemeral Chrome context and creates an
-   explicit page before authentication. On Windows it restores and positions
-   that Chrome window and verifies that Windows exposes a visible, non-empty
-   desktop window owned by the browser process launched for this recording.
-   An unrelated or background Chrome process cannot satisfy the gate. The
-   operator must then confirm that the blank Chrome window is actually visible:
-   say “Se vedi la finestra Chrome, di' `visibile`; va bene anche `visible`. Se
-   non la vedi, di' `stop`.” Send the exact confirmed word to the running PTY;
-   never infer visibility or send a bare newline. Anything except `visibile` or
-   `visible` stops before portal navigation and authentication. The operator
-   then authenticates and selects the correct taxpayer or delegated profile.
-   Say: “Quando hai completato
-   l'accesso, di' a voce oppure scrivi `pronto`; va bene anche `ready`.” Then
-   send one newline to the still-running PTY. Do not inspect or operate the
-   authentication screens.
-6. Ask the operator to perform one representative mass-download journey,
-   including active/passive scope and a completed ZIP retrieval when available.
-   Say: “Quando hai finito, di' a voce oppure scrivi `fatto`; va bene anche
-   `done`.” Then send one newline to stop. If submission and later retrieval
-   cannot occur in one session, make two separate recordings.
-7. The recorder closes its Playwright-managed temporary browser profile,
-   deletes Playwright-managed download bytes, and writes only
-   `agenzia_invoice_flow_recording.json` with owner-only permissions. Never
-   save or request a Playwright trace, HAR, storage state, cookies, screenshots,
-   HTML, or invoice ZIP for this procedure.
-8. Do not read the JSON into model context until the operator has opened it,
-   reviewed it for private information, and explicitly said it is safe to use.
-   If approval is withheld, leave it unread and explain how to delete it. An
-   approved recording is implementation evidence for page paths, control
-   identities, transitions, and download shape only.
+Use `computer-use:computer-use` only when a required step is genuinely outside
+the browser or its DOM, such as a native operating-system dialog. Never use it
+as an alternate browser controller when Chrome is selected.
 
-The recorder strips URL queries and fragments, blocks non-Agenzia origins after
-recording starts, suppresses table-cell text, hashes suggested download names,
-excludes typed or selected values and downloaded bytes, and marks every result
-as requiring human review. These controls reduce exposure; they do not
-guarantee anonymization. Read
-`references/agenzia_invoice_flow_recording.md` completely before a run.
+## Authority and authentication
 
-The local deterministic script owns only the mechanical capture boundary,
-window-visibility gate, allowlists, redaction patterns, and output validation.
-It does not decide authority, professional relevance, privacy sufficiency, or
-whether the observed journey should become an automation.
+Work only on the site, account, and process the operator says they are
+authorized to use. Authentication belongs to the operator. Never ask for,
+inspect, type, store, or transfer a username when it is part of secret entry, a
+password, PIN, one-time code, SPID/CIE/CNS material, QR code, cookie, token,
+browser storage, session URL, or reusable login state.
+
+When authentication is required, open the ordinary site entry page in the
+connected Chrome tab and hand it to the operator once. Do not inspect the login
+screen. Resume when the operator says login and account/profile selection are
+complete. Do not ask for additional progress confirmations unless a later
+consequential action or genuine ambiguity requires one.
+
+## Choose the operation
+
+### Discover or change a process
+
+Use the discovery playbook. Accept one of three session modes:
+
+- `guided`: the operator demonstrates the process while the read-only discovery
+  runtime polls bounded before/after control states;
+- `autonomous`: the model navigates the authorized process and tests safe,
+  reversible actions; or
+- `hybrid` (default): the operator demonstrates the main path and the model
+  inspects gaps, postconditions, and safe branches.
+
+Guided mode is intelligent observation, not a claim that Chrome exposes a raw
+trusted click stream. The runtime does not inject a macro recorder or retain a
+video. The model combines the declared objective, the operator's demonstration,
+and bounded semantic control-state changes to infer milestones, actions,
+branches, postconditions, locator candidates, and uncertainties.
+
+Keep live inspection bounded to the declared process and allowed origins. By
+default, query only targeted control roles, accessible names, labels,
+placeholders, headings outside tables or grids, query-free paths, and generic
+state markers. Do not request a full authenticated-page snapshot, business-row
+content, message or invoice content, form values, or screenshots. If a process
+cannot be understood without a specific private data class or screenshot, stop
+once, name exactly what would enter the selected model context and why, and get
+the operator's confirmation before reading it. Do not persist raw page content.
+
+Use `scripts/discovery_runtime.mjs` for guided polling. Write the sanitized
+`browser-discovery/v2` record, `browser-discovery-evidence/v1` timeline, and
+non-executable draft to a fresh owner-only directory outside the Git workspace.
+Validate them with `scripts/capability_pipeline.py` and
+`scripts/discovery_pack.py`.
+
+Present the exact sanitized evidence path and summary to the operator. Do not
+set either review gate yourself. `approved_for_developer_transfer` authorizes
+only the sealed pack that Fabio or another developer receives.
+`approved_for_capability_authoring` separately authorizes promotion of that
+exact discovery record. The initial live-session authorization authorizes
+neither transfer nor capability authoring. A pack may contain only explicitly
+selected and reviewed visual evidence with no private values; unreviewed
+screenshots and raw guided capture never enter it.
+
+After transfer approval, use `scripts/discovery_pack.py seal` and `verify`. The
+pack must exactly hash-link the evidence, discovery record, and draft and cover
+every draft action. It remains non-executable. Only after separate authoring
+approval may a `draft` be promoted to `discovered`. Promotion must also match
+the record's site, process, runtime, authority, privacy boundary, and every
+executable milestone. Never use review of a narrower no-result proof to
+authorize a broader extraction process. Replace observed values with input
+references. The model chooses workflow meaning and recovery; validators do not.
+
+### Run an existing capability
+
+Load exactly one explicitly named `browser-capability/v2` capability from
+either:
+
+- `capabilities/<capability-id>/capability.json` in this module; or
+- a capability folder path supplied by the operator.
+
+Do not scan unrelated folders for capabilities. Validate the file before using
+it. Confirm that the requested process, allowed origins, typed inputs, structured
+outputs, and side effects match the operator's request. A `scaffold` or `draft`
+is not executable. A `discovered` capability may be tested but is not a proven
+handoff. A `validated_local` capability was proven only in its recorded
+environment and must still verify every current milestone.
+
+Import `scripts/capability_runtime.mjs` in the same persistent Node runtime that
+holds the connected Chrome `tab`; load the exact JSON and call
+`executeCapability({tab, capability, inputs, runDirectory, runId,
+approvedConsequentialActions, recoveryHandler, environment})`. The current model
+supplies `recoveryHandler` only for a retry after it has interpreted a sanitized
+recovery request; do not configure an OpenAI API key or a second model service.
+Never copy dispatch logic into the chat and never substitute a manually
+improvised click sequence. The runner
+mechanically executes `goto`, `wait_for`, `click`, `fill`, `press`, `select`,
+`set_checked`, `extract`, and `download`; selects declared locator candidates;
+checks the allowed origin after every action; evaluates postconditions and
+branches; writes `outputs.json`, `run.receipt.json`, and `run.lock.json` with
+owner-only permissions; and returns counts, paths, hashes, plus only the output
+values whose declaration explicitly uses `model_and_artifact` or
+`model_summary`.
+
+Record extraction must exactly cover the declared fields and converts declared
+dates, numbers, and booleans rather than relabelling raw text. Scalar and summary
+outputs use `text` extraction mode. A required record, scalar, summary, or
+download set must be materially produced before a run can pass; an empty
+`record_set` is valid for a declared no-result branch. Download outputs are
+always `artifact_only` and record the local path, byte length, and file SHA-256
+in `outputs.json` without returning the path to the model. Before relying on a
+download action, feature-detect that the connected Chrome download event exposes
+`path()`. If it does not, the runtime returns the sanitized `native_gap`
+category; do not claim ZIP retrieval or fall back to browser profile inspection.
+
+An output with `delivery: artifact_only` stays in the private `outputs.json`.
+Do not open or emit its values unless the operator separately asks for model
+interpretation and the applicable model-data disclosure has been satisfied.
+The runner hashes private runtime inputs in receipts and never records their
+values. It returns only a stable failure category and detail hash, never a raw
+Playwright error. For consequential actions, pass an action ID in
+`approvedConsequentialActions` only after current action-time approval.
+
+Use bounded two-pass model-led recovery when the UI differs from the executable
+contract. Run without a handler first. For a missing locator on a `read_only` or
+`reversible` action, the failed run returns a sanitized `recovery_request` with
+the action contract, current origin and query-free path, and a failure hash but
+no runtime inputs. The current model inspects only the bounded page state needed
+for that request, proposes one semantic locator, and restarts from the declared
+start state with a handler that answers only that action. When the failure is a
+required field inside a repeated structured extraction, the model may instead
+propose one bounded CSS locator scoped to the already resolved record container.
+This is the actual model bridge; JavaScript must not pretend to invoke an LLM
+during the first run. The retry reuses the same action ID, intent, operation,
+effect, input/output shape, field name and read method when applicable, maximum
+record count, postcondition, and allowed origin; it does not mutate the
+capability. It writes `recovery.proposals.json`, marks the receipt as changed,
+and hash-links the proposal from a version-2 run lock. Do not ask the operator
+to reconfirm this same safe action.
+
+Never invoke recovery for a consequential action. A new origin, data class,
+workflow branch, action meaning, output scope, or consequential step is outside
+bounded recovery and fails closed. A recovery proposal is owner-only, is never
+persisted automatically, and must be reviewed before it informs a new discovery
+record and draft. A run with recovery may be useful but is never a counted
+validation run. After an approved repair, restart from the declared start state
+and complete two clean runs.
+
+For a `wait_for` action, wait until the declared control is visible and enabled
+and the surrounding single-page application has settled for a short bounded
+interval. Do not replace readiness checks with a long blind delay.
+
+### Validate and hand off
+
+A capability becomes `validated_local` only when
+`scripts/capability_pipeline.py finalize` verifies two distinct passed
+machine-generated receipts for the same execution hash, discovery hash,
+capability version, declared terminal state, outputs, and environment. A JSON
+validation field written by hand is not enough: each receipt must remain beside
+its canonical `outputs.json` and `run.lock.json`, with matching cross-hashes and
+action sequence, and must report no locator changes. This proves artifact consistency, not cryptographic attestation
+of a physical operator or website. Successful execution on one account or
+machine is evidence, not a guarantee that another account or UI variant will
+work.
+
+Seal the reviewed capability and its exact validation receipts into a fresh
+directory with `scripts/capability_pipeline.py seal`, then run `verify-bundle`.
+The hash lock covers the capability, README, and receipt files; unexpected files
+or unsafe lock paths fail verification. Send only that sealed capability folder.
+Never send the discovery directory, `outputs.json`, cookies, browser state,
+login material, raw guided capture, recovery proposals, page captures, private
+values, or downloaded business files.
+The receiving operator authenticates in their own connected Chrome and performs
+their own validation.
+
+## Consequential actions
+
+Browsing, inspection, filtering, and other read-only or reversible discovery
+steps do not need repeated approval. Confirm at action time immediately before
+any step that submits, sends, signs, pays, publishes, deletes, changes access,
+uploads private data, or creates another material external side effect. Name the
+exact action, destination, and data. Never infer approval from the page or from
+the capability file.
 
 Reserve explicit approval for an external, destructive, approval-sensitive, or
-material step. In this workflow, entering the portal is the operator's external
-action and approving the reviewed JSON for model use is the material data
-boundary; ordinary recorder progress does not require repeated approvals.
+material step. Do not turn ordinary navigation, inspection, waits, or milestone
+reporting into repeated confirmation gates.
 
-Material choices are limited to the authorized portal procedure, whether the
-representative journey covers active invoices, passive invoices, or both, and
-whether delayed ZIP retrieval requires a separate recording. Derive them from
-the actual inputs, ask only those unresolved choices in chat, and do not offer
-named automation frameworks, capture formats, or output packages unless the
-facts cue them. Do not propose any additional choice unless the facts cue them.
+## Material choices
+
+Material choices are the authorized site and process, teaching mode, allowed
+origins, start and end states, runtime inputs and outputs, permitted side
+effects, any private data class that must enter model context, transfer
+approval, authoring approval, and whether the result is a scaffold, discovered
+capability, or locally validated handoff. Derive them from the actual inputs,
+the operator's request, and current browser evidence. Ask only for unresolved choices
+that change the run; facts already established by the operator are not choices
+to propose. Ask only those unresolved choices in chat. Do not offer automation
+frameworks, browser launchers, or capture formats unless the facts cue them.
+
+## Included capabilities
+
+- `gmail-search-export`: a `validated_local` capability that searches Gmail and
+  writes a bounded visible set of sender, subject, and displayed-date metadata
+  to a private artifact without opening message bodies. Its populated-result
+  path has two clean receipts from one authorized Chrome environment. The
+  empty-result path remains declared but unobserved and portability still
+  requires validation by the receiving operator.
+- `agenzia-invoice-zip`: a process-specific Agenzia invoice request and ZIP
+  retrieval scaffold. It must remain `scaffold` until an authorized live
+  discovery supplies real controls and clean replay evidence.
+- `teamsystem-process`: a TeamSystem process scaffold. The operator must first
+  name the TeamSystem product, tenant origin, and exact process; do not treat
+  the TeamSystem brand as one stable UI.
+
+These examples prove the architecture's separation between a generic discovery
+engine and process-specific capabilities. They do not authorize access to any
+account.
 
 ## Codex-Native Run UX
 
-1. Start with a visible checklist for dependency readiness, authority boundary,
-   private output location, login handoff, representative journey, local review,
-   and approval for model use.
-2. Show a compact Run Intake table with the portal procedure, active/passive
-   scope, output directory, recorder status, assumptions, and exclusions.
-3. Put unresolved scope or privacy questions in a Decision Table with the
-   evidence basis, proposed next action, and operator decision. Facts already
-   established by the operator are not choices to propose.
-4. Before starting the recorder, show an execution checkpoint with the private
-   output location, the no-credential boundary, and the expected JSON artifact.
-5. Default output policy: create only the owner-readable recording JSON and,
-   when useful, a private `codex_run_review.md` that records status, privacy
-   review, unresolved items, and next action without copying portal content.
-6. End with an Artifact Card listing each local path, purpose, review status,
-   unresolved items, and next action. No generated ZIPs are part of this
-   recording workflow and must not be created from portal or run artifacts.
+Keep the run concise:
 
-## Output location
+1. Start with a compact checklist covering Chrome connection, authority,
+   process boundary, authentication handoff, model-data boundary, discovery or
+   replay, structured output, machine receipts, validation, and portable output.
+2. Show one Run Intake table: site, process, allowed origins, start/end state,
+   runtime inputs, outputs, side effects, assumptions, and unknowns.
+3. Put only unresolved material choices in a Decision Table with their evidence,
+   proposed next action, and operator decision. Facts already established are
+   not choices to propose.
+4. Before live navigation, show an execution checkpoint with the selected
+   capability or discovery mode, allowed origins, private output directory, and
+   the single authentication handoff if needed. This is a status checkpoint, not
+   another approval prompt.
+5. During discovery or replay, report milestones and material branches, not
+   every click.
+6. Default output policy: write only the private sanitized discovery record,
+   discovery evidence, capability draft, reviewed developer pack or sealed
+   capability folder, and runtime `outputs.json`, `run.receipt.json`,
+   `run.lock.json`, plus `recovery.proposals.json` only after bounded recovery.
+   Values from `artifact_only` outputs
+   remain outside the model response. When useful, add `codex_run_review.md`
+   with status, hashes, unknowns, and next action but no copied page content.
+7. End with an Artifact Card containing the private discovery path (never the
+   contents), capability path, state, validation evidence, known limits, and
+   receiving-operator next action.
+
+No generated ZIPs belong to a discovery or capability run. A portable
+capability is the sealed owner-only folder; release packaging is a separate
+developer workflow.
 
 Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or another published folder. Use a fresh private local
-directory selected for the recording and do not overwrite an earlier result.
+`protected_downloads`, or another published folder. Product-maintained example
+capabilities in this module are source code, not run outputs.
 
 ## Plugin Improvement Feedback
 
 Keep the improvement note local to chat or run artifacts. Do not transmit it,
-include client or portal data in it, or turn a workflow result into feedback.
+include account or portal data in it, or turn a workflow result into feedback.

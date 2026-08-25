@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: Use when an authorized operator wants Vera to record a supported visible-browser procedure for later automation development; currently the post-login Agenzia delle Entrate active/passive invoice request and ZIP-retrieval journey.
+description: Use when an authorized operator or developer wants Vera to teach, discover, build, validate, or run a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through the operator's existing Chrome session, including when the developer cannot access the target system.
 ---
 
 # Automazione web
@@ -11,27 +11,29 @@ In Codex Desktop, resolve `../../modules/browser-automation` from this skill
 directory when it exists; otherwise resolve `../../../browser-automation` in
 the repository. Read that module's `skills/browser-automation/SKILL.md`
 completely and follow it. Treat the resolved module root as the plugin working
-directory for all commands, scripts, requirements, references, and run setup.
+directory for its contracts, example capabilities, references, and validation
+commands.
 
-For the supported Agenzia procedure, resolve the Vera root as `../..` from this
-wrapper directory and start one PTY command:
+This is a generic capability factory with process-specific outputs. The
+operator may demonstrate the process (`guided`), let the model explore safe
+reversible paths (`autonomous`), or combine both (`hybrid`). A reviewed
+sanitized developer pack lets another person understand and implement the
+process without receiving credentials or browser state. A later, separately
+approved capability is the executable handoff.
 
-```bash
-python <vera-root>/scripts/managed_python_runtime.py --module browser-automation --requirements requirements-portal-recorder.txt run scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-directory>
-```
+The live route requires the installed Chrome control skill and the user's
+connected Chrome extension. It reuses existing Chrome state and does not launch
+or install a separate browser or Playwright package. If that Chrome surface is
+unavailable, report the one setup instruction provided by the Chrome skill and
+stop the live run. Continue with useful process scoping or capability review,
+but never claim discovery, execution, or validation without browser evidence.
 
-The managed launcher installs and validates the selected optional requirements
-and starts the recorder in the same process. A missing-Playwright result is not
-a completed preflight. If setup reports `MPARANZA_NETWORK_PERMISSION_REQUIRED`,
-immediately rerun that exact PTY command with Codex host network approval. This
-approval may retrieve only the published requirement file selected by the
-command. Do not stop with a missing-Playwright diagnosis, ask the operator to
-install it manually, or split setup and recorder launch into separate commands.
-If the operator denies approval, report that denial as the blocker. Never look
-for `requirements.txt` or `scripts/` inside this wrapper directory.
+Never look for runtime scripts inside this wrapper directory. The executable
+runtime and deterministic capability pipeline live in the resolved module and
+have no third-party dependency.
+Authentication is always performed by the operator; never request, inspect,
+enter, retain, or transfer login secrets or reusable browser state.
 
-On another surface, explain that the current privacy-bounded recorder requires
-Codex Desktop and a local visible Chrome session. Continue with any useful
-scope preparation, but never request credentials, substitute a video, claim
-that recording created an executable automation, or control authentication on
-the operator's behalf.
+On a surface without compatible Chrome control, review or edit a supplied
+capability if useful, but state that live discovery and validation require Codex
+Desktop with the connected Chrome extension.
