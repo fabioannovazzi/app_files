@@ -241,6 +241,23 @@ This executes the full quality gate:
   were changed outside git and restore the server to a clean git-managed state
   before considering the work complete.
 
+### Branch and worktree lifecycle
+
+- The repository steady state is exactly one local branch (`main`), one remote
+  branch (`origin/main`), and one registered worktree (the primary checkout).
+- A task may create at most one temporary branch and one temporary worktree,
+  and only while that task is actively being worked.
+- After a task is merged and deployed, immediately delete its remote branch,
+  local branch, and worktree before reporting completion.
+- If task work is not merged and deployed, delete the branch, worktree, and
+  uncommitted contents when the task ends unless the user explicitly asks to
+  retain that exact work.
+- Never create a backup branch, safety branch, Git bundle, or stash merely to
+  preserve abandoned or uncertain work. Do so only when the user explicitly
+  requests that preservation.
+- Before reporting task completion, verify and report the local-branch,
+  remote-branch, registered-worktree, and stash counts.
+
 ## 5. Refactor Cycle
 
 Every **4–6 weeks** we schedule a short “cleanup sprint” to eliminate duplicate code and improve readability (monitored via Sonar/GitClear reports).
