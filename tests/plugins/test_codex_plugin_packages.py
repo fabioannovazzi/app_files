@@ -3055,7 +3055,7 @@ def test_clara_forbidden_page_has_no_vera_download() -> None:
     assert "Pro Plugin Pack" not in page_copy
 
 
-def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
+def test_reconciliation_page_explains_open_item_verification_problem() -> None:
     page = (
         ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html"
     ).read_text(encoding="utf-8")
@@ -3063,17 +3063,19 @@ def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
     assert "In pratica" not in page
     assert "Problema che risolve" in page
     assert (
-        "Riconcilia partite, pagamenti e supporti in un file Excel rivedibile" in page
+        "Verifica se le partite indicate come aperte lo sono ancora al cut-off" in page
     )
-    assert "Metti partite aperte, mastrini, banca e supporti" in page
+    assert "Qui la riga di partenza è la partita aperta" in page
+    assert "La riconciliazione banca-contabilità parte invece" in page
     assert "Cosa dai / cosa ottieni" in page
     assert "Excel conserva il dettaglio riga per riga" in page
     assert "Prompt pronti" in page
-    assert "Riconciliazione completa" in page
-    assert "Mastrino vs banca/supporti" in page
+    assert "Verifica completa" in page
+    assert "Possibili regolamenti non allocati" in page
     assert "Supporti post cut-off" in page
-    assert "Usa il default factoring" in page
-    assert "pagamento in estratto conto bancario" in page
+    assert "Usa il default factoring" not in page
+    assert "Quattro passaggi per capire che cosa ha chiuso ogni partita" not in page
+    assert "what closed each item" not in page
 
 
 def test_new_client_page_describes_one_connected_client_journey() -> None:
