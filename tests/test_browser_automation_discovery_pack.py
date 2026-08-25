@@ -205,6 +205,34 @@ def _write_json(path: Path, payload: object) -> Path:
     return path
 
 
+def _use_loopback_site(
+    pipeline: ModuleType,
+    draft: dict[str, object],
+    discovery: dict[str, object],
+    evidence: dict[str, object],
+    origin: str,
+) -> None:
+    """Bind all hash-linked synthetic artifacts to one loopback test origin."""
+
+    site = {
+        "name": "Synthetic local process",
+        "allowed_origins": [origin],
+        "start_url": f"{origin}/",
+    }
+    draft["site"] = copy.deepcopy(site)
+    draft["milestones"][0]["actions"][0]["target_origin"] = origin
+    discovery["site"] = copy.deepcopy(site)
+    for observation in discovery["observations"]:
+        observation["origin"] = origin
+    draft["provenance"]["discovery_record_sha256"] = pipeline.sha256_payload(discovery)
+    evidence["site"] = copy.deepcopy(site)
+    for entry in evidence["timeline"]:
+        entry["before"]["origin"] = origin
+        entry["after"]["origin"] = origin
+    evidence["discovery_record_sha256"] = pipeline.sha256_payload(discovery)
+    evidence["capability_draft_sha256"] = pipeline.sha256_payload(draft)
+
+
 def _set_nested(
     payload: dict[str, object], path: tuple[object, ...], value: object
 ) -> None:
@@ -273,23 +301,48 @@ def test_discovery_evidence_accepts_all_declared_modes(mode: str) -> None:
     assert errors == []
 
 
-def test_discovery_evidence_accepts_http_on_exact_loopback_origin() -> None:
+@pytest.mark.parametrize(
+    "loopback_origin",
+    [
+        "http://127.0.0.1:38421",
+        "http://localhost:38422",
+        "http://[::1]:38423",
+    ],
+)
+def test_discovery_evidence_accepts_explicit_port_bound_loopback_http(
+    loopback_origin: str,
+) -> None:
     pipeline, pack = _modules()
     draft, discovery = _draft_and_discovery(pipeline)
     evidence = _evidence(pipeline, draft, discovery, approved=False)
-    loopback_origin = "http://127.0.0.1:38421"
-    evidence["site"] = {
-        "name": "Synthetic local process",
-        "allowed_origins": [loopback_origin],
-        "start_url": f"{loopback_origin}/",
-    }
-    for entry in evidence["timeline"]:
-        entry["before"]["origin"] = loopback_origin
-        entry["after"]["origin"] = loopback_origin
+    _use_loopback_site(pipeline, draft, discovery, evidence, loopback_origin)
 
     errors = pack.validate_discovery_evidence(evidence)
 
     assert errors == []
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "http://example.test:38421",
+        "http://192.168.1.10:38421",
+        "http://127.0.0.1",
+        "http://localhost",
+        "http://[::1]",
+    ],
+)
+def test_discovery_evidence_rejects_non_loopback_or_portless_http(
+    origin: str,
+) -> None:
+    pipeline, pack = _modules()
+    draft, discovery = _draft_and_discovery(pipeline)
+    evidence = _evidence(pipeline, draft, discovery, approved=False)
+    _use_loopback_site(pipeline, draft, discovery, evidence, origin)
+
+    errors = pack.validate_discovery_evidence(evidence)
+
+    assert any("must use HTTPS" in error for error in errors)
 
 
 def test_hybrid_evidence_requires_both_operator_and_model_actions() -> None:
@@ -490,6 +543,30 @@ def test_approved_pack_is_owner_only_hash_locked_and_verifiable(
             tmp_path / "draft.json",
             tmp_path / "packs",
         )
+
+
+def test_loopback_synthetic_developer_pack_seals_and_verifies(
+    tmp_path: Path,
+) -> None:
+    pipeline, pack = _modules()
+    draft, discovery = _draft_and_discovery(pipeline)
+    evidence = _evidence(pipeline, draft, discovery, approved=True)
+    _use_loopback_site(
+        pipeline,
+        draft,
+        discovery,
+        evidence,
+        "http://[::1]:38423",
+    )
+
+    target = pack.seal_developer_pack(
+        _write_json(tmp_path / "evidence.json", evidence),
+        _write_json(tmp_path / "discovery.json", discovery),
+        _write_json(tmp_path / "draft.json", draft),
+        tmp_path / "packs",
+    )
+
+    assert pack.verify_developer_pack(target) == []
 
 
 def test_pack_verification_detects_tampering_and_unlisted_files(tmp_path: Path) -> None:

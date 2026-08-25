@@ -265,11 +265,12 @@ frameworks, browser launchers, or capture formats unless the facts cue them.
 ## Included capabilities
 
 - `gmail-search-export`: a non-executable `draft` that retains the learned Gmail
-  search and bounded sender, subject, and displayed-date extraction process
-  without opening message bodies. Its earlier receipts predate the Chrome-only
-  native-gap contract and do not validate this version. Renew exact authoring
-  review, promote it, and complete two clean replays; the empty-result path also
-  remains unobserved.
+  search and bounded sender and displayed-date extraction process without
+  opening messages or reading subjects or message bodies. It distinguishes mailbox-ready, results,
+  accessible no-results, and transient/loading states and fails closed after one
+  bounded transient retry. Earlier receipts do not validate this version. Renew
+  exact authoring review, promote it, and complete two clean replays before
+  treating it as a handoff.
 - `agenzia-invoice-zip`: a process-specific Agenzia invoice request and ZIP
   retrieval scaffold. It must remain `scaffold` until an authorized live
   discovery supplies real controls and clean replay evidence.

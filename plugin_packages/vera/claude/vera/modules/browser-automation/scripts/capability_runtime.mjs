@@ -11,7 +11,7 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/10";
+export const RUNTIME_VERSION = "browser-capability-runtime/11";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v1";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
@@ -370,15 +370,40 @@ async function resolveLocator(base, candidates, inputs, { wait = false, timeoutM
     const candidate = candidates[index];
     const locator = locatorFromCandidate(base, candidate, inputs);
     try {
-      if (wait) {
-        await locator.waitFor({ state: "visible", timeoutMs });
-      } else if (!(await locator.isVisible())) {
+      if (!(await locator.isVisible())) {
         failures.push(`${candidate.kind}[${index}] not visible`);
         continue;
       }
       return { locator, candidateIndex: index, candidateKind: candidate.kind };
     } catch (error) {
       failures.push(`${candidate.kind}[${index}]: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  if (wait && candidates.length > 0) {
+    // Waiting for alternatives is mechanical presence detection. Run the
+    // candidate waits concurrently so one absent DOM variant cannot consume
+    // the whole bounded state-detection budget before another variant is tried.
+    const attempts = candidates.map(async (candidate, index) => {
+      const locator = locatorFromCandidate(base, candidate, inputs);
+      await locator.waitFor({ state: "visible", timeoutMs });
+      return { locator, candidateIndex: index, candidateKind: candidate.kind };
+    });
+    try {
+      await Promise.any(attempts);
+      for (let index = 0; index < candidates.length; index += 1) {
+        const candidate = candidates[index];
+        const locator = locatorFromCandidate(base, candidate, inputs);
+        if (await locator.isVisible()) {
+          return { locator, candidateIndex: index, candidateKind: candidate.kind };
+        }
+      }
+    } catch (error) {
+      const details = error instanceof AggregateError ? error.errors : [error];
+      failures.push(
+        ...details.map((detail, index) =>
+          `wait[${index}]: ${detail instanceof Error ? detail.message : String(detail)}`
+        ),
+      );
     }
   }
   throw new LocatorResolutionError(`no locator candidate matched (${failures.join("; ")})`, {
@@ -541,6 +566,88 @@ async function extractOutput(action, rootLocator, declaration, inputs, timeoutMs
   }
   const records = await extractRecords(action, rootLocator, declaration, inputs, timeoutMs);
   return declaration.type === "record" ? records[0] ?? null : records;
+}
+
+function isTransientExtractionFailure(error) {
+  if (error instanceof LocatorResolutionError) {
+    return true;
+  }
+  const detail = error instanceof Error ? error.message : String(error);
+  return detail.startsWith("required extracted field is empty:") ||
+    detail.startsWith("extraction produced no records for ");
+}
+
+async function extractWithCandidateFallback(action, context, declaration, timeoutMs) {
+  const failures = [];
+  let fieldFailure = null;
+  const firstResolved = await resolveLocator(
+    context.tab.playwright,
+    action.locator_candidates,
+    context.inputs,
+    { wait: true, timeoutMs },
+  );
+  const candidateIndexes = [
+    firstResolved.candidateIndex,
+    ...action.locator_candidates
+      .map((_candidate, index) => index)
+      .filter((index) => index !== firstResolved.candidateIndex),
+  ];
+  for (const index of candidateIndexes) {
+    const candidate = action.locator_candidates[index];
+    let resolved;
+    if (index === firstResolved.candidateIndex) {
+      resolved = firstResolved;
+    } else {
+      try {
+        resolved = await resolveLocator(context.tab.playwright, [candidate], context.inputs);
+      } catch (error) {
+        failures.push(error instanceof Error ? error.message : String(error));
+        continue;
+      }
+    }
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const value = await extractOutput(
+          action,
+          resolved.locator,
+          declaration,
+          context.inputs,
+          timeoutMs,
+        );
+        return {
+          value,
+          locatorCandidate: {
+            index,
+            kind: candidate.kind,
+          },
+        };
+      } catch (error) {
+        if (!isTransientExtractionFailure(error)) {
+          throw error;
+        }
+        if (
+          error instanceof LocatorResolutionError &&
+          error.targetKind === "extraction_field_locator"
+        ) {
+          fieldFailure = error;
+        }
+        failures.push(error instanceof Error ? error.message : String(error));
+        if (attempt === 0) {
+          // Gmail can expose the row container before its metadata descendants
+          // settle. One short retry is reproducible, bounded, and does not
+          // interpret page meaning or broaden the declared output fields.
+          await context.tab.playwright.waitForTimeout(Math.min(200, timeoutMs));
+        }
+      }
+    }
+  }
+  if (fieldFailure != null) {
+    throw fieldFailure;
+  }
+  throw new LocatorResolutionError(
+    `no extraction locator candidate produced records (${failures.join("; ")})`,
+    { locatorCandidates: action.locator_candidates },
+  );
 }
 
 async function downloadedFileEvidence(path) {
@@ -888,7 +995,7 @@ async function executeAction(action, context) {
 
   let locatorCandidate = null;
   let locator = null;
-  if (!["goto"].includes(action.operation)) {
+  if (!["goto", "extract"].includes(action.operation)) {
     const resolved = await resolveLocator(tab.playwright, action.locator_candidates, inputs, {
       wait: action.operation === "wait_for",
       timeoutMs,
@@ -925,13 +1032,14 @@ async function executeAction(action, context) {
     if (declaration == null || declaration.type === "download_set") {
       throw new Error(`extract action references an incompatible output: ${action.output_ref}`);
     }
-    outputs[action.output_ref] = await extractOutput(
+    const extraction = await extractWithCandidateFallback(
       action,
-      locator,
+      context,
       declaration,
-      inputs,
       timeoutMs,
     );
+    outputs[action.output_ref] = extraction.value;
+    locatorCandidate = extraction.locatorCandidate;
   } else if (action.operation === "download") {
     const declaration = outputDeclarations.get(action.output_ref);
     if (declaration?.type !== "download_set" || declaration.delivery !== "artifact_only") {

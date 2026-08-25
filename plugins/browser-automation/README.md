@@ -26,8 +26,9 @@ Il modulo include:
   riga strutturata già risolta, con proposta owner-only e ricevuta non valida
   come clean run;
 - un draft Gmail che conserva il processo e i locator appresi per esportare
-  metadati visibili senza aprire i messaggi, ma richiede una nuova approvazione
-  di authoring e due replay puliti dopo il passaggio al contratto Chrome-only;
+  mittente e data visibile senza aprire i messaggi né leggere o archiviare
+  query, oggetti o contenuto, ma richiede una nuova approvazione di authoring e
+  due replay puliti dopo il passaggio al contratto Chrome-only;
 - uno scaffold Agenzia per richiesta fatture e recupero ZIP;
 - uno scaffold TeamSystem da specializzare sul prodotto e processo reali.
 
@@ -48,4 +49,5 @@ Le capability `scaffold` e `draft` non sono eseguibili. Una capability passa a
 interfaccia Chrome e senza recovery. `outputs.json`, raw capture e proposte di
 recovery non entrano nel pacchetto portatile. Le precedenti ricevute Gmail
 restano nella storia Git ma non validano il nuovo contratto e non vengono
-incluse nel modulo; il ramo senza risultati resta non verificato dal vivo.
+incluse nel modulo; l'osservazione Windows del ramo senza risultati non
+sostituisce i due replay puliti richiesti per questa versione.
