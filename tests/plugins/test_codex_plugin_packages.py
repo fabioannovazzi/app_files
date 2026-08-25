@@ -3500,6 +3500,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "area-matters",
         "area-accounting",
         "area-analysis",
+        "area-research",
         "area-studio",
     ):
         assert f'<article class="workstream" id="{area_id}">' in core
@@ -5180,6 +5181,7 @@ def test_clara_public_icon_matches_plugin_source() -> None:
                 "#area-matters",
                 "#area-accounting",
                 "#area-analysis",
+                "#area-research",
                 "#area-studio",
             ),
         ),
