@@ -34,9 +34,28 @@ def _pipeline() -> ModuleType:
     return _load_module(PIPELINE_PATH, "test_browser_capability_pipeline")
 
 
-def _capability(capability_id: str) -> dict[str, object]:
+def _checked_in_capability(capability_id: str) -> dict[str, object]:
     path = CAPABILITIES / capability_id / "capability.json"
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _capability(capability_id: str) -> dict[str, object]:
+    """Return a draft fixture while preserving checked-in release evidence."""
+
+    payload = _checked_in_capability(capability_id)
+    if capability_id != "gmail-search-export":
+        return payload
+    payload["status"] = "draft"
+    payload["validation"] = {
+        "environment_scope": "not_validated",
+        "execution_contract_sha256": None,
+        "receipts": [],
+        "known_limits": copy.deepcopy(payload["validation"]["known_limits"]),
+    }
+    payload["provenance"]["source"] = "live_discovery_unreviewed"
+    payload["provenance"]["discovery_approval_id"] = None
+    payload["provenance"]["discovery_approved_at"] = None
+    return payload
 
 
 def _discovery(*, approved: bool) -> dict[str, object]:
@@ -324,13 +343,13 @@ def test_checked_in_capabilities_are_v2_and_honest() -> None:
     pipeline = _pipeline()
     expected = {
         "agenzia-invoice-zip": "scaffold",
-        "gmail-search-export": "draft",
+        "gmail-search-export": "validated_local",
         "teamsystem-process": "scaffold",
     }
 
     actual = {}
     for capability_id, status in expected.items():
-        payload = _capability(capability_id)
+        payload = _checked_in_capability(capability_id)
         actual[capability_id] = payload["status"]
         assert payload["schema_version"] == "browser-capability/v2"
         assert pipeline.validate_capability(payload) == []
@@ -376,10 +395,10 @@ def test_scaffolds_do_not_claim_unobserved_execution() -> None:
         assert all(milestone["actions"] == [] for milestone in payload["milestones"])
 
 
-def test_gmail_draft_is_useful_but_not_executable_before_review() -> None:
-    payload = _capability("gmail-search-export")
+def test_gmail_capability_is_useful_and_locally_validated() -> None:
+    payload = _checked_in_capability("gmail-search-export")
 
-    assert payload["status"] == "draft"
+    assert payload["status"] == "validated_local"
     assert payload["outputs"][0]["fields"] == [
         {"name": "sender", "type": "text", "required": True},
         {"name": "subject", "type": "text", "required": True},
@@ -390,7 +409,9 @@ def test_gmail_draft_is_useful_but_not_executable_before_review() -> None:
         "no-results",
     }
     assert payload["outputs"][0]["delivery"] == "artifact_only"
-    assert payload["validation"]["environment_scope"] == "not_validated"
+    assert payload["validation"]["environment_scope"] == "existing_chrome_origin_ui"
+    assert len(payload["validation"]["receipts"]) == 2
+    assert payload["provenance"]["source"] == "authorized_live_discovery"
 
 
 def test_validator_rejects_secrets_email_literals_and_cross_origin_urls() -> None:

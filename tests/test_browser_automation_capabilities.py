@@ -56,11 +56,30 @@ def _load_dependency_check() -> ModuleType:
     return module
 
 
-def _capability(capability_id: str) -> dict[str, object]:
-    """Return one checked-in capability payload."""
+def _checked_in_capability(capability_id: str) -> dict[str, object]:
+    """Return one checked-in capability payload without fixture normalization."""
 
     path = CAPABILITIES / capability_id / "capability.json"
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _capability(capability_id: str) -> dict[str, object]:
+    """Return a draft Gmail fixture for contract mutation tests."""
+
+    payload = _checked_in_capability(capability_id)
+    if capability_id != "gmail-search-export":
+        return payload
+    payload["status"] = "draft"
+    payload["validation"] = {
+        "environment_scope": "not_validated",
+        "execution_contract_sha256": None,
+        "receipts": [],
+        "known_limits": copy.deepcopy(payload["validation"]["known_limits"]),
+    }
+    payload["provenance"]["source"] = "live_discovery_unreviewed"
+    payload["provenance"]["discovery_approval_id"] = None
+    payload["provenance"]["discovery_approved_at"] = None
+    return payload
 
 
 def _set_nested(
@@ -88,26 +107,27 @@ def _set_nested(
 def test_three_process_capabilities_have_honest_contract_states() -> None:
     contract = _load_contract()
     expected_status = {
-        "gmail-search-export": "draft",
+        "gmail-search-export": "validated_local",
         "agenzia-invoice-zip": "scaffold",
         "teamsystem-process": "scaffold",
     }
 
     actual_status = {}
     for capability_id, status in expected_status.items():
-        payload = _capability(capability_id)
+        payload = _checked_in_capability(capability_id)
         actual_status[capability_id] = payload["status"]
         assert contract.validate_capability(payload) == []
 
     assert actual_status == expected_status
 
 
-def test_gmail_export_is_a_useful_unreviewed_draft_without_fake_replays() -> None:
-    payload = _capability("gmail-search-export")
+def test_gmail_export_is_useful_and_backed_by_two_clean_receipts() -> None:
+    payload = _checked_in_capability("gmail-search-export")
 
-    assert payload["status"] == "draft"
-    assert payload["validation"]["receipts"] == []
-    assert payload["validation"]["environment_scope"] == "not_validated"
+    assert payload["status"] == "validated_local"
+    assert len(payload["validation"]["receipts"]) == 2
+    assert payload["validation"]["environment_scope"] == "existing_chrome_origin_ui"
+    assert payload["provenance"]["source"] == "authorized_live_discovery"
     assert payload["outputs"][0]["delivery"] == "artifact_only"
     assert {field["name"] for field in payload["outputs"][0]["fields"]} == {
         "sender",
@@ -486,6 +506,19 @@ def test_contract_cli_validates_all_checked_in_capabilities() -> None:
         assert "Capability contract is valid." in result.stderr
 
 
+def test_checked_in_gmail_bundle_is_hash_locked_and_verifiable() -> None:
+    contract = _load_contract()
+    bundle = CAPABILITIES / "gmail-search-export"
+
+    assert contract.verify_bundle(bundle) == []
+    assert not (bundle / "outputs.json").exists()
+    assert not (bundle / "browser-discovery.json").exists()
+    assert sorted(path.name for path in (bundle / "receipts").glob("*.json")) == [
+        "gmail-reviewed-clean-one.json",
+        "gmail-reviewed-clean-two.json",
+    ]
+
+
 def test_contract_cli_reports_invalid_json(tmp_path: Path) -> None:
     invalid = tmp_path / "invalid.json"
     invalid.write_text("{invalid", encoding="utf-8")
@@ -575,7 +608,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.3.0"
+    assert manifest["version"] == "0.4.0"
     assert {
         "chrome-extension",
         "playwright",

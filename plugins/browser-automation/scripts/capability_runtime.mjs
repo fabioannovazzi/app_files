@@ -11,7 +11,7 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/6";
+export const RUNTIME_VERSION = "browser-capability-runtime/7";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v1";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v1";
 
@@ -37,9 +37,16 @@ const RECOVERY_LOCATOR_KINDS = new Set(["role", "label", "placeholder", "test_id
 const EMAIL_ADDRESS = /(^|[^A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}($|[^A-Za-z0-9.-])/;
 
 class LocatorResolutionError extends Error {
-  constructor(message) {
+  constructor(message, {
+    targetKind = "action_locator",
+    fieldName = null,
+    locatorCandidates = [],
+  } = {}) {
     super(message);
     this.name = "LocatorResolutionError";
+    this.targetKind = targetKind;
+    this.fieldName = fieldName;
+    this.locatorCandidates = structuredClone(locatorCandidates);
   }
 }
 
@@ -100,18 +107,27 @@ function exactKeys(value, expected) {
     Object.keys(value).every((key) => expected.has(key));
 }
 
-function validateRecoveryLocatorCandidate(candidate) {
+function validateRecoveryLocatorCandidate(candidate, { allowStructuredCss = false } = {}) {
   const expectedKeys = new Set(["kind", "role", "value", "exact"]);
   if (!exactKeys(candidate, expectedKeys)) {
     throw new Error("recovery locator candidate has an unsupported shape");
   }
-  if (!RECOVERY_LOCATOR_KINDS.has(candidate.kind)) {
+  if (!RECOVERY_LOCATOR_KINDS.has(candidate.kind) && !(allowStructuredCss && candidate.kind === "css")) {
     throw new Error("recovery requires a semantic locator candidate");
   }
   if (typeof candidate.exact !== "boolean") {
     throw new Error("recovery locator exact must be boolean");
   }
-  if (candidate.kind === "role") {
+  if (candidate.kind === "css") {
+    if (
+      candidate.role !== null ||
+      candidate.exact !== false ||
+      typeof candidate.value !== "string" ||
+      candidate.value.trim() === ""
+    ) {
+      throw new Error("structured field CSS recovery requires text, null role, and exact false");
+    }
+  } else if (candidate.kind === "role") {
     if (typeof candidate.role !== "string" || candidate.role.trim() === "") {
       throw new Error("role recovery locator requires a role");
     }
@@ -339,7 +355,9 @@ async function resolveLocator(base, candidates, inputs, { wait = false, timeoutM
       failures.push(`${candidate.kind}[${index}]: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
-  throw new LocatorResolutionError(`no locator candidate matched (${failures.join("; ")})`);
+  throw new LocatorResolutionError(`no locator candidate matched (${failures.join("; ")})`, {
+    locatorCandidates: candidates,
+  });
 }
 
 async function readLocator(locator, read, timeoutMs) {
@@ -360,11 +378,39 @@ async function readField(container, field, inputs, timeoutMs) {
     if (field.locator_candidates.length === 0) {
       return await readLocator(container, field.read, timeoutMs);
     }
-    const resolved = await resolveLocator(container, field.locator_candidates, inputs, { timeoutMs });
-    return await readLocator(resolved.locator, field.read, timeoutMs);
+    const failures = [];
+    for (const candidate of field.locator_candidates) {
+      try {
+        const resolved = await resolveLocator(container, [candidate], inputs, { timeoutMs });
+        return await readLocator(resolved.locator, field.read, timeoutMs);
+      } catch (error) {
+        failures.push(error instanceof Error ? error.message : String(error));
+      }
+    }
+    throw new LocatorResolutionError(
+      `no extraction field locator could be read (${failures.join("; ")})`,
+      {
+        targetKind: "extraction_field_locator",
+        fieldName: field.name,
+        locatorCandidates: field.locator_candidates,
+      },
+    );
   } catch (error) {
     if (!field.required) {
       return null;
+    }
+    if (
+      error instanceof LocatorResolutionError &&
+      error.targetKind === "extraction_field_locator"
+    ) {
+      throw error;
+    }
+    if (field.locator_candidates.length > 0) {
+      throw new LocatorResolutionError(error.message, {
+        targetKind: "extraction_field_locator",
+        fieldName: field.name,
+        locatorCandidates: field.locator_candidates,
+      });
     }
     throw error;
   }
@@ -530,7 +576,23 @@ function safeRecoveryText(value, field) {
   return value.trim();
 }
 
+function recoveryTarget(action, error) {
+  if (error.targetKind === "extraction_field_locator") {
+    return {
+      kind: "extraction_field_locator",
+      field_name: error.fieldName,
+      locator_candidates: structuredClone(error.locatorCandidates),
+    };
+  }
+  return {
+    kind: "action_locator",
+    field_name: null,
+    locator_candidates: structuredClone(action.locator_candidates),
+  };
+}
+
 function recoveryRequest({ capability, milestone, action, page, error }) {
+  const target = recoveryTarget(action, error);
   return {
     schema_version: "browser-recovery-request/v1",
     capability: {
@@ -552,10 +614,14 @@ function recoveryRequest({ capability, milestone, action, page, error }) {
       locator_candidates: structuredClone(action.locator_candidates),
       postcondition_kind: action.postcondition.kind,
     },
+    recovery_target: target,
     page,
     failure: sanitizedErrorMetadata("locator_not_found", error.message),
     constraints: {
-      permitted_change: "one_semantic_locator_candidate",
+      permitted_change:
+        target.kind === "extraction_field_locator"
+          ? "one_bounded_structured_field_locator_candidate"
+          : "one_semantic_locator_candidate",
       same_action_intent_required: true,
       same_operation_required: true,
       same_effect_required: true,
@@ -584,6 +650,7 @@ async function attemptModelRecovery({
   }
   const page = assertAllowedUrl(await context.tab.url(), context.allowedOrigins);
   const request = recoveryRequest({ capability, milestone, action, page, error });
+  const target = request.recovery_target;
   if (typeof recoveryHandler !== "function") {
     context.pendingRecoveryRequest = request;
     return null;
@@ -601,9 +668,11 @@ async function attemptModelRecovery({
   ) {
     throw new Error("recovery handler returned an unsupported response shape");
   }
-  const candidate = validateRecoveryLocatorCandidate(response.locator_candidate);
+  const candidate = validateRecoveryLocatorCandidate(response.locator_candidate, {
+    allowStructuredCss: target.kind === "extraction_field_locator",
+  });
   if (
-    action.locator_candidates.some(
+    target.locator_candidates.some(
       (declared) => canonicalJson(declared) === canonicalJson(candidate),
     )
   ) {
@@ -616,12 +685,14 @@ async function attemptModelRecovery({
     action_intent: action.intent,
     operation: action.operation,
     effect: action.effect,
+    target_kind: target.kind,
+    field_name: target.field_name,
     origin: page.origin,
     path: page.path,
     original_locator_candidates_sha256: sha256Text(
-      canonicalJson(action.locator_candidates),
+      canonicalJson(target.locator_candidates),
     ),
-    candidate_index: action.locator_candidates.length,
+    candidate_index: target.locator_candidates.length,
     candidate,
     candidate_sha256: sha256Text(canonicalJson(candidate)),
     rationale: safeRecoveryText(response.rationale, "rationale"),
@@ -632,7 +703,17 @@ async function attemptModelRecovery({
     approved_for_persistence: false,
   };
   const patchedAction = structuredClone(action);
-  patchedAction.locator_candidates.push(candidate);
+  if (target.kind === "extraction_field_locator") {
+    const field = patchedAction.extract?.fields.find(
+      (candidateField) => candidateField.name === target.field_name,
+    );
+    if (field == null) {
+      throw new Error("recovery target field is not declared by the extraction action");
+    }
+    field.locator_candidates.push(candidate);
+  } else {
+    patchedAction.locator_candidates.push(candidate);
+  }
   try {
     const evidence = await executeAction(patchedAction, context);
     proposal.outcome = "passed";

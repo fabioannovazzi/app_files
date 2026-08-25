@@ -37,7 +37,18 @@ def _modules() -> tuple[ModuleType, ModuleType]:
 
 
 def _capability() -> dict[str, object]:
-    return json.loads(CAPABILITY_PATH.read_text(encoding="utf-8"))
+    payload = json.loads(CAPABILITY_PATH.read_text(encoding="utf-8"))
+    payload["status"] = "draft"
+    payload["validation"] = {
+        "environment_scope": "not_validated",
+        "execution_contract_sha256": None,
+        "receipts": [],
+        "known_limits": copy.deepcopy(payload["validation"]["known_limits"]),
+    }
+    payload["provenance"]["source"] = "live_discovery_unreviewed"
+    payload["provenance"]["discovery_approval_id"] = None
+    payload["provenance"]["discovery_approved_at"] = None
+    return payload
 
 
 def _discovery(capability: dict[str, object]) -> dict[str, object]:

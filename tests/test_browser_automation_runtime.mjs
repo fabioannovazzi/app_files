@@ -16,13 +16,14 @@ function locatorKey(kind, role, value) {
 }
 
 class FakeNode {
-  constructor({ text = "", attributes = {}, visible = true, enabled = true, children = {}, onAction = null } = {}) {
+  constructor({ text = "", attributes = {}, visible = true, enabled = true, children = {}, onAction = null, readError = null } = {}) {
     this.text = text;
     this.attributes = attributes;
     this.visible = visible;
     this.enabled = enabled;
     this.children = children;
     this.onAction = onAction;
+    this.readError = readError;
   }
 }
 
@@ -53,7 +54,10 @@ class FakeLocator {
   }
   async count() { return this.nodes.length; }
   nth(index) { return new FakeLocator(this.nodes[index] == null ? [] : [this.nodes[index]], this.tab); }
-  async innerText() { return this.nodes[0]?.text ?? ""; }
+  async innerText() {
+    if (this.nodes[0]?.readError != null) throw this.nodes[0].readError;
+    return this.nodes[0]?.text ?? "";
+  }
   async textContent() { return this.nodes[0]?.text ?? null; }
   async getAttribute(name) { return this.nodes[0]?.attributes[name] ?? null; }
 
@@ -759,6 +763,66 @@ test("executeCapability accepts one bounded model locator recovery and hash-link
     lock.recovery_proposals_sha256,
     createHash("sha256").update(proposalsText, "utf8").digest("hex"),
   );
+});
+
+test("executeCapability recovers one nested structured extraction field without widening the action", async () => {
+  const capability = syntheticCapability();
+  const originalCapability = structuredClone(capability);
+  const registry = resultRegistry();
+  for (const row of registry[locatorKey("role", "row", null)]) {
+    const senderNode = row.children[locatorKey("test_id", null, "sender")][0];
+    const sender = senderNode.text;
+    senderNode.readError = new Error("multiple matching structured nodes");
+    row.children[locatorKey("css", null, ".sender-summary:visible")] = [
+      new FakeNode({ text: sender }),
+    ];
+  }
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  let request = null;
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "field-recovery"),
+    runId: "field-recovery-run",
+    recoveryHandler: async (candidateRequest) => {
+      request = candidateRequest;
+      return {
+        locator_candidate: {
+          kind: "css",
+          role: null,
+          value: ".sender-summary:visible",
+          exact: false,
+        },
+        rationale: "The bounded row exposes one visible sender summary container.",
+        uncertainty: "The selector remains run-local until operator review.",
+      };
+    },
+  });
+
+  assert.equal(summary.result, "passed");
+  assert.equal(summary.recovery_proposal_count, 1);
+  assert.equal(request.recovery_target.kind, "extraction_field_locator");
+  assert.equal(request.recovery_target.field_name, "sender");
+  assert.equal(
+    request.constraints.permitted_change,
+    "one_bounded_structured_field_locator_candidate",
+  );
+  assert.deepEqual(capability, originalCapability);
+  const proposals = JSON.parse(
+    await readFile(summary.recovery_proposals_path, "utf8"),
+  );
+  assert.equal(proposals.proposals[0].target_kind, "extraction_field_locator");
+  assert.equal(proposals.proposals[0].field_name, "sender");
+  assert.deepEqual(proposals.proposals[0].candidate, {
+    kind: "css",
+    role: null,
+    value: ".sender-summary:visible",
+    exact: false,
+  });
 });
 
 test("executeCapability never invokes model recovery for consequential actions", async () => {

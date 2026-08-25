@@ -65,10 +65,13 @@ runs. Never count the repair run as a clean replay.
 
 A missing locator for a read-only or reversible action may be recovered during
 one run through a model-provided `recoveryHandler`. The model proposes exactly
-one semantic locator. The mechanical runtime preserves the action ID, intent,
-operation, effect, input/output contract, postcondition, and allowed origin. It
-never changes a consequential action, workflow branch, origin, data class, or
-output scope and never mutates the capability in place.
+one semantic locator. When the failure is inside a repeated structured
+extraction field, it may instead propose one bounded CSS locator scoped to the
+already resolved record container. The mechanical runtime preserves the action
+ID, intent, operation, effect, input/output contract, field name, read method,
+postcondition, maximum record count, and allowed origin. It never changes a
+consequential action, workflow branch, origin, data class, or output scope and
+never mutates the capability in place.
 
 Promotion compares the draft with the exact reviewed record. Site, process,
 runtime, authority, and privacy boundaries must match, and every executable
@@ -143,10 +146,12 @@ runtime writes:
 
 Recovery is a two-pass host-model interaction. A first run with a missing safe
 locator fails with a model-visible `recovery_request` containing the unchanged
-action contract, current origin and query-free path, and failure hash, but no
-runtime input. The host model then inspects the bounded live state and retries
-from the declared start with one semantic candidate. The JavaScript runtime does
-not call an API or claim to invoke an LLM inside the original execution.
+action contract, exact action-or-field recovery target, current origin and
+query-free path, and failure hash, but no runtime input. The host model then
+inspects the bounded live state and retries from the declared start with one
+semantic candidate, or one row-scoped CSS candidate for a structured extraction
+field. The JavaScript runtime does not call an API or claim to invoke an LLM
+inside the original execution.
 
 Only the runtime writes receipts. `finalize` requires two unique passed receipts
 whose execution hash, discovery hash, capability version, terminal, outputs,

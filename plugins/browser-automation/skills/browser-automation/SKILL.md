@@ -173,13 +173,16 @@ contract. Run without a handler first. For a missing locator on a `read_only` or
 the action contract, current origin and query-free path, and a failure hash but
 no runtime inputs. The current model inspects only the bounded page state needed
 for that request, proposes one semantic locator, and restarts from the declared
-start state with a handler that answers only that action. This is the actual
-model bridge; JavaScript must not pretend to invoke an LLM during the first run.
-The retry reuses the same action ID, intent, operation, effect, input/output
-shape, postcondition, and allowed origin; it does not mutate the capability. It
-writes `recovery.proposals.json`, marks the receipt as changed, and hash-links
-the proposal from a version-2 run lock. Do not ask the operator to reconfirm
-this same safe action.
+start state with a handler that answers only that action. When the failure is a
+required field inside a repeated structured extraction, the model may instead
+propose one bounded CSS locator scoped to the already resolved record container.
+This is the actual model bridge; JavaScript must not pretend to invoke an LLM
+during the first run. The retry reuses the same action ID, intent, operation,
+effect, input/output shape, field name and read method when applicable, maximum
+record count, postcondition, and allowed origin; it does not mutate the
+capability. It writes `recovery.proposals.json`, marks the receipt as changed,
+and hash-links the proposal from a version-2 run lock. Do not ask the operator
+to reconfirm this same safe action.
 
 Never invoke recovery for a consequential action. A new origin, data class,
 workflow branch, action meaning, output scope, or consequential step is outside
@@ -243,11 +246,12 @@ frameworks, browser launchers, or capture formats unless the facts cue them.
 
 ## Included capabilities
 
-- `gmail-search-export`: a useful but currently unreviewed `draft` that searches
-  Gmail and writes a bounded visible set of sender, subject, and displayed-date
-  metadata to a private artifact without opening message bodies. It is not
-  executable or validated until the exact discovery record is operator-reviewed
-  and both result branches are replayed cleanly.
+- `gmail-search-export`: a `validated_local` capability that searches Gmail and
+  writes a bounded visible set of sender, subject, and displayed-date metadata
+  to a private artifact without opening message bodies. Its populated-result
+  path has two clean receipts from one authorized Chrome environment. The
+  empty-result path remains declared but unobserved and portability still
+  requires validation by the receiving operator.
 - `agenzia-invoice-zip`: a process-specific Agenzia invoice request and ZIP
   retrieval scaffold. It must remain `scaffold` until an authorized live
   discovery supplies real controls and clean replay evidence.

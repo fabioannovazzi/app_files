@@ -22,9 +22,12 @@ Il modulo include:
 - una skill generica di discovery, developer handoff, generazione, replay e
   capability handoff;
 - un recupero model-led limitato a un nuovo locator semantico per la stessa
-  azione sicura, con proposta owner-only e ricevuta non valida come clean run;
-- una capability Gmail utile ma ancora in stato `draft`, che esporta metadati
-  visibili in un artefatto privato senza aprire i messaggi;
+  azione sicura oppure a un locator CSS circoscritto per un campo dentro una
+  riga strutturata già risolta, con proposta owner-only e ricevuta non valida
+  come clean run;
+- una capability Gmail in stato `validated_local`, verificata con due replay
+  puliti sul ramo con risultati, che esporta metadati visibili in un artefatto
+  privato senza aprire i messaggi;
 - uno scaffold Agenzia per richiesta fatture e recupero ZIP;
 - uno scaffold TeamSystem da specializzare sul prodotto e processo reali.
 
@@ -43,4 +46,6 @@ Le capability `scaffold` e `draft` non sono eseguibili. Una capability passa a
 `discovered` solo dopo l'approvazione dell'esatto record di discovery; passa a
 `validated_local` solo dopo due ricevute generate dal runtime nella stessa
 interfaccia Chrome e senza recovery. `outputs.json`, raw capture e proposte di
-recovery non entrano nel pacchetto portatile.
+recovery non entrano nel pacchetto portatile. La validazione Gmail corrente è
+specifica all'ambiente osservato; il ramo senza risultati resta dichiarato ma
+non è stato verificato dal vivo.
