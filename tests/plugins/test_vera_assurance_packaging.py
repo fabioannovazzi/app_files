@@ -21,6 +21,7 @@ ASSURANCE_CONSUMERS = {
     "financial-analysis",
     "journal-bank-reconciliation",
     "journal-sampling",
+    "management-control-pack",
     "new-client",
     "passive-invoice-audit",
     "previdenza-inps",

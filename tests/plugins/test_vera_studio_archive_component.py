@@ -37,6 +37,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "passive-invoice-audit",
     "sales-plan",
     "variance-analysis",
+    "management-control-pack",
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",

@@ -102,6 +102,11 @@
         "vera_financial_analysis"
       ]
     },
+    "management-control-pack": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "report-builder": {
       "module_roots": [
         "vera_assurance"

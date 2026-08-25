@@ -194,6 +194,17 @@ them without changing the capability catalog:
   credentials, or create an executable automation;
 - `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
+- `management-control-pack`: client-bound connectorless management reporting
+  from explicitly supplied accounting exports. Local deterministic code reads
+  the complete mapped populations, calculates exact P&L, Budget, aging, cash,
+  concentration, and profitability sections when their reviewed contracts are
+  available, and produces JSON, Excel, Markdown, and self-contained HTML.
+  Post-calculation model review receives the bounded metric, coverage,
+  lineage, and top-row context rather than the raw source population by
+  default. It may interpret facts and formulate hypotheses or questions but
+  must keep the result draft pending professional review. No ERP connector,
+  hosted service, background synchronization, or automatic publication is
+  part of this workflow;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
   perimeter, currency, sign convention, period/scenario mappings, and source

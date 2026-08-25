@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Management Control Pack" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <rect x="12" y="14" width="40" height="35" rx="5" fill="#F7F0DF"/>
+  <path d="M12 24h40M32 24v25" stroke="#1F211D" stroke-width="3"/>
+  <path d="M18 42V34M24 42V29M38 42V37M44 42V31" stroke="#1F211D" stroke-width="4" stroke-linecap="round"/>
+  <path d="m17 20 5-4 5 3" fill="none" stroke="#00B0F0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="45" cy="19" r="3" fill="#00B0F0"/>
+</svg>
