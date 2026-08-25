@@ -153,7 +153,7 @@ function syntheticCapability({
       controller: "chrome_extension",
       semantic_driver: "model",
       mechanical_driver: "playwright",
-      os_fallback: "computer_use_non_browser_only",
+      os_fallback: "operator_handoff_on_native_gap",
     },
     authority: {
       operator_authorized: true,
@@ -398,6 +398,23 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
   );
   assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
   assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+});
+
+test("executeCapability rejects a legacy desktop-control fallback contract", async () => {
+  const capability = syntheticCapability();
+  capability.runtime.os_fallback = "computer_use_non_browser_only";
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab: new FakeTab({}),
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "legacy-fallback"),
+      runId: "legacy-fallback-run",
+    }),
+    /capability runtime contract is unsupported/,
+  );
 });
 
 test("executeCapability returns declared model outputs but keeps artifact-only values private", async () => {

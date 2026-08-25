@@ -41,8 +41,10 @@ same engine with different site/process contracts.
   dispatches the executable JSON through `tab.playwright`. It owns bounded
   navigation, typed input substitution, locator fallback, waits, extraction,
   assertions, branches, downloads, and machine receipts.
-- Computer Use is allowed only for a real operating-system or non-browser gap.
-  It is not a fallback browser controller.
+- The executable contract has no Computer Use or desktop-control fallback. A
+  required operating-system, native-dialog, or other non-browser step produces
+  `native_gap`, stops the browser flow, and is handed to the operator. It cannot
+  count as capability execution or clean replay evidence.
 - `scripts/capability_pipeline.py` owns schema validation, reviewed-discovery
   provenance, origin bounds, secret-exclusion fields, validation-receipt checks,
   hashes, permissions, and non-overwriting bundle output.
@@ -131,7 +133,9 @@ incorrect confirmation modes, and approvals that do not name a declared
 consequential action even when a caller skipped the separate Python validator.
 Download completion additionally requires the connected Chrome event object to
 expose `path()` so the runtime can hash actual local bytes. A missing method is
-a sanitized `native_gap`, not successful download evidence.
+a sanitized `native_gap`, not successful download evidence. The runtime must
+not replace that missing evidence with accessibility-tree, screenshot,
+coordinate, profile inspection, or platform-specific desktop automation.
 
 ## Run evidence
 

@@ -343,7 +343,7 @@ def test_checked_in_capabilities_are_v2_and_honest() -> None:
     pipeline = _pipeline()
     expected = {
         "agenzia-invoice-zip": "scaffold",
-        "gmail-search-export": "validated_local",
+        "gmail-search-export": "draft",
         "teamsystem-process": "scaffold",
     }
 
@@ -395,10 +395,10 @@ def test_scaffolds_do_not_claim_unobserved_execution() -> None:
         assert all(milestone["actions"] == [] for milestone in payload["milestones"])
 
 
-def test_gmail_capability_is_useful_and_locally_validated() -> None:
+def test_gmail_capability_draft_is_useful_but_not_locally_validated() -> None:
     payload = _checked_in_capability("gmail-search-export")
 
-    assert payload["status"] == "validated_local"
+    assert payload["status"] == "draft"
     assert payload["outputs"][0]["fields"] == [
         {"name": "sender", "type": "text", "required": True},
         {"name": "subject", "type": "text", "required": True},
@@ -409,9 +409,10 @@ def test_gmail_capability_is_useful_and_locally_validated() -> None:
         "no-results",
     }
     assert payload["outputs"][0]["delivery"] == "artifact_only"
-    assert payload["validation"]["environment_scope"] == "existing_chrome_origin_ui"
-    assert len(payload["validation"]["receipts"]) == 2
-    assert payload["provenance"]["source"] == "authorized_live_discovery"
+    assert payload["validation"]["environment_scope"] == "not_validated"
+    assert payload["validation"]["receipts"] == []
+    assert payload["provenance"]["source"] == "live_discovery_unreviewed"
+    assert payload["runtime"]["os_fallback"] == "operator_handoff_on_native_gap"
 
 
 def test_validator_rejects_secrets_email_literals_and_cross_origin_urls() -> None:

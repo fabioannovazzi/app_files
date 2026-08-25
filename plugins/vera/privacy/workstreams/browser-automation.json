@@ -81,7 +81,7 @@
         "Authentication and account, taxpayer, company, or workspace selection belong to the operator. Vera never asks for, inspects, types, stores, or transfers a username when used for secret entry, password, PIN, one-time code, SPID/CIE/CNS material, QR code, cookie, token, browser storage, session URL, or reusable login state.",
         "In guided mode use bounded read-only polling of query-free paths and targeted control roles, accessible names, labels, placeholders, stable test IDs and generic state markers. Do not inject a click logger, claim a raw event stream, retain raw guided capture, or read form values and business rows by default. If one specific private data class or screenshot is necessary, identify the exact data and purpose and require separate operator confirmation before reading it.",
         "Confirm at action time immediately before submitting, sending, signing, paying, publishing, deleting, changing access, uploading private data, or another material external side effect; ordinary read-only and reversible exploration does not require repeated confirmation.",
-        "Use Computer Use only for a genuine operating-system or non-browser gap. It must not replace the Chrome extension or Playwright as the browser controller.",
+        "Do not use Computer Use, accessibility-tree control, screenshot coordinates, or another desktop controller as a Browser Automation fallback. A required operating-system, native-dialog, or non-browser step is recorded as native_gap, handed to the operator, and excluded from capability execution and clean replay evidence.",
         "Write sanitized discovery records, discovery evidence, developer packs and sealed capability bundles only to fresh owner-only local directories outside the Git workspace and published folders; never persist raw page content or overwrite an earlier bundle.",
         "Keep approval for the exact sanitized developer transfer separate from approval for capability authoring. The former permits sealing only the reviewed evidence, discovery record and non-executable draft; the latter is required before promotion. A changed record requires new authoring approval.",
         "Execute promoted capability JSON only through the packaged runtime in the connected Chrome tab. Keep artifact_only output values, local download paths, byte lengths, and file hashes in owner-only outputs.json and expose only output counts, the output-artifact path, and aggregate hashes unless the operator separately requests interpretation.",
@@ -93,7 +93,7 @@
   "security_controls": [
     {
       "id": "model-led-browser-extension-runtime",
-      "control": "The workflow binds to the existing Chrome extension profile, creates a fresh task tab by default, uses the model for semantic page and branch interpretation, uses Playwright for bounded actions and assertions, and reserves Computer Use for non-browser gaps. A connected Chrome binding replaces the old launcher and visibility ritual; unavailable Chrome produces one setup instruction rather than repeated launch attempts."
+      "control": "The workflow binds to the existing Chrome extension profile, creates a fresh task tab by default, uses the model for semantic page and branch interpretation, and uses Playwright for bounded actions and assertions. It has no Computer Use or desktop-control fallback: a required native or non-browser step is a native_gap handed to the operator and excluded from capability execution and clean replay evidence. A connected Chrome binding replaces the old launcher and visibility ritual; unavailable Chrome produces one setup instruction rather than repeated launch attempts."
     },
     {
       "id": "targeted-model-context-by-default",
@@ -109,7 +109,7 @@
     },
     {
       "id": "environment-scoped-validation",
-      "control": "A capability may claim validated_local only when the finalizer verifies two distinct passed machine receipts with the same execution contract, reviewed discovery, capability version, declared terminal, required outputs, and environment, with no model recovery, locator edits or retained private evidence. Gmail's populated-result path has this environment-scoped status from two sanitized clean receipts; its no-result branch remains unobserved. The status is explicitly environment-specific and the receiving operator must validate again."
+      "control": "A capability may claim validated_local only when the finalizer verifies two distinct passed machine receipts with the same execution contract, reviewed discovery, capability version, declared terminal, required outputs, and environment, with no model recovery, locator edits or retained private evidence. Changing the runtime boundary invalidates prior validation evidence. Gmail is therefore a non-executable draft under the Chrome-only native-gap contract until renewed authoring review and two new clean replays; its no-result branch also remains unobserved."
     },
     {
       "id": "bounded-model-locator-recovery",
@@ -132,6 +132,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f3a8180b93015050f72217813a6f78d1fe54cccb55a6e845e384560ec1ce2db3"
+    "source_fingerprint": "f0f7e57986b8762aa8a6d1227df645be8cf47822acc2001d576c8535ff7b1457"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "browser-automation",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Permette a un operatore di insegnare un processo web nel proprio Chrome e genera un developer pack e una capability intelligente e portabile.",
   "author": {
     "name": "Mparanza",
@@ -16,7 +16,6 @@
     "browser",
     "chrome-extension",
     "playwright",
-    "computer-use",
     "agenzia-delle-entrate",
     "teamsystem",
     "gmail",
@@ -27,7 +26,7 @@
   "interface": {
     "displayName": "Automazione web",
     "shortDescription": "Insegna e rende portatile un processo web autorizzato.",
-    "longDescription": "Vera usa la sessione Chrome già connessa dell'operatore come capability factory generica. In modalità guided l'operatore mostra il processo, in autonomous il modello esplora soltanto passaggi sicuri, in hybrid fa entrambe le cose. Il primo risultato è un developer pack sanitizzato e revisionato per chi non può accedere al sito; dopo approvazione e replay il secondo è una capability process-specifica. Il runtime JSON usa Playwright per azioni, output strutturati, postcondizioni, rami e ricevute hash-linked. Il modello può proporre un locator per la stessa azione sicura o per un campo strutturato già circoscritto; la proposta non modifica automaticamente la capability e il run non conta come validazione. L'operatore autentica personalmente e conferma soltanto azioni conseguenziali o ampliamenti sostanziali. I pacchetti escludono credenziali, cookie, storage, sessioni, output privati e file scaricati. Include una capability Gmail validata localmente e scaffold Agenzia e TeamSystem da completare con discovery live autorizzata.",
+    "longDescription": "Vera usa la sessione Chrome già connessa dell'operatore come capability factory generica. In modalità guided l'operatore mostra il processo, in autonomous il modello esplora soltanto passaggi sicuri, in hybrid fa entrambe le cose. Il primo risultato è un developer pack sanitizzato e revisionato per chi non può accedere al sito; dopo approvazione e replay il secondo è una capability process-specifica. Il runtime JSON usa Playwright per azioni, output strutturati, postcondizioni, rami e ricevute hash-linked. Il modello può proporre un locator per la stessa azione sicura o per un campo strutturato già circoscritto; la proposta non modifica automaticamente la capability e il run non conta come validazione. Non usa Computer Use o controller desktop come fallback: un passaggio nativo o fuori dal browser produce native_gap, viene consegnato all'operatore e resta fuori dalla validazione. L'operatore autentica personalmente e conferma soltanto azioni conseguenziali o ampliamenti sostanziali. I pacchetti escludono credenziali, cookie, storage, sessioni, output privati e file scaricati. Include un draft Gmail da riapprovare e rivalidare sul contratto Chrome-only e scaffold Agenzia e TeamSystem da completare con discovery live autorizzata.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [

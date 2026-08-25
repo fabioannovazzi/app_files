@@ -18,7 +18,7 @@
     "controller": "chrome_extension",
     "semantic_driver": "model",
     "mechanical_driver": "playwright",
-    "os_fallback": "computer_use_non_browser_only"
+    "os_fallback": "operator_handoff_on_native_gap"
   },
   "authority": {
     "operator_authorized": true,
@@ -125,7 +125,7 @@
   "validation": {"environment_scope": "not_validated", "execution_contract_sha256": null, "receipts": [], "known_limits": ["Validated only against a synthetic loopback fixture."]},
   "provenance": {
     "source": "authorized_live_discovery",
-    "discovery_record_sha256": "0a0a8a5196f1f238feee8620901cc8842ec527d370dda8dbef63872e13b484c0",
+    "discovery_record_sha256": "15dabb201dd1107e8c60f46ea335f69893598f7eb7ae5a159c8b31c93f86c13e",
     "discovery_approval_id": "synthetic-fixture-approval",
     "discovery_approved_at": "2026-08-24T12:00:00+02:00",
     "portable_bundle_contains_private_evidence": false

@@ -38,7 +38,9 @@ Use this reusable prompt shape:
 The initial session authorization covers ordinary navigation, inspection, and
 reversible exploration inside that boundary. Do not turn each page or click
 into another approval gate. Ask again only for a new origin, new data class,
-materially broader process, native non-browser control, or consequential action.
+materially broader process, or consequential action. A native non-browser step
+is not another Vera action to approve: record `native_gap` and hand it to the
+operator.
 
 Authentication belongs to the operator. Never ask for, read, type, store, or
 transfer a username when it is part of secret entry, password, PIN, one-time
@@ -104,8 +106,10 @@ session boundary may enable `includeStructuredControls` once. The observer then
 captures only the interactive control metadata plus a structured-context flag;
 it still excludes control values and does not use row text as a fallback name.
 
-Use Computer Use only for a required native operating-system or non-browser
-step. It is not a substitute browser controller.
+Do not use Computer Use or another desktop controller for a required native
+operating-system or non-browser step. Record a `native_gap`, stop the executable
+browser flow, and hand that exact step to the operator. Keep the operator's
+native action outside portable capability steps and clean replay evidence.
 
 ## 5. Produce the three linked discovery artifacts
 

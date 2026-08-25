@@ -107,7 +107,7 @@ def _set_nested(
 def test_three_process_capabilities_have_honest_contract_states() -> None:
     contract = _load_contract()
     expected_status = {
-        "gmail-search-export": "validated_local",
+        "gmail-search-export": "draft",
         "agenzia-invoice-zip": "scaffold",
         "teamsystem-process": "scaffold",
     }
@@ -121,13 +121,15 @@ def test_three_process_capabilities_have_honest_contract_states() -> None:
     assert actual_status == expected_status
 
 
-def test_gmail_export_is_useful_and_backed_by_two_clean_receipts() -> None:
+def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
     payload = _checked_in_capability("gmail-search-export")
 
-    assert payload["status"] == "validated_local"
-    assert len(payload["validation"]["receipts"]) == 2
-    assert payload["validation"]["environment_scope"] == "existing_chrome_origin_ui"
-    assert payload["provenance"]["source"] == "authorized_live_discovery"
+    assert payload["status"] == "draft"
+    assert payload["version"] == "0.4.0"
+    assert payload["validation"]["receipts"] == []
+    assert payload["validation"]["environment_scope"] == "not_validated"
+    assert payload["provenance"]["source"] == "live_discovery_unreviewed"
+    assert payload["runtime"]["os_fallback"] == "operator_handoff_on_native_gap"
     assert payload["outputs"][0]["delivery"] == "artifact_only"
     assert {field["name"] for field in payload["outputs"][0]["fields"]} == {
         "sender",
@@ -506,17 +508,14 @@ def test_contract_cli_validates_all_checked_in_capabilities() -> None:
         assert "Capability contract is valid." in result.stderr
 
 
-def test_checked_in_gmail_bundle_is_hash_locked_and_verifiable() -> None:
-    contract = _load_contract()
+def test_checked_in_gmail_draft_excludes_obsolete_validation_bundle() -> None:
     bundle = CAPABILITIES / "gmail-search-export"
 
-    assert contract.verify_bundle(bundle) == []
+    assert not (bundle / "capability.lock.json").exists()
+    assert not list((bundle / "receipts").glob("*.json"))
+    assert not list((bundle / "run-locks").glob("*.json"))
     assert not (bundle / "outputs.json").exists()
     assert not (bundle / "browser-discovery.json").exists()
-    assert sorted(path.name for path in (bundle / "receipts").glob("*.json")) == [
-        "gmail-reviewed-clean-one.json",
-        "gmail-reviewed-clean-two.json",
-    ]
 
 
 def test_contract_cli_reports_invalid_json(tmp_path: Path) -> None:
@@ -557,7 +556,8 @@ def test_browser_automation_skill_is_generic_model_led_and_low_friction() -> Non
         "recoveryHandler",
         "Agenzia delle Entrate, TeamSystem, Gmail",
         "two distinct passed",
-        "computer-use:computer-use",
+        "no Computer Use or desktop-control fallback",
+        "native_gap",
         "capability_runtime.mjs",
         "capability_pipeline.py",
         "Never write run outputs inside this Git workspace",
@@ -608,7 +608,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.4.0"
+    assert manifest["version"] == "0.5.0"
     assert {
         "chrome-extension",
         "playwright",
@@ -616,7 +616,12 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
         "gmail",
         "gestionale",
     } <= set(manifest["keywords"])
+    assert "computer-use" not in manifest["keywords"]
     assert "capability" in manifest["interface"]["longDescription"]
+    assert "native_gap" in manifest["interface"]["longDescription"]
+    assert (
+        "controller desktop come fallback" in manifest["interface"]["longDescription"]
+    )
     assert "TeamSystem" in fixture_text
     assert "capability portabile" in fixture_text
     assert "Agenzia delle Entrate" in fixture_text
@@ -630,6 +635,8 @@ def test_vera_wrapper_resolves_generic_module_without_managed_playwright() -> No
     assert "connected Chrome extension" in wrapper
     assert "no third-party dependency" in wrapper
     assert "Never look for runtime scripts inside this wrapper directory" in wrapper
+    assert "no Computer Use or desktop-control fallback" in wrapper
+    assert "native_gap" in wrapper
     assert "managed_python_runtime.py" not in wrapper
     assert "requirements-portal-recorder.txt" not in wrapper
 
@@ -658,6 +665,10 @@ def test_privacy_manifest_covers_live_control_metadata_and_portable_bundle() -> 
         in classes["bounded-live-browser-process-discovery"]["content"]
     )
     assert "fresh task tab" in boundary["content"]
+    boundary_controls = " ".join(boundary["controls"])
+    assert "Do not use Computer Use" in boundary_controls
+    assert "native_gap" in boundary_controls
+    assert "reserves Computer Use" not in json.dumps(privacy, ensure_ascii=False)
     assert "environment-scoped-validation" in controls
     assert "separate-reviewed-developer-transfer" in controls
     assert "bounded-model-locator-recovery" in controls
@@ -679,6 +690,8 @@ def test_public_copy_discloses_live_model_data_and_portable_exclusions() -> None
         "separate confirmation",
         "discovery records",
         "account identifiers",
+        "native_gap",
+        "fallback desktop controller",
     ):
         assert snippet in copy_source
     assert "Only after the operator opens and reviews the file" not in copy_source

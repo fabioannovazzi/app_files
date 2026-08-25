@@ -11,7 +11,7 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/7";
+export const RUNTIME_VERSION = "browser-capability-runtime/8";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v1";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v1";
 
@@ -224,7 +224,8 @@ function validateRuntimeShape(capability) {
     capability.runtime?.browser !== "existing_chrome" ||
     capability.runtime?.controller !== "chrome_extension" ||
     capability.runtime?.semantic_driver !== "model" ||
-    capability.runtime?.mechanical_driver !== "playwright"
+    capability.runtime?.mechanical_driver !== "playwright" ||
+    capability.runtime?.os_fallback !== "operator_handoff_on_native_gap"
   ) {
     throw new Error("capability runtime contract is unsupported");
   }
