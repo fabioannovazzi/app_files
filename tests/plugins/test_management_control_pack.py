@@ -656,6 +656,7 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
     for snippet in (
         "Pacchetto controllo di gestione | Vera",
         "Management control pack | Vera",
+        "Prepare recurring management reports from accounting exports.",
         "Non serve un connettore al gestionale",
         "No accounting-system connector is required",
         "Quali dati arrivano al modello",
@@ -670,6 +671,7 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
         'data-model-data-status="relevant"',
     ):
         assert snippet in page
+    assert "files already available" not in page
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
     assert all(page.count(f'"{key}":') == 5 for key in visible_keys)
     assert main.rstrip().endswith("</section>")
