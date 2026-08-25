@@ -125,7 +125,7 @@ def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
     payload = _checked_in_capability("gmail-search-export")
 
     assert payload["status"] == "draft"
-    assert payload["version"] == "0.4.0"
+    assert payload["version"] == "0.5.0"
     assert payload["validation"]["receipts"] == []
     assert payload["validation"]["environment_scope"] == "not_validated"
     assert payload["provenance"]["source"] == "live_discovery_unreviewed"
@@ -136,6 +136,17 @@ def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
         "subject",
         "displayed-date",
     }
+    submit = next(
+        milestone
+        for milestone in payload["milestones"]
+        if milestone["id"] == "submit-search"
+    )
+    postcondition = next(
+        action for action in submit["actions"] if action["id"] == "press-gmail-search"
+    )["postcondition"]
+    assert postcondition["kind"] == "url_includes"
+    assert postcondition["value"] == "#search/{{query}}"
+    assert postcondition["locator_candidates"] == []
     serialized = json.dumps(payload)
     assert "@" not in serialized
     assert "message bodies" in serialized
@@ -461,8 +472,7 @@ def test_seal_writes_owner_only_deterministic_non_overwriting_bundle(
         ),
         helpers._write_run_evidence(
             tmp_path / "run-two",
-            helpers._receipt(discovered, run_id="run-two", terminal="no-results"),
-            terminal="no-results",
+            helpers._receipt(discovered, run_id="run-two"),
         ),
     ]
     validated = tmp_path / "validated.json"
@@ -608,7 +618,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.5.1"
+    assert manifest["version"] == "0.5.2"
     assert {
         "chrome-extension",
         "playwright",

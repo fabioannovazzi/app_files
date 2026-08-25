@@ -183,18 +183,11 @@
           "postcondition": {
             "comparator": null,
             "expected": null,
-            "kind": "locator_visible",
-            "locator_candidates": [
-              {
-                "exact": false,
-                "kind": "role",
-                "role": "main",
-                "value": null
-              }
-            ],
+            "kind": "url_includes",
+            "locator_candidates": [],
             "output_ref": null,
             "timeout_ms": 10000,
-            "value": null
+            "value": "#search/{{query}}"
           },
           "target_origin": null,
           "timeout_ms": 10000
@@ -508,12 +501,13 @@
     "environment_scope": "not_validated",
     "execution_contract_sha256": null,
     "known_limits": [
-      "Changing the runtime boundary from a Computer Use fallback to operator handoff creates a new unreviewed draft lineage; the prior receipts do not validate this execution contract.",
-      "The repaired Gmail row and field locators were observed in one authorized account, but the updated runtime boundary requires renewed authoring review and two clean runtime replays.",
+      "The exact-query URL postcondition and runtime/10 receipt semantics create a new unreviewed draft lineage; prior receipts do not validate this execution contract.",
+      "Search submission fails closed unless the current Gmail URL, after bounded percent-decoding, contains the exact #search/{{query}} route; inbox-root rows cannot satisfy this proof.",
+      "The Gmail row and field locators were observed in one authorized account, but this updated contract requires renewed query-scoped authoring review and two clean runtime replays.",
       "The structural no-result fallback waits for the declared result-row timeout and does not depend on localized Gmail copy.",
       "The empty-result branch was not exercised in the exact query-scoped discovery session and remains an explicit unvalidated branch."
     ],
     "receipts": []
   },
-  "version": "0.4.0"
+  "version": "0.5.0"
 }

@@ -117,7 +117,90 @@ test("observeGuidedWindow captures bounded operator-visible state changes", asyn
     structured_rows_excluded: true,
     screenshots_excluded: true,
     structured_control_values_excluded: true,
+    private_identifier_tokens_redacted: true,
   });
+});
+
+test("captureControlState redacts identifiers embedded in control metadata", async () => {
+  const privateIdentifier = "01234567890";
+  const fiscalCode = "RSSMRA80A01H501U";
+  const emailAddress = "private.person@example.test";
+  const uuid = "0f4d8b6a-2e65-4d3f-9b0c-6f99d08b4b72";
+  const iban = "IT60X0542811101000000123456";
+  const tab = fakeTab({
+    urls: ["https://example.test/invoices"],
+    inventories: [
+      inventory([
+        {
+          ...control(`Download invoice ${privateIdentifier}`),
+          label: `Payment ${fiscalCode}`,
+          placeholder: "Reference 2026/000123",
+          test_id: `download-${privateIdentifier}`,
+        },
+        control(`Send to ${emailAddress}`),
+        control(`Open ${uuid}`),
+        control(`Account ${iban}`),
+      ]),
+    ],
+  });
+
+  const state = await captureControlState({
+    tab,
+    allowedOrigins: ["https://example.test"],
+  });
+
+  assert.equal(state.controls[0].name, "Download invoice [private identifier]");
+  assert.equal(state.controls[0].label, "Payment [private identifier]");
+  assert.equal(state.controls[0].placeholder, "Reference [private identifier]");
+  assert.equal(state.controls[0].test_id, null);
+  assert.deepEqual(state.controls[0].redacted_fields, [
+    "name",
+    "label",
+    "placeholder",
+    "test_id",
+  ]);
+  assert.doesNotMatch(JSON.stringify(state), new RegExp(privateIdentifier));
+  assert.doesNotMatch(JSON.stringify(state), new RegExp(fiscalCode));
+  assert.doesNotMatch(JSON.stringify(state), new RegExp(emailAddress));
+  assert.doesNotMatch(JSON.stringify(state), new RegExp(uuid));
+  assert.doesNotMatch(JSON.stringify(state), new RegExp(iban));
+  assert.equal(state.controls[1].name, "Send to [private identifier]");
+  assert.equal(state.controls[2].name, "Open [private identifier]");
+  assert.equal(state.controls[3].name, "Account [private identifier]");
+});
+
+test("control redaction preserves short functional numbers", async () => {
+  const tab = fakeTab({
+    urls: ["https://example.test/payments"],
+    inventories: [inventory([control("Pay F24 for step 2")])],
+  });
+
+  const state = await captureControlState({
+    tab,
+    allowedOrigins: ["https://example.test"],
+  });
+
+  assert.equal(state.controls[0].name, "Pay F24 for step 2");
+  assert.equal("redacted_fields" in state.controls[0], false);
+});
+
+test("private identifier changes do not alter the sanitized fingerprint", async () => {
+  const first = await captureControlState({
+    tab: fakeTab({
+      urls: ["https://example.test/invoices"],
+      inventories: [inventory([control("Download invoice 01234567890")])],
+    }),
+    allowedOrigins: ["https://example.test"],
+  });
+  const second = await captureControlState({
+    tab: fakeTab({
+      urls: ["https://example.test/invoices"],
+      inventories: [inventory([control("Download invoice 10987654321")])],
+    }),
+    allowedOrigins: ["https://example.test"],
+  });
+
+  assert.equal(first.control_fingerprint, second.control_fingerprint);
 });
 
 test("captureControlState rejects a page outside the declared origins", async () => {

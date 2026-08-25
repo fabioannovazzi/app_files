@@ -1,6 +1,6 @@
 {
   "name": "browser-automation",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Permette a un operatore di insegnare un processo web nel proprio Chrome e genera un developer pack e una capability intelligente e portabile.",
   "author": {
     "name": "Mparanza",

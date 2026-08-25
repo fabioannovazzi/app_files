@@ -88,10 +88,14 @@ and bounded semantic control-state changes to infer milestones, actions,
 branches, postconditions, locator candidates, and uncertainties.
 
 Keep live inspection bounded to the declared process and allowed origins. By
-default, query only targeted control roles, accessible names, labels,
-placeholders, headings outside tables or grids, query-free paths, and generic
-state markers. Do not request a full authenticated-page snapshot, business-row
-content, message or invoice content, form values, or screenshots. If a process
+default, query only targeted control roles, locally redacted accessible names,
+labels, placeholders and stable test IDs, headings outside tables or grids,
+query-free paths, and generic state markers. Before this metadata leaves the
+local discovery runtime, recognizable identifier-shaped substrings are replaced
+with a fixed marker and a dynamic test ID containing one is withheld. Treat the
+marker as evidence of redaction, never as a literal locator value. Do not request
+a full authenticated-page snapshot, business-row content, message or invoice
+content, form values, or screenshots. If a process
 cannot be understood without a specific private data class or screenshot, stop
 once, name exactly what would enter the selected model context and why, and get
 the operator's confirmation before reading it. Do not persist raw page content.

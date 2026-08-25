@@ -10,12 +10,57 @@
 
 import { canonicalJson, sha256Text } from "./capability_runtime.mjs";
 
-export const DISCOVERY_RUNTIME_VERSION = "browser-discovery-runtime/1";
+export const DISCOVERY_RUNTIME_VERSION = "browser-discovery-runtime/2";
 
 const DEFAULT_MAX_CONTROLS = 120;
 const MAX_CONTROLS = 250;
 const DEFAULT_POLL_INTERVAL_MS = 500;
 const MAX_GUIDED_WINDOW_MS = 60_000;
+const PRIVATE_IDENTIFIER_MARKER = "[private identifier]";
+const CONTROL_TEXT_FIELDS = ["name", "label", "placeholder", "test_id"];
+
+// This fixed redaction runs before control metadata leaves the local runtime.
+// It is deterministic because excluding recognizable identifier shapes is a
+// mechanically testable security boundary, not a semantic relevance decision.
+const PRIVATE_IDENTIFIER_PATTERNS = [
+  /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/giu,
+  /\b[0-9A-F]{8}-[0-9A-F]{4}-[1-5][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\b/giu,
+  /\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b/giu,
+  /\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b/giu,
+  /\b(?=[A-Z0-9._/-]{8,}\b)(?=[A-Z0-9._/-]*[A-Z])(?=[A-Z0-9._/-]*\d)[A-Z0-9._/-]+\b/giu,
+  /\b\d{2,}(?:[\s./_-]+\d{2,})+\b/gu,
+  /\b\d{4,}\b/gu,
+];
+
+function redactPrivateIdentifiers(value) {
+  if (typeof value !== "string" || !value) {
+    return { value, redacted: false };
+  }
+  let sanitized = value;
+  for (const pattern of PRIVATE_IDENTIFIER_PATTERNS) {
+    sanitized = sanitized.replace(pattern, PRIVATE_IDENTIFIER_MARKER);
+  }
+  sanitized = sanitized
+    .replace(/(?:\[private identifier\]\s*){2,}/gu, `${PRIVATE_IDENTIFIER_MARKER} `)
+    .replace(/\s+/gu, " ")
+    .trim();
+  return { value: sanitized, redacted: sanitized !== value };
+}
+
+function sanitizeControlMetadata(control) {
+  const sanitized = { ...control };
+  const redactedFields = [];
+  for (const field of CONTROL_TEXT_FIELDS) {
+    const result = redactPrivateIdentifiers(control[field]);
+    if (!result.redacted) continue;
+    sanitized[field] = field === "test_id" ? null : result.value;
+    redactedFields.push(field);
+  }
+  if (redactedFields.length > 0) {
+    sanitized.redacted_fields = redactedFields;
+  }
+  return sanitized;
+}
 
 function normalizeOrigin(value) {
   return new URL(value).origin;
@@ -174,7 +219,7 @@ export async function captureControlState({
     runtime_version: DISCOVERY_RUNTIME_VERSION,
     origin: page.origin,
     path: page.path,
-    controls: inventory.controls,
+    controls: inventory.controls.map(sanitizeControlMetadata),
     total_control_count: inventory.total_control_count,
     truncated: inventory.truncated,
   };
@@ -262,6 +307,7 @@ export async function observeGuidedWindow({
       form_values_excluded: true,
       structured_rows_excluded: !includeStructuredControls,
       structured_control_values_excluded: true,
+      private_identifier_tokens_redacted: true,
       screenshots_excluded: true,
     },
   };

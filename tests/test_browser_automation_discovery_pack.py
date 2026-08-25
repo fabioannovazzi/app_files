@@ -273,6 +273,25 @@ def test_discovery_evidence_accepts_all_declared_modes(mode: str) -> None:
     assert errors == []
 
 
+def test_discovery_evidence_accepts_http_on_exact_loopback_origin() -> None:
+    pipeline, pack = _modules()
+    draft, discovery = _draft_and_discovery(pipeline)
+    evidence = _evidence(pipeline, draft, discovery, approved=False)
+    loopback_origin = "http://127.0.0.1:38421"
+    evidence["site"] = {
+        "name": "Synthetic local process",
+        "allowed_origins": [loopback_origin],
+        "start_url": f"{loopback_origin}/",
+    }
+    for entry in evidence["timeline"]:
+        entry["before"]["origin"] = loopback_origin
+        entry["after"]["origin"] = loopback_origin
+
+    errors = pack.validate_discovery_evidence(evidence)
+
+    assert errors == []
+
+
 def test_hybrid_evidence_requires_both_operator_and_model_actions() -> None:
     pipeline, pack = _modules()
     draft, discovery = _draft_and_discovery(pipeline)
