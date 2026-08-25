@@ -842,6 +842,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "#area-matters",
         "#area-accounting",
         "#area-analysis",
+        "#area-research",
         "#area-studio",
     ):
         assert f'href="{area_href}"' in page
@@ -849,6 +850,23 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert 'href="#jurisdiction"' not in page
     assert 'href="#video"' not in page
     assert 'id="video"' not in page
+
+
+def test_vera_hub_separates_research_from_studio_communication() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    research = _article_markup(page, "area-research")
+    communication = _article_markup(page, "area-studio")
+
+    assert set(re.findall(r'href="([^"]+)"', research)) == {
+        "../bandi-agevolazioni/index.html",
+        "../quesito-legale-fiscale/index.html",
+    }
+    assert set(re.findall(r'href="([^"]+)"', communication)) == {
+        "../comunicazione-professionale/index.html",
+        "../presenza-digitale-studio/index.html",
+    }
+    assert 'data-i18n="stream.research.index">Area 5</span>' in research
+    assert 'data-i18n="stream.studio.index">Area 6</span>' in communication
 
 
 def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
@@ -1372,15 +1390,29 @@ def test_vera_hub_names_the_two_processing_categories() -> None:
 @pytest.mark.parametrize(
     "labels",
     (
-        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5"),
-        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5"),
-        ("Domaine 1", "Domaine 2", "Domaine 3", "Domaine 4", "Domaine 5"),
-        ("Bereich 1", "Bereich 2", "Bereich 3", "Bereich 4", "Bereich 5"),
-        ("Área 1", "Área 2", "Área 3", "Área 4", "Área 5"),
+        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5", "Area 6"),
+        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5", "Area 6"),
+        (
+            "Domaine 1",
+            "Domaine 2",
+            "Domaine 3",
+            "Domaine 4",
+            "Domaine 5",
+            "Domaine 6",
+        ),
+        (
+            "Bereich 1",
+            "Bereich 2",
+            "Bereich 3",
+            "Bereich 4",
+            "Bereich 5",
+            "Bereich 6",
+        ),
+        ("Área 1", "Área 2", "Área 3", "Área 4", "Área 5", "Área 6"),
     ),
 )
 def test_vera_hub_explains_work_area_numbers_in_every_language(
-    labels: tuple[str, str, str, str, str],
+    labels: tuple[str, str, str, str, str, str],
 ) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 

@@ -252,10 +252,11 @@ def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     assert vera.count('data-jurisdiction-item="it"') == 7
     assert 'id="area-matters"' in vera
     assert 'id="area-analysis"' in vera
+    assert 'id="area-research"' in vera
     assert 'id="area-studio"' in vera
 
 
-def test_vera_navigation_links_to_the_five_user_job_areas() -> None:
+def test_vera_navigation_links_to_the_six_user_job_areas() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
     navigation_css = (SHARED / "product-navigation.css").read_text(encoding="utf-8")
 
@@ -264,6 +265,7 @@ def test_vera_navigation_links_to_the_five_user_job_areas() -> None:
         ("#area-matters", "nav.matters"),
         ("#area-accounting", "nav.accounting"),
         ("#area-analysis", "nav.analysis"),
+        ("#area-research", "nav.research"),
         ("#area-studio", "nav.studio"),
     ):
         assert f'href="{href}"' in vera
@@ -274,9 +276,11 @@ def test_vera_navigation_links_to_the_five_user_job_areas() -> None:
         "Pratiche e adempimenti",
         "Controlli e riconciliazioni",
         "Pianificazione, analisi e report",
-        "Ricerca, comunicazione e sviluppo dello studio",
+        "Ricerca legale, fiscale e opportunità",
+        "Comunicazione e presenza dello studio",
         "Clients, engagements, and documents",
         "Matters and compliance",
+        "Legal and tax research and opportunities",
         "Dossiers et obligations",
         "Verfahren und Pflichten",
         "Expedientes y obligaciones",
