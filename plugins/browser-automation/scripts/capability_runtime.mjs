@@ -11,7 +11,7 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/9";
+export const RUNTIME_VERSION = "browser-capability-runtime/10";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v1";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
@@ -310,6 +310,31 @@ function queryFreePath(value) {
   return url.pathname;
 }
 
+function urlIncludesRenderedValue(url, renderedValue) {
+  if (url.includes(renderedValue)) {
+    return true;
+  }
+  try {
+    return decodeURIComponent(url.replaceAll("+", " ")).includes(renderedValue);
+  } catch {
+    return false;
+  }
+}
+
+async function waitForUrlCondition(tab, predicate, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (true) {
+    if (predicate(await tab.url())) {
+      return true;
+    }
+    const remainingMs = deadline - Date.now();
+    if (remainingMs <= 0) {
+      return false;
+    }
+    await tab.playwright.waitForTimeout(Math.min(100, remainingMs));
+  }
+}
+
 function assertAllowedUrl(url, allowedOrigins) {
   const origin = normalizeOrigin(url);
   if (!allowedOrigins.has(origin)) {
@@ -541,6 +566,17 @@ function outputCount(value) {
   return value == null ? 0 : 1;
 }
 
+function receiptOutputPayload(declaration, value) {
+  if (declaration?.type !== "download_set" || !Array.isArray(value)) {
+    return value;
+  }
+  return value.map(({ byte_length, sha256 }) => ({ byte_length, sha256 }));
+}
+
+function receiptOutputSha256(declaration, value) {
+  return sha256Text(canonicalJson(receiptOutputPayload(declaration, value)));
+}
+
 function sanitizedErrorMetadata(code, detail) {
   return {
     code,
@@ -755,10 +791,22 @@ async function evaluateCondition(condition, context) {
   switch (condition.kind) {
     case "always":
       return true;
-    case "url_path_equals":
-      return queryFreePath(await tab.url()) === renderTemplate(condition.value, inputs);
-    case "url_includes":
-      return (await tab.url()).includes(renderTemplate(condition.value, inputs));
+    case "url_path_equals": {
+      const renderedValue = renderTemplate(condition.value, inputs);
+      return waitForUrlCondition(
+        tab,
+        (currentUrl) => queryFreePath(currentUrl) === renderedValue,
+        timeoutMs,
+      );
+    }
+    case "url_includes": {
+      const renderedValue = renderTemplate(condition.value, inputs);
+      return waitForUrlCondition(
+        tab,
+        (currentUrl) => urlIncludesRenderedValue(currentUrl, renderedValue),
+        timeoutMs,
+      );
+    }
     case "locator_visible": {
       try {
         await resolveLocator(tab.playwright, condition.locator_candidates, inputs, {
@@ -907,13 +955,18 @@ async function executeAction(action, context) {
   const page = assertAllowedUrl(await tab.url(), context.allowedOrigins);
   await verifyPostcondition(action.postcondition, context);
   const outputValue = action.output_ref == null ? null : outputs[action.output_ref];
+  const outputDeclaration =
+    action.output_ref == null ? null : outputDeclarations.get(action.output_ref);
   return {
     locator_candidate: locatorCandidate,
     origin: page.origin,
     path: page.path,
     output_ref: action.output_ref,
     output_count: outputCount(outputValue),
-    output_sha256: outputValue == null ? null : sha256Text(canonicalJson(outputValue)),
+    output_sha256:
+      outputValue == null
+        ? null
+        : receiptOutputSha256(outputDeclaration, outputValue),
   };
 }
 
@@ -940,7 +993,7 @@ function receiptOutputEntries(capability, outputs) {
       sensitivity: declaration.sensitivity,
       delivery: declaration.delivery,
       record_count: outputCount(value),
-      sha256: sha256Text(canonicalJson(value)),
+      sha256: receiptOutputSha256(declaration, value),
       artifact: "outputs.json",
     };
   });

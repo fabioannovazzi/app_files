@@ -160,12 +160,13 @@ def _validate_origin(value: Any, *, scope: str, errors: list[str]) -> str | None
         errors.append(f"{scope} must be a non-empty origin")
         return None
     parsed = urlsplit(value)
-    if parsed.scheme != "https" or not parsed.hostname:
-        errors.append(f"{scope} must use HTTPS")
-    if parsed.username or parsed.password or parsed.path not in {"", "/"}:
-        errors.append(f"{scope} must not contain credentials or a path")
-    if parsed.query or parsed.fragment:
-        errors.append(f"{scope} must not contain a query or fragment")
+    local_host = parsed.hostname in {"127.0.0.1", "localhost", "::1"}
+    if parsed.scheme != "https" and not (parsed.scheme == "http" and local_host):
+        errors.append(f"{scope} must use HTTPS, except for loopback development")
+    if not parsed.hostname or parsed.username or parsed.password:
+        errors.append(f"{scope} must be an origin without embedded credentials")
+    if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
+        errors.append(f"{scope} must not contain a path, query, or fragment")
     return (
         f"{parsed.scheme}://{parsed.netloc}"
         if parsed.scheme and parsed.netloc

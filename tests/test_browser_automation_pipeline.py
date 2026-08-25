@@ -252,6 +252,170 @@ def _receipt(
     }
 
 
+def _download_capability() -> dict[str, object]:
+    pipeline = _pipeline()
+    capability = _capability("gmail-search-export")
+    discovery = _discovery(approved=True)
+    capability["status"] = "discovered"
+    capability["provenance"] = {
+        "source": "authorized_live_discovery",
+        "discovery_record_sha256": pipeline.sha256_payload(discovery),
+        "discovery_approval_id": "operator-review-one",
+        "discovery_approved_at": "2026-08-24T18:30:00+02:00",
+        "portable_bundle_contains_private_evidence": False,
+    }
+    capability["outputs"] = [
+        {
+            "name": "files",
+            "type": "download_set",
+            "sensitivity": "private",
+            "delivery": "artifact_only",
+            "description": "Synthetic downloaded files.",
+            "fields": [],
+        }
+    ]
+    capability["milestones"] = capability["milestones"][:3]
+    submit = capability["milestones"][1]
+    submit["transitions"] = [
+        {
+            "when": {
+                "kind": "always",
+                "locator_candidates": [],
+                "value": None,
+                "output_ref": None,
+                "comparator": None,
+                "expected": None,
+                "timeout_ms": 10000,
+            },
+            "next_milestone": "collect-results",
+            "terminal": False,
+        }
+    ]
+    download = capability["milestones"][2]["actions"][0]
+    download.update(
+        {
+            "id": "download-synthetic-file",
+            "intent": "Download one synthetic file.",
+            "operation": "download",
+            "effect": "reversible",
+            "locator_candidates": [
+                {
+                    "kind": "role",
+                    "role": "button",
+                    "value": "Download",
+                    "exact": True,
+                }
+            ],
+            "output_ref": "files",
+            "extract": None,
+            "postcondition": {
+                "kind": "output_count",
+                "locator_candidates": [],
+                "value": None,
+                "output_ref": "files",
+                "comparator": "gte",
+                "expected": 1,
+                "timeout_ms": 10000,
+            },
+        }
+    )
+    capability["milestones"][2]["transitions"] = [
+        {
+            "when": {
+                "kind": "output_nonempty",
+                "locator_candidates": [],
+                "value": None,
+                "output_ref": "files",
+                "comparator": None,
+                "expected": None,
+                "timeout_ms": 10000,
+            },
+            "next_milestone": None,
+            "terminal": True,
+        }
+    ]
+    capability["completion"] = {
+        "terminal_milestones": ["collect-results"],
+        "required_outputs": ["files"],
+    }
+    return capability
+
+
+def _download_receipt(
+    capability: dict[str, object],
+    *,
+    run_id: str,
+    byte_length: int,
+    file_sha256: str,
+) -> dict[str, object]:
+    pipeline = _pipeline()
+    completed = ["open-gmail", "submit-search", "collect-results"]
+    milestones = {item["id"]: item for item in capability["milestones"]}
+    portable_output = [{"byte_length": byte_length, "sha256": file_sha256}]
+    output_hash = pipeline.sha256_payload(portable_output)
+    action_results = []
+    for milestone_id in completed:
+        for action in milestones[milestone_id]["actions"]:
+            output_ref = action["output_ref"]
+            locators = action["locator_candidates"]
+            action_results.append(
+                {
+                    "milestone_id": milestone_id,
+                    "action_id": action["id"],
+                    "operation": action["operation"],
+                    "result": "passed",
+                    "started_at": "2026-08-24T19:00:00+02:00",
+                    "finished_at": "2026-08-24T19:00:01+02:00",
+                    "locator_candidate": (
+                        {"index": 0, "kind": locators[0]["kind"]} if locators else None
+                    ),
+                    "origin": "https://mail.google.com",
+                    "path": "/mail/u/0/",
+                    "output_ref": output_ref,
+                    "output_count": 1 if output_ref == "files" else 0,
+                    "output_sha256": output_hash if output_ref == "files" else None,
+                    "error": None,
+                }
+            )
+    return {
+        "schema_version": "browser-run-receipt/v1",
+        "runtime_version": "browser-capability-runtime/10",
+        "run_id": run_id,
+        "capability_id": capability["capability_id"],
+        "capability_version": capability["version"],
+        "execution_contract_sha256": pipeline.execution_contract_sha256(capability),
+        "discovery_record_sha256": capability["provenance"]["discovery_record_sha256"],
+        "started_at": "2026-08-24T19:00:00+02:00",
+        "finished_at": "2026-08-24T19:00:01+02:00",
+        "result": "passed",
+        "entry_milestone": capability["entry_milestone"],
+        "completed_milestones": completed,
+        "terminal_milestone": "collect-results",
+        "action_results": action_results,
+        "outputs": [
+            {
+                "name": "files",
+                "type": "download_set",
+                "sensitivity": "private",
+                "delivery": "artifact_only",
+                "record_count": 1,
+                "sha256": output_hash,
+                "artifact": "outputs.json",
+            }
+        ],
+        "input_hashes": {"query": "d" * 64, "max-results": "e" * 64},
+        "locator_changes_during_run": False,
+        "private_evidence_retained": False,
+        "environment": {
+            "browser": "existing_chrome",
+            "controller": "chrome_extension",
+            "origin_ui": "Synthetic",
+            "locale": "en",
+        },
+        "error": None,
+    }
+
+
 def _write_run_evidence(
     directory: Path,
     receipt: dict[str, object],
@@ -303,7 +467,7 @@ def _recovery_proposals(capability: dict[str, object]) -> dict[str, object]:
     }
     return {
         "schema_version": "browser-recovery-proposals/v2",
-        "runtime_version": "browser-capability-runtime/9",
+        "runtime_version": "browser-capability-runtime/10",
         "run_id": "recovered-run",
         "capability_id": capability["capability_id"],
         "capability_version": capability["version"],
@@ -467,6 +631,18 @@ def test_validator_enforces_runtime_semantics_and_action_confirmation() -> None:
         "confirmation must be 'action_time'" in item
         for item in pipeline.validate_capability(action)
     )
+
+
+def test_validator_rejects_guided_capture_redaction_marker_as_locator() -> None:
+    pipeline = _pipeline()
+    capability = _capability("gmail-search-export")
+    capability["milestones"][0]["actions"][1]["locator_candidates"][0][
+        "value"
+    ] = "Download invoice [private identifier]"
+
+    errors = pipeline.validate_capability(capability)
+
+    assert any("private identifier marker" in item for item in errors)
 
 
 def test_validator_allows_visible_structural_css_for_transition_state() -> None:
@@ -947,10 +1123,10 @@ def test_two_machine_receipts_finalize_and_seal_a_reviewed_capability(
     pipeline.promote_capability(draft_path, discovery_path, discovered_path)
     discovered = json.loads(discovered_path.read_text(encoding="utf-8"))
     receipt_one = _receipt(discovered, run_id="clean-run-one")
-    receipt_two = _receipt(discovered, run_id="clean-run-two", terminal="no-results")
+    receipt_two = _receipt(discovered, run_id="clean-run-two")
     receipt_paths = [
         _write_run_evidence(tmp_path / "run-one", receipt_one),
-        _write_run_evidence(tmp_path / "run-two", receipt_two, terminal="no-results"),
+        _write_run_evidence(tmp_path / "run-two", receipt_two),
     ]
     validated_path = tmp_path / "validated.json"
 
@@ -1005,6 +1181,134 @@ def test_finalizer_rejects_duplicate_or_tampered_receipts(tmp_path: Path) -> Non
             [first, tampered_path],
             tmp_path / "tampered-output.json",
         )
+
+
+def test_finalizer_rejects_clean_receipts_with_different_terminals(
+    tmp_path: Path,
+) -> None:
+    pipeline = _pipeline()
+    discovery = _discovery(approved=True)
+    draft = _draft_for_discovery(discovery)
+    discovered_path = tmp_path / "discovered.json"
+    pipeline.promote_capability(
+        _write_json(tmp_path / "draft.json", draft),
+        _write_json(tmp_path / "discovery.json", discovery),
+        discovered_path,
+    )
+    discovered = json.loads(discovered_path.read_text(encoding="utf-8"))
+    first = _write_run_evidence(
+        tmp_path / "result-run", _receipt(discovered, run_id="result-run")
+    )
+    second = _write_run_evidence(
+        tmp_path / "empty-run",
+        _receipt(discovered, run_id="empty-run", terminal="no-results"),
+        terminal="no-results",
+    )
+
+    with pytest.raises(ValueError, match="same terminal"):
+        pipeline.finalize_capability(
+            discovered_path, [first, second], tmp_path / "validated.json"
+        )
+
+
+def test_finalizer_rejects_clean_receipts_with_different_outputs(
+    tmp_path: Path,
+) -> None:
+    pipeline = _pipeline()
+    discovery = _discovery(approved=True)
+    draft = _draft_for_discovery(discovery)
+    discovered_path = tmp_path / "discovered.json"
+    pipeline.promote_capability(
+        _write_json(tmp_path / "draft.json", draft),
+        _write_json(tmp_path / "discovery.json", discovery),
+        discovered_path,
+    )
+    discovered = json.loads(discovered_path.read_text(encoding="utf-8"))
+    first = _write_run_evidence(
+        tmp_path / "first-run", _receipt(discovered, run_id="first-run")
+    )
+    changed_outputs = {
+        "messages": [
+            {
+                "sender": "Different synthetic sender",
+                "subject": "Synthetic subject",
+                "displayed-date": "2026-08-24",
+            }
+        ]
+    }
+    changed_receipt = _receipt(discovered, run_id="second-run")
+    changed_hash = pipeline.sha256_payload(changed_outputs["messages"])
+    changed_receipt["outputs"][0]["sha256"] = changed_hash
+    changed_receipt["action_results"][-1]["output_sha256"] = changed_hash
+    second = _write_run_evidence(
+        tmp_path / "second-run",
+        changed_receipt,
+        outputs_override=changed_outputs,
+    )
+
+    with pytest.raises(ValueError, match="same outputs"):
+        pipeline.finalize_capability(
+            discovered_path, [first, second], tmp_path / "validated.json"
+        )
+
+
+def test_finalizer_accepts_matching_download_evidence_from_different_local_paths(
+    tmp_path: Path,
+) -> None:
+    pipeline = _pipeline()
+    capability = _download_capability()
+    assert pipeline.validate_capability(capability) == []
+    capability_path = _write_json(tmp_path / "download-capability.json", capability)
+    file_hash = "a" * 64
+    first_outputs = {
+        "files": [
+            {
+                "path": "/private/tmp/first-download.zip",
+                "byte_length": 176,
+                "sha256": file_hash,
+            }
+        ]
+    }
+    second_outputs = {
+        "files": [
+            {
+                "path": "/private/tmp/second-download.zip",
+                "byte_length": 176,
+                "sha256": file_hash,
+            }
+        ]
+    }
+    first = _write_run_evidence(
+        tmp_path / "first-download-run",
+        _download_receipt(
+            capability,
+            run_id="first-download-run",
+            byte_length=176,
+            file_sha256=file_hash,
+        ),
+        outputs_override=first_outputs,
+    )
+    second = _write_run_evidence(
+        tmp_path / "second-download-run",
+        _download_receipt(
+            capability,
+            run_id="second-download-run",
+            byte_length=176,
+            file_sha256=file_hash,
+        ),
+        outputs_override=second_outputs,
+    )
+    validated_path = tmp_path / "validated.json"
+
+    pipeline.finalize_capability(
+        capability_path,
+        [first, second],
+        validated_path,
+    )
+
+    validated = json.loads(validated_path.read_text(encoding="utf-8"))
+    assert validated["status"] == "validated_local"
+    assert len(validated["validation"]["receipts"]) == 2
 
 
 def test_finalizer_rejects_output_changed_after_runtime(tmp_path: Path) -> None:
@@ -1269,8 +1573,7 @@ def test_direct_cli_runs_reviewed_lifecycle_and_all_evidence_validators(
         ),
         _write_run_evidence(
             tmp_path / "run-two",
-            _receipt(discovered, run_id="cli-run-two", terminal="no-results"),
-            terminal="no-results",
+            _receipt(discovered, run_id="cli-run-two"),
         ),
     ]
     assert pipeline.main(["validate", str(receipt_paths[0]), "--kind", "receipt"]) == 0

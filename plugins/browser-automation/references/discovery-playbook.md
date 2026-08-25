@@ -72,9 +72,12 @@ performed by the `operator` or `model`.
 At every step:
 
 1. Inspect the current allowed origin and query-free path.
-2. Capture only the targeted control role, accessible name, label,
-   placeholder, stable test ID, generic state marker, and bounded state
-   fingerprint needed for the decision.
+2. Capture only the targeted control role, locally redacted accessible name,
+   label, placeholder, stable test ID, generic state marker, and bounded state
+   fingerprint needed for the decision. The local runtime replaces recognizable
+   identifier-shaped substrings before returning this metadata and withholds a
+   dynamic test ID that contains one. Never use the redaction marker as a
+   literal locator.
 3. Interpret the page's role in the process and identify the semantic
    milestone, action intent, before/after state, outcome, postcondition, branch,
    and uncertainty.
@@ -84,7 +87,8 @@ At every step:
    that tests the current hypothesis.
 
 The default capture excludes query strings, form values, business rows, page
-HTML, screenshots, network bodies, downloaded bytes, and browser state. Raw
+HTML, screenshots, network bodies, downloaded bytes, browser state, and raw
+recognizable identifiers embedded in returned control text. Raw
 guided observations are ephemeral and are not the developer deliverable. If a
 specific private data class or screenshot is genuinely necessary, name it once
 and obtain confirmation for that class. A screenshot may enter the transfer

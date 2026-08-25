@@ -53,6 +53,7 @@ ISO_DATE_TIME = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T.+$")
 EMAIL_ADDRESS = re.compile(
     r"(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?![A-Za-z0-9.-])"
 )
+PRIVATE_IDENTIFIER_MARKER = "[private identifier]"
 
 CAPABILITY_KEYS = {
     "schema_version",
@@ -406,6 +407,20 @@ def sha256_payload(payload: Any) -> str:
     return hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
 
+def _receipt_output_payload(value: Any, declaration: Mapping[str, Any]) -> Any:
+    """Return the path-free output projection used in portable receipts."""
+
+    if declaration.get("type") != "download_set" or not isinstance(value, list):
+        return value
+    return [
+        {
+            "byte_length": item["byte_length"],
+            "sha256": item["sha256"],
+        }
+        for item in value
+    ]
+
+
 def execution_contract_payload(capability: Mapping[str, Any]) -> dict[str, Any]:
     """Return the immutable executable projection, excluding validation claims."""
 
@@ -607,6 +622,14 @@ def _validate_locator(value: Any, *, scope: str, errors: list[str]) -> str | Non
             errors.append(f"{scope}.value must be non-empty")
     if not isinstance(locator.get("exact"), bool):
         errors.append(f"{scope}.exact must be boolean")
+    locator_value = locator.get("value")
+    if (
+        isinstance(locator_value, str)
+        and PRIVATE_IDENTIFIER_MARKER in locator_value.casefold()
+    ):
+        errors.append(
+            f"{scope}.value must not contain the guided-capture private identifier marker"
+        )
     return str(kind)
 
 
@@ -2369,7 +2392,9 @@ def _verified_receipt(
         )
         if output_errors:
             raise ValueError(f"receipt {path} " + "; ".join(output_errors))
-        if evidence["sha256"] != sha256_payload(value):
+        if evidence["sha256"] != sha256_payload(
+            _receipt_output_payload(value, declaration)
+        ):
             raise ValueError(f"receipt {path} output hash does not match: {name}")
         if evidence["record_count"] != _output_count(value):
             raise ValueError(f"receipt {path} output count does not match: {name}")
@@ -2397,6 +2422,27 @@ def _verified_receipt(
     )
 
 
+def _require_consistent_clean_receipts(
+    receipts: Sequence[tuple[dict[str, Any], str, dict[str, Any], str]],
+) -> None:
+    """Require the same terminal, portable outputs, environment, and runtime."""
+
+    terminal_milestones = {receipt[0]["terminal_milestone"] for receipt in receipts}
+    if len(terminal_milestones) != 1:
+        raise ValueError("clean validation receipts must reach the same terminal")
+    output_hashes = {sha256_payload(receipt[0]["outputs"]) for receipt in receipts}
+    if len(output_hashes) != 1:
+        raise ValueError("clean validation receipts must contain the same outputs")
+    environment_hashes = {
+        sha256_payload(receipt[0]["environment"]) for receipt in receipts
+    }
+    if len(environment_hashes) != 1:
+        raise ValueError("clean validation receipts must use the same environment")
+    runtime_versions = {receipt[0]["runtime_version"] for receipt in receipts}
+    if len(runtime_versions) != 1:
+        raise ValueError("clean validation receipts must use the same runtime version")
+
+
 def finalize_capability(
     capability_path: Path,
     receipt_paths: Sequence[Path],
@@ -2417,14 +2463,7 @@ def finalize_capability(
     run_ids = [receipt[0]["run_id"] for receipt in receipts]
     if len(run_ids) != len(set(run_ids)):
         raise ValueError("finalization receipts must have unique run ids")
-    environment_hashes = {
-        sha256_payload(receipt[0]["environment"]) for receipt in receipts
-    }
-    if len(environment_hashes) != 1:
-        raise ValueError("clean validation receipts must use the same environment")
-    runtime_versions = {receipt[0]["runtime_version"] for receipt in receipts}
-    if len(runtime_versions) != 1:
-        raise ValueError("clean validation receipts must use the same runtime version")
+    _require_consistent_clean_receipts(receipts)
     finalized = copy.deepcopy(capability)
     finalized["status"] = "validated_local"
     finalized["validation"] = {
@@ -2480,6 +2519,10 @@ def seal_capability(
         actual_hashes = {receipt_hash for _, receipt_hash, _, _ in receipt_records}
         if actual_hashes != expected_hashes:
             raise ValueError("provided receipts do not match capability validation")
+        run_ids = [receipt[0]["run_id"] for receipt in receipt_records]
+        if len(run_ids) != len(set(run_ids)):
+            raise ValueError("validation receipts must have unique run ids")
+        _require_consistent_clean_receipts(receipt_records)
     elif receipt_paths:
         raise ValueError("discovered bundle must not include validation receipts")
     target = output_directory / capability["capability_id"]

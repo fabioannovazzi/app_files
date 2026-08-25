@@ -400,6 +400,79 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
   assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
 });
 
+test("executeCapability accepts an exact input-templated route in an encoded URL", async () => {
+  const capability = syntheticCapability();
+  const action = capability.milestones[0].actions[0];
+  action.operation = "press";
+  action.input_ref = null;
+  action.key = "Enter";
+  action.postcondition = {
+    kind: "url_includes",
+    locator_candidates: [],
+    value: "#search/{{query}}",
+    output_ref: null,
+    comparator: null,
+    expected: null,
+    timeout_ms: 100,
+  };
+  const registry = resultRegistry();
+  let searchSubmitted = false;
+  registry[locatorKey("placeholder", null, "Search")][0].onAction = ({ value }) => {
+    if (value === "Enter") {
+      searchSubmitted = true;
+    }
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  tab.playwright.waitForTimeout = async () => {
+    if (searchSubmitted) {
+      tab.currentUrl = "https://example.com/#search/newer_than%3A7d";
+    }
+  };
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "newer_than:7d", "max-results": 10 },
+    runDirectory: join(parent, "encoded-query-route"),
+    runId: "encoded-query-route-run",
+  });
+
+  assert.equal(summary.result, "passed");
+});
+
+test("executeCapability rejects a no-op press when the exact query route is absent", async () => {
+  const capability = syntheticCapability();
+  const action = capability.milestones[0].actions[0];
+  action.operation = "press";
+  action.input_ref = null;
+  action.key = "Enter";
+  action.postcondition = {
+    kind: "url_includes",
+    locator_candidates: [],
+    value: "#search/{{query}}",
+    output_ref: null,
+    comparator: null,
+    expected: null,
+    timeout_ms: 100,
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, resultRegistry());
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "newer_than:7d", "max-results": 10 },
+      runDirectory: join(parent, "missing-query-route"),
+      runId: "missing-query-route-run",
+    }),
+    /postcondition_failed/,
+  );
+});
+
 test("executeCapability rejects a legacy desktop-control fallback contract", async () => {
   const capability = syntheticCapability();
   capability.runtime.os_fallback = "computer_use_non_browser_only";
@@ -510,6 +583,52 @@ test("executeCapability records downloaded file bytes without returning the priv
   assert.equal(outputs.files[0].path, downloadPath);
   assert.equal(outputs.files[0].byte_length, 19);
   assert.equal(outputs.files[0].sha256.length, 64);
+});
+
+test("executeCapability keeps identical download evidence stable across local paths", async () => {
+  const capability = syntheticDownloadCapability();
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  const firstPath = join(parent, "first-download.zip");
+  const secondPath = join(parent, "second-download.zip");
+  await writeFile(firstPath, "same synthetic zip bytes", "utf8");
+  await writeFile(secondPath, "same synthetic zip bytes", "utf8");
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [new FakeNode()],
+  };
+  const firstTab = new FakeTab({});
+  firstTab.playwright = new FakePlaywright(firstTab, registry, firstPath);
+  const secondTab = new FakeTab({});
+  secondTab.playwright = new FakePlaywright(secondTab, registry, secondPath);
+
+  const first = await executeCapability({
+    tab: firstTab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "first-run"),
+    runId: "first-download-run",
+  });
+  const second = await executeCapability({
+    tab: secondTab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "second-run"),
+    runId: "second-download-run",
+  });
+  const firstOutputs = JSON.parse(await readFile(first.outputs_path, "utf8"));
+  const secondOutputs = JSON.parse(await readFile(second.outputs_path, "utf8"));
+  const firstReceipt = JSON.parse(await readFile(first.receipt_path, "utf8"));
+  const secondReceipt = JSON.parse(await readFile(second.receipt_path, "utf8"));
+  const firstLock = JSON.parse(await readFile(first.lock_path, "utf8"));
+  const secondLock = JSON.parse(await readFile(second.lock_path, "utf8"));
+
+  assert.notEqual(firstOutputs.files[0].path, secondOutputs.files[0].path);
+  assert.equal(first.outputs[0].sha256, second.outputs[0].sha256);
+  assert.equal(
+    firstReceipt.action_results.at(-1).output_sha256,
+    secondReceipt.action_results.at(-1).output_sha256,
+  );
+  assert.notEqual(firstLock.outputs_sha256, secondLock.outputs_sha256);
 });
 
 test("executeCapability reports a native gap when Chrome cannot expose download evidence", async () => {

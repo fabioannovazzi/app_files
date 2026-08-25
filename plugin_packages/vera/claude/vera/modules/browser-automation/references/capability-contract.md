@@ -49,9 +49,11 @@ same engine with different site/process contracts.
   provenance, origin bounds, secret-exclusion fields, validation-receipt checks,
   hashes, permissions, and non-overwriting bundle output.
 - `scripts/discovery_runtime.mjs` performs read-only bounded polling during an
-  operator demonstration. It records query-free paths and semantic control
-  metadata without form values, business rows, HTML, screenshots, or a claimed
-  raw click stream.
+  operator demonstration. Before returning control metadata, it replaces
+  recognizable identifier-shaped substrings in accessible names, labels and
+  placeholders with a fixed marker and withholds dynamic test IDs that contain
+  them. It records query-free paths without form values, business rows, HTML,
+  screenshots, or a claimed raw click stream.
 - `scripts/discovery_pack.py` validates and seals the separately reviewed
   `browser-discovery-evidence/v1`, `browser-discovery/v2`, and non-executable
   draft into a hash-linked developer pack. Transfer approval is not capability-
@@ -111,6 +113,11 @@ the live browser task. Receipts contain input hashes, not values.
 
 Prefer role and accessible name, then label, placeholder, stable test ID, or
 bounded visible text for interactive controls. CSS may appear as a fallback.
+The guided-capture private-identifier marker is evidence that local redaction
+occurred and must never be copied into a capability as a literal locator. Use
+the remaining semantic text only when it is sufficient and verify the resulting
+locator against the live page; otherwise keep the locator uncertain until an
+authorized bounded inspection establishes a safe candidate.
 Repeated structured extraction fields may use bounded CSS when accessibility
 semantics do not identify fields inside a row; those locators remain subject to
 clean replay evidence. A transition may use CSS without a semantic fallback only
@@ -137,6 +144,11 @@ completion; it verifies the declared visible state, URL path, structured output,
 or download event. The executor independently rejects unknown action effects,
 incorrect confirmation modes, and approvals that do not name a declared
 consequential action even when a caller skipped the separate Python validator.
+For `url_includes`, runtime input templates are compared with both the raw URL
+and one safely percent-decoded URL representation. A process such as Gmail
+search can therefore require the exact `#search/{{query}}` route without
+persisting the private query in a receipt; remaining on the inbox route fails
+the postcondition.
 Download completion additionally requires the connected Chrome event object to
 expose `path()` so the runtime can hash actual local bytes. A missing method is
 a sanitized `native_gap`, not successful download evidence. The runtime must
@@ -157,7 +169,10 @@ runtime writes:
 - `run.receipt.json`: capability and discovery hashes, hashed inputs, milestones,
   sanitized action outcomes, output counts and hashes, terminal state, and
   environment. Raw errors and private values are excluded; model-visible
-  failures contain only a stable category and a SHA-256 of the local detail.
+  failures contain only a stable category and a SHA-256 of the local detail. A
+  download-set output hash covers only the ordered byte-length and file-hash
+  evidence, never the machine-specific local path. The path remains solely in
+  `outputs.json`.
 - `run.lock.json`: hashes linking the receipt and output artifact.
 - `recovery.proposals.json`, only when bounded model recovery was attempted:
   the exact action-or-field target, proposed locator or resolved-root choice,
@@ -182,6 +197,11 @@ run may complete useful work but cannot count toward validation. Capability
 status and validation metadata are excluded
 from the execution hash so promotion from `discovered` to `validated_local`
 does not invalidate the proven executable contract.
+
+For download sets, "outputs match" means the receipt-visible ordered
+byte-length and SHA-256 evidence matches. Different owner-only download paths
+are expected across runs and remain protected by each run lock's hash of its
+exact `outputs.json`.
 
 The finalizer also requires each canonical receipt beside its canonical
 `outputs.json` and `run.lock.json`, verifies all cross-hashes, declared input
