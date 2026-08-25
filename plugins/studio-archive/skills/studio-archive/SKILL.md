@@ -75,11 +75,20 @@ The index never follows symbolic links.
 
 ### Archive-root access preflight
 
-Before first configuration, call `diagnose_studio_archive_access` with the
-exact selected root. It checks path resolution and root listing without
-persisting configuration, creating a client, or returning the private path in
-its result. Use its mechanical error category instead of interpreting a generic
-`Access denied` message:
+When the archive is not configured, offer the local guided setup first. Tell
+the user that Vera will open the operating system's folder chooser, then call
+`setup_studio_archive`. That action accepts no path argument: the chooser
+selects the exact root locally, the tool diagnoses access before configuration,
+and its result does not return the selected private path. Ask the user to type
+an absolute path only if the tool returns
+`archive_folder_picker_unavailable`. If the chooser is cancelled, no
+configuration is written; offer to reopen it instead of requesting the path.
+
+For the manual fallback, call `diagnose_studio_archive_access` with the exact
+selected root before configuration. It checks path resolution and root listing
+without persisting configuration, creating a client, or returning the private
+path in its result. Use its mechanical error category instead of interpreting
+a generic `Access denied` message:
 
 - `archive_host_access_permission_required` / the marker
   `MPARANZA_ARCHIVE_HOST_PERMISSION_REQUIRED`: immediately retry the exact
@@ -162,6 +171,9 @@ Use this exact chat workflow whenever a professional starts client work:
 1. Call `list_studio_archive_clients`. It returns safe client directory rows
    with stable IDs, display labels, status, and counts of private identity
    values; it does not return stored emails, legal names, or tax identifiers.
+   If it returns `configured: false` and `setup_required: true`, run the guided
+   setup above and repeat the client list after configuration; this recoverable
+   state is not a terminal workflow error.
    Compare the user's stated display name with these labels semantically. If
    the user supplies an email address, exact legal name, or tax identifier,
    call `resolve_studio_archive_client`; local code compares that one value and
@@ -244,7 +256,7 @@ batch has the same exact byte selection as an earlier run, with a new
 `idempotency_key` for each distinct batch.
 
 Users do not operate the CLI. If Codex must use the internal fallback, the
-corresponding commands are `clients`, `resolve-client`, `configure-client`, `create-client`,
+corresponding commands are `setup`, `clients`, `resolve-client`, `configure-client`, `create-client`,
 `create-engagement`, `import-document`, `engagements`, `prepare-workflow`, and
 `start-check-entries-from-sample` in `scripts/studio_archive.py`. Google Drive
 first-time setup additionally uses `authorize-google-drive --client-secrets`,
@@ -564,6 +576,7 @@ OCR-dependent, or produced no searchable passage.
 For local documents, prefer these Vera MCP tools:
 
 - `studio_archive_status`
+- `setup_studio_archive`
 - `configure_studio_archive`
 - `refresh_studio_archive`
 - `search_studio_archive`
@@ -579,6 +592,7 @@ If MCP is unavailable, work from the component root and use:
 
 ```bash
 python scripts/check_dependencies.py
+python scripts/studio_archive.py setup
 python scripts/studio_archive.py diagnose-access --archive-root /absolute/archive/path
 python scripts/studio_archive.py configure --archive-root /absolute/archive/path
 python scripts/studio_archive.py refresh
@@ -657,7 +671,11 @@ ZIPs during an archive run.
 
 ## Failure rules
 
-- First archive configuration: run the access diagnostic before configuring.
+- First archive configuration: use `setup_studio_archive` so the native folder
+  chooser runs the access diagnostic before configuring. Use the manual
+  diagnose/configure path only when the picker is unavailable.
+- Folder chooser cancelled: write no configuration and offer to reopen it; do
+  not replace cancellation with an immediate manual-path request.
 - Host sandbox denial: rerun the exact diagnostic and configuration with host
   folder-access approval and the approved-retry flag; do not classify it as an
   SMB or NTFS failure before that retry.

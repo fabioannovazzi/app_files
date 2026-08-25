@@ -12,6 +12,9 @@ import secrets
 import shutil
 import sqlite3
 import stat
+
+# Native folder selection uses fixed executable names and never invokes a shell.
+import subprocess  # nosec B404
 import sys
 import tempfile
 import warnings
@@ -23,7 +26,7 @@ from email.parser import BytesParser
 from email.utils import getaddresses
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any, Iterator, Mapping, Sequence
+from typing import Any, Callable, Iterator, Mapping, Sequence
 
 
 def _add_vera_assurance_module_path() -> None:
@@ -60,6 +63,7 @@ CLIENT_WORKFLOW_IDS = (*VERA_CLIENT_WORKFLOW_IDS, "apertura-pratica")
 __all__ = [
     "ArchiveAccessError",
     "ArchiveError",
+    "ArchiveFolderPickerUnavailableError",
     "ArchiveNotConfiguredError",
     "SourceChangedError",
     "cancel_studio_client_workflow",
@@ -90,6 +94,7 @@ __all__ = [
     "report_studio_client_retention",
     "resolve_studio_client_identity",
     "search_archive",
+    "setup_archive_with_folder_picker",
     "set_studio_client_identity",
     "snapshot_studio_client_folder",
     "snapshot_studio_client_google_drive",
@@ -229,6 +234,25 @@ class ArchiveNotConfiguredError(ArchiveError):
     """Raised when an operation needs a configured archive."""
 
     code = "archive_not_configured"
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.details = _studio_archive_setup_contract()
+
+
+class ArchiveFolderPickerUnavailableError(ArchiveError):
+    """Raised when this desktop runtime cannot open a native folder picker."""
+
+    code = "archive_folder_picker_unavailable"
+
+    def __init__(self) -> None:
+        super().__init__(
+            "The native Studio Archive folder chooser is unavailable on this runtime."
+        )
+        self.details = {
+            **_studio_archive_setup_contract(),
+            "manual_path_fallback_allowed": True,
+        }
 
 
 class SourceChangedError(ArchiveError):
@@ -769,6 +793,135 @@ def configure_archive(
     return status
 
 
+def _studio_archive_setup_contract() -> dict[str, Any]:
+    """Describe the fixed local recovery path for first-time configuration."""
+
+    return {
+        "setup_required": True,
+        "guided_setup": {
+            "tool_name": "setup_studio_archive",
+            "action": "select_folder_and_configure",
+            "selection_mode": "native_directory_picker",
+        },
+        "manual_path_fallback": {
+            "diagnose_tool_name": "diagnose_studio_archive_access",
+            "configure_tool_name": "configure_studio_archive",
+            "allowed_after": "archive_folder_picker_unavailable",
+        },
+    }
+
+
+def _native_folder_picker_command() -> tuple[str, ...]:
+    """Build fixed argv for the mechanically known desktop platform.
+
+    Platform selection is deterministic because it enforces a local, no-shell
+    UI boundary; it does not interpret the user's archive or client semantics.
+    """
+
+    if sys.platform == "darwin":
+        executable = shutil.which("osascript")
+        if executable is None:
+            raise ArchiveFolderPickerUnavailableError()
+        script = (
+            'try\nPOSIX path of (choose folder with prompt "Select the Vera Studio '
+            'Archive folder")\non error number -128\nreturn ""\nend try'
+        )
+        return (executable, "-e", script)
+    if sys.platform == "win32":
+        executable = (
+            shutil.which("powershell.exe")
+            or shutil.which("powershell")
+            or shutil.which("pwsh")
+        )
+        if executable is None:
+            raise ArchiveFolderPickerUnavailableError()
+        script = (
+            "Add-Type -AssemblyName System.Windows.Forms; "
+            "$dialog = New-Object System.Windows.Forms.FolderBrowserDialog; "
+            "$dialog.Description = 'Select the Vera Studio Archive folder'; "
+            "$dialog.ShowNewFolderButton = $false; "
+            "if ($dialog.ShowDialog() -eq "
+            "[System.Windows.Forms.DialogResult]::OK) { "
+            "[Console]::Out.Write($dialog.SelectedPath) }"
+        )
+        return (executable, "-NoProfile", "-STA", "-Command", script)
+    for executable_name, arguments in (
+        (
+            "zenity",
+            (
+                "--file-selection",
+                "--directory",
+                "--title=Select the Vera Studio Archive folder",
+            ),
+        ),
+        (
+            "kdialog",
+            (
+                "--getexistingdirectory",
+                ".",
+                "--title",
+                "Select the Vera Studio Archive folder",
+            ),
+        ),
+    ):
+        executable = shutil.which(executable_name)
+        if executable is not None:
+            return (executable, *arguments)
+    raise ArchiveFolderPickerUnavailableError()
+
+
+def _select_archive_root_with_native_picker() -> Path | None:
+    """Return the directory selected by the user, or ``None`` after cancellation."""
+
+    command = _native_folder_picker_command()
+    try:
+        # The command is fixed per supported platform; selected paths are output only.
+        completed = subprocess.run(  # nosec B603
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=300,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ArchiveFolderPickerUnavailableError() from exc
+    selected = completed.stdout.strip()
+    if completed.returncode == 0:
+        return Path(selected) if selected else None
+    if completed.returncode == 1 and not completed.stderr.strip():
+        return None
+    raise ArchiveFolderPickerUnavailableError()
+
+
+def setup_archive_with_folder_picker(
+    *,
+    state_dir: Path | None = None,
+    folder_selector: Callable[[], Path | None] | None = None,
+) -> dict[str, Any]:
+    """Select, diagnose, and configure one archive root through a local picker."""
+
+    selector = folder_selector or _select_archive_root_with_native_picker
+    selected_root = selector()
+    if selected_root is None:
+        return {
+            "configured": False,
+            "setup_status": "cancelled",
+            **_studio_archive_setup_contract(),
+        }
+    diagnostic = diagnose_archive_access(selected_root, state_dir=state_dir)
+    result = configure_archive(selected_root, state_dir=state_dir)
+    result.pop("archive_root", None)
+    result.update(
+        {
+            "setup_status": "configured",
+            "setup_required": False,
+            "archive_root_returned": False,
+            "access_diagnostic": diagnostic,
+        }
+    )
+    return result
+
+
 def diagnose_archive_access(
     archive_root: Path,
     *,
@@ -807,7 +960,7 @@ def _load_config(
     path = _config_path(state_dir)
     if not path.is_file():
         raise ArchiveNotConfiguredError(
-            "Studio Archive is not configured. Configure an absolute archive root first."
+            "Studio Archive is not configured. Start the guided folder setup first."
         )
     _assert_private_file(path, "configuration")
     try:
@@ -1280,6 +1433,22 @@ def list_studio_clients(
     """List client scopes without exposing the private identity registry."""
 
     private_state = _state_dir(state_dir)
+    if not _config_path(private_state).is_file():
+        return {
+            "configured": False,
+            "scope_configuration_changed": False,
+            "registered_client_count": 0,
+            "unregistered_scope_count": 0,
+            "configured_profile_count": 0,
+            "candidate_only_profile_count": 0,
+            "alias_only_profile_count": 0,
+            "orphaned_profile_count": 0,
+            "clients": [],
+            "orphaned_profiles": [],
+            "private_identity_values_returned": False,
+            "gmail_connector_called": False,
+            **_studio_archive_setup_contract(),
+        }
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
     records = (
@@ -1299,6 +1468,7 @@ def list_studio_clients(
         if record.scope_id not in active_scope_ids
     ]
     return {
+        "configured": True,
         "scope_configuration_changed": scopes_changed,
         "registered_client_count": sum(
             client["registration_status"] == "registered" for client in clients
@@ -4934,6 +5104,7 @@ def studio_archive_status(*, state_dir: Path | None = None) -> dict[str, Any]:
             "document_issue_count": 0,
             "document_issues": [],
             "document_issues_truncated": False,
+            **_studio_archive_setup_contract(),
         }
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)

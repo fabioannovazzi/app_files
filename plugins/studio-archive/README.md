@@ -10,7 +10,10 @@ or bind one client to a My Drive or Shared Drive folder for native Drive
 snapshots and transient evidence opening.
 
 Fabio and Paolo each configure the same shared or synced source folder from
-their own Vera installation in Codex Desktop. Each computer builds its own
+their own Vera installation in Codex Desktop. On first use, Vera opens the
+operating system's folder chooser, diagnoses the selected root, and saves the
+private local configuration; a typed absolute path is only a fallback when the
+native chooser is unavailable. Each computer builds its own
 derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the index,
 configuration, private contact metadata, and ChatGPT history are not shared.
 They are not the operational source of truth. Search and indexing never modify
@@ -155,6 +158,7 @@ The normal Codex path is the MCP server. A direct CLI fallback is also
 available:
 
 ```bash
+python scripts/studio_archive.py setup
 python scripts/studio_archive.py configure --archive-root /absolute/path/to/Studio
 python scripts/studio_archive.py refresh
 python scripts/studio_archive.py status

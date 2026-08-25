@@ -42,6 +42,7 @@ from archive_core import (
     resolve_studio_client_identity,
     search_archive,
     set_studio_client_identity,
+    setup_archive_with_folder_picker,
     snapshot_studio_client_folder,
     snapshot_studio_client_google_drive,
     start_check_entries_from_sample,
@@ -60,6 +61,8 @@ def _emit(payload: dict[str, Any]) -> None:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    subparsers.add_parser("setup")
 
     configure = subparsers.add_parser("configure")
     configure.add_argument("--archive-root", type=Path, required=True)
@@ -247,7 +250,9 @@ def main(argv: list[str] | None = None) -> int:
 
     args = _parser().parse_args(argv)
     try:
-        if args.command == "configure":
+        if args.command == "setup":
+            result = setup_archive_with_folder_picker()
+        elif args.command == "configure":
             result = configure_archive(
                 args.archive_root,
                 host_access_approved=args.host_folder_access_approved,

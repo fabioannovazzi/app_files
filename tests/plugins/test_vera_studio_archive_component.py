@@ -601,8 +601,163 @@ def test_status_without_configuration_does_not_create_state(
         "document_issue_count": 0,
         "document_issues": [],
         "document_issues_truncated": False,
+        "setup_required": True,
+        "guided_setup": {
+            "tool_name": "setup_studio_archive",
+            "action": "select_folder_and_configure",
+            "selection_mode": "native_directory_picker",
+        },
+        "manual_path_fallback": {
+            "diagnose_tool_name": "diagnose_studio_archive_access",
+            "configure_tool_name": "configure_studio_archive",
+            "allowed_after": "archive_folder_picker_unavailable",
+        },
     }
     assert not state_dir.exists()
+
+
+def test_client_list_without_configuration_returns_guided_setup(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    state_dir = tmp_path / "absent-state"
+
+    # Act
+    result = archive_core.list_studio_clients(state_dir=state_dir)
+
+    # Assert
+    assert result["configured"] is False
+    assert result["setup_required"] is True
+    assert result["guided_setup"] == {
+        "tool_name": "setup_studio_archive",
+        "action": "select_folder_and_configure",
+        "selection_mode": "native_directory_picker",
+    }
+    assert result["manual_path_fallback"]["allowed_after"] == (
+        "archive_folder_picker_unavailable"
+    )
+    assert result["clients"] == []
+    assert not state_dir.exists()
+
+
+def test_guided_setup_configures_selected_root_without_returning_private_path(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Shared Studio"
+    (archive_root / "Rossi").mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+
+    # Act
+    result = archive_core.setup_archive_with_folder_picker(
+        state_dir=state_dir,
+        folder_selector=lambda: archive_root,
+    )
+
+    # Assert
+    assert result["configured"] is True
+    assert result["setup_status"] == "configured"
+    assert result["setup_required"] is False
+    assert result["archive_root_returned"] is False
+    assert result["access_diagnostic"]["scope_count"] == 1
+    assert str(archive_root) not in json.dumps(result)
+    assert (state_dir / "config.json").is_file()
+
+
+def test_guided_setup_cancel_does_not_write_configuration(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    state_dir = tmp_path / "private-state"
+
+    # Act
+    result = archive_core.setup_archive_with_folder_picker(
+        state_dir=state_dir,
+        folder_selector=lambda: None,
+    )
+
+    # Assert
+    assert result["configured"] is False
+    assert result["setup_status"] == "cancelled"
+    assert result["setup_required"] is True
+    assert not state_dir.exists()
+
+
+@pytest.mark.parametrize(
+    ("platform_name", "available_name", "executable", "expected_argument"),
+    [
+        ("darwin", "osascript", "/usr/bin/osascript", "choose folder"),
+        (
+            "win32",
+            "powershell.exe",
+            r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+            "FolderBrowserDialog",
+        ),
+        ("linux", "zenity", "/usr/bin/zenity", "--directory"),
+    ],
+)
+def test_guided_setup_uses_platform_native_folder_picker(
+    tmp_path: Path,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    platform_name: str,
+    available_name: str,
+    executable: str,
+    expected_argument: str,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Shared Studio"
+    (archive_root / "Rossi").mkdir(parents=True)
+    available_executables = {available_name: executable}
+    observed: dict[str, tuple[str, ...]] = {}
+
+    def completed_picker(
+        command: tuple[str, ...], **_kwargs: Any
+    ) -> subprocess.CompletedProcess[str]:
+        observed["command"] = command
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=f"{archive_root}\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(archive_core.sys, "platform", platform_name)
+    monkeypatch.setattr(archive_core.shutil, "which", available_executables.get)
+    monkeypatch.setattr(archive_core.subprocess, "run", completed_picker)
+
+    # Act
+    result = archive_core.setup_archive_with_folder_picker(
+        state_dir=tmp_path / "private-state"
+    )
+
+    # Assert
+    assert result["configured"] is True
+    assert observed["command"][0] == executable
+    assert expected_argument in " ".join(observed["command"])
+
+
+def test_guided_setup_reports_manual_fallback_only_when_picker_is_unavailable(
+    tmp_path: Path,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Arrange
+    monkeypatch.setattr(archive_core.sys, "platform", "unsupported-desktop")
+    monkeypatch.setattr(archive_core.shutil, "which", lambda _name: None)
+
+    # Act / Assert
+    with pytest.raises(
+        archive_core.ArchiveFolderPickerUnavailableError,
+    ) as raised:
+        archive_core.setup_archive_with_folder_picker(
+            state_dir=tmp_path / "private-state"
+        )
+    assert raised.value.code == "archive_folder_picker_unavailable"
+    assert raised.value.details["manual_path_fallback_allowed"] is True
 
 
 def test_configure_rejects_state_inside_source_without_writing_it(
@@ -1590,7 +1745,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_thirty_two_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_thirty_three_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -1627,6 +1782,7 @@ def test_mcp_lists_thirty_two_strict_local_tools(tmp_path: Path) -> None:
         "close_studio_client_engagement",
         "recover_studio_client_ledger",
         "report_studio_client_retention",
+        "setup_studio_archive",
         "diagnose_studio_archive_access",
         "configure_studio_archive",
         "refresh_studio_archive",
@@ -1682,6 +1838,34 @@ def test_mcp_lists_thirty_two_strict_local_tools(tmp_path: Path) -> None:
         tool_by_name["diagnose_studio_archive_access"]["annotations"]["readOnlyHint"]
         is True
     )
+    assert tool_by_name["setup_studio_archive"]["inputSchema"]["required"] == []
+    assert tool_by_name["setup_studio_archive"]["annotations"]["readOnlyHint"] is False
+    assert (
+        tool_by_name["setup_studio_archive"]["annotations"]["idempotentHint"] is False
+    )
+
+
+def test_mcp_client_list_returns_guided_setup_when_archive_is_not_configured(
+    tmp_path: Path,
+) -> None:
+    # Arrange
+    state_dir = tmp_path / "absent-state"
+
+    # Act
+    result = _mcp_tool(
+        "list_studio_archive_clients",
+        {},
+        state_dir=state_dir,
+    )
+
+    # Assert
+    assert result["isError"] is False
+    assert result["structuredContent"]["configured"] is False
+    assert result["structuredContent"]["setup_required"] is True
+    assert result["structuredContent"]["guided_setup"]["tool_name"] == (
+        "setup_studio_archive"
+    )
+    assert not state_dir.exists()
 
 
 def test_mcp_diagnoses_archive_access_without_returning_private_path(
