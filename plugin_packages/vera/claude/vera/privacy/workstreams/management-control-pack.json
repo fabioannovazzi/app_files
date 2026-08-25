@@ -39,7 +39,7 @@
       {
         "id": "management-control-commentary",
         "purpose": "Prepare a metric-linked professional-review draft without changing calculated facts",
-        "content": "The bounded calculated context plus draft observations and hypotheses tied to exact metric IDs, management questions, and limitations. The deterministic finalizer checks only schema and metric-reference closure; business causation, accounting correctness, completeness, materiality, and professional approval remain model-led or professional judgments.",
+        "content": "The bounded calculated context plus draft observations and hypotheses tied to exact metric IDs, management questions, and limitations. The deterministic finalizer checks pack identity, rejects a blocked pack or failed declared control, and validates commentary schema and metric-reference closure; business causation, accounting correctness, completeness, materiality, and professional approval remain model-led or professional judgments.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -59,7 +59,7 @@
     },
     {
       "id": "exact-calculation-and-control-boundary",
-      "control": "Dates must match the reviewed format, monetary values use Decimal arithmetic, categories must close through the reviewed mapping, aging uses explicit cutoff buckets, and any failed declared source control total blocks the pack."
+      "control": "Dates must match the reviewed format, monetary values use Decimal arithmetic, reviewed field multipliers encode any sign normalization, categories must close through the reviewed mapping, bank movements remain inside the reporting window, balances remain at or before cutoff, aging uses explicit cutoff buckets, and any failed declared source control total blocks the pack."
     },
     {
       "id": "missing-section-fail-visible",
@@ -71,13 +71,13 @@
     },
     {
       "id": "metric-reference-closure",
-      "control": "Calculated observations and hypotheses in the final commentary must reference existing metric IDs. The finalizer validates shape and reference closure while preserving draft_pending_professional_review and never assigning semantic correctness or approval."
+      "control": "Calculated observations and hypotheses in the final commentary must reference existing metric IDs. The finalizer rejects blocked packs and failed controls, then validates shape and reference closure while preserving draft_pending_professional_review and never assigning semantic correctness or approval."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "efe6ac830ec1d2fe3ba4646a21057f1beccebadf707c2c14fc8d80155db3d9d3"
+    "source_fingerprint": "2afbbb0cd669c56d0860c071e0b50b773e1eab5e0f1916b2dce6b7942fc3ec36"
   }
 }

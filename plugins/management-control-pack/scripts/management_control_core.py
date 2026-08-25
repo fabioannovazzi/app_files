@@ -571,6 +571,16 @@ def _amount(
     return amount * multiplier
 
 
+def _mapping_multiplier(mapping: Mapping[str, Any], key: str, *, label: str) -> Decimal:
+    """Return one explicit reviewed sign multiplier for a mapped field."""
+
+    return _parse_decimal(
+        mapping.get(key, "1"),
+        label=label,
+        number_format="dot_decimal",
+    )
+
+
 def _review_recipe(recipe: Mapping[str, Any], inventory_sha256: str) -> dict[str, Any]:
     if (
         recipe.get("schema_version") != RECIPE_SCHEMA
@@ -894,6 +904,8 @@ def _budget_section(
         )
         monthly[row_date.strftime("%Y-%m")][category] += amount
         control_total += amount
+    if not monthly:
+        raise PackContractError("Budget has no rows inside the reporting period.")
     actual_rows = {str(row["period"]): row for row in pnl["rows"]}
     rows: list[dict[str, Any]] = []
     for period in sorted(set(actual_rows) | set(monthly)):
@@ -1054,11 +1066,18 @@ def _cash_section(
         raise PackContractError("Bank export was not mapped.")
     table, mapping = resolved
     date_col = _column(mapping, "date", required=True)
-    amount_col = _column(mapping, "amount", required=True)
     balance_col = _column(mapping, "balance")
     account_col = _column(mapping, "account")
     date_format = str(recipe.get("date_format", "%Y-%m-%d"))
     number_format = str(recipe.get("number_format", "dot_decimal"))
+    start = recipe["reporting_period"]["start"]
+    end = recipe["reporting_period"]["end"]
+    cutoff = recipe["reporting_period"]["cutoff"]
+    balance_multiplier = _mapping_multiplier(
+        mapping,
+        "balance_multiplier",
+        label="bank.balance_multiplier",
+    )
     monthly: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
     latest: dict[str, tuple[date, Decimal]] = {}
     control_total = Decimal("0")
@@ -1066,20 +1085,25 @@ def _cash_section(
         row_date = _parse_date(
             row.get(date_col), label=f"bank row {index} date", date_format=date_format
         )
-        amount = _parse_decimal(
-            row.get(amount_col),
-            label=f"bank row {index} amount",
-            number_format=number_format,
-        )
-        period = row_date.strftime("%Y-%m")
-        monthly[period]["inflow" if amount >= 0 else "outflow"] += amount
-        monthly[period]["net"] += amount
-        control_total += amount
-        if balance_col:
-            balance = _parse_decimal(
-                row.get(balance_col),
-                label=f"bank row {index} balance",
+        if start <= row_date <= end:
+            amount = _amount(
+                row,
+                mapping,
+                label=f"bank row {index}",
                 number_format=number_format,
+            )
+            period = row_date.strftime("%Y-%m")
+            monthly[period]["inflow" if amount >= 0 else "outflow"] += amount
+            monthly[period]["net"] += amount
+            control_total += amount
+        if balance_col and row_date <= cutoff:
+            balance = (
+                _parse_decimal(
+                    row.get(balance_col),
+                    label=f"bank row {index} balance",
+                    number_format=number_format,
+                )
+                * balance_multiplier
             )
             account = (
                 _bounded_text(row.get(account_col), maximum=120)
@@ -1088,6 +1112,8 @@ def _cash_section(
             )
             if account not in latest or row_date >= latest[account][0]:
                 latest[account] = (row_date, balance)
+    if not monthly:
+        raise PackContractError("Bank export has no rows inside the reporting period.")
     rows = [
         {
             "period": period,
@@ -1151,19 +1177,34 @@ def _sales_sections(
     number_format = str(recipe.get("number_format", "dot_decimal"))
     start = recipe["reporting_period"]["start"]
     end = recipe["reporting_period"]["end"]
+    revenue_multiplier = _mapping_multiplier(
+        mapping,
+        "revenue_multiplier",
+        label="sales_lines.revenue_multiplier",
+    )
+    direct_cost_multiplier = _mapping_multiplier(
+        mapping,
+        "direct_cost_multiplier",
+        label="sales_lines.direct_cost_multiplier",
+    )
     customers: dict[str, Decimal] = defaultdict(Decimal)
     services: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
     control_total = Decimal("0")
+    included_rows = 0
     for index, row in enumerate(table.rows, start=2):
         row_date = _parse_date(
             row.get(date_col), label=f"sales row {index} date", date_format=date_format
         )
         if row_date < start or row_date > end:
             continue
-        revenue = _parse_decimal(
-            row.get(revenue_col),
-            label=f"sales row {index} revenue",
-            number_format=number_format,
+        included_rows += 1
+        revenue = (
+            _parse_decimal(
+                row.get(revenue_col),
+                label=f"sales row {index} revenue",
+                number_format=number_format,
+            )
+            * revenue_multiplier
         )
         control_total += revenue
         if customer_col:
@@ -1177,12 +1218,19 @@ def _sales_sections(
             )
             services[service]["revenue"] += revenue
             if direct_cost_col:
-                direct_cost = _parse_decimal(
-                    row.get(direct_cost_col),
-                    label=f"sales row {index} direct_cost",
-                    number_format=number_format,
+                direct_cost = (
+                    _parse_decimal(
+                        row.get(direct_cost_col),
+                        label=f"sales row {index} direct_cost",
+                        number_format=number_format,
+                    )
+                    * direct_cost_multiplier
                 )
                 services[service]["direct_cost"] += direct_cost
+    if not included_rows:
+        raise PackContractError(
+            "Sales-line export has no rows inside the reporting period."
+        )
     total_revenue = sum(customers.values(), Decimal("0"))
     top_n = recipe.get("top_customers", 10)
     if not isinstance(top_n, int) or not 1 <= top_n <= 50:
@@ -1677,7 +1725,7 @@ def _append_sheet(
                         if decimal_value == decimal_value.to_integral()
                         else float(decimal_value)
                     )
-            values.append(value)
+            values.append(_excel_safe_value(value))
         worksheet.append(values)
     header_fill = PatternFill("solid", fgColor="002060")
     for cell in worksheet[1]:
@@ -1711,6 +1759,17 @@ def _append_sheet(
     worksheet.print_title_rows = "1:1"
 
 
+def _excel_safe_value(value: Any) -> Any:
+    """Keep untrusted text literal when a generated workbook is opened."""
+
+    if not isinstance(value, str) or not value:
+        return value
+    candidate = value.lstrip(" \t\r\n")
+    if candidate.startswith(("=", "+", "-", "@")):
+        return f"'{value}"
+    return value
+
+
 def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
     """Write one reviewable workbook; canonical JSON remains the exact source."""
 
@@ -1727,7 +1786,7 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
         ("Review status", pack["report_status"]),
     )
     for row in summary_rows:
-        summary.append(row)
+        summary.append(tuple(_excel_safe_value(value) for value in row))
     summary.append(())
     summary.append(("Metric ID", "Label", "Value", "Unit"))
     for metric in pack["metrics"].values():
@@ -1736,7 +1795,15 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
             int(raw_value) if raw_value == raw_value.to_integral() else float(raw_value)
         )
         summary.append(
-            (metric["metric_id"], metric["label"], excel_value, metric["unit"])
+            tuple(
+                _excel_safe_value(value)
+                for value in (
+                    metric["metric_id"],
+                    metric["label"],
+                    excel_value,
+                    metric["unit"],
+                )
+            )
         )
         summary.cell(row=summary.max_row, column=3).number_format = (
             "0.00%" if metric["unit"] == "ratio" else "#,##0.00###"
@@ -1821,6 +1888,22 @@ def finalize_commentary(
 ) -> dict[str, Any]:
     """Validate shape and metric closure without judging semantic quality."""
 
+    if (
+        pack.get("schema_version") != PACK_SCHEMA
+        or pack.get("workflow_id") != WORKFLOW_ID
+    ):
+        raise PackContractError("Pack identity is invalid.")
+    status = pack.get("status")
+    if status not in {"ready_for_review", "partial", "blocked"}:
+        raise PackContractError("Pack status is invalid.")
+    controls = pack.get("controls")
+    if not isinstance(controls, list):
+        raise PackContractError("Pack controls must be a list.")
+    if status == "blocked" or any(
+        isinstance(control, dict) and control.get("status") == "failed"
+        for control in controls
+    ):
+        raise PackContractError("A blocked pack or failed control cannot be finalized.")
     if commentary.get("schema_version") != COMMENTARY_SCHEMA:
         raise PackContractError("Commentary schema_version is invalid.")
     if commentary.get("workflow_id") != WORKFLOW_ID:

@@ -28,6 +28,7 @@ from management_control_core import (  # noqa: E402
     build_model_context,
     finalize_commentary,
     load_source_tables,
+    write_excel,
 )
 
 
@@ -251,6 +252,106 @@ def test_full_pack_calculates_exact_supported_sections(tmp_path: Path) -> None:
     assert {control["status"] for control in pack["controls"]} == {"passed"}
 
 
+def test_cash_uses_reporting_window_and_balance_cutoff(tmp_path: Path) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    bank = workbook["Bank"]
+    bank.append(("2024-12-31", "Main", 9000, 9000))
+    bank.append(("2025-03-31", "Main", 7000, 16000))
+    workbook.save(source)
+    workbook.close()
+    tables, inspection = _inspection_for(source)
+
+    pack = build_management_pack(tables, _reviewed_recipe(inspection))
+
+    assert pack["status"] == "ready_for_review"
+    assert [row["period"] for row in pack["sections"]["cash_movement"]["rows"]] == [
+        "2025-01",
+        "2025-02",
+    ]
+    assert pack["metrics"]["cash.total.net_movement"]["value"] == "1700"
+    assert pack["metrics"]["cash.latest.reported_balance"]["value"] == "1700"
+
+
+def test_budget_without_reporting_period_rows_is_unavailable(tmp_path: Path) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    budget = workbook["Budget"]
+    budget["A2"] = "2024-01-31"
+    budget["A3"] = "2024-01-31"
+    budget["A4"] = "2024-01-31"
+    budget["A5"] = "2024-02-29"
+    budget["A6"] = "2024-02-29"
+    budget["A7"] = "2024-02-29"
+    workbook.save(source)
+    workbook.close()
+    tables, inspection = _inspection_for(source)
+
+    pack = build_management_pack(tables, _reviewed_recipe(inspection))
+
+    assert pack["status"] == "partial"
+    assert pack["sections"]["budget_variance"] == {
+        "status": "unavailable",
+        "reason": "Budget has no rows inside the reporting period.",
+    }
+    assert "budget.total.ebitda_variance" not in pack["metrics"]
+
+
+def test_reviewed_sign_multipliers_normalize_bank_and_sales(tmp_path: Path) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    bank = workbook["Bank"]
+    bank["C2"], bank["D2"] = -2000, -2000
+    bank["C3"], bank["D3"] = 800, -1200
+    bank["C4"], bank["D4"] = -1000, -2200
+    bank["C5"], bank["D5"] = 500, -1700
+    sales = workbook["Sales"]
+    sales["D2"], sales["E2"] = -800, -200
+    sales["D3"], sales["E3"] = -200, -120
+    sales["D4"], sales["E4"] = -1000, -250
+    sales["D5"], sales["E5"] = -400, -200
+    workbook.save(source)
+    workbook.close()
+    tables, inspection = _inspection_for(source)
+    recipe = _reviewed_recipe(inspection)
+    recipe["tables"]["bank"]["amount_multiplier"] = "-1"  # type: ignore[index]
+    recipe["tables"]["bank"]["balance_multiplier"] = "-1"  # type: ignore[index]
+    recipe["tables"]["sales_lines"]["revenue_multiplier"] = "-1"  # type: ignore[index]
+    recipe["tables"]["sales_lines"]["direct_cost_multiplier"] = "-1"  # type: ignore[index]
+
+    pack = build_management_pack(tables, recipe)
+
+    assert pack["status"] == "ready_for_review"
+    assert pack["metrics"]["cash.total.net_movement"]["value"] == "1700"
+    assert pack["metrics"]["cash.latest.reported_balance"]["value"] == "1700"
+    assert pack["metrics"]["services.total.margin"]["value"] == "1630"
+    assert {control["status"] for control in pack["controls"]} == {"passed"}
+
+
+def test_sales_without_reporting_period_rows_is_unavailable(tmp_path: Path) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    sales = workbook["Sales"]
+    sales["A2"] = "2024-01-10"
+    sales["A3"] = "2024-01-20"
+    sales["A4"] = "2024-02-10"
+    sales["A5"] = "2024-02-20"
+    workbook.save(source)
+    workbook.close()
+    tables, inspection = _inspection_for(source)
+
+    pack = build_management_pack(tables, _reviewed_recipe(inspection))
+
+    assert pack["status"] == "partial"
+    assert pack["sections"]["customer_concentration"]["status"] == "unavailable"
+    assert pack["sections"]["service_profitability"]["status"] == "unavailable"
+    assert "customers.top1.share" not in pack["metrics"]
+
+
 def test_missing_optional_exports_remain_visible_and_partial(tmp_path: Path) -> None:
     source = tmp_path / "ledger.xlsx"
     _write_workbook(source, full=False)
@@ -349,6 +450,55 @@ def test_commentary_closes_only_existing_metric_references(tmp_path: Path) -> No
     commentary["observations"][0]["metric_ids"] = ["missing.metric"]
     with pytest.raises(PackContractError, match="unknown metric"):
         finalize_commentary(pack, commentary)
+
+
+def test_commentary_finalizer_rejects_blocked_pack(tmp_path: Path) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    tables, inspection = _inspection_for(source)
+    recipe = _reviewed_recipe(inspection)
+    recipe["control_totals"]["general_ledger"] = "999"  # type: ignore[index]
+    pack = build_management_pack(tables, recipe)
+    pack_bytes = (
+        json.dumps(pack, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        + "\n"
+    ).encode()
+    commentary = {
+        "schema_version": COMMENTARY_SCHEMA,
+        "workflow_id": "management-control-pack",
+        "pack_sha256": __import__("hashlib").sha256(pack_bytes).hexdigest(),
+        "observations": [],
+        "hypotheses": [],
+        "questions": [],
+        "limitations": [],
+    }
+
+    with pytest.raises(PackContractError, match="cannot be finalized"):
+        finalize_commentary(pack, commentary)
+
+
+def test_excel_writes_untrusted_labels_as_literal_text(tmp_path: Path) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    tables, inspection = _inspection_for(source)
+    pack = build_management_pack(tables, _reviewed_recipe(inspection))
+    pack["entity"] = "=1+1"
+    pack["sections"]["customer_concentration"]["rows"][0]["customer"] = "@SUM(1,1)"
+    pack["sections"]["service_profitability"]["rows"][0]["service"] = "+cmd"
+    output = tmp_path / "safe.xlsx"
+
+    write_excel(output, pack)
+
+    workbook = load_workbook(output, data_only=False)
+    try:
+        assert workbook["Summary"]["B1"].data_type == "s"
+        assert workbook["Summary"]["B1"].value == "'=1+1"
+        assert workbook["Customers"]["A2"].data_type == "s"
+        assert workbook["Customers"]["A2"].value == "'@SUM(1,1)"
+        assert workbook["Services"]["A2"].data_type == "s"
+        assert workbook["Services"]["A2"].value == "'+cmd"
+    finally:
+        workbook.close()
 
 
 def test_connectorless_cli_runs_end_to_end_inside_studio_archive(

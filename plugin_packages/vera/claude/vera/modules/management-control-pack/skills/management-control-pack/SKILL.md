@@ -141,7 +141,9 @@ Establish or ask only for unresolved material choices:
 - reporting start, end, cutoff date, fiscal calendar, and currency;
 - source table roles and exact column mappings;
 - whether amounts are already normalized or require a reviewed debit/credit
-  rule and multiplier;
+  rule or sign multiplier; use `amount_multiplier` for mapped ledger, Budget,
+  or bank movements, `balance_multiplier` for bank balances, and the separate
+  `revenue_multiplier` and `direct_cost_multiplier` for sales lines;
 - reviewed mapping from source categories to `revenue`, `cogs`,
   `operating_expense`, `other_operating`, `depreciation_amortization`,
   `interest`, `tax`, or `other`;
@@ -173,7 +175,9 @@ Read `inspection.json` and `suggested_recipe.json`. The inspector inventories
 tables, columns, types, row counts, and at most ten bounded preview rows. It
 does not choose semantic source roles. Fill the recipe in the run output with
 the reviewed decisions and set `mapping_review.status` to `reviewed` only after
-the mappings have actually been reviewed.
+the mappings have actually been reviewed. Every multiplier defaults to `1` and
+must be changed only to encode a sign convention the professional has reviewed;
+the deterministic runner never infers one from the source values.
 
 ## Calculation and interpretation
 
