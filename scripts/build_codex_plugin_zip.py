@@ -157,6 +157,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "passive-invoice-audit": "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md",
     "journal-sampling": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
     "management-control-pack": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
+    "centrale-rischi-review": "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",
     "new-client": "modules/new-client/skills/new-client/SKILL.md",
     "previdenza-inps": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
     "presenza-digitale-studio": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",

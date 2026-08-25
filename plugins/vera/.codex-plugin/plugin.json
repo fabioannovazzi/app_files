@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.170",
+  "version": "0.1.171",
   "description": "Vera affianca commercialisti e studi professionali in contabilità, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -41,6 +41,9 @@
     "reconciliation",
     "financial-analysis",
     "management-control-pack",
+    "centrale-rischi-review",
+    "centrale-rischi",
+    "credit-risk",
     "controllo-di-gestione",
     "variance-analysis",
     "analisi-scostamenti",

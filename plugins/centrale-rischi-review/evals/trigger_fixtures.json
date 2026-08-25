@@ -1,0 +1,21 @@
+{
+  "plugin": "centrale-rischi-review",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "centrale-rischi-report",
+      "prompt": "Analizza questo report Centrale Rischi e separa esposizioni a breve, medio e lungo termine, garanzie e sconfinamenti.",
+      "required_signals": ["Centrale Rischi", "esposizioni", "garanzie", "sconfinamenti"]
+    },
+    {
+      "id": "credit-risk-kpis",
+      "prompt": "Prepare a reviewable KPI pack from this Italian Centrale Rischi Excel export.",
+      "required_signals": ["KPI", "Centrale Rischi", "Excel"]
+    }
+  ],
+  "should_not_trigger": [
+    {"id": "generic-financial-analysis", "prompt": "Calculate EBITDA and net debt from these financial statements."},
+    {"id": "bank-reconciliation", "prompt": "Reconcile this bank statement to the general ledger."},
+    {"id": "portal-navigation-only", "prompt": "Open the bank portal and download my statement without analysing it."}
+  ]
+}

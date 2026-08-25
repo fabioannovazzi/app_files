@@ -27,6 +27,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "deep-research-validator",
     "financial-analysis",
     "management-control-pack",
+    "centrale-rischi-review",
     "sales-plan",
     "variance-analysis",
     "client-file-preparation",
@@ -74,6 +75,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
     Path("static/shared/management-control-pack/index.html"),
+    Path("static/shared/centrale-rischi-review/index.html"),
     Path("static/shared/sales-plan/index.html"),
     Path("static/shared/journal-bank-reconciliation/index.html"),
     Path("static/shared/passive-invoice-audit/index.html"),
@@ -302,6 +304,7 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
     ROOT / "static" / "shared" / "management-control-pack" / "index.html",
+    ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "report-builder" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
@@ -324,6 +327,7 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
     ROOT / "static" / "shared" / "management-control-pack" / "index.html",
+    ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "new-client" / "index.html",
@@ -548,7 +552,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.170"
+    assert manifest["version"] == "0.1.171"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Trasforma questi export contabili in un pacchetto di controllo di gestione "
@@ -746,7 +750,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 30
+        assert len(card_bodies) == 31
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -1434,6 +1438,7 @@ def test_vera_routes_every_commercialista_module() -> None:
         "browser-automation",
         "comunicazione-professionale",
         "management-control-pack",
+        "centrale-rischi-review",
         "passive-invoice-audit",
         "presenza-digitale-studio",
     }
@@ -3510,6 +3515,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../sales-plan/index.html",
         "../variance-analysis/index.html",
         "../management-control-pack/index.html",
+        "../centrale-rischi-review/index.html",
         "../financial-analysis/index.html",
         "../comunicazione-professionale/index.html",
         "../presenza-digitale-studio/index.html",
@@ -3534,8 +3540,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 27
-    assert core.count('class="module-row"') == 27
+    assert core.count(" data-module-link") == 28
+    assert core.count('class="module-row"') == 28
     assert core.count('data-jurisdiction-item="it"') == 7
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
@@ -4080,6 +4086,7 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
     (
         ("financial-analysis", "financial-analysis"),
         ("management-control-pack", "management-control-pack"),
+        ("centrale-rischi-review", "centrale-rischi-review"),
         ("sales-plan", "sales-plan"),
     ),
 )
@@ -4403,6 +4410,7 @@ def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
         "deep-research-validator",
         "financial-analysis",
         "management-control-pack",
+        "centrale-rischi-review",
         "journal-bank-reconciliation",
         "journal-sampling",
         "lucia",
@@ -5180,6 +5188,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         ),
         "management-control-pack": (
             "https://mparanza.com/static/shared/management-control-pack/index.html?lang=it"
+        ),
+        "centrale-rischi-review": (
+            "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
         "prompt-optimizer": (

@@ -107,6 +107,11 @@
         "vera_assurance"
       ]
     },
+    "centrale-rischi-review": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "report-builder": {
       "module_roots": [
         "vera_assurance"

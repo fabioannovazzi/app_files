@@ -134,6 +134,7 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "sales-plan",
     "variance-analysis",
     "management-control-pack",
+    "centrale-rischi-review",
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",

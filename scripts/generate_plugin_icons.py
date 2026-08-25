@@ -252,6 +252,13 @@ SPECS = (
         "management_pack",
     ),
     IconSpec(
+        "centrale-rischi-review",
+        "Vera · Centrale Rischi Review",
+        "#002060",
+        "#00B0F0",
+        "credit_risk",
+    ),
+    IconSpec(
         "sales-plan",
         "Sales Plan",
         "#4F6F52",
@@ -518,6 +525,13 @@ def _body(spec: IconSpec) -> str:
   <path d="M18 42V34M24 42V29M38 42V37M44 42V31" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
   <path d="m17 20 5-4 5 3" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="45" cy="19" r="3" fill="{accent}"/>""",
+        "credit_risk": f"""
+  <path d="M32 12 13 23h38z" fill="{paper}"/>
+  <path d="M17 27h30M18 47h28" stroke="{paper}" stroke-width="5" stroke-linecap="round"/>
+  <path d="M22 28v16M32 28v16M42 28v16" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>
+  <path d="M15 54h34" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>
+  <path d="m39 34 5-5 5 5M49 29v13" fill="none" stroke="{accent}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="49" cy="47" r="3" fill="{accent}"/>""",
         "sales_plan": f"""
   <path d="M14 49h37" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>
   <rect x="18" y="34" width="7" height="12" rx="2" fill="{paper}"/>
