@@ -548,7 +548,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.166"
+    assert manifest["version"] == "0.1.167"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Trasforma questi export contabili in un pacchetto di controllo di gestione "
@@ -605,8 +605,12 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "No matching specialist workflow" in router
     assert "../<skill-name>/SKILL.md" in router
     assert "../../modules/studio-archive" in wrapper
+    assert "setup_studio_archive" in wrapper
+    assert "archive_folder_picker_unavailable" in wrapper
     assert not any(name.endswith("/WORKFLOW.md") for name in entries)
     assert "## Connected Gmail workflow" in module_skill
+    assert "setup_studio_archive" in module_skill
+    assert "native folder" in module_skill
     assert module_skill.index("get_profile") < module_skill.index("search_emails")
     assert module_skill.index("search_emails") < module_skill.index("batch_read_email")
     assert "at most 20 results per page" in module_skill

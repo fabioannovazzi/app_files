@@ -36,7 +36,7 @@
       {
         "id": "studio-archive-access-diagnostic",
         "purpose": "Explain why a selected local or network archive root cannot be opened before client registration begins",
-        "content": "The user-selected archive path is already present in the active model request. The diagnostic returns only path kind, failed access stage, a mechanically classified host-sandbox, SMB-session, network-reachability, filesystem-permission, missing-path or unclassified status, numeric errno or Windows error code when available, host-approved retry state, and one bounded next action. It does not echo the private path, request or return SMB credentials, persist Studio Archive configuration, or create client and engagement records",
+        "content": "During guided setup, the operating system's native folder chooser passes the selected archive path directly to the local helper; the model receives setup status, path-safe diagnostic fields, discovered scope labels and counts, but not the selected absolute root. If the native picker is unavailable and the user supplies the manual fallback path in chat, that path is already present in the active model request. The diagnostic returns only path kind, failed access stage, a mechanically classified host-sandbox, SMB-session, network-reachability, filesystem-permission, missing-path or unclassified status, numeric errno or Windows error code when available, host-approved retry state, and one bounded next action. It does not echo the private path, request or return SMB credentials, create a client, or create an engagement",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -187,7 +187,7 @@
     },
     {
       "id": "path-safe-archive-access-diagnostics",
-      "control": "Before first local-archive configuration, a read-only diagnostic can distinguish native-path support, host-access approval, mechanically reported SMB session or credential errors, share reachability and share/filesystem access denial. Error responses expose only path kind, access stage, fixed category, numeric OS codes and the approved-retry state; they never echo the selected private path or request credentials. An ambiguous OS error remains unclassified, and client or engagement creation does not begin until diagnosis and configuration succeed."
+      "control": "Before first local-archive configuration, the guided setup opens the operating system's native directory picker, runs the same read-only access diagnostic on the locally selected root, and only then writes private configuration. The selected absolute root is removed from the guided tool response. A manual-path request is allowed only after the picker is mechanically unavailable; cancellation writes nothing and remains retryable. The diagnostic distinguishes native-path support, host-access approval, mechanically reported SMB session or credential errors, share reachability and share/filesystem access denial. Error responses expose only path kind, access stage, fixed category, numeric OS codes and the approved-retry state; they never echo the selected private path or request credentials. An ambiguous OS error remains unclassified, and client or engagement creation does not begin until diagnosis and configuration succeed."
     },
     {
       "id": "scope-and-path-containment",
@@ -246,6 +246,6 @@
     "reviewed_at": "2026-08-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6d70cc0e630ae815080118ba414f9480b7630abfdfcfe9a36f784d46afb4607a"
+    "source_fingerprint": "8ddf52899d909152deb4c23fa6a98975e26d18f901e486bb7eee13aeac0fb786"
   }
 }

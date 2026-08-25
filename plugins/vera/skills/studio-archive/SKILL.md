@@ -54,6 +54,12 @@ Choose the route before resolving any module:
    `skills/studio-archive/SKILL.md` completely and follow it. Treat the resolved
    module root as the plugin working directory for local commands, scripts,
    requirement files, MCP tools, and archive state.
+   When `list_studio_archive_clients` reports `configured: false` and
+   `setup_required: true`, tell the user that Vera will open the operating
+   system's folder chooser and call `setup_studio_archive` before asking for an
+   absolute path. Request a path manually only when that guided action returns
+   `archive_folder_picker_unavailable`; cancellation means no configuration was
+   written and should lead to an offer to reopen the chooser.
 
 The Gmail, WhatsApp Desktop, and local document routes are independent. Gmail
 uses OpenAI's separately connected connector in ChatGPT or Codex. WhatsApp is
