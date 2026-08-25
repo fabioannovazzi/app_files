@@ -248,7 +248,7 @@ def _validate_runtime(value: Any, *, errors: list[str]) -> None:
         "controller": "chrome_extension",
         "semantic_driver": "model",
         "mechanical_driver": "playwright",
-        "os_fallback": "computer_use_non_browser_only",
+        "os_fallback": "operator_handoff_on_native_gap",
     }
     for field, expected_value in expected.items():
         if runtime.get(field) != expected_value:

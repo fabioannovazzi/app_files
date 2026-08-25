@@ -28,6 +28,10 @@ unavailable, report the one setup instruction provided by the Chrome skill and
 stop the live run. Continue with useful process scoping or capability review,
 but never claim discovery, execution, or validation without browser evidence.
 
+This workflow has no Computer Use or desktop-control fallback. A required
+native or non-browser step is a `native_gap`: hand that exact step to the
+operator and exclude it from capability execution and clean replay evidence.
+
 Never look for runtime scripts inside this wrapper directory. The executable
 runtime and deterministic capability pipeline live in the resolved module and
 have no third-party dependency.

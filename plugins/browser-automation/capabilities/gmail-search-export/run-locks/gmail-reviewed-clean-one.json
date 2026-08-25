@@ -1,8 +1,0 @@
-{
-  "capability_id": "gmail-search-export",
-  "execution_contract_sha256": "93bc210dda5a36ab3c30d812ecec3dfdd577f5e13c2a4f61bbf2d9123b04e296",
-  "outputs_sha256": "d9c208d94527fe517f8787e3aa67f098352bc6104fdba600406e7af9394c6b8c",
-  "receipt_sha256": "47ba98a05245be073aaf27b1c322da1b02be4e95edc581e9ad77e8c4a1324905",
-  "run_id": "gmail-reviewed-clean-one",
-  "schema_version": "browser-run-lock/v1"
-}

@@ -47,9 +47,12 @@ neutral page first, or repeat a visibility checkpoint. If the extension is not
 connected, give the single concrete setup instruction from the Chrome skill and
 stop; do not cycle through launch attempts.
 
-Use `computer-use:computer-use` only when a required step is genuinely outside
-the browser or its DOM, such as a native operating-system dialog. Never use it
-as an alternate browser controller when Chrome is selected.
+Browser Automation has no Computer Use or desktop-control fallback. If a
+required step leaves Chrome or its DOM, stop the executable browser flow,
+return or record `native_gap`, and hand that exact step to the operator. Do not
+inspect or operate operating-system dialogs through accessibility trees,
+screenshots, coordinates, or platform-specific UI automation as part of a
+portable capability.
 
 ## Authority and authentication
 
@@ -157,7 +160,9 @@ always `artifact_only` and record the local path, byte length, and file SHA-256
 in `outputs.json` without returning the path to the model. Before relying on a
 download action, feature-detect that the connected Chrome download event exposes
 `path()`. If it does not, the runtime returns the sanitized `native_gap`
-category; do not claim ZIP retrieval or fall back to browser profile inspection.
+category; do not claim ZIP retrieval, inspect the browser profile, or invoke a
+desktop-control fallback. Hand the native step to the operator and keep it
+outside clean replay evidence.
 
 An output with `delivery: artifact_only` stays in the private `outputs.json`.
 Do not open or emit its values unless the operator separately asks for model
@@ -246,12 +251,12 @@ frameworks, browser launchers, or capture formats unless the facts cue them.
 
 ## Included capabilities
 
-- `gmail-search-export`: a `validated_local` capability that searches Gmail and
-  writes a bounded visible set of sender, subject, and displayed-date metadata
-  to a private artifact without opening message bodies. Its populated-result
-  path has two clean receipts from one authorized Chrome environment. The
-  empty-result path remains declared but unobserved and portability still
-  requires validation by the receiving operator.
+- `gmail-search-export`: a non-executable `draft` that retains the learned Gmail
+  search and bounded sender, subject, and displayed-date extraction process
+  without opening message bodies. Its earlier receipts predate the Chrome-only
+  native-gap contract and do not validate this version. Renew exact authoring
+  review, promote it, and complete two clean replays; the empty-result path also
+  remains unobserved.
 - `agenzia-invoice-zip`: a process-specific Agenzia invoice request and ZIP
   retrieval scaffold. It must remain `scaffold` until an authorized live
   discovery supplies real controls and clean replay evidence.

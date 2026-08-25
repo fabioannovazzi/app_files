@@ -25,9 +25,9 @@ Il modulo include:
   azione sicura oppure a un locator CSS circoscritto per un campo dentro una
   riga strutturata già risolta, con proposta owner-only e ricevuta non valida
   come clean run;
-- una capability Gmail in stato `validated_local`, verificata con due replay
-  puliti sul ramo con risultati, che esporta metadati visibili in un artefatto
-  privato senza aprire i messaggi;
+- un draft Gmail che conserva il processo e i locator appresi per esportare
+  metadati visibili senza aprire i messaggi, ma richiede una nuova approvazione
+  di authoring e due replay puliti dopo il passaggio al contratto Chrome-only;
 - uno scaffold Agenzia per richiesta fatture e recupero ZIP;
 - uno scaffold TeamSystem da specializzare sul prodotto e processo reali.
 
@@ -46,6 +46,6 @@ Le capability `scaffold` e `draft` non sono eseguibili. Una capability passa a
 `discovered` solo dopo l'approvazione dell'esatto record di discovery; passa a
 `validated_local` solo dopo due ricevute generate dal runtime nella stessa
 interfaccia Chrome e senza recovery. `outputs.json`, raw capture e proposte di
-recovery non entrano nel pacchetto portatile. La validazione Gmail corrente è
-specifica all'ambiente osservato; il ramo senza risultati resta dichiarato ma
-non è stato verificato dal vivo.
+recovery non entrano nel pacchetto portatile. Le precedenti ricevute Gmail
+restano nella storia Git ma non validano il nuovo contratto e non vengono
+incluse nel modulo; il ramo senza risultati resta non verificato dal vivo.

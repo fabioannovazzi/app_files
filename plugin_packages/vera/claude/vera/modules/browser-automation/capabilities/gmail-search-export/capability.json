@@ -482,17 +482,17 @@
     ]
   },
   "provenance": {
-    "discovery_approval_id": "recovery-b8fa2b03",
-    "discovery_approved_at": "2026-08-25T08:28:54Z",
+    "discovery_approval_id": null,
+    "discovery_approved_at": null,
     "discovery_record_sha256": "0eb57b46f09c73dbeadde046765da746458ee35d841f4c02a6b6af2c34d1ca93",
     "portable_bundle_contains_private_evidence": false,
-    "source": "authorized_live_discovery"
+    "source": "live_discovery_unreviewed"
   },
   "runtime": {
     "browser": "existing_chrome",
     "controller": "chrome_extension",
     "mechanical_driver": "playwright",
-    "os_fallback": "computer_use_non_browser_only",
+    "os_fallback": "operator_handoff_on_native_gap",
     "semantic_driver": "model"
   },
   "schema_version": "browser-capability/v2",
@@ -503,32 +503,17 @@
     "name": "Gmail",
     "start_url": "https://mail.google.com/mail/u/0/"
   },
-  "status": "validated_local",
+  "status": "draft",
   "validation": {
-    "environment_scope": "existing_chrome_origin_ui",
-    "execution_contract_sha256": "93bc210dda5a36ab3c30d812ecec3dfdd577f5e13c2a4f61bbf2d9123b04e296",
+    "environment_scope": "not_validated",
+    "execution_contract_sha256": null,
     "known_limits": [
-      "The approved repair lineage is recorded, but this draft remains non-executable until mechanical promotion completes.",
-      "The repaired Gmail row and field locators were observed in one authorized account and remain environment-specific until two clean runtime replays pass.",
+      "Changing the runtime boundary from a Computer Use fallback to operator handoff creates a new unreviewed draft lineage; the prior receipts do not validate this execution contract.",
+      "The repaired Gmail row and field locators were observed in one authorized account, but the updated runtime boundary requires renewed authoring review and two clean runtime replays.",
       "The structural no-result fallback waits for the declared result-row timeout and does not depend on localized Gmail copy.",
       "The empty-result branch was not exercised in the exact query-scoped discovery session and remains an explicit unvalidated branch."
     ],
-    "receipts": [
-      {
-        "environment_fingerprint": "2375ca4f68d0fca27fc97f2cc23c2bb71ca0375973fc85d5e6b248acb5ae064f",
-        "executed_at": "2026-08-25T08:30:20.154Z",
-        "receipt_sha256": "47ba98a05245be073aaf27b1c322da1b02be4e95edc581e9ad77e8c4a1324905",
-        "result": "passed",
-        "run_id": "gmail-reviewed-clean-one"
-      },
-      {
-        "environment_fingerprint": "2375ca4f68d0fca27fc97f2cc23c2bb71ca0375973fc85d5e6b248acb5ae064f",
-        "executed_at": "2026-08-25T08:30:35.341Z",
-        "receipt_sha256": "c11f69a3a0edee506b8e918dc29a518f9e9fa87938aaf7d357669bb97038242b",
-        "result": "passed",
-        "run_id": "gmail-reviewed-clean-two"
-      }
-    ]
+    "receipts": []
   },
-  "version": "0.3.1"
+  "version": "0.4.0"
 }
