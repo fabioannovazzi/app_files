@@ -47,8 +47,8 @@
       },
       {
         "id": "owner-only-browser-recovery-proposal",
-        "purpose": "Allow the current model to recover from a missing locator for the same read-only or reversible action without silently changing the process contract",
-        "content": "After a first safe action fails because no declared locator matches, the selected model receives capability and milestone identity, action intent, operation and effect, declared locator candidates, allowed origins, current origin and query-free path, postcondition kind, and a sanitized failure hash. It does not receive runtime input values through the recovery request. The model may inspect the bounded current page state, return one semantic locator with a bounded rationale and uncertainty, and restart the capability from its declared start state. The JavaScript runtime does not call another model service during execution. The owner-only recovery proposal stores that candidate, contract hashes, query-free path, sanitized error hashes and outcome; it is non-portable, unapproved for persistence, excluded from clean validation and excluded from the capability handoff",
+        "purpose": "Allow the current model to recover from a missing action or nested extraction-field locator for the same read-only or reversible action without silently changing the process contract",
+        "content": "After a first safe action fails because no declared action locator or nested structured extraction-field locator matches, the selected model receives capability and milestone identity, the exact action-or-field target, action intent, operation and effect, declared locator candidates, allowed origins, current origin and query-free path, postcondition kind, and a sanitized failure hash. It does not receive runtime input values through the recovery request. The model may inspect the bounded current page state and return one semantic locator with a bounded rationale and uncertainty. A nested structured-field repair may use one bounded CSS selector only within the already resolved record container; the field name, read method and maximum record count remain fixed. Execution then restarts from the capability's declared start state. The JavaScript runtime does not call another model service during execution. The owner-only recovery proposal stores the exact target, candidate, contract hashes, query-free path, sanitized error hashes and outcome; it is non-portable, unapproved for persistence, excluded from clean validation and excluded from the capability handoff",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -85,7 +85,7 @@
         "Write sanitized discovery records, discovery evidence, developer packs and sealed capability bundles only to fresh owner-only local directories outside the Git workspace and published folders; never persist raw page content or overwrite an earlier bundle.",
         "Keep approval for the exact sanitized developer transfer separate from approval for capability authoring. The former permits sealing only the reviewed evidence, discovery record and non-executable draft; the latter is required before promotion. A changed record requires new authoring approval.",
         "Execute promoted capability JSON only through the packaged runtime in the connected Chrome tab. Keep artifact_only output values, local download paths, byte lengths, and file hashes in owner-only outputs.json and expose only output counts, the output-artifact path, and aggregate hashes unless the operator separately requests interpretation.",
-        "For a missing locator on the same read-only or reversible action, allow the selected model to propose one semantic locator without another navigation confirmation. The runtime must preserve all other action and origin invariants, write a non-portable owner-only recovery proposal, and exclude that run from clean validation. Never use recovery for consequential actions or silently persist the candidate.",
+        "For a missing action or nested extraction-field locator on the same read-only or reversible action, allow the selected model to propose one semantic locator without another navigation confirmation. A nested structured-field candidate may be a bounded CSS selector only within the already resolved record container. The runtime must preserve the exact action-or-field target, action and origin invariants, field name, read method and maximum record count; write a non-portable owner-only recovery proposal; and exclude that run from clean validation. Never use recovery for consequential actions or silently persist the candidate.",
         "Send the reviewed sanitized developer pack only to the intended developer. Send only the separately sealed capability folder to a receiving operator. No browser state, raw guided capture, runtime output, recovery proposal, observed private value, account identifier, or downloaded business file travels with the capability."
       ]
     }
@@ -109,11 +109,11 @@
     },
     {
       "id": "environment-scoped-validation",
-      "control": "A capability may claim validated_local only when the finalizer verifies two distinct passed machine receipts with the same execution contract, reviewed discovery, capability version, declared terminal, required outputs, and environment, with no model recovery, locator edits or retained private evidence. The status is explicitly environment-specific and the receiving operator must validate again."
+      "control": "A capability may claim validated_local only when the finalizer verifies two distinct passed machine receipts with the same execution contract, reviewed discovery, capability version, declared terminal, required outputs, and environment, with no model recovery, locator edits or retained private evidence. Gmail's populated-result path has this environment-scoped status from two sanitized clean receipts; its no-result branch remains unobserved. The status is explicitly environment-specific and the receiving operator must validate again."
     },
     {
       "id": "bounded-model-locator-recovery",
-      "control": "When a declared locator is missing, the first run returns a sanitized recovery request and stops. The current model may then inspect the bounded state and propose one semantic locator only for the same read-only or reversible action before a restart from the declared start state. The runtime preserves the action ID, intent, operation, effect, inputs, outputs, postcondition and allowed origin, never invokes another model service internally, never permits recovery for a consequential action, never mutates the capability, writes a hash-linked owner-only proposal marked unapproved for persistence, and marks the run ineligible for clean validation."
+      "control": "When a declared action or nested extraction-field locator is missing, the first run returns a sanitized recovery request and stops. The current model may then inspect the bounded state and propose one semantic locator only for the same read-only or reversible action before a restart from the declared start state. A nested structured-field proposal may use one bounded CSS selector scoped inside the already resolved record container. The runtime preserves the exact action-or-field target, action ID, intent, operation, effect, inputs, outputs, field name, read method, maximum record count, postcondition and allowed origin; never invokes another model service internally; never permits recovery for a consequential action; never mutates the capability; writes a hash-linked owner-only proposal marked unapproved for persistence; and marks the run ineligible for clean validation."
     },
     {
       "id": "reviewed-discovery-provenance",
@@ -132,6 +132,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a90c883cfe3842295d2019a97add8dea37364592e20de5a2f49ef7e8ffc3e82f"
+    "source_fingerprint": "f3a8180b93015050f72217813a6f78d1fe54cccb55a6e845e384560ec1ce2db3"
   }
 }

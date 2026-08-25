@@ -181,9 +181,12 @@ typed inputs, fresh run directory, unique run ID, action-time approvals, and the
 current model's bounded `recoveryHandler`.
 
 For a missing locator on a read-only or reversible action, the model may propose
-one semantic locator. The runtime mechanically preserves the action ID, intent,
-operation, effect, input/output shape, postcondition, and origin boundary. It
-does not mutate the capability. The run writes an owner-only
+one semantic locator. If a repeated structured extraction field fails, the
+model may instead propose one bounded CSS locator scoped to the already resolved
+record container. The runtime mechanically preserves the action ID, intent,
+operation, effect, input/output shape, field name, read method, maximum record
+count, postcondition, and origin boundary. It does not mutate the capability.
+The run writes an owner-only
 `recovery.proposals.json`, marks `locator_changes_during_run: true`, and links
 the proposal hash from `run.lock.json`. A recovery run may complete useful work
 without another ordinary-navigation prompt, but it never counts as clean

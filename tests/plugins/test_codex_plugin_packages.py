@@ -26,6 +26,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "presenza-digitale-studio",
     "deep-research-validator",
     "financial-analysis",
+    "management-control-pack",
     "sales-plan",
     "variance-analysis",
     "client-file-preparation",
@@ -63,6 +64,7 @@ VERA_DISCOVERY_TERMS = (
     "bandi",
     "agevolazioni",
     "comunicazione professionale",
+    "controllo di gestione",
     "circolari clienti",
 )
 VERA_PUBLIC_PAGE_PATHS = (
@@ -71,6 +73,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
+    Path("static/shared/management-control-pack/index.html"),
     Path("static/shared/sales-plan/index.html"),
     Path("static/shared/journal-bank-reconciliation/index.html"),
     Path("static/shared/passive-invoice-audit/index.html"),
@@ -298,6 +301,7 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
+    ROOT / "static" / "shared" / "management-control-pack" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "report-builder" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
@@ -319,6 +323,7 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
+    ROOT / "static" / "shared" / "management-control-pack" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "new-client" / "index.html",
@@ -546,8 +551,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["version"] == "0.1.164"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Studia il formato dello studio e prepara email, articolo web e grafica "
-        "su questa novità, oppure non pubblicare."
+        "Trasforma questi export contabili in un pacchetto di controllo di gestione "
+        "con P&L, Budget, aging, cassa e concentrazione."
     )
     assert any(
         "sito dello studio" in prompt and "preview responsive" in prompt
@@ -737,7 +742,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 29
+        assert len(card_bodies) == 30
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -1424,6 +1429,7 @@ def test_vera_routes_every_commercialista_module() -> None:
         "bandi-agevolazioni",
         "browser-automation",
         "comunicazione-professionale",
+        "management-control-pack",
         "passive-invoice-audit",
         "presenza-digitale-studio",
     }
@@ -2738,13 +2744,19 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     shell = (ROOT / "static" / "shared" / "plugin-page-shell.css").read_text(
         encoding="utf-8"
     )
+    scale = (ROOT / "static" / "shared" / "function-page-scale.css").read_text(
+        encoding="utf-8"
+    )
     journey_shell = (ROOT / "static" / "shared" / "vera-journey.css").read_text(
         encoding="utf-8"
     )
 
-    assert "--plugin-hero-title-size: 2.875rem;" in shell
-    assert "--plugin-section-title-size: 2.125rem;" in shell
-    assert "--plugin-lead-size: 1.1875rem;" in shell
+    assert "--function-title-size: 2.875rem;" in scale
+    assert "--function-section-title-size: 2.125rem;" in scale
+    assert "--function-lead-size: 1.1875rem;" in scale
+    assert "--plugin-hero-title-size: var(--function-title-size);" in shell
+    assert "--plugin-section-title-size: var(--function-section-title-size);" in shell
+    assert "--plugin-lead-size: var(--function-lead-size);" in shell
     assert "font-size: var(--plugin-hero-title-size)" in shell
     assert "font-size: var(--plugin-section-title-size)" in shell
     assert "font-size: var(--plugin-lead-size)" in shell
@@ -3080,7 +3092,7 @@ def test_clara_forbidden_page_has_no_vera_download() -> None:
     assert "Pro Plugin Pack" not in page_copy
 
 
-def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
+def test_reconciliation_page_explains_open_item_verification_problem() -> None:
     page = (
         ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html"
     ).read_text(encoding="utf-8")
@@ -3088,17 +3100,19 @@ def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
     assert "In pratica" not in page
     assert "Problema che risolve" in page
     assert (
-        "Riconcilia partite, pagamenti e supporti in un file Excel rivedibile" in page
+        "Verifica se le partite indicate come aperte lo sono ancora al cut-off" in page
     )
-    assert "Metti partite aperte, mastrini, banca e supporti" in page
+    assert "Qui la riga di partenza è la partita aperta" in page
+    assert "La riconciliazione banca-contabilità parte invece" in page
     assert "Cosa dai / cosa ottieni" in page
     assert "Excel conserva il dettaglio riga per riga" in page
     assert "Prompt pronti" in page
-    assert "Riconciliazione completa" in page
-    assert "Mastrino vs banca/supporti" in page
+    assert "Verifica completa" in page
+    assert "Possibili regolamenti non allocati" in page
     assert "Supporti post cut-off" in page
-    assert "Usa il default factoring" in page
-    assert "pagamento in estratto conto bancario" in page
+    assert "Usa il default factoring" not in page
+    assert "Quattro passaggi per capire che cosa ha chiuso ogni partita" not in page
+    assert "what closed each item" not in page
 
 
 def test_new_client_page_describes_one_connected_client_journey() -> None:
@@ -3473,16 +3487,13 @@ def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_pr
     assert "window.location.replace" not in page
 
 
-def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
+def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
     core_start = page.index('id="core"')
     core_end = page.index("</section>", core_start)
-    italy_start = page.index('id="jurisdiction"')
-    italy_end = page.index("</section>", italy_start)
     core = page[core_start:core_end]
-    italy = page[italy_start:italy_end]
 
     for module_link in (
         "../new-client/index.html#journey",
@@ -3494,17 +3505,18 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
         "../variance-analysis/index.html",
+        "../management-control-pack/index.html",
         "../financial-analysis/index.html",
         "../comunicazione-professionale/index.html",
         "../presenza-digitale-studio/index.html",
         "../report-builder/index.html",
-        "../prompt-optimizer/index.html",
-        "../deep-research-validator/index.html",
+        "../quesito-legale-fiscale/index.html",
         "../studio-archive/index.html",
         "../browser-automation/index.html",
     ):
         assert f'href="{module_link}"' in core
     for module_link in (
+        "../bilancio-xbrl-it/index.html",
         "../bandi-agevolazioni/index.html",
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
@@ -3512,27 +3524,35 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
-        assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 24
-    assert core.count('class="module-row"') == 24
-    assert italy.count('data-jurisdiction-item="it"') == 7
-    assert italy.count('data-jurisdiction-item="en"') == 1
-    assert italy.count('data-jurisdiction-item="fr"') == 1
-    assert italy.count('data-jurisdiction-item="de"') == 1
-    for area_id in ("area-clients", "area-accounting", "area-outputs"):
+        module = re.search(
+            rf'<a class="module-row"[^>]+href="{re.escape(module_link)}"[^>]*>',
+            core,
+        )
+        assert module is not None
+        assert 'data-jurisdiction-item="it"' in module.group(0)
+    assert core.count(" data-module-link") == 27
+    assert core.count('class="module-row"') == 27
+    assert core.count('data-jurisdiction-item="it"') == 7
+    for language in ("en", "fr", "de"):
+        assert f'data-jurisdiction-item="{language}"' not in core
+    for area_id in (
+        "area-clients",
+        "area-matters",
+        "area-accounting",
+        "area-analysis",
+        "area-research",
+        "area-studio",
+    ):
         assert f'<article class="workstream" id="{area_id}">' in core
     assert 'id="modello"' not in page
     assert 'id="core"' in page
-    assert 'id="jurisdiction"' in page
+    assert 'id="jurisdiction"' not in page
     assert 'id="video"' not in page
     assert 'id="installa"' in page
     assert "Core multilingue + pacchetto Italia" not in page
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
-    assert "FatturaPA" in italy
-    assert (
-        'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
-        'de: "CH-ZH", es: null };'
-    ) in page
+    assert "FatturaPA" in core
+    assert "const jurisdictionsByPage" not in page
     assert "item.hidden = item.dataset.jurisdictionItem !== lang" in page
     assert (
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
@@ -3608,11 +3628,11 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.reconciliation.title",
         "module.plan.title",
         "module.variance.title",
+        "module.managementPack.title",
         "module.financialAnalysis.title",
         "module.communication.title",
         "module.report.title",
-        "module.prompt.title",
-        "module.research.title",
+        "module.question.title",
     )
     for title_key in title_keys:
         assert page.count(f'data-i18n="{title_key}"') == 1
@@ -3632,24 +3652,39 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_vera_page_places_reviewed_archive_organization_between_intake_and_search() -> (
-    None
-):
+def test_vera_page_lists_client_file_workflows_without_an_extra_subgroup() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    organization = re.search(
-        r'<a[^>]+id="archive-organization".*?</a>',
+    area = re.search(
+        r'<article class="workstream" id="area-clients">.*?</article>',
         page,
         flags=re.DOTALL,
     )
 
-    assert organization is not None
-    assert 'href="../archive-organization/index.html"' in organization.group(0)
-    assert 'data-i18n="module.archiveOrganization.title"' in organization.group(0)
-    assert page.index('id="new-client"') < page.index('id="archive-organization"')
-    assert page.index('id="archive-organization"') < page.index('id="studio-archive"')
-    assert "<p" not in organization.group(0)
+    assert area is not None
+    area_markup = area.group(0)
+    assert "module-cluster" not in area_markup
+    assert "group.clientFile" not in page
+    assert area_markup.index('id="new-client"') < area_markup.index(
+        'id="studio-archive"'
+    )
+    assert area_markup.index('id="studio-archive"') < area_markup.index(
+        'id="archive-organization"'
+    )
+    for workflow_id, href in (
+        ("new-client", "../new-client/index.html#journey"),
+        ("studio-archive", "../studio-archive/index.html"),
+        ("archive-organization", "../archive-organization/index.html"),
+    ):
+        workflow = re.search(
+            rf'<a[^>]+id="{workflow_id}".*?</a>',
+            area_markup,
+            flags=re.DOTALL,
+        )
+        assert workflow is not None
+        assert f'href="{href}"' in workflow.group(0)
+        assert "<p" not in workflow.group(0)
 
 
 def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
@@ -3667,6 +3702,15 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "data-module-link" in plan.group(0)
     assert "module-row__arrow" in plan.group(0)
     assert "module.plan.title" in plan.group(0)
+
+    management_pack = re.search(
+        r'<a[^>]+id="management-control-pack".*?</a>',
+        page,
+        flags=re.DOTALL,
+    )
+    assert management_pack is not None
+    assert 'href="../management-control-pack/index.html"' in management_pack.group(0)
+    assert "module.managementPack.title" in management_pack.group(0)
 
     financial_analysis = re.search(
         r'<a[^>]+id="financial-analysis".*?</a>',
@@ -4031,6 +4075,7 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
     ("page_name", "workflow_id"),
     (
         ("financial-analysis", "financial-analysis"),
+        ("management-control-pack", "management-control-pack"),
         ("sales-plan", "sales-plan"),
     ),
 )
@@ -4155,8 +4200,8 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
         in studio
     )
     assert "To choose a client, the model receives every record’s label" in studio
-    assert "The same reduced sample and run" in journal
-    assert "One index, the same limits, and the same run" in check_entries
+    assert "The same reduced sample in every mode" in journal
+    assert "One index and the same limits in every mode" in check_entries
     assert "The local-folder route scans" in archive_organization
     assert "Local-folder organization works in Codex and Cowork" in (
         archive_organization
@@ -4293,7 +4338,7 @@ def test_registro_imprese_sari_page_explains_the_practice_plan_journey() -> None
         assert snippet in page
 
 
-def test_homepage_routes_deep_research_validator_through_vera() -> None:
+def test_homepage_does_not_expose_the_internal_deep_research_validator() -> None:
     source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
         encoding="utf-8"
     )
@@ -4302,8 +4347,8 @@ def test_homepage_routes_deep_research_validator_through_vera() -> None:
     )
 
     assert '"href": "/static/shared/deep-research-validator/index.html"' not in source
-    assert "../deep-research-validator/index.html" in page
-    assert "Validate Deep Research" in page
+    assert 'href="../deep-research-validator/index.html"' not in page
+    assert 'href="../quesito-legale-fiscale/index.html"' in page
 
 
 def test_check_entries_page_matches_plugin_site_pattern() -> None:
@@ -4353,6 +4398,7 @@ def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
         "concordato-plan-review",
         "deep-research-validator",
         "financial-analysis",
+        "management-control-pack",
         "journal-bank-reconciliation",
         "journal-sampling",
         "lucia",
@@ -5128,6 +5174,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "financial-analysis": (
             "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
+        "management-control-pack": (
+            "https://mparanza.com/static/shared/management-control-pack/index.html?lang=it"
+        ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
@@ -5183,8 +5232,12 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "/?lang=it",
             "Vera",
             (
-                "#core",
-                "#jurisdiction",
+                "#area-clients",
+                "#area-matters",
+                "#area-accounting",
+                "#area-analysis",
+                "#area-research",
+                "#area-studio",
             ),
         ),
         (
@@ -5192,8 +5245,20 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "/",
             "Clara",
             (
-                "#functions",
-                "#workflow",
+                "#area-deliverables",
+                "#area-recordings",
+                "#area-retail",
+                "#area-analysis",
+            ),
+        ),
+        (
+            "lucia",
+            "/?lang=it",
+            "Lucia",
+            (
+                "#area-research",
+                "#area-matters",
+                "#area-studio",
             ),
         ),
     ),
@@ -5212,7 +5277,7 @@ def test_companion_headers_share_product_navigation(
     )[0]
     link_hrefs = tuple(
         re.findall(
-            r'<a\b(?=[^>]*\bdata-i18n="nav\.[^"]+")[^>]*\bhref="([^"]+)"',
+            r'<a\b(?=[^>]*\bdata-i18n="[^"]+")[^>]*\bhref="([^"]+)"',
             header,
         )
     )
@@ -5256,7 +5321,7 @@ def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
     assert ".product-nav__menu[data-menu-open] > .product-nav__links" in stylesheet
     assert ".product-nav__language-list button" in stylesheet
     assert "min-height: 44px;" in stylesheet
-    assert "@media (max-width: 840px)" in stylesheet
+    assert "@media (max-width: 1080px)" in stylesheet
     assert "@media (max-width: 380px)" in stylesheet
     assert stylesheet.count("flex: 0 0 auto;") >= 3
     assert "[data-product-nav-menu-trigger]" in script
@@ -5355,7 +5420,7 @@ def test_companion_overview_video_follows_the_intended_product_story(
     )
     if companion == "vera":
         assert page.index('id="installa"') < page.index('id="core"')
-        assert page.index('id="core"') < page.index('id="jurisdiction"')
+        assert 'id="jurisdiction"' not in page
         assert 'id="assurance"' not in page
         assert "data-featured-video" not in page
         assert 'id="video"' not in page
@@ -5534,27 +5599,27 @@ def test_product_pages_use_direct_product_explanations_for_hero_and_metadata(
 
     direct_leads = {
         "en": {
-            "clara": "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+            "clara": "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
             "vera": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
             "lucia": "Lucia adds legal research, source validation, matter opening, professional communication, and firm websites to Codex.",
         },
         "it": {
-            "clara": "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+            "clara": "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
             "vera": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
             "lucia": "Lucia aggiunge a Codex ricerca legale, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio.",
         },
         "fr": {
-            "clara": "Clara ajoute à Codex les présentations, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
+            "clara": "Clara ajoute à Codex les présentations, les vidéos de recherche narrées, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
             "vera": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
             "lucia": "Lucia ajoute à Codex la recherche juridique, la vérification des sources, l'ouverture de dossier, la communication professionnelle et le site du cabinet.",
         },
         "de": {
-            "clara": "Clara ergänzt Codex um Präsentationen, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
+            "clara": "Clara ergänzt Codex um Präsentationen, vertonte Forschungsvideos, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
             "vera": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
             "lucia": "Lucia ergänzt Codex um juristische Recherche, Quellenprüfung, Aktenanlage, professionelle Kommunikation und Kanzlei-Websites.",
         },
         "es": {
-            "clara": "Clara añade a Codex presentaciones, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
+            "clara": "Clara añade a Codex presentaciones, vídeos de investigación narrados, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
             "vera": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
             "lucia": "Lucia añade a Codex investigación jurídica, comprobación de fuentes, apertura de asuntos, comunicación profesional y sitios web del despacho.",
         },
@@ -5764,7 +5829,9 @@ def test_vera_module_links_preserve_language_without_changing_market() -> None:
     assert 'url.searchParams.set("lang", lang)' in page
     assert "link.dataset.nativeLanguage" in page
     assert ": withLanguage(link.dataset.baseHref, lang)" in page
-    assert "es: null" in page
+    assert 'es: "../new-client/index.html#file-preparation"' in page
+    assert "const jurisdictionsByPage" not in page
+    assert "item.hidden = item.dataset.jurisdictionItem !== lang" in page
     assert "window.location.replace" not in page
 
 

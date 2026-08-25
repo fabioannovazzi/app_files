@@ -58,6 +58,11 @@ skill to imitate a missing operational workflow.
   artifacts; do not duplicate it with client-bound assurance runs.
 - `financial-analysis`: prepare controlled historical accounting analysis and
   fixed financial due-diligence calculations.
+- `management-control-pack`: turn reviewed connectorless accounting exports
+  into one recurring management pack with every supported monthly P&L, Budget,
+  aging, cash, concentration, and profitability section plus a bounded
+  model-led interpretation layer; missing optional data remains visible and
+  the workflow does not require or simulate an ERP connector.
 - `journal-bank-reconciliation`: reconcile bank statements with journal or
   ledger exports using reviewed mappings and matching evidence.
 - `passive-invoice-audit`: screen passive FatturaPA XML populations against

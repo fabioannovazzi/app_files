@@ -1,0 +1,39 @@
+{
+  "plugin": "management-control-pack",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "monthly-management-pack",
+      "prompt": "Prepare one management pack from this ledger, budget, open-items, bank and sales workbook.",
+      "required_signals": [
+        "management pack",
+        "ledger",
+        "budget"
+      ]
+    },
+    {
+      "id": "connectorless-control-pack",
+      "prompt": "Use these Excel exports to create a connectorless CFO-style control pack with P&L, aging, cash and customer concentration.",
+      "required_signals": [
+        "Excel exports",
+        "P&L",
+        "aging",
+        "cash"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "single-variance",
+      "prompt": "Explain the variance between Actual and Budget in this P&L."
+    },
+    {
+      "id": "due-diligence",
+      "prompt": "Prepare a Quality of Earnings schedule for this acquisition."
+    },
+    {
+      "id": "generic-report",
+      "prompt": "Turn this already prepared table into a Word report."
+    }
+  ]
+}

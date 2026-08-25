@@ -34,6 +34,7 @@ def _repo_root() -> Path:
 
 def _load_review_session(plugin: str) -> Any:
     path = _repo_root() / PLUGIN_REVIEW_MODULES[plugin]
+    scripts_path = str(path.parent)
     module_name = f"{plugin.replace('-', '_')}_review_session_contract_test"
     spec = importlib.util.spec_from_file_location(
         module_name,
@@ -43,7 +44,11 @@ def _load_review_session(plugin: str) -> Any:
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
-    spec.loader.exec_module(module)
+    sys.path.insert(0, scripts_path)
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.path.remove(scripts_path)
     return module
 
 

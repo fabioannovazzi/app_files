@@ -22,6 +22,7 @@ VERA_SITE_MODULES = {
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
+    "management-control-pack",
     "riconciliazione-partite",
     "concordato-plan-review",
     "previdenza-inps",
@@ -333,7 +334,6 @@ DISCARDED_PUBLIC_PHRASES = (
     "ready_to_file always remains false",
     "generare il dossier non significa accettare il cliente",
     "non sostituisce",
-    "giudizio professionale",
     "il professionista decide",
     "professional judgment remains",
     "vera doesn't",
@@ -777,89 +777,97 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
     ) == _catalog_workflow_names(
         catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
     )
-    assert set(re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)) == (
-        _catalog_workflow_names(
-            catalog, "Cross-cutting answer assurance", "Developer governance"
-        )
-    )
+    assert not re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)
+    for internal_href in (
+        "../prompt-optimizer/index.html",
+        "../deep-research-validator/index.html",
+    ):
+        assert f'href="{internal_href}"' not in core
 
 
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    jurisdiction = _article_markup(page, "jurisdiction")
-    common_workstreams = core.replace(jurisdiction, "")
-    expected_common_module_count = 25
-    expected_jurisdiction_module_count = 10
+    expected_module_count = 27
+    module_hrefs = re.findall(
+        r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
+    )
 
-    assert core.count('class="module-row"') == (
-        expected_common_module_count + expected_jurisdiction_module_count
-    )
-    assert (
-        jurisdiction.count('class="module-row"')
-        == expected_jurisdiction_module_count
-    )
+    assert core.count('class="module-row"') == expected_module_count
+    assert len(module_hrefs) == expected_module_count
+    assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert jurisdiction.count('data-jurisdiction-item="it"') == 7
-    assert jurisdiction.count('data-jurisdiction-item="en"') == 1
-    assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
-    assert jurisdiction.count('data-jurisdiction-item="de"') == 1
+    assert core.count('data-jurisdiction-item="it"') == 7
+    for language in ("en", "fr", "de"):
+        assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
         "../new-client/index.html#journey",
-        "../avviso-intake/index.html",
+        "../studio-archive/index.html",
+        "../archive-organization/index.html",
         "../dati-fiscali-strutturati/index.html",
         "../email-cliente/index.html",
+        "../avviso-intake/index.html",
         "../fatture-xml-check/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
-        "../archive-organization/index.html",
-        "../studio-archive/index.html",
+        "../bilancio-xbrl-it/index.html",
+        "../concordato-plan-review/index.html",
+        "../browser-automation/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
+        "../passive-invoice-audit/index.html",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
-        "../bilancio-xbrl-it/index.html",
+        "../sales-plan/index.html",
+        "../variance-analysis/index.html",
+        "../management-control-pack/index.html",
         "../financial-analysis/index.html",
-        "../bandi-agevolazioni/index.html",
-        "../concordato-plan-review/index.html",
         "../report-builder/index.html",
+        "../report-enti-locali/index.html",
+        "../bandi-agevolazioni/index.html",
         "../quesito-legale-fiscale/index.html",
-        "../prompt-optimizer/index.html",
-        "../deep-research-validator/index.html",
+        "../comunicazione-professionale/index.html",
+        "../presenza-digitale-studio/index.html",
     ):
         assert f'href="{expected_href}"' in core
-    assert core.index('id="new-client"') < core.index('id="archive-organization"')
-    assert core.index('id="archive-organization"') < core.index('id="studio-archive"')
-    for expected_href in (
-        "../fatture-xml-check/index.html",
-        "../report-enti-locali/index.html",
-        "../concordato-plan-review/index.html",
-        "../previdenza-inps/index.html",
-        "../registro-imprese-sari/index.html",
-        "../new-client/uk.html",
-        "../new-client/geneva.html",
-        "../new-client/zurich.html",
-    ):
-        assert f'href="{expected_href}"' in jurisdiction
-
-    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in common_workstreams
-    assert 'data-jurisdiction-item="it"' in common_workstreams
+    assert core.index('id="new-client"') < core.index('id="studio-archive"')
+    assert core.index('id="studio-archive"') < core.index('id="archive-organization"')
+    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
+    assert 'data-jurisdiction-item="it"' in core
     assert (
-        'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>'
-        in common_workstreams
+        'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>' in core
     )
-    assert "Controllo scritture · FatturaPA" not in common_workstreams
-    assert "FatturaPA" in jurisdiction
+    assert "Controllo scritture · FatturaPA" not in core
     for area_href in (
         "#area-clients",
+        "#area-matters",
         "#area-accounting",
-        "#area-outputs",
-        "#jurisdiction",
+        "#area-analysis",
+        "#area-research",
+        "#area-studio",
     ):
         assert f'href="{area_href}"' in page
-    assert page.index('id="core"') < page.index('id="jurisdiction"')
+    assert 'id="jurisdiction"' not in page
+    assert 'href="#jurisdiction"' not in page
     assert 'href="#video"' not in page
     assert 'id="video"' not in page
+
+
+def test_vera_hub_separates_research_from_studio_communication() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    research = _article_markup(page, "area-research")
+    communication = _article_markup(page, "area-studio")
+
+    assert set(re.findall(r'href="([^"]+)"', research)) == {
+        "../bandi-agevolazioni/index.html",
+        "../quesito-legale-fiscale/index.html",
+    }
+    assert set(re.findall(r'href="([^"]+)"', communication)) == {
+        "../comunicazione-professionale/index.html",
+        "../presenza-digitale-studio/index.html",
+    }
+    assert 'data-i18n="stream.research.index">Area 5</span>' in research
+    assert 'data-i18n="stream.studio.index">Area 6</span>' in communication
 
 
 def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
@@ -880,62 +888,56 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         if (match := re.search(r"<h4[^>]*>([^<]+)</h4>", row)) is not None
     ]
     expected_labels = [
-        "Fascicolo nuovo cliente",
+        "Apertura del fascicolo cliente",
+        "Archiviazione e ricerca nel fascicolo cliente",
+        "Riordino della cartella cliente",
         "Estrazione dati fiscali",
         "Richiesta documenti e chiarimenti",
-        "Controllo FatturaPA XML",
         "Esame avvisi e cartelle",
+        "Controllo FatturaPA XML",
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
-        "Riordino cartella cliente",
-        "Archivio clienti",
+        "Bilancio OIC e XBRL",
+        "Revisione concordato preventivo",
+        "Automazione web",
         "Campionamento scritture contabili",
         "Controllo scritture",
+        "Audit intelligente fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
         "Analisi scostamenti",
-        "Bilancio OIC e XBRL",
+        "Pacchetto controllo di gestione",
         "Analisi finanziaria e due diligence",
+        "Preparazione report finanziario",
+        "Report finanziario enti locali",
         "Bandi e agevolazioni",
-        "Revisione concordato preventivo",
+        "Risposta a quesiti legali e fiscali",
         "Comunicazione professionale",
         "Sito dello studio",
-        "Preparazione report finanziario",
-        "Risposta a quesiti legali e fiscali",
-        "Ottimizzazione prompt",
-        "Validazione ricerca",
-        "Bilancio OIC e XBRL",
-        "Bandi e agevolazioni",
-        "Controllo FatturaPA XML",
-        "Report finanziario enti locali",
-        "Revisione concordato preventivo",
-        "Revisione pratica INPS",
-        "Pratiche Registro Imprese",
     ]
     expected_runtime_labels = {
-        "module.newClient.title": "Fascicolo nuovo cliente",
+        "module.newClient.title": "Apertura del fascicolo cliente",
         "module.newClient.includes.data": "Estrazione dati fiscali",
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
         "module.notice.title": "Esame avvisi e cartelle",
-        "module.archiveOrganization.title": "Riordino cartella cliente",
-        "module.archive.title": "Archivio clienti",
+        "module.archiveOrganization.title": "Riordino della cartella cliente",
+        "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
         "module.sampling.title": "Campionamento scritture contabili",
         "module.entries.title": "Controllo scritture",
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
         "module.variance.title": "Analisi scostamenti",
+        "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.communication.title": "Comunicazione professionale",
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
         "module.question.title": "Risposta a quesiti legali e fiscali",
-        "module.prompt.title": "Ottimizzazione prompt",
-        "module.research.title": "Validazione ricerca",
     }
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
-        "archive-organization": "Riordino cartella cliente",
+        "archive-organization": "Riordino della cartella cliente",
         "audit-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
@@ -948,9 +950,10 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "email-cliente": "Richiesta documenti e chiarimenti",
         "fatture-xml-check": "Controllo FatturaPA XML",
         "financial-analysis": "Analisi finanziaria e due diligence",
+        "management-control-pack": "Pacchetto controllo di gestione",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
-        "new-client": "Fascicolo nuovo cliente",
+        "new-client": "Apertura del fascicolo cliente",
         "previdenza-inps": "Revisione pratica INPS",
         "presenza-digitale-studio": "Sito dello studio",
         "prompt-optimizer": "Ottimizzazione prompt",
@@ -959,7 +962,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
         "variance-analysis": "Analisi scostamenti",
-        "studio-archive": "Archivio clienti",
+        "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
     }
     marketplace_cards = json.loads(
         (VERA_PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
@@ -968,7 +971,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 32
+    assert len(labels) == 27
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1035,6 +1038,7 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     "page_path",
     (
         SHARED_ROOT / "financial-analysis" / "index.html",
+        SHARED_ROOT / "management-control-pack" / "index.html",
         SHARED_ROOT / "new-client" / "index.html",
     ),
 )
@@ -1144,17 +1148,17 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
         "A private index on the Mac.",
         "No model decides which documents to index or ignore.",
         "No embedding database is created.",
-        "Retrieval is mechanical. Interpretation uses Codex.",
+        "Retrieval is mechanical. Interpretation uses the selected model.",
         "A model then attempts to transcribe text from images",
         "the result needs visual confirmation.",
         "Email stays in Gmail and does not enter the document index.",
-        "OpenAI’s Gmail connector",
-        "searches the required messages at that moment in read-only mode.",
+        "Connect the read-only Gmail connector available in the selected runtime separately.",
+        "Vera searches the required messages at that moment.",
         "Computer Use",
         "Documents are always available. Gmail and WhatsApp only on request.",
-        "Gmail works in ChatGPT or Codex.",
-        "The local archive and WhatsApp Desktop require Codex",
-        "You can continue in ChatGPT with Gmail and material supplied in the conversation",
+        "The Studio Archive run and connected-file search work in Codex and Cowork.",
+        "Gmail uses the connector for the selected account",
+        "WhatsApp Desktop remains a Codex-specific route.",
         "On-screen inspection only when requested",
         "Opening it may mark messages as read",
         "The chat stays in WhatsApp.",
@@ -1391,15 +1395,29 @@ def test_vera_hub_names_the_two_processing_categories() -> None:
 @pytest.mark.parametrize(
     "labels",
     (
-        ("Area 1", "Area 2", "Area 3"),
-        ("Area 1", "Area 2", "Area 3"),
-        ("Domaine 1", "Domaine 2", "Domaine 3"),
-        ("Bereich 1", "Bereich 2", "Bereich 3"),
-        ("Área 1", "Área 2", "Área 3"),
+        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5", "Area 6"),
+        ("Area 1", "Area 2", "Area 3", "Area 4", "Area 5", "Area 6"),
+        (
+            "Domaine 1",
+            "Domaine 2",
+            "Domaine 3",
+            "Domaine 4",
+            "Domaine 5",
+            "Domaine 6",
+        ),
+        (
+            "Bereich 1",
+            "Bereich 2",
+            "Bereich 3",
+            "Bereich 4",
+            "Bereich 5",
+            "Bereich 6",
+        ),
+        ("Área 1", "Área 2", "Área 3", "Área 4", "Área 5", "Área 6"),
     ),
 )
 def test_vera_hub_explains_work_area_numbers_in_every_language(
-    labels: tuple[str, str, str],
+    labels: tuple[str, str, str, str, str, str],
 ) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
@@ -1419,7 +1437,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 35
+    expected_module_link_count = 27
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
