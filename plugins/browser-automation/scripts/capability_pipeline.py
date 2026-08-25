@@ -44,7 +44,7 @@ DISCOVERY_SCHEMA = "browser-discovery/v2"
 RECEIPT_SCHEMA = "browser-run-receipt/v1"
 RUN_LOCK_SCHEMA = "browser-run-lock/v1"
 RECOVERY_RUN_LOCK_SCHEMA = "browser-run-lock/v2"
-RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v1"
+RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2"
 BUNDLE_LOCK_SCHEMA = "browser-capability-lock/v2"
 SAFE_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
@@ -136,9 +136,12 @@ RECOVERY_ITEM_KEYS = {
     "action_intent",
     "operation",
     "effect",
+    "target_kind",
+    "field_name",
     "origin",
     "path",
     "original_locator_candidates_sha256",
+    "resolution",
     "candidate_index",
     "candidate",
     "candidate_sha256",
@@ -878,6 +881,7 @@ def _validate_extraction(
     input_types: Mapping[str, str],
     output_type: str | None,
     output_fields: set[str],
+    root_locator_candidates: Any,
 ) -> None:
     extraction = _exact_keys(
         value,
@@ -920,6 +924,15 @@ def _validate_extraction(
         errors.append(f"{scope}.empty_allowed must be boolean")
     fields = extraction.get("fields")
     field_names: list[str] = []
+    root_locator_payloads = (
+        {
+            canonical_json_bytes(candidate)
+            for candidate in root_locator_candidates
+            if isinstance(candidate, Mapping)
+        }
+        if _is_sequence(root_locator_candidates)
+        else set()
+    )
     if not _is_sequence(fields):
         errors.append(f"{scope}.fields must be an array")
     elif mode == "text" and fields:
@@ -949,6 +962,17 @@ def _validate_extraction(
                 required=False,
                 require_semantic=False,
             )
+            field_locator_candidates = field.get("locator_candidates")
+            if _is_sequence(field_locator_candidates):
+                for locator_index, candidate in enumerate(field_locator_candidates):
+                    if (
+                        isinstance(candidate, Mapping)
+                        and canonical_json_bytes(candidate) in root_locator_payloads
+                    ):
+                        errors.append(
+                            f"{field_scope}.locator_candidates[{locator_index}] must not "
+                            "repeat an action root locator; use [] to read the resolved root"
+                        )
             read = _exact_keys(
                 field.get("read"),
                 {"kind", "attribute"},
@@ -1141,6 +1165,7 @@ def _validate_milestones(
                     input_types=input_types,
                     output_type=output_type,
                     output_fields=output_fields.get(str(output_ref), set()),
+                    root_locator_candidates=action.get("locator_candidates"),
                 )
             elif extraction is not None:
                 errors.append(f"{action_scope}.extract must be null for {operation}")
@@ -2006,6 +2031,17 @@ def validate_recovery_proposals(payload: Any) -> list[str]:
             errors.append(f"{scope}.operation is not recoverable")
         if proposal.get("effect") not in {"read_only", "reversible"}:
             errors.append(f"{scope}.effect is not recoverable")
+        target_kind = proposal.get("target_kind")
+        if target_kind not in {"action_locator", "extraction_field_locator"}:
+            errors.append(f"{scope}.target_kind is unsupported")
+        field_name = proposal.get("field_name")
+        if target_kind == "extraction_field_locator":
+            if not isinstance(field_name, str) or not SAFE_ID.fullmatch(field_name):
+                errors.append(
+                    f"{scope}.field_name must be a lower-case slug for field recovery"
+                )
+        elif field_name is not None:
+            errors.append(f"{scope}.field_name must be null for action recovery")
         _validate_origin(proposal.get("origin"), scope=f"{scope}.origin", errors=errors)
         path = proposal.get("path")
         if (
@@ -2015,27 +2051,45 @@ def validate_recovery_proposals(payload: Any) -> list[str]:
             or "#" in path
         ):
             errors.append(f"{scope}.path must be query-free")
-        for field in (
-            "original_locator_candidates_sha256",
-            "candidate_sha256",
-        ):
-            if not _is_sha256(proposal.get(field)):
-                errors.append(f"{scope}.{field} must be a SHA-256")
-        candidate_index = proposal.get("candidate_index")
-        if not isinstance(candidate_index, int) or candidate_index < 0:
-            errors.append(f"{scope}.candidate_index must be non-negative")
-        candidate_before = len(errors)
-        kind = _validate_locator(
-            proposal.get("candidate"),
-            scope=f"{scope}.candidate",
-            errors=errors,
-        )
-        if kind is not None and kind not in SEMANTIC_LOCATORS:
-            errors.append(f"{scope}.candidate must be semantic")
-        if len(errors) == candidate_before and proposal.get(
-            "candidate_sha256"
-        ) != sha256_payload(proposal["candidate"]):
-            errors.append(f"{scope}.candidate_sha256 does not match candidate")
+        if not _is_sha256(proposal.get("original_locator_candidates_sha256")):
+            errors.append(
+                f"{scope}.original_locator_candidates_sha256 must be a SHA-256"
+            )
+        resolution = proposal.get("resolution")
+        if resolution not in {"locator_candidate", "resolved_action_root"}:
+            errors.append(f"{scope}.resolution is unsupported")
+        if resolution == "resolved_action_root":
+            if target_kind != "extraction_field_locator":
+                errors.append(
+                    f"{scope}.resolved_action_root requires extraction field recovery"
+                )
+            for field in ("candidate_index", "candidate", "candidate_sha256"):
+                if proposal.get(field) is not None:
+                    errors.append(
+                        f"{scope}.{field} must be null for resolved_action_root"
+                    )
+        elif resolution == "locator_candidate":
+            candidate_index = proposal.get("candidate_index")
+            if not isinstance(candidate_index, int) or candidate_index < 0:
+                errors.append(f"{scope}.candidate_index must be non-negative")
+            if not _is_sha256(proposal.get("candidate_sha256")):
+                errors.append(f"{scope}.candidate_sha256 must be a SHA-256")
+            candidate_before = len(errors)
+            kind = _validate_locator(
+                proposal.get("candidate"),
+                scope=f"{scope}.candidate",
+                errors=errors,
+            )
+            if (
+                kind is not None
+                and target_kind == "action_locator"
+                and kind not in SEMANTIC_LOCATORS
+            ):
+                errors.append(f"{scope}.candidate must be semantic")
+            if len(errors) == candidate_before and proposal.get(
+                "candidate_sha256"
+            ) != sha256_payload(proposal["candidate"]):
+                errors.append(f"{scope}.candidate_sha256 does not match candidate")
         original_failure = _exact_keys(
             proposal.get("original_failure"),
             {"code", "detail_sha256"},

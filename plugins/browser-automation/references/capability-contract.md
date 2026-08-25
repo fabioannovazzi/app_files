@@ -69,11 +69,13 @@ A missing locator for a read-only or reversible action may be recovered during
 one run through a model-provided `recoveryHandler`. The model proposes exactly
 one semantic locator. When the failure is inside a repeated structured
 extraction field, it may instead propose one bounded CSS locator scoped to the
-already resolved record container. The mechanical runtime preserves the action
-ID, intent, operation, effect, input/output contract, field name, read method,
-postcondition, maximum record count, and allowed origin. It never changes a
-consequential action, workflow branch, origin, data class, or output scope and
-never mutates the capability in place.
+already resolved record container. When the failed field is the action root
+itself, the model may instead select `use_resolved_action_root: true`; the
+runtime retries that field with an empty field-locator list. The mechanical
+runtime preserves the action ID, intent, operation, effect, input/output
+contract, field name, read method, postcondition, maximum record count, and
+allowed origin. It never changes a consequential action, workflow branch,
+origin, data class, or output scope and never mutates the capability in place.
 
 Promotion compares the draft with the exact reviewed record. Site, process,
 runtime, authority, and privacy boundaries must match, and every executable
@@ -113,7 +115,11 @@ Each action declares its operation, intent, effect, locator candidates, typed
 input or output reference, timeout, and postcondition. Record extraction uses
 `single` or `list` mode with an exact declared field shape, typed coercion, a
 hard maximum, an optional positive-integer runtime limit, required fields, and
-deduplication keys. Scalar and summary extraction uses `text` mode. Required
+deduplication keys. Field locators are resolved inside the already resolved
+action root. A field that reads that root must therefore declare
+`locator_candidates: []`; repeating an action-root locator at field scope is
+invalid because it searches for the same control as a descendant of itself.
+Scalar and summary extraction uses `text` mode. Required
 non-collection outputs must be produced on every terminal path; an empty
 `record_set` remains a valid no-result output. `consequential` actions require
 action-time confirmation. A capability never treats a successful click as
@@ -144,9 +150,10 @@ runtime writes:
   failures contain only a stable category and a SHA-256 of the local detail.
 - `run.lock.json`: hashes linking the receipt and output artifact.
 - `recovery.proposals.json`, only when bounded model recovery was attempted:
-  the proposed semantic locator, semantic rationale, uncertainty, original
-  contract hashes, sanitized error hashes, and outcome. The file is owner-only,
-  non-portable, and unapproved for persistence. A version-2 run lock hashes it.
+  the exact action-or-field target, proposed locator or resolved-root choice,
+  semantic rationale, uncertainty, original contract hashes, sanitized error
+  hashes, and outcome. The file is owner-only, non-portable, and unapproved for
+  persistence. A version-2 run lock hashes it.
 
 Recovery is a two-pass host-model interaction. A first run with a missing safe
 locator fails with a model-visible `recovery_request` containing the unchanged
@@ -154,7 +161,8 @@ action contract, exact action-or-field recovery target, current origin and
 query-free path, and failure hash, but no runtime input. The host model then
 inspects the bounded live state and retries from the declared start with one
 semantic candidate, or one row-scoped CSS candidate for a structured extraction
-field. The JavaScript runtime does not call an API or claim to invoke an LLM
+field, or an explicit resolved-action-root choice when the field is the root
+itself. The JavaScript runtime does not call an API or claim to invoke an LLM
 inside the original execution.
 
 Only the runtime writes receipts. `finalize` requires two unique passed receipts

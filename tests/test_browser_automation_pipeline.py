@@ -302,8 +302,8 @@ def _recovery_proposals(capability: dict[str, object]) -> dict[str, object]:
         "exact": True,
     }
     return {
-        "schema_version": "browser-recovery-proposals/v1",
-        "runtime_version": "browser-capability-runtime/5",
+        "schema_version": "browser-recovery-proposals/v2",
+        "runtime_version": "browser-capability-runtime/9",
         "run_id": "recovered-run",
         "capability_id": capability["capability_id"],
         "capability_version": capability["version"],
@@ -317,9 +317,12 @@ def _recovery_proposals(capability: dict[str, object]) -> dict[str, object]:
                 "action_intent": "Fill the declared search control.",
                 "operation": "fill",
                 "effect": "reversible",
+                "target_kind": "action_locator",
+                "field_name": None,
                 "origin": "https://mail.google.com",
                 "path": "/mail/u/0/",
                 "original_locator_candidates_sha256": "b" * 64,
+                "resolution": "locator_candidate",
                 "candidate_index": 1,
                 "candidate": candidate,
                 "candidate_sha256": pipeline.sha256_payload(candidate),
@@ -532,6 +535,38 @@ def test_recovery_proposal_validator_accepts_only_bounded_semantic_changes() -> 
     assert "recovery.portable must be false" in errors
 
 
+def test_recovery_proposal_validator_accepts_resolved_action_root_for_field() -> None:
+    pipeline = _pipeline()
+    recovery = _recovery_proposals(_capability("gmail-search-export"))
+    proposal = recovery["proposals"][0]
+    proposal["target_kind"] = "extraction_field_locator"
+    proposal["field_name"] = "sender"
+    proposal["resolution"] = "resolved_action_root"
+    proposal["candidate_index"] = None
+    proposal["candidate"] = None
+    proposal["candidate_sha256"] = None
+
+    assert pipeline.validate_recovery_proposals(recovery) == []
+
+
+def test_recovery_proposal_validator_accepts_bounded_css_for_field_only() -> None:
+    pipeline = _pipeline()
+    recovery = _recovery_proposals(_capability("gmail-search-export"))
+    proposal = recovery["proposals"][0]
+    candidate = {
+        "kind": "css",
+        "role": None,
+        "value": ".sender-summary:visible",
+        "exact": False,
+    }
+    proposal["target_kind"] = "extraction_field_locator"
+    proposal["field_name"] = "sender"
+    proposal["candidate"] = candidate
+    proposal["candidate_sha256"] = pipeline.sha256_payload(candidate)
+
+    assert pipeline.validate_recovery_proposals(recovery) == []
+
+
 def test_recovery_run_lock_hashes_the_owner_only_proposal() -> None:
     pipeline = _pipeline()
     recovery = _recovery_proposals(_capability("gmail-search-export"))
@@ -642,6 +677,33 @@ def test_validator_requires_exact_output_fields_and_numeric_list_limit() -> None
 
     assert any("fields must exactly cover the output fields" in item for item in errors)
     assert any("limit_input_ref must name a number input" in item for item in errors)
+
+
+def test_validator_rejects_extraction_field_that_repeats_action_root_locator() -> None:
+    pipeline = _pipeline()
+    capability = _capability("gmail-search-export")
+    action = capability["milestones"][2]["actions"][0]
+    field = action["extract"]["fields"][0]
+    field["locator_candidates"] = copy.deepcopy(action["locator_candidates"])
+
+    errors = pipeline.validate_capability(capability)
+
+    assert any(
+        "must not repeat an action root locator; use [] to read the resolved root"
+        in item
+        for item in errors
+    )
+
+
+def test_validator_accepts_empty_field_locator_to_read_resolved_root() -> None:
+    pipeline = _pipeline()
+    capability = _capability("gmail-search-export")
+    action = capability["milestones"][2]["actions"][0]
+    action["extract"]["fields"][0]["locator_candidates"] = []
+
+    errors = pipeline.validate_capability(capability)
+
+    assert errors == []
 
 
 def test_validator_rejects_unreachable_and_inconsistent_terminal_graphs() -> None:

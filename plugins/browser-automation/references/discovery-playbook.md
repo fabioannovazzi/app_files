@@ -177,9 +177,13 @@ current model's bounded `recoveryHandler`.
 For a missing locator on a read-only or reversible action, the model may propose
 one semantic locator. If a repeated structured extraction field fails, the
 model may instead propose one bounded CSS locator scoped to the already resolved
-record container. The runtime mechanically preserves the action ID, intent,
-operation, effect, input/output shape, field name, read method, maximum record
-count, postcondition, and origin boundary. It does not mutate the capability.
+record container. If the field is the already resolved action root, answer with
+`use_resolved_action_root: true`; the repaired field must use
+`locator_candidates: []`. Never repeat an action-root locator at field scope,
+because field candidates are evaluated as descendants of that root. The runtime
+mechanically preserves the action ID, intent, operation, effect, input/output
+shape, field name, read method, maximum record count, postcondition, and origin
+boundary. It does not mutate the capability.
 The run writes an owner-only
 `recovery.proposals.json`, marks `locator_changes_during_run: true`, and links
 the proposal hash from `run.lock.json`. A recovery run may complete useful work

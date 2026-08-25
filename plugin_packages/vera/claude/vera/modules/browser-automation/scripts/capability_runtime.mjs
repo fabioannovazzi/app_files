@@ -11,9 +11,9 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/8";
+export const RUNTIME_VERSION = "browser-capability-runtime/9";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v1";
-export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v1";
+export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
 const EXECUTABLE_STATES = new Set(["discovered", "validated_local"]);
 const SAFE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -621,7 +621,7 @@ function recoveryRequest({ capability, milestone, action, page, error }) {
     constraints: {
       permitted_change:
         target.kind === "extraction_field_locator"
-          ? "one_bounded_structured_field_locator_candidate"
+          ? "one_bounded_structured_field_locator_candidate_or_resolved_action_root"
           : "one_semantic_locator_candidate",
       same_action_intent_required: true,
       same_operation_required: true,
@@ -661,18 +661,31 @@ async function attemptModelRecovery({
     context.pendingRecoveryRequest = request;
     return null;
   }
-  if (
-    !exactKeys(
-      response,
-      new Set(["locator_candidate", "rationale", "uncertainty"]),
-    )
-  ) {
+  const locatorResponse = exactKeys(
+    response,
+    new Set(["locator_candidate", "rationale", "uncertainty"]),
+  );
+  const rootResponse = exactKeys(
+    response,
+    new Set(["use_resolved_action_root", "rationale", "uncertainty"]),
+  );
+  if (!locatorResponse && !rootResponse) {
     throw new Error("recovery handler returned an unsupported response shape");
   }
-  const candidate = validateRecoveryLocatorCandidate(response.locator_candidate, {
-    allowStructuredCss: target.kind === "extraction_field_locator",
-  });
   if (
+    rootResponse &&
+    (response.use_resolved_action_root !== true || target.kind !== "extraction_field_locator")
+  ) {
+    throw new Error("resolved action root recovery requires an extraction field target");
+  }
+  const resolution = rootResponse ? "resolved_action_root" : "locator_candidate";
+  const candidate = locatorResponse
+    ? validateRecoveryLocatorCandidate(response.locator_candidate, {
+        allowStructuredCss: target.kind === "extraction_field_locator",
+      })
+    : null;
+  if (
+    candidate != null &&
     target.locator_candidates.some(
       (declared) => canonicalJson(declared) === canonicalJson(candidate),
     )
@@ -693,9 +706,10 @@ async function attemptModelRecovery({
     original_locator_candidates_sha256: sha256Text(
       canonicalJson(target.locator_candidates),
     ),
-    candidate_index: target.locator_candidates.length,
+    resolution,
+    candidate_index: candidate == null ? null : target.locator_candidates.length,
     candidate,
-    candidate_sha256: sha256Text(canonicalJson(candidate)),
+    candidate_sha256: candidate == null ? null : sha256Text(canonicalJson(candidate)),
     rationale: safeRecoveryText(response.rationale, "rationale"),
     uncertainty: safeRecoveryText(response.uncertainty, "uncertainty"),
     original_failure: sanitizedErrorMetadata("locator_not_found", error.message),
@@ -711,7 +725,11 @@ async function attemptModelRecovery({
     if (field == null) {
       throw new Error("recovery target field is not declared by the extraction action");
     }
-    field.locator_candidates.push(candidate);
+    if (resolution === "resolved_action_root") {
+      field.locator_candidates = [];
+    } else {
+      field.locator_candidates.push(candidate);
+    }
   } else {
     patchedAction.locator_candidates.push(candidate);
   }

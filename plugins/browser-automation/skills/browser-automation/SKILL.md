@@ -164,6 +164,12 @@ category; do not claim ZIP retrieval, inspect the browser profile, or invoke a
 desktop-control fallback. Hand the native step to the operator and keep it
 outside clean replay evidence.
 
+Extraction field locators are resolved inside the action's already resolved
+root. When a field reads that root control itself, author
+`locator_candidates: []` for the field. Never repeat an action-root locator at
+field scope: that means "find this control inside itself" and is rejected by
+the validator.
+
 An output with `delivery: artifact_only` stays in the private `outputs.json`.
 Do not open or emit its values unless the operator separately asks for model
 interpretation and the applicable model-data disclosure has been satisfied.
@@ -181,6 +187,9 @@ for that request, proposes one semantic locator, and restarts from the declared
 start state with a handler that answers only that action. When the failure is a
 required field inside a repeated structured extraction, the model may instead
 propose one bounded CSS locator scoped to the already resolved record container.
+If the required field is the resolved action root itself, the model may return
+`use_resolved_action_root: true`; the retry reads that root directly and records
+the choice rather than inventing a descendant locator.
 This is the actual model bridge; JavaScript must not pretend to invoke an LLM
 during the first run. The retry reuses the same action ID, intent, operation,
 effect, input/output shape, field name and read method when applicable, maximum
