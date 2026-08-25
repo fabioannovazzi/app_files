@@ -1,7 +1,7 @@
 {
   "name": "browser-automation",
-  "version": "0.2.0",
-  "description": "Scopre processi web autorizzati nella sessione Chrome dell'operatore e genera capability intelligenti e portabili.",
+  "version": "0.3.0",
+  "description": "Permette a un operatore di insegnare un processo web nel proprio Chrome e genera un developer pack e una capability intelligente e portabile.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",
@@ -26,8 +26,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Automazione web",
-    "shortDescription": "Scopre e rende portatile un processo web autorizzato.",
-    "longDescription": "Vera usa la sessione Chrome già connessa dell'operatore per esplorare semanticamente un processo autorizzato, riconoscere pagine e rami, provare azioni reversibili e generare una capability process-specifica. Il modello interpreta l'interfaccia e recupera dai cambiamenti; Playwright esegue azioni e verifiche ripetibili. L'operatore autentica personalmente la propria sessione e conferma soltanto le azioni conseguenziali. Il pacchetto portatile esclude credenziali, cookie, storage, sessioni, contenuti osservati e file scaricati. Include una prova Gmail e scaffold Agenzia e TeamSystem da completare con discovery live autorizzata.",
+    "shortDescription": "Insegna e rende portatile un processo web autorizzato.",
+    "longDescription": "Vera usa la sessione Chrome già connessa dell'operatore come capability factory generica. In modalità guided l'operatore mostra il processo, in autonomous il modello esplora soltanto passaggi sicuri, in hybrid fa entrambe le cose. Il primo risultato è un developer pack sanitizzato e revisionato per chi non può accedere al sito; dopo approvazione e replay il secondo è una capability process-specifica. Il runtime JSON usa Playwright per azioni, output strutturati, postcondizioni, rami e ricevute hash-linked. Il modello può recuperare un locator cambiato soltanto per la stessa azione sicura, senza modificare automaticamente la capability o contare il run come validazione. L'operatore autentica personalmente e conferma soltanto azioni conseguenziali o ampliamenti sostanziali. I pacchetti escludono credenziali, cookie, storage, sessioni, output privati e file scaricati. Include un draft Gmail e scaffold Agenzia e TeamSystem da completare con discovery live autorizzata.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -40,7 +40,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Scopri questo processo nel mio Chrome autorizzato e genera una capability portabile e verificabile."
+      "Usa la modalità hybrid nel mio Chrome autorizzato: ti mostro il processo principale, esplora soltanto rami sicuri e prepara un developer pack sanitizzato e una capability verificabile."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

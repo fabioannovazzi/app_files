@@ -208,13 +208,18 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
-- `browser-automation`: a Codex Desktop developer and execution workflow that
-  reuses the authorized operator's connected Chrome profile, explores one
-  bounded web process with model-led interpretation, turns observed controls
-  and branches into a process-specific intelligent Playwright capability, and
-  validates clean replay before portable handoff. It applies to Agenzia delle
-  Entrate, TeamSystem, Gmail, or another browser-based gestionale; authentication
-  remains with each operator and no session or secret is transferred;
+- `browser-automation`: a Codex Desktop capability factory that reuses the
+  authorized operator's connected Chrome profile in guided, autonomous, or
+  hybrid mode. The operator can demonstrate one bounded web process, let the
+  model explore safe reversible paths, or combine both. It first produces a
+  separately reviewed sanitized developer pack so a developer without site
+  access can understand the process, then turns approved evidence into one
+  process-specific intelligent Playwright capability and validates clean replay
+  before portable handoff. Runtime locator recovery is model-led but confined
+  mechanically to the same safe action and never counts as clean validation.
+  It applies to Agenzia delle Entrate, TeamSystem, Gmail, or another browser-
+  based gestionale; authentication remains with each operator and no session or
+  secret is transferred;
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound
@@ -223,7 +228,9 @@ them without changing the capability catalog:
   bounded reads, and explicit exclusion of ambiguous correspondence. WhatsApp
   is capability-gated and excluded from Cowork v1; on another supported local
   runtime it requires one confirmed complete phone number and a verified
-  one-to-one chat. Each professional may additionally keep a private SQLite
+  one-to-one chat. Browser-process teaching and automation are routed through
+  the separate generic `browser-automation` workflow rather than this archive
+  route. Each professional may additionally keep a private SQLite
   search index, configuration, and optional private contact metadata for one
   shared or synced studio folder. The portable client, engagement, input, run,
   lifecycle, and artifact ledger stays in each customer folder. Search and

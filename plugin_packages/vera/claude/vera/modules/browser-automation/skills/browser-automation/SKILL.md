@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation.
+description: "Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
 ---
 
 ## Cowork execution contract
@@ -49,4 +49,4 @@ override this Cowork contract.
 
 # Automazione web
 
-Live process discovery, replay, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied capability JSON and may run the packaged deterministic contract validator when local Python is already available, but it must not claim live discovery or validation. Continue with useful process scoping or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.
+Live process discovery, execution, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied sanitized developer pack or capability JSON and may run the packaged deterministic evidence or capability pipeline when local Python is already available, but it must not claim live discovery or validation. Continue with useful process scoping, developer-pack review, or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.

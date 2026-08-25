@@ -1,29 +1,35 @@
 ---
 name: browser-automation
-description: Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation.
+description: "Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
 ---
 
 # Automazione web
 
-Discover an authorized browser process and turn it into a portable, intelligent
-capability that another operator can run in their own Chrome session. The
-deliverable is a working process capability, not a recording and not a browser
-session.
+Run a generic capability factory on an authorized operator's computer, then
+turn the observed process into a portable, intelligent capability that another
+operator can run in their own Chrome session. This exists specifically for the
+case where the developer cannot access the target system: the operator can
+demonstrate the process, let the model explore it, or combine both. The first
+deliverable is a sanitized reviewed developer pack; the final deliverable is a
+working process-specific capability. Neither deliverable is a browser session,
+macro, video recording, or credential transfer.
 
 Read `references/capability-contract.md` completely before building, changing,
 validating, or running a capability. For a new or changed process, also read
 `references/discovery-playbook.md` completely.
 
-Before the first local contract helper in a run, execute
+Before the first local pipeline helper in a run, execute
 `python scripts/check_dependencies.py` from this module. The core uses only the
 Python standard library; this check must not install packages or access the
 network. `requirements.txt` therefore declares no third-party runtime package.
 
-The local deterministic scripts own only dependency readiness, contract shape,
-origin bounds, forbidden secret and capture fields, validation-receipt rules,
-hashes, owner-only permissions, and non-overwriting bundle output. They do not
-decide what a page means, which process matters, which branch to follow, whether
-a locator is semantically correct, or whether a professional result is sound.
+The local deterministic scripts own only dependency readiness, executable JSON
+dispatch, typed runtime inputs, structured output shape, origin bounds,
+postcondition mechanics, forbidden secret and capture fields, validation-receipt
+rules, hashes, owner-only permissions, and non-overwriting bundle output. They
+do not decide what a page means, which process matters, which branch to follow,
+whether a locator is semantically correct, or whether a professional result is
+sound.
 
 ## Required browser runtime
 
@@ -63,10 +69,20 @@ consequential action or genuine ambiguity requires one.
 
 ### Discover or change a process
 
-Use the discovery playbook. The model actively navigates the authorized site,
-interprets each page, tests reversible actions, identifies semantic milestones,
-collects robust locator candidates, follows relevant branches, and verifies the
-end state. It is not a passive demonstration recorder.
+Use the discovery playbook. Accept one of three session modes:
+
+- `guided`: the operator demonstrates the process while the read-only discovery
+  runtime polls bounded before/after control states;
+- `autonomous`: the model navigates the authorized process and tests safe,
+  reversible actions; or
+- `hybrid` (default): the operator demonstrates the main path and the model
+  inspects gaps, postconditions, and safe branches.
+
+Guided mode is intelligent observation, not a claim that Chrome exposes a raw
+trusted click stream. The runtime does not inject a macro recorder or retain a
+video. The model combines the declared objective, the operator's demonstration,
+and bounded semantic control-state changes to infer milestones, actions,
+branches, postconditions, locator candidates, and uncertainties.
 
 Keep live inspection bounded to the declared process and allowed origins. By
 default, query only targeted control roles, accessible names, labels,
@@ -77,30 +93,101 @@ cannot be understood without a specific private data class or screenshot, stop
 once, name exactly what would enter the selected model context and why, and get
 the operator's confirmation before reading it. Do not persist raw page content.
 
-Write the sanitized discovery record to a fresh owner-only directory outside
-the Git workspace. Validate it mechanically, let the operator review it, then
-author a process-specific `capability.json`. Replace observed values with input
-references. The model chooses workflow meaning and recovery; the validator does
-not.
+Use `scripts/discovery_runtime.mjs` for guided polling. Write the sanitized
+`browser-discovery/v2` record, `browser-discovery-evidence/v1` timeline, and
+non-executable draft to a fresh owner-only directory outside the Git workspace.
+Validate them with `scripts/capability_pipeline.py` and
+`scripts/discovery_pack.py`.
+
+Present the exact sanitized evidence path and summary to the operator. Do not
+set either review gate yourself. `approved_for_developer_transfer` authorizes
+only the sealed pack that Fabio or another developer receives.
+`approved_for_capability_authoring` separately authorizes promotion of that
+exact discovery record. The initial live-session authorization authorizes
+neither transfer nor capability authoring. A pack may contain only explicitly
+selected and reviewed visual evidence with no private values; unreviewed
+screenshots and raw guided capture never enter it.
+
+After transfer approval, use `scripts/discovery_pack.py seal` and `verify`. The
+pack must exactly hash-link the evidence, discovery record, and draft and cover
+every draft action. It remains non-executable. Only after separate authoring
+approval may a `draft` be promoted to `discovered`. Promotion must also match
+the record's site, process, runtime, authority, privacy boundary, and every
+executable milestone. Never use review of a narrower no-result proof to
+authorize a broader extraction process. Replace observed values with input
+references. The model chooses workflow meaning and recovery; validators do not.
 
 ### Run an existing capability
 
-Load exactly one explicitly named capability from either:
+Load exactly one explicitly named `browser-capability/v2` capability from
+either:
 
 - `capabilities/<capability-id>/capability.json` in this module; or
 - a capability folder path supplied by the operator.
 
 Do not scan unrelated folders for capabilities. Validate the file before using
-it. Confirm that the requested process, allowed origins, inputs, and side effects
-match the operator's request. A `scaffold` is not executable; start live
-discovery. A `discovered` capability may be tested but is not a proven handoff.
-A `validated_local` capability was proven only in its recorded environment and
-must still verify every current milestone.
+it. Confirm that the requested process, allowed origins, typed inputs, structured
+outputs, and side effects match the operator's request. A `scaffold` or `draft`
+is not executable. A `discovered` capability may be tested but is not a proven
+handoff. A `validated_local` capability was proven only in its recorded
+environment and must still verify every current milestone.
 
-Execute each action through `tab.playwright` with fresh page state. Try the
-declared semantic locators in order, verify the postcondition, and use model-led
-recovery when the UI has changed. If recovery changes a locator or branch,
-update the capability and reset before counting a validation run.
+Import `scripts/capability_runtime.mjs` in the same persistent Node runtime that
+holds the connected Chrome `tab`; load the exact JSON and call
+`executeCapability({tab, capability, inputs, runDirectory, runId,
+approvedConsequentialActions, recoveryHandler, environment})`. The current model
+supplies `recoveryHandler` only for a retry after it has interpreted a sanitized
+recovery request; do not configure an OpenAI API key or a second model service.
+Never copy dispatch logic into the chat and never substitute a manually
+improvised click sequence. The runner
+mechanically executes `goto`, `wait_for`, `click`, `fill`, `press`, `select`,
+`set_checked`, `extract`, and `download`; selects declared locator candidates;
+checks the allowed origin after every action; evaluates postconditions and
+branches; writes `outputs.json`, `run.receipt.json`, and `run.lock.json` with
+owner-only permissions; and returns counts, paths, hashes, plus only the output
+values whose declaration explicitly uses `model_and_artifact` or
+`model_summary`.
+
+Record extraction must exactly cover the declared fields and converts declared
+dates, numbers, and booleans rather than relabelling raw text. Scalar and summary
+outputs use `text` extraction mode. A required record, scalar, summary, or
+download set must be materially produced before a run can pass; an empty
+`record_set` is valid for a declared no-result branch. Download outputs are
+always `artifact_only` and record the local path, byte length, and file SHA-256
+in `outputs.json` without returning the path to the model. Before relying on a
+download action, feature-detect that the connected Chrome download event exposes
+`path()`. If it does not, the runtime returns the sanitized `native_gap`
+category; do not claim ZIP retrieval or fall back to browser profile inspection.
+
+An output with `delivery: artifact_only` stays in the private `outputs.json`.
+Do not open or emit its values unless the operator separately asks for model
+interpretation and the applicable model-data disclosure has been satisfied.
+The runner hashes private runtime inputs in receipts and never records their
+values. It returns only a stable failure category and detail hash, never a raw
+Playwright error. For consequential actions, pass an action ID in
+`approvedConsequentialActions` only after current action-time approval.
+
+Use bounded two-pass model-led recovery when the UI differs from the executable
+contract. Run without a handler first. For a missing locator on a `read_only` or
+`reversible` action, the failed run returns a sanitized `recovery_request` with
+the action contract, current origin and query-free path, and a failure hash but
+no runtime inputs. The current model inspects only the bounded page state needed
+for that request, proposes one semantic locator, and restarts from the declared
+start state with a handler that answers only that action. This is the actual
+model bridge; JavaScript must not pretend to invoke an LLM during the first run.
+The retry reuses the same action ID, intent, operation, effect, input/output
+shape, postcondition, and allowed origin; it does not mutate the capability. It
+writes `recovery.proposals.json`, marks the receipt as changed, and hash-links
+the proposal from a version-2 run lock. Do not ask the operator to reconfirm
+this same safe action.
+
+Never invoke recovery for a consequential action. A new origin, data class,
+workflow branch, action meaning, output scope, or consequential step is outside
+bounded recovery and fails closed. A recovery proposal is owner-only, is never
+persisted automatically, and must be reviewed before it informs a new discovery
+record and draft. A run with recovery may be useful but is never a counted
+validation run. After an approved repair, restart from the declared start state
+and complete two clean runs.
 
 For a `wait_for` action, wait until the declared control is visible and enabled
 and the surrounding single-page application has settled for a short bounded
@@ -108,16 +195,26 @@ interval. Do not replace readiness checks with a long blind delay.
 
 ### Validate and hand off
 
-A capability becomes `validated_local` only after two complete clean runs from
-the declared start state, with no locator edits during either run. Successful
-execution on one account or machine is evidence, not a guarantee that another
-account or UI variant will work.
+A capability becomes `validated_local` only when
+`scripts/capability_pipeline.py finalize` verifies two distinct passed
+machine-generated receipts for the same execution hash, discovery hash,
+capability version, declared terminal state, outputs, and environment. A JSON
+validation field written by hand is not enough: each receipt must remain beside
+its canonical `outputs.json` and `run.lock.json`, with matching cross-hashes and
+action sequence, and must report no locator changes. This proves artifact consistency, not cryptographic attestation
+of a physical operator or website. Successful execution on one account or
+machine is evidence, not a guarantee that another account or UI variant will
+work.
 
-Seal the reviewed capability into a fresh directory with
-`scripts/capability_contract.py`. Send only that sealed capability folder. Never
-send the discovery directory, cookies, browser state, login material, page
-captures, private values, or downloaded business files. The receiving operator
-authenticates in their own connected Chrome and performs their own validation.
+Seal the reviewed capability and its exact validation receipts into a fresh
+directory with `scripts/capability_pipeline.py seal`, then run `verify-bundle`.
+The hash lock covers the capability, README, and receipt files; unexpected files
+or unsafe lock paths fail verification. Send only that sealed capability folder.
+Never send the discovery directory, `outputs.json`, cookies, browser state,
+login material, raw guided capture, recovery proposals, page captures, private
+values, or downloaded business files.
+The receiving operator authenticates in their own connected Chrome and performs
+their own validation.
 
 ## Consequential actions
 
@@ -134,10 +231,11 @@ reporting into repeated confirmation gates.
 
 ## Material choices
 
-Material choices are the authorized site and process, allowed origins, start and
-end states, runtime inputs and outputs, permitted side effects, any private data
-class that must enter model context, and whether the result is a scaffold,
-discovered capability, or locally validated handoff. Derive them from the actual inputs,
+Material choices are the authorized site and process, teaching mode, allowed
+origins, start and end states, runtime inputs and outputs, permitted side
+effects, any private data class that must enter model context, transfer
+approval, authoring approval, and whether the result is a scaffold, discovered
+capability, or locally validated handoff. Derive them from the actual inputs,
 the operator's request, and current browser evidence. Ask only for unresolved choices
 that change the run; facts already established by the operator are not choices
 to propose. Ask only those unresolved choices in chat. Do not offer automation
@@ -145,8 +243,11 @@ frameworks, browser launchers, or capture formats unless the facts cue them.
 
 ## Included capabilities
 
-- `gmail-search-proof`: a local proof capability for a synthetic, no-result
-  Gmail search that reads no message content and creates no side effect.
+- `gmail-search-export`: a useful but currently unreviewed `draft` that searches
+  Gmail and writes a bounded visible set of sender, subject, and displayed-date
+  metadata to a private artifact without opening message bodies. It is not
+  executable or validated until the exact discovery record is operator-reviewed
+  and both result branches are replayed cleanly.
 - `agenzia-invoice-zip`: a process-specific Agenzia invoice request and ZIP
   retrieval scaffold. It must remain `scaffold` until an authorized live
   discovery supplies real controls and clean replay evidence.
@@ -164,7 +265,7 @@ Keep the run concise:
 
 1. Start with a compact checklist covering Chrome connection, authority,
    process boundary, authentication handoff, model-data boundary, discovery or
-   replay, validation, and portable output.
+   replay, structured output, machine receipts, validation, and portable output.
 2. Show one Run Intake table: site, process, allowed origins, start/end state,
    runtime inputs, outputs, side effects, assumptions, and unknowns.
 3. Put only unresolved material choices in a Decision Table with their evidence,
@@ -177,8 +278,12 @@ Keep the run concise:
 5. During discovery or replay, report milestones and material branches, not
    every click.
 6. Default output policy: write only the private sanitized discovery record,
-   capability draft or sealed folder, and when useful `codex_run_review.md` with
-   status, evidence, unknowns, and next action but no copied page content.
+   discovery evidence, capability draft, reviewed developer pack or sealed
+   capability folder, and runtime `outputs.json`, `run.receipt.json`,
+   `run.lock.json`, plus `recovery.proposals.json` only after bounded recovery.
+   Values from `artifact_only` outputs
+   remain outside the model response. When useful, add `codex_run_review.md`
+   with status, hashes, unknowns, and next action but no copied page content.
 7. End with an Artifact Card containing the private discovery path (never the
    contents), capability path, state, validation evidence, known limits, and
    receiving-operator next action.

@@ -1,13 +1,11 @@
 {
-  "schema_version": "browser-capability/v1",
+  "schema_version": "browser-capability/v2",
   "capability_id": "teamsystem-process",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "status": "scaffold",
   "site": {
     "name": "TeamSystem",
-    "allowed_origins": [
-      "https://www.teamsystem.com"
-    ],
+    "allowed_origins": ["https://www.teamsystem.com"],
     "start_url": "https://www.teamsystem.com/"
   },
   "process": {
@@ -39,104 +37,92 @@
       "type": "text",
       "required": true,
       "sensitivity": "non_sensitive",
-      "purpose": "Identify the exact TeamSystem web product."
+      "purpose": "Identify the exact TeamSystem web product.",
+      "enum_values": []
     },
     {
       "name": "process-name",
       "type": "text",
       "required": true,
       "sensitivity": "non_sensitive",
-      "purpose": "Name the one process to discover."
+      "purpose": "Name the one process to discover.",
+      "enum_values": []
     },
     {
       "name": "tenant-origin",
       "type": "text",
       "required": true,
       "sensitivity": "private_runtime_only",
-      "purpose": "Bound live discovery to the operator's actual authorized tenant origin."
+      "purpose": "Bound live discovery to the operator's actual authorized tenant origin.",
+      "enum_values": []
     }
   ],
   "outputs": [
     {
       "name": "process-capability",
-      "type": "local_artifact",
-      "content": "A new process-specific capability generated after authorized live discovery."
+      "type": "summary",
+      "sensitivity": "private",
+      "delivery": "artifact_only",
+      "description": "A process-specific capability generated after authorized live discovery.",
+      "fields": []
     },
     {
       "name": "validation-summary",
       "type": "summary",
-      "content": "Milestone results, branches, known limits, and clean replay receipts without business content."
+      "sensitivity": "private",
+      "delivery": "model_summary",
+      "description": "Milestone results, branches, known limits, and receipt hashes without business content.",
+      "fields": []
     }
   ],
+  "entry_milestone": "bind-product-and-process",
   "milestones": [
     {
       "id": "bind-product-and-process",
       "intent": "Replace this brand-level scaffold with the exact TeamSystem product, tenant origin, and process boundary.",
-      "preconditions": [
-        "The operator names the product, tenant, process, start state, end state, and side effects."
-      ],
+      "preconditions": ["The operator names the product, tenant, process, start state, end state, and side effects."],
       "actions": [],
-      "success_evidence": [
+      "transitions": [
         {
-          "kind": "visible_text",
-          "value": "UNRESOLVED_BY_LIVE_DISCOVERY"
+          "when": {"kind": "always", "locator_candidates": [], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000},
+          "next_milestone": "discover-live-process",
+          "terminal": false
         }
-      ],
-      "recovery": [
-        "Do not navigate from this public origin as if it were the tenant application.",
-        "Create a new process-specific capability ID after live discovery."
       ]
     },
     {
       "id": "discover-live-process",
       "intent": "Explore the authorized process semantically and capture real milestones, branches, locators, and postconditions.",
-      "preconditions": [
-        "The operator has authenticated personally and selected the correct company or workspace."
-      ],
+      "preconditions": ["The operator has authenticated personally and selected the correct company or workspace."],
       "actions": [],
-      "success_evidence": [
+      "transitions": [
         {
-          "kind": "visible_text",
-          "value": "UNRESOLVED_BY_LIVE_DISCOVERY"
+          "when": {"kind": "always", "locator_candidates": [], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000},
+          "next_milestone": null,
+          "terminal": true
         }
-      ],
-      "recovery": [
-        "Split materially different product modules or processes into separate capabilities."
       ]
     }
   ],
   "completion": {
-    "required_milestones": [
-      "bind-product-and-process",
-      "discover-live-process"
-    ],
-    "evidence_to_record": [
-      "Exact product and tenant origin were declared.",
-      "One bounded process was discovered and represented in a separate capability."
-    ]
+    "terminal_milestones": ["discover-live-process"],
+    "required_outputs": ["process-capability", "validation-summary"]
   },
   "privacy": {
     "model_data": [
-      "Visible post-login page content necessary to interpret the selected TeamSystem process",
-      "DOM and accessibility metadata within the declared tenant origins",
-      "Declared runtime inputs and milestone evidence"
+      "During authorized discovery, the declared process objective, query-free path, targeted control roles, accessible names, labels, placeholders, state changes, branches, postconditions and uncertainties needed to interpret the selected TeamSystem process",
+      "During execution, the declared runtime inputs needed by the selected process and sanitized milestone outcomes, output counts and hashes",
+      "For bounded locator recovery, the current model receives the action intent and contract, declared locator candidates, current origin and query-free path, postcondition kind, and a sanitized failure hash, but not runtime input or output values"
     ],
     "portable_artifact_excludes": [
-      "credentials",
-      "cookies",
-      "browser_storage",
-      "session_urls",
-      "page_html",
-      "screenshots",
-      "network_bodies",
-      "downloaded_file_bytes",
-      "observed_private_values"
+      "credentials", "cookies", "browser_storage", "session_urls", "page_html", "screenshots", "network_bodies", "downloaded_file_bytes", "observed_private_values"
     ],
     "private_evidence_retained": false
   },
   "validation": {
     "environment_scope": "not_validated",
-    "runs": [],
+    "execution_contract_sha256": null,
+    "receipts": [],
     "known_limits": [
       "TeamSystem product, tenant origin, and process are intentionally unresolved.",
       "This brand-level scaffold is not executable and must generate a new process-specific capability."
@@ -145,6 +131,8 @@
   "provenance": {
     "source": "developer_scaffold",
     "discovery_record_sha256": null,
+    "discovery_approval_id": null,
+    "discovery_approved_at": null,
     "portable_bundle_contains_private_evidence": false
   }
 }

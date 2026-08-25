@@ -39,6 +39,12 @@ skill to imitate a missing operational workflow.
 - `bilancio-xbrl-it`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
+- `browser-automation`: run a generic capability factory on an authorized
+  operator's existing Chrome so the operator can demonstrate a browser process,
+  let the model explore safe reversible paths, or combine both; produce a
+  separately reviewed sanitized developer pack for a developer who cannot
+  access the system, then author, replay, validate, and hand off one site- and
+  process-specific capability without transferring authentication state.
 - `check-entries`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
@@ -97,12 +103,6 @@ skill to imitate a missing operational workflow.
   price-volume-mix variances when the data contract supports them; and produce
   reviewable waterfall, bridge, small-multiple, and drilldown plots without
   assigning semantic causes or materiality automatically.
-- `browser-automation`: in Claude Desktop, discover, build, validate, or run one
-  authorized process on Agenzia delle Entrate, TeamSystem, Gmail, or another
-  browser-based gestionale through the operator's existing Chrome extension;
-  the model interprets the live UI and recovery while Playwright owns bounded
-  actions and assertions, producing a process-specific capability that excludes
-  credentials, browser state, observed private values, and downloaded files.
 - `studio-archive`: create or resume a durable client engagement; use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.

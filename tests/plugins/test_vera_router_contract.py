@@ -77,9 +77,10 @@ def test_vera_routes_generic_browser_process_discovery_to_browser_automation() -
     )
 
     assert "Agenzia delle Entrate, TeamSystem, Gmail" in " ".join(router.split())
-    assert "model interprets the live UI" in catalog
+    assert "operator can demonstrate a browser process" in catalog
     assert "connected Chrome extension" in wrapper
-    assert "capability portatile" in cards["browser-automation"]["instructions"]
+    assert "developer pack sanitizzato" in cards["browser-automation"]["instructions"]
+    assert "guided, autonomous oppure hybrid" in cards["browser-automation"]["instructions"]
     assert exact_request in _read_text(
         ROOT / "plugins" / "browser-automation" / "evals" / "trigger_fixtures.json"
     )

@@ -148,17 +148,32 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
         "modules/browser-automation/scripts/record_agenzia_invoice_flow.py"
         not in vera_entries
     )
-    assert (
-        "modules/browser-automation/scripts/capability_contract.py" in vera_entries
-    )
+    assert "modules/browser-automation/scripts/capability_pipeline.py" in vera_entries
+    assert "modules/browser-automation/scripts/capability_runtime.mjs" in vera_entries
+    assert "modules/browser-automation/scripts/discovery_pack.py" in vera_entries
+    assert "modules/browser-automation/scripts/discovery_runtime.mjs" in vera_entries
+    for relative_path in (
+        "scripts/capability_pipeline.py",
+        "scripts/capability_runtime.mjs",
+        "scripts/discovery_pack.py",
+        "scripts/discovery_runtime.mjs",
+    ):
+        assert (
+            vera_entries[f"modules/browser-automation/{relative_path}"]
+            == (ROOT / "plugins" / "browser-automation" / relative_path).read_bytes()
+        )
+    assert "modules/browser-automation/scripts/capability_contract.py" not in vera_entries
     for capability_id in (
-        "gmail-search-proof",
+        "gmail-search-export",
         "agenzia-invoice-zip",
         "teamsystem-process",
     ):
+        relative_path = f"capabilities/{capability_id}/capability.json"
+        projected_path = f"modules/browser-automation/{relative_path}"
+        assert projected_path in vera_entries
         assert (
-            f"modules/browser-automation/capabilities/{capability_id}/capability.json"
-            in vera_entries
+            vera_entries[projected_path]
+            == (ROOT / "plugins" / "browser-automation" / relative_path).read_bytes()
         )
     assert (
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs" not in vera_entries

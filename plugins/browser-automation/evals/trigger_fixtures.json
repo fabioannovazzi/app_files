@@ -12,6 +12,15 @@
       ]
     },
     {
+      "id": "hybrid-remote-developer-pack",
+      "prompt": "Solo Francesco accede al gestionale: avvia la modalità hybrid, lascia che mostri il percorso principale e prepara un developer pack sanitizzato per costruire la capability.",
+      "required_signals": [
+        "modalità hybrid",
+        "mostri il percorso",
+        "developer pack"
+      ]
+    },
+    {
       "id": "discover-agenzia-invoice-flow",
       "prompt": "Mostra a Vera come scaricare le fatture attive e passive dall’Agenzia delle Entrate",
       "required_signals": [

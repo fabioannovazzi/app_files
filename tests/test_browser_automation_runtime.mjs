@@ -1,0 +1,861 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import test from "node:test";
+
+import {
+  canonicalJson,
+  executeCapability,
+  executionContractSha256,
+} from "../plugins/browser-automation/scripts/capability_runtime.mjs";
+
+function locatorKey(kind, role, value) {
+  return `${kind}:${role ?? ""}:${value ?? ""}`;
+}
+
+class FakeNode {
+  constructor({ text = "", attributes = {}, visible = true, enabled = true, children = {}, onAction = null } = {}) {
+    this.text = text;
+    this.attributes = attributes;
+    this.visible = visible;
+    this.enabled = enabled;
+    this.children = children;
+    this.onAction = onAction;
+  }
+}
+
+class FakeLocator {
+  constructor(nodes, tab) {
+    this.nodes = nodes;
+    this.tab = tab;
+  }
+
+  child(kind, role, value) {
+    return new FakeLocator(
+      this.nodes.flatMap((node) => node.children[locatorKey(kind, role, value)] ?? []),
+      this.tab,
+    );
+  }
+
+  getByRole(role, options = {}) { return this.child("role", role, options.name ?? null); }
+  getByLabel(value) { return this.child("label", null, value); }
+  getByPlaceholder(value) { return this.child("placeholder", null, value); }
+  getByTestId(value) { return this.child("test_id", null, value); }
+  getByText(value) { return this.child("text", null, value); }
+  locator(value) { return this.child("css", null, value); }
+
+  async isVisible() { return this.nodes.some((node) => node.visible); }
+  async isEnabled() { return this.nodes.some((node) => node.visible && node.enabled); }
+  async waitFor() {
+    if (!(await this.isVisible())) throw new Error("not visible");
+  }
+  async count() { return this.nodes.length; }
+  nth(index) { return new FakeLocator(this.nodes[index] == null ? [] : [this.nodes[index]], this.tab); }
+  async innerText() { return this.nodes[0]?.text ?? ""; }
+  async textContent() { return this.nodes[0]?.text ?? null; }
+  async getAttribute(name) { return this.nodes[0]?.attributes[name] ?? null; }
+
+  async act(kind, value = null) {
+    if (!(await this.isVisible())) throw new Error("not visible");
+    await this.nodes[0]?.onAction?.({ kind, value, tab: this.tab });
+  }
+
+  async click() { await this.act("click"); }
+  async fill(value) { await this.act("fill", value); }
+  async press(value) { await this.act("press", value); }
+  async selectOption(value) { await this.act("select", value); }
+  async setChecked(value) { await this.act("set_checked", value); }
+}
+
+class FakePlaywright extends FakeLocator {
+  constructor(tab, registry, downloadPath = "/private/tmp/synthetic-download.zip") {
+    super([new FakeNode({ children: registry })], tab);
+    this.downloadPath = downloadPath;
+  }
+
+  async waitForEvent() {
+    return { path: async () => this.downloadPath };
+  }
+
+  async waitForTimeout() {}
+}
+
+class FakeTab {
+  constructor(registry, startUrl = "https://example.com/") {
+    this.currentUrl = startUrl;
+    this.playwright = new FakePlaywright(this, registry);
+  }
+
+  async goto(url) { this.currentUrl = url; }
+  async url() { return this.currentUrl; }
+}
+
+function candidate(kind, value, role = null) {
+  return { kind, role, value, exact: true };
+}
+
+function nonePostcondition() {
+  return {
+    kind: "none",
+    locator_candidates: [],
+    value: null,
+    output_ref: null,
+    comparator: null,
+    expected: null,
+    timeout_ms: 100,
+  };
+}
+
+function always(nextMilestone = null, terminal = false) {
+  return {
+    when: {
+      kind: "always",
+      locator_candidates: [],
+      value: null,
+      output_ref: null,
+      comparator: null,
+      expected: null,
+      timeout_ms: 100,
+    },
+    next_milestone: nextMilestone,
+    terminal,
+  };
+}
+
+function syntheticCapability({
+  effect = "reversible",
+  delivery = "artifact_only",
+  sensitivity = "private",
+} = {}) {
+  return {
+    schema_version: "browser-capability/v2",
+    capability_id: "synthetic-search",
+    version: "0.2.0",
+    status: "discovered",
+    site: {
+      name: "Synthetic",
+      allowed_origins: ["https://example.com"],
+      start_url: "https://example.com/",
+    },
+    process: {
+      name: "Synthetic search",
+      objective: "Extract structured result metadata.",
+      out_of_scope: [],
+    },
+    runtime: {
+      browser: "existing_chrome",
+      controller: "chrome_extension",
+      semantic_driver: "model",
+      mechanical_driver: "playwright",
+      os_fallback: "computer_use_non_browser_only",
+    },
+    authority: {
+      operator_authorized: true,
+      authentication: "operator_only",
+      secret_policy: "never_request_read_store",
+      consequential_actions: "confirm_at_action_time",
+    },
+    inputs: [
+      {
+        name: "query",
+        type: "text",
+        required: true,
+        sensitivity: "private_runtime_only",
+        purpose: "Search expression.",
+        enum_values: [],
+      },
+      {
+        name: "max-results",
+        type: "number",
+        required: true,
+        sensitivity: "non_sensitive",
+        purpose: "Maximum visible results.",
+        enum_values: [],
+      },
+    ],
+    outputs: [
+      {
+        name: "messages",
+        type: "record_set",
+        sensitivity,
+        delivery,
+        description: "Visible result metadata.",
+        fields: [
+          { name: "sender", type: "text", required: true },
+          { name: "subject", type: "text", required: true },
+        ],
+      },
+    ],
+    entry_milestone: "search",
+    milestones: [
+      {
+        id: "search",
+        intent: "Submit the query.",
+        preconditions: [],
+        actions: [
+          {
+            id: "fill-query",
+            intent: "Fill the search control.",
+            operation: "fill",
+            effect,
+            confirmation: effect === "consequential" ? "action_time" : "none",
+            locator_candidates: [candidate("placeholder", "Search")],
+            input_ref: "query",
+            key: null,
+            path: null,
+            target_origin: null,
+            output_ref: null,
+            extract: null,
+            postcondition: nonePostcondition(),
+            timeout_ms: 100,
+          },
+        ],
+        transitions: [always("collect")],
+      },
+      {
+        id: "collect",
+        intent: "Extract visible metadata.",
+        preconditions: [],
+        actions: [
+          {
+            id: "extract-messages",
+            intent: "Extract result rows.",
+            operation: "extract",
+            effect: "read_only",
+            confirmation: "none",
+            locator_candidates: [candidate("role", null, "row")],
+            input_ref: null,
+            key: null,
+            path: null,
+            target_origin: null,
+            output_ref: "messages",
+            extract: {
+              mode: "list",
+              fields: [
+                {
+                  name: "sender",
+                  locator_candidates: [candidate("test_id", "sender")],
+                  read: { kind: "inner_text", attribute: null },
+                  required: true,
+                },
+                {
+                  name: "subject",
+                  locator_candidates: [candidate("test_id", "subject")],
+                  read: { kind: "inner_text", attribute: null },
+                  required: true,
+                },
+              ],
+              max_items: 50,
+              limit_input_ref: "max-results",
+              empty_allowed: true,
+              dedupe_by: ["sender", "subject"],
+            },
+            postcondition: {
+              kind: "output_count",
+              locator_candidates: [],
+              value: null,
+              output_ref: "messages",
+              comparator: "gte",
+              expected: 1,
+              timeout_ms: 100,
+            },
+            timeout_ms: 100,
+          },
+        ],
+        transitions: [always(null, true)],
+      },
+    ],
+    completion: {
+      terminal_milestones: ["collect"],
+      required_outputs: ["messages"],
+    },
+    privacy: {
+      model_data: ["Milestone outcomes and output counts only."],
+      portable_artifact_excludes: [
+        "credentials",
+        "cookies",
+        "browser_storage",
+        "session_urls",
+        "page_html",
+        "screenshots",
+        "network_bodies",
+        "downloaded_file_bytes",
+        "observed_private_values",
+      ],
+      private_evidence_retained: false,
+    },
+    validation: {
+      environment_scope: "not_validated",
+      execution_contract_sha256: null,
+      receipts: [],
+      known_limits: [],
+    },
+    provenance: {
+      source: "authorized_live_discovery",
+      discovery_record_sha256: "a".repeat(64),
+      discovery_approval_id: "synthetic-review",
+      discovery_approved_at: "2026-08-24T20:00:00+02:00",
+      portable_bundle_contains_private_evidence: false,
+    },
+  };
+}
+
+function syntheticDownloadCapability() {
+  const capability = syntheticCapability();
+  capability.outputs = [
+    {
+      name: "files",
+      type: "download_set",
+      sensitivity: "private",
+      delivery: "artifact_only",
+      description: "Downloaded files.",
+      fields: [],
+    },
+  ];
+  const action = capability.milestones[1].actions[0];
+  action.id = "download-file";
+  action.intent = "Download one synthetic file.";
+  action.operation = "download";
+  action.locator_candidates = [candidate("role", "Download", "button")];
+  action.output_ref = "files";
+  action.extract = null;
+  action.postcondition.output_ref = "files";
+  action.postcondition.kind = "output_count";
+  action.postcondition.comparator = "gte";
+  action.postcondition.expected = 1;
+  capability.completion.required_outputs = ["files"];
+  return capability;
+}
+
+function resultRegistry(tab) {
+  const row = (sender, subject) => new FakeNode({
+    children: {
+      [locatorKey("test_id", null, "sender")]: [new FakeNode({ text: sender })],
+      [locatorKey("test_id", null, "subject")]: [new FakeNode({ text: subject })],
+    },
+  });
+  return {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "row", null)]: [
+      row("Supplier A", "Invoice 100"),
+      row("Supplier B", "Invoice 200"),
+      row("Supplier A", "Invoice 100"),
+    ],
+  };
+}
+
+test("executeCapability drives actions, extracts records, and emits hash-linked evidence", async () => {
+  const capability = syntheticCapability();
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, resultRegistry(tab));
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  const runDirectory = join(parent, "run-one");
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory,
+    runId: "synthetic-run-one",
+    clock: (() => {
+      let tick = 0;
+      return () => `2026-08-24T20:00:${String(tick++).padStart(2, "0")}+02:00`;
+    })(),
+    environment: { locale: "en" },
+  });
+
+  assert.equal(summary.result, "passed");
+  assert.deepEqual(summary.completed_milestones, ["search", "collect"]);
+  assert.deepEqual(summary.outputs.map((item) => item.record_count), [2]);
+  assert.equal("records" in summary, false);
+  assert.deepEqual(summary.delivered_outputs, {});
+  const outputs = JSON.parse(await readFile(summary.outputs_path, "utf8"));
+  assert.deepEqual(outputs.messages, [
+    { sender: "Supplier A", subject: "Invoice 100" },
+    { sender: "Supplier B", subject: "Invoice 200" },
+  ]);
+  const receipt = JSON.parse(await readFile(summary.receipt_path, "utf8"));
+  const receiptText = await readFile(summary.receipt_path, "utf8");
+  const outputsText = await readFile(summary.outputs_path, "utf8");
+  const runLock = JSON.parse(await readFile(summary.lock_path, "utf8"));
+  assert.equal(receipt.execution_contract_sha256, executionContractSha256(capability));
+  assert.equal(receipt.outputs[0].sha256, summary.outputs[0].sha256);
+  assert.equal(receipt.action_results.length, 2);
+  assert.equal(receipt.input_hashes.query.length, 64);
+  assert.equal(
+    runLock.receipt_sha256,
+    createHash("sha256").update(receiptText, "utf8").digest("hex"),
+  );
+  assert.equal(
+    runLock.outputs_sha256,
+    createHash("sha256").update(outputsText, "utf8").digest("hex"),
+  );
+  assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
+  assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+});
+
+test("executeCapability returns declared model outputs but keeps artifact-only values private", async () => {
+  const capability = syntheticCapability({
+    delivery: "model_and_artifact",
+    sensitivity: "non_sensitive",
+  });
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, resultRegistry(tab));
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "delivered-output"),
+    runId: "delivered-output-run",
+  });
+
+  assert.deepEqual(summary.delivered_outputs.messages, [
+    { sender: "Supplier A", subject: "Invoice 100" },
+    { sender: "Supplier B", subject: "Invoice 200" },
+  ]);
+});
+
+test("executeCapability extracts a declared model summary as text", async () => {
+  const capability = syntheticCapability();
+  capability.outputs = [
+    {
+      name: "status-summary",
+      type: "summary",
+      sensitivity: "non_sensitive",
+      delivery: "model_summary",
+      description: "Visible status summary.",
+      fields: [],
+    },
+  ];
+  const extraction = capability.milestones[1].actions[0];
+  extraction.output_ref = "status-summary";
+  extraction.locator_candidates = [candidate("role", null, "status")];
+  extraction.extract = {
+    mode: "text",
+    fields: [],
+    max_items: 1,
+    limit_input_ref: null,
+    empty_allowed: false,
+    dedupe_by: [],
+  };
+  extraction.postcondition.output_ref = "status-summary";
+  extraction.postcondition.kind = "output_nonempty";
+  extraction.postcondition.comparator = null;
+  extraction.postcondition.expected = null;
+  capability.completion.required_outputs = ["status-summary"];
+  const registry = resultRegistry();
+  registry[locatorKey("role", "status", null)] = [new FakeNode({ text: "Ready" })];
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "summary-output"),
+    runId: "summary-output-run",
+  });
+
+  assert.equal(summary.delivered_outputs["status-summary"], "Ready");
+});
+
+test("executeCapability records downloaded file bytes without returning the private path", async () => {
+  const capability = syntheticDownloadCapability();
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  const downloadPath = join(parent, "download.zip");
+  await writeFile(downloadPath, "synthetic zip bytes", "utf8");
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [new FakeNode()],
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry, downloadPath);
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "download-output"),
+    runId: "download-output-run",
+  });
+
+  assert.deepEqual(summary.delivered_outputs, {});
+  const outputs = JSON.parse(await readFile(summary.outputs_path, "utf8"));
+  assert.equal(outputs.files[0].path, downloadPath);
+  assert.equal(outputs.files[0].byte_length, 19);
+  assert.equal(outputs.files[0].sha256.length, 64);
+});
+
+test("executeCapability reports a native gap when Chrome cannot expose download evidence", async () => {
+  const capability = syntheticDownloadCapability();
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [new FakeNode()],
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  tab.playwright.waitForEvent = async () => ({});
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "download-native-gap"),
+      runId: "download-native-gap-run",
+    }),
+    /native_gap/,
+  );
+});
+
+test("executeCapability fails when a required non-collection output is unproduced", async () => {
+  const capability = syntheticCapability();
+  capability.outputs = [
+    {
+      name: "status-summary",
+      type: "summary",
+      sensitivity: "non_sensitive",
+      delivery: "model_summary",
+      description: "Visible status summary.",
+      fields: [],
+    },
+  ];
+  const action = capability.milestones[1].actions[0];
+  action.id = "wait-status";
+  action.operation = "wait_for";
+  action.locator_candidates = [candidate("role", null, "status")];
+  action.output_ref = null;
+  action.extract = null;
+  action.postcondition = nonePostcondition();
+  capability.completion.required_outputs = ["status-summary"];
+  const registry = resultRegistry();
+  registry[locatorKey("role", "status", null)] = [new FakeNode({ text: "Ready" })];
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "missing-summary"),
+      runId: "missing-summary-run",
+    }),
+    /required_output_incomplete/,
+  );
+});
+
+test("executeCapability rejects undeclared inputs and consequential actions without approval", async () => {
+  const capability = syntheticCapability({ effect: "consequential" });
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, resultRegistry(tab));
+  const firstParent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10, unexpected: true },
+      runDirectory: join(firstParent, "bad-input"),
+      runId: "bad-input-run",
+    }),
+    /undeclared runtime input/,
+  );
+
+  const secondParent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(secondParent, "no-approval"),
+      runId: "no-approval-run",
+    }),
+    /operator_confirmation_required/,
+  );
+});
+
+test("executeCapability fails closed on malformed action effects and approval ids", async () => {
+  const malformed = syntheticCapability();
+  malformed.milestones[0].actions[0].effect = "reversibl";
+  const badConfirmation = syntheticCapability({ effect: "consequential" });
+  badConfirmation.milestones[0].actions[0].confirmation = "none";
+  const valid = syntheticCapability();
+  const tab = new FakeTab({});
+  const inputs = { query: "invoice", "max-results": 10 };
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability: malformed,
+      inputs,
+      runDirectory: join(await mkdtemp(join(tmpdir(), "browser-runtime-test-")), "bad-effect"),
+      runId: "bad-effect-run",
+    }),
+    /unsupported effect/,
+  );
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability: badConfirmation,
+      inputs,
+      runDirectory: join(await mkdtemp(join(tmpdir(), "browser-runtime-test-")), "bad-confirmation"),
+      runId: "bad-confirmation-run",
+    }),
+    /confirmation must be action_time/,
+  );
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability: valid,
+      inputs,
+      runDirectory: join(await mkdtemp(join(tmpdir(), "browser-runtime-test-")), "bad-approval"),
+      runId: "bad-approval-run",
+      approvedConsequentialActions: ["fill-query"],
+    }),
+    /approval does not name a consequential action/,
+  );
+});
+
+test("executeCapability rejects draft or unreviewed provenance", async () => {
+  const draft = syntheticCapability();
+  draft.status = "draft";
+  const unreviewed = syntheticCapability();
+  unreviewed.provenance.source = "live_discovery_unreviewed";
+  unreviewed.provenance.discovery_approval_id = null;
+  unreviewed.provenance.discovery_approved_at = null;
+  const tab = new FakeTab({});
+  const firstParent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  const secondParent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability: draft,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(firstParent, "draft"),
+      runId: "draft-run",
+    }),
+    /is not executable/,
+  );
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability: unreviewed,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(secondParent, "unreviewed"),
+      runId: "unreviewed-run",
+    }),
+    /lacks reviewed discovery provenance/,
+  );
+});
+
+test("executeCapability fails closed when an action leaves the allowed origin", async () => {
+  const capability = syntheticCapability();
+  const tab = new FakeTab({});
+  const registry = resultRegistry(tab);
+  registry[locatorKey("placeholder", null, "Search")][0].onAction = ({ tab: currentTab }) => {
+    currentTab.currentUrl = "https://attacker.example/escaped";
+  };
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "origin-escape"),
+      runId: "origin-escape-run",
+    }),
+    /origin_boundary_violation/,
+  );
+});
+
+test("executeCapability returns a sanitized recovery request for a model-led retry", async () => {
+  const capability = syntheticCapability();
+  const registry = resultRegistry();
+  delete registry[locatorKey("placeholder", null, "Search")];
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  let caught = null;
+
+  try {
+    await executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "recovery-request"),
+      runId: "recovery-request-run",
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.ok(caught instanceof Error);
+  assert.equal(caught.code, "locator_resolution_failed");
+  assert.equal(caught.runSummary.recovery_request.action.action_id, "fill-query");
+  assert.equal(caught.runSummary.recovery_request.constraints.permitted_change, "one_semantic_locator_candidate");
+  assert.equal(JSON.stringify(caught.runSummary.recovery_request).includes("invoice"), false);
+  const receiptText = await readFile(caught.runSummary.receipt_path, "utf8");
+  assert.equal(receiptText.includes("invoice"), false);
+});
+
+test("executeCapability accepts one bounded model locator recovery and hash-links the proposal", async () => {
+  const capability = syntheticCapability();
+  const originalCapability = structuredClone(capability);
+  const registry = resultRegistry();
+  registry[locatorKey("placeholder", null, "Find records")] = [new FakeNode()];
+  delete registry[locatorKey("placeholder", null, "Search")];
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  let request = null;
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "model-recovery"),
+    runId: "model-recovery-run",
+    recoveryHandler: async (candidateRequest) => {
+      request = candidateRequest;
+      return {
+        locator_candidate: candidate("placeholder", "Find records"),
+        rationale: "The visible search field has a revised accessible placeholder.",
+        uncertainty: "The candidate is valid only for this run until reviewed.",
+      };
+    },
+  });
+
+  assert.equal(summary.result, "passed");
+  assert.equal(summary.recovery_proposal_count, 1);
+  assert.equal(JSON.stringify(request).includes("invoice"), false);
+  assert.equal(request.constraints.permitted_change, "one_semantic_locator_candidate");
+  assert.deepEqual(capability, originalCapability);
+  const receipt = JSON.parse(await readFile(summary.receipt_path, "utf8"));
+  const proposalsText = await readFile(summary.recovery_proposals_path, "utf8");
+  const proposals = JSON.parse(proposalsText);
+  const lock = JSON.parse(await readFile(summary.lock_path, "utf8"));
+  assert.equal(receipt.locator_changes_during_run, true);
+  assert.equal(receipt.action_results[0].locator_candidate.index, 1);
+  assert.equal(proposals.portable, false);
+  assert.equal(proposals.requires_operator_review_before_persistence, true);
+  assert.equal(proposals.proposals[0].approved_for_persistence, false);
+  assert.deepEqual(
+    proposals.proposals[0].candidate,
+    candidate("placeholder", "Find records"),
+  );
+  assert.equal(lock.schema_version, "browser-run-lock/v2");
+  assert.equal(
+    lock.recovery_proposals_sha256,
+    createHash("sha256").update(proposalsText, "utf8").digest("hex"),
+  );
+});
+
+test("executeCapability never invokes model recovery for consequential actions", async () => {
+  const capability = syntheticCapability({ effect: "consequential" });
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, resultRegistry(tab));
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  let recoveryCalls = 0;
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "consequential-recovery"),
+      runId: "consequential-recovery-run",
+      recoveryHandler: async () => {
+        recoveryCalls += 1;
+        return {
+          locator_candidate: candidate("placeholder", "Find records"),
+          rationale: "Synthetic rationale.",
+          uncertainty: "Synthetic uncertainty.",
+        };
+      },
+    }),
+    /operator_confirmation_required/,
+  );
+  assert.equal(recoveryCalls, 0);
+});
+
+test("executeCapability rejects non-semantic recovery locators", async () => {
+  const capability = syntheticCapability();
+  const registry = resultRegistry();
+  delete registry[locatorKey("placeholder", null, "Search")];
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  await assert.rejects(
+    executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "unsafe-recovery"),
+      runId: "unsafe-recovery-run",
+      recoveryHandler: async () => ({
+        locator_candidate: candidate("css", "input.search"),
+        rationale: "A CSS selector was proposed.",
+        uncertainty: "It has not been reviewed.",
+      }),
+    }),
+    /run_failed/,
+  );
+});
+
+test("executeCapability never exposes raw browser failure text", async () => {
+  const capability = syntheticCapability();
+  const privateDetail = "private-runtime-value-in-browser-error";
+  const tab = new FakeTab({});
+  const registry = resultRegistry(tab);
+  registry[locatorKey("placeholder", null, "Search")][0].onAction = () => {
+    throw new Error(privateDetail);
+  };
+  tab.playwright = new FakePlaywright(tab, registry);
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  let caught = null;
+
+  try {
+    await executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "private-error"),
+      runId: "private-error-run",
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.ok(caught instanceof Error);
+  assert.equal(caught.message.includes(privateDetail), false);
+  assert.equal(caught.code, "run_failed");
+  assert.equal(caught.detailSha256.length, 64);
+  const receiptText = await readFile(caught.runSummary.receipt_path, "utf8");
+  assert.equal(receiptText.includes(privateDetail), false);
+});
+
+test("canonicalJson and execution hash are stable across key order and validation status", () => {
+  assert.equal(canonicalJson({ b: 2, a: 1 }), canonicalJson({ a: 1, b: 2 }));
+  const discovered = syntheticCapability();
+  const validated = structuredClone(discovered);
+  validated.status = "validated_local";
+  validated.validation = {
+    environment_scope: "existing_chrome_origin_ui",
+    execution_contract_sha256: "f".repeat(64),
+    receipts: [],
+    known_limits: [],
+  };
+  assert.equal(executionContractSha256(discovered), executionContractSha256(validated));
+});

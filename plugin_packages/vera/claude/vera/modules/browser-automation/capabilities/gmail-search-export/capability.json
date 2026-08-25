@@ -1,0 +1,512 @@
+{
+  "schema_version": "browser-capability/v2",
+  "capability_id": "gmail-search-export",
+  "version": "0.3.0",
+  "status": "draft",
+  "site": {
+    "name": "Gmail",
+    "allowed_origins": [
+      "https://mail.google.com"
+    ],
+    "start_url": "https://mail.google.com/mail/u/0/"
+  },
+  "process": {
+    "name": "Gmail search-result metadata export",
+    "objective": "Run an operator-supplied Gmail search and write sender, subject, and displayed date metadata for the bounded visible result set to a private local JSON artifact.",
+    "out_of_scope": [
+      "Open or read message bodies",
+      "Send, draft, label, archive, move, or delete mail",
+      "Download attachments",
+      "Retain account identifiers, browser state, or authentication material"
+    ]
+  },
+  "runtime": {
+    "browser": "existing_chrome",
+    "controller": "chrome_extension",
+    "semantic_driver": "model",
+    "mechanical_driver": "playwright",
+    "os_fallback": "computer_use_non_browser_only"
+  },
+  "authority": {
+    "operator_authorized": true,
+    "authentication": "operator_only",
+    "secret_policy": "never_request_read_store",
+    "consequential_actions": "confirm_at_action_time"
+  },
+  "inputs": [
+    {
+      "name": "query",
+      "type": "text",
+      "required": true,
+      "sensitivity": "private_runtime_only",
+      "purpose": "The Gmail search expression supplied for this run.",
+      "enum_values": []
+    },
+    {
+      "name": "max-results",
+      "type": "number",
+      "required": true,
+      "sensitivity": "non_sensitive",
+      "purpose": "Maximum number of currently visible result rows to export.",
+      "enum_values": []
+    }
+  ],
+  "outputs": [
+    {
+      "name": "messages",
+      "type": "record_set",
+      "sensitivity": "private",
+      "delivery": "artifact_only",
+      "description": "Visible Gmail search-result metadata written to outputs.json without emitting record values in the model response.",
+      "fields": [
+        {
+          "name": "sender",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "displayed-date",
+          "type": "text",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "entry_milestone": "open-gmail",
+  "milestones": [
+    {
+      "id": "open-gmail",
+      "intent": "Reach the authenticated Gmail mailbox without inspecting message rows.",
+      "preconditions": [
+        "The operator has authenticated personally in the connected Chrome session."
+      ],
+      "actions": [
+        {
+          "id": "navigate-gmail-root",
+          "intent": "Reset to the declared Gmail start state.",
+          "operation": "goto",
+          "effect": "read_only",
+          "confirmation": "none",
+          "locator_candidates": [],
+          "input_ref": null,
+          "key": null,
+          "path": "/mail/u/0/",
+          "target_origin": "https://mail.google.com",
+          "output_ref": null,
+          "extract": null,
+          "postcondition": {
+            "kind": "none",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "timeout_ms": 10000
+        },
+        {
+          "id": "wait-gmail-search",
+          "intent": "Wait for Gmail's search control to become ready.",
+          "operation": "wait_for",
+          "effect": "read_only",
+          "confirmation": "none",
+          "locator_candidates": [
+            {
+              "kind": "placeholder",
+              "role": null,
+              "value": "Search mail",
+              "exact": true
+            }
+          ],
+          "input_ref": null,
+          "key": null,
+          "path": null,
+          "target_origin": null,
+          "output_ref": null,
+          "extract": null,
+          "postcondition": {
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "kind": "placeholder",
+                "role": null,
+                "value": "Search mail",
+                "exact": true
+              }
+            ],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {
+          "when": {
+            "kind": "always",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "next_milestone": "submit-search",
+          "terminal": false
+        }
+      ]
+    },
+    {
+      "id": "submit-search",
+      "intent": "Submit the operator-supplied Gmail search expression.",
+      "preconditions": [
+        "The search expression has been supplied for this run.",
+        "Reading visible sender, subject, and displayed date metadata has been authorized for this process."
+      ],
+      "actions": [
+        {
+          "id": "fill-gmail-search",
+          "intent": "Fill Gmail's search control with the runtime query.",
+          "operation": "fill",
+          "effect": "reversible",
+          "confirmation": "none",
+          "locator_candidates": [
+            {
+              "kind": "placeholder",
+              "role": null,
+              "value": "Search mail",
+              "exact": true
+            }
+          ],
+          "input_ref": "query",
+          "key": null,
+          "path": null,
+          "target_origin": null,
+          "output_ref": null,
+          "extract": null,
+          "postcondition": {
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "kind": "placeholder",
+                "role": null,
+                "value": "Search mail",
+                "exact": true
+              }
+            ],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "timeout_ms": 10000
+        },
+        {
+          "id": "press-gmail-search",
+          "intent": "Run the search.",
+          "operation": "press",
+          "effect": "reversible",
+          "confirmation": "none",
+          "locator_candidates": [
+            {
+              "kind": "placeholder",
+              "role": null,
+              "value": "Search mail",
+              "exact": true
+            }
+          ],
+          "input_ref": null,
+          "key": "Enter",
+          "path": null,
+          "target_origin": null,
+          "output_ref": null,
+          "extract": null,
+          "postcondition": {
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "kind": "role",
+                "role": "main",
+                "value": null,
+                "exact": false
+              }
+            ],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {
+          "when": {
+            "kind": "locator_visible",
+            "locator_candidates": [
+              {
+                "kind": "css",
+                "role": null,
+                "value": "tr.zA:visible",
+                "exact": false
+              }
+            ],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "next_milestone": "collect-results",
+          "terminal": false
+        },
+        {
+          "when": {
+            "kind": "always",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": null,
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "next_milestone": "no-results",
+          "terminal": false
+        }
+      ]
+    },
+    {
+      "id": "collect-results",
+      "intent": "Extract the bounded visible search-result metadata to the private run artifact.",
+      "preconditions": [
+        "At least one visible Gmail result row is present."
+      ],
+      "actions": [
+        {
+          "id": "extract-gmail-results",
+          "intent": "Extract sender, subject, and displayed date without opening messages.",
+          "operation": "extract",
+          "effect": "read_only",
+          "confirmation": "none",
+          "locator_candidates": [
+            {
+              "kind": "css",
+              "role": null,
+              "value": "tr.zA:visible",
+              "exact": false
+            },
+            {
+              "kind": "role",
+              "role": "row",
+              "value": null,
+              "exact": false
+            }
+          ],
+          "input_ref": null,
+          "key": null,
+          "path": null,
+          "target_origin": null,
+          "output_ref": "messages",
+          "extract": {
+            "mode": "list",
+            "fields": [
+              {
+                "name": "sender",
+                "locator_candidates": [
+                  {
+                    "kind": "css",
+                    "role": null,
+                    "value": "span[email]:visible",
+                    "exact": false
+                  }
+                ],
+                "read": {
+                  "kind": "inner_text",
+                  "attribute": null
+                },
+                "required": true
+              },
+              {
+                "name": "subject",
+                "locator_candidates": [
+                  {
+                    "kind": "css",
+                    "role": null,
+                    "value": ".bog:visible",
+                    "exact": false
+                  }
+                ],
+                "read": {
+                  "kind": "inner_text",
+                  "attribute": null
+                },
+                "required": true
+              },
+              {
+                "name": "displayed-date",
+                "locator_candidates": [
+                  {
+                    "kind": "css",
+                    "role": null,
+                    "value": "td.xW span:visible",
+                    "exact": false
+                  }
+                ],
+                "read": {
+                  "kind": "inner_text",
+                  "attribute": null
+                },
+                "required": false
+              }
+            ],
+            "max_items": 100,
+            "limit_input_ref": "max-results",
+            "empty_allowed": false,
+            "dedupe_by": [
+              "sender",
+              "subject",
+              "displayed-date"
+            ]
+          },
+          "postcondition": {
+            "kind": "output_count",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": "messages",
+            "comparator": "gte",
+            "expected": 1,
+            "timeout_ms": 10000
+          },
+          "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {
+          "when": {
+            "kind": "output_nonempty",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": "messages",
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "next_milestone": null,
+          "terminal": true
+        }
+      ]
+    },
+    {
+      "id": "no-results",
+      "intent": "Complete with an empty structured result set when Gmail shows no matching conversations.",
+      "preconditions": [
+        "The result-row transition completed its bounded wait without finding a visible Gmail result row."
+      ],
+      "actions": [
+        {
+          "id": "verify-empty-gmail-results",
+          "intent": "Verify structurally that Gmail remains ready and no visible result row is present, without reading localized page text.",
+          "operation": "wait_for",
+          "effect": "read_only",
+          "confirmation": "none",
+          "locator_candidates": [
+            {
+              "kind": "placeholder",
+              "role": null,
+              "value": "Search mail",
+              "exact": true
+            }
+          ],
+          "input_ref": null,
+          "key": null,
+          "path": null,
+          "target_origin": null,
+          "output_ref": null,
+          "extract": null,
+          "postcondition": {
+            "kind": "output_count",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": "messages",
+            "comparator": "eq",
+            "expected": 0,
+            "timeout_ms": 10000
+          },
+          "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {
+          "when": {
+            "kind": "output_empty",
+            "locator_candidates": [],
+            "value": null,
+            "output_ref": "messages",
+            "comparator": null,
+            "expected": null,
+            "timeout_ms": 10000
+          },
+          "next_milestone": null,
+          "terminal": true
+        }
+      ]
+    }
+  ],
+  "completion": {
+    "terminal_milestones": [
+      "collect-results",
+      "no-results"
+    ],
+    "required_outputs": [
+      "messages"
+    ]
+  },
+  "privacy": {
+    "model_data": [
+      "Capability instructions, action outcomes, branch result, output record count, hashes, and sanitized errors",
+      "During discovery only, the exact private result fields named by the operator may enter the selected model context after a separate query-specific authorization; observed values are not written to the discovery record or portable capability",
+      "Sender, subject, and displayed date values remain in the owner-only outputs.json artifact unless the operator separately requests model interpretation",
+      "For bounded locator recovery, the current model receives the action intent and contract, declared locator candidates, current origin and query-free path, postcondition kind, and a sanitized failure hash, but not the Gmail query or output values"
+    ],
+    "portable_artifact_excludes": [
+      "credentials",
+      "cookies",
+      "browser_storage",
+      "session_urls",
+      "page_html",
+      "screenshots",
+      "network_bodies",
+      "downloaded_file_bytes",
+      "observed_private_values"
+    ],
+    "private_evidence_retained": false
+  },
+  "validation": {
+    "environment_scope": "not_validated",
+    "execution_contract_sha256": null,
+    "receipts": [],
+    "known_limits": [
+      "The current live discovery record is unreviewed; the draft remains non-executable until the operator approves that exact sanitized record.",
+      "The current Gmail row and field locators were observed in one authorized account and remain environment-specific until two clean runtime replays pass.",
+      "The structural no-result fallback waits for the declared result-row timeout and does not depend on localized Gmail copy."
+    ]
+  },
+  "provenance": {
+    "source": "live_discovery_unreviewed",
+    "discovery_record_sha256": "0404d4e39ea764c4eff77945e8118c154c04f7a20d6d008d46251c86e988a813",
+    "discovery_approval_id": null,
+    "discovery_approved_at": null,
+    "portable_bundle_contains_private_evidence": false
+  }
+}

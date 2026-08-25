@@ -1,0 +1,133 @@
+{
+  "schema_version": "browser-capability/v2",
+  "capability_id": "synthetic-record-search",
+  "version": "0.1.0",
+  "status": "discovered",
+  "site": {
+    "name": "Synthetic runtime fixture",
+    "allowed_origins": ["http://127.0.0.1:18765"],
+    "start_url": "http://127.0.0.1:18765/"
+  },
+  "process": {
+    "name": "Synthetic record search",
+    "objective": "Search a synthetic page and extract a bounded deduplicated record set.",
+    "out_of_scope": ["Authentication", "Private data", "Consequential actions"]
+  },
+  "runtime": {
+    "browser": "existing_chrome",
+    "controller": "chrome_extension",
+    "semantic_driver": "model",
+    "mechanical_driver": "playwright",
+    "os_fallback": "computer_use_non_browser_only"
+  },
+  "authority": {
+    "operator_authorized": true,
+    "authentication": "operator_only",
+    "secret_policy": "never_request_read_store",
+    "consequential_actions": "confirm_at_action_time"
+  },
+  "inputs": [
+    {"name": "query", "type": "text", "required": true, "sensitivity": "non_sensitive", "purpose": "Synthetic search expression.", "enum_values": []},
+    {"name": "max-results", "type": "number", "required": true, "sensitivity": "non_sensitive", "purpose": "Maximum synthetic rows to inspect.", "enum_values": []}
+  ],
+  "outputs": [
+    {
+      "name": "records",
+      "type": "record_set",
+      "sensitivity": "non_sensitive",
+      "delivery": "model_and_artifact",
+      "description": "Synthetic records extracted by the fixture capability.",
+      "fields": [
+        {"name": "sender", "type": "text", "required": true},
+        {"name": "subject", "type": "text", "required": true},
+        {"name": "date", "type": "date", "required": true}
+      ]
+    }
+  ],
+  "entry_milestone": "open-fixture",
+  "milestones": [
+    {
+      "id": "open-fixture",
+      "intent": "Open the synthetic fixture and wait for its search input.",
+      "preconditions": ["The loopback fixture server is running."],
+      "actions": [
+        {
+          "id": "navigate-fixture", "intent": "Open the fixture.", "operation": "goto", "effect": "read_only", "confirmation": "none", "locator_candidates": [], "input_ref": null, "key": null, "path": "/", "target_origin": "http://127.0.0.1:18765", "output_ref": null, "extract": null,
+          "postcondition": {"kind": "locator_visible", "locator_candidates": [{"kind": "label", "role": null, "value": "Search records", "exact": true}], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000}, "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {"when": {"kind": "always", "locator_candidates": [], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000}, "next_milestone": "submit-search", "terminal": false}
+      ]
+    },
+    {
+      "id": "submit-search",
+      "intent": "Submit the synthetic query and choose the observed branch.",
+      "preconditions": ["The query is declared."],
+      "actions": [
+        {
+          "id": "fill-query", "intent": "Fill the query.", "operation": "fill", "effect": "reversible", "confirmation": "none", "locator_candidates": [{"kind": "label", "role": null, "value": "Search records", "exact": true}], "input_ref": "query", "key": null, "path": null, "target_origin": null, "output_ref": null, "extract": null,
+          "postcondition": {"kind": "locator_visible", "locator_candidates": [{"kind": "label", "role": null, "value": "Search records", "exact": true}], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000}, "timeout_ms": 10000
+        },
+        {
+          "id": "press-search", "intent": "Run the query.", "operation": "press", "effect": "reversible", "confirmation": "none", "locator_candidates": [{"kind": "label", "role": null, "value": "Search records", "exact": true}], "input_ref": null, "key": "Enter", "path": null, "target_origin": null, "output_ref": null, "extract": null,
+          "postcondition": {"kind": "locator_visible", "locator_candidates": [{"kind": "role", "role": "main", "value": null, "exact": false}], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000}, "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {"when": {"kind": "locator_text_contains", "locator_candidates": [{"kind": "role", "role": "status", "value": null, "exact": false}], "value": "No records found", "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 1000}, "next_milestone": "no-results", "terminal": false},
+        {"when": {"kind": "locator_visible", "locator_candidates": [{"kind": "test_id", "role": null, "value": "result-row", "exact": false}], "value": null, "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000}, "next_milestone": "collect-results", "terminal": false}
+      ]
+    },
+    {
+      "id": "collect-results",
+      "intent": "Extract and deduplicate the bounded synthetic results.",
+      "preconditions": ["At least one synthetic row exists."],
+      "actions": [
+        {
+          "id": "extract-results", "intent": "Extract the result rows.", "operation": "extract", "effect": "read_only", "confirmation": "none", "locator_candidates": [{"kind": "test_id", "role": null, "value": "result-row", "exact": false}], "input_ref": null, "key": null, "path": null, "target_origin": null, "output_ref": "records",
+          "extract": {
+            "mode": "list", "max_items": 100, "limit_input_ref": "max-results", "empty_allowed": false, "dedupe_by": ["sender", "subject", "date"],
+            "fields": [
+              {"name": "sender", "locator_candidates": [{"kind": "test_id", "role": null, "value": "sender", "exact": false}], "read": {"kind": "inner_text", "attribute": null}, "required": true},
+              {"name": "subject", "locator_candidates": [{"kind": "test_id", "role": null, "value": "subject", "exact": false}], "read": {"kind": "inner_text", "attribute": null}, "required": true},
+              {"name": "date", "locator_candidates": [{"kind": "test_id", "role": null, "value": "date", "exact": false}], "read": {"kind": "inner_text", "attribute": null}, "required": true}
+            ]
+          },
+          "postcondition": {"kind": "output_count", "locator_candidates": [], "value": null, "output_ref": "records", "comparator": "gte", "expected": 1, "timeout_ms": 10000}, "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {"when": {"kind": "output_nonempty", "locator_candidates": [], "value": null, "output_ref": "records", "comparator": null, "expected": null, "timeout_ms": 10000}, "next_milestone": null, "terminal": true}
+      ]
+    },
+    {
+      "id": "no-results",
+      "intent": "Complete the synthetic no-result branch.",
+      "preconditions": ["The no-results status is visible."],
+      "actions": [
+        {
+          "id": "verify-no-results", "intent": "Verify the empty state.", "operation": "wait_for", "effect": "read_only", "confirmation": "none", "locator_candidates": [{"kind": "role", "role": "status", "value": null, "exact": false}], "input_ref": null, "key": null, "path": null, "target_origin": null, "output_ref": null, "extract": null,
+          "postcondition": {"kind": "locator_text_contains", "locator_candidates": [{"kind": "role", "role": "status", "value": null, "exact": false}], "value": "No records found", "output_ref": null, "comparator": null, "expected": null, "timeout_ms": 10000}, "timeout_ms": 10000
+        }
+      ],
+      "transitions": [
+        {"when": {"kind": "output_empty", "locator_candidates": [], "value": null, "output_ref": "records", "comparator": null, "expected": null, "timeout_ms": 10000}, "next_milestone": null, "terminal": true}
+      ]
+    }
+  ],
+  "completion": {"terminal_milestones": ["collect-results", "no-results"], "required_outputs": ["records"]},
+  "privacy": {
+    "model_data": ["Synthetic values, counts, action outcomes, and receipt hashes"],
+    "portable_artifact_excludes": ["credentials", "cookies", "browser_storage", "session_urls", "page_html", "screenshots", "network_bodies", "downloaded_file_bytes", "observed_private_values"],
+    "private_evidence_retained": false
+  },
+  "validation": {"environment_scope": "not_validated", "execution_contract_sha256": null, "receipts": [], "known_limits": ["Validated only against a synthetic loopback fixture."]},
+  "provenance": {
+    "source": "authorized_live_discovery",
+    "discovery_record_sha256": "0a0a8a5196f1f238feee8620901cc8842ec527d370dda8dbef63872e13b484c0",
+    "discovery_approval_id": "synthetic-fixture-approval",
+    "discovery_approved_at": "2026-08-24T12:00:00+02:00",
+    "portable_bundle_contains_private_evidence": false
+  }
+}

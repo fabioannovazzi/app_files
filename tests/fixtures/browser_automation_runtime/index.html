@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Browser capability runtime fixture</title>
+  </head>
+  <body>
+    <main>
+      <h1>Runtime fixture</h1>
+      <form id="search-form">
+        <label for="query">Search records</label>
+        <input id="query" name="query" placeholder="Search records">
+      </form>
+      <button id="clear-search" type="button" hidden>Clear search</button>
+      <p id="status" role="status"></p>
+      <section id="results" aria-label="Search results"></section>
+    </main>
+    <script>
+      const records = [
+        { sender: "Synthetic Alpha", subject: "Quarterly plan", date: "2026-08-01" },
+        { sender: "Synthetic Beta", subject: "Alpha follow-up", date: "2026-08-02" },
+        { sender: "Synthetic Alpha", subject: "Quarterly plan", date: "2026-08-01" },
+      ];
+      const form = document.querySelector("#search-form");
+      const query = document.querySelector("#query");
+      const results = document.querySelector("#results");
+      const status = document.querySelector("#status");
+      const clearSearch = document.querySelector("#clear-search");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const needle = query.value.trim().toLowerCase();
+        const matches = records.filter((record) =>
+          `${record.sender} ${record.subject}`.toLowerCase().includes(needle),
+        );
+        results.replaceChildren();
+        status.textContent = matches.length === 0 ? "No records found" : "";
+        clearSearch.hidden = false;
+        for (const record of matches) {
+          const row = document.createElement("article");
+          row.dataset.testid = "result-row";
+          for (const [name, value] of Object.entries(record)) {
+            const field = document.createElement("span");
+            field.dataset.testid = name;
+            field.textContent = value;
+            row.append(field);
+          }
+          results.append(row);
+        }
+      });
+
+      clearSearch.addEventListener("click", () => {
+        query.value = "";
+        results.replaceChildren();
+        status.textContent = "";
+        clearSearch.hidden = true;
+      });
+    </script>
+  </body>
+</html>

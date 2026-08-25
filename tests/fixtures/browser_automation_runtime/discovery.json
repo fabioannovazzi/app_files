@@ -1,0 +1,83 @@
+{
+  "schema_version": "browser-discovery/v2",
+  "record_id": "synthetic-record-search-discovery",
+  "recorded_at": "2026-08-24T12:00:00+02:00",
+  "site": {
+    "name": "Synthetic runtime fixture",
+    "allowed_origins": ["http://127.0.0.1:18765"],
+    "start_url": "http://127.0.0.1:18765/"
+  },
+  "process": {
+    "name": "Synthetic record search",
+    "objective": "Search a synthetic page and extract a bounded deduplicated record set.",
+    "out_of_scope": ["Authentication", "Private data", "Consequential actions"]
+  },
+  "runtime": {
+    "browser": "existing_chrome",
+    "controller": "chrome_extension",
+    "semantic_driver": "model",
+    "mechanical_driver": "playwright",
+    "os_fallback": "computer_use_non_browser_only"
+  },
+  "authority": {
+    "operator_authorized": true,
+    "authentication": "operator_only",
+    "secret_policy": "never_request_read_store",
+    "consequential_actions": "confirm_at_action_time"
+  },
+  "privacy": {
+    "model_data": ["Synthetic values, counts, action outcomes, and receipt hashes"],
+    "portable_artifact_excludes": ["credentials", "cookies", "browser_storage", "session_urls", "page_html", "screenshots", "network_bodies", "downloaded_file_bytes", "observed_private_values"],
+    "private_evidence_retained": false
+  },
+  "observations": [
+    {
+      "milestone_id": "open-fixture",
+      "intent": "Observe the synthetic search entry state.",
+      "origin": "http://127.0.0.1:18765",
+      "path": "/",
+      "controls": [{"kind": "label", "role": null, "value": "Search records", "exact": true}],
+      "action": "Open the loopback fixture.",
+      "outcome": "The labeled search input is visible.",
+      "uncertainties": []
+    },
+    {
+      "milestone_id": "submit-search",
+      "intent": "Observe query submission and result branching.",
+      "origin": "http://127.0.0.1:18765",
+      "path": "/",
+      "controls": [{"kind": "label", "role": null, "value": "Search records", "exact": true}],
+      "action": "Fill a synthetic query and press Enter.",
+      "outcome": "The page renders either synthetic rows or the no-result status.",
+      "uncertainties": []
+    },
+    {
+      "milestone_id": "collect-results",
+      "intent": "Observe the synthetic repeated-record shape.",
+      "origin": "http://127.0.0.1:18765",
+      "path": "/",
+      "controls": [{"kind": "test_id", "role": null, "value": "result-row", "exact": false}],
+      "action": "Read the synthetic sender, subject, and date fields.",
+      "outcome": "Repeated rows expose all declared synthetic fields.",
+      "uncertainties": []
+    },
+    {
+      "milestone_id": "no-results",
+      "intent": "Observe the synthetic empty branch.",
+      "origin": "http://127.0.0.1:18765",
+      "path": "/",
+      "controls": [{"kind": "role", "role": "status", "value": null, "exact": false}],
+      "action": "Read the generic synthetic empty-state marker.",
+      "outcome": "The status reports no records.",
+      "uncertainties": []
+    }
+  ],
+  "branches": ["A matching query collects records; a non-matching query completes with an empty record set."],
+  "downloads": [],
+  "review": {
+    "operator_reviewed": true,
+    "approved_for_capability_authoring": true,
+    "reviewed_at": "2026-08-24T12:00:00+02:00",
+    "approval_id": "synthetic-fixture-approval"
+  }
+}
