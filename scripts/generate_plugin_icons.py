@@ -245,6 +245,13 @@ SPECS = (
         "financial_analysis",
     ),
     IconSpec(
+        "management-control-pack",
+        "Vera · Management Control Pack",
+        "#002060",
+        "#00B0F0",
+        "management_pack",
+    ),
+    IconSpec(
         "sales-plan",
         "Sales Plan",
         "#4F6F52",
@@ -505,6 +512,12 @@ def _body(spec: IconSpec) -> str:
   <path d="M21 45h20" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>
   <circle cx="43" cy="39" r="8" fill="none" stroke="{accent}" stroke-width="4"/>
   <path d="m49 45 7 7" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>""",
+        "management_pack": f"""
+  <rect x="12" y="14" width="40" height="35" rx="5" fill="{paper}"/>
+  <path d="M12 24h40M32 24v25" stroke="{color}" stroke-width="3"/>
+  <path d="M18 42V34M24 42V29M38 42V37M44 42V31" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
+  <path d="m17 20 5-4 5 3" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="45" cy="19" r="3" fill="{accent}"/>""",
         "sales_plan": f"""
   <path d="M14 49h37" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>
   <rect x="18" y="34" width="7" height="12" rx="2" fill="{paper}"/>

@@ -1,0 +1,84 @@
+{
+  "schema_version": 3,
+  "workstream": "management-control-pack",
+  "display_name": "Management Control Pack",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "scripts",
+    "assets"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "management-control-mapping-inspection",
+        "purpose": "Establish source roles, reporting perimeter, exact columns, accounting categories, signs, periods, controls, and the reviewed recipe before calculation",
+        "content": "User instructions; supplied export and sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete supplied CSV, Excel, or ZIP population is read locally to inventory the tables. Source roles, account meaning, customer identity, and signs are selected through model-led and professional review rather than filename rules. Vera performs no automatic anonymization or pseudonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "management-control-post-calculation-review",
+        "purpose": "Interpret the exact management pack and identify observations, hypotheses, questions, missing evidence, and limitations",
+        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, monthly series capped at 60 rows per section, top receivables, payables, customers and services capped at 20 or the reviewed top-customer limit, source IDs and hashes, and limitations. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "management-control-commentary",
+        "purpose": "Prepare a metric-linked professional-review draft without changing calculated facts",
+        "content": "The bounded calculated context plus draft observations and hypotheses tied to exact metric IDs, management questions, and limitations. The deterministic finalizer checks only schema and metric-reference closure; business causation, accounting correctness, completeness, materiality, and professional approval remain model-led or professional judgments.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "client-engagement-path-isolation",
+      "control": "Every Codex inspector, calculation, and finalization writer requires a digest-valid Studio Archive management-control-pack context, accepts only exact receipted inputs or current-run outputs, and writes only below that run's output directory."
+    },
+    {
+      "id": "explicit-reviewed-source-mapping",
+      "control": "The inspector does not assign semantic table roles. The runner requires a recipe bound to the current input inventory and a non-empty reviewer and timestamp with mapping_review.status=reviewed before any calculation."
+    },
+    {
+      "id": "exact-calculation-and-control-boundary",
+      "control": "Dates must match the reviewed format, monetary values use Decimal arithmetic, categories must close through the reviewed mapping, aging uses explicit cutoff buckets, and any failed declared source control total blocks the pack."
+    },
+    {
+      "id": "missing-section-fail-visible",
+      "control": "A missing or invalid general-ledger contract blocks execution; unavailable optional Budget, aging, bank, concentration, or profitability evidence is preserved as an explicit unavailable section and partial pack rather than replaced by model inference."
+    },
+    {
+      "id": "bounded-post-calculation-model-context",
+      "control": "The deterministic projection excludes raw source populations, absolute paths, and original filenames and exposes only calculated metrics, bounded series, top-ranked rows, controls, lineage IDs, and limitations for interpretation."
+    },
+    {
+      "id": "metric-reference-closure",
+      "control": "Calculated observations and hypotheses in the final commentary must reference existing metric IDs. The finalizer validates shape and reference closure while preserving draft_pending_professional_review and never assigning semantic correctness or approval."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-25",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "d83e6518263dffe096982115e86f1b8d420902feb9726d7943026a4e4576e028"
+  }
+}

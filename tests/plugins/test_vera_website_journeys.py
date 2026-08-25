@@ -22,6 +22,7 @@ VERA_SITE_MODULES = {
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
+    "management-control-pack",
     "riconciliazione-partite",
     "concordato-plan-review",
     "previdenza-inps",
@@ -787,7 +788,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 26
+    expected_module_count = 27
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -819,6 +820,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
         "../variance-analysis/index.html",
+        "../management-control-pack/index.html",
         "../financial-analysis/index.html",
         "../report-builder/index.html",
         "../report-enti-locali/index.html",
@@ -833,8 +835,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
     assert 'data-jurisdiction-item="it"' in core
     assert (
-        'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>'
-        in core
+        'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>' in core
     )
     assert "Controllo scritture · FatturaPA" not in core
     for area_href in (
@@ -906,6 +907,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
         "Analisi scostamenti",
+        "Pacchetto controllo di gestione",
         "Analisi finanziaria e due diligence",
         "Preparazione report finanziario",
         "Report finanziario enti locali",
@@ -926,6 +928,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
         "module.variance.title": "Analisi scostamenti",
+        "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.communication.title": "Comunicazione professionale",
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
@@ -947,6 +950,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "email-cliente": "Richiesta documenti e chiarimenti",
         "fatture-xml-check": "Controllo FatturaPA XML",
         "financial-analysis": "Analisi finanziaria e due diligence",
+        "management-control-pack": "Pacchetto controllo di gestione",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
         "new-client": "Apertura del fascicolo cliente",
@@ -967,7 +971,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 26
+    assert len(labels) == 27
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1034,6 +1038,7 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     "page_path",
     (
         SHARED_ROOT / "financial-analysis" / "index.html",
+        SHARED_ROOT / "management-control-pack" / "index.html",
         SHARED_ROOT / "new-client" / "index.html",
     ),
 )
@@ -1432,7 +1437,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 26
+    expected_module_link_count = 27
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

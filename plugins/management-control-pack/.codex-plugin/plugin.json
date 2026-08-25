@@ -1,0 +1,51 @@
+{
+  "name": "management-control-pack",
+  "version": "0.1.0",
+  "description": "Connectorless management-control pack preparation for Vera from reviewed accounting exports.",
+  "author": {
+    "name": "Fabio Annovazzi · Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/management-control-pack/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "management-control",
+    "management-reporting",
+    "management-pack",
+    "controllo-di-gestione",
+    "accounting",
+    "budget",
+    "working-capital",
+    "receivables",
+    "payables",
+    "cash",
+    "customer-concentration"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Management Control Pack",
+    "shortDescription": "Build a reviewable management pack from accounting exports.",
+    "longDescription": "Vera prepares one connectorless management-control pack from reviewed Excel or CSV exports. It inventories source tables, requires explicit mappings, calculates monthly P&L, budget variances, receivables and payables aging, cash movements, customer concentration and service profitability when the corresponding data is available, and produces JSON, Excel, Markdown and a self-contained HTML command centre. Calculated facts remain separate from model-led interpretation and professional approval.",
+    "developerName": "Fabio Annovazzi · Mparanza",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com/static/shared/management-control-pack/index.html?lang=it",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Prepare a management-control pack from these accounting exports.",
+      "Show which management analyses the supplied data supports and which remain unavailable.",
+      "Build the reviewed Excel, Markdown, JSON, and HTML management pack."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}
