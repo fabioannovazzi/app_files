@@ -26,7 +26,7 @@ Diligence program and it does not authorize an orchestrator.
 
 The user-facing Vera workflows remain:
 
-- Audit Reconciliation;
+- Open-item Reconciliation;
 - Journal Sampling;
 - Check Entries;
 - Journal-Bank Reconciliation;
@@ -45,9 +45,9 @@ does not yet prove generalization across independent accounting-system exports.
 - Journal Sampling accepts a print-friendly source when the parser produces any
   records. Its generic text-PDF path assigns the final one or two numeric tokens
   on a line to debit and credit without proving source-owned amount roles.
-- Audit Reconciliation contains case-origin terminology such as `All.A` in
+- Open-item Reconciliation contains case-origin terminology such as `All.A` in
   reusable evidence wording and can infer source roles from filename keywords.
-- Audit Reconciliation may assign journal monetary cells to debit or credit by
+- Open-item Reconciliation may assign journal monetary cells to debit or credit by
   position relative to a calculated midpoint.
 - Journal Sampling, Check Entries, Journal-Bank Reconciliation, and Concordato
   Plan Review contain binary-float monetary paths. Report Builder parses values
@@ -58,11 +58,11 @@ does not yet prove generalization across independent accounting-system exports.
 - Journal-Bank Reconciliation can treat generic description tokens as
   references, accept a unique amount candidate without a usable date, and
   silently disable an empty sample restriction.
-- Audit Reconciliation does not currently enforce evidence-use uniqueness,
+- Open-item Reconciliation does not currently enforce evidence-use uniqueness,
   fan-out, currency equality, party equality, or allocation conservation. One
   bank row can therefore close duplicated open rows, and equal amounts can
   match across currencies.
-- Audit Reconciliation may write complete-looking workpapers when required
+- Open-item Reconciliation may write complete-looking workpapers when required
   review remains pending or checks fail; current final readiness is driven
   mainly by recorded review actions rather than independent mechanical and
   semantic gates.
@@ -73,8 +73,8 @@ does not yet prove generalization across independent accounting-system exports.
 Relevant source locations:
 
 - `plugins/journal-sampling/scripts/journal_sampling_core.py`;
-- `plugins/audit-reconciliation/scripts/raw_input_runner.py`;
-- `plugins/audit-reconciliation/scripts/locale_support.py`;
+- `plugins/open-item-reconciliation/scripts/raw_input_runner.py`;
+- `plugins/open-item-reconciliation/scripts/locale_support.py`;
 - `plugins/check-entries/scripts/check_entries_core.py`;
 - `plugins/journal-bank-reconciliation/scripts/journal_bank_core.py`;
 - `plugins/report-builder/scripts/report_builder_core.py`;
@@ -328,9 +328,9 @@ The target application is:
 | --- | --- |
 | M1 precision and abstention | All six workflows use exact material values and visibly withhold unsupported or unresolved facts. Journal Sampling additionally preserves the source-reported increment. |
 | M2 reviewed preparation | Journal and bank field mappings, source roles, parties, currencies, periods, signs, numeric measures, and plan/support roles become explicit reviewed inputs before deterministic execution. |
-| M3 assurance kernel | Journal Sampling, Check Entries, Journal-Bank, and Concordato use replayable assurance envelopes. Audit Reconciliation and Report Builder retain their narrower workflow contracts while reusing package-neutral receipts, qualifications, ledgers, and independent readiness controls. |
+| M3 assurance kernel | Journal Sampling, Check Entries, Journal-Bank, and Concordato use replayable assurance envelopes. Open-item Reconciliation and Report Builder retain their narrower workflow contracts while reusing package-neutral receipts, qualifications, ledgers, and independent readiness controls. |
 | M4 output closure | Report Builder proves every reported material number through source, prepared, XLSX, Markdown, and DOCX addresses. Other workflows bind their material workpaper values and native review outputs where those values are rendered. |
-| M5 reviewed calculations | Audit Reconciliation and Journal-Bank preserve allocations and residuals; Check Entries preserves direction and differences; Concordato preserves reviewed formula/sign boundaries and unsupported semantic conclusions; Report Builder binds unit, scale, sign, period, cell selection, and rendered totals. It is not useful to add de-cumulation or ratio machinery to Journal Sampling without a case that needs it. |
+| M5 reviewed calculations | Open-item Reconciliation and Journal-Bank preserve allocations and residuals; Check Entries preserves direction and differences; Concordato preserves reviewed formula/sign boundaries and unsupported semantic conclusions; Report Builder binds unit, scale, sign, period, cell selection, and rendered totals. It is not useful to add de-cumulation or ratio machinery to Journal Sampling without a case that needs it. |
 | M6 real-source eligibility | Source-derived rows require bounded qualification or an exact reviewed source contract. Stable byte capture alone does not make an ambiguous table semantically eligible. |
 | M7 promotion discipline | Every workflow requires independent positive cases, adversarial mutations, retained regressions, privacy validation, and release checks before its claim is promoted. |
 
@@ -532,7 +532,7 @@ Vera privacy-surface validator before packaging.
 - add positive and negative source-family fixtures;
 - preserve deterministic sampling only over a qualified population.
 
-### V3 - Audit Reconciliation hardening
+### V3 - Open-item Reconciliation hardening
 
 - remove case-origin vocabulary from reusable rules;
 - make source-role inference a proposal rather than authority;

@@ -46,7 +46,7 @@
         "vera_ocr"
       ]
     },
-    "audit-reconciliation": {
+    "open-item-reconciliation": {
       "module_roots": [
         "vera_assurance"
       ]

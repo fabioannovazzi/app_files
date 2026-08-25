@@ -23,6 +23,16 @@
       "required_signals": ["istruttoria", "cartella cliente", "controlli contabili"]
     },
     {
+      "id": "vera-open-item-reconciliation",
+      "prompt": "Vera, parti dall'elenco delle partite dichiarate aperte al 31 dicembre e verifica su mastrini, banca e factoring quali sono chiuse, parziali o ancora aperte.",
+      "required_signals": ["vera:open-item-reconciliation"]
+    },
+    {
+      "id": "vera-journal-bank-reconciliation",
+      "prompt": "Vera, parti dai movimenti di questi estratti conto e abbinali direttamente alle righe del giornale; non ho una lista di partite aperte.",
+      "required_signals": ["vera:journal-bank-reconciliation"]
+    },
+    {
       "id": "vera-new-client",
       "prompt": "Vera, prepara il dossier di onboarding del nuovo cliente con titolari effettivi, mandato, privacy, AML e piano dei riesami, lasciando le decisioni al commercialista.",
       "required_signals": ["Vera", "onboarding", "AML"]

@@ -990,14 +990,14 @@ name, filename, folder, or document content.""",
         count=1,
     )
     text = re.sub(
-        r"(?ms)^- `studio-archive`:.*?^- `audit-reconciliation`:",
+        r"(?ms)^- `studio-archive`:.*?^- `open-item-reconciliation`:",
         "- `studio-archive`: the portable client, engagement, input, run, "
         "lifecycle, and artifact ledger in the connected studio folder; "
         "optional local indexing when its declared dependencies are already "
         "callable; and one client's callable, read-only Anthropic Gmail "
         "connector. The current guarded WhatsApp and native Google Drive OAuth "
         "routes remain unavailable;\n"
-        "- `audit-reconciliation`:",
+        "- `open-item-reconciliation`:",
         text,
         count=1,
     )
@@ -1629,7 +1629,7 @@ def project_cowork_skill(
         text = _project_previdenza_cowork_skill(text)
     elif (
         relative_path
-        == "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
+        == "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
     ):
         text = _project_audit_cowork_skill(text)
     elif relative_path == "modules/journal-sampling/skills/journal-sampling/SKILL.md":

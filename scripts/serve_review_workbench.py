@@ -49,7 +49,7 @@ REVIEW_TOKEN_HEADER = "X-Mparanza-Review-Token"
 REQUIRE_VERA_CUSTOMER_RUN = True
 VERA_REVIEW_WORKFLOW_IDS = frozenset(
     {
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "concordato-plan-review",

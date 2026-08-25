@@ -9,7 +9,7 @@ and screenshots prove structure; they do not prove real workflow usability.
 The default release-grade validation set is every generated non-plotting
 review-workbench plugin:
 
-- `audit-reconciliation`
+- `open-item-reconciliation`
 - `check-entries`
 - `new-client`
 - `client-file-preparation` (New Client's document-preparation phase)

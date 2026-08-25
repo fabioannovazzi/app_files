@@ -49,8 +49,8 @@ SPECS = (
         "browser_automation",
     ),
     IconSpec(
-        "audit-reconciliation",
-        "Riconciliazione partite",
+        "open-item-reconciliation",
+        "Riconciliazione partite aperte",
         "#17365D",
         "#D89B3D",
         "reconcile",

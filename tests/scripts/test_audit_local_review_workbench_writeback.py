@@ -10,7 +10,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_PATH = ROOT / "scripts" / "audit_local_review_workbench_writeback.py"
 GENERIC_VERA_REVIEW_PLUGINS = (
-    "audit-reconciliation",
+    "open-item-reconciliation",
     "check-entries",
     "client-file-preparation",
     "concordato-plan-review",

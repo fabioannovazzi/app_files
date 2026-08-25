@@ -938,7 +938,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
         "archive-organization": "Riordino della cartella cliente",
-        "audit-reconciliation": "Riconciliazione partite aperte",
+        "open-item-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
         "bilancio-xbrl-it": "Bilancio OIC e XBRL",

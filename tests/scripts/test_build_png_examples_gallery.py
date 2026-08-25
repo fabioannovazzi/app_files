@@ -950,18 +950,18 @@ def test_build_index_suppresses_redundant_single_plugin_family_heading(
     tmp_path: Path,
 ) -> None:
     source_root = tmp_path / "runs" / "png_examples"
-    source_dir = source_root / "audit-reconciliation"
+    source_dir = source_root / "open-item-reconciliation"
     gallery_dir = source_root / "png-gallery"
     source_dir.mkdir(parents=True)
     gallery_dir.mkdir(parents=True)
     source_path = source_dir / "index.html"
-    output_path = gallery_dir / "audit-reconciliation__index.png"
+    output_path = gallery_dir / "open-item-reconciliation__index.png"
     source_path.write_text("<html></html>", encoding="utf-8")
     output_path.write_bytes(b"png")
     item = gallery.GalleryItem(
         source_path=source_path,
         output_path=output_path,
-        label="audit-reconciliation / index",
+        label="open-item-reconciliation / index",
         dimensions=None,
     )
     stats = {
@@ -977,10 +977,10 @@ def test_build_index_suppresses_redundant_single_plugin_family_heading(
     html = gallery._build_index([item], stats, gallery_dir)
 
     assert (
-        '<h2 class="source-heading">audit reconciliation <span>1 items</span></h2>'
+        '<h2 class="source-heading">open-item reconciliation <span>1 items</span></h2>'
         in html
     )
-    assert '<h2 class="plugin-heading">audit reconciliation' not in html
+    assert '<h2 class="plugin-heading">open-item reconciliation' not in html
 
 
 def test_default_skipped_artifact_excludes_generic_html_snapshot(

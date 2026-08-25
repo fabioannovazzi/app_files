@@ -7,13 +7,6 @@
         "archive-organization"
       ]
     },
-    "auditReconciliationWidgets": {
-      "command": "node",
-      "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
-        "audit-reconciliation"
-      ]
-    },
     "bilancioXbrlIt": {
       "command": "node",
       "args": [
@@ -75,6 +68,13 @@
       "args": [
         "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
         "new-client"
+      ]
+    },
+    "openItemReconciliationWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "open-item-reconciliation"
       ]
     },
     "previdenzaInpsReview": {

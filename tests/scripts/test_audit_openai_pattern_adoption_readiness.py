@@ -517,7 +517,7 @@ def test_write_customer_validation_template_defaults_to_workbench_plugins(
 
     assert exit_code == 0
     assert [case["plugin"] for case in payload["cases"]] == [
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "concordato-plan-review",
@@ -538,7 +538,7 @@ def test_committed_customer_validation_example_covers_default_plugins() -> None:
 
     assert payload["schema_version"] == "1.0"
     assert [case["plugin"] for case in payload["cases"]] == [
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "concordato-plan-review",
@@ -577,7 +577,7 @@ def test_customer_validation_runbook_names_required_evidence_and_gate() -> None:
         assert required_text in runbook
 
     for plugin in (
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "concordato-plan-review",

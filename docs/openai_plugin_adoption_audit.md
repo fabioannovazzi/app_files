@@ -25,7 +25,7 @@ Main groups:
 
 - Shared non-plotting review workbench generator:
   `scripts/generate_non_plotting_review_widgets.py`.
-- Generated non-plotting widget assets for Audit Reconciliation, Check Entries,
+- Generated non-plotting widget assets for Open-item Reconciliation, Check Entries,
   New Client's client-file-preparation engine, Concordato Plan Review, Deep
   Research Validator, Journal-Bank Reconciliation, Journal Sampling, Prompt
   Optimizer, and Report Builder.

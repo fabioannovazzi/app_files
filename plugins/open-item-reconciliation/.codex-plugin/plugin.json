@@ -1,0 +1,52 @@
+{
+  "name": "open-item-reconciliation",
+  "version": "0.1.48",
+  "description": "Verifica se le partite indicate aperte al cut-off risultano ancora da chiudere, usando le evidenze contabili disponibili.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/riconciliazione-partite/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "audit",
+    "reconciliation",
+    "accounting",
+    "open-items",
+    "ledger",
+    "bank",
+    "statements",
+    "payment-batches",
+    "factoring",
+    "compensation",
+    "workpapers"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Riconciliazione partite aperte",
+    "shortDescription": "Verifica le partite dichiarate aperte al cut-off e segnala chiusure, residui ed eccezioni.",
+    "longDescription": "Workflow Codex che parte da una popolazione di partite dichiarate aperte a una data di cut-off e verifica quali risultano chiuse, parzialmente chiuse o ancora aperte. Usa come evidenza mastrini, giornale, estratti conto, distinte di pagamento, factoring, anticipi e compensazioni; conserva i riferimenti documentali e produce workpaper Excel/Word, diagnostiche, richieste di evidenze mancanti e punti da verificare. La riconciliazione diretta dei movimenti bancari con il giornale appartiene invece al workflow separato Riconciliazione banca-contabilità.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Usa Riconciliazione partite aperte su una cartella del cliente collegata al suo scope Studio Archive.",
+      "Parti dalla popolazione dichiarata aperta al cut-off. Inferisci periodo, lingua e assunzioni sulle evidenze quando possibile; chiedimi solo le ambiguita sostanziali. Usa il default factoring salvo richiesta contraria.",
+      "Prepara Excel/Word con dettaglio righe, scheda operativa per commercialista, evidenze citate, review Codex, richieste evidenze mancanti e punti da verificare."
+    ],
+    "brandColor": "#17365D",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

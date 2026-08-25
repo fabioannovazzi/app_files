@@ -27,10 +27,10 @@ from vera_assurance import (  # noqa: E402
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("archive-organization", "archive_organization.py"),
-    ("audit-reconciliation", "audit_assurance.py"),
-    ("audit-reconciliation", "build_missing_evidence_requests.py"),
-    ("audit-reconciliation", "build_review_sample.py"),
-    ("audit-reconciliation", "raw_input_runner.py"),
+    ("open-item-reconciliation", "audit_assurance.py"),
+    ("open-item-reconciliation", "build_missing_evidence_requests.py"),
+    ("open-item-reconciliation", "build_review_sample.py"),
+    ("open-item-reconciliation", "raw_input_runner.py"),
     ("client-file-preparation", "build_file_preparation_outputs.py"),
     ("client-file-preparation", "parse_fatturapa_xml.py"),
     ("client-file-preparation", "parse_fiscal_forms.py"),
@@ -100,7 +100,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
 )
 
 CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
-    ("audit-reconciliation", "review_server.py"),
+    ("open-item-reconciliation", "review_server.py"),
     ("check-entries", "apply_review_edits.py"),
     ("journal-bank-reconciliation", "apply_review_edits.py"),
     ("passive-invoice-audit", "evaluate_audit.py"),
@@ -111,7 +111,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("archive-organization", "check_dependencies.py"),
-    ("audit-reconciliation", "check_dependencies.py"),
+    ("open-item-reconciliation", "check_dependencies.py"),
     ("client-file-preparation", "check_dependencies.py"),
     ("client-file-preparation", "check_environment.py"),
     ("client-file-preparation", "managed_ocr_runtime.py"),

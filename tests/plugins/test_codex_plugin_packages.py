@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
     "archive-organization",
-    "audit-reconciliation",
+    "open-item-reconciliation",
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
     "browser-automation",
@@ -217,12 +217,12 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
         "save_archive_organization_decisions",
         "apply_archive_organization_decisions",
     ),
-    "audit-reconciliation": (
-        "validate_audit_reconciliation_review",
-        "render_audit_reconciliation_review",
-        "get_audit_reconciliation_case_context",
-        "save_audit_reconciliation_decisions",
-        "apply_audit_reconciliation_decisions",
+    "open-item-reconciliation": (
+        "validate_open_item_reconciliation_review",
+        "render_open_item_reconciliation_review",
+        "get_open_item_reconciliation_case_context",
+        "save_open_item_reconciliation_decisions",
+        "apply_open_item_reconciliation_decisions",
     ),
     "check-entries": (
         "validate_check_entries_review",
@@ -548,7 +548,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.165"
+    assert manifest["version"] == "0.1.166"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Trasforma questi export contabili in un pacchetto di controllo di gestione "
@@ -747,12 +747,12 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
         assert "../<skill-name>/SKILL.md" in router
-        audit_wrapper = card_bodies["skills/audit-reconciliation/SKILL.md"]
-        assert "Resolve `../../modules/audit-reconciliation`" in audit_wrapper
+        audit_wrapper = card_bodies["skills/open-item-reconciliation/SKILL.md"]
+        assert "Resolve `../../modules/open-item-reconciliation`" in audit_wrapper
         full_workflow = entries[
-            "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
+            "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
         ].decode("utf-8")
-        assert "# Audit Reconciliation" in full_workflow
+        assert "# Open-item Reconciliation" in full_workflow
         assert "## Required Questions" in full_workflow
     if plugin_name == "lucia":
         assert set(card_bodies) == {
@@ -3015,7 +3015,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
             "/static/shared/variance-analysis/index.html",
         )
         removed_plugin_pages = (
-            "/static/shared/audit-reconciliation/index.html",
+            "/static/shared/open-item-reconciliation/index.html",
             "/static/shared/reporting/index.html",
             "/static/shared/research/index.html",
             "/static/shared/mix-contribution-analysis/index.html",
@@ -3387,7 +3387,7 @@ def test_homepage_routes_accountant_plugins_through_vera() -> None:
     assert source.count('"label": "Vera"') == 5
     assert source.count('"tooltip_key": "vera"') == 5
     for direct_workflow_link in (
-        '"href": "/static/shared/audit-reconciliation/index.html"',
+        '"href": "/static/shared/open-item-reconciliation/index.html"',
         '"href": "/static/shared/report-builder/index.html"',
         '"href": "/static/shared/new-client/index.html"',
         '"href": "/static/shared/new-client/uk.html"',
@@ -4246,7 +4246,7 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
 
 def test_unlinked_family_explainer_pages_are_removed() -> None:
     for page_path in (
-        ROOT / "static" / "shared" / "audit-reconciliation" / "index.html",
+        ROOT / "static" / "shared" / "open-item-reconciliation" / "index.html",
         ROOT / "static" / "shared" / "reporting" / "index.html",
         ROOT / "static" / "shared" / "research" / "index.html",
     ):
@@ -5134,7 +5134,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "archive-organization": (
             "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
-        "audit-reconciliation": (
+        "open-item-reconciliation": (
             "https://mparanza.com/static/shared/riconciliazione-partite/index.html"
         ),
         "bandi-agevolazioni": (

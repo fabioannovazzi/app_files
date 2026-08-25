@@ -24,9 +24,12 @@ skill to imitate a missing operational workflow.
   no-overwrite local or Drive moves with a journal and rollback; Drive mode
   preserves file IDs, links, permissions, and history while changing parent
   and name.
-- `audit-reconciliation`: reconcile ledgers, statements, payments, factoring,
-  advances, compensation, and other accounting evidence into reviewable
-  workpapers.
+- `open-item-reconciliation`: start from a population reported as open at a
+  cut-off and test each item against ledgers, statements, payments, factoring,
+  advances, compensation, and other accounting evidence to determine which
+  items are closed, partly closed, or still open; produce reviewable
+  workpapers. Do not use it for a direct statement-to-journal match when no
+  open-item population is being tested.
 - `bandi-agevolazioni`: discover and monitor source-backed Italian grant,
   subsidy, tax-credit, or subsidized-finance opportunities through a reviewed
   priority-source registry, a professionally reviewed query-scoped source
@@ -73,8 +76,11 @@ skill to imitate a missing operational workflow.
   aging, cash, concentration, and profitability section plus a bounded
   model-led interpretation layer; missing optional data remains visible and
   the workflow does not require or simulate an ERP connector.
-- `journal-bank-reconciliation`: reconcile bank statements with journal or
-  ledger exports using reviewed mappings and matching evidence.
+- `journal-bank-reconciliation`: start from bank-statement movements and match
+  them directly with journal or ledger entries using reviewed mappings and
+  matching evidence. The presence of a bank statement does not by itself make
+  an open-item request a bank-reconciliation request; route by the population
+  being tested.
 - `passive-invoice-audit`: screen passive FatturaPA XML populations against
   actual booked ledger movements, apply deterministic arithmetic and matching
   checks, then use native Claude GPT-5.6 Luna on compact matched-invoice packets

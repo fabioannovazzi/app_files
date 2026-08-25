@@ -120,7 +120,7 @@ def test_repo_workbench_demo_audit_has_no_findings() -> None:
     reports = audit.audit_adapters(ROOT)
 
     assert {report.plugin for report in reports} == {
-        "audit-reconciliation",
+        "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
         "new-client",

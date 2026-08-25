@@ -65,6 +65,26 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     assert catalogued_skills == expected_skills
 
 
+def test_vera_router_distinguishes_open_items_from_bank_movements() -> None:
+    router = _read_text(ROUTER_PATH)
+    catalog = _read_text(CATALOG_PATH)
+    normalized_catalog = " ".join(catalog.split())
+    fixtures = json.loads(
+        _read_text(VERA_ROOT / "evals" / "trigger_fixtures.json")
+    )["should_trigger"]
+    cases = {case["id"]: case for case in fixtures}
+
+    assert cases["vera-open-item-reconciliation"]["required_signals"] == [
+        "vera:open-item-reconciliation"
+    ]
+    assert cases["vera-journal-bank-reconciliation"]["required_signals"] == [
+        "vera:journal-bank-reconciliation"
+    ]
+    assert "population reported as open at a cut-off" in normalized_catalog
+    assert "start from bank-statement movements" in normalized_catalog
+    assert "Route direct bank-statement-to-journal" in router
+
+
 def test_vera_routes_generic_browser_process_discovery_to_browser_automation() -> None:
     router = _read_text(ROUTER_PATH)
     catalog = _read_text(CATALOG_PATH)

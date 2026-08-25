@@ -240,7 +240,11 @@ them without changing the capability catalog:
   overwriting the originals. The workflow never stores Gmail credentials or
   messages, modifies existing source documents or mail, shares a local index,
   uses WhatsApp Web or an unofficial API, or downloads OCR weights;
-- `audit-reconciliation`: open-item and accounting-evidence reconciliation;
+- `open-item-reconciliation`: test a population reported as open at a cut-off
+  and determine which items are closed, partly closed, or still open from the
+  available accounting evidence. Route direct bank-statement-to-journal or
+  ledger matching to `journal-bank-reconciliation`, even when both workflows
+  use bank and ledger evidence;
 - `management-control-pack`: client-bound connectorless management reporting
   from explicitly supplied accounting exports. Local deterministic code reads
   the complete mapped populations, calculates exact P&L, Budget, aging, cash,

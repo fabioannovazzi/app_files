@@ -69,7 +69,7 @@ Unknown:
 - promotion remains blocked until V5 privacy, regression, package, and
   requirement audits are complete.
 
-## Audit Reconciliation public projection 2026-07-24
+## Open-item Reconciliation public projection 2026-07-24
 
 A twelve-row holdout was selected from the receipted 200-row
 [Connecticut Open Expenditures Ledger](https://data.ct.gov/resource/jz5u-r6jf.csv?$limit=200).
@@ -108,7 +108,7 @@ population, not an authentic bank statement. It therefore does not establish
 external audit-evidence sufficiency or satisfy the second independent-source
 promotion requirement.
 
-## Audit Reconciliation independent HMRC projection 2026-07-24
+## Open-item Reconciliation independent HMRC projection 2026-07-24
 
 A second twelve-row holdout was selected after the first case from the official
 [HMRC September 2025 spending return](https://www.data.gov.uk/dataset/008d307b-5434-4218-9b62-2eabdef48778/financial-transactions-data-hmrc/datafile/8b0d2b77-c7aa-43b0-bdcf-9a6323097115/preview),
@@ -133,7 +133,7 @@ repository or Marketplace package.
 
 The same party, currency, evidence-reuse, and truncation mutations all withheld
 closure. The first execution also exposed run-clock metadata in the two XLSX
-packages. Audit Reconciliation now normalizes OOXML core properties, member
+packages. Open-item Reconciliation now normalizes OOXML core properties, member
 order, and ZIP timestamps; a focused regression and both public cases prove
 byte-identical workbooks after that repair.
 
@@ -144,7 +144,7 @@ evaluation projections from published payment rows, not authentic independent
 bank statements. External evidence sufficiency and every professional
 conclusion remain unassessed.
 
-## Audit Reconciliation successor re-audit 2026-07-25
+## Open-item Reconciliation successor re-audit 2026-07-25
 
 The review-successor boundary was remediated after an implementation audit and
 then exercised through its intended browser, Python, and MCP process surfaces.

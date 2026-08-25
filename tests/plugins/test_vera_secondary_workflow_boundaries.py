@@ -14,15 +14,15 @@ import pytest
 from openpyxl import Workbook
 
 ROOT = Path(__file__).resolve().parents[2]
-AUDIT_SCRIPTS = ROOT / "plugins" / "audit-reconciliation" / "scripts"
+AUDIT_SCRIPTS = ROOT / "plugins" / "open-item-reconciliation" / "scripts"
 JOURNAL_SCRIPTS = ROOT / "plugins" / "journal-sampling" / "scripts"
 SECONDARY_ENTRYPOINTS = (
-    ("audit-reconciliation", AUDIT_SCRIPTS / "audit_assurance.py"),
+    ("open-item-reconciliation", AUDIT_SCRIPTS / "audit_assurance.py"),
     (
-        "audit-reconciliation",
+        "open-item-reconciliation",
         AUDIT_SCRIPTS / "build_missing_evidence_requests.py",
     ),
-    ("audit-reconciliation", AUDIT_SCRIPTS / "build_review_sample.py"),
+    ("open-item-reconciliation", AUDIT_SCRIPTS / "build_review_sample.py"),
     ("journal-sampling", JOURNAL_SCRIPTS / "replay_normalization.py"),
     ("journal-sampling", JOURNAL_SCRIPTS / "review_successor.py"),
 )
@@ -127,7 +127,7 @@ def test_secondary_entrypoint_requires_direct_customer_run_loader(
         and node.func.id == "load_client_engagement_context_file"
     ]
 
-    assert workflow_id in {"audit-reconciliation", "journal-sampling"}
+    assert workflow_id in {"open-item-reconciliation", "journal-sampling"}
     assert len(client_arguments) == 1
     assert any(
         keyword.arg == "required"
@@ -139,7 +139,7 @@ def test_secondary_entrypoint_requires_direct_customer_run_loader(
 
 
 def test_audit_review_sample_rejects_unreceipted_workbook(tmp_path: Path) -> None:
-    context_path, output_dir = _running_context(tmp_path, "audit-reconciliation")
+    context_path, output_dir = _running_context(tmp_path, "open-item-reconciliation")
     workbook_path = tmp_path / "unreceipted.xlsx"
     _write_reconciliation_workbook(workbook_path)
 
@@ -168,7 +168,7 @@ def test_audit_review_sample_rejects_unreceipted_workbook(tmp_path: Path) -> Non
 def test_audit_review_sample_continues_after_customer_folder_rename(
     tmp_path: Path,
 ) -> None:
-    context_path, output_dir = _running_context(tmp_path, "audit-reconciliation")
+    context_path, output_dir = _running_context(tmp_path, "open-item-reconciliation")
     workbook_path = output_dir / "riconciliazione_audit.xlsx"
     _write_reconciliation_workbook(workbook_path)
     original_client_root = context_path.parents[5]
@@ -205,7 +205,7 @@ def test_audit_review_sample_continues_after_customer_folder_rename(
 def test_audit_missing_evidence_helper_writes_inside_running_output(
     tmp_path: Path,
 ) -> None:
-    context_path, output_dir = _running_context(tmp_path, "audit-reconciliation")
+    context_path, output_dir = _running_context(tmp_path, "open-item-reconciliation")
     workbook_path = output_dir / "riconciliazione_audit.xlsx"
     _write_reconciliation_workbook(workbook_path)
 
@@ -229,7 +229,7 @@ def test_audit_missing_evidence_helper_writes_inside_running_output(
 
 
 def test_audit_assurance_context_gate_continues_after_rename(tmp_path: Path) -> None:
-    context_path, output_dir = _running_context(tmp_path, "audit-reconciliation")
+    context_path, output_dir = _running_context(tmp_path, "open-item-reconciliation")
     original_client_root = context_path.parents[5]
     renamed_client_root = original_client_root.with_name("Renamed Audit Customer")
     original_client_root.rename(renamed_client_root)
@@ -343,8 +343,8 @@ def test_journal_review_successor_context_continues_after_rename(
     ("workflow_id", "tool_name", "item_id"),
     [
         (
-            "audit-reconciliation",
-            "save_audit_reconciliation_decisions",
+            "open-item-reconciliation",
+            "save_open_item_reconciliation_decisions",
             "review:closed",
         ),
         (
