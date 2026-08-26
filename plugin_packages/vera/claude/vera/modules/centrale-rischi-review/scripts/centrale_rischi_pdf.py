@@ -15,12 +15,15 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
 
 __all__ = [
+    "PDF_CORPUS_EVALUATION_SCHEMA",
     "PDF_NORMALIZATION_SCHEMA",
+    "evaluate_pdf_corpus",
     "normalize_pdf",
     "write_normalized_workbook",
 ]
 
 PDF_NORMALIZATION_SCHEMA = "vera.centrale_rischi_pdf_normalization.v1"
+PDF_CORPUS_EVALUATION_SCHEMA = "vera.centrale_rischi_pdf_corpus_evaluation.v1"
 
 EXPOSURE_HEADERS = (
     "reference_month",
@@ -418,7 +421,12 @@ def _guarantee_row(
     return output, issues
 
 
-def normalize_pdf(path: Path) -> dict[str, Any]:
+def normalize_pdf(
+    path: Path,
+    *,
+    page_numbers: Sequence[int] | None = None,
+    allow_no_supported_tables: bool = False,
+) -> dict[str, Any]:
     """Extract native-text tables without assigning professional classifications."""
 
     if not path.is_file() or path.suffix.casefold() != ".pdf":
@@ -436,7 +444,24 @@ def normalize_pdf(path: Path) -> dict[str, Any]:
     page_count = 0
     with pdfplumber.open(path) as document:
         page_count = len(document.pages)
-        for page in document.pages:
+        if page_numbers is None:
+            selected_page_numbers = tuple(range(1, page_count + 1))
+        else:
+            selected_page_numbers = tuple(sorted(set(page_numbers)))
+            if not selected_page_numbers:
+                raise ValueError("At least one PDF page must be selected.")
+            invalid_pages = [
+                number
+                for number in selected_page_numbers
+                if number < 1 or number > page_count
+            ]
+            if invalid_pages:
+                raise ValueError(
+                    "PDF page selection is outside the document: "
+                    + ", ".join(map(str, invalid_pages))
+                )
+        for page_number in selected_page_numbers:
+            page = document.pages[page_number - 1]
             page_text = page.extract_text() or ""
             native_character_count += len(page_text.strip())
             reference_month = _reference_month(page_text)
@@ -506,7 +531,7 @@ def normalize_pdf(path: Path) -> dict[str, Any]:
         raise ValueError(
             "The PDF has no readable native text. Use the official digital Centrale Rischi report downloaded from the Banca d'Italia service."
         )
-    if not any(collections.values()):
+    if not any(collections.values()) and not allow_no_supported_tables:
         raise ValueError(
             "No supported Centrale Rischi table layout was found in the native-text PDF."
         )
@@ -517,6 +542,7 @@ def normalize_pdf(path: Path) -> dict[str, Any]:
             "source_document_sha256": source_hash,
             "source_kind": "native_pdf_extraction",
             "page_count": page_count,
+            "selected_pages": list(selected_page_numbers),
         },
         "review_status": "pending_professional_review",
         "semantic_roles_assigned": False,
@@ -525,6 +551,92 @@ def normalize_pdf(path: Path) -> dict[str, Any]:
         "unclassified_tables": unclassified,
         "implementation_reason": (
             "Header-shape recognition, cell extraction, Italian-number parsing, record provenance and current-versus-previous separation are deterministic because they are mechanically reviewable. Duration meaning, risk family, materiality and professional conclusions remain reviewed judgments."
+        ),
+    }
+
+
+def evaluate_pdf_corpus(
+    path: Path, *, cases: Mapping[str, Sequence[int]] | None = None
+) -> dict[str, Any]:
+    """Measure parser coverage without creating or combining client analyses."""
+
+    if not path.is_file() or path.suffix.casefold() != ".pdf":
+        raise ValueError(f"Expected one readable PDF: {path}")
+    with pdfplumber.open(path) as document:
+        page_count = len(document.pages)
+    if not page_count:
+        raise ValueError("The PDF has no pages.")
+    selected_cases: Mapping[str, Sequence[int]] = cases or {
+        f"page_{page_number:03d}": (page_number,)
+        for page_number in range(1, page_count + 1)
+    }
+    if not selected_cases:
+        raise ValueError("At least one corpus case is required.")
+
+    case_results: list[dict[str, Any]] = []
+    for case_id, page_numbers in selected_cases.items():
+        normalized_case_id = _clean_cell(case_id)
+        if not normalized_case_id:
+            raise ValueError("Corpus case IDs must be non-empty.")
+        selected_pages = tuple(sorted(set(page_numbers)))
+        try:
+            normalization = normalize_pdf(
+                path,
+                page_numbers=selected_pages,
+                allow_no_supported_tables=True,
+            )
+        except ValueError as exc:
+            case_results.append(
+                {
+                    "case_id": normalized_case_id,
+                    "pages": list(selected_pages),
+                    "outcome": "not_recognized",
+                    "row_counts": {
+                        "exposures": 0,
+                        "guarantees_received": 0,
+                        "inframonthly_events": 0,
+                        "information_requests": 0,
+                    },
+                    "issue_count": 0,
+                    "unclassified_table_count": 0,
+                    "diagnostic": str(exc),
+                }
+            )
+            continue
+        recognized = any(normalization["tables"].values())
+        case_results.append(
+            {
+                "case_id": normalized_case_id,
+                "pages": list(selected_pages),
+                "outcome": "recognized" if recognized else "not_recognized",
+                "row_counts": {
+                    key: len(rows) for key, rows in normalization["tables"].items()
+                },
+                "issue_count": len(normalization["issues"]),
+                "unclassified_table_count": len(normalization["unclassified_tables"]),
+                "diagnostic": (
+                    ""
+                    if recognized
+                    else "No supported Centrale Rischi table layout was found on the selected pages."
+                ),
+            }
+        )
+    return {
+        "schema_version": PDF_CORPUS_EVALUATION_SCHEMA,
+        "workflow_id": "centrale-rischi-review",
+        "purpose": "parser_coverage_only",
+        "analysis_generated": False,
+        "source": {
+            "source_document_sha256": _sha256_file(path),
+            "page_count": page_count,
+        },
+        "case_count": len(case_results),
+        "recognized_case_count": sum(
+            item["outcome"] == "recognized" for item in case_results
+        ),
+        "cases": case_results,
+        "implementation_reason": (
+            "Explicit page selection and parser row counts are deterministic and mechanically reviewable. Case meaning and client-level interpretation are deliberately not inferred or combined."
         ),
     }
 

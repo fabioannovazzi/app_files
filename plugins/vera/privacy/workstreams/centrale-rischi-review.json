@@ -31,7 +31,7 @@
       {
         "id": "centrale-rischi-post-calculation-review",
         "purpose": "Interpret exact calculated CR facts and identify observations, hypotheses, questions, missing evidence and limitations",
-        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 guarantees, up to 20 supplied prejudicial events, coverage, controls, source IDs and hashes, and limitations. Raw source populations, absolute paths and original filenames are excluded from this projection by default.",
+        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, inframonthly events and information requests, together with coverage, controls and limitations. The bounded auxiliary rows may include intermediary or guaranteed-party names, dates, categories, types, reasons, amounts, source pages, row locators and extraction confidence. Raw source populations, absolute paths, original filenames and source-document hashes are excluded from those auxiliary-row projections by default.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -64,11 +64,11 @@
     },
     {
       "id": "missing-evidence-fail-visible",
-      "control": "Pregiudizievoli, multi-month movements and financial-statement ratios remain explicitly unavailable when required evidence is absent; the workflow never substitutes model inference or a universal credit threshold."
+      "control": "Pregiudizievoli, guarantees received, inframonthly events, information requests, multi-month movements and financial-statement ratios remain explicitly unavailable when the required source or table is absent; the workflow never substitutes zero, model inference or a universal credit threshold."
     },
     {
       "id": "bounded-post-calculation-model-context",
-      "control": "The deterministic post-calculation projection excludes raw source populations, absolute paths and original filenames and exposes only calculated metrics, bounded series, bounded exceptions, coverage, controls, lineage IDs and limitations."
+      "control": "The deterministic post-calculation projection excludes raw source populations, absolute paths and original filenames and exposes only calculated metrics, bounded series, bounded exceptions, up to 20 rows from each separate PDF information population, coverage, controls, lineage IDs and limitations. Source-document hashes are excluded from projected auxiliary rows."
     },
     {
       "id": "metric-reference-closure",
@@ -87,6 +87,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e01c92bfd660bf3d05cbc8fc2d1669af2ae6df2dfc546d8a25e08d87ce72636c"
+    "source_fingerprint": "e61c1acd10a5e4df4ed48bd517a3a1c8e623744e7ede8f5db9385c21fce91f50"
   }
 }

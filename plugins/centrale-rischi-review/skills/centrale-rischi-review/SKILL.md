@@ -24,6 +24,14 @@ checked against the source and bound to a reviewed recipe before calculation.
 Browser automation is an optional acquisition adapter; it is not part of the
 calculation or professional-review contract.
 
+Official guides, facsimiles and educational PDFs remain useful parser test
+corpora. Do not reject them merely because they are not one client's report.
+Evaluate their examples as explicit page or page-range cases and report parser
+coverage for each case separately. Never combine several examples into one
+fictitious client analysis, and never infer case meaning from a filename or
+keyword. Corpus evaluation produces coverage evidence only; client analysis
+still requires one bound report and a reviewed mapping recipe.
+
 Do not mix the report supplied to the interested client with technical
 XML/SDMX survey flows used by reporting intermediaries. This initial workflow
 targets the client report and its reviewed tabular normalization. Technical
@@ -192,8 +200,24 @@ Read `execution_receipt.json`, `centrale_rischi_analysis.json`, and
 `model_context.json` before opening the rendered files. Stop on a blocked
 analysis or failed declared control. The bounded model context contains exact
 metrics, maturity summaries, at most 36 monthly rows, and at most 20 top
-overruns, guarantees, and prejudicial events. It excludes raw populations,
-absolute paths, and original filenames by default.
+overruns, exposure-linked guarantees and prejudicial events, plus at most 20
+rows from each separate population of guarantees received, inframonthly events
+and information requests. It excludes raw populations, absolute paths,
+original filenames and source-document hashes from those bounded auxiliary-row
+projections by default.
+
+For parser development or regression evaluation, run examples separately:
+
+```bash
+python scripts/evaluate_pdf_corpus.py \
+  --input <guide-or-facsimile.pdf> \
+  --output <outside-repo-output>/corpus_coverage.json \
+  --case <case-name>=<page-or-range>
+```
+
+Omit `--case` to evaluate every page independently. A case that contains no
+recognized layout is recorded as `not_recognized`; it does not reject the
+other examples and does not create a client analysis.
 
 Prepare `centrale_rischi_commentary.json` from the template. Separate facts,
 hypotheses, questions, and limitations. Every observation and hypothesis must

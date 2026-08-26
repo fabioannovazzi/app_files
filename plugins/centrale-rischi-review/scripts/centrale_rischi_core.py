@@ -35,7 +35,7 @@ __all__ = [
     "write_json",
 ]
 
-ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v2"
+ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v3"
 COMMENTARY_SCHEMA = "vera.centrale_rischi_commentary.v1"
 RECIPE_SCHEMA = "vera.centrale_rischi_recipe.v2"
 WORKFLOW_ID = "centrale-rischi-review"
@@ -540,7 +540,7 @@ def build_analysis(
                     row[columns["reference_month"]], row_number=row_number
                 ),
                 "intermediary": _text(row[columns["intermediary"]])
-                or "Unspecified intermediary",
+                or "Intermediario non specificato",
                 "risk_category": risk_value,
                 "exposure_family": family,
                 "original_duration": original_duration_value,
@@ -684,7 +684,7 @@ def build_analysis(
         ),
         _metric(
             "cr.available_resources",
-            "Margine disponibile",
+            "Margine CR calcolato",
             total_available,
             str(recipe.get("currency", "EUR")),
         ),
@@ -742,7 +742,7 @@ def build_analysis(
             None if prior_used is None else total_used - prior_used,
             str(recipe.get("currency", "EUR")),
             "unavailable" if prior_used is None else "available",
-            "Requires at least two reference months." if prior_used is None else None,
+            "Richiede almeno due mesi di riferimento." if prior_used is None else None,
         ),
         _metric(
             "financial.net_debt_ebitda",
@@ -750,7 +750,7 @@ def build_analysis(
             None,
             "ratio",
             "unavailable",
-            "Requires reviewed financial-statement evidence outside Centrale Rischi.",
+            "Richiede dati di bilancio verificati esterni alla Centrale Rischi.",
         ),
         _metric(
             "financial.debt_equity",
@@ -758,7 +758,7 @@ def build_analysis(
             None,
             "ratio",
             "unavailable",
-            "Requires reviewed balance-sheet evidence outside Centrale Rischi.",
+            "Richiede dati patrimoniali verificati esterni alla Centrale Rischi.",
         ),
         _metric(
             "financial.dscr",
@@ -766,7 +766,7 @@ def build_analysis(
             None,
             "ratio",
             "unavailable",
-            "Requires reviewed cash-flow and debt-service evidence outside Centrale Rischi.",
+            "Richiede flussi di cassa e servizio del debito verificati esterni alla Centrale Rischi.",
         ),
     ]
 
@@ -793,7 +793,7 @@ def build_analysis(
             ),
             (
                 "available_resources",
-                f"Margine disponibile — {category}",
+                f"Margine CR calcolato — {category}",
                 totals["available"],
                 str(recipe.get("currency", "EUR")),
                 "available",
@@ -806,7 +806,7 @@ def build_analysis(
                 "percent",
                 "unavailable" if utilization is None else "available",
                 (
-                    "Operational granted is zero for this category."
+                    "L'accordato operativo è zero per questa categoria."
                     if utilization is None
                     else None
                 ),
@@ -877,6 +877,13 @@ def build_analysis(
             for key, value in row.items()
         }
 
+    def auxiliary_rows(label: str) -> tuple[list[dict[str, Any]], bool]:
+        matching_tables = [item for item in tables if item.table_label == label]
+        return (
+            [public_row(row) for item in matching_tables for row in item.rows],
+            bool(matching_tables),
+        )
+
     exposures = [public_row(row) for row in normalized]
     original_term_summary = [
         {
@@ -902,6 +909,15 @@ def build_analysis(
     guarantees = [public_row(row) for row in latest if row["guaranteed_amount"] > 0]
     overruns = [public_row(row) for row in latest if row["overrun"] > 0]
     prejudicial = [public_row(row) for row in latest if row["prejudicial_event"]]
+    guarantees_received, guarantees_received_available = auxiliary_rows(
+        "Garanzie ricevute"
+    )
+    inframonthly_events, inframonthly_events_available = auxiliary_rows(
+        "Eventi inframensili"
+    )
+    information_requests, information_requests_available = auxiliary_rows(
+        "Richieste informazioni"
+    )
     limitations = [
         "L'utilizzo è calcolato per categoria di rischio confermata; non viene presentato un unico rapporto trasversale perché gli importi utilizzati hanno significati specifici per categoria.",
         "Breve, medio e lungo derivano dai valori confermati della durata originaria. La durata residua è esposta separatamente come entro un anno, oltre un anno, non rilevante o non classificata e non consente di distinguere medio da lungo termine.",
@@ -941,9 +957,24 @@ def build_analysis(
         "risk_category_summary": category_summary,
         "monthly_series": monthly_series,
         "guarantees": guarantees,
+        "guarantees_received": guarantees_received,
         "overruns": overruns,
+        "inframonthly_events": inframonthly_events,
+        "information_requests": information_requests,
         "prejudicial_events": prejudicial,
         "coverage": {
+            "guarantees_on_exposures": (
+                "available" if columns.get("guaranteed_amount") else "unavailable"
+            ),
+            "guarantees_received": (
+                "available" if guarantees_received_available else "unavailable"
+            ),
+            "inframonthly_events": (
+                "available" if inframonthly_events_available else "unavailable"
+            ),
+            "information_requests": (
+                "available" if information_requests_available else "unavailable"
+            ),
             "pregiudizievoli": (
                 "available" if columns.get("prejudicial_event") else "unavailable"
             ),
@@ -971,8 +1002,15 @@ def build_analysis(
 def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
     """Project bounded calculated evidence for model-led interpretation."""
 
+    def project(
+        rows: Sequence[Mapping[str, Any]], fields: Sequence[str]
+    ) -> list[dict[str, Any]]:
+        return [
+            {field: row[field] for field in fields if field in row} for row in rows[:20]
+        ]
+
     return {
-        "schema_version": "vera.centrale_rischi_model_context.v1",
+        "schema_version": "vera.centrale_rischi_model_context.v2",
         "workflow_id": WORKFLOW_ID,
         "status": analysis["status"],
         "entity": analysis["entity"],
@@ -993,6 +1031,54 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
             key=lambda row: Decimal(str(row["guaranteed_amount"])),
             reverse=True,
         )[:20],
+        "guarantees_received": project(
+            analysis["guarantees_received"],
+            (
+                "reference_month",
+                "intermediary",
+                "category",
+                "location",
+                "guaranteed_party",
+                "relationship_status",
+                "guarantee_type",
+                "guarantee_value",
+                "guaranteed_amount",
+                "record_status",
+                "valid_from",
+                "valid_to",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
+        "inframonthly_events": project(
+            analysis["inframonthly_events"],
+            (
+                "intermediary",
+                "event_date",
+                "event_type",
+                "event_cancelled",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
+        "information_requests": project(
+            analysis["information_requests"],
+            (
+                "intermediary",
+                "request_date",
+                "requested_period",
+                "request_type",
+                "request_reason_code",
+                "request_reason",
+                "validity_period",
+                "notes",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
         "prejudicial_events": analysis["prejudicial_events"][:20],
         "coverage": analysis["coverage"],
         "controls": analysis["controls"],
@@ -1071,9 +1157,140 @@ def finalize_commentary(
 
 def _metric_rows(analysis: Mapping[str, Any]) -> str:
     return "".join(
-        f"<tr><td>{html.escape(str(item['label']))}</td><td>{html.escape(str(item['value'] if item['value'] is not None else 'Non disponibile'))}</td><td>{html.escape(str(item['unit']))}</td><td>{html.escape(str(item['availability']))}</td></tr>"
+        "<tr>"
+        f"<td>{html.escape(str(item['label']))}</td>"
+        f'<td class="number">{html.escape(_metric_value(item))}</td>'
+        f"<td>{html.escape(_unit_label(str(item['unit'])))}</td>"
+        "<td>"
+        f"{html.escape(_availability_label(str(item['availability'])))}"
+        + (
+            f"<small>{html.escape(str(item['reason']))}</small>"
+            if item.get("reason")
+            else ""
+        )
+        + "</td></tr>"
         for item in analysis["metrics"]
     )
+
+
+def _availability_label(value: str) -> str:
+    return {"available": "Disponibile", "unavailable": "Non disponibile"}.get(
+        value, value
+    )
+
+
+def _unit_label(value: str) -> str:
+    return {
+        "count": "numero",
+        "percent": "%",
+        "ratio": "rapporto",
+    }.get(value, value)
+
+
+def _review_status_label(value: str) -> str:
+    return {
+        "draft_pending_professional_review": (
+            "Bozza in attesa di revisione professionale"
+        ),
+        "pending_professional_review": "In attesa di revisione professionale",
+    }.get(value, value)
+
+
+def _format_number_it(value: Any) -> str:
+    if value in (None, ""):
+        return "—"
+    try:
+        number = Decimal(str(value))
+    except InvalidOperation:
+        return str(value)
+    rendered = format(number, "f")
+    integer, separator, decimal = rendered.partition(".")
+    sign = "-" if integer.startswith("-") else ""
+    digits = integer.lstrip("-")
+    grouped = ".".join(
+        reversed([digits[max(0, end - 3) : end] for end in range(len(digits), 0, -3)])
+    )
+    return f"{sign}{grouped}{',' + decimal if separator and decimal else ''}"
+
+
+def _metric_value(item: Mapping[str, Any]) -> str:
+    if item.get("value") is None:
+        return "Non disponibile"
+    return _format_number_it(item["value"])
+
+
+_NUMERIC_FIELDS = frozenset(
+    {
+        "granted",
+        "operational_granted",
+        "used",
+        "available",
+        "overrun",
+        "guaranteed_amount",
+        "guarantee_value",
+        "average_balance",
+        "utilization_pct",
+    }
+)
+
+
+def _display_cell(field: str, value: Any) -> str:
+    return _format_number_it(value) if field in _NUMERIC_FIELDS else str(value or "—")
+
+
+def _html_table(
+    rows: Sequence[Mapping[str, Any]], columns: Sequence[tuple[str, str]]
+) -> str:
+    headings = "".join(f"<th>{html.escape(label)}</th>" for label, _ in columns)
+    body = "".join(
+        "<tr>"
+        + "".join(
+            (
+                '<td class="number">'
+                + html.escape(_display_cell(field, row.get(field)))
+                + "</td>"
+                if field in _NUMERIC_FIELDS
+                else "<td>"
+                + html.escape(_display_cell(field, row.get(field)))
+                + "</td>"
+            )
+            for _, field in columns
+        )
+        + "</tr>"
+        for row in rows
+    )
+    return (
+        '<div class="table-wrap"><table><thead><tr>'
+        + headings
+        + "</tr></thead><tbody>"
+        + body
+        + "</tbody></table></div>"
+    )
+
+
+def _empty_population_message(
+    analysis: Mapping[str, Any], coverage_key: str | None
+) -> str:
+    if coverage_key and analysis["coverage"].get(coverage_key) == "unavailable":
+        return "Non disponibile: la relativa fonte o tabella non è stata fornita."
+    return "Nessuna voce rilevata nella popolazione disponibile."
+
+
+def _html_population(
+    analysis: Mapping[str, Any],
+    *,
+    title: str,
+    key: str,
+    columns: Sequence[tuple[str, str]],
+    coverage_key: str | None = None,
+) -> str:
+    rows = analysis[key]
+    content = (
+        _html_table(rows, columns)
+        if rows
+        else f'<p class="empty">{html.escape(_empty_population_message(analysis, coverage_key))}</p>'
+    )
+    return f"<section><h2>{html.escape(title)}</h2>{content}</section>"
 
 
 def _term_label(value: str) -> str:
@@ -1098,7 +1315,7 @@ def render_markdown(
         "",
         f"Periodo più recente: {analysis['latest_reference_month']}",
         "",
-        f"Stato: `{analysis['review_status']}`",
+        f"Stato: {_review_status_label(str(analysis['review_status']))}",
         "",
         "## KPI",
         "",
@@ -1107,7 +1324,7 @@ def render_markdown(
     ]
     for item in analysis["metrics"]:
         lines.append(
-            f"| {item['label']} | {item['value'] if item['value'] is not None else 'Non disponibile'} | {item['unit']} | {item['availability']} |"
+            f"| {item['label']} | {_metric_value(item)} | {_unit_label(str(item['unit']))} | {_availability_label(str(item['availability']))} |"
         )
     lines.extend(
         [
@@ -1148,17 +1365,96 @@ def render_markdown(
         lines.append(
             f"| {item['risk_category']} | {item['operational_granted']} | {item['used']} | {item['available']} | {item['utilization_pct'] if item['utilization_pct'] is not None else 'Non disponibile'} |"
         )
-    lines.extend(
-        [
-            "",
-            f"Garanzie: {len(analysis['guarantees'])}",
-            f"Sconfinamenti: {len(analysis['overruns'])}",
-            f"Pregiudizievoli: {len(analysis['prejudicial_events'])}",
-            "",
-            "## Limiti",
-            "",
-        ]
+
+    def population(
+        title: str,
+        key: str,
+        columns: Sequence[tuple[str, str]],
+        coverage_key: str | None = None,
+    ) -> None:
+        lines.extend(["", f"## {title}", ""])
+        rows = analysis[key]
+        if not rows:
+            lines.append(_empty_population_message(analysis, coverage_key))
+            return
+        lines.append("| " + " | ".join(label for label, _ in columns) + " |")
+        lines.append("| " + " | ".join("---" for _ in columns) + " |")
+        for row in rows:
+            values = [
+                _display_cell(field, row.get(field)).replace("|", "\\|")
+                for _, field in columns
+            ]
+            lines.append("| " + " | ".join(values) + " |")
+
+    population(
+        "Garanzie collegate alle esposizioni",
+        "guarantees",
+        (
+            ("Intermediario", "intermediary"),
+            ("Categoria", "risk_category"),
+            ("Tipo", "guarantee_type"),
+            ("Importo garantito", "guaranteed_amount"),
+        ),
+        "guarantees_on_exposures",
     )
+    population(
+        "Garanzie ricevute per obbligazioni di terzi",
+        "guarantees_received",
+        (
+            ("Mese", "reference_month"),
+            ("Intermediario", "intermediary"),
+            ("Garantito", "guaranteed_party"),
+            ("Tipo", "guarantee_type"),
+            ("Valore garanzia", "guarantee_value"),
+            ("Importo garantito", "guaranteed_amount"),
+        ),
+        "guarantees_received",
+    )
+    population(
+        "Sconfinamenti",
+        "overruns",
+        (
+            ("Intermediario", "intermediary"),
+            ("Categoria", "risk_category"),
+            ("Accordato operativo", "operational_granted"),
+            ("Utilizzato", "used"),
+            ("Sconfinamento", "overrun"),
+        ),
+    )
+    population(
+        "Eventi inframensili",
+        "inframonthly_events",
+        (
+            ("Intermediario", "intermediary"),
+            ("Data", "event_date"),
+            ("Evento", "event_type"),
+            ("Cancellato", "event_cancelled"),
+        ),
+        "inframonthly_events",
+    )
+    population(
+        "Richieste di informazione",
+        "information_requests",
+        (
+            ("Intermediario", "intermediary"),
+            ("Data", "request_date"),
+            ("Periodo richiesto", "requested_period"),
+            ("Tipo", "request_type"),
+            ("Causale", "request_reason"),
+        ),
+        "information_requests",
+    )
+    population(
+        "Pregiudizievoli",
+        "prejudicial_events",
+        (
+            ("Intermediario", "intermediary"),
+            ("Categoria", "risk_category"),
+            ("Evidenza", "prejudicial_event"),
+        ),
+        "pregiudizievoli",
+    )
+    lines.extend(["", "## Limiti", ""])
     lines.extend(f"- {item}" for item in analysis["limitations"])
     if commentary:
         lines.extend(
@@ -1190,11 +1486,21 @@ def render_html(
     commentary_html = ""
     if commentary:
         blocks = []
-        for title, key in (("Osservazioni", "observations"), ("Ipotesi", "hypotheses")):
-            items = "".join(
-                f"<li>{html.escape(item['text'])} <code>{html.escape(', '.join(item['metric_ids']))}</code></li>"
-                for item in commentary[key]
-            )
+        for title, key in (
+            ("Osservazioni", "observations"),
+            ("Ipotesi", "hypotheses"),
+            ("Domande da approfondire", "questions"),
+            ("Limiti aggiuntivi", "limitations"),
+        ):
+            if key in {"observations", "hypotheses"}:
+                items = "".join(
+                    f"<li>{html.escape(item['text'])} <code>{html.escape(', '.join(item['metric_ids']))}</code></li>"
+                    for item in commentary[key]
+                )
+            else:
+                items = "".join(
+                    f"<li>{html.escape(item)}</li>" for item in commentary[key]
+                )
             blocks.append(
                 f"<h3>{title}</h3><ul>{items or '<li>Nessuna voce.</li>'}</ul>"
             )
@@ -1203,19 +1509,100 @@ def render_html(
             + "".join(blocks)
             + "</section>"
         )
-    original_term_rows = "".join(
-        f"<tr><td>{html.escape(_term_label(str(item['original_term'])))}</td><td>{item['granted']}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['overrun']}</td></tr>"
+    original_term_rows = [
+        {**item, "term": _term_label(str(item["original_term"]))}
         for item in analysis["original_term_summary"]
-    )
-    residual_term_rows = "".join(
-        f"<tr><td>{html.escape(_term_label(str(item['residual_term'])))}</td><td>{item['granted']}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['overrun']}</td></tr>"
+    ]
+    residual_term_rows = [
+        {**item, "term": _term_label(str(item["residual_term"]))}
         for item in analysis["residual_term_summary"]
+    ]
+    amount_columns = (
+        ("Classe", "term"),
+        ("Accordato", "granted"),
+        ("Operativo", "operational_granted"),
+        ("Utilizzato", "used"),
+        ("Sconfinamento", "overrun"),
     )
-    category_rows = "".join(
-        f"<tr><td>{html.escape(item['risk_category'])}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['available']}</td><td>{item['utilization_pct'] if item['utilization_pct'] is not None else 'Non disponibile'}</td></tr>"
-        for item in analysis["risk_category_summary"]
+    populations = "".join(
+        (
+            _html_population(
+                analysis,
+                title="Garanzie collegate alle esposizioni",
+                key="guarantees",
+                columns=(
+                    ("Intermediario", "intermediary"),
+                    ("Categoria", "risk_category"),
+                    ("Tipo", "guarantee_type"),
+                    ("Importo garantito", "guaranteed_amount"),
+                ),
+                coverage_key="guarantees_on_exposures",
+            ),
+            _html_population(
+                analysis,
+                title="Garanzie ricevute per obbligazioni di terzi",
+                key="guarantees_received",
+                columns=(
+                    ("Mese", "reference_month"),
+                    ("Intermediario", "intermediary"),
+                    ("Garantito", "guaranteed_party"),
+                    ("Tipo", "guarantee_type"),
+                    ("Valore garanzia", "guarantee_value"),
+                    ("Importo garantito", "guaranteed_amount"),
+                ),
+                coverage_key="guarantees_received",
+            ),
+            _html_population(
+                analysis,
+                title="Sconfinamenti",
+                key="overruns",
+                columns=(
+                    ("Intermediario", "intermediary"),
+                    ("Categoria", "risk_category"),
+                    ("Accordato operativo", "operational_granted"),
+                    ("Utilizzato", "used"),
+                    ("Sconfinamento", "overrun"),
+                ),
+            ),
+            _html_population(
+                analysis,
+                title="Eventi inframensili",
+                key="inframonthly_events",
+                columns=(
+                    ("Intermediario", "intermediary"),
+                    ("Data", "event_date"),
+                    ("Evento", "event_type"),
+                    ("Cancellato", "event_cancelled"),
+                ),
+                coverage_key="inframonthly_events",
+            ),
+            _html_population(
+                analysis,
+                title="Richieste di informazione",
+                key="information_requests",
+                columns=(
+                    ("Intermediario", "intermediary"),
+                    ("Data", "request_date"),
+                    ("Periodo richiesto", "requested_period"),
+                    ("Tipo", "request_type"),
+                    ("Causale", "request_reason"),
+                ),
+                coverage_key="information_requests",
+            ),
+            _html_population(
+                analysis,
+                title="Pregiudizievoli",
+                key="prejudicial_events",
+                columns=(
+                    ("Intermediario", "intermediary"),
+                    ("Categoria", "risk_category"),
+                    ("Evidenza", "prejudicial_event"),
+                ),
+                coverage_key="pregiudizievoli",
+            ),
+        )
     )
-    return f"""<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centrale Rischi — {html.escape(str(analysis['entity']))}</title><style>body{{font-family:'Instrument Sans',Arial,sans-serif;margin:0;color:#171816;background:#fff}}main{{max-width:1120px;margin:auto;padding:48px 24px}}header{{border-top:5px solid #002060;border-bottom:1px solid #c9ccd1;padding-bottom:24px}}.eyebrow{{color:#006b8f;font-weight:700;text-transform:uppercase;letter-spacing:.08em}}h1{{font-size:clamp(2.2rem,5vw,4.5rem);line-height:.98;margin:.4rem 0}}section{{margin-top:42px}}table{{width:100%;border-collapse:collapse}}th,td{{padding:12px 8px;border-bottom:1px solid #d9dadd;text-align:left}}th{{color:#002060}}.status{{display:inline-block;border:1px solid #002060;padding:6px 10px}}code{{font-size:.8em;color:#006b8f}}@media(max-width:700px){{main{{padding:28px 16px}}table{{font-size:.82rem}}}}</style></head><body><main><header><p class="eyebrow">Vera · Centrale Rischi</p><h1>{html.escape(str(analysis['entity']))}</h1><p>Periodo più recente: {analysis['latest_reference_month']} · <span class="status">{analysis['review_status']}</span></p></header><section><h2>KPI</h2><table><thead><tr><th>Metrica</th><th>Valore</th><th>Unità</th><th>Copertura</th></tr></thead><tbody>{_metric_rows(analysis)}</tbody></table></section><section><h2>Esposizioni per durata originaria</h2><table><thead><tr><th>Classe</th><th>Accordato</th><th>Operativo</th><th>Utilizzato</th><th>Sconfinamento</th></tr></thead><tbody>{original_term_rows}</tbody></table></section><section><h2>Esposizioni per durata residua</h2><table><thead><tr><th>Classe</th><th>Accordato</th><th>Operativo</th><th>Utilizzato</th><th>Sconfinamento</th></tr></thead><tbody>{residual_term_rows}</tbody></table></section><section><h2>Indicatori per categoria</h2><table><thead><tr><th>Categoria</th><th>Operativo</th><th>Utilizzato</th><th>Margine</th><th>Utilizzo %</th></tr></thead><tbody>{category_rows}</tbody></table></section><section><h2>Eccezioni</h2><p>Garanzie sulle esposizioni: {len(analysis['guarantees'])} · Sconfinamenti: {len(analysis['overruns'])} · Pregiudizievoli: {len(analysis['prejudicial_events'])}</p></section>{commentary_html}<section><h2>Limiti</h2><ul>{''.join(f'<li>{html.escape(item)}</li>' for item in analysis['limitations'])}</ul></section></main></body></html>"""
+    return f"""<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centrale Rischi — {html.escape(str(analysis['entity']))}</title><style>:root{{--navy:#002060;--blue:#006b8f;--ink:#171816;--muted:#5c6470;--rule:#d9dadd}}*{{box-sizing:border-box}}body{{font-family:'Instrument Sans',Arial,sans-serif;margin:0;color:var(--ink);background:#fff}}main{{max-width:1120px;margin:auto;padding:48px 24px 72px}}header{{border-top:5px solid var(--navy);border-bottom:1px solid #c9ccd1;padding:28px 0 24px}}.eyebrow{{color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.08em}}h1{{font-size:clamp(2.2rem,5vw,4.5rem);line-height:.98;margin:.4rem 0}}h2{{font-size:1.55rem;margin-bottom:14px}}h3{{font-size:1.05rem;margin-top:24px}}section{{margin-top:42px}}.table-wrap{{overflow-x:auto;border-top:1px solid var(--navy)}}table{{width:100%;border-collapse:collapse;min-width:680px}}th,td{{padding:12px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}}th{{color:var(--navy);font-size:.82rem;letter-spacing:.02em}}td.number{{font-variant-numeric:tabular-nums;text-align:right}}td small{{display:block;color:var(--muted);margin-top:4px;max-width:44ch}}.status{{display:inline-block;border:1px solid var(--navy);padding:6px 10px}}.empty{{color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}}code{{font-size:.8em;color:var(--blue)}}@media(max-width:700px){{main{{padding:28px 16px 52px}}table{{font-size:.82rem}}}}</style></head><body><main><header><p class="eyebrow">Vera · Centrale Rischi</p><h1>{html.escape(str(analysis['entity']))}</h1><p>Periodo più recente: {html.escape(str(analysis['latest_reference_month']))} · <span class="status">{html.escape(_review_status_label(str(analysis['review_status'])))}</span></p></header><section><h2>KPI</h2><div class="table-wrap"><table><thead><tr><th>Metrica</th><th>Valore</th><th>Unità</th><th>Copertura</th></tr></thead><tbody>{_metric_rows(analysis)}</tbody></table></div></section><section><h2>Esposizioni per durata originaria</h2>{_html_table(original_term_rows, amount_columns)}</section><section><h2>Esposizioni per durata residua</h2>{_html_table(residual_term_rows, amount_columns)}</section><section><h2>Indicatori per categoria</h2>{_html_table(analysis['risk_category_summary'], (("Categoria", "risk_category"), ("Operativo", "operational_granted"), ("Utilizzato", "used"), ("Margine CR calcolato", "available"), ("Utilizzo %", "utilization_pct")))}</section>{populations}{commentary_html}<section><h2>Limiti</h2><ul>{''.join(f'<li>{html.escape(item)}</li>' for item in analysis['limitations'])}</ul></section></main></body></html>"""
 
 
 def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
@@ -1244,7 +1631,10 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         "Categorie": analysis["risk_category_summary"],
         "Esposizioni": analysis["exposures"],
         "Garanzie": analysis["guarantees"],
+        "Garanzie ricevute": analysis["guarantees_received"],
         "Sconfinamenti": analysis["overruns"],
+        "Eventi inframensili": analysis["inframonthly_events"],
+        "Richieste informazioni": analysis["information_requests"],
         "Pregiudizievoli": analysis["prejudicial_events"],
         "Serie mensile": analysis["monthly_series"],
         "Controlli": analysis["controls"],

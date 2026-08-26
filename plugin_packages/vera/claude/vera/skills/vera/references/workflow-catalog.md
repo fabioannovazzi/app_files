@@ -76,13 +76,15 @@ skill to imitate a missing operational workflow.
   aging, cash, concentration, and profitability section plus a bounded
   model-led interpretation layer; missing optional data remains visible and
   the workflow does not require or simulate an ERP connector.
-- `centrale-rischi-review`: analyse a reviewed Italian Centrale Rischi CSV or
-  Excel export; classify exposures through professional-confirmed maturity and
-  risk-category mappings; calculate guarantees, non-suffering overruns,
-  concentration, available resources and source-supported KPIs; keep missing
+- `centrale-rischi-review`: normalize an official native-text Italian Centrale
+  Rischi PDF or analyse a reviewed CSV or Excel export; classify exposures
+  through professional-confirmed maturity and risk-category mappings;
+  calculate guarantees, non-suffering overruns, concentration, available
+  resources and source-supported KPIs; keep guarantees received,
+  inframonthly events and information requests separate; and keep missing
   financial-statement ratios and prejudicial evidence explicitly unavailable.
-  Portal or PDF acquisition remains an optional upstream adapter rather than
-  part of the calculation contract.
+  Portal acquisition remains an optional upstream adapter rather than part of
+  the calculation contract.
 - `journal-bank-reconciliation`: start from bank-statement movements and match
   them directly with journal or ledger entries using reviewed mappings and
   matching evidence. The presence of a bank statement does not by itself make

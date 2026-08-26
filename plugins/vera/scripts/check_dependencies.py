@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import subprocess
 import sys
@@ -15,30 +16,23 @@ __all__ = ["main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
-COMPONENTS = (
-    "open-item-reconciliation",
-    "client-file-preparation",
-    "new-client",
-    "journal-sampling",
-    "check-entries",
-    "journal-bank-reconciliation",
-    "passive-invoice-audit",
-    "sales-plan",
-    "variance-analysis",
-    "financial-analysis",
-    "report-builder",
-    "concordato-plan-review",
-    "comunicazione-professionale",
-    "presenza-digitale-studio",
-    "prompt-optimizer",
-    "deep-research-validator",
-    "previdenza-inps",
-    "registro-imprese-sari",
-    "bandi-agevolazioni",
-    "bilancio-xbrl-it",
-    "browser-automation",
-    "studio-archive",
-)
+
+
+def _registered_components() -> tuple[str, ...]:
+    """Read the canonical component registry used to build Vera packages."""
+
+    payload = json.loads((PLUGIN_ROOT / "components.json").read_text(encoding="utf-8"))
+    components = payload.get("plugins")
+    if (
+        not isinstance(components, list)
+        or not components
+        or any(not isinstance(name, str) or not name for name in components)
+    ):
+        raise RuntimeError("Vera components.json has no valid plugins registry.")
+    return tuple(components)
+
+
+COMPONENTS = _registered_components()
 
 
 def _component_root(name: str) -> Path:

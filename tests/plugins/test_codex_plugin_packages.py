@@ -552,7 +552,12 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.177"
+    source_manifest = json.loads(
+        (ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert manifest["version"] == source_manifest["version"]
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Trasforma questi export contabili in un pacchetto di controllo di gestione "
