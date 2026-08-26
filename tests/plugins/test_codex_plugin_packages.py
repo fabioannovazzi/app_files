@@ -1356,8 +1356,10 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
     prefix = "vera-codex-plugin/plugins/vera/modules/browser-automation/"
 
     for relative_path in (
+        "scripts/acceptance_fixture.py",
         "scripts/capability_pipeline.py",
         "scripts/capability_runtime.mjs",
+        "scripts/check_installation.py",
         "scripts/discovery_pack.py",
         "scripts/discovery_runtime.mjs",
         "references/capability-contract.md",
