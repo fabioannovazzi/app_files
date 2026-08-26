@@ -79,13 +79,13 @@
     },
     {
       "id": "pdf-layout-provenance",
-      "control": "A PDF-derived normalization retains the source document hash, page, table region, row locator, current-versus-previous record status and available validity dates. Rows with incomplete required metadata are marked review_required, unclassified tables remain visible, and scanned PDFs stop because OCR is not enabled. When calculation receives the original PDF again, it verifies the source hash, the run-local normalization receipt and the exact normalized-workbook hash before applying the reviewed recipe; missing, changed or substituted artifacts fail closed."
+      "control": "A PDF-derived normalization retains the source document hash, page, table region, row locator, current-versus-previous record status and available validity dates. The supported input is the official digital Centrale Rischi report; an image-only copy is rejected with a request for that original digital report. When calculation receives the original PDF again, it verifies the source hash, the run-local normalization receipt and the exact normalized-workbook hash before applying the reviewed recipe; missing, changed or substituted artifacts fail closed."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3189f2e6870e27efacd773077250802919dee830314a603b0f9ee690e5068fc9"
+    "source_fingerprint": "833bbb1c9b45cd0bddb1eaf7f28d21343153596a06db3283cce90df7244e2826"
   }
 }

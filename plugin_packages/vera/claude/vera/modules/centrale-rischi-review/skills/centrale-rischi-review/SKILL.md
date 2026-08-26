@@ -1,6 +1,6 @@
 ---
 name: centrale-rischi-review
-description: Use when Vera must normalize a native-text Italian Centrale Rischi PDF or analyse a reviewed export, separate duration lenses, list supported guarantees and exceptions, and prepare source-supported debt and resource KPIs.
+description: Use when Vera must normalize an official digital Italian Centrale Rischi PDF or analyse a reviewed export, separate duration lenses, list supported guarantees and exceptions, and prepare source-supported debt and resource KPIs.
 ---
 
 ## Cowork execution contract
@@ -56,12 +56,15 @@ Claude, use only the exact Studio Archive run output for workflow ID
 # Centrale Rischi Review
 
 Use this workflow for one reviewable analysis of a Banca d'Italia Centrale
-Rischi report or an already normalized export. The executable layer accepts
-native-text `.pdf`, `.csv`, `.xlsx`, or `.xlsm` inputs. PDF inspection first
-writes separate normalized review sheets and provenance receipts; those sheets
-must still be checked against the source and bound to a reviewed recipe before
-calculation. Scanned PDFs stop visibly because OCR is a separate adapter that
-is not enabled.
+Rischi report or an already normalized export. The expected PDF input is the
+official digital report downloaded from the Banca d'Italia service. Treat that
+report as native text: OCR is not part of this workflow and must not be
+presented as an intake requirement, capability gap, fallback, or open issue.
+If the supplied file is a printout or an image-only scan, request the original
+digital report instead of starting an OCR path. The executable layer accepts
+`.pdf`, `.csv`, `.xlsx`, or `.xlsm` inputs. PDF inspection first writes separate
+normalized review sheets and provenance receipts; those sheets must still be
+checked against the source and bound to a reviewed recipe before calculation.
 Browser automation is an optional acquisition adapter; it is not part of the
 calculation or professional-review contract.
 

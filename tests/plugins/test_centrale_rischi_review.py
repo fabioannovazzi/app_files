@@ -680,6 +680,16 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
     }
 
 
+def test_skill_treats_ocr_as_outside_the_centrale_rischi_workflow() -> None:
+    skill = (
+        PLUGIN_ROOT / "skills" / "centrale-rischi-review" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+
+    assert "OCR is not part of this workflow" in skill
+    assert "instead of starting an OCR path" in skill
+    assert "OCR is a separate adapter" not in skill
+
+
 def test_public_page_and_privacy_surface_are_registered() -> None:
     page = (
         ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html"
@@ -701,5 +711,6 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert main.rstrip().endswith("</section>")
     assert "Quali dati arrivano al modello" in page
     assert "What data reaches the model" in page
+    assert "OCR" not in page
     assert manifest["workstream"] == "centrale-rischi-review"
     assert manifest["external_boundaries"] == []
