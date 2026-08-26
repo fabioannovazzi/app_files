@@ -23,7 +23,12 @@ from centrale_rischi_core import (  # noqa: E402
     CentraleRischiContractError,
     build_inspection,
     load_source_tables,
+    sha256_file,
     write_json,
+)
+from centrale_rischi_pdf import (  # noqa: E402
+    normalize_pdf,
+    write_normalized_workbook,
 )
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
@@ -49,7 +54,28 @@ def main(argv: list[str] | None = None) -> int:
             input_paths=args.input,
             output_dir=args.output_dir,
         )
-        inspection, control, recipe = build_inspection(load_source_tables(args.input))
+        pdf_inputs = [path for path in args.input if path.suffix.casefold() == ".pdf"]
+        if pdf_inputs and len(args.input) != 1:
+            raise CentraleRischiContractError(
+                "PDF intake accepts exactly one source document per inspection run."
+            )
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        if pdf_inputs:
+            normalization = normalize_pdf(pdf_inputs[0])
+            normalized_path = args.output_dir / "centrale_rischi_normalized.xlsx"
+            write_normalized_workbook(normalized_path, normalization)
+            write_json(args.output_dir / "pdf_normalization.json", normalization)
+            source_tables = load_source_tables([normalized_path])
+        else:
+            normalization = None
+            normalized_path = None
+            source_tables = load_source_tables(args.input)
+        inspection, control, recipe = build_inspection(source_tables)
+        if normalization is not None:
+            recipe["source_kind"] = "native_pdf_extraction"
+            recipe["source_document_sha256"] = normalization["source"][
+                "source_document_sha256"
+            ]
     except (
         AssuranceContractError,
         CentraleRischiContractError,
@@ -57,10 +83,27 @@ def main(argv: list[str] | None = None) -> int:
         ValueError,
     ) as exc:
         parser.error(str(exc))
-    args.output_dir.mkdir(parents=True, exist_ok=True)
     write_json(args.output_dir / "inspection.json", inspection)
     write_json(args.output_dir / "inspection_control.json", control)
     write_json(args.output_dir / "suggested_recipe.json", recipe)
+    if normalized_path is not None:
+        write_json(
+            args.output_dir / "pdf_normalization_receipt.json",
+            {
+                "schema_version": "vera.centrale_rischi_pdf_normalization_receipt.v1",
+                "workflow_id": "centrale-rischi-review",
+                "status": "pending_professional_review",
+                "source_document_sha256": normalization["source"][
+                    "source_document_sha256"
+                ],
+                "normalized_workbook_sha256": sha256_file(normalized_path),
+                "normalized_row_counts": {
+                    key: len(rows) for key, rows in normalization["tables"].items()
+                },
+                "issue_count": len(normalization["issues"]),
+                "unclassified_table_count": len(normalization["unclassified_tables"]),
+            },
+        )
     LOGGER.info("Inspected Centrale Rischi sources; semantic mappings remain pending.")
     return 0
 

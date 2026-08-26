@@ -28,9 +28,10 @@ def main(argv: list[str] | None = None) -> int:
     if not args.requirements.is_file():
         LOGGER.error("Requirements file not found: %s", args.requirements)
         return 1
-    if importlib.util.find_spec("openpyxl") is None:
-        LOGGER.error("Missing dependency: openpyxl")
-        return 1
+    for dependency in ("openpyxl", "pdfplumber"):
+        if importlib.util.find_spec(dependency) is None:
+            LOGGER.error("Missing dependency: %s", dependency)
+            return 1
     for candidate in (
         PLUGIN_ROOT / "vendor" / "modules",
         PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",

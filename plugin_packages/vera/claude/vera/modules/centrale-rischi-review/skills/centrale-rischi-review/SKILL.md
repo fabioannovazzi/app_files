@@ -1,6 +1,6 @@
 ---
 name: centrale-rischi-review
-description: Use when Vera must analyse a reviewed Italian Centrale Rischi export, separate short-, medium- and long-term exposures, list guarantees, overruns and prejudicial evidence, and prepare source-supported debt and resource KPIs.
+description: Use when Vera must normalize a native-text Italian Centrale Rischi PDF or analyse a reviewed export, separate duration lenses, list supported guarantees and exceptions, and prepare source-supported debt and resource KPIs.
 ---
 
 ## Cowork execution contract
@@ -56,10 +56,12 @@ Claude, use only the exact Studio Archive run output for workflow ID
 # Centrale Rischi Review
 
 Use this workflow for one reviewable analysis of a Banca d'Italia Centrale
-Rischi report or an already normalized export. The executable layer currently
-accepts `.csv`, `.xlsx`, or `.xlsm` tables. A readable PDF, downloaded portal
-file, or PEC attachment may be an upstream source, but its extraction must be
-converted to and reviewed against this tabular contract before calculation.
+Rischi report or an already normalized export. The executable layer accepts
+native-text `.pdf`, `.csv`, `.xlsx`, or `.xlsm` inputs. PDF inspection first
+writes separate normalized review sheets and provenance receipts; those sheets
+must still be checked against the source and bound to a reviewed recipe before
+calculation. Scanned PDFs stop visibly because OCR is a separate adapter that
+is not enabled.
 Browser automation is an optional acquisition adapter; it is not part of the
 calculation or professional-review contract.
 
@@ -70,9 +72,12 @@ intermediary flows require a separate input adapter and validation population.
 
 Normal outputs include:
 
-- exposures split into reviewed `short`, `medium`, `long`, or explicit
-  `unclassified` residual-duration classes;
-- guarantees, non-suffering overruns, and supplied prejudicial events;
+- exposures split into reviewed `short`, `medium`, `long`, `not_relevant`, or
+  explicit `unclassified` original-duration classes, with the official
+  residual-duration lens reported separately as `within_one_year`,
+  `over_one_year`, `not_relevant`, or `unclassified`;
+- exposure-linked positive guaranteed amounts, separate `Garanzie ricevute`
+  review rows, non-suffering overruns, and supplied prejudicial events;
 - accordato, accordato operativo, utilized, available resources,
   category-specific utilization, overrun, guarantee-coverage, maturity-mix,
   concentration, and multi-month movement metrics;
@@ -133,10 +138,13 @@ Before helper scripts, establish:
   evidence, or prepare a factual discrepancy dossier;
 
 - the exact exposure table and columns for reference month, intermediary, risk
-  category, residual duration, accordato, accordato operativo, and utilizzato;
+  category, original duration, residual duration, accordato, accordato
+  operativo, and utilizzato;
 - optional guarantee type, guaranteed amount, and prejudicial-event columns;
+- an exhaustive reviewed mapping from every observed original-duration value
+  to `short`, `medium`, `long`, `not_relevant`, or `unclassified`;
 - an exhaustive reviewed mapping from every observed residual-duration value
-  to `short`, `medium`, `long`, or `unclassified`;
+  to `within_one_year`, `over_one_year`, `not_relevant`, or `unclassified`;
 - an exhaustive reviewed mapping from every observed risk-category value to
   `performing`, `suffering`, or `other`;
 - source control totals when available and a tolerance.
@@ -150,7 +158,9 @@ For a PDF-derived normalization, preserve the source document hash, page,
 row/region locator, whether the record is current or previous, `Da` and `A`
 validity dates, and extraction confidence. Native PDF styling and coordinates
 can be substantive because previous or corrected records may be visually
-distinguished. A linear text dump is not a validated parser.
+distinguished. `Garanzie ricevute`, inframonthly events and information
+requests stay on separate review sheets and are not merged into client credit
+exposures. A linear text dump is not a validated parser.
 
 Show a Decision Table only for unresolved material mappings generated from the
 actual evidence. Do not make normal output formats into user choices. Ordinary
@@ -175,7 +185,7 @@ From the module root:
 ```bash
 python scripts/check_dependencies.py
 python scripts/inspect_inputs.py \
-  --input <bound-export> [--input <bound-export> ...] \
+  --input <bound-report-or-export> [--input <bound-export> ...] \
   --client-engagement <context.json> \
   --output-dir <run-output>/inspection
 ```
@@ -185,9 +195,17 @@ arbitrary packages at runtime. If the check reports a missing requirement,
 install only that published declaration when the environment and user authority
 permit it; otherwise report the unavailable capability.
 
-The inspector reads the complete table locally, records row counts and hashes,
-and exposes at most ten preview rows with cell text bounded to 200 characters.
-It does not assign semantic roles. Complete `suggested_recipe.json` as
+For a PDF, the inspector reads native text and table geometry locally and
+writes `centrale_rischi_normalized.xlsx`, `pdf_normalization.json`, and
+`pdf_normalization_receipt.json` before the ordinary inspection artifacts. The
+normalizer recognizes only mechanically reviewable table shapes, parses Italian
+amount formatting, and preserves unresolved tables and row-level issues. It
+does not assign duration meaning, exposure family, materiality, or conclusions.
+
+The inspector reads each complete normalized or supplied table locally,
+records row counts and hashes, and exposes at most ten preview rows with cell
+text bounded to 200 characters. It does not assign semantic roles. Complete
+`suggested_recipe.json` as
 `reviewed_recipe.json`, bind it to the unchanged `inventory_sha256`, and set a
 named, timestamped `mapping_review.status` to `reviewed` only after review.
 
@@ -200,11 +218,16 @@ so an available margin in another operation or intermediary never offsets it.
 
 ```bash
 python scripts/run_analysis.py \
-  --input <bound-export> [--input <bound-export> ...] \
+  --input <bound-report-or-export> [--input <bound-export> ...] \
   --recipe <run-output>/inspection/reviewed_recipe.json \
   --client-engagement <context.json> \
   --output-dir <run-output>/analysis
 ```
+
+For a native-text PDF, pass the same bound PDF to both commands. The analysis
+runner verifies the PDF hash, the inspection receipt and the exact run-local
+`centrale_rischi_normalized.xlsx` before calculating from that reviewed
+workbook. Do not manually substitute another normalization file.
 
 Read `execution_receipt.json`, `centrale_rischi_analysis.json`, and
 `model_context.json` before opening the rendered files. Stop on a blocked
@@ -234,6 +257,8 @@ coverage, and review status.
 ## Natural outputs
 
 - `inspection.json`, private `inspection_control.json`, and recipe skeleton;
+- for PDF intake, the normalized workbook, full local normalization review and
+  normalization receipt;
 - `centrale_rischi_analysis.json` and `execution_receipt.json`;
 - `centrale_rischi_analysis.xlsx`;
 - `centrale_rischi_facts.md` and `centrale_rischi_dashboard.html`;

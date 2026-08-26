@@ -43,6 +43,46 @@ __all__ = ["main"]
 LOGGER = logging.getLogger(__name__)
 
 
+def _resolve_calculation_inputs(
+    source_paths: list[Path], recipe_path: Path
+) -> tuple[list[Path], list[Path]]:
+    """Resolve and verify the inspected workbook for one native PDF source."""
+
+    pdf_paths = [path for path in source_paths if path.suffix.casefold() == ".pdf"]
+    if not pdf_paths:
+        return source_paths, []
+    if len(source_paths) != 1:
+        raise CentraleRischiContractError(
+            "PDF analysis accepts exactly one source document per run."
+        )
+    normalized_path = recipe_path.parent / "centrale_rischi_normalized.xlsx"
+    normalization_receipt_path = recipe_path.parent / "pdf_normalization_receipt.json"
+    recipe = load_json(recipe_path)
+    receipt = load_json(normalization_receipt_path)
+    source_sha256 = sha256_file(pdf_paths[0])
+    if recipe.get("source_kind") != "native_pdf_extraction":
+        raise CentraleRischiContractError(
+            "A PDF source requires a reviewed native_pdf_extraction recipe."
+        )
+    if (
+        recipe.get("source_document_sha256") != source_sha256
+        or receipt.get("source_document_sha256") != source_sha256
+    ):
+        raise CentraleRischiContractError(
+            "The PDF no longer matches the reviewed normalization receipt."
+        )
+    if (
+        receipt.get("schema_version")
+        != "vera.centrale_rischi_pdf_normalization_receipt.v1"
+        or receipt.get("workflow_id") != "centrale-rischi-review"
+        or receipt.get("normalized_workbook_sha256") != sha256_file(normalized_path)
+    ):
+        raise CentraleRischiContractError(
+            "The normalized PDF workbook does not match its inspection receipt."
+        )
+    return [normalized_path], [normalized_path, normalization_receipt_path]
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run exact calculations and write the normal review outputs."""
 
@@ -59,8 +99,18 @@ def main(argv: list[str] | None = None) -> int:
             input_paths=[*args.input, args.recipe],
             output_dir=args.output_dir,
         )
+        calculation_inputs, derived_inputs = _resolve_calculation_inputs(
+            args.input, args.recipe
+        )
+        if derived_inputs:
+            load_client_engagement_context_file(
+                args.client_engagement,
+                expected_workflow_id="centrale-rischi-review",
+                input_paths=derived_inputs,
+                output_dir=args.output_dir,
+            )
         analysis = build_analysis(
-            load_source_tables(args.input), load_json(args.recipe)
+            load_source_tables(calculation_inputs), load_json(args.recipe)
         )
     except (
         AssuranceContractError,
