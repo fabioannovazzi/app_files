@@ -32,12 +32,12 @@ def test_bilancio_public_prototype_has_a_stable_source_backed_entrypoint() -> No
 
     assert (
         '<link rel="canonical" href="https://mparanza.com/static/shared/'
-        'bilancio-xbrl-it/prototype/">'
+        'bilancio-xbrl-it/prototype/index.html">'
     ) in page
     assert PAGOPA_LANDING in page
     assert PAGOPA_PDF in page
     assert (
-        'publicExampleHref: "/static/shared/bilancio-xbrl-it/prototype/"'
+        'publicExampleHref: "/static/shared/bilancio-xbrl-it/prototype/index.html"'
         in function_copy
     )
     assert f'publicExampleSourceHref: "{PAGOPA_LANDING}"' in function_copy
