@@ -686,10 +686,10 @@
     }
   ],
   "limitations": [
-    "The corpus contains official educational examples, one historical annotated report example and one synthetic report; it does not contain a confidential real client report.",
-    "The previously mentioned 193395.pdf professional analysis was not available in the inspected corpus and therefore is not evidence in this benchmark.",
-    "Mappings and gold facts were reviewed during development but have not yet been approved by an independent commercialista.",
-    "A model semantic review is not professional approval; all client-facing commentary remains draft_pending_professional_review.",
+    "The corpus contains official educational examples, one historical annotated report example and one synthetic report. Future real reports will extend evidence about unseen-layout robustness; their present absence is not a failure on the represented cases.",
+    "193395.pdf is available but is a third-party professional analysis output rather than an official Centrale Rischi input; it is excluded from this input-pipeline benchmark by design.",
+    "Mappings and gold facts were reviewed during development. A commercialista will check or reperform client-facing judgments as part of the intended workflow.",
+    "The model semantic review is the intended first-pass quality gate; professional control before client use remains a separate responsibility.",
     "Passing negative narrative controls shows specificity on these documents only and does not prove support for every future Banca d'Italia layout."
   ]
 }

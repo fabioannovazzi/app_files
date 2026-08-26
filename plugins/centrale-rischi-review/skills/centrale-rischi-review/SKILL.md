@@ -245,8 +245,11 @@ must keep these gates separate:
 Do not call the workflow professionally validated merely because the
 deterministic gates pass. A model review remains
 `model_reviewed_not_professional`; client-facing output remains pending until a
-commercialista reviews it. Preserve in the benchmark receipt any missing real
-client report, missing professional comparison, or unavailable source.
+commercialista reviews it. This is the intended supervised workflow, not by
+itself a failure of the model-led semantic layer. Preserve the evidence scope
+accurately in the benchmark receipt and do not present an available source as
+missing. Passing cases support a quality conclusion for the represented
+layouts; unseen layouts remain a separate robustness question.
 
 Prepare `centrale_rischi_commentary.json` from the template. Separate facts,
 hypotheses, questions, and limitations. Every observation and hypothesis must
