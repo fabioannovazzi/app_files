@@ -84,6 +84,7 @@ class FakePlaywright extends FakeLocator {
     return { path: async () => this.downloadPath };
   }
 
+  async waitForLoadState() {}
   async waitForTimeout() {}
 }
 
@@ -461,6 +462,72 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
   );
   assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
   assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+});
+
+test("goto accepts a committed exact target after the connected tab reports a timeout", async () => {
+  const capability = syntheticCapability();
+  capability.milestones[0].actions[0] = {
+    ...capability.milestones[0].actions[0],
+    id: "open-fixture",
+    intent: "Open the synthetic fixture.",
+    operation: "goto",
+    effect: "read_only",
+    locator_candidates: [],
+    input_ref: null,
+    path: "/",
+  };
+  const tab = new FakeTab(resultRegistry(), "https://example.com/before");
+  tab.goto = async (url) => {
+    tab.currentUrl = url;
+    throw new Error("connected tab navigation timed out after commit");
+  };
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-goto-commit-test-"));
+
+  const summary = await executeCapability({
+    tab,
+    capability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(parent, "run-one"),
+    runId: "goto-commit-run",
+  });
+
+  assert.equal(summary.result, "passed");
+  assert.equal(await tab.url(), "https://example.com/");
+});
+
+test("goto rejects a timeout when the connected tab did not reach the target", async () => {
+  const capability = syntheticCapability();
+  capability.milestones[0].actions[0] = {
+    ...capability.milestones[0].actions[0],
+    id: "open-fixture",
+    intent: "Open the synthetic fixture.",
+    operation: "goto",
+    effect: "read_only",
+    locator_candidates: [],
+    input_ref: null,
+    path: "/",
+  };
+  const tab = new FakeTab(resultRegistry(), "https://example.com/before");
+  tab.goto = async () => {
+    throw new Error("connected tab navigation timed out before commit");
+  };
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-goto-failure-test-"));
+
+  await assert.rejects(
+    () => executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "run-one"),
+      runId: "goto-failure-run",
+    }),
+    (error) => {
+      assert.equal(error.code, "run_failed");
+      assert.equal(error.runSummary.result, "failed");
+      assert.equal(error.runSummary.completed_milestones.length, 0);
+      return true;
+    },
+  );
 });
 
 test("gmail capability detects mailbox readiness through an accessible search control", async () => {
