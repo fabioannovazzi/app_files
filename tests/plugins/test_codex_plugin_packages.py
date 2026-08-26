@@ -552,7 +552,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.173"
+    assert manifest["version"] == "0.1.174"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Trasforma questi export contabili in un pacchetto di controllo di gestione "
@@ -1356,8 +1356,10 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
     prefix = "vera-codex-plugin/plugins/vera/modules/browser-automation/"
 
     for relative_path in (
+        "scripts/acceptance_fixture.py",
         "scripts/capability_pipeline.py",
         "scripts/capability_runtime.mjs",
+        "scripts/check_installation.py",
         "scripts/discovery_pack.py",
         "scripts/discovery_runtime.mjs",
         "references/capability-contract.md",
