@@ -42,6 +42,8 @@ their result could change the case answer, return it to this workflow.
 In Codex or Cowork, read `references/operating-model.md` completely before
 directing a durable case. The ChatGPT upload does not carry reference files, so
 use the complete operating instructions below when that reference is absent.
+Before receiving a bounded branch or validator result in Codex or Cowork, also
+read [references/case-direction-return.md](references/case-direction-return.md).
 
 ## Authority and boundary
 
@@ -157,12 +159,14 @@ position, or the current answer no longer identifies useful next work.
    external research, or deliverable production to the narrowest specialist.
    Give it the current answer, exact question, relevant evidence and
    limitations, expected return, and the result that would disconfirm the
-   working view.
+   working view. Require the result to return through the common case-direction
+   contract, whether the specialist creates new claims or references claims it
+   already recorded through its authoritative adapter.
 6. **Integrate before narrating.** Register returned materials, record evidence
    receipts and claim relationships, preserve contradictory evidence, and
-   close, dismiss, or open questions as warranted. Then update the workpaper.
-   Never create a fresh “latest loop” workpaper that silently drops prior
-   evidence.
+   close, dismiss, or open questions as warranted through
+   `record_case_direction_return.py`. Then update the workpaper. Never create a
+   fresh “latest loop” workpaper that silently drops prior evidence.
 7. **Say what changed.** State whether the answer strengthened, weakened,
    changed, split into conditions, or remained unchanged. Explain why. A new
    source is not progress unless it changes support, uncertainty, or next work.
@@ -176,19 +180,21 @@ In a durable Codex workspace, commit each model-authored workpaper revision
 through the controlled checkpoint after the contribution has been recorded:
 
 ```bash
-python scripts/record_analysis_contribution.py \
-  <case-dir> <model-authored-analysis-contribution.json>
+python scripts/record_case_direction_return.py \
+  <case-dir> <model-authored-case-direction-return.json>
 python scripts/commit_advisory_workpaper.py \
   <case-dir> <staged-advisory-workpaper.md> \
   --claim-id <claim-id> [--claim-id <claim-id> ...] \
   --change-summary "<what changed in the case direction>"
 ```
 
-The active model still authors the prose and selects the claim IDs. The helper
-only validates those IDs, resolves their declared dependency/evidence closure,
-preserves the prior workpaper, and binds the new bytes to current claim meaning
-and evidence. Do not edit the canonical `advisory_workpaper.md` directly and
-then manufacture a checkpoint afterward.
+The active model still authors the return, prose, and selected claim IDs. The
+return helper validates the declared hand-off and commits its evidence, claims,
+judgements, and question changes atomically. The workpaper helper then resolves
+the selected dependency/evidence closure, preserves the prior workpaper, and
+binds the new bytes to current claim meaning and evidence. Neither helper
+performs semantic judgement. Do not edit the canonical
+`advisory_workpaper.md` directly and then manufacture a checkpoint afterward.
 
 ## External research branch
 
@@ -212,7 +218,9 @@ Before launching research, write a bounded brief containing:
 On return, register the report and its controlling sources. Extract claims
 claim-by-claim, not report-by-report. External evidence may establish that a
 profit pool, mechanism, or risk is plausible; it cannot prove that the target
-captures it or owns the required capability without target evidence.
+captures it or owns the required capability without target evidence. Return the
+bounded answer, claims, receipts, limitations, answer effect, and resulting
+questions through the common case-direction contract.
 
 ## Data-analysis and specialist boundary
 
@@ -225,6 +233,9 @@ findings affect the case answer and next work.
 
 The same boundary applies to interviews, reporting, and other specialist
 workflows. Their manifests and outputs do not become a second project spine.
+After any specialist-specific integration, record a common case-direction
+return that references the resulting active claim IDs; do not duplicate the
+specialist's already-recorded claims merely to satisfy the hand-off.
 
 ## Working deliverable policy
 
@@ -286,7 +297,10 @@ The case is ready for a delivery milestone only when the workpaper and
 structured registers support the intended message and all material residual
 uncertainty is visible. Route the completed deliverable to
 `clara:advisory-deliverable-validator`; that validator reviews the output but
-does not replace this workflow's case direction. For a case-bound HTML deck,
+does not replace this workflow's case direction. Receive its generation-time
+review through the same case-direction return contract. If validation changes
+the position, update the registers and workpaper before rebuilding and
+revalidating the deliverable. For a case-bound HTML deck,
 delivery or publication readiness additionally requires a `ready` receipt from
 `scripts/verify_advisory_html_delivery.py` for the exact final HTML and current
 case state.

@@ -70,6 +70,17 @@
         "Make the data orchestrator owner of the overall case thesis",
         "Treat a mechanically valid chart manifest as a business conclusion"
       ]
+    },
+    {
+      "id": "validator-finding-reenters-the-spine",
+      "decision": "Whether the completed deliverable is ready to support the continue or stop decision",
+      "validation_return": "The validator walks the recommendation upstream and finds that the market mechanism is adequately supported but the target-capture claim is only partially supported. The exact review and audit remain bound to the pre-feedback registers.",
+      "expected_effect": "Return the material finding through the validation-feedback envelope, weaken or qualify the active target-capture position, open the smallest target-evidence question, update and checkpoint the workpaper, and rebuild before revalidation.",
+      "must_not": [
+        "Leave the validator finding in a separate report while the spine remains unchanged",
+        "Let deterministic code decide how the finding changes the case answer",
+        "Describe the earlier audit as current after the claim or evidence register changes"
+      ]
     }
   ]
 }

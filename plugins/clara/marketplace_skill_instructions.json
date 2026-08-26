@@ -11,7 +11,7 @@
       "display_name": "Direct an advisory case",
       "short_description": "Keep the answer, evidence, and next work current",
       "default_prompt": "Use $advisory-case-director to direct this case, update the current answer from new evidence, and choose the next work.",
-      "instructions": "Provide the case folder or current case materials and state the decision being supported. Clara states the best current answer first, maintains a case-specific partner-readable spine and cumulative evidence lineage, chooses the next decision-relevant research, interview, data, or deliverable branch, integrates what returns, and makes partner judgement and unresolved questions visible."
+      "instructions": "Provide the case folder or current case materials and state the decision being supported. Clara states the best current answer first, maintains a case-specific partner-readable spine and cumulative evidence lineage, chooses the next decision-relevant research, interview, data, or deliverable branch, returns each bounded result as active claims tied to evidence, receives validation findings back into the spine, and makes partner judgement and unresolved questions visible."
     },
     "clara": {
       "display_name": "Clara",
@@ -23,7 +23,7 @@
       "display_name": "Validate an advisory deliverable",
       "short_description": "Check advisory work against evidence and scope",
       "default_prompt": "Use $advisory-deliverable-validator to validate this completed advisory deliverable against its contract and evidence.",
-      "instructions": "Provide the completed memo, report, analysis, or presentation, its advisory_contract.json when available, and the selected evidence. Clara reviews contract conformance, factual support, calculations and provenance, reasoning, contradictions, recommendation fit, judgement boundaries, correction needs, uncertainty, and delivery readiness. Existing Clara presentation, HTML-deck, reporting, and deck-correction checks remain authoritative."
+      "instructions": "Provide the completed memo, report, analysis, or presentation, its advisory_contract.json when available, and the selected evidence. Clara reviews contract conformance, factual support, calculations and provenance, reasoning, contradictions, recommendation fit, judgement boundaries, correction needs, uncertainty, and delivery readiness. For a generation-time case, material validation findings return to the case director before semantic revision. Existing Clara presentation, HTML-deck, reporting, and deck-correction checks remain authoritative."
     },
     "attribute-reporting": {
       "display_name": "Compare assortment, new-product, and best-seller attributes",

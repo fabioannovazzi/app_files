@@ -64,7 +64,12 @@ choosing the newest file.
 
 ## Contribution integration mode
 
-For each returned contribution:
+For each returned contribution, use the common case-direction envelope defined
+in [case-direction-return.md](case-direction-return.md). A specialist may first
+use its own authoritative adapter, but its result still returns to the director
+by referencing the active claim IDs that now carry its bounded answer.
+
+Then:
 
 1. identify the exact question it was intended to answer;
 2. register the artifact or source when it is not already registered;
@@ -75,9 +80,10 @@ For each returned contribution:
    their history;
 6. update related open questions and optional issue groupings;
 7. decide the contribution's effect on the current answer; and
-8. commit the staged workpaper through `commit_advisory_workpaper.py` only after
-   those lineage updates; the helper archives the prior version and writes the
-   current checkpoint.
+8. record the return atomically through `record_case_direction_return.py`; and
+9. commit the staged workpaper through `commit_advisory_workpaper.py` only after
+   the return and lineage updates; the helper archives the prior version and
+   writes the current checkpoint.
 
 A report can answer its bounded research question while opening a more
 decision-relevant target question. That is a valid result, not a failure.
@@ -111,7 +117,10 @@ A research branch should return:
 - new questions created by the result.
 
 The director integrates those elements into existing claim lineage. It does
-not paste the report wholesale into the workpaper or discard prior loops.
+not paste the report wholesale into the workpaper or discard prior loops. The
+research report may retain its own format, but its case-facing answer must be
+returned as active claim IDs, evidence receipts, limitations, answer effect,
+and question changes through the common case-direction envelope.
 
 ## Deliverable round trip
 
@@ -126,6 +135,14 @@ This is one case-direction cycle with milestone outputs, not separate inner and
 outer loops. The deliverable may be created early to make the answer testable.
 Semantic feedback always returns to the spine. Pure design or wording feedback
 does not need to reopen the case thesis.
+
+The validator is also a bounded branch. For a generation-time case, its exact
+review and audit return through the same envelope. The model selects which
+findings affect case direction; the helper binds those declared findings to the
+exact validator bytes and rejects feedback if the evidence or claim register
+changed after validation. A changed claim is superseded, an unresolved problem
+becomes a bounded question or recheck, and a changed answer is committed to the
+workpaper before the deliverable is rebuilt and validated again.
 
 For a case-bound HTML milestone, the final handoff adds one mechanical closure
 step after HTML static/browser QA and the model-led advisory validator:

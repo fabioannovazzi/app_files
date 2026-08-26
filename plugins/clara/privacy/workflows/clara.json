@@ -13,6 +13,7 @@
     "skills/clara/SKILL.md",
     "skills/clara/references/cowork-runtime.md",
     "skills/clara/references/workflow-catalog.md",
+    "contracts/advisory_case_direction_return.v1.schema.json",
     "contracts/preparation_audit_envelope.v2.schema.json",
     "contracts/real_data_pilot_intake.v1.schema.json",
     "contracts/real_data_pilot_intake.v2.schema.json",
@@ -39,7 +40,7 @@
       {
         "id": "advisory-judgement-and-evidence",
         "purpose": "Weigh evidence and prepare decision-ready advice",
-        "content": "Material summaries; stable evidence receipts and claim records; source limitations; quotation and transcript provenance; calculation inputs, methods, outputs, verification runs, and artifact bindings; consultant and advisor judgement; Codex inferences; claim dependencies; contradictions; hypotheses; options; recommendations; implementation conditions; pending inclusion decisions; case issues; output appearances; correction and recheck succession; and pseudonymous but linkable audit metadata such as exact source and output digests, byte counts, stable IDs, dates, counts, and cross-receipt hashes"
+        "content": "Material summaries; stable evidence receipts and claim records; source limitations; quotation and transcript provenance; calculation inputs, methods, outputs, verification runs, and artifact bindings; consultant and advisor judgement; Codex inferences; claim dependencies; contradictions; hypotheses; options; recommendations; implementation conditions; pending inclusion decisions; case issues; case-direction branch and validator returns; output appearances; correction and recheck succession; and pseudonymous but linkable audit metadata such as exact source and output digests, byte counts, stable IDs, dates, counts, and cross-receipt hashes"
       },
       {
         "id": "human-visible-outputs",
@@ -204,6 +205,6 @@
     "reviewed_at": "2026-08-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "064f22e73f7eae9cb6f3c083cf758934bcef510610ccccf89b5f74d33386e0fb"
+    "source_fingerprint": "e4fb7614176cd02ed6df981a33dd5246a437e79d4a9ab5b7da91ecf5f083eec1"
   }
 }
