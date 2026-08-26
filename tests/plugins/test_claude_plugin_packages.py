@@ -86,7 +86,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.137"
+    assert manifest["version"] == template["version"]
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
@@ -162,7 +162,9 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
             vera_entries[f"modules/browser-automation/{relative_path}"]
             == (ROOT / "plugins" / "browser-automation" / relative_path).read_bytes()
         )
-    assert "modules/browser-automation/scripts/capability_contract.py" not in vera_entries
+    assert (
+        "modules/browser-automation/scripts/capability_contract.py" not in vera_entries
+    )
     for capability_id in (
         "gmail-search-export",
         "agenzia-invoice-zip",
@@ -779,12 +781,17 @@ def test_projected_cowork_runtime_entrypoints_execute(
         output_zip=tmp_path / "vera-claude-plugin.zip",
     )
     builder.build_package(isolated)
+    component_count = len(
+        json.loads(
+            (ROOT / "plugins" / "vera" / "components.json").read_text(encoding="utf-8")
+        )["plugins"]
+    )
 
     commands = (
         (
             isolated.output_directory / "scripts" / "check_dependencies.py",
             (),
-            "All 22 Vera modules are available.",
+            f"All {component_count} Vera modules are available.",
         ),
         (
             isolated.output_directory

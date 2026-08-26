@@ -1059,6 +1059,26 @@ def test_vera_function_page_does_not_publish_continue_with_vera_band(
     assert 'href="#install"' not in page
 
 
+def test_centrale_rischi_page_publishes_benchmark_evidence() -> None:
+    page = (SHARED_ROOT / "centrale-rischi-review" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for snippet in (
+        'id="evidence"',
+        'data-i18n="evidence.extraction.score">24/24',
+        'data-i18n="evidence.analysis.score">18/18',
+        'data-i18n="evidence.commentary.score">116/120',
+        "cinque fonti ufficiali, storiche e sintetiche",
+        "layout non ancora incontrati",
+        "commercialista controlla o riesegue il giudizio",
+    ):
+        assert snippet in page
+
+    assert page.index('id="result"') < page.index('id="evidence"')
+    assert page.index('id="evidence"') < page.index('id="limits"')
+
+
 def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))

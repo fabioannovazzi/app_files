@@ -113,11 +113,11 @@ so this pack does not claim that local CLI validation ran.
 
 ## Final candidate
 
-- **Version:** 0.1.137
+- **Version:** 0.1.139
 - **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`
-- **SHA-256:** `a186c4481214a1f427636d664aa2947969b6495be120f0445ce12f284fd73c79`
-- **Size:** 4,487,269 bytes
-- **Archive entries:** 808
+- **SHA-256:** `c45aee20d23175d6de1c3db3e9c0cfc6be31efc040366bd7a1a104e8220eb3e5`
+- **Size:** 4,794,143 bytes
+- **Archive entries:** 879
 
 Two consecutive builds produced the same SHA-256. The archive has a direct
 plugin root, deterministic timestamps, no duplicate or traversal paths, no

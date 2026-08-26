@@ -1,7 +1,7 @@
 {
   "name": "vera",
   "displayName": "Vera",
-  "version": "0.1.137",
+  "version": "0.1.139",
   "description": "Assistente AI x commercialisti. Vera affianca commercialisti e studi professionali nel lavoro di ogni cliente. Organizza e ritrova i documenti, controlla dati e scritture contabili, seleziona campioni, riconcilia movimenti e prepara analisi finanziarie, analisi degli scostamenti con grafici, report e carte di lavoro rivedibili. Supporta la preparazione del bilancio civilistico OIC, anche da PDF leggibili o scansionati, fino alla revisione e all’esportazione XBRL. Aiuta inoltre con bandi e agevolazioni, avvisi e cartelle, casi INPS, Registro Imprese e DIRE, concordato preventivo, ricerche fiscali o normative, comunicazioni ai clienti e siti informativi dello studio. Vera mostra fonti, passaggi, ambiguità e informazioni mancanti prima di usare o consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
   "author": {
     "name": "Mparanza",
