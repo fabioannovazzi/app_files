@@ -244,7 +244,7 @@
           publicExampleSourceLabel: "Abrir las cuentas publicadas usadas en la demostración",
         }),
       },
-      publicExampleHref: "/static/shared/bilancio-xbrl-it/prototype/",
+      publicExampleHref: "/static/shared/bilancio-xbrl-it/prototype/index.html",
       publicExampleSourceHref: "https://amministrazionetrasparente.pagopa.it/archivio29_bilanci_0_3105_731_1.html",
     },
     "bandi-agevolazioni": {
