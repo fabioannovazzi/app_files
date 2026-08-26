@@ -37,7 +37,9 @@ contenuti osservati o file scaricati. Ogni operatore autentica la propria
 sessione Chrome.
 
 ```bash
+python scripts/check_installation.py
 python scripts/check_dependencies.py
+python -I -B scripts/acceptance_fixture.py --self-check
 python scripts/capability_pipeline.py validate --kind capability capabilities/gmail-search-export/capability.json
 python scripts/discovery_pack.py --help
 node --test ../../tests/test_browser_automation_runtime.mjs ../../tests/test_browser_automation_discovery_runtime.mjs

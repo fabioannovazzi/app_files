@@ -19,9 +19,21 @@ validating, or running a capability. For a new or changed process, also read
 `references/discovery-playbook.md` completely.
 
 Before the first local pipeline helper in a run, execute
-`python scripts/check_dependencies.py` from this module. The core uses only the
-Python standard library; this check must not install packages or access the
-network. `requirements.txt` therefore declares no third-party runtime package.
+`python scripts/check_installation.py` and then
+`python scripts/check_dependencies.py` from this module. The installation
+preflight resolves the owning manifest from this exact module, records its
+observed version, and verifies the required local contract files. Never compare
+that observed version with a historical version number unless the operator has
+explicitly asked to test that exact release. A newer installed Vera version is
+the subject under test, not a preflight failure. Fail only when the active
+manifest is missing or malformed, the plugin name is unsupported, or required
+component files are absent. This deterministic rule is justified because
+manifest parsing and file presence are mechanically verifiable; version recency
+or suitability must not be guessed from a pinned number.
+
+The core uses only the Python standard library; these checks must not install
+packages or access the network. `requirements.txt` therefore declares no
+third-party runtime package.
 
 The local deterministic scripts own only dependency readiness, executable JSON
 dispatch, typed runtime inputs, structured output shape, origin bounds,
@@ -53,6 +65,25 @@ return or record `native_gap`, and hand that exact step to the operator. Do not
 inspect or operate operating-system dialogs through accessibility trees,
 screenshots, coordinates, or platform-specific UI automation as part of a
 portable capability.
+
+### Cross-platform acceptance fixture
+
+For a Windows or Mac end-to-end acceptance run, do not invent a temporary web
+server or hand-written HTML page. Start the shipped standard-library fixture
+with `python -I -B scripts/acceptance_fixture.py --port 0` and keep that process
+alive. It binds only `127.0.0.1`, probes its own `/healthz` endpoint before
+emitting one JSON ready record, closes every HTTP response, and uses no external
+assets. Use only the exact `page_url` and semantic controls declared in that
+record. Stop the fixture process when the test ends.
+
+Navigate a fresh connected-Chrome task tab to `page_url`. If `tab.goto()`
+reports a timeout, do not immediately declare the local test failed: read the
+tab's current URL once. Continue only when it exactly equals `page_url` and the
+heading `Vera browser acceptance fixture` is visible through `tab.playwright`.
+This is a bounded committed-navigation check, not a retry or a relaxed origin
+rule. If either check fails, record `local_fixture_navigation_failed` and stop.
+Never bypass a browser security interstitial or replace the fixture with a
+different origin.
 
 ## Authority and authentication
 

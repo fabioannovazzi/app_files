@@ -35,6 +35,15 @@ operator and exclude it from capability execution and clean replay evidence.
 Never look for runtime scripts inside this wrapper directory. The executable
 runtime and deterministic capability pipeline live in the resolved module and
 have no third-party dependency.
+For acceptance testing, run the resolved module's
+`scripts/check_installation.py` and use the version returned from that active
+manifest as the version under test. Never reject a newer installed Vera because
+an old test prompt names a historical version; an exact-version check applies
+only when the operator explicitly asks to test that exact release.
+For cross-platform acceptance, use the resolved module's shipped
+`scripts/acceptance_fixture.py`; do not improvise a local server. Follow the
+module skill's exact self-probe and committed-navigation checks before treating
+a connected-Chrome `goto` timeout as a terminal fixture failure.
 Authentication is always performed by the operator; never request, inspect,
 enter, retain, or transfer login secrets or reusable browser state.
 
