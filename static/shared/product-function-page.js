@@ -133,6 +133,25 @@
     )
     .join("");
 
+  const publicExample = page.publicExampleHref && text.publicExampleTitle
+    ? `
+      <section class="pf-section pf-public-example" aria-labelledby="${pageKey}-public-example-title">
+        <div class="pf-section__head">
+          <div>
+            <p class="pf-section__label">${text.publicExampleLabel}</p>
+            <h2 id="${pageKey}-public-example-title">${text.publicExampleTitle}</h2>
+          </div>
+          <div class="pf-public-example__body">
+            <p class="pf-section__copy">${text.publicExampleSummary}</p>
+            <div class="pf-public-example__links">
+              <a class="pf-public-example__primary" href="${page.publicExampleHref}">${text.publicExampleLinkLabel}</a>
+              <a href="${page.publicExampleSourceHref}" target="_blank" rel="noreferrer">${text.publicExampleSourceLabel}</a>
+            </div>
+          </div>
+        </div>
+      </section>`
+    : "";
+
   root.innerHTML = `
     <a class="skip-link" href="#main-content">${ui.skip}</a>
     <header class="pf-nav">
@@ -159,6 +178,7 @@
         <article class="pf-fact"><h2>${ui.work}</h2><p>${text.work}</p></article>
         <article class="pf-fact"><h2>${ui.output}</h2><p>${text.output}</p></article>
       </section>
+      ${publicExample}
       <section class="pf-section">
         <div class="pf-section__head">
           <div><p class="pf-section__label">${ui.responsibilitiesLabel}</p><h2>${ui.responsibilitiesTitle}</h2></div>

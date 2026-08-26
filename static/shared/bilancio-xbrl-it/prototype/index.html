@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Demo pubblica del workbench Vera per la revisione di un bilancio OIC, costruita sul bilancio 2024 pubblicato da PagoPA.">
+  <meta name="theme-color" content="#061d38">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:title" content="Bilancio intelligente · esempio pubblico | Vera">
+  <meta property="og:description" content="Fonti, versioni, punti aperti e decisioni professionali in una demo pubblica basata su un bilancio pubblicato.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/bilancio-xbrl-it/prototype/">
+  <link rel="canonical" href="https://mparanza.com/static/shared/bilancio-xbrl-it/prototype/">
+  <link rel="icon" href="data:,">
+  <title>Bilancio intelligente · esempio pubblico | Vera</title>
+  <link rel="stylesheet" href="./prototype.css?v=20260826">
+  <script src="./prototype.js?v=20260826" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Vai al contenuto</a>
+
+  <header class="site-nav">
+    <div class="site-nav__inner">
+      <a class="site-brand" href="/" aria-label="Mparanza">
+        <span class="site-wordmark" aria-hidden="true">MPARANZA</span>
+      </a>
+      <span class="site-product">Vera</span>
+      <nav class="site-links" aria-label="Navigazione della demo">
+        <a href="../">Bilancio OIC e XBRL</a>
+        <a href="https://amministrazionetrasparente.pagopa.it/archivio29_bilanci_0_3105_731_1.html" target="_blank" rel="noreferrer">Fonte pubblica</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero__copy">
+        <p class="eyebrow">Esempio pubblico · Bilancio intelligente</p>
+        <h1 id="page-title">Dal bilancio pubblicato alla coda di revisione</h1>
+        <p class="hero__lead">La demo mostra come Vera organizza fonti, versioni, punti aperti e decisioni. Usa soltanto dati pubblicati da PagoPA e non prepara un bilancio da depositare.</p>
+        <div class="hero__actions">
+          <a class="primary-link" href="#demo">Apri il workbench</a>
+          <a href="https://pagopa.portaleamministrazionetrasparente.it/archiviofile/pagopa/utente2005/Bilanci%20(dal%202022)/Bilancio%202024/PAGOPA_Bilancio%20al%2031%20dicembre%202024_v.del%2020.05.2025%20nuovo%20Ateco_signed_oscurato.pdf" target="_blank" rel="noreferrer">Leggi il PDF originale</a>
+        </div>
+      </div>
+      <aside class="source-note" aria-label="Fonte della demo">
+        <span>Fonte registrata</span>
+        <strong>PAGOPA S.P.A.</strong>
+        <dl>
+          <div><dt>Periodo</dt><dd>31 dicembre 2024</dd></div>
+          <div><dt>Documento</dt><dd>55 pagine</dd></div>
+          <div><dt>Stato</dt><dd>Bilancio pubblicato</dd></div>
+        </dl>
+        <p>Gli importi mostrati sono osservazioni dal PDF pubblico, non calcoli o conclusioni prodotti da Vera.</p>
+      </aside>
+    </section>
+
+    <section class="public-boundary" aria-label="Confini della demo">
+      <div><span>01</span><strong>Solo dati pubblici</strong><p>Nessun file del visitatore viene letto o caricato.</p></div>
+      <div><span>02</span><strong>Decisioni nel browser</strong><p>Il salvataggio resta sul dispositivo e può essere azzerato.</p></div>
+      <div><span>03</span><strong>Nessun deposito</strong><p>La demo non approva, firma, valida o deposita un XBRL.</p></div>
+    </section>
+
+    <section class="demo-section" id="demo" aria-labelledby="demo-title">
+      <div class="demo-heading">
+        <div>
+          <p class="eyebrow">Workbench dimostrativo</p>
+          <h2 id="demo-title">Una revisione esplicita, senza percentuali di completamento</h2>
+        </div>
+        <p>Ogni voce conserva il fatto osservato, l’evidenza mancante, il responsabile e la decisione del professionista.</p>
+      </div>
+
+      <div class="workbench" data-loading="true">
+        <aside class="workbench-nav" aria-label="Sezioni del workbench">
+          <div class="workbench-brand">
+            <span class="workbench-mark" aria-hidden="true">V</span>
+            <span><strong>Vera</strong><small>Bilancio</small></span>
+          </div>
+          <nav>
+            <button class="workbench-nav__item is-active" type="button" data-panel="overview" aria-current="page"><span>01</span>Sintesi</button>
+            <button class="workbench-nav__item" type="button" data-panel="sources"><span>02</span>Fonti <b id="source-count">–</b></button>
+            <button class="workbench-nav__item" type="button" data-panel="review"><span>03</span>Revisione <b id="review-count">–</b></button>
+            <button class="workbench-nav__item" type="button" data-panel="statements"><span>04</span>Prospetti</button>
+            <button class="workbench-nav__item" type="button" data-panel="artifacts"><span>05</span>Artefatti</button>
+          </nav>
+          <div class="workbench-boundary">
+            <span>Confine operativo</span>
+            <p>Prepara revisioni. Non approva e non deposita.</p>
+          </div>
+        </aside>
+
+        <div class="workbench-main">
+          <header class="case-bar">
+            <div><strong id="case-name">PAGOPA S.P.A.</strong><span>31-12-2024</span></div>
+            <div class="case-bar__actions">
+              <span class="state-label">Dati mancanti</span>
+              <span class="revision-label" id="revision-label">demo_rev_7</span>
+              <button class="save-button" id="save-review" type="button">Salva nel browser</button>
+            </div>
+          </header>
+
+          <div class="workbench-content">
+            <section class="panel is-active" data-panel-view="overview" aria-labelledby="overview-title">
+              <div class="panel-heading">
+                <div><p class="panel-label">Caso dimostrativo · fonte pubblica</p><h3 id="overview-title">Bilancio 2024 — revisione professionale</h3></div>
+                <a href="https://amministrazionetrasparente.pagopa.it/archivio29_bilanci_0_3105_731_1.html" target="_blank" rel="noreferrer">Apri la fonte</a>
+              </div>
+              <div class="next-action">
+                <div><span>Prossima azione richiesta</span><strong>Acquisire il bilancio di verifica</strong></div>
+                <p>Il PDF mostra il risultato pubblicato; per mappature, quadrature e controlli serve la fonte contabile di lavoro.</p>
+                <button type="button" data-jump="sources">Vai alle fonti</button>
+              </div>
+              <div class="revision-impact" id="revision-impact" hidden aria-live="polite">
+                <div><span>Nuova versione simulata</span><strong id="impact-revision">demo_rev_8</strong></div>
+                <p>Nessun file è stato letto. Le aree dipendenti tornano da ricalcolare e da rivedere.</p>
+                <ul id="impact-list"></ul>
+              </div>
+              <div class="overview-grid">
+                <section aria-labelledby="workflow-title">
+                  <div class="section-head"><div><p>Stato del lavoro</p><h4 id="workflow-title">Dal documento alla decisione</h4></div><small>Nessuna percentuale nasconde i blocchi</small></div>
+                  <ol class="workflow-list" id="workflow-list"></ol>
+                </section>
+                <aside aria-labelledby="attention-title">
+                  <div class="section-head"><div><p>Coda professionale</p><h4 id="attention-title">Richiede attenzione</h4></div><button type="button" data-jump="review">Vedi tutto</button></div>
+                  <div class="attention-list" id="attention-list"></div>
+                </aside>
+              </div>
+              <section class="facts" aria-labelledby="facts-title">
+                <div class="section-head"><div><p>Prospetti pubblicati</p><h4 id="facts-title">Importi leggibili, non ricalcolati</h4></div><small>EUR · confronto 2024 / 2023</small></div>
+                <div class="facts-grid" id="facts-grid"></div>
+              </section>
+            </section>
+
+            <section class="panel" data-panel-view="sources" aria-labelledby="sources-title" hidden>
+              <div class="panel-heading">
+                <div><p class="panel-label">Inventario fonti</p><h3 id="sources-title">Documenti e versioni</h3><p>Ogni analisi parte da una versione identificata. Un aggiornamento non sostituisce la ricevuta precedente.</p></div>
+                <button class="primary-button" id="simulate-update" type="button">Simula aggiornamento fonte</button>
+              </div>
+              <div class="table-wrap"><table><thead><tr><th>Documento</th><th>Versione</th><th>Origine</th><th>Stato</th><th>Ricevuta</th></tr></thead><tbody id="documents-body"></tbody></table></div>
+              <div class="three-step">
+                <div><span>01</span><strong>Seleziona</strong><p>Il professionista indica il documento aggiornato.</p></div>
+                <div><span>02</span><strong>Registra</strong><p>Vera crea una nuova versione e conserva la precedente.</p></div>
+                <div><span>03</span><strong>Ricalcola</strong><p>I controlli vengono ripetuti; le decisioni invalidate tornano in revisione.</p></div>
+              </div>
+            </section>
+
+            <section class="panel" data-panel-view="review" aria-labelledby="review-title" hidden>
+              <div class="panel-heading">
+                <div><p class="panel-label">Coda professionale</p><h3 id="review-title">Decisioni e richieste di evidenza</h3><p>La demo registra decisioni locali; non modifica un caso Vera.</p></div>
+                <span class="decision-state" id="decision-state">Nessuna decisione</span>
+              </div>
+              <div class="review-layout">
+                <div class="review-queue" id="review-queue" aria-label="Voci da rivedere"></div>
+                <article class="review-detail" id="review-detail" aria-live="polite"></article>
+              </div>
+            </section>
+
+            <section class="panel" data-panel-view="statements" aria-labelledby="statements-title" hidden>
+              <div class="panel-heading">
+                <div><p class="panel-label">Prospetti pubblicati</p><h3 id="statements-title">Confronto 2024 / 2023</h3><p>Gli importi provengono dal PDF pubblico. Non sono presentati come calcoli Vera.</p></div>
+                <span class="source-only">Fonte pubblicata</span>
+              </div>
+              <div class="statement-ledger" id="statement-ledger"></div>
+            </section>
+
+            <section class="panel" data-panel-view="artifacts" aria-labelledby="artifacts-title" hidden>
+              <div class="panel-heading">
+                <div><p class="panel-label">Consegna</p><h3 id="artifacts-title">Artefatti e verifiche</h3><p>La disponibilità di un file non equivale alla sua approvazione o validazione.</p></div>
+              </div>
+              <div class="artifact-list" id="artifact-list"></div>
+              <div class="filing-boundary"><span>01</span><div><strong>Deposito fuori dalla demo</strong><p>Il caricamento TEBENI e l’approvazione del bilancio restano azioni esplicite del professionista.</p></div></div>
+            </section>
+          </div>
+
+          <footer class="workbench-footer">
+            <span>Demo pubblica · nessun dato cliente</span>
+            <span id="save-status" role="status" aria-live="polite">Nessuna decisione salvata</span>
+            <button id="reset-demo" type="button">Azzera demo</button>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <section class="implementation-note" aria-labelledby="implementation-title">
+      <div><p class="eyebrow">Cosa dimostra</p><h2 id="implementation-title">La versione è parte della revisione</h2></div>
+      <div class="implementation-note__body">
+        <p>Quando cambia una fonte, la versione precedente non viene sovrascritta. Le mappature, i prospetti, le schede, la nota e la validazione che dipendono da quella fonte tornano da ricalcolare.</p>
+        <p>Nel workflow operativo, i calcoli meccanici possono essere ripetuti; significato contabile, evidenza sufficiente, testi e approvazione restano soggetti a revisione professionale.</p>
+      </div>
+    </section>
+
+    <section class="function-model-data" data-model-data-workflow="bilancio-xbrl-it" data-model-data-status="relevant" aria-labelledby="model-data-title">
+      <div class="function-model-data__head">
+        <div><p class="eyebrow">Trattamento dei dati</p><h2 id="model-data-title">Quali dati arrivano al modello</h2></div>
+        <div class="function-model-data__body">
+          <h3>Questa demo pubblica non invia dati a un modello.</h3>
+          <p>La pagina usa soltanto i dati PagoPA incorporati nell'esempio. Le decisioni scelte nella demo restano nella memoria locale del browser; non vengono inviate a Mparanza, OpenAI o altri servizi. La simulazione di nuova versione non legge né carica un file.</p>
+          <p>Nel workflow Vera operativo, il codice importa l’intero bilancio di verifica e gli allegati selezionati ed esegue calcoli, quadrature, validazione e XBRL sull’intera popolazione. Le attività semantiche ricevono pacchetti più stretti: per esempio da 1 a 50 conti per una proposta di mappatura, fino a 50 domande attive o una sola sezione di nota con le evidenze accettate pertinenti. Il modello non riceve automaticamente i file sorgente, il record completo del caso o lo snapshot approvato.</p>
+          <p>Nel caso operativo non c’è anonimizzazione o pseudonimizzazione automatica: descrizioni, nomi e identificativi possono rimanere quando servono al significato contabile, alla prova o alla responsabilità professionale. Il modello può suggerire, ma non può accettare righe, fatti, mappature, informative, approvazione o XBRL.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div><span>Vera · Bilancio intelligente</span><span>Esempio pubblico basato su dati pubblicati</span></div>
+    <div><a href="../">Funzione Bilancio OIC e XBRL</a><a href="/data-handling">Gestione dei dati</a><a href="https://github.com/fabioannovazzi/app_files">Codice sorgente</a></div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
