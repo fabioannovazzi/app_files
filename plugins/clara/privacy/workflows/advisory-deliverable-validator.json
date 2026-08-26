@@ -3,6 +3,7 @@
   "workflow": "advisory-deliverable-validator",
   "display_name": "Advisory Deliverable Validator",
   "governed_paths": [
+    "contracts/advisory_case_direction_return.v1.schema.json",
     "contracts/advisory_contract.v1.schema.json",
     "contracts/advisory_claim_register.v1.schema.json",
     "contracts/advisory_evidence_register.v1.schema.json",
@@ -13,12 +14,14 @@
     "scripts/finalize_hosted_transcript.py",
     "scripts/integrate_transcript_review.py",
     "scripts/record_analysis_contribution.py",
+    "scripts/record_case_direction_return.py",
     "scripts/record_reporting_contribution.py",
     "scripts/verify_advisory_html_delivery.py",
     "skills/advisory-deliverable-validator/SKILL.md",
     "skills/advisory-deliverable-validator/evals",
     "skills/advisory-deliverable-validator/references",
     "skills/advisory-deliverable-validator/scripts",
+    "skills/advisory-case-director/references/case-direction-return.md",
     "skills/claim-basis-map/scripts/render_claim_basis_map.py",
     "skills/html-deck/scripts/build_html_deck.py"
   ],
@@ -33,7 +36,7 @@
       {
         "id": "format-check-and-review-artifacts",
         "purpose": "Compose the advisory review with authoritative Clara format-specific checks and prepare any correction",
-        "content": "Claim Basis Map audit records, HTML deck plans and ledgers, static and browser-QA reports bound to the reviewed deliverable bytes, Reporting Engine semantic/calculation/render artifacts, Deck Correction completion records, referenced artifact paths and hashes, one model-authored assessment per bounded coverage unit, model-led findings, correction drafts, the corrected artifact's second preparation inventory and second review, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, workpaper checkpoint, and delivery-readiness receipt"
+        "content": "Claim Basis Map audit records, HTML deck plans and ledgers, static and browser-QA reports bound to the reviewed deliverable bytes, Reporting Engine semantic/calculation/render artifacts, Deck Correction completion records, referenced artifact paths and hashes, one model-authored assessment per bounded coverage unit, model-led findings, the case-direction validation return, correction drafts, the corrected artifact's second preparation inventory and second review, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, workpaper checkpoint, and delivery-readiness receipt"
       },
       {
         "id": "advisory-claim-and-evidence-lineage",
@@ -81,13 +84,13 @@
   "security_controls": [
     {
       "id": "lineage-artifact-binding",
-      "control": "Evidence artifacts, lineage inventories, the deliverable, contract, HTML static and browser-QA results, workpaper checkpoint, and corrected output are bound by local paths, byte counts and SHA-256; deterministic checks validate references and dependency closure without making semantic support decisions."
+      "control": "Evidence artifacts, lineage inventories, the deliverable, contract, HTML static and browser-QA results, validator return, workpaper checkpoint, and corrected output are bound by local paths, byte counts and SHA-256; deterministic checks validate references, register currency, and dependency closure without making semantic support decisions."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0f01d3a6251939f089a94269fadcb5111e7811c8c027bfe1246e8dd3854b9884"
+    "source_fingerprint": "96aef90b9aad1d51b88d9ad8a6ff493f164d63088fe4aac2128881548764c4fe"
   }
 }

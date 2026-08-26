@@ -33,11 +33,13 @@ from html_deck_runtime import (
     apply_fixed_16_9_deck_runtime,
     assert_fixed_16_9_deck_runtime,
 )
+from jsonschema import Draft202012Validator
 
 LOGGER = logging.getLogger(__name__)
 
 __all__ = [
     "CASE_BRIEF_FILENAME",
+    "CASE_DIRECTION_RETURNS_DIRNAME",
     "ADVISORY_WORKPAPER_CHECKPOINT_FILENAME",
     "ADVISORY_WORKPAPER_FILENAME",
     "CLARA_KICKOFF_PREPARATION_FILENAME",
@@ -94,6 +96,7 @@ __all__ = [
     "prepare_support_package",
     "register_material",
     "record_analysis_contribution",
+    "record_case_direction_return",
     "refresh_case_brief",
     "render_clara_kickoff_deck",
     "render_clara_partner_brief",
@@ -106,6 +109,12 @@ __all__ = [
 ]
 
 SCHEMA_VERSION = 1
+CASE_DIRECTION_RETURNS_DIRNAME = "case_direction_returns"
+CASE_DIRECTION_RETURN_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "contracts"
+    / "advisory_case_direction_return.v1.schema.json"
+)
 EXCHANGE_SCHEMA_VERSION = 2
 EXCHANGE_SOURCE = "case_notes_case_update"
 SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
@@ -2308,16 +2317,485 @@ def _claim_and_evidence_closure(
             if calculation_id and calculation_id not in evidence_ids:
                 evidence_ids.append(calculation_id)
 
+    history_neighbours: dict[str, set[str]] = {
+        evidence_id: set() for evidence_id in evidence_by_id
+    }
+    for evidence_id, receipt in evidence_by_id.items():
+        for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
+            referenced_id = str(receipt.get(field, "")).strip()
+            if referenced_id and referenced_id in evidence_by_id:
+                history_neighbours[evidence_id].add(referenced_id)
+                history_neighbours[referenced_id].add(evidence_id)
+
     pending_evidence = list(evidence_ids)
     while pending_evidence:
         evidence_id = pending_evidence.pop(0)
-        receipt = evidence_by_id[evidence_id]
-        for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
-            referenced_id = str(receipt.get(field, "")).strip()
+        for referenced_id in sorted(history_neighbours.get(evidence_id, set())):
             if referenced_id and referenced_id not in evidence_ids:
                 evidence_ids.append(referenced_id)
                 pending_evidence.append(referenced_id)
     return claim_ids, evidence_ids
+
+
+def _case_direction_return_schema_errors(payload: Any) -> list[str]:
+    """Validate only the mechanically stable case-return envelope shape."""
+
+    try:
+        schema = _read_json(CASE_DIRECTION_RETURN_SCHEMA_PATH)
+        Draft202012Validator.check_schema(schema)
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"cannot load case-direction return schema: {exc}"]
+    errors = sorted(
+        Draft202012Validator(schema).iter_errors(payload),
+        key=lambda error: tuple(str(part) for part in error.absolute_path),
+    )
+    return [
+        "case-direction return"
+        + (
+            "." + ".".join(str(part) for part in error.absolute_path)
+            if error.absolute_path
+            else ""
+        )
+        + f": {error.message}"
+        for error in errors
+    ]
+
+
+def _json_sha256(payload: Mapping[str, Any]) -> str:
+    canonical = json.dumps(
+        payload,
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return sha256(canonical).hexdigest()
+
+
+def _resolve_case_direction_artifact(
+    case_dir: Path,
+    artifact: Mapping[str, Any],
+) -> Path:
+    raw_path = Path(str(artifact.get("path", ""))).expanduser()
+    reference = str(artifact.get("path_reference", ""))
+    if reference == "case_relative":
+        resolved = (case_dir.resolve() / raw_path).resolve()
+        try:
+            resolved.relative_to(case_dir.resolve())
+        except ValueError as exc:
+            raise CaseWorkspaceError(
+                f"case-relative return artifact escapes the case folder: {raw_path}"
+            ) from exc
+        return resolved
+    if reference == "absolute":
+        if not raw_path.is_absolute():
+            raise CaseWorkspaceError(
+                f"absolute return artifact path is not absolute: {raw_path}"
+            )
+        return raw_path.resolve()
+    raise CaseWorkspaceError(f"unsupported return artifact path_reference: {reference}")
+
+
+def _verify_case_direction_artifact(
+    case_dir: Path,
+    artifact: Mapping[str, Any],
+    *,
+    label: str,
+) -> Path:
+    path = _resolve_case_direction_artifact(case_dir, artifact)
+    if not path.is_file():
+        raise CaseWorkspaceError(f"{label} does not exist: {path}")
+    expected_size = artifact.get("byte_count")
+    if path.stat().st_size != expected_size:
+        raise CaseWorkspaceError(f"{label} byte_count does not match: {path}")
+    actual_sha256 = sha256(path.read_bytes()).hexdigest()
+    if actual_sha256 != artifact.get("sha256"):
+        raise CaseWorkspaceError(f"{label} sha256 does not match: {path}")
+    return path
+
+
+def _validate_validation_return_binding(
+    case_dir: Path,
+    binding: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind feedback to exact validator bytes and the pre-feedback lineage.
+
+    These comparisons are deterministic because the validator already declared
+    the reviewed IDs and hashes. They do not decide whether any finding is
+    semantically correct or what the case director should conclude from it.
+    """
+
+    review_path = _verify_case_direction_artifact(
+        case_dir,
+        binding["review_artifact"],
+        label="validation review artifact",
+    )
+    audit_path = _verify_case_direction_artifact(
+        case_dir,
+        binding["audit_artifact"],
+        label="validation audit artifact",
+    )
+    try:
+        review = _read_json(review_path)
+        audit = _read_json(audit_path)
+    except json.JSONDecodeError as exc:
+        raise CaseWorkspaceError(
+            f"validation return artifact is not valid JSON: {exc}"
+        ) from exc
+
+    lineage = audit.get("lineage")
+    if (
+        not isinstance(lineage, dict)
+        or lineage.get("provenance_mode") != "generation_time"
+    ):
+        raise CaseWorkspaceError(
+            "validation feedback can return to a case spine only from generation-time lineage"
+        )
+    review_lineage = review.get("lineage_review")
+    if not isinstance(review_lineage, dict):
+        raise CaseWorkspaceError("validation review lacks lineage_review")
+    review_claim_ids = {
+        str(value) for value in review_lineage.get("reviewed_claim_ids", [])
+    }
+    audit_claim_ids = {str(value) for value in lineage.get("reviewed_claim_ids", [])}
+    if review_claim_ids != audit_claim_ids:
+        raise CaseWorkspaceError(
+            "validation review and audit disagree on reviewed_claim_ids"
+        )
+    audit_deliverable = audit.get("deliverable")
+    if not isinstance(audit_deliverable, dict) or review.get(
+        "deliverable_sha256"
+    ) != audit_deliverable.get("sha256"):
+        raise CaseWorkspaceError(
+            "validation review and audit disagree on deliverable_sha256"
+        )
+
+    known_finding_ids = {
+        str(item.get("id"))
+        for item in review.get("findings", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    unknown_findings = sorted(
+        set(str(value) for value in binding.get("finding_ids", [])) - known_finding_ids
+    )
+    if unknown_findings:
+        raise CaseWorkspaceError(
+            "validation binding has unknown finding ids: " + ", ".join(unknown_findings)
+        )
+
+    evidence_binding = lineage.get("evidence_register")
+    claim_binding = lineage.get("claim_register")
+    if not isinstance(evidence_binding, dict) or not isinstance(claim_binding, dict):
+        raise CaseWorkspaceError(
+            "validation audit lacks generation-time register bindings"
+        )
+    current_evidence_sha256 = sha256(
+        (case_dir / EVIDENCE_REGISTER_FILENAME).read_bytes()
+    ).hexdigest()
+    current_claim_sha256 = sha256(
+        (case_dir / CLAIM_REGISTER_FILENAME).read_bytes()
+    ).hexdigest()
+    if evidence_binding.get("sha256") != current_evidence_sha256:
+        raise CaseWorkspaceError(
+            "validation feedback is stale: evidence register changed after validation"
+        )
+    if claim_binding.get("sha256") != current_claim_sha256:
+        raise CaseWorkspaceError(
+            "validation feedback is stale: claim register changed after validation"
+        )
+    return {
+        "review_path": str(review_path),
+        "audit_path": str(audit_path),
+        "reviewed_claim_ids": sorted(review_claim_ids),
+        "finding_ids": [str(value) for value in binding.get("finding_ids", [])],
+        "record_complete": bool(audit.get("record_complete")),
+        "effective_delivery_readiness": str(
+            audit.get("effective_delivery_readiness", "blocked")
+        ),
+    }
+
+
+def _apply_case_direction_question_changes(
+    case_dir: Path,
+    *,
+    updates: Sequence[Mapping[str, Any]],
+    additions: Sequence[Mapping[str, Any]],
+    new_judgement_ids: Sequence[str],
+    timestamp: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    questions_path = _case_path(case_dir, "open_questions")
+    payload = _read_json(questions_path)
+    questions = payload.get("questions")
+    if not isinstance(questions, list):
+        raise CaseWorkspaceError("open_questions.json: questions must be a list")
+    by_id = {
+        str(item.get("id")): item
+        for item in questions
+        if isinstance(item, dict) and item.get("id")
+    }
+    applied_updates: list[dict[str, Any]] = []
+    for update in updates:
+        question_id = str(update.get("question_id", ""))
+        question = by_id.get(question_id)
+        if question is None:
+            raise CaseWorkspaceError(f"unknown question_id: {question_id}")
+        status = str(update.get("status", ""))
+        _validate_choice(status, OPEN_QUESTION_STATUSES, "question status")
+        previous_status = str(question.get("status", ""))
+        question["status"] = status
+        question["updated_at"] = timestamp
+        applied_updates.append(
+            {
+                "question_id": question_id,
+                "previous_status": previous_status,
+                "status": status,
+                "explanation": str(update.get("explanation", "")),
+            }
+        )
+
+    judgement_ids = _known_judgement_ids(case_dir)
+    added_questions: list[dict[str, Any]] = []
+    for addition in additions:
+        source_entry_ids = [
+            str(value) for value in addition.get("source_entry_ids", [])
+        ]
+        for raw_index in addition.get("source_judgement_indexes", []):
+            index = int(raw_index)
+            if index >= len(new_judgement_ids):
+                raise CaseWorkspaceError(
+                    f"new question source_judgement_indexes has no judgement at index {index}"
+                )
+            judgement_id = str(new_judgement_ids[index])
+            if judgement_id not in source_entry_ids:
+                source_entry_ids.append(judgement_id)
+        unknown_entries = sorted(set(source_entry_ids) - judgement_ids)
+        if unknown_entries:
+            raise CaseWorkspaceError(
+                "new question has unknown source judgement ids: "
+                + ", ".join(unknown_entries)
+            )
+        question = {
+            "id": _next_id(
+                "q",
+                [str(item.get("id")) for item in questions if isinstance(item, dict)],
+            ),
+            "question": str(addition.get("question", "")).strip(),
+            "why_it_matters": str(addition.get("why_it_matters", "")).strip(),
+            "status": "open",
+            "source_entry_ids": source_entry_ids,
+            "created_at": timestamp,
+            "updated_at": timestamp,
+        }
+        questions.append(question)
+        by_id[question["id"]] = question
+        added_questions.append(question)
+
+    if updates or additions:
+        _write_json(questions_path, payload)
+    return applied_updates, added_questions
+
+
+def record_case_direction_return(
+    case_dir: Path,
+    declared_return: Mapping[str, Any],
+    *,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Record one model-authored branch or validator return into the case spine.
+
+    The helper enforces shape, IDs, hashes, graph reachability, atomicity, and
+    replay safety. The model remains responsible for the question, answer,
+    claims, evidence relationships, answer effect, and next questions.
+    """
+
+    payload = json.loads(json.dumps(dict(declared_return)))
+    schema_errors = _case_direction_return_schema_errors(payload)
+    if schema_errors:
+        raise CaseWorkspaceError("; ".join(schema_errors))
+    case_dir = case_dir.resolve()
+    request_sha256 = _json_sha256(payload)
+    return_id = str(payload["return_id"])
+    receipt_path = case_dir / CASE_DIRECTION_RETURNS_DIRNAME / f"{return_id}.json"
+    if receipt_path.is_file():
+        existing = _read_json(receipt_path)
+        if existing.get("request_sha256") != request_sha256:
+            raise CaseWorkspaceError(
+                f"case-direction return id {return_id!r} already exists with different content"
+            )
+        return {**existing, "receipt_path": str(receipt_path), "replayed": True}
+
+    workspace_errors = validate_case_workspace(case_dir)
+    if workspace_errors:
+        raise CaseWorkspaceError("; ".join(workspace_errors))
+    for index, artifact in enumerate(payload["source_artifacts"]):
+        _verify_case_direction_artifact(
+            case_dir,
+            artifact,
+            label=f"source_artifacts[{index}]",
+        )
+
+    validation_summary: dict[str, Any] | None = None
+    if payload["return_type"] == "validation_feedback":
+        validation_summary = _validate_validation_return_binding(
+            case_dir, payload["validation_binding"]
+        )
+
+    questions_payload = _read_json(_case_path(case_dir, "open_questions"))
+    questions_by_id = {
+        str(item.get("id")): item
+        for item in questions_payload.get("questions", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    branch = payload["branch"]
+    branch_question_id = str(branch.get("question_id", ""))
+    if branch_question_id:
+        question = questions_by_id.get(branch_question_id)
+        if question is None:
+            raise CaseWorkspaceError(
+                f"branch references unknown question_id: {branch_question_id}"
+            )
+        if str(question.get("question", "")) != str(branch.get("question", "")):
+            raise CaseWorkspaceError(
+                "branch.question must exactly match the referenced open question"
+            )
+        updated_question_ids = {
+            str(item.get("question_id")) for item in payload["question_updates"]
+        }
+        if branch_question_id not in updated_question_ids:
+            raise CaseWorkspaceError(
+                "a return bound to an existing question must declare its question update"
+            )
+
+    timestamp = _now_iso(now)
+    mutation_paths = [
+        case_dir / EVIDENCE_REGISTER_FILENAME,
+        case_dir / CLAIM_REGISTER_FILENAME,
+        case_dir / "advisory_evidence_map.md",
+        _case_path(case_dir, "judgement"),
+        _case_path(case_dir, "open_questions"),
+        _case_path(case_dir, "manifest"),
+        case_dir / CASE_BRIEF_FILENAME,
+        receipt_path,
+    ]
+    snapshot = _snapshot_files(mutation_paths)
+    completed = False
+    try:
+        evidence_receipts = payload["evidence_receipts"]
+        claims = payload["claims"]
+        judgement_entries = payload["judgement_entries"]
+        if evidence_receipts or claims or judgement_entries:
+            contribution = record_analysis_contribution(
+                case_dir,
+                evidence_receipts=evidence_receipts,
+                claims=claims,
+                judgement_entries=judgement_entries,
+                now=now,
+            )
+        else:
+            contribution = {
+                "evidence_added": 0,
+                "claims_added": 0,
+                "judgement_entries": [],
+            }
+        question_updates, new_questions = _apply_case_direction_question_changes(
+            case_dir,
+            updates=payload["question_updates"],
+            additions=payload["new_questions"],
+            new_judgement_ids=[
+                str(item.get("id")) for item in contribution["judgement_entries"]
+            ],
+            timestamp=timestamp,
+        )
+
+        evidence_register = _read_json(case_dir / EVIDENCE_REGISTER_FILENAME)
+        claim_register = _read_json(case_dir / CLAIM_REGISTER_FILENAME)
+        evidence_by_id = {
+            str(item.get("id")): item
+            for item in evidence_register.get("evidence", [])
+            if isinstance(item, dict) and item.get("id")
+        }
+        claim_by_id = {
+            str(item.get("id")): item
+            for item in claim_register.get("claims", [])
+            if isinstance(item, dict) and item.get("id")
+        }
+        result_claim_ids = [str(value) for value in payload["result_claim_ids"]]
+        unknown_result_claims = sorted(set(result_claim_ids) - set(claim_by_id))
+        if unknown_result_claims:
+            raise CaseWorkspaceError(
+                "unknown result_claim_ids: " + ", ".join(unknown_result_claims)
+            )
+        inactive_result_claims = sorted(
+            claim_id
+            for claim_id in result_claim_ids
+            if claim_by_id[claim_id].get("state") != "active"
+        )
+        if inactive_result_claims:
+            raise CaseWorkspaceError(
+                "result_claim_ids must be active: " + ", ".join(inactive_result_claims)
+            )
+        closure_claim_ids, closure_evidence_ids = _claim_and_evidence_closure(
+            claim_by_id,
+            evidence_by_id,
+            result_claim_ids,
+        )
+        declared_claim_ids = {
+            str(item.get("id")) for item in claims if isinstance(item, dict)
+        }
+        orphan_claim_ids = sorted(declared_claim_ids - set(closure_claim_ids))
+        if orphan_claim_ids:
+            raise CaseWorkspaceError(
+                "returned claims are outside the result dependency closure: "
+                + ", ".join(orphan_claim_ids)
+            )
+        declared_evidence_ids = {
+            str(item.get("id")) for item in evidence_receipts if isinstance(item, dict)
+        }
+        orphan_evidence_ids = sorted(declared_evidence_ids - set(closure_evidence_ids))
+        if orphan_evidence_ids:
+            raise CaseWorkspaceError(
+                "returned evidence is outside the result claim closure: "
+                + ", ".join(orphan_evidence_ids)
+            )
+
+        final_errors = validate_case_workspace(case_dir)
+        if final_errors:
+            raise CaseWorkspaceError("; ".join(final_errors))
+        receipt = {
+            "schema_version": "clara.case_direction_return_receipt.v1",
+            "recorded_at": timestamp,
+            "request_sha256": request_sha256,
+            "return_id": return_id,
+            "return_type": payload["return_type"],
+            "branch": branch,
+            "answer_effect": payload["answer_effect"],
+            "result_claim_ids": result_claim_ids,
+            "result_claim_closure": closure_claim_ids,
+            "result_evidence_closure": closure_evidence_ids,
+            "source_artifacts": payload["source_artifacts"],
+            "limitations": payload["limitations"],
+            "contribution": {
+                "evidence_added": contribution["evidence_added"],
+                "claims_added": contribution["claims_added"],
+                "judgement_entry_ids": [
+                    str(item.get("id")) for item in contribution["judgement_entries"]
+                ],
+            },
+            "question_updates": question_updates,
+            "new_question_ids": [item["id"] for item in new_questions],
+            "validation_binding": validation_summary,
+            "mechanical_limit": (
+                "This receipt proves declared hand-off integrity and graph closure; "
+                "it does not prove claim truth, support quality, materiality, or reasoning."
+            ),
+        }
+        _write_json(receipt_path, receipt)
+        _touch_manifest(case_dir, timestamp)
+        refresh_case_brief(case_dir, now=now)
+        completed = True
+    finally:
+        if not completed:
+            _restore_files(snapshot)
+    return {**receipt, "receipt_path": str(receipt_path), "replayed": False}
 
 
 def commit_advisory_workpaper(

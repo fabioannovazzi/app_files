@@ -159,6 +159,7 @@ def test_case_director_semantic_evals_cover_the_learned_failure_modes() -> None:
         "partner-question-changes-the-analysis",
         "semantic-deck-feedback-round-trip",
         "bounded-data-contribution",
+        "validator-finding-reenters-the-spine",
     }
     assert (
         "target captures that pool"
@@ -174,6 +175,10 @@ def test_case_director_semantic_evals_cover_the_learned_failure_modes() -> None:
     )
     assert "owner of the overall case thesis" in " ".join(
         cases["bounded-data-contribution"]["must_not"]
+    )
+    assert (
+        "update and checkpoint the workpaper"
+        in cases["validator-finding-reenters-the-spine"]["expected_effect"]
     )
 
 

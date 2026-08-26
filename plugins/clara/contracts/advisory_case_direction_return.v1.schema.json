@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/advisory-case-direction-return-1.0.json",
+  "title": "Clara advisory case-direction return",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "return_id",
+    "return_type",
+    "branch",
+    "answer_effect",
+    "result_claim_ids",
+    "source_artifacts",
+    "limitations",
+    "evidence_receipts",
+    "claims",
+    "judgement_entries",
+    "question_updates",
+    "new_questions",
+    "validation_binding"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "return_id": {"$ref": "#/$defs/id"},
+    "return_type": {"enum": ["analysis_branch", "validation_feedback"]},
+    "branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow", "question_id", "question", "answer"],
+      "properties": {
+        "workflow": {"$ref": "#/$defs/text"},
+        "question_id": {"type": "string"},
+        "question": {"$ref": "#/$defs/text"},
+        "answer": {"$ref": "#/$defs/text"}
+      }
+    },
+    "answer_effect": {
+      "enum": ["strengthens", "weakens", "changes", "splits", "unchanged"]
+    },
+    "result_claim_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "source_artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/artifactReceipt"}
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "evidence_receipts": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "claims": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "judgement_entries": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "question_updates": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/questionUpdate"}
+    },
+    "new_questions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/newQuestion"}
+    },
+    "validation_binding": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/validationBinding"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"return_type": {"const": "validation_feedback"}},
+        "required": ["return_type"]
+      },
+      "then": {
+        "properties": {
+          "validation_binding": {"$ref": "#/$defs/validationBinding"}
+        }
+      },
+      "else": {
+        "properties": {"validation_binding": {"type": "null"}}
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "text": {"type": "string", "minLength": 1},
+    "artifactReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "path_reference", "sha256", "byte_count", "role"],
+      "properties": {
+        "path": {"$ref": "#/$defs/text"},
+        "path_reference": {"enum": ["case_relative", "absolute"]},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byte_count": {"type": "integer", "minimum": 0},
+        "role": {"enum": ["branch_output", "supporting_output", "other"]}
+      }
+    },
+    "questionUpdate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_id", "status", "explanation"],
+      "properties": {
+        "question_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["open", "answered", "dismissed"]},
+        "explanation": {"$ref": "#/$defs/text"}
+      }
+    },
+    "newQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question",
+        "why_it_matters",
+        "source_entry_ids",
+        "source_judgement_indexes"
+      ],
+      "properties": {
+        "question": {"$ref": "#/$defs/text"},
+        "why_it_matters": {"$ref": "#/$defs/text"},
+        "source_entry_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "source_judgement_indexes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "validationArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "path_reference", "sha256", "byte_count"],
+      "properties": {
+        "path": {"$ref": "#/$defs/text"},
+        "path_reference": {"enum": ["case_relative", "absolute"]},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byte_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "validationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_artifact", "audit_artifact", "finding_ids"],
+      "properties": {
+        "review_artifact": {"$ref": "#/$defs/validationArtifact"},
+        "audit_artifact": {"$ref": "#/$defs/validationArtifact"},
+        "finding_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

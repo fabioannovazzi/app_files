@@ -1036,15 +1036,22 @@ def _evidence_reference_closure(
     selected_ids: set[str],
     evidence_by_id: dict[str, dict[str, Any]],
 ) -> set[str]:
-    """Return every receipt in the declared history of selected evidence."""
+    """Return every predecessor and successor in selected evidence history."""
 
     closure = set(selected_ids)
+    history_neighbours: dict[str, set[str]] = {
+        evidence_id: set() for evidence_id in evidence_by_id
+    }
+    for evidence_id, receipt in evidence_by_id.items():
+        for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
+            referenced_id = str(receipt.get(field, ""))
+            if referenced_id and referenced_id in evidence_by_id:
+                history_neighbours[evidence_id].add(referenced_id)
+                history_neighbours[referenced_id].add(evidence_id)
     pending = list(selected_ids)
     while pending:
         evidence_id = pending.pop()
-        receipt = evidence_by_id.get(evidence_id, {})
-        for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
-            referenced_id = str(receipt.get(field, ""))
+        for referenced_id in history_neighbours.get(evidence_id, set()):
             if referenced_id and referenced_id not in closure:
                 closure.add(referenced_id)
                 pending.append(referenced_id)

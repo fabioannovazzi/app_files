@@ -1499,6 +1499,37 @@ def test_generation_time_lineage_rejects_an_omitted_evidence_receipt() -> None:
     )
 
 
+def test_generation_time_lineage_includes_a_later_recheck_of_linked_evidence() -> None:
+    validator = _validator_module()
+    evidence_a = _lineage_receipt("ev-a", "Management stated premise A.")
+    evidence_b = _lineage_receipt("ev-b", "The premise was rechecked unchanged.")
+    evidence_b["rechecks_evidence_id"] = "ev-a"
+    claim = _lineage_claim("cl-a", "Premise A", evidence_ids=["ev-a"])
+    assessment = _chain_assessment(claim)
+    assessment["evidence_ids"] = ["ev-a", "ev-b"]
+    review = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": ["cl-a"],
+        "chain_assessments": [assessment],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "The claim review includes its later recheck receipt.",
+    }
+
+    errors = validator._validate_lineage_review(
+        review,
+        provenance_mode="generation_time",
+        claim_register={"schema_version": "1.0", "claims": [claim]},
+        evidence_register={
+            "schema_version": "1.0",
+            "evidence": [evidence_a, evidence_b],
+        },
+    )
+
+    assert not any("evidence_ids must match lineage" in error for error in errors)
+
+
 def test_ready_review_cannot_pass_without_any_material_claim_review(
     tmp_path: Path,
 ) -> None:

@@ -466,22 +466,26 @@ Supported source previews include Markdown/text, Word documents, PDFs as
 registered references, and PowerPoint decks.
 
 After indexing or importing any new material that could affect a decision,
-commit the evidence receipts, claims, and any judgement-log projections that
-Clara actually uses as one contribution before revising the advisory workpaper,
-storyline, deck, memo, or decision pack:
+return the bounded analysis to the case director before revising the advisory
+workpaper, storyline, deck, memo, or decision pack. The common envelope carries
+the evidence receipts, claims, judgement projections, answer effect, and
+question changes that Clara actually uses:
 
 ```bash
-python scripts/record_analysis_contribution.py \
-  <case-dir> <model-authored-analysis-contribution.json>
+python scripts/record_case_direction_return.py \
+  <case-dir> <model-authored-case-direction-return.json>
 python scripts/advisory_evidence_lineage.py validate <case-dir>
 ```
 
-The model authors observations, support relationships, what evidence proves and
-does not prove, dependencies, reasoning, uncertainty, decision use, and any
-judgement-log wording. The contribution helper validates and commits all three
-records atomically; if any binding fails it restores the prior registers and
-case files. Use the lower-level `add-evidence` and `add-claims` commands only
-for repair or migration where no coupled case mutation is required.
+The model authors the question and answer, observations, support relationships,
+what evidence proves and does not prove, dependencies, reasoning, uncertainty,
+decision use, answer effect, question changes, and any judgement-log wording.
+The return helper validates and commits the declared hand-off atomically; if
+any binding fails it restores the prior registers and case files. Specialist
+adapters may record their own authoritative claims first and reference those
+claim IDs in the return. Use `record_analysis_contribution.py` and the lower-
+level `add-evidence` and `add-claims` commands only for repair, migration, or a
+specialist adapter where no case-direction return is being completed.
 When a claim enters a final output, have the model declare its claim ID and
 locator, then let the helper compute the output receipt:
 
@@ -1038,13 +1042,15 @@ These HTML files are working artifacts for the senior partner, not client
 outputs. They should summarize initial hypotheses, evidence gaps, open
 questions, and what Clara needs from the partner next.
 
-5. Codex reads the source material and drafts structured evidence, claims, and
-their judgement-log projections. Store entries as pending by default, but bind
-each one to its canonical `advisory_claim_id` and linked evidence receipt IDs:
+5. Codex reads the source material and drafts the first bounded case-direction
+   return: structured evidence, active result claims, their judgement-log
+   projections, the answer effect, and the resulting questions. Store entries
+   as pending by default, but bind each one to its canonical
+   `advisory_claim_id` and linked evidence receipt IDs:
 
 ```bash
-python scripts/record_analysis_contribution.py \
-  <case-dir> <model-authored-analysis-contribution.json>
+python scripts/record_case_direction_return.py \
+  <case-dir> <model-authored-case-direction-return.json>
 ```
 
 `add_judgement.py` remains a low-level repair tool. It cannot make an unbound

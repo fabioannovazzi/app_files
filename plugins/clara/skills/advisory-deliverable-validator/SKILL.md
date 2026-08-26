@@ -39,6 +39,11 @@ appearance. The final validator selects the decision-relevant claims through
 model judgement and walks each selected claim back through every declared
 dependency and evidence receipt.
 
+For a durable generation-time case, read
+[the case-direction return contract](../advisory-case-director/references/case-direction-return.md)
+before returning the review. The validator is a bounded contributor to the
+spine, not a second case controller.
+
 For an external completed document with no generation-time registers, use
 `matched_support`. Clara may identify material claims and match them to supplied
 or newly inspected evidence, but must not describe that reconstruction as
@@ -288,6 +293,11 @@ provenance.
    Preserve the original bytes. For decks, use `clara:deck-correction`; for
    calculation-backed content, rerun the authoritative Reporting Engine checks;
    for an HTML stage deck, rebuild and rerun HTML deck validation/browser QA.
+   In a generation-time case, do not make a semantic correction directly from
+   the validator: package the review, return the material findings to the case
+   director through the common case-direction contract, update the spine, and
+   then rebuild. Pure format or wording corrections that do not change claim
+   meaning may remain inside the format-specific correction workflow.
    An unchanged claim keeps its claim ID and gains a new appearance. A changed
    claim gets a new claim record whose `supersedes_claim_id` points to the prior
    claim; withdrawn wording remains in the history rather than being erased.
@@ -320,7 +330,26 @@ python scripts/managed_python_runtime.py run \
    preservation. Use `delivery_readiness.status` and the semantic review to
    state whether delivery is ready, ready with residual uncertainty, not ready,
    or blocked.
-11. For a generation-time Clara case HTML deck, run the final mechanical case
+11. For every generation-time case, return the packaged semantic review to the
+   case director, whether it confirms the current claims or requires a change.
+   Author a `validation_feedback` envelope against the common case-direction
+   return schema. Bind the exact `advisory_validation_review.json` and
+   `validation_audit.json`, select the material finding IDs through model
+   judgement, and return the active claim IDs that now carry the answer. Then
+   run:
+
+```bash
+python scripts/record_case_direction_return.py \
+  <case-dir> <model-authored-validation-feedback-return.json>
+```
+
+   The helper checks exact bytes, reviewed IDs, current pre-feedback register
+   hashes, declared graph closure, and replay safety. It does not infer the
+   findings' meaning. If feedback changes a claim or opens a recheck, return to
+   `clara:advisory-case-director`, update and checkpoint the workpaper, rebuild
+   the deliverable, and rerun this validator. Do not describe the earlier audit
+   as current after the spine changes.
+12. For a generation-time Clara case HTML deck, run the final mechanical case
    gate after packaging:
 
 ```bash
