@@ -43,8 +43,12 @@ Normal outputs include:
   explicit `unclassified` original-duration classes, with the official
   residual-duration lens reported separately as `within_one_year`,
   `over_one_year`, `not_relevant`, or `unclassified`;
-- exposure-linked positive guaranteed amounts, separate `Garanzie ricevute`
-  review rows, non-suffering overruns, and supplied prejudicial events;
+- exposure-linked positive guaranteed amounts, separate `Garanti
+  intestatario`, `Garanzie ricevute`, and `Debitori ceduti` review rows,
+  non-suffering overruns, and supplied prejudicial events;
+- separate `Altre informazioni` and `Prospetto sintetico` control or
+  information rows when the exact supported table shape is present; these
+  populations never enter exposure totals;
 - accordato, accordato operativo, utilized, available resources,
   category-specific utilization, overrun, guarantee-coverage, maturity-mix,
   concentration, and multi-month movement metrics;
@@ -125,9 +129,12 @@ For a PDF-derived normalization, preserve the source document hash, page,
 row/region locator, whether the record is current or previous, `Da` and `A`
 validity dates, and extraction confidence. Native PDF styling and coordinates
 can be substantive because previous or corrected records may be visually
-distinguished. `Garanzie ricevute`, inframonthly events and information
-requests stay on separate review sheets and are not merged into client credit
-exposures. A linear text dump is not a validated parser.
+distinguished. `Garanti intestatario`, `Garanzie ricevute`, `Debitori ceduti`,
+`Altre informazioni`, `Prospetto sintetico`, inframonthly events and
+information requests stay on separate review sheets and are not merged into
+client credit exposures. Empty generated sheets are not evidence that the
+corresponding population was present and empty. A linear text dump is not a
+validated parser.
 
 Show a Decision Table only for unresolved material mappings generated from the
 actual evidence. Do not make normal output formats into user choices. Ordinary
@@ -201,8 +208,9 @@ Read `execution_receipt.json`, `centrale_rischi_analysis.json`, and
 analysis or failed declared control. The bounded model context contains exact
 metrics, maturity summaries, at most 36 monthly rows, and at most 20 top
 overruns, exposure-linked guarantees and prejudicial events, plus at most 20
-rows from each separate population of guarantees received, inframonthly events
-and information requests. It excludes raw populations, absolute paths,
+rows from each separate population of guarantees received, guarantors of the
+holder, ceded debtors, other risk information, summary totals, inframonthly
+events and information requests. It excludes raw populations, absolute paths,
 original filenames and source-document hashes from those bounded auxiliary-row
 projections by default.
 

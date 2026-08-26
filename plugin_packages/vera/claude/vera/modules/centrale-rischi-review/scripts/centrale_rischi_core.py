@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from openpyxl import Workbook, load_workbook
-from openpyxl.styles import Font, PatternFill
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 __all__ = [
     "ANALYSIS_SCHEMA",
@@ -35,7 +35,7 @@ __all__ = [
     "write_json",
 ]
 
-ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v3"
+ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v5"
 COMMENTARY_SCHEMA = "vera.centrale_rischi_commentary.v1"
 RECIPE_SCHEMA = "vera.centrale_rischi_recipe.v2"
 WORKFLOW_ID = "centrale-rischi-review"
@@ -503,27 +503,42 @@ def build_analysis(
             raise CentraleRischiContractError(
                 f"Invalid record_status at source row {row_number}: {record_status!r}"
             )
-        operational = _decimal(
-            row[columns["operational_granted"]],
-            field="operational_granted",
-            row_number=row_number,
+
+        def amount_value(field: str, value: Any) -> Decimal | str:
+            try:
+                return _decimal(value, field=field, row_number=row_number)
+            except CentraleRischiContractError:
+                if record_status == "previous":
+                    # Previous/corrected records never enter totals. Preserve an
+                    # exact non-numeric source state such as "Assenza di
+                    # segnalazione" instead of coercing it to zero.
+                    return _text(value)
+                raise
+
+        granted = amount_value("granted", row[columns["granted"]])
+        operational = amount_value(
+            "operational_granted", row[columns["operational_granted"]]
         )
-        used = _decimal(row[columns["used"]], field="used", row_number=row_number)
-        overrun = (
-            Decimal("0")
-            if family == "suffering"
-            else max(used - operational, Decimal("0"))
-        )
+        used = amount_value("used", row[columns["used"]])
+        if isinstance(operational, Decimal) and isinstance(used, Decimal):
+            overrun: Decimal | None = (
+                Decimal("0")
+                if family == "suffering"
+                else max(used - operational, Decimal("0"))
+            )
+            available: Decimal | None = max(operational - used, Decimal("0"))
+        else:
+            overrun = None
+            available = None
         guarantee_type = (
             _text(row.get(columns.get("guarantee_type", ""), ""))
             if columns.get("guarantee_type")
             else ""
         )
-        guaranteed = (
-            _decimal(
+        guaranteed: Decimal | str = (
+            amount_value(
+                "guaranteed_amount",
                 row.get(columns.get("guaranteed_amount", ""), ""),
-                field="guaranteed_amount",
-                row_number=row_number,
             )
             if columns.get("guaranteed_amount")
             else Decimal("0")
@@ -547,12 +562,10 @@ def build_analysis(
                 "original_term": original_term,
                 "residual_duration": residual_duration_value,
                 "residual_term": residual_term,
-                "granted": _decimal(
-                    row[columns["granted"]], field="granted", row_number=row_number
-                ),
+                "granted": granted,
                 "operational_granted": operational,
                 "used": used,
-                "available": max(operational - used, Decimal("0")),
+                "available": available,
                 "overrun": overrun,
                 "guarantee_type": guarantee_type,
                 "guaranteed_amount": guaranteed,
@@ -879,10 +892,11 @@ def build_analysis(
 
     def auxiliary_rows(label: str) -> tuple[list[dict[str, Any]], bool]:
         matching_tables = [item for item in tables if item.table_label == label]
-        return (
-            [public_row(row) for item in matching_tables for row in item.rows],
-            bool(matching_tables),
-        )
+        rows = [public_row(row) for item in matching_tables for row in item.rows]
+        # PDF normalization creates review sheets for every supported population.
+        # An empty generated sheet is not evidence that the source population was
+        # present and empty, so availability requires at least one extracted row.
+        return rows, bool(rows)
 
     exposures = [public_row(row) for row in normalized]
     original_term_summary = [
@@ -912,6 +926,12 @@ def build_analysis(
     guarantees_received, guarantees_received_available = auxiliary_rows(
         "Garanzie ricevute"
     )
+    guarantors, guarantors_available = auxiliary_rows("Garanti intestatario")
+    ceded_debtors, ceded_debtors_available = auxiliary_rows("Debitori ceduti")
+    other_risk_information, other_risk_information_available = auxiliary_rows(
+        "Altre informazioni"
+    )
+    summary_totals, summary_totals_available = auxiliary_rows("Prospetto sintetico")
     inframonthly_events, inframonthly_events_available = auxiliary_rows(
         "Eventi inframensili"
     )
@@ -921,7 +941,9 @@ def build_analysis(
     limitations = [
         "L'utilizzo è calcolato per categoria di rischio confermata; non viene presentato un unico rapporto trasversale perché gli importi utilizzati hanno significati specifici per categoria.",
         "Breve, medio e lungo derivano dai valori confermati della durata originaria. La durata residua è esposta separatamente come entro un anno, oltre un anno, non rilevante o non classificata e non consente di distinguere medio da lungo termine.",
-        "L'Importo garantito su un'esposizione del cliente non coincide con la tabella Garanzie ricevute per obbligazioni di terzi. L'analisi delle esposizioni non unisce le due popolazioni.",
+        "L'Importo garantito su un'esposizione, i Garanti dell'intestatario e le Garanzie ricevute per obbligazioni di terzi sono popolazioni diverse e non vengono unite.",
+        "I Debitori ceduti e il valore nominale dei crediti ceduti sono esposti separatamente e non vengono sommati alle esposizioni creditizie dell'intestatario.",
+        "Il Prospetto sintetico e le altre informazioni di rischio sono popolazioni di controllo o informative: non vengono sommate alle esposizioni analitiche e non sostituiscono la riconciliazione professionale.",
         "La Centrale Rischi da sola non consente di calcolare PFN/EBITDA, Debt/Equity o DSCR.",
         "L'output non riproduce né stima il rating proprietario di una banca.",
     ]
@@ -958,6 +980,10 @@ def build_analysis(
         "monthly_series": monthly_series,
         "guarantees": guarantees,
         "guarantees_received": guarantees_received,
+        "guarantors": guarantors,
+        "ceded_debtors": ceded_debtors,
+        "other_risk_information": other_risk_information,
+        "summary_totals": summary_totals,
         "overruns": overruns,
         "inframonthly_events": inframonthly_events,
         "information_requests": information_requests,
@@ -968,6 +994,16 @@ def build_analysis(
             ),
             "guarantees_received": (
                 "available" if guarantees_received_available else "unavailable"
+            ),
+            "guarantors": "available" if guarantors_available else "unavailable",
+            "ceded_debtors": (
+                "available" if ceded_debtors_available else "unavailable"
+            ),
+            "other_risk_information": (
+                "available" if other_risk_information_available else "unavailable"
+            ),
+            "summary_totals": (
+                "available" if summary_totals_available else "unavailable"
             ),
             "inframonthly_events": (
                 "available" if inframonthly_events_available else "unavailable"
@@ -1010,7 +1046,7 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
         ]
 
     return {
-        "schema_version": "vera.centrale_rischi_model_context.v2",
+        "schema_version": "vera.centrale_rischi_model_context.v4",
         "workflow_id": WORKFLOW_ID,
         "status": analysis["status"],
         "entity": analysis["entity"],
@@ -1046,6 +1082,76 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
                 "record_status",
                 "valid_from",
                 "valid_to",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
+        "guarantors": project(
+            analysis["guarantors"],
+            (
+                "reference_month",
+                "intermediary",
+                "guarantor",
+                "guarantee_value",
+                "guaranteed_amount",
+                "record_status",
+                "valid_from",
+                "valid_to",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
+        "ceded_debtors": project(
+            analysis["ceded_debtors"],
+            (
+                "reference_month",
+                "intermediary",
+                "ceded_debtor",
+                "nominal_value",
+                "record_status",
+                "valid_from",
+                "valid_to",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
+        "other_risk_information": project(
+            analysis["other_risk_information"],
+            (
+                "reference_month",
+                "intermediary",
+                "category",
+                "location",
+                "original_duration",
+                "residual_duration",
+                "currency",
+                "activity_type",
+                "relationship_status",
+                "amount",
+                "intrinsic_value",
+                "record_status",
+                "valid_from",
+                "valid_to",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
+        "summary_totals": project(
+            analysis["summary_totals"],
+            (
+                "reference_month",
+                "intermediary",
+                "summary_category",
+                "granted",
+                "operational_granted",
+                "used",
+                "guarantee_value",
+                "guaranteed_amount",
+                "intrinsic_value",
                 "source_page",
                 "source_row_locator",
                 "extraction_confidence",
@@ -1272,7 +1378,10 @@ def _empty_population_message(
     analysis: Mapping[str, Any], coverage_key: str | None
 ) -> str:
     if coverage_key and analysis["coverage"].get(coverage_key) == "unavailable":
-        return "Non disponibile: la relativa fonte o tabella non è stata fornita."
+        return (
+            "Non disponibile: nessuna riga è stata estratta o fornita per questa "
+            "popolazione."
+        )
     return "Nessuna voce rilevata nella popolazione disponibile."
 
 
@@ -1409,6 +1518,58 @@ def render_markdown(
             ("Importo garantito", "guaranteed_amount"),
         ),
         "guarantees_received",
+    )
+    population(
+        "Garanti dell'intestatario",
+        "guarantors",
+        (
+            ("Mese", "reference_month"),
+            ("Intermediario", "intermediary"),
+            ("Garante", "guarantor"),
+            ("Valore garanzia", "guarantee_value"),
+            ("Importo garantito", "guaranteed_amount"),
+        ),
+        "guarantors",
+    )
+    population(
+        "Debitori ceduti",
+        "ceded_debtors",
+        (
+            ("Mese", "reference_month"),
+            ("Intermediario", "intermediary"),
+            ("Debitore ceduto", "ceded_debtor"),
+            ("Valore nominale", "nominal_value"),
+        ),
+        "ceded_debtors",
+    )
+    population(
+        "Altre informazioni di rischio",
+        "other_risk_information",
+        (
+            ("Mese", "reference_month"),
+            ("Intermediario", "intermediary"),
+            ("Categoria", "category"),
+            ("Localizzazione", "location"),
+            ("Importo", "amount"),
+            ("Valore intrinseco", "intrinsic_value"),
+        ),
+        "other_risk_information",
+    )
+    population(
+        "Prospetto sintetico",
+        "summary_totals",
+        (
+            ("Mese", "reference_month"),
+            ("Intermediario", "intermediary"),
+            ("Categoria", "summary_category"),
+            ("Accordato", "granted"),
+            ("Operativo", "operational_granted"),
+            ("Utilizzato", "used"),
+            ("Valore garanzia", "guarantee_value"),
+            ("Importo garantito", "guaranteed_amount"),
+            ("Valore intrinseco", "intrinsic_value"),
+        ),
+        "summary_totals",
     )
     population(
         "Sconfinamenti",
@@ -1554,6 +1715,62 @@ def render_html(
             ),
             _html_population(
                 analysis,
+                title="Garanti dell'intestatario",
+                key="guarantors",
+                columns=(
+                    ("Mese", "reference_month"),
+                    ("Intermediario", "intermediary"),
+                    ("Garante", "guarantor"),
+                    ("Valore garanzia", "guarantee_value"),
+                    ("Importo garantito", "guaranteed_amount"),
+                ),
+                coverage_key="guarantors",
+            ),
+            _html_population(
+                analysis,
+                title="Debitori ceduti",
+                key="ceded_debtors",
+                columns=(
+                    ("Mese", "reference_month"),
+                    ("Intermediario", "intermediary"),
+                    ("Debitore ceduto", "ceded_debtor"),
+                    ("Valore nominale", "nominal_value"),
+                ),
+                coverage_key="ceded_debtors",
+            ),
+            _html_population(
+                analysis,
+                title="Altre informazioni di rischio",
+                key="other_risk_information",
+                columns=(
+                    ("Mese", "reference_month"),
+                    ("Intermediario", "intermediary"),
+                    ("Categoria", "category"),
+                    ("Localizzazione", "location"),
+                    ("Importo", "amount"),
+                    ("Valore intrinseco", "intrinsic_value"),
+                ),
+                coverage_key="other_risk_information",
+            ),
+            _html_population(
+                analysis,
+                title="Prospetto sintetico",
+                key="summary_totals",
+                columns=(
+                    ("Mese", "reference_month"),
+                    ("Intermediario", "intermediary"),
+                    ("Categoria", "summary_category"),
+                    ("Accordato", "granted"),
+                    ("Operativo", "operational_granted"),
+                    ("Utilizzato", "used"),
+                    ("Valore garanzia", "guarantee_value"),
+                    ("Importo garantito", "guaranteed_amount"),
+                    ("Valore intrinseco", "intrinsic_value"),
+                ),
+                coverage_key="summary_totals",
+            ),
+            _html_population(
+                analysis,
                 title="Sconfinamenti",
                 key="overruns",
                 columns=(
@@ -1608,6 +1825,48 @@ def render_html(
 def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
     """Write a reviewable workbook from the exact analysis payload."""
 
+    def excel_number(value: Any) -> int | float | None:
+        if value in (None, ""):
+            return None
+        try:
+            number = Decimal(str(value))
+        except InvalidOperation:
+            return None
+        if number == number.to_integral_value():
+            return int(number)
+        return float(number)
+
+    amount_fields = {
+        "granted",
+        "operational_granted",
+        "used",
+        "available",
+        "overrun",
+        "guaranteed_amount",
+        "guarantee_value",
+        "nominal_value",
+        "amount",
+        "intrinsic_value",
+        "average_balance",
+        "expected",
+        "actual",
+        "difference",
+    }
+    percentage_fields = {"utilization_pct"}
+    numeric_fields = amount_fields | percentage_fields
+    hidden_audit_fields = {
+        "source_row",
+        "source_region",
+        "source_document_sha256",
+    }
+
+    def project_rows(
+        rows: Sequence[Mapping[str, Any]], fields: Sequence[str]
+    ) -> list[dict[str, Any]]:
+        return [
+            {field: row.get(field) for field in fields if field in row} for row in rows
+        ]
+
     workbook = Workbook()
     summary = workbook.active
     summary.title = "KPI"
@@ -1615,11 +1874,14 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         ("Metric ID", "Metrica", "Valore", "Unità", "Disponibilità", "Motivo")
     )
     for item in analysis["metrics"]:
+        metric_value = (
+            excel_number(item["value"]) if item["availability"] == "available" else None
+        )
         summary.append(
             (
                 item["metric_id"],
                 item["label"],
-                item["value"],
+                metric_value,
                 item["unit"],
                 item["availability"],
                 item["reason"] or "",
@@ -1630,12 +1892,55 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         "Durata residua": analysis["residual_term_summary"],
         "Categorie": analysis["risk_category_summary"],
         "Esposizioni": analysis["exposures"],
-        "Garanzie": analysis["guarantees"],
+        "Garanzie": project_rows(
+            analysis["guarantees"],
+            (
+                "reference_month",
+                "intermediary",
+                "risk_category",
+                "guarantee_type",
+                "guaranteed_amount",
+                "record_status",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
         "Garanzie ricevute": analysis["guarantees_received"],
-        "Sconfinamenti": analysis["overruns"],
+        "Garanti intestatario": analysis["guarantors"],
+        "Debitori ceduti": analysis["ceded_debtors"],
+        "Altre informazioni": analysis["other_risk_information"],
+        "Prospetto sintetico": analysis["summary_totals"],
+        "Sconfinamenti": project_rows(
+            analysis["overruns"],
+            (
+                "reference_month",
+                "intermediary",
+                "risk_category",
+                "operational_granted",
+                "used",
+                "overrun",
+                "record_status",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
         "Eventi inframensili": analysis["inframonthly_events"],
         "Richieste informazioni": analysis["information_requests"],
-        "Pregiudizievoli": analysis["prejudicial_events"],
+        "Pregiudizievoli": project_rows(
+            analysis["prejudicial_events"],
+            (
+                "reference_month",
+                "intermediary",
+                "risk_category",
+                "prejudicial_event",
+                "record_status",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
         "Serie mensile": analysis["monthly_series"],
         "Controlli": analysis["controls"],
     }
@@ -1645,18 +1950,82 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
             headers = list(rows[0])
             sheet.append(headers)
             for row in rows:
-                sheet.append([row.get(header) for header in headers])
+                sheet.append(
+                    [
+                        (
+                            excel_number(row.get(header))
+                            if header in numeric_fields
+                            else row.get(header)
+                        )
+                        for header in headers
+                    ]
+                )
         else:
             sheet.append(("Stato", "Nessun dato disponibile"))
+
+    navy_fill = PatternFill("solid", fgColor="002060")
+    alternate_fill = PatternFill("solid", fgColor="F3F6FA")
+    bottom_rule = Border(bottom=Side(style="thin", color="D9DADD"))
     for sheet in workbook.worksheets:
-        sheet.freeze_panes = "A2"
+        sheet.sheet_view.showGridLines = False
+        sheet.freeze_panes = "D2" if sheet.max_column > 10 else "A2"
+        sheet.auto_filter.ref = sheet.dimensions
+        sheet.row_dimensions[1].height = 30
         for cell in sheet[1]:
             cell.font = Font(bold=True, color="FFFFFF")
-            cell.fill = PatternFill("solid", fgColor="002060")
+            cell.fill = navy_fill
+            cell.alignment = Alignment(vertical="center", wrap_text=True)
+        headers = {
+            str(cell.value): cell.column for cell in sheet[1] if cell.value is not None
+        }
+        for row_number in range(2, sheet.max_row + 1):
+            sheet.row_dimensions[row_number].height = 30
+            for cell in sheet[row_number]:
+                cell.alignment = Alignment(
+                    horizontal=(
+                        "right"
+                        if str(sheet.cell(1, cell.column).value) in numeric_fields
+                        else "left"
+                    ),
+                    vertical="top",
+                    wrap_text=True,
+                )
+                cell.border = bottom_rule
+                if row_number % 2 == 0:
+                    cell.fill = alternate_fill
+        if sheet.title == "KPI":
+            for row_number in range(2, sheet.max_row + 1):
+                value_cell = sheet.cell(row_number, 3)
+                unit = str(sheet.cell(row_number, 4).value or "")
+                value_cell.alignment = Alignment(horizontal="right", vertical="top")
+                value_cell.number_format = "0.00" if unit == "percent" else "#,##0"
+        else:
+            for header in amount_fields:
+                if header not in headers:
+                    continue
+                for cell in sheet.iter_rows(
+                    min_row=2,
+                    min_col=headers[header],
+                    max_col=headers[header],
+                ):
+                    cell[0].number_format = "#,##0"
+            for header in percentage_fields:
+                if header not in headers:
+                    continue
+                for cell in sheet.iter_rows(
+                    min_row=2,
+                    min_col=headers[header],
+                    max_col=headers[header],
+                ):
+                    cell[0].number_format = "0.00"
         for column_cells in sheet.columns:
+            header = str(column_cells[0].value or "")
             width = min(
-                42,
-                max(12, max(len(str(cell.value or "")) for cell in column_cells) + 2),
+                48 if sheet.title == "KPI" and header in {"Metrica", "Motivo"} else 28,
+                max(10, max(len(str(cell.value or "")) for cell in column_cells) + 2),
             )
-            sheet.column_dimensions[column_cells[0].column_letter].width = width
+            column = sheet.column_dimensions[column_cells[0].column_letter]
+            column.width = width
+            if header in hidden_audit_fields:
+                column.hidden = True
     workbook.save(path)

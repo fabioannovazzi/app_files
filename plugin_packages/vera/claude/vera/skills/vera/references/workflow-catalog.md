@@ -80,8 +80,10 @@ skill to imitate a missing operational workflow.
   Rischi PDF or analyse a reviewed CSV or Excel export; classify exposures
   through professional-confirmed maturity and risk-category mappings;
   calculate guarantees, non-suffering overruns, concentration, available
-  resources and source-supported KPIs; keep guarantees received,
-  inframonthly events and information requests separate; and keep missing
+  resources and source-supported KPIs; keep guarantors of the holder,
+  guarantees received, ceded debtors, other risk information, summary totals,
+  inframonthly events and information requests separate; quarantine ambiguous
+  merged grids instead of turning them into client facts; and keep missing
   financial-statement ratios and prejudicial evidence explicitly unavailable.
   Portal acquisition remains an optional upstream adapter rather than part of
   the calculation contract.

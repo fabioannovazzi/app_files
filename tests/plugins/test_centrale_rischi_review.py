@@ -11,6 +11,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
 from reportlab.platypus import (
     PageBreak,
     Paragraph,
@@ -228,6 +229,20 @@ def _write_native_pdf_fixture(path: Path) -> None:
                 ),
             ]
         ),
+        Paragraph("Informazioni sui garanti", styles["BodyText"]),
+        styled_table(
+            [
+                ("Garante", "Valore Garanzia", "Importo Garantito"),
+                ("MARIO GARANTE", "50.000", "40.000"),
+            ]
+        ),
+        Paragraph("Informazioni sui debitori ceduti", styles["BodyText"]),
+        styled_table(
+            [
+                ("Ceduto", "Valore nominale del credito ceduto"),
+                ("DEBITORE CEDUTO", "20.000"),
+            ]
+        ),
         PageBreak(),
         Paragraph("Intermediario: BANCA QUATTRO", styles["BodyText"]),
         Paragraph("Eventi inframensili", styles["BodyText"]),
@@ -238,7 +253,7 @@ def _write_native_pdf_fixture(path: Path) -> None:
             ]
         ),
         PageBreak(),
-        Paragraph("Intermediario: BANCA CINQUE", styles["BodyText"]),
+        Paragraph("BANCA CINQUE", styles["BodyText"]),
         Paragraph("Richieste informazioni", styles["BodyText"]),
         styled_table(
             [
@@ -263,6 +278,203 @@ def _write_native_pdf_fixture(path: Path) -> None:
         styled_table([("Campo A", "Campo B"), ("Valore A", "Valore B")]),
     ]
     document.build(story)
+
+
+def _write_fragmented_header_pdf_fixture(path: Path) -> None:
+    styles = getSampleStyleSheet()
+    document = SimpleDocTemplate(
+        path.as_posix(),
+        pagesize=landscape(A4),
+        leftMargin=10 * mm,
+        rightMargin=10 * mm,
+        topMargin=10 * mm,
+        bottomMargin=10 * mm,
+    )
+    rows = [
+        (
+            "Categor",
+            "ia",
+            "Localizzazione",
+            "Durata Originaria",
+            "Durata Residua",
+            "Divisa",
+            "Tipo Attivita",
+            "Stato Rapporto",
+            "Tipo Garanzia",
+            "Ruolo Affidato",
+            "Accordato",
+            "Accordato Operativo",
+            "Utilizzato",
+            "Saldo Medio",
+            "Importo Garantito",
+        ),
+        (
+            "RISCHI A SCADENZA",
+            "",
+            "Milano",
+            "Oltre cinque anni",
+            "Oltre 1 anno",
+            "Euro",
+            "Prestito",
+            "Rapporto non contestato",
+            "Ipoteca",
+            "0",
+            "150.000",
+            "150.000",
+            "170.000",
+            "0",
+            "170.000",
+        ),
+    ]
+    table = Table(rows, repeatRows=1)
+    table.setStyle(
+        TableStyle(
+            [
+                ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
+                ("FONTSIZE", (0, 0), (-1, -1), 5),
+            ]
+        )
+    )
+    document.build(
+        [
+            Paragraph("DATA CONTABILE: settembre 2010", styles["Heading2"]),
+            Paragraph("Intermediario: BANCA UNO", styles["BodyText"]),
+            table,
+        ]
+    )
+
+
+def _write_clipped_valid_to_pdf_fixture(path: Path) -> None:
+    page_width, page_height = landscape(A4)
+    pdf = canvas.Canvas(path.as_posix(), pagesize=(page_width, page_height))
+    pdf.setFont("Helvetica-Bold", 10)
+    pdf.drawString(24, page_height - 40, "DATA DI RIFERIMENTO: giugno 2021")
+    pdf.drawString(24, page_height - 58, "Intermediario: BANCA UNO")
+    headers = (
+        "Categoria",
+        "Localizzazione",
+        "Durata Originaria",
+        "Durata Residua",
+        "Divisa",
+        "Import Export",
+        "Tipo Attivita",
+        "Stato Rapporto",
+        "Tipo Garanzia",
+        "Ruolo Affidato",
+        "Accordato",
+        "Accordato Operativo",
+        "Utilizzato",
+        "Saldo Medio",
+        "Importo Garantito",
+        "Da",
+    )
+    row = (
+        "RISCHI A SCADENZA",
+        "Pavia",
+        "Oltre cinque anni",
+        "Oltre 1 anno",
+        "Euro",
+        "Altro",
+        "Prestito",
+        "Non contestato",
+        "Nessuna",
+        "0",
+        "45.000",
+        "45.000",
+        "60.000",
+        "0",
+        "0",
+        "02/08/2021",
+    )
+    column_widths = [94, 48, 48, 44, 28, 44, 44, 48, 44, 38, 42, 48, 40, 34, 42, 46]
+    table = Table([headers, row], colWidths=column_widths, rowHeights=(24, 34))
+    table.setStyle(
+        TableStyle(
+            [
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+                ("FONTSIZE", (0, 0), (-1, -1), 4.5),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ]
+        )
+    )
+    table_width, table_height = table.wrapOn(pdf, page_width, page_height)
+    table_x = 20
+    table_y = page_height - 150
+    table.drawOn(pdf, table_x, table_y)
+    pdf.setFont("Helvetica", 5)
+    pdf.drawString(table_x + table_width + 12, table_y + table_height - 15, "A")
+    pdf.drawString(table_x + table_width + 4, table_y + 13, "10/08/2021")
+    pdf.save()
+
+
+def _write_repeated_header_pdf_fixture(path: Path) -> None:
+    styles = getSampleStyleSheet()
+    document = SimpleDocTemplate(
+        path.as_posix(),
+        pagesize=landscape(A4),
+        leftMargin=10 * mm,
+        rightMargin=10 * mm,
+        topMargin=10 * mm,
+        bottomMargin=10 * mm,
+    )
+    headers = (
+        "Categoria",
+        "Localizzazione",
+        "Accordato",
+        "Accordato Operativo",
+        "Utilizzato",
+    )
+    table = Table(
+        [
+            headers,
+            ("RISCHI A SCADENZA", "Milano", "100", "100", "90"),
+            headers,
+            ("RISCHI A REVOCA", "Roma", "200", "200", "180"),
+        ]
+    )
+    table.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.5, colors.black)]))
+    document.build(
+        [
+            Paragraph("DATA DI RIFERIMENTO: giugno 2021", styles["Heading2"]),
+            Paragraph("Intermediario: BANCA UNO", styles["BodyText"]),
+            table,
+        ]
+    )
+
+
+def _write_auxiliary_risk_pdf_fixture(path: Path) -> None:
+    styles = getSampleStyleSheet()
+    document = SimpleDocTemplate(
+        path.as_posix(),
+        pagesize=landscape(A4),
+        leftMargin=10 * mm,
+        rightMargin=10 * mm,
+        topMargin=10 * mm,
+        bottomMargin=10 * mm,
+    )
+    detail = Table(
+        [
+            ("Categoria", "Localizzazione", "Importo"),
+            ("SOFFERENZE - CREDITI PASSATI A PERDITA", "Milano", "30.010"),
+        ]
+    )
+    summary = Table(
+        [
+            ("", "Accordato", "Accordato Operativo", "Utilizzato"),
+            ("Crediti per cassa", "308.412", "308.412", "202.890"),
+        ]
+    )
+    for table in (detail, summary):
+        table.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.5, colors.black)]))
+    document.build(
+        [
+            Paragraph("ULTIMA DATA CONTABILE: 30/09/2010", styles["Heading2"]),
+            Paragraph("Intermediario: BANCA ALFA", styles["BodyText"]),
+            detail,
+            Paragraph("Prospetto sintetico", styles["BodyText"]),
+            summary,
+        ]
+    )
 
 
 def _reviewed_recipe(inspection: dict[str, object]) -> dict[str, object]:
@@ -416,6 +628,7 @@ def test_native_pdf_normalization_feeds_analysis_without_double_counting_previou
     _write_native_pdf_fixture(source_pdf)
 
     normalization = normalize_pdf(source_pdf)
+    normalization["tables"]["exposures"][1]["granted"] = "Assenza di segnalazione"
     write_normalized_workbook(normalized_workbook, normalization)
     tables = load_source_tables([normalized_workbook])
     exposure_table = next(
@@ -478,19 +691,96 @@ def test_native_pdf_normalization_feeds_analysis_without_double_counting_previou
     assert (
         normalization["tables"]["guarantees_received"][0]["guarantee_value"] == "130000"
     )
+    assert normalization["tables"]["guarantors"][0]["guarantor"] == "MARIO GARANTE"
+    assert normalization["tables"]["ceded_debtors"][0]["nominal_value"] == "20000"
     assert analysis["source"]["current_row_count"] == 1
     assert analysis["source"]["previous_row_count"] == 1
+    assert analysis["exposures"][1]["granted"] == "Assenza di segnalazione"
     assert metrics["cr.total_used"]["value"] == "45000"
     assert metrics["cr.previous_record_count"]["value"] == 1
     assert analysis["guarantees"] == []
     assert len(analysis["guarantees_received"]) == 1
+    assert len(analysis["guarantors"]) == 1
+    assert len(analysis["ceded_debtors"]) == 1
+    assert analysis["coverage"]["other_risk_information"] == "unavailable"
+    assert analysis["coverage"]["summary_totals"] == "unavailable"
     assert len(analysis["inframonthly_events"]) == 1
     assert len(analysis["information_requests"]) == 1
     context = build_model_context(analysis)
     assert context["guarantees_received"][0]["guaranteed_party"] == "VIOLA VERDI"
+    assert context["guarantors"][0]["guarantor"] == "MARIO GARANTE"
+    assert context["ceded_debtors"][0]["ceded_debtor"] == "DEBITORE CEDUTO"
     assert context["inframonthly_events"][0]["event_type"] == "Regolarizzazione"
     assert context["information_requests"][0]["request_reason_code"] == "01"
     assert "source_document_sha256" not in json.dumps(context["guarantees_received"])
+
+
+def test_pdf_normalization_repairs_exact_fragmented_header_and_old_month_label(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "fragmented-header.pdf"
+    _write_fragmented_header_pdf_fixture(source_pdf)
+
+    normalization = normalize_pdf(source_pdf)
+
+    assert len(normalization["tables"]["exposures"]) == 1
+    assert normalization["tables"]["exposures"][0]["category"] == "RISCHI A SCADENZA"
+    assert normalization["tables"]["exposures"][0]["reference_month"] == "2010-09"
+    assert normalization["tables"]["exposures"][0]["used"] == "170000"
+
+
+def test_pdf_normalization_recovers_exact_clipped_terminal_valid_to(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "clipped-valid-to.pdf"
+    _write_clipped_valid_to_pdf_fixture(source_pdf)
+
+    normalization = normalize_pdf(source_pdf)
+    previous = normalization["tables"]["exposures"][0]
+
+    assert previous["record_status"] == "previous"
+    assert previous["valid_from"] == "02/08/2021"
+    assert previous["valid_to"] == "10/08/2021"
+    assert previous["extraction_confidence"] == "high"
+    assert normalization["issues"] == []
+
+
+def test_pdf_normalization_quarantines_merged_tables_with_repeated_headers(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "repeated-header.pdf"
+    _write_repeated_header_pdf_fixture(source_pdf)
+
+    normalization = normalize_pdf(source_pdf, allow_no_supported_tables=True)
+
+    assert normalization["tables"]["exposures"] == []
+    assert len(normalization["unclassified_tables"]) == 1
+    assert (
+        normalization["unclassified_tables"][0]["reason"] == "repeated_header_in_body"
+    )
+    assert (
+        normalization["unclassified_tables"][0]["review_priority"]
+        == "unsupported_data_candidate"
+    )
+
+
+def test_pdf_normalization_separates_other_risk_and_summary_populations(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "auxiliary-risk.pdf"
+    _write_auxiliary_risk_pdf_fixture(source_pdf)
+
+    normalization = normalize_pdf(source_pdf)
+
+    other = normalization["tables"]["other_risk_information"][0]
+    summary = normalization["tables"]["summary_totals"][0]
+    assert other["reference_month"] == "2010-09"
+    assert other["category"] == "SOFFERENZE - CREDITI PASSATI A PERDITA"
+    assert other["amount"] == "30010"
+    assert summary["summary_category"] == "Crediti per cassa"
+    assert summary["granted"] == "308412"
+    assert summary["used"] == "202890"
+    assert normalization["unclassified_tables"] == []
 
 
 def test_pdf_corpus_evaluation_keeps_examples_separate(tmp_path: Path) -> None:
@@ -512,14 +802,22 @@ def test_pdf_corpus_evaluation_keeps_examples_separate(tmp_path: Path) -> None:
     assert "analysis" not in evaluation
     assert cases["exposure-example"]["row_counts"]["exposures"] == 2
     assert cases["guarantee-example"]["row_counts"]["guarantees_received"] == 1
+    assert cases["guarantee-example"]["row_counts"]["guarantors"] == 1
+    assert cases["guarantee-example"]["row_counts"]["ceded_debtors"] == 1
     assert cases["other-information"]["row_counts"] == {
         "exposures": 0,
         "guarantees_received": 0,
+        "guarantors": 0,
+        "ceded_debtors": 0,
+        "other_risk_information": 0,
+        "summary_totals": 0,
         "inframonthly_events": 1,
         "information_requests": 1,
     }
     assert cases["unsupported-example"]["outcome"] == "not_recognized"
     assert cases["unsupported-example"]["unclassified_table_count"] == 1
+    assert cases["unsupported-example"]["unsupported_data_candidate_count"] == 0
+    assert cases["unsupported-example"]["layout_or_narrative_count"] == 1
 
 
 def test_pdf_corpus_evaluation_cli_writes_coverage_only(tmp_path: Path) -> None:
@@ -583,6 +881,10 @@ def test_pdf_inspection_cli_writes_normalized_pipeline_artifacts(
     assert receipt["normalized_row_counts"] == {
         "exposures": 2,
         "guarantees_received": 1,
+        "guarantors": 1,
+        "ceded_debtors": 1,
+        "other_risk_information": 0,
+        "summary_totals": 0,
         "information_requests": 1,
         "inframonthly_events": 1,
     }
@@ -731,6 +1033,10 @@ def test_model_context_is_bounded_and_excludes_source_paths(tmp_path: Path) -> N
         "source_document_sha256": "a" * 64,
     }
     analysis["guarantees_received"] = [auxiliary_row] * 25
+    analysis["guarantors"] = [auxiliary_row] * 25
+    analysis["ceded_debtors"] = [auxiliary_row] * 25
+    analysis["other_risk_information"] = [auxiliary_row] * 25
+    analysis["summary_totals"] = [auxiliary_row] * 25
     analysis["inframonthly_events"] = [auxiliary_row] * 25
     analysis["information_requests"] = [auxiliary_row] * 25
 
@@ -741,6 +1047,10 @@ def test_model_context_is_bounded_and_excludes_source_paths(tmp_path: Path) -> N
     assert len(context["top_overruns"]) <= 20
     assert len(context["monthly_series"]) <= 36
     assert len(context["guarantees_received"]) == 20
+    assert len(context["guarantors"]) == 20
+    assert len(context["ceded_debtors"]) == 20
+    assert len(context["other_risk_information"]) == 20
+    assert len(context["summary_totals"]) == 20
     assert len(context["inframonthly_events"]) == 20
     assert len(context["information_requests"]) == 20
     assert "source_document_sha256" not in json.dumps(context)
@@ -787,7 +1097,7 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
         },
     )
     rendered = render_html(analysis, commentary)
-    workbook = load_workbook(output, read_only=True)
+    workbook = load_workbook(output)
 
     assert "draft_pending_professional_review" not in rendered
     assert "Bozza in attesa di revisione professionale" in rendered
@@ -798,6 +1108,10 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
     assert "non rilevante" in rendered
     assert "Lo sconfinamento è stato regolarizzato?" in rendered
     assert "Manca il confronto con il bilancio." in rendered
+    assert "Garanti dell&#x27;intestatario" in rendered
+    assert "Debitori ceduti" in rendered
+    assert "Altre informazioni di rischio" in rendered
+    assert "Prospetto sintetico" in rendered
     assert "Pregiudizievoli: 0" not in rendered
     assert set(workbook.sheetnames) == {
         "KPI",
@@ -807,6 +1121,10 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
         "Esposizioni",
         "Garanzie",
         "Garanzie ricevute",
+        "Garanti intestatario",
+        "Debitori ceduti",
+        "Altre informazioni",
+        "Prospetto sintetico",
         "Sconfinamenti",
         "Eventi inframensili",
         "Richieste informazioni",
@@ -814,6 +1132,26 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
         "Serie mensile",
         "Controlli",
     }
+    assert workbook["KPI"]["C2"].data_type == "n"
+    assert workbook["KPI"]["C2"].number_format == "#,##0"
+    assert [cell.value for cell in workbook["Garanzie"][1]] == [
+        "reference_month",
+        "intermediary",
+        "risk_category",
+        "guarantee_type",
+        "guaranteed_amount",
+        "record_status",
+        "source_page",
+        "source_row_locator",
+        "extraction_confidence",
+    ]
+    assert workbook["Esposizioni"].freeze_panes == "D2"
+    exposure_headers = {
+        cell.value: cell.column_letter for cell in workbook["Esposizioni"][1]
+    }
+    assert (
+        workbook["Esposizioni"].column_dimensions[exposure_headers["source_row"]].hidden
+    )
 
 
 def test_html_distinguishes_unavailable_evidence_from_zero(tmp_path: Path) -> None:
@@ -830,7 +1168,8 @@ def test_html_distinguishes_unavailable_evidence_from_zero(tmp_path: Path) -> No
     assert analysis["coverage"]["pregiudizievoli"] == "unavailable"
     assert "Pregiudizievoli: 0" not in rendered
     assert (
-        "Non disponibile: la relativa fonte o tabella non è stata fornita." in rendered
+        "Non disponibile: nessuna riga è stata estratta o fornita per questa "
+        "popolazione." in rendered
     )
 
 
@@ -883,6 +1222,10 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert main.rstrip().endswith("</section>")
     assert "Quali dati arrivano al modello" in page
     assert "What data reaches the model" in page
+    assert "garanti dell’intestatario" in page
+    assert "debitori ceduti" in page
+    assert "summary totals" in page
     assert "OCR" not in page
     assert manifest["workstream"] == "centrale-rischi-review"
     assert manifest["external_boundaries"] == []
+    assert "ceded debtors" in manifest["model_context"]["classes"][1]["content"]

@@ -30,7 +30,7 @@
       {
         "id": "centrale-rischi-post-calculation-review",
         "purpose": "Interpret exact calculated CR facts and identify observations, hypotheses, questions, missing evidence and limitations",
-        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, inframonthly events and information requests, together with coverage, controls and limitations. The bounded auxiliary rows may include intermediary or guaranteed-party names, dates, categories, types, reasons, amounts, source pages, row locators and extraction confidence. Raw source populations, absolute paths, original filenames and source-document hashes are excluded from those auxiliary-row projections by default.",
+        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, guarantors of the holder, ceded debtors, other risk information, summary totals, inframonthly events and information requests, together with coverage, controls and limitations. The bounded auxiliary rows may include intermediary, guarantor, guaranteed-party or ceded-debtor names, dates, categories, types, reasons, amounts, source pages, row locators and extraction confidence. Raw source populations, absolute paths, original filenames and source-document hashes are excluded from those auxiliary-row projections by default.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -63,7 +63,7 @@
     },
     {
       "id": "missing-evidence-fail-visible",
-      "control": "Pregiudizievoli, guarantees received, inframonthly events, information requests, multi-month movements and financial-statement ratios remain explicitly unavailable when the required source or table is absent; the workflow never substitutes zero, model inference or a universal credit threshold."
+      "control": "Pregiudizievoli, guarantees received, guarantors of the holder, ceded debtors, other risk information, summary totals, inframonthly events, information requests, multi-month movements and financial-statement ratios remain explicitly unavailable when no row was extracted or supplied for the required population; an empty generated review sheet is not treated as proof of an empty source population, and the workflow never substitutes zero, model inference or a universal credit threshold."
     },
     {
       "id": "bounded-post-calculation-model-context",
@@ -75,7 +75,7 @@
     },
     {
       "id": "acquisition-adapter-separation",
-      "control": "Portal navigation, browser automation and PEC retrieval remain upstream evidence-acquisition routes with their own authorization and receipts. Native-text PDF normalization is a local intake adapter that writes separate review tables and a receipt before the normalized workbook enters the ordinary reviewed calculation contract."
+      "control": "Portal navigation, browser automation and PEC retrieval remain upstream evidence-acquisition routes with their own authorization and receipts. Native-text PDF normalization is a local intake adapter that writes separate review tables and a receipt before the normalized workbook enters the ordinary reviewed calculation contract. Exact supported table shapes are extracted; mechanically ambiguous merged grids are quarantined for professional review instead of entering client facts."
     },
     {
       "id": "pdf-layout-provenance",
@@ -86,6 +86,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fc06149e7ae5f628ee51da2bc34105e22513b9edbe9d7cd6e1b4db01480cc1fd"
+    "source_fingerprint": "a64b473d8f83c6606df1fb9cd7a28dc1c44ec01229febfca5c778e7cc1b59788"
   }
 }

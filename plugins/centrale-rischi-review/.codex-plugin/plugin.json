@@ -1,6 +1,6 @@
 {
   "name": "centrale-rischi-review",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Reviewable Centrale Rischi exposure analysis for Vera from the official digital PDF or confirmed CSV and Excel exports.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Centrale Rischi Review",
     "shortDescription": "Analyse an official Centrale Rischi report.",
-    "longDescription": "Vera normalizes the official digital Centrale Rischi PDF or inventories a supplied CSV or Excel export, requires reviewed field and value mappings, and then calculates short-, medium- and long-term exposures, guarantees, overruns, concentration, available resources and source-supported KPIs. Missing financial-statement ratios and prejudicial evidence remain explicitly unavailable. Calculated facts, model-led interpretation and professional approval remain separate.",
+    "longDescription": "Vera normalizes the official digital Centrale Rischi PDF or inventories a supplied CSV or Excel export, requires reviewed field and value mappings, and then calculates short-, medium- and long-term exposures, guarantees, overruns, concentration, available resources and source-supported KPIs. Guarantors of the holder, guarantees received, ceded debtors, other risk information and summary totals remain separate populations. Ambiguous grids are quarantined; missing financial-statement ratios and prejudicial evidence remain explicitly unavailable. Calculated facts, model-led interpretation and professional approval remain separate.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it",
