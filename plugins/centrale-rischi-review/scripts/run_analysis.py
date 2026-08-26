@@ -137,6 +137,11 @@ def main(argv: list[str] | None = None) -> int:
             "schema_version": COMMENTARY_SCHEMA,
             "workflow_id": "centrale-rischi-review",
             "analysis_sha256": analysis_sha256,
+            "evidence_ref_contract": {
+                "metric": "metric:<existing metric_id>",
+                "control": "control:<existing control_id>",
+                "source_row": "row:<existing source_row_locator>",
+            },
             "observations": [],
             "hypotheses": [],
             "questions": [],

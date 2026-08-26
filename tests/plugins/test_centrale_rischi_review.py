@@ -29,6 +29,7 @@ if str(SCRIPTS) not in sys.path:
 import evaluate_pdf_corpus as evaluate_pdf_corpus_cli  # noqa: E402
 import inspect_inputs  # noqa: E402
 import run_analysis  # noqa: E402
+import run_gold_benchmark as gold_benchmark  # noqa: E402
 from centrale_rischi_core import (  # noqa: E402
     COMMENTARY_SCHEMA,
     CentraleRischiContractError,
@@ -442,6 +443,143 @@ def _write_repeated_header_pdf_fixture(path: Path) -> None:
     )
 
 
+def _write_merged_correction_pdf_fixture(path: Path) -> None:
+    styles = getSampleStyleSheet()
+    document = SimpleDocTemplate(
+        path.as_posix(),
+        pagesize=landscape(A4),
+        leftMargin=8 * mm,
+        rightMargin=8 * mm,
+        topMargin=8 * mm,
+        bottomMargin=8 * mm,
+    )
+    headers = (
+        "Categoria",
+        "Localizzazione",
+        "Durata Originaria",
+        "Durata Residua",
+        "Divisa",
+        "Import Export",
+        "Tipo Attivita",
+        "Stato Rapporto",
+        "Tipo Garanzia",
+        "Ruolo Affidato",
+        "Accordato",
+        "Accordato Operativo",
+        "Utilizzato",
+        "Saldo Medio",
+        "Importo Garantito",
+        "Da",
+        "A",
+    )
+    current = (
+        "RISCHI A SCADENZA",
+        "38270",
+        "17",
+        "18",
+        "1",
+        "8",
+        "32",
+        "90",
+        "112",
+        "0",
+        "60.000",
+        "60.000",
+        "60.000",
+        "0",
+        "60.000",
+        "",
+        "",
+    )
+    previous_absent = (
+        *current[:10],
+        "Assenza di segnalazione",
+        "",
+        "",
+        "",
+        "",
+        "01/12/2009",
+        "10/12/2009",
+    )
+    previous_numeric = (
+        *current[:8],
+        "125",
+        "0",
+        "0",
+        "0",
+        "60.000",
+        "0",
+        "60.000",
+        "01/12/2009",
+        "10/12/2009",
+    )
+    table = Table([headers, current, headers, previous_absent, previous_numeric])
+    table.setStyle(
+        TableStyle(
+            [
+                ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
+                ("FONTSIZE", (0, 0), (-1, -1), 3.5),
+            ]
+        )
+    )
+    document.build(
+        [
+            Paragraph(
+                "La correzione operata dalla banca sulle segnalazioni del mese di ottobre 2009 è evidenziata come segue:",
+                styles["BodyText"],
+            ),
+            Paragraph("Situazione corrente", styles["BodyText"]),
+            Paragraph(
+                'Per la data contabile indicata l intermediario aveva segnalato le seguenti informazioni successivamente rettificate. Nella colonna "Da" e "A" compaiono le date.',
+                styles["BodyText"],
+            ),
+            table,
+        ]
+    )
+
+
+def _write_generic_request_pdf_fixture(path: Path, validity_period: str) -> None:
+    styles = getSampleStyleSheet()
+    document = SimpleDocTemplate(
+        path.as_posix(),
+        pagesize=landscape(A4),
+        leftMargin=10 * mm,
+        rightMargin=10 * mm,
+        topMargin=10 * mm,
+        bottomMargin=10 * mm,
+    )
+    table = Table(
+        [
+            (
+                "Data della richiesta di informazione",
+                "Periodo richiesto",
+                "Tipo richiesta di informazione",
+                "Causale della richiesta",
+                "Descrizione causale",
+                "Periodo validita",
+                "Note",
+            ),
+            (
+                "02/04/2021",
+                "Marzo 2020",
+                "PRIMA INFORMAZIONE",
+                "01",
+                "RICHIESTA PER CONCESSIONE DI FIDO",
+                validity_period,
+                "IN CORSO DI VALIDITA",
+            ),
+        ]
+    )
+    table.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.5, colors.black)]))
+    document.build(
+        [
+            Paragraph("RICHIESTE DI INFORMAZIONE", styles["Heading2"]),
+            Paragraph("INTERMEDIARIO", styles["BodyText"]),
+            table,
+        ]
+    )
+
+
 def _write_auxiliary_risk_pdf_fixture(path: Path) -> None:
     styles = getSampleStyleSheet()
     document = SimpleDocTemplate(
@@ -570,6 +708,9 @@ def test_analysis_calculates_maturities_overruns_guarantees_and_kpis(
     categories = {
         item["risk_category"]: item for item in analysis["risk_category_summary"]
     }
+    movements = {
+        item["risk_category"]: item for item in analysis["category_movement_summary"]
+    }
 
     assert analysis["status"] == "complete"
     assert metrics["cr.total_used"]["value"] == "1500"
@@ -587,6 +728,14 @@ def test_analysis_calculates_maturities_overruns_guarantees_and_kpis(
     assert residual_term["not_relevant"]["used"] == "100"
     assert categories["Autoliquidante"]["utilization_pct"] == "105.56"
     assert categories["A scadenza"]["utilization_pct"] == "75"
+    assert movements["Autoliquidante"]["used_change"] == "150"
+    assert movements["A scadenza"]["used_change"] == "-50"
+    assert movements["Sofferenze"]["used_change"] == "100"
+    assert movements["Sofferenze"]["presence"] == "new_in_latest"
+    assert any(
+        item["label"] == "Variazione utilizzato — Sofferenze" and item["value"] == "100"
+        for item in analysis["metrics"]
+    )
     assert len(analysis["guarantees"]) == 2
     assert len(analysis["overruns"]) == 1
     assert len(analysis["prejudicial_events"]) == 1
@@ -707,6 +856,10 @@ def test_native_pdf_normalization_feeds_analysis_without_double_counting_previou
     assert len(analysis["inframonthly_events"]) == 1
     assert len(analysis["information_requests"]) == 1
     context = build_model_context(analysis)
+    assert context["previous_records"][0]["used"] == "60000"
+    assert (
+        context["previous_records"][0]["source_row_locator"] == "page:1:table:2:row:2"
+    )
     assert context["guarantees_received"][0]["guaranteed_party"] == "VIOLA VERDI"
     assert context["guarantors"][0]["guarantor"] == "MARIO GARANTE"
     assert context["ceded_debtors"][0]["ceded_debtor"] == "DEBITORE CEDUTO"
@@ -762,6 +915,58 @@ def test_pdf_normalization_quarantines_merged_tables_with_repeated_headers(
         normalization["unclassified_tables"][0]["review_priority"]
         == "unsupported_data_candidate"
     )
+
+
+def test_pdf_normalization_recovers_exact_merged_correction_grid(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "merged-correction.pdf"
+    _write_merged_correction_pdf_fixture(source_pdf)
+
+    normalization = normalize_pdf(source_pdf)
+    rows = normalization["tables"]["exposures"]
+
+    assert len(rows) == 3
+    assert [row["record_status"] for row in rows] == [
+        "current",
+        "previous",
+        "previous",
+    ]
+    assert rows[0]["reference_month"] == "2009-10"
+    assert rows[0]["used"] == "60000"
+    assert rows[1]["granted"] == "Assenza di segnalazione"
+    assert rows[2]["guarantee_type"] == "125"
+    assert rows[2]["valid_to"] == "10/12/2009"
+    assert normalization["unclassified_tables"] == []
+    assert all(
+        item["issues"] == ["missing_intermediary"] for item in normalization["issues"]
+    )
+
+
+def test_pdf_normalization_does_not_invent_generic_request_intermediary(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "generic-request.pdf"
+    _write_generic_request_pdf_fixture(source_pdf, "Da 02/04/2021 a 31/12/9999")
+
+    normalization = normalize_pdf(source_pdf)
+    request = normalization["tables"]["information_requests"][0]
+
+    assert request["intermediary"] == ""
+    assert request["extraction_confidence"] == "review_required"
+    assert normalization["issues"][0]["issues"] == ["missing_intermediary"]
+
+
+def test_pdf_normalization_removes_only_exact_validity_watermark_prefix(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "watermarked-request.pdf"
+    _write_generic_request_pdf_fixture(source_pdf, "O Da 18/06/2026 a 20/06/2026")
+
+    normalization = normalize_pdf(source_pdf)
+    request = normalization["tables"]["information_requests"][0]
+
+    assert request["validity_period"] == "Da 18/06/2026 a 20/06/2026"
 
 
 def test_pdf_normalization_separates_other_risk_and_summary_populations(
@@ -842,6 +1047,151 @@ def test_pdf_corpus_evaluation_cli_writes_coverage_only(tmp_path: Path) -> None:
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["case_count"] == 2
     assert payload["analysis_generated"] is False
+
+
+def test_gold_benchmark_runs_pdf_case_end_to_end(tmp_path: Path) -> None:
+    source_pdf = tmp_path / "centrale-rischi-examples.pdf"
+    manifest_path = tmp_path / "gold.json"
+    output_dir = tmp_path / "benchmark"
+    _write_native_pdf_fixture(source_pdf)
+    manifest = {
+        "schema_version": gold_benchmark.BENCHMARK_SCHEMA,
+        "workflow_id": "centrale-rischi-review",
+        "sources": {
+            "fixture": {
+                "sha256": gold_benchmark.sha256_file(source_pdf),
+                "page_count": 5,
+                "role": "Test fixture",
+            }
+        },
+        "mapping_profiles": {
+            "fixture": {
+                "original_term": {"Oltre cinque anni": "long"},
+                "residual_term": {"Oltre 1 anno": "over_one_year"},
+                "exposure_family": {"RISCHI A SCADENZA": "performing"},
+            }
+        },
+        "negative_control_sources": [],
+        "extraction_cases": [
+            {
+                "case_id": "fixture_p1",
+                "source_id": "fixture",
+                "pages": [1],
+                "row_counts": {"exposures": 2},
+                "issue_codes": [],
+                "unsupported_data_candidate_count": 0,
+                "expected_rows": {
+                    "exposures": [
+                        {
+                            "reference_month": "2026-06",
+                            "used": "45000",
+                            "record_status": "current",
+                        },
+                        {
+                            "reference_month": "2026-06",
+                            "used": "60000",
+                            "record_status": "previous",
+                        },
+                    ]
+                },
+            }
+        ],
+        "analysis_cases": [
+            {
+                "case_id": "analysis_fixture_p1",
+                "extraction_case_id": "fixture_p1",
+                "source_id": "fixture",
+                "pages": [1],
+                "entity": "Fixture S.r.l.",
+                "analysis_objective": "Test the full benchmark contract.",
+                "mapping_profile": "fixture",
+                "control_totals": {"used": "45000"},
+                "expected": {
+                    "outcome": "analysis",
+                    "status": "complete",
+                    "source_counts": {
+                        "current_row_count": 1,
+                        "previous_row_count": 1,
+                    },
+                    "metrics": {
+                        "cr.total_used": "45000",
+                        "cr.previous_record_count": 1,
+                        "cr.original_term.long_share_pct": "100",
+                    },
+                    "population_counts": {"exposures": 2, "overruns": 0},
+                },
+            }
+        ],
+        "semantic_rubric": {"dimensions": {}},
+        "semantic_review_cases": [],
+        "limitations": ["Fixture only."],
+    }
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    receipt = gold_benchmark.run_benchmark(
+        manifest_path,
+        {"fixture": source_pdf},
+        output_dir,
+    )
+
+    assert receipt["deterministic_passed"] is True
+    assert receipt["summary"] == {
+        "extraction_total": 1,
+        "extraction_passed": 1,
+        "analysis_total": 1,
+        "analysis_passed": 1,
+    }
+    assert receipt["overall_status"] == "deterministic_pass_semantic_review_pending"
+    assert (output_dir / "benchmark_receipt.json").is_file()
+    assert (output_dir / "benchmark_report.html").is_file()
+    assert (
+        output_dir
+        / "analysis"
+        / "analysis_fixture_p1"
+        / "centrale_rischi_dashboard.html"
+    ).is_file()
+
+
+def test_gold_benchmark_rejects_semantic_review_with_missing_case(
+    tmp_path: Path,
+) -> None:
+    source_pdf = tmp_path / "source.pdf"
+    manifest_path = tmp_path / "gold.json"
+    review_path = tmp_path / "semantic-review.json"
+    _write_native_pdf_fixture(source_pdf)
+    review_path.write_text(
+        json.dumps(
+            {
+                "schema_version": gold_benchmark.SEMANTIC_REVIEW_SCHEMA,
+                "reviews": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    manifest = {
+        "schema_version": gold_benchmark.BENCHMARK_SCHEMA,
+        "sources": {
+            "fixture": {
+                "sha256": gold_benchmark.sha256_file(source_pdf),
+                "page_count": 5,
+                "role": "Test fixture",
+            }
+        },
+        "extraction_cases": [],
+        "negative_control_sources": [],
+        "analysis_cases": [],
+        "semantic_rubric": {"dimensions": {"factual_accuracy": {}}},
+        "semantic_review_cases": [{"case_id": "required-case"}],
+    }
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="missing cases"):
+        gold_benchmark.run_benchmark(
+            manifest_path,
+            {"fixture": source_pdf},
+            tmp_path / "output",
+            semantic_review_path=review_path,
+        )
 
 
 def test_pdf_inspection_cli_writes_normalized_pipeline_artifacts(
@@ -1046,6 +1396,8 @@ def test_model_context_is_bounded_and_excludes_source_paths(tmp_path: Path) -> N
     assert "absolute_path" not in json.dumps(context)
     assert len(context["top_overruns"]) <= 20
     assert len(context["monthly_series"]) <= 36
+    assert len(context["category_movement_summary"]) <= 50
+    assert len(context["previous_records"]) <= 20
     assert len(context["guarantees_received"]) == 20
     assert len(context["guarantors"]) == 20
     assert len(context["ceded_debtors"]) == 20
@@ -1063,14 +1415,47 @@ def test_commentary_requires_existing_metric_references(tmp_path: Path) -> None:
     commentary = {
         "schema_version": COMMENTARY_SCHEMA,
         "workflow_id": "centrale-rischi-review",
-        "observations": [{"text": "Utilizzo elevato.", "metric_ids": ["missing"]}],
+        "observations": [
+            {"text": "Utilizzo elevato.", "evidence_refs": ["metric:missing"]}
+        ],
         "hypotheses": [],
         "questions": [],
         "limitations": [],
     }
 
-    with pytest.raises(CentraleRischiContractError, match="existing metric_ids"):
+    with pytest.raises(CentraleRischiContractError, match="existing evidence_refs"):
         finalize_commentary(analysis, commentary)
+
+
+@pytest.mark.parametrize(
+    "evidence_ref",
+    (
+        "metric:cr.total_used",
+        "control:control.latest.used",
+        "row:sheet:CR:row:2",
+    ),
+)
+def test_commentary_accepts_closed_evidence_reference_types(
+    tmp_path: Path, evidence_ref: str
+) -> None:
+    source = tmp_path / "cr.xlsx"
+    _write_source(source)
+    analysis, _ = _analysis_for(source)
+    analysis["overruns"][0]["source_row_locator"] = "sheet:CR:row:2"
+    commentary = {
+        "schema_version": COMMENTARY_SCHEMA,
+        "workflow_id": "centrale-rischi-review",
+        "observations": [
+            {"text": "Fatto collegato all'evidenza.", "evidence_refs": [evidence_ref]}
+        ],
+        "hypotheses": [],
+        "questions": [],
+        "limitations": [],
+    }
+
+    finalized = finalize_commentary(analysis, commentary)
+
+    assert finalized["observations"][0]["evidence_refs"] == [evidence_ref]
 
 
 def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
@@ -1088,7 +1473,7 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
             "observations": [
                 {
                     "text": "Lo sconfinamento richiede verifica.",
-                    "metric_ids": ["cr.overrun_amount"],
+                    "evidence_refs": ["metric:cr.overrun_amount"],
                 }
             ],
             "hypotheses": [],
@@ -1108,6 +1493,13 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
     assert "non rilevante" in rendered
     assert "Lo sconfinamento è stato regolarizzato?" in rendered
     assert "Manca il confronto con il bilancio." in rendered
+    assert "Variazione tra gli ultimi due periodi per categoria" in rendered
+    assert "Utilizzato — Autoliquidante" not in rendered
+    assert '<details class="evidence">' in rendered
+    assert "<summary>Evidenze</summary>" in rendered
+    assert rendered.index("Commento professionale — bozza") < rendered.index(
+        "Esposizioni per durata originaria"
+    )
     assert "Garanti dell&#x27;intestatario" in rendered
     assert "Debitori ceduti" in rendered
     assert "Altre informazioni di rischio" in rendered
@@ -1118,6 +1510,7 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
         "Durata originaria",
         "Durata residua",
         "Categorie",
+        "Variazione categorie",
         "Esposizioni",
         "Garanzie",
         "Garanzie ricevute",

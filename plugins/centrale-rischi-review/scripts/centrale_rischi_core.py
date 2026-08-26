@@ -35,8 +35,8 @@ __all__ = [
     "write_json",
 ]
 
-ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v5"
-COMMENTARY_SCHEMA = "vera.centrale_rischi_commentary.v1"
+ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v6"
+COMMENTARY_SCHEMA = "vera.centrale_rischi_commentary.v2"
 RECIPE_SCHEMA = "vera.centrale_rischi_recipe.v2"
 WORKFLOW_ID = "centrale-rischi-review"
 ORIGINAL_TERM_CLASSES = (
@@ -635,6 +635,9 @@ def build_analysis(
         for value in RESIDUAL_TERM_CLASSES
     }
     monthly: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
+    monthly_category: dict[str, dict[str, dict[str, Decimal]]] = defaultdict(
+        lambda: defaultdict(lambda: defaultdict(Decimal))
+    )
     intermediary: dict[str, Decimal] = defaultdict(Decimal)
     category_totals: dict[str, dict[str, Decimal]] = defaultdict(
         lambda: defaultdict(Decimal)
@@ -650,6 +653,14 @@ def build_analysis(
             "guaranteed_amount",
         ):
             monthly[month][field] += row[field]
+        for field in (
+            "granted",
+            "operational_granted",
+            "used",
+            "available",
+            "overrun",
+        ):
+            monthly_category[month][str(row["risk_category"])][field] += row[field]
     for row in latest:
         original_bucket = original_term_totals[str(row["original_term"])]
         residual_bucket = residual_term_totals[str(row["residual_term"])]
@@ -840,6 +851,75 @@ def build_analysis(
                 }
             )
 
+    category_movement_summary: list[dict[str, Any]] = []
+    if len(months) > 1:
+        prior_month = months[-2]
+        latest_categories = set(monthly_category[latest_month])
+        prior_categories = set(monthly_category[prior_month])
+        for category in sorted(latest_categories | prior_categories):
+            category_id = hashlib.sha256(category.encode("utf-8")).hexdigest()[:10]
+            prior_totals = monthly_category[prior_month][category]
+            latest_totals = monthly_category[latest_month][category]
+            movement = {
+                "risk_category": category,
+                "prior_reference_month": prior_month,
+                "latest_reference_month": latest_month,
+                "presence": (
+                    "new_in_latest"
+                    if category not in prior_categories
+                    else (
+                        "absent_in_latest"
+                        if category not in latest_categories
+                        else "continuing"
+                    )
+                ),
+            }
+            for field in (
+                "granted",
+                "operational_granted",
+                "used",
+                "available",
+                "overrun",
+            ):
+                prior_value = prior_totals[field]
+                latest_value = latest_totals[field]
+                movement[f"prior_{field}"] = _decimal_text(prior_value)
+                movement[f"latest_{field}"] = _decimal_text(latest_value)
+                movement[f"{field}_change"] = _decimal_text(latest_value - prior_value)
+            category_movement_summary.append(movement)
+            for suffix, label, field in (
+                (
+                    "operational_granted_change",
+                    f"Variazione accordato operativo — {category}",
+                    "operational_granted_change",
+                ),
+                (
+                    "used_change",
+                    f"Variazione utilizzato — {category}",
+                    "used_change",
+                ),
+                (
+                    "overrun_change",
+                    f"Variazione sconfinamento — {category}",
+                    "overrun_change",
+                ),
+            ):
+                metrics.append(
+                    {
+                        **_metric(
+                            f"cr.category.{category_id}.{suffix}",
+                            label,
+                            Decimal(str(movement[field])),
+                            str(recipe.get("currency", "EUR")),
+                        ),
+                        "dimension": {
+                            "risk_category": category,
+                            "prior_reference_month": prior_month,
+                            "latest_reference_month": latest_month,
+                        },
+                    }
+                )
+
     controls: list[dict[str, Any]] = []
     tolerance = _decimal(
         recipe.get("control_tolerance", "0.01"), field="control_tolerance", row_number=0
@@ -951,6 +1031,10 @@ def build_analysis(
         limitations.append(
             "Le evidenze pregiudizievoli non sono disponibili perché non è stata fornita una colonna proveniente da una fonte separata e confermata."
         )
+    if category_movement_summary:
+        limitations.append(
+            "Il confronto per categoria mostra variazioni aggregate tra i due periodi più recenti; senza una riconciliazione per singolo rapporto non prova che una specifica posizione sia stata riclassificata."
+        )
     return {
         "schema_version": ANALYSIS_SCHEMA,
         "workflow_id": WORKFLOW_ID,
@@ -977,6 +1061,7 @@ def build_analysis(
         "original_term_summary": original_term_summary,
         "residual_term_summary": residual_term_summary,
         "risk_category_summary": category_summary,
+        "category_movement_summary": category_movement_summary,
         "monthly_series": monthly_series,
         "guarantees": guarantees,
         "guarantees_received": guarantees_received,
@@ -1045,8 +1130,21 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
             {field: row[field] for field in fields if field in row} for row in rows[:20]
         ]
 
+    def correction_sort_key(row: Mapping[str, Any]) -> tuple[str, date, int]:
+        try:
+            validity_end = datetime.strptime(
+                str(row.get("valid_to", "")), "%d/%m/%Y"
+            ).date()
+        except ValueError:
+            validity_end = date.min
+        try:
+            source_page = int(str(row.get("source_page", "0")))
+        except ValueError:
+            source_page = 0
+        return str(row.get("reference_month", "")), validity_end, source_page
+
     return {
-        "schema_version": "vera.centrale_rischi_model_context.v4",
+        "schema_version": "vera.centrale_rischi_model_context.v6",
         "workflow_id": WORKFLOW_ID,
         "status": analysis["status"],
         "entity": analysis["entity"],
@@ -1056,7 +1154,37 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
         "original_term_summary": analysis["original_term_summary"],
         "residual_term_summary": analysis["residual_term_summary"],
         "risk_category_summary": analysis["risk_category_summary"],
+        "category_movement_summary": analysis["category_movement_summary"][:50],
         "monthly_series": analysis["monthly_series"][-36:],
+        "previous_records": project(
+            sorted(
+                (
+                    row
+                    for row in analysis["exposures"]
+                    if row.get("record_status") == "previous"
+                ),
+                key=correction_sort_key,
+                reverse=True,
+            ),
+            (
+                "reference_month",
+                "intermediary",
+                "risk_category",
+                "original_duration",
+                "residual_duration",
+                "granted",
+                "operational_granted",
+                "used",
+                "guarantee_type",
+                "guaranteed_amount",
+                "record_status",
+                "valid_from",
+                "valid_to",
+                "source_page",
+                "source_row_locator",
+                "extraction_confidence",
+            ),
+        ),
         "top_overruns": sorted(
             analysis["overruns"],
             key=lambda row: Decimal(str(row["overrun"])),
@@ -1191,7 +1319,8 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
         "assurance_levels": analysis["assurance_levels"],
         "limitations": analysis["limitations"],
         "excluded_by_default": [
-            "raw source population",
+            "current raw source population",
+            "previous records beyond the bounded review projection",
             "absolute paths",
             "original filenames",
         ],
@@ -1201,7 +1330,7 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
 def finalize_commentary(
     analysis: Mapping[str, Any], commentary: Mapping[str, Any]
 ) -> dict[str, Any]:
-    """Validate commentary shape and metric-reference closure."""
+    """Validate commentary shape and evidence-reference closure."""
 
     if (
         analysis.get("schema_version") != ANALYSIS_SCHEMA
@@ -1219,7 +1348,26 @@ def finalize_commentary(
         or commentary.get("workflow_id") != WORKFLOW_ID
     ):
         raise CentraleRischiContractError("Commentary schema or workflow is invalid.")
-    metric_ids = {str(item["metric_id"]) for item in analysis.get("metrics", [])}
+    model_context = build_model_context(analysis)
+    valid_evidence_refs = {
+        f"metric:{item['metric_id']}" for item in model_context.get("metrics", [])
+    }
+    valid_evidence_refs.update(
+        f"control:{item['control_id']}" for item in model_context.get("controls", [])
+    )
+
+    def add_row_references(value: Any) -> None:
+        if isinstance(value, Mapping):
+            locator = value.get("source_row_locator")
+            if locator:
+                valid_evidence_refs.add(f"row:{locator}")
+            for nested in value.values():
+                add_row_references(nested)
+        elif isinstance(value, list):
+            for nested in value:
+                add_row_references(nested)
+
+    add_row_references(model_context)
     normalized: dict[str, Any] = {
         "schema_version": COMMENTARY_SCHEMA,
         "workflow_id": WORKFLOW_ID,
@@ -1232,19 +1380,19 @@ def finalize_commentary(
         for item in items:
             if not isinstance(item, Mapping) or not _text(item.get("text")):
                 raise CentraleRischiContractError(f"Each {section} item requires text.")
-            references = item.get("metric_ids")
+            references = item.get("evidence_refs")
             if (
                 not isinstance(references, list)
                 or not references
-                or not set(map(str, references)) <= metric_ids
+                or not set(map(str, references)) <= valid_evidence_refs
             ):
                 raise CentraleRischiContractError(
-                    f"Each {section} item requires only existing metric_ids."
+                    f"Each {section} item requires only existing evidence_refs."
                 )
             normalized_items.append(
                 {
                     "text": _text(item["text"]),
-                    "metric_ids": [str(value) for value in references],
+                    "evidence_refs": [str(value) for value in references],
                 }
             )
         normalized[section] = normalized_items
@@ -1276,6 +1424,7 @@ def _metric_rows(analysis: Mapping[str, Any]) -> str:
         )
         + "</td></tr>"
         for item in analysis["metrics"]
+        if "dimension" not in item
     )
 
 
@@ -1414,6 +1563,14 @@ def _term_label(value: str) -> str:
     }.get(value, value)
 
 
+def _movement_label(value: str) -> str:
+    return {
+        "continuing": "presente in entrambi i periodi",
+        "new_in_latest": "presente solo nel periodo più recente",
+        "absent_in_latest": "assente nel periodo più recente",
+    }.get(value, value)
+
+
 def render_markdown(
     analysis: Mapping[str, Any], commentary: Mapping[str, Any] | None = None
 ) -> str:
@@ -1474,6 +1631,20 @@ def render_markdown(
         lines.append(
             f"| {item['risk_category']} | {item['operational_granted']} | {item['used']} | {item['available']} | {item['utilization_pct'] if item['utilization_pct'] is not None else 'Non disponibile'} |"
         )
+    if analysis["category_movement_summary"]:
+        lines.extend(
+            [
+                "",
+                "## Variazione tra gli ultimi due periodi per categoria",
+                "",
+                "| Categoria | Periodo precedente | Periodo recente | Presenza | Utilizzato precedente | Utilizzato recente | Variazione utilizzato | Sconfinamento precedente | Sconfinamento recente |",
+                "| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
+            ]
+        )
+        for item in analysis["category_movement_summary"]:
+            lines.append(
+                f"| {item['risk_category']} | {item['prior_reference_month']} | {item['latest_reference_month']} | {_movement_label(str(item['presence']))} | {item['prior_used']} | {item['latest_used']} | {item['used_change']} | {item['prior_overrun']} | {item['latest_overrun']} |"
+            )
 
     def population(
         title: str,
@@ -1627,7 +1798,7 @@ def render_markdown(
         ):
             lines.extend([f"### {heading}", ""])
             lines.extend(
-                f"- {item['text']} ({', '.join(item['metric_ids'])})"
+                f"- {item['text']} ({', '.join(item['evidence_refs'])})"
                 for item in commentary[key]
             )
         for heading, key in (
@@ -1655,7 +1826,10 @@ def render_html(
         ):
             if key in {"observations", "hypotheses"}:
                 items = "".join(
-                    f"<li>{html.escape(item['text'])} <code>{html.escape(', '.join(item['metric_ids']))}</code></li>"
+                    f"<li><span>{html.escape(item['text'])}</span>"
+                    '<details class="evidence"><summary>Evidenze</summary>'
+                    f"<code>{html.escape(', '.join(item['evidence_refs']))}</code>"
+                    "</details></li>"
                     for item in commentary[key]
                 )
             else:
@@ -1684,6 +1858,30 @@ def render_html(
         ("Operativo", "operational_granted"),
         ("Utilizzato", "used"),
         ("Sconfinamento", "overrun"),
+    )
+    category_movement_rows = [
+        {**item, "presence_label": _movement_label(str(item["presence"]))}
+        for item in analysis["category_movement_summary"]
+    ]
+    category_movement_html = (
+        "<section><h2>Variazione tra gli ultimi due periodi per categoria</h2>"
+        + _html_table(
+            category_movement_rows,
+            (
+                ("Categoria", "risk_category"),
+                ("Periodo precedente", "prior_reference_month"),
+                ("Periodo recente", "latest_reference_month"),
+                ("Presenza", "presence_label"),
+                ("Utilizzato precedente", "prior_used"),
+                ("Utilizzato recente", "latest_used"),
+                ("Variazione utilizzato", "used_change"),
+                ("Sconfinamento precedente", "prior_overrun"),
+                ("Sconfinamento recente", "latest_overrun"),
+            ),
+        )
+        + "</section>"
+        if category_movement_rows
+        else ""
     )
     populations = "".join(
         (
@@ -1819,7 +2017,7 @@ def render_html(
             ),
         )
     )
-    return f"""<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centrale Rischi — {html.escape(str(analysis['entity']))}</title><style>:root{{--navy:#002060;--blue:#006b8f;--ink:#171816;--muted:#5c6470;--rule:#d9dadd}}*{{box-sizing:border-box}}body{{font-family:'Instrument Sans',Arial,sans-serif;margin:0;color:var(--ink);background:#fff}}main{{max-width:1120px;margin:auto;padding:48px 24px 72px}}header{{border-top:5px solid var(--navy);border-bottom:1px solid #c9ccd1;padding:28px 0 24px}}.eyebrow{{color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.08em}}h1{{font-size:clamp(2.2rem,5vw,4.5rem);line-height:.98;margin:.4rem 0}}h2{{font-size:1.55rem;margin-bottom:14px}}h3{{font-size:1.05rem;margin-top:24px}}section{{margin-top:42px}}.table-wrap{{overflow-x:auto;border-top:1px solid var(--navy)}}table{{width:100%;border-collapse:collapse;min-width:680px}}th,td{{padding:12px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}}th{{color:var(--navy);font-size:.82rem;letter-spacing:.02em}}td.number{{font-variant-numeric:tabular-nums;text-align:right}}td small{{display:block;color:var(--muted);margin-top:4px;max-width:44ch}}.status{{display:inline-block;border:1px solid var(--navy);padding:6px 10px}}.empty{{color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}}code{{font-size:.8em;color:var(--blue)}}@media(max-width:700px){{main{{padding:28px 16px 52px}}table{{font-size:.82rem}}}}</style></head><body><main><header><p class="eyebrow">Vera · Centrale Rischi</p><h1>{html.escape(str(analysis['entity']))}</h1><p>Periodo più recente: {html.escape(str(analysis['latest_reference_month']))} · <span class="status">{html.escape(_review_status_label(str(analysis['review_status'])))}</span></p></header><section><h2>KPI</h2><div class="table-wrap"><table><thead><tr><th>Metrica</th><th>Valore</th><th>Unità</th><th>Copertura</th></tr></thead><tbody>{_metric_rows(analysis)}</tbody></table></div></section><section><h2>Esposizioni per durata originaria</h2>{_html_table(original_term_rows, amount_columns)}</section><section><h2>Esposizioni per durata residua</h2>{_html_table(residual_term_rows, amount_columns)}</section><section><h2>Indicatori per categoria</h2>{_html_table(analysis['risk_category_summary'], (("Categoria", "risk_category"), ("Operativo", "operational_granted"), ("Utilizzato", "used"), ("Margine CR calcolato", "available"), ("Utilizzo %", "utilization_pct")))}</section>{populations}{commentary_html}<section><h2>Limiti</h2><ul>{''.join(f'<li>{html.escape(item)}</li>' for item in analysis['limitations'])}</ul></section></main></body></html>"""
+    return f"""<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centrale Rischi — {html.escape(str(analysis['entity']))}</title><style>:root{{--navy:#002060;--blue:#006b8f;--ink:#171816;--muted:#5c6470;--rule:#d9dadd}}*{{box-sizing:border-box}}body{{font-family:'Instrument Sans',Arial,sans-serif;margin:0;color:var(--ink);background:#fff}}main{{max-width:1120px;margin:auto;padding:48px 24px 72px}}header{{border-top:5px solid var(--navy);border-bottom:1px solid #c9ccd1;padding:28px 0 24px}}.eyebrow{{color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.08em}}h1{{font-size:clamp(2.2rem,5vw,4.5rem);line-height:.98;margin:.4rem 0}}h2{{font-size:1.55rem;margin-bottom:14px}}h3{{font-size:1.05rem;margin-top:24px}}section{{margin-top:42px}}.table-wrap{{overflow-x:auto;border-top:1px solid var(--navy)}}table{{width:100%;border-collapse:collapse;min-width:680px}}th,td{{padding:12px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}}th{{color:var(--navy);font-size:.82rem;letter-spacing:.02em}}td.number{{font-variant-numeric:tabular-nums;text-align:right}}td small{{display:block;color:var(--muted);margin-top:4px;max-width:44ch}}.status{{display:inline-block;border:1px solid var(--navy);padding:6px 10px}}.empty{{color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}}code{{font-size:.8em;color:var(--blue)}}details.evidence{{margin:.35rem 0 .8rem;color:var(--muted)}}details.evidence summary{{cursor:pointer;font-size:.82rem}}details.evidence code{{display:block;margin-top:.25rem;overflow-wrap:anywhere}}@media(max-width:700px){{main{{padding:28px 16px 52px}}table{{font-size:.82rem}}}}</style></head><body><main><header><p class="eyebrow">Vera · Centrale Rischi</p><h1>{html.escape(str(analysis['entity']))}</h1><p>Periodo più recente: {html.escape(str(analysis['latest_reference_month']))} · <span class="status">{html.escape(_review_status_label(str(analysis['review_status'])))}</span></p></header><section><h2>KPI</h2><div class="table-wrap"><table><thead><tr><th>Metrica</th><th>Valore</th><th>Unità</th><th>Copertura</th></tr></thead><tbody>{_metric_rows(analysis)}</tbody></table></div></section>{commentary_html}<section><h2>Esposizioni per durata originaria</h2>{_html_table(original_term_rows, amount_columns)}</section><section><h2>Esposizioni per durata residua</h2>{_html_table(residual_term_rows, amount_columns)}</section><section><h2>Indicatori per categoria</h2>{_html_table(analysis['risk_category_summary'], (("Categoria", "risk_category"), ("Operativo", "operational_granted"), ("Utilizzato", "used"), ("Margine CR calcolato", "available"), ("Utilizzo %", "utilization_pct")))}</section>{category_movement_html}{populations}<section><h2>Limiti</h2><ul>{''.join(f'<li>{html.escape(item)}</li>' for item in analysis['limitations'])}</ul></section></main></body></html>"""
 
 
 def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
@@ -1851,6 +2049,21 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         "expected",
         "actual",
         "difference",
+        "prior_granted",
+        "latest_granted",
+        "granted_change",
+        "prior_operational_granted",
+        "latest_operational_granted",
+        "operational_granted_change",
+        "prior_used",
+        "latest_used",
+        "used_change",
+        "prior_available",
+        "latest_available",
+        "available_change",
+        "prior_overrun",
+        "latest_overrun",
+        "overrun_change",
     }
     percentage_fields = {"utilization_pct"}
     numeric_fields = amount_fields | percentage_fields
@@ -1891,6 +2104,7 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         "Durata originaria": analysis["original_term_summary"],
         "Durata residua": analysis["residual_term_summary"],
         "Categorie": analysis["risk_category_summary"],
+        "Variazione categorie": analysis["category_movement_summary"],
         "Esposizioni": analysis["exposures"],
         "Garanzie": project_rows(
             analysis["guarantees"],

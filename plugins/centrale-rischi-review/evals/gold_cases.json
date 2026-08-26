@@ -1,0 +1,695 @@
+{
+  "schema_version": "vera.centrale_rischi_gold_benchmark.v1",
+  "workflow_id": "centrale-rischi-review",
+  "sources": {
+    "official_guide": {
+      "sha256": "b5e2b059ff482a2ec142ac7901f09f4d392fbe2191ffaf86ad14dae05a1a307e",
+      "page_count": 41,
+      "role": "Banca d'Italia official guide with separate educational examples"
+    },
+    "official_plain_guide": {
+      "sha256": "0360543e706b0ea8ff3c2109b1bd93cec0712025eb0ebc2a70dfe0b51553466e",
+      "page_count": 24,
+      "role": "Banca d'Italia narrative guide used as a negative layout control"
+    },
+    "camera_webinar": {
+      "sha256": "15323a54b9f361a4100533b7a3c72ba65784ca8521710e5584c8e4a6d6616370",
+      "page_count": 38,
+      "role": "Educational webinar used as a negative layout control"
+    },
+    "historical_examples": {
+      "sha256": "2339ef0f2ced70bc3f3eae9c195846fa6f8fa38134ebbb75c04055be0e32adf9",
+      "page_count": 17,
+      "role": "Historical annotated examples; pages 1-8 form one coherent report example"
+    },
+    "synthetic_report": {
+      "sha256": "754e623a93f0c0194ccece0f71a62bdb5ae9b0fd0abbec519832fd7970fbdda4",
+      "page_count": 8,
+      "role": "Synthetic native-text report designed as one coherent end-to-end case"
+    }
+  },
+  "negative_control_sources": [
+    "official_plain_guide",
+    "camera_webinar"
+  ],
+  "mapping_profiles": {
+    "modern": {
+      "original_term": {
+        "": "not_relevant",
+        "Oltre cinque anni": "long"
+      },
+      "residual_term": {
+        "": "not_relevant",
+        "Oltre 1 anno": "over_one_year"
+      },
+      "exposure_family": {
+        "GARANZIE CONNESSE CON OPERAZIONI DI NATURA COMMERCIALE": "other",
+        "GARANZIE CONNESSE CON OPERAZIONI DI NATURA FINANZIARIA": "other",
+        "RISCHI A REVOCA": "performing",
+        "RISCHI A SCADENZA": "performing",
+        "SOFFERENZE": "suffering"
+      }
+    },
+    "legacy_2010": {
+      "original_term": {
+        "": "not_relevant",
+        "16": "medium",
+        "17": "long"
+      },
+      "residual_term": {
+        "": "not_relevant",
+        "5": "within_one_year",
+        "18": "over_one_year"
+      },
+      "exposure_family": {
+        "GARANZIE CONNESSE CON OPERAZIONI DI NATURA COMMERCIALE": "other",
+        "RISCHI A REVOCA": "performing",
+        "RISCHI A SCADENZA": "performing",
+        "RISCHI AUTOLIQUIDANTI": "performing",
+        "SOFFERENZE": "suffering"
+      }
+    },
+    "legacy_2009": {
+      "original_term": {
+        "": "not_relevant",
+        "2": "unclassified",
+        "17": "long"
+      },
+      "residual_term": {
+        "": "not_relevant",
+        "1": "unclassified",
+        "18": "over_one_year"
+      },
+      "exposure_family": {
+        "RISCHI A REVOCA": "performing",
+        "RISCHI A SCADENZA": "performing",
+        "RISCHI AUTOLIQUIDANTI": "performing"
+      }
+    }
+  },
+  "extraction_cases": [
+    {
+      "case_id": "official_event_p9",
+      "source_id": "official_guide",
+      "pages": [9],
+      "row_counts": {"inframonthly_events": 1},
+      "expected_rows": {
+        "inframonthly_events": [
+          {"intermediary": "BANCA QUATTRO", "event_date": "30/06/2021", "event_type": "SOFFERENZE", "event_cancelled": "NO"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_exposures_p10",
+      "source_id": "official_guide",
+      "pages": [10],
+      "row_counts": {"exposures": 2},
+      "expected_rows": {
+        "exposures": [
+          {"reference_month": "2021-05", "intermediary": "BANCA UNO", "category": "RISCHI A SCADENZA", "granted": "100000", "operational_granted": "100000", "used": "100000", "record_status": "current"},
+          {"reference_month": "2021-05", "intermediary": "BANCA UNO", "category": "GARANZIE CONNESSE CON OPERAZIONI DI NATURA FINANZIARIA", "granted": "190000", "operational_granted": "190000", "used": "190000", "record_status": "current"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_guarantor_debtor_p11",
+      "source_id": "official_guide",
+      "pages": [11],
+      "row_counts": {"exposures": 1, "guarantors": 1, "ceded_debtors": 1},
+      "expected_rows": {
+        "exposures": [
+          {"category": "RISCHI A SCADENZA", "granted": "100000", "used": "100000"}
+        ],
+        "guarantors": [
+          {"guarantor": "NUOVA INDUSTRIA (codice censito 11111111)", "guarantee_value": "50000", "guaranteed_amount": "40000"}
+        ],
+        "ceded_debtors": [
+          {"ceded_debtor": "NUOVA INDUSTRIA (codice censito 1111111111)", "nominal_value": "20000"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_previous_p12",
+      "source_id": "official_guide",
+      "pages": [12],
+      "row_counts": {"exposures": 1},
+      "expected_rows": {
+        "exposures": [
+          {"category": "RISCHI A REVOCA", "used": "249491", "record_status": "previous", "valid_from": "02/07/2021", "valid_to": "05/07/2021"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_spv_p14",
+      "source_id": "official_guide",
+      "pages": [14],
+      "row_counts": {"exposures": 1},
+      "expected_rows": {
+        "exposures": [
+          {"intermediary": "Società Veicolo (cfr. lista dei servicer)", "category": "RISCHI A SCADENZA", "original_duration": "Oltre cinque anni", "residual_duration": "Oltre 1 anno", "granted": "76087", "operational_granted": "76087", "used": "76087"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_generic_request_p16",
+      "source_id": "official_guide",
+      "pages": [16],
+      "row_counts": {"information_requests": 1},
+      "issue_codes": ["missing_intermediary"],
+      "expected_rows": {
+        "information_requests": [
+          {"intermediary": "", "request_date": "02/04/2021", "requested_period": "Marzo 2020", "request_type": "PRIMA INFORMAZIONE", "request_reason_code": "01", "validity_period": "Da 02/04/2021 a 31/12/9999", "extraction_confidence": "review_required"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_facilities_p29",
+      "source_id": "official_guide",
+      "pages": [29],
+      "row_counts": {"exposures": 2},
+      "expected_rows": {
+        "exposures": [
+          {"category": "RISCHI A SCADENZA", "granted": "150000", "operational_granted": "150000", "used": "150000", "guaranteed_amount": "150000"},
+          {"category": "RISCHI A REVOCA", "granted": "12000", "operational_granted": "12000", "used": "0", "guaranteed_amount": "0"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_overrun_suffering_p31",
+      "source_id": "official_guide",
+      "pages": [31],
+      "row_counts": {"exposures": 2},
+      "expected_rows": {
+        "exposures": [
+          {"intermediary": "BANCA UNO", "category": "RISCHI A SCADENZA", "granted": "150000", "operational_granted": "150000", "used": "170000", "guaranteed_amount": "170000"},
+          {"intermediary": "BANCA DUE", "category": "SOFFERENZE", "granted": "0", "operational_granted": "0", "used": "80000", "guaranteed_amount": "0"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_guarantee_received_p32",
+      "source_id": "official_guide",
+      "pages": [32],
+      "row_counts": {"guarantees_received": 1},
+      "expected_rows": {
+        "guarantees_received": [
+          {"reference_month": "2021-03", "intermediary": "BANCA TRE", "guaranteed_party": "VIOLA VERDI", "guarantee_value": "130000", "guaranteed_amount": "80000"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_deleted_suffering_p33",
+      "source_id": "official_guide",
+      "pages": [33],
+      "row_counts": {"exposures": 1},
+      "expected_rows": {
+        "exposures": [
+          {"category": "SOFFERENZE", "used": "4000", "record_status": "previous", "valid_from": "02/08/2021", "valid_to": "06/08/2021"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_correction_p34",
+      "source_id": "official_guide",
+      "pages": [34],
+      "row_counts": {"exposures": 2},
+      "expected_rows": {
+        "exposures": [
+          {"category": "RISCHI A SCADENZA", "used": "45000", "record_status": "current"},
+          {"category": "RISCHI A SCADENZA", "used": "60000", "record_status": "previous", "valid_from": "02/08/2021", "valid_to": "10/08/2021"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_event_transition_p36",
+      "source_id": "official_guide",
+      "pages": [36],
+      "row_counts": {"exposures": 1, "inframonthly_events": 1},
+      "expected_rows": {
+        "exposures": [
+          {"reference_month": "2021-05", "intermediary": "BANCA QUATTRO", "category": "RISCHI A SCADENZA", "granted": "0", "operational_granted": "0", "used": "40000"}
+        ],
+        "inframonthly_events": [
+          {"intermediary": "BANCA QUATTRO", "event_date": "10/06/2021", "event_type": "SOFFERENZE", "event_cancelled": "NO"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_suffering_p37",
+      "source_id": "official_guide",
+      "pages": [37],
+      "row_counts": {"exposures": 1},
+      "expected_rows": {
+        "exposures": [
+          {"reference_month": "2021-06", "intermediary": "BANCA QUATTRO", "category": "SOFFERENZE", "granted": "0", "operational_granted": "0", "used": "40000"}
+        ]
+      }
+    },
+    {
+      "case_id": "official_requests_p39",
+      "source_id": "official_guide",
+      "pages": [39],
+      "row_counts": {"information_requests": 4},
+      "expected_rows": {
+        "information_requests": [
+          {"intermediary": "BANCA UNO", "request_date": "12/04/2021", "request_reason_code": "02", "request_reason": "RICHIESTA SU SOGGETTO COLLEGATO", "notes": "IN CORSO DI VALIDITA’"},
+          {"intermediary": "BANCA UNO", "request_date": "12/04/2021", "request_reason_code": "01", "request_reason": "RICHIESTA PER CONCESSIONE DI FIDO", "notes": "CAUSALE VARIATA"},
+          {"intermediary": "BANCA DUE", "request_date": "07/05/2021", "request_type": "SERVIZIO DI INFORMAZIONE PERIODICA", "notes": "IN CORSO DI VALIDITA’"},
+          {"intermediary": "BANCA TRE", "request_date": "18/06/2021", "validity_period": "Da 18/06/2021 a 20/06/2021", "notes": "ANNULLATA"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_summary_p1_2",
+      "source_id": "historical_examples",
+      "pages": [1, 2],
+      "row_counts": {"summary_totals": 8},
+      "expected_rows": {
+        "summary_totals": [
+          {"intermediary": "BANCA ALFA", "summary_category": "Crediti per cassa", "granted": "308412", "operational_granted": "308412", "used": "202890"},
+          {"intermediary": "BANCA ALFA", "summary_category": "Derivati finanziari", "intrinsic_value": "279781"},
+          {"intermediary": "BANCA PIQUADRO", "summary_category": "Sofferenze", "used": "100010", "guaranteed_amount": "20000"},
+          {"intermediary": "BAD BANK", "summary_category": "Crediti per cassa", "used": "153213"},
+          {"intermediary": "BANCA BETA", "summary_category": "Crediti per cassa", "granted": "86393", "used": "92905"},
+          {"intermediary": "BANCA GAMMA", "summary_category": "Crediti per cassa", "granted": "25000", "used": "108682"},
+          {"intermediary": "BANCA GAMMA", "summary_category": "Crediti di firma", "granted": "25000", "used": "25000"},
+          {"intermediary": "BANCA GAMMA", "summary_category": "Garanzie ricevute", "guarantee_value": "50000", "guaranteed_amount": "50000"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_detail_p3",
+      "source_id": "historical_examples",
+      "pages": [3],
+      "row_counts": {"exposures": 2, "guarantors": 1, "inframonthly_events": 1},
+      "expected_rows": {
+        "exposures": [
+          {"intermediary": "BANCA BETA", "category": "RISCHI A SCADENZA", "original_duration": "16", "residual_duration": "5", "granted": "26393", "used": "26393"},
+          {"intermediary": "BANCA BETA", "category": "RISCHI A SCADENZA", "original_duration": "17", "residual_duration": "18", "granted": "60000", "used": "66512"}
+        ],
+        "guarantors": [
+          {"guarantor": "Cointestazione formata da BRANCA SILVANO e VAN MARS STEFANIA", "guarantee_value": "160000", "guaranteed_amount": "138090"}
+        ],
+        "inframonthly_events": [
+          {"intermediary": "BAD BANK", "event_date": "01/10/2010", "event_type": "SOFFERENZE", "event_cancelled": "NO"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_detail_p5",
+      "source_id": "historical_examples",
+      "pages": [5],
+      "row_counts": {"exposures": 3, "guarantors": 2, "other_risk_information": 5},
+      "expected_rows": {
+        "exposures": [
+          {"category": "RISCHI AUTOLIQUIDANTI", "granted": "200000", "used": "84063"},
+          {"category": "RISCHI A SCADENZA", "granted": "48412", "used": "48412"},
+          {"category": "RISCHI A REVOCA", "granted": "60000", "used": "70415"}
+        ],
+        "guarantors": [
+          {"guarantor": "BIANCHI LUCA", "guarantee_value": "780000", "guaranteed_amount": "50000"},
+          {"guarantor": "CONSORZIO BETA - SOCIETA' COOPERATIVA DI GARANZIA COLLETTIVA FIDI", "guarantee_value": "90000", "guaranteed_amount": "100758"}
+        ],
+        "other_risk_information": [
+          {"category": "DERIVATI FINANZIARI", "intrinsic_value": "279781"},
+          {"category": "RISCHI AUTOLIQUIDANTI - CREDITI SCADUTI", "amount": "15000"},
+          {"category": "RISCHI AUTOLIQUIDANTI - CREDITI SCADUTI", "amount": "5000"},
+          {"category": "RISCHI AUTOLIQUIDANTI - CREDITI SCADUTI", "amount": "25000"},
+          {"category": "RISCHI AUTOLIQUIDANTI - CREDITI SCADUTI", "amount": "18500"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_detail_p7",
+      "source_id": "historical_examples",
+      "pages": [7],
+      "row_counts": {"exposures": 4, "guarantees_received": 1},
+      "expected_rows": {
+        "exposures": [
+          {"intermediary": "BAD BANK", "category": "RISCHI A REVOCA", "granted": "0", "used": "153213"},
+          {"intermediary": "BANCA GAMMA", "category": "RISCHI A REVOCA", "currency": "1", "granted": "0", "used": "79841"},
+          {"intermediary": "BANCA GAMMA", "category": "RISCHI A REVOCA", "currency": "2", "granted": "25000", "used": "28841"},
+          {"intermediary": "BANCA GAMMA", "category": "GARANZIE CONNESSE CON OPERAZIONI DI NATURA COMMERCIALE", "granted": "25000", "used": "25000"}
+        ],
+        "guarantees_received": [
+          {"intermediary": "BANCA GAMMA", "guaranteed_party": "PLUTO IMMOBILIARE SRL", "guarantee_value": "50000", "guaranteed_amount": "50000"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_detail_p8",
+      "source_id": "historical_examples",
+      "pages": [8],
+      "row_counts": {"exposures": 1, "guarantors": 2, "other_risk_information": 1},
+      "expected_rows": {
+        "exposures": [
+          {"intermediary": "BANCA PIQUADRO", "category": "SOFFERENZE", "used": "100010", "guaranteed_amount": "20000"}
+        ],
+        "guarantors": [
+          {"guarantor": "BRANCA SILVANO", "guarantee_value": "50000", "guaranteed_amount": "10000"},
+          {"guarantor": "VAN MARS STEFANIA", "guarantee_value": "445000", "guaranteed_amount": "10000"}
+        ],
+        "other_risk_information": [
+          {"category": "SOFFERENZE – CREDITI PASSATI A PERDITA", "amount": "30010"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_corrections_p9",
+      "source_id": "historical_examples",
+      "pages": [9],
+      "row_counts": {"exposures": 8, "guarantors": 4},
+      "expected_rows": {
+        "exposures": [
+          {"category": "RISCHI AUTOLIQUIDANTI", "currency": "1", "granted": "60000", "used": "0", "record_status": "current"},
+          {"category": "RISCHI AUTOLIQUIDANTI", "currency": "2", "granted": "10000", "used": "10000", "record_status": "current"},
+          {"category": "RISCHI A SCADENZA", "original_duration": "2", "residual_duration": "18", "granted": "58470", "used": "66670", "guaranteed_amount": "66670", "record_status": "current"},
+          {"category": "RISCHI A REVOCA", "granted": "0", "used": "39600", "record_status": "current"},
+          {"category": "RISCHI AUTOLIQUIDANTI", "currency": "1", "granted": "Assenza di segnalazione", "record_status": "previous", "valid_from": "10/08/2009", "valid_to": "10/12/2009"},
+          {"category": "RISCHI AUTOLIQUIDANTI", "currency": "2", "granted": "60000", "used": "10000", "record_status": "previous", "valid_from": "10/08/2009", "valid_to": "10/12/2009"},
+          {"category": "RISCHI AUTOLIQUIDANTI", "currency": "1", "granted": "0", "used": "10000", "record_status": "previous", "valid_from": "03/08/2009", "valid_to": "10/08/2009"},
+          {"category": "RISCHI AUTOLIQUIDANTI", "currency": "2", "granted": "10000", "used": "0", "record_status": "previous", "valid_from": "03/08/2009", "valid_to": "10/08/2009"}
+        ],
+        "guarantors": [
+          {"guarantor": "Cointestazione formata da BIANCHI LUDOVICO, ROSSI SERGIO", "guarantee_value": "500000", "guaranteed_amount": "66667", "record_status": "current"},
+          {"guarantor": "BIANCHI MARIO", "guarantee_value": "616428", "guaranteed_amount": "39600", "record_status": "current"},
+          {"guarantor": "NEWFIDI - SOCIETA' COOPERATIVA DI GARANZIA COLLETTIVA FIDI", "guarantee_value": "10000", "guaranteed_amount": "10000", "record_status": "current"},
+          {"guarantor": "NEWFIDI - SOCIETA' COOPERATIVA DI GARANZIA COLLETTIVA FIDI", "guarantee_value": "Assenza di segnalazione", "record_status": "previous", "valid_from": "03/08/2009", "valid_to": "10/12/2009"}
+        ]
+      }
+    },
+    {
+      "case_id": "historical_merged_correction_p17",
+      "source_id": "historical_examples",
+      "pages": [17],
+      "row_counts": {"exposures": 3},
+      "issue_codes": ["missing_intermediary", "missing_intermediary", "missing_intermediary"],
+      "expected_rows": {
+        "exposures": [
+          {"reference_month": "2009-10", "intermediary": "", "category": "RISCHI A SCADENZA", "original_duration": "17", "residual_duration": "18", "guarantee_type": "112", "granted": "60000", "used": "60000", "guaranteed_amount": "60000", "record_status": "current", "extraction_confidence": "review_required"},
+          {"reference_month": "2009-10", "intermediary": "", "guarantee_type": "112", "granted": "Assenza di segnalazione", "record_status": "previous", "valid_from": "01/12/2009", "valid_to": "10/12/2009"},
+          {"reference_month": "2009-10", "intermediary": "", "guarantee_type": "125", "granted": "0", "used": "60000", "guaranteed_amount": "60000", "record_status": "previous", "valid_from": "01/12/2009", "valid_to": "10/12/2009"}
+        ]
+      }
+    },
+    {
+      "case_id": "synthetic_full",
+      "source_id": "synthetic_report",
+      "pages": [1, 2, 3, 4, 5, 6, 7, 8],
+      "row_counts": {"exposures": 7, "guarantees_received": 1, "inframonthly_events": 1, "information_requests": 4},
+      "expected_rows": {
+        "exposures": [
+          {"reference_month": "2026-06", "intermediary": "BANCA UNO", "category": "RISCHI A SCADENZA", "granted": "150000", "used": "150000", "guaranteed_amount": "150000", "record_status": "current"},
+          {"reference_month": "2026-06", "intermediary": "BANCA UNO", "category": "RISCHI A REVOCA", "granted": "12000", "used": "0", "record_status": "current"},
+          {"reference_month": "2026-06", "intermediary": "BANCA DUE", "category": "RISCHI A SCADENZA", "granted": "45000", "used": "45000", "record_status": "current"},
+          {"reference_month": "2026-06", "intermediary": "BANCA DUE", "category": "RISCHI A SCADENZA", "used": "60000", "record_status": "previous", "valid_from": "03/08/2026", "valid_to": "10/08/2026"},
+          {"reference_month": "2026-06", "intermediary": "BANCA TRE", "category": "SOFFERENZE", "used": "4000", "record_status": "previous", "valid_from": "03/08/2026", "valid_to": "06/08/2026"},
+          {"reference_month": "2026-05", "intermediary": "BANCA UNO", "category": "RISCHI A SCADENZA", "used": "170000", "guaranteed_amount": "170000", "record_status": "current"},
+          {"reference_month": "2026-05", "intermediary": "BANCA CINQUE", "category": "SOFFERENZE", "used": "80000", "record_status": "current"}
+        ],
+        "guarantees_received": [
+          {"reference_month": "2026-04", "intermediary": "BANCA TRE", "guaranteed_party": "VIOLA VERDI", "guarantee_value": "130000", "guaranteed_amount": "80000"}
+        ],
+        "inframonthly_events": [
+          {"intermediary": "BANCA QUATTRO", "event_date": "10/07/2026", "event_type": "SOFFERENZE", "event_cancelled": "NO"}
+        ],
+        "information_requests": [
+          {"intermediary": "BANCA UNO", "request_reason_code": "02", "validity_period": "Da 15/05/2026 a 31/12/9999"},
+          {"intermediary": "BANCA UNO", "request_reason_code": "01", "validity_period": "Da 12/04/2026 a 15/05/2026"},
+          {"intermediary": "BANCA DUE", "requested_period": "Aprile 2026", "validity_period": "Da 07/05/2026 a 31/12/9999"},
+          {"intermediary": "BANCA TRE", "notes": "ANNULLATA", "validity_period": "Da 18/06/2026 a 20/06/2026"}
+        ]
+      }
+    }
+  ],
+  "analysis_cases": [
+    {
+      "case_id": "analysis_official_p10",
+      "extraction_case_id": "official_exposures_p10",
+      "source_id": "official_guide",
+      "pages": [10],
+      "entity": "Caso didattico ufficiale — pagina 10",
+      "analysis_objective": "Verificare esposizioni per cassa e di firma senza confonderne la natura.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "290000", "operational_granted": "290000", "used": "290000"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 2, "previous_row_count": 0}, "metrics": {"cr.total_granted": "290000", "cr.total_used": "290000", "cr.available_resources": "0", "cr.overrun_amount": "0", "cr.original_term.long_share_pct": "34.48"}, "population_counts": {"exposures": 2, "overruns": 0}}
+    },
+    {
+      "case_id": "analysis_official_p11",
+      "extraction_case_id": "official_guarantor_debtor_p11",
+      "source_id": "official_guide",
+      "pages": [11],
+      "entity": "Caso didattico ufficiale — pagina 11",
+      "analysis_objective": "Verificare la separazione tra esposizione, garante e debitore ceduto.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "100000", "operational_granted": "100000", "used": "100000"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 1, "previous_row_count": 0}, "metrics": {"cr.total_used": "100000", "cr.original_term.long_share_pct": "100", "cr.overrun_amount": "0"}, "population_counts": {"guarantors": 1, "ceded_debtors": 1}}
+    },
+    {
+      "case_id": "analysis_official_p12_rejected",
+      "extraction_case_id": "official_previous_p12",
+      "source_id": "official_guide",
+      "pages": [12],
+      "entity": "Caso didattico ufficiale — pagina 12",
+      "analysis_objective": "Verificare che una sola riga precedente non diventi esposizione corrente.",
+      "mapping_profile": "modern",
+      "expected": {"outcome": "rejected", "error_contains": "no current records"}
+    },
+    {
+      "case_id": "analysis_official_p14",
+      "extraction_case_id": "official_spv_p14",
+      "source_id": "official_guide",
+      "pages": [14],
+      "entity": "Caso didattico ufficiale — pagina 14",
+      "analysis_objective": "Verificare una esposizione gestita tramite società veicolo.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "76087", "operational_granted": "76087", "used": "76087"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_used": "76087", "cr.available_resources": "0", "cr.original_term.long_share_pct": "100"}, "population_counts": {"exposures": 1}}
+    },
+    {
+      "case_id": "analysis_official_p29",
+      "extraction_case_id": "official_facilities_p29",
+      "source_id": "official_guide",
+      "pages": [29],
+      "entity": "Caso didattico ufficiale — pagina 29",
+      "analysis_objective": "Verificare accordato, utilizzato, margine e garanzia collegata.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "162000", "operational_granted": "162000", "used": "150000"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_granted": "162000", "cr.total_used": "150000", "cr.available_resources": "12000", "cr.guarantee_coverage_pct": "100", "cr.overrun_amount": "0"}, "population_counts": {"guarantees": 1, "overruns": 0}}
+    },
+    {
+      "case_id": "analysis_official_p31",
+      "extraction_case_id": "official_overrun_suffering_p31",
+      "source_id": "official_guide",
+      "pages": [31],
+      "entity": "Caso didattico ufficiale — pagina 31",
+      "analysis_objective": "Separare lo sconfinamento della linea performing dalla sofferenza.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "150000", "operational_granted": "150000", "used": "250000"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_used": "250000", "cr.overrun_amount": "20000", "cr.overrun_count": 1, "cr.guarantee_coverage_pct": "68", "cr.top_intermediary_share_pct": "68", "cr.original_term.long_share_pct": "68"}, "population_counts": {"exposures": 2, "guarantees": 1, "overruns": 1}},
+      "required_context_facts": [
+        {"intermediary": "BANCA UNO", "risk_category": "RISCHI A SCADENZA", "used": "170000", "overrun": "20000"},
+        {"metric_id": "cr.category.e7a8d198a5.used", "value": "80000"}
+      ]
+    },
+    {
+      "case_id": "analysis_official_p32_rejected",
+      "extraction_case_id": "official_guarantee_received_p32",
+      "source_id": "official_guide",
+      "pages": [32],
+      "entity": "Caso didattico ufficiale — pagina 32",
+      "analysis_objective": "Verificare che una garanzia ricevuta non venga trasformata in esposizione del soggetto.",
+      "mapping_profile": "modern",
+      "expected": {"outcome": "rejected", "error_contains": "no data rows"}
+    },
+    {
+      "case_id": "analysis_official_p33_rejected",
+      "extraction_case_id": "official_deleted_suffering_p33",
+      "source_id": "official_guide",
+      "pages": [33],
+      "entity": "Caso didattico ufficiale — pagina 33",
+      "analysis_objective": "Verificare che una sofferenza cancellata e solo precedente non entri nei totali correnti.",
+      "mapping_profile": "modern",
+      "expected": {"outcome": "rejected", "error_contains": "no current records"}
+    },
+    {
+      "case_id": "analysis_official_p34",
+      "extraction_case_id": "official_correction_p34",
+      "source_id": "official_guide",
+      "pages": [34],
+      "entity": "Caso didattico ufficiale — pagina 34",
+      "analysis_objective": "Verificare che la rettifica storica non alteri i totali correnti.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "45000", "operational_granted": "45000", "used": "45000"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 1, "previous_row_count": 1}, "metrics": {"cr.total_used": "45000", "cr.overrun_amount": "0", "cr.previous_record_count": 1, "cr.original_term.long_share_pct": "100"}, "population_counts": {"exposures": 2, "overruns": 0}},
+      "required_context_facts": [
+        {"record_status": "previous", "used": "60000", "valid_from": "02/08/2021", "valid_to": "10/08/2021", "source_row_locator": "page:34:table:3:row:2"}
+      ]
+    },
+    {
+      "case_id": "analysis_official_transition_p36_37",
+      "source_id": "official_guide",
+      "pages": [36, 37],
+      "entity": "Caso didattico ufficiale — pagine 36-37",
+      "analysis_mode": "trend",
+      "analysis_objective": "Rappresentare la sequenza documentata tra evento inframensile e categorie mensili senza inferire causalità.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "0", "operational_granted": "0", "used": "40000"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 2, "previous_row_count": 0}, "metrics": {"cr.total_used": "40000", "cr.overrun_amount": "0", "cr.used_mom_change": "0", "cr.category.e4f5aa0378.used_change": "-40000", "cr.category.e7a8d198a5.used_change": "40000"}, "population_counts": {"inframonthly_events": 1, "overruns": 0}},
+      "required_context_facts": [
+        {"risk_category": "RISCHI A SCADENZA", "prior_used": "40000", "latest_used": "0", "used_change": "-40000", "presence": "absent_in_latest"},
+        {"risk_category": "SOFFERENZE", "prior_used": "0", "latest_used": "40000", "used_change": "40000", "presence": "new_in_latest"},
+        {"event_date": "10/06/2021", "event_type": "SOFFERENZE", "event_cancelled": "NO"}
+      ]
+    },
+    {
+      "case_id": "analysis_historical_full_p1_8",
+      "source_id": "historical_examples",
+      "pages": [1, 2, 3, 4, 5, 6, 7, 8],
+      "entity": "Report storico didattico — pagine 1-8",
+      "analysis_objective": "Riconciliare il prospetto sintetico con il dettaglio analitico dello stesso soggetto e mese.",
+      "mapping_profile": "legacy_2010",
+      "control_totals": {"granted": "444805", "operational_granted": "444805", "used": "682700"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 10, "previous_row_count": 0}, "metrics": {"cr.total_granted": "444805", "cr.total_used": "682700", "cr.available_resources": "115937", "cr.overrun_amount": "253822", "cr.overrun_count": 5, "cr.guarantee_coverage_pct": "2.93", "cr.top_intermediary_share_pct": "29.72", "cr.original_term.medium_share_pct": "10.96", "cr.original_term.long_share_pct": "9.74"}, "population_counts": {"exposures": 10, "guarantees": 1, "guarantees_received": 1, "guarantors": 5, "other_risk_information": 6, "summary_totals": 8, "overruns": 5, "inframonthly_events": 1}},
+      "required_context_facts": [
+        {"intermediary": "BAD BANK", "risk_category": "RISCHI A REVOCA", "overrun": "153213"},
+        {"guaranteed_party": "PLUTO IMMOBILIARE SRL", "guarantee_value": "50000", "guaranteed_amount": "50000"},
+        {"summary_category": "Crediti per cassa", "intermediary": "BANCA ALFA", "used": "202890"},
+        {"category": "SOFFERENZE – CREDITI PASSATI A PERDITA", "amount": "30010"},
+        {"control_id": "control.latest.used", "expected": "682700", "actual": "682700", "status": "passed"}
+      ]
+    },
+    {
+      "case_id": "analysis_historical_p3",
+      "extraction_case_id": "historical_detail_p3",
+      "source_id": "historical_examples",
+      "pages": [3],
+      "entity": "Report storico didattico — pagina 3",
+      "analysis_objective": "Verificare durate, sconfinamento, garante ed evento inframensile.",
+      "mapping_profile": "legacy_2010",
+      "control_totals": {"granted": "86393", "operational_granted": "86393", "used": "92905"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_used": "92905", "cr.overrun_amount": "6512", "cr.overrun_count": 1, "cr.original_term.medium_share_pct": "28.41", "cr.original_term.long_share_pct": "71.59"}, "population_counts": {"guarantors": 1, "inframonthly_events": 1}}
+    },
+    {
+      "case_id": "analysis_historical_p5",
+      "extraction_case_id": "historical_detail_p5",
+      "source_id": "historical_examples",
+      "pages": [5],
+      "entity": "Report storico didattico — pagina 5",
+      "analysis_objective": "Verificare margini e sconfinamenti senza sommare derivati o crediti scaduti informativi.",
+      "mapping_profile": "legacy_2010",
+      "control_totals": {"granted": "308412", "operational_granted": "308412", "used": "202890"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_used": "202890", "cr.available_resources": "115937", "cr.overrun_amount": "10415", "cr.overrun_count": 1, "cr.original_term.medium_share_pct": "23.86"}, "population_counts": {"guarantors": 2, "other_risk_information": 5}}
+    },
+    {
+      "case_id": "analysis_historical_p7",
+      "extraction_case_id": "historical_detail_p7",
+      "source_id": "historical_examples",
+      "pages": [7],
+      "entity": "Report storico didattico — pagina 7",
+      "analysis_objective": "Verificare sconfinamenti per linea e separazione delle garanzie ricevute.",
+      "mapping_profile": "legacy_2010",
+      "control_totals": {"granted": "50000", "operational_granted": "50000", "used": "286895"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_used": "286895", "cr.available_resources": "0", "cr.overrun_amount": "236895", "cr.overrun_count": 3, "cr.top_intermediary_share_pct": "53.4"}, "population_counts": {"guarantees_received": 1, "overruns": 3}}
+    },
+    {
+      "case_id": "analysis_historical_p8",
+      "extraction_case_id": "historical_detail_p8",
+      "source_id": "historical_examples",
+      "pages": [8],
+      "entity": "Report storico didattico — pagina 8",
+      "analysis_objective": "Verificare sofferenza, quota garantita, garanti e crediti passati a perdita separati.",
+      "mapping_profile": "legacy_2010",
+      "control_totals": {"granted": "0", "operational_granted": "0", "used": "100010"},
+      "expected": {"outcome": "analysis", "status": "complete", "metrics": {"cr.total_used": "100010", "cr.overrun_amount": "0", "cr.guarantee_coverage_pct": "20"}, "population_counts": {"guarantees": 1, "guarantors": 2, "other_risk_information": 1, "overruns": 0}}
+    },
+    {
+      "case_id": "analysis_historical_p9",
+      "extraction_case_id": "historical_corrections_p9",
+      "source_id": "historical_examples",
+      "pages": [9],
+      "entity": "Report storico didattico — pagina 9",
+      "analysis_objective": "Verificare righe correnti e rettificate preservando codici durata non classificati.",
+      "mapping_profile": "legacy_2009",
+      "control_totals": {"granted": "128470", "operational_granted": "128470", "used": "116270"},
+      "expected": {"outcome": "analysis", "status": "partial", "source_counts": {"current_row_count": 4, "previous_row_count": 4}, "metrics": {"cr.total_used": "116270", "cr.available_resources": "60000", "cr.overrun_amount": "47800", "cr.overrun_count": 2, "cr.guarantee_coverage_pct": "57.34", "cr.previous_record_count": 4}, "population_counts": {"guarantors": 4, "overruns": 2}}
+    },
+    {
+      "case_id": "analysis_historical_p17",
+      "extraction_case_id": "historical_merged_correction_p17",
+      "source_id": "historical_examples",
+      "pages": [17],
+      "entity": "Report storico didattico — pagina 17",
+      "analysis_objective": "Verificare il recupero della griglia fusa e l'esclusione delle due rettifiche dai totali correnti.",
+      "mapping_profile": "legacy_2009",
+      "control_totals": {"granted": "60000", "operational_granted": "60000", "used": "60000"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 1, "previous_row_count": 2}, "metrics": {"cr.total_used": "60000", "cr.overrun_amount": "0", "cr.guarantee_coverage_pct": "100", "cr.previous_record_count": 2, "cr.original_term.long_share_pct": "100"}, "population_counts": {"exposures": 3, "guarantees": 1}}
+    },
+    {
+      "case_id": "analysis_synthetic_full",
+      "extraction_case_id": "synthetic_full",
+      "source_id": "synthetic_report",
+      "pages": [1, 2, 3, 4, 5, 6, 7, 8],
+      "entity": "Caso dimostrativo sintetico",
+      "analysis_mode": "trend",
+      "analysis_objective": "Verificare il percorso end-to-end su un report coerente con trend, rettifiche e popolazioni separate.",
+      "mapping_profile": "modern",
+      "control_totals": {"granted": "207000", "operational_granted": "207000", "used": "195000"},
+      "expected": {"outcome": "analysis", "status": "complete", "source_counts": {"current_row_count": 5, "previous_row_count": 2}, "metrics": {"cr.total_granted": "207000", "cr.total_used": "195000", "cr.available_resources": "12000", "cr.overrun_amount": "0", "cr.guarantee_coverage_pct": "76.92", "cr.top_intermediary_share_pct": "76.92", "cr.original_term.long_share_pct": "100", "cr.previous_record_count": 2, "cr.used_mom_change": "-55000", "cr.category.e4f5aa0378.used_change": "25000", "cr.category.e7a8d198a5.used_change": "-80000"}, "population_counts": {"exposures": 7, "guarantees": 1, "guarantees_received": 1, "inframonthly_events": 1, "information_requests": 4, "overruns": 0}},
+      "required_context_facts": [
+        {"risk_category": "RISCHI A SCADENZA", "prior_used": "170000", "latest_used": "195000", "used_change": "25000", "presence": "continuing"},
+        {"risk_category": "SOFFERENZE", "prior_used": "80000", "latest_used": "0", "used_change": "-80000", "presence": "absent_in_latest"},
+        {"record_status": "previous", "used": "60000", "valid_from": "03/08/2026", "valid_to": "10/08/2026"},
+        {"record_status": "previous", "used": "4000", "valid_from": "03/08/2026", "valid_to": "06/08/2026"},
+        {"event_date": "10/07/2026", "event_type": "SOFFERENZE", "event_cancelled": "NO"},
+        {"notes": "ANNULLATA", "validity_period": "Da 18/06/2026 a 20/06/2026"}
+      ]
+    }
+  ],
+  "semantic_rubric": {
+    "scale": "0=unusable, 1=major defects, 2=material caveats, 3=good professional draft, 4=excellent professional draft",
+    "pass_rule": "Every dimension must score at least 3 and there must be no blocking finding.",
+    "dimensions": {
+      "factual_accuracy": "Every number, date and population statement is supported by the model context.",
+      "evidence_bounding": "Facts, hypotheses, unknowns and limitations remain distinct; no causal or rating claim is invented.",
+      "professional_usefulness": "The draft explains what matters to a commercialista beyond restating totals.",
+      "prioritization": "Material exceptions, corrections, category changes and coverage gaps are surfaced before minor detail.",
+      "uncertainty_discipline": "Missing evidence and alternative explanations are explicit.",
+      "actionability": "Questions and next checks are specific, evidence-linked and proportionate."
+    }
+  },
+  "semantic_review_cases": [
+    {
+      "case_id": "analysis_synthetic_full",
+      "required_topics": ["latest current exposure", "category movements", "two previous corrections", "post-period inframonthly event", "guarantee received is a separate population", "financial-statement ratios unavailable"],
+      "known_failure_modes": ["inventing a day for a month-only reference", "calling CR margin immediately available liquidity", "treating disappearance of a category as proof of cure"]
+    },
+    {
+      "case_id": "analysis_historical_full_p1_8",
+      "required_topics": ["summary-to-detail controls pass", "five non-suffering overruns", "suffering excluded from overrun", "guarantors and guarantee received remain separate", "derivative and passed-loss information excluded from exposure totals"],
+      "known_failure_modes": ["summing auxiliary populations into debt", "calling all zero operational lines suffering", "ignoring the concentration of overrun rows"]
+    },
+    {
+      "case_id": "analysis_official_transition_p36_37",
+      "required_topics": ["May category", "June category", "inframonthly event date", "aggregate sequence rather than proven row-level reclassification"],
+      "known_failure_modes": ["claiming the event caused the monthly classification", "saying total debt increased when it did not"]
+    },
+    {
+      "case_id": "analysis_official_p31",
+      "required_topics": ["20,000 overrun on performing exposure", "80,000 suffering is separate and not an overrun", "68 percent guarantee coverage and concentration are arithmetic descriptions"],
+      "known_failure_modes": ["calling suffering an overrun", "netting suffering against available margin", "inferring bank rating"]
+    },
+    {
+      "case_id": "analysis_official_p34",
+      "required_topics": ["45,000 current used", "60,000 previous corrected used", "previous row excluded", "no current overrun"],
+      "known_failure_modes": ["including both rows in current totals", "describing the correction as a current delay"]
+    }
+  ],
+  "limitations": [
+    "The corpus contains official educational examples, one historical annotated report example and one synthetic report; it does not contain a confidential real client report.",
+    "The previously mentioned 193395.pdf professional analysis was not available in the inspected corpus and therefore is not evidence in this benchmark.",
+    "Mappings and gold facts were reviewed during development but have not yet been approved by an independent commercialista.",
+    "A model semantic review is not professional approval; all client-facing commentary remains draft_pending_professional_review.",
+    "Passing negative narrative controls shows specificity on these documents only and does not prove support for every future Banca d'Italia layout."
+  ]
+}

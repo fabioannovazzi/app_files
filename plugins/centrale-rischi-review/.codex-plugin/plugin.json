@@ -1,6 +1,6 @@
 {
   "name": "centrale-rischi-review",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Reviewable Centrale Rischi exposure analysis for Vera from the official digital PDF or confirmed CSV and Excel exports.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
