@@ -1,7 +1,7 @@
 {
   "name": "centrale-rischi-review",
-  "version": "0.1.1",
-  "description": "Reviewable Centrale Rischi exposure analysis for Vera from confirmed CSV or Excel exports.",
+  "version": "0.1.2",
+  "description": "Reviewable Centrale Rischi exposure analysis for Vera from the official digital PDF or confirmed CSV and Excel exports.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -23,8 +23,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Centrale Rischi Review",
-    "shortDescription": "Analyse reviewed Centrale Rischi exports.",
-    "longDescription": "Vera inventories a supplied Centrale Rischi CSV or Excel export, requires reviewed field and value mappings, and then calculates short-, medium- and long-term exposures, guarantees, overruns, concentration, available resources and source-supported KPIs. Missing financial-statement ratios and prejudicial evidence remain explicitly unavailable. Calculated facts, model-led interpretation and professional approval remain separate.",
+    "shortDescription": "Analyse an official Centrale Rischi report.",
+    "longDescription": "Vera normalizes the official digital Centrale Rischi PDF or inventories a supplied CSV or Excel export, requires reviewed field and value mappings, and then calculates short-, medium- and long-term exposures, guarantees, overruns, concentration, available resources and source-supported KPIs. Missing financial-statement ratios and prejudicial evidence remain explicitly unavailable. Calculated facts, model-led interpretation and professional approval remain separate.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it",
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "capabilities": ["Interactive", "Read", "Write", "Analysis"],
     "defaultPrompt": [
-      "Analyse this Centrale Rischi export and separate short-, medium- and long-term exposures.",
+      "Analyse this Centrale Rischi PDF or export and separate short-, medium- and long-term exposures.",
       "List guarantees, overruns and prejudicial events supported by this report.",
       "Prepare a reviewable Centrale Rischi KPI pack without inventing financial-statement ratios."
     ],

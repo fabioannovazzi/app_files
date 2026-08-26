@@ -1,6 +1,6 @@
 ---
 name: centrale-rischi-review
-description: Use when Vera must normalize a native-text Centrale Rischi PDF or analyse a reviewed export, classify duration lenses, list supported guarantees and exceptions, and prepare source-supported debt and resource KPIs.
+description: Use when Vera must normalize an official digital Centrale Rischi PDF or analyse a reviewed export, classify duration lenses, list supported guarantees and exceptions, and prepare source-supported debt and resource KPIs.
 ---
 
 ## Cowork execution contract

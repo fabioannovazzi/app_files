@@ -504,7 +504,7 @@ def normalize_pdf(path: Path) -> dict[str, Any]:
                         )
     if native_character_count == 0:
         raise ValueError(
-            "The PDF has no readable native text. OCR is a separate, reviewed adapter and is not enabled."
+            "The PDF has no readable native text. Use the official digital Centrale Rischi report downloaded from the Banca d'Italia service."
         )
     if not any(collections.values()):
         raise ValueError(
