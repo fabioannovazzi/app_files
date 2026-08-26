@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import copy
 import hashlib
 import importlib.util
@@ -1697,3 +1698,18 @@ def test_core_dependency_check_needs_no_third_party_package() -> None:
 
     assert dependency_check.main([]) == 0
     assert dependency_check.main(["--requirements", "missing.txt"]) == 1
+
+
+def test_pipeline_zip_calls_remain_python_39_compatible() -> None:
+    tree = ast.parse(PIPELINE_PATH.read_text(encoding="utf-8"))
+
+    incompatible_lines = [
+        node.lineno
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "zip"
+        and any(keyword.arg == "strict" for keyword in node.keywords)
+    ]
+
+    assert incompatible_lines == []

@@ -2310,7 +2310,7 @@ def _verified_receipt(
     milestones = {item["id"]: item for item in capability["milestones"]}
     if any(milestone_id not in milestones for milestone_id in completed):
         raise ValueError(f"receipt {path} contains an unknown milestone")
-    for current_id, next_id in zip(completed, completed[1:], strict=False):
+    for current_id, next_id in zip(completed, completed[1:]):
         targets = {
             transition["next_milestone"]
             for transition in milestones[current_id]["transitions"]
@@ -2336,7 +2336,7 @@ def _verified_receipt(
     ]
     allowed_origins = set(capability["site"]["allowed_origins"])
     for action_result, action in zip(
-        receipt["action_results"], expected_action_records, strict=True
+        receipt["action_results"], expected_action_records
     ):
         if action_result["output_ref"] != action["output_ref"]:
             raise ValueError(f"receipt {path} action output reference does not match")
