@@ -35,11 +35,23 @@ __all__ = [
     "write_json",
 ]
 
-ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v1"
+ANALYSIS_SCHEMA = "vera.centrale_rischi_analysis.v2"
 COMMENTARY_SCHEMA = "vera.centrale_rischi_commentary.v1"
-RECIPE_SCHEMA = "vera.centrale_rischi_recipe.v1"
+RECIPE_SCHEMA = "vera.centrale_rischi_recipe.v2"
 WORKFLOW_ID = "centrale-rischi-review"
-MATURITY_CLASSES = ("short", "medium", "long", "unclassified")
+ORIGINAL_TERM_CLASSES = (
+    "short",
+    "medium",
+    "long",
+    "not_relevant",
+    "unclassified",
+)
+RESIDUAL_TERM_CLASSES = (
+    "within_one_year",
+    "over_one_year",
+    "not_relevant",
+    "unclassified",
+)
 EXPOSURE_FAMILIES = ("performing", "suffering", "other")
 
 
@@ -246,10 +258,15 @@ def build_inspection(
             "valid_from": "",
             "valid_to": "",
             "source_page": "",
+            "source_region": "",
             "source_row_locator": "",
             "extraction_confidence": "",
         },
-        "value_mappings": {"maturity": {}, "exposure_family": {}},
+        "value_mappings": {
+            "original_term": {},
+            "residual_term": {},
+            "exposure_family": {},
+        },
         "control_totals": {},
         "control_tolerance": "0.01",
         "mapping_review": {"status": "pending", "reviewer": "", "reviewed_at": ""},
@@ -348,6 +365,7 @@ def _require_reviewed_recipe(
         "reference_month",
         "intermediary",
         "risk_category",
+        "original_duration",
         "residual_duration",
         "granted",
         "operational_granted",
@@ -368,12 +386,12 @@ def _require_reviewed_recipe(
         "guaranteed_amount",
         "prejudicial_event",
         "reporting_type",
-        "original_duration",
         "relationship_status",
         "record_status",
         "valid_from",
         "valid_to",
         "source_page",
+        "source_region",
         "source_row_locator",
         "extraction_confidence",
     ):
@@ -401,7 +419,15 @@ def _require_reviewed_recipe(
             raise CentraleRischiContractError(
                 "PDF-derived rows require source_document_sha256."
             )
-        for field in ("record_status", "source_page", "source_row_locator"):
+        for field in (
+            "record_status",
+            "valid_from",
+            "valid_to",
+            "source_page",
+            "source_region",
+            "source_row_locator",
+            "extraction_confidence",
+        ):
             if not columns.get(field):
                 raise CentraleRischiContractError(
                     f"PDF-derived rows require the provenance mapping: {field}"
@@ -436,26 +462,47 @@ def build_analysis(
     mappings = recipe.get("value_mappings")
     if not isinstance(mappings, Mapping):
         raise CentraleRischiContractError("value_mappings must be an object.")
-    maturity_map = mappings.get("maturity")
+    original_term_map = mappings.get("original_term")
+    residual_term_map = mappings.get("residual_term")
     family_map = mappings.get("exposure_family")
-    if not isinstance(maturity_map, Mapping) or not isinstance(family_map, Mapping):
+    if (
+        not isinstance(original_term_map, Mapping)
+        or not isinstance(residual_term_map, Mapping)
+        or not isinstance(family_map, Mapping)
+    ):
         raise CentraleRischiContractError(
-            "Reviewed maturity and exposure_family mappings are required."
+            "Reviewed original_term, residual_term and exposure_family mappings are required."
         )
     normalized: list[dict[str, Any]] = []
-    missing_maturity: set[str] = set()
+    missing_original_term: set[str] = set()
+    missing_residual_term: set[str] = set()
     missing_family: set[str] = set()
     for row_number, row in enumerate(table.rows, start=2):
-        duration_value = _text(row[columns["residual_duration"]])
+        original_duration_value = _text(row[columns["original_duration"]])
+        residual_duration_value = _text(row[columns["residual_duration"]])
         risk_value = _text(row[columns["risk_category"]])
-        maturity = maturity_map.get(duration_value)
+        original_term = original_term_map.get(original_duration_value)
+        residual_term = residual_term_map.get(residual_duration_value)
         family = family_map.get(risk_value)
-        if maturity not in MATURITY_CLASSES:
-            missing_maturity.add(duration_value)
+        if original_term not in ORIGINAL_TERM_CLASSES:
+            missing_original_term.add(original_duration_value)
+        if residual_term not in RESIDUAL_TERM_CLASSES:
+            missing_residual_term.add(residual_duration_value)
         if family not in EXPOSURE_FAMILIES:
             missing_family.add(risk_value)
-        if maturity not in MATURITY_CLASSES or family not in EXPOSURE_FAMILIES:
+        if (
+            original_term not in ORIGINAL_TERM_CLASSES
+            or residual_term not in RESIDUAL_TERM_CLASSES
+            or family not in EXPOSURE_FAMILIES
+        ):
             continue
+        record_status = _mapped_text(
+            row, columns, "record_status", "current"
+        ).casefold()
+        if record_status not in {"current", "previous"}:
+            raise CentraleRischiContractError(
+                f"Invalid record_status at source row {row_number}: {record_status!r}"
+            )
         operational = _decimal(
             row[columns["operational_granted"]],
             field="operational_granted",
@@ -496,8 +543,10 @@ def build_analysis(
                 or "Unspecified intermediary",
                 "risk_category": risk_value,
                 "exposure_family": family,
-                "residual_duration": duration_value,
-                "maturity": maturity,
+                "original_duration": original_duration_value,
+                "original_term": original_term,
+                "residual_duration": residual_duration_value,
+                "residual_term": residual_term,
                 "granted": _decimal(
                     row[columns["granted"]], field="granted", row_number=row_number
                 ),
@@ -509,26 +558,31 @@ def build_analysis(
                 "guaranteed_amount": guaranteed,
                 "prejudicial_event": prejudicial,
                 "reporting_type": _mapped_text(row, columns, "reporting_type"),
-                "original_duration": _mapped_text(row, columns, "original_duration"),
                 "relationship_status": _mapped_text(
                     row, columns, "relationship_status"
                 ),
-                "record_status": _mapped_text(row, columns, "record_status", "current"),
+                "record_status": record_status,
                 "valid_from": _mapped_text(row, columns, "valid_from"),
                 "valid_to": _mapped_text(row, columns, "valid_to"),
                 "source_page": _mapped_text(row, columns, "source_page"),
+                "source_region": _mapped_text(row, columns, "source_region"),
                 "source_row_locator": _mapped_text(row, columns, "source_row_locator"),
                 "extraction_confidence": _mapped_text(
                     row, columns, "extraction_confidence"
                 ),
             }
         )
-    if missing_maturity or missing_family:
+    if missing_original_term or missing_residual_term or missing_family:
         details = []
-        if missing_maturity:
+        if missing_original_term:
+            details.append(
+                "unmapped original_duration values: "
+                + ", ".join(sorted(missing_original_term))
+            )
+        if missing_residual_term:
             details.append(
                 "unmapped residual_duration values: "
-                + ", ".join(sorted(missing_maturity))
+                + ", ".join(sorted(missing_residual_term))
             )
         if missing_family:
             details.append(
@@ -540,24 +594,39 @@ def build_analysis(
             "The selected exposure table has no data rows."
         )
 
-    months = sorted({str(row["reference_month"]) for row in normalized})
+    current_rows = [row for row in normalized if row["record_status"] == "current"]
+    previous_rows = [row for row in normalized if row["record_status"] == "previous"]
+    if not current_rows:
+        raise CentraleRischiContractError(
+            "The selected exposure table has no current records."
+        )
+    months = sorted({str(row["reference_month"]) for row in current_rows})
     latest_month = months[-1]
-    latest = [row for row in normalized if row["reference_month"] == latest_month]
-    maturity_totals: dict[str, dict[str, Decimal]] = {
+    latest = [row for row in current_rows if row["reference_month"] == latest_month]
+    original_term_totals: dict[str, dict[str, Decimal]] = {
         value: {
             "granted": Decimal("0"),
             "operational_granted": Decimal("0"),
             "used": Decimal("0"),
             "overrun": Decimal("0"),
         }
-        for value in MATURITY_CLASSES
+        for value in ORIGINAL_TERM_CLASSES
+    }
+    residual_term_totals: dict[str, dict[str, Decimal]] = {
+        value: {
+            "granted": Decimal("0"),
+            "operational_granted": Decimal("0"),
+            "used": Decimal("0"),
+            "overrun": Decimal("0"),
+        }
+        for value in RESIDUAL_TERM_CLASSES
     }
     monthly: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
     intermediary: dict[str, Decimal] = defaultdict(Decimal)
     category_totals: dict[str, dict[str, Decimal]] = defaultdict(
         lambda: defaultdict(Decimal)
     )
-    for row in normalized:
+    for row in current_rows:
         month = str(row["reference_month"])
         for field in (
             "granted",
@@ -569,9 +638,11 @@ def build_analysis(
         ):
             monthly[month][field] += row[field]
     for row in latest:
-        bucket = maturity_totals[str(row["maturity"])]
-        for field in bucket:
-            bucket[field] += row[field]
+        original_bucket = original_term_totals[str(row["original_term"])]
+        residual_bucket = residual_term_totals[str(row["residual_term"])]
+        for field in original_bucket:
+            original_bucket[field] += row[field]
+            residual_bucket[field] += row[field]
         intermediary[str(row["intermediary"])] += row["used"]
         for field in (
             "granted",
@@ -631,7 +702,7 @@ def build_analysis(
         ),
         _metric(
             "cr.guarantee_coverage_pct",
-            "Copertura garanzie su utilizzato",
+            "Copertura importi garantiti sulle esposizioni",
             _ratio(total_guaranteed, total_used),
             "percent",
         ),
@@ -642,22 +713,28 @@ def build_analysis(
             "percent",
         ),
         _metric(
-            "cr.short_term_share_pct",
-            "Quota breve termine",
-            _ratio(maturity_totals["short"]["used"], total_used),
+            "cr.original_term.short_share_pct",
+            "Quota breve per durata originaria",
+            _ratio(original_term_totals["short"]["used"], total_used),
             "percent",
         ),
         _metric(
-            "cr.medium_term_share_pct",
-            "Quota medio termine",
-            _ratio(maturity_totals["medium"]["used"], total_used),
+            "cr.original_term.medium_share_pct",
+            "Quota media per durata originaria",
+            _ratio(original_term_totals["medium"]["used"], total_used),
             "percent",
         ),
         _metric(
-            "cr.long_term_share_pct",
-            "Quota lungo termine",
-            _ratio(maturity_totals["long"]["used"], total_used),
+            "cr.original_term.long_share_pct",
+            "Quota lunga per durata originaria",
+            _ratio(original_term_totals["long"]["used"], total_used),
             "percent",
+        ),
+        _metric(
+            "cr.previous_record_count",
+            "Segnalazioni precedenti escluse dai totali correnti",
+            len(previous_rows),
+            "count",
         ),
         _metric(
             "cr.used_mom_change",
@@ -784,7 +861,11 @@ def build_analysis(
         if failed_controls
         else (
             "partial"
-            if any(row["maturity"] == "unclassified" for row in latest)
+            if any(
+                row["original_term"] == "unclassified"
+                or row["residual_term"] == "unclassified"
+                for row in latest
+            )
             or (recipe.get("analysis_mode") == "trend" and len(months) < 2)
             else "complete"
         )
@@ -797,12 +878,19 @@ def build_analysis(
         }
 
     exposures = [public_row(row) for row in normalized]
-    maturity = [
+    original_term_summary = [
         {
-            "maturity": key,
+            "original_term": key,
             **{field: _decimal_text(value) for field, value in totals.items()},
         }
-        for key, totals in maturity_totals.items()
+        for key, totals in original_term_totals.items()
+    ]
+    residual_term_summary = [
+        {
+            "residual_term": key,
+            **{field: _decimal_text(value) for field, value in totals.items()},
+        }
+        for key, totals in residual_term_totals.items()
     ]
     monthly_series = [
         {
@@ -811,21 +899,19 @@ def build_analysis(
         }
         for month in months
     ]
-    guarantees = [
-        public_row(row)
-        for row in latest
-        if row["guaranteed_amount"] > 0 or row["guarantee_type"]
-    ]
+    guarantees = [public_row(row) for row in latest if row["guaranteed_amount"] > 0]
     overruns = [public_row(row) for row in latest if row["overrun"] > 0]
     prejudicial = [public_row(row) for row in latest if row["prejudicial_event"]]
     limitations = [
-        "Utilization is calculated by reviewed risk category; no single cross-category utilization ratio is asserted because used amounts have category-specific meaning.",
-        "Centrale Rischi does not by itself support PFN/EBITDA, Debt/Equity, or DSCR.",
-        "The output does not reproduce or estimate a bank's proprietary credit rating.",
+        "L'utilizzo è calcolato per categoria di rischio confermata; non viene presentato un unico rapporto trasversale perché gli importi utilizzati hanno significati specifici per categoria.",
+        "Breve, medio e lungo derivano dai valori confermati della durata originaria. La durata residua è esposta separatamente come entro un anno, oltre un anno, non rilevante o non classificata e non consente di distinguere medio da lungo termine.",
+        "L'Importo garantito su un'esposizione del cliente non coincide con la tabella Garanzie ricevute per obbligazioni di terzi. L'analisi delle esposizioni non unisce le due popolazioni.",
+        "La Centrale Rischi da sola non consente di calcolare PFN/EBITDA, Debt/Equity o DSCR.",
+        "L'output non riproduce né stima il rating proprietario di una banca.",
     ]
     if not columns.get("prejudicial_event"):
         limitations.append(
-            "Pregiudizievoli are unavailable because no reviewed source column was supplied."
+            "Le evidenze pregiudizievoli non sono disponibili perché non è stata fornita una colonna proveniente da una fonte separata e confermata."
         )
     return {
         "schema_version": ANALYSIS_SCHEMA,
@@ -845,10 +931,13 @@ def build_analysis(
             "source_document_sha256": str(recipe.get("source_document_sha256", "")),
             "inventory_sha256": recipe["inventory_sha256"],
             "row_count": len(normalized),
+            "current_row_count": len(current_rows),
+            "previous_row_count": len(previous_rows),
         },
         "metrics": metrics,
         "exposures": exposures,
-        "maturity_summary": maturity,
+        "original_term_summary": original_term_summary,
+        "residual_term_summary": residual_term_summary,
         "risk_category_summary": category_summary,
         "monthly_series": monthly_series,
         "guarantees": guarantees,
@@ -860,6 +949,7 @@ def build_analysis(
             ),
             "multiple_months": "available" if len(months) > 1 else "unavailable",
             "trend_analysis": "available" if len(months) > 1 else "unavailable",
+            "previous_records": "available" if previous_rows else "unavailable",
             "reconciled_analysis": "unavailable",
             "financial_statement_ratios": "unavailable",
         },
@@ -889,7 +979,8 @@ def build_model_context(analysis: Mapping[str, Any]) -> dict[str, Any]:
         "currency": analysis["currency"],
         "latest_reference_month": analysis["latest_reference_month"],
         "metrics": analysis["metrics"],
-        "maturity_summary": analysis["maturity_summary"],
+        "original_term_summary": analysis["original_term_summary"],
+        "residual_term_summary": analysis["residual_term_summary"],
         "risk_category_summary": analysis["risk_category_summary"],
         "monthly_series": analysis["monthly_series"][-36:],
         "top_overruns": sorted(
@@ -985,6 +1076,18 @@ def _metric_rows(analysis: Mapping[str, Any]) -> str:
     )
 
 
+def _term_label(value: str) -> str:
+    return {
+        "short": "breve",
+        "medium": "medio",
+        "long": "lungo",
+        "within_one_year": "entro un anno",
+        "over_one_year": "oltre un anno",
+        "not_relevant": "non rilevante",
+        "unclassified": "non classificato",
+    }.get(value, value)
+
+
 def render_markdown(
     analysis: Mapping[str, Any], commentary: Mapping[str, Any] | None = None
 ) -> str:
@@ -1009,15 +1112,28 @@ def render_markdown(
     lines.extend(
         [
             "",
-            "## Esposizioni per scadenza",
+            "## Esposizioni per durata originaria",
             "",
             "| Scadenza | Accordato | Operativo | Utilizzato | Sconfinamento |",
             "| --- | ---: | ---: | ---: | ---: |",
         ]
     )
-    for item in analysis["maturity_summary"]:
+    for item in analysis["original_term_summary"]:
         lines.append(
-            f"| {item['maturity']} | {item['granted']} | {item['operational_granted']} | {item['used']} | {item['overrun']} |"
+            f"| {_term_label(str(item['original_term']))} | {item['granted']} | {item['operational_granted']} | {item['used']} | {item['overrun']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Esposizioni per durata residua",
+            "",
+            "| Durata residua | Accordato | Operativo | Utilizzato | Sconfinamento |",
+            "| --- | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for item in analysis["residual_term_summary"]:
+        lines.append(
+            f"| {_term_label(str(item['residual_term']))} | {item['granted']} | {item['operational_granted']} | {item['used']} | {item['overrun']} |"
         )
     lines.extend(
         [
@@ -1087,15 +1203,19 @@ def render_html(
             + "".join(blocks)
             + "</section>"
         )
-    maturity_rows = "".join(
-        f"<tr><td>{html.escape(item['maturity'])}</td><td>{item['granted']}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['overrun']}</td></tr>"
-        for item in analysis["maturity_summary"]
+    original_term_rows = "".join(
+        f"<tr><td>{html.escape(_term_label(str(item['original_term'])))}</td><td>{item['granted']}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['overrun']}</td></tr>"
+        for item in analysis["original_term_summary"]
+    )
+    residual_term_rows = "".join(
+        f"<tr><td>{html.escape(_term_label(str(item['residual_term'])))}</td><td>{item['granted']}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['overrun']}</td></tr>"
+        for item in analysis["residual_term_summary"]
     )
     category_rows = "".join(
         f"<tr><td>{html.escape(item['risk_category'])}</td><td>{item['operational_granted']}</td><td>{item['used']}</td><td>{item['available']}</td><td>{item['utilization_pct'] if item['utilization_pct'] is not None else 'Non disponibile'}</td></tr>"
         for item in analysis["risk_category_summary"]
     )
-    return f"""<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centrale Rischi — {html.escape(str(analysis['entity']))}</title><style>body{{font-family:'Instrument Sans',Arial,sans-serif;margin:0;color:#171816;background:#fff}}main{{max-width:1120px;margin:auto;padding:48px 24px}}header{{border-top:5px solid #002060;border-bottom:1px solid #c9ccd1;padding-bottom:24px}}.eyebrow{{color:#006b8f;font-weight:700;text-transform:uppercase;letter-spacing:.08em}}h1{{font-size:clamp(2.2rem,5vw,4.5rem);line-height:.98;margin:.4rem 0}}section{{margin-top:42px}}table{{width:100%;border-collapse:collapse}}th,td{{padding:12px 8px;border-bottom:1px solid #d9dadd;text-align:left}}th{{color:#002060}}.status{{display:inline-block;border:1px solid #002060;padding:6px 10px}}code{{font-size:.8em;color:#006b8f}}@media(max-width:700px){{main{{padding:28px 16px}}table{{font-size:.82rem}}}}</style></head><body><main><header><p class="eyebrow">Vera · Centrale Rischi</p><h1>{html.escape(str(analysis['entity']))}</h1><p>Periodo più recente: {analysis['latest_reference_month']} · <span class="status">{analysis['review_status']}</span></p></header><section><h2>KPI</h2><table><thead><tr><th>Metrica</th><th>Valore</th><th>Unità</th><th>Copertura</th></tr></thead><tbody>{_metric_rows(analysis)}</tbody></table></section><section><h2>Esposizioni per scadenza</h2><table><thead><tr><th>Scadenza</th><th>Accordato</th><th>Operativo</th><th>Utilizzato</th><th>Sconfinamento</th></tr></thead><tbody>{maturity_rows}</tbody></table></section><section><h2>Indicatori per categoria</h2><table><thead><tr><th>Categoria</th><th>Operativo</th><th>Utilizzato</th><th>Margine</th><th>Utilizzo %</th></tr></thead><tbody>{category_rows}</tbody></table></section><section><h2>Eccezioni</h2><p>Garanzie: {len(analysis['guarantees'])} · Sconfinamenti: {len(analysis['overruns'])} · Pregiudizievoli: {len(analysis['prejudicial_events'])}</p></section>{commentary_html}<section><h2>Limiti</h2><ul>{''.join(f'<li>{html.escape(item)}</li>' for item in analysis['limitations'])}</ul></section></main></body></html>"""
+    return f"""<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centrale Rischi — {html.escape(str(analysis['entity']))}</title><style>body{{font-family:'Instrument Sans',Arial,sans-serif;margin:0;color:#171816;background:#fff}}main{{max-width:1120px;margin:auto;padding:48px 24px}}header{{border-top:5px solid #002060;border-bottom:1px solid #c9ccd1;padding-bottom:24px}}.eyebrow{{color:#006b8f;font-weight:700;text-transform:uppercase;letter-spacing:.08em}}h1{{font-size:clamp(2.2rem,5vw,4.5rem);line-height:.98;margin:.4rem 0}}section{{margin-top:42px}}table{{width:100%;border-collapse:collapse}}th,td{{padding:12px 8px;border-bottom:1px solid #d9dadd;text-align:left}}th{{color:#002060}}.status{{display:inline-block;border:1px solid #002060;padding:6px 10px}}code{{font-size:.8em;color:#006b8f}}@media(max-width:700px){{main{{padding:28px 16px}}table{{font-size:.82rem}}}}</style></head><body><main><header><p class="eyebrow">Vera · Centrale Rischi</p><h1>{html.escape(str(analysis['entity']))}</h1><p>Periodo più recente: {analysis['latest_reference_month']} · <span class="status">{analysis['review_status']}</span></p></header><section><h2>KPI</h2><table><thead><tr><th>Metrica</th><th>Valore</th><th>Unità</th><th>Copertura</th></tr></thead><tbody>{_metric_rows(analysis)}</tbody></table></section><section><h2>Esposizioni per durata originaria</h2><table><thead><tr><th>Classe</th><th>Accordato</th><th>Operativo</th><th>Utilizzato</th><th>Sconfinamento</th></tr></thead><tbody>{original_term_rows}</tbody></table></section><section><h2>Esposizioni per durata residua</h2><table><thead><tr><th>Classe</th><th>Accordato</th><th>Operativo</th><th>Utilizzato</th><th>Sconfinamento</th></tr></thead><tbody>{residual_term_rows}</tbody></table></section><section><h2>Indicatori per categoria</h2><table><thead><tr><th>Categoria</th><th>Operativo</th><th>Utilizzato</th><th>Margine</th><th>Utilizzo %</th></tr></thead><tbody>{category_rows}</tbody></table></section><section><h2>Eccezioni</h2><p>Garanzie sulle esposizioni: {len(analysis['guarantees'])} · Sconfinamenti: {len(analysis['overruns'])} · Pregiudizievoli: {len(analysis['prejudicial_events'])}</p></section>{commentary_html}<section><h2>Limiti</h2><ul>{''.join(f'<li>{html.escape(item)}</li>' for item in analysis['limitations'])}</ul></section></main></body></html>"""
 
 
 def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
@@ -1119,7 +1239,8 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
             )
         )
     sections = {
-        "Scadenze": analysis["maturity_summary"],
+        "Durata originaria": analysis["original_term_summary"],
+        "Durata residua": analysis["residual_term_summary"],
         "Categorie": analysis["risk_category_summary"],
         "Esposizioni": analysis["exposures"],
         "Garanzie": analysis["guarantees"],

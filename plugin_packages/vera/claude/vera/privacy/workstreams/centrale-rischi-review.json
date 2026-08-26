@@ -21,7 +21,7 @@
       {
         "id": "centrale-rischi-mapping-inspection",
         "purpose": "Establish the exact exposure table, columns, duration classes, risk families, report perimeter and reviewed recipe before calculation",
-        "content": "User instructions; supplied export and sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete supplied CSV or Excel population is read locally to inventory tables. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in previews and are not automatically anonymized or pseudonymized. Source roles and value meaning remain model-led and professionally reviewed rather than keyword-classified.",
+        "content": "User instructions; supplied PDF or export and normalized sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete native-text PDF or supplied CSV or Excel population is read locally to normalize and inventory tables. The full PDF normalization remains a local review artifact by default. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in bounded previews and are not automatically anonymized or pseudonymized. Source roles, duration meaning and exposure-family meaning remain model-led and professionally reviewed rather than keyword-classified.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -55,11 +55,11 @@
     },
     {
       "id": "explicit-reviewed-value-mapping",
-      "control": "The inspector does not assign a table role, maturity class or exposure family. Calculation requires an inventory-bound recipe with a named, timestamped reviewed mapping that exhaustively maps each observed duration and risk-category value."
+      "control": "The PDF adapter recognizes only mechanically reviewable table shapes and the inspector does not assign duration meaning or exposure family. Calculation requires an inventory-bound recipe with a named, timestamped reviewed mapping that exhaustively maps each observed original-duration, residual-duration and risk-category value."
     },
     {
       "id": "exact-calculation-boundary",
-      "control": "Dates and monetary values must parse exactly. The runner calculates overruns per row only after a reviewed suffering classification and applies max(used minus operational granted, zero) only to non-suffering rows, without offsetting another operation or intermediary. Utilization is reported by reviewed risk category rather than as one indiscriminate cross-category ratio. Declared control totals outside tolerance block the analysis."
+      "control": "Dates and monetary values must parse exactly. Previous or corrected PDF records are retained with provenance but excluded from current and monthly totals. The runner calculates overruns per current row only after a reviewed suffering classification and applies max(used minus operational granted, zero) only to non-suffering rows, without offsetting another operation or intermediary. Utilization is reported by reviewed risk category rather than as one indiscriminate cross-category ratio. Declared control totals outside tolerance block the analysis."
     },
     {
       "id": "missing-evidence-fail-visible",
@@ -75,17 +75,17 @@
     },
     {
       "id": "acquisition-adapter-separation",
-      "control": "Portal navigation, browser automation, PEC retrieval and PDF extraction are upstream evidence-acquisition routes, not part of the calculation contract. Their own receipts and review are required before a normalized export becomes a workflow input."
+      "control": "Portal navigation, browser automation and PEC retrieval remain upstream evidence-acquisition routes with their own authorization and receipts. Native-text PDF normalization is a local intake adapter that writes separate review tables and a receipt before the normalized workbook enters the ordinary reviewed calculation contract."
     },
     {
       "id": "pdf-layout-provenance",
-      "control": "A PDF-derived normalization must retain the source document hash, page, row or region locator, current-versus-previous record status and available validity dates. The initial engine rejects a PDF-derived recipe without the required provenance mappings and does not treat linear text extraction as a validated parser."
+      "control": "A PDF-derived normalization retains the source document hash, page, table region, row locator, current-versus-previous record status and available validity dates. Rows with incomplete required metadata are marked review_required, unclassified tables remain visible, and scanned PDFs stop because OCR is not enabled. When calculation receives the original PDF again, it verifies the source hash, the run-local normalization receipt and the exact normalized-workbook hash before applying the reviewed recipe; missing, changed or substituted artifacts fail closed."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "185c8cde7d803acba9a4178a5e3b056dcf8fcc38b72c8057ca0d006222a0c74c"
+    "source_fingerprint": "3189f2e6870e27efacd773077250802919dee830314a603b0f9ee690e5068fc9"
   }
 }

@@ -979,6 +979,31 @@ async function verifyPostcondition(postcondition, context) {
   return true;
 }
 
+async function gotoWithCommittedTargetCheck(tab, targetUrl, timeoutMs) {
+  try {
+    await tab.goto(targetUrl);
+    return;
+  } catch (navigationError) {
+    let currentUrl;
+    try {
+      currentUrl = await tab.url();
+    } catch {
+      throw navigationError;
+    }
+    if (typeof currentUrl !== "string" || new URL(currentUrl).href !== targetUrl) {
+      throw navigationError;
+    }
+    try {
+      await tab.playwright.waitForLoadState({
+        state: "domcontentloaded",
+        timeoutMs,
+      });
+    } catch {
+      throw navigationError;
+    }
+  }
+}
+
 async function executeAction(action, context) {
   const {
     tab,
@@ -1012,7 +1037,8 @@ async function executeAction(action, context) {
     if (!capability.site.allowed_origins.includes(targetOrigin)) {
       throw new Error(`goto target origin is not allowed: ${targetOrigin}`);
     }
-    await tab.goto(new URL(renderTemplate(action.path, inputs), targetOrigin).href);
+    const targetUrl = new URL(renderTemplate(action.path, inputs), targetOrigin).href;
+    await gotoWithCommittedTargetCheck(tab, targetUrl, timeoutMs);
   } else if (action.operation === "wait_for") {
     if (!(await locator.isEnabled())) {
       throw new Error(`waited control is disabled: ${action.id}`);
