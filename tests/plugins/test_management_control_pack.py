@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import re
@@ -26,6 +27,7 @@ from management_control_core import (  # noqa: E402
     build_inspection,
     build_management_pack,
     build_model_context,
+    build_model_context_receipt,
     finalize_commentary,
     load_source_tables,
     write_excel,
@@ -405,6 +407,96 @@ def test_post_calculation_context_excludes_raw_files_and_absolute_paths(
     assert '"sha256"' in serialized
 
 
+def test_model_context_receipt_keeps_full_pack_out_of_default_model_read(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    tables, inspection = _inspection_for(source)
+    pack = build_management_pack(tables, _reviewed_recipe(inspection))
+    context = build_model_context(pack)
+
+    receipt = build_model_context_receipt(pack, context)
+
+    assert receipt["validation"] == {
+        "status": "passed",
+        "method": "exact_rebuild_from_full_pack",
+        "checks": [
+            "schema_and_status",
+            "coverage",
+            "controls",
+            "metrics",
+            "bounded_sections",
+            "limitations",
+            "source_lineage",
+        ],
+    }
+    assert receipt["full_pack"]["model_visible_by_default"] is False
+    assert receipt["model_context"]["model_visible_by_default"] is True
+    assert receipt["model_read_policy"]["full_pack_model_read_required"] is False
+    assert receipt["model_read_policy"]["local_validation_only_artifact_ids"] == [
+        "pack.structured"
+    ]
+    assert receipt["full_pack"]["sha256"] == context["pack_sha256"]
+    unhashed = {key: value for key, value in receipt.items() if key != "content_sha256"}
+    expected_hash = hashlib.sha256(
+        (
+            json.dumps(
+                unhashed,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n"
+        ).encode("utf-8")
+    ).hexdigest()
+    assert receipt["content_sha256"] == expected_hash
+
+
+def test_model_context_receipt_rejects_tampered_or_unbounded_context(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    tables, inspection = _inspection_for(source)
+    pack = build_management_pack(tables, _reviewed_recipe(inspection))
+    context = build_model_context(pack)
+    context["metrics"] = context["metrics"][:-1]
+
+    with pytest.raises(PackContractError, match="exact bounded projection"):
+        build_model_context_receipt(pack, context)
+
+
+@pytest.mark.parametrize("full", [True, False])
+def test_model_context_receipt_preserves_interpretation_contract(
+    tmp_path: Path, full: bool
+) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source, full=full)
+    tables, inspection = _inspection_for(source)
+    pack = build_management_pack(
+        tables,
+        _reviewed_recipe(inspection, full=full),
+    )
+    context = build_model_context(pack)
+
+    receipt = build_model_context_receipt(pack, context)
+
+    assert receipt["status"] == pack["status"]
+    assert receipt["model_context"]["metric_count"] == len(pack["metrics"])
+    assert receipt["model_context"]["coverage_record_count"] == len(pack["coverage"])
+    assert receipt["model_context"]["control_record_count"] == len(pack["controls"])
+    assert receipt["model_context"]["limitation_count"] == len(pack["limitations"])
+    assert all(
+        count <= receipt["bounds"]["max_rows_per_section"]
+        for count in receipt["bounds"]["section_row_counts"].values()
+    )
+    assert all(
+        count <= receipt["bounds"]["max_top_parties_per_section"]
+        for count in receipt["bounds"]["section_top_party_counts"].values()
+    )
+
+
 def test_pack_rejects_unreviewed_mapping(tmp_path: Path) -> None:
     source = tmp_path / "management.xlsx"
     _write_workbook(source)
@@ -585,9 +677,19 @@ def test_connectorless_cli_runs_end_to_end_inside_studio_archive(
         "management_control_facts.md",
         "management_control_dashboard.html",
         "model_context.json",
+        "model_context_receipt.json",
         "execution_receipt.json",
     ):
         assert (pack_dir / name).is_file(), name
+    context = json.loads((pack_dir / "model_context.json").read_text())
+    context_receipt = json.loads((pack_dir / "model_context_receipt.json").read_text())
+    assert context_receipt == build_model_context_receipt(
+        json.loads((pack_dir / "management_control_pack.json").read_text()),
+        context,
+    )
+    assert (
+        context_receipt["model_read_policy"]["full_pack_model_read_required"] is False
+    )
     workbook = load_workbook(pack_dir / "management_control_pack.xlsx")
     try:
         assert {"Summary", "Monthly P&L", "Budget variance", "AR aging"}.issubset(
@@ -666,6 +768,8 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
         "Qué datos recibe el modelo",
         "fino a dieci righe di anteprima per tabella",
         "non riceve di default le popolazioni complete",
+        "Il pacchetto calcolato completo viene validato localmente",
+        "The complete calculated pack is validated locally",
         "non monitora i sistemi in background",
         'data-model-data-workflow="management-control-pack"',
         'data-model-data-status="relevant"',
@@ -676,3 +780,22 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
     assert all(page.count(f'"{key}":') == 5 for key in visible_keys)
     assert main.rstrip().endswith("</section>")
     assert main.rindex('class="function-model-data"') > main.rindex('id="prompt"')
+
+
+def test_workflow_reads_only_the_bounded_post_calculation_context() -> None:
+    skill = (PLUGIN_ROOT / "skills" / "management-control-pack" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert (
+        "Read `execution_receipt.json`, `model_context_receipt.json`, and\n"
+        "`model_context.json`"
+    ) in skill
+    assert (
+        "Do not read\n`management_control_pack.json` into model context by default."
+        in skill
+    )
+    assert (
+        "Read `execution_receipt.json`, `management_control_pack.json`, and"
+        not in skill
+    )

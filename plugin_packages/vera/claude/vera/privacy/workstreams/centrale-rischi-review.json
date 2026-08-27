@@ -21,7 +21,7 @@
       {
         "id": "centrale-rischi-mapping-inspection",
         "purpose": "Establish the exact exposure table, columns, duration classes, risk families, report perimeter and reviewed recipe before calculation",
-        "content": "User instructions; supplied PDF or export and normalized sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete native-text PDF or supplied CSV or Excel population is read locally to normalize and inventory tables. The full PDF normalization remains a local review artifact by default. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in bounded previews and are not automatically anonymized or pseudonymized. Source roles, duration meaning and exposure-family meaning remain model-led and professionally reviewed rather than keyword-classified.",
+        "content": "User instructions; supplied PDF or export and normalized table labels; stable table IDs; every source column name and observed type; table row counts; each table's source SHA-256 hash; the inventory SHA-256 hash; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete native-text PDF or supplied CSV or Excel population is read locally to normalize and inventory tables. The full PDF normalization remains a local review artifact by default. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in bounded previews and are not automatically anonymized or pseudonymized. Source roles, duration meaning and exposure-family meaning remain model-led and professionally reviewed rather than keyword-classified.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -30,7 +30,7 @@
       {
         "id": "centrale-rischi-post-calculation-review",
         "purpose": "Interpret exact calculated CR facts and identify observations, hypotheses, questions, missing evidence and limitations",
-        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, guarantors of the holder, ceded debtors, other risk information, summary totals, inframonthly events and information requests, together with coverage, controls and limitations. The bounded auxiliary rows may include intermediary, guarantor, guaranteed-party or ceded-debtor names, dates, categories, types, reasons, amounts, source pages, row locators and extraction confidence. Raw source populations, absolute paths, original filenames and source-document hashes are excluded from those auxiliary-row projections by default.",
+        "content": "A bounded model_context.json containing status, entity name, currency, latest reference month, metrics, maturity and risk-category summaries, up to 50 category-movement rows, up to 36 monthly rows, up to 20 previous-record review rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, guarantors of the holder, ceded debtors, other risk information, summary totals, inframonthly events and information requests, together with coverage, controls, assurance levels and limitations. Bounded previous-record, exception and auxiliary rows may include intermediary, guarantor, guaranteed-party or ceded-debtor names, dates, categories, relationship or record status, types, reasons, amounts, source pages, row locators and extraction confidence. The current raw source population, previous records beyond the bounded projection, absolute paths, original filenames and source-document hashes are excluded by default.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -38,8 +38,8 @@
       },
       {
         "id": "centrale-rischi-commentary",
-        "purpose": "Prepare a metric-linked professional-review draft without changing calculated facts",
-        "content": "The bounded calculated context plus draft observations and hypotheses tied to existing metric IDs, professional questions and limitations. The finalizer validates schema, blocks failed controls, and checks metric-reference closure; duration meaning, exposure-family meaning, materiality, causation, credit judgment and professional approval remain model-led or professional judgments.",
+        "purpose": "Prepare an evidence-linked professional-review draft without changing calculated facts",
+        "content": "The bounded calculated context plus draft observations and hypotheses tied to existing evidence references: metric IDs, control IDs or source-row locators present in that context, together with professional questions and limitations. The finalizer validates schema, blocks failed controls, and checks evidence-reference closure; duration meaning, exposure-family meaning, materiality, causation, credit judgment and professional approval remain model-led or professional judgments.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -67,11 +67,11 @@
     },
     {
       "id": "bounded-post-calculation-model-context",
-      "control": "The deterministic post-calculation projection excludes raw source populations, absolute paths and original filenames and exposes only calculated metrics, bounded series, bounded exceptions, up to 20 rows from each separate PDF information population, coverage, controls, lineage IDs and limitations. Source-document hashes are excluded from projected auxiliary rows."
+      "control": "The deterministic post-calculation projection excludes the current raw source population, previous records beyond the bounded review projection, absolute paths and original filenames. It exposes only calculated metrics, bounded category movements and monthly series, bounded previous-record and exception rows, up to 20 rows from each separate PDF information population, coverage, controls, assurance levels and limitations. Source-document hashes are excluded from projected rows."
     },
     {
-      "id": "metric-reference-closure",
-      "control": "Final observations and hypotheses must reference existing metric IDs. The finalizer validates shape and reference closure while preserving draft_pending_professional_review and never assigning source meaning, materiality, causation, credit judgment or approval."
+      "id": "evidence-reference-closure",
+      "control": "Final observations and hypotheses must reference an existing metric ID, control ID or source-row locator present in the bounded model context. The finalizer validates shape and evidence-reference closure while preserving draft_pending_professional_review and never assigning source meaning, materiality, causation, credit judgment or approval."
     },
     {
       "id": "acquisition-adapter-separation",
@@ -83,9 +83,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-25",
+    "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2f5dfad5899423280195340af4b19102fa4c48b305b348c221d86f478f65887b"
+    "source_fingerprint": "53f5cfc85a5f9bbee251901c60a736e3ab5fdf5e7ca3effee467fb2419b25d95"
   }
 }

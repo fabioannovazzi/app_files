@@ -147,12 +147,15 @@ python scripts/run_pack.py \
   --output-dir <run-output>/pack
 ```
 
-Read `execution_receipt.json`, `management_control_pack.json`, and
-`model_context.json` before opening the Excel or HTML render. Stop on a blocked
-core pack or a failed declared control total. The default model context contains
-calculated metrics, bounded monthly series, top-ranked exceptions, coverage,
-lineage IDs, and limitations; it does not contain the raw source population or
-original filenames.
+Read `execution_receipt.json`, `model_context_receipt.json`, and
+`model_context.json` before opening the Excel or HTML render. Do not read
+`management_control_pack.json` into model context by default. The local runner
+has already rebuilt the bounded context from that complete pack, verified exact
+projection equality, and bound both files by hash in the receipt. Stop on a
+blocked core pack, a failed declared control total, or a failed context receipt.
+The default model context contains calculated metrics, bounded monthly series,
+top-ranked exceptions, coverage, lineage IDs, and limitations; it does not
+contain the raw source population or original filenames.
 
 Write `management_commentary.json` from `commentary_template.json`. Every
 observation or hypothesis must reference existing metric IDs. Separate:
@@ -161,6 +164,13 @@ observation or hypothesis must reference existing metric IDs. Separate:
 - hypotheses that require more evidence;
 - questions for management or the professional;
 - limitations and unavailable sections.
+
+For the run-level model-data report, record the exact bounded
+`model_context.json` read as the post-calculation model-visible phase. Do not
+record the local finalizer's read of `management_control_pack.json` as a model
+phase. If the same model session uses the already-read bounded context for both
+review and commentary, record one phase rather than inventing a duplicate
+transmission; a genuinely separate model read remains a separate phase.
 
 Then validate and assemble the reviewed draft:
 
@@ -182,7 +192,7 @@ source completeness, business causation, or approval.
 - `management_control_pack.json` and `execution_receipt.json`;
 - `management_control_pack.xlsx`;
 - `management_control_facts.md` and `management_control_dashboard.html`;
-- `model_context.json` and `commentary_template.json`;
+- `model_context.json`, `model_context_receipt.json`, and `commentary_template.json`;
 - after interpretation, `management_control_report.md`,
   `management_control_dashboard_reviewed.html`, and
   `commentary_receipt.json`.
