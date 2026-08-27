@@ -314,14 +314,26 @@ def test_sites_handoff_remains_openai_only_in_cowork(vera_entries) -> None:
     )
 
 
-def test_cowork_privacy_register_keeps_studio_archive_and_omits_openai_services(
+def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_services(
     vera_entries,
 ) -> None:
     projected_components = json.loads(vera_entries["components.json"])
 
-    assert projected_components["shared_services"] == []
-    assert not any(name.startswith("privacy/services/") for name in vera_entries)
+    assert projected_components["shared_services"] == ["run-receipt-stamping"]
+    assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
+        "privacy/services/run-receipt-stamping.json"
+    }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
+    receipt_service = json.loads(
+        vera_entries["privacy/services/run-receipt-stamping.json"]
+    )
+    assert receipt_service["runtime_profiles"] == ["anthropic-cowork"]
+    assert "governed_repository_paths" not in receipt_service
+    assert all(
+        not implementation.startswith("repository:")
+        for control in receipt_service["security_controls"]
+        for implementation in control["implemented_by"]
+    )
 
 
 def test_cowork_privacy_register_validates_projected_bytes(

@@ -26,6 +26,19 @@ exact output folder:
 - `model_data_report.md`: the small localized report shown in the final
   Artifact Card.
 
+The build command also checks the private studio-level server-receipt setting.
+If the studio previously enabled it, the same run automatically creates:
+
+- `model_data_receipt_request.json`: the retry-stable four-field request;
+- `model_data_receipt.json`: the returned server timestamp and Ed25519 proof;
+- `model_data_receipt.html`: a customer-readable receipt that can be printed or
+  saved as PDF and links to public verification.
+
+If the setting is disabled, the builder makes no receipt-service network call.
+Do not ask for confirmation on every run after the studio has enabled the
+setting. If stamping fails, retain the local report and retry-stable request,
+but state that no server-stamped receipt was created.
+
 For a Studio Archive run, declare both files as run artifacts before completion.
 For a studio-wide workflow, keep them in that workflow's exact authorized output
 folder. Never write a client report in plugin source. When the host cannot write
@@ -34,6 +47,31 @@ created, and use `host_attested` rather than claiming exact payload evidence.
 
 The report is not a consent banner, privacy score, network monitor, provider
 attestation, DPIA, legal opinion, or GDPR certification.
+
+## Optional server-stamped proof
+
+The server receives exactly schema version `1`, a random receipt UUID created
+for this run, the installed Vera version, and the SHA-256 digest of the
+canonical local report. It does not receive the report, workflow or local run
+IDs, client or case data, purposes, phase labels, counts, filenames, file
+contents, source-document hashes, prompts, or model outputs. Mparanza retains
+only the opaque receipt ID, its own timestamp, Vera version, report digest,
+signature, key ID, and implicit schema version, without an automatic deletion
+period.
+
+Enable this firm-level setting only after an explicit user choice:
+
+```bash
+python scripts/notarized_run_receipt.py settings enable \
+  --confirm-minimal-server-record
+```
+
+Disable future stamping with `settings disable`. Existing proofs remain until
+removed locally or deleted administratively from Mparanza, after which public
+verification is no longer possible. The proof establishes existence, server
+time, and integrity of the matching report only. It does not prove who submitted
+the digest, provider-side delivery, analytical correctness, semantic necessity,
+a DPIA, legal compliance, or GDPR compliance.
 
 ## Phase evidence
 
@@ -121,6 +159,10 @@ python scripts/model_data_report.py build \
 
 python scripts/model_data_report.py validate \
   --report /absolute/run/output/model_data_report.json
+
+python scripts/notarized_run_receipt.py verify \
+  --report /absolute/run/output/model_data_report.json \
+  --receipt /absolute/run/output/model_data_receipt.json
 ```
 
 The input uses schema version `1`. See the script's accepted fields and the

@@ -3,8 +3,10 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import os
 import subprocess
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -285,8 +287,14 @@ def test_cli_writes_json_and_markdown_idempotently(tmp_path: Path) -> None:
         str(tmp_path),
     ]
 
-    first = subprocess.run(command, check=False, capture_output=True, text=True)
-    second = subprocess.run(command, check=False, capture_output=True, text=True)
+    environment = os.environ.copy()
+    environment["PLUGIN_DATA"] = str(tmp_path / "plugin-data")
+    first = subprocess.run(
+        command, check=False, capture_output=True, text=True, env=environment
+    )
+    second = subprocess.run(
+        command, check=False, capture_output=True, text=True, env=environment
+    )
 
     assert first.returncode == 0, first.stderr
     assert second.returncode == 0, second.stderr
@@ -294,6 +302,53 @@ def test_cli_writes_json_and_markdown_idempotently(tmp_path: Path) -> None:
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["workflow_id"] == "variance-analysis"
     assert (tmp_path / "model_data_report.md").is_file()
+    assert json.loads(first.stdout)["server_receipt"] == {"status": "disabled"}
+
+
+def test_every_durable_build_checks_the_studio_receipt_setting(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = _load_module()
+    payload_path = tmp_path / "mapping_payload.json"
+    payload_path.write_text("{}\n", encoding="utf-8")
+    request_path = tmp_path / "model_data_report_input.json"
+    request_path.write_text(json.dumps(_reduced_request()), encoding="utf-8")
+    calls: list[tuple[Path, Path, Path]] = []
+    receipt_module = types.ModuleType("notarized_run_receipt")
+
+    class SyntheticReceiptError(RuntimeError):
+        pass
+
+    def stamp_if_enabled(
+        report_path: Path, *, output_dir: Path, plugin_root: Path
+    ) -> dict[str, str]:
+        calls.append((report_path, output_dir, plugin_root))
+        return {"status": "disabled"}
+
+    receipt_module.stamp_model_data_report_if_enabled = stamp_if_enabled
+    receipt_module.NotarizedRunReceiptError = SyntheticReceiptError
+    monkeypatch.setitem(sys.modules, "notarized_run_receipt", receipt_module)
+
+    result = module.main(
+        [
+            "build",
+            "--input",
+            str(request_path),
+            "--evidence-root",
+            str(tmp_path),
+            "--output-dir",
+            str(tmp_path),
+        ]
+    )
+
+    assert result == 0
+    assert calls == [
+        (
+            tmp_path / "model_data_report.json",
+            tmp_path,
+            ROOT / "plugins" / "vera",
+        )
+    ]
 
 
 def test_router_requires_report_for_every_substantive_run() -> None:

@@ -31,7 +31,8 @@
   "shared_services": [
     "managed-python-runtime",
     "plugin-update-check",
-    "plugin-feedback"
+    "plugin-feedback",
+    "run-receipt-stamping"
   ],
   "workflow_roles": {
     "new-client": {

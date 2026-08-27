@@ -184,6 +184,12 @@ def test_italian_data_handling_copy_states_the_shared_boundaries_directly() -> N
     assert "non prova la consegna lato provider" in (
         sections["run-evidence"]["paragraphs"][1]
     )
+    assert "identificativo casuale della ricevuta" in (
+        sections["run-evidence"]["paragraphs"][2]
+    )
+    assert "senza report, dati del cliente" in (
+        sections["run-evidence"]["paragraphs"][2]
+    )
     assert sections["hosted-features"]["paragraphs"][0] == (
         "Il normale funzionamento dei plugin non invia né conserva sul server di "
         "Mparanza LLC i dati del cliente o del lavoro. Per il normale funzionamento "
@@ -402,6 +408,10 @@ def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
     assert "does not prove provider-side delivery" in (
         sections["run-evidence"]["paragraphs"][1]
     )
+    assert "random receipt ID" in sections["run-evidence"]["paragraphs"][2]
+    assert "without the report, client data" in (
+        sections["run-evidence"]["paragraphs"][2]
+    )
     assert "destination's terms and controls apply separately" in (
         sections["connected-sources"]["paragraphs"][0]
     )
@@ -417,7 +427,7 @@ def test_data_handling_localizes_vera_run_evidence(language: str) -> None:
     run_evidence = sections["run-evidence"]
 
     assert "Vera" in run_evidence["title"]
-    assert len(run_evidence["paragraphs"]) == 2
+    assert len(run_evidence["paragraphs"]) == 3
     assert "JSON" in run_evidence["paragraphs"][0]
     assert "Markdown" in run_evidence["paragraphs"][0]
 

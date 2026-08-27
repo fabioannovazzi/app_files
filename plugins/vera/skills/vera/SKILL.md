@@ -86,7 +86,9 @@ Shared Vera routes are registered once in `../../privacy/services/`.
 `plugin-update-check` records only the automatic public version check.
 `plugin-feedback` records the separately chosen text-feedback and hosted
 improvement-interview routes plus later automatic status polling for their
-stored receipts. Do not duplicate those shared routes in every workstream or
+stored receipts. `run-receipt-stamping` records the optional studio-level route
+that sends a minimal per-run digest to Mparanza after the studio enables it;
+it never sends the local report or case material. Do not duplicate those shared routes in every workstream or
 turn them into per-case notices. WhatsApp Desktop is not a shared Vera service:
 it is an on-demand local Computer Use route recorded in the Studio Archive
 workstream, with no Mparanza webhook, connector, database, or retention period.
@@ -128,6 +130,31 @@ has them. Otherwise use the contract's narrower evidence basis and do not claim
 provider-signed delivery proof. For a Studio Archive run, declare both reports
 as artifacts before completion. When the host cannot create files, show the same
 compact report in chat and state that no durable receipt was created.
+
+The same build command checks the private studio-level server-receipt setting.
+When it is disabled, it performs no receipt-service network request. When the
+studio has previously enabled it, every durable report build automatically
+sends only a random per-run receipt UUID, the Vera version, and the canonical
+report digest to Mparanza. It then creates `model_data_receipt.json` and the
+customer-readable, print-to-PDF `model_data_receipt.html` in the same output
+folder. Do not ask again on every run. If stamping fails, state that the local
+model-data report was created but the server receipt was not, preserve the
+request file for an idempotent retry, and do not describe the run as stamped.
+
+Enable the firm setting only after the user explicitly chooses this separate
+Mparanza-hosted boundary and has been told the exact minimal record and its
+indefinite proof retention:
+
+```bash
+python scripts/notarized_run_receipt.py settings enable \
+  --confirm-minimal-server-record
+```
+
+Use `settings disable` to stop future stamping. Disabling does not delete local
+or server receipts already created. The receipt proves existence, server time,
+and integrity of the matching local report; it does not prove who submitted the
+digest, provider-side delivery, analytical correctness, semantic necessity, or
+GDPR compliance.
 
 A complete document or population reaching the model can be the correct
 purpose-based minimization outcome. Never score it as a privacy failure. Show a
@@ -565,7 +592,9 @@ data permit them.
 4. Before a long or write-heavy step, show an execution checkpoint with command
    intent, inputs, output folder, and expected artifacts.
 5. End with an Artifact Card. Include the compact model-data summary and link
-   `model_data_report.md` when a durable report was created. When useful, create
+   `model_data_report.md` when a durable report was created. When server receipt
+   stamping is enabled and succeeded, also link `model_data_receipt.html` and
+   its public verification URL. When useful, create
    `codex_run_review.md` in the output folder; never edit plugin source or
    generated ZIPs during a run.
 

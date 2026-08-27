@@ -28,7 +28,9 @@
     "browser-automation",
     "studio-archive"
   ],
-  "shared_services": [],
+  "shared_services": [
+    "run-receipt-stamping"
+  ],
   "workflow_roles": {
     "new-client": {
       "kind": "workflow",
