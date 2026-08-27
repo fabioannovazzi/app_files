@@ -420,8 +420,19 @@ def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
     )
 
 
-@pytest.mark.parametrize("language", ("en", "it", "fr", "de", "es"))
-def test_data_handling_localizes_vera_run_evidence(language: str) -> None:
+@pytest.mark.parametrize(
+    ("language", "synthetic_word"),
+    (
+        ("en", "synthetic"),
+        ("it", "sintetici"),
+        ("fr", "synthétiques"),
+        ("de", "synthetische"),
+        ("es", "sintéticos"),
+    ),
+)
+def test_data_handling_localizes_vera_run_evidence(
+    language: str, synthetic_word: str
+) -> None:
     page = get_data_handling_content(language)
     sections = {section["id"]: section for section in page["sections"]}
     run_evidence = sections["run-evidence"]
@@ -430,6 +441,18 @@ def test_data_handling_localizes_vera_run_evidence(language: str) -> None:
     assert len(run_evidence["paragraphs"]) == 3
     assert "JSON" in run_evidence["paragraphs"][0]
     assert "Markdown" in run_evidence["paragraphs"][0]
+    assert page["run_example"]["href"] == (
+        "/static/shared/vera/examples/model-data-receipt.html"
+    )
+    assert synthetic_word in page["run_example"]["note"].casefold()
+
+
+def test_data_handling_template_links_the_public_receipt_example() -> None:
+    template = (ROOT / "templates" / "data_handling.html").read_text(encoding="utf-8")
+
+    assert 'section.id == "run-evidence"' in template
+    assert 'href="{{ page.run_example.href }}"' in template
+    assert 'class="data-handling-section__example"' in template
 
 
 def test_data_handling_template_does_not_render_a_function_register() -> None:

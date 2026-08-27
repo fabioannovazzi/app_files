@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ricevuta della lavorazione Vera</title>
+  <style>
+    :root { color-scheme: light; font-family: "Instrument Sans", system-ui, sans-serif; color: #121923; background: #f5f7fa; }
+    body { margin: 0; } main { width: min(980px, calc(100% - 40px)); margin: 48px auto; background: #fff; border: 1px solid #d7dfe9; padding: clamp(26px, 5vw, 58px); }
+    .eyebrow { color: #0060c7; font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { color: #002060; font-size: clamp(2.2rem, 6vw, 4.8rem); line-height: .96; letter-spacing: -.045em; max-width: 12ch; }
+    h2 { color: #002060; margin-top: 38px; } p { line-height: 1.6; max-width: 76ch; }
+    .status { border-left: 4px solid #008f73; background: #effaf7; padding: 14px 18px; font-weight: 650; }
+    .checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 30px; } .check { border: 1px solid #d7dfe9; padding: 13px 15px; } .check strong { display: block; color: #526070; font-size: .78rem; margin-bottom: 4px; text-transform: uppercase; }
+    dl { display: grid; grid-template-columns: minmax(170px, 1fr) minmax(0, 2fr); border-top: 1px solid #d7dfe9; }
+    dt, dd { margin: 0; padding: 12px 0; border-bottom: 1px solid #d7dfe9; } dt { color: #526070; } dd { overflow-wrap: anywhere; }
+    code, .proof { font-family: ui-monospace, SFMono-Regular, monospace; font-size: .88em; }
+    table { border-collapse: collapse; width: 100%; font-size: .93rem; } th, td { border-bottom: 1px solid #d7dfe9; padding: 12px 10px; text-align: left; vertical-align: top; } th { color: #526070; font-weight: 650; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0; } a, button { color: #fff; background: #0057b8; border: 0; padding: 11px 16px; font: inherit; text-decoration: none; cursor: pointer; }
+    details { margin-top: 28px; } details p { overflow-wrap: anywhere; } .print-verification { display: none; } .improvement { border-left: 3px solid #00a1c9; padding-left: 18px; } .limits { border-top: 1px solid #d7dfe9; margin-top: 42px; padding-top: 24px; color: #465363; }
+    @media (max-width: 660px) { dl, .checks { grid-template-columns: 1fr; } dt { padding-bottom: 3px; border-bottom: 0; } dd { padding-top: 3px; } table { display: block; overflow-x: auto; } }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      :root { background: #fff; } main { width: auto; margin: 0; border: 0; padding: 0; }
+      h1 { font-size: 32px; margin: 10px 0 14px; } h2 { font-size: 20px; margin-top: 20px; }
+      p { font-size: 11px; margin: 7px 0; } .status { padding: 9px 12px; }
+      .checks { margin: 10px 0 16px; gap: 8px; } .check { padding: 8px 10px; font-size: 10px; }
+      dt, dd { padding: 7px 0; font-size: 10px; } table { font-size: 9px; } th, td { padding: 7px 6px; }
+      .actions, details { display: none; } .print-verification { display: block; font-size: 8px; overflow-wrap: anywhere; } .print-verification a { background: none; color: #0057b8; padding: 0; font: inherit; } .limits { margin-top: 18px; padding-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Vera · evidenza per esecuzione</p>
+  <h1>Ricevuta della lavorazione Vera</h1>
+  <p>Questa ricevuta collega il report locale sui dati arrivati al modello a una marca temporale e a una firma del server Mparanza.</p>
+  <p class="status">Ricevuta firmata dal server</p>
+  <div class="checks">
+    <div class="check"><strong>Integrità del report incorporato</strong><span id="digest-status">verifica in corso</span></div>
+    <div class="check"><strong>Firma Ed25519 incorporata</strong><span id="signature-status">verifica in corso</span></div>
+  </div>
+  <dl>
+    <dt>Processo Vera</dt><dd><code>variance-analysis</code></dd>
+    <dt>Esecuzione locale</dt><dd><code>run_example_public_receipt_001</code></dd>
+    <dt>Scopo professionale</dt><dd>Esempio sintetico: confrontare consuntivo e budget dopo la conferma del mapping.</dd>
+    <dt>Marca temporale server</dt><dd>2026-08-27T15:37:10+00:00</dd>
+    <dt>Versione Vera</dt><dd>0.1.184</dd>
+    <dt>Identificativo della ricevuta</dt><dd><code>f99eacc0-250d-4096-840f-7ebf3907b097</code></dd>
+    <dt>Digest del report locale</dt><dd><code>db777def8fea4c2b43520041d9f2e30e729296d2da33b750d371fe0fa0836b64</code></dd>
+  </dl>
+  <h2>Che cosa registra il report locale</h2>
+  <table>
+    <thead><tr><th>Fase</th><th>Esito</th><th>Fonte disponibile</th><th>Elaborato localmente</th><th>Visibile al modello</th><th>Mai visibile al modello</th></tr></thead>
+    <tbody><tr><td><code>mapping</code></td><td>Proiezione ridotta</td><td>10000 rows — righe della fonte sintetica; 14 columns — colonne della fonte sintetica</td><td>10000 rows — righe inventariate; 14 columns — colonne profilate</td><td>10 rows — righe candidate; 8 columns — colonne candidate</td><td>9990 rows — righe non mostrate; 6 columns — colonne non mostrate</td></tr><tr><td><code>commentary</code></td><td>Proiezione ridotta</td><td>10000 rows — righe della fonte sintetica</td><td>10000 rows — righe aggregate dal codice</td><td>12 rows — righe mensili aggregate; 5 metrics — metriche calcolate</td><td>10000 rows — righe di dettaglio</td></tr></tbody>
+  </table>
+  <h2>Possibile miglioramento supportato dal report</h2><article class="improvement"><h3>Escludere altre due colonne dopo la conferma del mapping.</h3><p><strong>Riduzione stimata:</strong> 2 columns — colonne potenzialmente escluse</p><p><strong>Protezione della qualità:</strong> Confrontare casi rappresentativi e mantenere il drill-down esatto prima di modificare il codice.</p></article>
+  <div class="actions">
+    <a href="https://mparanza.com/verify/vera-run-receipt/f99eacc0-250d-4096-840f-7ebf3907b097?sha256=db777def8fea4c2b43520041d9f2e30e729296d2da33b750d371fe0fa0836b64&amp;lang=it">Verifica sul server Mparanza</a>
+    <button type="button" onclick="window.print()">Stampa o salva in PDF</button>
+  </div>
+  <p class="print-verification"><strong>Verifica sul server Mparanza:</strong> <a href="https://mparanza.com/verify/vera-run-receipt/f99eacc0-250d-4096-840f-7ebf3907b097?sha256=db777def8fea4c2b43520041d9f2e30e729296d2da33b750d371fe0fa0836b64&amp;lang=it">https://mparanza.com/verify/vera-run-receipt/f99eacc0-250d-4096-840f-7ebf3907b097?sha256=db777def8fea4c2b43520041d9f2e30e729296d2da33b750d371fe0fa0836b64&amp;lang=it</a></p>
+  <details><summary>Dettagli della firma</summary>
+    <p class="proof">Ed25519 · ed25519-961f15d90e263db9</p>
+    <p class="proof">public_key: UbtUC5Cj8lFzoyEDwfOdJ6jnwQDl4yivSZIxrFzMAfo</p>
+    <p class="proof">signature: 6XllUDVS0acw_ttAdpVh-DkdYvGUf9igisLc2w3PkqE8Z3EF3zuACchzeAigeWBitqWHh8i9bQqkivV6QiAWAQ</p>
+  </details>
+  <div class="limits"><p>Il server conserva soltanto identificativo opaco, data, versione Vera, digest del report, firma e identificativo della chiave. Il report, i dati del cliente, i nomi dei file, i contenuti e gli hash dei documenti fonte restano locali.</p><p>La ricevuta prova esistenza, data server e integrità del report corrispondente. Non prova chi ha presentato il digest, la consegna lato provider, la correttezza dell’analisi, la necessità semantica o la conformità GDPR.</p></div>
+  <script id="embedded-report" type="application/octet-stream">eyJjcmVhdGVkX2F0IjoiMjAyNi0wOC0yN1QxNjozMDowMCswMjowMCIsImV2aWRlbmNlIjp7ImZpbGVzIjpbeyJieXRlcyI6NTQsInBhdGgiOiJtYXBwaW5nX3BheWxvYWQuanNvbiIsInBoYXNlX2lkIjoibWFwcGluZyIsInNoYTI1NiI6IjU1NWRhNWMwMjNkNzk0MzIwYWYyMzJlMjdmOTJkY2IzMGNlNGE4NmIxODBiYzUxOWQzN2M3YjVhM2Y4NjkxZWUifSx7ImJ5dGVzIjo2MiwicGF0aCI6ImNvbW1lbnRhcnlfcGF5bG9hZC5qc29uIiwicGhhc2VfaWQiOiJjb21tZW50YXJ5Iiwic2hhMjU2IjoiNGUzODk1NmEyYTI0ZDEyNTVjZjdiZDM4MzU4NzBlZjQxMTJlZDc0MWVlOWNiNTYyN2E1YjVlYTk4YjBjMDQwZCJ9XSwiaW5wdXRfc2hhMjU2IjoiZWViYTIzOWY0ZTJhNjdmYjg0ODRhNzQ4NTBlYzAyMzMwMDYzNzI4ZTM4MzA3ZTM2YTg3MzcyMDNhNDI5MjlhNCIsInJlY2VpcHRfc2hhMjU2IjoiYTQzYzQzNTYzMDNhMGZhYTkyZTZjMDhhMWQ5NGFkY2RkNjcxZWVkNmM3Mjg3M2Q1YTZhOWJjODgxMGFiMmE5NSJ9LCJpbXByb3ZlbWVudF9hc3Nlc3NtZW50Ijp7ImNhbmRpZGF0ZXMiOlt7ImNhbmRpZGF0ZV9pZCI6Im9taXQtdW51c2VkLWNvbHVtbnMtYWZ0ZXItbWFwcGluZyIsImNoYW5nZSI6IkVzY2x1ZGVyZSBhbHRyZSBkdWUgY29sb25uZSBkb3BvIGxhIGNvbmZlcm1hIGRlbCBtYXBwaW5nLiIsImVzdGltYXRlZF9yZWR1Y3Rpb24iOlt7ImJhc2lzIjoiZGVyaXZlZCIsImxhYmVsIjoiY29sb25uZSBwb3RlbnppYWxtZW50ZSBlc2NsdXNlIiwicXVhbnRpdHkiOjIsInVuaXQiOiJjb2x1bW5zIn1dLCJldmlkZW5jZSI6WyJOZXNzdW4gY2FsY29sbyBvIGNvbnRyb2xsbyBzdWNjZXNzaXZvIGRpcGVuZGUgZGFsbGUgZHVlIGNvbG9ubmUgbmVsbCdlc2VtcGlvIHNpbnRldGljby4iXSwicGhhc2VfaWRzIjpbIm1hcHBpbmciXSwicXVhbGl0eV9zYWZlZ3VhcmQiOiJDb25mcm9udGFyZSBjYXNpIHJhcHByZXNlbnRhdGl2aSBlIG1hbnRlbmVyZSBpbCBkcmlsbC1kb3duIGVzYXR0byBwcmltYSBkaSBtb2RpZmljYXJlIGlsIGNvZGljZS4iLCJzdGF0dXMiOiJjYW5kaWRhdGVfbmVlZHNfdmFsaWRhdGlvbiIsInZhbGlkYXRpb25fZXZpZGVuY2UiOltdfV0sInN0YXR1cyI6ImNhbmRpZGF0ZSJ9LCJsYW5ndWFnZSI6Iml0IiwibGltaXRhdGlvbnMiOlsiVGhlIHJlcG9ydCByZWNvcmRzIHdvcmtmbG93IGV2aWRlbmNlIGFuZCBleGFjdCBwYXlsb2FkIGZpbGVzIHdoZW4gYXZhaWxhYmxlOyBpdCBpcyBub3QgcHJvdmlkZXItc2lnbmVkIG5ldHdvcmsgdGVsZW1ldHJ5LiIsIlRoZSByZXBvcnQgZG9lcyBub3QgZGVjaWRlIHNlbWFudGljIG5lY2Vzc2l0eSwgcHJvdmlkZSBsZWdhbCBhZHZpY2UsIHBlcmZvcm0gYSBEUElBLCBvciBjZXJ0aWZ5IEdEUFIgY29tcGxpYW5jZS4iXSwicGhhc2VzIjpbeyJldmlkZW5jZV9iYXNpcyI6ImV4YWN0X3BheWxvYWRfcmVjZWlwdCIsImV2aWRlbmNlX2ZpbGVzIjpbIm1hcHBpbmdfcGF5bG9hZC5qc29uIl0sImxvY2FsbHlfcHJvY2Vzc2VkIjpbeyJiYXNpcyI6Im1lYXN1cmVkIiwibGFiZWwiOiJyaWdoZSBpbnZlbnRhcmlhdGUiLCJxdWFudGl0eSI6MTAwMDAsInVuaXQiOiJyb3dzIn0seyJiYXNpcyI6Im1lYXN1cmVkIiwibGFiZWwiOiJjb2xvbm5lIHByb2ZpbGF0ZSIsInF1YW50aXR5IjoxNCwidW5pdCI6ImNvbHVtbnMifV0sIm1vZGVsX3Zpc2libGUiOlt7ImJhc2lzIjoibWVhc3VyZWQiLCJsYWJlbCI6InJpZ2hlIGNhbmRpZGF0ZSIsInF1YW50aXR5IjoxMCwidW5pdCI6InJvd3MifSx7ImJhc2lzIjoibWVhc3VyZWQiLCJsYWJlbCI6ImNvbG9ubmUgY2FuZGlkYXRlIiwicXVhbnRpdHkiOjgsInVuaXQiOiJjb2x1bW5zIn1dLCJvdXRjb21lIjoicmVkdWNlZF9wcm9qZWN0aW9uIiwicGhhc2VfaWQiOiJtYXBwaW5nIiwicHVycG9zZSI6IlJpdmVkZXJlIGlsIHNpZ25pZmljYXRvIGRlbGxlIGNvbG9ubmUgY2FuZGlkYXRlIHN1IHVuIGNhbXBpb25lIHNpbnRldGljby4iLCJyZWFzb24iOiJJbCBtb2RlbGxvIGRvdmV2YSBzdGFiaWxpcmUgaWwgbWFwcGluZyBzZW1hbnRpY28gc2VuemEgcmljZXZlcmUgbCdpbnRlcmEgcG9wb2xhemlvbmUuIiwicmVtYWluZWRfbG9jYWwiOlt7ImJhc2lzIjoiZGVyaXZlZCIsImxhYmVsIjoicmlnaGUgbm9uIG1vc3RyYXRlIiwicXVhbnRpdHkiOjk5OTAsInVuaXQiOiJyb3dzIn0seyJiYXNpcyI6ImRlcml2ZWQiLCJsYWJlbCI6ImNvbG9ubmUgbm9uIG1vc3RyYXRlIiwicXVhbnRpdHkiOjYsInVuaXQiOiJjb2x1bW5zIn1dLCJzb3VyY2VfZXh0ZW50IjpbeyJiYXNpcyI6Im1lYXN1cmVkIiwibGFiZWwiOiJyaWdoZSBkZWxsYSBmb250ZSBzaW50ZXRpY2EiLCJxdWFudGl0eSI6MTAwMDAsInVuaXQiOiJyb3dzIn0seyJiYXNpcyI6Im1lYXN1cmVkIiwibGFiZWwiOiJjb2xvbm5lIGRlbGxhIGZvbnRlIHNpbnRldGljYSIsInF1YW50aXR5IjoxNCwidW5pdCI6ImNvbHVtbnMifV19LHsiZXZpZGVuY2VfYmFzaXMiOiJleGFjdF9wYXlsb2FkX3JlY2VpcHQiLCJldmlkZW5jZV9maWxlcyI6WyJjb21tZW50YXJ5X3BheWxvYWQuanNvbiJdLCJsb2NhbGx5X3Byb2Nlc3NlZCI6W3siYmFzaXMiOiJtZWFzdXJlZCIsImxhYmVsIjoicmlnaGUgYWdncmVnYXRlIGRhbCBjb2RpY2UiLCJxdWFudGl0eSI6MTAwMDAsInVuaXQiOiJyb3dzIn1dLCJtb2RlbF92aXNpYmxlIjpbeyJiYXNpcyI6Im1lYXN1cmVkIiwibGFiZWwiOiJyaWdoZSBtZW5zaWxpIGFnZ3JlZ2F0ZSIsInF1YW50aXR5IjoxMiwidW5pdCI6InJvd3MifSx7ImJhc2lzIjoibWVhc3VyZWQiLCJsYWJlbCI6Im1ldHJpY2hlIGNhbGNvbGF0ZSIsInF1YW50aXR5Ijo1LCJ1bml0IjoibWV0cmljcyJ9XSwib3V0Y29tZSI6InJlZHVjZWRfcHJvamVjdGlvbiIsInBoYXNlX2lkIjoiY29tbWVudGFyeSIsInB1cnBvc2UiOiJDb21tZW50YXJlIGdsaSBzY29zdGFtZW50aSBtZW5zaWxpIGNhbGNvbGF0aSBsb2NhbG1lbnRlLiIsInJlYXNvbiI6IklsIGNvbW1lbnRvIHJpY2hpZWRldmEgZ2xpIGFnZ3JlZ2F0aSBlIGxlIG1ldHJpY2hlLCBub24gbGUgc2luZ29sZSB0cmFuc2F6aW9uaS4iLCJyZW1haW5lZF9sb2NhbCI6W3siYmFzaXMiOiJtZWFzdXJlZCIsImxhYmVsIjoicmlnaGUgZGkgZGV0dGFnbGlvIiwicXVhbnRpdHkiOjEwMDAwLCJ1bml0Ijoicm93cyJ9XSwic291cmNlX2V4dGVudCI6W3siYmFzaXMiOiJtZWFzdXJlZCIsImxhYmVsIjoicmlnaGUgZGVsbGEgZm9udGUgc2ludGV0aWNhIiwicXVhbnRpdHkiOjEwMDAwLCJ1bml0Ijoicm93cyJ9XX1dLCJwcm9mZXNzaW9uYWxfcHVycG9zZSI6IkVzZW1waW8gc2ludGV0aWNvOiBjb25mcm9udGFyZSBjb25zdW50aXZvIGUgYnVkZ2V0IGRvcG8gbGEgY29uZmVybWEgZGVsIG1hcHBpbmcuIiwicmVwb3J0X2lkIjoibW9kZWxfZGF0YV9hNDNjNDM1NjMwM2EwZmFhOTJlNmMwOGEiLCJydW5faWQiOiJydW5fZXhhbXBsZV9wdWJsaWNfcmVjZWlwdF8wMDEiLCJydW50aW1lX3Byb2ZpbGUiOiJvcGVuYWktY29kZXgiLCJzY2hlbWFfdmVyc2lvbiI6MSwid29ya2Zsb3dfaWQiOiJ2YXJpYW5jZS1hbmFseXNpcyJ9Cg==</script>
+  <script id="signed-receipt" type="application/octet-stream">eyJrZXlfaWQiOiJlZDI1NTE5LTk2MWYxNWQ5MGUyNjNkYjkiLCJwbHVnaW5fdmVyc2lvbiI6IjAuMS4xODQiLCJyZWNlaXB0X2lkIjoiZjk5ZWFjYzAtMjUwZC00MDk2LTg0MGYtN2ViZjM5MDdiMDk3IiwicmVwb3J0X3NoYTI1NiI6ImRiNzc3ZGVmOGZlYTRjMmI0MzUyMDA0MWQ5ZjJlMzBlNzI5Mjk2ZDJkYTMzYjc1MGQzNzFmZTBmYTA4MzZiNjQiLCJzY2hlbWFfdmVyc2lvbiI6MSwic3RhbXBlZF9hdCI6IjIwMjYtMDgtMjdUMTU6Mzc6MTArMDA6MDAifQ==</script>
+  <script>
+    (() => {
+      const words = {valid: "valida", invalid: "non valida", unavailable: "non disponibile in questo browser; usa la verifica server"};
+      const decodeBase64 = value => Uint8Array.from(atob(value.trim()), character => character.charCodeAt(0));
+      const decodeBase64Url = value => decodeBase64(value.replace(/-/g, "+").replace(/_/g, "/") + "=".repeat((4 - value.length % 4) % 4));
+      const hex = bytes => Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+      const reportBytes = decodeBase64(document.getElementById("embedded-report").textContent);
+      const signedBytes = decodeBase64(document.getElementById("signed-receipt").textContent);
+      crypto.subtle.digest("SHA-256", reportBytes)
+        .then(value => hex(new Uint8Array(value)) === "db777def8fea4c2b43520041d9f2e30e729296d2da33b750d371fe0fa0836b64")
+        .then(valid => { document.getElementById("digest-status").textContent = valid ? words.valid : words.invalid; })
+        .catch(() => { document.getElementById("digest-status").textContent = words.unavailable; });
+      crypto.subtle.importKey("raw", decodeBase64Url("UbtUC5Cj8lFzoyEDwfOdJ6jnwQDl4yivSZIxrFzMAfo"), {name: "Ed25519"}, false, ["verify"])
+        .then(key => crypto.subtle.verify({name: "Ed25519"}, key, decodeBase64Url("6XllUDVS0acw_ttAdpVh-DkdYvGUf9igisLc2w3PkqE8Z3EF3zuACchzeAigeWBitqWHh8i9bQqkivV6QiAWAQ"), signedBytes))
+        .then(valid => { document.getElementById("signature-status").textContent = valid ? words.valid : words.invalid; })
+        .catch(() => { document.getElementById("signature-status").textContent = words.unavailable; });
+    })();
+  </script>
+</main>
+</body>
+</html>

@@ -23,6 +23,7 @@ _EDPB_AI_OPINION_URL = (
     "opinion-282024-on-certain-data-protection-aspects-related-to_en"
 )
 _SOURCE_URL = "https://github.com/fabioannovazzi/app_files"
+_RUN_RECEIPT_EXAMPLE_URL = "/static/shared/vera/examples/model-data-receipt.html"
 
 
 _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
@@ -167,6 +168,11 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
+        "run_example": {
+            "href": _RUN_RECEIPT_EXAMPLE_URL,
+            "label": "Open a synthetic HTML receipt",
+            "note": "A signed, verifiable example built from synthetic data only.",
+        },
         "resources": {
             "title": "Verify the position.",
             "intro": "You do not have to rely on the claim alone.",
@@ -336,6 +342,14 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
+        "run_example": {
+            "href": _RUN_RECEIPT_EXAMPLE_URL,
+            "label": "Apri una ricevuta HTML di esempio",
+            "note": (
+                "Un esempio firmato e verificabile, costruito esclusivamente con "
+                "dati sintetici."
+            ),
+        },
         "resources": {
             "title": "Verifica questa posizione.",
             "intro": "Non devi basarti soltanto su questa dichiarazione.",
@@ -526,6 +540,11 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
+        "run_example": {
+            "href": _RUN_RECEIPT_EXAMPLE_URL,
+            "label": "Ouvrir un reçu HTML d’exemple",
+            "note": "Un exemple signé et vérifiable, construit uniquement avec des données synthétiques.",
+        },
         "resources": {
             "title": "Vérifier cette position.",
             "intro": "Vous n'avez pas à vous fier uniquement à cette affirmation.",
@@ -711,6 +730,11 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
+        "run_example": {
+            "href": _RUN_RECEIPT_EXAMPLE_URL,
+            "label": "Beispiel eines HTML-Belegs öffnen",
+            "note": "Ein signiertes, prüfbares Beispiel, das ausschließlich synthetische Daten enthält.",
+        },
         "resources": {
             "title": "Diese Position überprüfen.",
             "intro": "Sie müssen sich nicht allein auf diese Aussage verlassen.",
@@ -895,6 +919,11 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
+        "run_example": {
+            "href": _RUN_RECEIPT_EXAMPLE_URL,
+            "label": "Abrir un recibo HTML de ejemplo",
+            "note": "Un ejemplo firmado y verificable, creado exclusivamente con datos sintéticos.",
+        },
         "resources": {
             "title": "Comprueba esta posición.",
             "intro": "No tienes que confiar únicamente en esta afirmación.",

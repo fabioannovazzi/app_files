@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import html
 import json
@@ -1305,6 +1306,8 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     assert "identificativo casuale, la versione e il digest del report locale" in page
     assert "random identifier, the version, and the local report digest" in page
     assert "salvare come PDF" in page
+    assert 'href="examples/model-data-receipt.html"' in page
+    assert 'data-i18n="report.exampleLink"' in page
     for phrase in (
         "Vera mostra che cosa è arrivato al modello.",
         "Vera shows what reached the model.",
@@ -1324,6 +1327,24 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
         "complete document or population is the correct minimum",
     ):
         assert phrase in page
+
+
+def test_public_model_data_receipt_example_is_signed_and_synthetic() -> None:
+    example_path = SHARED_ROOT / "vera" / "examples" / "model-data-receipt.html"
+    example = example_path.read_text(encoding="utf-8")
+    embedded_match = re.search(
+        r'<script id="embedded-report" type="application/octet-stream">([^<]+)</script>',
+        example,
+    )
+
+    assert embedded_match is not None
+    report = json.loads(base64.b64decode(embedded_match.group(1)))
+    assert report["professional_purpose"].startswith("Esempio sintetico:")
+    assert report["run_id"] == "run_example_public_receipt_001"
+    assert report["phases"][0]["model_visible"][0]["quantity"] == 10
+    assert report["phases"][0]["source_extent"][0]["quantity"] == 10_000
+    assert "https://mparanza.com/verify/vera-run-receipt/" in example
+    assert "Firma Ed25519 incorporata" in example
 
 
 @pytest.mark.parametrize(
