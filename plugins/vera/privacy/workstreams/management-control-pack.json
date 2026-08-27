@@ -31,7 +31,7 @@
       {
         "id": "management-control-post-calculation-review",
         "purpose": "Interpret the exact management pack and identify observations, hypotheses, questions, missing evidence, and limitations",
-        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, monthly series capped at 60 rows per section, top receivables, payables, customers and services capped at 20 or the reviewed top-customer limit, source IDs and hashes, and limitations. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default.",
+        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, monthly series capped at 60 rows per section, top receivables, payables, customers and services capped at 20 or the reviewed top-customer limit, source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -68,7 +68,7 @@
     },
     {
       "id": "bounded-post-calculation-model-context",
-      "control": "The deterministic projection excludes raw source populations, absolute paths, and original filenames and exposes only calculated metrics, bounded series, top-ranked rows, controls, lineage IDs, and limitations for interpretation."
+      "control": "The deterministic runner validates exact equality between the bounded projection and a fresh projection rebuilt from the complete calculated pack, hashes both artifacts in model_context_receipt.json, and excludes the complete pack from the default model-read set. The bounded projection excludes raw source populations, absolute paths, and original filenames and exposes only calculated metrics, bounded series, top-ranked rows, controls, lineage IDs, and limitations for interpretation."
     },
     {
       "id": "metric-reference-closure",
@@ -79,6 +79,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c848182ecec1ebf0fb9359c54c9a1b7b5ad0ad98207b88faabd1b03dec5cf34a"
+    "source_fingerprint": "a85e872e8d75c440cba8489069ae966ed76e0b8946b6280c302a31c53baaca1c"
   }
 }

@@ -27,6 +27,7 @@ from management_control_core import (  # noqa: E402
     PackContractError,
     build_management_pack,
     build_model_context,
+    build_model_context_receipt,
     load_json,
     load_source_tables,
     render_html,
@@ -69,7 +70,12 @@ def main(argv: list[str] | None = None) -> int:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     pack_path = args.output_dir / "management_control_pack.json"
     write_json(pack_path, pack)
-    write_json(args.output_dir / "model_context.json", build_model_context(pack))
+    model_context = build_model_context(pack)
+    write_json(args.output_dir / "model_context.json", model_context)
+    write_json(
+        args.output_dir / "model_context_receipt.json",
+        build_model_context_receipt(pack, model_context),
+    )
     (args.output_dir / "management_control_facts.md").write_text(
         render_markdown(pack), encoding="utf-8"
     )
@@ -91,6 +97,7 @@ def main(argv: list[str] | None = None) -> int:
     output_names = (
         "management_control_pack.json",
         "model_context.json",
+        "model_context_receipt.json",
         "management_control_facts.md",
         "management_control_dashboard.html",
         "management_control_pack.xlsx",

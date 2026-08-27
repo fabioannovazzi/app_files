@@ -119,12 +119,17 @@ _COPY = {
         "summary": "Summary",
         "summary_text": "{count} model phase(s): {outcomes}.",
         "phase_title": "What reached the model",
+        "measurement_note": (
+            '"Processed locally" is the total handled by code; "Never visible to '
+            'the model" is the part of the source that did not enter model context. '
+            "The measures overlap and must not be added together."
+        ),
         "phase": "Phase",
         "outcome": "Outcome",
         "source": "Available source",
         "local": "Processed locally",
         "visible": "Model-visible",
-        "excluded": "Remained local",
+        "excluded": "Never visible to the model",
         "reason": "Reason",
         "basis": "Evidence",
         "none": "None recorded",
@@ -148,12 +153,17 @@ _COPY = {
         "summary": "Sintesi",
         "summary_text": "{count} fase/i del modello: {outcomes}.",
         "phase_title": "Che cosa è arrivato al modello",
+        "measurement_note": (
+            '"Elaborato localmente" indica il totale trattato dal codice; "Mai '
+            'visibile al modello" indica la parte della fonte che non è entrata nel '
+            "contesto del modello. Le due misure si sovrappongono e non vanno sommate."
+        ),
         "phase": "Fase",
         "outcome": "Esito",
         "source": "Fonte disponibile",
         "local": "Elaborato localmente",
         "visible": "Visibile al modello",
-        "excluded": "Rimasto locale",
+        "excluded": "Mai visibile al modello",
         "reason": "Motivo",
         "basis": "Evidenza",
         "none": "Nessun elemento registrato",
@@ -177,12 +187,18 @@ _COPY = {
         "summary": "Synthèse",
         "summary_text": "{count} phase(s) du modèle : {outcomes}.",
         "phase_title": "Ce qui est parvenu au modèle",
+        "measurement_note": (
+            "« Traité localement » indique le total traité par le code ; « Jamais "
+            "visible par le modèle » indique la partie de la source qui n’est pas "
+            "entrée dans le contexte du modèle. Les mesures se chevauchent et ne "
+            "doivent pas être additionnées."
+        ),
         "phase": "Phase",
         "outcome": "Résultat",
         "source": "Source disponible",
         "local": "Traité localement",
         "visible": "Visible par le modèle",
-        "excluded": "Resté local",
+        "excluded": "Jamais visible par le modèle",
         "reason": "Raison",
         "basis": "Évidence",
         "none": "Aucun élément enregistré",
@@ -206,12 +222,18 @@ _COPY = {
         "summary": "Zusammenfassung",
         "summary_text": "{count} Modellphase(n): {outcomes}.",
         "phase_title": "Was das Modell erhalten hat",
+        "measurement_note": (
+            "„Lokal verarbeitet“ bezeichnet den gesamten vom Code verarbeiteten "
+            "Umfang; „Nie für das Modell sichtbar“ bezeichnet den Teil der Quelle, "
+            "der nicht in den Modellkontext gelangte. Die Messwerte überlappen und "
+            "dürfen nicht addiert werden."
+        ),
         "phase": "Phase",
         "outcome": "Ergebnis",
         "source": "Verfügbare Quelle",
         "local": "Lokal verarbeitet",
         "visible": "Für das Modell sichtbar",
-        "excluded": "Lokal geblieben",
+        "excluded": "Nie für das Modell sichtbar",
         "reason": "Grund",
         "basis": "Nachweis",
         "none": "Keine Elemente erfasst",
@@ -235,12 +257,17 @@ _COPY = {
         "summary": "Resumen",
         "summary_text": "{count} fase(s) del modelo: {outcomes}.",
         "phase_title": "Qué llegó al modelo",
+        "measurement_note": (
+            "«Procesado localmente» indica el total tratado por el código; «Nunca "
+            "visible para el modelo» indica la parte de la fuente que no entró en el "
+            "contexto del modelo. Las medidas se solapan y no deben sumarse."
+        ),
         "phase": "Fase",
         "outcome": "Resultado",
         "source": "Fuente disponible",
         "local": "Procesado localmente",
         "visible": "Visible para el modelo",
-        "excluded": "Permaneció local",
+        "excluded": "Nunca visible para el modelo",
         "reason": "Motivo",
         "basis": "Evidencia",
         "none": "Ningún elemento registrado",
@@ -668,6 +695,8 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
         copy["summary_text"].format(count=len(phases), outcomes=outcomes),
         "",
         f"## {copy['phase_title']}",
+        "",
+        copy["measurement_note"],
     ]
     for phase in phases:
         lines.extend(

@@ -34,6 +34,7 @@ __all__ = [
     "build_inspection",
     "build_management_pack",
     "build_model_context",
+    "build_model_context_receipt",
     "finalize_commentary",
     "load_json",
     "load_source_tables",
@@ -48,6 +49,8 @@ WORKFLOW_ID = "management-control-pack"
 RECIPE_SCHEMA = "vera.management_control_recipe.v1"
 PACK_SCHEMA = "vera.management_control_pack.v1"
 COMMENTARY_SCHEMA = "vera.management_control_commentary.v1"
+MODEL_CONTEXT_SCHEMA = "vera.management_control_model_context.v1"
+MODEL_CONTEXT_RECEIPT_SCHEMA = "vera.management_control_model_context_receipt.v1"
 CANONICAL_CATEGORIES = (
     "revenue",
     "cogs",
@@ -1462,23 +1465,115 @@ def build_model_context(pack: Mapping[str, Any]) -> dict[str, Any]:
             item["top_parties"] = section["top_parties"][:20]
         projected[name] = item
     return {
-        "schema_version": "vera.management_control_model_context.v1",
+        "schema_version": MODEL_CONTEXT_SCHEMA,
         "workflow_id": WORKFLOW_ID,
+        "pack_sha256": hashlib.sha256(_canonical_json_bytes(pack)).hexdigest(),
         "status": pack["status"],
         "entity": pack["entity"],
         "reporting_period": pack["reporting_period"],
         "currency": pack["currency"],
         "coverage": pack["coverage"],
         "controls": pack["controls"],
-        "metrics": list(pack["metrics"].values()),
+        "metrics": [
+            pack["metrics"][metric_id] for metric_id in sorted(pack["metrics"])
+        ],
         "sections": projected,
         "limitations": pack["limitations"],
         "source_lineage": pack["source_lineage"],
         "context_boundary": (
             "Bounded calculated results and top-ranked rows only; raw source populations "
-            "and original filenames are not included in this post-calculation projection."
+            "and original filenames are not included in this post-calculation projection. "
+            "The complete pack is validated locally and is not a default model input."
         ),
     }
+
+
+def build_model_context_receipt(
+    pack: Mapping[str, Any], model_context: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Prove mechanically that the bounded context exactly projects the full pack.
+
+    Exact projection equality, hashes, and row caps are deterministic because they
+    are mechanically verifiable. Accounting meaning and interpretation remain model-
+    led and professionally reviewed.
+    """
+
+    expected_context = build_model_context(pack)
+    if model_context != expected_context:
+        raise PackContractError(
+            "Model context does not match the exact bounded projection of the pack."
+        )
+    section_rows: dict[str, int] = {}
+    section_top_parties: dict[str, int] = {}
+    for section_id, section in model_context["sections"].items():
+        if not isinstance(section, dict):
+            continue
+        rows = section.get("rows")
+        if isinstance(rows, list):
+            section_rows[section_id] = len(rows)
+        top_parties = section.get("top_parties")
+        if isinstance(top_parties, list):
+            section_top_parties[section_id] = len(top_parties)
+    pack_bytes = _canonical_json_bytes(pack)
+    context_bytes = _canonical_json_bytes(model_context)
+    receipt: dict[str, Any] = {
+        "schema_version": MODEL_CONTEXT_RECEIPT_SCHEMA,
+        "workflow_id": WORKFLOW_ID,
+        "status": model_context["status"],
+        "validation": {
+            "status": "passed",
+            "method": "exact_rebuild_from_full_pack",
+            "checks": [
+                "schema_and_status",
+                "coverage",
+                "controls",
+                "metrics",
+                "bounded_sections",
+                "limitations",
+                "source_lineage",
+            ],
+        },
+        "full_pack": {
+            "artifact_id": "pack.structured",
+            "sha256": hashlib.sha256(pack_bytes).hexdigest(),
+            "byte_count": len(pack_bytes),
+            "model_visible_by_default": False,
+        },
+        "model_context": {
+            "artifact_id": "pack.model-context",
+            "sha256": hashlib.sha256(context_bytes).hexdigest(),
+            "byte_count": len(context_bytes),
+            "model_visible_by_default": True,
+            "metric_count": len(model_context["metrics"]),
+            "coverage_record_count": len(model_context["coverage"]),
+            "control_record_count": len(model_context["controls"]),
+            "limitation_count": len(model_context["limitations"]),
+        },
+        "bounds": {
+            "max_rows_per_section": MAX_MODEL_ROWS,
+            "max_top_parties_per_section": 20,
+            "section_row_counts": section_rows,
+            "section_top_party_counts": section_top_parties,
+        },
+        "model_read_policy": {
+            "default_model_visible_artifact_ids": [
+                "pack.execution-receipt",
+                "pack.model-context-receipt",
+                "pack.model-context",
+            ],
+            "local_validation_only_artifact_ids": ["pack.structured"],
+            "full_pack_model_read_required": False,
+        },
+        "implementation_reason": (
+            "Local exact-projection validation preserves calculated metrics, coverage, "
+            "controls, bounded sections, lineage, and limitations without a duplicate "
+            "model read of the complete calculated pack."
+        ),
+    }
+    receipt["content_sha256"] = hashlib.sha256(
+        _canonical_json_bytes(receipt)
+    ).hexdigest()
+    return receipt
 
 
 def _table_markdown(rows: Sequence[Mapping[str, Any]], columns: Sequence[str]) -> str:

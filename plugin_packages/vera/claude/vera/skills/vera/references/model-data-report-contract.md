@@ -52,7 +52,7 @@ Each phase records:
 - what source extent was available;
 - what local code processed;
 - what was model-visible;
-- what remained local;
+- what remained local and was never model-visible;
 - why that context was necessary;
 - whether the evidence comes from an exact payload file, a workflow receipt,
   host attestation, or is not measurable.

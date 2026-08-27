@@ -106,8 +106,10 @@ single reported month as continuous monitoring.
 
 Deterministic code owns file inventory, exact field extraction after reviewed
 mapping, date and Decimal parsing, exact aggregation, the non-suffering overrun
-formula `max(utilizzato - accordato operativo, 0)`, control totals, metric
-reference closure, rendering, and hashes. These rules are fixed because their
+formula `max(utilizzato - accordato operativo, 0)`, control totals, evidence-
+reference closure, rendering, and hashes.
+Evidence references may resolve to an existing metric ID, control ID, or source-
+row locator. These rules are fixed because their
 correctness is mechanically verifiable and the work must replay exactly.
 
 Claude and the professional own report scope, source meaning, duration and risk
