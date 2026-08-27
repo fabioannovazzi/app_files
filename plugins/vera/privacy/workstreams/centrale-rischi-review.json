@@ -22,7 +22,7 @@
       {
         "id": "centrale-rischi-mapping-inspection",
         "purpose": "Establish the exact exposure table, columns, duration classes, risk families, report perimeter and reviewed recipe before calculation",
-        "content": "User instructions; supplied PDF or export and normalized sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete native-text PDF or supplied CSV or Excel population is read locally to normalize and inventory tables. The full PDF normalization remains a local review artifact by default. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in bounded previews and are not automatically anonymized or pseudonymized. Source roles, duration meaning and exposure-family meaning remain model-led and professionally reviewed rather than keyword-classified.",
+        "content": "User instructions; supplied PDF or export and normalized table labels; stable table IDs; every source column name and observed type; table row counts; each table's source SHA-256 hash; the inventory SHA-256 hash; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete native-text PDF or supplied CSV or Excel population is read locally to normalize and inventory tables. The full PDF normalization remains a local review artifact by default. Intermediary names, risk categories, dates, amounts, guarantees and prejudicial descriptions may appear in bounded previews and are not automatically anonymized or pseudonymized. Source roles, duration meaning and exposure-family meaning remain model-led and professionally reviewed rather than keyword-classified.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -39,8 +39,8 @@
       },
       {
         "id": "centrale-rischi-commentary",
-        "purpose": "Prepare a metric-linked professional-review draft without changing calculated facts",
-        "content": "The bounded calculated context plus draft observations and hypotheses tied to existing metric IDs, professional questions and limitations. The finalizer validates schema, blocks failed controls, and checks metric-reference closure; duration meaning, exposure-family meaning, materiality, causation, credit judgment and professional approval remain model-led or professional judgments.",
+        "purpose": "Prepare an evidence-linked professional-review draft without changing calculated facts",
+        "content": "The bounded calculated context plus draft observations and hypotheses tied to existing evidence references: metric IDs, control IDs or source-row locators present in that context, together with professional questions and limitations. The finalizer validates schema, blocks failed controls, and checks evidence-reference closure; duration meaning, exposure-family meaning, materiality, causation, credit judgment and professional approval remain model-led or professional judgments.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -87,6 +87,6 @@
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0f7e7fb49cead98dffdc30b1cdb964ce0f55354e4c7b885388ba11ca2265fe4c"
+    "source_fingerprint": "4f9fdc59062e01ff021ca00b27bea1b2e7c2e81afff4255735e6c3e83f5d2cdf"
   }
 }

@@ -1626,4 +1626,36 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert 'id="example"' in page
     assert manifest["workstream"] == "centrale-rischi-review"
     assert manifest["external_boundaries"] == []
-    assert "ceded debtors" in manifest["model_context"]["classes"][1]["content"]
+    mapping_class, review_class, commentary_class = manifest["model_context"][
+        "classes"
+    ]
+    assert "stable table IDs" in mapping_class["content"]
+    assert "each table's source SHA-256 hash" in mapping_class["content"]
+    assert "inventory SHA-256 hash" in mapping_class["content"]
+    assert "ceded debtors" in review_class["content"]
+    assert "entity name" in review_class["content"]
+    assert "up to 50 category-movement rows" in review_class["content"]
+    assert "up to 20 previous-record review rows" in review_class["content"]
+    assert "up to 20 rows from each separate population" in review_class["content"]
+    assert commentary_class["purpose"].startswith("Prepare an evidence-linked")
+    assert "metric IDs, control IDs or source-row locators" in commentary_class[
+        "content"
+    ]
+    assert "evidence-reference closure" in commentary_class["content"]
+    assert "metric-linked" not in commentary_class["purpose"]
+    assert "metric-reference closure" not in commentary_class["content"]
+    for phrase in (
+        "identificatori stabili delle tabelle",
+        "stable table identifiers",
+        "identifiants stables des tables",
+        "stabile Tabellenkennungen",
+        "identificadores estables de las tablas",
+        "hash SHA-256 della fonte di ciascuna tabella e dell’inventario",
+        "source SHA-256 for each table and the inventory SHA-256",
+        "SHA-256 de la source de chaque table et le SHA-256 de l’inventaire",
+        "Quell-SHA-256 jeder Tabelle und den Inventar-SHA-256",
+        "SHA-256 de origen de cada tabla y el SHA-256 del inventario",
+    ):
+        assert phrase in page
+    assert "metriche, controlli o righe fonte già presenti" in page
+    assert "metrics, controls or source rows already present" in page
