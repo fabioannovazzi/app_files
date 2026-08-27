@@ -95,9 +95,30 @@ def test_bootstrap_installs_validates_and_exposes_dependencies(
     assert detail == f"Python runtime installed at {target}"
     assert target.is_dir()
     runtime_python = str(target / "bin" / "python")
-    assert commands[0][:3] == [sys.executable, "-m", "venv"]
-    assert commands[1][:4] == [runtime_python, "-m", "pip", "install"]
-    assert commands[2] == [
+    assert commands[0] == [
+        sys.executable,
+        "-m",
+        "venv",
+        "--without-pip",
+        str(target),
+    ]
+    assert commands[1] == [
+        sys.executable,
+        "-m",
+        "pip",
+        "--python",
+        runtime_python,
+        "--version",
+    ]
+    assert commands[2][:6] == [
+        sys.executable,
+        "-m",
+        "pip",
+        "--python",
+        runtime_python,
+        "install",
+    ]
+    assert commands[3] == [
         runtime_python,
         str(plugin_root / "scripts" / "check_dependencies.py"),
         "--managed-verify",

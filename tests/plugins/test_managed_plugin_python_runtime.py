@@ -65,8 +65,8 @@ def make_packaged_component(root: Path) -> Path:
     return component
 
 
-def create_fake_virtualenv(target: Path) -> Path:
-    python = target / "bin" / "python"
+def create_fake_virtualenv(target: Path, *, windows: bool = False) -> Path:
+    python = target / "Scripts" / "python.exe" if windows else target / "bin" / "python"
     python.parent.mkdir(parents=True)
     python.write_text("", encoding="utf-8")
     return python
@@ -107,9 +107,23 @@ def test_missing_target_is_installed_before_dependency_validation(
 
     assert ready is True
     assert detail == f"Python runtime installed at {target}"
-    assert commands[0][1:3] == ["-m", "venv"]
-    assert commands[1][1:3] == ["-m", "pip"]
-    assert commands[2][1].endswith("scripts/check_dependencies.py")
+    assert commands[0] == [
+        sys.executable,
+        "-m",
+        "venv",
+        "--without-pip",
+        str(target),
+    ]
+    assert commands[1][:5] == [
+        sys.executable,
+        "-m",
+        "pip",
+        "--python",
+        str(runtime.runtime_python(target)),
+    ]
+    assert commands[1][-1] == "--version"
+    assert commands[2][:6] == [*commands[1][:-1], "install"]
+    assert commands[3][1].endswith("scripts/check_dependencies.py")
     assert json.loads((target / runtime.READY_FILENAME).read_text())["scope"] == (
         "modules/studio-archive"
     )
@@ -144,8 +158,8 @@ def test_selected_optional_requirements_are_installed_before_validation(
     )
 
     assert ready is True, detail
-    assert commands[1][-2:] == ["-r", str(optional_file)]
-    assert commands[2][-2:] == ["--requirements", optional_name]
+    assert commands[2][-2:] == ["-r", str(optional_file)]
+    assert commands[3][-2:] == ["--requirements", optional_name]
     default_selection = runtime.select_runtime(plugin_root, "studio-archive")
     default_target = runtime.dependency_target(default_selection, data_dir)
     assert target != default_target
@@ -228,7 +242,10 @@ def test_first_setup_prevents_nested_google_probe_from_crashing(
         if command[1:3] == ["-m", "venv"]:
             return subprocess.run(command, **kwargs)
         if command[1:3] == ["-m", "pip"]:
-            target = Path(command[0]).parents[1]
+            if "install" not in command:
+                return subprocess.CompletedProcess(command, 0, "pip ready", "")
+            target_python = Path(command[command.index("--python") + 1])
+            target = target_python.parents[1]
             google = site_packages(target) / "google" / "api_core"
             google.mkdir(parents=True)
             (google.parent / "__init__.py").write_text("", encoding="utf-8")
@@ -270,6 +287,124 @@ def test_runtime_target_is_partitioned_by_windows_platform(
     target = runtime.dependency_target(selection, tmp_path / "plugin-data")
 
     assert f"{sys.implementation.cache_tag}-win-amd64" in target.parts
+
+
+def test_windows_runtime_avoids_ensurepip_when_base_pip_is_available(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    commands: list[list[str]] = []
+
+    def windows_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]), windows=True)
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        data_dir=tmp_path / "plugin-data",
+        runner=windows_runner,
+    )
+
+    target_python = target / "Scripts" / "python.exe"
+    assert ready is True, detail
+    assert "--without-pip" in commands[0]
+    assert commands[1][-2:] == [str(target_python), "--version"]
+    assert commands[2][:5] == [
+        sys.executable,
+        "-m",
+        "pip",
+        "--python",
+        str(target_python),
+    ]
+    assert all("ensurepip" not in command for command in commands)
+
+
+def test_base_pip_unavailable_falls_back_to_direct_ensurepip(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    commands: list[list[str]] = []
+
+    def fallback_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]), windows=True)
+            return subprocess.CompletedProcess(command, 0, "", "")
+        if "--python" in command:
+            return subprocess.CompletedProcess(command, 1, "", "No module named pip")
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        data_dir=tmp_path / "plugin-data",
+        runner=fallback_runner,
+    )
+
+    target_python = str(target / "Scripts" / "python.exe")
+    assert ready is True, detail
+    assert commands[2] == [
+        target_python,
+        "-m",
+        "ensurepip",
+        "--upgrade",
+        "--default-pip",
+    ]
+    assert commands[3][:3] == [target_python, "-m", "pip"]
+
+
+def test_ensurepip_failure_returns_complete_windows_diagnostics(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def blocked_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]), windows=True)
+            return subprocess.CompletedProcess(command, 0, "", "")
+        if "--python" in command:
+            return subprocess.CompletedProcess(
+                command,
+                1,
+                "base pip output",
+                "base pip could not launch target Python",
+            )
+        return subprocess.CompletedProcess(
+            command,
+            1,
+            "ensurepip output",
+            "Access is denied while unpacking bundled wheels",
+        )
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        data_dir=tmp_path / "plugin-data",
+        runner=blocked_runner,
+    )
+
+    assert ready is False
+    assert not target.exists()
+    assert "Managed pip bootstrap failed." in detail
+    assert "Base pip probe returned exit status 1" in detail
+    assert "base pip output" in detail
+    assert "base pip could not launch target Python" in detail
+    assert "Target ensurepip returned exit status 1" in detail
+    assert "ensurepip output" in detail
+    assert "Access is denied while unpacking bundled wheels" in detail
 
 
 def test_codex_runtime_uses_stable_private_temp_data_dir(
@@ -326,6 +461,8 @@ def test_network_resolution_failure_requests_codex_host_approval(
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
             return subprocess.CompletedProcess(command, 0, "", "")
+        if "--version" in command:
+            return subprocess.CompletedProcess(command, 0, "pip ready", "")
         return subprocess.CompletedProcess(
             command,
             1,
@@ -359,6 +496,8 @@ def test_invalid_distribution_is_not_mislabeled_as_network_denial(
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
             return subprocess.CompletedProcess(command, 0, "", "")
+        if "--version" in command:
+            return subprocess.CompletedProcess(command, 0, "pip ready", "")
         return subprocess.CompletedProcess(command, 1, "", package_error)
 
     ready, _, detail = runtime.ensure_runtime(

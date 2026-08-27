@@ -274,6 +274,78 @@ def _network_permission_detail(detail: str) -> str:
     )
 
 
+def _process_detail(completed: subprocess.CompletedProcess[str]) -> str:
+    """Return all non-empty captured output from a failed subprocess."""
+
+    return "\n".join(
+        output.strip()
+        for output in (completed.stdout, completed.stderr)
+        if output and output.strip()
+    )
+
+
+def _bootstrap_pip(
+    target: Path,
+    *,
+    runner: Runner,
+) -> tuple[list[str] | None, dict[str, str], str]:
+    """Return a pip command that installs into a pip-less virtual environment."""
+
+    target_python = runtime_python(target)
+    base_environment = dict(os.environ)
+    base_environment.pop("PYTHONHOME", None)
+    base_environment.pop("PYTHONPATH", None)
+    base_pip = [
+        sys.executable,
+        "-m",
+        "pip",
+        "--python",
+        str(target_python),
+    ]
+    probe = runner(
+        [*base_pip, "--version"],
+        cwd=target,
+        env=base_environment,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if probe.returncode == 0:
+        return base_pip, base_environment, ""
+
+    target_environment = runtime_environment(target)
+    target_environment.pop("PYTHONPATH", None)
+    ensured = runner(
+        [
+            str(target_python),
+            "-m",
+            "ensurepip",
+            "--upgrade",
+            "--default-pip",
+        ],
+        cwd=target,
+        env=target_environment,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if ensured.returncode == 0:
+        return [str(target_python), "-m", "pip"], target_environment, ""
+
+    probe_detail = _process_detail(probe) or "no captured output"
+    ensurepip_detail = _process_detail(ensured) or "no captured output"
+    return (
+        None,
+        target_environment,
+        (
+            "Managed pip bootstrap failed.\n"
+            f"Base pip probe returned exit status {probe.returncode}:\n{probe_detail}\n"
+            f"Target ensurepip returned exit status {ensured.returncode}:\n"
+            f"{ensurepip_detail}"
+        ),
+    )
+
+
 def dependency_target(
     selection: RuntimeSelection,
     data_dir: Path | None = None,
@@ -417,20 +489,25 @@ def ensure_runtime(
         return False, target, str(error)
     try:
         created = runner(
-            [sys.executable, "-m", "venv", str(target)],
+            [sys.executable, "-m", "venv", "--without-pip", str(target)],
             cwd=selection.requirement_root,
             capture_output=True,
             check=False,
             text=True,
         )
         if created.returncode != 0:
-            detail = (created.stderr or created.stdout).strip()
+            detail = _process_detail(created)
             shutil.rmtree(target, ignore_errors=True)
             return False, target, detail or "virtual environment creation failed"
+        pip_command, pip_environment, bootstrap_detail = _bootstrap_pip(
+            target,
+            runner=runner,
+        )
+        if pip_command is None:
+            shutil.rmtree(target, ignore_errors=True)
+            return False, target, bootstrap_detail
         install_command = [
-            str(runtime_python(target)),
-            "-m",
-            "pip",
+            *pip_command,
             "install",
             "--disable-pip-version-check",
             "--no-input",
@@ -440,12 +517,13 @@ def ensure_runtime(
         installed = runner(
             install_command,
             cwd=selection.requirement_root,
+            env=pip_environment,
             capture_output=True,
             check=False,
             text=True,
         )
         if installed.returncode != 0:
-            detail = (installed.stderr or installed.stdout).strip()
+            detail = _process_detail(installed)
             shutil.rmtree(target, ignore_errors=True)
             return (
                 False,
