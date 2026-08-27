@@ -34,6 +34,10 @@ from business_planning_core import (  # noqa: E402
     write_assumption_ledger,
     write_excel,
 )
+from business_planning_handoff import (  # noqa: E402
+    BusinessPlanningHandoffError,
+    review_counterpart_handoff,
+)
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     canonical_json_sha256,
@@ -61,25 +65,50 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--case", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--client-engagement", required=True, type=Path)
+    parser.add_argument("--counterpart-handoff", type=Path)
     args = parser.parse_args(argv)
+    counterpart_review: dict[str, object] | None = None
     try:
+        input_paths = [args.case]
+        if args.counterpart_handoff is not None:
+            input_paths.append(args.counterpart_handoff)
         load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="business-planning",
-            input_paths=[args.case],
+            input_paths=input_paths,
             output_dir=args.output_dir,
         )
         case = load_json(args.case)
         plan = build_business_plan(case)
+        if args.counterpart_handoff is not None:
+            counterpart_review = review_counterpart_handoff(
+                case,
+                load_json(args.counterpart_handoff),
+                receiving_product="Vera",
+            )
     except (
         AssuranceContractError,
         BusinessPlanningContractError,
+        BusinessPlanningHandoffError,
         OSError,
         ValueError,
     ) as exc:
         parser.error(str(exc))
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    if (
+        counterpart_review is not None
+        and counterpart_review["status"] != "aligned_for_counterpart_use"
+    ):
+        write_json(
+            args.output_dir / "counterpart_handoff_review.json",
+            counterpart_review,
+        )
+        LOGGER.error(
+            "Counterpart handoff requires professional resolution: %s.",
+            counterpart_review["status"],
+        )
+        return 2
     plan_path = args.output_dir / "business_plan.json"
     write_json(plan_path, plan)
     write_json(args.output_dir / "reconciliation.json", plan["reconciliation"])
@@ -88,6 +117,11 @@ def main(argv: list[str] | None = None) -> int:
         args.output_dir / "business_planning_handoff.json",
         build_counterpart_handoff(plan),
     )
+    if counterpart_review is not None:
+        write_json(
+            args.output_dir / "counterpart_handoff_review.json",
+            counterpart_review,
+        )
     write_assumption_ledger(args.output_dir / "assumption_ledger.csv", plan)
     write_excel(args.output_dir / "business_plan.xlsx", plan)
     (args.output_dir / "business_plan_facts.md").write_text(
@@ -110,7 +144,7 @@ def main(argv: list[str] | None = None) -> int:
     }
     write_json(args.output_dir / "commentary_template.json", commentary_template)
 
-    output_names = (
+    output_names = [
         "business_plan.json",
         "business_plan.xlsx",
         "assumption_ledger.csv",
@@ -120,14 +154,25 @@ def main(argv: list[str] | None = None) -> int:
         "business_plan_facts.md",
         "business_plan_review.html",
         "business_planning_handoff.json",
-    )
+    ]
+    if counterpart_review is not None:
+        output_names.append("counterpart_handoff_review.json")
     receipt = {
-        "schema_version": "mparanza.business_planning_financial_execution_receipt.v1",
+        "schema_version": "mparanza.business_planning_financial_execution_receipt.v2",
         "workflow_id": "business-planning",
         "status": plan["status"],
         "review_status": plan["review_status"],
         "case_sha256": _sha256_file(args.case),
         "case_content_sha256": canonical_json_sha256(case),
+        "counterpart_handoff": (
+            {
+                "path": args.counterpart_handoff.name,
+                "sha256": _sha256_file(args.counterpart_handoff),
+                "review_status": counterpart_review["status"],
+            }
+            if args.counterpart_handoff is not None and counterpart_review is not None
+            else None
+        ),
         "outputs": [
             {
                 "path": name,

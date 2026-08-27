@@ -29,3 +29,6 @@ bounded financial evidence. Compare its shared assumption IDs and descriptions
 with Clara's case, show any divergence, and return material inconsistencies for
 professional resolution. Never reinterpret reconciled figures, change Vera's
 accounting assumptions, or present statement closure as strategic validation.
+Pass the Clara workspace with `--case-workspace` and the Vera file with
+`--counterpart-handoff`; do not finalize until the durable handoff review
+reports `aligned_for_counterpart_use`.

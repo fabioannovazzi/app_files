@@ -20,6 +20,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from business_planning_handoff import HANDOFF_SCHEMA, counterpart_handoff_status
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
@@ -47,7 +48,7 @@ __all__ = [
 
 WORKFLOW_ID = "business-planning"
 CASE_SCHEMA = "mparanza.business_planning_financial_case.v1"
-PLAN_SCHEMA = "mparanza.business_planning_financial_plan.v1"
+PLAN_SCHEMA = "mparanza.business_planning_financial_plan.v2"
 COMMENTARY_SCHEMA = "mparanza.business_planning_financial_commentary.v1"
 MAX_PERIODS = 60
 MAX_SCENARIOS = 8
@@ -490,9 +491,20 @@ def validate_case(case: Mapping[str, Any]) -> None:
 
 
 def _decimal_mapping(
-    values: Mapping[str, Any], fields: Sequence[str], *, prefix: str
+    values: Mapping[str, Any],
+    fields: Sequence[str],
+    *,
+    prefix: str,
+    allow_negative_fields: frozenset[str] = frozenset(),
 ) -> dict[str, Decimal]:
-    return {field: _money(values[field], label=f"{prefix}.{field}") for field in fields}
+    return {
+        field: _money(
+            values[field],
+            label=f"{prefix}.{field}",
+            non_negative=field not in allow_negative_fields,
+        )
+        for field in fields
+    }
 
 
 def _money_strings(values: Mapping[str, Decimal]) -> dict[str, str]:
@@ -533,6 +545,7 @@ def build_business_plan(case: Mapping[str, Any]) -> dict[str, Any]:
         _mapping(opening_record["values"], label="opening values"),
         _OPENING_VALUE_FIELDS,
         prefix="opening_balance",
+        allow_negative_fields=frozenset({"equity"}),
     )
     opening_reconciliation = _opening_reconciliation(opening_values)
     opening_passed = abs(opening_reconciliation["difference"]) <= tolerance
@@ -761,6 +774,16 @@ def build_business_plan(case: Mapping[str, Any]) -> dict[str, Any]:
             "status_counts": dict(sorted(evidence_counts.items())),
             "unverified_evidence_ids": unverified_evidence,
         },
+        "evidence_register": [
+            {
+                "id": item["id"],
+                "kind": item["kind"],
+                "description": item["description"],
+                "status": item["status"],
+            }
+            for item in evidence_items
+            if item["id"] in referenced_evidence
+        ],
         "opening_balance": {
             "values": _money_strings(opening_values),
             "evidence_ids": list(opening_record["evidence_ids"]),
@@ -809,7 +832,7 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
         for item in plan["assumptions"]
     ]
     return {
-        "schema_version": "mparanza.business_planning_financial_model_context.v1",
+        "schema_version": "mparanza.business_planning_financial_model_context.v2",
         "workflow_id": WORKFLOW_ID,
         "case_id": plan["case_id"],
         "entity_name": plan["entity_name"],
@@ -821,6 +844,7 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
         "status": plan["status"],
         "review_status": plan["review_status"],
         "evidence_coverage": plan["evidence_coverage"],
+        "evidence_register": plan["evidence_register"],
         "assumptions": assumptions,
         "scenario_summaries": [
             {
@@ -852,7 +876,7 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
     """Build the reviewed Vera-to-Clara bridge without semantic merging."""
 
     return {
-        "schema_version": "mparanza.business_planning_handoff.v1",
+        "schema_version": HANDOFF_SCHEMA,
         "workflow_id": WORKFLOW_ID,
         "case_id": plan["case_id"],
         "entity_name": plan["entity_name"],
@@ -863,7 +887,9 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
         "from_lens": "accounting_financial",
         "to_product": "Clara",
         "to_lens": "strategic_commercial",
-        "status": "review_required_by_counterpart",
+        "status": counterpart_handoff_status(plan["status"]),
+        "source_plan_status": plan["status"],
+        "source_review_status": plan["review_status"],
         "assumptions": [
             {
                 "id": item["id"],
@@ -1096,22 +1122,134 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
 
 
 def render_html(plan: Mapping[str, Any]) -> str:
-    """Render a self-contained factual review page."""
+    """Render a self-contained factual page with the complete review surface."""
 
-    scenario_rows = "".join(
-        "<tr>"
-        f"<td>{html.escape(str(scenario['label']))}</td>"
-        f"<td>{html.escape(str(scenario['summary']['total_revenue']))}</td>"
-        f"<td>{html.escape(str(scenario['summary']['total_net_income']))}</td>"
-        f"<td>{html.escape(str(scenario['summary']['ending_cash']))}</td>"
-        f"<td>{html.escape(str(scenario['summary']['funding_requirement']))}</td>"
-        f"<td>{html.escape(str(scenario['summary']['break_even_period'] or 'not reached'))}</td>"
-        "</tr>"
-        for scenario in plan["scenarios"]
+    def render_table(headers: Sequence[str], rows: Sequence[Sequence[object]]) -> str:
+        head = "".join(f"<th>{html.escape(header)}</th>" for header in headers)
+        body = "".join(
+            "<tr>"
+            + "".join(f"<td>{html.escape(str(value))}</td>" for value in row)
+            + "</tr>"
+            for row in rows
+        )
+        return (
+            '<div class="table-wrap"><table><thead><tr>'
+            f"{head}</tr></thead><tbody>{body}</tbody></table></div>"
+        )
+
+    scenario_summary = render_table(
+        (
+            "Scenario",
+            "Revenue",
+            "Net income",
+            "Ending cash",
+            "Minimum cash",
+            "Funding requirement",
+            "Break-even",
+        ),
+        [
+            (
+                scenario["label"],
+                scenario["summary"]["total_revenue"],
+                scenario["summary"]["total_net_income"],
+                scenario["summary"]["ending_cash"],
+                scenario["summary"]["minimum_cash"],
+                scenario["summary"]["funding_requirement"],
+                scenario["summary"]["break_even_period"] or "not reached",
+            )
+            for scenario in plan["scenarios"]
+        ],
     )
+    assumption_table = render_table(
+        (
+            "ID",
+            "Category",
+            "Description",
+            "Evidence",
+            "Effective periods",
+            "Rationale",
+            "Status",
+        ),
+        [
+            (
+                item["id"],
+                item["category"],
+                item["description"],
+                " · ".join(item["evidence_ids"]),
+                " · ".join(item["effective_periods"]),
+                item["rationale"],
+                item["status"],
+            )
+            for item in plan["assumptions"]
+        ],
+    )
+    evidence_table = render_table(
+        ("ID", "Kind", "Description", "Status"),
+        [
+            (
+                item["id"],
+                item["kind"],
+                item["description"],
+                item["status"],
+            )
+            for item in plan["evidence_register"]
+        ],
+    )
+    opening = plan["opening_balance"]
+    opening_table = render_table(
+        ("Line", "Amount"),
+        [(line, value) for line, value in opening["values"].items()],
+    )
+    reconciliation_table = render_table(
+        (
+            "Scenario",
+            "Period",
+            "Total assets",
+            "Liabilities and equity",
+            "Difference",
+            "Passed",
+        ),
+        [
+            (
+                item["scenario_id"],
+                item["period"],
+                item["total_assets"],
+                item["total_liabilities_and_equity"],
+                item["difference"],
+                item["passed"],
+            )
+            for item in plan["reconciliation"]["periods"]
+        ],
+    )
+    scenario_details: list[str] = []
+    for scenario in plan["scenarios"]:
+        scenario_details.append(
+            f"<section><h3>{html.escape(str(scenario['label']))}</h3>"
+        )
+        for statement, title in (
+            ("profit_and_loss", "Profit and loss"),
+            ("cash_flow", "Cash flow"),
+            ("balance_sheet", "Balance sheet"),
+        ):
+            line_names = list(scenario["periods"][0][statement])
+            scenario_details.append(f"<h4>{title}</h4>")
+            scenario_details.append(
+                render_table(
+                    ("Period", *line_names),
+                    [
+                        (
+                            period["period"],
+                            *(period[statement][line] for line in line_names),
+                        )
+                        for period in scenario["periods"]
+                    ],
+                )
+            )
+        scenario_details.append("</section>")
     limitations = "".join(
         f"<li>{html.escape(str(item))}</li>" for item in plan["limitations"]
     )
+    evidence = plan["evidence_coverage"]
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -1120,12 +1258,13 @@ def render_html(plan: Mapping[str, Any]) -> str:
   <title>Business plan facts — {html.escape(str(plan['entity_name']))}</title>
   <style>
     :root {{ color-scheme: light; font-family: "Instrument Sans", sans-serif; color: #17213a; background: #f6f8fc; }}
-    body {{ margin: 0; }} main {{ max-width: 1080px; margin: 0 auto; padding: 48px 24px 72px; }}
+    body {{ margin: 0; }} main {{ max-width: 1180px; margin: 0 auto; padding: 48px 24px 72px; }}
     h1 {{ color: #002060; font-size: clamp(2rem, 5vw, 4rem); margin: 0 0 12px; }}
+    h2 {{ margin-top: 48px; }} h3 {{ margin-top: 32px; }} h4 {{ margin: 28px 0 8px; color: #31527e; }}
     .meta {{ display: flex; flex-wrap: wrap; gap: 12px 24px; border-top: 1px solid #bfd1ed; border-bottom: 1px solid #bfd1ed; padding: 18px 0; }}
-    table {{ width: 100%; border-collapse: collapse; margin-top: 24px; background: white; }}
+    .table-wrap {{ overflow-x: auto; }} table {{ width: 100%; border-collapse: collapse; margin-top: 12px; background: white; }}
     th, td {{ padding: 12px; border-bottom: 1px solid #dbe4f2; text-align: right; }}
-    th:first-child, td:first-child {{ text-align: left; }} th {{ color: #002060; }}
+    th:first-child, td:first-child {{ text-align: left; }} th {{ color: #002060; white-space: nowrap; }} td {{ vertical-align: top; }}
     .warning {{ margin-top: 28px; padding: 18px; border-left: 3px solid #00a7d8; background: #edf8fc; }}
   </style>
 </head>
@@ -1133,8 +1272,17 @@ def render_html(plan: Mapping[str, Any]) -> str:
   <p>Vera · Business planning · accounting and financial lens</p>
   <h1>{html.escape(str(plan['entity_name']))}</h1>
   <div class="meta"><span>Company stage: {html.escape(str(plan['company_stage']))}</span><span>Status: {html.escape(str(plan['status']))}</span><span>Review: {html.escape(str(plan['review_status']))}</span><span>Currency: {html.escape(str(plan['reporting_currency']))}</span></div>
+  <p><strong>Objective:</strong> {html.escape(str(plan['planning_objective']))}</p>
+  <p><strong>Audience:</strong> {html.escape(str(plan['audience']))}</p>
+  <h2>Evidence coverage</h2>{evidence_table}
+  <p>Unverified evidence: {html.escape(' · '.join(evidence['unverified_evidence_ids']) or 'none')}.</p>
+  <h2>Opening balance</h2>{opening_table}
+  <p>Evidence: {html.escape(' · '.join(opening['evidence_ids']))}. Reconciliation difference: {html.escape(str(opening['reconciliation']['difference']))}; passed: {html.escape(str(opening['reconciliation']['passed']))}.</p>
+  <h2>Confirmed assumptions</h2>{assumption_table}
   <h2>Scenario summaries</h2>
-  <table><thead><tr><th>Scenario</th><th>Revenue</th><th>Net income</th><th>Ending cash</th><th>Funding requirement</th><th>Break-even</th></tr></thead><tbody>{scenario_rows}</tbody></table>
+  {scenario_summary}
+  <h2>Integrated statements</h2>{''.join(scenario_details)}
+  <h2>Reconciliation</h2>{reconciliation_table}
   <h2>Limitations</h2><ul>{limitations}</ul>
   <p class="warning">Exact statement closure does not validate the assumptions or approve the plan.</p>
 </main></body></html>

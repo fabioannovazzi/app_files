@@ -14,6 +14,10 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from business_planning_handoff import (  # noqa: E402
+    BusinessPlanningHandoffError,
+    review_counterpart_handoff,
+)
 from strategic_planning_core import (  # noqa: E402
     StrategicPlanningContractError,
     build_counterpart_handoff,
@@ -22,6 +26,7 @@ from strategic_planning_core import (  # noqa: E402
     load_json,
     render_html,
     render_markdown,
+    validate_case_workspace_boundary,
     write_assumption_ledger,
 )
 
@@ -45,20 +50,71 @@ def _write_json(path: Path, payload: dict[str, object]) -> None:
     )
 
 
+def _canonical_json_sha256(payload: dict[str, object]) -> str:
+    return hashlib.sha256(
+        (
+            json.dumps(
+                payload,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n"
+        ).encode("utf-8")
+    ).hexdigest()
+
+
 def main(argv: list[str] | None = None) -> int:
     """Validate the strategic case and write the normal review package."""
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--case-workspace", required=True, type=Path)
+    parser.add_argument("--counterpart-handoff", type=Path)
     args = parser.parse_args(argv)
+    counterpart_review: dict[str, object] | None = None
     try:
+        validate_case_workspace_boundary(
+            args.case,
+            args.output_dir,
+            args.case_workspace,
+            additional_inputs=(
+                (args.counterpart_handoff,)
+                if args.counterpart_handoff is not None
+                else ()
+            ),
+        )
         case = load_json(args.case)
         plan = build_strategic_plan(case)
-    except (StrategicPlanningContractError, OSError, ValueError) as exc:
+        if args.counterpart_handoff is not None:
+            counterpart_review = review_counterpart_handoff(
+                case,
+                load_json(args.counterpart_handoff),
+                receiving_product="Clara",
+            )
+    except (
+        BusinessPlanningHandoffError,
+        StrategicPlanningContractError,
+        OSError,
+        ValueError,
+    ) as exc:
         parser.error(str(exc))
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    if (
+        counterpart_review is not None
+        and counterpart_review["status"] != "aligned_for_counterpart_use"
+    ):
+        _write_json(
+            args.output_dir / "counterpart_handoff_review.json",
+            counterpart_review,
+        )
+        LOGGER.error(
+            "Counterpart handoff requires professional resolution: %s.",
+            counterpart_review["status"],
+        )
+        return 2
     plan_path = args.output_dir / "strategic_business_plan.json"
     _write_json(plan_path, plan)
     _write_json(args.output_dir / "model_context.json", build_model_context(plan))
@@ -66,6 +122,11 @@ def main(argv: list[str] | None = None) -> int:
         args.output_dir / "business_planning_handoff.json",
         build_counterpart_handoff(plan),
     )
+    if counterpart_review is not None:
+        _write_json(
+            args.output_dir / "counterpart_handoff_review.json",
+            counterpart_review,
+        )
     write_assumption_ledger(args.output_dir / "assumption_ledger.csv", plan)
     (args.output_dir / "strategic_business_plan.md").write_text(
         render_markdown(plan), encoding="utf-8"
@@ -74,21 +135,33 @@ def main(argv: list[str] | None = None) -> int:
         render_html(plan), encoding="utf-8"
     )
 
-    output_names = (
+    output_names = [
         "strategic_business_plan.json",
         "strategic_business_plan.md",
         "strategic_business_plan_review.html",
         "model_context.json",
         "assumption_ledger.csv",
         "business_planning_handoff.json",
-    )
+    ]
+    if counterpart_review is not None:
+        output_names.append("counterpart_handoff_review.json")
     receipt: dict[str, object] = {
-        "schema_version": "mparanza.business_planning_strategic_execution_receipt.v1",
+        "schema_version": "mparanza.business_planning_strategic_execution_receipt.v2",
         "workflow_id": "business-planning",
         "professional_lens": "strategic_commercial",
         "status": plan["status"],
         "review_status": plan["review_status"],
         "case_sha256": _sha256_file(args.case),
+        "case_content_sha256": _canonical_json_sha256(case),
+        "counterpart_handoff": (
+            {
+                "path": args.counterpart_handoff.name,
+                "sha256": _sha256_file(args.counterpart_handoff),
+                "review_status": counterpart_review["status"],
+            }
+            if args.counterpart_handoff is not None and counterpart_review is not None
+            else None
+        ),
         "outputs": [
             {
                 "path": name,

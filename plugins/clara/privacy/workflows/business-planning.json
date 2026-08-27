@@ -8,6 +8,7 @@
     "repository/plugins/business-planning/.codex-plugin/plugin.json",
     "repository/plugins/business-planning/skills/business-planning/SKILL.md",
     "repository/plugins/business-planning/references/case-contract.md",
+    "repository/plugins/business-planning/scripts/business_planning_handoff.py",
     "repository/plugins/business-planning/scripts/strategic_planning_core.py",
     "repository/plugins/business-planning/scripts/run_strategic_plan.py"
   ],
@@ -22,7 +23,7 @@
       {
         "id": "business-planning-strategic-case-and-handoff",
         "purpose": "Author and review the strategic-commercial plan and prepare the bounded Vera handoff",
-        "content": "The model authors evidence-linked findings, options, benefits and drawbacks, recommendation, conditions, initiatives, owners, milestones, KPIs, risks, responses, decision implications and open questions. The local finalizer receives only the reviewed structured case and checks declared lens, shape, identifiers and reference closure; it does not score a market or select a strategy. The normal model context and Vera handoff exclude evidence source_ref values, raw source documents, absolute paths and original filenames while preserving company context, assumptions, recommendation, initiatives, risks, questions and limitations needed for counterpart review."
+        "content": "The model authors evidence-linked findings, options, benefits and drawbacks, recommendation, conditions, initiatives, owners, milestones, KPIs, risks, responses, decision implications and open questions. The local finalizer receives only the reviewed structured case inside the selected Clara case workspace and checks declared lens, shape, identifiers, non-empty support references and reference closure; it does not score a market or select a strategy. The normal model context contains the bounded evidence register with IDs, kinds, descriptions and statuses plus company context, assumptions, recommendation, initiatives, risks, questions and limitations. It and the Vera handoff exclude evidence source_ref values, raw source documents, absolute paths and original filenames. When a reviewed Vera handoff is supplied, fixed code records exact case-identity and shared-assumption comparisons and blocks finalization on a non-ready source or unresolved mechanical divergence; it never resolves strategic meaning."
       }
     ]
   },
@@ -47,11 +48,16 @@
   },
   "hosted_service_ids": [],
   "boundaries_beyond_codex": [],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "clara-case-workspace-and-handoff-isolation",
+      "control": "The strategic finalizer accepts the case only from the selected Clara case-workspace root, writes only to its business-plan directory, accepts an optional counterpart handoff only from inside that workspace, records exact identity and shared-assumption comparisons, and stops before finalization when the source is not ready or the mechanical comparison requires professional resolution."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f5549a37f94387ff6bb8e8b809f79cec88f5f3f7b3c40407649fa5d6c5ccb46a"
+    "source_fingerprint": "257e0158d37a2164a0e0670704112c198d0c4d3a169638b4fdeae3df9bcc9030"
   }
 }

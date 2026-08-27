@@ -166,11 +166,14 @@ Do not install arbitrary packages at runtime.
 
 From the module root:
 
+Omit `--counterpart-handoff` only when no reviewed Clara handoff is available.
+
 ```bash
 python scripts/run_business_plan.py \
   --case <run-output>/business_plan_case.json \
   --client-engagement <context.json> \
-  --output-dir <run-output>/plan
+  --output-dir <run-output>/plan \
+  --counterpart-handoff <run-input>/business_planning_handoff.json
 ```
 
 The reviewed case uses canonical Decimal strings. Each scenario supplies the
@@ -188,10 +191,14 @@ requirement.
 
 From the module root:
 
+Omit `--counterpart-handoff` only when no reviewed Vera handoff is available.
+
 ```bash
 python scripts/run_strategic_plan.py \
+  --case-workspace <case-workspace> \
   --case <case-workspace>/strategic_business_plan_case.json \
-  --output-dir <case-workspace>/business-plan
+  --output-dir <case-workspace>/business-plan \
+  --counterpart-handoff <case-workspace>/business_planning_handoff.json
 ```
 
 The model authors the strategic findings, options, recommendation, initiatives,
@@ -229,4 +236,11 @@ Both lenses produce `business_planning_handoff.json` with shared company
 context and assumptions plus the lens-specific results needed by the
 counterpart. The receiving product reviews it as evidence. It must surface
 inconsistent assumptions or conclusions and return them for professional
-resolution; deterministic code does not merge or choose between them.
+resolution; deterministic code does not merge or choose between them. Pass an
+available handoff with `--counterpart-handoff`. The finalizer validates its
+source and receiving lenses, source-plan readiness, case identity, shared
+assumption IDs and exact descriptions, then writes
+`counterpart_handoff_review.json`. It stops before finalization when the source
+plan is partial or blocked, the case identity differs, no shared assumption is
+available, or a shared description differs. The professional resolves the
+meaning; the mechanical comparison never selects which description is right.

@@ -31,7 +31,7 @@
       {
         "id": "business-planning-financial-review-and-handoff",
         "purpose": "Interpret the complete reconciled calculation and prepare a bounded professional and Clara handoff",
-        "content": "The deterministic runner receives only the reviewed financial case, processes every included period and scenario, and writes the complete P&L, cash-flow, balance-sheet, reconciliation, assumption ledger, workbook and factual review. The normal model_context.json contains company context, assumption descriptions, effective periods and rationales, evidence coverage IDs and statuses, complete calculated statements for up to 60 periods and eight scenarios, summaries, reconciliation and limitations. It excludes raw source populations, absolute paths, original filenames and evidence source_ref values by default. The counterpart handoff contains company context, assumptions, scenario summaries, reconciliation and limitations without source paths; Clara must review it and expose any divergence rather than silently merging it.",
+        "content": "The deterministic runner receives only the reviewed financial case, processes every included period and scenario, and writes the complete P&L, cash-flow, balance-sheet, reconciliation, assumption ledger, workbook and factual review. The normal model_context.json contains company context, the bounded evidence register with IDs, kinds, descriptions and statuses, assumption descriptions, effective periods and rationales, complete calculated statements for up to 60 periods and eight scenarios, summaries, reconciliation and limitations. It excludes raw source populations, absolute paths, original filenames and evidence source_ref values by default. The counterpart handoff contains explicit source-plan and review status, company context, assumptions, scenario summaries, reconciliation and limitations without source paths. When a reviewed Clara handoff is supplied from the Studio Archive boundary, fixed code records exact case-identity and shared-assumption comparisons and blocks finalization on a non-ready source or unresolved mechanical divergence; it never resolves professional meaning.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -55,7 +55,11 @@
     },
     {
       "id": "bounded-post-calculation-context",
-      "control": "The post-calculation model projection and counterpart handoff exclude raw source populations, absolute paths, original filenames and evidence source_ref values while preserving the reviewed assumptions, calculated periods, scenarios, reconciliation and limitations needed for professional work."
+      "control": "The post-calculation model projection and counterpart handoff exclude raw source populations, absolute paths, original filenames and evidence source_ref values while preserving the bounded evidence descriptions, reviewed assumptions, calculated periods, scenarios, reconciliation and limitations needed for professional work."
+    },
+    {
+      "id": "counterpart-handoff-status-and-divergence-gate",
+      "control": "Every generated handoff carries its source-plan and review status. An optional Clara handoff must come from the digest-valid Studio Archive input or current-run boundary; exact case identity and shared assumption IDs and descriptions are recorded, and the runner stops before finalization when the source is not ready or the comparison requires professional resolution."
     },
     {
       "id": "draft-professional-review-boundary",
@@ -66,6 +70,6 @@
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "be8b55ad9815344e64063fe02bfae965f3463b0e167d4f18792f86f1cf44871c"
+    "source_fingerprint": "f1b2956aea0dfc75c5f8edf5d34a630e5954ef0f4a9998225e87b45172cc71c3"
   }
 }
