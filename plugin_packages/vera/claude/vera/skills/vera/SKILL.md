@@ -242,6 +242,17 @@ them without changing the capability catalog:
   must keep the result draft pending professional review. No ERP connector,
   hosted service, background synchronization, or automatic publication is
   part of this workflow;
+- `startup-business-plan`: client-bound integrated forward planning for a
+  startup or new venture, including pre-revenue and early-revenue stages. It
+  uses reviewed pilot evidence and early actuals when available and otherwise
+  begins from confirmed opening facts and assumptions without
+  treating missing history as zero. Model-led and professional judgment own
+  venture-stage assessment, evidence meaning, assumption selection, scenario
+  design, risks, narrative, and approval. Established-company strategic
+  planning is outside this Vera workflow. Deterministic code owns canonical Decimal arithmetic, linked
+  P&L, cash-flow and balance-sheet roll-forwards, reference closure,
+  reconciliation, funding-gap calculation, hashes, and replay receipts. It
+  creates no balancing plug and remains draft pending professional review;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
   perimeter, currency, sign convention, period/scenario mappings, and source

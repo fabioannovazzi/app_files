@@ -120,6 +120,13 @@ skill to imitate a missing operational workflow.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
+- `startup-business-plan`: prepare one integrated forward-looking business plan
+  for a startup or new venture, including pre-revenue and early-revenue stages;
+  use reviewed pilot evidence and early actuals when they exist and otherwise
+  start from explicitly confirmed opening facts and assumptions;
+  calculate linked P&L, cash flow, balance sheet, scenarios, break-even and
+  funding needs without inventing missing values or using a balancing plug.
+  Do not route an established-company strategic business plan here.
 - `variance-analysis`: compare Actual, Budget, Forecast, or prior-period
   accounting performance; reconcile source totals; calculate amount-only or
   price-volume-mix variances when the data contract supports them; and produce

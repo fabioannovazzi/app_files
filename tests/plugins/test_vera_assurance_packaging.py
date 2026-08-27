@@ -14,6 +14,7 @@ BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 ASSURANCE_CONSUMERS = {
     "open-item-reconciliation",
     "bandi-agevolazioni",
+    "startup-business-plan",
     "check-entries",
     "client-file-preparation",
     "concordato-plan-review",

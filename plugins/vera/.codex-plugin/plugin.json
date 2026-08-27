@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.182",
+  "version": "0.1.183",
   "description": "Vera affianca commercialisti e studi professionali in contabilità, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -51,6 +51,10 @@
     "working-capital",
     "customer-concentration",
     "sales-plan",
+    "startup-business-plan",
+    "business-plan",
+    "piano-industriale",
+    "startup-planning",
     "scenario-planning",
     "forecast-assumptions",
     "journal",

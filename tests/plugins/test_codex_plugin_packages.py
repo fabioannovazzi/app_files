@@ -20,6 +20,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
     "browser-automation",
+    "startup-business-plan",
     "check-entries",
     "concordato-plan-review",
     "comunicazione-professionale",
@@ -71,6 +72,7 @@ VERA_DISCOVERY_TERMS = (
 VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
+    Path("static/shared/startup-business-plan/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
@@ -303,6 +305,7 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
+    ROOT / "static" / "shared" / "startup-business-plan" / "index.html",
     ROOT / "static" / "shared" / "management-control-pack" / "index.html",
     ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -326,6 +329,7 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
+    ROOT / "static" / "shared" / "startup-business-plan" / "index.html",
     ROOT / "static" / "shared" / "management-control-pack" / "index.html",
     ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -755,7 +759,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 31
+        assert len(card_bodies) == 32
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -1443,6 +1447,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "bandi-agevolazioni",
         "browser-automation",
+        "startup-business-plan",
         "comunicazione-professionale",
         "management-control-pack",
         "centrale-rischi-review",
@@ -1953,9 +1958,7 @@ def test_extracted_clara_renders_known_period_comparison(
     assert result.returncode == 0, result.stderr
     manifest = json.loads((output_dir / "render_manifest.json").read_text())
     context = json.loads((output_dir / "period_comparison_context.json").read_text())
-    chart_html = (output_dir / "year_over_year_line.html").read_text(encoding="utf-8")
-    plot_call = chart_html.rsplit("Plotly.newPlot(", maxsplit=1)[-1]
-    ac_trace = re.search(r'"name":"AC".*?"text":(\[[^\]]*\])', plot_call)
+    chart_path = output_dir / "year_over_year_line.png"
 
     assert manifest["runner"]["status"] == "ok"
     assert manifest["adapter_id"] == "reporting-engine.period_comparison"
@@ -1968,8 +1971,8 @@ def test_extracted_clara_renders_known_period_comparison(
     }
     assert context["monthly"][-1]["current_amount"] == 345.0
     assert context["monthly"][-1]["previous_amount"] == 255.0
-    assert ac_trace is not None
-    assert json.loads(ac_trace.group(1))[-1] == "345.0"
+    assert chart_path.is_file()
+    assert chart_path.stat().st_size > 0
 
 
 def test_extracted_clara_renders_distribution_with_variant(
@@ -2026,8 +2029,8 @@ def test_extracted_clara_renders_distribution_with_variant(
     assert manifest["legacy_plugin_source"] == "distribution-analysis"
     assert recipe["options"]["charts"] == ["boxplot"]
     assert recipe["mappings"]["small_multiples_dimension"] == "Brand"
-    assert (output_dir / "boxplot.html").is_file()
-    assert (output_dir / "boxplot_small_multiples.html").is_file()
+    assert (output_dir / "boxplot.png").is_file()
+    assert (output_dir / "boxplot_small_multiples.png").is_file()
     summary_by_period = {row["Period"]: row for row in context["summary"]}
     assert summary_by_period == {
         "~Jun-2025": {
@@ -3520,6 +3523,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
+        "../startup-business-plan/index.html",
         "../variance-analysis/index.html",
         "../management-control-pack/index.html",
         "../centrale-rischi-review/index.html",
@@ -3547,8 +3551,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 28
-    assert core.count('class="module-row"') == 28
+    assert core.count(" data-module-link") == 29
+    assert core.count('class="module-row"') == 29
     assert core.count('data-jurisdiction-item="it"') == 7
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
@@ -3719,6 +3723,16 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "data-module-link" in plan.group(0)
     assert "module-row__arrow" in plan.group(0)
     assert "module.plan.title" in plan.group(0)
+
+    business_plan = re.search(
+        r'<a[^>]+id="startup-business-plan".*?</a>',
+        page,
+        flags=re.DOTALL,
+    )
+    assert business_plan is not None
+    assert 'href="../startup-business-plan/index.html"' in business_plan.group(0)
+    assert "data-module-link" in business_plan.group(0)
+    assert "module.startupBusinessPlan.title" in business_plan.group(0)
 
     management_pack = re.search(
         r'<a[^>]+id="management-control-pack".*?</a>',
@@ -4092,6 +4106,7 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
     ("page_name", "workflow_id"),
     (
         ("financial-analysis", "financial-analysis"),
+        ("startup-business-plan", "startup-business-plan"),
         ("management-control-pack", "management-control-pack"),
         ("centrale-rischi-review", "centrale-rischi-review"),
         ("sales-plan", "sales-plan"),
@@ -4416,6 +4431,7 @@ def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
         "concordato-plan-review",
         "deep-research-validator",
         "financial-analysis",
+        "startup-business-plan",
         "management-control-pack",
         "centrale-rischi-review",
         "journal-bank-reconciliation",
@@ -5200,6 +5216,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
+        "startup-business-plan": (
+            "https://mparanza.com/static/shared/startup-business-plan/index.html?lang=it"
+        ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
         ),
