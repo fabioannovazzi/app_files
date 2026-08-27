@@ -376,7 +376,17 @@ def _reference_month(page_text: str) -> str:
         page_text,
         flags=re.IGNORECASE,
     )
-    return f"{numeric.group(3)}-{numeric.group(2)}" if numeric else ""
+    if numeric:
+        return f"{numeric.group(3)}-{numeric.group(2)}"
+    correction = re.search(
+        r"segnalazioni\s+del\s+mese\s+di\s+([A-Za-zÀ-ÿ]+)\s+(\d{4})",
+        page_text,
+        flags=re.IGNORECASE,
+    )
+    if correction:
+        month_number = _ITALIAN_MONTHS.get(_fold(correction.group(1)))
+        return f"{correction.group(2)}-{month_number:02d}" if month_number else ""
+    return ""
 
 
 def _promote_summary_category_header(headers: Sequence[str]) -> list[str]:
@@ -486,6 +496,83 @@ def _has_repeated_header_row(rows: Sequence[Sequence[str]]) -> bool:
     return False
 
 
+_MERGED_CORRECTION_ROW = re.compile(
+    r"^(?P<category>[A-ZÀ-Ý][A-ZÀ-Ý '\-]+?)\s+"
+    r"(?P<location>\d{4,5})\s+"
+    r"(?P<original_duration>\d+)\s+"
+    r"(?P<residual_duration>\d+)\s+"
+    r"(?P<currency>\d+)\s+"
+    r"(?P<import_export>\d+)\s+"
+    r"(?P<activity_type>\d+)\s+"
+    r"(?P<relationship_status>\d+)\s+"
+    r"(?P<guarantee_type>\d+)\s+"
+    r"(?P<borrower_role>\d+)\s+"
+    r"(?P<tail>.+)$"
+)
+_AMOUNT_TOKEN = r"[+-]?\d[\d.,]*"  # nosec B105
+_MERGED_CURRENT_AMOUNTS = re.compile(
+    rf"^(?P<granted>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<operational_granted>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<used>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<average_balance>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<guaranteed_amount>{_AMOUNT_TOKEN})$"
+)
+_MERGED_PREVIOUS_AMOUNTS = re.compile(
+    rf"^(?P<granted>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<operational_granted>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<used>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<average_balance>{_AMOUNT_TOKEN})\s+"
+    rf"(?P<guaranteed_amount>{_AMOUNT_TOKEN})\s+"
+    r"(?P<valid_from>\d{2}/\d{2}/\d{4})\s+"
+    r"(?P<valid_to>\d{2}/\d{2}/\d{4})$"
+)
+_MERGED_PREVIOUS_ABSENCE = re.compile(
+    r"^(?P<granted>Assenza di segnalazione)\s+"
+    r"(?P<valid_from>\d{2}/\d{2}/\d{4})\s+"
+    r"(?P<valid_to>\d{2}/\d{2}/\d{4})$",
+    flags=re.IGNORECASE,
+)
+
+
+def _merged_correction_sources(page_text: str) -> list[dict[str, str]]:
+    """Recover an exact current/previous correction grid merged by PDF geometry.
+
+    This fallback is deliberately narrow. It requires the source's explicit
+    correction wording, one exact classification prefix, five amount columns
+    for current or previous rows, and both validity dates for previous rows.
+    It does not infer missing values or accept approximate layouts.
+    """
+
+    folded = _fold(page_text)
+    required_markers = (
+        "situazione corrente",
+        "informazioni successivamente rettificate",
+        "nella colonna da e a",
+    )
+    if not all(marker in folded for marker in required_markers):
+        return []
+    recovered: list[dict[str, str]] = []
+    for raw_line in page_text.splitlines():
+        line = re.sub(r"\s+\(\*+\)$", "", _clean_cell(raw_line))
+        head = _MERGED_CORRECTION_ROW.fullmatch(line)
+        if not head:
+            continue
+        tail = head.group("tail")
+        amounts = (
+            _MERGED_CURRENT_AMOUNTS.fullmatch(tail)
+            or _MERGED_PREVIOUS_AMOUNTS.fullmatch(tail)
+            or _MERGED_PREVIOUS_ABSENCE.fullmatch(tail)
+        )
+        if not amounts:
+            continue
+        source = {
+            key: value for key, value in head.groupdict().items() if key != "tail"
+        }
+        source.update(amounts.groupdict())
+        recovered.append(source)
+    return recovered
+
+
 def _unclassified_table(
     *,
     page_number: int,
@@ -567,9 +654,15 @@ def _nearest_standalone_intermediary(
     """Read the nearest exact uppercase standalone label used by request tables."""
 
     candidates: list[tuple[float, str]] = []
+    generic_labels = [
+        top
+        for top, text in lines
+        if top < table_top and _fold(_clean_cell(text).strip("| ")) == "intermediario"
+    ]
+    lower_bound = generic_labels[-1] if generic_labels else table_top - 90
     for top, text in lines:
         cleaned = _clean_cell(text).strip("| ")
-        if top >= table_top or table_top - top > 90:
+        if top >= table_top or top <= lower_bound:
             continue
         if not cleaned or _fold(cleaned) == "intermediario":
             continue
@@ -581,6 +674,17 @@ def _nearest_standalone_intermediary(
             continue
         candidates.append((top, cleaned))
     return candidates[-1][1] if candidates else ""
+
+
+def _clean_validity_period(value: str) -> str:
+    """Remove only isolated watermark letters before an exact validity range."""
+
+    text = _clean_cell(value)
+    match = re.fullmatch(
+        r"(?:[A-Z]\s+){1,4}(Da\s+\d{2}/\d{2}/\d{4}\s+a\s+\d{2}/\d{2}/\d{4})",
+        text,
+    )
+    return match.group(1) if match else text
 
 
 def _amount(value: str) -> str:
@@ -954,6 +1058,7 @@ def normalize_pdf(
                 active_reference_month = page_reference_month
             reference_month = page_reference_month or active_reference_month
             lines = _page_lines(page)
+            merged_correction_recovered = False
             for table_number, table in enumerate(page.find_tables(), start=1):
                 extracted_rows = _recover_terminal_valid_to(
                     page, table, table.extract()
@@ -967,6 +1072,45 @@ def normalize_pdf(
                     [_canonical_header(value) for value in rows[0]]
                 )
                 if _has_repeated_header_row(rows):
+                    fallback_sources = (
+                        []
+                        if merged_correction_recovered
+                        else _merged_correction_sources(page_text)
+                    )
+                    if fallback_sources:
+                        intermediary = _nearest_intermediary(
+                            lines, float(table.bbox[1])
+                        )
+                        for fallback_row, source in enumerate(
+                            fallback_sources, start=1
+                        ):
+                            provenance = {
+                                "source_page": page.page_number,
+                                "source_region": _region(table.bbox),
+                                "source_row_locator": (
+                                    f"page:{page.page_number}:table:{table_number}:"
+                                    f"merged-correction-row:{fallback_row}"
+                                ),
+                                "source_document_sha256": source_hash,
+                            }
+                            output, row_issues = _exposure_row(
+                                source,
+                                reference_month=reference_month,
+                                intermediary=intermediary,
+                                provenance=provenance,
+                            )
+                            collections["exposures"].append(output)
+                            if row_issues:
+                                issues.append(
+                                    {
+                                        "source_row_locator": provenance[
+                                            "source_row_locator"
+                                        ],
+                                        "issues": row_issues,
+                                    }
+                                )
+                        merged_correction_recovered = True
+                        continue
                     unclassified.append(
                         _unclassified_table(
                             page_number=page.page_number,
@@ -1049,6 +1193,10 @@ def normalize_pdf(
                             provenance=provenance,
                         )
                     else:
+                        if family == "information_requests":
+                            source["validity_period"] = _clean_validity_period(
+                                source.get("validity_period", "")
+                            )
                         output = {
                             **source,
                             "intermediary": intermediary,

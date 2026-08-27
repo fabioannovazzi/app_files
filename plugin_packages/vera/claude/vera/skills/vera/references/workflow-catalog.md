@@ -157,6 +157,16 @@ artifact. The studio-wide `comunicazione-professionale` workflow satisfies this
 requirement with its registered in-workstream equivalent because it cannot be
 stored in a single client's Studio Archive engagement.
 
+## Run-wide model-data evidence
+
+Every substantive professional workflow follows
+`model-data-report-contract.md` after its model-visible phases. The report is a
+cross-pipeline run artifact, not a specialist workflow: it records what was
+processed locally, what reached each model phase, what remained local, the
+evidence basis, and a possible narrower code path only when the run evidence
+supports one. Full-document or full-population model treatment remains a valid
+outcome when required by the professional purpose.
+
 ## Developer governance
 
 - `privacy-surface-review`: review and register model-context and external-data

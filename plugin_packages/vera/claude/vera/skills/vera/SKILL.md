@@ -128,6 +128,32 @@ choice of a connector, hosted-service action, or send/publish action is enough;
 do not ask again.
 
 
+## Run-level model-data report
+
+After every substantive Vera run, read and follow
+`references/model-data-report-contract.md`. This applies across client-bound,
+studio-wide, local, connected-source, ChatGPT, Claude, and Cowork workflows.
+Record every model-visible phase separately in the workflow's natural units,
+such as rows, columns, pages, files, messages, chunks, metrics, or evidence
+excerpts.
+
+When durable local output is available, build `model_data_report.json` and the
+localized `model_data_report.md` in the run's exact output folder with
+`scripts/model_data_report.py`. Bind exact model-payload files when the workflow
+has them. Otherwise use the contract's narrower evidence basis and do not claim
+provider-signed delivery proof. For a Studio Archive run, declare both reports
+as artifacts before completion. When the host cannot create files, show the same
+compact report in chat and state that no durable receipt was created.
+
+A complete document or population reaching the model can be the correct
+purpose-based minimization outcome. Never score it as a privacy failure. Show a
+possible code improvement only when the run evidence supports a narrower path
+and the report records how analytical quality will be protected. If no such
+conclusion is supportable, keep the internal assessment as `none_supported` or
+`not_assessed` and show no improvement suggestion to the user. The deterministic
+report builder validates counts, shapes, hashes, and status consistency; model
+and professional judgment decide semantic necessity.
+
 ## Client-bound work in Cowork
 
 Every client-bound workflow uses Studio Archive's portable ledger in the exact
@@ -487,8 +513,10 @@ data permit them.
    assumptions, or review choices.
 4. Before a long or write-heavy step, show an execution checkpoint with command
    intent, inputs, output folder, and expected artifacts.
-5. End with an Artifact Card. When useful, create `run_review.md` in the
-   output folder; never edit plugin source or generated ZIPs during a run.
+5. End with an Artifact Card. Include the compact model-data summary and link
+   `model_data_report.md` when a durable report was created. When useful, create
+   `run_review.md` in the output folder; never edit plugin source or
+   generated ZIPs during a run.
 
 ### Local DOCX visual review
 

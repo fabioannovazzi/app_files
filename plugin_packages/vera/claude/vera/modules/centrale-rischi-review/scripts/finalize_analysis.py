@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate metric-linked commentary and assemble the reviewed draft."""
+"""Validate evidence-linked commentary and assemble the reviewed draft."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Close metric references and write final reviewable outputs."""
+    """Close evidence references and write final reviewable outputs."""
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--analysis", required=True, type=Path)
@@ -79,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
                 {"path": markdown_path.name, "sha256": sha256_file(markdown_path)},
                 {"path": html_path.name, "sha256": sha256_file(html_path)},
             ],
-            "validation_boundary": "Schema and metric-reference closure were validated; source meaning, materiality, credit judgment and professional approval were not assigned.",
+            "validation_boundary": "Schema and evidence-reference closure were validated; source meaning, materiality, credit judgment and professional approval were not assigned.",
         },
     )
     LOGGER.info("Wrote reviewed-draft Centrale Rischi outputs.")
