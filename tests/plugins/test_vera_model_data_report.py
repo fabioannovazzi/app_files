@@ -163,6 +163,9 @@ def test_reduced_projection_builds_hash_bound_localized_report(tmp_path: Path) -
     assert report["evidence"]["files"][0]["bytes"] == payload_path.stat().st_size
     assert "Report sui dati arrivati al modello" in markdown
     assert "10,000 rows" in markdown
+    assert "Elaborato localmente" in markdown
+    assert "Mai visibile al modello" in markdown
+    assert "Le due misure si sovrappongono e non vanno sommate" in markdown
     assert "Possibile miglioramento" in markdown
     assert module.validate_model_data_report(report)["report_id"] == report["report_id"]
 

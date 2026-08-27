@@ -461,9 +461,10 @@ def test_all_product_directories_distinguish_area_headings_from_function_links()
 
 
 def test_product_roots_stop_after_the_function_directory() -> None:
-    for page_path in PRODUCT_PAGES.values():
+    for product, page_path in PRODUCT_PAGES.items():
         page = page_path.read_text(encoding="utf-8")
-        assert page.count("<section") == 2
+        expected_section_count = 3 if product == "vera" else 2
+        assert page.count("<section") == expected_section_count
         assert '<section id="workflow">' not in page
         assert "Funzioni disponibili" in page or "Available functions" in page
 
@@ -803,6 +804,13 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
     assert '@import url("./function-model-data.css");' in renderer_css
     assert "function-model-data__conclusion" in renderer
     assert "function-model-data__conclusion" in component_css
+    assert "function-model-data__report-note" in injector
+    assert "function-model-data__report-note" in renderer
+    assert "function-model-data__report-note" in component_css
+    assert 'page.product === "Vera"' in renderer
+    assert "#run-evidence" in injector
+    assert "#run-evidence" in renderer
+    assert 'attributeFilter: ["lang"]' in injector
     assert "pf-model-data" not in renderer
     assert "pf-model-data" not in renderer_css
     assert 'href="../function-model-data.css"' in bank_page
@@ -821,6 +829,22 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
                 or "product-function-page.js" in explanation
                 or 'class="function-model-data"' in explanation
             ), f"{destination}: does not use the shared model-data component"
+
+
+def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> None:
+    pages = sorted(SHARED.glob("*/index.html")) + [
+        SHARED / "bilancio-xbrl-it" / "prototype" / "index.html"
+    ]
+    standalone_pages = []
+    for page_path in pages:
+        page = page_path.read_text(encoding="utf-8")
+        if "data-model-data-workflow=" in page:
+            standalone_pages.append(page_path)
+            assert (
+                "function-model-data.js" in page
+            ), f"{page_path}: run-level report note is not loaded"
+
+    assert len(standalone_pages) == 19
 
 
 def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:

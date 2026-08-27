@@ -191,6 +191,80 @@
     .section-head__title { display: grid; gap: 14px; }
     .section-head > p { max-width: 660px; color: var(--blue); font-size: 1.075rem; }
 
+    .run-report {
+      padding-block: var(--space-section);
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1.18fr);
+      gap: clamp(44px, 9vw, 128px);
+      align-items: start;
+      border-bottom: 1px solid var(--cyan);
+      scroll-margin-top: 88px;
+    }
+
+    .run-report__intro { display: grid; gap: 18px; }
+    .run-report__intro h2 {
+      max-width: 11ch;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+    }
+    .run-report__detail { display: grid; gap: 28px; }
+    .run-report__copy {
+      max-width: 650px;
+      color: var(--blue);
+      font-size: clamp(1.08rem, 1.6vw, 1.3rem);
+      line-height: 1.55;
+    }
+    .run-report__link {
+      width: fit-content;
+      color: var(--navy);
+      font-size: 0.92rem;
+      font-weight: 650;
+      text-decoration-color: var(--cyan);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 5px;
+    }
+    .run-report__link:hover { color: var(--blue); }
+    .run-report__receipt {
+      padding-top: 24px;
+      border-top: 2px solid var(--navy);
+    }
+    .run-report__receipt-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 12px;
+      color: var(--blue);
+      font-size: 0.75rem;
+      font-weight: 650;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .run-report__receipt dl { margin: 0; }
+    .run-report__receipt-row {
+      min-height: 64px;
+      padding-block: 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: baseline;
+      border-top: 1px solid var(--cyan);
+    }
+    .run-report__receipt dt { color: var(--blue); }
+    .run-report__receipt dd {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1.08rem;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .run-report__note {
+      max-width: 64ch;
+      margin-top: 18px;
+      color: var(--blue);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
     .workstreams { display: grid; gap: clamp(64px, 9vw, 104px); }
     .workstream { display: grid; gap: 28px; scroll-margin-top: 88px; }
 
@@ -851,6 +925,7 @@
         grid-template-columns: 1fr;
         align-items: start;
       }
+      .run-report { grid-template-columns: minmax(0, 0.75fr) minmax(360px, 1.25fr); gap: 52px; }
       .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
       .bilancio-feature { grid-template-columns: 1fr; }
       .bilancio-feature__copy {
@@ -904,6 +979,8 @@
       .hero-install__actions { grid-template-columns: 1fr; }
       .vera-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
       .section-head { grid-template-columns: 1fr; gap: 20px; }
+      .run-report { grid-template-columns: 1fr; gap: 40px; }
+      .run-report__intro h2 { max-width: 14ch; }
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
       .workstream-head p { grid-column: 1; }
       .bilancio-steps { grid-template-columns: 1fr; }
@@ -1046,6 +1123,30 @@
       <figure class="vera-mark" aria-hidden="true">
         <img src="icon.svg" alt="">
       </figure>
+    </section>
+
+    <section class="run-report" id="model-data-report" aria-labelledby="model-data-report-title">
+      <div class="run-report__intro">
+        <span class="section-index" data-i18n="report.index">Per ogni lavoro</span>
+        <h2 id="model-data-report-title" data-i18n="report.title">Vera mostra che cosa è arrivato al modello.</h2>
+      </div>
+      <div class="run-report__detail">
+        <p class="run-report__copy" data-i18n="report.copy">Dopo ogni esecuzione sostanziale, un breve report distingue la fonte disponibile, ciò che il codice ha elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello. Se la lavorazione crea file, conserva anche una ricevuta JSON e una versione Markdown.</p>
+        <div class="run-report__receipt" aria-label="Esempio illustrativo di report" data-i18n-aria-label="report.exampleAria">
+          <div class="run-report__receipt-head">
+            <span data-i18n="report.example">Esempio illustrativo</span>
+            <span data-i18n="report.unit">Righe</span>
+          </div>
+          <dl>
+            <div class="run-report__receipt-row"><dt data-i18n="report.source">Disponibili nella fonte</dt><dd data-i18n="report.sourceValue">10.000</dd></div>
+            <div class="run-report__receipt-row"><dt data-i18n="report.processed">Elaborate localmente</dt><dd data-i18n="report.processedValue">10.000</dd></div>
+            <div class="run-report__receipt-row"><dt data-i18n="report.model">Visibili al modello</dt><dd data-i18n="report.modelValue">1.000</dd></div>
+            <div class="run-report__receipt-row"><dt data-i18n="report.local">Mai visibili al modello</dt><dd data-i18n="report.localValue">9.000</dd></div>
+          </dl>
+          <p class="run-report__note" data-i18n="report.note">Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.</p>
+        </div>
+        <a class="run-report__link" href="/data-handling?lang=it#run-evidence" data-data-handling-link data-data-handling-anchor="#run-evidence" data-i18n="report.link">Come leggere il report e i suoi limiti →</a>
+      </div>
     </section>
 
     <section class="section-block" id="core">
@@ -1268,6 +1369,22 @@
         "hero.eyebrow": "Assistente AI per commercialisti",
         "hero.title": "Vera",
         "hero.lead": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
+        "report.index": "Per ogni lavoro",
+        "report.title": "Vera mostra che cosa è arrivato al modello.",
+        "report.copy": "Dopo ogni esecuzione sostanziale, un breve report distingue la fonte disponibile, ciò che il codice ha elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello. Se la lavorazione crea file, conserva anche una ricevuta JSON e una versione Markdown.",
+        "report.exampleAria": "Esempio illustrativo di report",
+        "report.example": "Esempio illustrativo",
+        "report.unit": "Righe",
+        "report.source": "Disponibili nella fonte",
+        "report.sourceValue": "10.000",
+        "report.processed": "Elaborate localmente",
+        "report.processedValue": "10.000",
+        "report.model": "Visibili al modello",
+        "report.modelValue": "1.000",
+        "report.local": "Mai visibili al modello",
+        "report.localValue": "9.000",
+        "report.note": "Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.",
+        "report.link": "Come leggere il report e i suoi limiti →",
         "core.index": "Cosa può fare Vera",
         "core.title": "Funzioni disponibili",
         "core.copy": "Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.",
@@ -1432,6 +1549,22 @@
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
         "hero.lead": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
+        "report.index": "For every piece of work",
+        "report.title": "Vera shows what reached the model.",
+        "report.copy": "After every substantive run, a short report distinguishes the available source, what code processed locally, what was visible to the model, and what was never visible to the model. When the work creates files, it also keeps a JSON receipt and a Markdown version.",
+        "report.exampleAria": "Illustrative report example",
+        "report.example": "Illustrative example",
+        "report.unit": "Rows",
+        "report.source": "Available in the source",
+        "report.sourceValue": "10,000",
+        "report.processed": "Processed locally",
+        "report.processedValue": "10,000",
+        "report.model": "Visible to the model",
+        "report.modelValue": "1,000",
+        "report.local": "Never visible to the model",
+        "report.localValue": "9,000",
+        "report.note": "The locally processed total and the part never visible to the model overlap and must not be added together. Actual quantities depend on the workflow and professional purpose; for some work, the complete document or population is the correct minimum.",
+        "report.link": "How to read the report and its limits →",
         "core.index": "What Vera can do",
         "core.title": "Available functions",
         "core.copy": "Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.",
@@ -1596,6 +1729,22 @@
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
         "hero.lead": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
+        "report.index": "Pour chaque travail",
+        "report.title": "Vera montre ce qui est parvenu au modèle.",
+        "report.copy": "Après chaque exécution substantielle, un bref rapport distingue la source disponible, ce que le code a traité localement, ce qui a été visible par le modèle et ce qui n'a jamais été visible par le modèle. Lorsque le travail crée des fichiers, il conserve aussi un reçu JSON et une version Markdown.",
+        "report.exampleAria": "Exemple illustratif de rapport",
+        "report.example": "Exemple illustratif",
+        "report.unit": "Lignes",
+        "report.source": "Disponibles dans la source",
+        "report.sourceValue": "10 000",
+        "report.processed": "Traitées localement",
+        "report.processedValue": "10 000",
+        "report.model": "Visibles par le modèle",
+        "report.modelValue": "1 000",
+        "report.local": "Jamais visibles par le modèle",
+        "report.localValue": "9 000",
+        "report.note": "Le total traité localement et la partie jamais visible par le modèle se chevauchent et ne doivent pas être additionnés. Les quantités réelles dépendent du workflow et de la finalité professionnelle ; pour certains travaux, le document ou la population complète constitue le minimum approprié.",
+        "report.link": "Comprendre le rapport et ses limites →",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Fonctions disponibles",
         "core.copy": "Sélectionnez une fonction pour ouvrir sa page avec les entrées, la méthode, les sorties, les responsabilités et les informations sur les données transmises au modèle.",
@@ -1760,6 +1909,22 @@
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
         "hero.lead": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
+        "report.index": "Für jede Arbeit",
+        "report.title": "Vera zeigt, was das Modell erhalten hat.",
+        "report.copy": "Nach jeder substanziellen Ausführung unterscheidet ein kurzer Bericht die verfügbare Quelle, was der Code lokal verarbeitet hat, was für das Modell sichtbar war und was für das Modell nie sichtbar war. Wenn die Arbeit Dateien erzeugt, werden außerdem ein JSON-Beleg und eine Markdown-Version gespeichert.",
+        "report.exampleAria": "Veranschaulichendes Berichtsbeispiel",
+        "report.example": "Veranschaulichendes Beispiel",
+        "report.unit": "Zeilen",
+        "report.source": "In der Quelle verfügbar",
+        "report.sourceValue": "10.000",
+        "report.processed": "Lokal verarbeitet",
+        "report.processedValue": "10.000",
+        "report.model": "Für das Modell sichtbar",
+        "report.modelValue": "1.000",
+        "report.local": "Nie für das Modell sichtbar",
+        "report.localValue": "9.000",
+        "report.note": "Der lokal verarbeitete Gesamtumfang und der für das Modell nie sichtbare Teil überlappen und dürfen nicht addiert werden. Die tatsächlichen Mengen hängen vom Workflow und beruflichen Zweck ab; bei manchen Arbeiten ist das vollständige Dokument oder die vollständige Grundgesamtheit das richtige Minimum.",
+        "report.link": "Bericht und Grenzen verstehen →",
         "core.index": "Was Vera kann",
         "core.title": "Verfügbare Funktionen",
         "core.copy": "Wählen Sie eine Funktion, um ihre Seite mit Eingaben, Methode, Ergebnissen, Verantwortlichkeiten und Informationen zu den Modelldaten zu öffnen.",
@@ -1924,6 +2089,22 @@
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
         "hero.lead": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
+        "report.index": "Para cada trabajo",
+        "report.title": "Vera muestra qué llegó al modelo.",
+        "report.copy": "Después de cada ejecución sustancial, un breve informe distingue la fuente disponible, lo que el código procesó localmente, lo que fue visible para el modelo y lo que nunca fue visible para el modelo. Cuando el trabajo crea archivos, también conserva un recibo JSON y una versión Markdown.",
+        "report.exampleAria": "Ejemplo ilustrativo de informe",
+        "report.example": "Ejemplo ilustrativo",
+        "report.unit": "Filas",
+        "report.source": "Disponibles en la fuente",
+        "report.sourceValue": "10.000",
+        "report.processed": "Procesadas localmente",
+        "report.processedValue": "10.000",
+        "report.model": "Visibles para el modelo",
+        "report.modelValue": "1.000",
+        "report.local": "Nunca visibles para el modelo",
+        "report.localValue": "9.000",
+        "report.note": "El total procesado localmente y la parte nunca visible para el modelo se solapan y no deben sumarse. Las cantidades reales dependen del flujo y de la finalidad profesional; para algunos trabajos, el documento o la población completa es el mínimo correcto.",
+        "report.link": "Cómo leer el informe y sus límites →",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Funciones disponibles",
         "core.copy": "Selecciona una función para abrir su página con entradas, método, resultados, responsabilidades e información sobre los datos que llegan al modelo.",
@@ -2194,7 +2375,7 @@
       });
       document.querySelector("[data-home-link]").setAttribute("href", `/?lang=${lang}`);
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
-        link.setAttribute("href", `/data-handling?lang=${lang}`);
+        link.setAttribute("href", `/data-handling?lang=${lang}${link.dataset.dataHandlingAnchor || ""}`);
       });
       setVideos(lang);
 

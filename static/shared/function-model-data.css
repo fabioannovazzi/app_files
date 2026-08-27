@@ -61,6 +61,26 @@
   font: 620 var(--function-subsection-title-size, 1.125rem) / 1.25 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
 }
 
+.function-model-data__report-note {
+  max-width: 62ch;
+  margin: 0.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--model-data-line);
+  color: var(--model-data-ink);
+  font: 400 0.94rem/1.58 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+}
+
+.function-model-data__report-note a {
+  color: var(--model-data-blue);
+  font-weight: 620;
+  text-decoration-color: var(--model-data-line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.function-model-data__report-note a:hover { color: var(--model-data-ink); }
+.function-model-data__report-note a:focus-visible { outline: 3px solid var(--model-data-line); outline-offset: 3px; }
+
 @media (max-width: 760px) {
   .function-model-data {
     width: min(100vw - 28px, var(--function-content-width, 1120px));

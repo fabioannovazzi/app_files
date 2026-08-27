@@ -85,5 +85,6 @@
     function setLanguage(language){const lang=Object.hasOwn(copy,language)?language:'it';const values={...base,...copy[lang]};document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(el=>{if(Object.hasOwn(values,el.dataset.i18n))el.textContent=values[el.dataset.i18n]});document.querySelectorAll('[data-lang]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.lang===lang)));const url=new URL(window.location.href);url.searchParams.set('lang',lang);history.replaceState({},'',url)}
     document.querySelectorAll('[data-lang]').forEach(button=>button.addEventListener('click',()=>setLanguage(button.dataset.lang)));setLanguage(new URLSearchParams(window.location.search).get('lang')||'it');
   </script>
+  <script src="../function-model-data.js?v=20260827-run-report"></script>
 </body>
 </html>

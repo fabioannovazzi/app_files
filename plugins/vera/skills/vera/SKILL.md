@@ -118,7 +118,8 @@ After every substantive Vera run, read and follow
 studio-wide, local, connected-source, ChatGPT, Codex, and Cowork workflows.
 Record every model-visible phase separately in the workflow's natural units,
 such as rows, columns, pages, files, messages, chunks, metrics, or evidence
-excerpts.
+excerpts. Distinguish the full extent processed locally from the part that was
+never model-visible; those measures overlap and are not alternative categories.
 
 When durable local output is available, build `model_data_report.json` and the
 localized `model_data_report.md` in the run's exact output folder with

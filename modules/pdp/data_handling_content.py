@@ -99,6 +99,32 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "run-evidence",
+                "title": "Vera records the boundary of every substantive run.",
+                "paragraphs": [
+                    (
+                        "After every substantive Vera run, a compact report records each "
+                        "model-visible phase in the workflow's natural units. It distinguishes "
+                        "the source extent available, what code processed locally, what was "
+                        "visible to the model, which part was never visible to the model, why the "
+                        "context was needed, and the available evidence basis. When the host can "
+                        "write files, Vera "
+                        "keeps a JSON receipt and a Markdown version in that run's output; "
+                        "otherwise it shows the report in chat and says that no durable receipt "
+                        "was created. The locally processed total and the never-model-visible "
+                        "part overlap; they are not alternative categories to add together."
+                    ),
+                    (
+                        "A possible narrower code path appears only when evidence from the run "
+                        "supports it and identifies a safeguard for analytical quality. A "
+                        "complete relevant document or population can be the correct minimum. "
+                        "The report is not network monitoring, a provider attestation, a DPIA, "
+                        "a legal opinion, or GDPR certification; a recorded hash binds a receipt "
+                        "to bytes but does not prove provider-side delivery."
+                    ),
+                ],
+            },
+            {
                 "id": "connected-sources",
                 "title": "Connectors and sends use their own destination.",
                 "paragraphs": [
@@ -244,6 +270,33 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "run-evidence",
+                "title": "Vera registra il confine dei dati di ogni esecuzione sostanziale.",
+                "paragraphs": [
+                    (
+                        "Dopo ogni esecuzione sostanziale di Vera, un report compatto registra "
+                        "ogni fase visibile al modello nelle unità proprie del processo. Distingue "
+                        "l'estensione disponibile della fonte, ciò che il codice ha elaborato "
+                        "localmente, ciò che è stato visibile al modello, quale parte non è mai "
+                        "stata visibile al modello, il motivo del contesto e la base probatoria "
+                        "disponibile. Quando l'ambiente può scrivere file, Vera conserva una "
+                        "ricevuta JSON e una versione Markdown "
+                        "nell'output dell'esecuzione; altrimenti mostra il report in chat e dichiara "
+                        "che non è stata creata una ricevuta durevole. Il totale elaborato "
+                        "localmente e la parte mai visibile al modello si sovrappongono: non sono "
+                        "categorie alternative da sommare."
+                    ),
+                    (
+                        "Un possibile percorso di codice più ristretto compare soltanto quando le "
+                        "evidenze dell'esecuzione lo sostengono e indicano come proteggere la qualità "
+                        "analitica. Un documento o una popolazione rilevante completa può essere il "
+                        "minimo corretto. Il report non è monitoraggio di rete, attestazione del "
+                        "provider, DPIA, parere legale o certificazione GDPR; un hash registrato "
+                        "lega la ricevuta ai byte ma non prova la consegna lato provider."
+                    ),
+                ],
+            },
+            {
                 "id": "hosted-features",
                 "title": "Server di Mparanza LLC.",
                 "paragraphs": [
@@ -373,6 +426,34 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Ne placez jamais de mots de passe, clés API, cookies "
                         "d'authentification, jetons d'accès ou données de session dans "
                         "des prompts ou fichiers que l'environnement d'IA choisi peut lire."
+                    ),
+                ],
+            },
+            {
+                "id": "run-evidence",
+                "title": "Vera consigne le périmètre de chaque exécution substantielle.",
+                "paragraphs": [
+                    (
+                        "Après chaque exécution substantielle de Vera, un rapport compact consigne "
+                        "chaque phase visible par le modèle dans les unités propres au workflow. Il "
+                        "distingue l'étendue de la source disponible, ce que le code a traité "
+                        "localement, ce qui a été visible par le modèle, la partie qui n'a jamais été "
+                        "visible par le modèle, la raison du contexte et la base de preuve disponible. "
+                        "Lorsque l'environnement peut écrire des fichiers, Vera conserve un reçu "
+                        "JSON et une version Markdown "
+                        "dans le livrable de l'exécution ; sinon, elle affiche le rapport dans la "
+                        "conversation et indique qu'aucun reçu durable n'a été créé."
+                        " Le total traité localement et la partie jamais visible par le modèle se "
+                        "chevauchent : ce ne sont pas des catégories alternatives à additionner."
+                    ),
+                    (
+                        "Une voie de code potentiellement plus étroite n'apparaît que si les preuves "
+                        "de l'exécution la justifient et précisent comment protéger la qualité "
+                        "analytique. Un document ou une population pertinente complète peut constituer "
+                        "le minimum approprié. Le rapport n'est ni une surveillance réseau, ni une "
+                        "attestation du fournisseur, ni une AIPD, ni un avis juridique, ni une "
+                        "certification RGPD ; un hash consigné lie un reçu à des octets, mais ne "
+                        "prouve pas la transmission côté fournisseur."
                     ),
                 ],
             },
@@ -526,6 +607,34 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "run-evidence",
+                "title": "Vera dokumentiert die Datengrenze jeder substanziellen Ausführung.",
+                "paragraphs": [
+                    (
+                        "Nach jeder substanziellen Vera-Ausführung dokumentiert ein kompakter "
+                        "Bericht jede für das Modell sichtbare Phase in den natürlichen Einheiten "
+                        "des Workflows. Er unterscheidet den verfügbaren Quellumfang, die lokale "
+                        "Codeverarbeitung, die für das Modell sichtbaren Daten, den Teil, der für "
+                        "das Modell nie sichtbar war, den Zweck des Kontexts und die verfügbare "
+                        "Nachweisgrundlage. Kann die Umgebung Dateien schreiben, speichert Vera "
+                        "einen JSON-Beleg und eine Markdown-Version im Ergebnis dieser Ausführung; "
+                        "andernfalls zeigt sie den Bericht im Chat und erklärt, dass kein "
+                        "dauerhafter Beleg erstellt wurde. Der lokal verarbeitete Gesamtumfang "
+                        "und der für das Modell nie sichtbare Teil überlappen; sie sind keine "
+                        "alternativen Kategorien, die addiert werden dürfen."
+                    ),
+                    (
+                        "Ein möglicher engerer Codepfad erscheint nur, wenn die Nachweise der "
+                        "Ausführung ihn stützen und eine Sicherung der analytischen Qualität nennen. "
+                        "Ein vollständiges relevantes Dokument oder eine vollständige Grundgesamtheit "
+                        "kann das richtige Minimum sein. Der Bericht ist keine Netzwerküberwachung, "
+                        "Provider-Bestätigung, Datenschutz-Folgenabschätzung, Rechtsauskunft oder "
+                        "DSGVO-Zertifizierung; ein gespeicherter Hash bindet einen Beleg an Bytes, "
+                        "beweist aber keine Übermittlung auf Providerseite."
+                    ),
+                ],
+            },
+            {
                 "id": "connected-sources",
                 "title": "Connectoren und Sendefunktionen nutzen ihr eigenes Ziel.",
                 "paragraphs": [
@@ -667,6 +776,33 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Nunca incluyas contraseñas, claves de API, cookies de autenticación, "
                         "tokens de acceso ni datos de sesión en prompts o archivos que el "
                         "entorno de IA elegido pueda leer."
+                    ),
+                ],
+            },
+            {
+                "id": "run-evidence",
+                "title": "Vera registra el límite de datos de cada ejecución sustancial.",
+                "paragraphs": [
+                    (
+                        "Después de cada ejecución sustancial de Vera, un informe compacto registra "
+                        "cada fase visible para el modelo en las unidades propias del flujo. Distingue "
+                        "la extensión disponible de la fuente, lo que el código procesó localmente, "
+                        "lo que fue visible para el modelo, la parte que nunca fue visible para el "
+                        "modelo, la razón del contexto y la base probatoria disponible. Cuando el "
+                        "entorno puede escribir archivos, Vera conserva un recibo JSON y una versión "
+                        "Markdown en la salida "
+                        "de esa ejecución; de lo contrario, muestra el informe en el chat e indica "
+                        "que no se creó un recibo duradero. El total procesado localmente y la parte "
+                        "nunca visible para el modelo se solapan; no son categorías alternativas "
+                        "que deban sumarse."
+                    ),
+                    (
+                        "Una posible ruta de código más estrecha solo aparece cuando las evidencias "
+                        "de la ejecución la respaldan e identifican una protección para la calidad "
+                        "analítica. Un documento o una población relevante completa puede ser el "
+                        "mínimo correcto. El informe no es monitorización de red, atestación del "
+                        "proveedor, EIPD, dictamen jurídico ni certificación RGPD; un hash registrado "
+                        "vincula el recibo a los bytes, pero no prueba la entrega del lado del proveedor."
                     ),
                 ],
             },

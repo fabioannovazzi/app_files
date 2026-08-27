@@ -1287,6 +1287,30 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     assert 'data-i18n="privacy.routes.hosted.title"' not in page
 
 
+def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    assert 'id="model-data-report"' in page
+    assert 'data-i18n="report.title"' in page
+    assert 'data-data-handling-anchor="#run-evidence"' in page
+    assert "/data-handling?lang=it#run-evidence" in page
+    for phrase in (
+        "Vera mostra che cosa è arrivato al modello.",
+        "Vera shows what reached the model.",
+        "Vera montre ce qui est parvenu au modèle.",
+        "Vera zeigt, was das Modell erhalten hat.",
+        "Vera muestra qué llegó al modelo.",
+        "10.000",
+        "10,000",
+        "1.000",
+        "1,000",
+        "9.000",
+        "9,000",
+        "complete document or population is the correct minimum",
+    ):
+        assert phrase in page
+
+
 @pytest.mark.parametrize(
     (
         "title",

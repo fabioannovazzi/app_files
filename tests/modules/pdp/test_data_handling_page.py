@@ -175,6 +175,15 @@ def test_italian_data_handling_copy_states_the_shared_boundaries_directly() -> N
         "Se si caricano dati personali, è necessario avere un DPA con il provider "
         "del modello."
     )
+    assert sections["run-evidence"]["title"] == (
+        "Vera registra il confine dei dati di ogni esecuzione sostanziale."
+    )
+    assert "ricevuta JSON e una versione Markdown" in (
+        sections["run-evidence"]["paragraphs"][0]
+    )
+    assert "non prova la consegna lato provider" in (
+        sections["run-evidence"]["paragraphs"][1]
+    )
     assert sections["hosted-features"]["paragraphs"][0] == (
         "Il normale funzionamento dei plugin non invia né conserva sul server di "
         "Mparanza LLC i dati del cliente o del lavoro. Per il normale funzionamento "
@@ -378,6 +387,7 @@ def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
     assert set(sections) == {
         "local-execution",
         "workflow-boundaries",
+        "run-evidence",
         "connected-sources",
         "hosted-features",
     }
@@ -385,12 +395,31 @@ def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
         sections["local-execution"]["paragraphs"][1]
     )
     assert "does not duplicate" in sections["workflow-boundaries"]["paragraphs"][0]
+    assert "each model-visible phase" in sections["run-evidence"]["paragraphs"][0]
+    assert "A complete relevant document or population can be the correct minimum" in (
+        sections["run-evidence"]["paragraphs"][1]
+    )
+    assert "does not prove provider-side delivery" in (
+        sections["run-evidence"]["paragraphs"][1]
+    )
     assert "destination's terms and controls apply separately" in (
         sections["connected-sources"]["paragraphs"][0]
     )
     assert "reaches Mparanza-controlled systems" in (
         sections["hosted-features"]["paragraphs"][0]
     )
+
+
+@pytest.mark.parametrize("language", ("en", "it", "fr", "de", "es"))
+def test_data_handling_localizes_vera_run_evidence(language: str) -> None:
+    page = get_data_handling_content(language)
+    sections = {section["id"]: section for section in page["sections"]}
+    run_evidence = sections["run-evidence"]
+
+    assert "Vera" in run_evidence["title"]
+    assert len(run_evidence["paragraphs"]) == 2
+    assert "JSON" in run_evidence["paragraphs"][0]
+    assert "Markdown" in run_evidence["paragraphs"][0]
 
 
 def test_data_handling_template_does_not_render_a_function_register() -> None:
