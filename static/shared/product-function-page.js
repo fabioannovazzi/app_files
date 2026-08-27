@@ -24,6 +24,8 @@
       promptTitle: "Prompt iniziale",
       modelDataLabel: "Trattamento dei dati",
       modelDataTitle: "Quali dati arrivano al modello",
+      modelDataReport: "Alla fine di ogni esecuzione sostanziale, Vera mostra un breve report con ciò che è stato elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello.",
+      modelDataReportLink: "Come leggere il report →",
       source: "Codice sorgente",
       dataPolicy: "Gestione dei dati",
       language: "Lingua",
@@ -43,6 +45,8 @@
       promptTitle: "Starting prompt",
       modelDataLabel: "Data handling",
       modelDataTitle: "What data reaches the model",
+      modelDataReport: "At the end of every substantive run, Vera shows a short report separating what was processed locally, what was visible to the model, and what was never visible to the model.",
+      modelDataReportLink: "How to read the report →",
       source: "Source code",
       dataPolicy: "Data handling",
       language: "Language",
@@ -62,6 +66,8 @@
       promptTitle: "Prompt initial",
       modelDataLabel: "Traitement des données",
       modelDataTitle: "Quelles données parviennent au modèle",
+      modelDataReport: "À la fin de chaque exécution substantielle, Vera affiche un bref rapport distinguant ce qui a été traité localement, ce qui a été visible par le modèle et ce qui n'a jamais été visible par le modèle.",
+      modelDataReportLink: "Comprendre le rapport →",
       source: "Code source",
       dataPolicy: "Traitement des données",
       language: "Langue",
@@ -81,6 +87,8 @@
       promptTitle: "Startprompt",
       modelDataLabel: "Datenverarbeitung",
       modelDataTitle: "Welche Daten das Modell erhält",
+      modelDataReport: "Am Ende jeder substanziellen Ausführung zeigt Vera einen kurzen Bericht darüber, was lokal verarbeitet wurde, was für das Modell sichtbar war und was für das Modell nie sichtbar war.",
+      modelDataReportLink: "Bericht verstehen →",
       source: "Quellcode",
       dataPolicy: "Datenverarbeitung",
       language: "Sprache",
@@ -100,6 +108,8 @@
       promptTitle: "Prompt inicial",
       modelDataLabel: "Tratamiento de datos",
       modelDataTitle: "Qué datos recibe el modelo",
+      modelDataReport: "Al final de cada ejecución sustancial, Vera muestra un breve informe que separa lo procesado localmente, lo visible para el modelo y lo que nunca fue visible para el modelo.",
+      modelDataReportLink: "Cómo leer el informe →",
       source: "Código fuente",
       dataPolicy: "Tratamiento de datos",
       language: "Idioma",
@@ -201,6 +211,7 @@
           <div class="function-model-data__body function-model-data__paragraphs">
             ${text.modelDataConclusion ? `<h3 class="function-model-data__conclusion">${text.modelDataConclusion}</h3>` : ""}
             ${modelDataParagraphs.map((paragraph) => `<p class="function-model-data__copy">${paragraph}</p>`).join("")}
+            ${page.product === "Vera" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="https://mparanza.com/data-handling?lang=${language}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
           </div>
         </div>
       </section>
@@ -208,7 +219,7 @@
     <footer class="pf-footer">
       <div class="pf-footer__inner">
         <span>${isShared ? text.name : `${page.product} · ${text.name}`}</span>
-        <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="/data-handling?lang=${language}">${ui.dataPolicy}</a></div>
+        <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="https://mparanza.com/data-handling?lang=${language}">${ui.dataPolicy}</a></div>
       </div>
     </footer>
   `;

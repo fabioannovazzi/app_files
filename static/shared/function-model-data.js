@@ -9,34 +9,46 @@
       label: "Trattamento dei dati",
       title: "Quali dati arrivano al modello",
       placeholder: "Informazioni specifiche per questa funzione in preparazione.",
+      report: "Alla fine di ogni esecuzione sostanziale, Vera mostra un breve report con ciò che è stato elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello.",
+      reportLink: "Come leggere il report →",
     },
     en: {
       label: "Data handling",
       title: "What data reaches the model",
       placeholder: "Function-specific information is being prepared.",
+      report: "At the end of every substantive run, Vera shows a short report separating what was processed locally, what was visible to the model, and what was never visible to the model.",
+      reportLink: "How to read the report →",
     },
     fr: {
       label: "Traitement des données",
       title: "Quelles données parviennent au modèle",
       placeholder: "Les informations spécifiques à cette fonction sont en préparation.",
+      report: "À la fin de chaque exécution substantielle, Vera affiche un bref rapport distinguant ce qui a été traité localement, ce qui a été visible par le modèle et ce qui n'a jamais été visible par le modèle.",
+      reportLink: "Comprendre le rapport →",
     },
     de: {
       label: "Datenverarbeitung",
       title: "Welche Daten das Modell erhält",
       placeholder: "Funktionsspezifische Informationen werden derzeit vorbereitet.",
+      report: "Am Ende jeder substanziellen Ausführung zeigt Vera einen kurzen Bericht darüber, was lokal verarbeitet wurde, was für das Modell sichtbar war und was für das Modell nie sichtbar war.",
+      reportLink: "Bericht verstehen →",
     },
     es: {
       label: "Tratamiento de datos",
       title: "Qué datos recibe el modelo",
       placeholder: "Se está preparando la información específica de esta función.",
+      report: "Al final de cada ejecución sustancial, Vera muestra un breve informe que separa lo procesado localmente, lo visible para el modelo y lo que nunca fue visible para el modelo.",
+      reportLink: "Cómo leer el informe →",
     },
   };
 
   const params = new URLSearchParams(window.location.search);
-  const requestedLanguage = (params.get("lang") || document.documentElement.lang || "en")
-    .slice(0, 2)
-    .toLowerCase();
-  const language = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "en";
+  const getLanguage = () => {
+    const requestedLanguage = (document.documentElement.lang || params.get("lang") || "en")
+      .slice(0, 2)
+      .toLowerCase();
+    return Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "en";
+  };
   const paragraphSeparator = /\n\s*\n/;
 
   const renderParagraphs = (target) => {
@@ -77,6 +89,9 @@
         if (paragraphSeparator.test(container.textContent)) {
           renderParagraphs(container);
         }
+        if (!container.querySelector("[data-model-data-report-note]")) {
+          appendReportNotes();
+        }
       });
       observer.observe(container, { childList: true, characterData: true, subtree: true });
     });
@@ -98,7 +113,7 @@
 
     const pathParts = window.location.pathname.split("/").filter(Boolean);
     const workflow = pathParts.at(-2) || "unknown";
-    const text = copy[language];
+    const text = copy[getLanguage()];
     const section = document.createElement("section");
     section.className = "function-model-data";
     section.dataset.modelDataWorkflow = workflow;
@@ -124,15 +139,50 @@
     paragraph.className = "function-model-data__copy";
     paragraph.textContent = text.placeholder;
 
+    const body = document.createElement("div");
+    body.className = "function-model-data__body function-model-data__paragraphs";
+    body.append(paragraph);
+
     heading.append(label, title);
-    head.append(heading, paragraph);
+    head.append(heading, body);
     section.append(head);
     main.append(section);
+  };
+
+  const updateReportNotes = () => {
+    const language = getLanguage();
+    const text = copy[language];
+    document.querySelectorAll("[data-model-data-report-note]").forEach((paragraph) => {
+      const link = document.createElement("a");
+      link.href = `https://mparanza.com/data-handling?lang=${language}#run-evidence`;
+      link.textContent = text.reportLink;
+      paragraph.replaceChildren(document.createTextNode(`${text.report} `), link);
+    });
+  };
+
+  const appendReportNotes = () => {
+    document.querySelectorAll("[data-model-data-status]").forEach((section) => {
+      if (section.querySelector("[data-model-data-report-note]")) return;
+      const body = section.querySelector(".function-model-data__body");
+      if (!body) return;
+      const paragraph = document.createElement("p");
+      paragraph.className = "function-model-data__report-note";
+      paragraph.dataset.modelDataReportNote = "";
+      body.append(paragraph);
+    });
+    updateReportNotes();
   };
 
   const initialize = () => {
     appendPlaceholder();
     initializeParagraphs();
+    appendReportNotes();
+
+    const languageObserver = new MutationObserver(updateReportNotes);
+    languageObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["lang"],
+    });
   };
 
   const loadNavigation = () => {
