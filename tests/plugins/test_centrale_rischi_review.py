@@ -1619,6 +1619,11 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert "debitori ceduti" in page
     assert "summary totals" in page
     assert "OCR" not in page
+    assert (
+        'href="https://centrale-rischi-synthetic.fabio3143.chatgpt.site/"'
+        in page
+    )
+    assert 'id="example"' in page
     assert manifest["workstream"] == "centrale-rischi-review"
     assert manifest["external_boundaries"] == []
     assert "ceded debtors" in manifest["model_context"]["classes"][1]["content"]
