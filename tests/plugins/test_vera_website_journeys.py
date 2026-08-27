@@ -1303,8 +1303,14 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
         "Vera muestra qué llegó al modelo.",
         '"report.sourceValue": "100"',
         '"report.processedValue": "100"',
-        '"report.modelValue": "10"',
+        '"report.mappingRowsValue": "10"',
+        '"report.mappingColumnsValue": "4"',
+        '"report.resultRowsValue": "12"',
+        '"report.resultMetricsValue": "53"',
         '"report.localValue": "90"',
+        '"report.identityColumnsValue": "2"',
+        "Righe mensili ricevute per il commento",
+        "Monthly rows received for commentary",
         "complete document or population is the correct minimum",
     ):
         assert phrase in page
