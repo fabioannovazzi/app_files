@@ -252,8 +252,8 @@ SPECS = (
         "management_pack",
     ),
     IconSpec(
-        "startup-business-plan",
-        "Vera · Startup Business Plan",
+        "business-planning",
+        "Mparanza · Business Planning",
         "#002060",
         "#D89B3D",
         "business_plan",

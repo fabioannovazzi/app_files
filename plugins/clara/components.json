@@ -2,6 +2,7 @@
   "schema_version": 1,
   "plugins": [
     "attribute-reporting",
+    "business-planning",
     "distribution-analysis",
     "funnel-analysis",
     "mix-contribution-analysis",

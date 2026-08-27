@@ -19,7 +19,7 @@ SHARED_ROOT = ROOT / "static" / "shared"
 VERA_PLUGIN_ROOT = ROOT / "plugins" / "vera"
 VERA_SITE_MODULES = {
     "archive-organization",
-    "startup-business-plan",
+    "business-planning",
     "new-client",
     "journal-sampling",
     "check-entries",
@@ -547,6 +547,10 @@ def test_vera_module_pages_present_an_outcome_led_connected_journey(
     page_path: Path,
 ) -> None:
     page = page_path.read_text(encoding="utf-8")
+    if "product-function-page.js" in page:
+        assert 'data-function-page="business-planning"' in page
+        assert "product-function-pages.js" in page
+        return
     prompt_nodes = re.findall(
         r'<code\b(?=[^>]*(?:id="prompt-example"|data-journey="prompt.text"))[^>]*>',
         page,
@@ -567,6 +571,9 @@ def test_vera_module_pages_present_an_outcome_led_connected_journey(
 )
 def test_pipeline_labels_omit_redundant_product_names(page_path: Path) -> None:
     page = page_path.read_text(encoding="utf-8")
+    if "product-function-page.js" in page:
+        assert 'data-function-page="business-planning"' in page
+        return
     breadcrumb = re.search(
         r'<(?P<tag>nav|p)\b[^>]*class="(?:journey-)?breadcrumb"[^>]*>'
         r"(?P<body>.*?)</(?P=tag)>",
@@ -822,7 +829,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
-        "../startup-business-plan/index.html",
+        "../business-planning/index.html",
         "../variance-analysis/index.html",
         "../management-control-pack/index.html",
         "../centrale-rischi-review/index.html",
@@ -911,7 +918,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
-        "Business plan per startup",
+        "Business plan contabile e finanziario",
         "Analisi scostamenti",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
@@ -934,7 +941,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.entries.title": "Controllo scritture",
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
-        "module.startupBusinessPlan.title": "Business plan per startup",
+        "module.businessPlanning.title": "Business plan contabile e finanziario",
         "module.variance.title": "Analisi scostamenti",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
@@ -961,7 +968,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "financial-analysis": "Analisi finanziaria e due diligence",
         "management-control-pack": "Pacchetto controllo di gestione",
         "centrale-rischi-review": "Analisi Centrale Rischi",
-        "startup-business-plan": "Business plan per startup",
+        "business-planning": "Business plan contabile e finanziario",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
         "new-client": "Apertura del fascicolo cliente",
@@ -1049,7 +1056,7 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     "page_path",
     (
         SHARED_ROOT / "financial-analysis" / "index.html",
-        SHARED_ROOT / "startup-business-plan" / "index.html",
+        SHARED_ROOT / "business-planning" / "index.html",
         SHARED_ROOT / "management-control-pack" / "index.html",
         SHARED_ROOT / "centrale-rischi-review" / "index.html",
         SHARED_ROOT / "new-client" / "index.html",

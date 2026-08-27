@@ -1,0 +1,60 @@
+{
+  "plugin": "business-planning",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "startup-financial-plan",
+      "prompt": "Prepare an integrated financial business plan for this early-revenue startup with P&L, cash flow, balance sheet, scenarios and funding needs.",
+      "required_signals": [
+        "startup",
+        "financial business plan",
+        "funding needs"
+      ]
+    },
+    {
+      "id": "established-company-financial-plan",
+      "prompt": "Build the accounting and financial business plan for this established manufacturer from its historical accounts and confirmed operating assumptions.",
+      "required_signals": [
+        "established manufacturer",
+        "financial business plan",
+        "historical accounts"
+      ]
+    },
+    {
+      "id": "startup-strategic-plan",
+      "prompt": "Prepare the strategic and commercial business plan for this pre-revenue startup, including market evidence, options, milestones and risks.",
+      "required_signals": [
+        "strategic and commercial business plan",
+        "pre-revenue startup",
+        "market evidence"
+      ]
+    },
+    {
+      "id": "established-company-strategic-plan",
+      "prompt": "Prepare the strategic business plan for this established industrial group, including positioning, growth initiatives, operating model and decision implications.",
+      "required_signals": [
+        "strategic business plan",
+        "established industrial group",
+        "growth initiatives"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "sales-plan-only",
+      "prompt": "Apply these volume and FX assumptions to the monthly sales Actuals."
+    },
+    {
+      "id": "historical-analysis-only",
+      "prompt": "Analyse the historical profitability and working capital in these accounts."
+    },
+    {
+      "id": "concordato-plan",
+      "prompt": "Review this concordato preventivo plan and creditor proposal."
+    },
+    {
+      "id": "generic-advisory-framing",
+      "prompt": "Help me define the scope and deliverables for this advisory assignment."
+    }
+  ]
+}

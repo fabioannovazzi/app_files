@@ -110,11 +110,12 @@
     "avviso-intake": [["vera", "area-matters"]],
     "bandi-agevolazioni": [["vera", "area-research"]],
     "bilancio-xbrl-it": [["vera", "area-matters"]],
-    "startup-business-plan": [["vera", "area-analysis"]],
+    "business-planning": [["vera", "area-analysis"]],
     "browser-automation": [["vera", "area-matters"]],
     "centrale-rischi-review": [["vera", "area-analysis"]],
     "check-entries": [["vera", "area-accounting"]],
     "clara-brand-fit": [["clara", "area-retail"]],
+    "clara-business-planning": [["clara", "area-analysis"]],
     "clara-advisory-planning": [["clara", "area-analysis"]],
     "clara-data-analysis": [["clara", "area-analysis"]],
     "clara-advisory-deliverable-validator": [["clara", "area-deliverables"]],
@@ -160,12 +161,12 @@
       de: "Web-Automatisierung",
       es: "Automatización web",
     },
-    "startup-business-plan": {
-      it: "Business plan per startup",
-      en: "Prepare a startup business plan",
-      fr: "Préparer le business plan d’une startup",
-      de: "Businessplan für ein Start-up erstellen",
-      es: "Preparar el plan de negocio de una startup",
+    "business-planning": {
+      it: "Business plan contabile e finanziario",
+      en: "Accounting and financial business plan",
+      fr: "Business plan comptable et financier",
+      de: "Rechnungslegungs- und Finanz-Businessplan",
+      es: "Plan de negocio contable y financiero",
     },
     "studio-archive": {
       it: "Ricerca nei documenti, nelle email e in WhatsApp",
@@ -177,6 +178,13 @@
   };
 
   const canonicalNames = {
+    "clara-business-planning": {
+      it: "Business plan strategico e commerciale",
+      en: "Strategic and commercial business plan",
+      fr: "Business plan stratégique et commercial",
+      de: "Strategischer und kommerzieller Businessplan",
+      es: "Plan de negocio estratégico y comercial",
+    },
     "clara-advisory-planning": {
       it: "Pianificare un incarico di consulenza",
       en: "Plan an advisory assignment",
@@ -379,7 +387,6 @@
 
   const literalHeadingKeys = {
     "archive-organization": { journey: "inputsResult", method: "processingMethod", storage: "documentSources", policy: "proposedStructure", review: "approval", "review.sees": "planContents", "review.safety": "excludedChanges", prompt: "startingPrompt" },
-    "startup-business-plan": { method: "method", assumptions: "assumptions", statements: "calculationAndReconciliation", outputs: "outputs", prompt: "startingPrompt" },
     "deep-research-validator": { proof: "sourceVerification", next: "relatedFunction", starter: "startingPrompt", details: "technicalDetails" },
     "financial-analysis": { packs: "analysisInputs", fdd: "dueDiligenceCalculations", method: "calculationMethod", controls: "calculationControls", boundary: "professionalReview", prompt: "startingPrompt", related: "relatedFunctions" },
     "new-client": { journey: "newClientWorkflow", prepare: "initialFileReview", "prepare.result": "missingItems", "prepare.videos": "video", italy: "italyChecks", relationship: "engagementFile", documents: "documentPlan", aml: "amlAssessment", proof: "fileStatus", prompt: "startingPrompt" },
@@ -635,7 +642,7 @@
       setHeading('[data-i18n="nav.details"]', "details", currentLanguage);
     }
 
-    if (key === "startup-business-plan" || key === "financial-analysis" || key === "sales-plan") {
+    if (key === "financial-analysis" || key === "sales-plan") {
       setHeading('[data-i18n="nav.method"]', "method", currentLanguage);
     }
 

@@ -846,7 +846,7 @@ def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> No
                 "function-model-data.js" in page
             ), f"{page_path}: run-level report note is not loaded"
 
-    assert len(standalone_pages) == 20
+    assert len(standalone_pages) == 19
 
 
 def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
@@ -861,6 +861,8 @@ def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
         "quesito-legale-fiscale",
         "comunicazione-professionale",
         "presenza-digitale-studio",
+        "business-planning",
+        "clara-business-planning",
     ):
         values = _javascript_string_values(
             _function_page_copy(function_copy, page_name), "modelData"
@@ -874,7 +876,6 @@ def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
         "prompt-optimizer",
         "registro-imprese-sari",
         "report-builder",
-        "startup-business-plan",
         "sales-plan",
     ):
         page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")

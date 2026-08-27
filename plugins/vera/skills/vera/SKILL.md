@@ -310,17 +310,19 @@ them without changing the capability catalog:
   must keep the result draft pending professional review. No ERP connector,
   hosted service, background synchronization, or automatic publication is
   part of this workflow;
-- `startup-business-plan`: client-bound integrated forward planning for a
-  startup or new venture, including pre-revenue and early-revenue stages. It
-  uses reviewed pilot evidence and early actuals when available and otherwise
-  begins from confirmed opening facts and assumptions without
-  treating missing history as zero. Model-led and professional judgment own
-  venture-stage assessment, evidence meaning, assumption selection, scenario
-  design, risks, narrative, and approval. Established-company strategic
-  planning is outside this Vera workflow. Deterministic code owns canonical Decimal arithmetic, linked
-  P&L, cash-flow and balance-sheet roll-forwards, reference closure,
-  reconciliation, funding-gap calculation, hashes, and replay receipts. It
-  creates no balancing plug and remains draft pending professional review;
+- `business-planning`: client-bound accounting and financial business planning
+  for a startup, new venture, or established company. The company stage is a
+  reviewed plain-language context, not a deterministic route. Vera owns the
+  historical or opening accounting base, confirmed assumptions, linked P&L,
+  cash flow and balance sheet, working capital, debt and equity, scenarios,
+  funding requirement and reconciliation. Model-led and professional judgment
+  own evidence meaning, assumption and scenario design, risks, narrative and
+  approval. Deterministic code owns canonical Decimal arithmetic, roll-forwards,
+  reference closure, reconciliation, funding-gap calculation, hashes and replay
+  receipts. It creates no balancing plug and remains draft pending professional
+  review. A reviewed Clara handoff may enter as strategic evidence, but Vera
+  must expose divergences and must not silently change Clara's assumptions or
+  recommendation;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
   perimeter, currency, sign convention, period/scenario mappings, and source

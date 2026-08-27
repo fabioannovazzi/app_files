@@ -28,6 +28,10 @@
     "due-diligence",
     "evidence-synthesis",
     "business-analysis",
+    "business-planning",
+    "business-plan",
+    "startup-planning",
+    "established-company-planning",
     "market-analysis",
     "customer-analysis",
     "competitive-analysis",
@@ -74,7 +78,7 @@
   "interface": {
     "displayName": "Clara",
     "shortDescription": "AI companion for consultants",
-    "longDescription": "Clara helps consultants plan advisory assignments as reviewable contracts and direct the living case. She states the current answer, keeps evidence, assumptions and contradictions visible, chooses the next decision-relevant work, and revises the position when research, data, interviews or partner judgement change it.\n\nShe analyzes markets, customers, products, competitors and operations, then creates presentations, reports and reviewable workpapers. She also validates completed deliverables against contract and evidence, creates grounded research videos, and supports Retailer Signals and Brand Fit.\n\nProfessional judgement stays with the consultant.",
+    "longDescription": "Clara helps consultants plan advisory assignments as reviewable contracts and direct the living case. She states the current answer, keeps evidence, assumptions and contradictions visible, chooses the next decision-relevant work, and revises the position when research, data, interviews or partner judgement change it.\n\nShe prepares the strategic and commercial business plan of startups and established companies, covering market evidence, positioning, options, recommendations, initiatives, milestones, KPIs and risks. She also analyzes markets, customers, products, competitors and operations, creates presentations, reports and reviewable workpapers, validates completed deliverables, and supports grounded research videos, Retailer Signals and Brand Fit.\n\nProfessional judgement stays with the consultant.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [

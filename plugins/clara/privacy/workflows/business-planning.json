@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "workflow": "business-planning",
+  "display_name": "Business Planning — strategic and commercial lens",
+  "governed_paths": [
+    "components.json",
+    "skills/business-planning/SKILL.md",
+    "repository/plugins/business-planning/.codex-plugin/plugin.json",
+    "repository/plugins/business-planning/skills/business-planning/SKILL.md",
+    "repository/plugins/business-planning/references/case-contract.md",
+    "repository/plugins/business-planning/scripts/strategic_planning_core.py",
+    "repository/plugins/business-planning/scripts/run_strategic_plan.py"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "business-planning-strategic-intake",
+        "purpose": "Understand the company context, planning decision, evidence, assumptions, market, business model, positioning and operating questions",
+        "content": "The selected model may read the full assignment and selected evidence for a startup, new venture or established company, including names and entities, company-stage description, historical and current business facts, market and customer evidence, competitors, products, channels, pricing, organization, operations, financial summaries, management statements, assumptions, constraints, audience, horizon, open questions and any reviewed Vera business-planning handoff. Real company, customer, supplier, employee, founder, lender or investor information may be present when professionally necessary. Clara applies no automatic anonymization or pseudonymization and does not classify company stage with deterministic rules."
+      },
+      {
+        "id": "business-planning-strategic-case-and-handoff",
+        "purpose": "Author and review the strategic-commercial plan and prepare the bounded Vera handoff",
+        "content": "The model authors evidence-linked findings, options, benefits and drawbacks, recommendation, conditions, initiatives, owners, milestones, KPIs, risks, responses, decision implications and open questions. The local finalizer receives only the reviewed structured case and checks declared lens, shape, identifiers and reference closure; it does not score a market or select a strategy. The normal model context and Vera handoff exclude evidence source_ref values, raw source documents, absolute paths and original filenames while preserving company context, assumptions, recommendation, initiatives, risks, questions and limitations needed for counterpart review."
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-08-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "f5549a37f94387ff6bb8e8b809f79cec88f5f3f7b3c40407649fa5d6c5ccb46a"
+  }
+}
