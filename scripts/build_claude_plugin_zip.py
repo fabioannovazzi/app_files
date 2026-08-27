@@ -374,6 +374,7 @@ CLARA_COWORK_INCLUDED_SKILLS = frozenset(
         "advisory-case-director",
         "attribute-reporting",
         "brand-fit",
+        "business-planning",
         "claim-basis-map",
         "clara",
         "html-deck",

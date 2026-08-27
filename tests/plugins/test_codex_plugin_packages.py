@@ -20,7 +20,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
     "browser-automation",
-    "startup-business-plan",
+    "business-planning",
     "check-entries",
     "concordato-plan-review",
     "comunicazione-professionale",
@@ -72,7 +72,6 @@ VERA_DISCOVERY_TERMS = (
 VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
-    Path("static/shared/startup-business-plan/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
@@ -305,7 +304,6 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
-    ROOT / "static" / "shared" / "startup-business-plan" / "index.html",
     ROOT / "static" / "shared" / "management-control-pack" / "index.html",
     ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -329,7 +327,6 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
     ROOT / "static" / "shared" / "financial-analysis" / "index.html",
-    ROOT / "static" / "shared" / "startup-business-plan" / "index.html",
     ROOT / "static" / "shared" / "management-control-pack" / "index.html",
     ROOT / "static" / "shared" / "centrale-rischi-review" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -1447,7 +1444,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "bandi-agevolazioni",
         "browser-automation",
-        "startup-business-plan",
+        "business-planning",
         "comunicazione-professionale",
         "management-control-pack",
         "centrale-rischi-review",
@@ -2607,6 +2604,7 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
             if plugin_root.name == "clara" and skill_file.parent.name in {
                 "attribute-reporting",
                 "brand-fit",
+                "business-planning",
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
@@ -3523,7 +3521,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
-        "../startup-business-plan/index.html",
+        "../business-planning/index.html",
         "../variance-analysis/index.html",
         "../management-control-pack/index.html",
         "../centrale-rischi-review/index.html",
@@ -3725,14 +3723,14 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "module.plan.title" in plan.group(0)
 
     business_plan = re.search(
-        r'<a[^>]+id="startup-business-plan".*?</a>',
+        r'<a[^>]+id="business-planning".*?</a>',
         page,
         flags=re.DOTALL,
     )
     assert business_plan is not None
-    assert 'href="../startup-business-plan/index.html"' in business_plan.group(0)
+    assert 'href="../business-planning/index.html"' in business_plan.group(0)
     assert "data-module-link" in business_plan.group(0)
-    assert "module.startupBusinessPlan.title" in business_plan.group(0)
+    assert "module.businessPlanning.title" in business_plan.group(0)
 
     management_pack = re.search(
         r'<a[^>]+id="management-control-pack".*?</a>',
@@ -4106,7 +4104,6 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
     ("page_name", "workflow_id"),
     (
         ("financial-analysis", "financial-analysis"),
-        ("startup-business-plan", "startup-business-plan"),
         ("management-control-pack", "management-control-pack"),
         ("centrale-rischi-review", "centrale-rischi-review"),
         ("sales-plan", "sales-plan"),
@@ -4125,6 +4122,26 @@ def test_accounting_process_page_ends_with_model_data_block(
     assert 'data-model-data-status="relevant"' in main
     assert main.rstrip().endswith("</section>")
     assert main.rindex('class="function-model-data"') > main.rindex('id="prompt"')
+
+
+def test_business_planning_pages_use_distinct_product_lenses_and_shared_renderer() -> None:
+    vera_page = (
+        ROOT / "static" / "shared" / "business-planning" / "index.html"
+    ).read_text(encoding="utf-8")
+    clara_page = (
+        ROOT / "static" / "shared" / "clara-business-planning" / "index.html"
+    ).read_text(encoding="utf-8")
+    copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'data-function-page="business-planning"' in vera_page
+    assert 'data-function-page="clara-business-planning"' in clara_page
+    assert "Accounting and financial business plan" in copy
+    assert "Strategic and commercial business plan" in copy
+    assert "startups and established companies" in copy
+    assert "never selects the strategy" in copy
+    assert "without a balancing plug" in copy
 
 
 def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
@@ -4431,7 +4448,7 @@ def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
         "concordato-plan-review",
         "deep-research-validator",
         "financial-analysis",
-        "startup-business-plan",
+        "business-planning",
         "management-control-pack",
         "centrale-rischi-review",
         "journal-bank-reconciliation",
@@ -4754,7 +4771,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     assert 'id="data-handling"' not in page
     assert 'id="presentations"' not in page
     assert 'id="videos"' not in page
-    assert page.count('class="function-link"') == 10
+    assert page.count('class="function-link"') == 11
     for stale_snippet in (
         "Clara prepares the work. The judgment remains yours.",
         "Clara prepara il lavoro. Il giudizio resta tuo.",
@@ -5216,8 +5233,8 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
-        "startup-business-plan": (
-            "https://mparanza.com/static/shared/startup-business-plan/index.html?lang=it"
+        "business-planning": (
+            "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
         ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
@@ -5428,7 +5445,7 @@ def test_clara_public_page_uses_vera_visual_system() -> None:
     assert 'href="clara-page.css?v=' in page
     assert 'src="icon.svg"' in page
     assert 'class="function-directory"' in page
-    assert page.count('class="function-link"') == 10
+    assert page.count('class="function-link"') == 11
     for color in ("#002060", "#0070C0", "#00B0F0", "#FFFFFF"):
         assert color in stylesheet
     for black in ("#000000", "#171816"):
