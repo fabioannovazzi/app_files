@@ -206,7 +206,7 @@ Hosted services
 
 The FastAPI service supports authentication, Hosted Interview, Hosted Voice,
 the Attribute Reporting/Brand Fit bridge, plugin change requests, and the
-public/static site. Dataset analysis, journal checking, slide work, and
+optional server-stamped Vera run receipts, plus the public/static site. Dataset analysis, journal checking, slide work, and
 reporting run through the plugins and local deterministic scripts rather than
 web execution routes.
 
@@ -319,6 +319,28 @@ and the file to `0600`, and populate it locally. Never commit live credentials.
 - `REDIS_URL`: Connection string (for example `redis://localhost:6379/0`) used to store magic
   link tokens. Recommended when running multiple workers so links are shared across processes.
 
+### Vera run-receipt signing
+
+The optional run-receipt service timestamps and signs only a random receipt ID,
+the Vera version, and the digest of the local model-data report. It does not
+receive or store the report or case content. Configure the hosted service with:
+
+- `VERA_RUN_RECEIPT_SIGNING_PRIVATE_KEY`: base64url encoding, without padding,
+  of a 32-byte Ed25519 private key. The service fails closed when this is absent.
+- `VERA_RUN_RECEIPT_SIGNING_KEY_ID`: optional stable 1–64 character identifier;
+  when omitted, the service derives one from the public key.
+- `VERA_RUN_RECEIPT_VERIFY_KEYS_JSON`: optional JSON object mapping retained key
+  IDs to base64url raw Ed25519 public keys. Keep every retired public key here so
+  old receipts remain verifiable after private-key rotation.
+- `VERA_RUN_RECEIPT_DB_PATH`: optional SQLite path for one-process local use.
+  Production can instead use the shared Postgres configuration selected by
+  `PDP_DATABASE_URL`, or by `PDP_STORE_BACKEND=postgres` plus `DATABASE_URL`.
+
+Generate a deployment key outside the repository, place only the private value
+in deployment secrets, and retain its public key for rotation. Never commit the
+private key. The public verification route is
+`/verify/vera-run-receipt/{receipt_id}?sha256={report_digest}`.
+
 When `AUTH_ENABLED` is off, the remaining variables are ignored.
 
 ### Email delivery (Resend)
@@ -389,6 +411,11 @@ processes share the configuration:
 - `AUTH_MAGIC_LINK_DEFAULT_REDIRECT` (optional)
 - `AUTH_MAGIC_LINK_STORE_PATH` (optional)
 - `REDIS_URL` (recommended when running multiple workers)
+- `VERA_RUN_RECEIPT_SIGNING_PRIVATE_KEY` (required for receipt stamping)
+- `VERA_RUN_RECEIPT_SIGNING_KEY_ID` (optional)
+- `VERA_RUN_RECEIPT_VERIFY_KEYS_JSON` (required when verifying receipts signed
+  by retired keys)
+- `VERA_RUN_RECEIPT_DB_PATH` (optional local SQLite fallback)
 
 `GOOGLE_ALLOWED_DOMAINS` may be left empty to admit accounts from any domain,
 but `GOOGLE_CLIENT_ID` is always required when authentication is enabled.

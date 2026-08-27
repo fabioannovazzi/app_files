@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "service_id": "run-receipt-stamping",
+  "display_name": "Server-stamped run receipts",
+  "governed_paths": [
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/vera/SKILL.md",
+    "skills/vera/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "anthropic-cowork"
+  ],
+  "external_boundaries": [
+    {
+      "id": "automatic-server-stamped-run-receipt",
+      "kind": "hosted_service",
+      "destination": "Mparanza's fixed HTTPS Vera run-receipt endpoint and public verification page",
+      "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
+      "content": "After the studio has enabled this setting, each substantive run sends exactly schema version, one random per-run receipt UUID, the installed Vera version, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest.",
+      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible.",
+      "activation": "automatic_after_prior_connection",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Automatic transmission occurs only while the private firm-level receipt setting is enabled; enabling it requires a separate command that records the studio's acceptance of the minimal server record.",
+        "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields.",
+        "The server rejects additional request fields, assigns its own timestamp, signs the complete retained record with Ed25519, stores only the minimal proof fields, applies request-size and rate limits, and fails closed when signing or verification keys are unavailable.",
+        "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "minimal-receipt-request-allow-list",
+      "control": "Both client and server enforce the same closed receipt request schema, and the server's Pydantic model forbids every unregistered field.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py"
+      ],
+      "on_violation": "The request or response is rejected before a proof is accepted or written locally."
+    },
+    {
+      "id": "fixed-receipt-destination",
+      "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py"
+      ],
+      "on_violation": "The client aborts before making a network request."
+    },
+    {
+      "id": "private-studio-receipt-setting",
+      "control": "The optional studio setting is stored locally with mode 0600 and must be explicitly enabled before automatic stamping begins.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py"
+      ],
+      "on_violation": "Without the enabled setting, the ordinary report build performs no receipt-service network call."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "9a0dbbeafe8e716d518f809815ba01969d4e7227d7c54f8d04bba536852085c8"
+  }
+}

@@ -63,6 +63,8 @@ from modules.research_video_voice.api import router as research_video_voice_rout
 from modules.research_video_voice.api import (
     site_router as research_video_voice_site_router,
 )
+from modules.run_receipts.api import api_router as run_receipts_api_router
+from modules.run_receipts.api import site_router as run_receipts_site_router
 from modules.utilities.logging_config import configure_logging
 from modules.utilities.secrets_loader import load_env_from_secrets_file
 from modules.utilities.session_cleanup import cleanup_sessions
@@ -1553,6 +1555,8 @@ def create_app() -> FastAPI:
     app.include_router(hosted_interviews_site_router)
     app.include_router(hosted_interviews_public_router)
     app.include_router(change_requests_router)
+    app.include_router(run_receipts_site_router)
+    app.include_router(run_receipts_api_router)
     protected_site_routers = [
         (
             case_notes_voice_site_router,

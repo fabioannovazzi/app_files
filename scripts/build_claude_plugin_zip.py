@@ -74,6 +74,7 @@ COWORK_OMITTED_PATHS = frozenset(
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
     }
 )
+COWORK_SHARED_SERVICES = ("run-receipt-stamping",)
 PROJECTION_ONLY_PATHS = frozenset(
     {
         "marketplace_skill_instructions.json",
@@ -977,7 +978,12 @@ name, filename, folder, or document content.""",
         r"(?ms)^Shared Vera routes are registered once in "
         r"`\.\./\.\./privacy/services/`\..*?"
         r"^Ask for confirmation only",
-        "Ask for confirmation only",
+        (
+            "The Cowork package registers `run-receipt-stamping` once in "
+            "`../../privacy/services/`; its manifest describes the optional "
+            "firm-level Mparanza receipt boundary.\n\n"
+            "Ask for confirmation only"
+        ),
         text,
         count=1,
     )
@@ -1548,7 +1554,13 @@ def _project_vera_components(content: bytes) -> bytes:
     shared_services = payload.get("shared_services")
     if not isinstance(shared_services, list):
         raise ValueError("Vera components.json must contain a shared_services list")
-    payload["shared_services"] = []
+    missing_services = set(COWORK_SHARED_SERVICES) - set(shared_services)
+    if missing_services:
+        raise ValueError(
+            "Vera components.json is missing Cowork shared services: "
+            f"{sorted(missing_services)}"
+        )
+    payload["shared_services"] = list(COWORK_SHARED_SERVICES)
     return _json_bytes(payload)
 
 
@@ -1845,8 +1857,12 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
         isinstance(workstream, str) and workstream for workstream in workstreams
     ):
         raise ValueError("Projected Vera components.json must list workstreams")
-    if components.get("shared_services") != []:
-        raise ValueError("Cowork must not register OpenAI-only shared services")
+    shared_services = components.get("shared_services")
+    if shared_services != list(COWORK_SHARED_SERVICES):
+        raise ValueError(
+            "Cowork must register only its supported shared services: "
+            f"{list(COWORK_SHARED_SERVICES)}"
+        )
     expected_manifests = {
         f"privacy/workstreams/{workstream}.json" for workstream in workstreams
     }
@@ -1862,8 +1878,20 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
             "Cowork privacy workstream manifests do not match projected "
             f"components; missing={missing}, extra={extra}"
         )
-    if any(name.startswith("privacy/services/") for name in entries):
-        raise ValueError("Cowork must not package OpenAI-only service manifests")
+    expected_service_manifests = {
+        f"privacy/services/{service_id}.json" for service_id in shared_services
+    }
+    actual_service_manifests = {
+        name
+        for name in entries
+        if name.startswith("privacy/services/") and name.endswith(".json")
+    }
+    if actual_service_manifests != expected_service_manifests:
+        raise ValueError(
+            "Cowork privacy service manifests do not match projected components; "
+            f"expected={sorted(expected_service_manifests)}, "
+            f"actual={sorted(actual_service_manifests)}"
+        )
 
     validator = _load_privacy_validator()
     with tempfile.TemporaryDirectory(prefix="vera-cowork-privacy-") as temporary_name:
@@ -1928,6 +1956,66 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
                 wrapper=wrapper,
                 vera_root=projected_root,
                 shared_paths=payload.get("governed_shared_paths", []),
+            )
+            projected_manifest = _json_bytes(payload)
+            entries[manifest_name] = projected_manifest
+            (projected_root / manifest_name).write_bytes(projected_manifest)
+
+        for service_id in shared_services:
+            manifest_name = f"privacy/services/{service_id}.json"
+            payload = json.loads(entries[manifest_name])
+            governed_paths = payload.get("governed_paths")
+            if not isinstance(governed_paths, list) or not all(
+                isinstance(path, str) and path for path in governed_paths
+            ):
+                raise ValueError(
+                    f"{service_id}: projected service governed_paths are invalid"
+                )
+            payload["governed_paths"] = [
+                path for path in governed_paths if (projected_root / path).exists()
+            ]
+            if not payload["governed_paths"]:
+                raise ValueError(
+                    f"{service_id}: projected package has no governed client implementation"
+                )
+            payload.pop("governed_repository_paths", None)
+            payload["runtime_profiles"] = ["anthropic-cowork"]
+            for boundary in payload.get("external_boundaries", []):
+                if not isinstance(boundary, dict):
+                    raise ValueError(
+                        f"{service_id}: projected service boundary is invalid"
+                    )
+                boundary["runtime_profiles"] = ["anthropic-cowork"]
+            projected_controls: list[dict[str, object]] = []
+            for control in payload.get("security_controls", []):
+                if not isinstance(control, dict):
+                    raise ValueError(
+                        f"{service_id}: projected security control is invalid"
+                    )
+                implementations = control.get("implemented_by")
+                if not isinstance(implementations, list):
+                    raise ValueError(
+                        f"{service_id}: projected security implementations are invalid"
+                    )
+                local_implementations = [
+                    path
+                    for path in implementations
+                    if isinstance(path, str)
+                    and not path.startswith("repository:")
+                    and any(
+                        path == governed or path.startswith(governed.rstrip("/") + "/")
+                        for governed in payload["governed_paths"]
+                    )
+                ]
+                if not local_implementations:
+                    continue
+                control["implemented_by"] = local_implementations
+                projected_controls.append(control)
+            payload["security_controls"] = projected_controls
+            payload["review"]["source_fingerprint"] = validator._fingerprint(
+                projected_root,
+                payload["governed_paths"],
+                vera_root=projected_root,
             )
             projected_manifest = _json_bytes(payload)
             entries[manifest_name] = projected_manifest
@@ -2536,7 +2624,10 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative.startswith("evals/"):
             continue
-        if relative.startswith("privacy/services/"):
+        if relative.startswith("privacy/services/") and relative not in {
+            f"privacy/services/{service_id}.json"
+            for service_id in COWORK_SHARED_SERVICES
+        }:
             continue
         if relative.startswith("modules/") and Path(relative).name == "README.md":
             continue

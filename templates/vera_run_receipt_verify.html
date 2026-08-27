@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>{{ copy.title }}</title>
+  <style>
+    :root { color-scheme: light; font-family: "Instrument Sans", system-ui, sans-serif; color: #111827; background: #f7f8fa; }
+    body { margin: 0; }
+    main { width: min(760px, calc(100% - 40px)); margin: 64px auto; background: #fff; border: 1px solid #d9dee8; padding: clamp(28px, 5vw, 56px); }
+    .eyebrow { color: #0057b8; font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { color: #002060; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; margin: 14px 0 22px; }
+    .status { border-left: 4px solid #008f73; padding: 14px 18px; background: #f1faf7; font-weight: 650; }
+    .status--failed { border-color: #a43131; background: #fff5f5; }
+    dl { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 2fr); gap: 0; margin: 32px 0; border-top: 1px solid #d9dee8; }
+    dt, dd { margin: 0; padding: 13px 0; border-bottom: 1px solid #d9dee8; }
+    dt { color: #526070; }
+    dd { overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, monospace; }
+    p { line-height: 1.6; }
+    a { color: #0057b8; }
+    @media (max-width: 580px) { dl { grid-template-columns: 1fr; } dt { border-bottom: 0; padding-bottom: 3px; } dd { padding-top: 3px; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Mparanza · Vera</p>
+  <h1>{{ copy.title }}</h1>
+  {% if verified %}
+    <p class="status">{{ copy.verified }}</p>
+    <dl>
+      <dt>{{ copy.id }}</dt><dd>{{ receipt.receipt_id }}</dd>
+      <dt>{{ copy.time }}</dt><dd>{{ receipt.stamped_at }}</dd>
+      <dt>{{ copy.version }}</dt><dd>{{ receipt.plugin_version }}</dd>
+      <dt>{{ copy.digest }}</dt><dd>{{ receipt.report_sha256 }}</dd>
+      <dt>{{ copy.key }}</dt><dd>{{ receipt.algorithm }} · {{ receipt.key_id }}</dd>
+      <dt>{{ copy.signature }}</dt><dd>{{ copy.yes }}</dd>
+    </dl>
+  {% else %}
+    <p class="status status--failed">{{ copy.missing }}</p>
+  {% endif %}
+  <p>{{ copy.limit }}</p>
+  <p>{{ copy.boundary }} <a href="/data-handling?lang={{ lang }}#run-evidence">{{ copy.link }}</a>.</p>
+</main>
+</body>
+</html>

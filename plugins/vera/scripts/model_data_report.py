@@ -955,6 +955,21 @@ def main(argv: list[str] | None = None) -> int:
         markdown_path = output_dir / "model_data_report.md"
         _write_once_or_identical(json_path, _canonical_bytes(report))
         _write_once_or_identical(markdown_path, markdown.encode("utf-8"))
+        from notarized_run_receipt import (
+            NotarizedRunReceiptError,
+            stamp_model_data_report_if_enabled,
+        )
+
+        try:
+            server_receipt = stamp_model_data_report_if_enabled(
+                json_path,
+                output_dir=output_dir,
+                plugin_root=Path(__file__).resolve().parents[1],
+            )
+        except NotarizedRunReceiptError as exc:
+            raise ModelDataReportError(
+                "local report written, but server receipt stamping failed: " + str(exc)
+            ) from exc
         sys.stdout.write(
             json.dumps(
                 {
@@ -962,6 +977,7 @@ def main(argv: list[str] | None = None) -> int:
                     "report_id": report["report_id"],
                     "json_path": str(json_path),
                     "markdown_path": str(markdown_path),
+                    "server_receipt": server_receipt,
                 },
                 ensure_ascii=False,
                 sort_keys=True,

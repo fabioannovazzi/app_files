@@ -122,6 +122,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "a legal opinion, or GDPR certification; a recorded hash binds a receipt "
                         "to bytes but does not prove provider-side delivery."
                     ),
+                    (
+                        "A firm can separately enable server-stamped receipts. Once enabled, "
+                        "each durable run automatically sends Mparanza only a random receipt "
+                        "ID, the Vera version, and the digest of the local report. Mparanza "
+                        "adds its server time and Ed25519 signature and retains those proof "
+                        "fields without the report, client data, filenames, source content, "
+                        "or source-document hashes. The resulting HTML can be sent to a "
+                        "customer, printed as PDF, and checked on the public verification page. "
+                        "This proves existence, server time, and report integrity only; it does "
+                        "not independently prove who submitted the digest."
+                    ),
                 ],
             },
             {
@@ -294,6 +305,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "provider, DPIA, parere legale o certificazione GDPR; un hash registrato "
                         "lega la ricevuta ai byte ma non prova la consegna lato provider."
                     ),
+                    (
+                        "Lo studio può attivare separatamente le ricevute con marca server. Dopo "
+                        "l'attivazione, ogni esecuzione durevole invia automaticamente a Mparanza "
+                        "soltanto un identificativo casuale della ricevuta, la versione di Vera e "
+                        "il digest del report locale. Mparanza aggiunge data server e firma "
+                        "Ed25519 e conserva quei soli campi di prova, senza report, dati del "
+                        "cliente, nomi dei file, contenuti o hash dei documenti fonte. L'HTML "
+                        "risultante può essere inviato al cliente, salvato come PDF e verificato "
+                        "nella pagina pubblica. Prova soltanto esistenza, data server e integrità "
+                        "del report; non prova autonomamente chi ha presentato il digest."
+                    ),
                 ],
             },
             {
@@ -454,6 +476,18 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "attestation du fournisseur, ni une AIPD, ni un avis juridique, ni une "
                         "certification RGPD ; un hash consigné lie un reçu à des octets, mais ne "
                         "prouve pas la transmission côté fournisseur."
+                    ),
+                    (
+                        "Le cabinet peut activer séparément les reçus horodatés par le serveur. "
+                        "Après activation, chaque exécution durable envoie automatiquement à "
+                        "Mparanza uniquement un identifiant de reçu aléatoire, la version de Vera "
+                        "et le hash du rapport local. Mparanza ajoute l'heure serveur et une "
+                        "signature Ed25519 et ne conserve que ces champs de preuve, sans rapport, "
+                        "données client, noms de fichiers, contenus ni hash des documents sources. "
+                        "Le reçu HTML peut être envoyé au client, enregistré en PDF et vérifié sur "
+                        "la page publique. Il prouve uniquement l'existence, l'heure serveur et "
+                        "l'intégrité du rapport, sans prouver de manière indépendante l'auteur "
+                        "de l'envoi du hash."
                     ),
                 ],
             },
@@ -632,6 +666,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "DSGVO-Zertifizierung; ein gespeicherter Hash bindet einen Beleg an Bytes, "
                         "beweist aber keine Übermittlung auf Providerseite."
                     ),
+                    (
+                        "Die Kanzlei kann servergestempelte Belege separat aktivieren. Danach "
+                        "sendet jede dauerhafte Ausführung automatisch nur eine zufällige "
+                        "Beleg-ID, die Vera-Version und den Hash des lokalen Berichts an "
+                        "Mparanza. Mparanza ergänzt Serverzeit und Ed25519-Signatur und speichert "
+                        "nur diese Nachweisfelder, nicht den Bericht, Mandantendaten, Dateinamen, "
+                        "Inhalte oder Hashes der Quelldokumente. Der HTML-Beleg kann an den "
+                        "Mandanten gesendet, als PDF gespeichert und öffentlich geprüft werden. "
+                        "Er belegt nur Existenz, Serverzeit und Berichtsintegrität und weist den "
+                        "Absender des Hashes nicht unabhängig nach."
+                    ),
                 ],
             },
             {
@@ -803,6 +848,18 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "mínimo correcto. El informe no es monitorización de red, atestación del "
                         "proveedor, EIPD, dictamen jurídico ni certificación RGPD; un hash registrado "
                         "vincula el recibo a los bytes, pero no prueba la entrega del lado del proveedor."
+                    ),
+                    (
+                        "El despacho puede activar por separado los recibos sellados por el "
+                        "servidor. Una vez activados, cada ejecución duradera envía "
+                        "automáticamente a Mparanza solo un identificador de recibo aleatorio, "
+                        "la versión de Vera y el hash del informe local. Mparanza añade la hora "
+                        "del servidor y una firma Ed25519 y conserva únicamente esos campos de "
+                        "prueba, sin informe, datos del cliente, nombres de archivo, contenidos "
+                        "ni hashes de documentos fuente. El HTML puede enviarse al cliente, "
+                        "guardarse como PDF y verificarse públicamente. Solo prueba existencia, "
+                        "hora del servidor e integridad del informe; no prueba de forma "
+                        "independiente quién presentó el hash."
                     ),
                 ],
             },
