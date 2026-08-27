@@ -154,7 +154,7 @@
     const text = copy[language];
     document.querySelectorAll("[data-model-data-report-note]").forEach((paragraph) => {
       const link = document.createElement("a");
-      link.href = `/data-handling?lang=${language}#run-evidence`;
+      link.href = `https://mparanza.com/data-handling?lang=${language}#run-evidence`;
       link.textContent = text.reportLink;
       paragraph.replaceChildren(document.createTextNode(`${text.report} `), link);
     });

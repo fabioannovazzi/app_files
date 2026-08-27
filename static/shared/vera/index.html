@@ -1145,7 +1145,7 @@
           </dl>
           <p class="run-report__note" data-i18n="report.note">Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.</p>
         </div>
-        <a class="run-report__link" href="/data-handling?lang=it#run-evidence" data-data-handling-link data-data-handling-anchor="#run-evidence" data-i18n="report.link">Come leggere il report e i suoi limiti →</a>
+        <a class="run-report__link" href="https://mparanza.com/data-handling?lang=it#run-evidence" data-data-handling-link data-data-handling-anchor="#run-evidence" data-i18n="report.link">Come leggere il report e i suoi limiti →</a>
       </div>
     </section>
 
@@ -1340,7 +1340,7 @@
       <div class="footer-identity">
         <nav class="footer-links" aria-label="Informazioni" data-i18n-aria-label="footer.linksLabel">
           <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Codice sorgente</a>
-          <a href="/data-handling?lang=it" data-data-handling-link data-i18n="footer.data">Gestione dei dati</a>
+          <a href="https://mparanza.com/data-handling?lang=it" data-data-handling-link data-i18n="footer.data">Gestione dei dati</a>
         </nav>
       </div>
     </div>
@@ -2375,7 +2375,7 @@
       });
       document.querySelector("[data-home-link]").setAttribute("href", `/?lang=${lang}`);
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
-        link.setAttribute("href", `/data-handling?lang=${lang}${link.dataset.dataHandlingAnchor || ""}`);
+        link.setAttribute("href", `https://mparanza.com/data-handling?lang=${lang}${link.dataset.dataHandlingAnchor || ""}`);
       });
       setVideos(lang);
 

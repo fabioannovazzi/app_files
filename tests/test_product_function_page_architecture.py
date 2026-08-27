@@ -810,6 +810,8 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
     assert 'page.product === "Vera"' in renderer
     assert "#run-evidence" in injector
     assert "#run-evidence" in renderer
+    assert "https://mparanza.com/data-handling?lang=${language}" in injector
+    assert "https://mparanza.com/data-handling?lang=${language}" in renderer
     assert 'attributeFilter: ["lang"]' in injector
     assert "pf-model-data" not in renderer
     assert "pf-model-data" not in renderer_css

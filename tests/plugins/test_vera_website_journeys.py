@@ -1293,7 +1293,8 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     assert 'id="model-data-report"' in page
     assert 'data-i18n="report.title"' in page
     assert 'data-data-handling-anchor="#run-evidence"' in page
-    assert "/data-handling?lang=it#run-evidence" in page
+    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in page
+    assert "https://mparanza.com/data-handling?lang=${lang}" in page
     for phrase in (
         "Vera mostra che cosa è arrivato al modello.",
         "Vera shows what reached the model.",

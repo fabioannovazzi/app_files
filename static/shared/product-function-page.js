@@ -211,7 +211,7 @@
           <div class="function-model-data__body function-model-data__paragraphs">
             ${text.modelDataConclusion ? `<h3 class="function-model-data__conclusion">${text.modelDataConclusion}</h3>` : ""}
             ${modelDataParagraphs.map((paragraph) => `<p class="function-model-data__copy">${paragraph}</p>`).join("")}
-            ${page.product === "Vera" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="/data-handling?lang=${language}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
+            ${page.product === "Vera" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="https://mparanza.com/data-handling?lang=${language}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
           </div>
         </div>
       </section>
@@ -219,7 +219,7 @@
     <footer class="pf-footer">
       <div class="pf-footer__inner">
         <span>${isShared ? text.name : `${page.product} · ${text.name}`}</span>
-        <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="/data-handling?lang=${language}">${ui.dataPolicy}</a></div>
+        <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="https://mparanza.com/data-handling?lang=${language}">${ui.dataPolicy}</a></div>
       </div>
     </footer>
   `;
