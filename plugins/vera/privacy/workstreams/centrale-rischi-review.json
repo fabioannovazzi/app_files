@@ -31,7 +31,7 @@
       {
         "id": "centrale-rischi-post-calculation-review",
         "purpose": "Interpret exact calculated CR facts and identify observations, hypotheses, questions, missing evidence and limitations",
-        "content": "A bounded model_context.json containing metrics, maturity and risk-category summaries, up to 36 monthly rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, guarantors of the holder, ceded debtors, other risk information, summary totals, inframonthly events and information requests, together with coverage, controls and limitations. The bounded auxiliary rows may include intermediary, guarantor, guaranteed-party or ceded-debtor names, dates, categories, types, reasons, amounts, source pages, row locators and extraction confidence. Raw source populations, absolute paths, original filenames and source-document hashes are excluded from those auxiliary-row projections by default.",
+        "content": "A bounded model_context.json containing status, entity name, currency, latest reference month, metrics, maturity and risk-category summaries, up to 50 category-movement rows, up to 36 monthly rows, up to 20 previous-record review rows, the top 20 calculated overruns, top 20 exposure-linked guarantees, up to 20 supplied prejudicial events, and up to 20 rows from each separate population of guarantees received, guarantors of the holder, ceded debtors, other risk information, summary totals, inframonthly events and information requests, together with coverage, controls, assurance levels and limitations. Bounded previous-record, exception and auxiliary rows may include intermediary, guarantor, guaranteed-party or ceded-debtor names, dates, categories, relationship or record status, types, reasons, amounts, source pages, row locators and extraction confidence. The current raw source population, previous records beyond the bounded projection, absolute paths, original filenames and source-document hashes are excluded by default.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -68,11 +68,11 @@
     },
     {
       "id": "bounded-post-calculation-model-context",
-      "control": "The deterministic post-calculation projection excludes raw source populations, absolute paths and original filenames and exposes only calculated metrics, bounded series, bounded exceptions, up to 20 rows from each separate PDF information population, coverage, controls, lineage IDs and limitations. Source-document hashes are excluded from projected auxiliary rows."
+      "control": "The deterministic post-calculation projection excludes the current raw source population, previous records beyond the bounded review projection, absolute paths and original filenames. It exposes only calculated metrics, bounded category movements and monthly series, bounded previous-record and exception rows, up to 20 rows from each separate PDF information population, coverage, controls, assurance levels and limitations. Source-document hashes are excluded from projected rows."
     },
     {
-      "id": "metric-reference-closure",
-      "control": "Final observations and hypotheses must reference existing metric IDs. The finalizer validates shape and reference closure while preserving draft_pending_professional_review and never assigning source meaning, materiality, causation, credit judgment or approval."
+      "id": "evidence-reference-closure",
+      "control": "Final observations and hypotheses must reference an existing metric ID, control ID or source-row locator present in the bounded model context. The finalizer validates shape and evidence-reference closure while preserving draft_pending_professional_review and never assigning source meaning, materiality, causation, credit judgment or approval."
     },
     {
       "id": "acquisition-adapter-separation",
@@ -84,9 +84,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-25",
+    "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fd324c4de4f2f5c39817513ddcd486174239a1052c00df74126c37eace885499"
+    "source_fingerprint": "0f7e7fb49cead98dffdc30b1cdb964ce0f55354e4c7b885388ba11ca2265fe4c"
   }
 }
