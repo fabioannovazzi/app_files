@@ -96,6 +96,11 @@
         "vera_assurance"
       ]
     },
+    "startup-business-plan": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "financial-analysis": {
       "module_roots": [
         "vera_assurance",

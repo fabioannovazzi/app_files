@@ -18,6 +18,7 @@ SHARED_ROOT = ROOT / "static" / "shared"
 VERA_PLUGIN_ROOT = ROOT / "plugins" / "vera"
 VERA_SITE_MODULES = {
     "archive-organization",
+    "startup-business-plan",
     "new-client",
     "journal-sampling",
     "check-entries",
@@ -789,7 +790,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 28
+    expected_module_count = 29
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -820,6 +821,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
+        "../startup-business-plan/index.html",
         "../variance-analysis/index.html",
         "../management-control-pack/index.html",
         "../centrale-rischi-review/index.html",
@@ -908,6 +910,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
+        "Business plan per startup",
         "Analisi scostamenti",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
@@ -930,6 +933,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.entries.title": "Controllo scritture",
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
+        "module.startupBusinessPlan.title": "Business plan per startup",
         "module.variance.title": "Analisi scostamenti",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
@@ -956,6 +960,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "financial-analysis": "Analisi finanziaria e due diligence",
         "management-control-pack": "Pacchetto controllo di gestione",
         "centrale-rischi-review": "Analisi Centrale Rischi",
+        "startup-business-plan": "Business plan per startup",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
         "new-client": "Apertura del fascicolo cliente",
@@ -976,7 +981,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 28
+    assert len(labels) == 29
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1043,6 +1048,7 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     "page_path",
     (
         SHARED_ROOT / "financial-analysis" / "index.html",
+        SHARED_ROOT / "startup-business-plan" / "index.html",
         SHARED_ROOT / "management-control-pack" / "index.html",
         SHARED_ROOT / "centrale-rischi-review" / "index.html",
         SHARED_ROOT / "new-client" / "index.html",
@@ -1492,7 +1498,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 28
+    expected_module_link_count = 29
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

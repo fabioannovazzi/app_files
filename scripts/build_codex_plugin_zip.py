@@ -166,6 +166,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "registro-imprese-sari": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
     "report-builder": "modules/report-builder/skills/report-builder/SKILL.md",
     "sales-plan": "modules/sales-plan/skills/sales-plan/SKILL.md",
+    "startup-business-plan": "modules/startup-business-plan/skills/startup-business-plan/SKILL.md",
     "variance-analysis": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }

@@ -1,0 +1,71 @@
+{
+  "schema_version": 3,
+  "workstream": "startup-business-plan",
+  "display_name": "Startup Business Plan",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "references",
+    "scripts",
+    "assets"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "startup-business-plan-evidence-and-assumption-intake",
+        "purpose": "Understand the startup stage, planning objective, evidence, opening position, assumptions, scenarios, audience, and missing information before calculation",
+        "content": "User instructions and the evidence selected for the startup plan may reach the model, including the venture stage, problem and market validation, pilot evidence or early actuals when available, opening balances, available funding, commercial and operating assumptions, investment and working-capital facts, financing terms, external evidence, audience requirements, and open questions. Real company, customer, supplier, employee, founder, lender, or investor information may be present when professionally necessary. Vera performs no automatic anonymization or pseudonymization. The model and professional separate source-supported facts, external evidence, management assumptions, model-proposed hypotheses, and unknowns, then confirm one reviewed startup case; the deterministic validator checks only that the reviewed venture-stage description is present and does not classify the venture or invent missing numbers.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "startup-business-plan-post-calculation-review",
+        "purpose": "Interpret the complete reconciled planning calculation and prepare a professional-review draft",
+        "content": "The deterministic runner receives only the reviewed case contract, processes every included period and scenario, and writes the complete P&L, cash-flow, balance-sheet, reconciliation, assumption ledger, workbook, and factual review outputs. The default model_context.json contains assumption descriptions, effective periods and rationales, evidence coverage IDs and statuses, complete calculated statements for up to 60 periods and eight scenarios, scenario summaries, reconciliation and limitations. It excludes raw source populations, absolute paths, original filenames, and evidence source_ref values by default. Interpretation separates calculated observations, hypotheses, questions, risks, limitations, and professional decisions; the result remains draft pending professional review.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "client-engagement-path-isolation",
+      "control": "The Codex runner requires a digest-valid Studio Archive startup-business-plan context, accepts the reviewed case only from the engagement input or current run output boundary, and writes only below that run's output directory."
+    },
+    {
+      "id": "reviewed-opening-and-assumption-contract",
+      "control": "Calculation requires review.status=reviewed, a named reviewer and timestamp, a non-empty professionally reviewed venture_stage, a reconciled opening position tied to known evidence IDs, confirmed assumptions with effective periods and evidence references, and exact scenario rows linked only to confirmed assumptions. Missing pilot history is never converted to zero by the runner."
+    },
+    {
+      "id": "exact-integrated-statement-calculation",
+      "control": "Canonical Decimal parsing, period order, working-capital movements, fixed-asset, debt and equity roll-forwards, and statement reconciliation use fixed mechanically verifiable rules. The runner creates no balancing plug, blocks negative debt or net fixed assets, and preserves negative cash as an explicit funding requirement."
+    },
+    {
+      "id": "bounded-post-calculation-context",
+      "control": "The post-calculation model projection excludes raw source populations, absolute paths, original filenames and evidence source_ref values while preserving all calculated periods and scenarios inside the 60-period and eight-scenario reviewed contract."
+    },
+    {
+      "id": "draft-professional-review-boundary",
+      "control": "Every plan output retains draft_pending_professional_review. Reconciliation proves exact application and statement closure only; it does not approve assumptions, source sufficiency, probability, financing suitability, tax treatment, narrative, or professional conclusions."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "95b03a764857c69faf2cb6dad8891a35d105c074bffd3150c4c4d4572e1b3f8e"
+  }
+}

@@ -376,6 +376,7 @@ def test_shared_model_data_copy_names_the_model_not_the_runtime_pair() -> None:
 
     workflows = (
         "archive-organization",
+        "startup-business-plan",
         "check-entries",
         "concordato-plan-review",
         "deep-research-validator",

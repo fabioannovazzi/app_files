@@ -110,6 +110,7 @@
     "avviso-intake": [["vera", "area-matters"]],
     "bandi-agevolazioni": [["vera", "area-research"]],
     "bilancio-xbrl-it": [["vera", "area-matters"]],
+    "startup-business-plan": [["vera", "area-analysis"]],
     "browser-automation": [["vera", "area-matters"]],
     "centrale-rischi-review": [["vera", "area-analysis"]],
     "check-entries": [["vera", "area-accounting"]],
@@ -158,6 +159,13 @@
       fr: "Automatisation web",
       de: "Web-Automatisierung",
       es: "Automatización web",
+    },
+    "startup-business-plan": {
+      it: "Business plan per startup",
+      en: "Prepare a startup business plan",
+      fr: "Préparer le business plan d’une startup",
+      de: "Businessplan für ein Start-up erstellen",
+      es: "Preparar el plan de negocio de una startup",
     },
     "studio-archive": {
       it: "Ricerca nei documenti, nelle email e in WhatsApp",
@@ -371,6 +379,7 @@
 
   const literalHeadingKeys = {
     "archive-organization": { journey: "inputsResult", method: "processingMethod", storage: "documentSources", policy: "proposedStructure", review: "approval", "review.sees": "planContents", "review.safety": "excludedChanges", prompt: "startingPrompt" },
+    "startup-business-plan": { method: "method", assumptions: "assumptions", statements: "calculationAndReconciliation", outputs: "outputs", prompt: "startingPrompt" },
     "deep-research-validator": { proof: "sourceVerification", next: "relatedFunction", starter: "startingPrompt", details: "technicalDetails" },
     "financial-analysis": { packs: "analysisInputs", fdd: "dueDiligenceCalculations", method: "calculationMethod", controls: "calculationControls", boundary: "professionalReview", prompt: "startingPrompt", related: "relatedFunctions" },
     "new-client": { journey: "newClientWorkflow", prepare: "initialFileReview", "prepare.result": "missingItems", "prepare.videos": "video", italy: "italyChecks", relationship: "engagementFile", documents: "documentPlan", aml: "amlAssessment", proof: "fileStatus", prompt: "startingPrompt" },
@@ -626,7 +635,7 @@
       setHeading('[data-i18n="nav.details"]', "details", currentLanguage);
     }
 
-    if (key === "financial-analysis" || key === "sales-plan") {
+    if (key === "startup-business-plan" || key === "financial-analysis" || key === "sales-plan") {
       setHeading('[data-i18n="nav.method"]', "method", currentLanguage);
     }
 

@@ -85,6 +85,9 @@ The shared specialist workflows cover:
   journal-to-bank reconciliation;
 - forward-looking sales Plan scenarios from reviewed Actuals and confirmed
   commercial or FX assumptions;
+- integrated business plans for startups and new ventures, using
+  reviewed evidence and confirmed assumptions to link profit and loss, cash
+  flow, balance sheet, scenarios, and funding needs;
 - source-bound historical financial analysis and fixed due-diligence recipes,
   management variance analysis with the shared calculation and plot suite,
   plus reviewable financial reports and concordato preventivo review;

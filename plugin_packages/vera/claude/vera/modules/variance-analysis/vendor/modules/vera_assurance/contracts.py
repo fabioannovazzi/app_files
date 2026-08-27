@@ -132,6 +132,7 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "journal-bank-reconciliation",
     "passive-invoice-audit",
     "sales-plan",
+    "startup-business-plan",
     "variance-analysis",
     "management-control-pack",
     "centrale-rischi-review",
