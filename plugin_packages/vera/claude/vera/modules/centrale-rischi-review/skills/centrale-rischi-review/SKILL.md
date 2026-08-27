@@ -250,7 +250,8 @@ workbook. Do not manually substitute another normalization file.
 Read `execution_receipt.json`, `centrale_rischi_analysis.json`, and
 `model_context.json` before opening the rendered files. Stop on a blocked
 analysis or failed declared control. The bounded model context contains exact
-metrics, maturity summaries, at most 36 monthly rows, and at most 20 top
+metrics, maturity summaries, at most 50 category-movement rows, at most 36
+monthly rows, at most 20 previous-record review rows, and at most 20 top
 overruns, exposure-linked guarantees and prejudicial events, plus at most 20
 rows from each separate population of guarantees received, guarantors of the
 holder, ceded debtors, other risk information, summary totals, inframonthly
@@ -271,10 +272,34 @@ Omit `--case` to evaluate every page independently. A case that contains no
 recognized layout is recorded as `not_recognized`; it does not reject the
 other examples and does not create a client analysis.
 
+For a release-quality regression check, run the reviewed gold manifest with
+`scripts/run_gold_benchmark.py`. Bind every source ID to the exact local PDF;
+the runner verifies both SHA-256 and page count before using it. The benchmark
+must keep these gates separate:
+
+- exact page-level extraction facts and population counts;
+- reviewed mappings, control totals, Decimal metrics, and expected rejection
+  of pages that contain no current exposure population;
+- self-contained HTML, formula-free numeric XLSX, and bounded model context;
+- row-order invariance, exclusion of previous records from current totals, and
+  separation of auxiliary populations from exposure metrics;
+- model or professional semantic review of the commentary against the supplied
+  rubric.
+
+Do not call the workflow professionally validated merely because the
+deterministic gates pass. A model review remains
+`model_reviewed_not_professional`; client-facing output remains pending until a
+commercialista reviews it. This is the intended supervised workflow, not by
+itself a failure of the model-led semantic layer. Preserve the evidence scope
+accurately in the benchmark receipt and do not present an available source as
+missing. Passing cases support a quality conclusion for the represented
+layouts; unseen layouts remain a separate robustness question.
+
 Prepare `centrale_rischi_commentary.json` from the template. Separate facts,
 hypotheses, questions, and limitations. Every observation and hypothesis must
-reference existing metric IDs; a metric movement is not proof of business
-causation.
+reference existing evidence with `metric:<metric_id>`,
+`control:<control_id>`, or `row:<source_row_locator>`; the finalizer rejects
+unknown references. A metric movement is not proof of business causation.
 
 ```bash
 python scripts/finalize_analysis.py \
