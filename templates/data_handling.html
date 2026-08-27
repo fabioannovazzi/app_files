@@ -101,6 +101,16 @@
           {% for paragraph in section.paragraphs %}
             <p>{{ paragraph }}</p>
           {% endfor %}
+          {% if section.id == "run-evidence" %}
+            <a class="data-handling-section__example"
+               href="{{ page.run_example.href }}">
+              <span>
+                <strong>{{ page.run_example.label }}</strong>
+                <small>{{ page.run_example.note }}</small>
+              </span>
+              <span aria-hidden="true">→</span>
+            </a>
+          {% endif %}
         </div>
       </section>
     {% endfor %}
