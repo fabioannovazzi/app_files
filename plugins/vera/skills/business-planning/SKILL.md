@@ -23,4 +23,6 @@ When a reviewed Clara `business_planning_handoff.json` is available, use it as
 bounded strategic evidence. Compare its shared assumption IDs and descriptions
 with Vera's case, show any divergence, and return material inconsistencies for
 professional resolution. Never convert strategic statements into numbers or
-silently alter Clara's recommendation.
+silently alter Clara's recommendation. Pass the file to the financial finalizer
+with `--counterpart-handoff`; do not finalize until its durable handoff review
+reports `aligned_for_counterpart_use`.

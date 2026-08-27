@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "business-planning"
 SCRIPT_ROOT = PLUGIN_ROOT / "scripts"
 SHARED_MODULES = ROOT / "plugins" / "_shared" / "vendor" / "modules"
+if str(SCRIPT_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_ROOT))
 if str(SHARED_MODULES) not in sys.path:
     sys.path.insert(0, str(SHARED_MODULES))
 
@@ -28,6 +30,10 @@ def _load_module(name: str, path: Path) -> ModuleType:
     return module
 
 
+HANDOFF = _load_module(
+    "business_planning_handoff",
+    SCRIPT_ROOT / "business_planning_handoff.py",
+)
 CORE = _load_module(
     "test_business_planning_financial_core",
     SCRIPT_ROOT / "business_planning_core.py",
@@ -253,6 +259,46 @@ def _strategic_case(*, evidence_status: str = "reviewed") -> dict[str, Any]:
     }
 
 
+def _aligned_strategic_case() -> dict[str, Any]:
+    case = _strategic_case()
+    case["case_id"] = "venture-plan-2027"
+    case["entity_name"] = "Venture S.r.l."
+    case["assumptions"][0]["id"] = "operating-case"
+    case["assumptions"][0][
+        "description"
+    ] = "Revenue, margin, costs, and working-capital balances."
+    for collection_name in ("findings", "options", "initiatives", "risks"):
+        for item in case[collection_name]:
+            item["assumption_ids"] = ["operating-case"]
+    case["recommendation"]["assumption_ids"] = ["operating-case"]
+    return case
+
+
+def _clara_workspace(tmp_path: Path, case: dict[str, Any]) -> tuple[Path, Path, Path]:
+    workspace = tmp_path / "clara-case"
+    workspace.mkdir()
+    workspace_files = {
+        "case_manifest.json": {
+            "schema_version": 1,
+            "client": case["entity_name"],
+            "project": "Business planning",
+            "objective": case["planning_objective"],
+            "audience": case["audience"],
+            "status": "active",
+        },
+        "material_registry.json": {"schema_version": 1, "materials": []},
+        "judgement_log.json": {"schema_version": 1, "entries": []},
+        "open_questions.json": {"schema_version": 1, "questions": []},
+        "case_issues.json": {"schema_version": 1, "issues": []},
+        "clara_mandate.json": {"schema_version": 1},
+    }
+    for filename, payload in workspace_files.items():
+        (workspace / filename).write_text(json.dumps(payload), encoding="utf-8")
+    case_path = workspace / "strategic_business_plan_case.json"
+    case_path.write_text(json.dumps(case), encoding="utf-8")
+    return workspace, case_path, workspace / "business-plan"
+
+
 def _running_case(tmp_path: Path, case: dict[str, Any]) -> tuple[Path, Path, Path]:
     ledger = _load_customer_ledger()
     client_root = tmp_path / "Customer"
@@ -323,6 +369,20 @@ def test_negative_cash_is_preserved_as_funding_requirement() -> None:
     summary = plan["scenarios"][0]["summary"]
     assert summary["minimum_cash"] == "-115"
     assert summary["funding_requirement"] == "115"
+    assert plan["reconciliation"]["all_passed"] is True
+
+
+def test_reconciled_negative_opening_equity_is_supported() -> None:
+    case = _case()
+    case["opening_balance"]["values"].update(
+        cash="0",
+        accounts_payable="50",
+        equity="-50",
+    )
+
+    plan = CORE.build_business_plan(case)
+
+    assert plan["opening_balance"]["values"]["equity"] == "-50"
     assert plan["reconciliation"]["all_passed"] is True
 
 
@@ -456,7 +516,7 @@ def test_established_company_uses_the_same_financial_contract() -> None:
     assert plan["company_stage"].startswith("Established manufacturer")
     assert handoff["from_product"] == "Vera"
     assert handoff["to_product"] == "Clara"
-    assert handoff["status"] == "review_required_by_counterpart"
+    assert handoff["status"] == "ready_for_counterpart_review"
 
 
 def test_clara_strategic_case_keeps_semantic_content_model_led() -> None:
@@ -505,10 +565,103 @@ def test_clara_strategic_case_rejects_unknown_option_reference() -> None:
         STRATEGIC.build_strategic_plan(case)
 
 
+def test_clara_strategic_case_rejects_unlinked_assumption() -> None:
+    case = _strategic_case()
+    case["assumptions"][0]["evidence_ids"] = []
+
+    with pytest.raises(
+        STRATEGIC.StrategicPlanningContractError,
+        match="evidence_ids must not be empty",
+    ):
+        STRATEGIC.build_strategic_plan(case)
+
+
+@pytest.mark.parametrize(
+    "target",
+    ("finding", "option", "recommendation", "initiative", "risk"),
+)
+def test_clara_strategic_case_rejects_unsupported_plan_element(target: str) -> None:
+    case = _strategic_case()
+    item = (
+        case["recommendation"] if target == "recommendation" else case[f"{target}s"][0]
+    )
+    item["evidence_ids"] = []
+    item["assumption_ids"] = []
+
+    with pytest.raises(
+        STRATEGIC.StrategicPlanningContractError,
+        match="must reference evidence or a confirmed assumption",
+    ):
+        STRATEGIC.build_strategic_plan(case)
+
+
+def test_counterpart_handoff_reports_alignment_and_description_divergence() -> None:
+    financial_plan = CORE.build_business_plan(_case())
+    handoff = CORE.build_counterpart_handoff(financial_plan)
+    strategic_case = _aligned_strategic_case()
+
+    aligned = HANDOFF.review_counterpart_handoff(
+        strategic_case,
+        handoff,
+        receiving_product="Clara",
+    )
+    strategic_case["assumptions"][0]["description"] = "A different description."
+    divergent = HANDOFF.review_counterpart_handoff(
+        strategic_case,
+        handoff,
+        receiving_product="Clara",
+    )
+
+    assert aligned["status"] == "aligned_for_counterpart_use"
+    assert divergent["status"] == "divergence_requires_professional_review"
+    assert divergent["assumption_comparison"]["description_divergences"] == [
+        {
+            "assumption_id": "operating-case",
+            "counterpart_description": (
+                "Revenue, margin, costs, and working-capital balances."
+            ),
+            "receiving_case_description": "A different description.",
+        }
+    ]
+
+
+def test_vera_reviews_aligned_clara_handoff() -> None:
+    strategic_plan = STRATEGIC.build_strategic_plan(_aligned_strategic_case())
+    handoff = STRATEGIC.build_counterpart_handoff(strategic_plan)
+
+    review = HANDOFF.review_counterpart_handoff(
+        _case(),
+        handoff,
+        receiving_product="Vera",
+    )
+
+    assert review["status"] == "aligned_for_counterpart_use"
+    assert review["assumption_comparison"]["shared_assumption_ids"] == [
+        "operating-case"
+    ]
+
+
+def test_blocked_financial_plan_produces_explicitly_blocked_handoff() -> None:
+    case = _case()
+    case["opening_balance"]["values"]["equity"] = "99"
+
+    plan = CORE.build_business_plan(case)
+    handoff = CORE.build_counterpart_handoff(plan)
+
+    assert plan["status"] == "blocked"
+    assert handoff["status"] == "blocked_source_plan"
+    assert handoff["source_plan_status"] == "blocked"
+    assert handoff["source_review_status"] == "draft_pending_professional_review"
+    review = HANDOFF.review_counterpart_handoff(
+        _aligned_strategic_case(),
+        handoff,
+        receiving_product="Clara",
+    )
+    assert review["status"] == "source_not_ready"
+
+
 def test_clara_runner_writes_complete_strategic_review_package(tmp_path: Path) -> None:
-    case_path = tmp_path / "strategic_business_plan_case.json"
-    case_path.write_text(json.dumps(_strategic_case()), encoding="utf-8")
-    output_dir = tmp_path / "plan"
+    workspace, case_path, output_dir = _clara_workspace(tmp_path, _strategic_case())
 
     completed = subprocess.run(
         [
@@ -518,6 +671,8 @@ def test_clara_runner_writes_complete_strategic_review_package(tmp_path: Path) -
             str(case_path),
             "--output-dir",
             str(output_dir),
+            "--case-workspace",
+            str(workspace),
         ],
         capture_output=True,
         check=False,
@@ -543,6 +698,95 @@ def test_clara_runner_writes_complete_strategic_review_package(tmp_path: Path) -
         (output_dir / "execution_receipt.json").read_text(encoding="utf-8")
     )
     assert receipt["professional_lens"] == "strategic_commercial"
+    assert receipt["case_content_sha256"]
+
+
+def test_clara_runner_rejects_output_outside_case_workspace(tmp_path: Path) -> None:
+    workspace, case_path, _output_dir = _clara_workspace(tmp_path, _strategic_case())
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            "--case",
+            str(case_path),
+            "--output-dir",
+            str(tmp_path / "outside"),
+            "--case-workspace",
+            str(workspace),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    assert completed.returncode == 2
+    assert "output directory must be <case-workspace>/business-plan" in completed.stderr
+
+
+def test_clara_runner_records_aligned_vera_handoff(tmp_path: Path) -> None:
+    case = _aligned_strategic_case()
+    workspace, case_path, output_dir = _clara_workspace(tmp_path, case)
+    handoff_path = workspace / "vera_business_planning_handoff.json"
+    handoff_path.write_text(
+        json.dumps(CORE.build_counterpart_handoff(CORE.build_business_plan(_case()))),
+        encoding="utf-8",
+    )
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            "--case",
+            str(case_path),
+            "--output-dir",
+            str(output_dir),
+            "--case-workspace",
+            str(workspace),
+            "--counterpart-handoff",
+            str(handoff_path),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    review = json.loads(
+        (output_dir / "counterpart_handoff_review.json").read_text(encoding="utf-8")
+    )
+    receipt = json.loads(
+        (output_dir / "execution_receipt.json").read_text(encoding="utf-8")
+    )
+    assert review["status"] == "aligned_for_counterpart_use"
+    assert receipt["counterpart_handoff"]["review_status"] == (
+        "aligned_for_counterpart_use"
+    )
+
+
+def test_review_html_exposes_complete_financial_and_strategic_surfaces() -> None:
+    financial_html = CORE.render_html(CORE.build_business_plan(_case()))
+    strategic_html = STRATEGIC.render_html(
+        STRATEGIC.build_strategic_plan(_strategic_case())
+    )
+
+    for heading in (
+        "Evidence coverage",
+        "Confirmed assumptions",
+        "Integrated statements",
+        "Reconciliation",
+    ):
+        assert heading in financial_html
+    for heading in (
+        "Evidence register",
+        "Confirmed assumptions",
+        "Options and trade-offs",
+        "Risks and responses",
+        "Open questions",
+    ):
+        assert heading in strategic_html
+    assert "customer-research" in strategic_html
+    assert "Validate repeat demand before national rollout." in strategic_html
 
 
 def test_unverified_strategic_evidence_keeps_result_partial() -> None:

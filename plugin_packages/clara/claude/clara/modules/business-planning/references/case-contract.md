@@ -67,6 +67,12 @@ assumptions, plus:
 - initiatives with owners, milestones and KPIs;
 - risks, responses and open questions.
 
+Every confirmed assumption references evidence. Every finding, option,
+recommendation, initiative and risk references at least one reviewed evidence
+item or confirmed assumption. The finalizer must be given the Clara case
+workspace, reads the strategic case from its root and writes only to its
+`business-plan` directory.
+
 The model and consultant decide the meaning, domains, options, recommendation,
 initiatives, KPIs and risks. Deterministic code checks only shape, explicit
 lens, review status, unique identifiers, reference closure and artifact hashes.
@@ -79,7 +85,12 @@ probable or financeable. Reference closure does not approve Clara's market
 evidence, strategic interpretation, feasibility or recommendation.
 
 Both runners create `business_planning_handoff.json` using schema
-`mparanza.business_planning_handoff.v1`. It identifies the source and receiving
-lens, carries shared assumptions without source paths and includes only the
-results needed for counterpart review. The receiving product must expose any
-divergence; it may not silently overwrite the other lens.
+`mparanza.business_planning_handoff.v2`. It identifies the source and receiving
+lens, carries the source plan and review statuses, carries shared assumptions
+without source paths and includes only the results needed for counterpart
+review. A ready, partial or blocked source is labelled explicitly. When a
+handoff is supplied to the receiving runner, it creates
+`counterpart_handoff_review.json`, compares exact case identity and shared
+assumption IDs and descriptions, and stops on unresolved divergence or a source
+that is not ready. The receiving product must expose any semantic divergence;
+it may not silently overwrite the other lens.

@@ -12,6 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from business_planning_handoff import HANDOFF_SCHEMA, counterpart_handoff_status
+
 __all__ = [
     "CASE_SCHEMA",
     "PLAN_SCHEMA",
@@ -22,13 +24,14 @@ __all__ = [
     "load_json",
     "render_html",
     "render_markdown",
+    "validate_case_workspace_boundary",
     "validate_case",
     "write_assumption_ledger",
 ]
 
 WORKFLOW_ID = "business-planning"
 CASE_SCHEMA = "mparanza.business_planning_strategic_case.v1"
-PLAN_SCHEMA = "mparanza.business_planning_strategic_plan.v1"
+PLAN_SCHEMA = "mparanza.business_planning_strategic_plan.v2"
 _IDENTIFIER_RE = re.compile(r"^[a-z][a-z0-9_.-]{0,119}$")
 _EVIDENCE_KINDS = {
     "historical_fact",
@@ -168,6 +171,88 @@ def _known_references(
     return references
 
 
+def _require_support(
+    evidence_references: Sequence[str],
+    assumption_references: Sequence[str],
+    *,
+    label: str,
+) -> None:
+    """Require a declared evidence or confirmed-assumption basis."""
+
+    if not evidence_references and not assumption_references:
+        raise StrategicPlanningContractError(
+            f"{label} must reference evidence or a confirmed assumption"
+        )
+
+
+def validate_case_workspace_boundary(
+    case_path: Path,
+    output_dir: Path,
+    case_workspace: Path,
+    *,
+    additional_inputs: Sequence[Path] = (),
+) -> None:
+    """Keep Clara inputs and outputs inside one recognizable case workspace."""
+
+    if case_workspace.is_symlink() or not case_workspace.is_dir():
+        raise StrategicPlanningContractError(
+            f"Clara case workspace must be a regular directory: {case_workspace}"
+        )
+    workspace = case_workspace.resolve()
+    if case_path.is_symlink() or not case_path.is_file():
+        raise StrategicPlanningContractError(
+            f"Strategic case must be a regular file: {case_path}"
+        )
+    if case_path.resolve().parent != workspace:
+        raise StrategicPlanningContractError(
+            "strategic_business_plan_case.json must be at the Clara case-workspace root"
+        )
+    if output_dir.resolve() != workspace / "business-plan":
+        raise StrategicPlanningContractError(
+            "output directory must be <case-workspace>/business-plan"
+        )
+    if output_dir.is_symlink():
+        raise StrategicPlanningContractError(
+            "Clara business-plan output directory must not be a symlink"
+        )
+    for path in additional_inputs:
+        if path.is_symlink() or not path.is_file():
+            raise StrategicPlanningContractError(
+                f"Counterpart handoff must be a regular file: {path}"
+            )
+        try:
+            path.resolve().relative_to(workspace)
+        except ValueError as exc:
+            raise StrategicPlanningContractError(
+                "counterpart handoff must remain inside the Clara case workspace"
+            ) from exc
+
+    required_files = (
+        "case_manifest.json",
+        "material_registry.json",
+        "judgement_log.json",
+        "open_questions.json",
+        "case_issues.json",
+        "clara_mandate.json",
+    )
+    missing = [
+        name
+        for name in required_files
+        if (workspace / name).is_symlink() or not (workspace / name).is_file()
+    ]
+    if missing:
+        raise StrategicPlanningContractError(
+            f"Clara case workspace is incomplete; missing={missing}"
+        )
+    manifest = load_json(workspace / "case_manifest.json")
+    if manifest.get("schema_version") != 1:
+        raise StrategicPlanningContractError(
+            "case_manifest.json has an unsupported schema_version"
+        )
+    for field in ("client", "project", "objective", "audience", "status"):
+        _text(manifest.get(field), label=f"case_manifest.{field}")
+
+
 def validate_case(case: Mapping[str, Any]) -> None:
     """Validate shape and references without making strategic judgments."""
 
@@ -258,6 +343,7 @@ def validate_case(case: Mapping[str, Any]) -> None:
             item["evidence_ids"],
             known=evidence_ids,
             label=f"assumption[{index}].evidence_ids",
+            allow_empty=False,
         )
         _text(item["rationale"], label=f"assumption[{index}].rationale")
         if item["status"] != "confirmed":
@@ -291,15 +377,20 @@ def validate_case(case: Mapping[str, Any]) -> None:
         _text(item["domain"], label=f"finding[{index}].domain", maximum=200)
         _text(item["statement"], label=f"finding[{index}].statement")
         _text(item["implication"], label=f"finding[{index}].implication")
-        _known_references(
+        linked_evidence = _known_references(
             item["evidence_ids"],
             known=evidence_ids,
             label=f"finding[{index}].evidence_ids",
         )
-        _known_references(
+        linked_assumptions = _known_references(
             item["assumption_ids"],
             known=assumption_ids,
             label=f"finding[{index}].assumption_ids",
+        )
+        _require_support(
+            linked_evidence,
+            linked_assumptions,
+            label=f"finding[{index}]",
         )
         if item["confidence"] not in _CONFIDENCE_VALUES:
             raise StrategicPlanningContractError(
@@ -333,15 +424,20 @@ def validate_case(case: Mapping[str, Any]) -> None:
         _text(item["description"], label=f"option[{index}].description")
         _text_list(item["benefits"], label=f"option[{index}].benefits")
         _text_list(item["drawbacks"], label=f"option[{index}].drawbacks")
-        _known_references(
+        linked_evidence = _known_references(
             item["evidence_ids"],
             known=evidence_ids,
             label=f"option[{index}].evidence_ids",
         )
-        _known_references(
+        linked_assumptions = _known_references(
             item["assumption_ids"],
             known=assumption_ids,
             label=f"option[{index}].assumption_ids",
+        )
+        _require_support(
+            linked_evidence,
+            linked_assumptions,
+            label=f"option[{index}]",
         )
 
     recommendation = _mapping(case["recommendation"], label="case.recommendation")
@@ -363,15 +459,20 @@ def validate_case(case: Mapping[str, Any]) -> None:
         label="recommendation.option_ids",
         allow_empty=False,
     )
-    _known_references(
+    recommendation_evidence = _known_references(
         recommendation["evidence_ids"],
         known=evidence_ids,
         label="recommendation.evidence_ids",
     )
-    _known_references(
+    recommendation_assumptions = _known_references(
         recommendation["assumption_ids"],
         known=assumption_ids,
         label="recommendation.assumption_ids",
+    )
+    _require_support(
+        recommendation_evidence,
+        recommendation_assumptions,
+        label="recommendation",
     )
     _text_list(
         recommendation["conditions"],
@@ -433,15 +534,20 @@ def validate_case(case: Mapping[str, Any]) -> None:
                 label=f"initiative[{index}].milestones[{milestone_index}].outcome",
             )
         _text_list(item["kpis"], label=f"initiative[{index}].kpis")
-        _known_references(
+        linked_evidence = _known_references(
             item["evidence_ids"],
             known=evidence_ids,
             label=f"initiative[{index}].evidence_ids",
         )
-        _known_references(
+        linked_assumptions = _known_references(
             item["assumption_ids"],
             known=assumption_ids,
             label=f"initiative[{index}].assumption_ids",
+        )
+        _require_support(
+            linked_evidence,
+            linked_assumptions,
+            label=f"initiative[{index}]",
         )
 
     risk_items = _list(case["risks"], label="case.risks")
@@ -467,15 +573,20 @@ def validate_case(case: Mapping[str, Any]) -> None:
         risk_ids.add(risk_id)
         _text(item["description"], label=f"risk[{index}].description")
         _text(item["response"], label=f"risk[{index}].response")
-        _known_references(
+        linked_evidence = _known_references(
             item["evidence_ids"],
             known=evidence_ids,
             label=f"risk[{index}].evidence_ids",
         )
-        _known_references(
+        linked_assumptions = _known_references(
             item["assumption_ids"],
             known=assumption_ids,
             label=f"risk[{index}].assumption_ids",
+        )
+        _require_support(
+            linked_evidence,
+            linked_assumptions,
+            label=f"risk[{index}]",
         )
 
     question_items = _list(case["open_questions"], label="case.open_questions")
@@ -505,9 +616,24 @@ def build_strategic_plan(case: Mapping[str, Any]) -> dict[str, Any]:
 
     validate_case(case)
     evidence_items = [dict(item) for item in case["evidence_register"]]
-    counts = Counter(str(item["status"]) for item in evidence_items)
+    referenced_evidence = {
+        str(evidence_id)
+        for collection_name in (
+            "assumptions",
+            "findings",
+            "options",
+            "initiatives",
+            "risks",
+        )
+        for item in case[collection_name]
+        for evidence_id in item["evidence_ids"]
+    } | {str(item) for item in case["recommendation"]["evidence_ids"]}
+    referenced_items = [
+        item for item in evidence_items if str(item["id"]) in referenced_evidence
+    ]
+    counts = Counter(str(item["status"]) for item in referenced_items)
     unverified = sorted(
-        str(item["id"]) for item in evidence_items if item["status"] == "unverified"
+        str(item["id"]) for item in referenced_items if item["status"] == "unverified"
     )
     return {
         "schema_version": PLAN_SCHEMA,
@@ -522,9 +648,19 @@ def build_strategic_plan(case: Mapping[str, Any]) -> dict[str, Any]:
         "status": "partial" if unverified else "ready_for_professional_review",
         "review_status": "draft_pending_professional_review",
         "evidence_coverage": {
+            "referenced_evidence_ids": sorted(referenced_evidence),
             "status_counts": dict(sorted(counts.items())),
             "unverified_evidence_ids": unverified,
         },
+        "evidence_register": [
+            {
+                "id": item["id"],
+                "kind": item["kind"],
+                "description": item["description"],
+                "status": item["status"],
+            }
+            for item in referenced_items
+        ],
         "assumptions": [dict(item) for item in case["assumptions"]],
         "findings": [dict(item) for item in case["findings"]],
         "options": [dict(item) for item in case["options"]],
@@ -558,6 +694,7 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
             "status",
             "review_status",
             "evidence_coverage",
+            "evidence_register",
             "assumptions",
             "findings",
             "options",
@@ -568,7 +705,7 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
             "limitations",
         )
     } | {
-        "schema_version": "mparanza.business_planning_strategic_model_context.v1",
+        "schema_version": "mparanza.business_planning_strategic_model_context.v2",
         "excluded_by_default": [
             "raw source documents",
             "absolute source paths",
@@ -582,7 +719,7 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
     """Build the reviewed Clara-to-Vera bridge without semantic merging."""
 
     return {
-        "schema_version": "mparanza.business_planning_handoff.v1",
+        "schema_version": HANDOFF_SCHEMA,
         "workflow_id": WORKFLOW_ID,
         "case_id": plan["case_id"],
         "entity_name": plan["entity_name"],
@@ -593,7 +730,9 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
         "from_lens": "strategic_commercial",
         "to_product": "Vera",
         "to_lens": "accounting_financial",
-        "status": "review_required_by_counterpart",
+        "status": counterpart_handoff_status(plan["status"]),
+        "source_plan_status": plan["status"],
+        "source_review_status": plan["review_status"],
         "assumptions": [
             {
                 "id": item["id"],
@@ -667,13 +806,34 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
         f"- Status: `{plan['status']}`",
         f"- Review: `{plan['review_status']}`",
         "",
-        "## Recommendation",
-        "",
-        str(plan["recommendation"]["statement"]),
-        "",
-        "## Strategic findings",
+        "## Evidence register",
         "",
     ]
+    lines.extend(
+        f"- `{item['id']}` ({item['kind']}, {item['status']}): {item['description']}"
+        for item in plan["evidence_register"]
+    )
+    lines.extend(["", "## Confirmed assumptions", ""])
+    lines.extend(
+        f"- `{item['id']}`: {item['description']} Evidence: {', '.join(item['evidence_ids'])}. Rationale: {item['rationale']}"
+        for item in plan["assumptions"]
+    )
+    lines.extend(
+        [
+            "",
+            "## Recommendation",
+            "",
+            str(plan["recommendation"]["statement"]),
+            "",
+            f"Selected options: {', '.join(plan['recommendation']['option_ids'])}",
+            f"Conditions: {'; '.join(plan['recommendation']['conditions']) or 'none'}",
+            f"Evidence: {', '.join(plan['recommendation']['evidence_ids'])}",
+            f"Assumptions: {', '.join(plan['recommendation']['assumption_ids'])}",
+            "",
+            "## Strategic findings",
+            "",
+        ]
+    )
     for item in plan["findings"]:
         lines.extend(
             [
@@ -682,6 +842,24 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
                 str(item["statement"]),
                 "",
                 f"Implication: {item['implication']}",
+                f"Confidence: {item['confidence']}",
+                f"Evidence: {', '.join(item['evidence_ids'])}",
+                f"Assumptions: {', '.join(item['assumption_ids'])}",
+                "",
+            ]
+        )
+    lines.extend(["## Options and trade-offs", ""])
+    for item in plan["options"]:
+        lines.extend(
+            [
+                f"### {item['title']}",
+                "",
+                str(item["description"]),
+                "",
+                f"Benefits: {'; '.join(item['benefits'])}",
+                f"Drawbacks: {'; '.join(item['drawbacks'])}",
+                f"Evidence: {', '.join(item['evidence_ids'])}",
+                f"Assumptions: {', '.join(item['assumption_ids'])}",
                 "",
             ]
         )
@@ -694,15 +872,30 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
                 str(item["objective"]),
                 "",
                 f"Owner: {item['owner']}",
+                "Milestones: "
+                + "; ".join(
+                    f"{milestone['period']}: {milestone['outcome']}"
+                    for milestone in item["milestones"]
+                ),
                 f"KPIs: {'; '.join(item['kpis'])}",
+                f"Evidence: {', '.join(item['evidence_ids'])}",
+                f"Assumptions: {', '.join(item['assumption_ids'])}",
                 "",
             ]
         )
     lines.extend(["## Risks", ""])
     lines.extend(
-        f"- {item['description']} Response: {item['response']}"
+        f"- {item['description']} Response: {item['response']} Evidence: {', '.join(item['evidence_ids'])}. Assumptions: {', '.join(item['assumption_ids'])}."
         for item in plan["risks"]
     )
+    lines.extend(["", "## Open questions", ""])
+    if plan["open_questions"]:
+        lines.extend(
+            f"- {item['question']} Why it matters: {item['why_it_matters']}"
+            for item in plan["open_questions"]
+        )
+    else:
+        lines.append("- None recorded.")
     lines.extend(["", "## Limitations", ""])
     lines.extend(f"- {item}" for item in plan["limitations"])
     return "\n".join(lines) + "\n"
@@ -711,26 +904,104 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
 def render_html(plan: Mapping[str, Any]) -> str:
     """Render a self-contained strategic plan review page."""
 
+    def references(item: Mapping[str, Any]) -> str:
+        evidence = " · ".join(item.get("evidence_ids", [])) or "none"
+        assumptions = " · ".join(item.get("assumption_ids", [])) or "none"
+        return (
+            '<p class="refs"><strong>Evidence:</strong> '
+            f"{html.escape(evidence)} · <strong>Assumptions:</strong> "
+            f"{html.escape(assumptions)}</p>"
+        )
+
+    def bullets(items: Sequence[object]) -> str:
+        return (
+            "<ul>"
+            + "".join(f"<li>{html.escape(str(item))}</li>" for item in items)
+            + "</ul>"
+        )
+
+    evidence_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(item['id']))}</td>"
+        f"<td>{html.escape(str(item['kind']))}</td>"
+        f"<td>{html.escape(str(item['description']))}</td>"
+        f"<td>{html.escape(str(item['status']))}</td>"
+        "</tr>"
+        for item in plan["evidence_register"]
+    )
+    assumption_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(item['id']))}</td>"
+        f"<td>{html.escape(str(item['category']))}</td>"
+        f"<td>{html.escape(str(item['description']))}</td>"
+        f"<td>{html.escape(' · '.join(item['evidence_ids']))}</td>"
+        f"<td>{html.escape(str(item['rationale']))}</td>"
+        f"<td>{html.escape(str(item['status']))}</td>"
+        "</tr>"
+        for item in plan["assumptions"]
+    )
     findings = "".join(
         "<article>"
         f"<p class=\"eyebrow\">{html.escape(str(item['domain']))}</p>"
         f"<h3>{html.escape(str(item['statement']))}</h3>"
         f"<p>{html.escape(str(item['implication']))}</p>"
+        f"<p><strong>Confidence:</strong> {html.escape(str(item['confidence']))}</p>"
+        f"{references(item)}"
         "</article>"
         for item in plan["findings"]
+    )
+    options = "".join(
+        "<article>"
+        f"<h3>{html.escape(str(item['title']))}</h3>"
+        f"<p>{html.escape(str(item['description']))}</p>"
+        "<h4>Benefits</h4>"
+        f"{bullets(item['benefits'])}"
+        "<h4>Drawbacks</h4>"
+        f"{bullets(item['drawbacks'])}"
+        f"{references(item)}"
+        "</article>"
+        for item in plan["options"]
     )
     initiatives = "".join(
         "<article>"
         f"<h3>{html.escape(str(item['title']))}</h3>"
         f"<p>{html.escape(str(item['objective']))}</p>"
         f"<p><strong>Owner:</strong> {html.escape(str(item['owner']))}</p>"
-        f"<p><strong>KPIs:</strong> {html.escape('; '.join(item['kpis']))}</p>"
-        "</article>"
+        "<h4>Milestones</h4>"
+        + bullets(
+            [
+                f"{milestone['period']}: {milestone['outcome']}"
+                for milestone in item["milestones"]
+            ]
+        )
+        + "<h4>KPIs</h4>"
+        + bullets(item["kpis"])
+        + references(item)
+        + "</article>"
         for item in plan["initiatives"]
+    )
+    risks = "".join(
+        "<article>"
+        f"<h3>{html.escape(str(item['description']))}</h3>"
+        f"<p><strong>Response:</strong> {html.escape(str(item['response']))}</p>"
+        f"{references(item)}"
+        "</article>"
+        for item in plan["risks"]
+    )
+    questions = (
+        "".join(
+            "<article>"
+            f"<h3>{html.escape(str(item['question']))}</h3>"
+            f"<p>{html.escape(str(item['why_it_matters']))}</p>"
+            "</article>"
+            for item in plan["open_questions"]
+        )
+        or "<p>None recorded.</p>"
     )
     limitations = "".join(
         f"<li>{html.escape(str(item))}</li>" for item in plan["limitations"]
     )
+    recommendation = plan["recommendation"]
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -739,12 +1010,13 @@ def render_html(plan: Mapping[str, Any]) -> str:
   <title>Strategic business plan — {html.escape(str(plan['entity_name']))}</title>
   <style>
     :root {{ color-scheme: light; font-family: "Instrument Sans", sans-serif; color: #183765; background: #fff; }}
-    body {{ margin: 0; }} main {{ max-width: 1080px; margin: 0 auto; padding: 52px 24px 80px; }}
+    body {{ margin: 0; }} main {{ max-width: 1180px; margin: 0 auto; padding: 52px 24px 80px; }}
     h1 {{ color: #002060; font-size: clamp(2.2rem, 6vw, 4.8rem); line-height: 1; margin: 12px 0 24px; }}
-    h2, h3 {{ color: #002060; }} .meta {{ border-block: 1px solid #b7dded; padding: 18px 0; }}
+    h2, h3 {{ color: #002060; }} h2 {{ margin-top: 48px; }} .meta {{ border-block: 1px solid #b7dded; padding: 18px 0; }}
     .grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #b7dded; border: 1px solid #b7dded; }}
-    article {{ background: white; padding: 24px; }} .eyebrow {{ color: #0070c0; font-size: .78rem; font-weight: 700; text-transform: uppercase; }}
+    article {{ background: white; padding: 24px; }} .eyebrow {{ color: #0070c0; font-size: .78rem; font-weight: 700; text-transform: uppercase; }} .refs {{ color: #52657f; font-size: .9rem; }}
     .recommendation {{ margin: 36px 0; padding: 24px 28px; border-left: 3px solid #00b0f0; background: #f3fbff; }}
+    .table-wrap {{ overflow-x: auto; }} table {{ width: 100%; border-collapse: collapse; }} th, td {{ padding: 12px; border-bottom: 1px solid #dbe4f2; text-align: left; vertical-align: top; }} th {{ color: #002060; white-space: nowrap; }}
     @media (max-width: 720px) {{ .grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
@@ -752,9 +1024,16 @@ def render_html(plan: Mapping[str, Any]) -> str:
   <p>Clara · Business planning · strategic and commercial lens</p>
   <h1>{html.escape(str(plan['entity_name']))}</h1>
   <p class="meta">{html.escape(str(plan['company_stage']))} · {html.escape(str(plan['planning_horizon']))} · {html.escape(str(plan['status']))}</p>
-  <section class="recommendation"><h2>Recommendation</h2><p>{html.escape(str(plan['recommendation']['statement']))}</p></section>
+  <p><strong>Objective:</strong> {html.escape(str(plan['planning_objective']))}</p>
+  <p><strong>Audience:</strong> {html.escape(str(plan['audience']))} · <strong>Review:</strong> {html.escape(str(plan['review_status']))}</p>
+  <h2>Evidence register</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Kind</th><th>Description</th><th>Status</th></tr></thead><tbody>{evidence_rows}</tbody></table></div>
+  <h2>Confirmed assumptions</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Category</th><th>Description</th><th>Evidence</th><th>Rationale</th><th>Status</th></tr></thead><tbody>{assumption_rows}</tbody></table></div>
+  <section class="recommendation"><h2>Recommendation</h2><p>{html.escape(str(recommendation['statement']))}</p><p><strong>Selected options:</strong> {html.escape(' · '.join(recommendation['option_ids']))}</p><h3>Conditions</h3>{bullets(recommendation['conditions']) if recommendation['conditions'] else '<p>None recorded.</p>'}{references(recommendation)}</section>
   <h2>Strategic findings</h2><section class="grid">{findings}</section>
+  <h2>Options and trade-offs</h2><section class="grid">{options}</section>
   <h2>Initiatives</h2><section class="grid">{initiatives}</section>
+  <h2>Risks and responses</h2><section class="grid">{risks}</section>
+  <h2>Open questions</h2><section class="grid">{questions}</section>
   <h2>Limitations</h2><ul>{limitations}</ul>
 </main></body></html>
 """
