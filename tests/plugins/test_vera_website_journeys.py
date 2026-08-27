@@ -1301,12 +1301,10 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
         "Vera montre ce qui est parvenu au modèle.",
         "Vera zeigt, was das Modell erhalten hat.",
         "Vera muestra qué llegó al modelo.",
-        "10.000",
-        "10,000",
-        "1.000",
-        "1,000",
-        "9.000",
-        "9,000",
+        '"report.sourceValue": "100"',
+        '"report.processedValue": "100"',
+        '"report.modelValue": "10"',
+        '"report.localValue": "90"',
         "complete document or population is the correct minimum",
     ):
         assert phrase in page
