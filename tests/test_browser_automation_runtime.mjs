@@ -868,6 +868,10 @@ test("executeCapability records downloaded file bytes without returning the priv
   assert.equal(outputs.files[0].path, downloadPath);
   assert.equal(outputs.files[0].byte_length, 19);
   assert.equal(outputs.files[0].sha256.length, 64);
+  const receipt = JSON.parse(await readFile(summary.receipt_path, "utf8"));
+  assert.equal(receipt.schema_version, "browser-run-receipt/v2");
+  assert.equal(receipt.action_results.at(-1).evidence_code, "download-bytes-verified");
+  assert.equal(receipt.action_results.at(-1).mechanism_hint, "control-without-href");
 });
 
 test("executeCapability keeps identical download evidence stable across local paths", async () => {
@@ -927,16 +931,164 @@ test("executeCapability reports a native gap when Chrome cannot expose download 
   tab.playwright.waitForEvent = async () => ({});
   const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
 
-  await assert.rejects(
-    executeCapability({
+  const runDirectory = join(parent, "download-native-gap");
+  let caught = null;
+  try {
+    await executeCapability({
       tab,
       capability,
       inputs: { query: "invoice", "max-results": 10 },
-      runDirectory: join(parent, "download-native-gap"),
+      runDirectory,
       runId: "download-native-gap-run",
-    }),
-    /native_gap/,
-  );
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.equal(caught?.code, "native_gap");
+  assert.equal(caught?.reasonCode, "download-path-api-unavailable");
+  assert.equal(caught?.runSummary.error.reason_code, "download-path-api-unavailable");
+  const receipt = JSON.parse(await readFile(join(runDirectory, "run.receipt.json"), "utf8"));
+  const failedAction = receipt.action_results.at(-1);
+  assert.equal(failedAction.evidence_code, "download-path-api-unavailable");
+  assert.equal(failedAction.mechanism_hint, "control-without-href");
+  assert.equal(failedAction.error.reason_code, "download-path-api-unavailable");
+  assert.equal(failedAction.origin, "https://example.com");
+  assert.equal(failedAction.path, "/");
+});
+
+test("executeCapability distinguishes a download event with no local path", async () => {
+  const capability = syntheticDownloadCapability();
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [new FakeNode()],
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  tab.playwright.waitForEvent = async () => ({ path: async () => null });
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+
+  let caught = null;
+  try {
+    await executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "download-path-missing"),
+      runId: "download-path-missing-run",
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.equal(caught?.code, "native_gap");
+  assert.equal(caught?.reasonCode, "download-path-not-returned");
+});
+
+test("executeCapability distinguishes an unreadable downloaded file", async () => {
+  const capability = syntheticDownloadCapability();
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [new FakeNode()],
+  };
+  const tab = new FakeTab({});
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  tab.playwright = new FakePlaywright(tab, registry, join(parent, "missing.zip"));
+
+  let caught = null;
+  try {
+    await executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory: join(parent, "download-file-unreadable"),
+      runId: "download-file-unreadable-run",
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.equal(caught?.code, "native_gap");
+  assert.equal(caught?.reasonCode, "download-file-unreadable");
+});
+
+test("executeCapability distinguishes a missing download event on an unchanged page", async () => {
+  const capability = syntheticDownloadCapability();
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [
+      new FakeNode({ attributes: { href: "blob:private-runtime-value" } }),
+    ],
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  tab.playwright.waitForEvent = async () => {
+    throw new Error("private timeout detail");
+  };
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  const runDirectory = join(parent, "download-event-unchanged");
+
+  let caught = null;
+  try {
+    await executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory,
+      runId: "download-event-unchanged-run",
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.equal(caught?.reasonCode, "download-event-not-observed-page-unchanged");
+  const receiptText = await readFile(join(runDirectory, "run.receipt.json"), "utf8");
+  assert.doesNotMatch(receiptText, /private timeout detail|private-runtime-value/);
+  const receipt = JSON.parse(receiptText);
+  assert.equal(receipt.action_results.at(-1).mechanism_hint, "blob-url");
+});
+
+test("executeCapability distinguishes a missing download event after navigation", async () => {
+  const capability = syntheticDownloadCapability();
+  const registry = {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [
+      new FakeNode({
+        attributes: { href: "/download-status?secret=value" },
+        onAction: ({ tab: clickedTab }) => {
+          clickedTab.currentUrl = "https://example.com/?secret=value#fragment";
+        },
+      }),
+    ],
+  };
+  const tab = new FakeTab({});
+  tab.playwright = new FakePlaywright(tab, registry);
+  tab.playwright.waitForEvent = async () => {
+    throw new Error("download event timed out");
+  };
+  const parent = await mkdtemp(join(tmpdir(), "browser-runtime-test-"));
+  const runDirectory = join(parent, "download-event-navigation");
+
+  let caught = null;
+  try {
+    await executeCapability({
+      tab,
+      capability,
+      inputs: { query: "invoice", "max-results": 10 },
+      runDirectory,
+      runId: "download-event-navigation-run",
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.equal(caught?.reasonCode, "download-event-not-observed-after-navigation");
+  const receiptText = await readFile(join(runDirectory, "run.receipt.json"), "utf8");
+  assert.doesNotMatch(receiptText, /secret=value|fragment/);
+  const failedAction = JSON.parse(receiptText).action_results.at(-1);
+  assert.equal(failedAction.origin, "https://example.com");
+  assert.equal(failedAction.path, "/");
+  assert.equal(failedAction.mechanism_hint, "same-origin-url");
 });
 
 test("executeCapability fails when a required non-collection output is unproduced", async () => {

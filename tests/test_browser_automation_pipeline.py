@@ -227,11 +227,13 @@ def _receipt(
                         if output_value is not None
                         else None
                     ),
+                    "evidence_code": None,
+                    "mechanism_hint": None,
                     "error": None,
                 }
             )
     return {
-        "schema_version": "browser-run-receipt/v1",
+        "schema_version": "browser-run-receipt/v2",
         "runtime_version": "browser-capability-runtime/2",
         "run_id": run_id,
         "capability_id": capability["capability_id"],
@@ -391,12 +393,22 @@ def _download_receipt(
                     "output_ref": output_ref,
                     "output_count": 1 if output_ref == "files" else 0,
                     "output_sha256": output_hash if output_ref == "files" else None,
+                    "evidence_code": (
+                        "download-bytes-verified"
+                        if action["operation"] == "download"
+                        else None
+                    ),
+                    "mechanism_hint": (
+                        "control-without-href"
+                        if action["operation"] == "download"
+                        else None
+                    ),
                     "error": None,
                 }
             )
     return {
-        "schema_version": "browser-run-receipt/v1",
-        "runtime_version": "browser-capability-runtime/11",
+        "schema_version": "browser-run-receipt/v2",
+        "runtime_version": "browser-capability-runtime/12",
         "run_id": run_id,
         "capability_id": capability["capability_id"],
         "capability_version": capability["version"],

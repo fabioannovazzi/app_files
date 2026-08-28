@@ -54,7 +54,7 @@
       {
         "id": "private-run-output-artifact",
         "purpose": "Keep structured values produced by an authorized capability run in an owner-only local artifact without automatically adding artifact-only values to model context or the portable handoff",
-        "content": "Runtime outputs.json may contain the structured values declared by the capability, including private business metadata. Download entries retained there contain the local file path, byte length, and file SHA-256; download sets are always artifact_only. For artifact_only outputs the runtime response exposes only output name, type, record count, aggregate hash, and owner-only artifact path; the model does not open or emit the output values or downloaded-file path unless the operator separately requests interpretation after the applicable exact model-data disclosure. Values explicitly declared model_and_artifact or model_summary are returned to the selected model context. Runtime input values are represented in the receipt only by SHA-256 hashes. outputs.json is excluded from the portable capability bundle",
+        "content": "Runtime outputs.json may contain the structured values declared by the capability, including private business metadata. Download entries retained there contain the local file path, byte length, and file SHA-256; download sets are always artifact_only. For artifact_only outputs the runtime response exposes only output name, type, record count, aggregate hash, and owner-only artifact path; the model does not open or emit the output values or downloaded-file path unless the operator separately requests interpretation after the applicable exact model-data disclosure. A failed download may expose only a bounded evidence reason code, a categorical control-mechanism hint, and the post-click origin plus query-free path; it does not expose the href, URL query, raw browser error, page content, or downloaded bytes. Values explicitly declared model_and_artifact or model_summary are returned to the selected model context. Runtime input values are represented in the receipt only by SHA-256 hashes. outputs.json is excluded from the portable capability bundle",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -123,7 +123,7 @@
     },
     {
       "id": "machine-generated-run-receipts",
-      "control": "The connected-Chrome runtime writes owner-only outputs, receipt, and run-lock files. Receipts contain hashes, counts, sanitized action outcomes and environment rather than raw errors, input values, or output values. The finalizer rejects validation fields alone and requires canonical receipt, output, and run-lock artifacts whose cross-hashes and action sequence agree. This proves artifact consistency, not cryptographic attestation of a physical operator or website. The portable bundle excludes outputs.json."
+      "control": "The connected-Chrome runtime writes owner-only outputs, receipt, and run-lock files. Receipts contain hashes, counts, sanitized action outcomes and environment rather than raw errors, input values, or output values. Failed download receipts may add only a bounded evidence reason code, a categorical control-mechanism hint, and post-click origin plus query-free path; hrefs, URL queries, raw browser errors, page content, and downloaded bytes remain excluded. The finalizer rejects validation fields alone and requires canonical receipt, output, and run-lock artifacts whose cross-hashes and action sequence agree. This proves artifact consistency, not cryptographic attestation of a physical operator or website. The portable bundle excludes outputs.json."
     },
     {
       "id": "scaffolds-do-not-claim-live-support",
@@ -134,6 +134,6 @@
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "86454a0e121afd377e9729d45850000bb4d1f5ee2dfb7e8e532042e81b6585b0"
+    "source_fingerprint": "efee5fb6bc4ad53f55e76ba82b8e374fff44d6d4da2be588dd33d703eb421e91"
   }
 }

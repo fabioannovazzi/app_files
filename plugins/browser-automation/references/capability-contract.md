@@ -148,7 +148,13 @@ Download completion additionally requires the connected Chrome event object to
 expose `path()` so the runtime can hash actual local bytes. A missing method is
 a sanitized `native_gap`, not successful download evidence. The runtime must
 not replace that missing evidence with accessibility-tree, screenshot,
-coordinate, profile inspection, or platform-specific desktop automation.
+coordinate, profile inspection, or platform-specific desktop automation. A
+failed download action records one bounded mechanical reason code distinguishing
+an unavailable or unobserved event, navigation without an event, unavailable or
+unresolved path evidence, and unreadable local bytes. It may also record a
+categorical control-mechanism hint and the post-click origin plus query-free
+path. It never persists the control href, URL query, raw browser error, page
+content, or downloaded bytes in the receipt.
 
 ## Run evidence
 
@@ -164,7 +170,9 @@ runtime writes:
 - `run.receipt.json`: capability and discovery hashes, hashed inputs, milestones,
   sanitized action outcomes, output counts and hashes, terminal state, and
   environment. Raw errors and private values are excluded; model-visible
-  failures contain only a stable category and a SHA-256 of the local detail. A
+  failures contain only a stable category, an optional bounded reason code, and
+  a SHA-256 of the local detail. Download actions also contain an optional
+  categorical mechanism hint and evidence code. A
   download-set output hash covers only the ordered byte-length and file-hash
   evidence, never the machine-specific local path. The path remains solely in
   `outputs.json`.
