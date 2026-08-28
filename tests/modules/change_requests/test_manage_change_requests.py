@@ -166,6 +166,40 @@ def test_cli_needs_info_records_public_question(
     assert payload["needs_info_question"] == "Provide the exact sanitized response."
 
 
+def test_cli_external_remediation_records_safe_public_recovery(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    record = ChangeRequestStore(sqlite_path=database_path).submit(_submission())
+
+    exit_code = manage_change_requests.main(
+        [
+            "--sqlite-path",
+            str(database_path),
+            "external-remediation",
+            record.change_request_id,
+            "--owner",
+            "platform-owner",
+            "--instructions",
+            "Reinstall the supported browser control from the plugin UI.",
+            "--verification",
+            "Confirm the native host and one browser connection succeed.",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["status"] == "open"
+    assert payload["disposition"] == "needs_info"
+    assert payload["needs_info_question"].startswith("Supported recovery:")
+    assert payload["operator_note"].startswith(
+        "External remediation owner: platform_owner."
+    )
+
+
 def test_cli_close_records_non_fix_disposition(
     tmp_path: Path, capsys, monkeypatch
 ) -> None:
