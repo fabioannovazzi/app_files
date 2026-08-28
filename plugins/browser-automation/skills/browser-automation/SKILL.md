@@ -195,7 +195,11 @@ always `artifact_only` and record the local path, byte length, and file SHA-256
 in `outputs.json` without returning the path to the model. Before relying on a
 download action, feature-detect that the connected Chrome download event exposes
 `path()`. If it does not, the runtime returns the sanitized `native_gap`
-category; do not claim ZIP retrieval, inspect the browser profile, or invoke a
+category with a bounded reason code. Failed download receipts distinguish event,
+navigation, path, and byte-read evidence gaps and may include only a categorical
+control-mechanism hint plus the post-click origin and query-free path. They do
+not retain the href, URL query, raw browser error, page content, or downloaded
+bytes. Do not claim ZIP retrieval, inspect the browser profile, or invoke a
 desktop-control fallback. Hand the native step to the operator and keep it
 outside clean replay evidence.
 

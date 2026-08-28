@@ -42,7 +42,7 @@ LOGGER = logging.getLogger(__name__)
 
 CAPABILITY_SCHEMA = "browser-capability/v2"
 DISCOVERY_SCHEMA = "browser-discovery/v2"
-RECEIPT_SCHEMA = "browser-run-receipt/v1"
+RECEIPT_SCHEMA = "browser-run-receipt/v2"
 RUN_LOCK_SCHEMA = "browser-run-lock/v1"
 RECOVERY_RUN_LOCK_SCHEMA = "browser-run-lock/v2"
 RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2"
@@ -1825,6 +1825,8 @@ def validate_run_receipt(payload: Any) -> list[str]:
                     "output_ref",
                     "output_count",
                     "output_sha256",
+                    "evidence_code",
+                    "mechanism_hint",
                     "error",
                 },
                 scope=scope,
@@ -1880,17 +1882,31 @@ def validate_run_receipt(payload: Any) -> list[str]:
             output_hash = action.get("output_sha256")
             if output_hash is not None and not _is_sha256(output_hash):
                 errors.append(f"{scope}.output_sha256 must be null or SHA-256")
+            for field in ("evidence_code", "mechanism_hint"):
+                value = action.get(field)
+                if value is not None and (
+                    not isinstance(value, str) or not SAFE_ID.fullmatch(value)
+                ):
+                    errors.append(f"{scope}.{field} must be null or an id")
             error = action.get("error")
             if error is not None:
                 error_record = _exact_keys(
                     error,
-                    {"code", "detail_sha256"},
+                    {"code", "reason_code", "detail_sha256"},
                     scope=f"{scope}.error",
                     errors=errors,
                 )
                 if error_record is not None:
                     if not _non_empty_text(error_record.get("code")):
                         errors.append(f"{scope}.error.code must be non-empty")
+                    reason_code = error_record.get("reason_code")
+                    if reason_code is not None and (
+                        not isinstance(reason_code, str)
+                        or not SAFE_ID.fullmatch(reason_code)
+                    ):
+                        errors.append(
+                            f"{scope}.error.reason_code must be null or an id"
+                        )
                     if not _is_sha256(error_record.get("detail_sha256")):
                         errors.append(f"{scope}.error.detail_sha256 must be SHA-256")
     if receipt.get("result") == "passed":
@@ -1987,13 +2003,19 @@ def validate_run_receipt(payload: Any) -> list[str]:
         else:
             error_record = _exact_keys(
                 receipt_error,
-                {"code", "detail_sha256"},
+                {"code", "reason_code", "detail_sha256"},
                 scope="receipt.error",
                 errors=errors,
             )
             if error_record is not None:
                 if not _non_empty_text(error_record.get("code")):
                     errors.append("receipt.error.code must be non-empty")
+                reason_code = error_record.get("reason_code")
+                if reason_code is not None and (
+                    not isinstance(reason_code, str)
+                    or not SAFE_ID.fullmatch(reason_code)
+                ):
+                    errors.append("receipt.error.reason_code must be null or an id")
                 if not _is_sha256(error_record.get("detail_sha256")):
                     errors.append("receipt.error.detail_sha256 must be SHA-256")
     return errors

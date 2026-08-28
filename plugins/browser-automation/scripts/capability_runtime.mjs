@@ -11,8 +11,8 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/11";
-export const RECEIPT_SCHEMA = "browser-run-receipt/v1";
+export const RUNTIME_VERSION = "browser-capability-runtime/12";
+export const RECEIPT_SCHEMA = "browser-run-receipt/v2";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
 const EXECUTABLE_STATES = new Set(["discovered", "validated_local"]);
@@ -47,6 +47,20 @@ class LocatorResolutionError extends Error {
     this.targetKind = targetKind;
     this.fieldName = fieldName;
     this.locatorCandidates = structuredClone(locatorCandidates);
+  }
+}
+
+class DownloadObservationError extends Error {
+  constructor(message, {
+    evidenceCode,
+    mechanismHint = null,
+    observedPage = null,
+  }) {
+    super(message);
+    this.name = "DownloadObservationError";
+    this.evidenceCode = evidenceCode;
+    this.mechanismHint = mechanismHint;
+    this.observedPage = observedPage;
   }
 }
 
@@ -650,20 +664,98 @@ async function extractWithCandidateFallback(action, context, declaration, timeou
   );
 }
 
-async function downloadedFileEvidence(path) {
-  const fileStat = await stat(path);
+async function downloadedFileEvidence(path, { mechanismHint, observedPage }) {
+  let fileStat;
+  try {
+    fileStat = await stat(path);
+  } catch (error) {
+    throw new DownloadObservationError(
+      `download path could not be read: ${error instanceof Error ? error.message : String(error)}`,
+      {
+        evidenceCode: "download-file-unreadable",
+        mechanismHint,
+        observedPage,
+      },
+    );
+  }
   if (!fileStat.isFile()) {
-    throw new Error("download path is not a regular file");
+    throw new DownloadObservationError("download path is not a regular file", {
+      evidenceCode: "download-path-not-regular-file",
+      mechanismHint,
+      observedPage,
+    });
   }
   const hash = createHash("sha256");
-  for await (const chunk of createReadStream(path)) {
-    hash.update(chunk);
+  try {
+    for await (const chunk of createReadStream(path)) {
+      hash.update(chunk);
+    }
+  } catch (error) {
+    throw new DownloadObservationError(
+      `download bytes could not be read: ${error instanceof Error ? error.message : String(error)}`,
+      {
+        evidenceCode: "download-file-unreadable",
+        mechanismHint,
+        observedPage,
+      },
+    );
   }
   return {
     path,
     byte_length: fileStat.size,
     sha256: hash.digest("hex"),
   };
+}
+
+async function downloadMechanismHint(locator, currentUrl, allowedOrigins) {
+  // These categories come from mechanically observable control attributes.
+  // They diagnose transport shape without persisting hrefs, tokens, or page meaning.
+  let downloadAttribute = null;
+  let href = null;
+  let target = null;
+  try {
+    [downloadAttribute, href, target] = await Promise.all([
+      locator.getAttribute("download"),
+      locator.getAttribute("href"),
+      locator.getAttribute("target"),
+    ]);
+  } catch {
+    return "control-attributes-unavailable";
+  }
+  if (downloadAttribute !== null) return "download-attribute";
+  if (typeof href !== "string" || href.trim() === "") {
+    return "control-without-href";
+  }
+  const normalizedHref = href.trim().toLowerCase();
+  if (normalizedHref.startsWith("blob:")) return "blob-url";
+  if (normalizedHref.startsWith("data:")) return "data-url";
+  if (normalizedHref.startsWith("javascript:")) return "javascript-url";
+  let resolved;
+  try {
+    resolved = new URL(href, currentUrl);
+  } catch {
+    return "unclassified-href";
+  }
+  if (!new Set(["http:", "https:"]).has(resolved.protocol)) {
+    return "non-http-url";
+  }
+  if (target?.trim().toLowerCase() === "_blank") return "new-tab-url";
+  const currentOrigin = new URL(currentUrl).origin;
+  if (resolved.origin === currentOrigin) return "same-origin-url";
+  if (allowedOrigins.has(normalizeOrigin(resolved.origin))) return "allowed-cross-origin-url";
+  return "outside-allowed-origin-url";
+}
+
+function downloadObservationPage(error) {
+  return error instanceof DownloadObservationError ? error.observedPage : null;
+}
+
+function downloadEvidenceCode(error) {
+  return error instanceof DownloadObservationError ? error.evidenceCode : null;
+}
+
+function downloadMechanism(error) {
+  return error instanceof DownloadObservationError ? error.mechanismHint : null;
 }
 
 function outputCount(value) {
@@ -684,15 +776,17 @@ function receiptOutputSha256(declaration, value) {
   return sha256Text(canonicalJson(receiptOutputPayload(declaration, value)));
 }
 
-function sanitizedErrorMetadata(code, detail) {
+function sanitizedErrorMetadata(code, detail, reasonCode = null) {
   return {
     code,
+    reason_code: reasonCode,
     detail_sha256: sha256Text(String(detail)),
   };
 }
 
 function classifyRunFailure(error) {
   const detail = error instanceof Error ? error.message : String(error);
+  if (error instanceof DownloadObservationError) return "native_gap";
   if (error instanceof LocatorResolutionError) return "locator_resolution_failed";
   if (detail.startsWith("browser left allowed origins:")) return "origin_boundary_violation";
   if (detail.startsWith("postcondition failed:")) return "postcondition_failed";
@@ -1014,6 +1108,8 @@ async function executeAction(action, context) {
     approvedConsequentialActions,
   } = context;
   const timeoutMs = boundedTimeout(action.timeout_ms);
+  let evidenceCode = null;
+  let mechanism = null;
   if (action.effect === "consequential" && !approvedConsequentialActions.has(action.id)) {
     throw new Error(`consequential action requires current operator approval: ${action.id}`);
   }
@@ -1071,17 +1167,100 @@ async function executeAction(action, context) {
     if (declaration?.type !== "download_set" || declaration.delivery !== "artifact_only") {
       throw new Error(`download action requires an artifact-only download_set output`);
     }
-    const downloadPromise = tab.playwright.waitForEvent("download", { timeoutMs });
+    const beforeUrl = await tab.url();
+    const beforePage = assertAllowedUrl(beforeUrl, context.allowedOrigins);
+    const mechanismHint = await downloadMechanismHint(
+      locator,
+      beforeUrl,
+      context.allowedOrigins,
+    );
+    if (typeof tab.playwright.waitForEvent !== "function") {
+      throw new DownloadObservationError(
+        "connected Chrome runtime lacks the download event API",
+        {
+          evidenceCode: "download-event-api-unavailable",
+          mechanismHint,
+          observedPage: beforePage,
+        },
+      );
+    }
+    let downloadPromise;
+    try {
+      downloadPromise = tab.playwright.waitForEvent("download", { timeoutMs });
+    } catch (error) {
+      throw new DownloadObservationError(
+        `download event listener could not start: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          evidenceCode: "download-event-listener-failed",
+          mechanismHint,
+          observedPage: beforePage,
+        },
+      );
+    }
+    const downloadOutcomePromise = Promise.resolve(downloadPromise).then(
+      (download) => ({ download, error: null }),
+      (error) => ({ download: null, error }),
+    );
     await locator.click({ timeoutMs });
-    const download = await downloadPromise;
+    const downloadOutcome = await downloadOutcomePromise;
+    const afterUrl = await tab.url();
+    const afterPage = assertAllowedUrl(afterUrl, context.allowedOrigins);
+    if (downloadOutcome.error !== null || downloadOutcome.download == null) {
+      const pageChanged = new URL(beforeUrl).href !== new URL(afterUrl).href;
+      const evidenceCode = pageChanged
+        ? "download-event-not-observed-after-navigation"
+        : "download-event-not-observed-page-unchanged";
+      const detail = downloadOutcome.error instanceof Error
+        ? downloadOutcome.error.message
+        : String(downloadOutcome.error ?? "download event returned no object");
+      throw new DownloadObservationError(`download event was not observed: ${detail}`, {
+        evidenceCode,
+        mechanismHint,
+        observedPage: afterPage,
+      });
+    }
+    const download = downloadOutcome.download;
     if (typeof download?.path !== "function") {
-      throw new Error("connected Chrome runtime lacks download path evidence");
+      throw new DownloadObservationError(
+        "connected Chrome runtime lacks download path evidence",
+        {
+          evidenceCode: "download-path-api-unavailable",
+          mechanismHint,
+          observedPage: afterPage,
+        },
+      );
     }
-    const path = await download.path({ timeoutMs });
+    let path;
+    try {
+      path = await download.path({ timeoutMs });
+    } catch (error) {
+      throw new DownloadObservationError(
+        `download path resolution failed: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          evidenceCode: "download-path-resolution-failed",
+          mechanismHint,
+          observedPage: afterPage,
+        },
+      );
+    }
     if (path == null) {
-      throw new Error(`download did not produce a local path: ${action.id}`);
+      throw new DownloadObservationError(
+        `download did not produce a local path: ${action.id}`,
+        {
+          evidenceCode: "download-path-not-returned",
+          mechanismHint,
+          observedPage: afterPage,
+        },
+      );
     }
-    outputs[action.output_ref].push(await downloadedFileEvidence(path));
+    outputs[action.output_ref].push(
+      await downloadedFileEvidence(path, {
+        mechanismHint,
+        observedPage: afterPage,
+      }),
+    );
+    evidenceCode = "download-bytes-verified";
+    mechanism = mechanismHint;
   } else {
     throw new Error(`unsupported operation: ${action.operation}`);
   }
@@ -1101,6 +1280,8 @@ async function executeAction(action, context) {
       outputValue == null
         ? null
         : receiptOutputSha256(outputDeclaration, outputValue),
+    evidence_code: evidenceCode,
+    mechanism_hint: mechanism,
   };
 }
 
@@ -1168,6 +1349,7 @@ function publicSummary(
     recovery_proposals_path: recoveryProposalsPath,
     recovery_proposal_count: recoveryProposalCount,
     recovery_request: recoveryRequestForModel,
+    error: receipt.error,
   };
 }
 
@@ -1272,6 +1454,7 @@ export async function executeCapability({
             error: null,
           });
         } catch (error) {
+          const observedPage = downloadObservationPage(error);
           actionResults.push({
             milestone_id: milestone.id,
             action_id: action.id,
@@ -1280,14 +1463,17 @@ export async function executeCapability({
             started_at: actionStartedAt,
             finished_at: clock(),
             locator_candidate: null,
-            origin: null,
-            path: null,
+            origin: observedPage?.origin ?? null,
+            path: observedPage?.path ?? null,
             output_ref: action.output_ref,
             output_count: 0,
             output_sha256: null,
+            evidence_code: downloadEvidenceCode(error),
+            mechanism_hint: downloadMechanism(error),
             error: sanitizedErrorMetadata(
               "action_failed",
               error instanceof Error ? error.message : String(error),
+              downloadEvidenceCode(error),
             ),
           });
           throw error;
@@ -1324,7 +1510,11 @@ export async function executeCapability({
     }
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    failure = sanitizedErrorMetadata(classifyRunFailure(error), detail);
+    failure = sanitizedErrorMetadata(
+      classifyRunFailure(error),
+      detail,
+      downloadEvidenceCode(error),
+    );
   }
 
   const outputsPath = join(resolvedRunDirectory, "outputs.json");
@@ -1410,6 +1600,7 @@ export async function executeCapability({
       `browser capability run failed: ${failure.code} (${failure.detail_sha256})`,
     );
     error.code = failure.code;
+    error.reasonCode = failure.reason_code;
     error.detailSha256 = failure.detail_sha256;
     error.runSummary = summary;
     throw error;
