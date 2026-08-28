@@ -38,6 +38,7 @@ __all__ = [
     "ChangeRequestStoreError",
     "ChangeRequestStoreUnavailableError",
     "ChangeRequestDisposition",
+    "ExternalRemediationOwner",
     "ChangeRequestTriageState",
     "get_change_request_store",
 ]
@@ -52,8 +53,16 @@ ChangeRequestDisposition = Literal[
     "non_actionable",
 ]
 ChangeRequestTriageState = Literal["active", "considering"]
+ExternalRemediationOwner = Literal[
+    "reporter_machine",
+    "platform_owner",
+    "external_service",
+]
 _UNRESOLVED_DISPOSITIONS = frozenset({"unresolved", "needs_info"})
 _NON_FIX_DISPOSITIONS = frozenset({"duplicate", "external", "non_actionable"})
+_EXTERNAL_REMEDIATION_OWNERS = frozenset(
+    {"reporter_machine", "platform_owner", "external_service"}
+)
 
 _CHANGE_REQUEST_ID_PATTERN = re.compile(r"^CR-(?P<number>[1-9][0-9]*)$")
 _DEFAULT_MAX_RECORDS = 10_000
@@ -874,6 +883,7 @@ class ChangeRequestStore:
         change_request_id: str,
         *,
         question: str,
+        operator_note: str | None = None,
     ) -> ChangeRequestRecord:
         """Request one bounded, token-mediated evidence follow-up."""
 
@@ -883,6 +893,13 @@ class ChangeRequestStore:
             raise ValueError(
                 "A needs-information question of 1-1000 characters is required."
             )
+        clean_operator_note = (
+            " ".join(operator_note.split()) if operator_note is not None else None
+        )
+        if clean_operator_note is not None and (
+            not clean_operator_note or len(clean_operator_note) > 2_000
+        ):
+            raise ValueError("An operator note of 1-2000 characters is required.")
         self._ensure_schema()
         timestamp = _utc_now()
         try:
@@ -898,6 +915,7 @@ class ChangeRequestStore:
                 if (
                     current.disposition == "needs_info"
                     and current.needs_info_question == clean_question
+                    and current.operator_note == clean_operator_note
                 ):
                     return current
                 connection.execute(
@@ -906,12 +924,17 @@ class ChangeRequestStore:
                     SET status = 'open', disposition = 'needs_info',
                         revision = revision + 1,
                         triage_state = 'active', needs_info_question = ?,
-                        operator_note = NULL, closed_at = NULL,
+                        operator_note = ?, closed_at = NULL,
                         fixed_version = NULL, install_url = NULL, fixed_at = NULL,
                         updated_at = ?
                     WHERE request_no = ?
                     """,
-                    (clean_question, timestamp, request_no),
+                    (
+                        clean_question,
+                        clean_operator_note,
+                        timestamp,
+                        request_no,
+                    ),
                 )
                 row = self._select_number(connection, request_no)
                 if row is None:
@@ -931,6 +954,51 @@ class ChangeRequestStore:
             raise ChangeRequestStoreUnavailableError(
                 "Change-request storage is unavailable."
             ) from exc
+
+    def mark_external_remediation(
+        self,
+        change_request_id: str,
+        *,
+        owner: ExternalRemediationOwner,
+        instructions: str,
+        verification: str,
+    ) -> ChangeRequestRecord:
+        """Route a non-code repair through an explicit, auditable owner contract.
+
+        The fixed owner values validate operator input mechanically; they do not
+        infer whether a report belongs to Vera, a machine, or an external service.
+        """
+
+        if owner not in _EXTERNAL_REMEDIATION_OWNERS:
+            raise ValueError("Unknown external-remediation owner.")
+        clean_instructions = " ".join(instructions.split())
+        clean_verification = " ".join(verification.split())
+        if not clean_instructions or len(clean_instructions) > 300:
+            raise ValueError(
+                "External-remediation instructions of 1-300 characters are required."
+            )
+        if not clean_verification or len(clean_verification) > 220:
+            raise ValueError(
+                "External-remediation verification of 1-220 characters is required."
+            )
+        question = (
+            f"Supported recovery: {clean_instructions} "
+            f"Verification required: {clean_verification} "
+            "Return only bounded sanitized results. Do not include credentials, "
+            "tokens, browser contents, screenshots, account identifiers, registry "
+            "exports, local paths, or personal data. Do not perform unofficial "
+            "credential, browser-state, registry, manifest, or policy changes."
+        )
+        operator_note = (
+            f"External remediation owner: {owner}. Resolution requires evidence "
+            "from the affected environment and must not be attributed to a Vera "
+            "source change."
+        )
+        return self.mark_needs_info(
+            change_request_id,
+            question=question,
+            operator_note=operator_note,
+        )
 
     def add_follow_up_evidence(
         self,

@@ -177,6 +177,65 @@ def test_non_fix_disposition_is_distinct_and_reversible(tmp_path: Path) -> None:
     assert store.list_open() == [reopened]
 
 
+def test_external_remediation_preserves_owner_through_follow_up(
+    tmp_path: Path,
+) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    record = store.submit(_submission())
+
+    waiting = store.mark_external_remediation(
+        record.change_request_id,
+        owner="reporter_machine",
+        instructions="Reinstall the supported browser control from the plugin UI.",
+        verification="Confirm the native host and one browser connection succeed.",
+    )
+    retried = store.mark_external_remediation(
+        record.change_request_id,
+        owner="reporter_machine",
+        instructions="Reinstall the supported browser control from the plugin UI.",
+        verification="Confirm the native host and one browser connection succeed.",
+    )
+
+    assert waiting.disposition == "needs_info"
+    assert waiting.revision == 2
+    assert waiting.needs_info_question is not None
+    assert waiting.needs_info_question.startswith("Supported recovery:")
+    assert "Return only bounded sanitized results." in waiting.needs_info_question
+    assert waiting.operator_note == (
+        "External remediation owner: reporter_machine. Resolution requires evidence "
+        "from the affected environment and must not be attributed to a Vera source "
+        "change."
+    )
+    assert retried == waiting
+
+    updated = store.add_follow_up_evidence(
+        record.change_request_id,
+        record.status_token,
+        {
+            "update_id": "external-remediation-result",
+            "diagnostic_status": "native_host_ready",
+        },
+    )
+
+    assert updated.disposition == "unresolved"
+    assert updated.revision == 3
+    assert updated.needs_info_question is None
+    assert updated.operator_note == waiting.operator_note
+
+
+def test_external_remediation_rejects_unsupported_owner(tmp_path: Path) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    record = store.submit(_submission())
+
+    with pytest.raises(ValueError, match="Unknown external-remediation owner"):
+        store.mark_external_remediation(
+            record.change_request_id,
+            owner="vera",  # type: ignore[arg-type]
+            instructions="Retry the supported local setup.",
+            verification="Confirm the affected operation succeeds.",
+        )
+
+
 def test_submit_rejects_reused_submission_id_with_different_content(
     tmp_path: Path,
 ) -> None:

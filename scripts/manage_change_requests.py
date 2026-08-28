@@ -68,6 +68,19 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     needs_info_parser.add_argument("change_request_id")
     needs_info_parser.add_argument("--question", required=True)
 
+    external_remediation_parser = commands.add_parser(
+        "external-remediation",
+        help="Route a safe repair to a reporter machine or external owner.",
+    )
+    external_remediation_parser.add_argument("change_request_id")
+    external_remediation_parser.add_argument(
+        "--owner",
+        required=True,
+        choices=("reporter-machine", "platform-owner", "external-service"),
+    )
+    external_remediation_parser.add_argument("--instructions", required=True)
+    external_remediation_parser.add_argument("--verification", required=True)
+
     close_parser = commands.add_parser(
         "close", help="Close a verified non-fix outcome with an explicit disposition."
     )
@@ -169,6 +182,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             record = store.mark_needs_info(
                 args.change_request_id,
                 question=args.question,
+            )
+            _write_json(_record_payload(record, include_request=False))
+            return 0
+        if args.command == "external-remediation":
+            record = store.mark_external_remediation(
+                args.change_request_id,
+                owner=args.owner.replace("-", "_"),
+                instructions=args.instructions,
+                verification=args.verification,
             )
             _write_json(_record_payload(record, include_request=False))
             return 0
