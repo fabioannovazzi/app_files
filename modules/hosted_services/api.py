@@ -492,6 +492,15 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "cta_label": "See how your data is handled",
             "cta_href": "/data-handling",
         },
+        "collaborative": {
+            "id": "collaborative",
+            "title": "Collaborative by design.",
+            "description": (
+                "Our plugins are shaped with the help of people who share their time, "
+                "knowledge and perspective. The work is sustained by voluntary "
+                "contributions and developed openly for others to inspect, adapt and improve."
+            ),
+        },
         "bridge": {
             "id": "plugins",
             "title": "Plugins by design.",
@@ -708,6 +717,16 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "closing": "Una regola per Clara, Vera e Lucia. Nessuna burocrazia prompt per prompt.",
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
             "cta_href": "/data-handling",
+        },
+        "collaborative": {
+            "id": "collaborative",
+            "title": "Collaborativi per scelta.",
+            "description": (
+                "I nostri plugin prendono forma con l'aiuto di persone che condividono "
+                "il proprio tempo, le proprie conoscenze e il proprio punto di vista. "
+                "Il lavoro è sostenuto da contributi volontari e sviluppato apertamente "
+                "perché altri possano esaminarlo, adattarlo e migliorarlo."
+            ),
         },
         "bridge": {
             "id": "plugins",
@@ -931,6 +950,16 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "cta_label": "Voir comment vos données sont traitées",
             "cta_href": "/data-handling",
         },
+        "collaborative": {
+            "id": "collaborative",
+            "title": "Collaboratifs par conception.",
+            "description": (
+                "Nos plugins sont façonnés avec l'aide de personnes qui partagent leur "
+                "temps, leurs connaissances et leur point de vue. Le travail repose sur "
+                "des contributions volontaires et est développé ouvertement afin que "
+                "d'autres puissent l'examiner, l'adapter et l'améliorer."
+            ),
+        },
         "bridge": {
             "id": "plugins",
             "title": "Plugins par conception.",
@@ -1152,6 +1181,16 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "closing": "Eine Regel für Clara, Vera und Lucia. Kein Papierkram für jeden Prompt.",
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
             "cta_href": "/data-handling",
+        },
+        "collaborative": {
+            "id": "collaborative",
+            "title": "Gemeinsam konzipiert.",
+            "description": (
+                "Unsere Plugins entstehen mit der Hilfe von Menschen, die ihre Zeit, "
+                "ihr Wissen und ihre Perspektive teilen. Die Arbeit wird durch freiwillige "
+                "Beiträge getragen und offen entwickelt, damit andere sie prüfen, "
+                "anpassen und verbessern können."
+            ),
         },
         "bridge": {
             "id": "plugins",
@@ -1396,6 +1435,16 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "cta_label": "Ver cómo se tratan tus datos",
             "cta_href": "/data-handling",
         },
+        "collaborative": {
+            "id": "collaborative",
+            "title": "Colaborativos por diseño.",
+            "description": (
+                "Nuestros plugins toman forma con la ayuda de personas que comparten "
+                "su tiempo, sus conocimientos y su perspectiva. El trabajo se sostiene "
+                "con contribuciones voluntarias y se desarrolla abiertamente para que "
+                "otros puedan examinarlo, adaptarlo y mejorarlo."
+            ),
+        },
         "bridge": {
             "id": "plugins",
             "title": "Plugins por diseño.",
@@ -1511,6 +1560,7 @@ def landing_page(request: Request) -> Any:
             free=landing_page_content["free"],
             security=landing_page_content["security"],
             compliance=landing_page_content["compliance"],
+            collaborative=landing_page_content["collaborative"],
             bridge=landing_page_content["bridge"],
             copy=get_page_copy("landing", lang),
             lang=lang,
@@ -1726,5 +1776,6 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
         "free": content.get("free", {}),
         "security": content.get("security", {}),
         "compliance": content.get("compliance", {}),
+        "collaborative": content.get("collaborative", {}),
         "bridge": content.get("bridge", {}),
     }
