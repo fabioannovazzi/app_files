@@ -3135,7 +3135,8 @@ body.landing-body.landing-home {
 }
 
 .landing-home .landing-open-source,
-.landing-home .landing-free {
+.landing-home .landing-free,
+.landing-home .landing-collaborative {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: clamp(40px, 7vw, 104px);
@@ -3149,6 +3150,7 @@ body.landing-body.landing-home {
 .landing-home .landing-free h2,
 .landing-home .landing-security h2,
 .landing-home .landing-compliance h2,
+.landing-home .landing-collaborative h2,
 .landing-home .landing-bridge h2 {
   margin: 0;
   max-width: 8ch;
@@ -3161,7 +3163,8 @@ body.landing-body.landing-home {
 }
 
 .landing-home .landing-open-source__body > p,
-.landing-home .landing-free__body > p {
+.landing-home .landing-free__body > p,
+.landing-home .landing-collaborative__body > p {
   margin: 0;
   max-width: 46ch;
   color: var(--landing-muted);
@@ -3605,6 +3608,7 @@ body.landing-body.landing-home {
   .landing-home .landing-free,
   .landing-home .landing-security,
   .landing-home .landing-compliance,
+  .landing-home .landing-collaborative,
   .landing-home .landing-bridge {
     grid-template-columns: minmax(0, 1fr);
     gap: 40px;
@@ -3615,7 +3619,8 @@ body.landing-body.landing-home {
   }
 
   .landing-home .landing-open-source,
-  .landing-home .landing-free {
+  .landing-home .landing-free,
+  .landing-home .landing-collaborative {
     padding: 84px 0;
   }
 
@@ -3631,6 +3636,7 @@ body.landing-body.landing-home {
   .landing-home .landing-free h2,
   .landing-home .landing-security h2,
   .landing-home .landing-compliance h2,
+  .landing-home .landing-collaborative h2,
   .landing-home .landing-bridge h2 {
     max-width: 9ch;
     font-size: clamp(2.6rem, 4.8vw, 4.8rem);

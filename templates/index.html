@@ -179,6 +179,17 @@
     </section>
   {% endif %}
 
+  {% if collaborative %}
+    <section id="{{ collaborative.id }}"
+             class="landing-collaborative"
+             aria-labelledby="landing-collaborative-title">
+      <h2 id="landing-collaborative-title">{{ collaborative.title }}</h2>
+      <div class="landing-collaborative__body">
+        <p>{{ collaborative.description }}</p>
+      </div>
+    </section>
+  {% endif %}
+
   {% if bridge %}
     <section id="{{ bridge.id }}"
              class="landing-bridge"

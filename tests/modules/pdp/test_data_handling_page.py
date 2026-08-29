@@ -208,13 +208,21 @@ def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
 
 
 @pytest.mark.parametrize(
-    ("lang", "open_title", "free_title", "security_title", "bridge_title"),
+    (
+        "lang",
+        "open_title",
+        "free_title",
+        "security_title",
+        "collaborative_title",
+        "bridge_title",
+    ),
     (
         (
             "en",
             "Open by design.",
             "Free by design.",
             "Secure by design.",
+            "Collaborative by design.",
             "Plugins by design.",
         ),
         (
@@ -222,6 +230,7 @@ def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
             "Aperti per scelta.",
             "Gratuiti per scelta.",
             "Sicuri per scelta.",
+            "Collaborativi per scelta.",
             "Plugin per scelta.",
         ),
         (
@@ -229,6 +238,7 @@ def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
             "Ouverts par conception.",
             "Gratuits par conception.",
             "Sécurisés par conception.",
+            "Collaboratifs par conception.",
             "Plugins par conception.",
         ),
         (
@@ -236,6 +246,7 @@ def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
             "Offen konzipiert.",
             "Kostenlos konzipiert.",
             "Sicher konzipiert.",
+            "Gemeinsam konzipiert.",
             "Als Plugins konzipiert.",
         ),
         (
@@ -243,6 +254,7 @@ def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
             "Abiertos por diseño.",
             "Gratuitos por diseño.",
             "Seguros por diseño.",
+            "Colaborativos por diseño.",
             "Plugins por diseño.",
         ),
     ),
@@ -252,6 +264,7 @@ def test_homepage_design_copy_is_localized(
     open_title: str,
     free_title: str,
     security_title: str,
+    collaborative_title: str,
     bridge_title: str,
 ) -> None:
     content = _get_landing_page_content(lang)
@@ -261,7 +274,46 @@ def test_homepage_design_copy_is_localized(
     assert content["free"]["title"] == free_title
     assert security["title"] == security_title
     assert security["cta_href"] == "/data-handling"
+    assert content["collaborative"]["title"] == collaborative_title
     assert content["bridge"]["title"] == bridge_title
+
+
+def test_homepage_collaborative_section_uses_approved_copy() -> None:
+    content = _get_landing_page_content("en")["collaborative"]
+
+    assert content == {
+        "id": "collaborative",
+        "title": "Collaborative by design.",
+        "description": (
+            "Our plugins are shaped with the help of people who share their time, "
+            "knowledge and perspective. The work is sustained by voluntary "
+            "contributions and developed openly for others to inspect, adapt and improve."
+        ),
+    }
+
+
+def test_homepage_passes_collaborative_section_to_template(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured = _capture_template_response(monkeypatch)
+    client = TestClient(app)
+
+    response = client.get("/?lang=en")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["collaborative"] == _get_landing_page_content("en")["collaborative"]
+
+
+def test_homepage_template_places_collaborative_before_plugins() -> None:
+    template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
+
+    compliance_position = template.index("{% if compliance %}")
+    collaborative_position = template.index("{% if collaborative %}")
+    plugins_position = template.index("{% if bridge %}")
+
+    assert compliance_position < collaborative_position < plugins_position
 
 
 @pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
