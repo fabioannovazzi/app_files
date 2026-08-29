@@ -346,6 +346,37 @@
       font-weight: 700;
     }
 
+    .contributors { scroll-margin-top: 88px; }
+    .contributor-list {
+      margin: 0;
+      padding: 0;
+      border-top: 2px solid var(--navy);
+      list-style: none;
+    }
+    .contributor-list li { border-bottom: 1px solid var(--cyan); }
+    .contributor-row {
+      min-height: 88px;
+      padding: 22px 4px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      text-decoration: none;
+    }
+    .contributor-name {
+      font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+    .contributor-platform {
+      color: var(--blue);
+      font-size: 0.875rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .contributor-row:hover .contributor-name { color: var(--blue); }
+    .contributor-row:hover .contributor-platform { color: var(--navy); }
+
     .bilancio-head {
       align-items: start;
       margin-bottom: clamp(48px, 7vw, 76px);
@@ -1030,6 +1061,7 @@
       .module-row[data-vera-workflow="new-client"] > p { grid-column: 1; grid-row: 2; }
       .module-row[data-vera-workflow="new-client"] .module-row__included { grid-column: 1; grid-row: 3; }
       .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 2; grid-row: 1 / span 3; }
+      .contributor-row { gap: 18px; }
       .overview-video { grid-template-columns: 1fr; }
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
     }
@@ -1044,6 +1076,7 @@
     @media (pointer: coarse) {
       .button { min-height: 52px; padding-inline: 22px; }
       .module-row { min-height: 112px; }
+      .contributor-row { min-height: 96px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1350,6 +1383,36 @@
       </div>
     </section>
 
+    <section class="section-block contributors" id="contributors" aria-labelledby="contributors-title">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="section-index" data-i18n="contributors.index">Collaborazione</span>
+          <h2 id="contributors-title" data-i18n="contributors.title">Contributors</h2>
+        </div>
+        <p data-i18n="contributors.copy">Vera non esisterebbe senza il contributo di persone che condividono tempo, competenze e prospettive per migliorarla.</p>
+      </div>
+      <ul class="contributor-list">
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/giancarlo-coppola-903b8521" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-name">Giancarlo Coppola</span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/francescogiraldo" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-name">Francesco Giraldo</span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="contributor-row" href="https://it.linkedin.com/in/gerardo-maruotti-16b781b9" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-name">Gerardo Maruotti</span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
   </main>
 
   <footer>
@@ -1553,6 +1616,9 @@
         "install.coworkButton": "Scarica per Claude Cowork",
         "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
         "install.video.title": "Collega ChatGPT al computer con Codex",
+        "contributors.index": "Collaborazione",
+        "contributors.title": "Contributors",
+        "contributors.copy": "Vera non esisterebbe senza il contributo di persone che condividono tempo, competenze e prospettive per migliorarla.",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
         "footer.data": "Gestione dei dati"
@@ -1745,6 +1811,9 @@
         "install.coworkButton": "Download for Claude Cowork",
         "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
+        "contributors.index": "Collaboration",
+        "contributors.title": "Contributors",
+        "contributors.copy": "Vera could not exist without the people who share their time, expertise and perspective to improve it.",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
         "footer.data": "Data handling"
@@ -1937,6 +2006,9 @@
         "install.coworkButton": "Télécharger pour Claude Cowork",
         "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
+        "contributors.index": "Collaboration",
+        "contributors.title": "Contributeurs",
+        "contributors.copy": "Vera ne pourrait pas exister sans les personnes qui partagent leur temps, leur expertise et leur point de vue pour l’améliorer.",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
         "footer.data": "Gestion des données"
@@ -2129,6 +2201,9 @@
         "install.coworkButton": "Für Claude Cowork herunterladen",
         "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
+        "contributors.index": "Zusammenarbeit",
+        "contributors.title": "Mitwirkende",
+        "contributors.copy": "Vera könnte ohne die Menschen nicht existieren, die ihre Zeit, ihr Fachwissen und ihre Perspektiven einbringen, um sie zu verbessern.",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
         "footer.data": "Datenverarbeitung"
@@ -2321,6 +2396,9 @@
         "install.coworkButton": "Descargar para Claude Cowork",
         "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
+        "contributors.index": "Colaboración",
+        "contributors.title": "Colaboradores",
+        "contributors.copy": "Vera no podría existir sin las personas que comparten su tiempo, experiencia y perspectiva para mejorarla.",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
         "footer.data": "Tratamiento de datos"
