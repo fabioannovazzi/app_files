@@ -724,7 +724,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "description": (
                 "I nostri plugin prendono forma con l'aiuto di persone che condividono "
                 "il proprio tempo, le proprie conoscenze e il proprio punto di vista. "
-                "Il lavoro è sostenuto da contributi volontari e sviluppato apertamente "
+                "Il lavoro è sostenuto da contributi volontari e sviluppato in open source "
                 "perché altri possano esaminarlo, adattarlo e migliorarlo."
             ),
         },
