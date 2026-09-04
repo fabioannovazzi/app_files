@@ -4124,7 +4124,9 @@ def test_accounting_process_page_ends_with_model_data_block(
     assert main.rindex('class="function-model-data"') > main.rindex('id="prompt"')
 
 
-def test_business_planning_pages_use_distinct_product_lenses_and_shared_renderer() -> None:
+def test_business_planning_pages_use_distinct_product_lenses_and_shared_renderer() -> (
+    None
+):
     vera_page = (
         ROOT / "static" / "shared" / "business-planning" / "index.html"
     ).read_text(encoding="utf-8")
@@ -4137,11 +4139,18 @@ def test_business_planning_pages_use_distinct_product_lenses_and_shared_renderer
 
     assert 'data-function-page="business-planning"' in vera_page
     assert 'data-function-page="clara-business-planning"' in clara_page
-    assert "Accounting and financial business plan" in copy
+    assert "Financial plan and funding needs" in copy
     assert "Strategic and commercial business plan" in copy
     assert "startups and established companies" in copy
     assert "never selects the strategy" in copy
     assert "without a balancing plug" in copy
+    business_planning_copy = copy.split('"browser-automation"', maxsplit=1)[0]
+    clara_business_planning_copy = copy.split('"clara-business-planning"', maxsplit=1)[
+        1
+    ].split('"clara-advisory-planning"', maxsplit=1)[0]
+    assert "handoff" not in business_planning_copy.lower()
+    assert "handoff" not in clara_business_planning_copy.lower()
+    assert "user does not transfer files between products" in copy
 
 
 def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:

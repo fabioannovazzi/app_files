@@ -41,7 +41,7 @@
       "display_name": "Prepare a strategic business plan",
       "short_description": "Connect market evidence, options, initiatives, and risks",
       "default_prompt": "Use $business-planning to prepare the strategic and commercial business plan for this company from reviewed evidence and assumptions.",
-      "instructions": "State the company, its stage in plain language, the decision, audience, horizon, and selected evidence. The workflow supports startups, new ventures, and established companies. Clara develops evidence-linked findings, strategic options, recommendation, initiatives, milestones, KPIs, risks, and decision implications, then prepares a reviewable handoff to Vera. Clara does not reinterpret Vera's reconciled figures or silently change accounting assumptions."
+      "instructions": "State the company, its stage in plain language, the decision, audience, horizon, and selected evidence. The workflow supports startups, new ventures, and established companies. Clara develops evidence-linked findings, strategic options, recommendation, initiatives, milestones, KPIs, risks, and decision implications. Clara remains responsible for the result; if the scope needs Vera's financial contribution, she handles it internally in the same plan, exposes unresolved differences, and does not reinterpret reconciled figures or silently change accounting assumptions."
     },
     "claim-basis-map": {
       "display_name": "Verify presentation claims",

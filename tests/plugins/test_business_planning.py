@@ -30,9 +30,9 @@ def _load_module(name: str, path: Path) -> ModuleType:
     return module
 
 
-HANDOFF = _load_module(
-    "business_planning_handoff",
-    SCRIPT_ROOT / "business_planning_handoff.py",
+CONTRIBUTION = _load_module(
+    "business_planning_contribution",
+    SCRIPT_ROOT / "business_planning_contribution.py",
 )
 CORE = _load_module(
     "test_business_planning_financial_core",
@@ -253,16 +253,23 @@ def _strategic_case(*, evidence_status: str = "reviewed") -> dict[str, Any]:
             {
                 "id": "pricing-proof",
                 "question": "What price sustains repeat demand?",
-                "why_it_matters": "It changes the commercial case and Vera handoff.",
+                "why_it_matters": "It changes the commercial case and funding need.",
             }
         ],
     }
 
 
 def _aligned_strategic_case() -> dict[str, Any]:
+    financial_case = _case()
     case = _strategic_case()
-    case["case_id"] = "venture-plan-2027"
-    case["entity_name"] = "Venture S.r.l."
+    for field in (
+        "case_id",
+        "entity_name",
+        "company_stage",
+        "planning_objective",
+        "audience",
+    ):
+        case[field] = financial_case[field]
     case["assumptions"][0]["id"] = "operating-case"
     case["assumptions"][0][
         "description"
@@ -484,7 +491,7 @@ def test_runner_writes_complete_client_bound_review_package(tmp_path: Path) -> N
         "business_plan.xlsx",
         "business_plan_facts.md",
         "business_plan_review.html",
-        "business_planning_handoff.json",
+        "counterpart_contribution.json",
         "commentary_template.json",
         "execution_receipt.json",
         "model_context.json",
@@ -510,25 +517,25 @@ def test_established_company_uses_the_same_financial_contract() -> None:
     case["evidence_register"][0]["kind"] = "historical_actual"
 
     plan = CORE.build_business_plan(case)
-    handoff = CORE.build_counterpart_handoff(plan)
+    contribution = CORE.build_counterpart_contribution(plan)
 
     assert plan["status"] == "ready_for_professional_review"
     assert plan["company_stage"].startswith("Established manufacturer")
-    assert handoff["from_product"] == "Vera"
-    assert handoff["to_product"] == "Clara"
-    assert handoff["status"] == "ready_for_counterpart_review"
+    assert contribution["from_product"] == "Vera"
+    assert contribution["to_product"] == "Clara"
+    assert contribution["status"] == "ready_for_owner_review"
 
 
 def test_clara_strategic_case_keeps_semantic_content_model_led() -> None:
     plan = STRATEGIC.build_strategic_plan(_strategic_case())
-    handoff = STRATEGIC.build_counterpart_handoff(plan)
+    contribution = STRATEGIC.build_counterpart_contribution(plan)
 
     assert plan["professional_lens"] == "strategic_commercial"
     assert plan["recommendation"]["option_ids"] == ["focused-launch"]
     assert plan["status"] == "ready_for_professional_review"
-    assert handoff["from_product"] == "Clara"
-    assert handoff["to_product"] == "Vera"
-    assert handoff["assumptions"][0]["id"] == "channel-capacity"
+    assert contribution["from_product"] == "Clara"
+    assert contribution["to_product"] == "Vera"
+    assert contribution["assumptions"][0]["id"] == "channel-capacity"
 
 
 def test_clara_strategic_case_supports_a_startup_without_a_second_mode() -> None:
@@ -595,26 +602,26 @@ def test_clara_strategic_case_rejects_unsupported_plan_element(target: str) -> N
         STRATEGIC.build_strategic_plan(case)
 
 
-def test_counterpart_handoff_reports_alignment_and_description_divergence() -> None:
+def test_counterpart_contribution_reports_compatibility_and_text_difference() -> None:
     financial_plan = CORE.build_business_plan(_case())
-    handoff = CORE.build_counterpart_handoff(financial_plan)
+    contribution = CORE.build_counterpart_contribution(financial_plan)
     strategic_case = _aligned_strategic_case()
 
-    aligned = HANDOFF.review_counterpart_handoff(
+    compatible = CONTRIBUTION.review_counterpart_contribution(
         strategic_case,
-        handoff,
+        contribution,
         receiving_product="Clara",
     )
     strategic_case["assumptions"][0]["description"] = "A different description."
-    divergent = HANDOFF.review_counterpart_handoff(
+    divergent = CONTRIBUTION.review_counterpart_contribution(
         strategic_case,
-        handoff,
+        contribution,
         receiving_product="Clara",
     )
 
-    assert aligned["status"] == "aligned_for_counterpart_use"
-    assert divergent["status"] == "divergence_requires_professional_review"
-    assert divergent["assumption_comparison"]["description_divergences"] == [
+    assert compatible["status"] == "mechanically_compatible"
+    assert divergent["status"] == "requires_owner_resolution"
+    assert divergent["assumption_comparison"]["description_differences"] == [
         {
             "assumption_id": "operating-case",
             "counterpart_description": (
@@ -625,36 +632,80 @@ def test_counterpart_handoff_reports_alignment_and_description_divergence() -> N
     ]
 
 
-def test_vera_reviews_aligned_clara_handoff() -> None:
+def test_vera_reviews_compatible_clara_contribution() -> None:
     strategic_plan = STRATEGIC.build_strategic_plan(_aligned_strategic_case())
-    handoff = STRATEGIC.build_counterpart_handoff(strategic_plan)
+    contribution = STRATEGIC.build_counterpart_contribution(strategic_plan)
 
-    review = HANDOFF.review_counterpart_handoff(
+    review = CONTRIBUTION.review_counterpart_contribution(
         _case(),
-        handoff,
+        contribution,
         receiving_product="Vera",
     )
 
-    assert review["status"] == "aligned_for_counterpart_use"
+    assert review["status"] == "mechanically_compatible"
     assert review["assumption_comparison"]["shared_assumption_ids"] == [
         "operating-case"
     ]
+    assert "does not establish semantic agreement" in review["compatibility_boundary"]
 
 
-def test_blocked_financial_plan_produces_explicitly_blocked_handoff() -> None:
+def test_vera_owner_plan_includes_clara_content_and_one_assumption_register() -> None:
+    financial_plan = CORE.build_business_plan(_case())
+    strategic_plan = STRATEGIC.build_strategic_plan(_aligned_strategic_case())
+    contribution = STRATEGIC.build_counterpart_contribution(strategic_plan)
+    review = CONTRIBUTION.review_counterpart_contribution(
+        _case(), contribution, receiving_product="Vera"
+    )
+
+    owner_plan = CONTRIBUTION.attach_counterpart_contribution(
+        financial_plan, contribution, review
+    )
+
+    assert owner_plan["owner_product"] == "Vera"
+    assert owner_plan["counterpart_contribution"]["included_in_owner_plan"] is True
+    assert (
+        owner_plan["counterpart_contribution"]["content"]["recommendation"]["statement"]
+        == "Run the focused launch subject to the stated conditions."
+    )
+    assert owner_plan["assumption_register"] == [
+        {
+            "id": "operating-case",
+            "relationship": "matching_description",
+            "owner_product": "Vera",
+            "owner_category": "commercial and operating schedule",
+            "owner_description": (
+                "Revenue, margin, costs, and working-capital balances."
+            ),
+            "owner_rationale": "Confirmed by management for this scenario.",
+            "owner_status": "confirmed",
+            "owner_effective_periods": ["2027-Q1", "2027-Q2"],
+            "counterpart_product": "Clara",
+            "counterpart_category": "commercial execution",
+            "counterpart_description": (
+                "Revenue, margin, costs, and working-capital balances."
+            ),
+            "counterpart_rationale": ("Confirmed by management for planning purposes."),
+            "counterpart_status": "confirmed",
+            "counterpart_effective_periods": [],
+        }
+    ]
+    assert "Clara strategic contribution" in CORE.render_html(owner_plan)
+
+
+def test_blocked_financial_plan_produces_blocked_contribution() -> None:
     case = _case()
     case["opening_balance"]["values"]["equity"] = "99"
 
     plan = CORE.build_business_plan(case)
-    handoff = CORE.build_counterpart_handoff(plan)
+    contribution = CORE.build_counterpart_contribution(plan)
 
     assert plan["status"] == "blocked"
-    assert handoff["status"] == "blocked_source_plan"
-    assert handoff["source_plan_status"] == "blocked"
-    assert handoff["source_review_status"] == "draft_pending_professional_review"
-    review = HANDOFF.review_counterpart_handoff(
+    assert contribution["status"] == "blocked_contribution"
+    assert contribution["source_plan_status"] == "blocked"
+    assert contribution["source_review_status"] == "draft_pending_professional_review"
+    review = CONTRIBUTION.review_counterpart_contribution(
         _aligned_strategic_case(),
-        handoff,
+        contribution,
         receiving_product="Clara",
     )
     assert review["status"] == "source_not_ready"
@@ -682,7 +733,7 @@ def test_clara_runner_writes_complete_strategic_review_package(tmp_path: Path) -
     assert completed.returncode == 0, completed.stderr
     expected = {
         "assumption_ledger.csv",
-        "business_planning_handoff.json",
+        "counterpart_contribution.json",
         "execution_receipt.json",
         "model_context.json",
         "strategic_business_plan.json",
@@ -724,12 +775,14 @@ def test_clara_runner_rejects_output_outside_case_workspace(tmp_path: Path) -> N
     assert "output directory must be <case-workspace>/business-plan" in completed.stderr
 
 
-def test_clara_runner_records_aligned_vera_handoff(tmp_path: Path) -> None:
+def test_clara_runner_includes_compatible_vera_contribution(tmp_path: Path) -> None:
     case = _aligned_strategic_case()
     workspace, case_path, output_dir = _clara_workspace(tmp_path, case)
-    handoff_path = workspace / "vera_business_planning_handoff.json"
-    handoff_path.write_text(
-        json.dumps(CORE.build_counterpart_handoff(CORE.build_business_plan(_case()))),
+    contribution_path = workspace / "vera_financial_contribution.json"
+    contribution_path.write_text(
+        json.dumps(
+            CORE.build_counterpart_contribution(CORE.build_business_plan(_case()))
+        ),
         encoding="utf-8",
     )
 
@@ -743,8 +796,8 @@ def test_clara_runner_records_aligned_vera_handoff(tmp_path: Path) -> None:
             str(output_dir),
             "--case-workspace",
             str(workspace),
-            "--counterpart-handoff",
-            str(handoff_path),
+            "--counterpart-contribution",
+            str(contribution_path),
         ],
         capture_output=True,
         check=False,
@@ -753,15 +806,67 @@ def test_clara_runner_records_aligned_vera_handoff(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     review = json.loads(
-        (output_dir / "counterpart_handoff_review.json").read_text(encoding="utf-8")
+        (output_dir / "counterpart_contribution_review.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    plan = json.loads(
+        (output_dir / "strategic_business_plan.json").read_text(encoding="utf-8")
     )
     receipt = json.loads(
         (output_dir / "execution_receipt.json").read_text(encoding="utf-8")
     )
-    assert review["status"] == "aligned_for_counterpart_use"
-    assert receipt["counterpart_handoff"]["review_status"] == (
-        "aligned_for_counterpart_use"
+    assert review["status"] == "mechanically_compatible"
+    assert plan["owner_product"] == "Clara"
+    assert plan["counterpart_contribution"]["included_in_owner_plan"] is True
+    assert plan["counterpart_contribution"]["content"]["financial_scenario_summaries"]
+    assert receipt["counterpart_contribution"]["included_in_owner_plan"] is True
+
+
+def test_clara_owner_plan_stays_visible_and_partial_on_contribution_difference(
+    tmp_path: Path,
+) -> None:
+    case = _aligned_strategic_case()
+    workspace, case_path, output_dir = _clara_workspace(tmp_path, case)
+    contribution = CORE.build_counterpart_contribution(
+        CORE.build_business_plan(_case())
     )
+    contribution["planning_objective"] = "A different planning objective."
+    contribution_path = workspace / "vera_financial_contribution.json"
+    contribution_path.write_text(json.dumps(contribution), encoding="utf-8")
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            "--case",
+            str(case_path),
+            "--output-dir",
+            str(output_dir),
+            "--case-workspace",
+            str(workspace),
+            "--counterpart-contribution",
+            str(contribution_path),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    plan = json.loads(
+        (output_dir / "strategic_business_plan.json").read_text(encoding="utf-8")
+    )
+    html = (output_dir / "strategic_business_plan_review.html").read_text(
+        encoding="utf-8"
+    )
+    assert plan["status"] == "partial"
+    assert plan["owner_product"] == "Clara"
+    assert plan["counterpart_contribution"]["included_in_owner_plan"] is False
+    assert plan["counterpart_contribution"]["unresolved_issues"][0]["field"] == (
+        "planning_objective"
+    )
+    assert "preserved for owner review" in html
 
 
 def test_review_html_exposes_complete_financial_and_strategic_surfaces() -> None:
@@ -772,14 +877,14 @@ def test_review_html_exposes_complete_financial_and_strategic_surfaces() -> None
 
     for heading in (
         "Evidence coverage",
-        "Confirmed assumptions",
+        "Assumption register",
         "Integrated statements",
         "Reconciliation",
     ):
         assert heading in financial_html
     for heading in (
         "Evidence register",
-        "Confirmed assumptions",
+        "Assumption register",
         "Options and trade-offs",
         "Risks and responses",
         "Open questions",

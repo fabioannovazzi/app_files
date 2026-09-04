@@ -1,6 +1,6 @@
 ---
 name: business-planning
-description: Use when Vera or Clara must prepare or revise a forward-looking business plan for a startup, new venture, or established company. Vera owns the accounting-financial lens; Clara owns the strategic-commercial lens. Use one reviewed assumption and handoff contract without treating the two professional outputs as interchangeable.
+description: Use when Vera or Clara must prepare or revise a forward-looking plan for a startup, new venture, or established company. The invoked product owns the user journey and final deliverable; the other product may provide an optional internal contribution without becoming a second user workflow.
 ---
 
 ## Output location
@@ -31,6 +31,31 @@ The invoking product fixes the professional lens:
 Do not ask the user to choose a lens after they have invoked Vera or Clara.
 Neither product may silently rewrite the other product's reviewed assumptions,
 figures, recommendation, or professional conclusions.
+
+## Entry-product ownership
+
+The product initially invoked owns the user relationship, run status, final
+review package and next action. Never ask the user to transfer an internal JSON
+file, invoke the counterpart product manually, or understand contribution
+schema names and compatibility statuses.
+
+- A Vera-owned result is the finance-led plan. Clara may contribute strategic
+  recommendation, initiatives, risks and questions when the requested scope is
+  cross-lens.
+- A Clara-owned result is the strategy-led business plan. Vera may contribute
+  reconciled scenario summaries and funding information when the requested
+  scope is cross-lens.
+- The counterpart contribution is optional internal evidence. It never changes
+  ownership and is not a second user-facing skill or deliverable.
+- If the counterpart is unavailable, the owner completes its supported lens and
+  labels any missing cross-lens section `partial`; it does not instruct the user
+  to operate the internal file contract.
+
+When both products contribute, the owner finalizer produces one plan, one
+combined assumption register and one visible list of unresolved differences.
+Exact compatibility checks are deterministic because identity, status, IDs and
+text equality are mechanically verifiable. Meaning, numerical consistency,
+feasibility and professional agreement remain model-led and professional.
 
 For Vera, route a request limited to sales volumes, prices, revenue, discounts,
 COGS, or FX to `sales-plan`; historical analysis to `financial-analysis`;
@@ -106,9 +131,10 @@ from canonical source rather than edited directly.
    professional decisions separate.
 4. Before a long or write-heavy step, show an execution checkpoint with command
    intent, inputs, output folder and expected artifacts.
-5. End with an Artifact Card listing output paths, evidence and assumption
-   coverage, review status, unresolved issues, counterpart handoff and next
-   action.
+5. End with an Artifact Card listing the owner deliverables, evidence and
+   assumption coverage, review status, unresolved issues and next action. List
+   the internal counterpart contribution only when the user asks for audit or
+   technical details.
 
 Explicit approval is reserved for external, destructive, approval-sensitive,
 or material steps. Local inspection, deterministic validation, calculation,
@@ -141,14 +167,15 @@ Do not install arbitrary packages at runtime.
 
 From the module root:
 
-Omit `--counterpart-handoff` only when no reviewed Clara handoff is available.
+Omit `--counterpart-contribution` when the requested plan is finance-only or no
+Clara contribution is available.
 
 ```bash
 python scripts/run_business_plan.py \
   --case <run-output>/business_plan_case.json \
   --client-engagement <context.json> \
   --output-dir <run-output>/plan \
-  --counterpart-handoff <run-input>/business_planning_handoff.json
+  --counterpart-contribution <run-input>/counterpart_contribution.json
 ```
 
 The reviewed case uses canonical Decimal strings. Each scenario supplies the
@@ -166,59 +193,60 @@ requirement.
 
 From the module root:
 
-Omit `--counterpart-handoff` only when no reviewed Vera handoff is available.
+Omit `--counterpart-contribution` when the requested plan is strategy-only or no
+Vera contribution is available.
 
 ```bash
 python scripts/run_strategic_plan.py \
   --case-workspace <case-workspace> \
   --case <case-workspace>/strategic_business_plan_case.json \
   --output-dir <case-workspace>/business-plan \
-  --counterpart-handoff <case-workspace>/business_planning_handoff.json
+  --counterpart-contribution <case-workspace>/counterpart_contribution.json
 ```
 
 The model authors the strategic findings, options, recommendation, initiatives,
 milestones, KPIs, risks and open questions from reviewed evidence and confirmed
 assumptions. The finalizer validates only schema and reference closure, removes
 source locations from the normal model context, renders the review package and
-creates the Clara-to-Vera handoff. A mechanically valid result does not prove
-market attractiveness, strategic fit, feasibility or consultant approval.
+creates a bounded internal Clara contribution. A mechanically valid result does
+not prove market attractiveness, strategic fit, feasibility or consultant
+approval.
 
-## Interpretation, handoff and delivery
+## Interpretation, contribution and delivery
 
 For Vera, read `business_plan.json`, `reconciliation.json`,
-`model_context.json`, `business_planning_handoff.json` and
-`execution_receipt.json` before drafting conclusions. Use the bounded model
-context by default. Separate calculated observations from hypotheses,
+`model_context.json` and `execution_receipt.json` before drafting conclusions.
+Use the bounded model context by default. Separate calculated observations from hypotheses,
 questions, evidence gaps, risks and professional decisions.
 
 For Clara, read `strategic_business_plan.json`, `model_context.json`,
-`business_planning_handoff.json` and `execution_receipt.json`. Keep factual
-observations, assumptions, model-authored implications and professional
+and `execution_receipt.json`. Keep factual observations, assumptions,
+model-authored implications and professional
 recommendations visibly distinct.
 
 Normal Vera outputs are `business_plan.json`, `business_plan.xlsx`,
 `assumption_ledger.csv`, `reconciliation.json`, `model_context.json`,
 `commentary_template.json`, `business_plan_facts.md`,
-`business_plan_review.html`, `business_planning_handoff.json` and
+`business_plan_review.html` and
 `execution_receipt.json`.
 
 Normal Clara outputs are `strategic_business_plan.json`,
 `strategic_business_plan.md`, `strategic_business_plan_review.html`,
 `model_context.json`, `assumption_ledger.csv`,
-`business_planning_handoff.json` and `execution_receipt.json`.
+and `execution_receipt.json`.
 
-Both lenses produce `business_planning_handoff.json` with shared company
-context and assumptions plus the lens-specific results needed by the
-counterpart. The receiving product reviews it as evidence. It must surface
-inconsistent assumptions or conclusions and return them for professional
-resolution; deterministic code does not merge or choose between them. Pass an
-available handoff with `--counterpart-handoff`. The finalizer validates its
-source and receiving lenses, source-plan readiness, case identity, shared
-assumption IDs and exact descriptions, then writes
-`counterpart_handoff_review.json`. It stops before finalization when the source
-plan is partial or blocked, the case identity differs, no shared assumption is
-available, or a shared description differs. The professional resolves the
-meaning; the mechanical comparison never selects which description is right.
+Both lenses also create `counterpart_contribution.json` as an internal audit and
+reuse artifact. It carries shared company context and assumptions plus the
+lens-specific content needed by the other product. When supplied with
+`--counterpart-contribution`, the owner finalizer validates source and receiving
+lenses, source readiness, exact case identity, shared context and shared
+assumption IDs and descriptions, then writes
+`counterpart_contribution_review.json`. A compatible contribution is included
+in the owner plan and combined assumption register. A non-ready or conflicting
+contribution does not disappear into JSON or abort the user journey: the owner
+plan becomes `partial`, preserves the candidate contribution, and shows the
+unresolved differences for professional resolution. The mechanical comparison
+never decides whether two statements have the same meaning or which is right.
 
 ## Plugin Improvement Feedback
 

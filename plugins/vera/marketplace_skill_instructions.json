@@ -164,10 +164,10 @@
       "instructions": "Allega gli Actual mensili già rivisti e indica le assunzioni commerciali e valutarie da applicare. Vera traduce ogni ipotesi in driver, perimetro, periodo e priorità da confermare, quindi restituisce il Piano vendite, il registro delle assunzioni e la riconciliazione dei totali."
     },
     "business-planning": {
-      "display_name": "Business plan contabile e finanziario",
+      "display_name": "Piano economico-finanziario e fabbisogno",
       "short_description": "Collega ipotesi, prospetti, scenari e fabbisogno",
-      "default_prompt": "Usa $business-planning per preparare il business plan contabile e finanziario di questa impresa dalle evidenze disponibili e dalle ipotesi che confermerò.",
-      "instructions": "Indica l'impresa, il suo stadio in linguaggio naturale, l'obiettivo, il destinatario e l'orizzonte e allega le evidenze disponibili. La funzione vale per startup, nuove iniziative e imprese consolidate. Vera usa la base storica quando esiste e altrimenti parte da saldi iniziali, fondi disponibili e ipotesi confermati, senza trasformare la storia mancante in zero. Prima del calcolo restituisce evidenze mancanti e registro delle ipotesi. Dopo la conferma prepara conto economico, cassa e stato patrimoniale collegati, scenari, break-even, fabbisogno, riconciliazione, limiti e handoff rivedibile verso Clara. Vera non sostituisce il business plan strategico-commerciale di Clara e non ne modifica silenziosamente ipotesi o conclusioni."
+      "default_prompt": "Usa $business-planning per preparare il piano economico-finanziario e il fabbisogno di questa impresa dalle evidenze disponibili e dalle ipotesi che confermerò.",
+      "instructions": "Indica l'impresa, il suo stadio in linguaggio naturale, l'obiettivo, il destinatario e l'orizzonte e allega le evidenze disponibili. La funzione vale per startup, nuove iniziative e imprese consolidate. Vera usa la base storica quando esiste e altrimenti parte da saldi iniziali, fondi disponibili e ipotesi confermate, senza trasformare la storia mancante in zero. Prima del calcolo restituisce evidenze mancanti e registro delle ipotesi. Dopo la conferma prepara conto economico, cassa e stato patrimoniale collegati, scenari, break-even, fabbisogno, riconciliazione e limiti. Vera resta responsabile del risultato; se il perimetro richiede un contributo strategico di Clara, lo gestisce internamente nello stesso piano e mostra le differenze irrisolte."
     },
     "variance-analysis": {
       "display_name": "Analisi scostamenti",

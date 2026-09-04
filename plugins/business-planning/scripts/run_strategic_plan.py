@@ -14,20 +14,21 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from business_planning_handoff import (  # noqa: E402
-    BusinessPlanningHandoffError,
-    review_counterpart_handoff,
+from business_planning_contribution import (  # noqa: E402
+    BusinessPlanningContributionError,
+    attach_counterpart_contribution,
+    review_counterpart_contribution,
+    write_assumption_register,
 )
 from strategic_planning_core import (  # noqa: E402
     StrategicPlanningContractError,
-    build_counterpart_handoff,
+    build_counterpart_contribution,
     build_model_context,
     build_strategic_plan,
     load_json,
     render_html,
     render_markdown,
     validate_case_workspace_boundary,
-    write_assumption_ledger,
 )
 
 __all__ = ["main"]
@@ -71,30 +72,38 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--case", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--case-workspace", required=True, type=Path)
-    parser.add_argument("--counterpart-handoff", type=Path)
+    parser.add_argument("--counterpart-contribution", type=Path)
     args = parser.parse_args(argv)
     counterpart_review: dict[str, object] | None = None
+    counterpart_contribution: dict[str, object] | None = None
     try:
         validate_case_workspace_boundary(
             args.case,
             args.output_dir,
             args.case_workspace,
             additional_inputs=(
-                (args.counterpart_handoff,)
-                if args.counterpart_handoff is not None
+                (args.counterpart_contribution,)
+                if args.counterpart_contribution is not None
                 else ()
             ),
         )
         case = load_json(args.case)
-        plan = build_strategic_plan(case)
-        if args.counterpart_handoff is not None:
-            counterpart_review = review_counterpart_handoff(
+        if args.counterpart_contribution is not None:
+            counterpart_contribution = load_json(args.counterpart_contribution)
+            counterpart_review = review_counterpart_contribution(
                 case,
-                load_json(args.counterpart_handoff),
+                counterpart_contribution,
                 receiving_product="Clara",
             )
+        plan = build_strategic_plan(case)
+        if counterpart_contribution is not None and counterpart_review is not None:
+            plan = attach_counterpart_contribution(
+                plan,
+                counterpart_contribution,
+                counterpart_review,
+            )
     except (
-        BusinessPlanningHandoffError,
+        BusinessPlanningContributionError,
         StrategicPlanningContractError,
         OSError,
         ValueError,
@@ -102,32 +111,21 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(str(exc))
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    if (
-        counterpart_review is not None
-        and counterpart_review["status"] != "aligned_for_counterpart_use"
-    ):
-        _write_json(
-            args.output_dir / "counterpart_handoff_review.json",
-            counterpart_review,
-        )
-        LOGGER.error(
-            "Counterpart handoff requires professional resolution: %s.",
-            counterpart_review["status"],
-        )
-        return 2
     plan_path = args.output_dir / "strategic_business_plan.json"
     _write_json(plan_path, plan)
     _write_json(args.output_dir / "model_context.json", build_model_context(plan))
     _write_json(
-        args.output_dir / "business_planning_handoff.json",
-        build_counterpart_handoff(plan),
+        args.output_dir / "counterpart_contribution.json",
+        build_counterpart_contribution(plan),
     )
     if counterpart_review is not None:
         _write_json(
-            args.output_dir / "counterpart_handoff_review.json",
+            args.output_dir / "counterpart_contribution_review.json",
             counterpart_review,
         )
-    write_assumption_ledger(args.output_dir / "assumption_ledger.csv", plan)
+    write_assumption_register(
+        args.output_dir / "assumption_ledger.csv", plan["assumption_register"]
+    )
     (args.output_dir / "strategic_business_plan.md").write_text(
         render_markdown(plan), encoding="utf-8"
     )
@@ -141,25 +139,29 @@ def main(argv: list[str] | None = None) -> int:
         "strategic_business_plan_review.html",
         "model_context.json",
         "assumption_ledger.csv",
-        "business_planning_handoff.json",
+        "counterpart_contribution.json",
     ]
     if counterpart_review is not None:
-        output_names.append("counterpart_handoff_review.json")
+        output_names.append("counterpart_contribution_review.json")
     receipt: dict[str, object] = {
-        "schema_version": "mparanza.business_planning_strategic_execution_receipt.v2",
+        "schema_version": "mparanza.business_planning_strategic_execution_receipt.v3",
         "workflow_id": "business-planning",
         "professional_lens": "strategic_commercial",
         "status": plan["status"],
         "review_status": plan["review_status"],
         "case_sha256": _sha256_file(args.case),
         "case_content_sha256": _canonical_json_sha256(case),
-        "counterpart_handoff": (
+        "counterpart_contribution": (
             {
-                "path": args.counterpart_handoff.name,
-                "sha256": _sha256_file(args.counterpart_handoff),
+                "path": args.counterpart_contribution.name,
+                "sha256": _sha256_file(args.counterpart_contribution),
                 "review_status": counterpart_review["status"],
+                "included_in_owner_plan": plan["counterpart_contribution"][
+                    "included_in_owner_plan"
+                ],
             }
-            if args.counterpart_handoff is not None and counterpart_review is not None
+            if args.counterpart_contribution is not None
+            and counterpart_review is not None
             else None
         ),
         "outputs": [
@@ -173,7 +175,8 @@ def main(argv: list[str] | None = None) -> int:
         "implementation_reason": (
             "Schema, identifier and reference closure, rendering, and artifact hashes "
             "are deterministic because they are mechanically verifiable. Strategic "
-            "meaning, option design and recommendation remain model-led and professional."
+            "meaning, option design, recommendation, and cross-lens agreement remain "
+            "model-led and professional."
         ),
     }
     receipt["content_sha256"] = hashlib.sha256(

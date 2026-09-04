@@ -1,7 +1,7 @@
 {
   "name": "business-planning",
-  "version": "0.2.1",
-  "description": "Shared business planning for startups and established companies, with distinct Vera and Clara professional lenses.",
+  "version": "0.2.2",
+  "description": "Owner-led financial and strategic planning for startups and established companies, with optional internal counterpart contributions.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -27,8 +27,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Business Planning",
-    "shortDescription": "Build reviewable strategic or financial business plans.",
-    "longDescription": "Business Planning supports startups, new ventures and established companies through one shared assumption and handoff contract. In Vera, the accounting-financial lens prepares linked P&L, cash flow, balance sheet, scenarios, funding needs and reconciliation. In Clara, the strategic-commercial lens prepares evidence-linked findings, options, recommendations, initiatives, milestones, KPIs and risks. The two lenses may exchange a reviewed handoff, but neither silently changes the other's assumptions or conclusions.",
+    "shortDescription": "Build owner-led strategic or financial plans.",
+    "longDescription": "Business Planning supports startups, new ventures and established companies through one adaptive workflow. The product initially invoked owns the user journey and final result. Vera prepares the financial plan and funding needs with linked P&L, cash flow, balance sheet, scenarios and reconciliation. Clara prepares the strategic and commercial business plan with evidence-linked findings, options, recommendations, initiatives, milestones, KPIs and risks. When the scope needs both lenses, the counterpart contributes internally to the same owner-led plan; the user does not transfer files or manage a second workflow.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/business-planning/index.html?lang=it",
@@ -41,9 +41,9 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Prepare the accounting and financial business plan for this company from reviewed evidence and assumptions.",
+      "Prepare the financial plan and funding needs for this company from reviewed evidence and confirmed assumptions.",
       "Prepare the strategic and commercial business plan for this company from reviewed evidence and assumptions.",
-      "Review the counterpart business-planning handoff and surface any inconsistent assumptions before continuing."
+      "Prepare a complete plan; keep the invoked product as owner and include any counterpart contribution internally."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",
