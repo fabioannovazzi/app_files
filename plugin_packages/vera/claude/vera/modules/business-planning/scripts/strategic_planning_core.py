@@ -12,13 +12,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from business_planning_handoff import HANDOFF_SCHEMA, counterpart_handoff_status
+from business_planning_contribution import (
+    CONTRIBUTION_SCHEMA,
+    build_assumption_register,
+    counterpart_contribution_status,
+)
 
 __all__ = [
     "CASE_SCHEMA",
     "PLAN_SCHEMA",
     "StrategicPlanningContractError",
-    "build_counterpart_handoff",
+    "build_counterpart_contribution",
     "build_model_context",
     "build_strategic_plan",
     "load_json",
@@ -31,7 +35,7 @@ __all__ = [
 
 WORKFLOW_ID = "business-planning"
 CASE_SCHEMA = "mparanza.business_planning_strategic_case.v1"
-PLAN_SCHEMA = "mparanza.business_planning_strategic_plan.v2"
+PLAN_SCHEMA = "mparanza.business_planning_strategic_plan.v3"
 _IDENTIFIER_RE = re.compile(r"^[a-z][a-z0-9_.-]{0,119}$")
 _EVIDENCE_KINDS = {
     "historical_fact",
@@ -218,13 +222,13 @@ def validate_case_workspace_boundary(
     for path in additional_inputs:
         if path.is_symlink() or not path.is_file():
             raise StrategicPlanningContractError(
-                f"Counterpart handoff must be a regular file: {path}"
+                f"Counterpart contribution must be a regular file: {path}"
             )
         try:
             path.resolve().relative_to(workspace)
         except ValueError as exc:
             raise StrategicPlanningContractError(
-                "counterpart handoff must remain inside the Clara case workspace"
+                "counterpart contribution must remain inside the Clara case workspace"
             ) from exc
 
     required_files = (
@@ -635,9 +639,10 @@ def build_strategic_plan(case: Mapping[str, Any]) -> dict[str, Any]:
     unverified = sorted(
         str(item["id"]) for item in referenced_items if item["status"] == "unverified"
     )
-    return {
+    plan = {
         "schema_version": PLAN_SCHEMA,
         "workflow_id": WORKFLOW_ID,
+        "owner_product": "Clara",
         "case_id": case["case_id"],
         "entity_name": case["entity_name"],
         "company_stage": case["company_stage"],
@@ -647,6 +652,8 @@ def build_strategic_plan(case: Mapping[str, Any]) -> dict[str, Any]:
         "professional_lens": case["professional_lens"],
         "status": "partial" if unverified else "ready_for_professional_review",
         "review_status": "draft_pending_professional_review",
+        "counterpart_contribution": None,
+        "unresolved_issues": [],
         "evidence_coverage": {
             "referenced_evidence_ids": sorted(referenced_evidence),
             "status_counts": dict(sorted(counts.items())),
@@ -674,6 +681,10 @@ def build_strategic_plan(case: Mapping[str, Any]) -> dict[str, Any]:
             *(["One or more evidence items remain unverified."] if unverified else []),
         ],
     }
+    plan["assumption_register"] = build_assumption_register(
+        plan["assumptions"], owner_product="Clara"
+    )
+    return plan
 
 
 def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -684,6 +695,7 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
         for key in (
             "schema_version",
             "workflow_id",
+            "owner_product",
             "case_id",
             "entity_name",
             "company_stage",
@@ -693,6 +705,9 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
             "professional_lens",
             "status",
             "review_status",
+            "counterpart_contribution",
+            "unresolved_issues",
+            "assumption_register",
             "evidence_coverage",
             "evidence_register",
             "assumptions",
@@ -705,7 +720,7 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
             "limitations",
         )
     } | {
-        "schema_version": "mparanza.business_planning_strategic_model_context.v2",
+        "schema_version": "mparanza.business_planning_strategic_model_context.v3",
         "excluded_by_default": [
             "raw source documents",
             "absolute source paths",
@@ -715,11 +730,11 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
-    """Build the reviewed Clara-to-Vera bridge without semantic merging."""
+def build_counterpart_contribution(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Build Clara's bounded strategic contribution for an owner-led plan."""
 
     return {
-        "schema_version": HANDOFF_SCHEMA,
+        "schema_version": CONTRIBUTION_SCHEMA,
         "workflow_id": WORKFLOW_ID,
         "case_id": plan["case_id"],
         "entity_name": plan["entity_name"],
@@ -730,7 +745,7 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
         "from_lens": "strategic_commercial",
         "to_product": "Vera",
         "to_lens": "accounting_financial",
-        "status": counterpart_handoff_status(plan["status"]),
+        "status": counterpart_contribution_status(plan["status"]),
         "source_plan_status": plan["status"],
         "source_review_status": plan["review_status"],
         "assumptions": [
@@ -758,11 +773,11 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
         "risks": plan["risks"],
         "open_questions": plan["open_questions"],
         "limitations": plan["limitations"],
-        "handoff_boundary": (
-            "Vera may use this reviewed bridge to build or revise the financial plan, "
-            "but must not convert strategic statements into figures or alter Clara's "
-            "recommendation silently. Any divergence must be stated and returned for "
-            "professional review."
+        "contribution_boundary": (
+            "Vera may include this bounded strategic contribution in a Vera-owned "
+            "plan after mechanical compatibility and professional review. Vera must "
+            "not convert strategic statements into figures or alter Clara's "
+            "recommendation."
         ),
     }
 
@@ -813,10 +828,15 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
         f"- `{item['id']}` ({item['kind']}, {item['status']}): {item['description']}"
         for item in plan["evidence_register"]
     )
-    lines.extend(["", "## Confirmed assumptions", ""])
+    lines.extend(["", "## Assumption register", ""])
     lines.extend(
-        f"- `{item['id']}`: {item['description']} Evidence: {', '.join(item['evidence_ids'])}. Rationale: {item['rationale']}"
-        for item in plan["assumptions"]
+        "- `{id}` ({relationship}) — Clara: {owner}; counterpart: {counterpart}".format(
+            id=item["id"],
+            relationship=item["relationship"],
+            owner=item["owner_description"] or "—",
+            counterpart=item["counterpart_description"] or "—",
+        )
+        for item in plan["assumption_register"]
     )
     lines.extend(
         [
@@ -896,6 +916,49 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
         )
     else:
         lines.append("- None recorded.")
+    contribution = plan.get("counterpart_contribution")
+    if contribution:
+        lines.extend(
+            [
+                "",
+                "## Vera financial contribution",
+                "",
+                f"Status: `{contribution['status']}`",
+                "",
+            ]
+        )
+        if contribution["included_in_owner_plan"]:
+            content = contribution["content"]
+            lines.extend(
+                [
+                    "| Scenario | Revenue | Net income | Ending cash | Funding requirement |",
+                    "| --- | ---: | ---: | ---: | ---: |",
+                ]
+            )
+            lines.extend(
+                "| {label} | {revenue} | {income} | {cash} | {funding} |".format(
+                    label=item["label"],
+                    revenue=item["summary"]["total_revenue"],
+                    income=item["summary"]["total_net_income"],
+                    cash=item["summary"]["ending_cash"],
+                    funding=item["summary"]["funding_requirement"],
+                )
+                for item in content["financial_scenario_summaries"]
+            )
+            lines.append(
+                "Reconciliation: "
+                + ("passed" if content["reconciliation"]["all_passed"] else "failed")
+                + "."
+            )
+        else:
+            lines.append(
+                "The contribution is preserved for owner review but is not included "
+                "as an accepted part of this plan."
+            )
+            lines.extend(
+                f"- {item['kind']}: {item.get('field') or item.get('detail') or item.get('assumption_id')}"
+                for item in contribution["unresolved_issues"]
+            )
     lines.extend(["", "## Limitations", ""])
     lines.extend(f"- {item}" for item in plan["limitations"])
     return "\n".join(lines) + "\n"
@@ -932,13 +995,11 @@ def render_html(plan: Mapping[str, Any]) -> str:
     assumption_rows = "".join(
         "<tr>"
         f"<td>{html.escape(str(item['id']))}</td>"
-        f"<td>{html.escape(str(item['category']))}</td>"
-        f"<td>{html.escape(str(item['description']))}</td>"
-        f"<td>{html.escape(' · '.join(item['evidence_ids']))}</td>"
-        f"<td>{html.escape(str(item['rationale']))}</td>"
-        f"<td>{html.escape(str(item['status']))}</td>"
+        f"<td>{html.escape(str(item['relationship']))}</td>"
+        f"<td>{html.escape(str(item['owner_description'] or '—'))}</td>"
+        f"<td>{html.escape(str(item['counterpart_description'] or '—'))}</td>"
         "</tr>"
-        for item in plan["assumptions"]
+        for item in plan["assumption_register"]
     )
     findings = "".join(
         "<article>"
@@ -1001,6 +1062,46 @@ def render_html(plan: Mapping[str, Any]) -> str:
     limitations = "".join(
         f"<li>{html.escape(str(item))}</li>" for item in plan["limitations"]
     )
+    contribution = plan.get("counterpart_contribution")
+    contribution_html = ""
+    if contribution:
+        issues = "".join(
+            f"<li>{html.escape(str(item))}</li>"
+            for item in contribution["unresolved_issues"]
+        )
+        if contribution["included_in_owner_plan"]:
+            content = contribution["content"]
+            summary_rows = "".join(
+                "<tr>"
+                f"<td>{html.escape(str(item['label']))}</td>"
+                f"<td>{html.escape(str(item['summary']['total_revenue']))}</td>"
+                f"<td>{html.escape(str(item['summary']['total_net_income']))}</td>"
+                f"<td>{html.escape(str(item['summary']['ending_cash']))}</td>"
+                f"<td>{html.escape(str(item['summary']['funding_requirement']))}</td>"
+                "</tr>"
+                for item in content["financial_scenario_summaries"]
+            )
+            reconciliation = (
+                "passed" if content["reconciliation"]["all_passed"] else "failed"
+            )
+            contribution_body = (
+                '<div class="table-wrap"><table><thead><tr><th>Scenario</th>'
+                "<th>Revenue</th><th>Net income</th><th>Ending cash</th>"
+                f"<th>Funding requirement</th></tr></thead><tbody>{summary_rows}"
+                "</tbody></table></div>"
+                f"<p><strong>Reconciliation:</strong> {reconciliation}</p>"
+            )
+        else:
+            contribution_body = (
+                "<p>This contribution is preserved for owner review but is not "
+                "included as an accepted part of the plan.</p>"
+                f"<ul>{issues}</ul>"
+            )
+        contribution_html = (
+            '<section class="contribution"><h2>Vera financial contribution</h2>'
+            f"<p><strong>Status:</strong> {html.escape(str(contribution['status']))}</p>"
+            f"{contribution_body}</section>"
+        )
     recommendation = plan["recommendation"]
     return f"""<!doctype html>
 <html lang="en">
@@ -1016,24 +1117,26 @@ def render_html(plan: Mapping[str, Any]) -> str:
     .grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #b7dded; border: 1px solid #b7dded; }}
     article {{ background: white; padding: 24px; }} .eyebrow {{ color: #0070c0; font-size: .78rem; font-weight: 700; text-transform: uppercase; }} .refs {{ color: #52657f; font-size: .9rem; }}
     .recommendation {{ margin: 36px 0; padding: 24px 28px; border-left: 3px solid #00b0f0; background: #f3fbff; }}
+    .contribution {{ margin: 36px 0; padding: 24px 28px; border-left: 3px solid #00b0f0; background: #f3fbff; }}
     .table-wrap {{ overflow-x: auto; }} table {{ width: 100%; border-collapse: collapse; }} th, td {{ padding: 12px; border-bottom: 1px solid #dbe4f2; text-align: left; vertical-align: top; }} th {{ color: #002060; white-space: nowrap; }}
     @media (max-width: 720px) {{ .grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
 <body><main>
-  <p>Clara · Business planning · strategic and commercial lens</p>
+  <p>Clara · Strategic business planning · owner</p>
   <h1>{html.escape(str(plan['entity_name']))}</h1>
   <p class="meta">{html.escape(str(plan['company_stage']))} · {html.escape(str(plan['planning_horizon']))} · {html.escape(str(plan['status']))}</p>
   <p><strong>Objective:</strong> {html.escape(str(plan['planning_objective']))}</p>
   <p><strong>Audience:</strong> {html.escape(str(plan['audience']))} · <strong>Review:</strong> {html.escape(str(plan['review_status']))}</p>
   <h2>Evidence register</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Kind</th><th>Description</th><th>Status</th></tr></thead><tbody>{evidence_rows}</tbody></table></div>
-  <h2>Confirmed assumptions</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Category</th><th>Description</th><th>Evidence</th><th>Rationale</th><th>Status</th></tr></thead><tbody>{assumption_rows}</tbody></table></div>
+  <h2>Assumption register</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Relationship</th><th>Clara description</th><th>Counterpart description</th></tr></thead><tbody>{assumption_rows}</tbody></table></div>
   <section class="recommendation"><h2>Recommendation</h2><p>{html.escape(str(recommendation['statement']))}</p><p><strong>Selected options:</strong> {html.escape(' · '.join(recommendation['option_ids']))}</p><h3>Conditions</h3>{bullets(recommendation['conditions']) if recommendation['conditions'] else '<p>None recorded.</p>'}{references(recommendation)}</section>
   <h2>Strategic findings</h2><section class="grid">{findings}</section>
   <h2>Options and trade-offs</h2><section class="grid">{options}</section>
   <h2>Initiatives</h2><section class="grid">{initiatives}</section>
   <h2>Risks and responses</h2><section class="grid">{risks}</section>
   <h2>Open questions</h2><section class="grid">{questions}</section>
+  {contribution_html}
   <h2>Limitations</h2><ul>{limitations}</ul>
 </main></body></html>
 """

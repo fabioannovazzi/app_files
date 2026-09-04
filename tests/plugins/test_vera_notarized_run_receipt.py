@@ -4,7 +4,6 @@ import base64
 import importlib
 import json
 import re
-import stat
 import sys
 from pathlib import Path
 from typing import Any
@@ -203,51 +202,44 @@ def test_end_to_end_stamps_exports_and_verifies_without_sending_report(
     assert "Non prova" in html_text
 
 
-def test_disabled_setting_makes_no_network_call_and_enable_is_private(
+def test_stamp_reads_the_cowork_manifest_version(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     report_module, receipt_module = _modules(monkeypatch)
     report_path = _report(report_module, tmp_path)
-    plugin_data = tmp_path / "plugin-data"
+    opener, _store = _opener(tmp_path)
+    plugin_root = tmp_path / "cowork-plugin"
+    manifest_dir = plugin_root / ".claude-plugin"
+    manifest_dir.mkdir(parents=True)
+    (manifest_dir / "plugin.json").write_text(
+        json.dumps({"version": "0.1.141"}), encoding="utf-8"
+    )
+    output_dir = tmp_path / "receipt-output"
+    output_dir.mkdir()
 
-    disabled = receipt_module.stamp_model_data_report_if_enabled(
+    receipt_module.stamp_model_data_report(
         report_path,
-        output_dir=tmp_path,
-        plugin_root=PLUGIN_ROOT,
-        plugin_data=plugin_data,
+        output_dir=output_dir,
+        plugin_root=plugin_root,
+        opener=opener,
     )
-    settings_path = receipt_module._write_settings(
-        enabled=True, plugin_data=plugin_data
+    request = json.loads(
+        (output_dir / "model_data_receipt_request.json").read_text(encoding="utf-8")
     )
 
-    assert disabled == {"status": "disabled"}
-    assert not (tmp_path / "model_data_receipt_request.json").exists()
-    assert stat.S_IMODE(settings_path.stat().st_mode) == 0o600
-    assert receipt_module.firm_receipts_enabled(plugin_data) is True
+    assert request["plugin_version"] == "0.1.141"
 
 
-def test_enable_cli_requires_explicit_boundary_confirmation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_receipt_cli_has_no_settings_or_opt_out_path(
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _report_module, receipt_module = _modules(monkeypatch)
-    plugin_data = tmp_path / "plugin-data"
 
-    refused = receipt_module.main(
-        ["settings", "enable", "--plugin-data", str(plugin_data)]
-    )
-    accepted = receipt_module.main(
-        [
-            "settings",
-            "enable",
-            "--plugin-data",
-            str(plugin_data),
-            "--confirm-minimal-server-record",
-        ]
-    )
+    with pytest.raises(SystemExit):
+        receipt_module.main(["settings", "status"])
 
-    assert refused == 2
-    assert accepted == 0
-    assert receipt_module.firm_receipts_enabled(plugin_data) is True
+    assert "firm_receipts_enabled" not in receipt_module.__all__
+    assert "stamp_model_data_report_if_enabled" not in receipt_module.__all__
 
 
 def test_failed_stamp_keeps_same_minimal_request_for_retry(

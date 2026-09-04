@@ -124,9 +124,10 @@ skill to imitate a missing operational workflow.
   startup, new venture, or established company from reviewed historical or
   opening evidence and confirmed assumptions; calculate linked P&L, cash flow,
   balance sheet, scenarios, break-even and funding needs without inventing
-  missing values or using a balancing plug; accept a reviewed Clara strategic
-  handoff as bounded evidence while surfacing rather than silently merging any
-  divergence.
+  missing values or using a balancing plug; keep Vera as owner of the user
+  request and final finance-led package; include an optional internal Clara
+  strategic contribution only after compatibility review while surfacing rather
+  than silently merging any divergence.
 - `variance-analysis`: compare Actual, Budget, Forecast, or prior-period
   accounting performance; reconcile source totals; calculate amount-only or
   price-volume-mix variances when the data contract supports them; and produce

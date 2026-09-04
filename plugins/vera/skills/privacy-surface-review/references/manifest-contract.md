@@ -72,6 +72,7 @@ applicable runtime profiles, retention posture, and one activation mode:
 - `automatic_session_start`;
 - `automatic_after_prior_submission`;
 - `automatic_after_prior_connection`;
+- `automatic_per_durable_run`;
 - `explicit_user_choice`.
 
 An explicit route must be optional and confirmed. An automatic route cannot

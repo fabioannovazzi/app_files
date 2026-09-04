@@ -400,6 +400,7 @@ def _boundary_errors(
                 "automatic_on_first_use",
                 "automatic_after_prior_submission",
                 "automatic_after_prior_connection",
+                "automatic_per_durable_run",
             }
             if activation not in automatic | {"explicit_user_choice"}:
                 errors.append(f"{scope}: boundary[{index}] has invalid activation")

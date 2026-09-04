@@ -23,7 +23,6 @@ _EDPB_AI_OPINION_URL = (
     "opinion-282024-on-certain-data-protection-aspects-related-to_en"
 )
 _SOURCE_URL = "https://github.com/fabioannovazzi/app_files"
-_RUN_RECEIPT_EXAMPLE_URL = "/static/shared/vera/examples/model-data-receipt.html"
 
 
 _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
@@ -124,15 +123,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "to bytes but does not prove provider-side delivery."
                     ),
                     (
-                        "A firm can separately enable server-stamped receipts. Once enabled, "
-                        "each durable run automatically sends Mparanza only a random receipt "
+                        "Each durable run automatically sends Mparanza only a random receipt "
                         "ID, the Vera version, and the digest of the local report. Mparanza "
                         "adds its server time and Ed25519 signature and retains those proof "
                         "fields without the report, client data, filenames, source content, "
                         "or source-document hashes. The resulting HTML can be sent to a "
                         "customer, printed as PDF, and checked on the public verification page. "
                         "This proves existence, server time, and report integrity only; it does "
-                        "not independently prove who submitted the digest."
+                        "not independently prove who submitted the digest. If the receipt service "
+                        "is unavailable, the work and local report remain complete and the request "
+                        "stays pending for retry."
                     ),
                 ],
             },
@@ -168,11 +168,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
-        "run_example": {
-            "href": _RUN_RECEIPT_EXAMPLE_URL,
-            "label": "Open a synthetic HTML receipt",
-            "note": "A signed, verifiable example built from synthetic data only.",
-        },
         "resources": {
             "title": "Verify the position.",
             "intro": "You do not have to rely on the claim alone.",
@@ -312,15 +307,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "lega la ricevuta ai byte ma non prova la consegna lato provider."
                     ),
                     (
-                        "Lo studio può attivare separatamente le ricevute con marca server. Dopo "
-                        "l'attivazione, ogni esecuzione durevole invia automaticamente a Mparanza "
+                        "Ogni esecuzione durevole invia automaticamente a Mparanza "
                         "soltanto un identificativo casuale della ricevuta, la versione di Vera e "
                         "il digest del report locale. Mparanza aggiunge data server e firma "
                         "Ed25519 e conserva quei soli campi di prova, senza report, dati del "
                         "cliente, nomi dei file, contenuti o hash dei documenti fonte. L'HTML "
                         "risultante può essere inviato al cliente, salvato come PDF e verificato "
                         "nella pagina pubblica. Prova soltanto esistenza, data server e integrità "
-                        "del report; non prova autonomamente chi ha presentato il digest."
+                        "del report; non prova autonomamente chi ha presentato il digest. Se il "
+                        "servizio non è disponibile, il lavoro e il report locale restano "
+                        "completati e la richiesta rimane in attesa per un nuovo tentativo."
                     ),
                 ],
             },
@@ -342,14 +338,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
-        "run_example": {
-            "href": _RUN_RECEIPT_EXAMPLE_URL,
-            "label": "Apri una ricevuta HTML di esempio",
-            "note": (
-                "Un esempio firmato e verificabile, costruito esclusivamente con "
-                "dati sintetici."
-            ),
-        },
         "resources": {
             "title": "Verifica questa posizione.",
             "intro": "Non devi basarti soltanto su questa dichiarazione.",
@@ -492,8 +480,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "prouve pas la transmission côté fournisseur."
                     ),
                     (
-                        "Le cabinet peut activer séparément les reçus horodatés par le serveur. "
-                        "Après activation, chaque exécution durable envoie automatiquement à "
+                        "Chaque exécution durable envoie automatiquement à "
                         "Mparanza uniquement un identifiant de reçu aléatoire, la version de Vera "
                         "et le hash du rapport local. Mparanza ajoute l'heure serveur et une "
                         "signature Ed25519 et ne conserve que ces champs de preuve, sans rapport, "
@@ -501,7 +488,9 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Le reçu HTML peut être envoyé au client, enregistré en PDF et vérifié sur "
                         "la page publique. Il prouve uniquement l'existence, l'heure serveur et "
                         "l'intégrité du rapport, sans prouver de manière indépendante l'auteur "
-                        "de l'envoi du hash."
+                        "de l'envoi du hash. Si le service est indisponible, le travail et le "
+                        "rapport local restent terminés et la demande demeure en attente d'une "
+                        "nouvelle tentative."
                     ),
                 ],
             },
@@ -540,11 +529,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
-        "run_example": {
-            "href": _RUN_RECEIPT_EXAMPLE_URL,
-            "label": "Ouvrir un reçu HTML d’exemple",
-            "note": "Un exemple signé et vérifiable, construit uniquement avec des données synthétiques.",
-        },
         "resources": {
             "title": "Vérifier cette position.",
             "intro": "Vous n'avez pas à vous fier uniquement à cette affirmation.",
@@ -686,15 +670,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "beweist aber keine Übermittlung auf Providerseite."
                     ),
                     (
-                        "Die Kanzlei kann servergestempelte Belege separat aktivieren. Danach "
-                        "sendet jede dauerhafte Ausführung automatisch nur eine zufällige "
+                        "Jede dauerhafte Ausführung sendet automatisch nur eine zufällige "
                         "Beleg-ID, die Vera-Version und den Hash des lokalen Berichts an "
                         "Mparanza. Mparanza ergänzt Serverzeit und Ed25519-Signatur und speichert "
                         "nur diese Nachweisfelder, nicht den Bericht, Mandantendaten, Dateinamen, "
                         "Inhalte oder Hashes der Quelldokumente. Der HTML-Beleg kann an den "
                         "Mandanten gesendet, als PDF gespeichert und öffentlich geprüft werden. "
                         "Er belegt nur Existenz, Serverzeit und Berichtsintegrität und weist den "
-                        "Absender des Hashes nicht unabhängig nach."
+                        "Absender des Hashes nicht unabhängig nach. Ist der Dienst nicht verfügbar, "
+                        "bleiben die Arbeit und der lokale Bericht abgeschlossen und die Anfrage "
+                        "für einen erneuten Versuch ausstehend."
                     ),
                 ],
             },
@@ -730,11 +715,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
-        "run_example": {
-            "href": _RUN_RECEIPT_EXAMPLE_URL,
-            "label": "Beispiel eines HTML-Belegs öffnen",
-            "note": "Ein signiertes, prüfbares Beispiel, das ausschließlich synthetische Daten enthält.",
-        },
         "resources": {
             "title": "Diese Position überprüfen.",
             "intro": "Sie müssen sich nicht allein auf diese Aussage verlassen.",
@@ -874,16 +854,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "vincula el recibo a los bytes, pero no prueba la entrega del lado del proveedor."
                     ),
                     (
-                        "El despacho puede activar por separado los recibos sellados por el "
-                        "servidor. Una vez activados, cada ejecución duradera envía "
-                        "automáticamente a Mparanza solo un identificador de recibo aleatorio, "
+                        "Cada ejecución duradera envía automáticamente a Mparanza solo un "
+                        "identificador de recibo aleatorio, "
                         "la versión de Vera y el hash del informe local. Mparanza añade la hora "
                         "del servidor y una firma Ed25519 y conserva únicamente esos campos de "
                         "prueba, sin informe, datos del cliente, nombres de archivo, contenidos "
                         "ni hashes de documentos fuente. El HTML puede enviarse al cliente, "
                         "guardarse como PDF y verificarse públicamente. Solo prueba existencia, "
                         "hora del servidor e integridad del informe; no prueba de forma "
-                        "independiente quién presentó el hash."
+                        "independiente quién presentó el hash. Si el servicio no está disponible, "
+                        "el trabajo y el informe local permanecen completados y la solicitud queda "
+                        "pendiente para volver a intentarlo."
                     ),
                 ],
             },
@@ -919,11 +900,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
         ],
-        "run_example": {
-            "href": _RUN_RECEIPT_EXAMPLE_URL,
-            "label": "Abrir un recibo HTML de ejemplo",
-            "note": "Un ejemplo firmado y verificable, creado exclusivamente con datos sintéticos.",
-        },
         "resources": {
             "title": "Comprueba esta posición.",
             "intro": "No tienes que confiar únicamente en esta afirmación.",

@@ -74,7 +74,8 @@
                     "automatic_session_start",
                     "automatic_on_first_use",
                     "automatic_after_prior_submission",
-                    "automatic_after_prior_connection"
+                    "automatic_after_prior_connection",
+                    "automatic_per_durable_run"
                   ]
                 }
               },
@@ -114,6 +115,7 @@
               "automatic_on_first_use",
               "automatic_after_prior_submission",
               "automatic_after_prior_connection",
+              "automatic_per_durable_run",
               "explicit_user_choice"
             ]
           },

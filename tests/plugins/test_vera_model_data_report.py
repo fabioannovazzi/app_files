@@ -3,8 +3,6 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
-import os
-import subprocess
 import sys
 import types
 from pathlib import Path
@@ -268,7 +266,10 @@ def test_report_validation_rejects_changed_payload_file(tmp_path: Path) -> None:
         module.validate_model_data_report(report, evidence_root=tmp_path)
 
 
-def test_cli_writes_json_and_markdown_idempotently(tmp_path: Path) -> None:
+def test_cli_writes_json_and_markdown_idempotently(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = _load_module()
     payload_path = tmp_path / "mapping_payload.json"
     payload_path.write_text("{}\n", encoding="utf-8")
     request_path = tmp_path / "model_data_report_input.json"
@@ -276,8 +277,6 @@ def test_cli_writes_json_and_markdown_idempotently(tmp_path: Path) -> None:
         json.dumps(_reduced_request(), ensure_ascii=False), encoding="utf-8"
     )
     command = [
-        sys.executable,
-        str(SCRIPT_PATH),
         "build",
         "--input",
         str(request_path),
@@ -287,25 +286,36 @@ def test_cli_writes_json_and_markdown_idempotently(tmp_path: Path) -> None:
         str(tmp_path),
     ]
 
-    environment = os.environ.copy()
-    environment["PLUGIN_DATA"] = str(tmp_path / "plugin-data")
-    first = subprocess.run(
-        command, check=False, capture_output=True, text=True, env=environment
-    )
-    second = subprocess.run(
-        command, check=False, capture_output=True, text=True, env=environment
-    )
+    calls: list[Path] = []
+    receipt_module = types.ModuleType("notarized_run_receipt")
 
-    assert first.returncode == 0, first.stderr
-    assert second.returncode == 0, second.stderr
+    class SyntheticReceiptError(RuntimeError):
+        pass
+
+    def stamp(
+        report_path: Path, *, output_dir: Path, plugin_root: Path
+    ) -> dict[str, str]:
+        del output_dir, plugin_root
+        calls.append(report_path)
+        return {"status": "stamped"}
+
+    receipt_module.stamp_model_data_report = stamp
+    receipt_module.NotarizedRunReceiptError = SyntheticReceiptError
+    monkeypatch.setitem(sys.modules, "notarized_run_receipt", receipt_module)
+
+    first = module.main(command)
+    second = module.main(command)
+
+    assert first == 0
+    assert second == 0
     report_path = tmp_path / "model_data_report.json"
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["workflow_id"] == "variance-analysis"
     assert (tmp_path / "model_data_report.md").is_file()
-    assert json.loads(first.stdout)["server_receipt"] == {"status": "disabled"}
+    assert calls == [report_path, report_path]
 
 
-def test_every_durable_build_checks_the_studio_receipt_setting(
+def test_every_durable_build_stamps_the_server_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = _load_module()
@@ -319,13 +329,13 @@ def test_every_durable_build_checks_the_studio_receipt_setting(
     class SyntheticReceiptError(RuntimeError):
         pass
 
-    def stamp_if_enabled(
+    def stamp(
         report_path: Path, *, output_dir: Path, plugin_root: Path
     ) -> dict[str, str]:
         calls.append((report_path, output_dir, plugin_root))
-        return {"status": "disabled"}
+        return {"status": "stamped"}
 
-    receipt_module.stamp_model_data_report_if_enabled = stamp_if_enabled
+    receipt_module.stamp_model_data_report = stamp
     receipt_module.NotarizedRunReceiptError = SyntheticReceiptError
     monkeypatch.setitem(sys.modules, "notarized_run_receipt", receipt_module)
 
@@ -349,6 +359,80 @@ def test_every_durable_build_checks_the_studio_receipt_setting(
             ROOT / "plugins" / "vera",
         )
     ]
+
+
+def test_receipt_outage_keeps_completed_work_and_returns_pending(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    module = _load_module()
+    (tmp_path / "mapping_payload.json").write_text("{}\n", encoding="utf-8")
+    request_path = tmp_path / "model_data_report_input.json"
+    request_path.write_text(json.dumps(_reduced_request()), encoding="utf-8")
+    receipt_spec = importlib.util.spec_from_file_location(
+        "notarized_run_receipt",
+        ROOT / "plugins" / "vera" / "scripts" / "notarized_run_receipt.py",
+    )
+    assert receipt_spec is not None
+    assert receipt_spec.loader is not None
+    receipt_module = importlib.util.module_from_spec(receipt_spec)
+    receipt_spec.loader.exec_module(receipt_module)
+    stamp_model_data_report = receipt_module.stamp_model_data_report
+
+    def unavailable(
+        report_path: Path, *, output_dir: Path, plugin_root: Path
+    ) -> dict[str, str]:
+        def offline(_request: object, *, timeout: float) -> object:
+            del timeout
+            raise OSError("synthetic outage")
+
+        return stamp_model_data_report(
+            report_path,
+            output_dir=output_dir,
+            plugin_root=plugin_root,
+            opener=offline,
+        )
+
+    receipt_module.stamp_model_data_report = unavailable
+    monkeypatch.setitem(sys.modules, "model_data_report", module)
+    monkeypatch.setitem(sys.modules, "notarized_run_receipt", receipt_module)
+
+    result = module.main(
+        [
+            "build",
+            "--input",
+            str(request_path),
+            "--evidence-root",
+            str(tmp_path),
+            "--output-dir",
+            str(tmp_path),
+        ]
+    )
+    response = json.loads(capsys.readouterr().out)
+
+    assert result == 0
+    assert response["server_receipt"]["reason"] == "receipt service is unavailable"
+    assert (tmp_path / "model_data_report.json").is_file()
+    assert (tmp_path / "model_data_report.md").is_file()
+    assert (tmp_path / "model_data_receipt_request.json").is_file()
+    assert not (tmp_path / "model_data_receipt.json").exists()
+    assert not (tmp_path / "model_data_receipt.html").exists()
+    retry_request = json.loads(
+        (tmp_path / "model_data_receipt_request.json").read_text(encoding="utf-8")
+    )
+    assert set(retry_request) == {
+        "schema_version",
+        "receipt_id",
+        "plugin_version",
+        "report_sha256",
+    }
+    assert response["status"] == "written"
+    assert response["server_receipt"] == {
+        "status": "pending",
+        "reason": "receipt service is unavailable",
+        "request_path": str(tmp_path / "model_data_receipt_request.json"),
+    }
 
 
 def test_router_requires_report_for_every_substantive_run() -> None:
