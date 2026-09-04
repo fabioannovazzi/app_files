@@ -78,19 +78,26 @@ initiatives, KPIs and risks. Deterministic code checks only shape, explicit
 lens, review status, unique identifiers, reference closure and artifact hashes.
 It does not score or select a strategy.
 
-## Result and handoff boundary
+## Result and counterpart-contribution boundary
 
 Reconciliation does not approve Vera's assumptions or establish that a plan is
 probable or financeable. Reference closure does not approve Clara's market
 evidence, strategic interpretation, feasibility or recommendation.
 
-Both runners create `business_planning_handoff.json` using schema
-`mparanza.business_planning_handoff.v2`. It identifies the source and receiving
-lens, carries the source plan and review statuses, carries shared assumptions
-without source paths and includes only the results needed for counterpart
-review. A ready, partial or blocked source is labelled explicitly. When a
-handoff is supplied to the receiving runner, it creates
-`counterpart_handoff_review.json`, compares exact case identity and shared
-assumption IDs and descriptions, and stops on unresolved divergence or a source
-that is not ready. The receiving product must expose any semantic divergence;
-it may not silently overwrite the other lens.
+The product initially invoked remains the owner of the user request and final
+review package. Both runners create the internal
+`counterpart_contribution.json` using schema
+`mparanza.business_planning_contribution.v1`. It identifies the source and
+receiving lens, carries source readiness, shared assumptions without source
+paths and only the lens-specific content needed by the other product.
+
+When a contribution is supplied to the owner runner, it creates
+`counterpart_contribution_review.json` and compares mechanically verifiable
+facts: source readiness, exact case identity, exact shared company context, and
+shared assumption IDs and descriptions. `mechanically_compatible` is not a
+claim of semantic agreement, numerical consistency, feasibility or approval.
+The owner result includes compatible counterpart content and writes one
+provenance-preserving assumption register. If the source is not ready or exact
+differences require owner review, the final package is `partial`, retains the
+candidate contribution, and exposes the unresolved items instead of aborting
+with only a hidden JSON result. Neither lens silently overwrites the other.

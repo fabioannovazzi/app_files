@@ -162,11 +162,11 @@
       es: "Automatización web",
     },
     "business-planning": {
-      it: "Business plan contabile e finanziario",
-      en: "Accounting and financial business plan",
-      fr: "Business plan comptable et financier",
-      de: "Rechnungslegungs- und Finanz-Businessplan",
-      es: "Plan de negocio contable y financiero",
+      it: "Piano economico-finanziario e fabbisogno",
+      en: "Financial plan and funding needs",
+      fr: "Plan économique et financier et besoin de financement",
+      de: "Finanzplanung und Finanzierungsbedarf",
+      es: "Plan económico-financiero y necesidades de financiación",
     },
     "studio-archive": {
       it: "Ricerca nei documenti, nelle email e in WhatsApp",

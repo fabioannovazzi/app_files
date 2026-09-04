@@ -102,9 +102,13 @@ user's existing ChatGPT plan without a separate model API key. Reporting Engine 
 user asks to place its reviewed chart or interpretation in an advisory output.
 Business Planning is the specialist route for the strategic and commercial
 business plan of a startup, new venture, or established company. Clara owns the
+user request and final strategy-led review package. An optional Vera financial
+contribution remains internal to that Clara-owned workflow rather than becoming
+a second user journey. Clara owns the
 market and customer case, business model, positioning, options, recommendation,
 initiatives, milestones, KPIs, risks and decision implications. A reviewed Vera
-handoff may enter as financial evidence, but Clara must expose divergences and
+contribution may enter as financial evidence and be included only after
+mechanical compatibility review. Clara keeps unresolved differences visible and
 must not reinterpret reconciled figures or present statement closure as
 strategic validation.
 Advisory Deliverable Validator is the user-facing review route for a completed

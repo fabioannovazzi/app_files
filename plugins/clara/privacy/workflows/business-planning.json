@@ -8,7 +8,7 @@
     "repository/plugins/business-planning/.codex-plugin/plugin.json",
     "repository/plugins/business-planning/skills/business-planning/SKILL.md",
     "repository/plugins/business-planning/references/case-contract.md",
-    "repository/plugins/business-planning/scripts/business_planning_handoff.py",
+    "repository/plugins/business-planning/scripts/business_planning_contribution.py",
     "repository/plugins/business-planning/scripts/strategic_planning_core.py",
     "repository/plugins/business-planning/scripts/run_strategic_plan.py"
   ],
@@ -18,12 +18,12 @@
       {
         "id": "business-planning-strategic-intake",
         "purpose": "Understand the company context, planning decision, evidence, assumptions, market, business model, positioning and operating questions",
-        "content": "The selected model may read the full assignment and selected evidence for a startup, new venture or established company, including names and entities, company-stage description, historical and current business facts, market and customer evidence, competitors, products, channels, pricing, organization, operations, financial summaries, management statements, assumptions, constraints, audience, horizon, open questions and any reviewed Vera business-planning handoff. Real company, customer, supplier, employee, founder, lender or investor information may be present when professionally necessary. Clara applies no automatic anonymization or pseudonymization and does not classify company stage with deterministic rules."
+        "content": "The selected model may read the full assignment and selected evidence for a startup, new venture or established company, including names and entities, company-stage description, historical and current business facts, market and customer evidence, competitors, products, channels, pricing, organization, operations, financial summaries, management statements, assumptions, constraints, audience, horizon, open questions and any optional Vera financial contribution used inside the Clara-owned plan. Real company, customer, supplier, employee, founder, lender or investor information may be present when professionally necessary. Clara applies no automatic anonymization or pseudonymization and does not classify company stage with deterministic rules."
       },
       {
-        "id": "business-planning-strategic-case-and-handoff",
-        "purpose": "Author and review the strategic-commercial plan and prepare the bounded Vera handoff",
-        "content": "The model authors evidence-linked findings, options, benefits and drawbacks, recommendation, conditions, initiatives, owners, milestones, KPIs, risks, responses, decision implications and open questions. The local finalizer receives only the reviewed structured case inside the selected Clara case workspace and checks declared lens, shape, identifiers, non-empty support references and reference closure; it does not score a market or select a strategy. The normal model context contains the bounded evidence register with IDs, kinds, descriptions and statuses plus company context, assumptions, recommendation, initiatives, risks, questions and limitations. It and the Vera handoff exclude evidence source_ref values, raw source documents, absolute paths and original filenames. When a reviewed Vera handoff is supplied, fixed code records exact case-identity and shared-assumption comparisons and blocks finalization on a non-ready source or unresolved mechanical divergence; it never resolves strategic meaning."
+        "id": "business-planning-strategic-case-and-contribution",
+        "purpose": "Author and review Clara's owner-led strategic-commercial plan with any optional Vera financial contribution",
+        "content": "The model authors evidence-linked findings, options, benefits and drawbacks, recommendation, conditions, initiatives, owners, milestones, KPIs, risks, responses, decision implications and open questions. The local finalizer receives only the reviewed structured case inside the selected Clara case workspace and checks declared lens, shape, identifiers, non-empty support references and reference closure; it does not score a market or select a strategy. The normal model context contains the bounded evidence register with IDs, kinds, descriptions and statuses plus company context, assumptions, recommendation, initiatives, risks, questions and limitations. It and the internal Vera contribution exclude evidence source_ref values, raw source documents, absolute paths and original filenames. When an optional Vera contribution is supplied, fixed code records exact case identity, shared-context and shared-assumption comparisons, includes mechanically compatible financial summaries in the Clara-owned plan, and marks unresolved differences partial; it never resolves strategic meaning or reinterprets reconciled figures."
       }
     ]
   },
@@ -50,14 +50,14 @@
   "boundaries_beyond_codex": [],
   "security_controls": [
     {
-      "id": "clara-case-workspace-and-handoff-isolation",
-      "control": "The strategic finalizer accepts the case only from the selected Clara case-workspace root, writes only to its business-plan directory, accepts an optional counterpart handoff only from inside that workspace, records exact identity and shared-assumption comparisons, and stops before finalization when the source is not ready or the mechanical comparison requires professional resolution."
+      "id": "clara-case-workspace-and-contribution-isolation",
+      "control": "The strategic finalizer accepts the case only from the selected Clara case-workspace root, writes only to its business-plan directory, and accepts an optional counterpart contribution only from inside that workspace. It records exact identity, shared-context and shared-assumption comparisons, binds mechanically compatible financial summaries into the Clara-owned plan, and makes the result partial with visible unresolved differences when owner review is required."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "257e0158d37a2164a0e0670704112c198d0c4d3a169638b4fdeae3df9bcc9030"
+    "source_fingerprint": "fddd80e5f5dc7e56c2bb3e4b24057946d03250943902fef4ef60dc81485cb7f6"
   }
 }

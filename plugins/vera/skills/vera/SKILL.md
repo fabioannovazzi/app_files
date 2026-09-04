@@ -313,6 +313,9 @@ them without changing the capability catalog:
 - `business-planning`: client-bound accounting and financial business planning
   for a startup, new venture, or established company. The company stage is a
   reviewed plain-language context, not a deterministic route. Vera owns the
+  user request and final finance-led review package, while an optional Clara
+  strategic contribution remains internal to the workflow rather than a second
+  user journey. Vera owns the
   historical or opening accounting base, confirmed assumptions, linked P&L,
   cash flow and balance sheet, working capital, debt and equity, scenarios,
   funding requirement and reconciliation. Model-led and professional judgment
@@ -320,9 +323,10 @@ them without changing the capability catalog:
   approval. Deterministic code owns canonical Decimal arithmetic, roll-forwards,
   reference closure, reconciliation, funding-gap calculation, hashes and replay
   receipts. It creates no balancing plug and remains draft pending professional
-  review. A reviewed Clara handoff may enter as strategic evidence, but Vera
-  must expose divergences and must not silently change Clara's assumptions or
-  recommendation;
+  review. A Clara contribution may enter as strategic evidence and be included
+  in Vera's final plan only after mechanical compatibility review. Vera keeps
+  unresolved differences visible, retains ownership, and must not silently
+  change Clara's assumptions or recommendation;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
   perimeter, currency, sign convention, period/scenario mappings, and source
