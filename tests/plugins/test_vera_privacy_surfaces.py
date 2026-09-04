@@ -161,6 +161,13 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
         and boundary["requires_confirmation"] is True
         for boundary in feedback_boundaries[1:]
     )
+    receipt_boundaries = manifests["run-receipt-stamping"]["external_boundaries"]
+    assert [boundary["id"] for boundary in receipt_boundaries] == [
+        "automatic-server-stamped-run-receipt"
+    ]
+    assert receipt_boundaries[0]["activation"] == "automatic_per_durable_run"
+    assert receipt_boundaries[0]["optional"] is False
+    assert receipt_boundaries[0]["requires_confirmation"] is False
 
 
 def test_vera_security_controls_exclude_architecture_and_policy_labels() -> None:

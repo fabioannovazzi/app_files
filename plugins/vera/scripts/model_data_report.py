@@ -957,19 +957,25 @@ def main(argv: list[str] | None = None) -> int:
         _write_once_or_identical(markdown_path, markdown.encode("utf-8"))
         from notarized_run_receipt import (
             NotarizedRunReceiptError,
-            stamp_model_data_report_if_enabled,
+            stamp_model_data_report,
         )
 
         try:
-            server_receipt = stamp_model_data_report_if_enabled(
+            server_receipt = stamp_model_data_report(
                 json_path,
                 output_dir=output_dir,
                 plugin_root=Path(__file__).resolve().parents[1],
             )
         except NotarizedRunReceiptError as exc:
-            raise ModelDataReportError(
-                "local report written, but server receipt stamping failed: " + str(exc)
-            ) from exc
+            # Receipt delivery is auxiliary: a remote failure must not invalidate
+            # mechanically completed local artifacts or the professional's work.
+            server_receipt = {
+                "status": "pending",
+                "reason": str(exc),
+            }
+            request_path = output_dir / "model_data_receipt_request.json"
+            if request_path.is_file() and not request_path.is_symlink():
+                server_receipt["request_path"] = str(request_path)
         sys.stdout.write(
             json.dumps(
                 {

@@ -1170,7 +1170,7 @@
       </div>
       <div class="run-report__detail">
         <p class="run-report__copy" data-i18n="report.copy">Dopo ogni esecuzione sostanziale, un breve report distingue la fonte disponibile, ciò che il codice ha elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello. Se la lavorazione crea file, conserva anche una ricevuta JSON e una versione Markdown.</p>
-        <p class="run-report__copy" data-i18n="report.stamp">Lo studio può attivare una volta le ricevute con marca server. Da quel momento, per ogni report Vera invia a Mparanza soltanto un identificativo casuale, la versione e il digest del report locale; il report e i dati del cliente restano nello spazio di lavoro. Il commercialista riceve un HTML verificabile da inviare al cliente o salvare come PDF.</p>
+        <p class="run-report__copy" data-i18n="report.stamp">Per ogni report durevole, Vera invia automaticamente a Mparanza soltanto un identificativo casuale, la versione e il digest del report locale; il report e i dati del cliente restano nello spazio di lavoro. Il commercialista riceve un HTML verificabile da inviare al cliente o salvare come PDF. Se il servizio non è disponibile, il lavoro resta completato e la richiesta rimane in attesa per un nuovo tentativo.</p>
         <div class="run-report__receipt" aria-label="Esempio con dati sintetici del flusso" data-i18n-aria-label="report.exampleAria">
           <div class="run-report__receipt-head">
             <span data-i18n="report.example">Esempio con dati sintetici</span>
@@ -1189,7 +1189,6 @@
           <p class="run-report__note" data-i18n="report.note">Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.</p>
         </div>
         <div class="run-report__links">
-          <a class="run-report__link" href="examples/model-data-receipt.html" target="_blank" rel="noopener" data-i18n="report.exampleLink">Apri la ricevuta HTML di esempio →</a>
           <a class="run-report__link" href="https://mparanza.com/data-handling?lang=it#run-evidence" data-data-handling-link data-data-handling-anchor="#run-evidence" data-i18n="report.link">Come leggere il report e i suoi limiti →</a>
         </div>
       </div>
@@ -1452,7 +1451,7 @@
         "report.index": "Per ogni lavoro",
         "report.title": "Vera mostra che cosa è arrivato al modello.",
         "report.copy": "Dopo ogni esecuzione sostanziale, un breve report distingue la fonte disponibile, ciò che il codice ha elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello. Se la lavorazione crea file, conserva anche una ricevuta JSON e una versione Markdown.",
-        "report.stamp": "Lo studio può attivare una volta le ricevute con marca server. Da quel momento, per ogni report Vera invia a Mparanza soltanto un identificativo casuale, la versione e il digest del report locale; il report e i dati del cliente restano nello spazio di lavoro. Il commercialista riceve un HTML verificabile da inviare al cliente o salvare come PDF.",
+        "report.stamp": "Per ogni report durevole, Vera invia automaticamente a Mparanza soltanto un identificativo casuale, la versione e il digest del report locale; il report e i dati del cliente restano nello spazio di lavoro. Il commercialista riceve un HTML verificabile da inviare al cliente o salvare come PDF. Se il servizio non è disponibile, il lavoro resta completato e la richiesta rimane in attesa per un nuovo tentativo.",
         "report.exampleAria": "Esempio con dati sintetici del flusso",
         "report.example": "Esempio con dati sintetici",
         "report.unit": "Controllo di gestione",
@@ -1473,7 +1472,6 @@
         "report.identityColumns": "Colonne di identità escluse",
         "report.identityColumnsValue": "2",
         "report.note": "Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.",
-        "report.exampleLink": "Apri la ricevuta HTML di esempio →",
         "report.link": "Come leggere il report e i suoi limiti →",
         "core.index": "Cosa può fare Vera",
         "core.title": "Funzioni disponibili",
@@ -1647,7 +1645,7 @@
         "report.index": "For every piece of work",
         "report.title": "Vera shows what reached the model.",
         "report.copy": "After every substantive run, a short report distinguishes the available source, what code processed locally, what was visible to the model, and what was never visible to the model. When the work creates files, it also keeps a JSON receipt and a Markdown version.",
-        "report.stamp": "The firm can enable server-stamped receipts once. From then on, for each report Vera sends Mparanza only a random identifier, the version, and the local report digest; the report and client data stay in the workspace. The accountant receives a verifiable HTML receipt to send to the customer or save as PDF.",
+        "report.stamp": "For every durable report, Vera automatically sends Mparanza only a random identifier, the version, and the local report digest; the report and client data stay in the workspace. The accountant receives a verifiable HTML receipt to send to the customer or save as PDF. If the service is unavailable, the work remains complete and the request stays pending for retry.",
         "report.exampleAria": "Synthetic-data flow example",
         "report.example": "Synthetic-data example",
         "report.unit": "Management control",
@@ -1668,7 +1666,6 @@
         "report.identityColumns": "Identity columns excluded",
         "report.identityColumnsValue": "2",
         "report.note": "The locally processed total and the part never visible to the model overlap and must not be added together. Actual quantities depend on the workflow and professional purpose; for some work, the complete document or population is the correct minimum.",
-        "report.exampleLink": "Open the example HTML receipt →",
         "report.link": "How to read the report and its limits →",
         "core.index": "What Vera can do",
         "core.title": "Available functions",
@@ -1842,7 +1839,7 @@
         "report.index": "Pour chaque travail",
         "report.title": "Vera montre ce qui est parvenu au modèle.",
         "report.copy": "Après chaque exécution substantielle, un bref rapport distingue la source disponible, ce que le code a traité localement, ce qui a été visible par le modèle et ce qui n'a jamais été visible par le modèle. Lorsque le travail crée des fichiers, il conserve aussi un reçu JSON et une version Markdown.",
-        "report.stamp": "Le cabinet peut activer une seule fois les reçus horodatés par le serveur. Ensuite, pour chaque rapport, Vera envoie à Mparanza uniquement un identifiant aléatoire, la version et le hash du rapport local ; le rapport et les données client restent dans l'espace de travail. Le professionnel reçoit un HTML vérifiable à envoyer au client ou à enregistrer en PDF.",
+        "report.stamp": "Pour chaque rapport durable, Vera envoie automatiquement à Mparanza uniquement un identifiant aléatoire, la version et le hash du rapport local ; le rapport et les données client restent dans l'espace de travail. Le professionnel reçoit un HTML vérifiable à envoyer au client ou à enregistrer en PDF. Si le service est indisponible, le travail reste terminé et la demande demeure en attente d'une nouvelle tentative.",
         "report.exampleAria": "Exemple de flux avec données synthétiques",
         "report.example": "Exemple avec données synthétiques",
         "report.unit": "Contrôle de gestion",
@@ -1863,7 +1860,6 @@
         "report.identityColumns": "Colonnes d’identité exclues",
         "report.identityColumnsValue": "2",
         "report.note": "Le total traité localement et la partie jamais visible par le modèle se chevauchent et ne doivent pas être additionnés. Les quantités réelles dépendent du workflow et de la finalité professionnelle ; pour certains travaux, le document ou la population complète constitue le minimum approprié.",
-        "report.exampleLink": "Ouvrir le reçu HTML d’exemple →",
         "report.link": "Comprendre le rapport et ses limites →",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Fonctions disponibles",
@@ -2037,7 +2033,7 @@
         "report.index": "Für jede Arbeit",
         "report.title": "Vera zeigt, was das Modell erhalten hat.",
         "report.copy": "Nach jeder substanziellen Ausführung unterscheidet ein kurzer Bericht die verfügbare Quelle, was der Code lokal verarbeitet hat, was für das Modell sichtbar war und was für das Modell nie sichtbar war. Wenn die Arbeit Dateien erzeugt, werden außerdem ein JSON-Beleg und eine Markdown-Version gespeichert.",
-        "report.stamp": "Die Kanzlei kann servergestempelte Belege einmalig aktivieren. Danach sendet Vera für jeden Bericht nur eine zufällige ID, die Version und den Hash des lokalen Berichts an Mparanza; Bericht und Mandantendaten bleiben im Arbeitsbereich. Die Kanzlei erhält einen prüfbaren HTML-Beleg zum Versand oder Speichern als PDF.",
+        "report.stamp": "Für jeden dauerhaften Bericht sendet Vera automatisch nur eine zufällige ID, die Version und den Hash des lokalen Berichts an Mparanza; Bericht und Mandantendaten bleiben im Arbeitsbereich. Die Kanzlei erhält einen prüfbaren HTML-Beleg zum Versand oder Speichern als PDF. Ist der Dienst nicht verfügbar, bleibt die Arbeit abgeschlossen und die Anfrage für einen erneuten Versuch ausstehend.",
         "report.exampleAria": "Ablaufbeispiel mit synthetischen Daten",
         "report.example": "Beispiel mit synthetischen Daten",
         "report.unit": "Controlling",
@@ -2058,7 +2054,6 @@
         "report.identityColumns": "Ausgeschlossene Identitätsspalten",
         "report.identityColumnsValue": "2",
         "report.note": "Der lokal verarbeitete Gesamtumfang und der für das Modell nie sichtbare Teil überlappen und dürfen nicht addiert werden. Die tatsächlichen Mengen hängen vom Workflow und beruflichen Zweck ab; bei manchen Arbeiten ist das vollständige Dokument oder die vollständige Grundgesamtheit das richtige Minimum.",
-        "report.exampleLink": "HTML-Beleg als Beispiel öffnen →",
         "report.link": "Bericht und Grenzen verstehen →",
         "core.index": "Was Vera kann",
         "core.title": "Verfügbare Funktionen",
@@ -2232,7 +2227,7 @@
         "report.index": "Para cada trabajo",
         "report.title": "Vera muestra qué llegó al modelo.",
         "report.copy": "Después de cada ejecución sustancial, un breve informe distingue la fuente disponible, lo que el código procesó localmente, lo que fue visible para el modelo y lo que nunca fue visible para el modelo. Cuando el trabajo crea archivos, también conserva un recibo JSON y una versión Markdown.",
-        "report.stamp": "El despacho puede activar una sola vez los recibos sellados por el servidor. A partir de entonces, por cada informe Vera envía a Mparanza únicamente un identificador aleatorio, la versión y el hash del informe local; el informe y los datos del cliente permanecen en el espacio de trabajo. El asesor recibe un HTML verificable para enviarlo al cliente o guardarlo como PDF.",
+        "report.stamp": "Para cada informe duradero, Vera envía automáticamente a Mparanza únicamente un identificador aleatorio, la versión y el hash del informe local; el informe y los datos del cliente permanecen en el espacio de trabajo. El asesor recibe un HTML verificable para enviarlo al cliente o guardarlo como PDF. Si el servicio no está disponible, el trabajo permanece completado y la solicitud queda pendiente para volver a intentarlo.",
         "report.exampleAria": "Ejemplo de flujo con datos sintéticos",
         "report.example": "Ejemplo con datos sintéticos",
         "report.unit": "Control de gestión",
@@ -2253,7 +2248,6 @@
         "report.identityColumns": "Columnas de identidad excluidas",
         "report.identityColumnsValue": "2",
         "report.note": "El total procesado localmente y la parte nunca visible para el modelo se solapan y no deben sumarse. Las cantidades reales dependen del flujo y de la finalidad profesional; para algunos trabajos, el documento o la población completa es el mínimo correcto.",
-        "report.exampleLink": "Abrir el recibo HTML de ejemplo →",
         "report.link": "Cómo leer el informe y sus límites →",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Funciones disponibles",

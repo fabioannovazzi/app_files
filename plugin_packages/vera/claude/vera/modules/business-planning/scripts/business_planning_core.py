@@ -20,7 +20,11 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-from business_planning_handoff import HANDOFF_SCHEMA, counterpart_handoff_status
+from business_planning_contribution import (
+    CONTRIBUTION_SCHEMA,
+    build_assumption_register,
+    counterpart_contribution_status,
+)
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
@@ -35,7 +39,7 @@ __all__ = [
     "COMMENTARY_SCHEMA",
     "PLAN_SCHEMA",
     "BusinessPlanningContractError",
-    "build_counterpart_handoff",
+    "build_counterpart_contribution",
     "build_business_plan",
     "build_model_context",
     "load_json",
@@ -48,7 +52,7 @@ __all__ = [
 
 WORKFLOW_ID = "business-planning"
 CASE_SCHEMA = "mparanza.business_planning_financial_case.v1"
-PLAN_SCHEMA = "mparanza.business_planning_financial_plan.v2"
+PLAN_SCHEMA = "mparanza.business_planning_financial_plan.v3"
 COMMENTARY_SCHEMA = "mparanza.business_planning_financial_commentary.v1"
 MAX_PERIODS = 60
 MAX_SCENARIOS = 8
@@ -755,9 +759,10 @@ def build_business_plan(case: Mapping[str, Any]) -> dict[str, Any]:
         else "partial" if unverified_evidence else "ready_for_professional_review"
     )
     evidence_counts = Counter(str(item["status"]) for item in evidence_items)
-    return {
+    plan = {
         "schema_version": PLAN_SCHEMA,
         "workflow_id": WORKFLOW_ID,
+        "owner_product": "Vera",
         "case_id": case["case_id"],
         "entity_name": case["entity_name"],
         "company_stage": case["company_stage"],
@@ -768,6 +773,8 @@ def build_business_plan(case: Mapping[str, Any]) -> dict[str, Any]:
         "periods": list(case["periods"]),
         "status": status,
         "review_status": "draft_pending_professional_review",
+        "counterpart_contribution": None,
+        "unresolved_issues": [],
         "reconciliation_tolerance": case["reconciliation_tolerance"],
         "evidence_coverage": {
             "referenced_evidence_ids": sorted(referenced_evidence),
@@ -815,6 +822,10 @@ def build_business_plan(case: Mapping[str, Any]) -> dict[str, Any]:
             ),
         ],
     }
+    plan["assumption_register"] = build_assumption_register(
+        plan["assumptions"], owner_product="Vera"
+    )
+    return plan
 
 
 def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -832,8 +843,9 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
         for item in plan["assumptions"]
     ]
     return {
-        "schema_version": "mparanza.business_planning_financial_model_context.v2",
+        "schema_version": "mparanza.business_planning_financial_model_context.v3",
         "workflow_id": WORKFLOW_ID,
+        "owner_product": plan["owner_product"],
         "case_id": plan["case_id"],
         "entity_name": plan["entity_name"],
         "company_stage": plan["company_stage"],
@@ -843,6 +855,9 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
         "reporting_currency": plan["reporting_currency"],
         "status": plan["status"],
         "review_status": plan["review_status"],
+        "counterpart_contribution": plan["counterpart_contribution"],
+        "unresolved_issues": plan["unresolved_issues"],
+        "assumption_register": plan["assumption_register"],
         "evidence_coverage": plan["evidence_coverage"],
         "evidence_register": plan["evidence_register"],
         "assumptions": assumptions,
@@ -872,11 +887,11 @@ def build_model_context(plan: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
-    """Build the reviewed Vera-to-Clara bridge without semantic merging."""
+def build_counterpart_contribution(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Build Vera's bounded financial contribution for an owner-led plan."""
 
     return {
-        "schema_version": HANDOFF_SCHEMA,
+        "schema_version": CONTRIBUTION_SCHEMA,
         "workflow_id": WORKFLOW_ID,
         "case_id": plan["case_id"],
         "entity_name": plan["entity_name"],
@@ -887,7 +902,7 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
         "from_lens": "accounting_financial",
         "to_product": "Clara",
         "to_lens": "strategic_commercial",
-        "status": counterpart_handoff_status(plan["status"]),
+        "status": counterpart_contribution_status(plan["status"]),
         "source_plan_status": plan["status"],
         "source_review_status": plan["review_status"],
         "assumptions": [
@@ -911,10 +926,10 @@ def build_counterpart_handoff(plan: Mapping[str, Any]) -> dict[str, Any]:
         ],
         "reconciliation": plan["reconciliation"],
         "limitations": plan["limitations"],
-        "handoff_boundary": (
-            "Clara may use this reviewed bridge as evidence for strategic work, but "
-            "must not alter accounting assumptions, figures, or reconciliation status "
-            "silently. Any divergence must be stated and returned for professional review."
+        "contribution_boundary": (
+            "Clara may include this bounded financial contribution in a Clara-owned "
+            "plan after mechanical compatibility and professional review. Clara must "
+            "not alter accounting assumptions, figures, or reconciliation status."
         ),
     }
 
@@ -1081,7 +1096,7 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
     """Render a factual planning summary without semantic conclusions."""
 
     lines = [
-        f"# Business plan facts — {plan['entity_name']}",
+        f"# Financial plan and funding needs — {plan['entity_name']}",
         "",
         f"- Status: `{plan['status']}`",
         f"- Review: `{plan['review_status']}`",
@@ -1092,11 +1107,29 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
         f"- Currency: {plan['reporting_currency']}",
         f"- Reconciliation: {'passed' if plan['reconciliation']['all_passed'] else 'failed'}",
         "",
-        "## Scenario summaries",
+        "## Assumption register",
         "",
-        "| Scenario | Revenue | Net income | Ending cash | Minimum cash | Funding requirement | Break-even |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| ID | Relationship | Vera description | Counterpart description |",
+        "| --- | --- | --- | --- |",
     ]
+    lines.extend(
+        "| {id} | {relationship} | {owner} | {counterpart} |".format(
+            id=item["id"],
+            relationship=item["relationship"],
+            owner=item["owner_description"] or "—",
+            counterpart=item["counterpart_description"] or "—",
+        )
+        for item in plan["assumption_register"]
+    )
+    lines.extend(
+        [
+            "",
+            "## Scenario summaries",
+            "",
+            "| Scenario | Revenue | Net income | Ending cash | Minimum cash | Funding requirement | Break-even |",
+            "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
+        ]
+    )
     for scenario in plan["scenarios"]:
         summary = scenario["summary"]
         lines.append(
@@ -1110,6 +1143,45 @@ def render_markdown(plan: Mapping[str, Any]) -> str:
                 break_even=summary["break_even_period"] or "not reached",
             )
         )
+    contribution = plan.get("counterpart_contribution")
+    if contribution:
+        lines.extend(
+            [
+                "",
+                "## Clara strategic contribution",
+                "",
+                f"Status: `{contribution['status']}`",
+                "",
+            ]
+        )
+        if contribution["included_in_owner_plan"]:
+            content = contribution["content"]
+            lines.extend(
+                [
+                    str(content["recommendation"]["statement"]),
+                    "",
+                    "### Initiatives",
+                    "",
+                ]
+            )
+            lines.extend(
+                f"- {item['title']}: {item['objective']}"
+                for item in content["initiatives"]
+            )
+            lines.extend(["", "### Strategic risks", ""])
+            lines.extend(
+                f"- {item['description']} Response: {item['response']}"
+                for item in content["risks"]
+            )
+        else:
+            lines.append(
+                "The contribution is preserved for owner review but is not included "
+                "as an accepted part of this plan."
+            )
+            lines.extend(
+                f"- {item['kind']}: {item.get('field') or item.get('detail') or item.get('assumption_id')}"
+                for item in contribution["unresolved_issues"]
+            )
     lines.extend(["", "## Limitations", ""])
     lines.extend(f"- {item}" for item in plan["limitations"])
     lines.extend(
@@ -1161,26 +1233,15 @@ def render_html(plan: Mapping[str, Any]) -> str:
         ],
     )
     assumption_table = render_table(
-        (
-            "ID",
-            "Category",
-            "Description",
-            "Evidence",
-            "Effective periods",
-            "Rationale",
-            "Status",
-        ),
+        ("ID", "Relationship", "Vera description", "Counterpart description"),
         [
             (
                 item["id"],
-                item["category"],
-                item["description"],
-                " · ".join(item["evidence_ids"]),
-                " · ".join(item["effective_periods"]),
-                item["rationale"],
-                item["status"],
+                item["relationship"],
+                item["owner_description"] or "—",
+                item["counterpart_description"] or "—",
             )
-            for item in plan["assumptions"]
+            for item in plan["assumption_register"]
         ],
     )
     evidence_table = render_table(
@@ -1249,13 +1310,51 @@ def render_html(plan: Mapping[str, Any]) -> str:
     limitations = "".join(
         f"<li>{html.escape(str(item))}</li>" for item in plan["limitations"]
     )
+    contribution = plan.get("counterpart_contribution")
+    contribution_html = ""
+    if contribution:
+        issues = "".join(
+            f"<li>{html.escape(str(item))}</li>"
+            for item in contribution["unresolved_issues"]
+        )
+        if contribution["included_in_owner_plan"]:
+            content = contribution["content"]
+            initiative_items = "".join(
+                "<li><strong>"
+                f"{html.escape(str(item['title']))}</strong>: "
+                f"{html.escape(str(item['objective']))}</li>"
+                for item in content["initiatives"]
+            )
+            risk_items = "".join(
+                "<li>"
+                f"{html.escape(str(item['description']))} "
+                f"<strong>Response:</strong> {html.escape(str(item['response']))}"
+                "</li>"
+                for item in content["risks"]
+            )
+            contribution_body = (
+                f"<p>{html.escape(str(content['recommendation']['statement']))}</p>"
+                f"<h3>Initiatives</h3><ul>{initiative_items}</ul>"
+                f"<h3>Strategic risks</h3><ul>{risk_items}</ul>"
+            )
+        else:
+            contribution_body = (
+                "<p>This contribution is preserved for owner review but is not "
+                "included as an accepted part of the plan.</p>"
+                f"<ul>{issues}</ul>"
+            )
+        contribution_html = (
+            '<section class="contribution"><h2>Clara strategic contribution</h2>'
+            f"<p><strong>Status:</strong> {html.escape(str(contribution['status']))}</p>"
+            f"{contribution_body}</section>"
+        )
     evidence = plan["evidence_coverage"]
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Business plan facts — {html.escape(str(plan['entity_name']))}</title>
+  <title>Financial plan and funding needs — {html.escape(str(plan['entity_name']))}</title>
   <style>
     :root {{ color-scheme: light; font-family: "Instrument Sans", sans-serif; color: #17213a; background: #f6f8fc; }}
     body {{ margin: 0; }} main {{ max-width: 1180px; margin: 0 auto; padding: 48px 24px 72px; }}
@@ -1266,10 +1365,11 @@ def render_html(plan: Mapping[str, Any]) -> str:
     th, td {{ padding: 12px; border-bottom: 1px solid #dbe4f2; text-align: right; }}
     th:first-child, td:first-child {{ text-align: left; }} th {{ color: #002060; white-space: nowrap; }} td {{ vertical-align: top; }}
     .warning {{ margin-top: 28px; padding: 18px; border-left: 3px solid #00a7d8; background: #edf8fc; }}
+    .contribution {{ margin-top: 48px; padding: 24px 28px; border-left: 3px solid #00a7d8; background: #edf8fc; }}
   </style>
 </head>
 <body><main>
-  <p>Vera · Business planning · accounting and financial lens</p>
+  <p>Vera · Financial planning · owner</p>
   <h1>{html.escape(str(plan['entity_name']))}</h1>
   <div class="meta"><span>Company stage: {html.escape(str(plan['company_stage']))}</span><span>Status: {html.escape(str(plan['status']))}</span><span>Review: {html.escape(str(plan['review_status']))}</span><span>Currency: {html.escape(str(plan['reporting_currency']))}</span></div>
   <p><strong>Objective:</strong> {html.escape(str(plan['planning_objective']))}</p>
@@ -1278,11 +1378,12 @@ def render_html(plan: Mapping[str, Any]) -> str:
   <p>Unverified evidence: {html.escape(' · '.join(evidence['unverified_evidence_ids']) or 'none')}.</p>
   <h2>Opening balance</h2>{opening_table}
   <p>Evidence: {html.escape(' · '.join(opening['evidence_ids']))}. Reconciliation difference: {html.escape(str(opening['reconciliation']['difference']))}; passed: {html.escape(str(opening['reconciliation']['passed']))}.</p>
-  <h2>Confirmed assumptions</h2>{assumption_table}
+  <h2>Assumption register</h2>{assumption_table}
   <h2>Scenario summaries</h2>
   {scenario_summary}
   <h2>Integrated statements</h2>{''.join(scenario_details)}
   <h2>Reconciliation</h2>{reconciliation_table}
+  {contribution_html}
   <h2>Limitations</h2><ul>{limitations}</ul>
   <p class="warning">Exact statement closure does not validate the assumptions or approve the plan.</p>
 </main></body></html>

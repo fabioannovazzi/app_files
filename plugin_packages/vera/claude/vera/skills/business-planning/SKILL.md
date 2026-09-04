@@ -1,6 +1,6 @@
 ---
 name: business-planning
-description: Use when Vera must prepare or revise the accounting and financial business plan of a startup, new venture, or established company, including reviewed assumptions, linked P&L, cash flow, balance sheet, scenarios, funding needs, reconciliation, and a controlled handoff to Clara.
+description: Use when Vera must prepare or revise a finance-led plan for a startup, new venture, or established company, including reviewed assumptions, linked P&L, cash flow, balance sheet, scenarios, funding needs, reconciliation, and optional internal strategic contribution from Clara.
 ---
 
 ## Cowork execution contract
@@ -47,7 +47,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Business Planning — Vera lens
+# Financial planning — Vera owner
 
 
 
@@ -63,10 +63,19 @@ The same route supports startups and established companies; record the company
 stage in reviewed plain language and do not classify it with deterministic
 rules.
 
-When a reviewed Clara `business_planning_handoff.json` is available, use it as
-bounded strategic evidence. Compare its shared assumption IDs and descriptions
-with Vera's case, show any divergence, and return material inconsistencies for
-professional resolution. Never convert strategic statements into numbers or
-silently alter Clara's recommendation. Pass the file to the financial finalizer
-with `--counterpart-handoff`; do not finalize until its durable handoff review
-reports `aligned_for_counterpart_use`.
+Vera remains the visible owner of the request and final deliverable. Do not ask
+the user to invoke Clara, move a JSON file, choose an internal lens, or interpret
+internal compatibility statuses. When the user requests a complete cross-lens
+plan and Clara is callable, obtain Clara's bounded strategic contribution
+internally and include it in Vera's final review package. For a finance-only
+request, do not create collaboration ceremony.
+
+When a Clara `counterpart_contribution.json` is available, compare its source
+readiness, exact case identity, shared context and shared assumption IDs and
+descriptions with Vera's case. Pass it to the financial finalizer with
+`--counterpart-contribution`. The runner binds mechanically compatible strategic
+content into the Vera-owned plan and writes one combined assumption register.
+It keeps the plan `partial` and shows unresolved differences when owner review
+is needed. Never convert strategic statements into numbers or silently alter
+Clara's recommendation. Mechanical compatibility is not semantic or
+professional agreement.

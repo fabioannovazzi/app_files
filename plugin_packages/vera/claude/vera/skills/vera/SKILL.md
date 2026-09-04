@@ -148,28 +148,18 @@ provider-signed delivery proof. For a Studio Archive run, declare both reports
 as artifacts before completion. When the host cannot create files, show the same
 compact report in chat and state that no durable receipt was created.
 
-The same build command checks the private studio-level server-receipt setting.
-When it is disabled, it performs no receipt-service network request. When the
-studio has previously enabled it, every durable report build automatically
-sends only a random per-run receipt UUID, the Vera version, and the canonical
-report digest to Mparanza. It then creates `model_data_receipt.json` and the
-customer-readable, print-to-PDF `model_data_receipt.html` in the same output
-folder. Do not ask again on every run. If stamping fails, state that the local
-model-data report was created but the server receipt was not, preserve the
-request file for an idempotent retry, and do not describe the run as stamped.
-
-Enable the firm setting only after the user explicitly chooses this separate
-Mparanza-hosted boundary and has been told the exact minimal record and its
-indefinite proof retention:
-
-```bash
-python scripts/notarized_run_receipt.py settings enable \
-  --confirm-minimal-server-record
-```
-
-Use `settings disable` to stop future stamping. Disabling does not delete local
-or server receipts already created. The receipt proves existence, server time,
-and integrity of the matching local report; it does not prove who submitted the
+Every durable report build automatically sends only schema version, a random
+per-run receipt UUID, the Vera version, and the canonical report digest to
+Mparanza. It then creates `model_data_receipt.json` and the customer-readable,
+print-to-PDF `model_data_receipt.html` in the same output folder. There is no
+activation setting or per-run confirmation. If stamping fails, state that the
+local model-data report was created but the server receipt is pending, preserve
+the request file for an idempotent retry, and return the completed run
+successfully. Never discard, roll back, or describe the professional work as
+failed merely because the receipt service is unavailable. Retry the stamp later
+with `scripts/notarized_run_receipt.py stamp` and do not describe the run as
+stamped until that succeeds. The receipt proves existence, server time, and
+integrity of the matching local report; it does not prove who submitted the
 digest, provider-side delivery, analytical correctness, semantic necessity, or
 GDPR compliance.
 
@@ -272,6 +262,9 @@ them without changing the capability catalog:
 - `business-planning`: client-bound accounting and financial business planning
   for a startup, new venture, or established company. The company stage is a
   reviewed plain-language context, not a deterministic route. Vera owns the
+  user request and final finance-led review package, while an optional Clara
+  strategic contribution remains internal to the workflow rather than a second
+  user journey. Vera owns the
   historical or opening accounting base, confirmed assumptions, linked P&L,
   cash flow and balance sheet, working capital, debt and equity, scenarios,
   funding requirement and reconciliation. Model-led and professional judgment
@@ -279,9 +272,10 @@ them without changing the capability catalog:
   approval. Deterministic code owns canonical Decimal arithmetic, roll-forwards,
   reference closure, reconciliation, funding-gap calculation, hashes and replay
   receipts. It creates no balancing plug and remains draft pending professional
-  review. A reviewed Clara handoff may enter as strategic evidence, but Vera
-  must expose divergences and must not silently change Clara's assumptions or
-  recommendation;
+  review. A Clara contribution may enter as strategic evidence and be included
+  in Vera's final plan only after mechanical compatibility review. Vera keeps
+  unresolved differences visible, retains ownership, and must not silently
+  change Clara's assumptions or recommendation;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
   perimeter, currency, sign convention, period/scenario mappings, and source
@@ -556,8 +550,8 @@ data permit them.
    intent, inputs, output folder, and expected artifacts.
 5. End with an Artifact Card. Include the compact model-data summary and link
    `model_data_report.md` when a durable report was created. When server receipt
-   stamping is enabled and succeeded, also link `model_data_receipt.html` and
-   its public verification URL. When useful, create
+   stamping succeeded, also link `model_data_receipt.html` and its public
+   verification URL. When useful, create
    `run_review.md` in the output folder; never edit plugin source or
    generated ZIPs during a run.
 

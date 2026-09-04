@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create and verify optional server-stamped proofs for Vera model-data reports.
+"""Create and verify server-stamped proofs for Vera model-data reports.
 
 The Mparanza service receives only an opaque receipt UUID, the Vera version,
 and the SHA-256 digest of the canonical local report. It never receives the
@@ -29,16 +29,13 @@ from typing import Any
 __all__ = [
     "NotarizedRunReceiptError",
     "build_receipt_request",
-    "firm_receipts_enabled",
     "main",
-    "stamp_model_data_report_if_enabled",
     "stamp_model_data_report",
     "verify_model_data_receipt",
 ]
 
 RECEIPT_ENDPOINT = "https://mparanza.com/api/vera/run-receipts"
 _ENDPOINT_ENV = "VERA_RUN_RECEIPT_ENDPOINT"
-_SETTINGS_FILE = "settings.json"
 _REQUEST_FILE = "model_data_receipt_request.json"
 _RECEIPT_FILE = "model_data_receipt.json"
 _HTML_FILE = "model_data_receipt.html"
@@ -324,22 +321,18 @@ def _exact_fields(payload: Mapping[str, Any], fields: set[str], *, label: str) -
         )
 
 
-def _atomic_write(path: Path, data: bytes, *, private: bool = False) -> None:
+def _atomic_write(path: Path, data: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
         dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
     )
     temporary = Path(temporary_name)
     try:
-        if private:
-            os.fchmod(descriptor, 0o600)
         with os.fdopen(descriptor, "wb") as handle:
             handle.write(data)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
-        if private:
-            path.chmod(0o600)
     finally:
         if temporary.exists():
             temporary.unlink()
@@ -359,64 +352,19 @@ def _write_once_or_identical(path: Path, data: bytes) -> None:
     _atomic_write(path, data)
 
 
-def _default_plugin_data() -> Path:
-    explicit = os.environ.get("PLUGIN_DATA") or os.environ.get("CLAUDE_PLUGIN_DATA")
-    if explicit:
-        return Path(explicit).expanduser().resolve()
-    if sys.platform == "darwin":
-        return Path.home() / "Library" / "Application Support" / "Mparanza" / "Vera"
-    if os.name == "nt":
-        app_data = os.environ.get("APPDATA")
-        if app_data:
-            return Path(app_data) / "Mparanza" / "Vera"
-    xdg_data = os.environ.get("XDG_DATA_HOME")
-    if xdg_data:
-        return Path(xdg_data).expanduser() / "mparanza" / "vera"
-    return Path.home() / ".local" / "share" / "mparanza" / "vera"
-
-
-def _settings_path(plugin_data: Path | None = None) -> Path:
-    root = (plugin_data or _default_plugin_data()).expanduser().resolve()
-    return root / "run-receipts" / _SETTINGS_FILE
-
-
-def _read_settings(plugin_data: Path | None = None) -> dict[str, Any]:
-    path = _settings_path(plugin_data)
-    if not path.exists():
-        return {"schema_version": 1, "enabled": False}
-    if path.is_symlink() or not path.is_file():
-        raise NotarizedRunReceiptError("run-receipt settings must be a regular file")
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise NotarizedRunReceiptError("run-receipt settings are invalid") from exc
-    if not isinstance(payload, dict):
-        raise NotarizedRunReceiptError("run-receipt settings must be an object")
-    _exact_fields(payload, {"schema_version", "enabled"}, label="settings")
-    if payload["schema_version"] != 1 or not isinstance(payload["enabled"], bool):
-        raise NotarizedRunReceiptError("run-receipt settings are invalid")
-    return payload
-
-
-def firm_receipts_enabled(plugin_data: Path | None = None) -> bool:
-    """Return whether the studio previously enabled automatic receipt stamping."""
-
-    return bool(_read_settings(plugin_data)["enabled"])
-
-
-def _write_settings(*, enabled: bool, plugin_data: Path | None = None) -> Path:
-    path = _settings_path(plugin_data)
-    _atomic_write(
-        path,
-        _canonical_bytes({"schema_version": 1, "enabled": enabled}),
-        private=True,
-    )
-    return path
-
-
 def _plugin_version(plugin_root: Path) -> str:
-    manifest_path = plugin_root / ".codex-plugin" / "plugin.json"
-    if manifest_path.is_symlink() or not manifest_path.is_file():
+    manifest_path = next(
+        (
+            candidate
+            for candidate in (
+                plugin_root / ".codex-plugin" / "plugin.json",
+                plugin_root / ".claude-plugin" / "plugin.json",
+            )
+            if candidate.is_file() and not candidate.is_symlink()
+        ),
+        None,
+    )
+    if manifest_path is None:
         raise NotarizedRunReceiptError("Vera plugin manifest is unavailable")
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -893,24 +841,6 @@ def stamp_model_data_report(
     }
 
 
-def stamp_model_data_report_if_enabled(
-    report_path: Path,
-    *,
-    output_dir: Path,
-    plugin_root: Path,
-    plugin_data: Path | None = None,
-) -> dict[str, Any]:
-    """Stamp automatically only after the studio-level setting was enabled."""
-
-    if not firm_receipts_enabled(plugin_data):
-        return {"status": "disabled"}
-    return stamp_model_data_report(
-        report_path,
-        output_dir=output_dir,
-        plugin_root=plugin_root,
-    )
-
-
 def verify_model_data_receipt(
     receipt_path: Path,
     *,
@@ -966,10 +896,6 @@ def verify_model_data_receipt(
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
-    settings = subparsers.add_parser("settings")
-    settings.add_argument("action", choices=("enable", "disable", "status"))
-    settings.add_argument("--plugin-data", type=Path)
-    settings.add_argument("--confirm-minimal-server-record", action="store_true")
     stamp = subparsers.add_parser("stamp")
     stamp.add_argument("--report", type=Path, required=True)
     stamp.add_argument("--output-dir", type=Path, required=True)
@@ -982,32 +908,11 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Manage the firm setting, stamp a report, or verify an existing receipt."""
+    """Stamp a report or verify an existing receipt."""
 
     args = _parser().parse_args(argv)
     try:
-        if args.command == "settings":
-            if args.action == "status":
-                payload = {
-                    "schema_version": 1,
-                    "enabled": firm_receipts_enabled(args.plugin_data),
-                    "settings_path": str(_settings_path(args.plugin_data)),
-                }
-            else:
-                enabled = args.action == "enable"
-                if enabled and not args.confirm_minimal_server_record:
-                    raise NotarizedRunReceiptError(
-                        "enabling requires --confirm-minimal-server-record after the "
-                        "studio accepts automatic transmission of receipt ID, Vera version, "
-                        "and local report digest"
-                    )
-                path = _write_settings(enabled=enabled, plugin_data=args.plugin_data)
-                payload = {
-                    "schema_version": 1,
-                    "enabled": enabled,
-                    "settings_path": str(path),
-                }
-        elif args.command == "stamp":
+        if args.command == "stamp":
             payload = stamp_model_data_report(
                 args.report,
                 output_dir=args.output_dir,
