@@ -1348,3 +1348,102 @@ def test_cowork_cannot_resume_luna_job_with_different_worker(tmp_path: Path) -> 
 
     with pytest.raises(audit_core.AuditError, match="different"):
         audit_core.run_audit(**job)
+
+
+def _load_cli(name: str):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        f"passive_test_{name}", SCRIPTS / f"{name}.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _configure_cowork(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import cowork_worker
+
+    (tmp_path / "worker_config.json").write_text('{"runtime": "cowork-haiku"}')
+    monkeypatch.setattr(cowork_worker, "__file__", str(tmp_path / "cowork_worker.py"))
+
+
+def test_cowork_cli_returns_pending_and_preserves_outputs(tmp_path, monkeypatch):
+    job = _cowork_job(tmp_path)
+    cli = _load_cli("run_audit")
+    _configure_cowork(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        cli,
+        "load_client_engagement_context_file",
+        lambda *a, **kw: {"run_id": "synthetic-cli-test", "run_root": str(tmp_path)},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_audit",
+            "--invoices",
+            str(job["invoice_source"]),
+            "--ledger",
+            str(job["ledger_path"]),
+            "--ledger-mapping",
+            str(job["mapping_path"]),
+            "--output",
+            str(job["output_dir"]),
+            "--client-engagement",
+            str(tmp_path / "context.json"),
+        ],
+    )
+
+    result = cli.main()
+
+    assert result == 3
+    assert (job["output_dir"] / "exception_workpaper.xlsx").is_file()
+    request = next(job["output_dir"].glob("luna_chunks/*/cowork_request.json"))
+    assert json.loads(request.read_text())["requested_model"] == "haiku"
+
+
+def test_cowork_dependency_check_does_not_require_codex(tmp_path, monkeypatch):
+    cli = _load_cli("check_dependencies")
+    _configure_cowork(tmp_path, monkeypatch)
+    monkeypatch.setattr(cli.importlib.util, "find_spec", lambda name: object())
+    monkeypatch.setattr(
+        cli.shutil, "which", lambda name: pytest.fail("Cowork must not look for Codex")
+    )
+
+    assert cli.main([]) == 0
+
+
+def test_cowork_synthetic_cli_preserves_pending_worker_selection(tmp_path, monkeypatch):
+    cli = _load_cli("evaluate_audit")
+    _configure_cowork(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        cli, "load_client_workflow_context_for_output", lambda *a, **kw: {}
+    )
+    monkeypatch.setattr(cli, "validate_client_workflow_run", lambda *a, **kw: None)
+    captured = {}
+
+    def prepare(results, mutations, output, runner, config):
+        captured.update(runner=runner, model=config.semantic_model)
+        return {"status": "awaiting_semantic_review"}
+
+    monkeypatch.setattr(cli, "evaluate_synthetic_population", prepare)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "evaluate_audit",
+            "synthetic-evaluate",
+            "--results",
+            str(tmp_path / "results.jsonl"),
+            "--mutation-plan",
+            str(tmp_path / "mutations.json"),
+            "--output",
+            str(tmp_path / "evaluation"),
+        ],
+    )
+
+    result = cli.main()
+
+    assert result == 3
+    assert captured == {"runner": cli.run_cowork_chunk, "model": "haiku"}
