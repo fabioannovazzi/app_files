@@ -33,11 +33,14 @@ def _stub_ui_base(monkeypatch: pytest.MonkeyPatch) -> None:
     # Silence visuals and text outputs
     monkeypatch.setattr(fw.ui, "caption", lambda *a, **k: None)
     monkeypatch.setattr(fw.ui, "markdown", lambda *a, **k: None)
-    monkeypatch.setattr(fw.ui, "write", lambda *a, **k: None)
     monkeypatch.setattr(fw.ui, "error", lambda *a, **k: None)
 
 
-def _stub_multiselect(monkeypatch: pytest.MonkeyPatch, include: List[str] | None, exclude: List[str] | None) -> None:
+def _stub_multiselect(
+    monkeypatch: pytest.MonkeyPatch,
+    include: List[str] | None,
+    exclude: List[str] | None,
+) -> None:
     """Stub `ui.multiselect` to return provided selections by label."""
 
     naming = get_naming_params()
@@ -54,7 +57,9 @@ def _stub_multiselect(monkeypatch: pytest.MonkeyPatch, include: List[str] | None
     monkeypatch.setattr(fw.ui, "multiselect", _multi)
 
 
-def _stub_searchable_selectbox(monkeypatch: pytest.MonkeyPatch, returns: list[str]) -> None:
+def _stub_searchable_selectbox(
+    monkeypatch: pytest.MonkeyPatch, returns: list[str]
+) -> None:
     """Stub `searchable_selectbox_with_state` to return successive values from `returns`."""
 
     seq = returns.copy()
@@ -69,7 +74,9 @@ def _make_cols(n: int) -> list[DummyContainer]:
     return [DummyContainer() for _ in range(n)]
 
 
-def test_get_items_to_filter_categorical_includes_selection(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_items_to_filter_categorical_includes_selection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _stub_ui_base(monkeypatch)
     # Arrange
     naming = get_naming_params()
@@ -103,7 +110,9 @@ def test_get_items_to_filter_categorical_includes_selection(monkeypatch: pytest.
     assert "category" not in remaining and nothing in remaining
 
 
-def test_get_items_to_filter_returns_no_filter_when_none_selected(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_items_to_filter_returns_no_filter_when_none_selected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _stub_ui_base(monkeypatch)
     # Arrange
     naming = get_naming_params()
@@ -133,7 +142,9 @@ def test_get_items_to_filter_returns_no_filter_when_none_selected(monkeypatch: p
     assert remaining == index_cols  # unchanged
 
 
-def test_get_items_to_filter_numeric_slider_builds_number_filter(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_get_items_to_filter_numeric_slider_builds_number_filter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _stub_ui_base(monkeypatch)
     # Arrange: numeric column triggers slider path
     naming = get_naming_params()
@@ -176,7 +187,9 @@ def test_get_items_to_filter_numeric_slider_builds_number_filter(monkeypatch: py
     assert "age" not in remaining
 
 
-def test_make_filter_dict_integration_builds_chart_and_flags_filtered(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_make_filter_dict_integration_builds_chart_and_flags_filtered(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     _stub_ui_base(monkeypatch)
     # Arrange
     naming = get_naming_params()
@@ -201,10 +214,14 @@ def test_make_filter_dict_integration_builds_chart_and_flags_filtered(monkeypatc
     _stub_multiselect(monkeypatch, include=["A"], exclude=[])
 
     # radio is shown only if any filter active; return the default
-    monkeypatch.setattr(fw.ui, "radio", lambda *a, options, index=1, **k: options[index])
+    monkeypatch.setattr(
+        fw.ui, "radio", lambda *a, options, index=1, **k: options[index]
+    )
 
     # Act
-    p_out, c_out = fw.make_filter_dict(df, index_cols, param_dict, chart_dict, {}, col_array)
+    p_out, c_out = fw.make_filter_dict(
+        df, index_cols, param_dict, chart_dict, {}, col_array
+    )
 
     # Assert
     assert p_out[is_filtered_key] is True

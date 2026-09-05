@@ -26,4 +26,4 @@ def test_load_theme_is_noop_notifies(monkeypatch):
 
     # Assert
     assert result is None
-    assert notifier.calls == [("info", "UI theme assets have been removed.")]
+    assert notifier.calls == [("info", "Legacy theme assets have been removed.")]
