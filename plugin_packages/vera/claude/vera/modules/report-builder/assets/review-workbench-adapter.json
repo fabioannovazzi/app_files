@@ -161,5 +161,6 @@
         ]
       }
     ]
-  }
+  },
+  "injectLocalServer": false
 }

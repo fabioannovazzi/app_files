@@ -1,0 +1,47 @@
+{
+  "name": "sales-plan",
+  "version": "0.1.6",
+  "description": "Reviewed Actual-to-Plan sales scenarios for Vera.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/sales-plan/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "plan",
+    "sales-plan",
+    "scenario-planning",
+    "actual-to-plan",
+    "commercial-planning",
+    "fx-assumptions",
+    "vera"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Plan",
+    "shortDescription": "Create a reviewed sales Plan from Actuals and assumptions.",
+    "longDescription": "Vera Plan turns a reviewed monthly sales dataset into an Actual-to-Plan scenario using only confirmed commercial and foreign-exchange assumptions. Exact scopes, periods, priorities, source hashes, collisions, calculations, reconciliation, and replay evidence stay visible. The workflow prepares a Plan for professional review; it does not analyze historical performance, forecast by model inference, or approve management assumptions.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com/static/shared/sales-plan/index.html",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Create a sales Plan from these reviewed Actuals and assumptions.",
+      "Show the interpreted scope, driver, period, FX direction, and priority before calculating.",
+      "Deliver the Plan scenario, assumption ledger, summary, reconciliation, and execution receipt."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

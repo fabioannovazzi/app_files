@@ -4,6 +4,7 @@
   "display_name": "Business Planning — accounting and financial lens",
   "role": "workflow",
   "governed_paths": [
+    ".codex-plugin/plugin.json",
     "skills",
     "references",
     "scripts",
@@ -70,6 +71,6 @@
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "53f78f2768c252a26f9ddb69ca3e86638e3f0ddb7c20e32ab4dce917097827e2"
+    "source_fingerprint": "5cae350af71650cc5f3ec825f751665236c4b6cbc576a85b75c3b08d1b7ef811"
   }
 }

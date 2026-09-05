@@ -1,0 +1,52 @@
+{
+  "name": "apertura-pratica",
+  "version": "0.1.0",
+  "description": "Prepara un nuovo cliente o una nuova pratica legale da documenti e fatti verificabili, con controlli separati su parti, conflitti, incarico, scadenze, riservatezza e applicabilità antiriciclaggio.",
+  "author": {
+    "name": "Fabio Annovazzi · Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/lucia/index.html?lang=it#apertura-pratica",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "lucia",
+    "avvocati",
+    "apertura-pratica",
+    "nuovo-cliente",
+    "nuovo-incarico",
+    "conflitto-interessi",
+    "fascicolo-legale",
+    "intake-legale",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Lucia · Apertura pratica",
+    "shortDescription": "Prepara clienti e pratiche per la revisione dell’avvocato.",
+    "longDescription": "Lucia prepara un nuovo cliente o una nuova pratica per un cliente esistente. Conserva i documenti ricevuti come evidenze immutabili, struttura parti e ruoli, prepara il controllo conflitti, rende visibili incarico, possibili scadenze, riservatezza, privacy e applicabilità antiriciclaggio e propone un piano di fascicolo. Il workflow non dichiara autonomamente l’assenza di conflitti, non conferma scadenze e non attiva l’incarico: queste decisioni restano all’avvocato e sono registrate contro la versione esatta del dossier.",
+    "developerName": "Fabio Annovazzi · Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com/static/shared/lucia/index.html?lang=it#apertura-pratica",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Apri questa nuova pratica e mostrami parti, documenti mancanti e controlli da confermare.",
+      "Prepara l’intake per un nuovo incarico di un cliente già esistente.",
+      "Organizza questi documenti in un dossier di apertura senza spostare gli originali."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

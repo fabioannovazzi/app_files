@@ -85,7 +85,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.22"
+    assert manifest["version"] == "0.1.23"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -145,9 +145,7 @@ def test_lucia_current_catalog_has_registered_public_workflows_and_one_hidden_ru
     assert "studio-archive" not in cards
 
 
-def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() -> (
-    None
-):
+def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() -> None:
     components = _json(LUCIA_ROOT / "components.json")
     workflow = (
         LUCIA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md"
@@ -160,10 +158,7 @@ def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() 
     assert "does not create a third client workstream" in workflow
     assert "../prompt-optimizer/SKILL.md" in workflow
     assert "../deep-research-validator/SKILL.md" in workflow
-    assert (
-        "lucia:quesito-legale-fiscale -> lucia:prompt-optimizer"
-        in workflow
-    )
+    assert "lucia:quesito-legale-fiscale -> lucia:prompt-optimizer" in workflow
 
 
 def test_lucia_native_matter_opening_uses_its_own_validator_contract() -> None:
@@ -436,9 +431,10 @@ def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
         ].replace("Vera", "Lucia")
 
     for field in ("display_name", "short_description", "default_prompt"):
-        assert lucia_cards["quesito-legale-fiscale"][field] == vera_cards[
-            "quesito-legale-fiscale"
-        ][field]
+        assert (
+            lucia_cards["quesito-legale-fiscale"][field]
+            == vera_cards["quesito-legale-fiscale"][field]
+        )
 
 
 def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
@@ -474,7 +470,10 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.15"
+        assert (
+            manifest["version"]
+            == _json(LUCIA_ROOT / ".claude-plugin" / "plugin.json")["version"]
+        )
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")
@@ -486,7 +485,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
         assert set(components["plugins"]) == PUBLIC_WORKFLOWS
         assert "skills/lucia/SKILL.md" in lucia_names
         assert "skills/quesito-legale-fiscale/SKILL.md" in lucia_names
-        assert not any(".codex-plugin" in name for name in lucia_names)
+        assert not any(name.startswith(".codex-plugin/") for name in lucia_names)
         assert not any(
             name.startswith("modules/studio-archive/") for name in lucia_names
         )

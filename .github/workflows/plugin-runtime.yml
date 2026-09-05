@@ -1,0 +1,28 @@
+name: Packaged plugin runtime
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vera-packaged-mcp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest
+      - name: Exercise clean ZIPs and reject broken releases
+        run: python -m pytest -q tests/plugins/test_packaged_mcp_startup.py
+      - name: Verify distributed Cowork artifacts and runtime
+        run: python scripts/build_claude_plugin_zip.py vera --check

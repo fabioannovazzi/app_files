@@ -4,6 +4,7 @@
   "display_name": "Vera · Automazione web",
   "role": "workflow",
   "governed_paths": [
+    ".codex-plugin/plugin.json",
     "skills",
     "scripts",
     "references",
@@ -134,6 +135,6 @@
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "efee5fb6bc4ad53f55e76ba82b8e374fff44d6d4da2be588dd33d703eb421e91"
+    "source_fingerprint": "cc554de7f5d710dffac9076290a961b6ad40d41f4fb94b8e38148878b90590ab"
   }
 }

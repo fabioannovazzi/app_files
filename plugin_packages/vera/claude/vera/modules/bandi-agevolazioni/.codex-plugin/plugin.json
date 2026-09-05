@@ -1,0 +1,43 @@
+{
+  "name": "bandi-agevolazioni",
+  "version": "0.3.4",
+  "description": "Scopre opportunità source-first, verifica la copertura delle fonti e prepara dossier rivedibili senza firma o invio.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "bandi",
+    "agevolazioni",
+    "finanza-agevolata",
+    "contributi",
+    "commercialisti",
+    "dossier",
+    "professional-review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Bandi e agevolazioni",
+    "shortDescription": "Trova opportunità e prepara dossier rivedibili.",
+    "longDescription": "Vera costruisce un profilo agevolativo opaco dell'impresa e un registro revisionato di fonti istituzionali prioritarie per territorio, categoria e famiglia di atti. Ogni nuova ricerca propone una selezione di fonti specifica per i territori e le categorie richiesti: il commercialista revisiona quali fonti coprono ciascuna dimensione e quali restano scoperte. Solo dopo questa revisione Vera controlla direttamente la finestra temporale, inclusi DGR, DDR, BUR, allegati e modifiche pertinenti, prima della ricerca web complementare; conserva l'ultimo atto visto e dichiara ogni fonte o ambito non verificato. Una scansione non può risultare completa con selezione non revisionata, gap dichiarati o fonti prioritarie irrisolte. La copertura misura l'esecuzione della selezione revisionata, non la probabilità di trovare tutti i bandi. Vera monitora gli stati della misura, abbina le opportunità ai clienti e, dopo la selezione, organizza fonti ed evidenze in un dossier rivedibile. Non contatta clienti, non accede ai portali, non firma e non invia domande.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "supportURL": "https://mparanza.com/support",
+    "capabilities": ["Interactive", "Write", "Analysis"],
+    "defaultPrompt": [
+      "Costruisci il profilo agevolativo e controlla source-first le pubblicazioni istituzionali degli ultimi 60 giorni, dichiarando le fonti non verificate.",
+      "Confronta questa nuova opportunità con i profili opachi del portafoglio e segnala chi merita una revisione professionale.",
+      "Ricostruisci i requisiti e prepara il dossier da fonti ufficiali ed evidenze cliente, senza contattare, accedere al portale, firmare o inviare."
+    ],
+    "brandColor": "#315F72",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

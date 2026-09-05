@@ -21,6 +21,25 @@ separate implementations and must not be edited by hand. A release is valid
 only when both packages are built from the same source commit. Each surface
 keeps its own manifest version.
 
+Both install-package builders require Node.js on `PATH`. Building or checking a
+package extracts its ZIP into a clean temporary directory and runs every
+registered local MCP launcher through `initialize` and `tools/list`. A missing
+runtime dependency, invalid response, crash, or timeout fails the release check.
+The build checks the candidate before replacing downloadable artifacts.
+
+Cowork retains nested component manifests because server startup and integrity
+receipts read them. Only the root `.claude-plugin/plugin.json` identifies the
+Cowork plugin. Review adapters with `injectLocalServer: false` declare an exact
+implementation tree; the install builders must not inject the generic local UI
+server into those trees. The separate ChatGPT upload projection still includes
+its review bridge.
+
+The `Packaged plugin runtime` CI job exercises both Vera install ZIP layouts and
+negative packaging cases, then checks the committed Cowork download for drift
+and startup failures. These checks establish tool availability, not successful
+completion of professional workflows or acceptance inside the Cowork desktop
+app; those still need representative host-level smoke tests.
+
 ## Skill identities
 
 Vera owns one public skill namespace. Codex exposes every registered specialist

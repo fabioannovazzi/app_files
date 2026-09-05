@@ -111,7 +111,30 @@ strict plugin validator against the generated plugin directory and repository
 marketplace. The CLI was not available on the 2026-07-27 acceptance machine,
 so this pack does not claim that local CLI validation ran.
 
-## Final candidate
+## Current local candidate: 2026-09-05 startup repair
+
+- **Version:** 0.1.143
+- **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`
+- **SHA-256:** `e52badb5aa88217c302146ee06387659e3b1029577a6da407a64f685d1d0fe7d`
+- **Size:** 4,907,468 bytes
+- **Archive entries:** 921
+
+The public 0.1.142 ZIP reproduced 12 missing-manifest crashes and five other
+startup failures. The local replacement preserves nested runtime manifests,
+omits undeclared generic review-server injection from exact implementation
+trees, and resolves Journal-Bank shared code from its packaged vendor directory.
+
+All 18 configured MCP servers in the extracted candidate answered `initialize`
+and `tools/list` successfully. The corresponding full Codex install ZIP also
+passed all 18 handshakes. Both builders now require this check before replacing
+install ZIPs; Cowork `--check` repeats it. CI covers missing runtime files,
+unexpected implementation files, tool-list failures, and hung servers.
+
+This is a local package-runtime result. The candidate has not been deployed,
+submitted, or tested through a new Claude Cowork desktop session. Historical
+desktop acceptance records below do not establish acceptance of this version.
+
+## Previous candidate: 0.1.142 (startup defect reproduced)
 
 - **Version:** 0.1.142
 - **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`

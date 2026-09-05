@@ -159,5 +159,6 @@
         ]
       }
     ]
-  }
+  },
+  "injectLocalServer": false
 }

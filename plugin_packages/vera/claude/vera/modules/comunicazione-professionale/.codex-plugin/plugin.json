@@ -1,0 +1,51 @@
+{
+  "name": "comunicazione-professionale",
+  "version": "0.1.7",
+  "description": "Source-backed professional communications and branded explainers for Vera.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "vera",
+    "commercialisti",
+    "professional-communication",
+    "client-email",
+    "linkedin",
+    "newsletter",
+    "website-article",
+    "client-alert",
+    "visual-explainer",
+    "tax-research"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Comunicazione professionale",
+    "shortDescription": "Comunicazioni nel formato studio",
+    "longDescription": "Vera trasforma una novità fiscale, normativa o professionale in un pacchetto di comunicazione fondato su fonti, coerente con la voce dello studio e pronto per la revisione. Il professionista sceglie ogni comunicazione precedente usata come esempio: Vera non esplora l'archivio o la casella dello Studio. Il codice locale sostituisce gli identificatori riconoscibili; una sessione dedicata pseudonimizza nomi e contesto e una seconda sessione indipendente controlla soltanto le copie candidate. Solo la generazione usa le copie approvate. Verifica dei claim, giudizio editoriale e controllo visuale ricevono pacchetti separati senza comunicazioni precedenti. Originali e corrispondenza restano nello Studio, mentre gli input intermedi vengono eliminati dopo il controllo. Questa riduzione non rende anonimo il primo passaggio. Prima della scrittura Vera definisce il contratto della risposta; poi usa prompt versionati e sessioni host distinte per generazione, verifica dei claim, giudizio editoriale e controllo visuale, registrando digest e provenienza senza fingere ricevute autenticate dal provider. Le note pubbliche approvate identificano la fonte reale e sopravvivono esattamente al packaging. L'assessore editoriale deve superare un benchmark anti-slop e può chiedere revisioni o concludere che non vi è nulla di utile da pubblicare. Ogni elemento del formato Studio dichiara se deriva da esempi osservati, da istruzioni fornite o da una proposta Vera; anche uno Studio nuovo può adottare un primo formato senza inventare uno storico. Un carosello viene omesso se non aggiunge informazione al testo. Se il professionista seleziona Creative Production, Vera registra il board, la direzione scelta e ogni token applicato dal renderer deterministico; testi, numeri, fonti, logo e controlli restano esatti. Vera non inventa casi, non assume l'applicabilità della norma e non invia o pubblica senza una scelta esplicita del professionista.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Trasforma questa novità fiscale in una email chiara ai clienti e valuta un carosello solo se aggiunge informazione utile.",
+      "Studia questi post precedenti e prepara una nuova comunicazione nella voce dello studio, con fonti e claim verificabili.",
+      "Valuta se oggi esiste davvero qualcosa di utile da comunicare; se sì, prepara il pacchetto multicanale."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

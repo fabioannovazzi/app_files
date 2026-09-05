@@ -4,6 +4,7 @@
   "display_name": "Variance Analysis",
   "role": "workflow",
   "governed_paths": [
+    ".codex-plugin/plugin.json",
     "skills",
     "scripts",
     "mcp",
@@ -91,6 +92,6 @@
     "reviewed_at": "2026-08-10",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "768f8da098bbc1baf7c3b45f51671bb40aee7b89322ab277cce616977b139ef1"
+    "source_fingerprint": "f5edf8c0e827bdae3797a621adb1f461a172dbc06769c9e1503bc1479514db27"
   }
 }

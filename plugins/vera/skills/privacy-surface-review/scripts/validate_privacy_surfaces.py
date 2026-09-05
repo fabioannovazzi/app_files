@@ -300,6 +300,8 @@ def _fingerprint(
     )
     if (
         adapter.is_file()
+        and json.loads(adapter.read_text(encoding="utf-8")).get("injectLocalServer")
+        is not False
         and scripts_are_governed
         and not source_review_server.is_file()
     ):

@@ -1,0 +1,47 @@
+{
+  "name": "deep-research-validator",
+  "version": "0.1.40",
+  "description": "Validate professional answers with separate source-identity, semantic-support, reasoning, treatment, coverage, and professional-judgment records.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/deep-research-validator/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "deep-research",
+    "validation",
+    "citations",
+    "sources",
+    "claims",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Validate Answer",
+    "shortDescription": "Review reports, memos, and letters with explicit source identity, semantic support, reasoning, treatment, and judgment boundaries.",
+    "longDescription": "Claude workflow for validating generated or supplied professional answers, including Deep Research reports, memos, and one-page letters. professional reviews answer-contract conformance and material-claim coverage, then assesses source identity, semantic support, inferential reasoning, issue-specific treatment, claim disposition, and professional-judgment dependencies. Deterministic scripts inspect document and source access, capture cited sources, resolve exact identifiers, record exact passage presence only within the specifically cited source snapshot, validate answer-contract and review-record shape, reject mechanically contradictory review states, and package the review. Exact or fuzzy matching never decides semantic support. Record completeness does not certify legal correctness, reviewer rejection cannot produce delivery readiness, and recording a proposed fix does not make an answer final: the reviewed or corrected answer must be regenerated semantically. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Validate the professional answer, report, memo, or letter I provide.",
+      "Review answer-contract conformance and all material claims; separate source identity, semantic support, reasoning gaps, issue treatment, and professional-judgment dependencies; then package the reviewed or corrected answer.",
+      "Do not make direct OpenAI API calls from plugin scripts; use Claude for semantic judgment and deterministic scripts only for inspection, fetching, exact observations, shape validation, and packaging."
+    ],
+    "brandColor": "#4f6b78",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

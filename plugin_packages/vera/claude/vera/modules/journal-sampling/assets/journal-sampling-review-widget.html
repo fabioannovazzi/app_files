@@ -1074,7 +1074,7 @@
     </div>
   </main>
   <script>
-    const CONFIG = {"schemaVersion":"1.0","plugin":"journal-sampling","title":"Journal Sampling Review","reviewTitle":"Journal Extraction And Sample Review","queueTitle":"Sample Rows","detailTitle":"Sample Rationale","detailMode":"sample-sheet","detailHelp":"Review extracted journal fields, sampling basis, and output trace.","detailGroups":[{"title":"Extracted Journal Row","variant":"ledger","fields":["entry","entry_date","account","description","amount","status"],"empty":"No journal row fields."},{"title":"Sampling Basis","variant":"checklist","fields":["method","reason","sample_size","population_size","seed"],"empty":"No sampling basis."},{"title":"Output Trace","variant":"source","fields":["source_file","output_path","review_notes","status"],"empty":"No output trace."}],"panels":["Journal row","Sampling basis","Finding"],"localized":{"es":{"title":"Revisi\u00f3n de muestreo contable","reviewTitle":"Revisi\u00f3n de extracci\u00f3n y muestra","queueTitle":"L\u00edneas de la muestra","detailTitle":"Justificaci\u00f3n de la muestra","detailHelp":"Revise los campos extra\u00eddos, la base de muestreo y la trazabilidad de la salida.","search":"Buscar muestra, l\u00ednea contable, mapeo, extracci\u00f3n, salida"},"it":{"title":"Revisione campionamento contabile","reviewTitle":"Revisione estrazione e campione","queueTitle":"Righe campione","detailTitle":"Razionale campione","detailHelp":"Rivedi campi estratti, base di campionamento e tracciabilita output.","search":"Cerca campione, riga contabile, mapping, estrazione, output"},"fr":{"title":"Revue echantillonnage journal","reviewTitle":"Revue extraction et echantillon","queueTitle":"Lignes echantillon","detailTitle":"Rationale echantillon","detailHelp":"Revoyez les champs extraits, la base d'echantillonnage et la trace de sortie.","search":"Chercher echantillon, ligne, mapping, extraction, sortie"},"de":{"title":"Journal Sampling Review","reviewTitle":"Buchungsextraktion und Stichprobe pruefen","queueTitle":"Stichprobenzeilen","detailTitle":"Stichprobenbegruendung","detailHelp":"Extrahierte Buchungsfelder, Stichprobenbasis und Ausgabeprotokoll pruefen.","search":"Stichprobe, Buchungszeile, Mapping, Extraktion, Ausgabe suchen"}},"saveTool":"save_journal_sampling_decisions","applyTool":"apply_journal_sampling_decisions","widgetType":"journal_sampling_review","demo":{"review_type":"journal_sampling_review","items":[{"id":"sample-1","item_type":"sampled_entry","title":"Entry 812 - manual journal","source_path":"journal.xlsx","output_path":"audit_sample.csv","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"entry":"812","account":"Accruals","amount":"980.00","status":"selected","reason":"High-value manual journal.","target_artifact":"journal_sample.csv","target_id_field":"entry","target_record_id":"812","target_field":"review_notes","edit_hint":"Editing this sample updates review_notes in journal_sample.csv for entry 812."},"evidence":[{"kind":"sampling_basis","method":"risk-ranked sample"}]},{"id":"sample-2","item_type":"review_artifact","title":"Entry 944 - incomplete account mapping","source_path":"journal.xlsx","output_path":"journal_exceptions.csv","allowed_actions":["accept","edit","mark_unclear","request_more_documents","skip"],"recommended_action":"mark_unclear","data":{"entry":"944","account":"","amount":"410.00","status":"needs_evidence","method":"mapping exception review","reason":"The printed journal row has an amount but no readable account label.","requested_document":"Original journal export with account code for entry 944","target_artifact":"journal_exceptions.csv","target_id_field":"entry","target_record_id":"944","target_field":"review_notes","edit_hint":"Editing this exception updates review_notes in journal_exceptions.csv for entry 944."},"evidence":[{"kind":"extraction_exception","status":"needs_evidence","reason":"Account column was blank after deterministic extraction."}]}]}};
+    const CONFIG = {"schemaVersion":"1.0","plugin":"journal-sampling","title":"Journal Sampling Review","reviewTitle":"Journal Extraction And Sample Review","queueTitle":"Sample Rows","detailTitle":"Sample Rationale","detailMode":"sample-sheet","detailHelp":"Review extracted journal fields, sampling basis, and output trace.","detailGroups":[{"title":"Extracted Journal Row","variant":"ledger","fields":["entry","entry_date","account","description","amount","status"],"empty":"No journal row fields."},{"title":"Sampling Basis","variant":"checklist","fields":["method","reason","sample_size","population_size","seed"],"empty":"No sampling basis."},{"title":"Output Trace","variant":"source","fields":["source_file","output_path","review_notes","status"],"empty":"No output trace."}],"panels":["Journal row","Sampling basis","Finding"],"localized":{"es":{"title":"Revisi\u00f3n de muestreo contable","reviewTitle":"Revisi\u00f3n de extracci\u00f3n y muestra","queueTitle":"L\u00edneas de la muestra","detailTitle":"Justificaci\u00f3n de la muestra","detailHelp":"Revise los campos extra\u00eddos, la base de muestreo y la trazabilidad de la salida.","search":"Buscar muestra, l\u00ednea contable, mapeo, extracci\u00f3n, salida"},"it":{"title":"Revisione campionamento contabile","reviewTitle":"Revisione estrazione e campione","queueTitle":"Righe campione","detailTitle":"Razionale campione","detailHelp":"Rivedi campi estratti, base di campionamento e tracciabilita output.","search":"Cerca campione, riga contabile, mapping, estrazione, output"},"fr":{"title":"Revue echantillonnage journal","reviewTitle":"Revue extraction et echantillon","queueTitle":"Lignes echantillon","detailTitle":"Rationale echantillon","detailHelp":"Revoyez les champs extraits, la base d'echantillonnage et la trace de sortie.","search":"Chercher echantillon, ligne, mapping, extraction, sortie"},"de":{"title":"Journal Sampling Review","reviewTitle":"Buchungsextraktion und Stichprobe pruefen","queueTitle":"Stichprobenzeilen","detailTitle":"Stichprobenbegruendung","detailHelp":"Extrahierte Buchungsfelder, Stichprobenbasis und Ausgabeprotokoll pruefen.","search":"Stichprobe, Buchungszeile, Mapping, Extraktion, Ausgabe suchen"}},"saveTool":"save_journal_sampling_decisions","applyTool":"apply_journal_sampling_decisions","widgetType":"journal_sampling_review","demo":{"review_type":"journal_sampling_review","items":[{"id":"sample-1","item_type":"sampled_entry","title":"Entry 812 - manual journal","source_path":"journal.xlsx","output_path":"audit_sample.csv","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"entry":"812","account":"Accruals","amount":"980.00","status":"selected","reason":"High-value manual journal.","target_artifact":"journal_sample.csv","target_id_field":"entry","target_record_id":"812","target_field":"review_notes","edit_hint":"Editing this sample updates review_notes in journal_sample.csv for entry 812."},"evidence":[{"kind":"sampling_basis","method":"risk-ranked sample"}]},{"id":"sample-2","item_type":"review_artifact","title":"Entry 944 - incomplete account mapping","source_path":"journal.xlsx","output_path":"journal_exceptions.csv","allowed_actions":["accept","edit","mark_unclear","request_more_documents","skip"],"recommended_action":"mark_unclear","data":{"entry":"944","account":"","amount":"410.00","status":"needs_evidence","method":"mapping exception review","reason":"The printed journal row has an amount but no readable account label.","requested_document":"Original journal export with account code for entry 944","target_artifact":"journal_exceptions.csv","target_id_field":"entry","target_record_id":"944","target_field":"review_notes","edit_hint":"Editing this exception updates review_notes in journal_exceptions.csv for entry 944."},"evidence":[{"kind":"extraction_exception","status":"needs_evidence","reason":"Account column was blank after deterministic extraction."}]}]},"injectLocalServer":false};
     const ACTION_LABELS = {
       accept: "Accept",
       reject: "Reject",
@@ -1155,15 +1155,17 @@
 
     function pickPayload(raw) {
       if (!raw || typeof raw !== "object") return null;
-      if (raw.widget_type === CONFIG.widgetType || raw.review_payload) return raw;
-      if (raw.structuredContent) return pickPayload(raw.structuredContent);
-      if (raw.toolOutput) return pickPayload(raw.toolOutput);
+      if (raw.widget_type === CONFIG.widgetType || raw.review_payload || raw.ui_decisions || raw.final_artifacts || raw.applied_decisions) return raw;
+      for (const key of ["widget_payload", "_meta", "toolResponseMetadata", "mcp_tool_result", "call_tool_result", "structuredContent", "toolOutput"]) {
+        const selected = pickPayload(raw[key]);
+        if (selected) return selected;
+      }
       return null;
     }
     function toolOutput() {
       if (new URLSearchParams(window.location.search).has("demo")) return DEMO_PAYLOAD;
       const host = window.openai || {};
-      return pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
+      return pickPayload(host.toolResponseMetadata) || pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
     }
     function esc(value) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -1957,29 +1959,26 @@
     }
     function saveToolArgs() {
       return {
-        client_engagement: state.payload.client_engagement || null,
-        model_review_context: {
-          ...(state.payload.model_review_binding || {}),
-          review: reviewPayload(),
-          intake: state.payload.run_intake || {},
-        },
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
       };
     }
     function applyToolArgs() {
       return {
-        client_engagement: state.payload.client_engagement || null,
-        model_review_context: {
-          ...(state.payload.model_review_binding || {}),
-          review: reviewPayload(),
-          intake: state.payload.run_intake || {},
-        },
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        final_artifacts: state.payload.final_artifacts || null,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
       };
     }
     function parseToolResult(result) {
+      const privatePayload = pickPayload(result);
+      if (privatePayload) return privatePayload;
       if (result?.structuredContent) return result.structuredContent;
       if (result?.ui_decisions || result?.ok != null) return result;
       const text = Array.isArray(result?.content) ? result.content.find((entry) => entry?.text)?.text : null;
@@ -2127,6 +2126,14 @@
     document.getElementById("apply-decisions").addEventListener("click", handleApplyDecisions);
     document.getElementById("copy-decisions").addEventListener("click", () => copyDecisionJson().then(() => setSaveStatus(uiText("jsonCopied", "JSON copied."), "ok")).catch((error) => setSaveStatus(error.message || String(error), "error")));
     document.getElementById("download-decisions").addEventListener("click", downloadDecisionJson);
+    window.addEventListener("message", (event) => {
+      if (event?.data?.method !== "ui/notifications/tool-result") return;
+      const nextPayload = pickPayload(event.data.params);
+      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;
+      state.payload = nextPayload;
+      loadInitialDecisions();
+      render();
+    });
     state.payload = toolOutput();
     loadInitialDecisions();
     render();
