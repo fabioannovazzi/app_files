@@ -7,12 +7,10 @@
     "funnel-analysis",
     "mix-contribution-analysis",
     "period-comparison",
+    "reporting-engine",
     "scatter-bubble-analysis",
     "set-overlap-analysis",
     "statement-analysis",
     "variance-analysis"
-  ],
-  "internal_modules": [
-    "reporting-engine"
   ]
 }

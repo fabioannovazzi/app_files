@@ -367,7 +367,7 @@ def discover_plugin_dirs(plugins_root: Path = ROOT / "plugins") -> list[Path]:
 
 
 def embedded_plugin_names(plugin_dir: Path) -> list[str]:
-    """Return component plugin names embedded by an umbrella plugin."""
+    """Return sibling plugins to vendor, excluding already-owned native modules."""
 
     components_path = plugin_dir / "components.json"
     if not components_path.exists():
@@ -383,7 +383,7 @@ def embedded_plugin_names(plugin_dir: Path) -> list[str]:
         )
     if plugin_dir.name in normalized:
         raise ValueError(f"Umbrella plugin cannot embed itself: {components_path}")
-    return normalized
+    return [name for name in normalized if not (plugin_dir / "modules" / name).is_dir()]
 
 
 def _load_interaction_audit_module():

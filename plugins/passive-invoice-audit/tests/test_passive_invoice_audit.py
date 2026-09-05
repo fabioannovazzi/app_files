@@ -1447,3 +1447,19 @@ def test_cowork_synthetic_cli_preserves_pending_worker_selection(tmp_path, monke
 
     assert result == 3
     assert captured == {"runner": cli.run_cowork_chunk, "model": "haiku"}
+
+
+def test_cowork_accepts_single_json_fence_without_changing_raw_response(tmp_path):
+    job = _cowork_job(tmp_path)
+    record_path = _save_cowork_fixture_response(job)
+    response_path = record_path.with_name("cowork_response.json")
+    raw = "```json\n" + response_path.read_text() + "\n```"
+    response_path.write_text(raw)
+    record = json.loads(record_path.read_text())
+    record["response_sha256"] = hashlib.sha256(response_path.read_bytes()).hexdigest()
+    record_path.write_text(json.dumps(record))
+
+    summary = audit_core.run_audit(**job)
+
+    assert summary["status"] == "completed"
+    assert response_path.read_text() == raw

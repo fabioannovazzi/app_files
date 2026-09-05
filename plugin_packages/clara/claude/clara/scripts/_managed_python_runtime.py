@@ -119,10 +119,9 @@ def select_runtime(
         scope = "core"
     else:
         try:
-            registry = json.loads(
+            components = json.loads(
                 (root / "components.json").read_text(encoding="utf-8")
-            )
-            components = registry["plugins"] + registry.get("internal_modules", [])
+            )["plugins"]
         except (OSError, KeyError, TypeError, json.JSONDecodeError) as error:
             raise ValueError("Plugin component registry is unavailable") from error
         if not isinstance(components, list) or not all(
@@ -443,6 +442,7 @@ def _dependencies_ready(
     *,
     runner: Runner,
     require_receipt: bool,
+    diagnostics: list[str] | None = None,
 ) -> bool:
     """Return whether the target satisfies the selected dependency checker."""
 
@@ -461,8 +461,12 @@ def _dependencies_ready(
             check=False,
             text=True,
         )
-    except (OSError, subprocess.SubprocessError, ValueError):
+    except (OSError, subprocess.SubprocessError, ValueError) as error:
+        if diagnostics is not None:
+            diagnostics.append(str(error))
         return False
+    if completed.returncode != 0 and diagnostics is not None:
+        diagnostics.append(_process_detail(completed))
     return completed.returncode == 0
 
 
@@ -539,17 +543,20 @@ def ensure_runtime(
                     else "pip install returned a non-zero status"
                 ),
             )
+        diagnostics: list[str] = []
         if not _dependencies_ready(
             selection,
             target,
             runner=runner,
             require_receipt=False,
+            diagnostics=diagnostics,
         ):
             shutil.rmtree(target, ignore_errors=True)
             return (
                 False,
                 target,
-                "Declared requirements remained unavailable after installation",
+                "Dependency checker failed after installation: "
+                + ("\n".join(diagnostics).strip() or "no diagnostic output"),
             )
         (target / READY_FILENAME).write_text(
             json.dumps(_receipt_payload(selection), sort_keys=True) + "\n",

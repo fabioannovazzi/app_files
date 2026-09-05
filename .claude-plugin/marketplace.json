@@ -12,7 +12,7 @@
       "displayName": "Vera",
       "source": "./plugin_packages/vera/claude/vera",
       "description": "Assistente AI per commercialisti e studi professionali. Organizza documenti, controlla dati e scritture, riconcilia movimenti e prepara analisi finanziarie, bilanci, report e carte di lavoro. Supporta ricerche fiscali e normative, pratiche e comunicazioni ai clienti. Espone fonti, ambiguità e informazioni mancanti. Il giudizio professionale, la firma e l’invio restano al commercialista.",
-      "version": "0.1.202",
+      "version": "0.1.203",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",
@@ -70,7 +70,7 @@
       "displayName": "Clara",
       "source": "./plugin_packages/clara/claude/clara",
       "description": "AI companion for consultants. Clara plans and directs advisory cases, validates completed deliverables, organizes evidence, analyzes business data, and prepares reviewable work, reports, presentations, and narrated research videos.",
-      "version": "0.1.172",
+      "version": "0.1.174",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",

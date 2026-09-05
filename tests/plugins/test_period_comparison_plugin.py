@@ -1617,3 +1617,61 @@ def test_spanish_period_mcp_responses_errors_and_handoff(tmp_path: Path) -> None
     assert "<!-- Review Handoff -->" in handoff
     assert "Review payload:" not in handoff
     assert strict_report.ok, strict_report.errors
+
+
+def test_price_calculation_accepts_numeric_measures_carried_as_strings() -> None:
+    load_core()
+    from modules.data.common_data_utils import insert_unit_and_volume_price_column
+    from modules.utilities.config import get_naming_params
+
+    names = get_naming_params()
+    frame = pl.DataFrame(
+        {names["monetaryLocalCurrencyName"]: [120.0], names["unitsName"]: ["3"]}
+    ).lazy()
+
+    result = insert_unit_and_volume_price_column(frame).collect()
+
+    assert result[names["pricePerUnitName"]].to_list() == [40.0]
+
+
+def test_price_calculation_rejects_non_numeric_measure_strings() -> None:
+    load_core()
+    from modules.data.common_data_utils import insert_unit_and_volume_price_column
+    from modules.utilities.config import get_naming_params
+
+    names = get_naming_params()
+    frame = pl.DataFrame(
+        {names["monetaryLocalCurrencyName"]: [120.0], names["unitsName"]: ["invalid"]}
+    ).lazy()
+
+    with pytest.raises(pl.exceptions.InvalidOperationError):
+        insert_unit_and_volume_price_column(frame).collect()
+
+
+def test_trend_endpoint_label_uses_last_value(monkeypatch: pytest.MonkeyPatch) -> None:
+    load_core()
+    from modules.charting import draw_charts_utils
+    from modules.utilities.config import get_naming_params
+
+    names = get_naming_params()
+    frame = pl.DataFrame(
+        {
+            "AC": [405000.0, 426000.0],
+            "PY": [360000.0, 379500.0],
+            names["maxValue"]: [405000.0, 426000.0],
+        }
+    )
+    monkeypatch.setattr(
+        draw_charts_utils,
+        "get_number_prefix",
+        lambda value, chart, *args: ("", chart, 0),
+    )
+    monkeypatch.setattr(
+        draw_charts_utils, "divide_by_value_prefix", lambda value, *args: str(value)
+    )
+
+    result, _ = draw_charts_utils.get_labels_for_trend_comparison(
+        frame, ["AC", "PY"], "Sales", {}
+    )
+
+    assert result[names["labelName"]].to_list() == ["405000.0", "426000.0"]

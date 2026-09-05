@@ -71,7 +71,10 @@ def run_cowork_chunk(
     if not record_path.exists():
         raise AuditError("Cowork response is missing its host worker record")
     response_bytes = response_path.read_bytes()
-    response = json.loads(response_bytes)
+    response_text = response_bytes.decode("utf-8").strip()
+    if response_text.startswith("```json\n") and response_text.endswith("\n```"):
+        response_text = response_text[8:-4]
+    response = json.loads(response_text)
     record = json.loads(record_path.read_text())
     if not isinstance(record, dict) or (
         record.get("schema_version") != "vera.cowork_worker_record.v1"

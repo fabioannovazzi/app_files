@@ -7351,6 +7351,4 @@ def test_clara_dependency_choices_match_all_registered_runtime_modules() -> None
     checker = load_dependency_checker()
     registry = json.loads((PLUGIN_ROOT / "components.json").read_text())
 
-    assert set(checker.COMPONENTS) == set(registry["plugins"]) | set(
-        registry["internal_modules"]
-    )
+    assert set(checker.COMPONENTS) == set(registry["plugins"])
