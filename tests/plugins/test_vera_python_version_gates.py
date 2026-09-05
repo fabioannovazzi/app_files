@@ -31,6 +31,7 @@ def test_dependency_gate_accepts_managed_runtime(
     version: tuple[int, int],
     expected: int,
 ) -> None:
+    monkeypatch.setattr(sys, "dont_write_bytecode", True)
     path = ROOT / tree / component / "scripts" / "check_dependencies.py"
     spec = importlib.util.spec_from_file_location("component_dependency_gate", path)
     assert spec and spec.loader
