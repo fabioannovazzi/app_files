@@ -1,0 +1,1 @@
+# Standard library only. Shared archive support is bundled with Vera.

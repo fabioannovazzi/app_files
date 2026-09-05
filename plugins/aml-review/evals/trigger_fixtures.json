@@ -1,0 +1,12 @@
+{
+  "plugin": "aml-review",
+  "version": 1,
+  "should_trigger": [
+    {"id":"existing-review","prompt":"Vera, riesamina il fascicolo antiriciclaggio alla luce del nuovo socio.","required_signals":["antiriciclaggio","socio"]},
+    {"id":"transaction-explanation","prompt":"Per la revisione AML confronta contratto di finanziamento, pagatore e spiegazione del cliente.","required_signals":["AML","finanziamento"]}
+  ],
+  "should_not_trigger": [
+    {"id":"onboarding","prompt":"Apri il fascicolo del nuovo cliente con incarico e privacy.","reason":"Whole-client onboarding belongs to new-client."},
+    {"id":"generic-law","prompt":"Spiega in generale gli obblighi antiriciclaggio.","reason":"A general legal question belongs to quesito-legale-fiscale."}
+  ]
+}

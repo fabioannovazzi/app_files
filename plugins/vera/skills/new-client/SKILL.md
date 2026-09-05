@@ -7,6 +7,10 @@ description: "Use when a studio starts work on a new client: prepare files, iden
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
+For substantive AML investigation or a later AML reassessment, use
+`vera:aml-review` with the same client's selected evidence and reviewed setup;
+do not repeat the whole onboarding intake.
+
 This is Vera's sole new-client workflow. Do not route users to separate
 document-preparation or professional-setup workflows.
 

@@ -50,6 +50,7 @@ const TOOL_NAMES = {
   matchEmail: "match_studio_archive_email",
 };
 const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
+  "aml-review",
   "open-item-reconciliation",
   "archive-organization",
   "client-file-preparation",
