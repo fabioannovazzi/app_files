@@ -162,13 +162,6 @@
       de: "Web-Automatisierung",
       es: "Automatización web",
     },
-    "business-planning": {
-      it: "Piano economico-finanziario e fabbisogno",
-      en: "Financial plan and funding needs",
-      fr: "Plan économique et financier et besoin de financement",
-      de: "Finanzplanung und Finanzierungsbedarf",
-      es: "Plan económico-financiero y necesidades de financiación",
-    },
     "studio-archive": {
       it: "Ricerca nei documenti, nelle email e in WhatsApp",
       en: "Studio archive",
@@ -179,13 +172,6 @@
   };
 
   const canonicalNames = {
-    "clara-business-planning": {
-      it: "Business plan strategico e commerciale",
-      en: "Strategic and commercial business plan",
-      fr: "Business plan stratégique et commercial",
-      de: "Strategischer und kommerzieller Businessplan",
-      es: "Plan de negocio estratégico y comercial",
-    },
     "clara-advisory-planning": {
       it: "Pianificare un incarico di consulenza",
       en: "Plan an advisory assignment",

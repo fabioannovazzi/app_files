@@ -4201,6 +4201,12 @@ def test_business_planning_pages_use_identical_localized_function_copy() -> None
     assert "The function is the same in Vera and Clara" in shared_copy["en"]["summary"]
     assert "Business Planning skill" in shared_copy["en"]["prompt"]
     assert "shared calculation IDs" in shared_copy["en"]["modelData"]
+    navigation = (ROOT / "static/shared/function-page-navigation.js").read_text()
+    overrides = navigation.split("const fallbackNames =", 1)[1].split(
+        "const ariaLabels =", 1
+    )[0]
+    assert '"business-planning"' not in overrides
+    assert '"clara-business-planning"' not in overrides
 
 
 def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
