@@ -1236,20 +1236,16 @@ def _order_legacy_small_multiple_rows(
 ) -> pl.DataFrame:
     """Keep all small-multiple panels in the same waterfall row order."""
 
-    baseline, comparison = _periods(recipe)
-    ordered_labels = [
-        baseline,
-        *_legacy_small_multiples_display_types(aggregation, names, recipe),
-        names["residualName"],
-        comparison,
-    ]
-    work_column = names["workColumn"]
-    label_key = pl.col(work_column).cast(pl.Utf8).str.strip_chars()
-    order_expr = pl.lit(len(ordered_labels))
-    for index, label in reversed(list(enumerate(ordered_labels))):
-        order_expr = (
-            pl.when(label_key == label).then(pl.lit(index)).otherwise(order_expr)
-        )
+    # Position follows the waterfall role, never the user-facing wording.
+    # Preserve the calculation's contribution order between the two totals.
+    measure = pl.col(names["measureName"])
+    order_expr = (
+        pl.when(measure == "absolute")
+        .then(pl.lit(0))
+        .when(measure == "total")
+        .then(pl.lit(2))
+        .otherwise(pl.lit(1))
+    )
     return (
         frame.with_row_index("__row_nr")
         .with_columns(order_expr.alias("__order"))
@@ -1266,17 +1262,11 @@ def _prefix_legacy_small_multiple_axis_labels(
 ) -> tuple[pl.DataFrame, dict[str, str], list[str], list[str]]:
     """Prefix category labels while returning visible tick labels."""
 
-    baseline, comparison = _periods(recipe)
-    visible_order = [
-        baseline,
-        *_legacy_small_multiples_display_types(aggregation, names, recipe),
-        names["residualName"],
-        comparison,
-    ]
-    present_labels = {
-        str(value).strip() for value in frame[names["workColumn"]].to_list()
-    }
-    visible_order = [label for label in visible_order if label in present_labels]
+    # The frame is already ordered. Include every contribution in the axis
+    # order, including labels that differ from the aggregation's usual wording.
+    visible_order = list(
+        dict.fromkeys(str(value).strip() for value in frame[names["workColumn"]])
+    )
     label_map = {
         label: _ordered_axis_label(index, label)
         for index, label in enumerate(visible_order, start=1)

@@ -1085,6 +1085,82 @@ def test_variance_plugin_records_waterfall_export_failure(
     assert result.audit["legacy_runtime"]["waterfall_chart"]["error"] == "export failed"
 
 
+@pytest.mark.parametrize(
+    "change_label", ["Price & units & mix", "Price & volume & mix", "Other"]
+)
+def test_small_multiples_keep_changes_between_budget_and_actual_without_units(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, change_label: str
+) -> None:
+    import plotly.graph_objects as go
+
+    core = load_core()
+    calculate = core.run_legacy_variance
+
+    def calculate_with_display_label(*args: Any, **kwargs: Any) -> Any:
+        result = calculate(*args, **kwargs)
+        from modules.charting import plot_charts
+        from modules.utilities.config import get_naming_params
+
+        prepare = plot_charts.prepare_data_for_waterfall
+        work_column = get_naming_params()["workColumn"]
+
+        def prepare_with_display_label(*args: Any, **kwargs: Any) -> Any:
+            frame, base, params = prepare(*args, **kwargs)
+            frame = frame.with_columns(
+                pl.when(pl.col(work_column).str.strip_chars() == "Price & units & mix")
+                .then(pl.lit(change_label))
+                .otherwise(pl.col(work_column))
+                .alias(work_column)
+            )
+            return frame, base, params
+
+        monkeypatch.setattr(
+            plot_charts, "prepare_data_for_waterfall", prepare_with_display_label
+        )
+        return result
+
+    monkeypatch.setattr(core, "run_legacy_variance", calculate_with_display_label)
+    input_path = tmp_path / "synthetic_input.csv"
+    input_path.write_text(
+        "Category,Scenario,Amount,Currency\n"
+        "Revenue,Budget,1000,EUR\nRevenue,Actual,1200,EUR\n"
+        "Costs,Budget,800,EUR\nCosts,Actual,700,EUR\n"
+    )
+    captured = []
+
+    def force_fallback(figure: go.Figure, *args: Any, **kwargs: Any) -> None:
+        meta = figure.layout.meta
+        if isinstance(meta, dict) and "waterfall_small_multiples_grid" in meta:
+            captured.append(figure)
+        raise ValueError("Chrome unavailable in fallback regression test")
+
+    monkeypatch.setattr(go.Figure, "write_image", force_fallback)
+
+    result = core.run_variance_analysis(
+        input_path,
+        tmp_path / "variance",
+        currency="EUR",
+        waterfall_small_multiples=True,
+        waterfall_small_multiples_dimension="Category",
+    )
+
+    assert len(captured) == 1
+    traces = [trace for trace in captured[0].data if trace.type == "waterfall"]
+    assert len(traces) == 2
+    assert list(traces[0].y) == ["01||Budget", f"02||{change_label}", "03||Actual"]
+    assert list(traces[1].y) == list(traces[0].y)
+    assert list(traces[0].measure) == ["absolute", "relative", "total"]
+    assert list(traces[1].measure) == list(traces[0].measure)
+    assert list(traces[0].x) == [1000, 200, 1200]
+    assert list(traces[1].x) == [800, -100, 700]
+    assert list(captured[0].layout.yaxis.categoryarray) == list(traces[0].y)
+    assert (tmp_path / "variance/waterfall_small_multiples.png").is_file()
+    assert (
+        result.audit["legacy_runtime"]["waterfall_chart"]["small_multiples_status"]
+        == "written"
+    )
+
+
 def test_variance_plugin_writes_waterfall_small_multiples(tmp_path: Path) -> None:
     core = load_core()
     input_path = tmp_path / "sales.csv"
