@@ -39,7 +39,8 @@ def review_narrative(
 ) -> tuple[list[dict[str, Any]], list[str]]:
     """Resolve typed financial claims; reject stale amounts and unsupported rubrics."""
     refs = {r["id"]: r for r in [*case["evidence"], *case["assumptions"]]}
-    accepted, issues = [], []
+    accepted: list[dict[str, Any]] = []
+    issues: list[str] = []
     for entry in case["narrative"]:
         prefix = f"Narrative {entry['id']}"
         require(
@@ -47,7 +48,6 @@ def review_narrative(
             == {
                 "id",
                 "kind",
-                "contributor",
                 "text",
                 "claims",
                 "basis_ids",
@@ -71,9 +71,6 @@ def review_narrative(
             },
             "Unknown narrative kind",
         )
-        require(
-            entry["contributor"] in {"Clara", "Vera"}, "Unknown narrative contributor"
-        )
         errors = []
         if not reviewed(entry["review"]):
             errors.append("requires professional review")
@@ -94,7 +91,11 @@ def review_narrative(
                 errors.append("invalid claim fields")
                 continue
             calc = calculations.get(claim["calculation_id"])
-            if calc is None or calc["value"] is None or calc["value"] != claim["value"]:
+            if calc is None or calc["value"] is None:
+                errors.append(
+                    "financial claim awaits an available authoritative calculation"
+                )
+            elif calc["value"] != claim["value"]:
                 errors.append(
                     "financial number disagrees with authoritative calculation"
                 )
@@ -142,7 +143,7 @@ def build_charts(plan: dict[str, Any]) -> list[dict[str, Any]]:
     if not plan["calculations"]:
         return []
     case = plan["case"]
-    scenarios = case["financial"]["scenarios"]
+    scenarios = plan["statements"]["scenarios"]
     charts = []
 
     def add(
@@ -437,11 +438,11 @@ def _waterfall(chart: dict[str, Any]) -> str:
     parts.append(
         f'<line class="zero-line" x1="80" x2="825" y1="{y(0):.2f}" y2="{y(0):.2f}" stroke="#667681" stroke-dasharray="5 4"/>'
     )
-    for index, (label, point, start, end, total) in enumerate(levels):
+    for index, (label, point, bar_start, bar_end, total) in enumerate(levels):
         x = 95 + index * 92
-        color = "#123d65" if total else "#16829a" if end >= start else "#a15335"
+        color = "#123d65" if total else "#16829a" if bar_end >= bar_start else "#a15335"
         parts.append(
-            f'<g data-calculation-id="{e(point["calculation_id"])}"><title>{e(label)}: {e(point["value"])} {e(chart["unit"])} · {e(point["calculation_id"])}</title><rect x="{x}" y="{min(y(start), y(end)):.2f}" width="58" height="{max(.5,abs(y(start)-y(end))):.2f}" fill="{color}"/></g>'
+            f'<g data-calculation-id="{e(point["calculation_id"])}"><title>{e(label)}: {e(point["value"])} {e(chart["unit"])} · {e(point["calculation_id"])}</title><rect x="{x}" y="{min(y(bar_start), y(bar_end)):.2f}" width="58" height="{max(.5,abs(y(bar_start)-y(bar_end))):.2f}" fill="{color}"/></g>'
         )
         for j, word in enumerate(label.split()):
             parts.append(
@@ -494,7 +495,7 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
     _check_audience(case)
     e = html.escape
     parts = [
-        f'<header><p class="eyebrow">{e(plan["owner_product"])} · Business Planning</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])}</p><p>Audience: {e(case["audience"])} · {e(case["reporting_currency"])} · {e(case["periods"][0])} — {e(case["periods"][-1])}</p><strong class="status">{e(plan["status"].replace("_", " ").capitalize())}</strong><p>Financial authority: Vera · One shared source and assumption register</p></header>'
+        f'<header><p class="eyebrow">Business Planning</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])}</p><p>Audience: {e(case["audience"])} · {e(case["reporting_currency"])} · {e(case["periods"][0])} — {e(case["periods"][-1])}</p><strong class="status">{e(plan["status"].replace("_", " ").capitalize())}</strong><p>One shared financial model and business analysis</p></header>'
     ]
     parts.append(
         "<section><h2>Unresolved matters</h2><ul>"
@@ -514,7 +515,7 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             rendered = f'<a class="figure-ref" href="#calc-{e(c["id"])}" data-calculation-id="{e(c["id"])}">{e(c["value"])} {e(c["unit"])}</a>'
             prose = prose.replace("{{" + key + "}}", rendered)
         parts.append(
-            f'<article><p class="eyebrow">{e(n["contributor"])} · {e(n["kind"])}</p><p>{prose}</p><small>Basis: {e(", ".join(n["basis_ids"]))} · Reviewed by {e(n["review"]["reviewer"])}</small></article>'
+            f'<article><p class="eyebrow">{e(n["kind"])}</p><p>{prose}</p><small>Basis: {e(", ".join(n["basis_ids"]))} · Reviewed by {e(n["review"]["reviewer"])}</small></article>'
         )
     parts.append(
         "</section><section><h2>Financial decision charts</h2>"
@@ -724,7 +725,6 @@ def write_package(
             pdf_error = str(exc)
     receipt = {
         "workflow_id": "business-planning",
-        "owner_product": plan["owner_product"],
         "status": "partial" if pdf_error else plan["status"],
         "pdf_error": pdf_error,
         "case_sha256": plan["case_sha256"],

@@ -100,17 +100,11 @@ also self-contained: its local source report is not uploaded, its product images
 and HTML report stay local, and its semantic work runs in Codex through the
 user's existing ChatGPT plan without a separate model API key. Reporting Engine is also self-contained unless the
 user asks to place its reviewed chart or interpretation in an advisory output.
-Business Planning is the specialist route for the strategic and commercial
-business plan of a startup, new venture, or established company. Clara owns the
-user request and final strategy-led review package. An optional Vera financial
-contribution remains internal to that Clara-owned workflow rather than becoming
-a second user journey. Clara owns the
-market and customer case, business model, positioning, options, recommendation,
-initiatives, milestones, KPIs, risks and decision implications. A reviewed Vera
-contribution may enter as financial evidence and be included only after
-mechanical compatibility review. Clara keeps unresolved differences visible and
-must not reinterpret reconciled figures or present statement closure as
-strategic validation.
+Business Planning prepares one business plan for a startup, new venture or
+established company. It assesses customers, market, operations, economics, cash,
+options, recommendation and next actions. Vera and Clara expose the same function,
+case, financial model and report; neither has a separate angle or contribution.
+The business question determines the required work.
 Advisory Deliverable Validator is the user-facing review route for a completed
 memo, report, analysis, presentation, or other supported professional document.
 It consumes `advisory_contract.json` and composes with Claim Basis Map, HTML Deck

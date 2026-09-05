@@ -45,11 +45,15 @@ def case_data() -> dict:
     return json.loads((FIXTURE / "case.json").read_text())
 
 
-def test_both_owners_have_identical_authoritative_financial_figures() -> None:
+def test_both_entry_points_have_identical_plans_and_html() -> None:
     case = case_data()
     vera = build_plan(case, owner="Vera", source_root=FIXTURE)
     clara = build_plan(case, owner="Clara", source_root=FIXTURE)
     assert vera["status"] == "ready_for_professional_review"
+    assert vera == clara
+    assert compile_html(vera, source_root=FIXTURE) == compile_html(
+        clara, source_root=FIXTURE
+    )
     assert vera["calculations"] == clara["calculations"]
     assert vera["calculations_sha256"] == clara["calculations_sha256"]
     assert vera["calculations"]["base/2027-01/ebitda"]["value"] == "-100"
@@ -63,6 +67,43 @@ def test_both_owners_have_identical_authoritative_financial_figures() -> None:
     assert vera["calculations"]["base/2027-02/debt_service"]["value"] == "60"
     assert vera["calculations"]["base/2027-01/dscr"]["value"] == "-10"
     assert vera["calculations"]["base/2027-03/sources_uses_difference"]["value"] == "0"
+
+
+def test_registered_skills_and_marketplace_cards_are_identical() -> None:
+    vera_root = REPO_ROOT / "plugins/vera"
+    clara_root = REPO_ROOT / "plugins/clara"
+    skill = "skills/business-planning/SKILL.md"
+    assert (vera_root / skill).read_text() == (clara_root / skill).read_text()
+    vera_cards = json.loads(
+        (vera_root / "marketplace_skill_instructions.json").read_text()
+    )
+    clara_cards = json.loads(
+        (clara_root / "marketplace_skill_instructions.json").read_text()
+    )
+    assert (
+        vera_cards["skills"]["business-planning"]
+        == clara_cards["skills"]["business-planning"]
+    )
+
+
+@pytest.mark.parametrize("entry_point", ["Vera", "Clara"])
+def test_missing_reviewed_business_analysis_is_partial_for_either_entry(
+    entry_point: str,
+) -> None:
+    case = case_data()
+    case["narrative"][0]["review"]["status"] = "unverified"
+    plan = build_plan(case, owner=entry_point, source_root=FIXTURE)
+    assert plan["status"] == "partial"
+    assert (
+        "Required reviewed business analysis is missing" in plan["unresolved_matters"]
+    )
+
+
+def test_product_labelled_v2_case_requires_explicit_migration() -> None:
+    case = case_data()
+    case["schema_version"] = "mparanza.business_planning_case.v2"
+    with pytest.raises(PlanningError, match="shared v3 case"):
+        build_plan(case, source_root=FIXTURE)
 
 
 def test_accepted_negative_ebitda_cannot_revert_to_positive_model() -> None:
@@ -110,7 +151,7 @@ def test_missing_debt_repayment_is_not_zero_and_suppresses_capital_claim() -> No
     case["narrative"].append(entry)
     plan = build_plan(case, owner="Vera", source_root=FIXTURE)
     assert plan["status"] != "ready_for_professional_review"
-    assert plan["calculations"] == {}
+    assert "base/2027-03/funding_requirement" not in plan["calculations"]
     assert "base/2027-02/debt_repayments" in " ".join(plan["unresolved_matters"])
     assert (
         plan["case"]["financial"]["scenarios"][0]["schedule"][1]["debt_repayments"]
@@ -257,7 +298,7 @@ def test_output_csv_json_html_and_receipt_share_calculation_register(
 def test_no_debt_service_and_zero_revenue_do_not_invent_ratios() -> None:
     case = case_data()
     case["observations"], case["resolutions"], case["narrative"] = [], [], []
-    case["required_contributions"] = ["Vera"]
+    case["required_sections"] = ["financial"]
     row = case["financial"]["scenarios"][0]["schedule"][0]
     row["revenue"] = "0"
     row["interest_expense"] = "0"
@@ -295,7 +336,7 @@ def test_clara_registered_entrypoint_compiles_shared_case(tmp_path: Path) -> Non
     )
     assert completed.returncode == 0, completed.stderr
     plan = json.loads((output / "business_plan.json").read_text())
-    assert plan["owner_product"] == "Clara"
+    assert plan["workflow_id"] == "business-planning"
     assert (
         plan["calculations"]
         == build_plan(case, owner="Vera", source_root=FIXTURE)["calculations"]
@@ -363,7 +404,7 @@ def test_vera_registered_entrypoint_binds_every_source_receipt(tmp_path: Path) -
     )
     assert completed.returncode == 0, completed.stderr
     plan = json.loads((output / "business_plan.json").read_text())
-    assert plan["owner_product"] == "Vera"
+    assert plan["workflow_id"] == "business-planning"
     assert plan["calculations"]["base/2027-01/ebitda"]["value"] == "-100"
 
 
@@ -391,7 +432,6 @@ def test_complete_accepted_funding_recommendation_uses_full_horizon_gap() -> Non
         {
             "id": "funding",
             "kind": "capital_recommendation",
-            "contributor": "Vera",
             "text": "The modeled funding requirement is {{amount}}; timing must address the early cash deficit.",
             "claims": {
                 "amount": {
@@ -573,3 +613,19 @@ def test_zero_channel_units_do_not_invent_unit_economics() -> None:
         ]["value"]
         is None
     )
+
+
+def test_incomplete_scenario_preserves_independently_complete_scenario() -> None:
+    case = case_data()
+    complete = deepcopy(case["financial"]["scenarios"][0])
+    complete["id"] = "complete"
+    complete["label"] = "Independent complete scenario"
+    case["financial"]["scenarios"].append(complete)
+    case["financial"]["scenarios"][0]["schedule"][1]["debt_repayments"] = None
+
+    plan = build_plan(case, owner="Vera", source_root=FIXTURE)
+
+    assert plan["status"] == "partial"
+    assert "complete/2027-03/funding_requirement" in plan["calculations"]
+    assert "base/2027-03/funding_requirement" not in plan["calculations"]
+    assert plan["statements"]["unavailable_scenarios"] == ["base"]

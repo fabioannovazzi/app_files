@@ -1,6 +1,6 @@
 ---
 name: business-planning
-description: Prepare a finance-led plan for a startup, new venture or established company using the shared reviewed Business Planning case, Vera's authoritative calculations and Clara's internal strategic contribution when required.
+description: Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.
 ---
 
 ## Cowork execution contract
@@ -73,16 +73,19 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Business Planning — Vera owner
+# Business Planning
 
 Resolve `../../modules/business-planning` from this directory when it exists;
 otherwise resolve `../../../business-planning` in the repository. Read that module's
 `skills/business-planning/SKILL.md` completely and follow it. Run dependency checks
 and helpers from that module root, the plugin working directory.
 
-Vera owns the user journey and accounting-financial result. Obtain needed Clara
-strategy internally in the same shared case and source/assumption register. Never
-ask the user to invoke Clara or transport contribution files. Use
-`run_business_plan.py`, retaining the exact Studio Archive context and receipts.
-The shared v2 case and compiler are mandatory. Final financial numbers bind Vera
-calculation IDs; legacy independent contribution summaries cannot finalize a plan.
+This is the same Business Planning function in Vera and Clara. The user's business
+question determines the analysis, evidence and report. Both cover the business
+proposition, demand, operations, economics, cash, options and recommendation.
+Neither product has a different angle or supplies a separate contribution.
+Use one case, financial model and report compiler throughout.
+
+The shared skill handles the invoking product's existing storage integration.
+This affects file location and access checks only, never analytical scope,
+required sections, calculations, conclusions or report content.

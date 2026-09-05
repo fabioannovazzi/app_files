@@ -1,8 +1,8 @@
-# Shared Business Planning case v2
+# Shared Business Planning case v3
 
-Both registered owner commands consume the same JSON schema
-`mparanza.business_planning_case.v2`. Owner is supplied by the entry point, never
-by a second case or independent set of figures. Legacy financial/strategic v1
+Both registered commands consume the same JSON schema
+`mparanza.business_planning_case.v3`. The case and report have no product owner
+or product-specific contributors. Both commands run the same analysis contract. Legacy financial/strategic v1 and product-labelled v2
 contracts remain inspection/calculation internals, not finalization interfaces.
 
 The sanitized developer fixture is `tests/fixtures/business_planning/case.json`
@@ -16,7 +16,7 @@ All listed fields are required; unknown top-level fields are rejected:
 
 | Field | Contract |
 | --- | --- |
-| schema_version | `mparanza.business_planning_case.v2` |
+| schema_version | `mparanza.business_planning_case.v3` |
 | case_id, entity_name, company_stage, planning_objective | Reviewed identity and plain-language mandate; no stage classifier |
 | audience | Exact audience key used in source restrictions |
 | reporting_currency | Three uppercase letters; normalize source units before comparison |
@@ -28,10 +28,10 @@ All listed fields are required; unknown top-level fields are rejected:
 | decisions | Professional decisions, including conflict resolution and audience release |
 | observations | Reviewed source-figure alignments, including conflicting figures |
 | resolutions | Explicit observation selections backed by professional decisions |
-| financial | Opening position and scenarios below; `null` means no supported financial contribution |
+| financial | Opening position and scenarios below; `null` means no supported financial model |
 | narrative | Typed, reviewed model-authored findings, options, initiatives, risks and recommendations |
 | limitations | Plain-language limitations; do not hide missing inputs here instead of marking them null |
-| required_contributions | List containing `Vera` and/or `Clara`, selected from the professional mandate |
+| required_sections | `financial` and/or `business_analysis`, selected from the mandate, identically for either entry point |
 
 ## Source and review register
 
@@ -101,7 +101,7 @@ reviewed evidence/assumption IDs, effective in that period:
 - `debt_draws`, `debt_repayments`, `equity_contributions`, `dividends`;
 - `variable_cogs`, `variable_operating_expenses` (each reconciles to its total).
 
-Vera's existing Decimal statement engine calculates P&L, cash flow and balance
+The shared Decimal statement engine calculates P&L, cash flow and balance
 sheet, with exact opening/period reconciliation. Revenue less COGS gives gross
 profit; less operating expense gives EBITDA; less D&A gives EBIT; less cash
 interest and tax gives net income. Operating cash flow adds back D&A and subtracts
@@ -140,7 +140,7 @@ minimum liquidity. No channel economics are invented without channel inputs.
 
 ## Typed narrative and reporting
 
-Each narrative record has exactly `id`, `kind`, `contributor`, `text`, `claims`,
+Each narrative record has exactly `id`, `kind`, `text`, `claims`,
 `basis_ids`, `rubric_id`, `review`. Kinds are `finding`, `option`, `risk`,
 `limitation`, `initiative`, `capital_recommendation`, `score`, `benchmark`, `kpi`.
 Text references numbers via `{{claim-name}}`; `claims` maps each token to

@@ -1,6 +1,6 @@
 ---
 name: business-planning
-description: One shared, adaptive Business Planning workflow for startups, new ventures and established companies. Vera owns the accounting-financial result; Clara owns the strategic-commercial result. Counterpart work is internal and all financial claims bind Vera's calculation register.
+description: Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.
 ---
 
 ## Output location
@@ -12,27 +12,22 @@ Synthetic developer evaluations may write to a temporary test directory.
 
 # Business Planning
 
-Use one shared case and compiler. The invoked product remains the visible owner
-from intake through delivery. Do not ask the user to invoke the other product,
-transfer contribution files or choose a lens or company-stage mode.
+Use one workflow and report in both Vera and Clara. There is no product-specific
+angle, division of analytical responsibilities, or contribution from another
+product. The user's business question determines the work.
 
-- Vera owns the accounting-financial result. Obtain Clara's model-led strategic
-  contribution internally when the mandate requires strategy, market or options.
-- Clara owns the strategic-commercial result. Obtain Vera's financial contribution
-  internally whenever financial figures, feasibility or funding enter the result.
-  The shared runner invokes Vera's arithmetic directly; no separate plugin call
-  or manually supplied financial summary is necessary.
-- Both use exactly the same source register, assumptions and authoritative
-  calculated figures. Internal contributors edit proposed sections of the shared
-  case; the owner resolves differences with the professional before acceptance.
-- Record company stage in reviewed plain language. Adapt source collection and
-  questions to the actual business, including new ventures inside existing firms.
-  Missing history never becomes zero. Do not infer stage using keyword rules.
+Assess the proposition and customer need, credible demand, pricing and channels,
+operations and capacity, full costs and margins, cash timing and financing,
+credible alternatives, and the recommendation with practical next actions.
+Use one source register, accepted assumptions and financial calculation register.
+Changing entry point must not change scope, required sections, numbers or report.
+Company stage changes the evidence and questions; missing history is not zero.
+Do not infer stage using keyword rules.
 
 ## Intake and review
 
 Read [the case contract](../../references/case-contract.md). Both entry points
-require `mparanza.business_planning_case.v2`. Legacy v1 case and counterpart files
+require `mparanza.business_planning_case.v3`. Legacy v1/v2 case and counterpart files
 are inspection inputs only; they cannot finalize reports. Migrate by inspecting
 actual files and obtaining real assumption/audience decisions, never by inventing
 review metadata. Do not assume an earlier report used this registered pipeline.
@@ -67,16 +62,16 @@ produce partial results; disagreement with accepted figures blocks readiness.
 
 ## Financial and strategic work
 
-Vera's shared engine calculates monthly scenarios and linked statements, margins,
+The shared financial engine calculates monthly scenarios and linked statements, margins,
 EBITDA/EBIT/net income, cash flow, working capital, minimum cash, pre-financing
 funding need and residual gap, runway, revenue break-even, margin of safety,
 debt service/DSCR and sources-and-uses reconciliation. Read their formula and
 limitation fields. Do not treat mechanical reconciliation as viability.
 
-Clara interprets reviewed market evidence, positioning, options, initiatives,
+The model interprets reviewed market evidence, positioning, options, initiatives,
 commercial implications and risks. All financial amounts in narrative use typed
-`{{claim}}` placeholders with exact calculation IDs and expected values. Clara
-must never independently calculate or rewrite a Vera amount. Correct the accepted
+`{{claim}}` placeholders with exact calculation IDs and expected values. Narrative
+must never independently calculate or rewrite a canonical amount. Correct the accepted
 inputs and rerun the shared engine if figures need changing.
 
 Do not invent scores, benchmarks or KPI thresholds. They require a reviewed rubric,
@@ -92,6 +87,9 @@ buffer or round size unsupported by that model. Report missing inputs and questi
 instead. Financing timing and unpaid/missing debt cannot be hidden in prose.
 
 ## Registered execution
+
+The commands below are storage adapters to the same execution path. They do not
+select financial or strategic modes. The model handles this binding internally.
 
 Run `python scripts/check_dependencies.py` first. `requirements.txt` is the core
 published dependency declaration; do not install arbitrary packages at runtime.
@@ -152,7 +150,7 @@ files and paths are not automatically model context. The full report structure i
 an audience-controlled local audit artifact; do not send it wholesale to a model
 or external service without the relevant data-use authorization.
 
-Deliver one owner report with its status, supported conclusions, open matters and
+Deliver one business plan report with its status, supported conclusions, open matters and
 next professional action. Finalize Vera's physical output artifacts with stable
 IDs, purpose, audience and media type and complete the Studio Archive run. Record
 failure/cancellation honestly. Clara records results in the selected case workspace.

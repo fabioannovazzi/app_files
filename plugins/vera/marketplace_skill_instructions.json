@@ -164,10 +164,10 @@
       "instructions": "Allega gli Actual mensili già rivisti e indica le assunzioni commerciali e valutarie da applicare. Vera traduce ogni ipotesi in driver, perimetro, periodo e priorità da confermare, quindi restituisce il Piano vendite, il registro delle assunzioni e la riconciliazione dei totali."
     },
     "business-planning": {
-      "display_name": "Piano economico-finanziario e fabbisogno",
-      "short_description": "Collega ipotesi, prospetti, scenari e fabbisogno",
-      "default_prompt": "Usa $business-planning per preparare il piano economico-finanziario e il fabbisogno di questa impresa dalle evidenze disponibili e dalle ipotesi che confermerò.",
-      "instructions": "Indica l'impresa, il suo stadio in linguaggio naturale, l'obiettivo, il destinatario e l'orizzonte e allega le evidenze disponibili. La funzione vale per startup, nuove iniziative e imprese consolidate. Vera usa la base storica quando esiste e altrimenti parte da saldi iniziali, fondi disponibili e ipotesi confermate, senza trasformare la storia mancante in zero. Prima del calcolo restituisce evidenze mancanti e registro delle ipotesi. Dopo la conferma prepara conto economico, cassa e stato patrimoniale collegati, scenari, break-even, fabbisogno, riconciliazione e limiti. Vera resta responsabile del risultato; se il perimetro richiede un contributo strategico di Clara, lo gestisce internamente nello stesso piano e mostra le differenze irrisolte."
+      "display_name": "Prepare a business plan",
+      "short_description": "Assess the business and prepare one complete plan",
+      "default_prompt": "Use $business-planning to prepare a business plan from these files. Assess whether the business makes sense and recommend what to do next.",
+      "instructions": "Prepare one business plan covering the proposition, customers and demand, operations, economics, cash needs, options, recommendation and next actions. Adapt the analysis to the business question and available evidence. Use the same shared workflow, case, financial model and report in Vera and Clara; do not assign product-specific angles or request a contribution from the other product."
     },
     "variance-analysis": {
       "display_name": "Analisi scostamenti",

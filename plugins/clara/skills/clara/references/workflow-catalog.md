@@ -34,13 +34,11 @@ their bounded purpose matches the requested contribution.
   private Retailer Signals report.
 - `brand-fit`: compare checked retailer signals with the brand's current
   retailer presence and brand-owned catalogue in the stored snapshot.
-- `business-planning`: prepare the strategic and commercial business plan of a
-  startup, new venture, or established company from reviewed evidence and
-  confirmed assumptions; develop findings, options, recommendation,
-  initiatives, milestones, KPIs, risks and decision implications; keep Clara as
-  owner of the user request and final strategy-led package; include an optional
-  internal Vera financial contribution only after compatibility review while
-  surfacing rather than silently merging any divergence.
+- `business-planning`: prepare one business plan for a startup, new venture or
+  established company. Assess customers, market, operations, economics, cash,
+  options, recommendation and next actions using one case, financial model and
+  report. Vera and Clara expose this exact same function. The business question
+  determines scope; the entry product never changes the angle or required work.
 - `deck-correction`: turn spoken or written feedback into verified changes to
   an existing PPTX or Clara HTML deck while preserving untouched content.
 - `html-deck`: build or revise a source-faithful, standalone HTML presentation

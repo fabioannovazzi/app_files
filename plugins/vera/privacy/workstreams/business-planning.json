@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "workstream": "business-planning",
-  "display_name": "Business Planning — accounting and financial lens",
+  "display_name": "Business Planning",
   "role": "workflow",
   "governed_paths": [
     ".codex-plugin/plugin.json",
@@ -21,18 +21,18 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "business-planning-financial-intake",
-        "purpose": "Understand the company context, objective, accounting evidence, opening or historical position, assumptions, scenarios, audience and missing information before calculation",
-        "content": "User instructions and selected evidence may reach the model, including a reviewed plain-language company stage for a startup, new venture or established company; historical accounts when available; opening balances and funding; commercial, operating, investment, working-capital, financing, tax and interest assumptions; external evidence; audience requirements; and open questions. Real company, customer, supplier, employee, founder, lender or investor information may be present when professionally necessary. Vera performs no automatic anonymization or pseudonymization. The model and professional separate facts, external evidence, management assumptions, model-proposed hypotheses and unknowns, then confirm the accounting-financial case. Deterministic code checks the declared lens and case shape but does not classify the company or invent missing history or numbers.",
+        "id": "business-planning-intake",
+        "purpose": "Understand the business question, market, customers, operations, economics, cash, options and planning assumptions",
+        "content": "The selected model may read the assignment and selected evidence, including company, customer, supplier and personal information when relevant, market evidence, operating and financial data, reviewed assumptions, scenarios, audience and open questions. Both products perform the same business analysis. No automatic anonymization is applied. Company stage and evidence meaning are interpreted by the model and professional, not classified by code.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
         ]
       },
       {
-        "id": "business-planning-financial-review-and-contribution",
-        "purpose": "Interpret one shared authoritative financial register with internal strategic work and controlled report compilation",
-        "content": "Both entry points consume one shared reviewed case and locally run Vera's Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent counterpart files and legacy cases cannot finalize reports.",
+        "id": "business-planning-analysis-and-report",
+        "purpose": "Prepare one business analysis using the shared financial model and report compiler",
+        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -63,6 +63,6 @@
     "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "783373edeb4da0db61474a63b4d13a4a9df09cbde86bb4675d921cd8dd363621"
+    "source_fingerprint": "943fb6cfa4784ca9e2637128cb4397919ec2b9abb9889f0701f69bb4a40bdcbe"
   }
 }
