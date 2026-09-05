@@ -45,8 +45,8 @@ def main(argv: list[str] | None = None) -> int:
         for path in missing_files:
             LOGGER.error("Missing requirements file: %s", path)
         return 1
-    if sys.version_info < (3, 11):
-        LOGGER.error("Python 3.11 or newer is required.")
+    if sys.version_info < (3, 10):
+        LOGGER.error("Python 3.10 or newer is required.")
         return 1
     missing: list[tuple[str, str]] = []
     for path in requirement_paths:
