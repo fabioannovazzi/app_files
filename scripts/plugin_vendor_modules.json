@@ -152,6 +152,11 @@
         "vera_assurance",
         "vera_ocr"
       ]
+    },
+    "aml-review": {
+      "module_roots": [
+        "vera_assurance"
+      ]
     }
   }
 }

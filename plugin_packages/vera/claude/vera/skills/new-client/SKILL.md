@@ -51,6 +51,10 @@ override this Cowork contract.
 
 
 
+For substantive AML investigation or a later AML reassessment, use
+`vera:aml-review` with the same client's selected evidence and reviewed setup;
+do not repeat the whole onboarding intake.
+
 This is Vera's sole new-client workflow. Do not route users to separate
 document-preparation or professional-setup workflows.
 

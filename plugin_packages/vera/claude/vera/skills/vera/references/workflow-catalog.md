@@ -17,6 +17,11 @@ skill to imitate a missing operational workflow.
 
 ## Professional workflows
 
+- `aml-review`: review Italian client AML evidence at onboarding or later review,
+  reconstruct ownership and economic explanations, investigate inconsistencies,
+  compare prior assessments and record professional decisions. New Client owns
+  whole-client onboarding; this workflow owns substantive AML analysis.
+
 - `archive-organization`: screen one registered local or Google Drive client folder, use semantic
   judgment to propose studio-policy categories and destinations, detect exact
   duplicates by hash and probable duplicates by reviewed model judgment,

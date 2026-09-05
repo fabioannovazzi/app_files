@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Revisione antiriciclaggio" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<path d="M15 17h20v15H15zM29 38h18v13H29z" fill="none" stroke="#F7F0DF" stroke-width="3"/><path d="M25 32v12h4" fill="none" stroke="#F7F0DF" stroke-width="3"/><circle cx="43" cy="22" r="7" fill="none" stroke="#00B0F0" stroke-width="3"/><path d="m48 27 6 6" stroke="#00B0F0" stroke-width="3"/>
+</svg>

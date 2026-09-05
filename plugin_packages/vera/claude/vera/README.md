@@ -178,3 +178,11 @@ minimisation and legal assessment.
 
 Vera never signs, files, sends, activates, or approves professional work on the
 user's behalf. Every substantive output remains a draft for qualified review.
+
+## AML review
+
+`vera:aml-review` examines ownership, economic explanations, evidence discrepancies
+and changes since a prior assessment for Italian clients. It prepares a sourced
+memo and records professional decisions through the existing client archive.
+Its Python helper reuses validated New Client arithmetic when available; screening
+reports are supplied by the studio and no automatic SOS or monitoring is included.

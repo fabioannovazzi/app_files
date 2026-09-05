@@ -140,6 +140,7 @@ CHATGPT_HIDDEN_COMPONENTS = {"lucia": frozenset({"studio-archive"})}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "aml-review": "modules/aml-review/skills/aml-review/SKILL.md",
     "archive-organization": "modules/archive-organization/skills/archive-organization/SKILL.md",
     "open-item-reconciliation": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
     "bandi-agevolazioni": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",

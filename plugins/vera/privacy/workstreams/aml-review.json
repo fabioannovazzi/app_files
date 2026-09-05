@@ -1,0 +1,67 @@
+{
+  "schema_version": 3,
+  "workstream": "aml-review",
+  "display_name": "AML review",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "aml-review-evidence",
+        "purpose": "Analyse client AML evidence, explanations, prior reviews and proposed decisions",
+        "content": "Selected original identity, ownership, screening, contractual, accounting and bank evidence; client explanations; previous assessment and decisions; source citations, findings, alternatives, questions, proposed risk rationale and optional existing calculation. Entire selected files may enter the model when needed; no automatic anonymization or fixed excerpt cap. Later review may read the complete prior record and new evidence.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "current-source-research",
+      "kind": "public_research",
+      "destination": "Current primary and professional public sources selected for the case",
+      "purpose": "Verify the current source basis for legal and professional proposals",
+      "content": "Legal or professional research topics, public-source queries and selected source URLs; direct client identifiers are not used in the public research route",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Record retrieval, version, temporal scope, and reuse status for selected sources.",
+        "Keep credentials, authentication codes, cookies, screening-provider tokens, and direct client identifiers out of public research."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "archive-binding",
+      "control": "The CLI requires a running portable v2 AML archive context and checks selected source paths against exact run receipts before reading them."
+    },
+    {
+      "id": "record-integrity",
+      "control": "Records bind source hashes, prior client and engagement identity, and exact proposal digests for decisions; content-addressed output never overwrites an earlier record."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-05",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "6f5059626648eae087bed0d7616a2ecb42b1d2df8bb6cd6c4b3657927bc24707"
+  }
+}

@@ -28,6 +28,9 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "aml-review", "Vera · Revisione antiriciclaggio", "#002060", "#00B0F0", "aml"
+    ),
+    IconSpec(
         "apertura-pratica",
         "Lucia · Apertura pratica",
         "#002060",
@@ -331,13 +334,12 @@ def _frame(spec: IconSpec, body: str) -> str:
 
 
 def _body(spec: IconSpec) -> str:
-    paper = (
-        "#FFFFFF" if spec.motif in {"advisor", "reviewer", "counsel"} else "#F7F0DF"
-    )
+    paper = "#FFFFFF" if spec.motif in {"advisor", "reviewer", "counsel"} else "#F7F0DF"
     ink = "#22302A"
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "aml": f"""<path d="M15 17h20v15H15zM29 38h18v13H29z" fill="none" stroke="{paper}" stroke-width="3"/><path d="M25 32v12h4" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="43" cy="22" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m48 27 6 6" stroke="{accent}" stroke-width="3"/>""",
         "organize": f"""
   <path d="M12 23a5 5 0 0 1 5-5h10l5 6h15a5 5 0 0 1 5 5v17a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5z" fill="{paper}"/>
   <path d="M20 32h20M20 40h13" stroke="{color}" stroke-width="3" stroke-linecap="round"/>

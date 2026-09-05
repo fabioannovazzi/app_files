@@ -1,0 +1,42 @@
+{
+  "name": "aml-review",
+  "version": "0.1.0",
+  "description": "Revisione motivata delle evidenze antiriciclaggio di clienti nuovi ed esistenti.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/aml-review/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "aml",
+    "antiriciclaggio",
+    "commercialisti",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Revisione antiriciclaggio",
+    "shortDescription": "Esamina titolarità, operazioni e variazioni del cliente.",
+    "longDescription": "Analizza evidenze e spiegazioni economiche, confronta valutazioni precedenti e conserva proposte e decisioni professionali. Usa rapporti di screening forniti e non invia segnalazioni.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Esamina queste evidenze e prepara la revisione antiriciclaggio del cliente."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}
