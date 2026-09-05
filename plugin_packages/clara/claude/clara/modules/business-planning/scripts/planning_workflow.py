@@ -27,7 +27,7 @@ __all__ = [
     "digest",
     "verify_sources",
 ]
-CASE_SCHEMA = "mparanza.business_planning_case.v2"
+CASE_SCHEMA = "mparanza.business_planning_case.v3"
 OPENING = (
     "cash",
     "accounts_receivable",
@@ -105,15 +105,15 @@ def require(condition: bool, message: str) -> None:
 
 
 def indexed(items: list[dict[str, Any]], label: str) -> dict[str, dict[str, Any]]:
-    result = {}
+    result: dict[str, dict[str, Any]] = {}
     require(isinstance(items, list), f"{label} must be a list")
     for item in items:
         identifier = item.get("id")
-        require(
-            isinstance(identifier, str)
-            and re.fullmatch(r"[a-z][a-z0-9_-]*", identifier) is not None,
-            f"Invalid {label} ID: {identifier}",
-        )
+        if (
+            not isinstance(identifier, str)
+            or re.fullmatch(r"[a-z][a-z0-9_-]*", identifier) is None
+        ):
+            raise PlanningError(f"Invalid {label} ID: {identifier}")
         require(identifier not in result, f"Duplicate {label} ID: {identifier}")
         result[identifier] = item
     return result
@@ -185,7 +185,7 @@ def verify_sources(case: dict[str, Any], source_root: Path) -> None:
 def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
     require(
         case.get("schema_version") == CASE_SCHEMA,
-        "Finalization requires the shared v2 case with provenance; legacy cases must be reviewed and migrated",
+        "Finalization requires the shared v3 case with provenance; legacy cases must be reviewed and migrated",
     )
     allowed = {
         "schema_version",
@@ -206,7 +206,7 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         "financial",
         "narrative",
         "limitations",
-        "required_contributions",
+        "required_sections",
     }
     require(
         set(case) == allowed,
@@ -293,8 +293,8 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         "Every selected source needs an evidence/assumption record (source coverage)",
     )
     require(
-        set(case["required_contributions"]) <= {"Vera", "Clara"},
-        "Unknown internal contributor",
+        set(case["required_sections"]) <= {"financial", "business_analysis"},
+        "Unknown required section",
     )
     return {"sources": sources, "refs": refs, "decisions": decisions}, issues
 
@@ -305,7 +305,7 @@ def _financial(
     financial = case["financial"]
     if financial is None:
         issues.append(
-            "Vera financial contribution unavailable; no capital recommendation is supported"
+            "Financial model unavailable; no capital recommendation is supported"
         )
         return None, {}
     require(
@@ -377,8 +377,17 @@ def _financial(
                 )
     if missing:
         issues.extend(f"Missing financial input: {label}" for label in missing)
+    incomplete_scenarios = {label.split("/", 1)[0] for label in missing}
+    usable_scenarios = {
+        key: value
+        for key, value in scenarios.items()
+        if key not in incomplete_scenarios
+    }
+    # Linked statements need opening balances, but a missing input in one
+    # scenario must not suppress another independently complete scenario.
+    if "opening" in incomplete_scenarios or not usable_scenarios:
         return None, {}
-    # Use the existing Vera linked-statement engine, fed only from this register.
+    # Use the shared linked-statement engine, fed only from this register.
     # Readiness is imposed separately; draft inputs are never represented as accepted.
     internal_case = {
         k: case[k]
@@ -446,11 +455,12 @@ def _financial(
                         for r in s["schedule"]
                     ],
                 }
-                for s in scenarios.values()
+                for s in usable_scenarios.values()
             ],
         }
     )
     statements = build_business_plan(internal_case)
+    statements["unavailable_scenarios"] = sorted(incomplete_scenarios)
     if not statements["reconciliation"]["all_passed"]:
         issues.append("Financial statement reconciliation failed")
     calculations: dict[str, Any] = {}
@@ -507,7 +517,7 @@ def _financial(
                         add(
                             metric,
                             number(value),
-                            f"Vera linked statements: {group}.{metric}",
+                            f"Linked statements: {group}.{metric}",
                         )
             revenue = vals["revenue"]
             gross = number(row["profit_and_loss"]["gross_profit"])
@@ -581,11 +591,21 @@ def _financial(
                 ),
             )
             working_capital = sum(
-                number(row["balance_sheet"][k])
-                for k in ("accounts_receivable", "inventory", "other_current_assets")
+                (
+                    number(row["balance_sheet"][k])
+                    for k in (
+                        "accounts_receivable",
+                        "inventory",
+                        "other_current_assets",
+                    )
+                ),
+                Decimal("0"),
             ) - sum(
-                number(row["balance_sheet"][k])
-                for k in ("accounts_payable", "other_liabilities")
+                (
+                    number(row["balance_sheet"][k])
+                    for k in ("accounts_payable", "other_liabilities")
+                ),
+                Decimal("0"),
             )
             add(
                 "working_capital",
@@ -752,6 +772,11 @@ def _financial(
             channel
         )
     for (sid, period), channels in channel_groups.items():
+        if sid in incomplete_scenarios:
+            issues.append(
+                f"Channel reconciliation unavailable for incomplete scenario: {sid}/{period}"
+            )
+            continue
         require(
             len({c["channel"] for c in channels}) == len(channels),
             "Duplicate channel in a scenario period",
@@ -834,6 +859,7 @@ def _financial(
     return {
         "scenarios": statements["scenarios"],
         "reconciliation": statements["reconciliation"],
+        "unavailable_scenarios": statements["unavailable_scenarios"],
     }, calculations
 
 
@@ -899,7 +925,9 @@ def _comparisons(
             )
         ):
             issues.append(
-                f"Accepted observation disagrees with authoritative calculation: {key}"
+                f"Accepted observation awaits an available authoritative calculation: {key}"
+                if calc is None or calc["value"] is None
+                else f"Accepted observation disagrees with authoritative calculation: {key}"
             )
         result.append(
             {
@@ -915,13 +943,13 @@ def _comparisons(
 
 
 def build_plan(
-    case: dict[str, Any], *, owner: str, source_root: Path
+    case: dict[str, Any], *, source_root: Path, owner: str | None = None
 ) -> dict[str, Any]:
-    """Run the identical finance engine for either owner from one accepted case."""
-    require(owner in {"Vera", "Clara"}, "Unknown owner")
+    """Build one product-independent plan; owner is an optional entry-adapter label."""
+    require(owner in {None, "Vera", "Clara"}, "Unknown entry point")
     require(
         case.get("schema_version") == CASE_SCHEMA,
-        "Finalization requires the shared v2 case with provenance; legacy cases must be reviewed and migrated",
+        "Finalization requires the shared v3 case with provenance; legacy cases must be reviewed and migrated",
     )
     regs, issues = _review_case(case)
     verify_sources(case, source_root)
@@ -957,17 +985,15 @@ def build_plan(
                 }
     narrative = case["narrative"]
     indexed(narrative, "narrative")
-    if "Clara" in case["required_contributions"] and not any(
-        n.get("contributor") == "Clara" for n in narrative
-    ):
-        issues.append("Required Clara strategic contribution is missing")
-    if "Vera" in case["required_contributions"] and statements is None:
-        issues.append("Required Vera reconciled financial contribution is missing")
+    if "financial" in case["required_sections"] and statements is None:
+        issues.append("Required financial model is missing")
     # Keep all mechanical/narrative mismatches visible, but do not render rejected prose.
     from planning_report import review_narrative
 
     accepted, narrative_issues = review_narrative(case, calculations)
     issues.extend(narrative_issues)
+    if "business_analysis" in case["required_sections"] and not accepted:
+        issues.append("Required reviewed business analysis is missing")
     if issues:
         if any(n["kind"] == "capital_recommendation" for n in accepted):
             issues.append(
@@ -978,9 +1004,8 @@ def build_plan(
     if any("disagrees" in i or "reconciliation failed" in i for i in issues):
         status = "blocked"
     plan = {
-        "schema_version": "mparanza.business_planning_plan.v2",
-        "owner_product": owner,
-        "financial_authority": "Vera",
+        "schema_version": "mparanza.business_planning_plan.v3",
+        "workflow_id": "business-planning",
         "case_sha256": digest(case),
         "case": deepcopy(case),
         "status": status,
@@ -1009,9 +1034,7 @@ def build_plan(
 
 def validate_plan(plan: dict[str, Any], *, source_root: Path) -> None:
     """Replay all arithmetic/lineage/review gates before export; distrust supplied outputs."""
-    expected = build_plan(
-        plan["case"], owner=plan["owner_product"], source_root=source_root
-    )
+    expected = build_plan(plan["case"], source_root=source_root)
     require(
         plan == expected,
         "Report, calculations, IDs, hashes, or chart data differ from canonical replay",

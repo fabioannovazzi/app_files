@@ -485,7 +485,7 @@ def test_vera_runner_rejects_legacy_case_without_provenance(tmp_path: Path) -> N
     )
 
     assert completed.returncode == 2
-    assert "shared v2 case with provenance" in completed.stderr
+    assert "shared v3 case with provenance" in completed.stderr
     assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
@@ -712,7 +712,7 @@ def test_clara_runner_rejects_legacy_case_without_provenance(tmp_path: Path) -> 
     )
 
     assert completed.returncode == 2
-    assert "shared v2 case with provenance" in completed.stderr
+    assert "shared v3 case with provenance" in completed.stderr
     assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
@@ -769,7 +769,7 @@ def test_clara_runner_rejects_legacy_summary_contribution(tmp_path: Path) -> Non
     )
 
     assert completed.returncode == 2
-    assert "shared v2 case with provenance" in completed.stderr
+    assert "shared v3 case with provenance" in completed.stderr
     assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
@@ -804,7 +804,7 @@ def test_clara_runner_requires_migration_of_legacy_conflicting_contribution(
     )
 
     assert completed.returncode == 2
-    assert "shared v2 case with provenance" in completed.stderr
+    assert "shared v3 case with provenance" in completed.stderr
     assert not output_dir.exists() or not list(output_dir.iterdir())
 
 

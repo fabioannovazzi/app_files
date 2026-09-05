@@ -1,5 +1,5 @@
 {
-  "schema_version": "mparanza.business_planning_case.v2",
+  "schema_version": "mparanza.business_planning_case.v3",
   "case_id": "synthetic-contradictions",
   "entity_name": "Synthetic planning company",
   "company_stage": "Established company testing a new venture",
@@ -791,7 +791,6 @@
     {
       "id": "profit-risk",
       "kind": "risk",
-      "contributor": "Clara",
       "text": "The adjusted operating result is {{ebitda}}. The accepted cost base requires a strategic response before expansion.",
       "claims": {
         "ebitda": {
@@ -814,8 +813,8 @@
     "Synthetic evaluation only; no client report or registered historical run was used.",
     "Financing arrives after the first projected cash deficit. Debt repayment must remain in the cash model."
   ],
-  "required_contributions": [
-    "Vera",
-    "Clara"
+  "required_sections": [
+    "financial",
+    "business_analysis"
   ]
 }

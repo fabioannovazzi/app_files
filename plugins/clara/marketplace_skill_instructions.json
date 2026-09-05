@@ -38,10 +38,10 @@
       "instructions": "Provide the retailer analysis, evidence of the brand's current presence, and the brand-owned catalogue. Clara distinguishes current assortment gaps from new catalogue opportunities and returns an evidence-linked Brand Fit assessment."
     },
     "business-planning": {
-      "display_name": "Prepare a strategic business plan",
-      "short_description": "Connect market evidence, options, initiatives, and risks",
-      "default_prompt": "Use $business-planning to prepare the strategic and commercial business plan for this company from reviewed evidence and assumptions.",
-      "instructions": "State the company, its stage in plain language, the decision, audience, horizon, and selected evidence. The workflow supports startups, new ventures, and established companies. Clara develops evidence-linked findings, strategic options, recommendation, initiatives, milestones, KPIs, risks, and decision implications. Clara remains responsible for the result; if the scope needs Vera's financial contribution, she handles it internally in the same plan, exposes unresolved differences, and does not reinterpret reconciled figures or silently change accounting assumptions."
+      "display_name": "Prepare a business plan",
+      "short_description": "Assess the business and prepare one complete plan",
+      "default_prompt": "Use $business-planning to prepare a business plan from these files. Assess whether the business makes sense and recommend what to do next.",
+      "instructions": "Prepare one business plan covering the proposition, customers and demand, operations, economics, cash needs, options, recommendation and next actions. Adapt the analysis to the business question and available evidence. Use the same shared workflow, case, financial model and report in Vera and Clara; do not assign product-specific angles or request a contribution from the other product."
     },
     "claim-basis-map": {
       "display_name": "Verify presentation claims",

@@ -115,14 +115,11 @@ skill to imitate a missing operational workflow.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
-- `business-planning`: prepare the accounting and financial business plan of a
-  startup, new venture, or established company from reviewed historical or
-  opening evidence and confirmed assumptions; calculate linked P&L, cash flow,
-  balance sheet, scenarios, break-even and funding needs without inventing
-  missing values or using a balancing plug; keep Vera as owner of the user
-  request and final finance-led package; include an optional internal Clara
-  strategic contribution only after compatibility review while surfacing rather
-  than silently merging any divergence.
+- `business-planning`: prepare one business plan for a startup, new venture or
+  established company. Assess customers, market, operations, economics, cash,
+  options, recommendation and next actions using one case, financial model and
+  report. Vera and Clara expose this exact same function. The business question
+  determines scope; the entry product never changes the angle or required work.
 - `variance-analysis`: compare Actual, Budget, Forecast, or prior-period
   accounting performance; reconcile source totals; calculate amount-only or
   price-volume-mix variances when the data contract supports them; and produce

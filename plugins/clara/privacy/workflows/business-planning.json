@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "workflow": "business-planning",
-  "display_name": "Business Planning — strategic and commercial lens",
+  "display_name": "Business Planning",
   "governed_paths": [
     "components.json",
     "skills/business-planning/SKILL.md",
@@ -21,14 +21,14 @@
     "policy": "real_professional_data_may_enter_codex_context",
     "classes": [
       {
-        "id": "business-planning-strategic-intake",
-        "purpose": "Understand the company context, planning decision, evidence, assumptions, market, business model, positioning and operating questions",
-        "content": "The selected model may read the full assignment and selected evidence for a startup, new venture or established company, including names and entities, company-stage description, historical and current business facts, market and customer evidence, competitors, products, channels, pricing, organization, operations, financial summaries, management statements, assumptions, constraints, audience, horizon, open questions and any optional Vera financial contribution used inside the Clara-owned plan. Real company, customer, supplier, employee, founder, lender or investor information may be present when professionally necessary. Clara applies no automatic anonymization or pseudonymization and does not classify company stage with deterministic rules."
+        "id": "business-planning-intake",
+        "purpose": "Understand the business question, market, customers, operations, economics, cash, options and planning assumptions",
+        "content": "The selected model may read the assignment and selected evidence, including company, customer, supplier and personal information when relevant, market evidence, operating and financial data, reviewed assumptions, scenarios, audience and open questions. Both products perform the same business analysis. No automatic anonymization is applied. Company stage and evidence meaning are interpreted by the model and professional, not classified by code."
       },
       {
-        "id": "business-planning-strategic-case-and-contribution",
-        "purpose": "Author reviewed strategy from the shared case and authoritative Vera calculation IDs",
-        "content": "Both entry points consume one shared reviewed case and locally run Vera's Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent counterpart files and legacy cases cannot finalize reports."
+        "id": "business-planning-analysis-and-report",
+        "purpose": "Prepare one business analysis using the shared financial model and report compiler",
+        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. Missing inputs in one scenario do not suppress independently complete scenarios; unavailable scenario calculations and dependent claims remain explicit in the report."
       }
     ]
   },
@@ -75,6 +75,6 @@
     "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e313cf8c0413c1db657f504775b959d229551c3ab4da375c44ba97afbf9f2ce1"
+    "source_fingerprint": "367b23397f1e5b23461d09380f29d8b1b9dd0ab540e7eb68b29e30f145b5d071"
   }
 }

@@ -18,9 +18,7 @@ LOGGER = logging.getLogger(__name__)
 
 def run(owner: str, argv: list[str] | None = None) -> int:
     """Bind all selected sources to the owner workspace, then run one compiler."""
-    parser = argparse.ArgumentParser(
-        description=f"{owner}-owned shared Business Planning"
-    )
+    parser = argparse.ArgumentParser(description="Business Planning")
     parser.add_argument("--case", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--source-root", type=Path)
@@ -37,11 +35,11 @@ def run(owner: str, argv: list[str] | None = None) -> int:
         case = load_json(args.case)
         require(
             case.get("schema_version") == CASE_SCHEMA,
-            "Finalization requires the shared v2 case with provenance; legacy cases must be reviewed and migrated",
+            "Finalization requires the shared v3 case with provenance; legacy cases must be reviewed and migrated",
         )
         require(
             args.counterpart_contribution is None,
-            "Review internal contributions into the shared v2 register; independent counterpart files cannot finalize a plan",
+            "Use one shared v3 case; independent counterpart files cannot finalize a plan",
         )
         source_root = args.source_root or args.case.parent
         sources = [
@@ -61,7 +59,7 @@ def run(owner: str, argv: list[str] | None = None) -> int:
                 args.case_workspace,
                 additional_inputs=sources,
             )
-        plan = build_plan(case, owner=owner, source_root=source_root)
+        plan = build_plan(case, source_root=source_root)
         write_package(
             plan, source_root=source_root, output=args.output_dir, pdf=args.pdf
         )

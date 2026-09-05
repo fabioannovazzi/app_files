@@ -2658,10 +2658,16 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "Read that module's" in normalized_skill_text
                 assert "plugin working directory" in normalized_skill_text
                 continue
+            if (
+                plugin_root.name == "clara"
+                and skill_file.parent.name == "business-planning"
+            ):
+                assert "Read that module's" in normalized_skill_text
+                assert "plugin working directory" in normalized_skill_text
+                continue
             if plugin_root.name == "clara" and skill_file.parent.name in {
                 "attribute-reporting",
                 "brand-fit",
-                "business-planning",
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
@@ -4173,9 +4179,7 @@ def test_accounting_process_page_ends_with_model_data_block(
     assert main.rindex('class="function-model-data"') > main.rindex('id="prompt"')
 
 
-def test_business_planning_pages_use_distinct_product_lenses_and_shared_renderer() -> (
-    None
-):
+def test_business_planning_pages_use_identical_localized_function_copy() -> None:
     vera_page = (
         ROOT / "static" / "shared" / "business-planning" / "index.html"
     ).read_text(encoding="utf-8")
@@ -4188,18 +4192,15 @@ def test_business_planning_pages_use_distinct_product_lenses_and_shared_renderer
 
     assert 'data-function-page="business-planning"' in vera_page
     assert 'data-function-page="clara-business-planning"' in clara_page
-    assert "Financial plan and funding needs" in copy
-    assert "Strategic and commercial business plan" in copy
-    assert "startups and established companies" in copy
-    assert "never selects the strategy" in copy
-    assert "without a balancing plug" in copy
-    business_planning_copy = copy.split('"browser-automation"', maxsplit=1)[0]
-    clara_business_planning_copy = copy.split('"clara-business-planning"', maxsplit=1)[
-        1
-    ].split('"clara-advisory-planning"', maxsplit=1)[0]
-    assert "handoff" not in business_planning_copy.lower()
-    assert "handoff" not in clara_business_planning_copy.lower()
-    assert "user does not transfer files between products" in copy
+    shared_copy, _ = json.JSONDecoder().raw_decode(
+        copy.split("const businessPlanningCopy = ", maxsplit=1)[1]
+    )
+    assert set(shared_copy) == {"it", "en", "fr", "de", "es"}
+    assert copy.count("copy: businessPlanningCopy") == 2
+    assert shared_copy["en"]["name"] == "Business plan"
+    assert "The function is the same in Vera and Clara" in shared_copy["en"]["summary"]
+    assert "Business Planning skill" in shared_copy["en"]["prompt"]
+    assert "shared calculation IDs" in shared_copy["en"]["modelData"]
 
 
 def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:

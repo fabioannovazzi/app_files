@@ -1,24 +1,27 @@
 ---
 name: business-planning
-description: Prepare a strategy-led plan for a startup, new venture or established company using the shared reviewed Business Planning case and Vera's internal authoritative financial contribution.
+description: Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.
 ---
 
-# Business Planning — Clara owner
+# Business Planning
 
 Resolve `../../modules/business-planning` from this directory when it exists;
-otherwise resolve `../../../business-planning` in the repository. Read that component's
+otherwise resolve `../../../business-planning` in the repository. Read that module's
 `skills/business-planning/SKILL.md` completely and follow it. Run dependency checks
 and helpers from that module root, the plugin working directory.
 
-Clara owns the user journey and strategic-commercial result. Use the same shared
-source register and accepted assumptions for Vera's financial work, performed
-internally by the shared runner. Never ask the user to invoke Vera or transport
-contribution files. Use `run_strategic_plan.py` with the selected advisory case
-workspace. Every financial narrative value binds an authoritative Vera calculation
-ID. Clara cannot rewrite those values or finalize independent financial summaries.
+This is the same Business Planning function in Vera and Clara. The user's business
+question determines the analysis, evidence and report. Both cover the business
+proposition, demand, operations, economics, cash, options and recommendation.
+Neither product has a different angle or supplies a separate contribution.
+Use one case, financial model and report compiler throughout.
 
-Use `advisory-brief-planner` when the mandate is materially unframed and
-`advisory-case-director` for a durable advisory case. These do not replace this
-workflow's shared v2 case or compiler.
+The shared skill handles the invoking product's existing storage integration.
+This affects file location and access checks only, never analytical scope,
+required sections, calculations, conclusions or report content.
 
+## Plugin Improvement Feedback
+
+Use only the feedback rule for the installed entry product:
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.

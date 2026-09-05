@@ -285,23 +285,11 @@ them without changing the capability catalog:
   must keep the result draft pending professional review. No ERP connector,
   hosted service, background synchronization, or automatic publication is
   part of this workflow;
-- `business-planning`: client-bound accounting and financial business planning
-  for a startup, new venture, or established company. The company stage is a
-  reviewed plain-language context, not a deterministic route. Vera owns the
-  user request and final finance-led review package, while an optional Clara
-  strategic contribution remains internal to the workflow rather than a second
-  user journey. Vera owns the
-  historical or opening accounting base, confirmed assumptions, linked P&L,
-  cash flow and balance sheet, working capital, debt and equity, scenarios,
-  funding requirement and reconciliation. Model-led and professional judgment
-  own evidence meaning, assumption and scenario design, risks, narrative and
-  approval. Deterministic code owns canonical Decimal arithmetic, roll-forwards,
-  reference closure, reconciliation, funding-gap calculation, hashes and replay
-  receipts. It creates no balancing plug and remains draft pending professional
-  review. A Clara contribution may enter as strategic evidence and be included
-  in Vera's final plan only after mechanical compatibility review. Vera keeps
-  unresolved differences visible, retains ownership, and must not silently
-  change Clara's assumptions or recommendation;
+- `business-planning`: prepare one business plan for a startup, new venture or
+  established company. Assess customers, market, operations, economics, cash,
+  options, recommendation and next actions using one case, financial model and
+  report. Vera and Clara expose this exact same function. The business question
+  determines scope; the entry product never changes the angle or required work.;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
   perimeter, currency, sign convention, period/scenario mappings, and source
