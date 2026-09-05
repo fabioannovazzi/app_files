@@ -1843,6 +1843,10 @@ def _omit_inert_module_host_metadata(relative_path: str) -> bool:
         return False
     if module_path.startswith("hooks/"):
         return True
+    # Nested manifests are runtime inputs (version and integrity receipts),
+    # even though Cowork discovers only the root .claude-plugin manifest.
+    if module_path == ".codex-plugin/plugin.json":
+        return False
     return component not in MODULES_REQUIRING_HOST_DESCRIPTORS
 
 
@@ -2518,11 +2522,13 @@ def _lucia_package_entries(
     )
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
 
-    forbidden_parts = {".app.json", ".mcp.json", ".codex-plugin"}
+    forbidden_parts = {".app.json", ".mcp.json"}
     for name in entries:
         parts = set(Path(name).parts)
         if parts & forbidden_parts or name.startswith("modules/studio-archive/"):
             raise ValueError(f"Lucia Cowork retains forbidden path: {name}")
+        if name.startswith(".codex-plugin/"):
+            raise ValueError(f"Lucia Cowork retains a root Codex manifest: {name}")
     for component in LUCIA_SHARED_COWORK_COMPONENTS:
         prefix = f"modules/{component}/"
         vera_component = {
@@ -2779,10 +2785,18 @@ def build_package(package: ClaudePackage) -> tuple[Path, Path]:
     """Build one unpacked Cowork plugin and matching deterministic ZIP."""
 
     entries = claude_package_entries(package)
-    _build_directory(package.output_directory, entries)
-    _build_zip(package.output_zip, entries)
-    if package.public_zip is not None:
-        _build_zip(package.public_zip, entries)
+    # Validate the finished ZIP before replacing any distributable artifact.
+    with tempfile.TemporaryDirectory(prefix="cowork-release-") as temporary:
+        candidate = Path(temporary) / "candidate.zip"
+        _write_zip(candidate, entries)
+        if package.plugin == "vera" or ".mcp.json" in entries:
+            errors = _load_codex_builder().verify_packaged_mcp(candidate, ["."])
+            if errors:
+                raise ValueError("\n".join(errors))
+        _build_directory(package.output_directory, entries)
+        _build_zip(package.output_zip, entries)
+        if package.public_zip is not None:
+            _build_zip(package.public_zip, entries)
     return package.output_directory, package.output_zip
 
 
@@ -2796,6 +2810,10 @@ def verify_package(package: ClaudePackage) -> list[str]:
     ]
     if package.public_zip is not None:
         errors.extend(verify_zip(package.public_zip, entries))
+    if not errors and (package.plugin == "vera" or ".mcp.json" in entries):
+        errors.extend(
+            _load_codex_builder().verify_packaged_mcp(package.output_zip, ["."])
+        )
     return errors
 
 

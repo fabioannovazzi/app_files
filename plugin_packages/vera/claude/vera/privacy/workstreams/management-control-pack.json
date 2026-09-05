@@ -4,6 +4,7 @@
   "display_name": "Management Control Pack",
   "role": "workflow",
   "governed_paths": [
+    ".codex-plugin/plugin.json",
     "skills",
     "scripts",
     "assets"
@@ -78,6 +79,6 @@
     "reviewed_at": "2026-08-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3a7e2e64e125a05cc8538efccefc3f0ded05ef7b9ec059dd4fbf1822dec414dc"
+    "source_fingerprint": "b12dc10de2bce9fd0593b07caeb1fc5b26e4a7a2ed1bcb1bf58a3fc9636fd01e"
   }
 }

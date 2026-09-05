@@ -1,0 +1,45 @@
+{
+  "name": "passive-invoice-audit",
+  "version": "0.1.1",
+  "description": "Exception-focused audit of passive FatturaPA invoices against booked ledger entries, with deterministic checks and native Claude/Luna semantic review.",
+  "author": {
+    "name": "Fabio Annovazzi · Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/passive-invoice-audit/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "audit",
+    "fatturapa",
+    "invoices",
+    "ledger",
+    "luna",
+    "vera"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Passive-Invoice Audit",
+    "shortDescription": "Screen booked passive invoices and surface only review exceptions.",
+    "longDescription": "Vera workflow for read-only full-population review of Italian passive invoices already booked in accounting. Deterministic code extracts structured FatturaPA evidence, matches ledger movements without forcing uncertainty, checks arithmetic and accounting mechanics, and persists a restartable audit trail. Compact matched-invoice packets are reviewed only by gpt-5.6-luna through the native Claude client and its existing authenticated session; scripts make no direct model API calls and require no API key. The primary XLSX workpaper contains exceptions, while machine-readable JSONL retains one record per invoice.",
+    "developerName": "Fabio Annovazzi · Mparanza",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Audit these passive FatturaPA invoices against the actual ledger entries and prepare an exception workpaper.",
+      "Keep all accounting sources read-only, use deterministic checks first, and use only gpt-5.6-luna through native Claude for semantic review.",
+      "Treat no_issue_detected as screening language, never as proof that a booking is correct."
+    ],
+    "brandColor": "#496373",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

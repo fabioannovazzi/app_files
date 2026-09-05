@@ -4,6 +4,7 @@
   "display_name": "Centrale Rischi Review",
   "role": "workflow",
   "governed_paths": [
+    ".codex-plugin/plugin.json",
     "skills",
     "scripts",
     "assets"
@@ -86,6 +87,6 @@
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "dd1dc01462aa201a9167dcc6c5051ba720f395f223736f68831fd696e8a93cf9"
+    "source_fingerprint": "485521d82cff9b07d169e20ab96fdfe47b46ea6405a533474368dd0fe7677366"
   }
 }

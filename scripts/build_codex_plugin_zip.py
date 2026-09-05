@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import logging
 import shutil
 import stat
 import subprocess
@@ -850,7 +851,14 @@ def shared_vendor_module_entries(
 def review_workbench_server_entry(plugin_dir: Path) -> bytes | None:
     """Return the shared local review server when a plugin needs injection."""
 
-    if not (plugin_dir / "assets" / "review-workbench-adapter.json").exists():
+    adapter = plugin_dir / "assets" / "review-workbench-adapter.json"
+    if not adapter.exists():
+        return None
+    # Exact implementation contracts cannot accept an undeclared extra script.
+    if (
+        json.loads(adapter.read_text(encoding="utf-8")).get("injectLocalServer")
+        is False
+    ):
         return None
     if (plugin_dir / "scripts" / "review_server.py").exists():
         return None
@@ -1425,6 +1433,9 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
                     entries[f"{component_prefix}{CHATGPT_UPLOAD_REVIEW_MCP_SERVER}"] = (
                         content
                     )
+                    entries[f"{component_prefix}scripts/review_server.py"] = (
+                        SHARED_REVIEW_WORKBENCH_SERVER.read_bytes()
+                    )
             continue
         if name == ".codex-plugin/plugin.json":
             content = project_chatgpt_manifest(content)
@@ -1501,6 +1512,84 @@ def verify_zip_entries(zip_path: Path, entries: dict[str, bytes]) -> None:
                 raise ValueError(f"Temporary ZIP verification failed: {name}")
 
 
+def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
+    """Require real initialize/tools-list replies from each packaged launcher.
+
+    This is a mechanical release gate, not a professional-workflow verdict.
+    The isolated extraction prevents accidental use of checkout dependencies.
+    """
+
+    node = shutil.which("node")
+    if node is None:
+        return ["Node.js is required for the packaged MCP release check"]
+    errors: list[str] = []
+    with tempfile.TemporaryDirectory(prefix="plugin-mcp-release-") as temporary:
+        staging = Path(temporary)
+        with ZipFile(zip_path) as archive:
+            for entry in archive.infolist():
+                destination = (staging / entry.filename).resolve()
+                if not destination.is_relative_to(staging.resolve()):
+                    return [f"Unsafe ZIP entry: {entry.filename}"]
+                if stat.S_ISLNK(entry.external_attr >> 16):
+                    return [f"Symlink in ZIP: {entry.filename}"]
+            archive.extractall(staging)
+        for relative_root in plugin_roots:
+            root = staging / relative_root
+            config_path = root / ".mcp.json"
+            if not config_path.is_file():
+                errors.append(f"{relative_root}: packaged MCP configuration is missing")
+                continue
+            configuration = json.loads(config_path.read_text())
+            count = len(configuration["mcpServers"])
+            try:
+                result = subprocess.run(
+                    [node, str(ROOT / "scripts" / "check_packaged_mcp.cjs"), str(root)],
+                    cwd=staging,
+                    capture_output=True,
+                    text=True,
+                    timeout=15 + count * 12,
+                    check=False,
+                )
+            except subprocess.TimeoutExpired:
+                errors.append(f"{relative_root}: packaged MCP checker timed out")
+                continue
+            if result.returncode:
+                try:
+                    failures = json.loads(result.stdout)
+                except json.JSONDecodeError:
+                    failures = []
+                details = [
+                    f"{failure['name']}: {failure['error']} {failure.get('stderr', '')}"
+                    for failure in failures
+                    if failure.get("error")
+                ]
+                errors.append(
+                    f"{relative_root}: packaged MCP startup failed: "
+                    + (
+                        "\n".join(details)
+                        or result.stderr.strip()
+                        or result.stdout.strip()
+                    )
+                )
+            else:
+                logging.getLogger(__name__).info(
+                    "[MCP OK] %s: %s servers initialized and listed tools",
+                    relative_root,
+                    count,
+                )
+    return errors
+
+
+def _mcp_roots(package: BuildTarget, entries: dict[str, bytes]) -> list[str]:
+    return [
+        root
+        for plugin in package.plugin_names
+        for root in [f"{package.package_root}/plugins/{plugin}"]
+        if f"{root}/.mcp.json" in entries
+        or (ROOT / "plugins" / plugin / ".mcp.json").is_file()
+    ]
+
+
 def write_system_zip(
     zip_path: Path, entries: dict[str, bytes], package_root: str
 ) -> None:
@@ -1540,6 +1629,11 @@ def build_package(package: BuildTarget) -> Path:
             temp_path = Path(temp_file.name)
         write_system_zip(temp_path, entries, package.package_root)
         verify_zip_entries(temp_path, entries)
+        roots = _mcp_roots(package, entries)
+        if roots:
+            errors = verify_packaged_mcp(temp_path, roots)
+            if errors:
+                raise ValueError("\n".join(errors))
         temp_path.chmod(0o644)
         temp_path.replace(output)
         output.chmod(0o644)
@@ -1617,6 +1711,9 @@ def verify_package(package: BuildTarget) -> list[str]:
             actual = archive.read(name)
             if actual != expected[name]:
                 errors.append(f"Content differs: {name}")
+    roots = _mcp_roots(package, expected)
+    if not errors and roots:
+        errors.extend(verify_packaged_mcp(package.output_zip, roots))
     return errors
 
 

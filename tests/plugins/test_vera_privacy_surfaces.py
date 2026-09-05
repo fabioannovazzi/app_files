@@ -737,9 +737,10 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     )
     assert refreshed.returncode == 0, refreshed.stdout + refreshed.stderr
     governed_adapter = component_root / "assets" / "review-workbench-adapter.json"
+    adapter_payload = json.loads(governed_adapter.read_text(encoding="utf-8"))
+    adapter_payload["title"] = "Material browser-boundary change"
     governed_adapter.write_text(
-        governed_adapter.read_text(encoding="utf-8")
-        + "\nMaterial browser-boundary change.\n",
+        json.dumps(adapter_payload),
         encoding="utf-8",
     )
 

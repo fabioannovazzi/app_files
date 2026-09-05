@@ -5729,6 +5729,15 @@ def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
         ),
         "demo": target["demo"],
     }
+    # These exact runtime trees do not declare the generic local UI server.
+    if target["plugin"] in {
+        "check-entries",
+        "concordato-plan-review",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "report-builder",
+    }:
+        config["injectLocalServer"] = False
     if target["plugin"] == "new-client":
         config["persistDecisionTextInWidgetState"] = target.get(
             "persistDecisionTextInWidgetState", False

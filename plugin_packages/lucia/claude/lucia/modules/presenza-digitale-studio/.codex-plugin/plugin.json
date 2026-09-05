@@ -1,0 +1,49 @@
+{
+  "name": "presenza-digitale-studio",
+  "version": "0.1.5",
+  "description": "Reviewable website refreshes and first websites for professional studios, built from verified studio material.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "vera",
+    "commercialisti",
+    "studio-professionale",
+    "website-refresh",
+    "first-website",
+    "responsive-design",
+    "professional-website",
+    "digital-presence"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Presenza digitale dello studio",
+    "shortDescription": "Siti professionali, attuali e revisionabili",
+    "longDescription": "Vera analizza il sito esistente di uno studio oppure prepara il suo primo sito partendo da informazioni, credenziali, servizi e materiali verificati. Migliora architettura, testi, gerarchia, tipografia e comportamento responsive attraverso skill specialistiche disponibili nel runtime, quindi consegna una preview revisionabile e un pacchetto pubblicabile. Non inventa testimonianze, risultati, qualifiche, servizi, storia o testi legali e non pubblica senza l'approvazione esplicita del professionista.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Analizza il sito attuale dello studio e prepara una versione più chiara, contemporanea e responsive.",
+      "Lo studio non ha ancora un sito: costruisci una prima presenza digitale professionale dai materiali verificati.",
+      "Prepara una preview privata del nuovo sito e pubblicala solo dopo la mia approvazione."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

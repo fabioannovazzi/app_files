@@ -1540,6 +1540,8 @@ def test_generated_workbench_packages_include_local_review_server() -> None:
         if (plugin_dir / "scripts" / "review_server.py").exists():
             assert entry_name in expected
             assert expected[entry_name] != shared_server
+        elif json.loads(adapter_path.read_text()).get("injectLocalServer") is False:
+            assert entry_name not in expected
         else:
             assert expected[entry_name] == shared_server
 

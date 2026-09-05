@@ -130,7 +130,8 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert "scripts/run_component_mcp.cjs" in vera_entries
     assert ".mcp.json" in vera_entries
     cowork_mcp = json.loads(vera_entries[".mcp.json"])
-    assert len(cowork_mcp["mcpServers"]) == 18
+    canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
+    assert set(cowork_mcp["mcpServers"]) == set(canonical_mcp["mcpServers"])
     assert all(
         server["args"][0] == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
         for server in cowork_mcp["mcpServers"].values()
@@ -221,7 +222,8 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     )
     servers = payload["mcpServers"]
 
-    assert len(servers) == 18
+    canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
+    assert set(servers) == set(canonical_mcp["mcpServers"])
     for server in servers.values():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
@@ -247,9 +249,9 @@ def test_claude_package_vendors_every_registered_vera_component(
         assert any(name.startswith(component_prefix) for name in vera_entries)
         descriptors = {
             f"{component_prefix}.app.json",
-            f"{component_prefix}.codex-plugin/plugin.json",
             f"{component_prefix}.mcp.json",
         }
+        assert f"{component_prefix}.codex-plugin/plugin.json" in vera_entries
         if component in {
             "check-entries",
             "concordato-plan-review",
@@ -791,6 +793,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "vera-public.zip",
     )
     builder.build_package(isolated)
     component_count = len(
@@ -852,6 +855,7 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "vera-public.zip",
     )
     builder.build_package(isolated)
     script = (
@@ -1028,13 +1032,17 @@ def test_cowork_vendored_runtime_text_is_host_neutral(vera_entries) -> None:
     assert '"execution_location": "cowork_connected_folder"' in review_session
     assert "Claude-written answer-generation instructions" in validate_prompt
     assert "REQUIRE_VERA_CUSTOMER_RUN = True" in review_server
-    assert (
-        sum(
-            "REQUIRE_VERA_CUSTOMER_RUN = True" in content
-            for content in runtime_entries.values()
-        )
-        == 10
-    )
+    assert {
+        name.split("/")[1]
+        for name, content in runtime_entries.items()
+        if "REQUIRE_VERA_CUSTOMER_RUN = True" in content
+    } == {
+        "archive-organization",
+        "client-file-preparation",
+        "new-client",
+        "prompt-optimizer",
+        "deep-research-validator",
+    }
     assert not any(
         "REQUIRE_VERA_CUSTOMER_RUN = False" in content
         for content in runtime_entries.values()

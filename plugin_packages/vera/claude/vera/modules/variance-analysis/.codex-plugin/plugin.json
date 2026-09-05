@@ -1,0 +1,46 @@
+{
+  "name": "variance-analysis",
+  "version": "0.1.92",
+  "description": "Sales and management-accounting variance analysis with reviewable calculations, plots, drilldowns, and driver interpretation.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/clara/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "variance",
+    "sales",
+    "management-accounting",
+    "actual-budget",
+    "price-volume-mix",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Variance Analysis",
+    "shortDescription": "Run sales or accounting variance analysis with reviewable outputs, drilldowns, and waterfall plots.",
+    "longDescription": "Self-contained variance workflow for CSV or Excel sales and management-accounting datasets. It inspects columns, confirms unresolved mappings, supports amount-only period comparisons and price/volume/mix when reviewed unit data exists, prepares legacy-backed YTD or rolling period buckets when requested, and runs the applicable calculation and visualization package: net-of-discount and margin totals, Price / Units / Mix decomposition ladder, fixed-dimension and exploded parent/child bridges, root-cause variance across dimension combinations, alternative sweep, automatic drilldowns, waterfall and small-multiples PNGs, diagnostics, structured context files, source packs, professional-review Word drafts, accounting-control audit outputs, and reviewed driver interpretation. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Variance Analysis on the sales or management-accounting CSV or Excel file I provide.",
+      "Inspect the columns, confirm the comparison and mappings, run the complete applicable variance package including plots and drilldowns, write the review artifacts, and interpret only source-supported drivers."
+    ],
+    "brandColor": "#386c75",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

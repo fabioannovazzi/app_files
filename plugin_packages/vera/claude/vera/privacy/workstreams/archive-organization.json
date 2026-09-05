@@ -4,6 +4,7 @@
   "display_name": "Vera · Riordino archivio",
   "role": "workflow",
   "governed_paths": [
+    ".codex-plugin/plugin.json",
     "skills",
     "scripts",
     "references",
@@ -98,6 +99,6 @@
     "reviewed_at": "2026-08-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9d6cea9cf042450033f4b566d35fba36d82fb49c24e28c159dcd381e59eb5823"
+    "source_fingerprint": "c96141a9379c7151d173f310abc9e280e2a2831d454f80be8b1b7d965444849a"
   }
 }

@@ -10,14 +10,12 @@ const { spawnSync } = require("node:child_process");
 
 const SERVER_NAME = "journal-bank-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
-const SHARED_ASSURANCE_ROOT = path.resolve(
-  PLUGIN_ROOT,
-  "..",
-  "_shared",
-  "vendor",
-  "modules",
-  "vera_assurance",
-);
+const SHARED_ASSURANCE_ROOT = (() => {
+  const vendored = path.join(PLUGIN_ROOT, "vendor", "modules", "vera_assurance");
+  return fs.existsSync(vendored)
+    ? vendored
+    : path.resolve(PLUGIN_ROOT, "..", "_shared", "vendor", "modules", "vera_assurance");
+})();
 const IMPLEMENTATION_ARTIFACT_SPECS = [
   [
     "implementation.plugin.codex_plugin.plugin_json",

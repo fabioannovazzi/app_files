@@ -18,11 +18,13 @@ from typing import Any
 try:
     from .implementation_bootstrap import (
         IMPLEMENTATION_CONTRACT,
+        implementation_contract,
         validate_implementation_tree,
     )
 except ImportError:  # pragma: no cover - direct script/importlib support
     from implementation_bootstrap import (  # type: ignore
         IMPLEMENTATION_CONTRACT,
+        implementation_contract,
         validate_implementation_tree,
     )
 
@@ -103,7 +105,7 @@ def _artifact_id(namespace: str, relative_path: str) -> str:
     return f"implementation.{namespace}.{relative_path.replace('/', '.')}"
 
 
-def _specifications() -> list[dict[str, str]]:
+def _specifications(plugin_root: Path = PLUGIN_ROOT) -> list[dict[str, str]]:
     declared_contract = (
         *(("plugin", path) for path in PLUGIN_IMPLEMENTATION_PATHS),
         *(("shared_assurance", path) for path in SHARED_IMPLEMENTATION_PATHS),
@@ -112,23 +114,25 @@ def _specifications() -> list[dict[str, str]]:
         raise RuntimeError(
             "Report Builder receipt and execution-boundary contracts diverged."
         )
-    return [
-        {
-            "artifact_id": _artifact_id("report_builder", relative_path),
-            "root_id": "implementation",
-            "path": relative_path,
-            "media_type": _media_type(relative_path),
-        }
-        for relative_path in PLUGIN_IMPLEMENTATION_PATHS
-    ] + [
-        {
-            "artifact_id": _artifact_id("vera_assurance", relative_path),
-            "root_id": "assurance_implementation",
-            "path": relative_path,
-            "media_type": _media_type(relative_path),
-        }
-        for relative_path in SHARED_IMPLEMENTATION_PATHS
-    ]
+    specifications: list[dict[str, str]] = []
+    for root_id, relative_path in implementation_contract(str(plugin_root)):
+        if root_id == "plugin":
+            namespace = "report_builder"
+            artifact_root_id = "implementation"
+        elif root_id == "shared_assurance":
+            namespace = "vera_assurance"
+            artifact_root_id = "assurance_implementation"
+        else:  # pragma: no cover - guarded by the bootstrap contract
+            raise RuntimeError("Unknown Report Builder implementation root.")
+        specifications.append(
+            {
+                "artifact_id": _artifact_id(namespace, relative_path),
+                "root_id": artifact_root_id,
+                "path": relative_path,
+                "media_type": _media_type(relative_path),
+            }
+        )
+    return specifications
 
 
 def _ordinary_file(root: Path, relative_path: str) -> Path:
@@ -194,7 +198,7 @@ def build_implementation_receipts() -> list[dict[str, Any]]:
         shared_assurance_root=str(roots["assurance_implementation"]),
     )
     receipts: list[dict[str, Any]] = []
-    for specification in _specifications():
+    for specification in _specifications(roots["implementation"]):
         path = _ordinary_file(
             roots[specification["root_id"]],
             specification["path"],
@@ -227,7 +231,10 @@ def validate_implementation_contract(
         implementation_receipts, (str, bytes, bytearray)
     ):
         raise ValueError("Report Builder implementation receipts are missing.")
-    specifications = _specifications()
+    roots = dict(artifact_roots or implementation_artifact_roots())
+    if set(roots) != {"implementation", "assurance_implementation"}:
+        raise ValueError("Report Builder implementation roots are not exact.")
+    specifications = _specifications(roots["implementation"])
     expected_ids = [specification["artifact_id"] for specification in specifications]
     if list(implementation_artifact_refs) != expected_ids:
         raise ValueError("Report Builder implementation reference set is not exact.")
@@ -245,9 +252,6 @@ def validate_implementation_contract(
         raise ValueError(
             "Report Builder implementation receipt identities are not exact."
         )
-    roots = dict(artifact_roots or implementation_artifact_roots())
-    if set(roots) != {"implementation", "assurance_implementation"}:
-        raise ValueError("Report Builder implementation roots are not exact.")
     validate_implementation_tree(
         str(roots["implementation"]),
         shared_assurance_root=str(roots["assurance_implementation"]),

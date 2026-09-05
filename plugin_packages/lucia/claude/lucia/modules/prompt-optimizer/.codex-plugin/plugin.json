@@ -1,0 +1,47 @@
+{
+  "name": "prompt-optimizer",
+  "version": "0.1.41",
+  "description": "Plan legal, tax, and compliance answers with an explicit document type, generation route, evidence posture, and validation contract.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/prompt-optimizer/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "prompt",
+    "deep-research",
+    "legal",
+    "tax",
+    "compliance",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Plan Answer",
+    "shortDescription": "Turn a legal, tax, or compliance question into an answer contract and route-specific generation instructions.",
+    "longDescription": "Claude workflow for planning a professional answer from the user's question without requiring the user to ask for prompt optimization. Claude identifies the legal, tax, or compliance intent, selects the document type and generation route, and records an answer contract covering purpose, audience, language, jurisdiction posture, evidence display, validation scope, correction policy, and professional-judgment policy. The route can be direct Claude generation, a ChatGPT Deep Research handoff, or validation of an external document. Claude then performs a model-led semantic review of the optimized prompt against the question and answer contract. Deterministic scripts validate only exact anchors, explicit prompt controls, contract and review-record shape, and packaging; they do not choose the legal domain, route, document type, governing law, source strategy, or validation posture. The workflow produces the answer contract, semantic prompt review, generation instructions, source-domain sidecars where relevant, validation audit, package, and human README. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Plan the answer to the legal, tax, or compliance question I provide.",
+      "Infer the answer type, generation route, evidence posture, and validation contract; pause only for unresolved material professional choices.",
+      "Do not make direct OpenAI API calls from plugin scripts; use Claude for semantic choices and deterministic scripts for inspection, shape validation, and packaging."
+    ],
+    "brandColor": "#4f6b78",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

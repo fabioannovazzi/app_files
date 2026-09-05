@@ -131,14 +131,20 @@ def test_vera_external_routes_name_their_applicable_runtime_profiles() -> None:
     assert research_boundaries[0]["runtime_profiles"] == RUNTIME_PROFILE_IDS
 
 
-def test_vera_current_shared_services_are_not_claimed_as_cowork_routes() -> None:
+def test_vera_only_run_receipt_service_is_a_cowork_route() -> None:
     manifests = _service_manifests()
+    expected = {
+        "managed-python-runtime": ["openai-codex"],
+        "plugin-feedback": ["openai-codex"],
+        "plugin-update-check": ["openai-codex"],
+        "run-receipt-stamping": RUNTIME_PROFILE_IDS,
+    }
 
+    assert {
+        manifest["service_id"]: manifest["runtime_profiles"] for manifest in manifests
+    } == expected
     assert all(
-        manifest["runtime_profiles"] == ["openai-codex"] for manifest in manifests
-    )
-    assert all(
-        boundary["runtime_profiles"] == ["openai-codex"]
+        boundary["runtime_profiles"] == expected[manifest["service_id"]]
         for manifest in manifests
         for boundary in manifest["external_boundaries"]
     )
