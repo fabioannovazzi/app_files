@@ -4,6 +4,9 @@ Use this contract for recent-opportunity discovery before general semantic web
 search. It governs execution order and coverage evidence; it does not create a
 universal source list or decide legal relevance.
 
+Read `institutional-discovery.md` for the required institutional inventory,
+issue-by-issue gazette evidence and Codex/ChatGPT execution contract.
+
 ## Reviewed priority-source registry
 
 `source_plan.entries` is the persistent registry for one private radar. The
@@ -16,7 +19,8 @@ context; the professional confirms them. Each entry records:
   funding portal or publisher page;
 - territories, categories and act families that explain why it belongs in the
   radar; and
-- DGR, DDR, BUR issue, call, annex, FAQ, amendment and portal-notice families
+- Gazzetta Ufficiale issues, ministerial and programming decrees, DGR, DDR,
+  BUR issue, call, annex, FAQ, amendment and portal-notice families
   where professionally relevant.
 
 The fields are reviewed metadata, not deterministic routing rules. Code never
@@ -172,7 +176,7 @@ must not be described as exhaustive discovery.
 ## Lifecycle observations
 
 Model reasoning proposes and the professional reviews every lifecycle meaning.
-The record supports `announced`, `approved`, `published`, `upcoming`, `open`,
+The record supports `announced`, `programmed`, `no_operating_calendar`, `approved`, `published`, `upcoming`, `open`,
 `closing_soon`, `extended`, `modified`, `funds_available`, `suspended`,
 `closed`, `refinanced` and `unknown`. Preserve observations append-only with
 effective date, observed time, source references and rationale. An amendment or

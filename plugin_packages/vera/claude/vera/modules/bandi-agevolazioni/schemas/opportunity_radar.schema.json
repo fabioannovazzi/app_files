@@ -144,7 +144,7 @@
         "source_surface": {"enum": ["official_register", "official_gazette", "act_repository", "funding_portal", "publisher_page", "other_official"]},
         "territories": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "categories": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-        "act_families": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["call", "dgr", "ddr", "bur_issue", "annex", "faq", "amendment", "portal_notice", "other"]}},
+        "act_families": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["call", "gu_issue", "ministerial_decree", "programming_decree", "dgr", "ddr", "bur_issue", "annex", "faq", "amendment", "portal_notice", "other"]}},
         "relevance_rationale": {"type": "string", "minLength": 1},
         "profile_refs": {"$ref": "#/$defs/idList"},
         "check_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
@@ -156,6 +156,7 @@
         "next_check_on": {"type": ["string", "null"], "format": "date"},
         "result_count": {"type": ["integer", "null"], "minimum": 0},
         "error_code": {"type": ["string", "null"]},
+        "issue_inventory": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/issueInventory"}]},
         "cursor_before": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
         "cursor_after": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
         "review_status": {"$ref": "#/$defs/reviewStatus"},
@@ -163,6 +164,8 @@
         "contribution": {"$ref": "#/$defs/contribution"}
       }
     },
+    "gazetteIssue": {"type": "object", "additionalProperties": false, "required": ["issue_id", "official_url", "publication_date", "status", "checked_at", "act_urls", "notes"], "properties": {"issue_id": {"$ref": "#/$defs/id"}, "official_url": {"type": "string", "format": "uri", "pattern": "^https://"}, "publication_date": {"type": "string", "format": "date"}, "status": {"enum": ["checked", "unavailable", "failed", "not_checked"]}, "checked_at": {"type": ["string", "null"], "format": "date-time"}, "act_urls": {"type": "array", "uniqueItems": true, "items": {"type": "string", "format": "uri", "pattern": "^https://"}}, "notes": {"type": "string", "minLength": 1}}, "allOf": [{"if": {"properties": {"status": {"const": "checked"}}}, "then": {"properties": {"checked_at": {"type": "string", "format": "date-time"}}}}]},
+    "issueInventory": {"type": "object", "additionalProperties": false, "required": ["index_urls", "enumerated_at", "window_start", "window_end", "enumeration_complete", "empty_window_rationale", "issues"], "properties": {"index_urls": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "format": "uri", "pattern": "^https://"}}, "enumerated_at": {"type": "string", "format": "date-time"}, "window_start": {"type": "string", "format": "date"}, "window_end": {"type": "string", "format": "date"}, "enumeration_complete": {"type": "boolean"}, "empty_window_rationale": {"type": "string"}, "issues": {"type": "array", "items": {"$ref": "#/$defs/gazetteIssue"}}}},
     "sourceCursor": {
       "type": "object",
       "additionalProperties": false,
@@ -203,7 +206,7 @@
       "required": ["observation_id", "status", "effective_date", "observed_at", "source_ids", "rationale", "review_status"],
       "properties": {
         "observation_id": {"$ref": "#/$defs/id"},
-        "status": {"enum": ["announced", "approved", "published", "upcoming", "open", "closing_soon", "extended", "modified", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
+        "status": {"enum": ["announced", "programmed", "no_operating_calendar", "approved", "published", "upcoming", "open", "closing_soon", "extended", "modified", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
         "effective_date": {"type": ["string", "null"], "format": "date"},
         "observed_at": {"type": "string", "format": "date-time"},
         "source_ids": {"$ref": "#/$defs/idList"},
@@ -227,7 +230,7 @@
         "closing_date": {"type": ["string", "null"], "format": "date"},
         "summary": {"type": "string", "minLength": 1},
         "lifecycle_history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lifecycleObservation"}},
-        "current_lifecycle": {"enum": ["announced", "approved", "published", "upcoming", "open", "closing_soon", "extended", "modified", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
+        "current_lifecycle": {"enum": ["announced", "programmed", "no_operating_calendar", "approved", "published", "upcoming", "open", "closing_soon", "extended", "modified", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
         "review_status": {"$ref": "#/$defs/reviewStatus"},
         "contribution": {"$ref": "#/$defs/contribution"}
       }
@@ -342,6 +345,7 @@
         "window_end": {"type": "string", "format": "date"},
         "result_count": {"type": ["integer", "null"], "minimum": 0},
         "error_code": {"type": ["string", "null"]},
+        "issue_inventory": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/issueInventory"}]},
         "cursor_before": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
         "cursor_after": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
         "check_review_status": {"$ref": "#/$defs/reviewStatus"}

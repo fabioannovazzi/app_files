@@ -75,6 +75,13 @@ override this Cowork contract.
 
 # Bandi e agevolazioni
 
+Before any opportunity research, read `references/source-first-discovery.md`
+and `references/institutional-discovery.md` completely. This method applies in
+Claude and ChatGPT, including a public scan without a client portfolio. Follow
+`references/institutional-discovery.md` for capability checks and the auditable
+chat-only route when local execution is unavailable. Do not replace the method
+with generic searches or claim local validation ran in chat.
+
 Operate one of two connected stages:
 
 1. a private opportunity radar that builds opaque company profiles, plans and
@@ -156,7 +163,7 @@ review package when the tooling can do so. These are not choices to propose.
 When useful, save the visible run summary as `run_review.md` beside the
 package. Never edit plugin source or generated ZIPs during a customer case run.
 
-## Client engagement gate
+## Client engagement gate (Stage B only)
 
 Select one Studio Archive client and engagement, import the official sources
 and client evidence as immutable receipts, then prepare and start workflow
@@ -262,7 +269,11 @@ python scripts/opportunity_radar.py \
 ```
 
 Inspect every priority URL directly across the requested window, including
-relevant DGR, DDR, BUR issues, annexes, FAQs and amendments. Record each check
+all Gazzetta Ufficiale issue summaries in the window, ministerial and programming
+decrees, and relevant DGR, DDR, BUR issues, annexes, FAQs and amendments.
+For an `official_gazette` check, pass `--issue-inventory-input <inventory.json>`
+using the contract in `references/institutional-discovery.md`; a checked source
+requires complete declared issue coverage. Record each check
 against the running scan; optionally pass a cursor JSON containing the latest
 stable publication ID, publication date or official URL:
 

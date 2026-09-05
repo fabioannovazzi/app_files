@@ -55,3 +55,27 @@ jobs:
         run: |
           python -m pip install -r plugins/variance-analysis/requirements.txt
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_variance_analysis_plugin.py -k keep_changes
+
+  bandi-source-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/bandi-agevolazioni/requirements.txt
+      - name: Verify Bandi source coverage and shared runtime instructions
+        run: >-
+          python -m pytest -q --confcutdir=tests/plugins
+          tests/plugins/test_bandi_institutional_discovery.py
+          tests/plugins/test_bandi_opportunity_radar.py
+          tests/plugins/test_bandi_agevolazioni_plugin.py
+          --cov=plugins/bandi-agevolazioni/scripts --cov-report=term-missing
+          --cov-fail-under=80
+      - name: Check Bandi code quality
+        run: |
+          python -m black --check plugins/bandi-agevolazioni/scripts/opportunity_radar.py tests/plugins/test_bandi_institutional_discovery.py
+          python -m isort --check-only plugins/bandi-agevolazioni/scripts/opportunity_radar.py tests/plugins/test_bandi_institutional_discovery.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/bandi-agevolazioni/scripts/opportunity_radar.py
+          python -m bandit -q plugins/bandi-agevolazioni/scripts/opportunity_radar.py

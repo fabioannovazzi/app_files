@@ -347,7 +347,54 @@ def _source_check_snapshot(entry: Mapping[str, Any]) -> dict[str, Any]:
         "cursor_after",
         "check_review_status",
     )
-    return {field: deepcopy(entry[field]) for field in fields}
+    return {
+        **{field: deepcopy(entry[field]) for field in fields},
+        "issue_inventory": deepcopy(entry.get("issue_inventory")),
+    }
+
+
+def _validate_issue_inventory(entry: Mapping[str, Any]) -> None:
+    """Check declared issue coverage mechanically; relevance remains model-led."""
+
+    inventory = entry.get("issue_inventory")
+    if inventory is None:
+        if (
+            entry.get("source_surface") == "official_gazette"
+            and entry["check_status"] == "checked"
+        ):
+            raise ValueError("checked gazette requires an issue inventory")
+        return
+    if (
+        inventory["window_start"] > entry["window_start"]
+        or inventory["window_end"] < entry["window_end"]
+    ):
+        raise ValueError("issue inventory does not cover the source check window")
+    if inventory["window_start"] > inventory["window_end"]:
+        raise ValueError("issue inventory window ends before it starts")
+    if _datetime(inventory["enumerated_at"], field="enumerated_at") > _datetime(
+        entry["checked_at"], field="checked_at"
+    ):
+        raise ValueError("issue inventory cannot be enumerated after its check")
+    issues = inventory["issues"]
+    _unique_ids(issues, "issue_id")
+    for issue in issues:
+        if (
+            not inventory["window_start"]
+            <= issue["publication_date"]
+            <= inventory["window_end"]
+        ):
+            raise ValueError("issue publication date is outside inventory window")
+        if issue["checked_at"] is not None and _datetime(
+            issue["checked_at"], field="issue checked_at"
+        ) > _datetime(entry["checked_at"], field="checked_at"):
+            raise ValueError("issue inspection cannot follow its source check")
+    if entry["check_status"] == "checked":
+        if not inventory["enumeration_complete"] or any(
+            issue["status"] != "checked" for issue in issues
+        ):
+            raise ValueError("checked gazette requires complete issue coverage")
+        if not issues and not inventory["empty_window_rationale"].strip():
+            raise ValueError("empty gazette inventory requires an evidenced rationale")
 
 
 def _selection_source_ids(selection: Mapping[str, Any]) -> set[str]:
@@ -647,7 +694,10 @@ def _review_basis(scope: str, target: dict[str, Any]) -> object:
             "cursor_before",
             "cursor_after",
         )
-        return {field: target[field] for field in fields}
+        return {
+            **{field: target[field] for field in fields},
+            "issue_inventory": target.get("issue_inventory"),
+        }
     return _without_review_status(target)
 
 
@@ -751,6 +801,7 @@ def _validate_radar(radar: dict[str, Any]) -> None:
         unknown_profiles = set(entry["profile_refs"]) - client_refs
         if unknown_profiles:
             raise ValueError(f"source {entry['source_id']} references unknown profiles")
+        _validate_issue_inventory(entry)
         status = entry["check_status"]
         if status == "planned" and entry["check_review_status"] == "confirmed":
             raise ValueError(
@@ -955,6 +1006,7 @@ def _validate_radar(radar: dict[str, Any]) -> None:
         ) > validate_iso_date(scan["window_end"], field="scan window_end"):
             raise ValueError(f"scan {scan_id} window ends before it starts")
         for snapshot in snapshots:
+            _validate_issue_inventory(snapshot)
             if (
                 snapshot["window_start"] > scan["window_start"]
                 or snapshot["window_end"] < scan["window_end"]
@@ -1587,6 +1639,7 @@ def record_source_check(
     error_code: str | None,
     cursor_after: dict[str, Any] | None,
     idempotency_key: str,
+    issue_inventory: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Record one direct-source check bound to a running temporal scan."""
 
@@ -1617,6 +1670,7 @@ def record_source_check(
         "result_count": result_count,
         "error_code": error_code,
         "cursor_after": normalized_cursor,
+        "issue_inventory": deepcopy(issue_inventory),
     }
 
     def apply(radar: dict[str, Any]) -> dict[str, Any]:
@@ -2344,6 +2398,15 @@ def render_radar_report(workspace: Path) -> Path:
     coverage = radar["source_plan"]["coverage"]
     scans = radar["monitoring"]["scan_history"]
     latest_scan = scans[-1] if scans else None
+    checks = (
+        [
+            entry
+            for entry in radar["source_plan"]["entries"]
+            if entry["last_scan_id"] == latest_scan["scan_id"]
+        ]
+        if latest_scan and latest_scan["outcome"] == "running"
+        else latest_scan["source_check_snapshots"] if latest_scan else []
+    )
     lines = [
         "# Vera — radar bandi e agevolazioni",
         "",
@@ -2362,6 +2425,8 @@ def render_radar_report(workspace: Path) -> Path:
                 "Superficie",
                 "Livello",
                 "Editore",
+                "URL ufficiale",
+                "Pertinenza e provenienza",
                 "Stato",
                 "Finestra",
                 "Ultimo controllo",
@@ -2377,6 +2442,8 @@ def render_radar_report(workspace: Path) -> Path:
                     item["source_surface"],
                     item["authority_level"],
                     item["publisher"],
+                    item["official_url"],
+                    item["relevance_rationale"],
                     item["check_status"],
                     (
                         f"{item['window_start']} → {item['window_end']}"
@@ -2410,19 +2477,22 @@ def render_radar_report(workspace: Path) -> Path:
                 f"Selezione fonti: **{latest_scan['source_selection']['review_status']}** · prioritarie: **{', '.join(latest_scan['source_selection']['priority_source_ids']) or 'nessuna'}** · supplementari: **{', '.join(latest_scan['source_selection']['supplemental_source_ids']) or 'nessuna'}**",
                 "",
                 *_table(
-                    ["Dimensione query", "Valore", "Stato", "Fonti"],
+                    ["Dimensione query", "Valore", "Stato", "Fonti", "Motivazione"],
                     [
                         [
                             claim["dimension"],
                             claim["query_value"],
                             claim["status"],
                             ", ".join(claim["source_ids"]),
+                            claim["rationale"],
                         ]
                         for claim in latest_scan["source_selection"]["scope_coverage"]
                     ],
                 ),
                 "",
                 f"Esito: **{latest_scan['outcome']}** · copertura registro: **{latest_scan['coverage']['status']}** · ultimo controllo: **{latest_scan['coverage']['last_checked_at'] or '—'}**",
+                "",
+                latest_scan["source_selection"]["selection_rationale"],
                 "",
                 f"Gap di ambito: {', '.join(latest_scan['coverage']['uncovered_scope_keys']) or 'nessuno'}",
                 "",
@@ -2438,6 +2508,76 @@ def render_radar_report(workspace: Path) -> Path:
             if latest_scan is not None
             else ["Nessuna scansione temporale registrata.", ""]
         ),
+        "## Inventari dei fascicoli nell'ultima scansione",
+        "",
+        *_table(
+            [
+                "Fonte",
+                "Indici consultati",
+                "Enumerato il",
+                "Finestra",
+                "Enumerazione completa",
+                "Finestra vuota",
+            ],
+            [
+                [
+                    check["source_id"],
+                    ", ".join(inventory["index_urls"]),
+                    inventory["enumerated_at"],
+                    f"{inventory['window_start']} → {inventory['window_end']}",
+                    str(inventory["enumeration_complete"]),
+                    inventory["empty_window_rationale"],
+                ]
+                for check in checks
+                if (inventory := check.get("issue_inventory")) is not None
+            ],
+        ),
+        "",
+        "## Fascicoli controllati nell'ultima scansione",
+        "",
+        *_table(
+            [
+                "Fonte",
+                "Fascicolo",
+                "URL sommario",
+                "Data pubblicazione",
+                "Esito",
+                "Verificato il",
+                "Atti da esaminare",
+                "Note",
+            ],
+            [
+                [
+                    check["source_id"],
+                    issue["issue_id"],
+                    issue["official_url"],
+                    issue["publication_date"],
+                    issue["status"],
+                    issue["checked_at"],
+                    ", ".join(issue["act_urls"]),
+                    issue["notes"],
+                ]
+                for check in checks
+                for issue in (check.get("issue_inventory") or {}).get("issues", [])
+            ],
+        ),
+        "",
+        "## Opportunità rilevate (anche senza abbinamenti)",
+        "",
+        *_table(
+            ["Opportunità", "Titolo", "Stato", "Fonti", "Revisione"],
+            [
+                [
+                    item["opportunity_id"],
+                    item["official_title"],
+                    item["current_lifecycle"],
+                    ", ".join(item["source_ids"]),
+                    item["review_status"],
+                ]
+                for item in radar["opportunities"]
+            ],
+        ),
+        "",
         "## Opportunità e abbinamenti",
         "",
         *_table(
@@ -2540,6 +2680,8 @@ def validate_opportunity_handoff_payload(
 
     sources = payload["source_plan_entries"]
     source_ids = _unique_ids(sources, "source_id")
+    for source in sources:
+        _validate_issue_inventory(source)
     used_sources = set(opportunity["source_ids"]) | set(match["source_ids"])
     if used_sources - source_ids:
         raise ValueError("opportunity handoff sources are not reference-closed")
@@ -2723,6 +2865,7 @@ def main(argv: list[str] | None = None) -> int:
     source_check.add_argument("--result-count", type=int)
     source_check.add_argument("--error-code")
     source_check.add_argument("--cursor-input", type=Path)
+    source_check.add_argument("--issue-inventory-input", type=Path)
     source_check.add_argument("--idempotency-key", required=True)
     scan = subparsers.add_parser("record-scan")
     scan.add_argument("--input", required=True, type=Path)
@@ -2806,6 +2949,11 @@ def main(argv: list[str] | None = None) -> int:
             error_code=args.error_code,
             cursor_after=(
                 _load_payload(args.cursor_input) if args.cursor_input else None
+            ),
+            issue_inventory=(
+                _load_payload(args.issue_inventory_input)
+                if args.issue_inventory_input
+                else None
             ),
         )
         path = _radar_path(args.workspace)
