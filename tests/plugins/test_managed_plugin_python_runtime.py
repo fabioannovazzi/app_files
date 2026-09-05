@@ -643,3 +643,89 @@ def test_managed_launcher_installs_optional_requirements_and_runs_helper_once(
 
     assert result == 0
     assert marker.read_text(encoding="utf-8") == "started"
+
+
+@pytest.mark.parametrize("plugin", ["vera", "clara"])
+@pytest.mark.parametrize("folder", ["{plugin}", "{plugin}~g2", "{plugin}~g17"])
+def test_cowork_sync_generation_uses_claude_manifest_name(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, plugin: str, folder: str
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / folder.format(plugin=plugin)
+    manifest = plugin_root / ".claude-plugin" / "plugin.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(json.dumps({"name": plugin}), encoding="utf-8")
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("CODEX_SANDBOX", raising=False)
+    monkeypatch.setattr(runtime.Path, "home", lambda: tmp_path / "home")
+
+    result = runtime.plugin_data_dir(plugin_root)
+
+    assert result == tmp_path / "home" / ".cache" / "mparanza" / plugin
+
+
+@pytest.mark.parametrize("name", ["../outside", "vera/child", "vera~g2", "", None])
+def test_cowork_manifest_unsafe_name_is_rejected(tmp_path: Path, name: object) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    manifest = plugin_root / ".claude-plugin" / "plugin.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(json.dumps({"name": name}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Plugin manifest name is not path-safe"):
+        runtime.plugin_data_dir(plugin_root)
+
+
+@pytest.mark.parametrize(
+    ("codex_payload", "expected_name"),
+    [
+        ('{"name": "codex-name"}', "codex-name"),
+        ("{}", "vera"),
+        ("invalid json", "vera"),
+    ],
+)
+def test_runtime_manifest_precedence_and_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    codex_payload: str,
+    expected_name: str,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera~g2"
+    codex_manifest = plugin_root / ".codex-plugin" / "plugin.json"
+    claude_manifest = plugin_root / ".claude-plugin" / "plugin.json"
+    codex_manifest.parent.mkdir(parents=True)
+    claude_manifest.parent.mkdir()
+    codex_manifest.write_text(codex_payload, encoding="utf-8")
+    claude_manifest.write_text('{"name": "vera"}', encoding="utf-8")
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+    monkeypatch.setattr(runtime.tempfile, "gettempdir", lambda: str(tmp_path))
+
+    result = runtime.plugin_data_dir(plugin_root)
+
+    assert result.name == expected_name
+
+
+def test_cowork_generation_without_unix_uid_uses_stable_manifest_name(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera~g2"
+    manifest = plugin_root / ".claude-plugin" / "plugin.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text('{"name": "vera"}', encoding="utf-8")
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+    monkeypatch.setattr(runtime.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(runtime.Path, "home", lambda: tmp_path / "home")
+
+    with monkeypatch.context() as platform_patch:
+        platform_patch.delattr(runtime.os, "getuid", raising=False)
+        result = runtime.plugin_data_dir(plugin_root)
+
+    assert result.name == "vera"
+    assert result.parent.name.startswith("user-")

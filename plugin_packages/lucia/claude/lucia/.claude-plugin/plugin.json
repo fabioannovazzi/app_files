@@ -2,7 +2,6 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "lucia",
   "displayName": "Lucia",
-  "version": "0.1.18",
   "description": "Assistente AI per avvocati e studi legali. Struttura incarichi, analizza materiali e fonti, verifica affermazioni e prepara ricerche, documenti e risultati rivedibili, adattati al contesto e alla giurisdizione. Mostra fonti, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
   "author": {
     "name": "Mparanza",
@@ -23,5 +22,6 @@
     "law-firm-website",
     "professional-services"
   ],
+  "version": "0.1.25",
   "skills": "./skills/"
 }

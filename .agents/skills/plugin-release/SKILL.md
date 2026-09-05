@@ -25,6 +25,15 @@ static/shared/*/downloads/*.zip
 
 The ZIP is generated. Codex cache is generated. Downloaded install folders are generated or user-local.
 
+## One Product Version Across Hosts
+
+Each product has one release version, stored in
+`plugins/<plugin-name>/.codex-plugin/plugin.json`. The Codex, ChatGPT upload,
+and Cowork builders use that same version. Claude source manifests are metadata
+templates and must not declare a separate version. Bump the canonical patch
+version for a release on either host, then rebuild every affected host package.
+Do not maintain independent Codex and Cowork version sequences.
+
 ## Required Workflow
 
 1. Finish source edits under `plugins/<plugin-name>`.
