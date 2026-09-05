@@ -65,6 +65,9 @@ from modules.chart_harness import (  # noqa: E402  # isort: skip
     reporting_subject_label_from_recipe,
     write_prepared_data_manifest,
 )
+from modules.chart_harness.date_parsing import (
+    parse_date_expression as _parse_date_expression,
+)
 from modules.utilities.helpers import get_schema_and_column_names
 from modules.utilities.utils import get_row_count
 
@@ -352,17 +355,6 @@ def _period_values(frame: pl.DataFrame, period_column: str | None) -> list[str]:
     if len(preferred) >= 2:
         return preferred
     return values[:2]
-
-
-def _parse_date_expression(column: str) -> pl.Expr:
-    expr = pl.col(column)
-    return expr.cast(pl.Date, strict=False).fill_null(
-        expr.cast(pl.Utf8)
-        .str.strptime(pl.Date, strict=False)
-        .fill_null(
-            expr.cast(pl.Utf8).str.strptime(pl.Datetime, strict=False).cast(pl.Date)
-        )
-    )
 
 
 def _coerce_date_value(value: Any) -> date | None:

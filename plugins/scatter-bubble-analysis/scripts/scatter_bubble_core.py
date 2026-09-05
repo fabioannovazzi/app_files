@@ -67,6 +67,7 @@ from modules.chart_harness import (  # noqa: E402  # isort: skip
     reporting_subject_label_from_recipe,
     write_prepared_data_manifest,
 )
+from modules.chart_harness.date_parsing import parse_date_expression
 from modules.utilities.config import get_metric_array_params, get_naming_params
 from modules.utilities.helpers import get_schema_and_column_names
 
@@ -548,12 +549,7 @@ def _source_date_expr(frame: pl.DataFrame, source_column: str) -> pl.Expr:
         return pl.col(source_column)
     if dtype == pl.Datetime:
         return pl.col(source_column).dt.date()
-    return (
-        pl.col(source_column)
-        .cast(pl.Utf8, strict=False)
-        .str.strptime(pl.Date, strict=False)
-        .fill_null(DEFAULT_DATE)
-    )
+    return parse_date_expression(source_column).fill_null(DEFAULT_DATE)
 
 
 def _date_expr(frame: pl.DataFrame, source_column: str | None) -> pl.Expr:

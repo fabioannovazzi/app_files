@@ -54,7 +54,7 @@ jobs:
       - name: Check waterfall fallback with supporting marker traces
         run: |
           python -m pip install plotly pillow polars
-          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_waterfall_fallback.py
+          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_waterfall_fallback.py tests/plugins/test_chart_date_parsing.py
       - name: Check waterfall ordering independently of contribution labels
         run: |
           python -m pip install -r plugins/variance-analysis/requirements.txt

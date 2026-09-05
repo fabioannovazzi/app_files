@@ -106,10 +106,25 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
             {"distribution_metric": "Sales", "panel_dimension": "Brand"},
             "boxplot.html",
         ),
+        (
+            "mix.timeline",
+            {"period_axis": "Date", "primary_metric": "Sales"},
+            "line.html",
+        ),
+        (
+            "distribution.histogram",
+            {"distribution_metric": "Sales"},
+            "histogram.html",
+        ),
     ],
 )
+@pytest.mark.parametrize("month_only", [False, True])
 def test_cowork_zip_renders_through_component_managed_runtime(
-    tmp_path: Path, capability: str, bindings: dict[str, str], artifact: str
+    tmp_path: Path,
+    capability: str,
+    bindings: dict[str, str],
+    artifact: str,
+    month_only: bool,
 ) -> None:
     """Exercise lazy chart imports absent from entrypoint --help checks."""
     import json
@@ -123,6 +138,10 @@ def test_cowork_zip_renders_through_component_managed_runtime(
         "2025-01-31,Alpha,100\n2025-02-28,Alpha,110\n2025-03-31,Alpha,120\n"
         "2026-01-31,Alpha,110\n2026-02-28,Alpha,120\n2026-03-31,Alpha,130\n"
     )
+    if month_only:
+        import re
+
+        dataset.write_text(re.sub(r"(202[56]-\d{2})-\d{2}", r"\1", dataset.read_text()))
     environment = dict(os.environ)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
@@ -177,3 +196,7 @@ def test_cowork_zip_renders_through_component_managed_runtime(
     )
     content = chart_path.read_bytes()
     assert content.startswith(b"\x89PNG\r\n\x1a\n") or b"Plotly.newPlot" in content
+    if capability == "mix.timeline":
+        audit = (output / "mix_contribution_audit.json").read_text()
+        assert "Jan-2025 to Mar-2026" in audit
+        assert "'y': [100.0, 110.0, 120.0, 110.0, 120.0, 130.0]" in audit

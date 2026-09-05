@@ -8864,3 +8864,29 @@ def test_spanish_mix_mcp_responses_errors_and_handoff(tmp_path: Path) -> None:
     assert "<!-- Review Handoff -->" in handoff
     assert "Review payload:" not in handoff
     assert strict_report.ok, strict_report.errors
+
+
+def test_monthly_resampling_keeps_first_day_in_its_own_month() -> None:
+    legacy = load_legacy_charting()
+    legacy._ensure_legacy_import_path()
+    from polars.testing import assert_frame_equal
+
+    from modules.charting.prepare_charts import perform_resample
+
+    frame = pl.DataFrame(
+        {
+            "Date": [date(2026, 1, 1), date(2026, 1, 31), date(2026, 2, 1)],
+            "Sales": [100.0, 200.0, 400.0],
+        }
+    )
+
+    result = perform_resample(
+        frame.lazy(), "Date", [], ["Sales"], "1ME", "sum"
+    ).collect()
+
+    assert_frame_equal(
+        result,
+        pl.DataFrame(
+            {"Date": [date(2026, 1, 1), date(2026, 2, 1)], "Sales": [300.0, 400.0]}
+        ),
+    )
