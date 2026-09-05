@@ -12,7 +12,7 @@
       "displayName": "Vera",
       "source": "./plugin_packages/vera/claude/vera",
       "description": "Assistente AI per commercialisti e studi professionali. Organizza documenti, controlla dati e scritture, riconcilia movimenti e prepara analisi finanziarie, bilanci, report e carte di lavoro. Supporta ricerche fiscali e normative, pratiche e comunicazioni ai clienti. Espone fonti, ambiguità e informazioni mancanti. Il giudizio professionale, la firma e l’invio restano al commercialista.",
-      "version": "0.1.145",
+      "version": "0.1.146",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",
@@ -112,7 +112,7 @@
       "displayName": "Lucia",
       "source": "./plugin_packages/lucia/claude/lucia",
       "description": "Assistente AI per avvocati e studi legali. Struttura incarichi, analizza materiali e fonti, verifica affermazioni e prepara ricerche, documenti e risultati rivedibili, adattati al contesto e alla giurisdizione. Mostra fonti, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
-      "version": "0.1.17",
+      "version": "0.1.18",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",

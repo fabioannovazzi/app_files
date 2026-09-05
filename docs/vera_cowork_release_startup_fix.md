@@ -93,3 +93,32 @@ projection. Lucia Cowork 0.1.17 applies the same description constraint.
 All 18 Vera packaged servers pass initialization and tool discovery. The
 corrected archive preview displays in Claude, but installation and an actual
 Cowork workflow remain pending explicit user approval of the candidate install.
+
+
+## Managed Python setup and cloud Cowork execution
+
+A real Claude Desktop test installed Vera Cowork 0.1.145 and confirmed its
+variance MCP process starts. The cloud Cowork session did not expose local
+plugin MCP tools. Anthropic documents that local MCP servers do not run in
+cloud sessions:
+https://support.claude.com/en/articles/14479288-claude-cowork-architecture-overview
+
+The calculation failed on missing Polars because the projected instruction
+contract contradicted Vera's managed runtime, forbidding dependency installation.
+Cowork 0.1.146 directs module helpers through the existing declared-requirements
+launcher. Shared instructions check whether the enclosing plugin actually ships
+that launcher; Lucia's shared skill update is Cowork 0.1.18.
+
+The repeated real Cowork test confirmed 0.1.146 and invoked the correct launcher.
+It then hit HTTP 403 “Host not in allowlist: pypi.org”. The tested Pro account has
+Settings > Capabilities > Allow network egress off. This account setting cannot
+be repaired by a ZIP. The user must authorize registry access; package code must
+not bypass network policy. After access is enabled a fresh session may be needed.
+https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude
+
+CI now provisions an empty managed environment from the extracted public-format
+ZIP and loads the actual variance calculation entrypoint. This catches dependency
+and import failures hidden by preinstalled developer packages. It does not prove
+an entire professional workflow or a restricted customer's network configuration.
+The local cold-start check passed; final Cowork calculation acceptance is pending
+network access at the time of this note.

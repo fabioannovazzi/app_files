@@ -26,6 +26,20 @@ jobs:
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
       - name: Enforce Cowork manifest description limits
-        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description"
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
       - name: Verify distributed Cowork artifacts and runtime
         run: python scripts/build_claude_plugin_zip.py vera --check
+
+  vera-cowork-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest
+      - name: Provision a fresh runtime from the distributed Cowork ZIP
+        env:
+          RUN_COWORK_PYTHON_INTEGRATION: "1"
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_cowork_python_runtime.py
