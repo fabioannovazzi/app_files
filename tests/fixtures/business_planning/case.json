@@ -1,0 +1,821 @@
+{
+  "schema_version": "mparanza.business_planning_case.v2",
+  "case_id": "synthetic-contradictions",
+  "entity_name": "Synthetic planning company",
+  "company_stage": "Established company testing a new venture",
+  "planning_objective": "Reconcile profitability and financing timing before a capital decision.",
+  "audience": "internal",
+  "reporting_currency": "EUR",
+  "periods": [
+    "2027-01",
+    "2027-02",
+    "2027-03"
+  ],
+  "review": {
+    "status": "reviewed",
+    "reviewer": "Synthetic professional",
+    "reviewed_at": "2026-09-05T12:00:00+02:00"
+  },
+  "sources": [
+    {
+      "id": "client",
+      "path": "sources/client-model.txt",
+      "sha256": "e96ddfadc961f68534e2317ce72894e748427a6a5877a01f416d929d94391284",
+      "version": "synthetic-v1",
+      "role": "financial_model",
+      "review_status": "reviewed",
+      "intended_audience": [
+        "internal"
+      ],
+      "confidentiality": {
+        "classification": "internal_only",
+        "allowed_audiences": [
+          "internal"
+        ]
+      }
+    },
+    {
+      "id": "review",
+      "path": "sources/professional-review.txt",
+      "sha256": "925a3f536d9fbee78759183fed64164860188cb7ded9e4108d31ec2aed250313",
+      "version": "synthetic-v1",
+      "role": "professional_review",
+      "review_status": "reviewed",
+      "intended_audience": [
+        "internal"
+      ],
+      "confidentiality": {
+        "classification": "internal_only",
+        "allowed_audiences": [
+          "internal"
+        ]
+      }
+    },
+    {
+      "id": "assumptions",
+      "path": "sources/accepted-assumptions.txt",
+      "sha256": "9585fb4068c4b3c194d123d53eff3f7d69cea5f12dd7bb95bf51cb7724e39743",
+      "version": "synthetic-v1",
+      "role": "model_hypothesis",
+      "review_status": "reviewed",
+      "intended_audience": [
+        "internal"
+      ],
+      "confidentiality": {
+        "classification": "internal_only",
+        "allowed_audiences": [
+          "internal"
+        ]
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "client-fact",
+      "kind": "fact",
+      "description": "Client reported profitability, not accepted as calculated truth.",
+      "source_ids": [
+        "client"
+      ],
+      "status": "reviewed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    },
+    {
+      "id": "adjustment",
+      "kind": "fact",
+      "description": "Professional cost correction and opening balance.",
+      "source_ids": [
+        "review"
+      ],
+      "status": "reviewed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "cash-timing",
+      "kind": "hypothesis",
+      "description": "Equity arrives in the second month; debt repayment remains explicit.",
+      "source_ids": [
+        "assumptions"
+      ],
+      "rationale": "Labelled synthetic professional hypothesis, confirmed for evaluation only.",
+      "effective_periods": [
+        "2027-01",
+        "2027-02",
+        "2027-03"
+      ],
+      "status": "confirmed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "accept-adjustment",
+      "kind": "conflict_resolution",
+      "rationale": "Reviewed operating cost correction replaces reported EBITDA for the model.",
+      "status": "reviewed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ],
+  "observations": [
+    {
+      "id": "client-ebitda",
+      "scenario": "base",
+      "period": "2027-01",
+      "metric": "ebitda",
+      "value": "200",
+      "unit": "EUR",
+      "source_ids": [
+        "client"
+      ],
+      "basis": "reported",
+      "material": true
+    },
+    {
+      "id": "adjusted-ebitda",
+      "scenario": "base",
+      "period": "2027-01",
+      "metric": "ebitda",
+      "value": "-100",
+      "unit": "EUR",
+      "source_ids": [
+        "review"
+      ],
+      "basis": "adjusted",
+      "material": true
+    }
+  ],
+  "resolutions": [
+    {
+      "calculation_id": "base/2027-01/ebitda",
+      "observation_id": "adjusted-ebitda",
+      "decision_id": "accept-adjustment"
+    }
+  ],
+  "financial": {
+    "opening_balance": {
+      "cash": "50",
+      "accounts_receivable": "0",
+      "inventory": "0",
+      "other_current_assets": "0",
+      "net_fixed_assets": "0",
+      "other_non_current_assets": "0",
+      "accounts_payable": "0",
+      "debt": "300",
+      "other_liabilities": "0",
+      "equity": "-250"
+    },
+    "opening_refs": {
+      "cash": [
+        "adjustment"
+      ],
+      "accounts_receivable": [
+        "adjustment"
+      ],
+      "inventory": [
+        "adjustment"
+      ],
+      "other_current_assets": [
+        "adjustment"
+      ],
+      "net_fixed_assets": [
+        "adjustment"
+      ],
+      "other_non_current_assets": [
+        "adjustment"
+      ],
+      "accounts_payable": [
+        "adjustment"
+      ],
+      "debt": [
+        "adjustment"
+      ],
+      "other_liabilities": [
+        "adjustment"
+      ],
+      "equity": [
+        "adjustment"
+      ]
+    },
+    "scenarios": [
+      {
+        "id": "base",
+        "label": "Base",
+        "schedule": [
+          {
+            "period": "2027-01",
+            "revenue": "1000",
+            "cogs": "600",
+            "operating_expenses": "500",
+            "depreciation_amortization": "0",
+            "interest_expense": "10",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "600",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-02",
+            "revenue": "1000",
+            "cogs": "600",
+            "operating_expenses": "500",
+            "depreciation_amortization": "0",
+            "interest_expense": "10",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "50",
+            "equity_contributions": "500",
+            "dividends": "0",
+            "variable_cogs": "600",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-03",
+            "revenue": "1000",
+            "cogs": "600",
+            "operating_expenses": "500",
+            "depreciation_amortization": "0",
+            "interest_expense": "10",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "600",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "downside",
+        "label": "Downside",
+        "schedule": [
+          {
+            "period": "2027-01",
+            "revenue": "800",
+            "cogs": "600",
+            "operating_expenses": "500",
+            "depreciation_amortization": "0",
+            "interest_expense": "10",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "600",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-02",
+            "revenue": "800",
+            "cogs": "600",
+            "operating_expenses": "500",
+            "depreciation_amortization": "0",
+            "interest_expense": "10",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "50",
+            "equity_contributions": "500",
+            "dividends": "0",
+            "variable_cogs": "600",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-03",
+            "revenue": "800",
+            "cogs": "600",
+            "operating_expenses": "500",
+            "depreciation_amortization": "0",
+            "interest_expense": "10",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "600",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "narrative": [
+    {
+      "id": "profit-risk",
+      "kind": "risk",
+      "contributor": "Clara",
+      "text": "The adjusted operating result is {{ebitda}}. The accepted cost base requires a strategic response before expansion.",
+      "claims": {
+        "ebitda": {
+          "calculation_id": "base/2027-01/ebitda",
+          "value": "-100"
+        }
+      },
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic evaluation only; no client report or registered historical run was used.",
+    "Financing arrives after the first projected cash deficit. Debt repayment must remain in the cash model."
+  ],
+  "required_contributions": [
+    "Vera",
+    "Clara"
+  ]
+}

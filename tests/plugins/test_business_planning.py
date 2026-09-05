@@ -465,7 +465,7 @@ def test_model_context_excludes_internal_source_references() -> None:
     assert "raw source populations" in model_context["excluded_by_default"]
 
 
-def test_runner_writes_complete_client_bound_review_package(tmp_path: Path) -> None:
+def test_vera_runner_rejects_legacy_case_without_provenance(tmp_path: Path) -> None:
     context_path, case_path, output_dir = _running_case(tmp_path, _case())
 
     completed = subprocess.run(
@@ -484,28 +484,9 @@ def test_runner_writes_complete_client_bound_review_package(tmp_path: Path) -> N
         text=True,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    expected = {
-        "assumption_ledger.csv",
-        "business_plan.json",
-        "business_plan.xlsx",
-        "business_plan_facts.md",
-        "business_plan_review.html",
-        "counterpart_contribution.json",
-        "commentary_template.json",
-        "execution_receipt.json",
-        "model_context.json",
-        "reconciliation.json",
-    }
-    assert {path.name for path in output_dir.iterdir()} == expected
-    receipt = json.loads(
-        (output_dir / "execution_receipt.json").read_text(encoding="utf-8")
-    )
-    assert receipt["workflow_id"] == "business-planning"
-    assert receipt["status"] == "ready_for_professional_review"
-    assert {item["path"] for item in receipt["outputs"]} == expected - {
-        "execution_receipt.json"
-    }
+    assert completed.returncode == 2
+    assert "shared v2 case with provenance" in completed.stderr
+    assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
 def test_established_company_uses_the_same_financial_contract() -> None:
@@ -711,7 +692,7 @@ def test_blocked_financial_plan_produces_blocked_contribution() -> None:
     assert review["status"] == "source_not_ready"
 
 
-def test_clara_runner_writes_complete_strategic_review_package(tmp_path: Path) -> None:
+def test_clara_runner_rejects_legacy_case_without_provenance(tmp_path: Path) -> None:
     workspace, case_path, output_dir = _clara_workspace(tmp_path, _strategic_case())
 
     completed = subprocess.run(
@@ -730,26 +711,9 @@ def test_clara_runner_writes_complete_strategic_review_package(tmp_path: Path) -
         text=True,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    expected = {
-        "assumption_ledger.csv",
-        "counterpart_contribution.json",
-        "execution_receipt.json",
-        "model_context.json",
-        "strategic_business_plan.json",
-        "strategic_business_plan.md",
-        "strategic_business_plan_review.html",
-    }
-    assert {path.name for path in output_dir.iterdir()} == expected
-    model_context = json.loads(
-        (output_dir / "model_context.json").read_text(encoding="utf-8")
-    )
-    assert '"source_ref":' not in json.dumps(model_context)
-    receipt = json.loads(
-        (output_dir / "execution_receipt.json").read_text(encoding="utf-8")
-    )
-    assert receipt["professional_lens"] == "strategic_commercial"
-    assert receipt["case_content_sha256"]
+    assert completed.returncode == 2
+    assert "shared v2 case with provenance" in completed.stderr
+    assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
 def test_clara_runner_rejects_output_outside_case_workspace(tmp_path: Path) -> None:
@@ -775,7 +739,7 @@ def test_clara_runner_rejects_output_outside_case_workspace(tmp_path: Path) -> N
     assert "output directory must be <case-workspace>/business-plan" in completed.stderr
 
 
-def test_clara_runner_includes_compatible_vera_contribution(tmp_path: Path) -> None:
+def test_clara_runner_rejects_legacy_summary_contribution(tmp_path: Path) -> None:
     case = _aligned_strategic_case()
     workspace, case_path, output_dir = _clara_workspace(tmp_path, case)
     contribution_path = workspace / "vera_financial_contribution.json"
@@ -804,26 +768,12 @@ def test_clara_runner_includes_compatible_vera_contribution(tmp_path: Path) -> N
         text=True,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    review = json.loads(
-        (output_dir / "counterpart_contribution_review.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    plan = json.loads(
-        (output_dir / "strategic_business_plan.json").read_text(encoding="utf-8")
-    )
-    receipt = json.loads(
-        (output_dir / "execution_receipt.json").read_text(encoding="utf-8")
-    )
-    assert review["status"] == "mechanically_compatible"
-    assert plan["owner_product"] == "Clara"
-    assert plan["counterpart_contribution"]["included_in_owner_plan"] is True
-    assert plan["counterpart_contribution"]["content"]["financial_scenario_summaries"]
-    assert receipt["counterpart_contribution"]["included_in_owner_plan"] is True
+    assert completed.returncode == 2
+    assert "shared v2 case with provenance" in completed.stderr
+    assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
-def test_clara_owner_plan_stays_visible_and_partial_on_contribution_difference(
+def test_clara_runner_requires_migration_of_legacy_conflicting_contribution(
     tmp_path: Path,
 ) -> None:
     case = _aligned_strategic_case()
@@ -853,20 +803,9 @@ def test_clara_owner_plan_stays_visible_and_partial_on_contribution_difference(
         text=True,
     )
 
-    assert completed.returncode == 0, completed.stderr
-    plan = json.loads(
-        (output_dir / "strategic_business_plan.json").read_text(encoding="utf-8")
-    )
-    html = (output_dir / "strategic_business_plan_review.html").read_text(
-        encoding="utf-8"
-    )
-    assert plan["status"] == "partial"
-    assert plan["owner_product"] == "Clara"
-    assert plan["counterpart_contribution"]["included_in_owner_plan"] is False
-    assert plan["counterpart_contribution"]["unresolved_issues"][0]["field"] == (
-        "planning_objective"
-    )
-    assert "preserved for owner review" in html
+    assert completed.returncode == 2
+    assert "shared v2 case with provenance" in completed.stderr
+    assert not output_dir.exists() or not list(output_dir.iterdir())
 
 
 def test_review_html_exposes_complete_financial_and_strategic_surfaces() -> None:

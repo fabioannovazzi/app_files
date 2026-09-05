@@ -8,9 +8,14 @@
     "repository/plugins/business-planning/.codex-plugin/plugin.json",
     "repository/plugins/business-planning/skills/business-planning/SKILL.md",
     "repository/plugins/business-planning/references/case-contract.md",
-    "repository/plugins/business-planning/scripts/business_planning_contribution.py",
+    "repository/plugins/business-planning/scripts/run_strategic_plan.py",
+    "repository/plugins/business-planning/scripts/planning_cli.py",
+    "repository/plugins/business-planning/scripts/planning_workflow.py",
+    "repository/plugins/business-planning/scripts/planning_report.py",
+    "repository/plugins/business-planning/scripts/business_planning_core.py",
     "repository/plugins/business-planning/scripts/strategic_planning_core.py",
-    "repository/plugins/business-planning/scripts/run_strategic_plan.py"
+    "repository/plugins/business-planning/scripts/check_dependencies.py",
+    "repository/plugins/business-planning/requirements-pdf.txt"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -22,8 +27,8 @@
       },
       {
         "id": "business-planning-strategic-case-and-contribution",
-        "purpose": "Author and review Clara's owner-led strategic-commercial plan with any optional Vera financial contribution",
-        "content": "The model authors evidence-linked findings, options, benefits and drawbacks, recommendation, conditions, initiatives, owners, milestones, KPIs, risks, responses, decision implications and open questions. The local finalizer receives only the reviewed structured case inside the selected Clara case workspace and checks declared lens, shape, identifiers, non-empty support references and reference closure; it does not score a market or select a strategy. The normal model context contains the bounded evidence register with IDs, kinds, descriptions and statuses plus company context, assumptions, recommendation, initiatives, risks, questions and limitations. It and the internal Vera contribution exclude evidence source_ref values, raw source documents, absolute paths and original filenames. When an optional Vera contribution is supplied, fixed code records exact case identity, shared-context and shared-assumption comparisons, includes mechanically compatible financial summaries in the Clara-owned plan, and marks unresolved differences partial; it never resolves strategic meaning or reinterprets reconciled figures."
+        "purpose": "Author reviewed strategy from the shared case and authoritative Vera calculation IDs",
+        "content": "Both entry points consume one shared reviewed case and locally run Vera's Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent counterpart files and legacy cases cannot finalize reports."
       }
     ]
   },
@@ -50,14 +55,26 @@
   "boundaries_beyond_codex": [],
   "security_controls": [
     {
-      "id": "clara-case-workspace-and-contribution-isolation",
-      "control": "The strategic finalizer accepts the case only from the selected Clara case-workspace root, writes only to its business-plan directory, and accepts an optional counterpart contribution only from inside that workspace. It records exact identity, shared-context and shared-assumption comparisons, binds mechanically compatible financial summaries into the Clara-owned plan, and makes the result partial with visible unresolved differences when owner review is required."
+      "id": "clara-case-workspace-isolation",
+      "control": "The Clara entry point accepts the case only from the selected workspace root, all selected sources inside that workspace, and outputs only in its business-plan directory."
+    },
+    {
+      "id": "source-identity-and-lineage",
+      "control": "The shared runner verifies the SHA-256 of every selected file, checks input-reference closure, and replays the complete calculated report before export. Altered calculated values or chart data reject compilation."
+    },
+    {
+      "id": "audience-bound-report-export",
+      "control": "Every selected source must allow the report audience in intended_audience and confidentiality.allowed_audiences, or have an explicit reviewed audience-release decision bound to its exact SHA-256. Otherwise the compiler rejects all report-package writes."
+    },
+    {
+      "id": "authoritative-narrative-figures",
+      "control": "Narrative claims require canonical calculation IDs and exact values. Disagreement blocks readiness; missing inputs or material reviews/conflicts withhold capital recommendations. Numeric literals in narrative are rejected. Semantic claims remain subject to model-led and professional review."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-27",
+    "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fddd80e5f5dc7e56c2bb3e4b24057946d03250943902fef4ef60dc81485cb7f6"
+    "source_fingerprint": "e313cf8c0413c1db657f504775b959d229551c3ab4da375c44ba97afbf9f2ce1"
   }
 }

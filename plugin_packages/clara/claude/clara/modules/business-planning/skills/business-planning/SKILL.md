@@ -1,6 +1,6 @@
 ---
 name: business-planning
-description: Use when Vera or Clara must prepare or revise a forward-looking plan for a startup, new venture, or established company. The invoked product owns the user journey and final deliverable; the other product may provide an optional internal contribution without becoming a second user workflow.
+description: One shared, adaptive Business Planning workflow for startups, new ventures and established companies. Vera owns the accounting-financial result; Clara owns the strategic-commercial result. Counterpart work is internal and all financial claims bind Vera's calculation register.
 ---
 
 ## Cowork execution contract
@@ -31,244 +31,171 @@ labels, or status summaries.
 ## Output location
 
 Never write run outputs inside this Git workspace or a published folder. Vera
-uses only the exact Studio Archive run output for workflow ID
-`business-planning`. Clara uses the selected advisory case workspace and keeps
-the plan with the case materials and deliverables.
+uses the exact Studio Archive run output for workflow ID `business-planning`.
+Clara uses the selected advisory case workspace and its `business-plan` folder.
+Synthetic developer evaluations may write to a temporary test directory.
 
 # Business Planning
 
-Use this one workflow for startups, new ventures, and established companies.
-Record `company_stage` in reviewed plain language. The model and professional
-interpret the stage; deterministic code checks only that the description is
-present. Do not create separate startup and established-company modes or route
-from a keyword classifier.
+Use one shared case and compiler. The invoked product remains the visible owner
+from intake through delivery. Do not ask the user to invoke the other product,
+transfer contribution files or choose a lens or company-stage mode.
 
-The invoking product fixes the professional lens:
+- Vera owns the accounting-financial result. Obtain Clara's model-led strategic
+  contribution internally when the mandate requires strategy, market or options.
+- Clara owns the strategic-commercial result. Obtain Vera's financial contribution
+  internally whenever financial figures, feasibility or funding enter the result.
+  The shared runner invokes Vera's arithmetic directly; no separate plugin call
+  or manually supplied financial summary is necessary.
+- Both use exactly the same source register, assumptions and authoritative
+  calculated figures. Internal contributors edit proposed sections of the shared
+  case; the owner resolves differences with the professional before acceptance.
+- Record company stage in reviewed plain language. Adapt source collection and
+  questions to the actual business, including new ventures inside existing firms.
+  Missing history never becomes zero. Do not infer stage using keyword rules.
 
-- Vera uses `accounting_financial` and owns the opening position, historical
-  base when available, assumptions, linked profit and loss, cash flow, balance
-  sheet, working capital, debt and equity, funding requirement and
-  reconciliation.
-- Clara uses `strategic_commercial` and owns market and customer evidence,
-  business model, positioning, strategic findings and options, recommendation,
-  initiatives, milestones, KPIs, risks and decision implications.
+## Intake and review
 
-Do not ask the user to choose a lens after they have invoked Vera or Clara.
-Neither product may silently rewrite the other product's reviewed assumptions,
-figures, recommendation, or professional conclusions.
+Read [the case contract](../../references/case-contract.md). Both entry points
+require `mparanza.business_planning_case.v2`. Legacy v1 case and counterpart files
+are inspection inputs only; they cannot finalize reports. Migrate by inspecting
+actual files and obtaining real assumption/audience decisions, never by inventing
+review metadata. Do not assume an earlier report used this registered pipeline.
 
-## Entry-product ownership
+Establish entity, mandate, audience, currency, monthly horizon, source selection,
+opening position, scenarios and material unknowns from the actual evidence. Ask
+only material unresolved questions. Keep the user informed about intake, evidence
+review, financial calculation, strategic interpretation, validation and delivery.
 
-The product initially invoked owns the user relationship, run status, final
-review package and next action. Never ask the user to transfer an internal JSON
-file, invoke the counterpart product manually, or understand contribution
-schema names and compatibility statuses.
+For every selected file record its relative path, actual SHA-256, version, role,
+review status, intended audience and explicit confidentiality restrictions. Roles
+distinguish client documents, professional reviews, existing financial models,
+external evidence and model-created hypotheses. Hashes establish file identity,
+not truth. Existing spreadsheets must be reconciled as evidence.
 
-- A Vera-owned result is the finance-led plan. Clara may contribute strategic
-  recommendation, initiatives, risks and questions when the requested scope is
-  cross-lens.
-- A Clara-owned result is the strategy-led business plan. Vera may contribute
-  reconciled scenario summaries and funding information when the requested
-  scope is cross-lens.
-- The counterpart contribution is optional internal evidence. It never changes
-  ownership and is not a second user-facing skill or deliverable.
-- If the counterpart is unavailable, the owner completes its supported lens and
-  labels any missing cross-lens section `partial`; it does not instruct the user
-  to operate the internal file contract.
+The model and professional must extract and align material source figures into
+`observations` with period, scenario, metric, units and source IDs. Include
+contradictory values, not only values supporting the preferred conclusion.
+Deterministic grouping exposes differences in these reviewed alignments; it
+cannot discover omitted claims or interpret raw documents. Review source coverage
+and completeness explicitly before marking the case reviewed.
 
-When both products contribute, the owner finalizer produces one plan, one
-combined assumption register and one visible list of unresolved differences.
-Exact compatibility checks are deterministic because identity, status, IDs and
-text equality are mechanically verifiable. Meaning, numerical consistency,
-feasibility and professional agreement remain model-led and professional.
+Keep facts, assumptions, hypotheses, calculated results, conflicts and professional
+decisions distinct. Confirm every material assumption, including financing timing,
+debt service, working capital and the variable/fixed cost split, with a named
+professional and timestamp. Explicit confirmed zero differs from missing `null`.
+Each input needs evidence/assumption references effective for its period.
 
-For Vera, route a request limited to sales volumes, prices, revenue, discounts,
-COGS, or FX to `sales-plan`; historical analysis to `financial-analysis`;
-recurring reporting to `management-control-pack`; and insolvency-plan review to
-`concordato-plan-review`. For Clara, route a generic assignment-framing request
-to `advisory-brief-planner`; use this workflow when the requested professional
-output is the business plan itself.
+An accepted conflict resolution names an observation and a reviewed professional
+decision. Never silently select a conflicting number. Unresolved material conflicts
+produce partial results; disagreement with accepted figures blocks readiness.
 
-## Judgment boundary
+## Financial and strategic work
 
-Model-led and professional judgment own the planning objective, company-stage
-description, evidence meaning, source selection, assumption selection,
-scenario or option design, market interpretation, risks, narrative and
-approval. Do not infer numerical values from qualitative statements. Read back
-every material assumption and obtain confirmation before finalization.
+Vera's shared engine calculates monthly scenarios and linked statements, margins,
+EBITDA/EBIT/net income, cash flow, working capital, minimum cash, pre-financing
+funding need and residual gap, runway, revenue break-even, margin of safety,
+debt service/DSCR and sources-and-uses reconciliation. Read their formula and
+limitation fields. Do not treat mechanical reconciliation as viability.
 
-Deterministic code owns reviewed case shape, reference closure, hashes and
-receipt integrity. In Vera's lens it also owns canonical Decimal parsing,
-period order, exact statement arithmetic, working-capital, debt and equity
-roll-forwards, reconciliation and funding-gap calculation. In Clara's lens it
-checks only the declared evidence, assumption, option, initiative and risk
-references and renders the reviewed model-authored strategic case. It never
-selects a strategy, scores a market or infers whether the company is a startup.
+Clara interprets reviewed market evidence, positioning, options, initiatives,
+commercial implications and risks. All financial amounts in narrative use typed
+`{{claim}}` placeholders with exact calculation IDs and expected values. Clara
+must never independently calculate or rewrite a Vera amount. Correct the accepted
+inputs and rerun the shared engine if figures need changing.
 
-## Workspace boundary
+Do not invent scores, benchmarks or KPI thresholds. They require a reviewed rubric,
+source, or explicitly labelled and confirmed professional hypothesis. A reference
+to a number does not support the meaning of a score: professional review must check
+both numerical and semantic claims, including numbers written as words and implied
+recommendations. The compiler checks exact bindings, not prose meaning.
 
-For Vera in Claude:
+A precise capital recommendation requires the complete accepted cash-flow model,
+all material reviews/conflicts resolved, and the full-horizon `funding_requirement`
+calculation ID. It is not permission to recommend a financing instrument, valuation,
+buffer or round size unsupported by that model. Report missing inputs and questions
+instead. Financing timing and unpaid/missing debt cannot be hidden in prose.
 
-1. Select one Studio Archive client and engagement.
-2. Import the exact reviewed evidence as immutable `source` receipts. A startup
-   may have no historical accounts; an established company normally has an
-   historical base. Neither absence nor availability decides the route.
-3. Prepare and start workflow ID `business-planning` from the exact selected
-   inputs and any finalized same-engagement upstream artifacts used.
-4. Pass the returned `client_engagement_path` unchanged to the helper and write
-   only below its `output_dir`.
-5. Finalize every physical output with a stable artifact ID, relative path,
-   purpose, audience and media type. Review the declaration and complete the
-   run. Record failure or cancellation instead of treating partial files as a
-   result.
+## Registered execution
 
-For Clara, use the current advisory case workspace, follow the Clara case
-director when one exists, and keep selected sources, the strategic case and
-outputs together. In Cowork, use only explicitly connected files and folders
-and state that no portable Studio Archive run was created.
+Run `python scripts/check_dependencies.py` first. `requirements.txt` is the core
+published dependency declaration; do not install arbitrary packages at runtime.
+
+Vera imports the shared case and **every selected source** as exact same-engagement
+Studio Archive receipts, then prepares and starts workflow `business-planning`.
+Use source paths relative to the run's `input_dir` (`imports` / receipt ID / stored filename),
+and pass the returned context unchanged. Inputs are checked against exact receipts.
+
+```bash
+python scripts/run_business_plan.py --case <receipted-case.json> \
+  --client-engagement <context.json> --source-root <run-input-dir> \
+  --output-dir <run-output>/plan
+```
+
+Clara keeps its case JSON at the advisory case workspace root and all selected
+sources below that workspace:
+
+```bash
+python scripts/run_strategic_plan.py --case <case-workspace>/business_plan_case.json \
+  --case-workspace <case-workspace> --source-root <case-workspace> \
+  --output-dir <case-workspace>/business-plan
+```
+
+Use a fresh output folder. Exit code 2 means partial/blocked or rejected input;
+inspect the report/validation file if written. Do not overwrite a previous report.
+
+## Controlled delivery
+
+Only the shared compiler produces the deliverable. Do not draft an independent
+final HTML, Markdown, spreadsheet or PDF with copied figures. Edit the reviewed
+structured case and rerun. Normal outputs are `business_plan.json`,
+`report_structure.json`, `business_plan_review.html`, `calculations.json`,
+`calculations.csv`, `input_manifest.json`, `reconciliation.json`,
+`validation.json` and `execution_receipt.json`.
+
+The compiler replays arithmetic, source hashes, reference closure, narrative
+bindings and chart data before rendering. It includes complete provenance,
+comparisons, professional decisions, unresolved matters, limitations and audience
+restrictions. Audience release requires an explicit reviewed decision bound to the
+source's hash; internal-only material cannot be exported to a different audience
+merely because a new audience name was entered.
+
+HTML comes first. Visually inspect it, including chart axes, negative results,
+zero lines, legends, source comparisons and provenance tables. PDF is optional via
+`--pdf`, solely from that validated structure. Check `requirements-pdf.txt` before
+using the optional renderer; no PDF is permitted for a partial or blocked result.
+
+Charts use canonical calculation IDs only: reported versus adjusted EBITDA when
+available, EBITDA scenarios, monthly cash before/after financing and cumulative
+funding gaps. Reported values are labelled source projections, not accepted EBITDA.
+Do not add decorative progress bars, unsupported scorecards or channel unit
+economics when channel-specific inputs are absent.
+
+For model interpretation provide only the reviewed, audience-permitted excerpts,
+assumptions and calculation records needed for the assignment. Full local source
+files and paths are not automatically model context. The full report structure is
+an audience-controlled local audit artifact; do not send it wholesale to a model
+or external service without the relevant data-use authorization.
+
+Deliver one owner report with its status, supported conclusions, open matters and
+next professional action. Finalize Vera's physical output artifacts with stable
+IDs, purpose, audience and media type and complete the Studio Archive run. Record
+failure/cancellation honestly. Clara records results in the selected case workspace.
 
 ## Cowork-native Run UX
 
-Before helper scripts, identify the material choices that can change the plan:
-entity, company stage, objective, audience, horizon, evidence, assumptions and
-output folder. Vera also resolves currency, periods, opening position,
-scenarios and tolerance. Clara also resolves the decision, strategic options,
-initiatives, milestones and KPIs. Ask only about choices whose answer would
-materially change the result.
+Show a compact checklist for intake, evidence/assumption review, calculation,
+interpretation, validation, visual inspection and delivery. Use a Run Intake table
+for the actual entity, mandate, audience, horizon, sources and output folder, and
+a Decision Table only for unresolved material choices. Confirmed facts and
+accepted assumptions are not choices to propose.
 
-Ask only those unresolved choices in chat. Ground the choice in the actual
-inputs. Do not introduce hypothetical alternatives unless the facts cue them.
+Default output policy: use only the selected run/case folder. End with an Artifact
+Card giving the report path, status, unresolved matters and next professional
+action. Include `run_review.md` when the host needs a review note. Build
+generated ZIPs from canonical source; never edit their extracted copies.
 
-Default output policy: write only to the reviewed run or case output folder.
-Input facts and confirmed assumptions are evidence to preserve, not choices to
-propose. Include `run_review.md` with the Artifact Card when the host
-supports a review note; generated ZIPs are release artifacts and must be built
-from canonical source rather than edited directly.
-
-1. Start with a visible checklist for intake, dependency check, evidence and
-   assumption review, lens-specific preparation, validation, visual inspection
-   and delivery.
-2. Show a Run Intake table with entity, company stage, product lens, objective,
-   audience, horizon, evidence, assumptions, output folder and unresolved
-   choices. Add the lens-specific inputs above.
-3. Show a compact Decision Table only for material unresolved choices grounded
-   in the actual inputs. Keep evidence, assumptions, hypotheses, unknowns and
-   professional decisions separate.
-4. Before a long or write-heavy step, show an execution checkpoint with command
-   intent, inputs, output folder and expected artifacts.
-5. End with an Artifact Card listing the owner deliverables, evidence and
-   assumption coverage, review status, unresolved issues and next action. List
-   the internal counterpart contribution only when the user asks for audit or
-   technical details.
-
-Explicit approval is reserved for external, destructive, approval-sensitive,
-or material steps. Local inspection, deterministic validation, calculation,
-rendering and authorized run-output writes do not add an approval ceremony.
-
-## Intake and assumption review
-
-Keep these classes separate:
-
-- source-supported historical or opening facts;
-- external evidence;
-- management assumptions;
-- model-proposed hypotheses;
-- calculated results or model-authored strategic findings;
-- missing information and professional judgments.
-
-For every material assumption, show its ID, description, evidence or hypothesis
-basis, horizon or effective periods, rationale and status. The professional
-must confirm the complete assumption read-back before the case receives
-`review.status=reviewed`; Vera also requires confirmation of the opening
-position. A model-proposed hypothesis may enter the case only after it is
-clearly labelled and explicitly confirmed.
-
-Read [the case contract](../../references/case-contract.md) before writing or
-reviewing a case JSON. `requirements.txt` is the complete core dependency
-declaration. Run `python scripts/check_dependencies.py` before either finalizer.
-Do not install arbitrary packages at runtime.
-
-## Vera financial calculation
-
-From the module root:
-
-Omit `--counterpart-contribution` when the requested plan is finance-only or no
-Clara contribution is available.
-
-```bash
-python scripts/run_business_plan.py \
-  --case <run-output>/business_plan_case.json \
-  --client-engagement <context.json> \
-  --output-dir <run-output>/plan \
-  --counterpart-contribution <run-input>/counterpart_contribution.json
-```
-
-The reviewed case uses canonical Decimal strings. Each scenario supplies the
-same ordered periods and references confirmed assumptions effective for those
-periods. The runner calculates linked P&L, cash flow, balance sheet, break-even
-period, minimum cash and funding requirement. It does not forecast demand,
-select assumptions, search the market or create a balancing plug.
-
-Stop on an invalid case, missing confirmation, unknown evidence or assumption
-reference, impossible fixed-asset or debt roll-forward, changed run context or
-failed statement reconciliation. Negative cash remains visible as a funding
-requirement.
-
-## Clara strategic finalization
-
-From the module root:
-
-Omit `--counterpart-contribution` when the requested plan is strategy-only or no
-Vera contribution is available.
-
-```bash
-python scripts/run_strategic_plan.py \
-  --case-workspace <case-workspace> \
-  --case <case-workspace>/strategic_business_plan_case.json \
-  --output-dir <case-workspace>/business-plan \
-  --counterpart-contribution <case-workspace>/counterpart_contribution.json
-```
-
-The model authors the strategic findings, options, recommendation, initiatives,
-milestones, KPIs, risks and open questions from reviewed evidence and confirmed
-assumptions. The finalizer validates only schema and reference closure, removes
-source locations from the normal model context, renders the review package and
-creates a bounded internal Clara contribution. A mechanically valid result does
-not prove market attractiveness, strategic fit, feasibility or consultant
-approval.
-
-## Interpretation, contribution and delivery
-
-For Vera, read `business_plan.json`, `reconciliation.json`,
-`model_context.json` and `execution_receipt.json` before drafting conclusions.
-Use the bounded model context by default. Separate calculated observations from hypotheses,
-questions, evidence gaps, risks and professional decisions.
-
-For Clara, read `strategic_business_plan.json`, `model_context.json`,
-and `execution_receipt.json`. Keep factual observations, assumptions,
-model-authored implications and professional
-recommendations visibly distinct.
-
-Normal Vera outputs are `business_plan.json`, `business_plan.xlsx`,
-`assumption_ledger.csv`, `reconciliation.json`, `model_context.json`,
-`commentary_template.json`, `business_plan_facts.md`,
-`business_plan_review.html` and
-`execution_receipt.json`.
-
-Normal Clara outputs are `strategic_business_plan.json`,
-`strategic_business_plan.md`, `strategic_business_plan_review.html`,
-`model_context.json`, `assumption_ledger.csv`,
-and `execution_receipt.json`.
-
-Both lenses also create `counterpart_contribution.json` as an internal audit and
-reuse artifact. It carries shared company context and assumptions plus the
-lens-specific content needed by the other product. When supplied with
-`--counterpart-contribution`, the owner finalizer validates source and receiving
-lenses, source readiness, exact case identity, shared context and shared
-assumption IDs and descriptions, then writes
-`counterpart_contribution_review.json`. A compatible contribution is included
-in the owner plan and combined assumption register. A non-ready or conflicting
-contribution does not disappear into JSON or abort the user journey: the owner
-plan becomes `partial`, preserves the candidate contribution, and shows the
-unresolved differences for professional resolution. The mechanical comparison
-never decides whether two statements have the same meaning or which is right.
+Ask only those unresolved choices in chat, grounded in the actual inputs. Do not
+introduce hypothetical alternatives unless the facts cue them. Before execution,
+show an execution checkpoint with the selected inputs, command intent, output
+folder and expected artifacts.

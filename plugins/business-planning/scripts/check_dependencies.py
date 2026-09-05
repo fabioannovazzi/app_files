@@ -45,6 +45,18 @@ def main(argv: list[str] | None = None) -> int:
     if importlib.util.find_spec("openpyxl") is None:
         LOGGER.error("Missing dependency: openpyxl")
         return 1
+    if args.requirements.name == "requirements-pdf.txt":
+        if importlib.util.find_spec("playwright") is None:
+            LOGGER.error("Missing optional PDF dependency: playwright")
+            return 1
+        from playwright.sync_api import sync_playwright
+
+        with sync_playwright() as runtime:
+            if not Path(runtime.chromium.executable_path).is_file():
+                LOGGER.error(
+                    "Optional PDF export requires a provisioned Chromium browser"
+                )
+                return 1
     try:
         _activate_assurance()
         import vera_assurance  # noqa: F401

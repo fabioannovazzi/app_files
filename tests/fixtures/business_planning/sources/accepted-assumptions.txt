@@ -1,0 +1,4 @@
+Synthetic accepted hypotheses: new equity EUR 500 arrives in the second month,
+not at opening. Operating working capital and capex are explicitly zero.
+Downside revenue EUR 800. Variable COGS EUR 600; remaining costs fixed.
+These inputs are invented solely for regression evaluation.
