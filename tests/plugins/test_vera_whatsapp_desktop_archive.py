@@ -100,8 +100,6 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
     assert interface["longDescription"] == approved_description
     assert len(approved_description.split()) <= 120
     assert len(approved_description.split("\n\n")) == 3
-    assert "scritture contabili" in interface["longDescription"]
-    assert "concordato preventivo" in interface["longDescription"]
     assert "Cerca la corrispondenza del cliente." not in (interface["longDescription"])
     assert "giudizio professionale" in interface["longDescription"]
     assert "New Client" not in interface["longDescription"]

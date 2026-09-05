@@ -977,10 +977,10 @@ def test_build_index_suppresses_redundant_single_plugin_family_heading(
     html = gallery._build_index([item], stats, gallery_dir)
 
     assert (
-        '<h2 class="source-heading">open-item reconciliation <span>1 items</span></h2>'
+        '<h2 class="source-heading">open item reconciliation <span>1 items</span></h2>'
         in html
     )
-    assert '<h2 class="plugin-heading">open-item reconciliation' not in html
+    assert '<h2 class="plugin-heading">open item reconciliation' not in html
 
 
 def test_default_skipped_artifact_excludes_generic_html_snapshot(

@@ -65,7 +65,7 @@ def test_normalize_ocr_payload_derives_text_and_layout_summary_from_raw_outputs(
     assert slide["raw_layout"] is None
     assert slide["ocr_text"] == "Main title\n• First point"
     assert slide["title_text"] == "Main title"
-    assert slide["bullet_texts"] == ["First point • Second point"]
+    assert slide["bullet_texts"] == ["First point", "Second point"]
     assert slide["figure_regions"] == [{"x": 120.0, "y": 30.0, "w": 240.0, "h": 190.0}]
 
 

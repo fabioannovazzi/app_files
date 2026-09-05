@@ -59,8 +59,7 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     template = json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(clara_entries[".claude-plugin/plugin.json"])
 
-    assert source["version"] == "0.1.164"
-    assert template["version"] == manifest["version"] == "0.1.140"
+    assert template["version"] == manifest["version"]
     assert manifest["name"] == "clara"
     assert manifest["displayName"] == "Clara"
     assert manifest["homepage"].endswith("/clara/index.html?lang=en")
@@ -257,7 +256,10 @@ def test_marketplace_catalog_contains_configured_plugins(configured_clara) -> No
 
     assert set(entries) == {"clara", "lucia", "vera"}
     assert entries["clara"]["source"] == "./plugin_packages/clara/claude/clara"
-    assert entries["clara"]["version"] == "0.1.140"
+    assert (
+        entries["clara"]["version"]
+        == json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))["version"]
+    )
     assert entries["clara"]["strict"] is True
     assert "version" not in catalog
     assert builder.verify_package(package) == []

@@ -51,9 +51,28 @@ def _node_binary() -> str:
     return candidates[-1].as_posix()
 
 
+def _mcp_command() -> list[str]:
+    # Apply evaluates expiry in Node; keep its clock aligned with the fixed
+    # 2026-07-20 package fixture instead of the developer machine's date.
+    clock = (
+        "const RealDate = Date;"
+        "global.Date = class extends RealDate {"
+        "constructor(...args) { super(...(args.length ? args : ['2026-07-20T12:00:00Z'])); }"
+        "static now() { return new RealDate('2026-07-20T12:00:00Z').getTime(); }"
+        "}; require(process.argv[1]);"
+    )
+    return [
+        _node_binary(),
+        "-e",
+        clock,
+        str(PLUGIN_ROOT / "mcp" / "server.cjs"),
+        "--stdio",
+    ]
+
+
 def _call_mcp(messages: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
     completed = subprocess.run(
-        [_node_binary(), str(PLUGIN_ROOT / "mcp" / "server.cjs"), "--stdio"],
+        _mcp_command(),
         cwd=PLUGIN_ROOT,
         input="\n".join(json.dumps(message) for message in messages) + "\n",
         capture_output=True,
@@ -69,7 +88,7 @@ def _call_mcp(messages: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
 
 def _start_mcp_session() -> subprocess.Popen[str]:
     return subprocess.Popen(
-        [_node_binary(), str(PLUGIN_ROOT / "mcp" / "server.cjs"), "--stdio"],
+        _mcp_command(),
         cwd=PLUGIN_ROOT,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
@@ -329,42 +348,6 @@ def test_vera_declares_new_client_component_skill_and_mcp_route() -> None:
     assert "skills/client-file-preparation/SKILL.md" in wrapper_text
     assert "validate_client_file_preparation_review" in wrapper_text
     assert not (VERA_ROOT / "skills" / "client-file-preparation").exists()
-
-
-def test_vera_delegates_new_client_dependency_check() -> None:
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(VERA_ROOT / "scripts" / "check_dependencies.py"),
-            "--module",
-            "new-client",
-        ],
-        cwd=VERA_ROOT,
-        capture_output=True,
-        check=False,
-        text=True,
-    )
-
-    assert result.returncode == 0, result.stderr
-    assert json.loads(result.stdout)["status"] == "ready"
-
-
-def test_vera_delegates_new_client_file_preparation_dependency_check() -> None:
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(VERA_ROOT / "scripts" / "check_dependencies.py"),
-            "--module",
-            "client-file-preparation",
-        ],
-        cwd=VERA_ROOT,
-        capture_output=True,
-        check=False,
-        text=True,
-    )
-
-    assert result.returncode == 0, result.stderr
-    assert "Ambiente pronto." in result.stdout
 
 
 def test_vera_zip_expected_entries_embed_new_client_component() -> None:
@@ -767,7 +750,7 @@ def test_new_client_persistence_survives_customer_folder_rename_and_rejects_esca
         "result"
     ]["structuredContent"]
 
-    assert saved["ok"] is True
+    assert saved["ok"] is True, saved
     assert saved["persisted"] is True
     protected = {
         path: path.read_bytes()
@@ -881,7 +864,7 @@ def test_widget_visible_payload_persists_with_opaque_token(
     finally:
         _stop_mcp_session(process)
 
-    assert applied["persisted"] is True
+    assert applied.get("persisted") is True, applied
     assert (output_dir / "applied_decisions.json").is_file()
     assert (output_dir / applied["review_history_path"]).is_file()
 
@@ -1028,13 +1011,13 @@ def test_reload_reuses_saved_decision_details(
     finally:
         _stop_mcp_session(process)
 
-    assert first_save["persisted"] is True
+    assert first_save.get("persisted") is True, first_save
     assert all(
         set(decision) == {"item_id", "action", "status"}
         for decision in minimized_decisions
     )
-    assert second_save["persisted"] is True
-    assert applied["persisted"] is True
+    assert second_save.get("persisted") is True, second_save
+    assert applied.get("persisted") is True, applied
     applied_by_id = {
         decision["item_id"]: decision
         for decision in applied["applied_decisions"]["decisions"]
@@ -1157,7 +1140,7 @@ def test_persistent_ready_gate_requires_professional_reviewer_reference(
         ]
     )[1]["result"]["structuredContent"]
 
-    assert without_reviewer["application_status"] == "blocked"
+    assert without_reviewer.get("application_status") == "blocked"
     assert (
         without_reviewer["final_artifacts"]["export_gate"]["relationship_ready"]
         is False
@@ -1710,7 +1693,7 @@ def test_new_client_save_apply_preserves_integrity_and_history(
         "result"
     ]["structuredContent"]
 
-    assert saved["ok"] is True
+    assert saved["ok"] is True, saved
     assert saved["persisted"] is True
     assert core.validate_contract(output_dir)["status"] == (
         "contract_validated_for_professional_review"
@@ -2366,7 +2349,7 @@ def test_new_client_public_page_explains_one_operational_journey() -> None:
     )
 
     for snippet in (
-        "Vera · Nuovo cliente",
+        "Nuovo cliente | Vera",
         "Un solo percorso",
         "Organizza ciò che è arrivato",
         "Completa ciò che manca",

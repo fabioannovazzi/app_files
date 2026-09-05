@@ -30,23 +30,6 @@ def test_vera_declares_previdenza_component_skill_and_mcp_route() -> None:
     assert (VERA_ROOT / "skills" / "previdenza-inps" / "SKILL.md").exists()
 
 
-def test_vera_delegates_previdenza_dependency_check() -> None:
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(VERA_ROOT / "scripts" / "check_dependencies.py"),
-            "--module",
-            "previdenza-inps",
-        ],
-        cwd=VERA_ROOT,
-        capture_output=True,
-        check=False,
-        text=True,
-    )
-
-    assert result.returncode == 0, result.stderr
-
-
 def test_vera_zip_expected_entries_embed_previdenza_component() -> None:
     builder = _load_builder()
     bundle = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")

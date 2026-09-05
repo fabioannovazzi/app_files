@@ -249,7 +249,7 @@ def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     assert 'href="#jurisdiction"' not in vera
     assert "data-jurisdiction-section" not in vera
     assert "data-jurisdiction-nav" not in vera
-    assert vera.count('data-jurisdiction-item="it"') == 7
+    assert vera.count('data-jurisdiction-item="it"') == 8
     assert 'id="area-matters"' in vera
     assert 'id="area-analysis"' in vera
     assert 'id="area-research"' in vera
@@ -463,7 +463,7 @@ def test_all_product_directories_distinguish_area_headings_from_function_links()
 def test_product_roots_stop_after_the_function_directory() -> None:
     for product, page_path in PRODUCT_PAGES.items():
         page = page_path.read_text(encoding="utf-8")
-        expected_section_count = 3 if product == "vera" else 2
+        expected_section_count = 4 if product == "vera" else 2
         assert page.count("<section") == expected_section_count
         assert '<section id="workflow">' not in page
         assert "Funzioni disponibili" in page or "Available functions" in page

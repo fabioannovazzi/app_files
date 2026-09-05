@@ -753,7 +753,7 @@ def test_real_data_pilot_intake_rejects_tracked_repository_source(
     tmp_path: Path,
 ) -> None:
     ignored_parent = ROOT / "out"
-    assert ignored_parent.is_dir()
+    ignored_parent.mkdir(exist_ok=True)
     with TemporaryDirectory(
         prefix="clara-m6-intake-location-test-",
         dir=ignored_parent,
@@ -778,7 +778,7 @@ def test_real_data_pilot_intake_rejects_unrelated_repository_root(
     tmp_path: Path,
 ) -> None:
     ignored_parent = ROOT / "out"
-    assert ignored_parent.is_dir()
+    ignored_parent.mkdir(exist_ok=True)
     unrelated_repository = tmp_path / "unrelated-repository"
     (unrelated_repository / ".git").mkdir(parents=True)
     with TemporaryDirectory(
@@ -820,7 +820,7 @@ def test_real_data_pilot_intake_rejects_ignored_hardlink_alias(
     tmp_path: Path,
 ) -> None:
     ignored_parent = ROOT / "out"
-    assert ignored_parent.is_dir()
+    ignored_parent.mkdir(exist_ok=True)
     tracked_source = CLARA_ROOT / "scripts" / "validate_real_data_pilot_intake.py"
     with TemporaryDirectory(
         prefix="clara-m6-hardlink-test-",
