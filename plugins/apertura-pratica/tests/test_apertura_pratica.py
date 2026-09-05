@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PLUGIN_ROOT / "scripts"))
 
+import apertura_pratica_core as core  # noqa: E402
 from apertura_pratica_core import (  # noqa: E402
     ValidationError,
     add_evidence,
@@ -241,34 +245,51 @@ def test_review_cannot_be_applied_without_confirmation_or_after_intake_change(
         apply_decisions(run_dir, decisions_path, confirmed_by_user=True)
 
 
-def test_managed_run_reuses_exact_studio_archive_input_view(tmp_path: Path) -> None:
-    studio_scripts = PLUGIN_ROOT.parent / "studio-archive" / "scripts"
-    sys.path.insert(0, str(studio_scripts))
-    import client_ledger as ledger
-
-    client_root = tmp_path / "client-folder"
-    client_root.mkdir()
-    client_id = "client_0123456789abcdef01234567"
-    ledger.create_client_manifest(client_root, client_id)
-    engagement = ledger.create_engagement(client_root, client_id, "Test matter")
+def test_managed_run_reuses_exact_studio_archive_input_view(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Model the ledger boundary without requiring Vera in the installed bundle.
+    plugin_root = tmp_path / "modules" / "apertura-pratica"
+    (plugin_root.parent / "studio-archive" / "scripts").mkdir(parents=True)
+    monkeypatch.setattr(core, "PLUGIN_ROOT", plugin_root)
+    monkeypatch.syspath_prepend(str(plugin_root.parent / "studio-archive" / "scripts"))
+    run_dir = (
+        tmp_path
+        / "client"
+        / "archive"
+        / "engagements"
+        / "matter"
+        / "runs"
+        / "run-001"
+        / "outputs"
+    )
+    run_dir.mkdir(parents=True)
     source = tmp_path / "instruction.txt"
     source.write_text("Open the bounded test matter.", encoding="utf-8")
-    imported = ledger.import_document(
-        client_root,
-        client_id,
-        engagement["engagement_id"],
-        source.resolve(),
-        "source",
+    input_view = run_dir.parent / "inputs" / "instruction.txt"
+    input_view.parent.mkdir()
+    input_view.write_bytes(source.read_bytes())
+    context = {
+        "engagement_id": "matter-001",
+        "run_id": "run-001",
+        "input_bindings": [{"path": str(input_view)}],
+    }
+    write_json(run_dir.parent / "context.json", context)
+    load_run = Mock(
+        return_value={
+            "run": {"workflow_id": "apertura-pratica"},
+            "output_dir": str(run_dir),
+            "context": context,
+        }
     )
-    prepared = ledger.prepare_run(
-        client_root,
-        client_id,
-        engagement["engagement_id"],
-        "apertura-pratica",
-        "0.1.0",
-        input_ids=[imported["receipt"]["input_id"]],
+    monkeypatch.setitem(
+        sys.modules,
+        "client_ledger",
+        SimpleNamespace(
+            load_run=load_run,
+            LedgerError=ValueError,
+        ),
     )
-    run_dir = Path(prepared["output_dir"])
     initialize_workspace(
         run_dir,
         opening_mode="new_client_new_matter",
@@ -279,10 +300,13 @@ def test_managed_run_reuses_exact_studio_archive_input_view(tmp_path: Path) -> N
 
     record = add_evidence(
         run_dir,
-        Path(prepared["context"]["input_bindings"][0]["path"]),
+        input_view,
         role="client_supplied",
     )
 
-    assert record["sha256"] == imported["receipt"]["sha256"]
+    assert record["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    load_run.assert_called_with(
+        tmp_path / "client", "matter-001", "run-001", verify_inputs=True
+    )
     with pytest.raises(ValidationError, match="exact immutable input view"):
         add_evidence(run_dir, source, role="client_supplied")
