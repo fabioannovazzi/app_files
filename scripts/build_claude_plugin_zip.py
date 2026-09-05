@@ -741,6 +741,11 @@ def project_claude_manifest(
             value = source.get(field)
             if value is not None:
                 manifest[field] = value
+    description = manifest.get("description")
+    if not isinstance(description, str) or not description.strip():
+        raise ValueError("Claude plugin description must be a non-empty string")
+    if len(description) > 500:
+        raise ValueError("Claude plugin description must be at most 500 characters")
     manifest["skills"] = "./skills/"
     if isinstance(template, dict) and "hooks" in template:
         hooks = template["hooks"]
