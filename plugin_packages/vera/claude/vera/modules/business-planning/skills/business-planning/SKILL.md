@@ -193,6 +193,31 @@ keeps source lineage, calculations, unresolved matters and restrictions accessib
 in an appendix. Deliver one readable report link and a short decision summary.
 The JSON/CSV files are internal workpapers, not competing user deliverables.
 
+### Reader-facing presentation
+
+Use the shared compiler's optional `presentation` structure (see case-contract.md),
+not a case-specific renderer, HTML patch or monkey-patch. Set `language` explicitly
+for report labels, chart axes and number formatting. Keep one recommendation-led
+report; tables support the reasoning rather than replace it.
+
+For comparisons, bind numeric table cells to exact canonical calculation IDs or
+explicitly labelled source observations. Give every table a narrative caption
+explaining period, scope, exclusions and decision consequence. Observations are
+reported evidence, not resolution of a conflicting authoritative calculation.
+For cash scenarios distinguish the pre-financing peak from the residual deficit
+after scheduled funding: explain whether money must arrive earlier, commitments
+must shrink or the launch must wait. A positive ending cash balance does not
+remove an earlier funding shortfall. These are model-authored judgments.
+
+Where next steps are material, use action rows with a responsible role, timing,
+and a narrative evidence/decision criterion. Do not invent commitments or owners;
+label proposed roles as such. Include source filename/version and precise sheet,
+cell or page locators in `source_notes`. Public references should have readable
+URLs in the standalone PDF. Inspect every PDF page for legends, table overflow,
+stranded headings, draft labels and accessible sources. Do not insert a blanket
+claim that no sharing has ever occurred; communication history belongs to run
+records and must reflect actual events.
+
 ### Registered execution and output location
 
 Run `python scripts/check_dependencies.py` from the shared module root first.
@@ -226,7 +251,10 @@ Internal-only material needs an explicit reviewed audience decision before relea
 Inspect the HTML visually: recommendation first, readable charts with units,
 periods, scenarios, axes, zero lines, and calculation lineage. PDF is optional via
 `--pdf`, from the validated report structure only, using the provisioned optional
-renderer in `requirements-pdf.txt`; a partial or blocked result cannot produce PDF.
+renderer in `requirements-pdf.txt`. Normal `--pdf` requires readiness. For an
+explicit internal discussion draft, use `--draft-pdf`: it retains partial status,
+prints a draft label on every page and records the PDF hash in the run receipt.
+Blocked results cannot export; never fabricate reviews to obtain a PDF.
 
 Provide models only the excerpts, assumptions and calculation records needed for
 reasoning and permitted for the audience. Full files, local paths and the complete
