@@ -117,12 +117,20 @@
     {
       "id": "source-first-coverage-gate",
       "control": "Each recent discovery scan binds an exact model-provenanced and professionally reviewed query-scoped source selection, one covered-or-gap claim for every requested territory and category, the selected-source registry revision and temporal window; it records immutable per-source check snapshots and optional public publication cursors, prevents semantic web research from preceding selected priority-source attempts, and rejects a complete outcome while the selection is unreviewed, a scope gap remains, or any selected priority source is failed, unavailable, missing or unreviewed."
+    },
+    {
+      "id": "gazette-issue-inventory",
+      "control": "Gazette source checks marked checked require an operator-supplied, professionally reviewed issue inventory: official index URLs, enumeration time and window, each issue URL and publication date, inspection status and timestamp, public act URLs and notes. Schema, unique IDs, date consistency and complete declared issue coverage are checked mechanically and included in review hashes and sealed scan snapshots. Code does not authenticate retrieval or decide semantic relevance."
+    },
+    {
+      "id": "chatgpt-public-discovery-boundary",
+      "control": "The shared institutional-discovery method also governs ChatGPT public research. Public source text, generic scope, registry metadata and issue evidence may enter the selected OpenAI ChatGPT account model context; Vera is not a separate recipient and does not enforce account retention or training controls. Without execution or storage, the response discloses that local schema validation, hash-bound review, workspace isolation and durable persistence did not run. Without browsing, current coverage remains partial. No private client profiles or identifiers enter public retrieval queries. The named runtime profiles in this register describe the local Codex and Cowork paths; they do not certify ChatGPT runtime controls."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-14",
+    "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "bbd89317c57ea59e813a8d9a3706758afd80979c4283495a1238eac9be28c003"
+    "source_fingerprint": "90078d3df57722ca61f250d076af4c82b5a20844baffedab05315751503207f8"
   }
 }

@@ -12,6 +12,18 @@ Later host-specific instructions in this reference cannot override this rule.
 
 ## Implemented
 
+- Shared Claude/Cowork institutional discovery instructions, explicit capability
+  limits and an auditable chat-only public-research route.
+- Issue-level gazette inventories bound to source-check reviews and sealed scan
+  snapshots, with exact coverage and temporal validation. Enumeration and page
+  inspection remain operator assertions, not authenticated retrieval evidence.
+- Programming and no-operating-calendar lifecycle states and visible unmatched
+  opportunities. Dynamic source additions reuse the append-only source registry.
+
+Live Claude and ChatGPT acceptance of CR-38–40 must be recorded separately from
+unit tests and package parity. The shared method alone is not runtime proof.
+
+
 - Private `single_client` and `portfolio` opportunity-radar workbenches using
   opaque client references, explicit local authorization/retention receipts,
   exact workspace-path binding and owner-only files.

@@ -91,7 +91,7 @@ def _source(client_refs: list[str] | None = None) -> dict[str, object]:
         "publisher": "Regione Veneto",
         "official_url": "https://www.regione.veneto.it/bandi",
         "discovery_role": "priority_direct",
-        "source_surface": "official_gazette",
+        "source_surface": "funding_portal",
         "territories": ["Regione Veneto"],
         "categories": ["artigianato", "investimenti"],
         "act_families": ["dgr", "ddr", "bur_issue", "annex", "amendment"],
