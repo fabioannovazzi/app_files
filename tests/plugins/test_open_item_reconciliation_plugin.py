@@ -2033,7 +2033,7 @@ def test_audit_mcp_terminal_replay_rejects_invalid_assured_tree(
     "module_name",
     ["audit_assurance", "reconciliation_helpers"],
 )
-def test_audit_mcp_rejects_timestamp_valid_local_bytecode_before_python_bridge_import(
+def test_audit_mcp_ignores_timestamp_valid_local_bytecode_before_python_bridge_import(
     tmp_path: Path,
     module_name: str,
 ) -> None:
@@ -2041,6 +2041,7 @@ def test_audit_mcp_rejects_timestamp_valid_local_bytecode_before_python_bridge_i
     output_dir = _running_audit_output(tmp_path)
     workflow.build_reconciliation_artifacts(
         output_dir=output_dir,
+        run_id=_customer_run_id(output_dir),
         open_items=[
             {
                 "record_id": "open-1",
@@ -2110,37 +2111,39 @@ def test_audit_mcp_rejects_timestamp_valid_local_bytecode_before_python_bridge_i
     decisions = [
         {"item_id": item["id"], "action": "accept"} for item in review_payload["items"]
     ]
-    before = _audit_tree_image(output_dir)
+    predecessor = json.loads((output_dir / "assurance_receipts.json").read_text())
+    source_before = metadata_source.read_bytes()
+    cache_before = cache_path.read_bytes()
 
-    with pytest.raises(subprocess.CalledProcessError) as raised:
-        _call_mcp_server(
-            [
-                {
-                    "jsonrpc": "2.0",
-                    "id": 1,
-                    "method": "tools/call",
-                    "params": {
-                        "name": "apply_open_item_reconciliation_decisions",
-                        "arguments": {
-                            "run_intake": run_intake,
-                            "review_payload": review_payload,
-                            "decisions": decisions,
-                            "final_artifacts": final_artifacts,
-                        },
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "apply_open_item_reconciliation_decisions",
+                    "arguments": {
+                        "run_intake": run_intake,
+                        "expected_predecessor_checkpoint": predecessor["content_sha256"],
+                        "review_payload": review_payload,
+                        "decisions": decisions,
+                        "final_artifacts": final_artifacts,
                     },
-                }
-            ],
-            server_path=plugin_copy / "mcp" / "server.cjs",
-            env={
-                "PYTHONDONTWRITEBYTECODE": "",
-                "PYTHONPYCACHEPREFIX": "",
-            },
-        )
-
-    assert raised.value.stdout == ""
-    assert "exact 25-file contract" in raised.value.stderr
+                },
+            }
+        ],
+        server_path=plugin_copy / "mcp" / "server.cjs",
+        env={
+            "PYTHONDONTWRITEBYTECODE": "",
+            "PYTHONPYCACHEPREFIX": "",
+        },
+    )
+    assert responses[0]["id"] == 1
+    assert responses[0]["result"].get("isError") is not True, responses
     assert not marker.exists()
-    assert _audit_tree_image(output_dir) == before
+    assert metadata_source.read_bytes() == source_before
+    assert cache_path.read_bytes() == cache_before
 
 
 def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(

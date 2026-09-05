@@ -2107,14 +2107,14 @@ def test_check_entries_rejects_resealed_upstream_implementation_set_mutation(
 
 @pytest.mark.parametrize(
     "mutation",
-    ["unowned_script", "pycache_fifo", "receipted_hardlink"],
+    ["unowned_script", "implementation_fifo", "receipted_hardlink"],
 )
 def test_check_entries_rejects_unsafe_upstream_implementation_physical_tree(
     monkeypatch: Any,
     tmp_path: Path,
     mutation: str,
 ) -> None:
-    if mutation == "pycache_fifo" and sys.platform == "win32":
+    if mutation == "implementation_fifo" and sys.platform == "win32":
         pytest.skip("FIFO implementation probe requires a POSIX host.")
     normalized = _qualified_journal(
         tmp_path / "source",
@@ -2143,10 +2143,8 @@ def test_check_entries_rejects_unsafe_upstream_implementation_physical_tree(
             "VALUE = 'unowned'\n",
             encoding="utf-8",
         )
-    elif mutation == "pycache_fifo":
-        cache = copied_plugin / "scripts" / "__pycache__"
-        cache.mkdir()
-        os.mkfifo(cache / "rogue")
+    elif mutation == "implementation_fifo":
+        os.mkfifo(copied_plugin / "scripts" / "rogue.pyc")
     else:
         target = copied_plugin / "scripts" / "journal_sampling_core.py"
         external = tmp_path / "journal_sampling_core.py"
@@ -9026,3 +9024,76 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
         "Review Handoff",
     ]
     assert invalid["error"] == "review_payload.items debe ser una matriz"
+
+
+@pytest.mark.parametrize(
+    "artifact", ["__pycache__/ambient.pyc", "ambient.pyc", "ambient.pyo"]
+)
+def test_mcp_initializes_with_incidental_bytecode(
+    tmp_path: Path, artifact: str
+) -> None:
+    plugin, shared = _copy_check_entries_runtime(tmp_path / "runtime")
+    cache = shared / artifact
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_bytes(b"inert generated cache")
+
+    responses = _call_mcp_server(
+        [
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+            {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+        ],
+        server_path=plugin / "mcp/server.cjs",
+    )
+
+    assert responses[0]["result"]["serverInfo"]["name"] == "check-entries-widgets"
+    assert responses[1]["result"]["tools"]
+    assert cache.read_bytes() == b"inert generated cache"
+
+
+@pytest.mark.parametrize(
+    "artifact", ["__pycache__/ambient.pyc", "ambient.pyc", "ambient.pyo"]
+)
+def test_check_entries_accepts_upstream_incidental_bytecode(
+    monkeypatch: Any,
+    tmp_path: Path,
+    artifact: str,
+) -> None:
+    normalized = _qualified_journal(
+        tmp_path / "source",
+        [
+            {
+                "date": "2025-01-02",
+                "movement": "M-1001",
+                "description": "Invoice payment",
+                "debit": "123.45",
+            }
+        ],
+    )
+    plugin = tmp_path / "runtime/journal-sampling"
+    shared = tmp_path / "runtime/_shared/vendor/modules/vera_assurance"
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo")
+    shutil.copytree(ROOT / "plugins/journal-sampling", plugin, ignore=ignore)
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_assurance", shared, ignore=ignore
+    )
+    cache = plugin / "scripts" / artifact
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_bytes(b"inert generated cache")
+    core = load_core()
+    monkeypatch.setattr(core, "_journal_sampling_component_root", lambda: plugin)
+    monkeypatch.setattr(
+        core,
+        "implementation_artifact_roots",
+        lambda: {
+            "implementation": ROOT / "plugins/check-entries",
+            "assurance_implementation": shared,
+        },
+    )
+    support = tmp_path / "support"
+    support.mkdir()
+    output = tmp_path / "checks"
+
+    core.run_entry_checks(normalized, support, output)
+
+    assert (output / "check_audit.json").is_file()
+    assert cache.read_bytes() == b"inert generated cache"

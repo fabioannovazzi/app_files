@@ -2071,6 +2071,8 @@ function concordatoScanImplementationRoot(root, scanRoots, rootFiles) {
         throw new Error("invalid Concordato implementation symlink");
       }
       if (entry.isDirectory()) {
+        // Generated caches are inert; the executable source contract stays exact.
+        if (name === "__pycache__") continue;
         directories.add(relative);
         pending.push(entryPath);
         continue;
@@ -2078,6 +2080,7 @@ function concordatoScanImplementationRoot(root, scanRoots, rootFiles) {
       if (!entry.isFile() || entry.nlink !== 1) {
         throw new Error("invalid Concordato implementation artifact");
       }
+      if (name.endsWith(".pyc") || name.endsWith(".pyo")) continue;
       files.add(relative);
     }
   }

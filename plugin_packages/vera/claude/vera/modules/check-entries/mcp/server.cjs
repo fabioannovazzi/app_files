@@ -108,6 +108,8 @@ function exactPreImportImplementationTree() {
           throw new Error("Check Entries implementation cannot contain symlinks");
         }
         if (observed.isDirectory()) {
+          // Cache files are inert; validate executable source with the exact contract.
+          if (name === "__pycache__") continue;
           observedDirectories.add(`${rootId}:${relative}`);
           pending.push(candidate);
           continue;
@@ -117,6 +119,7 @@ function exactPreImportImplementationTree() {
             "Check Entries implementation files must be ordinary single-link files",
           );
         }
+        if (name.endsWith(".pyc") || name.endsWith(".pyo")) continue;
         observedFiles.add(`${rootId}:${relative}`);
       }
     }

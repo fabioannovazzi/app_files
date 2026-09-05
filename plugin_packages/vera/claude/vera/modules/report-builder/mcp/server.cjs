@@ -1928,6 +1928,8 @@ function reportBuilderScanImplementationRoot(root, scanRoots, rootFiles) {
         throw new Error("invalid Report Builder implementation symlink");
       }
       if (entry.isDirectory()) {
+        // Generated caches are inert; the executable source contract stays exact.
+        if (name === "__pycache__") continue;
         directories.add(relative);
         pending.push(entryPath);
         continue;
@@ -1935,6 +1937,7 @@ function reportBuilderScanImplementationRoot(root, scanRoots, rootFiles) {
       if (!entry.isFile() || entry.nlink !== 1) {
         throw new Error("invalid Report Builder implementation artifact");
       }
+      if (name.endsWith(".pyc") || name.endsWith(".pyo")) continue;
       files.add(relative);
     }
   }
