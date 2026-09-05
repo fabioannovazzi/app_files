@@ -116,3 +116,5 @@ python scripts/mechanical_acceptance.py \
   --execute \
   --artifact-mode data_and_render
 ```
+
+Mechanical acceptance leaves currency unspecified by default. Pass `--currency USD` (or the explicitly supplied currency) to test a stated currency. Run both cases when checking currency regressions; a single currency fixture does not cover omission.

@@ -22,6 +22,9 @@ REQUIRED_MODULES = (
 )
 PACKAGE_IMPORTS = {
     "pillow": "PIL",
+    "python-dateutil": "dateutil",
+    "python-docx": "docx",
+    "scikit-learn": "sklearn",
 }
 
 

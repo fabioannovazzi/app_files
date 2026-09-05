@@ -675,6 +675,7 @@ def build_mechanical_acceptance(
     *,
     output_dir: Path,
     execute: bool = False,
+    currency: str | None = None,
     artifact_mode: str = ARTIFACT_MODE_DATA_ONLY,
     capability_ids: set[str] | None = None,
     recipe_paths: dict[str, Path] | None = None,
@@ -860,7 +861,7 @@ def build_mechanical_acceptance(
             recipe_path=explicit_recipe_path,
             dataset_profile=dataset["profile"],
             role_bindings=bindings,
-            currency="EUR",
+            currency=currency,
             artifact_mode=artifact_mode,
         )
         try:
@@ -1017,6 +1018,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
     parser.add_argument(
+        "--currency",
+        help="Explicit currency for rendered metrics; omitted means unspecified.",
+    )
+    parser.add_argument(
         "--suite",
         action="store_true",
         help="Use the packaged synthetic fixtures and family dataset bindings.",
@@ -1094,6 +1099,7 @@ def main(argv: list[str] | None = None) -> int:
         dataset_paths,
         output_dir=args.output_dir,
         execute=args.execute,
+        currency=args.currency,
         artifact_mode=args.artifact_mode,
         capability_ids=set(args.capability) or None,
         recipe_paths=recipe_paths,

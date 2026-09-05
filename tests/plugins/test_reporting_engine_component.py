@@ -1322,3 +1322,46 @@ def test_reporting_engine_cli_writes_dataset_profile(tmp_path: Path) -> None:
     assert result == 0
     assert payload["dataset_id"] == "cli_sales"
     assert payload["role_candidate_columns"]["period_axis"] == ["month"]
+
+
+@pytest.mark.parametrize("currency", [None, "USD"])
+def test_mechanical_acceptance_preserves_requested_currency(
+    tmp_path: Path, currency: str | None
+) -> None:
+    acceptance = _load_module(
+        "reporting_engine_currency_acceptance_test",
+        PLUGIN_ROOT / "scripts" / "mechanical_acceptance.py",
+    )
+    fixture = (
+        PLUGIN_ROOT / "fixtures" / "mechanical_acceptance" / "universal_complete.csv"
+    )
+    payload = acceptance.build_mechanical_acceptance(
+        [fixture],
+        output_dir=tmp_path / "acceptance",
+        currency=currency,
+        capability_ids={"distribution.histogram"},
+    )
+    record = payload["records"][0]
+    recipe = json.loads(Path(record["recipe_path"]).read_text())
+    assert recipe["options"].get("currency") == currency
+
+
+@pytest.mark.parametrize(
+    "component", ["distribution-analysis", "scatter-bubble-analysis"]
+)
+@pytest.mark.parametrize(
+    "distribution, import_name",
+    [
+        ("python-dateutil", "dateutil"),
+        ("python-docx", "docx"),
+        ("scikit-learn", "sklearn"),
+    ],
+)
+def test_chart_dependency_checker_maps_distribution_to_import(
+    component: str, distribution: str, import_name: str
+) -> None:
+    checker = _load_module(
+        "chart_dependency_mapping_test",
+        ROOT / "plugins" / component / "scripts" / "check_dependencies.py",
+    )
+    assert checker.import_name(distribution) == import_name
