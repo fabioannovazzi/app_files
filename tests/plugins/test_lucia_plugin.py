@@ -471,7 +471,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
         assert manifest["displayName"] == "Lucia"
         assert (
             manifest["version"]
-            == _json(LUCIA_ROOT / ".claude-plugin" / "plugin.json")["version"]
+            == _json(LUCIA_ROOT / ".codex-plugin" / "plugin.json")["version"]
         )
         approved_description = _json(LUCIA_ROOT / ".claude-plugin" / "plugin.json")[
             "description"

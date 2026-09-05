@@ -32,7 +32,7 @@ jobs:
       - name: Keep canonical package names and tolerate installer generations
         run: |
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py -k "cowork_sync_generation or cowork_manifest_unsafe"
-          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k distribution_keeps_canonical
+          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "distribution_keeps_canonical or canonical_version_despite"
 
   vera-cowork-python:
     runs-on: ubuntu-latest

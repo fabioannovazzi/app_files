@@ -711,7 +711,7 @@ def project_claude_manifest(
     include_agents: bool,
     template_content: bytes | None = None,
 ) -> bytes:
-    """Project source metadata and the independently versioned Claude template."""
+    """Project Claude metadata using the canonical product release version."""
 
     source = json.loads(content.decode("utf-8"))
     if not isinstance(source, dict):
@@ -734,8 +734,6 @@ def project_claude_manifest(
     if isinstance(template, dict):
         if template.get("name") != source["name"]:
             raise ValueError("Claude manifest name must match canonical manifest")
-        if not template.get("version"):
-            raise ValueError("Claude plugin manifest template requires version")
         manifest = {
             "$schema": CLAUDE_PLUGIN_SCHEMA,
             **{
@@ -743,7 +741,6 @@ def project_claude_manifest(
                 for field in (
                     "name",
                     "displayName",
-                    "version",
                     "description",
                     "author",
                     "homepage",
@@ -753,6 +750,7 @@ def project_claude_manifest(
                 )
                 if field in template
             },
+            "version": source["version"],
         }
     else:
         manifest = {

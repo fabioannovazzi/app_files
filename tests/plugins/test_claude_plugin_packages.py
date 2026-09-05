@@ -79,21 +79,21 @@ def cowork_instruction_docs(vera_entries):
     }
 
 
-def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
+def test_claude_manifest_uses_canonical_vera_identity_and_version(
     vera_entries,
 ) -> None:
     source = json.loads(VERA_SOURCE_MANIFEST.read_text(encoding="utf-8"))
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == template["version"]
+    assert manifest["version"] == source["version"]
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
         "name": template["name"],
         "displayName": template["displayName"],
-        "version": template["version"],
+        "version": source["version"],
         "description": template["description"],
         "author": template["author"],
         "homepage": template["homepage"],
@@ -1198,4 +1198,26 @@ def test_cowork_distribution_keeps_canonical_names_without_sync_suffixes(
     )
     assert package.output_zip.name == f"{plugin}-claude-plugin.zip"
     assert manifest["name"] == plugin
+    canonical = json.loads(
+        (ROOT / "plugins" / plugin / ".codex-plugin" / "plugin.json").read_text()
+    )
+    assert manifest["version"] == canonical["version"]
     assert not any(re.search(r"~g\d+(?:/|$)", name) for name in names)
+
+
+@pytest.mark.parametrize("template_version", [None, "0.0.1", "99.0.0"])
+def test_claude_build_uses_canonical_version_despite_old_template_version(
+    template_version: str | None,
+) -> None:
+    builder = load_builder()
+    source = json.loads(VERA_SOURCE_MANIFEST.read_text())
+    template = json.loads(VERA_CLAUDE_MANIFEST.read_text())
+    template["version"] = template_version
+
+    result = builder.project_claude_manifest(
+        json.dumps(source).encode(),
+        include_agents=False,
+        template_content=json.dumps(template).encode(),
+    )
+
+    assert json.loads(result)["version"] == source["version"]
