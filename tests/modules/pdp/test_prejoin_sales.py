@@ -29,6 +29,22 @@ from modules.pdp.prejoin_sales import JoinConfig, _join_retailer, _normalize_sal
 from modules.utilities.utils import get_schema_and_column_names
 
 
+@pytest.fixture
+def empty_resolution_history(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Give enrichment scenarios no prior history without accessing Postgres."""
+    monkeypatch.setattr(
+        mapping_mod.attribute_resolution_history,
+        "read_resolution_ledger",
+        lambda: pl.DataFrame(),
+    )
+
+    monkeypatch.setattr(
+        mapping_mod.attribute_resolution_history,
+        "read_resolution_consensus",
+        lambda: pl.DataFrame(),
+    )
+
+
 def test_prejoin_main_rejects_attribute_mapping_stage(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -1239,6 +1255,7 @@ def test_prejoin_sales_variant_fill_varying_variant_attribute_skips_ambiguous_ma
     assert_frame_equal(result, expected)
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_fills_missing_form(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -1311,6 +1328,7 @@ def test_prejoin_sales_parent_image_fill_fills_missing_form(monkeypatch) -> None
     assert not audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_accepts_string_confidence(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -1370,6 +1388,7 @@ def test_prejoin_sales_parent_image_fill_accepts_string_confidence(monkeypatch) 
     assert not audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_handles_short_responses(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -1439,6 +1458,7 @@ def test_prejoin_sales_parent_image_fill_handles_short_responses(monkeypatch) ->
     assert audit.height == 2
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_skips_invalid_image_url(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -1498,6 +1518,7 @@ def test_prejoin_sales_parent_image_fill_skips_invalid_image_url(monkeypatch) ->
     assert audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_uses_local_image_first(
     monkeypatch, tmp_path
 ) -> None:
@@ -1655,6 +1676,7 @@ def test_prejoin_sales_image_path_to_data_url_downloads_supported_fallback(
     assert data_url.startswith("data:image/jpeg;base64,")
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_preserves_late_attributes(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -1748,6 +1770,7 @@ def test_prejoin_sales_parent_image_fill_preserves_late_attributes(monkeypatch) 
     assert audit.height == 105
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_skips_low_coverage_attributes(
     monkeypatch,
 ) -> None:
@@ -1846,6 +1869,7 @@ def test_prejoin_sales_parent_image_fill_skips_low_coverage_attributes(
     assert audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_parent_image_fill_replays_checkpoint_response(
     monkeypatch,
 ) -> None:
@@ -1924,6 +1948,7 @@ def test_prejoin_sales_parent_image_fill_replays_checkpoint_response(
     assert audit.get_column("request_key").item() == request_key
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_updates_parent_and_variant(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -2034,6 +2059,7 @@ def test_prejoin_sales_web_fill_updates_parent_and_variant(monkeypatch) -> None:
     assert not audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_calls_checkpoint_callback(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -2154,6 +2180,7 @@ def test_prejoin_sales_web_fill_calls_checkpoint_callback(monkeypatch) -> None:
     assert "sephora:V1" in str(batches[0][0]["filled_variant_attributes"])
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_accepts_single_item_list_values(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -2264,6 +2291,7 @@ def test_prejoin_sales_web_fill_accepts_single_item_list_values(monkeypatch) -> 
     assert not audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_recovers_from_raw_response_fragment(
     monkeypatch,
 ) -> None:
@@ -2369,6 +2397,7 @@ def test_prejoin_sales_web_fill_recovers_from_raw_response_fragment(
     assert not audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_reuses_relaxed_brand_cache_keys(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -2461,6 +2490,7 @@ def test_prejoin_sales_web_fill_reuses_relaxed_brand_cache_keys(monkeypatch) -> 
     assert not audit.is_empty()
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_skips_low_coverage_attributes(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 
@@ -2680,6 +2710,7 @@ def test_prejoin_sales_web_fill_skips_low_coverage_attributes(monkeypatch) -> No
     assert audit.height == 1
 
 
+@pytest.mark.usefixtures("empty_resolution_history")
 def test_prejoin_sales_web_fill_replays_checkpoint_response(monkeypatch) -> None:
     import modules.pdp.prejoin_sales as prejoin_mod
 

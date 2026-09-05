@@ -33,6 +33,7 @@ def test_repo_review_payload_contract_coverage_has_no_gaps() -> None:
     by_plugin = {report.plugin: report for report in reports}
 
     assert set(by_plugin) == {
+        "archive-organization",
         "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",

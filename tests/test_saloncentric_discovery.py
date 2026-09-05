@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-
 import json
 from pathlib import Path
 
 from modules.pdp.discovery import _apply_sort_mode_to_url
 from modules.pdp.discovery_classification import build_parent_discovery_classification
-from modules.pdp.models import ListingObservation
+from modules.pdp.models import FilterSurface, ListingObservation
 from modules.pdp.saloncentric_filter_discovery import (
     SALONCENTRIC_CORE_DESCRIPTOR_FAMILIES,
     SALONCENTRIC_DESCRIPTOR_FAMILIES,
@@ -18,7 +17,6 @@ from modules.pdp.saloncentric_filter_discovery import (
     map_saloncentric_families_to_taxonomy,
     normalize_saloncentric_filter_value,
 )
-from modules.pdp.models import FilterSurface
 
 
 def test_apply_sort_mode_to_url_uses_srule_for_saloncentric() -> None:
@@ -101,8 +99,8 @@ def test_build_parent_discovery_classification_assigns_new_and_pareto() -> None:
     b_count = sum(1 for row in rows if row.get("pareto_class") == "B")
     c_count = sum(1 for row in rows if row.get("pareto_class") == "C")
     assert a_count == 2
-    assert b_count == 6
-    assert c_count == 2
+    assert b_count == 3
+    assert c_count == 5
 
 
 def test_extract_saloncentric_filter_surfaces_handles_multi_pref_pairs() -> None:
@@ -125,21 +123,21 @@ def test_extract_saloncentric_filter_surfaces_handles_multi_pref_pairs() -> None
 
 def test_default_filter_families_for_category_uses_taxonomy_branch() -> None:
     assert default_filter_families_for_category("permanent") == (
-        "product type",
         "product benefit",
         "product form",
         "ingredient preference",
-        "haircolor tone",
-        "haircolor level",
         "hair condition",
     )
-    assert default_filter_families_for_category("unknown-category") == SALONCENTRIC_DESCRIPTOR_FAMILIES
+    assert (
+        default_filter_families_for_category("unknown-category")
+        == SALONCENTRIC_DESCRIPTOR_FAMILIES
+    )
 
 
 def test_extract_saloncentric_filter_surfaces_defaults_to_category_allowlist() -> None:
     html = """
     <html><body>
-      <a href="/hair-color?prefn1=Haircolor+Tone&prefv1=Cool">Tone</a>
+      <a href="/hair-color?prefn1=productBenefitHairSc&prefv1=greyCoverage">Grey Coverage</a>
       <a href="/hair-color?prefn1=Brand&prefv1=Redken">Brand</a>
     </body></html>
     """
@@ -155,7 +153,7 @@ def test_extract_saloncentric_filter_surfaces_defaults_to_category_allowlist() -
     assert SALONCENTRIC_CORE_DESCRIPTOR_FAMILIES
     assert SALONCENTRIC_SECONDARY_DESCRIPTOR_FAMILIES == ("hair condition",)
     assert [(s.filter_family, s.filter_value) for s in surfaces] == [
-        ("haircolor tone", "Cool")
+        ("product benefit", "greyCoverage")
     ]
 
 
@@ -177,6 +175,7 @@ def test_extract_saloncentric_filter_surfaces_maps_real_site_family_keys() -> No
         ),
         html=html,
         category_key="permanent",
+        allowed_families=("haircolor level", "product benefit"),
     )
 
     assert [(surface.filter_family, surface.filter_value) for surface in surfaces] == [
@@ -212,9 +211,15 @@ def test_map_saloncentric_families_to_taxonomy_uses_labels_ids_and_aliases() -> 
 
 
 def test_normalize_saloncentric_filter_value_haircolor_level() -> None:
-    assert normalize_saloncentric_filter_value("haircolor level", "level1") == "Level 01"
-    assert normalize_saloncentric_filter_value("haircolor level", "Level 12") == "Level 12"
-    assert normalize_saloncentric_filter_value("haircolor level", "No Level") == "No Level"
+    assert (
+        normalize_saloncentric_filter_value("haircolor level", "level1") == "Level 01"
+    )
+    assert (
+        normalize_saloncentric_filter_value("haircolor level", "Level 12") == "Level 12"
+    )
+    assert (
+        normalize_saloncentric_filter_value("haircolor level", "No Level") == "No Level"
+    )
 
 
 def test_permanent_taxonomy_branch_maps_discovery_families() -> None:
@@ -223,49 +228,39 @@ def test_permanent_taxonomy_branch_maps_discovery_families() -> None:
 
     attributes = category_meta.get("attributes", [])
     assert [attr["id"] for attr in attributes] == [
-        "category",
         "benefit",
         "form",
         "ingredient_preference",
-        "haircolor_tone",
-        "haircolor_level",
         "hair_condition",
     ]
     assert [attr["label"] for attr in attributes] == [
-        "product type",
         "product benefit",
         "product form",
         "ingredient preference",
-        "haircolor tone",
-        "haircolor level",
         "hair condition",
     ]
 
     mapping = map_saloncentric_families_to_taxonomy(
         [
-            "product type",
             "product benefit",
             "product form",
             "ingredient preference",
-            "haircolor tone",
-            "haircolor level",
             "hair condition",
         ],
         category_meta=category_meta,
     )
 
     assert mapping == {
-        "product type": "category",
         "product benefit": "benefit",
         "product form": "form",
         "ingredient preference": "ingredient_preference",
-        "haircolor tone": "haircolor_tone",
-        "haircolor level": "haircolor_level",
         "hair condition": "hair_condition",
     }
 
 
-def test_crawl_filter_observations_forwards_parent_pattern_and_base_url(monkeypatch) -> None:
+def test_crawl_filter_observations_forwards_parent_pattern_and_base_url(
+    monkeypatch,
+) -> None:
     captured: dict[str, object] = {}
 
     def _fake_discover_listing_observations(*args, **kwargs):

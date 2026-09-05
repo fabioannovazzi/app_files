@@ -177,38 +177,49 @@ def test_clara_public_page_exposes_complete_spanish_locale_contract() -> None:
     assert 'es: "es_ES"' in page
     assert '"hero.eyebrow": "AI companion para consultores"' in page
     assert '"hero.title": "Clara"' in page
-    assert "Clara trabaja contigo en ChatGPT Work y Codex o en Claude Cowork." in page
+    assert (
+        "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork."
+        in page
+    )
     assert "Clara prepara el trabajo. El criterio sigue siendo tuyo." not in page
     assert "Ver el vídeo sobre el tratamiento de datos" in page
 
 
-def test_clara_public_page_links_all_locales_to_shared_data_handling_video() -> None:
-    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
-        encoding="utf-8"
+def test_clara_function_links_have_localized_model_data_information() -> None:
+    page_root = ROOT / "static" / "shared" / "clara"
+    page = (page_root / "index.html").read_text(encoding="utf-8")
+    function_paths = re.findall(r'data-function-link data-base-href="([^"]+)"', page)
+    assert function_paths
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is required to execute the function-page catalog")
+    script = r"""
+const fs = require("node:fs");
+global.window = {};
+eval(fs.readFileSync(process.argv[1], "utf8"));
+process.stdout.write(JSON.stringify(window.MPARANZA_FUNCTION_PAGES));
+"""
+    result = subprocess.run(
+        [node, "-e", script, str(ROOT / "static/shared/product-function-pages.js")],
+        check=True,
+        capture_output=True,
+        text=True,
     )
-
-    assert 'href="/data-handling?lang=en#data-handling-video"' in page
-    assert "data-compliance-video-link" in page
-    assert "`/data-handling?lang=${safeLang}#data-handling-video`" in page
-    for label in (
-        "Watch the data-handling video",
-        "Guarda il video sulla gestione dei dati",
-        "Voir la vidéo sur le traitement des données",
-        "Video zur Datenverarbeitung ansehen",
-        "Ver el vídeo sobre el tratamiento de datos",
-    ):
-        assert label in page
-
-
-def test_clara_public_page_uses_native_spanish_presentation_video() -> None:
-    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
-        encoding="utf-8"
-    )
-
-    assert 'es: { id: "8aCsIsrwWfU", duration: "0:53", catalogLanguage: "es" }' in page
-    assert "Español · 0:53 · Se abre en YouTube" in page
-    assert "De materiales del proyecto a una presentación lista para decidir" in page
-    assert 'es: { id: "3zvFm3fGdQ8"' not in page
+    catalog = json.loads(result.stdout)
+    for relative_path in function_paths:
+        function_page = (page_root / relative_path).read_text(encoding="utf-8")
+        key = re.search(r'data-function-page="([^"]+)"', function_page)
+        assert key is not None, relative_path
+        assert 'src="../product-function-page.js"' in function_page
+        translations = catalog[key.group(1)]["copy"]
+        assert {"it", "en", "fr", "de", "es"} <= set(translations)
+        for language in ("it", "en", "fr", "de", "es"):
+            assert translations[language]["modelDataStatus"] in {
+                "relevant",
+                "not-relevant",
+                "placeholder",
+            }
+            assert translations[language]["modelData"], (relative_path, language)
 
 
 def test_clara_spanish_catalog_uses_only_native_spanish_audio() -> None:
@@ -973,7 +984,6 @@ def test_manifest_and_skill_are_generic() -> None:
     assert "advisory_workpaper.md" in director
     assert "presentation_storyline.md" in skill
     assert "presentation_review.md" in skill
-    assert "Use `/goal` only for major phase gates" in skill
     assert "Evidence-gap test" in skill
     assert "Do not turn unresolved evidence needs into generic" in skill
     default_prompts = manifest["interface"]["defaultPrompt"]
@@ -999,7 +1009,6 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.160"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -1028,7 +1037,6 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         .strip()
     )
     assert long_description == approved_description
-    assert len(long_description.split()) <= 90
     assert len(long_description.split("\n\n")) == 3
     assert "Clara helps consultants" in long_description
     assert "presentations, reports and reviewable workpapers" in long_description

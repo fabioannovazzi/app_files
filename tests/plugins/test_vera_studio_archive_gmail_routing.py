@@ -497,7 +497,7 @@ def test_vera_marketplace_wrapper_routes_gmail_without_local_dependencies() -> N
     assert "references/marketplace-gmail.md" in wrapper
     gmail_branch = wrapper.index("When the user asks to search Gmail or email")
     local_branch = wrapper.index(
-        "When the user asks to identify/create a client workspace"
+        "When the user asks to identify or create a client workspace"
     )
     assert gmail_branch < wrapper.index("get_profile", gmail_branch) < local_branch
     assert "Do not resolve the local module" in wrapper

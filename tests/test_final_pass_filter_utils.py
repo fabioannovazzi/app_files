@@ -43,7 +43,7 @@ def test_numeric_table_rule_respects_digit_ratio() -> None:
         }
     )
 
-    cleaned, _ = clean_bank_not_matched(df)
+    cleaned = clean_bank_not_matched(df)
 
     assert get_row_count(cleaned) == 1
     assert cleaned["description"].to_list() == ["NUMERI 1.000,00 2.000,00 3.000,00 TOT"]

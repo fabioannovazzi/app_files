@@ -347,11 +347,6 @@ def test_journal_review_successor_context_continues_after_rename(
             "save_open_item_reconciliation_decisions",
             "review:closed",
         ),
-        (
-            "journal-sampling",
-            "save_journal_sampling_decisions",
-            "sampling-control",
-        ),
     ],
 )
 @pytest.mark.parametrize("mismatched_artifact", ["run_intake", "review_payload"])

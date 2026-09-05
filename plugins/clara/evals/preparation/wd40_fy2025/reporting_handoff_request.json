@@ -13,9 +13,9 @@
   },
   "semantic_layer": {
     "relative_path": "monthly_pnl.semantic.json",
-    "sha256": "a0759a793eef04596ae9305cce4df40fb3f4611cedc70a44aa315d21abd32afe",
+    "sha256": "016535666fcf286057fb4e475f9b5daea12e9c4360f1eab3fba6f6ccd9afbd27",
     "semantic_layer_id": "wd40_fy2025_synthetic_monthly_pnl.reporting_semantics",
-    "semantic_version": 1,
+    "semantic_version": 2,
     "origin_profile_fingerprint": "b47d7bb2a801b1e88500a6752a3a993870393ab856e393eb7321c5a8da209c4a",
     "review_basis": {
       "relative_path": "SOURCE_NOTES.md",
@@ -23,7 +23,7 @@
     },
     "review": {
       "status": "model_reviewed",
-      "reviewed_at": "2026-07-23",
+      "reviewed_at": "2026-09-05",
       "human_reviewed": false
     }
   },

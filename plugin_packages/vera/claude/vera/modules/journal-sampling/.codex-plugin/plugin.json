@@ -1,6 +1,6 @@
 {
   "name": "journal-sampling",
-  "version": "0.1.37",
+  "version": "0.1.38",
   "description": "Deterministic journal extraction and audit sample selection guided by Claude.",
   "author": {
     "name": "Mparanza",

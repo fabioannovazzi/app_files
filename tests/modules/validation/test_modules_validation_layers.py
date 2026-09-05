@@ -69,15 +69,14 @@ def test_readability_extract_returns_joined_plain_text(monkeypatch):
     """_readability_extract should join the plain text parts"""
     layers = _import_layers(monkeypatch)
 
-    def fake_simple_json_from_html_string(html: str, use_readability: bool = True):
-        return {"plain_text": [{"text": "Alpha"}, {"text": "Beta"}]}
+    class FakeDocument:
+        def __init__(self, html: str) -> None:
+            assert html == "<html></html>"
 
-    monkeypatch.setattr(
-        layers.readability,
-        "simple_json_from_html_string",
-        fake_simple_json_from_html_string,
-        raising=False,
-    )
+        def summary(self) -> str:
+            return "<p>Alpha</p><p>Beta</p>"
+
+    monkeypatch.setattr(layers, "Document", FakeDocument)
 
     result = layers._readability_extract("<html></html>")
 

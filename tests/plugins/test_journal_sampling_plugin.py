@@ -2031,10 +2031,10 @@ def test_static_page_exposes_five_localized_model_data_flows() -> None:
         "Les références aux fichiers sont remplacées par des codes neutres",
         "Dateiverweise werden durch neutrale Codes ersetzt",
         "Las referencias a archivos se sustituyen por códigos neutros",
-        "The same reduced sample and run",
-        "Les alias ref-* pseudonymisent les références techniques, pas les données professionnelles",
+        "The same reduced sample in every mode",
+        "mais cela ne pseudonymise pas les données professionnelles",
         "keine automatische Anonymisierung oder Nur-lokal-Garantie",
-        "El modelo parte del mismo model_review_context.json",
+        "El modelo utiliza siempre la misma muestra reducida",
     ):
         assert snippet in page
 

@@ -245,7 +245,7 @@ def test_reporting_handoff_closes_all_reviewed_transport_gates(
     assert receipt["classification"] == "synthetic_benchmark_only"
     assert receipt["semantic"] == {
         "semantic_layer_id": ("wd40_fy2025_synthetic_monthly_pnl.reporting_semantics"),
-        "semantic_version": 1,
+        "semantic_version": 2,
         "review_status": "model_reviewed",
         "validation": receipt["semantic"]["validation"],
         "snapshot_attachment": receipt["semantic"]["snapshot_attachment"],

@@ -85,6 +85,7 @@ def test_homepage_design_headings_share_the_display_scale() -> None:
         ".landing-home .landing-free h2,\n"
         ".landing-home .landing-security h2,\n"
         ".landing-home .landing-compliance h2,\n"
+        ".landing-home .landing-collaborative h2,\n"
         ".landing-home .landing-bridge h2"
     )
     responsive_selector = (
@@ -92,6 +93,7 @@ def test_homepage_design_headings_share_the_display_scale() -> None:
         "  .landing-home .landing-free h2,\n"
         "  .landing-home .landing-security h2,\n"
         "  .landing-home .landing-compliance h2,\n"
+        "  .landing-home .landing-collaborative h2,\n"
         "  .landing-home .landing-bridge h2"
     )
 

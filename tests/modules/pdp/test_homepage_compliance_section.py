@@ -53,7 +53,7 @@ def test_homepage_content_states_the_llm_context_boundary_honestly() -> None:
         content["principles"][2]["blurb"]
     )
     assert content["closing"] == (
-        "One policy for Vera and Clara. No prompt-by-prompt paperwork."
+        "One policy for Clara, Vera and Lucia. No prompt-by-prompt paperwork."
     )
 
 
@@ -139,31 +139,31 @@ def test_homepage_localizes_the_two_category_data_boundary(
     (
         (
             "en",
-            "In ordinary Vera and Clara workflows, Mparanza does not receive your client work.",
+            "In ordinary Clara, Vera and Lucia workflows, Mparanza does not receive your client work.",
             "Ordinary plugin functions use the AI workspace the user chooses.",
             "Mparanza-hosted services form a separate processing boundary.",
         ),
         (
             "it",
-            "Nei flussi ordinari di Vera e Clara, Mparanza non riceve il lavoro dei tuoi clienti.",
+            "Nei flussi ordinari di Clara, Vera e Lucia, Mparanza non riceve il lavoro dei tuoi clienti.",
             "Le normali funzioni dei plugin usano l'ambiente AI scelto dall'utente.",
             "I servizi hosted di Mparanza hanno un confine di trattamento separato.",
         ),
         (
             "fr",
-            "Dans les flux ordinaires de Vera et Clara, Mparanza ne reçoit pas le travail de vos clients.",
+            "Dans les flux ordinaires de Clara, Vera et Lucia, Mparanza ne reçoit pas le travail de vos clients.",
             "Les fonctions ordinaires des plugins utilisent l'environnement d'IA choisi par l'utilisateur.",
             "Les services hébergés par Mparanza ont un périmètre de traitement distinct.",
         ),
         (
             "de",
-            "Bei normalen Vera- und Clara-Abläufen erhält Mparanza Ihre Mandantenarbeit nicht.",
+            "Bei normalen Abläufen von Clara, Vera und Lucia erhält Mparanza Ihre Mandantenarbeit nicht.",
             "Normale Plugin-Funktionen nutzen die vom Nutzer gewählte KI-Arbeitsumgebung.",
             "Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze.",
         ),
         (
             "es",
-            "En los flujos ordinarios de Vera y Clara, Mparanza no recibe el trabajo de tus clientes.",
+            "En los flujos ordinarios de Clara, Vera y Lucia, Mparanza no recibe el trabajo de tus clientes.",
             "Las funciones ordinarias de los plugins usan el entorno de IA elegido por el usuario.",
             "Los servicios alojados por Mparanza constituyen un límite de tratamiento separado.",
         ),

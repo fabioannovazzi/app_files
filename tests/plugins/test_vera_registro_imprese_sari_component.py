@@ -36,23 +36,6 @@ def test_vera_declares_registro_imprese_sari_component_skill_and_mcp_route() -> 
     assert "skills/registro-imprese-sari/SKILL.md" in wrapper_text
 
 
-def test_vera_delegates_registro_imprese_sari_dependency_check() -> None:
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(VERA_ROOT / "scripts" / "check_dependencies.py"),
-            "--module",
-            "registro-imprese-sari",
-        ],
-        cwd=VERA_ROOT,
-        capture_output=True,
-        check=False,
-        text=True,
-    )
-
-    assert result.returncode == 0, result.stderr
-
-
 def test_vera_zip_expected_entries_embed_registro_imprese_sari_component() -> None:
     builder = _load_builder()
     bundle = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")

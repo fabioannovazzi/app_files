@@ -215,17 +215,11 @@ revised when the answer or story changes materially. Semantic deliverable
 feedback returns to the spine before the presentation is revised. Pure layout
 or wording feedback remains with the presentation specialist.
 
-Use `/goal` only for major phase gates, not as a micro-task list. Inside each
-goal, use ordinary checklists and artifacts.
-
-Deck correction is always a goal-level workflow. When a user asks Clara/Codex
-to correct, revise, or rebuild a deck from a voice/video call, transcript,
-review notes, or partner feedback, start or continue an explicit goal before
-doing deck-revision work. This is required because deck correction spans
-evidence intake, semantic interpretation, consultant-readable approval,
-PPTX editing, rendering, verification, and output review. Do not run it as a
-casual one-turn edit even when the requested change sounds small; use ordinary
-checklists inside the goal for the substeps.
+Use a persistent goal when the user explicitly requests one. Otherwise track
+substantial work with a proportionate plan and durable case artifacts. Deck
+correction still requires the specialist's interpretation, approval, editing,
+rendering, verification, and output review; creating a goal is not a
+prerequisite for starting an authorized correction.
 
 ## Human-Visible Document Quality Gate
 
@@ -330,9 +324,10 @@ deliberately accepted with a concrete reason.
 Before running helper scripts or write-heavy work, identify material choices
 that change execution: case objective, audience, output language, material
 scope, advisor name for inclusion records, whether notes are pasted text or existing files, and
-which existing folder should be indexed. Ask only those unresolved choices in
-chat; put differently, ask only those unresolved choices in chat before
-execution. Generate choices from the actual inputs; do not offer named
+which existing folder should be indexed. Reuse choices established in the
+conversation or case records. Ask only for unresolved material choices before
+dependent execution, and continue independent authorized work while awaiting
+an answer. Generate choices from the actual inputs; do not offer named
 frameworks, project roles, issue categories, advisor names, or decision-maker
 names unless the facts cue them or the user must supply a missing custom value.
 
@@ -357,24 +352,19 @@ it as a derived orientation view, not as authority. If
 workpaper or any human-visible output. Confirm substantive details against the
 JSON case files and source materials before drafting final output.
 
-Use Codex-native run artifacts lightly:
+Carry the requested work through review and delivery within the authorized
+scope. Keep progress notes concise. A checklist, Run Intake table, Decision
+Table, or Artifact Card is optional presentation; required case records,
+inclusion decisions, approval artifacts, and validation remain mandatory.
+Choose the format that helps the partner review the current work.
 
-- Start with a short checklist covering dependency check, case initialization,
-  material indexing, judgement capture, client-pack inclusion, and delivery.
-- Show a compact Run Intake table before helper scripts with case folder,
-  materials, language, audience, advisor name assumption, and output folder.
-- Show a Decision Table only for unresolved material choices or pending
-  client-pack inclusion decisions.
-- Before long or write-heavy steps, show an inclusion checkpoint with command
-  intent, inputs, output folder, and expected artifacts.
-- Ask for explicit continuation or approval only when the next step is
-  external, destructive, approval-sensitive, or still depends on an unresolved
-  material decision. Do not ask the user to type a generic continuation word
-  merely to create ceremony.
-- End with an Artifact Card listing generated paths, inclusion status, unresolved
-  questions, and next action.
-- When useful, create `codex_run_review.md` in the case output folder. Never edit
-  generated ZIPs during a run.
+Ask for approval when an action requires authorization that has not already
+been given. An unresolved material decision blocks its dependent work, not
+independent preparation. Never infer professional approval or promote pending
+judgement into a client pack. At delivery, link generated paths and state
+inclusion status, unresolved questions, and next action. Create
+`codex_run_review.md` when useful as a durable index. Never edit generated ZIPs
+during a case run.
 
 Use chat as the v1 interface. Do not build or invoke a local review UI for this
 plugin unless the user explicitly asks to add one. If review is needed, show the

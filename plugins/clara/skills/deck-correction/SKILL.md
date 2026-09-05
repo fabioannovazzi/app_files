@@ -20,9 +20,10 @@ evidence, validate contracts, apply explicit patches, and verify mechanics, but
 must never decide what the speaker meant from keywords, slide numbers, or visual
 matching alone.
 
-Deck correction is always a goal-level workflow. Start or continue an explicit
-goal before intake. The goal covers interpretation, user review, application,
-rendering, verification, and final output review.
+Complete interpretation, user review, application, rendering, verification,
+and final output review. Use a persistent goal only when explicitly requested
+by the user; otherwise use a proportionate plan without pausing intake to
+create a goal.
 
 ## Route by Target Format
 
@@ -238,8 +239,8 @@ run static and multi-viewport browser QA, render the result, and compare it with
 the baseline. Report both intended changes and any unexplained drift.
 
 There is no PPTX-style hash approval helper for HTML. Still show the interpreted
-change ledger before a materially ambiguous or broad revision and keep the
-goal-level checkpoint in chat.
+change ledger before a materially ambiguous or broad revision and resolve
+consequential ambiguity before applying the affected changes.
 
 When the HTML deck belongs to a Clara advisory case, rebuild with `--case-dir`,
 rerun the model-led advisory validator for the corrected bytes, and rerun
@@ -249,15 +250,9 @@ must already have been recorded as new or superseding claims upstream.
 
 ## Codex-Native Run UX
 
-Use a short checklist covering intake, transcript/evidence readiness,
-interpretation packets, understanding, approval, execution packets, render QA,
-and delivery.
-
-Show a compact Run Intake table with source deck, target format, feedback
-sources, transcript status, style authority, case/evidence folder, output copy,
-and expected QA artifacts. Use a Decision Table only for unresolved material
-choices such as ambiguous feedback, missing source material, an unresolvable
-style authority, or a real execution strategy choice.
+Summarize the source deck, feedback, output copy, and any unresolved material
+choice when needed for review. Use tables or a checklist only when they clarify
+the correction. Reuse established format, style, and case decisions.
 
 Default output policy: preserve the original, produce one corrected deck plus
 its interpretation, approval, verification, and render-review evidence. These
@@ -267,7 +262,7 @@ mandatory before application.
 
 Before long or write-heavy work, show an execution checkpoint naming the source
 deck, approved plan hash where applicable, output path, packet scope, and
-expected verification. End with an Artifact Card listing original, corrected
+expected verification. At delivery, link the original and corrected
 deck, interpreted changes, approval state, verification, render-review state,
 and residual manual items. Create `codex_run_review.md` when blocked or when a
 repeatable correction gap should survive the chat. Never edit generated ZIPs

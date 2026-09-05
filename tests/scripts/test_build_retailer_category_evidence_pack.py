@@ -2955,7 +2955,7 @@ def test_signal_insight_demotes_observed_category_center_bundle_rows() -> None:
             },
             {
                 "bundle_size": 2,
-                "bundle_key": "bundle-b",
+                "bundle_key": "silhouette=Terrace + design detail=Logo Detail",  # gitleaks:allow
                 "bundle_label": "Terrace + Logo Detail",
                 "count_top_seller": 60,
                 "count_other": 70,

@@ -144,7 +144,7 @@
           "const": "wd40_fy2025_synthetic_monthly_pnl.reporting_semantics"
         },
         "semantic_version": {
-          "const": 1
+          "const": 2
         },
         "review_status": {
           "const": "model_reviewed"

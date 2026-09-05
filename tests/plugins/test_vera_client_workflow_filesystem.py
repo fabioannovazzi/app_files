@@ -26,6 +26,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("aml-review", "aml_review.py"),
     ("archive-organization", "archive_organization.py"),
     ("open-item-reconciliation", "audit_assurance.py"),
     ("open-item-reconciliation", "build_missing_evidence_requests.py"),
@@ -114,6 +115,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 )
 
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("aml-review", "check_dependencies.py"),
     ("archive-organization", "check_dependencies.py"),
     ("open-item-reconciliation", "check_dependencies.py"),
     ("client-file-preparation", "check_dependencies.py"),

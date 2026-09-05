@@ -1,6 +1,6 @@
 {
   "name": "report-builder",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Deterministic report-building workflow guided by Claude.",
   "author": {
     "name": "Mparanza",

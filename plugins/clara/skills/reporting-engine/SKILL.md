@@ -216,19 +216,18 @@ or render proof.
 
 ## Codex-Native Run UX
 
-For any reporting-engine run, keep a short checklist in chat or in the run
-folder. The checklist should cover: inspect the manifest contract, run dataset
-intake when a tabular file is provided, create or load the dataset semantic
-layer, review Sales/Discount/COGS, validate its evidence and role bindings,
-compare required chart roles with role candidates, write a Run Intake table,
-write a Decision Table, and create an Artifact Card.
+Inspect the manifest contract, run dataset intake when a tabular file is
+provided, create or load the dataset semantic layer, review Sales/Discount/COGS,
+validate its evidence and role bindings, and compare required chart roles with
+role candidates. Report the result concisely; a checklist or intake table is
+optional, while the semantic and mechanical checks remain required.
 
 Default output policy: write user artifacts outside this repository. Catalog
 changes, generated ZIPs, and package checks are allowed inside the repo only
 when the task is explicitly plugin packaging or release.
 
-The Decision Table should show facts and evidence, not choices to propose. For
-example: chart capability, required roles, matched dataset columns, missing
+When a table helps explain compatibility, show facts and evidence: chart
+capability, required roles, matched dataset columns, missing
 roles, ambiguous roles, invocation contract status, and render-proof status.
 
 Use an execution checkpoint before claiming a chart family is ready: the

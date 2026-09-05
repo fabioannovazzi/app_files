@@ -5,6 +5,9 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import Mock
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 VERA_ROOT = ROOT / "plugins" / "vera"
@@ -32,21 +35,51 @@ def test_vera_declares_bilancio_xbrl_skill_and_mcp_route() -> None:
     assert (VERA_ROOT / "skills" / "bilancio-xbrl-it" / "SKILL.md").is_file()
 
 
-def test_vera_delegates_bilancio_xbrl_dependency_check() -> None:
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(VERA_ROOT / "scripts" / "check_dependencies.py"),
-            "--module",
-            "bilancio-xbrl-it",
-        ],
-        cwd=VERA_ROOT,
-        capture_output=True,
-        check=False,
-        text=True,
+@pytest.mark.parametrize(
+    "component_name",
+    [
+        "bilancio-xbrl-it",
+        "previdenza-inps",
+        "registro-imprese-sari",
+        "client-file-preparation",
+        "new-client",
+    ],
+)
+def test_vera_delegates_component_dependency_check(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    component_name: str,
+) -> None:
+    monkeypatch.syspath_prepend(str(VERA_ROOT / "scripts"))
+    spec = importlib.util.spec_from_file_location(
+        "vera_bilancio_dependency_checker",
+        VERA_ROOT / "scripts" / "check_dependencies.py",
     )
+    assert spec and spec.loader
+    checker = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(checker)
+    target = tmp_path / "runtime"
+    python = target / "bin" / "python"
+    ensure = Mock(return_value=(True, target, "ready"))
+    run = Mock(return_value=subprocess.CompletedProcess([], 0))
+    monkeypatch.setattr(checker, "ensure_runtime", ensure)
+    monkeypatch.setattr(checker, "runtime_python", lambda target: python)
+    monkeypatch.setattr(
+        checker, "runtime_environment", lambda target: {"TEST_RUNTIME": "1"}
+    )
+    monkeypatch.setattr(checker.subprocess, "run", run)
 
-    assert result.returncode == 0, result.stderr
+    result = checker.main(["--module", component_name])
+
+    assert result == 0
+    ensure.assert_called_once_with(VERA_ROOT, component_name, requirements=None)
+    component = ROOT / "plugins" / component_name
+    run.assert_called_once_with(
+        [str(python), str(component / "scripts" / "check_dependencies.py")],
+        cwd=component,
+        env={"TEST_RUNTIME": "1"},
+        check=False,
+    )
 
 
 def test_vera_zip_expected_entries_embed_bilancio_xbrl_component() -> None:
