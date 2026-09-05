@@ -32,7 +32,7 @@
       {
         "id": "business-planning-analysis-and-report",
         "purpose": "Prepare one business analysis using the shared financial model and report compiler",
-        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports.",
+        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. The model also authors the business recommendation, alternatives, next actions and chart selection. User idea snapshots, provisional interpretations, source-backed external numerical facts and optional commercial price/volume drivers can enter this same context. Pending professional review remains explicit and does not silently discard ordinary interpretation. Supporting workpapers are accessible in a collapsed report appendix; this does not remove them from the HTML file.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -56,13 +56,13 @@
     },
     {
       "id": "authoritative-narrative-figures",
-      "control": "Narrative claims require canonical calculation IDs and exact values. Disagreement blocks readiness; missing inputs or material reviews/conflicts withhold capital recommendations. Numeric literals in narrative are rejected. Semantic claims remain subject to model-led and professional review."
+      "control": "Calculated financial claims require canonical calculation IDs and exact values. External numerical facts can bind to source-backed evidence IDs with exact values and units. Disagreement blocks readiness; missing inputs or material reviews/conflicts withhold capital recommendations. Ordinary provisional interpretation remains visible. Numeric literals in narrative are rejected. Semantic classification and conclusions remain model-led and subject to professional review."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "976ef35afe3025eff35bc299ee7c681102dd9eefaed38e13abfd3c5b334afaf3"
+    "source_fingerprint": "e569c533ab7376961a6eefe32a389b04f289d3d2ccb2d0cf26f876e010a18c55"
   }
 }

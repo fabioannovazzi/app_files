@@ -72,13 +72,16 @@ def review_narrative(
             "Unknown narrative kind",
         )
         errors = []
-        if not reviewed(entry["review"]):
-            errors.append("requires professional review")
+        provisional = not reviewed(entry["review"])
+        if provisional:
+            issues.append(f"{prefix}: requires professional review")
         if not entry["basis_ids"] or not set(entry["basis_ids"]) <= set(refs):
-            errors.append("missing evidence/assumption basis")
+            if entry["basis_ids"] or entry["kind"] != "limitation":
+                errors.append("missing evidence/assumption basis")
         for rid in entry["basis_ids"]:
             if rid in refs and not reviewed(refs[rid]):
-                errors.append("unconfirmed narrative basis")
+                provisional = True
+                issues.append(f"{prefix}: unconfirmed narrative basis")
         tokens = re.findall(r"\{\{([a-z][a-z0-9_-]*)\}\}", entry["text"])
         claims = entry["claims"]
         if set(tokens) != set(claims):
@@ -87,6 +90,21 @@ def review_narrative(
         if any(ch.isnumeric() for ch in prose) or "{{" in prose or "}}" in prose:
             errors.append("numeric literals must use typed claim placeholders")
         for claim in claims.values():
+            if set(claim) == {"evidence_id", "value"}:
+                evidence = refs.get(claim["evidence_id"])
+                if evidence is None or claim["evidence_id"] not in entry["basis_ids"]:
+                    errors.append("unknown source claim basis")
+                elif evidence.get("value") != claim["value"] or not evidence.get(
+                    "unit"
+                ):
+                    errors.append(
+                        "source claim disagrees with evidence value or lacks units"
+                    )
+                elif evidence.get("claim_type") != "external_fact":
+                    errors.append(
+                        "source claims require an external_fact; modeled finances need calculation IDs"
+                    )
+                continue
             if set(claim) != {"calculation_id", "value"}:
                 errors.append("invalid claim fields")
                 continue
@@ -103,6 +121,13 @@ def review_narrative(
                 errors.append(
                     "reported source EBITDA cannot replace an authoritative narrative figure"
                 )
+        if provisional and entry["kind"] in {
+            "score",
+            "benchmark",
+            "kpi",
+            "capital_recommendation",
+        }:
+            errors.append("professional acceptance required for this claim")
         if entry["kind"] in {"score", "benchmark", "kpi"}:
             rubric = refs.get(entry["rubric_id"])
             if rubric is None or not reviewed(rubric) or not rubric.get("rubric"):
@@ -134,13 +159,13 @@ def review_narrative(
         if errors:
             issues.extend(f"{prefix}: {message}" for message in errors)
         else:
-            accepted.append(entry)
+            accepted.append({**entry, "provisional": provisional})
     return accepted, issues
 
 
 def build_charts(plan: dict[str, Any]) -> list[dict[str, Any]]:
     """Declare chart series exclusively as authoritative calculation ID vectors."""
-    if not plan["calculations"]:
+    if not plan["calculations"] or plan["statements"] is None:
         return []
     case = plan["case"]
     scenarios = plan["statements"]["scenarios"]
@@ -494,39 +519,92 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
     case = plan["case"]
     _check_audience(case)
     e = html.escape
-    parts = [
-        f'<header><p class="eyebrow">Business Planning</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])}</p><p>Audience: {e(case["audience"])} · {e(case["reporting_currency"])} · {e(case["periods"][0])} — {e(case["periods"][-1])}</p><strong class="status">{e(plan["status"].replace("_", " ").capitalize())}</strong><p>One shared financial model and business analysis</p></header>'
-    ]
-    parts.append(
-        "<section><h2>Unresolved matters</h2><ul>"
-        + "".join(f"<li>{e(i)}</li>" for i in plan["unresolved_matters"])
-        + (
-            "<li>No unresolved mechanical checks. Professional conclusions remain subject to review.</li>"
-            if not plan["unresolved_matters"]
-            else ""
-        )
-        + "</ul></section>"
-    )
-    parts.append("<section><h2>Reviewed interpretation and decisions</h2>")
-    for n in plan["accepted_narrative"]:
+    from planning_assessment import SECTIONS
+
+    narrative = {n["id"]: n for n in plan["accepted_narrative"]}
+    refs = {r["id"]: r for r in [*case["evidence"], *case["assumptions"]]}
+
+    rendered_narrative: set[str] = set()
+
+    def paragraph(identifier: str) -> str:
+        if identifier in rendered_narrative:
+            return ""
+        rendered_narrative.add(identifier)
+        n = narrative.get(identifier)
+        if n is None:
+            return '<p class="limitation">This conclusion is withheld pending correction of its supporting claims.</p>'
         prose = e(n["text"])
         for key, claim in n["claims"].items():
-            c = plan["calculations"][claim["calculation_id"]]
-            rendered = f'<a class="figure-ref" href="#calc-{e(c["id"])}" data-calculation-id="{e(c["id"])}">{e(c["value"])} {e(c["unit"])}</a>'
+            if "calculation_id" in claim:
+                c = plan["calculations"][claim["calculation_id"]]
+                rendered = f'<a class="figure-ref" href="#calc-{e(c["id"])}" data-calculation-id="{e(c["id"])}">{e(c["value"])} {e(c["unit"])}</a>'
+            else:
+                r = refs[claim["evidence_id"]]
+                rendered = f'<a href="#evidence-{e(r["id"])}" data-evidence-id="{e(r["id"])}">{e(claim["value"])} {e(r["unit"])}</a>'
             prose = prose.replace("{{" + key + "}}", rendered)
-        parts.append(
-            f'<article><p class="eyebrow">{e(n["kind"])}</p><p>{prose}</p><small>Basis: {e(", ".join(n["basis_ids"]))} · Reviewed by {e(n["review"]["reviewer"])}</small></article>'
+        status = (
+            "Provisional interpretation — professional review pending"
+            if n["provisional"]
+            else "Reviewed interpretation"
         )
-    parts.append(
-        "</section><section><h2>Financial decision charts</h2>"
-        + "".join(_svg(c) for c in plan["charts"])
-        + (
-            "<p>Financial inputs incomplete. No charts or precise capital recommendation are supported.</p>"
-            if not plan["charts"]
-            else ""
-        )
-        + "</section>"
+        basis = ", ".join(n["basis_ids"]) or "Explicit evidence gap"
+        return f'<article id="narrative-{e(identifier)}"><p>{prose}</p><details><summary>Basis and review</summary><p>{e(status)}. {e(basis)}</p></details></article>'
+
+    horizon = (
+        f'{e(case["periods"][0])} — {e(case["periods"][-1])}'
+        if case["periods"]
+        else "Forecast horizon not yet established"
     )
+    parts = [
+        f'<header><p class="eyebrow">Business plan · Audience: {e(case["audience"])}</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])} · {e(case["reporting_currency"] or "Currency not established")} · {horizon}</p></header>'
+    ]
+    assessment = case.get("assessment")
+    if assessment:
+        parts.append(
+            f'<section id="recommendation"><h2>Recommendation: {e(assessment["decision"]).capitalize()}</h2>'
+        )
+        parts.extend(paragraph(i) for i in assessment["recommendation"])
+        if plan["status"] != "ready_for_professional_review":
+            parts.append(
+                '<p class="status">Provisional assessment. Material evidence or review remains open; this is not a finalized business plan.</p>'
+            )
+        parts.append("<h3>What this judgment depends on</h3>")
+        parts.extend(paragraph(i) for i in assessment["depends_on"])
+        parts.append("<h3>What would change the recommendation</h3>")
+        parts.extend(paragraph(i) for i in assessment["would_change"])
+        parts.append("</section>")
+        for section, heading in SECTIONS.items():
+            parts.append(f'<section id="{section}"><h2>{e(heading)}</h2>')
+            parts.extend(paragraph(i) for i in assessment["sections"][section])
+            for chart in plan["charts"]:
+                if chart["section"] == section:
+                    parts.append(_svg(chart))
+                    parts.append(paragraph(chart["caption_id"]))
+            parts.append("</section>")
+    else:
+        parts.append(
+            "<section><h2>Business assessment incomplete</h2><p>The available calculations and notes do not yet constitute a business plan. A recommendation and the business questions still need to be addressed.</p></section>"
+        )
+    parts.append("<section><h2>Material uncertainties and limitations</h2><ul>")
+    parts.extend(f"<li>{e(i)}</li>" for i in case["limitations"])
+    parts.append(
+        '</ul></section><details id="supporting-evidence"><summary>Supporting evidence, calculations and review record</summary>'
+    )
+    parts.append(
+        f'<p>Validation status: {e(plan["status"])}. Checks establish internal consistency and file identity, not whether a business is viable.</p>'
+    )
+    parts.append(
+        "<h2>Unresolved matters</h2><ul>"
+        + "".join(f"<li>{e(i)}</li>" for i in plan["unresolved_matters"])
+        + "</ul>"
+    )
+    if not assessment:
+        parts.extend(paragraph(i) for i in narrative)
+        parts.extend(_svg(c) for c in plan["charts"])
+    for r in refs.values():
+        parts.append(
+            f'<p id="evidence-{e(r["id"])}"><strong>{e(r["id"])}</strong>: {e(r["description"])}</p>'
+        )
     parts.append("<section><h2>Cross-source figure comparison</h2>")
     for c in plan["comparisons"]:
         parts.append(
@@ -611,13 +689,14 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
     parts.append(
         f'<footer>Case SHA-256: {plan["case_sha256"]}<br>Calculation register SHA-256: {plan["calculations_sha256"]}<br>Validated structure SHA-256: {plan["content_sha256"]}</footer>'
     )
+    parts.append("</details>")
     payload = (
         json.dumps(plan, ensure_ascii=False)
         .replace("<", "\\u003c")
         .replace(">", "\\u003e")
         .replace("&", "\\u0026")
     )
-    style = """body{margin:0;background:#fff;color:#202a33;font:16px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:0 auto;padding:64px 36px}header{border-top:5px solid #123d65;padding-top:24px}h1{font-size:44px;line-height:1.15;letter-spacing:-1.5px;margin:16px 0}h2{font-size:25px;line-height:1.3;margin:0 0 24px;color:#123d65}h3{font-size:18px}.lead{font-size:22px;max-width:760px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#42647d}.status{display:inline-block;border-bottom:2px solid #16829a;padding:4px 0}section{padding:36px 0;border-bottom:1px solid #dce2e6}article{max-width:800px;margin:0 0 28px}figure{margin:28px 0 44px;break-inside:avoid}svg{display:block;width:100%;height:auto}svg text{font:12px system-ui,sans-serif;fill:#50616b}figcaption{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:13px}figcaption i{display:inline-block;width:14px;height:3px;margin-right:8px;vertical-align:middle}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th{color:#123d65;background:#f5f7f8}td,th{padding:10px;border-bottom:1px solid #dce2e6;vertical-align:top;overflow-wrap:anywhere}td{min-width:90px}.table-scroll{overflow-x:auto}details{margin:16px 0}summary{cursor:pointer;color:#123d65;font-size:13px}pre{font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}a{color:#123d65}footer{padding-top:28px;font-size:11px;overflow-wrap:anywhere}@media(max-width:600px){main{padding:28px 16px}h1{font-size:32px}.lead{font-size:18px}section{padding:28px 0}}@media print{main{padding:0;max-width:none}details>*{display:block!important}table{font-size:9px}.table-scroll{overflow:visible}header{break-after:avoid}h2,h3{break-after:avoid}tr{break-inside:avoid}}"""
+    style = """body{margin:0;background:#fff;color:#202a33;font:16px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:0 auto;padding:64px 36px}header{border-top:5px solid #123d65;padding-top:24px}h1{font-size:44px;line-height:1.15;letter-spacing:-1.5px;margin:16px 0}h2{font-size:25px;line-height:1.3;margin:0 0 24px;color:#123d65}h3{font-size:18px}.lead{font-size:22px;max-width:760px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#42647d}.status{display:inline-block;border-bottom:2px solid #16829a;padding:4px 0}section{padding:36px 0;border-bottom:1px solid #dce2e6}article{max-width:800px;margin:0 0 28px}figure{margin:28px 0 44px;break-inside:avoid}svg{display:block;width:100%;height:auto}svg text{font:12px system-ui,sans-serif;fill:#50616b}figcaption{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:13px}figcaption i{display:inline-block;width:14px;height:3px;margin-right:8px;vertical-align:middle}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th{color:#123d65;background:#f5f7f8}td,th{padding:10px;border-bottom:1px solid #dce2e6;vertical-align:top;overflow-wrap:anywhere}td{min-width:90px}.table-scroll{overflow-x:auto}details{margin:16px 0}summary{cursor:pointer;color:#123d65;font-size:13px}#supporting-evidence>summary{font-size:19px;padding:24px 0}article>details{font-size:12px}article>details>summary{font-size:12px}p{max-width:850px}pre{font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}a{color:#123d65}footer{padding-top:28px;font-size:11px;overflow-wrap:anywhere}@media(max-width:600px){main{padding:28px 16px}h1{font-size:32px}.lead{font-size:18px}section{padding:28px 0}}@media print{main{padding:0;max-width:none}details>*{display:block!important}table{font-size:9px}.table-scroll{overflow:visible}header{break-after:avoid}h2,h3{break-after:avoid}tr{break-inside:avoid}}"""
     return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(case["entity_name"])} · Business Planning</title><style>{style}</style></head><body><main>{"".join(parts)}</main><script type="application/json" id="validated-plan">{payload}</script></body></html>'
 
 

@@ -1,0 +1,223 @@
+{
+  "schema_version": "mparanza.business_planning_case.v3",
+  "case_id": "synthetic-mobile-repair",
+  "entity_name": "Mobile bicycle repair idea",
+  "company_stage": "Startup before launch",
+  "planning_objective": "Decide whether to test a mobile repair service before buying a vehicle.",
+  "audience": "internal",
+  "reporting_currency": null,
+  "periods": [],
+  "review": {
+    "status": "pending"
+  },
+  "sources": [
+    {
+      "id": "idea",
+      "path": "sources/idea.txt",
+      "sha256": "c4520176823c1e80a7de0f131ea5866f37e32c44397b02ed4781b8dbb8815dad",
+      "version": "user-description-v1",
+      "role": "user_statement",
+      "review_status": "unverified",
+      "intended_audience": [
+        "internal"
+      ],
+      "confidentiality": {
+        "classification": "internal_only",
+        "allowed_audiences": [
+          "internal"
+        ]
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "user-idea",
+      "kind": "fact",
+      "description": "The user proposes mobile bicycle repairs and reports repair skills; no customer demand, prices or vehicle commitment have been established.",
+      "source_ids": [
+        "idea"
+      ],
+      "status": "pending"
+    }
+  ],
+  "assumptions": [],
+  "decisions": [],
+  "observations": [],
+  "resolutions": [],
+  "financial": null,
+  "narrative": [
+    {
+      "id": "recommendation",
+      "kind": "finding",
+      "text": "Test the service before buying a vehicle. Mobile repair offers convenience, but the current idea does not yet show that enough customers will pay a price that covers travel and productive time. A limited booking pilot can test that without committing to a full operating setup.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "depends",
+      "kind": "risk",
+      "text": "This recommendation depends on the founder’s stated repair ability and access to a practical way to reach customers during a pilot. Neither paying demand nor commercially viable travel density has been demonstrated.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "change",
+      "kind": "initiative",
+      "text": "Proceed to a larger launch only if real bookings show customers accept a price covering parts, labour, travel, overhead and rework, with manageable service quality and cash exposure. Redesign the geography or offer if travel makes jobs uneconomic; stop if customers will not pay a sustainable price.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "business",
+      "kind": "finding",
+      "text": "Offer bicycle repairs at the customer’s home. The plausible customer is someone who values avoiding a workshop trip. That convenience is the proposed reason to buy; it remains a proposition to test against local workshops and other mobile services.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "market",
+      "kind": "limitation",
+      "text": "There is no observed demand evidence yet. Invite bookings for a defined repair menu and record acceptance at the proposed price. Ask what customers currently do when a bicycle needs repair. Track whether customers return or refer others, rather than counting expressions of interest as sales.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "operations",
+      "kind": "finding",
+      "text": "Start with repairs the founder can reliably perform on site. Establish tools, parts availability, booking windows, travel area, weather arrangements and a policy for jobs needing a workshop. Check applicable operating and insurance requirements before serving customers. Do not assume every requested repair can be completed at home.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "economics",
+      "kind": "limitation",
+      "text": "Set prices from the full time and cost of a job: diagnosis, repair, travel, scheduling, parts, payment fees, consumables, rework and an allowance for overhead and the founder’s labour. No supported prices or job duration estimates have been supplied, so revenue, contribution and sustainable booking volume cannot yet be calculated.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "cash-view",
+      "kind": "limitation",
+      "text": "Cash needs depend on tools already owned, parts bought before appointments, customer payment timing and any vehicle purchase or borrowing. Those inputs are missing. Avoid a precise capital recommendation and check whether a pilot can run using existing resources before committing to a vehicle.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "alternative",
+      "kind": "option",
+      "text": "Compare a narrow-area mobile pilot with scheduled repair sessions at a partner location. The mobile offer provides convenience but consumes travel time; a partner location can group jobs but may involve a fee or less customer convenience. A full vehicle-based launch adds fixed commitments before demand is known and is not supported yet.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    },
+    {
+      "id": "actions",
+      "kind": "initiative",
+      "text": "The founder should first define the repair menu, inspect existing tools and obtain parts prices. Then offer a limited set of appointment slots, record paid bookings and actual job and travel time, and document any rework. Review the resulting unit economics and cash needs before deciding on a vehicle or wider launch.",
+      "claims": {},
+      "basis_ids": [
+        "user-idea"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "pending"
+      }
+    }
+  ],
+  "limitations": [
+    "This assessment uses only the user’s description. No local market research, supplier quotations or customer trial has been completed.",
+    "Repair capability is user-reported; applicable local requirements and insurance have not been checked."
+  ],
+  "required_sections": [
+    "business_analysis"
+  ],
+  "assessment": {
+    "decision": "test",
+    "recommendation": [
+      "recommendation"
+    ],
+    "depends_on": [
+      "depends"
+    ],
+    "would_change": [
+      "change"
+    ],
+    "sections": {
+      "business": [
+        "business"
+      ],
+      "market": [
+        "market"
+      ],
+      "operations": [
+        "operations"
+      ],
+      "economics": [
+        "economics"
+      ],
+      "cash": [
+        "cash-view"
+      ],
+      "alternatives": [
+        "alternative"
+      ],
+      "next_actions": [
+        "actions"
+      ]
+    },
+    "charts": []
+  }
+}

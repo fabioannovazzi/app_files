@@ -12,15 +12,15 @@ proof that any earlier client report executed the registered workflow.
 
 ## Case fields
 
-All listed fields are required; unknown top-level fields are rejected:
+The base fields below are required; `assessment` is additionally required for readiness, and `commercial` is optional. Unknown top-level fields are rejected:
 
 | Field | Contract |
 | --- | --- |
 | schema_version | `mparanza.business_planning_case.v3` |
 | case_id, entity_name, company_stage, planning_objective | Reviewed identity and plain-language mandate; no stage classifier |
 | audience | Exact audience key used in source restrictions |
-| reporting_currency | Three uppercase letters; normalize source units before comparison |
-| periods | One to sixty contiguous, ordered `YYYY-MM` months |
+| reporting_currency | Three uppercase letters, or null for an idea without figures; normalize source units before comparison |
+| periods | One to sixty contiguous, ordered `YYYY-MM` months, or empty without a forecast |
 | review | `status=reviewed`, named `reviewer`, timezone-aware `reviewed_at` after the complete read-back |
 | sources | Every selected file, including contradictory evidence |
 | evidence | Source-backed facts and evidence; distinct from accepted assumptions |
@@ -144,15 +144,16 @@ Each narrative record has exactly `id`, `kind`, `text`, `claims`,
 `basis_ids`, `rubric_id`, `review`. Kinds are `finding`, `option`, `risk`,
 `limitation`, `initiative`, `capital_recommendation`, `score`, `benchmark`, `kpi`.
 Text references numbers via `{{claim-name}}`; `claims` maps each token to
-`{calculation_id, value}`. Exact value equality is mandatory. Numeric literals in
-prose are rejected; dates/financial figures belong in referenced structured data.
+`{calculation_id, value}` for calculated finances or `{evidence_id, value}` for
+external facts as detailed below. Exact value equality is mandatory. Numeric
+literals in prose are rejected; dates can use source-backed evidence claims.
 The professional checks semantic and implied financial claims, including written
 number words. Code must not pretend to infer meaning from keyword matching.
 
 Scores, benchmarks and numeric KPIs require `rubric_id` referencing reviewed
 support with a nonempty `rubric`; otherwise they are rejected. Rubric permission
 does not create new numbers: every numeric claim still requires an existing
-canonical calculation. Capital recommendations must bind a complete scenario's
+canonical calculation or qualifying external fact. Capital recommendations must bind a complete scenario's
 last-period funding requirement and are withheld while any material issue remains.
 
 The HTML compiler validates the entire plan by replaying the case, hashes,
@@ -187,3 +188,54 @@ must reconcile to the authoritative aggregate scenario; duplicate channels and
 mixed unit labels are rejected. The engine calculates revenue, variable cost and
 contribution per unit with calculation IDs. Zero units leave those metrics null.
 A channel contribution chart is generated only for supported calculated values.
+
+## Decision assessment (required for readiness)
+
+The model, not the user, authors this structure. `assessment` is required for a
+business plan to be ready. Its exact keys are:
+
+- `decision`: `proceed`, `test`, `redesign` or `stop` (model judgment).
+- `recommendation`, `depends_on`, `would_change`: nonempty lists of narrative IDs.
+- `sections`: each of `business`, `market`, `operations`, `economics`, `cash`,
+  `alternatives`, `next_actions`, mapped to nonempty lists of narrative IDs.
+- `charts`: selected objects with `chart_id`, `section`, `caption_id` (narrative ID).
+
+Each question needs an answer or an explicit, decision-relevant unknown. The
+validator checks coverage and references, not whether prose answers the question
+well. The model must assess substance, alternatives and recommendation support.
+Empty or withheld sections make the result partial. Chart selection is authored
+by the model from `build_charts` candidates; absent data never generates a chart.
+
+Unreviewed ordinary narrative is included as provisional, with pending review
+visible. Invalid numerical bindings remain withheld. A `limitation` can have no
+basis IDs when it explicitly describes an evidence gap. Review metadata is an
+actual professional attestation, never the model's completion flag.
+
+Besides `{calculation_id, value}`, a typed claim may use `{evidence_id, value}`
+for an evidence record with `claim_type: external_fact`, `value` (exact string),
+`unit`, source IDs and description. The evidence ID must be in the entry's basis.
+This supports dates, market observations and source quotations. It must not be
+used to bypass the authoritative financial model. Semantic classification of a
+claim remains model-led and professionally reviewed.
+
+For idea-only assessment, `financial` can be null and `periods` empty. Currency
+may be null only without financial/commercial figures. Preserve the user's actual
+idea in a local `user_statement` source; it is not validation of the idea. No
+financial assumptions or professional confirmations should be fabricated.
+
+## Optional commercial drivers
+
+`commercial` is an optional list. Each row has exactly `scenario`, `period`,
+`units`, `net_price`, `variable_cost_per_unit`, `fixed_cost`, `basis_ids`,
+`cost_scope`. Values use decimal strings or null; scenario/period pairs are unique.
+Rows cover the whole modeled business for that period; do not mix individual
+channels with whole-business rows. Net price excludes discounts and applicable
+sales taxes. Explicitly disclose which acquisition, fulfilment, people and other
+costs are included or missing in `cost_scope` and in the economics narrative.
+
+Calculated IDs are `<scenario>/<period>/commercial_<metric>` for units, net_price,
+revenue, contribution_per_unit, operating_result and break_even_units. Break-even
+is unavailable for nonpositive unit contribution. These calculations remain usable
+without full linked statements, but cannot establish cash survival or capital need.
+When linked figures exist for the same scenario/period, revenue and operating
+result must agree with financial revenue and EBITDA. Disagreement blocks readiness.
