@@ -6715,7 +6715,7 @@ def test_python_preimport_rejects_every_unowned_implementation_entry(
     assert _tree_snapshot(output_dir) == before
 
 
-def test_real_python_entry_rejects_timestamp_valid_unreceipted_bytecode(
+def test_real_python_entry_ignores_timestamp_valid_unreceipted_bytecode(
     tmp_path: Path,
 ) -> None:
     copied_plugin, _ = _copy_journal_bank_implementation(tmp_path)
@@ -6761,8 +6761,7 @@ def test_real_python_entry_rejects_timestamp_valid_unreceipted_bytecode(
         timeout=30,
     )
 
-    assert completed.returncode != 0
-    assert "implementation" in completed.stderr.lower()
+    assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
     assert target.read_bytes() == source
     assert target.stat().st_size == source_stat.st_size

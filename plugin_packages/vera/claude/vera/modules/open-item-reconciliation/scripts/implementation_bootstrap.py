@@ -23,6 +23,7 @@ __all__ = [
     "IMPLEMENTATION_CONTRACT",
     "activate_implementation_boundary",
     "validate_implementation_tree",
+    "repair_vendor_bytecode",
 ]
 
 IMPLEMENTATION_CONTRACT = (
@@ -137,6 +138,8 @@ def _scan_tree(
                     "implementation entries must be ordinary and must not be symlinks"
                 )
             if entry_type == _DIRECTORY_MODE:
+                if entry.name == "__pycache__":
+                    continue
                 observed_directories.add((root_id, relative))
                 pending.append(entry.path)
                 continue
@@ -144,6 +147,8 @@ def _scan_tree(
                 raise RuntimeError(
                     "implementation files must be ordinary single-link regular files"
                 )
+            if entry.name.endswith((".pyc", ".pyo")):
+                continue
             observed_files.add((root_id, relative))
 
 
@@ -291,3 +296,52 @@ def activate_implementation_boundary(
         relative_path = retained_by_name[module_name]
         _load_retained_module(plugin_root, module_name, relative_path)
     return roots
+
+
+def repair_vendor_bytecode() -> int:
+    """Remove only regular .pyc files directly inside own vendor cache folders."""
+
+    from pathlib import Path
+
+    root = Path(__file__).absolute().parents[1]
+    vendor = root / "vendor"
+    # Never fall back to a shared vendor tree or traverse a linked ancestor.
+    for ancestor in (root, vendor):
+        if ancestor.is_symlink():
+            raise RuntimeError(
+                "bytecode repair requires real plugin/vendor directories"
+            )
+    if not vendor.exists():
+        return 0
+    removed = 0
+    pending = [vendor]
+    while pending:
+        directory = pending.pop()
+        with _os.scandir(directory) as iterator:
+            entries = list(iterator)
+        for entry in entries:
+            if entry.is_symlink():
+                continue
+            if entry.is_dir(follow_symlinks=False):
+                pending.append(Path(entry.path))
+            elif (
+                directory.name == "__pycache__"
+                and entry.name.endswith(".pyc")
+                and entry.is_file(follow_symlinks=False)
+                and entry.stat(follow_symlinks=False).st_nlink == 1
+            ):
+                Path(entry.path).unlink()
+                removed += 1
+    return removed
+
+
+if __name__ == "__main__":
+    import argparse
+    import logging
+
+    parser = argparse.ArgumentParser(description="Safely clean own vendor bytecode.")
+    parser.add_argument("--repair", action="store_true", required=True)
+    parser.parse_args()
+    activate_implementation_boundary()
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    logging.info("Removed %s vendor cache .pyc files", repair_vendor_bytecode())
