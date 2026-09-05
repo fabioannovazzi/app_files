@@ -823,7 +823,7 @@ def test_transitive_contract_rejects_every_unowned_implementation_entry(
         core.validate_implementation_contract(recipe["calculation_decision"])
 
 
-def test_real_python_entry_rejects_timestamp_valid_unreceipted_bytecode(
+def test_real_python_entry_ignores_timestamp_valid_unreceipted_bytecode(
     tmp_path: Path,
 ) -> None:
     plugin_copy, _ = _copy_concordato_runtime(tmp_path, "malicious-pyc")
@@ -869,8 +869,7 @@ def test_real_python_entry_rejects_timestamp_valid_unreceipted_bytecode(
         timeout=30,
     )
 
-    assert completed.returncode != 0
-    assert "implementation" in completed.stderr.lower()
+    assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
     assert target.read_bytes() == source
     assert target.stat().st_size == source_stat.st_size

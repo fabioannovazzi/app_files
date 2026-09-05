@@ -5,6 +5,23 @@ description: Review Italian client AML evidence, ownership, changes and unusual 
 
 ## Cowork execution contract
 
+For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
+concordato-plan-review, report-builder and check-entries only, optional cache
+cleanup is available from the installed Vera root:
+
+```bash
+python3 modules/<module>/scripts/implementation_bootstrap.py --repair
+```
+
+For a standalone module, use `python3 scripts/implementation_bootstrap.py --repair`
+from its root. This validates the implementation first, then removes only regular,
+single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
+leaves directories, other files, symlinks and shared vendor trees untouched.
+If `validate_implementation_tree` ever fails with a file/directory-contract
+mismatch, do not delete or modify files inside the installed plugin tree by hand
+and do not bypass a sandbox/permission rejection to do so. Stop and report the
+exact error instead.
+
 Work from the connected folder and supplied files first. Before a module's Python
 helpers, locate the installed plugin root. When it contains `components.json` and
 `scripts/managed_python_runtime.py` (as Vera does), run from that root:

@@ -1,6 +1,6 @@
 {
   "name": "open-item-reconciliation",
-  "version": "0.1.49",
+  "version": "0.1.50",
   "description": "Verifica se le partite indicate aperte al cut-off risultano ancora da chiudere, usando le evidenze contabili disponibili.",
   "author": {
     "name": "Mparanza",

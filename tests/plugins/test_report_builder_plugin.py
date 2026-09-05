@@ -1311,7 +1311,7 @@ def test_python_transitive_contract_rejects_every_unowned_entry(
         )
 
 
-def test_real_python_entry_rejects_timestamp_valid_unreceipted_bytecode(
+def test_real_python_entry_ignores_timestamp_valid_unreceipted_bytecode(
     tmp_path: Path,
 ) -> None:
     # Arrange
@@ -1360,8 +1360,7 @@ def test_real_python_entry_rejects_timestamp_valid_unreceipted_bytecode(
     )
 
     # Assert
-    assert completed.returncode != 0
-    assert "implementation" in completed.stderr.lower()
+    assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
     assert target.read_bytes() == source
     assert target.stat().st_size == source_stat.st_size
