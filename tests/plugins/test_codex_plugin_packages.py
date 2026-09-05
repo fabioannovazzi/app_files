@@ -1203,7 +1203,12 @@ def test_projected_vera_upload_keeps_executable_new_client_review_bridges(
         assert workbench.mcp_server_path == projected_server
 
 
-def test_projected_vera_journal_bank_dependency_check_succeeds(
+@pytest.mark.parametrize(
+    "component_name",
+    ("journal-bank-reconciliation", "report-builder"),
+)
+def test_projected_vera_assured_component_dependency_check_succeeds(
+    component_name: str,
     tmp_path: Path,
 ) -> None:
     builder = load_builder()
@@ -1213,7 +1218,7 @@ def test_projected_vera_journal_bank_dependency_check_succeeds(
         extracted,
         builder.chatgpt_upload_entries(vera),
     )
-    component_root = extracted / "modules" / "journal-bank-reconciliation"
+    component_root = extracted / "modules" / component_name
 
     completed = subprocess.run(
         [sys.executable, "scripts/check_dependencies.py"],
@@ -1228,7 +1233,12 @@ def test_projected_vera_journal_bank_dependency_check_succeeds(
     assert "OK: all selected plugin dependencies are importable" in completed.stdout
 
 
-def test_projected_vera_journal_bank_dependency_check_rejects_mixed_layout(
+@pytest.mark.parametrize(
+    "component_name",
+    ("journal-bank-reconciliation", "report-builder"),
+)
+def test_projected_vera_assured_component_dependency_check_rejects_mixed_layout(
+    component_name: str,
     tmp_path: Path,
 ) -> None:
     builder = load_builder()
@@ -1238,9 +1248,9 @@ def test_projected_vera_journal_bank_dependency_check_rejects_mixed_layout(
         extracted,
         builder.chatgpt_upload_entries(vera),
     )
-    component_root = extracted / "modules" / "journal-bank-reconciliation"
+    component_root = extracted / "modules" / component_name
     (component_root / ".app.json").write_bytes(
-        (ROOT / "plugins" / "journal-bank-reconciliation" / ".app.json").read_bytes()
+        (ROOT / "plugins" / component_name / ".app.json").read_bytes()
     )
 
     completed = subprocess.run(
@@ -1272,6 +1282,45 @@ def test_projected_vera_journal_bank_builds_exact_implementation_receipts(
         "sys.path.insert(0, 'scripts'); "
         "import journal_bank_core as core; "
         "print(json.dumps(core.build_implementation_artifact_receipts()))"
+    )
+
+    completed = subprocess.run(
+        [sys.executable, "-c", receipt_probe],
+        cwd=component_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    receipt_paths = {
+        (receipt["root_id"], receipt["path"])
+        for receipt in json.loads(completed.stdout)
+    }
+    assert ("implementation", "scripts/review_mcp_server.cjs") in receipt_paths
+    assert ("implementation", "scripts/review_server.py") in receipt_paths
+    assert ("implementation", ".app.json") not in receipt_paths
+    assert ("implementation", ".mcp.json") not in receipt_paths
+    assert ("implementation", "mcp/server.cjs") not in receipt_paths
+
+
+def test_projected_vera_report_builder_builds_exact_implementation_receipts(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    extracted = tmp_path / "projected-vera"
+    builder.write_entries_to_directory(
+        extracted,
+        builder.chatgpt_upload_entries(vera),
+    )
+    component_root = extracted / "modules" / "report-builder"
+    receipt_probe = (
+        "import json, sys; "
+        "sys.path.insert(0, 'scripts'); "
+        "import implementation_contract as contract; "
+        "print(json.dumps(contract.build_implementation_receipts()))"
     )
 
     completed = subprocess.run(
