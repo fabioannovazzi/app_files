@@ -1,4 +1,4 @@
-# Vera 0.1.204: Cowork Python version gates
+# Vera 0.1.205: Cowork Python version gates
 
 Browser Automation and Studio Archive now accept Python 3.10 instead of
 rejecting it before dependency checks. SQLite FTS5 secure deletion, declared

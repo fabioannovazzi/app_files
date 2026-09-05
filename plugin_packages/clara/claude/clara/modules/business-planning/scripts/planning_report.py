@@ -336,7 +336,9 @@ def _table(headers: list[str], rows: list[list[Any]]) -> str:
     )
 
 
-def _svg(chart: dict[str, Any]) -> str:
+def _svg(chart: dict[str, Any], lang: str = "en") -> str:
+    from planning_presentation import format_number, label
+
     if chart["kind"] == "waterfall":
         return _waterfall(chart)
     points = [p for s in chart["series"] for p in s["points"]]
@@ -374,15 +376,17 @@ def _svg(chart: dict[str, Any]) -> str:
     for i in range(round((hi - lo) / step) + 1):
         tick = lo + step * i
         svg.append(
-            f'<line x1="80" x2="780" y1="{y(tick):.2f}" y2="{y(tick):.2f}" stroke="#e4e8eb"/><text x="70" y="{y(tick)+4:.2f}" text-anchor="end">{tick:,.0f}</text>'
+            f'<line x1="80" x2="780" y1="{y(tick):.2f}" y2="{y(tick):.2f}" stroke="#e4e8eb"/><text x="70" y="{y(tick)+4:.2f}" text-anchor="end">{format_number(str(tick), lang)}</text>'
         )
     svg.append(
         f'<line class="zero-line" x1="80" x2="780" y1="{y(0):.2f}" y2="{y(0):.2f}" stroke="#667681" stroke-dasharray="5 4"/>'
     )
     x_labels = chart.get("x_labels", chart["periods"])
     stride = max(1, (len(x_labels) + 7) // 8)
-    for p in x_labels[::stride]:
+    tick_labels = list(dict.fromkeys([*x_labels[::stride], x_labels[-1]]))
+    for p in tick_labels:
         svg.append(f'<text x="{x(p):.2f}" y="295" text-anchor="middle">{e(p)}</text>')
+    dashes = ["none", "8 4", "3 3", "10 3 2 3"]
     for i, series in enumerate(chart["series"]):
         color = palette[i % len(palette)]
         coords = " ".join(
@@ -391,7 +395,7 @@ def _svg(chart: dict[str, Any]) -> str:
         )
         if chart["kind"] == "line":
             svg.append(
-                f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2.5"/>'
+                f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2.5" stroke-dasharray="{dashes[i % len(dashes)]}"/>'
             )
         for p in series["points"]:
             px, py = x(p.get("x", p["period"])), y(float(number(p["value"])))
@@ -417,10 +421,10 @@ def _svg(chart: dict[str, Any]) -> str:
                 )
             svg.append("</g>")
     svg.append(
-        f'<text x="80" y="20">{e(chart["y_axis"])}</text><text x="440" y="322" text-anchor="middle">{e(chart["x_axis"])}</text></svg>'
+        f'<text x="80" y="20">{e(chart["y_axis"])}</text><text x="440" y="322" text-anchor="middle">{e(label(chart["x_axis"], lang))}</text></svg>'
     )
     legend = "".join(
-        f'<span><i style="background:{palette[i % len(palette)]}"></i>{e(s["label"])}</span>'
+        f'<li><svg class="legend-key" width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><line x1="0" y1="6" x2="24" y2="6" stroke="{palette[i % len(palette)]}" stroke-width="3" stroke-dasharray="{dashes[i % len(dashes)] if chart["kind"] == "line" else "none"}"/></svg> <span>{e(label(s["label"], lang))}</span></li>'
         for i, s in enumerate(chart["series"])
     )
     data = _table(
@@ -431,7 +435,8 @@ def _svg(chart: dict[str, Any]) -> str:
             for p in s["points"]
         ],
     )
-    return f'<figure id="{e(chart["id"])}"><h3>{e(chart["title"])}</h3>{"".join(svg)}<figcaption>{legend}</figcaption><details><summary>Chart data and calculation lineage</summary>{data}</details></figure>'
+    title = " · ".join(label(part, lang) for part in chart["title"].split(" · "))
+    return f'<figure id="{e(chart["id"])}"><h3>{e(title)}</h3>{"".join(svg)}<figcaption><ul class="chart-legend">{legend}</ul></figcaption><details><summary>{label("Chart data and calculation lineage", lang)}</summary>{data}</details></figure>'
 
 
 def _waterfall(chart: dict[str, Any]) -> str:
@@ -520,14 +525,25 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
     _check_audience(case)
     e = html.escape
     from planning_assessment import SECTIONS
+    from planning_presentation import (
+        format_number,
+        label,
+        language,
+        render_actions,
+        render_sources,
+        render_tables,
+    )
+
+    lang = language(case)
+    tr = lambda text: label(text, lang)
 
     narrative = {n["id"]: n for n in plan["accepted_narrative"]}
     refs = {r["id"]: r for r in [*case["evidence"], *case["assumptions"]]}
 
     rendered_narrative: set[str] = set()
 
-    def paragraph(identifier: str) -> str:
-        if identifier in rendered_narrative:
+    def paragraph(identifier: str, repeat: bool = False) -> str:
+        if identifier in rendered_narrative and not repeat:
             return ""
         rendered_narrative.add(identifier)
         n = narrative.get(identifier)
@@ -537,10 +553,13 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         for key, claim in n["claims"].items():
             if "calculation_id" in claim:
                 c = plan["calculations"][claim["calculation_id"]]
-                rendered = f'<a class="figure-ref" href="#calc-{e(c["id"])}" data-calculation-id="{e(c["id"])}">{e(c["value"])} {e(c["unit"])}</a>'
+                display_value = (
+                    format_number(c["value"], lang, 2) if lang == "it" else c["value"]
+                )
+                rendered = f'<a class="figure-ref" href="#reader-sources" data-calculation-id="{e(c["id"])}">{e(display_value)} {e(c["unit"])}</a>'
             else:
                 r = refs[claim["evidence_id"]]
-                rendered = f'<a href="#evidence-{e(r["id"])}" data-evidence-id="{e(r["id"])}">{e(claim["value"])} {e(r["unit"])}</a>'
+                rendered = f'<a href="#reader-sources" data-evidence-id="{e(r["id"])}">{e(claim["value"])} {e(r["unit"])}</a>'
             prose = prose.replace("{{" + key + "}}", rendered)
         status = (
             "Provisional interpretation — professional review pending"
@@ -548,7 +567,8 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             else "Reviewed interpretation"
         )
         basis = ", ".join(n["basis_ids"]) or "Explicit evidence gap"
-        return f'<article id="narrative-{e(identifier)}"><p>{prose}</p><details><summary>Basis and review</summary><p>{e(status)}. {e(basis)}</p></details></article>'
+        attr = "" if repeat else f' id="narrative-{e(identifier)}"'
+        return f'<article{attr}><p>{prose}</p><details><summary>{tr("Basis and review")}</summary><p>{e(tr(status))}. {e(basis)}</p></details></article>'
 
     horizon = (
         f'{e(case["periods"][0])} — {e(case["periods"][-1])}'
@@ -556,39 +576,74 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         else "Forecast horizon not yet established"
     )
     parts = [
-        f'<header><p class="eyebrow">Business plan · Audience: {e(case["audience"])}</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])} · {e(case["reporting_currency"] or "Currency not established")} · {horizon}</p></header>'
+        f'<header><p class="eyebrow">Business plan · {tr("Audience")}: {e(tr(case["audience"]))}</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])} · {e(case["reporting_currency"] or "Currency not established")} · {horizon}</p></header>'
     ]
     assessment = case.get("assessment")
     if assessment:
         parts.append(
-            f'<section id="recommendation"><h2>Recommendation: {e(assessment["decision"]).capitalize()}</h2>'
+            f'<section id="recommendation"><h2>{tr("Recommendation")}: {tr(assessment["decision"].capitalize())}</h2>'
         )
         parts.extend(paragraph(i) for i in assessment["recommendation"])
         if plan["status"] != "ready_for_professional_review":
             parts.append(
-                '<p class="status">Provisional assessment. Material evidence or review remains open; this is not a finalized business plan.</p>'
+                '<p class="status">'
+                + tr(
+                    "Provisional assessment. Material evidence or review remains open; this is not a finalized business plan."
+                )
+                + "</p>"
             )
-        parts.append("<h3>What this judgment depends on</h3>")
+        parts.append("<h3>" + tr("What this judgment depends on") + "</h3>")
         parts.extend(paragraph(i) for i in assessment["depends_on"])
-        parts.append("<h3>What would change the recommendation</h3>")
+        parts.append("<h3>" + tr("What would change the recommendation") + "</h3>")
         parts.extend(paragraph(i) for i in assessment["would_change"])
         parts.append("</section>")
         for section, heading in SECTIONS.items():
-            parts.append(f'<section id="{section}"><h2>{e(heading)}</h2>')
-            parts.extend(paragraph(i) for i in assessment["sections"][section])
+            parts.append(f'<section id="{section}"><h2>{e(tr(heading))}</h2>')
+            table_captions = {
+                t["caption_id"] for t in case.get("presentation", {}).get("tables", [])
+            }
+            action_ids = {
+                a[k]
+                for a in case.get("presentation", {}).get("actions", [])
+                for k in ("action_id", "criterion_id")
+            }
+            parts.extend(
+                paragraph(i)
+                for i in assessment["sections"][section]
+                if i not in table_captions and i not in action_ids
+            )
+            parts.append(
+                render_tables(
+                    plan,
+                    section,
+                    lambda i: paragraph(i, repeat=i in rendered_narrative),
+                )
+            )
+            if section == "next_actions":
+                parts.append(
+                    render_actions(
+                        plan, lambda i: paragraph(i, repeat=i in rendered_narrative)
+                    )
+                )
             for chart in plan["charts"]:
                 if chart["section"] == section:
-                    parts.append(_svg(chart))
+                    parts.append(_svg(chart, lang))
                     parts.append(paragraph(chart["caption_id"]))
             parts.append("</section>")
     else:
         parts.append(
             "<section><h2>Business assessment incomplete</h2><p>The available calculations and notes do not yet constitute a business plan. A recommendation and the business questions still need to be addressed.</p></section>"
         )
-    parts.append("<section><h2>Material uncertainties and limitations</h2><ul>")
-    parts.extend(f"<li>{e(i)}</li>" for i in case["limitations"])
     parts.append(
-        '</ul></section><details id="supporting-evidence"><summary>Supporting evidence, calculations and review record</summary>'
+        "<section><h2>" + tr("Material uncertainties and limitations") + "</h2><ul>"
+    )
+    parts.extend(f"<li>{e(i)}</li>" for i in case["limitations"])
+    parts.append("</ul></section>")
+    parts.append(render_sources(plan))
+    parts.append(
+        '<details id="supporting-evidence"><summary>'
+        + tr("Supporting evidence, calculations and review record")
+        + "</summary>"
     )
     parts.append(
         f'<p>Validation status: {e(plan["status"])}. Checks establish internal consistency and file identity, not whether a business is viable.</p>'
@@ -697,14 +752,44 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         .replace("&", "\\u0026")
     )
     style = """body{margin:0;background:#fff;color:#202a33;font:16px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:0 auto;padding:64px 36px}header{border-top:5px solid #123d65;padding-top:24px}h1{font-size:44px;line-height:1.15;letter-spacing:-1.5px;margin:16px 0}h2{font-size:25px;line-height:1.3;margin:0 0 24px;color:#123d65}h3{font-size:18px}.lead{font-size:22px;max-width:760px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#42647d}.status{display:inline-block;border-bottom:2px solid #16829a;padding:4px 0}section{padding:36px 0;border-bottom:1px solid #dce2e6}article{max-width:800px;margin:0 0 28px}figure{margin:28px 0 44px;break-inside:avoid}svg{display:block;width:100%;height:auto}svg text{font:12px system-ui,sans-serif;fill:#50616b}figcaption{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:13px}figcaption i{display:inline-block;width:14px;height:3px;margin-right:8px;vertical-align:middle}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th{color:#123d65;background:#f5f7f8}td,th{padding:10px;border-bottom:1px solid #dce2e6;vertical-align:top;overflow-wrap:anywhere}td{min-width:90px}.table-scroll{overflow-x:auto}details{margin:16px 0}summary{cursor:pointer;color:#123d65;font-size:13px}#supporting-evidence>summary{font-size:19px;padding:24px 0}article>details{font-size:12px}article>details>summary{font-size:12px}p{max-width:850px}pre{font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}a{color:#123d65}footer{padding-top:28px;font-size:11px;overflow-wrap:anywhere}@media(max-width:600px){main{padding:28px 16px}h1{font-size:32px}.lead{font-size:18px}section{padding:28px 0}}@media print{main{padding:0;max-width:none}details>*{display:block!important}table{font-size:9px}.table-scroll{overflow:visible}header{break-after:avoid}h2,h3{break-after:avoid}tr{break-inside:avoid}}"""
-    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(case["entity_name"])} · Business Planning</title><style>{style}</style></head><body><main>{"".join(parts)}</main><script type="application/json" id="validated-plan">{payload}</script></body></html>'
+    style += """
+    .chart-legend{list-style:none;padding:0;margin:8px 0;display:block}
+    .chart-legend li{display:block;margin:5px 0;break-inside:avoid}
+    svg.legend-key{display:inline-block;width:24px;height:12px;vertical-align:middle;margin-right:8px}
+    .decision-table table,.action-table table{font-size:14px}
+    .action-table article{margin:0}.action-table p{margin:0 0 8px}
+    .source-url{font-size:11px;overflow-wrap:anywhere}
+    @media print{
+      body{font:10pt/1.45 Arial,sans-serif}main{padding:0}
+      h1{font-size:26pt;letter-spacing:-.5px}h2{font-size:17pt;margin:0 0 12px}h3{font-size:12pt}
+      .lead{font-size:13pt}section{padding:18px 0}article{margin-bottom:12px}
+      h1,h2,h3{break-after:avoid-page;page-break-after:avoid}
+      p,li{orphans:3;widows:3}figure{margin:16px 0;break-inside:avoid-page}
+      .decision-table{break-inside:avoid-page}
+      .decision-table h3{break-after:avoid-page}
+      .decision-table table,.action-table table{font-size:9pt}
+      table{table-layout:fixed;font-size:8pt}td{min-width:0}td,th{padding:7px;overflow-wrap:break-word}
+      thead{display:table-header-group}tr{break-inside:avoid-page}
+      #supporting-evidence,article>details,figure>details{display:none!important}
+      #reader-sources{break-before:page}.source-url{font-size:8pt}
+      .chart-legend{font-size:9pt}svg text{font-family:Arial,sans-serif}
+    }
+    """
+    return f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(case["entity_name"])} · Business Planning</title><style>{style}</style></head><body><main>{"".join(parts)}</main><script type="application/json" id="validated-plan">{payload}</script></body></html>'
 
 
-def export_pdf(plan: dict[str, Any], *, source_root: Path, output: Path) -> None:
+def export_pdf(
+    plan: dict[str, Any], *, source_root: Path, output: Path, draft: bool = False
+) -> None:
     """PDF only from a freshly validated HTML structure; optional declared renderer."""
     rendered = compile_html(plan, source_root=source_root)
     require(
-        plan["status"] == "ready_for_professional_review",
+        plan["status"] == "ready_for_professional_review"
+        or (
+            draft
+            and plan["status"] == "partial"
+            and bool(plan["case"].get("assessment"))
+        ),
         "PDF export requires a complete validated report",
     )
     from playwright.sync_api import Error as BrowserError
@@ -721,13 +806,18 @@ def export_pdf(plan: dict[str, Any], *, source_root: Path, output: Path) -> None
             page = browser.new_page()
             page.route("**/*", lambda route: route.abort())
             page.set_content(rendered)
-            page.locator("details").evaluate_all(
-                "items => items.forEach(item => item.open = true)"
-            )
+            page.evaluate("document.fonts.ready")
+            from planning_presentation import label, language
+
+            lang = language(plan["case"])
+            header = label("Draft for discussion", lang) if draft else "Business plan"
             page.pdf(
                 path=str(output),
                 format="A4",
                 print_background=True,
+                display_header_footer=True,
+                header_template=f'<div style="font:9px Arial;width:100%;margin:0 12mm;color:#52616b">{html.escape(header)}</div>',
+                footer_template=f'<div style="font:9px Arial;width:100%;text-align:right;margin:0 12mm;color:#52616b">{label("Page", lang)} <span class="pageNumber"></span> / <span class="totalPages"></span></div>',
                 margin={
                     "top": "15mm",
                     "bottom": "15mm",
@@ -744,10 +834,16 @@ def export_pdf(plan: dict[str, Any], *, source_root: Path, output: Path) -> None
 
 
 def write_package(
-    plan: dict[str, Any], *, source_root: Path, output: Path, pdf: bool = False
+    plan: dict[str, Any],
+    *,
+    source_root: Path,
+    output: Path,
+    pdf: bool = False,
+    draft_pdf: bool = False,
 ) -> None:
     """Compile before writing anything; all derived outputs bind the same figures."""
     rendered = compile_html(plan, source_root=source_root)
+    require(not (pdf and draft_pdf), "Choose final or draft PDF, not both")
     output.mkdir(parents=True, exist_ok=True)
     require(
         not any(output.iterdir()),
@@ -795,17 +891,23 @@ def write_package(
         writer.writeheader()
         writer.writerows(plan["calculations"].values())
     pdf_error = None
-    if pdf:
+    if pdf or draft_pdf:
         try:
-            export_pdf(
-                plan, source_root=source_root, output=output / "business_plan.pdf"
+            pdf_path = output / (
+                "business_plan_draft.pdf" if draft_pdf else "business_plan.pdf"
             )
+            if draft_pdf:
+                export_pdf(plan, source_root=source_root, output=pdf_path, draft=True)
+            else:
+                export_pdf(plan, source_root=source_root, output=pdf_path)
         except (PlanningError, ImportError) as exc:
+            pdf_path.unlink(missing_ok=True)
             pdf_error = str(exc)
     receipt = {
         "workflow_id": "business-planning",
         "status": "partial" if pdf_error else plan["status"],
         "pdf_error": pdf_error,
+        "pdf_mode": "draft" if draft_pdf else "final" if pdf else None,
         "case_sha256": plan["case_sha256"],
         "calculations_sha256": plan["calculations_sha256"],
         "outputs": [

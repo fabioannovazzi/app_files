@@ -12,7 +12,7 @@ proof that any earlier client report executed the registered workflow.
 
 ## Case fields
 
-The base fields below are required; `assessment` is additionally required for readiness, and `commercial` is optional. Unknown top-level fields are rejected:
+The base fields below are required; `assessment` is additionally required for readiness, and `commercial` and `presentation` are optional. Unknown top-level fields are rejected:
 
 | Field | Contract |
 | --- | --- |
@@ -166,7 +166,11 @@ also covers the embedded JSON structure.
 manifest, canonical JSON/CSV figures, reconciliation, validation and a SHA-256
 output receipt. It refuses an occupied output folder. Optional `--pdf` uses only
 freshly validated HTML and requires `requirements-pdf.txt`; no arbitrary HTML is
-accepted by the PDF API. Only ready reports can be exported as PDF.
+accepted by the PDF API. Normal `--pdf` requires a ready report. Mutually exclusive `--draft-pdf` also
+permits a partial assessment, visibly labelled for discussion on every page; it
+does not promote status, resolve missing evidence or invent review attestations.
+Blocked results cannot export. The receipt records `pdf_mode` and the PDF hash;
+a failed export removes any incomplete PDF while preserving validated HTML.
 
 `ready_for_professional_review` describes mechanical completeness, not healthy
 financial performance or final professional approval. Missing reviews/conflicts
@@ -239,3 +243,33 @@ is unavailable for nonpositive unit contribution. These calculations remain usab
 without full linked statements, but cannot establish cash survival or capital need.
 When linked figures exist for the same scenario/period, revenue and operating
 result must agree with financial revenue and EBITDA. Disagreement blocks readiness.
+
+
+## Optional presentation
+
+`presentation` accepts `language` (`en` default, `it`), `tables`, `actions`, and
+`source_notes`. Content selection and the recommendation remain model-authored.
+
+A table has unique `id`, `title`, an assessment `section`, `headers` (one to eight),
+`rows` of matching width, and an accepted narrative `caption_id`. Text cells are
+`{"text": "Scenario name"}` and must contain labels, not financial claims.
+Numeric cells have exact canonical decimal `value` plus either `observation_id`
+(no operation) or a unique nonempty list of `calculation_ids`. Calculations must
+exist, be available and share units. `operation` is `value` (one ID, default),
+`sum`, `difference` (first minus the remaining values, at least two) or `ratio`
+(exactly two, nonzero denominator). Optional `decimals` is zero through four;
+`style` is `number` or `percent` (ratio only). Values are checked exactly before
+formatting; rounding is for display. Source observations remain labelled reported
+or adjusted evidence in the readable appendix, not authoritative conflict fixes.
+
+Example cell: `{"calculation_ids": ["base/2027-01/revenue", "base/2027-02/revenue"],
+"operation": "sum", "value": "2000", "decimals": 0}`. The actual value must equal
+the referenced calculations. No free-standing financial values are accepted.
+
+Actions have exactly `action_id`, `owner`, `when`, `criterion_id`. Both IDs refer
+to accepted narrative; owner and timing are nonempty text. Source notes contain
+`source_id`, `claim`, `locator`, optionally `url` (HTTP(S), no credentials).
+References are validated, not fetched or substantively verified by the renderer.
+Tables and action criteria cannot bypass the narrative validation contract.
+The readable sources appendix is printed; the full technical register remains
+available in HTML/JSON/CSV. Presentation participates in canonical replay.
