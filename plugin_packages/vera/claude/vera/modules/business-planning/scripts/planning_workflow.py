@@ -210,7 +210,7 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         "required_sections",
     }
     require(
-        set(case) - {"assessment", "commercial"} == allowed,
+        set(case) - {"assessment", "commercial", "presentation"} == allowed,
         f"Shared case fields differ: {sorted(set(case) ^ allowed)}",
     )
     for key in (
@@ -1046,6 +1046,9 @@ def build_plan(
     from planning_report import build_charts
 
     plan["charts"] = select_charts(plan, build_charts(plan))
+    from planning_presentation import validate_presentation
+
+    validate_presentation(plan)
     if plan["unresolved_matters"] and plan["status"] == "ready_for_professional_review":
         plan["status"] = "partial"
     plan["content_sha256"] = digest(plan)

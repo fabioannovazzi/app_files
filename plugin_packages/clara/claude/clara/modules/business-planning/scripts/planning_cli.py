@@ -25,7 +25,15 @@ def run(owner: str, argv: list[str] | None = None) -> int:
     parser.add_argument("--client-engagement", type=Path, required=owner == "Vera")
     parser.add_argument("--case-workspace", type=Path, required=owner == "Clara")
     parser.add_argument("--counterpart-contribution", type=Path)
-    parser.add_argument("--pdf", action="store_true")
+    pdf_options = parser.add_mutually_exclusive_group()
+    pdf_options.add_argument(
+        "--pdf", action="store_true", help="Export a complete validated report"
+    )
+    pdf_options.add_argument(
+        "--draft-pdf",
+        action="store_true",
+        help="Export a labelled discussion draft, retaining partial status and missing inputs",
+    )
     args = parser.parse_args(argv)
     try:
         if owner == "Clara":
@@ -61,7 +69,11 @@ def run(owner: str, argv: list[str] | None = None) -> int:
             )
         plan = build_plan(case, source_root=source_root)
         write_package(
-            plan, source_root=source_root, output=args.output_dir, pdf=args.pdf
+            plan,
+            source_root=source_root,
+            output=args.output_dir,
+            pdf=args.pdf,
+            draft_pdf=args.draft_pdf,
         )
     except (ValueError, OSError, KeyError, TypeError) as exc:
         parser.error(str(exc))
