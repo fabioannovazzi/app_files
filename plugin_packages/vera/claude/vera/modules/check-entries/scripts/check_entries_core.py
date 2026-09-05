@@ -1241,6 +1241,9 @@ def _validate_journal_sampling_implementation_tree(
                         "Journal Sampling implementation cannot contain symlinks."
                     )
                 if stat.S_ISDIR(observed.st_mode):
+                    # Source receipts remain exact; generated caches are not inputs.
+                    if entry.name == "__pycache__":
+                        continue
                     observed_directories.add((root_id, relative))
                     pending.append(Path(entry.path))
                     continue
@@ -1249,6 +1252,8 @@ def _validate_journal_sampling_implementation_tree(
                         "Journal Sampling implementation files must be ordinary "
                         "single-link files."
                     )
+                if entry.name.endswith((".pyc", ".pyo")):
+                    continue
                 observed_files.add((root_id, relative))
 
     for root_id, scan_root in (
