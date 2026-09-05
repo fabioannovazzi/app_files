@@ -72,7 +72,7 @@ SERIALIZED_HTML_NUMERIC_DOMAIN = (
     "period, and scenario."
 )
 EXPECTED_SEMANTIC_SHA256 = (
-    "a0759a793eef04596ae9305cce4df40fb3f4611cedc70a44aa315d21abd32afe"
+    "016535666fcf286057fb4e475f9b5daea12e9c4360f1eab3fba6f6ccd9afbd27"
 )
 EXPECTED_RECIPE_SHA256 = (
     "493727b2874f005d1d338725fd5c461953397f079c133413b3eab9a4653cd5e8"
@@ -824,7 +824,7 @@ def _validate_request(
         raise ContractValidationError("request semantic layer digest drifted")
     if (
         semantic["semantic_layer_id"] != SEMANTIC_LAYER_ID
-        or semantic["semantic_version"] != 1
+        or semantic["semantic_version"] != 2
     ):
         raise ContractValidationError("request semantic layer identity drifted")
     review_basis = semantic["review_basis"]
@@ -861,7 +861,7 @@ def _validate_request(
     )
     if review != {
         "status": "model_reviewed",
-        "reviewed_at": "2026-07-23",
+        "reviewed_at": "2026-09-05",
         "human_reviewed": False,
     }:
         raise ContractValidationError(
@@ -1047,7 +1047,7 @@ def _validate_semantic_gate(
 ) -> None:
     if (
         layer.get("semantic_layer_id") != SEMANTIC_LAYER_ID
-        or layer.get("semantic_version") != 1
+        or layer.get("semantic_version") != 2
     ):
         raise ContractValidationError("semantic layer identity drifted")
     if (layer.get("dataset_contract") or {}).get(
@@ -1059,7 +1059,7 @@ def _validate_semantic_gate(
         raise ContractValidationError("semantic layer must remain model-reviewed")
     if (
         semantic_review.get("reviewed_by") != "Codex semantic fixture review"
-        or semantic_review.get("reviewed_at") != "2026-07-23"
+        or semantic_review.get("reviewed_at") != "2026-09-05"
         or not any(
             "not human-reviewed" in str(note).casefold()
             for note in semantic_review.get("notes", [])
@@ -2628,7 +2628,7 @@ def _assemble_handoff_receipt(
         },
         "semantic": {
             "semantic_layer_id": SEMANTIC_LAYER_ID,
-            "semantic_version": 1,
+            "semantic_version": 2,
             "review_status": "model_reviewed",
             "validation": _artifact_receipt(
                 handoff_dir,

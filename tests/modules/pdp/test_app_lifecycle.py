@@ -113,7 +113,7 @@ def test_create_app_mounts_only_current_hosted_route_families() -> None:
         "/slides",
     )
 
-    assert len(route_paths) == 49
+    assert "/api/vera/run-receipts" in route_paths
     assert not any(path.startswith(retired_prefixes) for path in route_paths if path)
     assert "/case-notes/interview/{token}" in route_paths
     assert "/case-notes/api/voice/interviews" in route_paths

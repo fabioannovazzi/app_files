@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.2",
+  "schema_version": "0.3",
   "semantic_layer_id": "wd40_fy2025_synthetic_monthly_pnl.reporting_semantics",
-  "semantic_version": 1,
+  "semantic_version": 2,
   "dataset_contract": {
     "dataset_contract_id": "wd40_fy2025_synthetic_monthly_pnl",
     "contract_version": 1,
@@ -237,6 +237,120 @@
           "numeric column without a strong metric-class hint"
         ]
       }
+    },
+    {
+      "metric_id": "metric.sales",
+      "label": "Net sales",
+      "binding": {
+        "binding_type": "derived",
+        "column": null,
+        "expression": "value restricted to row_key = 'net_sales'",
+        "input_metric_ids": [
+          "metric.value"
+        ]
+      },
+      "definition": "The existing signed USD-thousands value for net_sales, at fiscal-month and SYN scenario grain.",
+      "metric_class": "additive_value",
+      "aggregation": {
+        "default": "identity",
+        "allowed": [
+          "identity",
+          "sum_across_periods_for_the_same_statement_line_and_scenario"
+        ],
+        "forbidden": [
+          "sum_across_statement_lines",
+          "mean",
+          "ratio"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "currency_thousands",
+        "currency": "USD",
+        "symbol": "USD 000"
+      },
+      "directionality": "signed_statement_amount",
+      "valid_period_grains": [
+        "month"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.row_key",
+        "dimension.scenario"
+      ],
+      "forbidden_dimension_ids": [
+        "dimension.line_type",
+        "dimension.unit"
+      ],
+      "status": "conditional",
+      "confidence": "high",
+      "rationale": "The prepared CSV and statement recipe explicitly identify net_sales. This is a row-scoped semantic reference, not a new renderer calculation.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "Monthly values are synthetic.",
+        "Rows include both detail lines and calculated statement subtotals, so cross-line aggregation double counts."
+      ],
+      "origin_profile_observation": {}
+    },
+    {
+      "metric_id": "metric.cogs",
+      "label": "Cost of products sold",
+      "binding": {
+        "binding_type": "derived",
+        "column": null,
+        "expression": "value restricted to row_key = 'cost_of_products_sold'",
+        "input_metric_ids": [
+          "metric.value"
+        ]
+      },
+      "definition": "The existing signed USD-thousands value for cost_of_products_sold, at fiscal-month and SYN scenario grain.",
+      "metric_class": "additive_value",
+      "aggregation": {
+        "default": "identity",
+        "allowed": [
+          "identity",
+          "sum_across_periods_for_the_same_statement_line_and_scenario"
+        ],
+        "forbidden": [
+          "sum_across_statement_lines",
+          "mean",
+          "ratio"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "currency_thousands",
+        "currency": "USD",
+        "symbol": "USD 000"
+      },
+      "directionality": "signed_statement_amount",
+      "valid_period_grains": [
+        "month"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.row_key",
+        "dimension.scenario"
+      ],
+      "forbidden_dimension_ids": [
+        "dimension.line_type",
+        "dimension.unit"
+      ],
+      "status": "conditional",
+      "confidence": "high",
+      "rationale": "The prepared CSV and statement recipe explicitly identify cost_of_products_sold. This is a row-scoped semantic reference, not a new renderer calculation.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "Monthly values are synthetic.",
+        "Rows include both detail lines and calculated statement subtotals, so cross-line aggregation double counts."
+      ],
+      "origin_profile_observation": {}
     }
   ],
   "dimensions": [
@@ -515,11 +629,12 @@
   "review": {
     "status": "model_reviewed",
     "reviewed_by": "Codex semantic fixture review",
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-09-05",
     "notes": [
       "Review applies only to this frozen synthetic preparation fixture and the one conditional analysis policy.",
       "This semantic layer is explicitly not human-reviewed.",
-      "Deterministic validation proves contract wiring and snapshot compatibility, not the truth of semantic judgment."
+      "Deterministic validation proves contract wiring and snapshot compatibility, not the truth of semantic judgment.",
+      "Semantic revision 2 migrates to schema 0.3 and reviews Sales/Discount/COGS against the frozen statement rows; numeric data, render recipe and publication boundaries are unchanged."
     ]
   },
   "boundaries": {
@@ -527,5 +642,46 @@
     "deterministic_validation_scope": "Schema, identifiers, evidence references, profile bindings, exact manifest intent joins, required role coverage, and snapshot compatibility only.",
     "chart_selection_included": false,
     "rendering_included": false
+  },
+  "business_metric_mappings": {
+    "sales": {
+      "state": "mapped",
+      "metric_id": "metric.sales",
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The prepared CSV and statement recipe explicitly identify net_sales. This is a row-scoped semantic reference, not a new renderer calculation.",
+      "evidence_ids": [
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "Synthetic monthly values only. No cross-statement-line aggregation."
+      ]
+    },
+    "cogs": {
+      "state": "mapped",
+      "metric_id": "metric.cogs",
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The prepared CSV and statement recipe explicitly identify cost_of_products_sold. This is a row-scoped semantic reference, not a new renderer calculation.",
+      "evidence_ids": [
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "Synthetic monthly values only. No cross-statement-line aggregation."
+      ]
+    },
+    "discount": {
+      "state": "absent",
+      "metric_id": null,
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The frozen 14-row statement contains net sales and cost of products sold but no separate discount measure. Net sales must not also be mapped as discount.",
+      "evidence_ids": [
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "Absent from this fixture does not mean the issuer has no discounts."
+      ]
+    }
   }
 }
