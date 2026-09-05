@@ -3,7 +3,7 @@
   "case_id": "synthetic-contradictions",
   "entity_name": "Synthetic planning company",
   "company_stage": "Established company testing a new venture",
-  "planning_objective": "Reconcile profitability and financing timing before a capital decision.",
+  "planning_objective": "Decide whether this proposed venture should launch, change its operating plan or stop.",
   "audience": "internal",
   "reporting_currency": "EUR",
   "periods": [
@@ -807,6 +807,229 @@
         "reviewer": "Synthetic professional",
         "reviewed_at": "2026-09-05T12:00:00+02:00"
       }
+    },
+    {
+      "id": "recommendation",
+      "kind": "finding",
+      "text": "Redesign the launch before committing further funds. The accepted cost structure loses money, while scheduled financing does not remove the early cash shortfall. A smaller, evidence-led pilot is the useful next step.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "depends",
+      "kind": "risk",
+      "text": "This judgment depends on the adjusted cost base and the financing and repayment schedule. Demand, repeat purchases and acquisition costs have not been demonstrated.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "change",
+      "kind": "initiative",
+      "text": "Reconsider expansion when paid orders and repeat purchases support positive contribution after acquisition and fulfilment, and an agreed cash schedule covers obligations throughout the launch.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "business",
+      "kind": "finding",
+      "text": "The financial material describes projected revenue and costs, but does not establish the product, target customer, specific customer need or a defensible reason to buy. Define these before treating the revenue forecast as a commercial plan.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "market",
+      "kind": "limitation",
+      "text": "The documents establish projections, not observed demand. Test willingness to pay through paid pilot orders and follow customers through repeat purchase; expressions of interest alone do not justify the sales plan.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "operations",
+      "kind": "limitation",
+      "text": "Supplier capacity, minimum order quantities, lead times, storage and distribution responsibilities are not established by this fixture. Obtain supplier terms before committing to inventory.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "cash-view",
+      "kind": "risk",
+      "text": "Financing arrives after the first operating losses, and later repayments consume cash. The accepted schedule still leaves a residual gap; funding alone would not repair loss-making operations.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "alternative",
+      "kind": "option",
+      "text": "Compare a smaller outsourced pilot with the full launch. It may reduce inventory exposure but increase unit cost. Direct sales may improve selling margin but add fulfilment and acquisition costs. Postpone if neither route can demonstrate viable contribution.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "actions",
+      "kind": "initiative",
+      "text": "The venture lead should first obtain paid customer evidence and supplier terms. The finance reviewer should then update the cost split, inventory timing and repayment schedule before any inventory commitment. Revisit the launch decision after those results are available.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "profit-chart",
+      "kind": "risk",
+      "text": "The reported positive result conflicts with the adjusted cost base. The accepted opening-month EBITDA is {{ebitda}}; use that loss when considering launch commitments.",
+      "claims": {
+        "ebitda": {
+          "calculation_id": "base/2027-01/ebitda",
+          "value": "-100"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "scenario-chart",
+      "kind": "risk",
+      "text": "Both modeled scenarios lose money. The downside opening-month EBITDA is {{ebitda}}. Better financing would address timing, but neither scenario supports the present operating plan.",
+      "claims": {
+        "ebitda": {
+          "calculation_id": "downside/2027-01/ebitda",
+          "value": "-300"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "cash-chart",
+      "kind": "risk",
+      "text": "Scheduled funding restores cash after an initial shortfall. The final-month cash balance is {{cash}}, but a positive closing balance does not fund obligations that fall due before financing arrives.",
+      "claims": {
+        "cash": {
+          "calculation_id": "base/2027-03/ending_cash",
+          "value": "170"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "gap-chart",
+      "kind": "risk",
+      "text": "The full-horizon pre-financing cash requirement is {{gap}}. The maximum remaining shortfall after scheduled financing is {{residual}}, occurring before funds arrive. These are timing-sensitive model outputs, not a recommendation for a financing round.",
+      "claims": {
+        "gap": {
+          "calculation_id": "base/2027-03/funding_requirement",
+          "value": "330"
+        },
+        "residual": {
+          "calculation_id": "base/2027-03/residual_funding_gap",
+          "value": "60"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
     }
   ],
   "limitations": [
@@ -816,5 +1039,62 @@
   "required_sections": [
     "financial",
     "business_analysis"
-  ]
+  ],
+  "assessment": {
+    "decision": "redesign",
+    "recommendation": [
+      "recommendation"
+    ],
+    "depends_on": [
+      "depends"
+    ],
+    "would_change": [
+      "change"
+    ],
+    "sections": {
+      "business": [
+        "business"
+      ],
+      "market": [
+        "market"
+      ],
+      "operations": [
+        "operations"
+      ],
+      "economics": [
+        "profit-risk"
+      ],
+      "cash": [
+        "cash-view"
+      ],
+      "alternatives": [
+        "alternative"
+      ],
+      "next_actions": [
+        "actions"
+      ]
+    },
+    "charts": [
+      {
+        "chart_id": "reported-adjusted-base",
+        "section": "economics",
+        "caption_id": "profit-chart"
+      },
+      {
+        "chart_id": "ebitda-scenarios",
+        "section": "economics",
+        "caption_id": "scenario-chart"
+      },
+      {
+        "chart_id": "cash-base",
+        "section": "cash",
+        "caption_id": "cash-chart"
+      },
+      {
+        "chart_id": "funding-base",
+        "section": "cash",
+        "caption_id": "gap-chart"
+      }
+    ]
+  }
 }

@@ -95,7 +95,8 @@ def test_missing_reviewed_business_analysis_is_partial_for_either_entry(
     plan = build_plan(case, owner=entry_point, source_root=FIXTURE)
     assert plan["status"] == "partial"
     assert (
-        "Required reviewed business analysis is missing" in plan["unresolved_matters"]
+        "Narrative profit-risk: requires professional review"
+        in plan["unresolved_matters"]
     )
 
 
@@ -119,7 +120,7 @@ def test_clara_stale_positive_ebitda_blocks_narrative_finalization() -> None:
     case["narrative"][0]["claims"]["ebitda"]["value"] = "200"
     plan = build_plan(case, owner="Clara", source_root=FIXTURE)
     assert plan["status"] == "blocked"
-    assert plan["accepted_narrative"] == []
+    assert "profit-risk" not in {n["id"] for n in plan["accepted_narrative"]}
     assert "financial number disagrees" in " ".join(plan["unresolved_matters"])
 
 
@@ -169,7 +170,7 @@ def test_unsupported_rubric_is_rejected(kind: str) -> None:
     plan = build_plan(case, owner="Clara", source_root=FIXTURE)
     assert plan["status"] == "partial"
     assert "reviewed rubric" in " ".join(plan["unresolved_matters"])
-    assert plan["accepted_narrative"] == []
+    assert "profit-risk" not in {n["id"] for n in plan["accepted_narrative"]}
 
 
 def test_unconfirmed_material_assumption_prevents_final_readiness() -> None:
@@ -227,7 +228,7 @@ def test_export_rejects_tampered_calculations_charts_and_receipts(
     if mutation == "calculation":
         plan["calculations"]["base/2027-01/ebitda"]["value"] = "200"
     elif mutation == "chart":
-        plan["charts"][0]["series"][0]["points"][0]["value"] = "200"
+        plan["charts"][0]["series"][0]["points"][0]["value"] = "999"
     elif mutation == "statement":
         plan["statements"]["scenarios"][0]["periods"][0]["cash_flow"][
             "ending_cash"
@@ -298,6 +299,7 @@ def test_output_csv_json_html_and_receipt_share_calculation_register(
 def test_no_debt_service_and_zero_revenue_do_not_invent_ratios() -> None:
     case = case_data()
     case["observations"], case["resolutions"], case["narrative"] = [], [], []
+    case.pop("assessment")
     case["required_sections"] = ["financial"]
     row = case["financial"]["scenarios"][0]["schedule"][0]
     row["revenue"] = "0"
@@ -457,7 +459,7 @@ def test_reported_ebitda_reference_cannot_bypass_adjusted_narrative_guard() -> N
     }
     plan = build_plan(case, owner="Clara", source_root=FIXTURE)
     assert plan["status"] != "ready_for_professional_review"
-    assert not plan["accepted_narrative"]
+    assert "profit-risk" not in {n["id"] for n in plan["accepted_narrative"]}
 
 
 def test_reviewed_rubric_allows_supported_kpi_interpretation() -> None:
@@ -483,7 +485,7 @@ def test_numeric_literal_in_strategic_prose_is_rejected() -> None:
     case["narrative"][0]["text"] = "The EBITDA is 200."
     plan = build_plan(case, owner="Clara", source_root=FIXTURE)
     assert plan["status"] == "partial"
-    assert plan["accepted_narrative"] == []
+    assert "profit-risk" not in {n["id"] for n in plan["accepted_narrative"]}
 
 
 def test_internal_only_classification_cannot_be_overridden_by_audience_lists() -> None:
@@ -577,7 +579,15 @@ def channel_case() -> dict:
 
 
 def test_reconciled_channels_produce_canonical_unit_economics_chart() -> None:
-    plan = build_plan(channel_case(), owner="Clara", source_root=FIXTURE)
+    case = channel_case()
+    case["assessment"]["charts"].append(
+        {
+            "chart_id": "unit-economics-base-2027-01",
+            "section": "economics",
+            "caption_id": "profit-risk",
+        }
+    )
+    plan = build_plan(case, owner="Clara", source_root=FIXTURE)
     rendered = compile_html(plan, source_root=FIXTURE)
     assert plan["status"] == "ready_for_professional_review"
     assert (

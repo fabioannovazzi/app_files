@@ -61,6 +61,7 @@ INPUTS = (
 EXTRAS = ("variable_cogs", "variable_operating_expenses")
 ROLES = {
     "client_document",
+    "user_statement",
     "professional_review",
     "financial_model",
     "external_evidence",
@@ -209,7 +210,7 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         "required_sections",
     }
     require(
-        set(case) == allowed,
+        set(case) - {"assessment", "commercial"} == allowed,
         f"Shared case fields differ: {sorted(set(case) ^ allowed)}",
     )
     for key in (
@@ -218,24 +219,33 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         "company_stage",
         "planning_objective",
         "audience",
-        "reporting_currency",
     ):
         require(
             isinstance(case[key], str) and bool(case[key].strip()), f"Missing {key}"
         )
     require(
-        re.fullmatch(r"[A-Z]{3}", case["reporting_currency"]) is not None,
+        (
+            case["reporting_currency"] is None
+            and case["financial"] is None
+            and not case.get("commercial")
+        )
+        or (
+            isinstance(case["reporting_currency"], str)
+            and re.fullmatch(r"[A-Z]{3}", case["reporting_currency"]) is not None
+        ),
         "Currency must be ISO-style uppercase code",
     )
     periods = case["periods"]
     require(
-        1 <= len(periods) <= 60 and len(set(periods)) == len(periods),
+        (1 <= len(periods) <= 60 or (not periods and case["financial"] is None))
+        and len(set(periods)) == len(periods),
         "Unique monthly periods required",
     )
     dates = [date.fromisoformat(p + "-01") for p in periods]
     ordinals = [d.year * 12 + d.month for d in dates]
     require(
-        ordinals == list(range(ordinals[0], ordinals[0] + len(periods))),
+        not ordinals
+        or ordinals == list(range(ordinals[0], ordinals[0] + len(periods))),
         "Use contiguous ordered YYYY-MM periods",
     )
     sources = indexed(case["sources"], "source")
@@ -269,7 +279,8 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
             "Facts belong in the evidence register",
         )
         require(
-            bool(record.get("rationale")) and bool(record.get("effective_periods")),
+            bool(record.get("rationale"))
+            and (bool(record.get("effective_periods")) or not periods),
             "Assumption rationale and periods required",
         )
         require(
@@ -954,6 +965,9 @@ def build_plan(
     regs, issues = _review_case(case)
     verify_sources(case, source_root)
     statements, calculations = _financial(case, regs, issues)
+    from planning_commercial import calculate_commercial
+
+    calculate_commercial(case, calculations, issues)
     comparisons = _comparisons(case, regs, calculations, issues)
     for comparison in comparisons:
         units = {row["unit"] for row in comparison["observations"]}
@@ -992,6 +1006,9 @@ def build_plan(
 
     accepted, narrative_issues = review_narrative(case, calculations)
     issues.extend(narrative_issues)
+    from planning_assessment import review_assessment
+
+    issues.extend(review_assessment(case, accepted))
     if "business_analysis" in case["required_sections"] and not accepted:
         issues.append("Required reviewed business analysis is missing")
     if issues:
@@ -1025,9 +1042,12 @@ def build_plan(
         ],
     }
     plan["calculations_sha256"] = digest(calculations)
+    from planning_assessment import select_charts
     from planning_report import build_charts
 
-    plan["charts"] = build_charts(plan)
+    plan["charts"] = select_charts(plan, build_charts(plan))
+    if plan["unresolved_matters"] and plan["status"] == "ready_for_professional_review":
+        plan["status"] = "partial"
     plan["content_sha256"] = digest(plan)
     return plan
 

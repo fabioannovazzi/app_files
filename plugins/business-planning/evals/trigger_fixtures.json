@@ -3,6 +3,20 @@
   "version": 1,
   "should_trigger": [
     {
+      "id": "ordinary-documents-request",
+      "prompt": "Prepare a business plan from these files. Does the business make sense, and what should I do next?",
+      "required_signals": [
+        "business plan"
+      ]
+    },
+    {
+      "id": "idea-only-request",
+      "prompt": "I want to offer mobile bicycle repairs. Help me prepare a business plan and decide whether to try it.",
+      "required_signals": [
+        "business plan"
+      ]
+    },
+    {
       "id": "startup-financial-plan",
       "prompt": "Prepare an integrated financial business plan for this early-revenue startup with P&L, cash flow, balance sheet, scenarios and funding needs.",
       "required_signals": [
