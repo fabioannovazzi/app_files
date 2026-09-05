@@ -79,3 +79,10 @@ The assessment of the question, sources, relevance, semantic support, reasoning,
 and professional judgment remains model-led. Use deterministic checks only for
 mechanically verifiable properties such as schema, required fields, allowed
 paths, checksums, and structural consistency.
+
+## Plugin Improvement Feedback
+
+Keep the improvement note local to chat or run artifacts. After substantive
+use, record only concrete technical problems or improvements observed during
+the work. Do not include client content, personal data, secrets, confidential
+sources, or local paths. Do not transmit feedback automatically.

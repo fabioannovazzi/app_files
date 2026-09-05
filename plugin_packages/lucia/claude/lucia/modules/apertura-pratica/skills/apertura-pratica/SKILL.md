@@ -7,7 +7,7 @@ description: Use when Lucia must open a new legal client or a new matter for an 
 
 Read `references/workflow-method.md` and
 `references/italian-professional-boundaries.md` completely before starting.
-Treat `../../../references/source-registry.json` as a currentness-controlled
+Treat `../../references/source-registry.json` as a currentness-controlled
 research starting point, never as a deterministic legal rule table.
 
 ## Surface contract
