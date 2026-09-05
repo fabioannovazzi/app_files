@@ -187,11 +187,15 @@ def runtime_key() -> str:
 def _plugin_name(plugin_root: Path) -> str:
     """Return a path-safe stable name instead of a marketplace version folder."""
 
-    manifest = plugin_root.resolve() / ".codex-plugin" / "plugin.json"
-    try:
-        name = json.loads(manifest.read_text(encoding="utf-8"))["name"]
-    except (OSError, KeyError, TypeError, json.JSONDecodeError):
-        name = plugin_root.resolve().name
+    root = plugin_root.resolve()
+    name = root.name
+    for manifest_directory in (".codex-plugin", ".claude-plugin"):
+        manifest = root / manifest_directory / "plugin.json"
+        try:
+            name = json.loads(manifest.read_text(encoding="utf-8"))["name"]
+        except (OSError, KeyError, TypeError, json.JSONDecodeError):
+            continue
+        break
     if not isinstance(name, str) or _PLUGIN_NAME_PATTERN.fullmatch(name) is None:
         raise ValueError("Plugin manifest name is not path-safe")
     return name

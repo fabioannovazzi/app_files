@@ -29,6 +29,10 @@ jobs:
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
       - name: Verify distributed Cowork artifacts and runtime
         run: python scripts/build_claude_plugin_zip.py vera --check
+      - name: Keep canonical package names and tolerate installer generations
+        run: |
+          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py -k "cowork_sync_generation or cowork_manifest_unsafe"
+          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k distribution_keeps_canonical
 
   vera-cowork-python:
     runs-on: ubuntu-latest

@@ -1177,3 +1177,25 @@ def test_claude_manifest_accepts_500_character_description(use_template):
     )
 
     assert json.loads(result)["description"] == "x" * 500
+
+
+@pytest.mark.parametrize("plugin", ["vera", "clara", "lucia"])
+def test_cowork_distribution_keeps_canonical_names_without_sync_suffixes(
+    plugin: str,
+) -> None:
+    """Keep installer generation names out of our distributable packages."""
+    builder = load_builder()
+    _, packages = builder.load_configuration()
+    package = next(item for item in packages if item.plugin == plugin)
+
+    with ZipFile(package.output_zip) as archive:
+        names = archive.namelist()
+        manifest = json.loads(archive.read(".claude-plugin/plugin.json"))
+
+    assert (
+        package.output_directory
+        == ROOT / "plugin_packages" / plugin / "claude" / plugin
+    )
+    assert package.output_zip.name == f"{plugin}-claude-plugin.zip"
+    assert manifest["name"] == plugin
+    assert not any(re.search(r"~g\d+(?:/|$)", name) for name in names)
