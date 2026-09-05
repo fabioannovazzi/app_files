@@ -184,8 +184,13 @@ def make_distribution_charts_title(
         chartDict, paramDict
     )
     currencyName, paramDict = get_currency_name(chartDict, paramDict, metric)
-    period1 = get_rolling_and_year_to_date_period(period1, paramDict, chartDict, True)
-    element = get_rolling_and_year_to_date_period(element, paramDict, chartDict, False)
+    if element:
+        period1 = get_rolling_and_year_to_date_period(period1, paramDict, chartDict, True)
+        element = get_rolling_and_year_to_date_period(element, paramDict, chartDict, False)
+        period_title = period1 + " vs " + element
+    else:
+        # A single observed period has no prior-year comparison to reconstruct.
+        period_title = period1
     metric = change_metric_if_cost_analysis(metric, chartDict)
     likeForLikeMessage = make_like_for_like_title_suffix(chartDict, paramDict, metric)
     if (
@@ -214,9 +219,7 @@ def make_distribution_charts_title(
         + " "
         + likeForLikeMessage
         + breakTag
-        + period1
-        + " vs "
-        + element
+        + period_title
     )
     title = title.replace("  ", " ")
     chartDict[plotTitleText] = title

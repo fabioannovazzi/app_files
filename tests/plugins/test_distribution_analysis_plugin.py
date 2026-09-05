@@ -477,9 +477,11 @@ def test_build_recipe_can_derive_to_date_periods_from_dates_without_period_colum
     assert set(canonical.get_column("Period").to_list()) == {"_Mar-2024", "_Mar-2025"}
 
 
+@pytest.mark.parametrize("single_period", [False, True])
 def test_legacy_distribution_rolling_titles_use_canonical_dates(
     tmp_path: Path,
     monkeypatch: Any,
+    single_period: bool,
 ) -> None:
     legacy = load_plugin_module(
         "legacy_distribution_charting_date_titles", "legacy_distribution_charting.py"
@@ -494,6 +496,18 @@ def test_legacy_distribution_rolling_titles_use_canonical_dates(
         fake_legacy_figure_writer,
     )
     frame = sample_date_only_distribution_frame()
+    if single_period:
+        frame = frame.with_columns(
+            pl.Series(
+                "Date",
+                [
+                    date(2016, 9, 4),
+                    date(2017, 1, 1),
+                    date(2017, 4, 1),
+                    date(2017, 8, 27),
+                ],
+            )
+        )
     recipe = distribution_core.build_recipe(
         Path("sales.csv"),
         frame,
@@ -527,7 +541,12 @@ def test_legacy_distribution_rolling_titles_use_canonical_dates(
         for figure in export.chart_context["plotly_figures"]
         for annotation in figure["annotations"]
     )
-    assert "~AUG-2016 vs ~AUG-2017" in title_text
+    if single_period:
+        assert "~AUG-2017" in title_text.upper()
+        assert "2016" not in title_text
+        assert " vs " not in title_text
+    else:
+        assert "~AUG-2016 vs ~AUG-2017" in title_text
     assert "~JUN-2025" not in title_text
     assert "~JUN-2026" not in title_text
 
