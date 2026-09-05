@@ -2631,6 +2631,22 @@ def insert_unit_and_volume_price_column(df_lazy: pl.LazyFrame) -> pl.LazyFrame:
     columns, schema = get_schema_and_column_names(df_lazy)
     existing_columns = set(schema.keys())  # or df_lazy.columns for Polars >= 0.17.4
 
+    # Canonical chart dimensions can carry numeric measures as strings. Parse
+    # the existing arithmetic inputs strictly before division; invalid values
+    # must still fail rather than becoming silent nulls.
+    arithmetic_inputs = {
+        units_name, volume_name, amount_name, discount_name,
+        net_of_discount_name, margin_name,
+    }
+    string_inputs = [
+        column for column in arithmetic_inputs
+        if column in existing_columns and schema[column] == pl.String
+    ]
+    if string_inputs:
+        df_lazy = df_lazy.with_columns(
+            pl.col(column).cast(pl.Float64) for column in sorted(string_inputs)
+        )
+
     # We'll build a list of Polars expressions applied in a single ``with_columns`` call.
     # Each block implements the conditional logic from the original pandas version.
 

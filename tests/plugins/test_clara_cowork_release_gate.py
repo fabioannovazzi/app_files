@@ -173,9 +173,9 @@ def test_saved_evidence_rejects_changed_command_log(tmp_path: Path) -> None:
         gate.verify_saved_evidence(root, gate.read_json(root / "result.json"))
 
 
-@pytest.mark.parametrize("include_second_environment", [True, False])
-def test_promotion_requires_both_environments_and_matching_cowork_review(
-    tmp_path: Path, include_second_environment: bool
+@pytest.mark.parametrize("runtime_python", ["3.10", "3.12"])
+def test_promotion_accepts_one_verified_runtime_and_matching_cowork_review(
+    tmp_path: Path, runtime_python: str
 ) -> None:
     archive = tmp_path / "candidate.zip"
     archive.write_bytes(b"candidate bytes")
@@ -183,24 +183,19 @@ def test_promotion_requires_both_environments_and_matching_cowork_review(
     payload = gate.read_json(receipt)
     payload["zip_sha256"] = gate.digest(archive)
     gate.write_json(receipt, payload)
-    script_evidence(tmp_path / "python310", gate.digest(archive), "3.10")
-    script_evidence(tmp_path / "python312", gate.digest(archive), "3.12")
+    script_evidence(tmp_path / "runtime", gate.digest(archive), runtime_python)
     destination = tmp_path / "public.zip"
     destination.write_bytes(b"previous release")
     args = [
         str(archive),
         "--output",
-        str(tmp_path / "python310"),
+        str(tmp_path / "runtime"),
         "--verify-release",
         "--cowork-acceptance",
         str(receipt),
         "--promote-to",
         str(destination),
     ]
-    if include_second_environment:
-        args += ["--additional-script-evidence", str(tmp_path / "python312")]
     result = gate.main(args)
-    assert result == (0 if include_second_environment else 1)
-    assert destination.read_bytes() == (
-        b"candidate bytes" if include_second_environment else b"previous release"
-    )
+    assert result == 0
+    assert destination.read_bytes() == b"candidate bytes"

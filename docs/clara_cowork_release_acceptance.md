@@ -8,7 +8,7 @@ actual Cowork agent. Both records refer to the ZIP SHA-256, not just its version
 
 `.github/workflows/clara-cowork.yml` runs on pull requests, main pushes, and manual
 dispatch. It checks source drift, then exercises the distributed Cowork ZIP on
-Linux with Python 3.10 and 3.12. It uploads logs and outputs even on failure.
+Linux with the Cowork launcher baseline, Python 3.10. It uploads logs and outputs even on failure.
 Candidate artifacts are labelled as candidates; this workflow does not publish.
 
 For a local diagnostic run:
@@ -88,13 +88,12 @@ file hashes. A changed ZIP or evidence file invalidates acceptance.
 
 ## Release decision and promotion
 
-Download both CI evidence artifacts into separate directories. Run:
+Download the CI script evidence artifact. One successful clean runtime is required. Run:
 
 ```sh
 source .venv/bin/activate
 python scripts/check_clara_cowork_release.py candidate.zip \
-  --output evidence-python-3.10 \
-  --additional-script-evidence evidence-python-3.12 \
+  --output script-evidence \
   --verify-release --cowork-acceptance cowork-review/acceptance.json
 ```
 
@@ -103,9 +102,15 @@ approved candidate to a release staging path, add `--promote-to release/clara.zi
 That destination is not touched when either gate fails. This does not deploy or
 publish; use the separately authorized deployment process afterward.
 
-Repository administrators must require the two `Fresh Clara ZIP / Python …`
-checks in branch protection. Local implementation does not change remote GitHub
+Repository administrators must require the `Fresh Clara Cowork ZIP`
+check in branch protection. Local implementation does not change remote GitHub
 settings. Existing build/deployment tools can still bypass the promotion command;
 operators must use this gate before publishing. There is no verified unattended
 Cowork driver wired into this repository yet, so a script pass remains explicitly
 `cowork_agent_acceptance: unverified` until actual Cowork review is supplied.
+
+The plugin creates its managed environment from the existing host Python and installs
+its declared dependencies automatically. Users do not need to install or approve
+two Python versions. The single CI baseline catches use of newer Python-only APIs;
+the evidence records the interpreter actually used without requiring another run
+on a second version.

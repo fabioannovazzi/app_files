@@ -11,20 +11,16 @@ permissions:
 
 jobs:
   packaged-reporting:
-    name: Fresh Clara ZIP / Python ${{ matrix.python }}
+    name: Fresh Clara Cowork ZIP
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        python: ['3.10', '3.12']
     env:
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python }}
+          python-version: '3.10'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -43,7 +39,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: clara-script-evidence-python-${{ matrix.python }}
+          name: clara-script-evidence
           if-no-files-found: warn
           path: |
             ${{ runner.temp }}/clara-acceptance/*.json
@@ -53,5 +49,5 @@ jobs:
       - name: Retain exact candidate for real Cowork acceptance
         uses: actions/upload-artifact@v4
         with:
-          name: clara-candidate-python-${{ matrix.python }}
+          name: clara-candidate
           path: plugin_packages/clara/clara-claude-plugin.zip

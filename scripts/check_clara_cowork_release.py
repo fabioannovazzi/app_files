@@ -27,7 +27,6 @@ __all__ = ["main", "extract_package", "module_choices", "verify_acceptance"]
 LOGGER = logging.getLogger(__name__)
 CASE = "reporting-engine.period_comparison.trend"
 GATE_VERSION = 1
-REQUIRED_PYTHONS = {"3.10", "3.12"}
 
 
 def digest(path: Path) -> str:
@@ -469,13 +468,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--cowork-acceptance", type=Path)
     parser.add_argument(
-        "--additional-script-evidence",
-        type=Path,
-        action="append",
-        default=[],
-        help="Other CI evidence directory; release requires Linux Python 3.10 and 3.12.",
-    )
-    parser.add_argument(
         "--verify-release",
         action="store_true",
         help="Verify saved script evidence and real Cowork acceptance; do not rerun.",
@@ -493,19 +485,12 @@ def main(argv: list[str] | None = None) -> int:
             report = read_json(output / "result.json")
             if not args.cowork_acceptance:
                 raise ValueError("Release requires real Cowork acceptance")
-            verified_pythons = set()
-            for directory in [output, *args.additional_script_evidence]:
-                saved = read_json(directory / "result.json")
-                if saved["zip_sha256"] != digest(args.zip) or saved["status"] != "pass":
-                    raise ValueError(
-                        "Script acceptance failed or is for a different ZIP"
-                    )
-                verify_saved_evidence(directory, saved)
-                if saved["environment"]["os"] == "Linux":
-                    verified_pythons.add(saved["environment"]["python_minor"])
-            if not REQUIRED_PYTHONS <= verified_pythons:
+            if report["zip_sha256"] != digest(args.zip) or report["status"] != "pass":
+                raise ValueError("Script acceptance failed or is for a different ZIP")
+            verify_saved_evidence(output, report)
+            if report["environment"]["os"] != "Linux":
                 raise ValueError(
-                    "Release requires passing Linux Python 3.10 and 3.12 evidence"
+                    "Release requires passing clean Linux Cowork package evidence"
                 )
             verify_acceptance(args.cowork_acceptance, digest(args.zip), report)
             if args.promote_to:

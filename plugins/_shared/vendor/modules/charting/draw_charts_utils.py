@@ -4376,6 +4376,7 @@ def get_labels_for_trend_comparison(df, yArray, metric, chartDict):
         pl.len().alias("__row_count"),
         pl.col(maxValueKey).max().alias("__max_value"),
         pl.col(workColumn).first().alias("__first_val"),
+        pl.col(workColumn).last().alias("__last_val"),
         pl.col(workColumn).max().alias("__ac_max_val"),
         pl.col(workColumn).min().alias("__ac_min_val"),
         pl.col(workColumnTwo).max().alias("__py_max_val"),
@@ -4393,6 +4394,7 @@ def get_labels_for_trend_comparison(df, yArray, metric, chartDict):
     prefix, chartDict, decimals = get_number_prefix(maxValue, chartDict, None, False)
 
     first_prefix = divide_by_value_prefix(stats[0, "__first_val"], chartDict, False)
+    last_prefix = divide_by_value_prefix(stats[0, "__last_val"], chartDict, False)
     ac_max_prefix = divide_by_value_prefix(stats[0, "__ac_max_val"], chartDict, False)
     ac_min_prefix = divide_by_value_prefix(stats[0, "__ac_min_val"], chartDict, False)
     py_max_prefix = divide_by_value_prefix(stats[0, "__py_max_val"], chartDict, False)
@@ -4406,7 +4408,7 @@ def get_labels_for_trend_comparison(df, yArray, metric, chartDict):
     )
     label_expr = (
         pl.when(pl.col("__idx") == last_idx)
-        .then(pl.lit(first_prefix))
+        .then(pl.lit(last_prefix))
         .otherwise(label_expr)
     )
     if ac_max_idx != metConditionValue:
