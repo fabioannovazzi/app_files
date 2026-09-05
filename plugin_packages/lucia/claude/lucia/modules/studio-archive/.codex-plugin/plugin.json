@@ -1,0 +1,62 @@
+{
+  "name": "studio-archive",
+  "version": "0.1.32",
+  "description": "Gmail, WhatsApp Desktop e archivi cliente locali o Google Workspace tramite Vera.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "vera",
+    "commercialisti",
+    "studio",
+    "archivio",
+    "ricerca",
+    "gmail",
+    "email",
+    "pec",
+    "whatsapp-desktop",
+    "google-workspace",
+    "google-drive",
+    "shared-drives",
+    "computer-use",
+    "codex-desktop",
+    "fonti",
+    "sqlite",
+    "fts5",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Vera · Archivio dello Studio",
+    "shortDescription": "Cerca un cliente in Gmail, WhatsApp Desktop, file locali o Google Drive.",
+    "longDescription": "In ChatGPT o Claude, Vera usa il connector Gmail di OpenAI installato e collegato separatamente per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Claude Desktop aggiunge l'accesso diretto a una cartella cliente locale oppure Google Drive, compresi gli Shared Drives autorizzati, e può consultare una chat uno-a-uno verificata nell'app WhatsApp Desktop locale tramite Computer Use. Il perimetro Drive è legato all'ID stabile della cartella; snapshot e aperture ricontrollano ID, versione, parent, capacità e checksum disponibili. I contenuti vengono letti solo quando richiesti e non sono copiati nell'indice permanente. Se Claude non è installato, Vera spiega il vantaggio, fornisce il link ufficiale e continua comunque il lavoro possibile in ChatGPT.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti.",
+      "Consulta WhatsApp Desktop per un solo cliente confermato, in sola lettura e senza inviare nulla.",
+      "Collega la cartella Google Drive di questo cliente e prepara uno snapshot verificabile senza modificare i file.",
+      "Chiedi a Vera di cercare una pratica locale e citare solo fonti aperte e verificate."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

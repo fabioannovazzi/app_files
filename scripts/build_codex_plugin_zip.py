@@ -136,7 +136,7 @@ CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "lucia", "vera"})
 SOURCE_PRESERVING_CHATGPT_PLUGINS = frozenset({"lucia", "vera"})
-CHATGPT_HIDDEN_COMPONENTS = {"lucia": frozenset({"studio-archive"})}
+CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
@@ -173,6 +173,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
 LUCIA_CHATGPT_ROUTER_TARGETS = {
+    "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
     "quesito-legale-fiscale": "skills/quesito-legale-fiscale/SKILL.md",
     "prompt-optimizer": "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md",
     "deep-research-validator": (

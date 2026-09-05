@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "luciaAssuranceRuntime": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/assurance_runtime_mcp.cjs"
+      ]
+    },
+    "luciaDeepResearchValidator": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "deep-research-validator"
+      ]
+    },
+    "luciaPromptOptimizer": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "prompt-optimizer"
+      ]
+    },
+    "luciaStudioArchive": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "studio-archive"
+      ],
+      "env": {
+        "LUCIA_ASSURANCE_HOST": "1"
+      }
+    }
+  }
+}

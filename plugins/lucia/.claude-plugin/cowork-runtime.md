@@ -75,6 +75,10 @@ for client, engagement, immutable input, and run lifecycle; its legal intake
 schema, conflict and deadline boundaries, validator, and review receipts remain
 specific to Lucia.
 
+For client and engagement setup, read `../studio-archive/SKILL.md` completely
+and use the packaged `luciaStudioArchive` MCP service. Prepare and start the
+run before passing its returned context path to the mandatory engagement gate.
+
 The assessment of the question, sources, relevance, semantic support, reasoning,
 and professional judgment remains model-led. Use deterministic checks only for
 mechanically verifiable properties such as schema, required fields, allowed
