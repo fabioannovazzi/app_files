@@ -819,14 +819,42 @@ def test_render_capability_preserves_fixed_capability_options(
     assert recipe["options"]["waterfall_chart"] is True
 
 
+@pytest.mark.parametrize("packaged", [False, True])
 def test_render_capability_dispatches_embedded_component_runner(
-    tmp_path: Path, monkeypatch: Any
+    tmp_path: Path, monkeypatch: Any, packaged: bool
 ) -> None:
     renderer = _load_module(
         "reporting_engine_renderer_dispatch_test",
         PLUGIN_ROOT / "scripts" / "render_capability.py",
     )
     calls: list[tuple[list[str], Path, bool]] = []
+    component_root = ROOT / "plugins" / "period-comparison"
+    expected_prefix = [
+        sys.executable,
+        str(component_root / "scripts/run_period_comparison.py"),
+    ]
+    if packaged:
+        host = tmp_path / "clara"
+        component_root = host / "modules/period-comparison"
+        component_root.mkdir(parents=True)
+        launcher = host / "scripts/managed_python_runtime.py"
+        launcher.parent.mkdir()
+        launcher.write_text("# Packaged launcher fixture\n")
+        adapter = renderer.resolve_capability_adapter(
+            "period_comparison.trend", root=PLUGIN_ROOT
+        )
+        adapter["component_root"] = str(component_root)
+        monkeypatch.setattr(
+            renderer, "resolve_capability_adapter", lambda *_a, **_k: adapter
+        )
+        expected_prefix = [
+            sys.executable,
+            str(launcher),
+            "--module",
+            "period-comparison",
+            "run",
+            "scripts/run_period_comparison.py",
+        ]
 
     def fake_run(
         command: list[str],
@@ -889,9 +917,8 @@ def test_render_capability_dispatches_embedded_component_runner(
     assert len(manifest["evidence"]["output_set_sha256"]) == 64
     assert calls
     command, cwd, capture_output = calls[0]
-    assert cwd == ROOT / "plugins" / "period-comparison"
-    assert command[0] == sys.executable
-    assert command[1].endswith("scripts/run_period_comparison.py")
+    assert cwd == component_root
+    assert command[: len(expected_prefix)] == expected_prefix
     assert "--artifact-mode" in command
     assert "data_only" in command
     assert capture_output is True

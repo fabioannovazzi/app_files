@@ -1,1 +1,2 @@
 jsonschema>=4.23,<5
+strenum>=0.4.15,<0.5

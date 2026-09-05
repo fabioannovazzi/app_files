@@ -7345,3 +7345,10 @@ def test_case_update_import_logs_conflict_without_overwriting(
         "Review imported judgement conflict"
         in target_questions["questions"][0]["question"]
     )
+
+
+def test_clara_dependency_choices_match_all_registered_runtime_modules() -> None:
+    checker = load_dependency_checker()
+    registry = json.loads((PLUGIN_ROOT / "components.json").read_text())
+
+    assert set(checker.COMPONENTS) == set(registry["plugins"])

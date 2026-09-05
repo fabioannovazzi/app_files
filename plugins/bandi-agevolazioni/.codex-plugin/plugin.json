@@ -30,7 +30,11 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "supportURL": "https://mparanza.com/support",
-    "capabilities": ["Interactive", "Write", "Analysis"],
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
     "defaultPrompt": [
       "Costruisci il profilo agevolativo e controlla source-first le pubblicazioni istituzionali degli ultimi 60 giorni, dichiarando le fonti non verificate.",
       "Confronta questa nuova opportunità con i profili opachi del portafoglio e segnala chi merita una revisione professionale.",

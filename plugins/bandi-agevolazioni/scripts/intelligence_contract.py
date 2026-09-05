@@ -12,7 +12,11 @@ from __future__ import annotations
 import hashlib
 import json
 from copy import deepcopy
-from enum import StrEnum
+
+try:
+    from enum import StrEnum
+except ImportError:  # Python 3.10 in Cowork
+    from strenum import StrEnum
 from typing import Any, Mapping, Sequence
 
 from case_core import canonical_json_sha256, safe_identifier

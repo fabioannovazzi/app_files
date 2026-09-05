@@ -10,7 +10,7 @@ import re
 import sys
 import zipfile
 from dataclasses import dataclass
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -67,6 +67,7 @@ from modules.chart_harness import (  # noqa: E402  # isort: skip
     reporting_subject_label_from_recipe,
     write_prepared_data_manifest,
 )
+from modules.chart_harness.date_parsing import parse_date_expression
 from modules.utilities.config import get_metric_array_params, get_naming_params
 from modules.utilities.helpers import get_schema_and_column_names
 
@@ -86,7 +87,7 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 SCHEMA_VERSION = "1.0"
-DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=UTC).date()
+DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=timezone.utc).date()
 ARTIFACT_MODE_DATA_ONLY = "data_only"
 ARTIFACT_MODE_DATA_AND_RENDER = "data_and_render"
 ARTIFACT_MODE_RENDER_ONLY = "render_only"
@@ -120,7 +121,7 @@ class ScatterBubbleRunResult:
 def utc_now() -> str:
     """Return the current UTC timestamp."""
 
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def configure_logging(verbose: bool = False) -> None:
@@ -548,12 +549,7 @@ def _source_date_expr(frame: pl.DataFrame, source_column: str) -> pl.Expr:
         return pl.col(source_column)
     if dtype == pl.Datetime:
         return pl.col(source_column).dt.date()
-    return (
-        pl.col(source_column)
-        .cast(pl.Utf8, strict=False)
-        .str.strptime(pl.Date, strict=False)
-        .fill_null(DEFAULT_DATE)
-    )
+    return parse_date_expression(source_column).fill_null(DEFAULT_DATE)
 
 
 def _date_expr(frame: pl.DataFrame, source_column: str | None) -> pl.Expr:

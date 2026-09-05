@@ -13,7 +13,7 @@ import tarfile
 import tempfile
 import uuid
 import zipfile
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -87,7 +87,7 @@ SITES_DELIVERY_FIELDS = {
 
 
 def _utc_now() -> str:
-    return datetime.now(UTC).replace(microsecond=0).isoformat()
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
 def _canonical_bytes(payload: Any) -> bytes:
@@ -253,7 +253,11 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
     if len(source_ids) != len(set(source_ids)):
         raise ValueError("Evidence IDs must be unique")
 
-    run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:10]
+    run_id = (
+        datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        + "-"
+        + uuid.uuid4().hex[:10]
+    )
     runs_root = root / "runs"
     staging = runs_root / f".{run_id}.staging"
     run_dir = runs_root / run_id

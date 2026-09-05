@@ -729,3 +729,40 @@ def test_cowork_generation_without_unix_uid_uses_stable_manifest_name(
 
     assert result.name == "vera"
     assert result.parent.name.startswith("user-")
+
+
+def test_failed_dependency_checker_preserves_runtime_rejection(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+        if command[1].endswith("check_dependencies.py"):
+            return subprocess.CompletedProcess(
+                command, 1, "", "Python 3.10 or newer is required"
+            )
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+
+    assert not ready
+    assert "Python 3.10 or newer is required" in detail
+    assert not target.exists()
+
+
+@pytest.mark.parametrize("version,expected", [((3, 9), 1), ((3, 10), 0)])
+def test_xbrl_checker_supports_cowork_python_baseline(monkeypatch, version, expected):
+    spec = importlib.util.spec_from_file_location(
+        "xbrl_runtime_checker",
+        ROOT / "plugins/bilancio-xbrl-it/scripts/check_dependencies.py",
+    )
+    checker = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(checker)
+    monkeypatch.setattr(checker.sys, "version_info", version)
+    monkeypatch.setattr(checker.importlib.util, "find_spec", lambda name: object())
+
+    assert checker.main([]) == expected

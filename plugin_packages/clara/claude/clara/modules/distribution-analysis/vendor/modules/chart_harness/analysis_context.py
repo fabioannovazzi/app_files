@@ -8,8 +8,7 @@ from typing import Any, Iterable
 
 import polars as pl
 
-from modules.utilities.helpers import get_schema_and_column_names
-from modules.utilities.utils import get_row_count
+from modules.chart_harness.date_parsing import parse_date_expression
 from modules.chart_harness.period_contract import (
     PERIOD_GRAIN_MONTH,
     PERIOD_GRAIN_QUARTER,
@@ -23,6 +22,8 @@ from modules.chart_harness.period_contract import (
     scenario_column_kind,
     scenario_roles_for_values,
 )
+from modules.utilities.helpers import get_schema_and_column_names
+from modules.utilities.utils import get_row_count
 
 __all__ = ["available_analysis_context"]
 
@@ -223,7 +224,7 @@ def _looks_like_named_date(column: str) -> bool:
 def _date_expression(column: str, dtype: Any) -> pl.Expr:
     if _is_date_dtype(dtype):
         return pl.col(column).cast(pl.Date)
-    return pl.col(column).cast(pl.Utf8).str.strptime(pl.Date, strict=False)
+    return parse_date_expression(column)
 
 
 def _observed_grain(values: list[date]) -> str:

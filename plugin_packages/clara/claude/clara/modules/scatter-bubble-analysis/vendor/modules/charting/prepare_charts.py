@@ -79,13 +79,12 @@ def perform_resample(
 
     sort_cols = list(dict.fromkeys([*group_by_cols, time_col]))
     df = df.sort(sort_cols)
-    # group_by_dynamic aggregates produce _time by default (the start of the bin)
-    # or you can label="right" for end of the bin.
-    # Adjust closed/label as you see fit for "month-end" style data.
+    # Calendar periods include their start and exclude the next period start.
+    # Otherwise a first-of-month observation is assigned to the prior month.
     df = df.group_by_dynamic(
         index_column=time_col,  # the datetime column
         every=polars_rule,
-        closed="right",  # mimic "month-end" style
+        closed="left",
         group_by=group_by_cols,  # also group by these
         label="left",
     ).agg(agg_exprs)

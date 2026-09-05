@@ -929,15 +929,28 @@ def _runner_command(
     runner = RUNNER_BY_COMPONENT.get(component)
     if runner is None:
         raise ValueError(f"No render runner registered for component: {component}")
-    command = [
-        sys.executable,
-        str(component_root / runner),
-        str(request.input_file),
-        "--output-dir",
-        str(request.output_dir),
-        "--language",
-        request.language,
-    ]
+    host_root = component_root.parent.parent
+    launcher = host_root / "scripts" / "managed_python_runtime.py"
+    if component_root.parent.name == "modules" and launcher.is_file():
+        command = [
+            sys.executable,
+            str(launcher),
+            "--module",
+            component,
+            "run",
+            runner,
+        ]
+    else:
+        command = [sys.executable, str(component_root / runner)]
+    command.extend(
+        [
+            str(request.input_file),
+            "--output-dir",
+            str(request.output_dir),
+            "--language",
+            request.language,
+        ]
+    )
     if recipe_path is not None:
         command.extend(["--recipe", str(recipe_path)])
     if request.currency and component in COMPONENTS_WITH_CURRENCY:

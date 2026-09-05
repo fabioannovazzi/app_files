@@ -29,7 +29,7 @@
     "reporting",
     "data-analysis"
   ],
-  "version": "0.1.173",
+  "version": "0.1.176",
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json",
   "agents": [

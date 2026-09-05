@@ -14,7 +14,6 @@ from modules.charting.chart_primitives import (
     get_color_dictionary,
     get_color_sequence,
 )
-from modules.charting.polars_helpers import to_lists
 from modules.utilities.config import (
     get_config_params,
     get_naming_params,
@@ -136,12 +135,11 @@ def draw_histogram_chart(
 
     numberOfItemsInCol = df_eager[chosenDimension].n_unique() if colChoice else 1
 
-    collected_lists = to_lists(df_eager, cols)
-
     if not colChoice:
         fig = px.histogram(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             opacity=opacity,
@@ -153,8 +151,9 @@ def draw_histogram_chart(
         ).update_layout(barmode="overlay")
     else:
         fig = px.histogram(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             opacity=opacity,
@@ -162,7 +161,7 @@ def draw_histogram_chart(
             histnorm=histnorm,
             barnorm=barnorm,
             cumulative=cumulative,
-            facet_col=collected_lists[chosenDimension],
+            facet_col=chosenDimension,
             facet_col_wrap=facet_col_wrap,
             log_x=logXAxis,
         ).update_layout(barmode="overlay")
@@ -219,26 +218,27 @@ def draw_boxplot_chart(
     out = lf
 
     numberOfItemsInCol = df_eager[chosenDimension].n_unique() if colChoice else 1
-    collected_lists = to_lists(df_eager, cols)
 
     if colChoice:
         fig = px.box(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             points=points,
             notched=True,
             orientation="h",
             category_orders={chosenDimension: uniqueItems},
-            facet_col=collected_lists[chosenDimension],
+            facet_col=chosenDimension,
             facet_col_wrap=1,
             log_x=logXAxis,
         ).update_layout()
     else:
         fig = px.box(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             points=points,
@@ -298,25 +298,26 @@ def draw_stripplot_chart(
     out = lf
 
     numberOfItemsInCol = df_eager[chosenDimension].n_unique() if colChoice else 1
-    collected_lists = to_lists(df_eager, cols)
 
     orientation = "h"
     facet_col_wrap = 1
     if colChoice:
         fig = px.strip(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             orientation=orientation,
             log_x=logXAxis,
-            facet_col=collected_lists[chosenDimension],
+            facet_col=chosenDimension,
             facet_col_wrap=facet_col_wrap,
         ).update_layout()
     else:
         fig = px.strip(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             orientation=orientation,
@@ -386,25 +387,26 @@ def draw_ecdf_chart(
     out = lf
 
     numberOfItemsInCol = df_eager[chosenDimension].n_unique() if colChoice else 1
-    collected_lists = to_lists(df_eager, cols)
 
     if colChoice:
         fig = px.ecdf(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             marginal=None,
             ecdfnorm="percent",
             ecdfmode=ecdfmode,
             log_x=logXAxis,
-            facet_col=collected_lists[chosenDimension],
+            facet_col=chosenDimension,
             facet_col_wrap=facet_col_wrap,
         )
     else:
         fig = px.ecdf(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             marginal=None,
@@ -467,12 +469,12 @@ def draw_kernel_density_chart(
     out = lf
 
     numberOfItemsInCol = df_eager[chosenDimension].n_unique() if colChoice else 1
-    collected_lists = to_lists(df_eager, cols)
 
     if not colChoice:
         fig = px.violin(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
             orientation="h",
@@ -483,8 +485,9 @@ def draw_kernel_density_chart(
         ).update_traces(side="positive", width=1.9)
     else:
         fig = px.violin(
-            x=collected_lists[metric],
-            color=collected_lists[periodName],
+            data_frame=df_eager,
+            x=metric,
+            color=periodName,
             # y=collected[chosenDimension].to_list(),
             color_discrete_sequence=colorSequenceArray,
             labels={"x": metric},
@@ -493,7 +496,7 @@ def draw_kernel_density_chart(
             box=box,
             points=points,
             log_x=logXAxis,
-            facet_col=collected_lists[chosenDimension],
+            facet_col=chosenDimension,
             facet_col_wrap=facet_col_wrap,
         ).update_traces(side="positive", width=1.9)
     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))

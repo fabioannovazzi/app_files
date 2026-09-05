@@ -1221,3 +1221,21 @@ def test_claude_build_uses_canonical_version_despite_old_template_version(
     )
 
     assert json.loads(result)["version"] == source["version"]
+
+
+def test_cowork_passive_invoice_worker_uses_haiku_and_pending_handoff(vera_entries):
+    worker_config = json.loads(
+        vera_entries["modules/passive-invoice-audit/scripts/worker_config.json"]
+    )
+    agent = vera_entries["agents/passive-invoice-reviewer.md"].decode()
+    skill = vera_entries["skills/passive-invoice-audit/SKILL.md"].decode()
+    manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
+
+    assert worker_config == {"runtime": "cowork-haiku"}
+    assert "model: haiku" in agent
+    assert "tools: Read" in agent
+    assert "./agents/passive-invoice-reviewer.md" in manifest["agents"]
+    assert "awaiting_semantic_review" in skill
+    assert "cowork_host_reported" in skill
+    assert "Never invent an" in skill
+    assert "unavailable in Cowork" not in skill

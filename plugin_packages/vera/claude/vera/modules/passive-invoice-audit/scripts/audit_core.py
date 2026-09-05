@@ -15,7 +15,7 @@ import zipfile
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
-from datetime import UTC, date, datetime
+from datetime import date, datetime, timezone
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
@@ -26,6 +26,7 @@ from xlsxwriter import Workbook
 __all__ = [
     "AuditConfig",
     "AuditError",
+    "SemanticReviewPending",
     "LunaRunner",
     "chunk_semantic_packets",
     "create_synthetic_population",
@@ -39,7 +40,7 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 WORKFLOW_ID = "passive-invoice-audit"
-WORKFLOW_VERSION = "0.1.1"
+WORKFLOW_VERSION = "0.1.2"
 SCHEMA_VERSION = "vera.passive_invoice_audit.v1"
 CENT = Decimal("0.01")
 MAX_ARCHIVE_MEMBERS = 100_000
@@ -109,6 +110,10 @@ class AuditError(ValueError):
     """Raised when the controlled audit contract cannot be satisfied."""
 
 
+class SemanticReviewPending(AuditError):
+    """Host must review the prepared packets before this job can complete."""
+
+
 LunaRunner = Callable[[str, Mapping[str, Any], Path, str, str, str], Mapping[str, Any]]
 
 
@@ -121,6 +126,7 @@ class AuditConfig:
     max_retries: int = 2
     reasoning_effort: str = "low"
     amount_tolerance: Decimal = CENT
+    semantic_model: str = "gpt-5.6-luna"
 
     def validate(self) -> None:
         """Reject unsafe or unsupported execution settings."""
@@ -133,12 +139,16 @@ class AuditConfig:
             raise AuditError("max_retries must be between 0 and 3")
         if self.reasoning_effort not in {"low", "medium", "high", "xhigh", "max"}:
             raise AuditError("Unsupported Luna reasoning effort")
+        if self.semantic_model not in {"gpt-5.6-luna", "haiku"}:
+            raise AuditError("Unsupported semantic worker")
+        if self.semantic_model == "haiku" and self.reasoning_effort != "low":
+            raise AuditError("Cowork Haiku does not accept Luna effort overrides")
         if self.amount_tolerance < 0:
             raise AuditError("amount_tolerance cannot be negative")
 
 
 def _now() -> str:
-    return datetime.now(UTC).replace(microsecond=0).isoformat()
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
 def _json_bytes(value: Any) -> bytes:
@@ -1281,6 +1291,15 @@ def validate_luna_result(
     for result in results:
         if not isinstance(result, dict) or set(result) != required:
             raise AuditError("Luna invoice result has unexpected fields")
+        for key in (
+            "invoice_id",
+            "status",
+            "suspected_issue_type",
+            "short_reason",
+            "professional_should_inspect",
+        ):
+            if not isinstance(result[key], str):
+                raise AuditError(f"Semantic {key} must be a string")
         status = result["status"]
         issue_type = result["suspected_issue_type"]
         if status not in SEMANTIC_STATUSES or issue_type not in ISSUE_TYPES:
@@ -1393,6 +1412,7 @@ def _input_fingerprint(
                 "chunk_size": config.chunk_size,
                 "reasoning_effort": config.reasoning_effort,
                 "amount_tolerance": str(config.amount_tolerance),
+                "semantic_model": config.semantic_model,
             },
         }
     )
@@ -1435,15 +1455,17 @@ def _validated_chunk_result(
     packet_sha256: str,
     invoice_ids: Sequence[str],
     reasoning_effort: str,
+    semantic_model: str = "gpt-5.6-luna",
 ) -> dict[str, Any]:
     payload = raw_result.get("response_payload")
     if not isinstance(payload, Mapping):
         raise AuditError("Luna runner did not return a structured payload")
     model = raw_result.get("model")
     effort = raw_result.get("reasoning_effort")
-    if model != "gpt-5.6-luna":
-        raise AuditError("Semantic chunk was not produced by gpt-5.6-luna")
-    if effort != reasoning_effort:
+    if model != semantic_model:
+        raise AuditError("Semantic chunk does not match the configured worker")
+    expected_effort = "host_default" if semantic_model == "haiku" else reasoning_effort
+    if effort != expected_effort:
         raise AuditError("Semantic chunk used a different reasoning effort")
     usage = raw_result.get("usage", {})
     if not isinstance(usage, Mapping):
@@ -1490,6 +1512,7 @@ def _recover_checkpoint(
     packet_sha256: str,
     invoice_ids: Sequence[str],
     reasoning_effort: str,
+    semantic_model: str = "gpt-5.6-luna",
 ) -> dict[str, Any]:
     payload = json.loads(_ordinary_file_bytes(path, CHUNK_RESULT_NAME))
     if not isinstance(payload, dict):
@@ -1512,6 +1535,7 @@ def _recover_checkpoint(
         packet_sha256=packet_sha256,
         invoice_ids=invoice_ids,
         reasoning_effort=reasoning_effort,
+        semantic_model=semantic_model,
     )
     return recovered | {"recovery_source": "chunk_checkpoint"}
 
@@ -1645,7 +1669,7 @@ def _execute_chunk(
     worker_artifacts_present = any(
         os.path.lexists(chunk_dir / name) for name in LUNA_ARTIFACT_NAMES
     )
-    if worker_artifacts_present:
+    if worker_artifacts_present and config.semantic_model == "gpt-5.6-luna":
         try:
             recovered = _recover_native_artifacts(
                 chunk_dir,
@@ -1672,6 +1696,7 @@ def _execute_chunk(
                 packet_sha256=packet_sha256,
                 invoice_ids=invoice_ids,
                 reasoning_effort=config.reasoning_effort,
+                semantic_model=config.semantic_model,
             )
         except (AuditError, OSError, UnicodeDecodeError, json.JSONDecodeError):
             _archive_stale_chunk_artifacts(chunk_dir)
@@ -1684,6 +1709,7 @@ def _execute_chunk(
         packet_sha256=packet_sha256,
         invoice_ids=invoice_ids,
         reasoning_effort=config.reasoning_effort,
+        semantic_model=config.semantic_model,
     )
     _atomic_write_json(chunk_dir / CHUNK_RESULT_NAME, _chunk_checkpoint(result))
     return result
@@ -1956,6 +1982,13 @@ def run_audit(
                         else _execute_chunk(chunk_id, chunk, output_dir, config, runner)
                     )
                     break
+                except SemanticReviewPending as exc:
+                    connection.execute(
+                        "UPDATE chunks SET status='awaiting_semantic_review', error=? WHERE chunk_id=?",
+                        (str(exc), chunk_id),
+                    )
+                    result = None
+                    break
                 except (AuditError, OSError, ValueError) as exc:
                     attempt += 1
                     if attempt > config.max_retries:
@@ -2051,6 +2084,15 @@ def run_audit(
     summary = {
         "schema_version": SCHEMA_VERSION,
         "run_fingerprint": fingerprint,
+        "semantic_worker_requested": config.semantic_model,
+        "semantic_runtime": (
+            "cowork_subagent" if config.semantic_model == "haiku" else "codex_native"
+        ),
+        "status": (
+            "awaiting_semantic_review"
+            if any(row[0] == "awaiting_semantic_review" for row in chunk_rows)
+            else ("failed" if failures else "completed")
+        ),
         "client_run_id": client_run_id,
         "population": len(complete_rows),
         "matched": match_counts["matched"],
@@ -2098,6 +2140,10 @@ def run_audit(
             "largest_absolute_line is only a fallback gross-comparison basis when no mapped gross amount is supplied",
         ],
     }
+    if config.semantic_model == "haiku":
+        summary["limitations"].append(
+            "Haiku is the requested Cowork subagent configuration; host-provided worker records are not independently authenticated model attestations. Legacy luna_* counters refer to the selected semantic worker. Empty usage and zero duration counters mean these measurements are unavailable from the host handoff."
+        )
     _write_jsonl(output_dir / "full_population.jsonl", complete_rows)
     _write_jsonl(output_dir / "ledger_entries_without_invoice.jsonl", orphans)
     (output_dir / "run_summary.json").write_bytes(_json_bytes(summary))
@@ -2309,6 +2355,8 @@ def evaluate_synthetic_population(
         for _attempt in range(config.max_retries + 1):
             try:
                 return _execute_chunk(chunk_id, chunk, output_dir, config, runner)
+            except SemanticReviewPending:
+                raise
             except (AuditError, OSError, ValueError) as exc:
                 last_error = str(exc)
         raise AuditError(
@@ -2318,6 +2366,7 @@ def evaluate_synthetic_population(
     results: dict[str, dict[str, Any]] = {}
     usage: list[Mapping[str, Any]] = []
     duration_ms = 0
+    awaiting = []
     with ThreadPoolExecutor(max_workers=config.concurrency) as executor:
         futures = {}
         for chunk in chunks:
@@ -2325,11 +2374,25 @@ def evaluate_synthetic_population(
             chunk_id = f"synthetic-chunk-{digest[:16]}"
             futures[executor.submit(execute_with_retry, chunk_id, chunk)] = chunk_id
         for future in as_completed(futures):
-            chunk_result = future.result()
+            try:
+                chunk_result = future.result()
+            except SemanticReviewPending:
+                awaiting.append(futures[future])
+                continue
             results.update(chunk_result["results"])
             usage.append(chunk_result["usage"])
             duration_ms += chunk_result["duration_ms"]
 
+    if awaiting:
+        report = {
+            "schema_version": "vera.passive_invoice_synthetic_evaluation.v1",
+            "status": "awaiting_semantic_review",
+            "semantic_worker_requested": config.semantic_model,
+            "pending_chunks": sorted(awaiting),
+            "exception_recall": None,
+        }
+        (output_dir / "synthetic_evaluation.json").write_bytes(_json_bytes(report))
+        return report
     result_rows = [
         row | {"semantic_result": results[row["packet"]["invoice_id"]]}
         for row in generated
@@ -2347,6 +2410,8 @@ def evaluate_synthetic_population(
     flagged = len(result_rows) - len(missed)
     report = {
         "schema_version": "vera.passive_invoice_synthetic_evaluation.v1",
+        "status": "completed",
+        "semantic_worker_requested": config.semantic_model,
         "synthetic_population": len(result_rows),
         "exception_recall": (flagged / len(result_rows) if result_rows else None),
         "human_review_rate": (flagged / len(result_rows) if result_rows else None),

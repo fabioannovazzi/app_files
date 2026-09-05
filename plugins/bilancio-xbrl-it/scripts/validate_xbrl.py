@@ -13,7 +13,7 @@ import shutil
 import subprocess  # nosec B404
 import sys
 import tempfile
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
@@ -249,7 +249,9 @@ def validate_instance(
         "messages": messages,
         "stdout": completed.stdout,
         "stderr": completed.stderr,
-        "validated_at": datetime.now(tz=UTC).replace(microsecond=0).isoformat(),
+        "validated_at": datetime.now(tz=timezone.utc)
+        .replace(microsecond=0)
+        .isoformat(),
     }
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text(

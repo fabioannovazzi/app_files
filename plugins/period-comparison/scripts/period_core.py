@@ -83,6 +83,7 @@ def _ensure_shared_modules_path() -> None:
 
 
 _ensure_shared_modules_path()
+from modules.chart_harness.date_parsing import parse_date_expression  # isort: skip
 from modules.chart_harness import (  # noqa: E402  # isort: skip
     apply_recipe_filters,
     apply_recipe_cohorts,
@@ -312,19 +313,6 @@ def numeric_columns(df: pl.DataFrame) -> list[str]:
         for name, dtype in df.schema.items()
         if dtype.is_numeric() and not normalize_name(name).endswith("id")
     ]
-
-
-def parse_date_expression(column: str) -> pl.Expr:
-    """Return a permissive date parsing expression."""
-
-    expr = pl.col(column)
-    return expr.cast(pl.Date, strict=False).fill_null(
-        expr.cast(pl.Utf8)
-        .str.strptime(pl.Date, strict=False)
-        .fill_null(
-            expr.cast(pl.Utf8).str.strptime(pl.Datetime, strict=False).cast(pl.Date)
-        )
-    )
 
 
 def infer_date_column(df: pl.DataFrame, columns: list[str]) -> str | None:

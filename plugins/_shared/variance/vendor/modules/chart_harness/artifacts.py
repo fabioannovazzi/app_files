@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -36,7 +36,7 @@ EXCEL_EXTENSIONS = {".xlsx", ".xlsm", ".xls"}
 def utc_now() -> str:
     """Return the current UTC timestamp for audit metadata."""
 
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def json_safe(value: Any) -> Any:

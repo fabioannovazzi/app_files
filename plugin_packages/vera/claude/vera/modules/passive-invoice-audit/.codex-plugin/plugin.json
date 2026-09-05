@@ -1,6 +1,6 @@
 {
   "name": "passive-invoice-audit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Exception-focused audit of passive FatturaPA invoices against booked ledger entries, with deterministic checks and native Claude/Luna semantic review.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",

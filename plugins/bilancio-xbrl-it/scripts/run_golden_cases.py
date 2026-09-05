@@ -7,7 +7,7 @@ import argparse
 import hashlib
 import json
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
@@ -207,7 +207,7 @@ Validator = Callable[[Path, Path, Path | None, str | None], dict[str, object]]
 
 
 def _now() -> str:
-    return datetime.now(tz=UTC).replace(microsecond=0).isoformat()
+    return datetime.now(tz=timezone.utc).replace(microsecond=0).isoformat()
 
 
 def _canonical_json(value: Any) -> bytes:

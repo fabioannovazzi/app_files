@@ -26,6 +26,7 @@ from audit_core import (
     evaluate_results,
     evaluate_synthetic_population,
 )
+from cowork_worker import configured_runtime, run_cowork_chunk
 from luna_worker import run_luna_chunk
 from vera_assurance import (
     AssuranceContractError,
@@ -93,12 +94,14 @@ def main() -> int:
             "%s", json.dumps({"synthetic_packets": len(generated)}, indent=2)
         )
     else:
+        cowork = configured_runtime() == "cowork-haiku"
         report = evaluate_synthetic_population(
             args.results,
             args.mutation_plan,
             args.output,
-            run_luna_chunk,
+            run_cowork_chunk if cowork else run_luna_chunk,
             AuditConfig(
+                semantic_model="haiku" if cowork else "gpt-5.6-luna",
                 chunk_size=args.chunk_size,
                 concurrency=args.concurrency,
                 max_retries=args.max_retries,
@@ -108,6 +111,8 @@ def main() -> int:
         logging.getLogger(__name__).info(
             "%s", json.dumps(report, indent=2, ensure_ascii=False)
         )
+        if report["status"] == "awaiting_semantic_review":
+            return 3
     return 0
 
 

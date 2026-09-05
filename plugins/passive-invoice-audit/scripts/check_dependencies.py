@@ -68,6 +68,13 @@ def main(argv: list[str] | None = None) -> int:
     if missing:
         LOGGER.error("Missing Python dependencies: %s", ", ".join(missing))
         return 1
+    from cowork_worker import configured_runtime
+
+    if configured_runtime() == "cowork-haiku":
+        LOGGER.info(
+            "OK: Python dependencies available. Semantic review requires the packaged Cowork Haiku subagent; this check does not verify model availability."
+        )
+        return 0
     codex = shutil.which("codex")
     if not codex:
         LOGGER.error("Codex CLI is unavailable; native GPT-5.6 Luna cannot run")

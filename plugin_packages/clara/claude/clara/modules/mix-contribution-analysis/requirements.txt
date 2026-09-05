@@ -4,3 +4,7 @@ kaleido
 Pillow
 openpyxl
 python-docx
+numpy
+psutil
+python-dateutil
+xlsxwriter

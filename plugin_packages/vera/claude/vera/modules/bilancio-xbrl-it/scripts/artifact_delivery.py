@@ -8,7 +8,7 @@ import hashlib
 import hmac
 import json
 import secrets
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any, Mapping
 from urllib.parse import urlencode, urlparse
 
@@ -82,7 +82,7 @@ class SignedArtifactDelivery:
 
         if isinstance(ttl_seconds, bool) or not 30 <= ttl_seconds <= 900:
             raise ValueError("Artifact grant lifetime must be from 30 to 900 seconds")
-        issued_at = (now or datetime.now(tz=UTC)).astimezone(UTC)
+        issued_at = (now or datetime.now(tz=timezone.utc)).astimezone(timezone.utc)
         required = {"tenant_id", "case_id", "artifact_id", "sha256"}
         missing = sorted(key for key in required if not str(claims.get(key, "")))
         if missing:
@@ -104,7 +104,7 @@ class SignedArtifactDelivery:
             "artifact_id": payload["artifact_id"],
             "sha256": payload["sha256"],
             "expires_at": datetime.fromtimestamp(
-                payload["expires_at"], tz=UTC
+                payload["expires_at"], tz=timezone.utc
             ).isoformat(timespec="seconds"),
             "download_url": f"{self._download_base_url}?{urlencode({'token': token})}",
             "token": token,
@@ -141,7 +141,9 @@ class SignedArtifactDelivery:
             raise ValueError("Artifact download grant claims are invalid")
         if payload["version"] != 1:
             raise ValueError("Artifact download grant version is unsupported")
-        current = int((now or datetime.now(tz=UTC)).astimezone(UTC).timestamp())
+        current = int(
+            (now or datetime.now(tz=timezone.utc)).astimezone(timezone.utc).timestamp()
+        )
         if (
             not isinstance(payload["expires_at"], int)
             or current >= payload["expires_at"]

@@ -15,7 +15,7 @@ import time
 from collections.abc import Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -118,7 +118,7 @@ def _canonical_sha256(value: Mapping[str, Any]) -> str:
 
 
 def _iso_now() -> str:
-    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

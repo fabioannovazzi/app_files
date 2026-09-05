@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any, Mapping
 
 __all__ = ["RequestContext", "authorize"]
@@ -70,7 +70,7 @@ def _support_grant_active(
         raise PermissionError("Support grant has an invalid expiry") from exc
     if expires_at.tzinfo is None:
         raise PermissionError("Support grant expiry must include a timezone")
-    return expires_at.astimezone(UTC) > datetime.now(tz=UTC)
+    return expires_at.astimezone(timezone.utc) > datetime.now(tz=timezone.utc)
 
 
 def authorize(

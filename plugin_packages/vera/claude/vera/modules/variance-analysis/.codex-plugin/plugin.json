@@ -1,6 +1,6 @@
 {
   "name": "variance-analysis",
-  "version": "0.1.94",
+  "version": "0.1.95",
   "description": "Sales and management-accounting variance analysis with reviewable calculations, plots, drilldowns, and driver interpretation.",
   "author": {
     "name": "Mparanza",
