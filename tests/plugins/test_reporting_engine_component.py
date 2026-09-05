@@ -41,6 +41,39 @@ def test_reporting_engine_declares_profiler_and_schema_dependencies_as_core() ->
     assert not any(value.startswith("jsonschema") for value in render_requirements)
 
 
+def test_reporting_engine_runtime_resolves_registered_core_requirements() -> None:
+    runtime = _load_module(
+        "reporting_engine_managed_runtime_test",
+        PLUGIN_ROOT.parents[1] / "scripts" / "_managed_python_runtime.py",
+    )
+
+    selection = runtime.select_runtime(PLUGIN_ROOT.parents[1], "reporting-engine")
+
+    assert selection.requirement_root == PLUGIN_ROOT
+    assert selection.requirements_files == (PLUGIN_ROOT / "requirements.txt",)
+    assert "polars>=1.0" in selection.requirements_file.read_text(encoding="utf-8")
+
+
+def test_reporting_engine_native_component_is_packaged_with_runtime_registry() -> None:
+    builder = _load_module(
+        "reporting_engine_package_builder_test",
+        ROOT / "scripts" / "build_codex_plugin_zip.py",
+    )
+    package = {item.plugin: item for item in builder.load_packages()}["clara"]
+
+    entries = builder.expected_zip_entries(package)
+
+    clara_root = f"{package.package_root}/plugins/clara"
+    assert (
+        "reporting-engine"
+        in json.loads(entries[f"{clara_root}/components.json"])["plugins"]
+    )
+    assert (
+        entries[f"{clara_root}/modules/reporting-engine/requirements.txt"]
+        == (PLUGIN_ROOT / "requirements.txt").read_bytes()
+    )
+
+
 def test_reporting_engine_catalog_summary_matches_packaged_manifest() -> None:
     contract = _load_module(
         "reporting_engine_contract_test",
