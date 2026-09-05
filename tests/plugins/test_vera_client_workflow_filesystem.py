@@ -909,6 +909,28 @@ def test_client_workflow_entrypoint_requires_managed_context(
 ) -> None:
     plugin_root = ROOT / "plugins" / workflow_id
     script_path = plugin_root / "scripts" / script_name
+    if workflow_id == "business-planning":
+        # This owner delegates parsing to the shared CLI. Test the public boundary
+        # instead of requiring its argparse declaration to be physically inline.
+        import subprocess
+        import sys
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "--case",
+                "missing.json",
+                "--output-dir",
+                "missing-output",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        assert "required: --client-engagement" in result.stderr
+        return
     tree = ast.parse(script_path.read_text(encoding="utf-8"), filename=str(script_path))
     declarations = [
         node

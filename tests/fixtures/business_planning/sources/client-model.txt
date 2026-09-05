@@ -1,0 +1,2 @@
+Synthetic client model: base monthly revenue EUR 1000, EBITDA positive EUR 200.
+This invented fixture contains no client documents or identifying information.
