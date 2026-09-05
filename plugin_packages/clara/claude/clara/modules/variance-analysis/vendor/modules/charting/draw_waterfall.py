@@ -463,7 +463,9 @@ def draw_pvm_decomposition_ladder(
         number_of_rows,
         number_of_cols,
     )
-    traces = list(fig.data)
+    # Legacy figures also contain marker/label and absolute-value bar traces.
+    # Only waterfall traces carry the measures used by this renderer.
+    traces = [trace for trace in fig.data if trace.type == "waterfall"]
     if traces:
         global_range = _combined_trace_extent(traces)
         fig.update_xaxes(range=list(global_range), matches="x")
@@ -778,7 +780,7 @@ def _draw_fallback_trace(
 def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
     """Write a deterministic PNG fallback when Kaleido/Chrome is unavailable."""
 
-    traces = list(fig.data)
+    traces = [trace for trace in fig.data if trace.type == "waterfall"]
     if not traces:
         raise ValueError("No waterfall traces are available for fallback rendering.")
     title_lines = _clean_html_lines(getattr(fig.layout.title, "text", "Sales variance"))
@@ -1850,7 +1852,7 @@ def _legacy_small_multiples_figure(
             continue
         annotations.append(annotation)
     fig.layout.annotations = tuple(annotations)
-    traces = list(fig.data)
+    traces = [trace for trace in fig.data if trace.type == "waterfall"]
     if traces:
         global_range = _combined_trace_extent(traces)
         fig.update_xaxes(range=list(global_range), matches="x")

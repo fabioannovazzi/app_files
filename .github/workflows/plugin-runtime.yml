@@ -43,3 +43,7 @@ jobs:
         env:
           RUN_COWORK_PYTHON_INTEGRATION: "1"
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_cowork_python_runtime.py
+      - name: Check waterfall fallback with supporting marker traces
+        run: |
+          python -m pip install plotly pillow polars
+          python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_waterfall_fallback.py
