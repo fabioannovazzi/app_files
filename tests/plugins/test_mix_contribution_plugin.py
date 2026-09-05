@@ -8890,3 +8890,23 @@ def test_monthly_resampling_keeps_first_day_in_its_own_month() -> None:
             {"Date": [date(2026, 1, 1), date(2026, 2, 1)], "Sales": [300.0, 400.0]}
         ),
     )
+
+
+@pytest.mark.parametrize("currency", ["", "USD"])
+def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
+    module = load_core()
+    frame = pl.DataFrame(
+        {
+            "Date": ["2026-01-01", "2026-02-01", "2026-03-01"],
+            "Category": ["A", "A", "A"],
+            "Sales": [100.0, 110.0, 120.0],
+            "COGS": [60.0, 65.0, 70.0],
+        }
+    )
+    existing = {"options": {"currency": currency}} if currency else None
+
+    recipe = module.build_recipe(
+        Path("synthetic.csv"), frame, language="en", existing_recipe=existing
+    )
+
+    assert recipe["options"]["currency"] == currency

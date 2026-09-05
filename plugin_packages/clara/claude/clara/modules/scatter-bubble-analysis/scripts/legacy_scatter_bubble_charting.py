@@ -1078,6 +1078,8 @@ def _patched_legacy_preparation(
     spec: dict[str, Any],
     draw_invocations: list[str],
 ):
+    from modules.charting import draw_scatter as draw_scatter_module
+
     original_scatter_group = plot_charts_module.group_by_dataset_for_scatter_plot
     original_prepare_scatter_group = (
         prepare_charts_module.group_by_dataset_for_scatter_plot
@@ -1090,7 +1092,7 @@ def _patched_legacy_preparation(
         plot_charts_module.prepare_sum_dataframe_for_bubble_plot
     )
     original_show_only_largest = plot_charts_module.show_only_largest
-    original_draw_scatter = plot_charts_module.draw_scatter_chart
+    original_draw_scatter = draw_scatter_module.draw_scatter_chart
     original_draw_bubble = plot_charts_module.draw_bubble_chart
     original_scatter_datashader = plot_charts_module.plot_scatter_chart_datashader
     original_add_bubbles_to_bubble_chart = (
@@ -1402,7 +1404,7 @@ def _patched_legacy_preparation(
         _weighted_prepare_bubble_sum
     )
     plot_charts_module.show_only_largest = _cached_show_only_largest
-    plot_charts_module.draw_scatter_chart = _tracked_draw_scatter
+    draw_scatter_module.draw_scatter_chart = _tracked_draw_scatter
     plot_charts_module.draw_bubble_chart = _tracked_draw_bubble
     plot_charts_module.plot_scatter_chart_datashader = _tracked_scatter_datashader
     plot_charts_module.get_mins_and_maxes = _get_mins_and_maxes_with_eager_frames
@@ -1427,7 +1429,7 @@ def _patched_legacy_preparation(
             original_prepare_bubble_sum
         )
         plot_charts_module.show_only_largest = original_show_only_largest
-        plot_charts_module.draw_scatter_chart = original_draw_scatter
+        draw_scatter_module.draw_scatter_chart = original_draw_scatter
         plot_charts_module.draw_bubble_chart = original_draw_bubble
         plot_charts_module.plot_scatter_chart_datashader = original_scatter_datashader
         plot_charts_module.get_mins_and_maxes = original_get_mins_and_maxes

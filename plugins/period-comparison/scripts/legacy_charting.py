@@ -573,7 +573,7 @@ def _capture_full_legacy_plot(
             names,
             chosen_chart,
             metric=metric,
-            currency=str((recipe.get("options") or {}).get("currency") or "EUR"),
+            currency=str((recipe.get("options") or {}).get("currency") or ""),
             reporting_entity=_reporting_entity(recipe),
             small_multiples=bool(small_multiples_dimension),
             selected_dimension=dimension,
