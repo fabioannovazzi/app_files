@@ -1,0 +1,57 @@
+name: Clara Cowork candidate acceptance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  packaged-reporting:
+    name: Fresh Clara ZIP / Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12']
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test the release gate's failure handling
+        run: |
+          python -m pip install pytest
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py
+      - name: Verify shipped candidate matches canonical source
+        run: python scripts/build_claude_plugin_zip.py clara --check
+      - name: Exercise the actual ZIP with fresh managed dependencies
+        run: >-
+          python scripts/check_clara_cowork_release.py
+          plugin_packages/clara/clara-claude-plugin.zip
+          --output "${{ runner.temp }}/clara-acceptance"
+      - name: Retain evidence, including failed commands
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clara-script-evidence-python-${{ matrix.python }}
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/clara-acceptance/*.json
+            ${{ runner.temp }}/clara-acceptance/*.log
+            ${{ runner.temp }}/clara-acceptance/intake/
+            ${{ runner.temp }}/clara-acceptance/render/
+      - name: Retain exact candidate for real Cowork acceptance
+        uses: actions/upload-artifact@v4
+        with:
+          name: clara-candidate-python-${{ matrix.python }}
+          path: plugin_packages/clara/clara-claude-plugin.zip
