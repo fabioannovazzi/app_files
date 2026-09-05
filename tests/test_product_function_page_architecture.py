@@ -846,7 +846,7 @@ def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> No
                 "function-model-data.js" in page
             ), f"{page_path}: run-level report note is not loaded"
 
-    assert len(standalone_pages) == 19
+    assert len(standalone_pages) == 20
 
 
 def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
