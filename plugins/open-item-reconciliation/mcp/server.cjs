@@ -105,9 +105,12 @@ function scanImplementationTree(rootId, root, scanRoot, files, directories) {
         throw new Error("implementation entries must not be symlinks");
       }
       if (current.isDirectory()) {
+        // Generated caches are inert; the executable source contract stays exact.
+        if (name === "__pycache__") continue;
         directories.add(implementationKey(rootId, relative));
         pending.push(candidate);
       } else if (current.isFile() && current.nlink === 1) {
+        if (name.endsWith(".pyc") || name.endsWith(".pyo")) continue;
         files.add(implementationKey(rootId, relative));
       } else {
         throw new Error(

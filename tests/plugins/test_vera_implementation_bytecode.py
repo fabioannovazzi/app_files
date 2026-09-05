@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -166,3 +167,68 @@ def test_repair_refuses_contract_mismatch_without_removing_cache(
     assert result.returncode != 0
     assert "contract" in result.stderr
     assert bytecode.read_bytes() == b"retain on failure"
+
+
+@pytest.mark.parametrize(
+    "artifact", ["__pycache__/ambient.pyc", "ambient.pyc", "ambient.pyo"]
+)
+def test_mcp_starts_with_incidental_bytecode(module_copy: Path, artifact: str) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js is required for MCP startup tests")
+    cache = module_copy / "vendor/modules/vera_assurance" / artifact
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_bytes(b"inert cache")
+    requests = [
+        {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+        {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+    ]
+
+    result = subprocess.run(
+        [node, str(module_copy / "mcp/server.cjs"), "--stdio"],
+        input="".join(json.dumps(request) + "\n" for request in requests),
+        cwd=module_copy,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    responses = [json.loads(line) for line in result.stdout.splitlines()]
+    assert responses[0]["result"]["serverInfo"]
+    assert responses[1]["result"]["tools"]
+    assert cache.read_bytes() == b"inert cache"
+
+
+@pytest.mark.parametrize("unsafe", ["source", "cache_symlink", "bytecode_hardlink"])
+def test_mcp_still_rejects_unsafe_implementation_entries(
+    module_copy: Path,
+    tmp_path: Path,
+    unsafe: str,
+) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js is required for MCP startup tests")
+    vendor = module_copy / "vendor/modules/vera_assurance"
+    external = tmp_path / "external"
+    if unsafe == "source":
+        (vendor / "unexpected.py").write_text("# unowned source\n")
+    elif unsafe == "cache_symlink":
+        external.mkdir()
+        (vendor / "__pycache__").symlink_to(external, target_is_directory=True)
+    else:
+        external.write_bytes(b"external")
+        os.link(external, vendor / "ambient.pyc")
+
+    result = subprocess.run(
+        [node, str(module_copy / "mcp/server.cjs"), "--stdio"],
+        input="",
+        cwd=module_copy,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert result.returncode != 0

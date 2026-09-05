@@ -103,6 +103,8 @@ function journalScanImplementationRoot(root, scanRoots, rootFiles) {
         throw new Error("Journal Sampling implementation cannot contain symlinks.");
       }
       if (entry.isDirectory()) {
+        // Generated caches are inert; the executable source contract stays exact.
+        if (name === "__pycache__") continue;
         directories.add(relative);
         pending.push(entryPath);
         continue;
@@ -110,6 +112,7 @@ function journalScanImplementationRoot(root, scanRoots, rootFiles) {
       if (!entry.isFile() || entry.nlink !== 1) {
         throw new Error("Journal Sampling implementation artifact is invalid.");
       }
+      if (name.endsWith(".pyc") || name.endsWith(".pyo")) continue;
       files.add(relative);
     }
   }

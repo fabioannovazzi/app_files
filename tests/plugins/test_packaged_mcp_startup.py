@@ -41,8 +41,9 @@ def write_zip(path: Path, entries: dict[str, bytes]) -> None:
 
 
 @pytest.mark.parametrize("surface", ["cowork", "codex"])
+@pytest.mark.parametrize("with_caches", [False, True])
 def test_vera_zip_all_registered_servers_initialize_and_list_tools(
-    surface: str, cowork_entries: dict[str, bytes], tmp_path: Path
+    surface: str, with_caches: bool, cowork_entries: dict[str, bytes], tmp_path: Path
 ) -> None:
     builder = load_builder("build_codex_plugin_zip")
     if surface == "cowork":
@@ -56,6 +57,22 @@ def test_vera_zip_all_registered_servers_initialize_and_list_tools(
         entries = builder.expected_zip_entries(vera)
         root = f"{vera.package_root}/plugins/vera"
         config = f"{root}/.mcp.json"
+    entries = dict(entries)
+    if with_caches:
+        prefix = "" if root == "." else f"{root}/"
+        for module in (
+            "check-entries",
+            "journal-sampling",
+            "journal-bank-reconciliation",
+            "open-item-reconciliation",
+            "concordato-plan-review",
+            "report-builder",
+        ):
+            vendor = f"{prefix}modules/{module}/vendor/modules/vera_assurance"
+            assert f"{vendor}/contracts.py" in entries
+            entries[f"{vendor}/__pycache__/ambient.pyc"] = b"inert cache"
+            entries[f"{vendor}/ambient.pyc"] = b"inert cache"
+            entries[f"{vendor}/ambient.pyo"] = b"inert cache"
     archive = tmp_path / "vera.zip"
     write_zip(archive, entries)
     registered = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())[

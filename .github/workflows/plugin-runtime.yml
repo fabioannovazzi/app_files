@@ -25,6 +25,8 @@ jobs:
       - name: Exercise clean ZIPs and reject broken releases
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
+      - name: Verify cache tolerance without weakening source or link checks
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k mcp
       - name: Enforce Cowork manifest description limits
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
       - name: Verify distributed Cowork artifacts and runtime

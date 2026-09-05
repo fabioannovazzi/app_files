@@ -12,16 +12,26 @@ Inspected local deletion commands concern temporary release snapshots, generated
 
 ## Recovery
 
-PR #548 (`675b4b42`, Vera 0.1.206) fixes six Python bootstrap scanners and explicitly prohibits manual installed-tree modifications or bypassing rejected permissions. It leaves two Check Entries checks unchanged: Node startup and validation of upstream Journal Sampling implementation receipts.
+PR #548 (`675b4b42`, Vera 0.1.206) fixes six Python bootstrap scanners and explicitly prohibits manual installed-tree modifications or bypassing rejected permissions. The interrupted task also left proposed changes to Check Entries Node startup and upstream Journal Sampling receipt validation.
 
-The follow-up aligns those two checks with the same cache treatment. Real cache directories and regular, single-link `.pyc`/`.pyo` files do not participate in the source-file contract. Source receipts, unexpected source entries, symlinks, hardlinks, and non-regular files outside excluded cache directories remain checked. No cleanup is invoked. These are mechanical integrity rules, not professional or semantic judgments.
+Initial testing of those two changes passed. A further probe of the actual rebuilt Cowork ZIP with caches in Journal Sampling exposed another exact-tree Node startup failure. Inspection identified the corresponding scanners in all six modules: journal-sampling, open-item-reconciliation, journal-bank-reconciliation, concordato-plan-review, report-builder and check-entries.
 
-Six regression cases exercise initialization/tool listing and actual upstream entry checks with three cache layouts, and assert that the cache bytes remain present and unchanged. The existing FIFO probe is moved out of the now-excluded cache directory to an implementation path ending in `.pyc`, so it continues to prove that an unsafe file type cannot exploit the extension exemption. Existing malicious-bytecode and source-tampering tests remain in scope.
+Vera 0.1.207 aligns all six Node scanners and Check Entries' upstream receipt validation with the bootstrap behavior. Real cache directories and regular, single-link `.pyc`/`.pyo` files do not participate in the source-file contract. Source receipts, unexpected source entries, symlinks, hardlinks, and non-regular files outside excluded cache directories remain checked. No cleanup is invoked. These are mechanical integrity rules, not professional or semantic judgments.
 
-Full fresh-session Cowork acceptance is separate from packaged launch and regression validation. This release does not claim every professional workflow has completed inside Cowork.
+CI now tests both Codex and Cowork ZIP startup with cache artifacts in all six modules, as well as six-module Node cache tolerance and unsafe-source/link rejection. Positive cases assert that cache files remain unchanged. The existing Check Entries FIFO probe is moved out of the now-excluded cache directory to an implementation path ending in `.pyc`, preserving coverage of the file-type restriction.
 
-## Validation before release
+The Open-item malicious-bytecode tests now use a correctly bound customer run and predecessor checkpoint, exercise the legitimate review call successfully, and still require that planted bytecode never executes and source/cache bytes remain unchanged. Blocking all cache files is no longer the expected behavior.
 
-Vera 0.1.207, Check Entries 0.1.38. All 36 selected implementation, bytecode, unsafe-entry and link-swap cases passed. All 435 package, icon and update-notification cases passed across the initial run (433 passes) and the two exact network-dependent Clara rendering rechecks. Those two initially failed because the sandbox could not resolve PyPI; rerunning with network access passed without source changes.
+## Validation
 
-Codex install, OpenAI upload and Cowork ZIP source-drift checks passed. The Cowork release gate initialized and listed tools from all 18 servers. The follow-up diff deletes no files. The generated marketplace catalog also catches up Lucia's already-merged 0.1.29 version; no Lucia source or ZIP is changed.
+- All 435 final package, icon and update-notification tests passed.
+
+- 90 six-module bootstrap/cache/repair/Node cases passed.
+- 48 packaged-MCP and Node release-gate cases passed, including clean and cache-bearing Codex/Cowork ZIPs.
+- 17 existing and added cross-module bytecode/upstream-integrity cases passed.
+- The final generated Cowork ZIP, extracted with cache artifacts added in all six modules, initialized and listed tools from all 18 servers. Its original ZIP SHA-256 is `9a46f565d4da42aa031035fc30367fbc1f727934d26d9a31cf1bbc281b107952`.
+- Codex install, OpenAI upload and Cowork source-drift checks passed. No files are deleted by the release diff.
+
+The generated marketplace catalog also catches up Lucia's already-merged 0.1.29 version; no Lucia source or ZIP is changed. The interrupted worktree's stale Vera-specific instructions inside Clara's execution contract are not carried forward.
+
+Full fresh-session Cowork acceptance is separate from packaged launch and regression validation. This release does not claim every professional workflow has completed inside Cowork. Deployment does not establish OpenAI Marketplace publication.
