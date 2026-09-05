@@ -1229,3 +1229,122 @@ def test_real_luna_integration_is_opt_in() -> None:
         "no_issue_detected"
     )
     assert decisions["real-luna-equipment-review"]["status"] != "no_issue_detected"
+
+
+def _cowork_job(tmp_path: Path) -> dict[str, Any]:
+    from cowork_worker import run_cowork_chunk
+
+    invoices = tmp_path / "invoices"
+    invoices.mkdir()
+    _write_invoice(invoices / "invoice.xml")
+    return {
+        "invoice_source": invoices,
+        "ledger_path": _write_ledger(tmp_path / "ledger.csv", _ledger_rows()),
+        "mapping_path": _write_mapping(tmp_path / "mapping.json"),
+        "output_dir": tmp_path / "output",
+        "runner": run_cowork_chunk,
+        "config": audit_core.AuditConfig(semantic_model="haiku", concurrency=1),
+    }
+
+
+def _save_cowork_fixture_response(job: dict[str, Any]) -> Path:
+    audit_core.run_audit(**job)
+    request_path = next(job["output_dir"].glob("luna_chunks/*/cowork_request.json"))
+    request = json.loads(request_path.read_text())
+    packets = json.loads((request_path.parent / "audit_packets.json").read_text())
+    response_path = request_path.with_name("cowork_response.json")
+    response_path.write_text(
+        json.dumps(
+            _semantic_payload(packets[0]["invoice_id"], status="no_issue_detected")
+        )
+    )
+    record_path = request_path.with_name("cowork_worker_record.json")
+    record_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "vera.cowork_worker_record.v1",
+                "request_sha256": request["request_sha256"],
+                "agent": request["agent"],
+                "requested_model": "haiku",
+                "invocation_id": "test-fixture-not-a-real-model-run",
+                "response_sha256": hashlib.sha256(
+                    response_path.read_bytes()
+                ).hexdigest(),
+                "provenance": "cowork_host_reported",
+            }
+        )
+    )
+    return record_path
+
+
+def test_cowork_audit_preparation_is_pending_not_success(tmp_path: Path) -> None:
+    job = _cowork_job(tmp_path)
+
+    summary = audit_core.run_audit(**job)
+
+    assert summary["status"] == "awaiting_semantic_review"
+    assert summary["luna_chunks_completed"] == 0
+    assert summary["luna_chunks_failed"] == 0
+    assert summary["luna_not_run_or_failed"] == 1
+    assert summary["invoices_requiring_professional_attention"] == 1
+    assert (job["output_dir"] / "exception_workpaper.xlsx").is_file()
+
+
+def test_cowork_audit_resumes_validated_host_response(tmp_path: Path) -> None:
+    job = _cowork_job(tmp_path)
+    _save_cowork_fixture_response(job)
+
+    summary = audit_core.run_audit(**job)
+
+    assert summary["status"] == "completed"
+    assert summary["semantic_worker_requested"] == "haiku"
+    assert summary["semantic_runtime"] == "cowork_subagent"
+    assert summary["luna_chunks_completed"] == 1
+    assert summary["luna_no_issue_detected"] == 1
+    assert summary["luna_recovery_sources"] == {"cowork_host_reported": 1}
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("request_sha256", "stale-packet"),
+        ("response_sha256", "changed-response"),
+        ("invocation_id", ""),
+        ("requested_model", "opus"),
+    ],
+)
+def test_cowork_audit_rejects_unbound_worker_records(
+    tmp_path: Path, field: str, value: str
+) -> None:
+    job = _cowork_job(tmp_path)
+    record_path = _save_cowork_fixture_response(job)
+    record = json.loads(record_path.read_text())
+    record[field] = value
+    record_path.write_text(json.dumps(record))
+
+    with pytest.raises(audit_core.AuditError, match="does not match"):
+        audit_core.run_audit(**job)
+
+
+def test_cowork_audit_rejects_missing_invoice_result(tmp_path: Path) -> None:
+    job = _cowork_job(tmp_path)
+    record_path = _save_cowork_fixture_response(job)
+    response_path = record_path.with_name("cowork_response.json")
+    response_path.write_text(
+        json.dumps({"schema_version": "vera.passive_invoice_luna.v1", "results": []})
+    )
+    record = json.loads(record_path.read_text())
+    record["response_sha256"] = hashlib.sha256(response_path.read_bytes()).hexdigest()
+    record_path.write_text(json.dumps(record))
+
+    with pytest.raises(audit_core.AuditError, match="each requested invoice"):
+        audit_core.run_audit(**job)
+
+
+def test_cowork_cannot_resume_luna_job_with_different_worker(tmp_path: Path) -> None:
+    job = _cowork_job(tmp_path)
+    audit_core.run_audit(**job)
+    job["config"] = audit_core.AuditConfig()
+
+    with pytest.raises(audit_core.AuditError, match="different"):
+        audit_core.run_audit(**job)

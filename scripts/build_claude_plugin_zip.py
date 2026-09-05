@@ -1643,6 +1643,13 @@ def project_cowork_skill(
     """Project one source skill into Cowork without product promotion/call-home."""
 
     text = content.decode("utf-8")
+    if relative_path in {
+        "skills/passive-invoice-audit/SKILL.md",
+        "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md",
+    }:
+        text = (ROOT / "plugins/vera/references/passive-invoice-cowork.md").read_text(
+            encoding="utf-8"
+        )
     if relative_path == "skills/vera/SKILL.md":
         reference_text = cowork_runtime_reference.decode("utf-8")
         runtime_section = _extract_section(reference_text, "## Cowork Runtime")
@@ -2691,6 +2698,8 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             content = _project_previdenza_inventory_script(content)
         elif relative == "scripts/check_dependencies.py":
             content = _project_vera_dependency_checker(content)
+        elif relative == "modules/passive-invoice-audit/scripts/worker_config.json":
+            content = _json_bytes({"runtime": "cowork-haiku"})
         elif relative == "components.json":
             content = _project_vera_components(content)
         if (

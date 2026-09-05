@@ -2008,7 +2008,14 @@ def test_extracted_clara_renders_known_period_comparison(
     assert result.returncode == 0, result.stderr
     manifest = json.loads((output_dir / "render_manifest.json").read_text())
     context = json.loads((output_dir / "period_comparison_context.json").read_text())
-    chart_path = output_dir / "year_over_year_line.html"
+    chart_path = next(
+        path
+        for path in (
+            output_dir / "year_over_year_line.html",
+            output_dir / "year_over_year_line.png",
+        )
+        if path.is_file()
+    )
 
     assert manifest["runner"]["status"] == "ok"
     assert manifest["adapter_id"] == "reporting-engine.period_comparison"
@@ -2023,7 +2030,8 @@ def test_extracted_clara_renders_known_period_comparison(
     assert context["monthly"][-1]["previous_amount"] == 255.0
     assert chart_path.is_file()
     assert chart_path.stat().st_size > 0
-    assert "Plotly.newPlot" in chart_path.read_text(encoding="utf-8")
+    content = chart_path.read_bytes()
+    assert content.startswith(b"\x89PNG\r\n\x1a\n") or b"Plotly.newPlot" in content
 
 
 def test_extracted_clara_renders_distribution_with_variant(
@@ -2080,10 +2088,14 @@ def test_extracted_clara_renders_distribution_with_variant(
     assert manifest["legacy_plugin_source"] == "distribution-analysis"
     assert recipe["options"]["charts"] == ["boxplot"]
     assert recipe["mappings"]["small_multiples_dimension"] == "Brand"
-    assert "Plotly.newPlot" in (output_dir / "boxplot.html").read_text(encoding="utf-8")
-    assert "Plotly.newPlot" in (output_dir / "boxplot_small_multiples.html").read_text(
-        encoding="utf-8"
-    )
+    for stem in ("boxplot", "boxplot_small_multiples"):
+        chart_path = next(
+            path
+            for path in (output_dir / f"{stem}.html", output_dir / f"{stem}.png")
+            if path.is_file()
+        )
+        content = chart_path.read_bytes()
+        assert content.startswith(b"\x89PNG\r\n\x1a\n") or b"Plotly.newPlot" in content
     summary_by_period = {row["Period"]: row for row in context["summary"]}
     assert summary_by_period == {
         "~Jun-2025": {

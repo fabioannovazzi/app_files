@@ -60,10 +60,6 @@ from modules.charting.draw_other_charts import (
     draw_area_chart,
 )
 from modules.charting.draw_pareto import draw_pareto_chart
-from modules.charting.draw_scatter import (
-    draw_scatter_chart,
-    draw_scatter_chart_datashader,
-)
 from modules.charting.draw_timeline import (
     draw_dot_chart,
     draw_slope_chart,
@@ -840,6 +836,9 @@ def plot_motion_charts(dfCopy,indexCols,valueCols,chartDict,timeColumn,paramDict
     return paramDict
 
 def plot_scatter_charts(dfCopy,indexCols,valueCols,chartDict,valueColsWithPrice,xColumn,paramDict,dfDict):
+    # Load scatter-only dependencies only for a scatter request.
+    from modules.charting.draw_scatter import draw_scatter_chart
+
     """
     prepares data and plots bubble chart
     """ 
@@ -1079,6 +1078,9 @@ def plot_one_dimensional_variance_chart_different_calculations(dfDict,indexCols,
 
 
 def plot_scatter_chart_datashader(fig,dfCopy,timeColumn,colorDimension,chartDict,uniqueItems,paramDict,countRows,countCols,numberOfCols,numberOfRows):
+    # Load scatter-only dependencies only for a scatter request.
+    from modules.charting.draw_scatter import draw_scatter_chart_datashader
+
     """
     scatter chart with many points
     """

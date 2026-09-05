@@ -22,6 +22,7 @@ for _vendor_root in (
         break
 
 from audit_core import AuditConfig, run_audit
+from cowork_worker import configured_runtime, run_cowork_chunk
 from luna_worker import run_luna_chunk
 from vera_assurance import AssuranceContractError, load_client_engagement_context_file
 
@@ -99,13 +100,15 @@ def main() -> int:
             for key, value in chart_of_accounts.items()
         ):
             raise ValueError("Chart of accounts must be a JSON object of strings")
+    cowork = configured_runtime() == "cowork-haiku"
     summary = run_audit(
         invoice_source=args.invoices,
         ledger_path=args.ledger,
         mapping_path=args.ledger_mapping,
         output_dir=args.output,
-        runner=run_luna_chunk,
+        runner=run_cowork_chunk if cowork else run_luna_chunk,
         config=AuditConfig(
+            semantic_model="haiku" if cowork else "gpt-5.6-luna",
             chunk_size=args.chunk_size,
             concurrency=args.concurrency,
             max_retries=args.max_retries,
@@ -118,6 +121,11 @@ def main() -> int:
         client_run_id=str(client_context["run_id"]),
         client_run_root=Path(str(client_context["run_root"])),
     )
+    if summary["status"] == "awaiting_semantic_review":
+        logging.getLogger(__name__).warning(
+            "Semantic review pending: dispatch prepared cowork_request.json files, save validated worker responses, and resume the same command."
+        )
+        return 3
     logging.getLogger(__name__).info(
         "Audit complete: %s invoices, %s require professional attention",
         summary["population"],

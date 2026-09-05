@@ -1,5 +1,9 @@
 polars>=1.0
+numpy
+psutil
+python-dateutil
 plotly
 kaleido
 Pillow
 openpyxl
+xlsxwriter

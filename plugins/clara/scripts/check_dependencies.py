@@ -27,6 +27,7 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 COMPONENTS = (
     "attribute-reporting",
+    "business-planning",
     "reporting-engine",
     "distribution-analysis",
     "funnel-analysis",

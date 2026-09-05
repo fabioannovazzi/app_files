@@ -11,5 +11,8 @@
     "set-overlap-analysis",
     "statement-analysis",
     "variance-analysis"
+  ],
+  "internal_modules": [
+    "reporting-engine"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "bilancio-xbrl-it",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Intelligent, source-traceable preparation of Italian OIC annual accounts from spreadsheets or reviewed PDFs, with deterministic XBRL export.",
   "author": {
     "name": "Mparanza",
@@ -10,7 +10,14 @@
   "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
-  "keywords": ["vera", "bilancio", "xbrl", "oic", "commercialisti", "italy"],
+  "keywords": [
+    "vera",
+    "bilancio",
+    "xbrl",
+    "oic",
+    "commercialisti",
+    "italy"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Bilancio intelligente",
@@ -18,7 +25,12 @@
     "longDescription": "Vera partecipa all'intera preparazione del bilancio: comprende i dati contabili da fogli di calcolo o PDF leggibili/scansionati, sottopone l'estrazione PDF alla revisione professionale, riusa decisioni precedenti, propone mappature spiegate, riconosce ambiguità e informazioni mancanti, pone domande contestuali, prepara prospetti e nota integrativa e dirige l'attenzione professionale. Calcoli, regole, riconciliazioni e generazione XBRL restano deterministici e tracciabili. L'XBRL è un formato di esportazione del bilancio approvato, non il prodotto. Vera non firma, approva o deposita il bilancio.",
     "developerName": "Mparanza",
     "category": "Productivity",
-    "capabilities": ["Interactive", "Read", "Write", "Analysis"],
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
     "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",

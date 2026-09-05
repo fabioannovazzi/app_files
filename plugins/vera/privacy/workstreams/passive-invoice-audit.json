@@ -32,11 +32,12 @@
         ]
       },
       {
-        "id": "compact-luna-invoice-review-packets",
+        "id": "compact-semantic-invoice-review-packets",
         "purpose": "Determine whether each matched invoice has a concrete material reason for professional review",
         "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, bounded causale and related-document references, withholding and stamp summaries, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five professional-linked reviewed historical treatments. Raw XML, payment instructions and IBAN, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt.",
         "runtime_profiles": [
-          "openai-codex"
+          "openai-codex",
+          "anthropic-cowork"
         ]
       }
     ]
@@ -61,7 +62,7 @@
     },
     {
       "id": "qualified-native-luna-worker",
-      "control": "The semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, fixes the model to gpt-5.6-luna, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
+      "control": "In the Codex distribution only, the semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, fixes the model to gpt-5.6-luna, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
     },
     {
       "id": "content-bound-restartable-job",
@@ -74,12 +75,16 @@
     {
       "id": "isolated-synthetic-corruption",
       "control": "Synthetic evaluation accepts only an explicit mutation plan whose source is professionally labelled acceptable and already matched, unflagged and free of deterministic exceptions; it copies the packet to a separate output with a synthetic identifier, changes only booked account identifiers and descriptions while preserving ordinary line descriptions, retains original and replacement treatment, and never mutates the real ledger, packet, job database or source file."
+    },
+    {
+      "id": "cowork-packet-response-binding",
+      "control": "The Cowork distribution prepares content-hashed requests for the configured native Haiku subagent. Missing responses leave the audit pending. Ingestion checks request and response hashes, the host invocation reference, strict result fields and exact invoice coverage; host-recorded provenance is explicitly not authenticated model identity or Luna qualification. No direct API or API-key client is introduced."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-23",
+    "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3f21ea64a9598efd6b9fb958d3b413a790ca4d66b1704f9de131d1014486bd19"
+    "source_fingerprint": "d1329149122c7671f5d5d69ab66507c20c4354f3647c6366c0d711772c1eb857"
   }
 }

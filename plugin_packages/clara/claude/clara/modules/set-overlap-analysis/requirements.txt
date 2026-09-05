@@ -4,3 +4,7 @@ kaleido==1.3.0
 matplotlib
 matplotlib_venn
 openpyxl
+numpy
+psutil
+python-dateutil
+xlsxwriter

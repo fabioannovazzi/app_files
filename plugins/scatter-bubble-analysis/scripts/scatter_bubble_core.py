@@ -10,7 +10,7 @@ import re
 import sys
 import zipfile
 from dataclasses import dataclass
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -86,7 +86,7 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 SCHEMA_VERSION = "1.0"
-DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=UTC).date()
+DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=timezone.utc).date()
 ARTIFACT_MODE_DATA_ONLY = "data_only"
 ARTIFACT_MODE_DATA_AND_RENDER = "data_and_render"
 ARTIFACT_MODE_RENDER_ONLY = "render_only"
@@ -120,7 +120,7 @@ class ScatterBubbleRunResult:
 def utc_now() -> str:
     """Return the current UTC timestamp."""
 
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def configure_logging(verbose: bool = False) -> None:

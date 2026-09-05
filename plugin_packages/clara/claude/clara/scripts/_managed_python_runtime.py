@@ -119,9 +119,10 @@ def select_runtime(
         scope = "core"
     else:
         try:
-            components = json.loads(
+            registry = json.loads(
                 (root / "components.json").read_text(encoding="utf-8")
-            )["plugins"]
+            )
+            components = registry["plugins"] + registry.get("internal_modules", [])
         except (OSError, KeyError, TypeError, json.JSONDecodeError) as error:
             raise ValueError("Plugin component registry is unavailable") from error
         if not isinstance(components, list) or not all(

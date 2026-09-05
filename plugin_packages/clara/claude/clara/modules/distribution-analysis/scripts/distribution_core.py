@@ -9,7 +9,7 @@ import logging
 import sys
 import zipfile
 from dataclasses import dataclass
-from datetime import UTC, date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
@@ -85,7 +85,7 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 SCHEMA_VERSION = "1.0"
-DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=UTC).date()
+DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=timezone.utc).date()
 DEFAULT_ROLLING_WINDOW_MONTHS = 12
 ROLLING_PERIOD_SYMBOL = "~"
 ARTIFACT_MODE_DATA_ONLY = "data_only"
@@ -138,7 +138,7 @@ class DistributionRunResult:
 def utc_now() -> str:
     """Return the current UTC timestamp."""
 
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def configure_logging(verbose: bool = False) -> None:

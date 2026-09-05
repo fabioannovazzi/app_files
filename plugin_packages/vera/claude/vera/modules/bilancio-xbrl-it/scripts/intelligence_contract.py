@@ -13,7 +13,11 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from enum import StrEnum
+
+try:
+    from enum import StrEnum
+except ImportError:  # Python 3.10 in Cowork
+    from strenum import StrEnum
 from typing import Any, Mapping, Sequence
 
 from disclosure_engine import manual_disclosure_flags, normalize_narrative_blocks

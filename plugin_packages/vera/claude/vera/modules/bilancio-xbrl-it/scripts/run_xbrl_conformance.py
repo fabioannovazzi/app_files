@@ -12,7 +12,7 @@ import shutil
 import subprocess  # nosec B404
 import sys
 from collections import Counter
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from importlib.metadata import version
 from pathlib import Path
 
@@ -125,7 +125,9 @@ def run_conformance(
         "returncode": completed.returncode,
         "stdout": completed.stdout,
         "stderr": completed.stderr,
-        "completed_at": datetime.now(tz=UTC).replace(microsecond=0).isoformat(),
+        "completed_at": datetime.now(tz=timezone.utc)
+        .replace(microsecond=0)
+        .isoformat(),
     }
     manifest = root / "conformance-manifest.json"
     manifest.write_text(

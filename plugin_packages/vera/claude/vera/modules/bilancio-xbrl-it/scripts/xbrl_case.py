@@ -26,9 +26,14 @@ import tempfile
 import zipfile
 from copy import deepcopy
 from dataclasses import dataclass
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
-from enum import StrEnum
+
+try:
+    from enum import StrEnum
+except ImportError:  # Python 3.10 in Cowork
+    from strenum import StrEnum
+
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
@@ -256,7 +261,7 @@ class ValidationIssue:
 
 
 def _now() -> str:
-    return datetime.now(tz=UTC).replace(microsecond=0).isoformat()
+    return datetime.now(tz=timezone.utc).replace(microsecond=0).isoformat()
 
 
 def _canonical_json(value: Any) -> bytes:
@@ -5843,7 +5848,7 @@ def archive_case(
     normalized_reason = reason.strip()
     if not normalized_reason:
         raise ValueError("Case archive reason is required")
-    archived_at = datetime.now(tz=UTC)
+    archived_at = datetime.now(tz=timezone.utc)
     before_hash = _sha256_bytes(_canonical_json(_case_payload_for_hash(case)))
     case["state"] = CaseState.ARCHIVED
     case["archive"] = {

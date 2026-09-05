@@ -14,7 +14,7 @@ import hashlib
 import json
 import shutil
 from contextlib import contextmanager
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator, Mapping
 
@@ -146,7 +146,7 @@ def _canonical_json(value: Any) -> bytes:
 
 
 def _now() -> str:
-    return datetime.now(tz=UTC).isoformat(timespec="seconds")
+    return datetime.now(tz=timezone.utc).isoformat(timespec="seconds")
 
 
 def re_full_sha256(value: str) -> bool:
@@ -1004,7 +1004,7 @@ class CaseService:
                 raise ValueError(
                     "Archived case retention cutoff must include a timezone"
                 )
-            if datetime.now(tz=UTC) < retain_until.astimezone(UTC):
+            if datetime.now(tz=timezone.utc) < retain_until.astimezone(timezone.utc):
                 raise ValueError("Archived case retention period has not elapsed")
             final_case_sha256 = (
                 (case_dir / "case.json.sha256").read_text(encoding="ascii").strip()
