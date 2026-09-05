@@ -75,33 +75,22 @@ The workflow is not Italian-only. Support the same five working locales used by 
 
 ## Cowork-native Run UX
 
-Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not run long or write-heavy execution under unconfirmed assumptions.
+Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Reuse choices already established in the conversation or bound case records. Ask only for unresolved material choices and wait before their dependent work; continue independent authorized preparation. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not infer missing required evidence, approval, or a material business decision. State routine provisional assumptions when the workflow permits them.
 
 Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Vera-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
 
 Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
 
-Use Cowork-native UI artifacts as part of the workflow, not as optional
-narration. At minimum:
-
-1. Start with a visible markdown run checklist. Track intake, dependency check,
-   inspection, user decisions, deterministic run, professional review, and delivery.
-2. Before helper scripts, show a Run Intake table with input paths, output
-   folder, working language, document language, assumptions, and notification
-   choice when the skill supports user run notifications.
-3. After inspection, show a compact Decision Table for missing mappings,
-   filters, review choices, unsupported files, or evidence assumptions. Ask
-   only unresolved decisions and update the working recipe or assumptions
-   yourself.
-4. Before a long-running or write-heavy step, show an execution checkpoint or
-   approval checkpoint with command intent, inputs, output folder, and expected
-   artifacts. Ask for approval only when the step is external, destructive,
-   approval-sensitive, or still depends on an unresolved material choice.
-5. During execution, update checklist statuses as steps complete.
-6. End with an Artifact Card listing output path, purpose, review status,
-   unresolved items, and next action. When useful, create `run_review.md`
-   in the output folder from generated JSON/CSV/Markdown outputs; never edit
-   plugin source or generated ZIPs during a run.
+Keep progress and handoff concise. Use a checklist, Run Intake table, Decision
+Table, or Artifact Card when it helps the user review complex work; their chat
+format is optional. Preserve all required saved mappings, review decisions,
+validation records, and artifacts. Resolve material choices before dependent
+execution and continue independent authorized work while awaiting an answer.
+Obtain authorization for external, destructive, or approval-sensitive actions
+when not already given, and preserve workflow-specific approval gates.
+At delivery, link outputs and state their purpose, review status, unresolved
+items, and next action. Create `run_review.md` when a durable review index
+is useful; never edit plugin source or generated ZIPs during a user-data run.
 
 ## Core Principle
 

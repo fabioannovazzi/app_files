@@ -1,6 +1,6 @@
 {
   "name": "check-entries",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Claude.",
   "author": {
     "name": "Mparanza",
@@ -13,9 +13,9 @@
   "keywords": [
     "audit",
     "entries",
-      "supporting-documents",
-      "fatturapa",
-      "xml",
+    "supporting-documents",
+    "fatturapa",
+    "xml",
     "pdf",
     "accounting",
     "deterministic"

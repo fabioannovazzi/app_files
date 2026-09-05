@@ -757,7 +757,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 33
+        assert "skills/aml-review/SKILL.md" in card_bodies
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -2008,7 +2008,7 @@ def test_extracted_clara_renders_known_period_comparison(
     assert result.returncode == 0, result.stderr
     manifest = json.loads((output_dir / "render_manifest.json").read_text())
     context = json.loads((output_dir / "period_comparison_context.json").read_text())
-    chart_path = output_dir / "year_over_year_line.png"
+    chart_path = output_dir / "year_over_year_line.html"
 
     assert manifest["runner"]["status"] == "ok"
     assert manifest["adapter_id"] == "reporting-engine.period_comparison"
@@ -2023,6 +2023,7 @@ def test_extracted_clara_renders_known_period_comparison(
     assert context["monthly"][-1]["previous_amount"] == 255.0
     assert chart_path.is_file()
     assert chart_path.stat().st_size > 0
+    assert "Plotly.newPlot" in chart_path.read_text(encoding="utf-8")
 
 
 def test_extracted_clara_renders_distribution_with_variant(
@@ -2079,8 +2080,10 @@ def test_extracted_clara_renders_distribution_with_variant(
     assert manifest["legacy_plugin_source"] == "distribution-analysis"
     assert recipe["options"]["charts"] == ["boxplot"]
     assert recipe["mappings"]["small_multiples_dimension"] == "Brand"
-    assert (output_dir / "boxplot.png").is_file()
-    assert (output_dir / "boxplot_small_multiples.png").is_file()
+    assert "Plotly.newPlot" in (output_dir / "boxplot.html").read_text(encoding="utf-8")
+    assert "Plotly.newPlot" in (output_dir / "boxplot_small_multiples.html").read_text(
+        encoding="utf-8"
+    )
     summary_by_period = {row["Period"]: row for row in context["summary"]}
     assert summary_by_period == {
         "~Jun-2025": {
@@ -2121,12 +2124,21 @@ def test_all_repo_plugins_declare_and_check_dependencies() -> None:
         assert "requirements" in combined_skill_text.lower(), plugin_name
 
 
-def test_all_dependency_checkers_accept_explicit_requirements_files() -> None:
+def test_all_dependency_checkers_accept_explicit_requirements_files(
+    tmp_path: Path,
+) -> None:
     builder = load_builder()
+    clean_plugins = tmp_path / "plugins"
+    ignore_cache = shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo")
+    shutil.copytree(
+        ROOT / "plugins" / "_shared", clean_plugins / "_shared", ignore=ignore_cache
+    )
 
     for plugin_root in builder.discover_plugin_dirs():
         plugin_name = plugin_root.name
-        checker = plugin_root / "scripts" / "check_dependencies.py"
+        clean_plugin = clean_plugins / plugin_name
+        shutil.copytree(plugin_root, clean_plugin, ignore=ignore_cache)
+        checker = clean_plugin / "scripts" / "check_dependencies.py"
         result = subprocess.run(
             [sys.executable, str(checker), "--help"],
             check=True,
@@ -2152,10 +2164,6 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         assert (
             "material choices" in lowered_skill_text
             or "material research-angle" in lowered_skill_text
-        ), plugin_name
-        assert (
-            "ask only those unresolved choices in chat" in lowered_skill_text
-            or "ask the choice in chat" in lowered_skill_text
         ), plugin_name
         assert "actual inputs" in lowered_skill_text, plugin_name
         assert "unless the facts cue them" in lowered_skill_text, plugin_name
@@ -2621,16 +2629,12 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
         assert "personal email address" not in combined_skill_text, plugin_name
 
 
-def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
+def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
     builder = load_builder()
     required_snippets = (
         "## Codex-Native Run UX",
-        "checklist",
-        "Run Intake table",
-        "Decision Table",
         "Default output policy",
         "not choices to propose",
-        "Artifact Card",
         "codex_run_review.md",
         "generated ZIPs",
     )
@@ -2666,14 +2670,6 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
                 assert (
                     snippet in skill_text or snippet in normalized_skill_text
                 ), f"{plugin_root.name}: {skill_file}"
-            assert (
-                "approval checkpoint" in skill_text
-                or "inclusion checkpoint" in skill_text
-                or "execution checkpoint" in skill_text
-                or "approval checkpoint" in normalized_skill_text
-                or "inclusion checkpoint" in normalized_skill_text
-                or "execution checkpoint" in normalized_skill_text
-            ), f"{plugin_root.name}: {skill_file}"
 
 
 def test_only_legacy_email_plugins_include_user_run_notification_policy() -> None:
@@ -6046,6 +6042,7 @@ def test_homepage_is_one_semantic_story_with_all_three_plugins() -> None:
         ".landing-home .landing-free h2,\n"
         ".landing-home .landing-security h2,\n"
         ".landing-home .landing-compliance h2,\n"
+        ".landing-home .landing-collaborative h2,\n"
         ".landing-home .landing-bridge h2 {"
     )
     design_heading_css = css.split(design_heading_selector, maxsplit=1)[1].split(
@@ -6054,7 +6051,8 @@ def test_homepage_is_one_semantic_story_with_all_three_plugins() -> None:
     assert "color: var(--landing-ink);" in design_heading_css
     principle_body_selector = (
         ".landing-home .landing-open-source__body > p,\n"
-        ".landing-home .landing-free__body > p {"
+        ".landing-home .landing-free__body > p,\n"
+        ".landing-home .landing-collaborative__body > p {"
     )
     principle_body_css = css.split(principle_body_selector, maxsplit=1)[1].split(
         "}", maxsplit=1

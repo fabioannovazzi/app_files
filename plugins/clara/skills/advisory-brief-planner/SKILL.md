@@ -107,11 +107,10 @@ is external, destructive, approval-sensitive, or separately requires consent.
 
 ## Codex-Native Run UX
 
-Keep a short checklist covering source intake, material-fact preservation,
-semantic contract review, mechanical validation, and specialist handoff. Before
-write-heavy work, show a compact Run Intake table with the assignment source,
-decision, audience, language, candidate output folder, and unresolved material
-items.
+Reuse the assignment details already supplied. Summarize the decision, scope,
+output destination, and unresolved material choices when the user needs to
+review them. Choose prose, a table, or a checklist according to the task;
+formatting is not an additional intake gate.
 
 Default output policy: create `draft_advisory_contract.json`, the validated
 `advisory_contract.json`, and `advisory_contract_validation.json` in the user's
@@ -119,15 +118,13 @@ assignment or case folder. These standard artifacts are not choices to propose
 for a durable Codex or Cowork run. Do not edit generated ZIPs; repository
 packages are rebuilt only during an explicitly requested plugin release task.
 
-Use a Decision Table only for unresolved material choices, with the current
-evidence and consequence of each unresolved item. It must not turn already
-supplied facts or model-led workflow selection into a menu. End with an
-Artifact Card listing the contract, validation report, status, selected Clara
-workflow, unresolved questions, and next action. When a durable run needs a
+Explain the evidence and consequence of unresolved material choices without
+turning supplied facts or workflow selection into a menu. Continue independent
+authorized preparation while awaiting an answer. At delivery, link the
+contract and validation report, with status, selected Clara workflow,
+unresolved questions, and next action. When a durable run needs a
 compact audit index, create `codex_run_review.md` beside the artifacts and link
-the source inputs, contract, validation report, and handoff. Before packaging,
-use an execution checkpoint that states the draft path, bound source files,
-output folder, and expected artifacts.
+the source inputs, contract, validation report, and handoff.
 
 ## Workflow
 

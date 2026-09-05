@@ -581,18 +581,23 @@ Default output policy: produce the richest normal package for the selected
 module. Natural outputs are not choices to propose when dependencies and source
 data permit them.
 
-1. Start with a visible markdown run checklist.
-2. Show a Run Intake table before helper scripts.
-3. Show a compact Decision Table for unresolved mappings, filters, evidence
-   assumptions, or review choices.
-4. Before a long or write-heavy step, show an execution checkpoint with command
-   intent, inputs, output folder, and expected artifacts.
-5. End with an Artifact Card. Include the compact model-data summary and link
-   `model_data_report.md` when a durable report was created. When server receipt
-   stamping succeeded, also link `model_data_receipt.html` and its public
-   verification URL. When useful, create
-   `codex_run_review.md` in the output folder; never edit plugin source or
-   generated ZIPs during a run.
+Carry the requested workflow through preparation, review, and delivery within
+the user's authorized scope. Reuse decisions already established in the
+conversation or bound case records. Ask only for consequential unresolved
+choices; continue independent authorized work while awaiting an answer. Never
+infer missing required case evidence or professional approval.
+
+Use concise progress notes. Checklists, Run Intake tables, Decision Tables, and
+Artifact Cards are presentation aids, not additional completion gates. Choose
+them when they make the work easier to review. This does not make saved review
+payloads, decisions, validation records, or required output files optional.
+
+At delivery, link the outputs and state review status and unresolved items.
+Include the compact model-data summary and link `model_data_report.md` when a
+durable report was created. When server receipt stamping succeeded, also link
+`model_data_receipt.html` and its public verification URL. When useful, create
+`codex_run_review.md` in the output folder; never edit plugin source or
+generated ZIPs during a user-data run.
 
 ### Local DOCX visual review
 

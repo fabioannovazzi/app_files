@@ -259,16 +259,12 @@ workflow without manufacturing a case-direction iteration.
 
 ## Codex-Native Run UX
 
-Keep a short checklist for orientation, current-answer review, next-branch
-selection, contribution integration, workpaper update, and partner checkpoint.
-Before write-heavy work, show a compact Run Intake table with the case folder,
-decision, current answer, latest material, open judgement bottlenecks, and
-output folder.
-
-Use a Decision Table only when two or more unresolved choices materially change
-the next branch. Show Clara's recommendation, the evidence for it, the
-consequence of each choice, and what the partner must decide. Do not turn the
-case-specific reasoning structure into a menu of generic frameworks.
+Lead updates with the current answer, what new evidence changes, and the next
+decision-relevant work. Reuse established case details. Use a table or
+checklist only when it clarifies the work or a material choice. For choices
+requiring the partner, give Clara's recommendation, supporting evidence, and
+consequences; continue independent authorized work while awaiting the answer.
+Do not turn case reasoning into a menu of generic frameworks.
 
 Before external research or a write-heavy specialist branch, show an execution
 checkpoint with the exact question, inputs and case context to be used, data
@@ -280,7 +276,7 @@ normal durable case run. Decks, memos, briefs, storylines, and review logs are
 milestone outputs governed by the working-deliverable policy, not automatic
 scaffolding.
 
-End a durable iteration with an Artifact Card listing the current workpaper,
+End a durable iteration by linking the current workpaper and reporting
 its checkpoint, newly registered material and claim IDs, changed question
 states, preserved history path when applicable, current-answer effect, and next
 action. When a compact audit index is useful, write `codex_run_review.md` beside
