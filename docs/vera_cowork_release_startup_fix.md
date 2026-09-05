@@ -78,3 +78,18 @@ unfinished feature. Other tasks' files were preserved.
 No deployment, publication, PR, or commit was performed by this repair task.
 Git topology remained one local branch, one remote branch, one registered
 worktree, and no stashes.
+
+
+## Desktop upload acceptance follow-up
+
+On 2026-09-05, a fresh public ZIP upload in Claude Desktop failed with
+`Plugin description must be at most 500 characters.` This is a separate
+installation failure from the MCP startup failures covered above. Cowork
+0.1.145 shortens Vera's description; the shared builder rejects invalid
+descriptions before replacing artifacts. Boundary tests cover 500 versus 501
+characters, missing values, and empty values, for templates and fallback
+projection. Lucia Cowork 0.1.17 applies the same description constraint.
+
+All 18 Vera packaged servers pass initialization and tool discovery. The
+corrected archive preview displays in Claude, but installation and an actual
+Cowork workflow remain pending explicit user approval of the candidate install.
