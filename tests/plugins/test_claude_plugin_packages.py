@@ -1134,3 +1134,37 @@ def test_project_claude_mcp_rejects_non_string_args() -> None:
 
     with pytest.raises(ValueError, match="args must be strings"):
         builder.project_claude_mcp(invalid)
+
+
+@pytest.mark.parametrize("use_template", [False, True])
+@pytest.mark.parametrize("description", ["x" * 501, "", None])
+def test_claude_manifest_rejects_invalid_description(use_template, description):
+    builder = load_builder()
+    source = json.loads(VERA_SOURCE_MANIFEST.read_text())
+    template = json.loads(VERA_CLAUDE_MANIFEST.read_text())
+    target = template if use_template else source
+    target["description"] = description
+
+    with pytest.raises(ValueError, match="description"):
+        builder.project_claude_manifest(
+            json.dumps(source).encode(),
+            include_agents=False,
+            template_content=json.dumps(template).encode() if use_template else None,
+        )
+
+
+@pytest.mark.parametrize("use_template", [False, True])
+def test_claude_manifest_accepts_500_character_description(use_template):
+    builder = load_builder()
+    source = json.loads(VERA_SOURCE_MANIFEST.read_text())
+    template = json.loads(VERA_CLAUDE_MANIFEST.read_text())
+    target = template if use_template else source
+    target["description"] = "x" * 500
+
+    result = builder.project_claude_manifest(
+        json.dumps(source).encode(),
+        include_agents=False,
+        template_content=json.dumps(template).encode() if use_template else None,
+    )
+
+    assert json.loads(result)["description"] == "x" * 500
