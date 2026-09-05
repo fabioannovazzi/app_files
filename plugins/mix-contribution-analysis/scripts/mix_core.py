@@ -759,7 +759,7 @@ def build_recipe(
             "dimensions": dimensions,
         },
         "options": {
-            "currency": "EUR",
+            "currency": "",
             "current_period_label": CURRENT_PERIOD,
             "period_selection": "infer_current_or_all",
             "charts": [
@@ -957,7 +957,7 @@ def validate_recipe(df: pl.DataFrame, recipe: dict[str, Any]) -> dict[str, Any]:
     if not dimensions:
         raise ValueError("At least one business dimension is required.")
     mappings["dimensions"] = dimensions
-    options["currency"] = options.get("currency") or "EUR"
+    options["currency"] = options.get("currency") or ""
     normalized_period_contract = period_contract_options(options)
     if normalize_name(str(options.get("period_grain") or "")) in {
         "raw",

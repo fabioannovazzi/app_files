@@ -6039,7 +6039,7 @@ def write_legacy_mix_chart(
             return prepared_data_cache.audit_delta(cache_start)
 
         metric = str(recipe["mappings"]["amount_column"])
-        currency = str((recipe.get("options") or {}).get("currency") or "EUR")
+        currency = str((recipe.get("options") or {}).get("currency") or "")
         chart = _legacy_chart_dict(names, spec, metric=metric, currency=currency)
         chart = apply_legacy_filter_title_metadata(chart, names, recipe)
         selected_periods = [str(item) for item in chart[names["selectedPeriods"]]]

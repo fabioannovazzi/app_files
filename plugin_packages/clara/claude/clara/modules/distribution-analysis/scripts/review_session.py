@@ -383,7 +383,7 @@ def write_run_intake(
             "source_row_count": source_row_count,
             "recipe_path": recipe_path.as_posix() if recipe_path else None,
             "mappings": recipe.get("mappings") or {},
-            "currency": options.get("currency") or "EUR",
+            "currency": options.get("currency") or "",
             "charts": options.get("charts"),
             "selected_periods": options.get("selected_periods"),
             "small_multiples": options.get("small_multiples", True),
@@ -500,7 +500,7 @@ def write_review_session_artifacts(
             "selected_periods": options.get("selected_periods") or [],
             "widest_period": widest.get("Period") or widest.get("period"),
             "widest_range": _num(widest.get("max")) - _num(widest.get("min")),
-            "currency": options.get("currency") or "EUR",
+            "currency": options.get("currency") or "",
             "legacy_chart_attempt_count": len(chart_audits),
             "legacy_chart_written_count": sum(
                 1

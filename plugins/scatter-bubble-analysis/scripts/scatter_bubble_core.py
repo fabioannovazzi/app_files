@@ -395,9 +395,7 @@ def build_recipe(
         },
         "options": {
             "currency": (
-                existing_options["currency"]
-                if "currency" in existing_options
-                else "EUR"
+                existing_options["currency"] if "currency" in existing_options else ""
             ),
             "color_palette": (
                 existing_options["color_palette"]

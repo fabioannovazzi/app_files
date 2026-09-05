@@ -478,10 +478,12 @@ def test_build_recipe_can_derive_to_date_periods_from_dates_without_period_colum
 
 
 @pytest.mark.parametrize("single_period", [False, True])
+@pytest.mark.parametrize("currency", ["", "USD"])
 def test_legacy_distribution_rolling_titles_use_canonical_dates(
     tmp_path: Path,
     monkeypatch: Any,
     single_period: bool,
+    currency: str,
 ) -> None:
     legacy = load_plugin_module(
         "legacy_distribution_charting_date_titles", "legacy_distribution_charting.py"
@@ -523,6 +525,7 @@ def test_legacy_distribution_rolling_titles_use_canonical_dates(
                 "charts": ["kernel_density"],
                 "selected_periods": ["AC"],
                 "small_multiples": False,
+                "currency": currency,
             },
         },
     )
@@ -549,6 +552,8 @@ def test_legacy_distribution_rolling_titles_use_canonical_dates(
         assert "~AUG-2016 vs ~AUG-2017" in title_text
     assert "~JUN-2025" not in title_text
     assert "~JUN-2026" not in title_text
+    assert "EUR" not in title_text
+    assert ("USD" in title_text) == bool(currency)
 
 
 def test_legacy_distribution_charts_route_through_legacy_plotters(
@@ -1036,3 +1041,23 @@ def test_spanish_distribution_mcp_responses_errors_and_handoff(
     assert "<!-- Review Handoff -->" in handoff
     assert "Review payload:" not in handoff
     assert strict_report.ok, strict_report.errors
+
+
+@pytest.mark.parametrize("currency", ["", "USD"])
+def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
+    module = load_plugin_module("distribution_core_currency", "distribution_core.py")
+    frame = pl.DataFrame(
+        {
+            "Date": ["2026-01-01", "2026-02-01", "2026-03-01"],
+            "Category": ["A", "A", "A"],
+            "Sales": [100.0, 110.0, 120.0],
+            "COGS": [60.0, 65.0, 70.0],
+        }
+    )
+    existing = {"options": {"currency": currency}} if currency else None
+
+    recipe = module.build_recipe(
+        Path("synthetic.csv"), frame, language="en", existing_recipe=existing
+    )
+
+    assert recipe["options"]["currency"] == currency

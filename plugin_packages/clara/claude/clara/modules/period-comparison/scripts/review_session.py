@@ -426,7 +426,7 @@ def write_run_intake(
             "source_row_count": source_row_count,
             "recipe_path": recipe_path.as_posix() if recipe_path else None,
             "mappings": recipe.get("mappings") or {},
-            "currency": options.get("currency") or "EUR",
+            "currency": options.get("currency") or "",
             "period_comparison_mode": options.get("period_comparison_mode"),
             "period_window": options.get("period_window"),
             "charts": options.get("charts"),
@@ -544,7 +544,7 @@ def write_review_session_artifacts(
             "previous_total": totals.get("previous"),
             "delta": totals.get("delta"),
             "delta_percent": totals.get("delta_percent"),
-            "currency": options.get("currency") or "EUR",
+            "currency": options.get("currency") or "",
             "small_multiples_dimension": selection.get("dimension"),
         },
     }

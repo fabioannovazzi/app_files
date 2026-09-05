@@ -830,7 +830,7 @@ def write_legacy_distribution_chart(
             return prepared_data_cache.audit_delta(cache_start)
 
         metric = str(recipe["mappings"]["metric_column"])
-        currency = str((recipe.get("options") or {}).get("currency") or "EUR")
+        currency = str((recipe.get("options") or {}).get("currency") or "")
         chart = _legacy_chart_dict(names, spec, metric=metric, currency=currency)
         reporting_entity = reporting_entity_label_from_recipe(recipe)
         if reporting_entity:

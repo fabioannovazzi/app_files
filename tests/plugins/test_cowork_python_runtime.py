@@ -116,6 +116,25 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
             {"distribution_metric": "Sales"},
             "histogram.html",
         ),
+        (
+            "scatter.scatter",
+            {
+                "x_metric": "Units",
+                "y_metric": "Sales",
+                "point_dimension": "Brand",
+            },
+            "scatter.html",
+        ),
+        (
+            "scatter.bubble",
+            {
+                "x_metric": "Units",
+                "y_metric": "Sales",
+                "size_metric": "Sales",
+                "point_dimension": "Brand",
+            },
+            "bubble.html",
+        ),
     ],
 )
 @pytest.mark.parametrize("month_only", [False, True])
@@ -134,9 +153,9 @@ def test_cowork_zip_renders_through_component_managed_runtime(
         archive.extractall(plugin_root)
     dataset = tmp_path / "synthetic_sales.csv"
     dataset.write_text(
-        "Date,Brand,Sales\n"
-        "2025-01-31,Alpha,100\n2025-02-28,Alpha,110\n2025-03-31,Alpha,120\n"
-        "2026-01-31,Alpha,110\n2026-02-28,Alpha,120\n2026-03-31,Alpha,130\n"
+        "Date,Brand,Sales,Units\n"
+        "2025-01-31,Alpha,100,10\n2025-02-28,Beta,110,11\n2025-03-31,Gamma,120,12\n"
+        "2026-01-31,Alpha,110,11\n2026-02-28,Beta,120,12\n2026-03-31,Gamma,130,13\n"
     )
     if month_only:
         import re
@@ -165,6 +184,11 @@ def test_cowork_zip_renders_through_component_managed_runtime(
             "--options-json",
             json.dumps(
                 {
+                    **(
+                        {"period_type": "all"}
+                        if capability.startswith("scatter.")
+                        else {}
+                    ),
                     "current_period_label": "2026",
                     "previous_period_label": "2025",
                     "period_window": {
@@ -174,7 +198,7 @@ def test_cowork_zip_renders_through_component_managed_runtime(
                 }
             ),
             "--currency",
-            "EUR",
+            "" if month_only else "USD",
             "--artifact-mode",
             "data_and_render",
         ],
@@ -189,6 +213,8 @@ def test_cowork_zip_renders_through_component_managed_runtime(
     assert result.returncode == 0, result.stdout + result.stderr
     manifest = json.loads((output / "render_manifest.json").read_text())
     assert manifest["runner"]["status"] == "ok"
+    used_recipe = json.loads((output / "used_recipe.json").read_text())
+    assert used_recipe["options"]["currency"] == ("" if month_only else "USD")
     chart_path = next(
         path
         for path in (output / artifact, output / Path(artifact).with_suffix(".png"))

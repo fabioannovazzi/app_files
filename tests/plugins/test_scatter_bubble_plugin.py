@@ -1071,3 +1071,23 @@ def test_package_config_injects_legacy_scatter_bubble_modules() -> None:
             f"{package.package_root}/plugins/clara/modules/"
             f"scatter-bubble-analysis/{path}" in entries
         )
+
+
+@pytest.mark.parametrize("currency", ["", "USD"])
+def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
+    module = core
+    frame = pl.DataFrame(
+        {
+            "Date": ["2026-01-01", "2026-02-01", "2026-03-01"],
+            "Category": ["A", "B", "C"],
+            "Sales": [100.0, 110.0, 120.0],
+            "COGS": [60.0, 65.0, 70.0],
+        }
+    )
+    existing = {"options": {"currency": currency}} if currency else None
+
+    recipe = module.build_recipe(
+        Path("synthetic.csv"), frame, language="en", existing_recipe=existing
+    )
+
+    assert recipe["options"]["currency"] == currency

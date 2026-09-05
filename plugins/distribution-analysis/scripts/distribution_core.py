@@ -871,7 +871,7 @@ def build_recipe(
             ),
         },
         "options": {
-            "currency": currency or options.get("currency") or "EUR",
+            "currency": currency or options.get("currency") or "",
             "charts": options.get("charts") or list(SUPPORTED_DISTRIBUTION_CHARTS),
             "selected_periods": selected_periods,
             "period_type": normalized_period_contract["period_type"],

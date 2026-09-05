@@ -420,7 +420,7 @@ def build_recipe(
             "dimensions": dimensions,
         },
         "options": {
-            "currency": "EUR",
+            "currency": "",
             "comparison_basis": "period",
             "period_comparison_mode": "previous_year",
             "period_type": PERIOD_TYPE_TO_DATE,
@@ -537,7 +537,7 @@ def validate_recipe(df: pl.DataFrame, recipe: dict[str, Any]) -> dict[str, Any]:
         default_type=PERIOD_TYPE_TO_DATE,
         default_grain=PERIOD_GRAIN_MONTH,
     )
-    options["currency"] = options.get("currency") or "EUR"
+    options["currency"] = options.get("currency") or ""
     options["period_type"] = normalized_period_contract["period_type"]
     options["period_grain"] = normalized_period_contract["period_grain"]
     options["fiscal_start_month"] = normalized_period_contract["fiscal_start_month"]
@@ -1698,7 +1698,7 @@ def write_native_reporting_tables(
     language = _recipe_language(recipe)
     metric = str(mappings.get("amount_column") or "Value")
     metric_label = _reporting_metric_label(recipe, metric)
-    unit = str(options.get("currency") or "EUR")
+    unit = str(options.get("currency") or "")
     baseline_label = str(options.get("previous_period_label") or PREVIOUS_PERIOD)
     comparison_label = str(options.get("current_period_label") or CURRENT_PERIOD)
     entity_label = reporting_subject_label_from_recipe(recipe) or (
@@ -2426,7 +2426,7 @@ def run_period_comparison(
             "source_file": str(input_path),
             "artifact_mode": artifact_mode,
             "metric": metric,
-            "unit": recipe["options"].get("currency") or "EUR",
+            "unit": recipe["options"].get("currency") or "",
             "comparison": period_window,
             "totals": totals,
             "monthly": monthly_context(monthly),
