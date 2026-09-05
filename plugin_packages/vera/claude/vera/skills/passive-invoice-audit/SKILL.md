@@ -5,12 +5,38 @@ description: Use when Vera must audit a population of passive FatturaPA invoices
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Use a local script only
-when it is callable and every declared dependency it needs is already available;
-never install packages at runtime. MCP tools, browser or computer control, and
-local review servers are optional enhancements, never completion gates. When an
-optional capability is unavailable, continue with Markdown and file-based review
-and state the limitation.
+Work from the connected folder and supplied files first. Before a module's Python
+helpers, locate the installed plugin root. When it contains `components.json` and
+`scripts/managed_python_runtime.py` (as Vera does), run from that root:
+
+```bash
+python3 scripts/check_dependencies.py --module <module>
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+If the enclosing plugin does not ship this managed launcher, use the module's
+dependency checker and only already-installed dependencies; do not assume that a
+standalone module script provisions them.
+
+The managed launchers provision and reuse an isolated environment containing only the
+module's published requirements. This declared dependency setup is authorized as
+part of running the workflow; never install arbitrary packages or use ambient
+Python for subsequent module helpers. Repeat any declared `--requirements` options
+on both commands. Missing ambient imports are a reason to run this setup, not to
+abandon the calculation. If setup fails, report its exact error and do not replace
+the required calculation with an invented result. Optional OCR setup still needs
+separate approval. If setup reports `Host not in allowlist` for PyPI, explain that
+Claude Settings > Capabilities > Allow network egress is disabled or restricted.
+Ask the user or organization administrator to authorize package-registry access;
+never change network permissions silently or work around the restriction. Retry
+the same managed setup after access is approved, in a new session if needed.
+
+MCP tools, browser or computer control, and local review servers are optional
+enhancements, never completion gates. Cloud Cowork sessions may not expose local
+plugin MCP servers even when the plugin is installed; use the packaged Python
+workflow through the managed launcher in that case. Do not equate missing MCP
+registration with a failed calculation engine. When an optional capability is
+unavailable, continue with Markdown and file-based review and state the limitation.
 
 The normal Cowork deliverable is a reviewable draft, artifact card, and
 source/review files. A callable persistence interface may optionally record or

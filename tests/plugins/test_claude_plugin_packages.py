@@ -396,8 +396,17 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     for name, content in skills.items():
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
-        assert "never install packages at runtime" in content, name
-        assert "optional enhancements, never completion gates" in content, name
+        assert "never install packages at runtime" not in content, name
+        assert "scripts/check_dependencies.py --module <module>" in content, name
+        assert (
+            "scripts/managed_python_runtime.py --module <module> run" in content
+        ), name
+        assert "never install arbitrary packages" in content, name
+        assert "Allow network egress" in content, name
+        assert "never change network permissions silently" in content, name
+        assert "optional enhancements, never completion gates" in " ".join(
+            content.split()
+        ), name
         assert "Markdown and file-based review" in content, name
         assert "The normal Cowork deliverable is a reviewable draft" in content, name
         assert "its absence never blocks delivery" in content, name
@@ -585,7 +594,7 @@ def test_cowork_instruction_docs_exclude_active_host_only_workflows(
         r"if (?:host )?MCP .* unavailable.*(?:start|run).*review_server",
         r"when host MCP tools are unavailable.*loopback workbench",
         r"Markdown/chat.*(?:inspection only|non applicata)",
-        r"(?:MCP server|workbench).*owns.*decision persistence",
+        r"(?:MCP server|workbench)[^.]*owns[^.]*decision persistence",
         r"handoff primario (?:è|e) il browser locale",
         r"va eseguito prima della risposta finale",
     )
