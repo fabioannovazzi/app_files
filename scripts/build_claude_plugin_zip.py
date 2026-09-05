@@ -498,6 +498,7 @@ labels, or status summaries.
 """
 LUCIA_SHARED_COWORK_COMPONENTS = frozenset(
     {
+        "studio-archive",
         "prompt-optimizer",
         "deep-research-validator",
         "comunicazione-professionale",
@@ -2548,6 +2549,10 @@ def _lucia_package_entries(
             },
         }
     )
+    entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
+    for name, content in source_entries.items():
+        if name.startswith("scripts/") or name == "requirements.txt":
+            entries[name] = content
     entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
     if "assets/icon.svg" in source_entries:
         entries["assets/icon.svg"] = source_entries["assets/icon.svg"]
@@ -2558,10 +2563,10 @@ def _lucia_package_entries(
     )
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
 
-    forbidden_parts = {".app.json", ".mcp.json"}
+    forbidden_parts = {".app.json"}
     for name in entries:
         parts = set(Path(name).parts)
-        if parts & forbidden_parts or name.startswith("modules/studio-archive/"):
+        if parts & forbidden_parts:
             raise ValueError(f"Lucia Cowork retains forbidden path: {name}")
         if name.startswith(".codex-plugin/"):
             raise ValueError(f"Lucia Cowork retains a root Codex manifest: {name}")

@@ -1,0 +1,15 @@
+# Union of Lucia's shared assurance, communication, website, and private
+# lifecycle workflows.
+fonttools>=4.55,<5
+jsonschema>=4.23,<5
+Pillow>=11.1,<12
+pypdf
+python-docx
+openpyxl
+reportlab>=4.0,<5
+google-api-python-client>=2.100,<3
+google-api-core>=2.11,<2.25
+google-auth>=2.35,<3
+google-auth-oauthlib>=1.2,<2
+protobuf>=3.20,<6
+requests==2.32.3

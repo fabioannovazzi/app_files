@@ -108,6 +108,10 @@ privato di cliente, incarico, evidenze e run; schema legale, confini
 professionali, validatore e ricevute di revisione restano specifici di Lucia e
 non sono sostituiti dal Deep Research Validator.
 
+Per preparare o riprendere cliente e incarico, leggi integralmente
+`../studio-archive/SKILL.md` e segui il modulo condiviso tramite
+`luciaStudioArchive`.
+
 Studio Archive è solo l'infrastruttura privata necessaria al contratto di
 input, output e tracciabilità. Non presentarlo come capacità Lucia e non usarlo
 per ricerca d'archivio, Gmail, Drive, WhatsApp o altri lavori di studio.

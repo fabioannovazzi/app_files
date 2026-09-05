@@ -139,9 +139,9 @@ def test_lucia_current_catalog_has_registered_public_workflows_and_one_hidden_ru
         "kind": "internal_runtime",
         "supports": ["prompt-optimizer", "deep-research-validator", "apertura-pratica"],
     }
-    assert skill_names == PUBLIC_SKILLS | {"lucia"}
-    assert set(cards) == PUBLIC_SKILLS | {"lucia"}
-    assert "studio-archive" not in cards
+    assert skill_names == PUBLIC_SKILLS | {"lucia", "studio-archive"}
+    assert set(cards) == PUBLIC_SKILLS | {"lucia", "studio-archive"}
+    assert "studio-archive" in cards
 
 
 def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() -> None:
@@ -233,7 +233,9 @@ def test_lucia_professional_communication_privacy_boundary_is_current() -> None:
     assert manifest["review"]["source_fingerprint"] == actual
 
 
-@pytest.mark.parametrize("workflow", sorted(SHARED_ASSURANCE_WORKFLOWS))
+@pytest.mark.parametrize(
+    "workflow", sorted(SHARED_ASSURANCE_WORKFLOWS | {"studio-archive"})
+)
 def test_lucia_wrappers_resolve_canonical_shared_component(workflow: str) -> None:
     wrapper = (LUCIA_ROOT / "skills" / workflow / "SKILL.md").read_text(
         encoding="utf-8"
@@ -267,7 +269,9 @@ def test_lucia_profiled_wrappers_resolve_shared_mechanics_and_lawyer_contract(
     assert "publication" in profile.casefold()
 
 
-@pytest.mark.parametrize("component", sorted(SHARED_ASSURANCE_WORKFLOWS))
+@pytest.mark.parametrize(
+    "component", sorted(SHARED_ASSURANCE_WORKFLOWS | {"studio-archive"})
+)
 def test_lucia_and_vera_package_the_same_assurance_component_bytes(
     component: str,
 ) -> None:
@@ -443,9 +447,9 @@ def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
         names = set(archive.namelist())
         components = json.loads(archive.read("components.json"))
 
-    assert set(components["plugins"]) == PUBLIC_WORKFLOWS
-    assert set(components["workflow_roles"]) == PUBLIC_WORKFLOWS
-    assert not any(name.startswith("modules/studio-archive/") for name in names)
+    assert set(components["plugins"]) == PUBLIC_WORKFLOWS | {"studio-archive"}
+    assert set(components["workflow_roles"]) == PUBLIC_WORKFLOWS | {"studio-archive"}
+    assert any(name.startswith("modules/studio-archive/") for name in names)
     assert any(name.startswith("modules/prompt-optimizer/") for name in names)
     assert any(name.startswith("modules/deep-research-validator/") for name in names)
     assert "skills/quesito-legale-fiscale/SKILL.md" in names
@@ -479,15 +483,13 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
         assert manifest["description"] == approved_description
         assert manifest["description"].startswith("Assistente AI per avvocati")
         assert manifest["skills"] == "./skills/"
-        assert set(components["plugins"]) == PUBLIC_WORKFLOWS
+        assert set(components["plugins"]) == PUBLIC_WORKFLOWS | {"studio-archive"}
         assert "skills/lucia/SKILL.md" in lucia_names
         assert "skills/quesito-legale-fiscale/SKILL.md" in lucia_names
         assert not any(name.startswith(".codex-plugin/") for name in lucia_names)
-        assert not any(
-            name.startswith("modules/studio-archive/") for name in lucia_names
-        )
+        assert any(name.startswith("modules/studio-archive/") for name in lucia_names)
 
-        for workflow in SHARED_ASSURANCE_WORKFLOWS:
+        for workflow in SHARED_ASSURANCE_WORKFLOWS | {"studio-archive"}:
             prefix = f"modules/{workflow}/"
             lucia_entries = {
                 name: lucia_archive.read(name)
@@ -528,7 +530,7 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert 'class="section-block" id="core"' in page
     assert 'class="workstreams"' in page
     assert 'class="module-directory"' in page
-    assert page.count('class="module-row"') == len(PUBLIC_SKILLS)
+    assert page.count('class="module-row"') == len(PUBLIC_SKILLS | {"studio-archive"})
     assert 'id="assurance"' not in page
     assert 'id="data-boundary"' not in page
     assert "data-language-summary" in page
@@ -546,7 +548,7 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert "Assistente Ai per avvocati indipendenti" in page
     assert "Validazione ricerca" in page
     assert "Risposta a quesiti legali e fiscali" in page
-    assert page.count('class="module-row"') == 6
+    assert 'href="../studio-archive/index.html?lang=it"' in page
     for module in re.findall(r'<a class="module-row".*?</a>', page, flags=re.DOTALL):
         assert "<p" not in module
     assert "Solo due" not in page
@@ -614,6 +616,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     """Exact labels should match mechanically across the two public surfaces."""
 
     canonical_labels = {
+        "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "prompt-optimizer": "Ottimizzazione prompt",
         "deep-research-validator": "Validazione ricerca",
@@ -632,6 +635,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         r'<h4 data-i18n="module\.[^"]+\.title">([^<]+)</h4>', page
     )
     website_keys = {
+        "studio-archive": "module.archive.title",
         "quesito-legale-fiscale": "module.question.title",
         "prompt-optimizer": "module.prompt.title",
         "deep-research-validator": "module.research.title",
@@ -649,6 +653,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         canonical_labels["quesito-legale-fiscale"],
         canonical_labels["prompt-optimizer"],
         canonical_labels["deep-research-validator"],
+        canonical_labels["studio-archive"],
         canonical_labels["apertura-pratica"],
         canonical_labels["comunicazione-professionale"],
         canonical_labels["presenza-digitale-studio"],
