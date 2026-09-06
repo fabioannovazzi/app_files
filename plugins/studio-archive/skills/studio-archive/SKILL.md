@@ -45,7 +45,7 @@ the selected customer folder at
 `Vera/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
 only its rebuildable search index, local configuration, and optional private
 contact metadata in the machine-local state directory, normally
-`~/.mparanza/vera-studio-archive`. Never place that private state inside the
+`~/.mparanza/vera-studio-archive/sessions/<session-key>`. Never place that private state inside the
 shared archive. It is not the source of truth for engagement inputs, runs, or
 artifacts.
 
@@ -737,3 +737,22 @@ locator, OCR gap, slow refresh, or awkward scope.
 
 Keep the improvement note local to chat or run artifacts. Do not submit it
 automatically.
+
+### Session state ownership
+
+State now defaults to a private session subdirectory under
+`~/.mparanza/vera-studio-archive/sessions/`. The session key is
+`VERA_STUDIO_ARCHIVE_SESSION_ID`, then `CODEX_THREAD_ID`, with a unique
+process identity as the fallback. The MCP server supplies a stable session ID
+across its helper commands. For a multi-command terminal workflow, set one
+unique `VERA_STUDIO_ARCHIVE_SESSION_ID` before configuring and keep it for the
+whole run. Use a different ID for each concurrent workflow.
+
+`VERA_STUDIO_ARCHIVE_STATE_DIR` still selects an explicit absolute directory.
+An OS lock covers the full process lifetime after first configuration access;
+competing processes fail clearly. Persisted session ownership also prevents
+another session from adopting or overwriting that directory between commands.
+Reuse a session ID only to resume that same session. To start a new session,
+use fresh state, configure the approved root and run `recover-ledger`.
+Never copy the old config into a new session or work around a configuration
+change error by repeatedly reconfiguring the contested state.

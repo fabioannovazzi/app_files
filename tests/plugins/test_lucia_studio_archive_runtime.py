@@ -31,6 +31,7 @@ def archive_runtime(tmp_path: Path):
         **os.environ,
         **server["env"],
         "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "state"),
+        "VERA_STUDIO_ARCHIVE_SESSION_ID": str(tmp_path),
         "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
     }
     transcript = []

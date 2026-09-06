@@ -544,6 +544,7 @@ def _mcp_request(
     environment = os.environ.copy()
     environment["VERA_STUDIO_ARCHIVE_PYTHON"] = sys.executable
     environment["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(state_dir)
+    environment["VERA_STUDIO_ARCHIVE_SESSION_ID"] = str(state_dir)
     completed = subprocess.run(
         [_node_executable(), str(MCP_SERVER_PATH), "--stdio"],
         cwd=COMPONENT_ROOT,
@@ -2458,3 +2459,142 @@ def test_vera_registers_archive_as_embedded_workflow() -> None:
     assert (
         ROOT / "plugins" / "vera" / "skills" / "studio-archive" / "SKILL.md"
     ).is_file()
+
+
+def test_interleaved_process_cannot_reconfigure_claimed_state(
+    archive_core: ModuleType,
+    tmp_path: Path,
+) -> None:
+    root_a = tmp_path / "client-a"
+    root_b = tmp_path / "client-b"
+    root_a.mkdir()
+    root_b.mkdir()
+    state = tmp_path / "state"
+    archive_core.configure_archive(root_a, state_dir=state)
+    script = (
+        "import sys; from pathlib import Path; "
+        "sys.path.insert(0, sys.argv[1]); import archive_core; "
+        "archive_core.configure_archive(Path(sys.argv[2]), state_dir=Path(sys.argv[3]))"
+    )
+
+    contender = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(ARCHIVE_CORE_PATH.parent),
+            str(root_b),
+            str(state),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert contender.returncode != 0
+    assert "state is in use by another process" in contender.stderr
+    assert archive_core._load_config(state).archive_root == root_a
+
+
+def test_out_of_band_config_change_rejected_before_read_or_reconfigure(
+    archive_core: ModuleType,
+    tmp_path: Path,
+) -> None:
+    root_a = tmp_path / "client-a"
+    root_b = tmp_path / "client-b"
+    root_a.mkdir()
+    root_b.mkdir()
+    state = tmp_path / "state"
+    archive_core.configure_archive(root_a, state_dir=state)
+    config_path = state / "config.json"
+    payload = json.loads(config_path.read_text())
+    payload["archive_root"] = str(root_b)
+    config_path.write_text(json.dumps(payload))
+
+    with pytest.raises(
+        archive_core.ArchiveError, match="configuration changed during this run"
+    ):
+        archive_core._load_config(state)
+    with pytest.raises(
+        archive_core.ArchiveError, match="configuration changed during this run"
+    ):
+        archive_core.configure_archive(root_a, state_dir=state)
+    assert json.loads(config_path.read_text())["archive_root"] == str(root_b)
+
+
+def test_default_state_is_isolated_per_session(
+    archive_core: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv(archive_core.STATE_ENV, raising=False)
+    monkeypatch.setenv(archive_core.SESSION_ENV, "run-a")
+    state_a = archive_core._state_dir()
+    monkeypatch.setenv(archive_core.SESSION_ENV, "run-b")
+    state_b = archive_core._state_dir()
+
+    assert state_a != state_b
+    assert state_a.parent == state_b.parent
+    assert state_a.parent.name == "sessions"
+
+
+def test_other_session_cannot_adopt_state_between_commands(
+    archive_core: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = tmp_path / "client"
+    root.mkdir()
+    state = tmp_path / "state"
+    script = (
+        "import sys; from pathlib import Path; "
+        "sys.path.insert(0, sys.argv[1]); import archive_core; "
+        "archive_core.configure_archive(Path(sys.argv[2]), state_dir=Path(sys.argv[3]))"
+    )
+    environment = {**os.environ, archive_core.SESSION_ENV: "original-session"}
+    subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(ARCHIVE_CORE_PATH.parent),
+            str(root),
+            str(state),
+        ],
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    monkeypatch.setenv(archive_core.SESSION_ENV, "different-session")
+
+    with pytest.raises(
+        archive_core.ArchiveError, match="configuration changed during this run"
+    ):
+        archive_core._load_config(state)
+    with pytest.raises(
+        archive_core.ArchiveError, match="configuration changed during this run"
+    ):
+        archive_core.configure_archive(root, state_dir=state)
+
+
+def test_configuration_change_during_operation_fails_at_return(
+    archive_core: ModuleType,
+    indexed_archive: SimpleNamespace,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = archive_core._current_scope_view
+    config_path = indexed_archive.state / "config.json"
+
+    def replace_after_read(config: Any) -> Any:
+        payload = json.loads(config_path.read_text())
+        payload["configured_at"] = "changed outside the locking protocol"
+        config_path.write_text(json.dumps(payload))
+        return original(config)
+
+    monkeypatch.setattr(archive_core, "_current_scope_view", replace_after_read)
+
+    with pytest.raises(
+        archive_core.ArchiveError, match="configuration changed during this run"
+    ):
+        archive_core.studio_archive_status(state_dir=indexed_archive.state)

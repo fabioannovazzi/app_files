@@ -2,6 +2,11 @@
 "use strict";
 
 const fs = require("node:fs");
+const { randomUUID } = require("node:crypto");
+const archiveSessionId =
+  process.env.VERA_STUDIO_ARCHIVE_SESSION_ID ||
+  process.env.CODEX_THREAD_ID ||
+  randomUUID();
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
@@ -1492,6 +1497,7 @@ function commandForTool(name, rawArgs) {
 function callTool(name, args) {
   const spawnOptions = {
     cwd: PLUGIN_ROOT,
+    env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId },
     encoding: "utf8",
     maxBuffer: MAX_OUTPUT_BYTES,
   };

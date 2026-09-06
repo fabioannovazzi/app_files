@@ -218,3 +218,22 @@ shared archive, a Git repository, or a cloud-synced folder. The derived index
 contains extracted document text and is not application-encrypted; protect it
 with a private operating-system account, full-disk encryption, and an
 appropriate backup policy.
+
+### Session state ownership
+
+State now defaults to a private session subdirectory under
+`~/.mparanza/vera-studio-archive/sessions/`. The session key is
+`VERA_STUDIO_ARCHIVE_SESSION_ID`, then `CODEX_THREAD_ID`, with a unique
+process identity as the fallback. The MCP server supplies a stable session ID
+across its helper commands. For a multi-command terminal workflow, set one
+unique `VERA_STUDIO_ARCHIVE_SESSION_ID` before configuring and keep it for the
+whole run. Use a different ID for each concurrent workflow.
+
+`VERA_STUDIO_ARCHIVE_STATE_DIR` still selects an explicit absolute directory.
+An OS lock covers the full process lifetime after first configuration access;
+competing processes fail clearly. Persisted session ownership also prevents
+another session from adopting or overwriting that directory between commands.
+Reuse a session ID only to resume that same session. To start a new session,
+use fresh state, configure the approved root and run `recover-ledger`.
+Never copy the old config into a new session or work around a configuration
+change error by repeatedly reconfiguring the contested state.
