@@ -934,6 +934,10 @@ def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
         entries[f"{root}/{relative_path.as_posix()}"] = source_path.read_bytes()
     for plugin_dir in plugin_dirs:
         plugin_root = f"{root}/plugins/{plugin_dir.name}"
+        if plugin_dir.name == "vera":
+            entries[f"{plugin_root}/scripts/self_relaunch.py"] = (
+                ROOT / "plugins/clara/scripts/self_relaunch.py"
+            ).read_bytes()
         vendor_config = vendor_module_config.get(plugin_dir.name)
         for path in source_files(
             plugin_dir,

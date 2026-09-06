@@ -145,7 +145,7 @@ python scripts/semantic_layer.py context --profile <run>/dataset_profile.json --
 python scripts/semantic_layer.py validate --profile <run>/dataset_profile.json --layer <run>/semantic_layer.json --output <run>/semantic_validation.json
 python scripts/semantic_layer.py attach --profile <run>/new_snapshot_profile.json --layer <run>/semantic_layer.json --output <run>/snapshot_attachment.json
 python scripts/check_compatibility.py <run>/dataset_profile.json --output <run>/compatibility.json
-python scripts/render_capability.py period_comparison.trend <dataset.csv> --output-dir <run>/render --role-bindings-json '{"period_axis":"Date","comparison_metric":"Sales"}' --artifact-mode data_only
+python scripts/render_capability.py period_comparison.trend <dataset.csv> --output-dir <run>/render --role-bindings-json '{"period_axis":"Date","comparison_metric":"Sales"}' --options-json '{"current_period_label":"<current-period>","previous_period_label":"<baseline-period>"}' --artifact-mode data_only
 python scripts/mechanical_acceptance.py --suite --output-dir <empty-run-dir> --execute --artifact-mode data_and_render
 ```
 

@@ -27,7 +27,7 @@ from zipfile import BadZipFile, ZipFile
 __all__ = ["main", "extract_package", "module_choices", "verify_acceptance"]
 LOGGER = logging.getLogger(__name__)
 CASE = "reporting-engine.period_comparison.trend"
-GATE_VERSION = 2
+GATE_VERSION = 3
 
 
 def verify_hook_registration(root: Path) -> None:
@@ -161,7 +161,13 @@ class CheckRun:
             key: value
             for key, value in os.environ.items()
             if not key.startswith(("PYTHON", "MPARANZA_"))
-            and key not in {"VIRTUAL_ENV", "PLUGIN_DATA", "CLAUDE_PLUGIN_DATA"}
+            and key
+            not in {
+                "VIRTUAL_ENV",
+                "PLUGIN_DATA",
+                "CLAUDE_PLUGIN_DATA",
+                "CLAUDE_ENV_FILE",
+            }
         }
         self.env.update(
             PYTHONNOUSERSITE="1",
@@ -234,22 +240,14 @@ class CheckRun:
         LOGGER.info("[%s] %s", "PASS" if passed else "FAIL", name)
         return passed
 
-    def managed(
+    def direct(
         self, name: str, script: str, *args: str, negative: bool = False
     ) -> bool:
         return self.command(
             name,
             [
                 str(self.python),
-                "scripts/managed_python_runtime.py",
-                "--module",
-                "reporting-engine",
-                "--requirements",
-                "requirements.txt",
-                "--requirements",
-                "requirements-render.txt",
-                "run",
-                f"scripts/{script}",
+                f"modules/reporting-engine/scripts/{script}",
                 *args,
             ],
             negative=negative,
@@ -283,11 +281,22 @@ class CheckRun:
             "reject-uninstalled-dependency",
             [
                 str(self.python),
-                "modules/reporting-engine/scripts/profile_dataset.py",
-                "--help",
+                "-I",
+                "-c",
+                "import polars",
             ],
             negative=True,
             expected_error="No module named 'polars'",
+        )
+        self.direct(
+            "cold-cli-profile",
+            "profile_dataset.py",
+            str(
+                self.root
+                / "modules/reporting-engine/fixtures/semantic_layer/retail_monthly.csv"
+            ),
+            "--output",
+            str(self.output / "cold_profile.json"),
         )
         choices = module_choices(self.root)
         self.report["dependency_modules"] = choices
@@ -333,7 +342,7 @@ class CheckRun:
         fixture = self.root / "modules/reporting-engine/fixtures/semantic_layer"
         dataset = fixture / "retail_monthly.csv"
         profile = self.output / "intake/dataset_profile.json"
-        self.managed(
+        self.direct(
             "intake",
             "dataset_intake.py",
             str(dataset),
@@ -342,7 +351,7 @@ class CheckRun:
             "--output-dir",
             str(profile.parent),
         )
-        self.managed(
+        self.direct(
             "semantics",
             "semantic_layer.py",
             "acceptance",
@@ -357,7 +366,7 @@ class CheckRun:
             "--output",
             str(self.output / "semantic_acceptance.json"),
         )
-        self.managed(
+        self.direct(
             "compatibility",
             "check_compatibility.py",
             str(profile),
@@ -374,7 +383,7 @@ class CheckRun:
                 },
             }
         )
-        self.managed(
+        self.direct(
             "render",
             "render_capability.py",
             "period_comparison.trend",
@@ -386,7 +395,7 @@ class CheckRun:
             "--artifact-mode",
             "data_and_render",
         )
-        self.managed(
+        self.direct(
             "reject-missing-role",
             "render_capability.py",
             "period_comparison.trend",

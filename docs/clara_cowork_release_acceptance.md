@@ -33,7 +33,10 @@ Coverage in this first gate:
 
 - Core dependency check and every module CLI choice, plus registered modules that
   use their own checker (currently Business Planning).
-- Missing dependency rejection before installation.
+- Bare-interpreter missing dependency rejection before installation, followed by
+  a direct CLI profile that provisions its own managed dependencies.
+- Direct reporting CLI execution throughout, without invoking the managed-runtime
+  launcher by hand or sourcing `CLAUDE_ENV_FILE`.
 - Reporting Engine intake of the packaged synthetic retail fixture.
 - Existing reviewed semantic fixture acceptance, including incompatible snapshots.
 - Mechanical trend compatibility, actual trend rendering, expected January and
