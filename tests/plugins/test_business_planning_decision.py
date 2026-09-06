@@ -226,3 +226,90 @@ def test_registered_idea_fixture_remains_provisional_and_decision_useful() -> No
     assert "paid bookings and actual job and travel time" in rendered
     assert not plan["calculations"] and not plan["charts"]
     assert plan == build_plan(case, source_root=FIXTURE, owner="Vera")
+
+
+@pytest.mark.parametrize("owner", ["Clara", "Vera"])
+@pytest.mark.parametrize("financial_required", [False, True])
+def test_reviewed_idea_readiness_depends_on_requested_financials(
+    owner, financial_required
+):
+    import json
+
+    case = json.loads((FIXTURE / "idea-case.json").read_text())
+    review = {
+        "status": "reviewed",
+        "reviewer": "Synthetic reviewer",
+        "reviewed_at": "2026-09-06T12:00:00+02:00",
+    }
+    case["review"] = review.copy()
+    for source in case["sources"]:
+        source["review_status"] = "reviewed"
+    for evidence in case["evidence"]:
+        evidence.update(review)
+    for narrative in case["narrative"]:
+        narrative["review"] = review.copy()
+    case["required_sections"] = ["business_analysis"] + (
+        ["financial"] if financial_required else []
+    )
+
+    plan = build_plan(case, owner=owner, source_root=FIXTURE)
+
+    assert plan["status"] == (
+        "partial" if financial_required else "ready_for_professional_review"
+    )
+    assert (
+        "Financial model unavailable; no capital recommendation is supported"
+        in plan["unresolved_matters"]
+    ) == financial_required
+
+
+@pytest.mark.parametrize("financial_required,exit_code", [(False, 0), (True, 2)])
+def test_reviewed_idea_cli_writes_expected_readiness(
+    tmp_path, financial_required, exit_code
+):
+    import json
+    import shutil
+    import subprocess
+    import sys
+
+    from tests.plugins.test_business_planning import SCRIPT_ROOT, _clara_workspace
+
+    case = json.loads((FIXTURE / "idea-case.json").read_text())
+    review = {
+        "status": "reviewed",
+        "reviewer": "Synthetic reviewer",
+        "reviewed_at": "2026-09-06T12:00:00+02:00",
+    }
+    case["review"] = review.copy()
+    for source in case["sources"]:
+        source["review_status"] = "reviewed"
+    for evidence in case["evidence"]:
+        evidence.update(review)
+    for narrative in case["narrative"]:
+        narrative["review"] = review.copy()
+    case["required_sections"] = ["business_analysis"] + (
+        ["financial"] if financial_required else []
+    )
+    workspace, case_path, output = _clara_workspace(tmp_path, case)
+    shutil.copytree(FIXTURE / "sources", workspace / "sources")
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_ROOT / "run_strategic_plan.py"),
+            "--case",
+            str(case_path),
+            "--output-dir",
+            str(output),
+            "--case-workspace",
+            str(workspace),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == exit_code, completed.stderr
+    plan = json.loads((output / "business_plan.json").read_text())
+    assert plan["status"] == (
+        "partial" if financial_required else "ready_for_professional_review"
+    )

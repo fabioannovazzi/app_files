@@ -315,9 +315,10 @@ def _financial(
 ) -> tuple[dict[str, Any] | None, dict[str, Any]]:
     financial = case["financial"]
     if financial is None:
-        issues.append(
-            "Financial model unavailable; no capital recommendation is supported"
-        )
+        if "financial" in case["required_sections"]:
+            issues.append(
+                "Financial model unavailable; no capital recommendation is supported"
+            )
         return None, {}
     require(
         set(financial)
