@@ -291,3 +291,32 @@ def test_acceptance_rejects_old_or_incomplete_host_review(
     gate.write_json(receipt, payload)
     with pytest.raises(ValueError, match="acceptance is missing"):
         gate.verify_acceptance(receipt, "abc", passing_report())
+
+
+def test_direct_cli_uses_empty_bootstrap_interpreter(monkeypatch, tmp_path):
+    from unittest.mock import Mock
+
+    archive = tmp_path / "candidate.zip"
+    archive.write_bytes(b"test")
+    monkeypatch.setenv("CLAUDE_ENV_FILE", "/tmp/inherited-hook-env")
+    run = gate.CheckRun(archive, tmp_path / "output", 60)
+    command = Mock(return_value=True)
+    monkeypatch.setattr(run, "command", command)
+
+    run.direct(
+        "profile", "profile_dataset.py", "relative.csv", "--output", "profile.json"
+    )
+
+    command.assert_called_once_with(
+        "profile",
+        [
+            str(run.python),
+            "modules/reporting-engine/scripts/profile_dataset.py",
+            "relative.csv",
+            "--output",
+            "profile.json",
+        ],
+        negative=False,
+        expected_error="missing required role bindings",
+    )
+    assert "CLAUDE_ENV_FILE" not in run.env
