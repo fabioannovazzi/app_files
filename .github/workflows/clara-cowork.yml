@@ -27,7 +27,7 @@ jobs:
       - name: Test the release gate's failure handling
         run: |
           python -m pip install pytest
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py tests/plugins/test_clara_claude_package.py
       - name: Verify shipped candidate matches canonical source
         run: python scripts/build_claude_plugin_zip.py clara --check
       - name: Exercise the actual ZIP with fresh managed dependencies
@@ -51,3 +51,21 @@ jobs:
         with:
           name: clara-candidate
           path: plugin_packages/clara/clara-claude-plugin.zip
+      - name: State candidate identity and remaining release checks
+        if: always()
+        env:
+          CLARA_EVIDENCE: ${{ runner.temp }}/clara-acceptance/result.json
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          path = Path(os.environ["CLARA_EVIDENCE"])
+          report = json.loads(path.read_text()) if path.is_file() else {}
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a") as summary:
+              summary.write("Clara candidate checks do not authorize publication.\n\n")
+              summary.write(f"Script status: {report.get('status', 'unverified')}\n\n")
+              summary.write(f"Version: {report.get('plugin', {}).get('version', 'unknown')}\n\n")
+              summary.write(f"ZIP SHA-256: {report.get('zip_sha256', 'unknown')}\n\n")
+              summary.write("Actual Cowork plugin loading, startup hooks and fresh-session workflow: unverified. Supply reviewed evidence to the release promotion gate.\n")
+          PY
