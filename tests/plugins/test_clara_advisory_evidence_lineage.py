@@ -763,3 +763,54 @@ def test_web_capture_rejects_loopback_before_opening(tmp_path: Path) -> None:
         )
 
     assert opener.called is False
+
+
+@pytest.mark.parametrize("external", [False, True])
+def test_deletion_preflight_protects_bound_file_and_ancestors(tmp_path, external):
+    lineage = _lineage()
+    case = tmp_path / "case"
+    lineage.initialize_lineage(case)
+    lineage.record_evidence(case, [_receipt("ev-a", observation="Premise A")])
+    lineage.record_claims(case, [_claim("cl-a", "Premise A", evidence_ids=["ev-a"])])
+    output = (tmp_path if external else case) / "builds" / "hash"
+    output.mkdir(parents=True)
+    memo = output / "memo.md"
+    memo.write_text("Premise A")
+    lineage.bind_claim_appearances(
+        case, memo, [{"claim_id": "cl-a", "locator": "paragraph 1"}]
+    )
+
+    assert lineage.check_safe_to_delete(case, memo) == ["cl-a"]
+    assert lineage.check_safe_to_delete(case, output) == ["cl-a"]
+    assert lineage.check_safe_to_delete(case, output.parent) == ["cl-a"]
+    assert lineage.check_safe_to_delete(case, output / "unbound.md") == []
+    assert lineage.check_safe_to_delete(case, output.with_name("hash-new")) == []
+
+
+def test_deletion_preflight_refuses_missing_registers(tmp_path):
+    lineage = _lineage()
+    with pytest.raises(lineage.LineageError, match="Cannot check deletion"):
+        lineage.check_safe_to_delete(tmp_path, tmp_path / "builds")
+
+
+@pytest.mark.parametrize(("bound", "expected_exit"), [(True, 1), (False, 0)])
+def test_deletion_preflight_cli_exits_nonzero_for_bound_directory(
+    tmp_path, monkeypatch, caplog, bound, expected_exit
+):
+    lineage = _lineage()
+    lineage.initialize_lineage(tmp_path)
+    lineage.record_evidence(tmp_path, [_receipt("ev-a", observation="Premise A")])
+    lineage.record_claims(
+        tmp_path, [_claim("cl-a", "Premise A", evidence_ids=["ev-a"])]
+    )
+    memo = tmp_path / "memo.md"
+    memo.write_text("Premise A")
+    lineage.bind_claim_appearances(
+        tmp_path, memo, [{"claim_id": "cl-a", "locator": "paragraph 1"}]
+    )
+    target = tmp_path if bound else tmp_path / "other"
+    monkeypatch.setattr(
+        sys, "argv", ["lineage", "check-safe-to-delete", str(tmp_path), str(target)]
+    )
+    assert lineage.main() == expected_exit
+    assert memo.read_text() == "Premise A"

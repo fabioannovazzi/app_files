@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -1375,23 +1377,22 @@ def test_generation_time_lineage_walks_all_dependencies_before_ready(
     deliverable.write_text(
         "# Recommendation\n\nProceed with the pilot.", encoding="utf-8"
     )
-    lineage.add_claim_appearances(
-        case_dir,
+    locations = tmp_path / "locations.json"
+    locations.write_text(
+        json.dumps([{"claim_id": "cl-x", "locator": "Recommendation"}])
+    )
+    subprocess.run(
         [
-            {
-                "claim_id": "cl-x",
-                "appearance": {
-                    "artifact": str(deliverable.resolve()),
-                    "path_reference": "absolute",
-                    "artifact_sha256": hashlib.sha256(
-                        deliverable.read_bytes()
-                    ).hexdigest(),
-                    "artifact_byte_count": deliverable.stat().st_size,
-                    "locator": "Recommendation",
-                    "recorded_at": "2026-08-18T08:30:00+00:00",
-                },
-            }
+            sys.executable,
+            str(CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"),
+            "bind-output",
+            str(case_dir),
+            str(deliverable),
+            str(locations),
         ],
+        check=True,
+        capture_output=True,
+        text=True,
     )
     contract_path = tmp_path / "advisory_contract.json"
     contract_path.write_text(json.dumps(_contract()), encoding="utf-8")

@@ -56,6 +56,24 @@ material authoritative. Use motion to clarify meaning, not decorate it.
 - Preserve keyboard, touch, reduced-motion, accessibility, and print behavior.
 - Treat a difficult URL as convenient obscurity, not access control.
 
+## Retain bound build artifacts
+
+Content-addressed build directories under `<output_root>/<sha256>/` must remain
+in place once their appearances are bound to the claim register. Never delete a
+previous bound build after rebuilding; retain superseded builds alongside new
+ones. Claim appearances are append-only and refer to the exact original bytes.
+Before any proposed cleanup, run from the plugin root:
+
+```bash
+python scripts/advisory_evidence_lineage.py check-safe-to-delete <case_dir> <path>
+```
+
+A nonzero exit blocks cleanup when this case references the path or a file below
+it, or its lineage cannot be checked. A zero exit means only that this case has
+no bound appearance there; check every other case using that output root too.
+The command is read-only and does not prevent manual filesystem deletion.
+
+
 ## Decision boundary
 
 The model owns semantic work: source interpretation, storyline, claims,

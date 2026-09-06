@@ -20,6 +20,7 @@ __all__ = [
     "LineageError",
     "add_claim_appearances",
     "bind_claim_appearances",
+    "check_safe_to_delete",
     "initialize_lineage",
     "record_claims",
     "record_evidence",
@@ -821,6 +822,33 @@ def bind_claim_appearances(
     return add_claim_appearances(case_dir, records)
 
 
+def check_safe_to_delete(case_dir: Path, target: Path) -> list[str]:
+    """Return claims referencing a path or its descendants in this case only.
+
+    Path containment is mechanical. This is a read-only preflight, not a
+    filesystem lock or permission to delete artifacts used by other cases.
+    """
+
+    audit = validate_lineage(case_dir, verify_artifacts=False)
+    if not audit["valid"]:
+        raise LineageError("Cannot check deletion: " + "; ".join(audit["errors"]))
+    target = target.expanduser().resolve()
+    claims = _read_json(case_dir / CLAIM_REGISTER_FILENAME)["claims"]
+    bound: set[str] = set()
+    for claim in claims:
+        for appearance in claim["appearances"]:
+            artifact = _resolve_artifact(
+                case_dir,
+                {
+                    "path": appearance["artifact"],
+                    "path_reference": appearance["path_reference"],
+                },
+            )
+            if artifact == target or target in artifact.parents:
+                bound.add(claim["id"])
+    return sorted(bound)
+
+
 def render_evidence_map(case_dir: Path) -> Path:
     """Render a readable control view without making semantic judgments."""
 
@@ -961,6 +989,11 @@ def _parser() -> argparse.ArgumentParser:
     bind.add_argument("case_dir", type=Path)
     bind.add_argument("artifact", type=Path)
     bind.add_argument("locations_json", type=Path)
+    deletion = subparsers.add_parser(
+        "check-safe-to-delete", help="Check this case for bound artifact references."
+    )
+    deletion.add_argument("case_dir", type=Path)
+    deletion.add_argument("path", type=Path)
     validate = subparsers.add_parser("validate", help="Validate lineage records.")
     validate.add_argument("case_dir", type=Path)
     validate.add_argument("--audit", type=Path)
@@ -1009,6 +1042,19 @@ def main() -> int:
                 _command_payload(args.locations_json, "appearances"),
             )
             LOGGER.info("Claim appearances bound: %s", added)
+            return 0
+        if args.command == "check-safe-to-delete":
+            bound = check_safe_to_delete(args.case_dir, args.path)
+            if bound:
+                LOGGER.error(
+                    "Path is bound as an appearance for claim(s) %s — do not delete. "
+                    "Rebuild instead of removing old builds.",
+                    ", ".join(bound),
+                )
+                return 1
+            LOGGER.info(
+                "No bound appearances in this case; other cases were not checked."
+            )
             return 0
         if args.command == "render":
             path = render_evidence_map(args.case_dir)

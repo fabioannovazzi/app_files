@@ -7352,3 +7352,41 @@ def test_clara_dependency_choices_match_all_registered_runtime_modules() -> None
     registry = json.loads((PLUGIN_ROOT / "components.json").read_text())
 
     assert set(checker.COMPONENTS) == set(registry["plugins"])
+
+
+@pytest.mark.parametrize("suffix", [".csv", ".xlsx", ".json"])
+@pytest.mark.parametrize("directory", [False, True])
+def test_index_materials_rejects_unsupported_input_before_registry_write(
+    tmp_path, suffix, directory
+):
+    core = load_core()
+    inputs = tmp_path / "inputs"
+    inputs.mkdir()
+    (inputs / "first.md").write_text("Supported document")
+    unsupported = inputs / ("source" + suffix)
+    unsupported.write_text("18500000,8325000")
+    case_dir = tmp_path / "case"
+    with pytest.raises(
+        core.UnsupportedMaterialTypeError, match="No materials were indexed"
+    ):
+        core.index_materials(case_dir, [inputs if directory else unsupported])
+    assert not case_dir.exists()
+
+
+def test_index_materials_cli_reports_unsupported_csv(tmp_path):
+    source = tmp_path / "source.csv"
+    source.write_text("18500000,8325000")
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPTS_DIR / "index_materials.py"),
+            str(tmp_path / "case"),
+            str(source),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 2
+    assert str(source) in result.stderr
+    assert "reporting-engine" in result.stderr
+    assert "Indexed 0" not in result.stderr

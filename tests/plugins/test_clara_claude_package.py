@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import sys
 from dataclasses import replace
 from pathlib import Path
@@ -211,7 +212,13 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
         "Clara workflow: clara:<specialist-skill>"
         in instruction_docs["skills/clara/SKILL.md"]
     )
-    assert "skills/clara/references/workflow-catalog.md" not in clara_entries
+    catalog = instruction_docs["skills/clara/references/workflow-catalog.md"]
+    catalogued = set(re.findall(r"^- `([a-z0-9-]+)`:", catalog, re.MULTILINE))
+    assert catalogued == EXPECTED_ROOT_SKILLS - {"clara"}
+    assert (
+        "../clara/references/workflow-catalog.md"
+        in instruction_docs["skills/advisory-brief-planner/SKILL.md"]
+    )
     for marker in (
         "ChatGPT",
         "Codex",

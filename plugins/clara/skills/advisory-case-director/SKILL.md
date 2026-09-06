@@ -10,6 +10,24 @@ support, unknowns, and proposed next work. Do not claim that durable files or
 local validation exist. In Codex or Cowork, maintain the case workspace and use
 the packaged mechanical helpers where applicable.
 
+## Retain bound build artifacts
+
+Content-addressed build directories under `<output_root>/<sha256>/` must remain
+in place once their appearances are bound to the claim register. Never delete a
+previous bound build after rebuilding; retain superseded builds alongside new
+ones. Claim appearances are append-only and refer to the exact original bytes.
+Before any proposed cleanup, run from the plugin root:
+
+```bash
+python scripts/advisory_evidence_lineage.py check-safe-to-delete <case_dir> <path>
+```
+
+A nonzero exit blocks cleanup when this case references the path or a file below
+it, or its lineage cannot be checked. A zero exit means only that this case has
+no bound appearance there; check every other case using that output root too.
+The command is read-only and does not prevent manual filesystem deletion.
+
+
 ## Output Location Rule
 
 Never write case outputs inside the Clara plugin, `static/shared`,
@@ -283,6 +301,23 @@ action. When a compact audit index is useful, write `codex_run_review.md` beside
 the case artifacts. Do not edit generated ZIPs during a case run.
 
 ## Completion and handoff
+
+Before handing a non-deck memo or report to validation, bind its final bytes
+and each claim's location from the plugin root:
+
+```bash
+python scripts/advisory_evidence_lineage.py bind-output <case_dir> <deliverable_path> <locations_json>
+```
+
+`locations_json` is a JSON file, for example
+`[{"claim_id":"cl-a","locator":"Recommendation, paragraph 2"}]`; include an
+entry for every claim appearing in the deliverable, using existing claim IDs
+and precise locations. A case-bound HTML build uses `build_html_deck.py
+--case-dir <case_dir>` to bind automatically. Keep each bound artifact immutable;
+write revisions to a new path and bind their new appearances before validation.
+If validation reports "no hash-bound appearance", return to this binding step
+for the exact prepared deliverable, then prepare the validation inventory again.
+
 
 An iteration is complete when the current answer, its support and limits, the
 effect of new evidence, the open decision-changing questions, the recommended
