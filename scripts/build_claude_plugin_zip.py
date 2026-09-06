@@ -2854,6 +2854,10 @@ def verify_zip(path: Path, entries: dict[str, bytes]) -> list[str]:
 def build_package(package: ClaudePackage) -> tuple[Path, Path]:
     """Build one unpacked Cowork plugin and matching deterministic ZIP."""
 
+    if package.plugin == "clara" and package.public_zip is not None:
+        raise ValueError(
+            "Promote Clara through check_clara_cowork_release.py --verify-release"
+        )
     entries = claude_package_entries(package)
     # Validate the finished ZIP before replacing any distributable artifact.
     with tempfile.TemporaryDirectory(prefix="cowork-release-") as temporary:

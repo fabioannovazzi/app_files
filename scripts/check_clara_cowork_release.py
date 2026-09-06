@@ -18,6 +18,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -26,7 +27,27 @@ from zipfile import BadZipFile, ZipFile
 __all__ = ["main", "extract_package", "module_choices", "verify_acceptance"]
 LOGGER = logging.getLogger(__name__)
 CASE = "reporting-engine.period_comparison.trend"
-GATE_VERSION = 1
+GATE_VERSION = 2
+
+
+def verify_hook_registration(root: Path) -> None:
+    """Check exact paths: Claude auto-loads the standard hooks file."""
+    manifest = read_json(root / ".claude-plugin/plugin.json")
+    automatic = root / "hooks/hooks.json"
+    if not automatic.is_file():
+        raise ValueError("Clara is missing its automatic startup hooks file")
+    hooks = manifest.get("hooks", [])
+    references = [hooks] if isinstance(hooks, str) else hooks
+    if isinstance(references, list) and any(
+        isinstance(reference, str)
+        and (root / reference).resolve() == automatic.resolve()
+        for reference in references
+    ):
+        raise ValueError(
+            "Duplicate hooks file: hooks/hooks.json is loaded automatically"
+        )
+    if not read_json(automatic).get("hooks", {}).get("SessionStart"):
+        raise ValueError("Clara is missing SessionStart hooks")
 
 
 def digest(path: Path) -> str:
@@ -87,18 +108,31 @@ def verify_acceptance(
     if script_report["status"] != "pass":
         raise ValueError("Packaged script checks have not passed")
     if (
-        receipt.get("schema_version") != 1
+        receipt.get("schema_version") != 2
         or receipt.get("zip_sha256") != zip_hash
         or receipt.get("status") != "pass"
         or receipt.get("host") != "Claude Cowork"
         or receipt.get("workflow") != CASE
         or receipt.get("fresh_install") is not True
+        or receipt.get("fresh_session") is not True
+        or receipt.get("plugin_version")
+        != script_report.get("plugin", {}).get("version")
     ):
         raise ValueError("Cowork acceptance is missing, failed, or for a different ZIP")
     for field in ("reviewer", "tested_at", "cowork_version", "environment"):
         if not isinstance(receipt.get(field), str) or not receipt[field].strip():
             raise ValueError(f"Cowork acceptance needs {field}")
-    for field in ("normal_answer", "report", "transcript", "visual_review"):
+    for check in ("plugin_load", "startup_hooks", "synthetic_workflow"):
+        if receipt.get("checks", {}).get(check) != "pass":
+            raise ValueError(f"Cowork acceptance needs a passing {check} check")
+    for field in (
+        "normal_answer",
+        "report",
+        "transcript",
+        "visual_review",
+        "plugin_load",
+        "startup_hooks",
+    ):
         record = receipt.get("evidence", {}).get(field, {})
         relative = record.get("path", "")
         path = (receipt_path.parent / relative).resolve()
@@ -228,6 +262,7 @@ class CheckRun:
         self.report["plugin"] = read_json(self.root / ".claude-plugin/plugin.json")
         if self.report["plugin"]["name"] != "clara":
             raise ValueError("Expected Clara")
+        verify_hook_registration(self.root)
         if not self.command(
             "bootstrap",
             [sys.executable, "-I", "-m", "venv", str(self.python.parent.parent)],
@@ -482,12 +517,21 @@ def main(argv: list[str] | None = None) -> int:
     output = args.output.resolve()
     if args.verify_release:
         try:
+            write_json(output / "release-verification.json", {"status": "unverified"})
             report = read_json(output / "result.json")
             if not args.cowork_acceptance:
                 raise ValueError("Release requires real Cowork acceptance")
             if report["zip_sha256"] != digest(args.zip) or report["status"] != "pass":
                 raise ValueError("Script acceptance failed or is for a different ZIP")
             verify_saved_evidence(output, report)
+            with tempfile.TemporaryDirectory(
+                prefix="clara-release-check-"
+            ) as directory:
+                root = Path(directory)
+                extract_package(args.zip, root)
+                verify_hook_registration(root)
+                if read_json(root / ".claude-plugin/plugin.json") != report["plugin"]:
+                    raise ValueError("Saved plugin identity differs from candidate")
             if report["environment"]["os"] != "Linux":
                 raise ValueError(
                     "Release requires passing clean Linux Cowork package evidence"
@@ -495,10 +539,27 @@ def main(argv: list[str] | None = None) -> int:
             verify_acceptance(args.cowork_acceptance, digest(args.zip), report)
             if args.promote_to:
                 args.promote_to.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(args.zip, args.promote_to)
+                # Verify the staged bytes before atomically replacing any release.
+                with tempfile.TemporaryDirectory(
+                    dir=args.promote_to.parent
+                ) as directory:
+                    staged = Path(directory) / "candidate.zip"
+                    shutil.copyfile(args.zip, staged)
+                    if digest(staged) != report["zip_sha256"]:
+                        raise ValueError("ZIP changed before promotion")
+                    staged.replace(args.promote_to)
+            write_json(
+                output / "release-verification.json",
+                {
+                    "status": "pass",
+                    "zip_sha256": report["zip_sha256"],
+                    "plugin_version": report["plugin"]["version"],
+                    "acceptance_sha256": digest(args.cowork_acceptance),
+                },
+            )
             LOGGER.info("[PASS] Script and Cowork acceptance match this ZIP")
             return 0
-        except (OSError, ValueError, KeyError) as error:
+        except (OSError, ValueError, KeyError, BadZipFile) as error:
             LOGGER.error("Release blocked: %s", error)
             return 1
     if args.promote_to:

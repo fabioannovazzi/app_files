@@ -31,7 +31,6 @@
   ],
   "version": "0.1.180",
   "skills": "./skills/",
-  "hooks": "./hooks/hooks.json",
   "agents": [
     "./agents/clara.md"
   ]

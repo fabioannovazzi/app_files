@@ -68,7 +68,10 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     assert manifest["skills"] == "./skills/"
     assert manifest["agents"] == ["./agents/clara.md"]
     assert "interface" not in manifest
-    assert manifest["hooks"] == "./hooks/hooks.json"
+    # Claude auto-loads this file; declaring it would load it twice.
+    assert "hooks" not in template
+    assert "hooks" not in manifest
+    assert "hooks/hooks.json" in clara_entries
     assert "mcpServers" not in manifest
 
 
@@ -76,6 +79,18 @@ def test_clara_package_uses_claude_archive_name(configured_clara) -> None:
     _, _, _, package = configured_clara
 
     assert package.output_zip.name == "clara-claude-plugin.zip"
+    assert package.public_zip is None  # Only the acceptance gate may promote Clara.
+
+
+def test_clara_builder_cannot_overwrite_public_release(
+    configured_clara, tmp_path
+) -> None:
+    builder, _, _, package = configured_clara
+    public = tmp_path / "public.zip"
+    public.write_bytes(b"previous release")
+    with pytest.raises(ValueError, match="Promote Clara through"):
+        builder.build_package(replace(package, public_zip=public))
+    assert public.read_bytes() == b"previous release"
 
 
 def test_clara_cowork_includes_claude_agent(clara_entries) -> None:

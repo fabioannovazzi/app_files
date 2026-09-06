@@ -30,7 +30,6 @@
     "data-analysis"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks.json",
   "agents": [
     "./agents/clara.md"
   ]
