@@ -38,7 +38,8 @@ jobs:
 
   vera-cowork-python:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Fresh managed environments and 23 install/render cases exceed 15 minutes.
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
