@@ -46,7 +46,12 @@ DATE_RE = re.compile(
 )
 NUMBER_RE = re.compile(
     r"(?<![A-Za-z0-9])(?:EUR|USD|GBP|CHF|[$€£])?\s*"
-    r"\d+(?:[.,]\d+)*(?:\s*(?:%|EUR|USD|GBP|CHF))?",
+    # Exact grouping avoids swallowing runs of independent large CSV integers.
+    r"(?:\d{1,3}(?:,\d{3})+(?!\d)(?:\.\d+)?"
+    r"|\d{1,3}(?:\.\d{3})+(?!\d)(?:,\d+)?"
+    r"|(?<![,\d])\d+,\d+(?![\d,])"
+    r"|\d+(?:\.\d+)?)"
+    r"(?:\s*(?:%|EUR|USD|GBP|CHF))?",
     re.IGNORECASE,
 )
 QUESTION_RE = re.compile(

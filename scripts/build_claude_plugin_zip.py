@@ -2198,7 +2198,6 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
         "hooks/cowork-hooks.json",
         "marketplace_skill_instructions.json",
         CLARA_COWORK_RUNTIME_REFERENCE,
-        "skills/clara/references/workflow-catalog.md",
     }:
         return True
     if relative_path.startswith(
@@ -2414,6 +2413,17 @@ def _clara_package_entries(
                 relative_path=relative,
                 main_runtime_reference=runtime_reference,
             )
+        elif relative == "skills/clara/references/workflow-catalog.md":
+            # Keep the planner's routing reference, limited to packaged workflows.
+            catalog = content.decode("utf-8")
+            catalog = catalog.split("## Developer governance", 1)[0]
+            for omitted in CLARA_COWORK_OMITTED_SKILLS:
+                catalog = re.sub(
+                    rf"(?m)^- `{re.escape(omitted)}`:[^\n]*(?:\n[ ]{{2}}[^\n]*)*\n?",
+                    "",
+                    catalog,
+                )
+            content = _project_clara_cowork_reference(catalog.encode("utf-8"))
         elif "/references/" in relative and relative.endswith(".md"):
             content = _project_clara_cowork_reference(content)
         elif (

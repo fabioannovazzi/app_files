@@ -49,6 +49,7 @@ __all__ = [
     "CASE_FILES",
     "INCLUSION_BUNDLES_FILENAME",
     "CaseWorkspaceError",
+    "UnsupportedMaterialTypeError",
     "CaseExchangeExportResult",
     "CaseExchangeImportResult",
     "EditablePptxMergeInputResult",
@@ -1063,6 +1064,10 @@ def _summarize_file(path: Path) -> str:
     return "File indexed without preview."
 
 
+class UnsupportedMaterialTypeError(ValueError):
+    """Raised before indexing when an input has no document preview adapter."""
+
+
 def discover_material_paths(paths: Sequence[Path]) -> list[Path]:
     """Return supported files from explicit files or folders, without copying."""
 
@@ -1070,14 +1075,20 @@ def discover_material_paths(paths: Sequence[Path]) -> list[Path]:
     for source in paths:
         if not source.exists():
             raise FileNotFoundError(source)
-        if source.is_file() and source.suffix.lower() in SUPPORTED_FILE_SUFFIXES:
-            discovered.append(source)
-        elif source.is_dir():
-            discovered.extend(
-                path
-                for path in source.rglob("*")
-                if path.is_file() and path.suffix.lower() in SUPPORTED_FILE_SUFFIXES
-            )
+        # File adapter availability is mechanical; reject before any registry writes.
+        candidates = [source] if source.is_file() else sorted(source.rglob("*"))
+        for path in candidates:
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in SUPPORTED_FILE_SUFFIXES:
+                raise UnsupportedMaterialTypeError(
+                    f"Unsupported material for document indexing: {path}. "
+                    f"Supported suffixes: {', '.join(sorted(SUPPORTED_FILE_SUFFIXES))}. "
+                    "Use clara:reporting-engine for CSV/XLSX/Parquet data; "
+                    "register structured JSON as evidence through the owning workflow. "
+                    "No materials were indexed; select supported documents separately."
+                )
+            discovered.append(path)
     return sorted({path.resolve() for path in discovered})
 
 

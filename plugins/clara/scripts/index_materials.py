@@ -8,7 +8,11 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from advisor_case_core import MATERIAL_TYPES, index_materials
+from advisor_case_core import (
+    MATERIAL_TYPES,
+    UnsupportedMaterialTypeError,
+    index_materials,
+)
 
 __all__ = ["main"]
 
@@ -60,12 +64,15 @@ def main() -> int:
     if args.provenance_note:
         source_metadata["provenance_note"] = args.provenance_note
 
-    indexed = index_materials(
-        args.case_dir,
-        args.materials,
-        material_type=args.material_type,
-        source_metadata=source_metadata,
-    )
+    try:
+        indexed = index_materials(
+            args.case_dir,
+            args.materials,
+            material_type=args.material_type,
+            source_metadata=source_metadata,
+        )
+    except UnsupportedMaterialTypeError as exc:
+        parser.error(str(exc))
     LOGGER.info("Indexed %s material(s).", len(indexed))
     return 0
 

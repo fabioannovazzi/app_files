@@ -531,3 +531,25 @@ def test_advisory_planner_privacy_record_has_no_external_boundary() -> None:
     assert "query_llm" not in source
     assert "openai" not in source.casefold()
     assert "requests." not in source
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        (
+            "18500000,8325000,3700000,2100000",
+            ["18500000", "8325000", "3700000", "2100000"],
+        ),
+        ("1,234,567.89", ["1,234,567.89"]),
+        ("EUR 1,234,567.89", ["EUR 1,234,567.89"]),
+        ("1.234.567,89 EUR", ["1.234.567,89 EUR"]),
+        ("12,5%", ["12,5%"]),
+        ("1234.56789", ["1234.56789"]),
+        ("1234,56789", ["1234,56789"]),
+    ],
+)
+def test_number_literals_preserve_grouping_without_merging_large_csv_fields(
+    text, expected
+):
+    validator = _load_validator()
+    assert [match.group(0) for match in validator.NUMBER_RE.finditer(text)] == expected
