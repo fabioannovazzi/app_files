@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import atexit
 import errno
 import hashlib
 import io
@@ -24,6 +25,7 @@ from datetime import datetime, timezone
 from email import policy
 from email.parser import BytesParser
 from email.utils import getaddresses
+from functools import wraps
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Callable, Iterator, Mapping, Sequence
@@ -110,6 +112,71 @@ CLIENT_IDENTITIES_SCHEMA_VERSION = 2
 STATE_ENV = "VERA_STUDIO_ARCHIVE_STATE_DIR"
 DEFAULT_STATE_SUBDIR = Path(".mparanza") / "vera-studio-archive"
 CONFIG_FILENAME = "config.json"
+SESSION_ENV = "VERA_STUDIO_ARCHIVE_SESSION_ID"
+_PROCESS_SESSION = f"{os.getpid()}-{secrets.token_hex(16)}"
+_STATE_LEASES: dict[Path, tuple[Any, bytes | None]] = {}
+_CONFIGURATION_CHANGED = (
+    "Studio Archive configuration changed during this run, "
+    "re-validate before continuing."
+)
+
+
+def _session_id() -> str:
+    """Share an identity across CLI commands only when the host supplies one."""
+    return (
+        os.environ.get(SESSION_ENV, "").strip()
+        or os.environ.get("CODEX_THREAD_ID", "").strip()
+        or _PROCESS_SESSION
+    )
+
+
+def _check_configuration(state: Path) -> None:
+    """Reject changes to a configuration already observed by this process."""
+    expected = _STATE_LEASES[state][1]
+    path = state / CONFIG_FILENAME
+    actual = path.read_bytes() if path.exists() else None
+    if actual != expected:
+        raise ArchiveError(_CONFIGURATION_CHANGED)
+
+
+def _claim_state(state: Path) -> None:
+    """Hold an OS lock until process exit, covering the entire read/use window."""
+    state = state.resolve()
+    if state in _STATE_LEASES:
+        _check_configuration(state)
+        return
+    state.mkdir(parents=True, exist_ok=True, mode=0o700)
+    handle = (state / ".config.lock").open("a+b")
+    try:
+        if os.name == "nt":
+            import msvcrt
+
+            handle.seek(0)
+            handle.write(b"0")
+            handle.flush()
+            handle.seek(0)
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError as exc:
+        handle.close()
+        raise ArchiveError(
+            "Studio Archive state is in use by another process; "
+            "use an isolated session state directory or retry after it finishes."
+        ) from exc
+    path = state / CONFIG_FILENAME
+    _STATE_LEASES[state] = (handle, path.read_bytes() if path.exists() else None)
+
+
+def _release_state_leases() -> None:
+    for handle, _ in _STATE_LEASES.values():
+        handle.close()
+    _STATE_LEASES.clear()
+
+
+atexit.register(_release_state_leases)
 CLIENT_IDENTITIES_FILENAME = "client-identities.json"
 GOOGLE_DRIVE_BINDINGS_FILENAME = "google-drive-bindings.json"
 GOOGLE_DRIVE_AUTH_FILENAME = "google-drive-token.json"
@@ -436,7 +503,10 @@ def _state_dir(
         selected = (
             Path(environment_value).expanduser()
             if environment_value
-            else Path.home() / DEFAULT_STATE_SUBDIR
+            else Path.home()
+            / DEFAULT_STATE_SUBDIR
+            / "sessions"
+            / hashlib.sha256(_session_id().encode("utf-8")).hexdigest()[:32]
         )
     selected = Path(selected).expanduser()
     if not selected.is_absolute():
@@ -492,6 +562,14 @@ def _assert_private_file(path: Path, label: str) -> None:
 
 
 def _write_private_json(path: Path, payload: dict[str, Any]) -> None:
+    if path.name == CONFIG_FILENAME:
+        _claim_state(path.parent)
+        existing = _STATE_LEASES[path.parent.resolve()][1]
+        if existing is not None:
+            owner = json.loads(existing).get("session_id")
+            if owner is not None and owner != _session_id():
+                raise ArchiveError(_CONFIGURATION_CHANGED)
+        payload = {**payload, "session_id": _session_id()}
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{path.name}.",
@@ -503,9 +581,15 @@ def _write_private_json(path: Path, payload: dict[str, Any]) -> None:
         with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
             json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
             handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
         temporary.chmod(0o600)
+        written_bytes = temporary.read_bytes() if path.name == CONFIG_FILENAME else None
         temporary.replace(path)
         path.chmod(0o600)
+        if path.name == CONFIG_FILENAME:
+            state = path.parent.resolve()
+            _STATE_LEASES[state] = (_STATE_LEASES[state][0], written_bytes)
     finally:
         if temporary.exists():
             temporary.unlink()
@@ -773,6 +857,7 @@ def configure_archive(
         root,
         host_access_approved=host_access_approved,
     )
+    _claim_state(private_state)
     config_path = _config_path(private_state)
     if config_path.is_file() and _config_matches(
         config_path,
@@ -957,6 +1042,7 @@ def _load_config(
     *,
     validate_scope_roots: bool = True,
 ) -> ArchiveConfig:
+    _claim_state(state_dir)
     path = _config_path(state_dir)
     if not path.is_file():
         raise ArchiveNotConfiguredError(
@@ -964,11 +1050,13 @@ def _load_config(
         )
     _assert_private_file(path, "configuration")
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(_STATE_LEASES[state_dir.resolve()][1] or b"null")
     except (OSError, json.JSONDecodeError) as exc:
         raise ArchiveError(
             f"Studio Archive configuration is unreadable: {exc}"
         ) from exc
+    if payload.get("session_id", _session_id()) != _session_id():
+        raise ArchiveError(_CONFIGURATION_CHANGED)
     if payload.get("schema_version") != CONFIG_SCHEMA_VERSION:
         raise ArchiveError("Studio Archive configuration version is unsupported.")
     raw_root = payload.get("archive_root")
@@ -5486,3 +5574,23 @@ def open_archive_source(
         }
     finally:
         connection.close()
+
+
+def _verify_run_configuration(function: Callable[..., Any]) -> Callable[..., Any]:
+    """Verify the pinned configuration before returning any public operation."""
+
+    @wraps(function)
+    def checked(*args: Any, **kwargs: Any) -> Any:
+        result = function(*args, **kwargs)
+        state = _state_dir(kwargs.get("state_dir"))
+        if state in _STATE_LEASES:
+            _check_configuration(state)
+        return result
+
+    return checked
+
+
+for _operation_name in __all__:
+    _operation = globals()[_operation_name]
+    if callable(_operation) and not isinstance(_operation, type):
+        globals()[_operation_name] = _verify_run_configuration(_operation)

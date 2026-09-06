@@ -240,12 +240,16 @@
     {
       "id": "fail-closed-whatsapp-client-routing",
       "control": "The local WhatsApp route starts only from empty unique Search and composer controls, attempts Search with Command-F, and if Computer Use rejects that modifier chord continues only after a fresh full snapshot proves those controls remain uniquely exposed and empty with no send control. It then clicks the exact fresh Search index, rejects contradictory focus metadata, enters the confirmed phone one digit at a time, and checks the exact Search prefix and empty composer after every digit. Any mismatch stops; only one proven newly misdirected digit may be removed. Raw pre-verification state stays local, the exact result's More Info contact card must contain one confirmed-name heading and exact phone before the contact is opened, and only the verified target chat-table subtree may be returned."
+    },
+    {
+      "id": "session-owned-archive-configuration",
+      "control": "Archive state defaults to an isolated session directory. The local MCP server passes one session identity to its helper processes. An operating-system lock is held from first configuration access until process exit; competing processes fail. Persisted ownership rejects other sessions between commands. Configuration reads use the pinned bytes, configuration writes validate the prior bytes, and public operations check for unexpected changes before returning. Atomic replacement is preserved. Explicit state-directory overrides remain subject to the same ownership and lock checks."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-20",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4a43f49cd98bcd0eaa237428fa8c8824ad7a2e30194fe0e101cf525a9132f832"
+    "source_fingerprint": "c8c96002a5286ff4ee32b91128adbb5490b991095d7ae6ba35ca39837ea93e1f"
   }
 }
