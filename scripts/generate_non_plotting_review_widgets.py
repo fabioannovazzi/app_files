@@ -5689,7 +5689,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
 
 def render_target(target: dict[str, Any]) -> str:
     config = adapter_config(target)
-    return TEMPLATE.format(
+    html = TEMPLATE.format(
         title=target["title"],
         search=target["search"],
         config_json=json.dumps(config, ensure_ascii=True, separators=(",", ":")),
@@ -5700,6 +5700,14 @@ def render_target(target: dict[str, Any]) -> str:
         schema_version_json=json.dumps(target.get("schemaVersion", "1.0")),
         **_widget_snippets(target),
     )
+    if target["plugin"] == "open-item-reconciliation":
+        if __package__:
+            from scripts.open_item_review_widget import customize_review
+        else:
+            from open_item_review_widget import customize_review
+
+        return customize_review(html)
+    return html
 
 
 def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
