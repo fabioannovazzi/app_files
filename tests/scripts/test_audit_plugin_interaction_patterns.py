@@ -144,10 +144,33 @@ def test_main_emits_json_summary(capsys) -> None:
         for pattern in payload["patterns"]
         for verifier in pattern["verifier_paths"]
     )
-    assert isinstance(coverage["ask_material_questions_only"]["missing_plugins"], list)
-    assert isinstance(coverage["stateful_decision_review"]["missing_plugins"], list)
-    assert isinstance(coverage["local_browser_writeback"]["missing_plugins"], list)
+    assert coverage["ask_material_questions_only"]["missing_plugins"] == []
+    assert coverage["stateful_decision_review"]["missing_plugins"] == []
+    assert coverage["local_browser_writeback"]["missing_plugins"] == []
     assert "clara" not in coverage["stateful_decision_review"]["applicable_plugins"]
+
+
+@pytest.mark.parametrize(
+    ("skill", "expected"),
+    [
+        (
+            "scripts/prepare_review.py persists pending_review_decisions.json; "
+            "scripts/apply_review.py applies the saved review.",
+            True,
+        ),
+        ("A file named pending_review_decisions.json is mentioned here.", False),
+        ("scripts/prepare_review.py and scripts/apply_review.py", False),
+    ],
+)
+def test_native_saved_review_contract_requires_file_and_commands(
+    tmp_path: Path, skill: str, expected: bool
+) -> None:
+    audit = load_audit_module()
+    write_plugin(tmp_path, "native-review", skill)
+
+    report = audit.audit_plugins(tmp_path)[0]
+
+    assert report.stateful_decision_review is expected
 
 
 def test_pattern_catalog_is_loaded_from_structured_artifact() -> None:

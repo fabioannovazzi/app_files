@@ -623,11 +623,24 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
         and "render_" in lowered_mcp_text
         and "review" in lowered_mcp_text
     )
+    native_saved_review = all(
+        # Explicit file/CLI names identify the native persistence contract.
+        token in lowered_skill_text
+        for token in (
+            "pending_review_decisions.json",
+            "scripts/prepare_review.py",
+            "scripts/apply_review.py",
+        )
+    )
     report.stateful_decision_review = (
-        "save_" in lowered_mcp_text
-        and "apply_" in lowered_mcp_text
-        and "ui_decisions.json" in lowered_mcp_text
-    ) or "ui_decisions.json" in lowered_skill_text
+        (
+            "save_" in lowered_mcp_text
+            and "apply_" in lowered_mcp_text
+            and "ui_decisions.json" in lowered_mcp_text
+        )
+        or "ui_decisions.json" in lowered_skill_text
+        or native_saved_review
+    )
     report.generated_workbench_asset = (
         plugin_dir / "assets" / "review-workbench-adapter.json"
     ).exists()
@@ -656,6 +669,11 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
     )
     report.has_decision_contract_language = _contains_all(
         skill_text, DECISION_CONTRACT_TERMS
+    ) or (
+        native_saved_review
+        and _contains_all(
+            skill_text, ("applied_decisions.json", "final_artifacts.json")
+        )
     )
 
     for phrase in BANNED_CONTINUE_PROMPTS:
@@ -721,7 +739,11 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
                     ),
                 )
             )
-        if not _contains_all(skill_text, REVIEW_TOOL_TERMS):
+        if not _contains_all(skill_text, REVIEW_TOOL_TERMS) and not (
+            native_saved_review
+            and "scripts/validate_run.py" in lowered_skill_text
+            and "scripts/review_server.py" in lowered_skill_text
+        ):
             report.issues.append(
                 InteractionIssue(
                     severity="medium",

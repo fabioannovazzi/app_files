@@ -320,3 +320,15 @@ def test_direct_cli_uses_empty_bootstrap_interpreter(monkeypatch, tmp_path):
         expected_error="missing required role bindings",
     )
     assert "CLAUDE_ENV_FILE" not in run.env
+
+
+def test_new_probe_preserves_existing_gate_evidence(tmp_path: Path) -> None:
+    """A supplemental probe cannot replace a completed run's report."""
+    report = tmp_path / "result.json"
+    original = json.dumps(passing_report()).encode()
+    report.write_bytes(original)
+
+    with pytest.raises(FileExistsError, match="use a new output directory"):
+        gate.CheckRun(tmp_path / "candidate.zip", tmp_path, 10)
+
+    assert report.read_bytes() == original

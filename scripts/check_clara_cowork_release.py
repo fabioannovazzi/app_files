@@ -150,6 +150,10 @@ class CheckRun:
     """Run actual commands with isolated state and retain every command's log."""
 
     def __init__(self, archive: Path, output: Path, timeout: int) -> None:
+        if (output / "result.json").exists():
+            raise FileExistsError(
+                f"Gate evidence already exists in {output}; use a new output directory"
+            )
         self.archive, self.output, self.timeout = archive, output, timeout
         self.root = output / "package"
         self.python = (

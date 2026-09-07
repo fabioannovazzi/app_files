@@ -256,21 +256,23 @@ def test_plugin_update_scripts_stay_identical() -> None:
 
 
 @pytest.mark.parametrize("plugin_root", [CLARA_ROOT, VERA_ROOT])
-def test_published_manifest_never_advertises_unreleased_source_version(
+def test_published_manifest_matches_observed_marketplace_release(
     plugin_root: Path,
 ) -> None:
-    checker = load_update_checker()
-    source_manifest = json.loads(
-        (plugin_root / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
-    )
+    # A development checkout may be older or newer than the published release.
+    publication = json.loads(
+        (ROOT / "docs/releases/marketplace-publications.json").read_text(
+            encoding="utf-8"
+        )
+    )["plugins"][plugin_root.name]
     published_manifest = json.loads(PUBLISHED_VERSIONS_PATH.read_text(encoding="utf-8"))
     published_version = published_manifest["plugins"][plugin_root.name][
         "published_version"
     ]
 
-    result = checker.is_newer_version(published_version, source_manifest["version"])
-
-    assert result is False
+    assert published_version == publication["version"]
+    assert publication["listing_url"].startswith("https://chatgpt.com/plugins/")
+    assert publication["observed_at"]
 
 
 @pytest.mark.parametrize("plugin_root", [CLARA_ROOT, VERA_ROOT])
@@ -288,9 +290,8 @@ def test_published_manifest_is_not_behind_installed_marketplace(
         if not manifest_path.is_file():
             continue
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if (
-            manifest.get("name") == plugin_root.name
-            and isinstance(manifest.get("version"), str)
+        if manifest.get("name") == plugin_root.name and isinstance(
+            manifest.get("version"), str
         ):
             installed_versions.append(manifest["version"])
     if not installed_versions:
