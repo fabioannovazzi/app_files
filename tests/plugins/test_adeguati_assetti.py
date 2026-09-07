@@ -559,3 +559,120 @@ def test_cli_follow_up_uses_finalized_same_engagement_artifact(
         == previous["record_sha256"]
     )
     assert "Awaiting new evidence" in saved.with_suffix(".md").read_text()
+
+
+def intelligent_case(tmp_path: Path) -> dict:
+    review = case(tmp_path)
+    review["intelligent_review"] = {
+        "version": 1,
+        "coverage": [
+            {
+                "id": "C1",
+                "area": "Reporting",
+                "status": "assessed",
+                "reason": "Limited to supplied reporting examples.",
+                "observation_ids": ["O1"],
+            },
+            {
+                "id": "C2",
+                "area": "Payments",
+                "status": "excluded",
+                "reason": "Outside agreed scope; no company-wide conclusion.",
+                "observation_ids": [],
+            },
+        ],
+        "processes": [
+            {
+                "id": "P1",
+                "process": "Monthly reporting",
+                "risk": "Late management response",
+                "responsibility": "Administrator, as reported",
+                "control": "Monthly review required by policy",
+                "information_flow": "Delivery unverified",
+                "operation": "Two quarterly reports; informal reviews may exist",
+                "gap": "Monthly operation unknown",
+                "observation_ids": ["O1"],
+            }
+        ],
+        "questions": [
+            {
+                "id": "Q1",
+                "question": "Show the latest review and response",
+                "why_it_matters": "Could substantiate an informal control",
+                "evidence_needed": "Dated report and decision",
+                "status": "Unanswered",
+                "observation_ids": ["O1"],
+            }
+        ],
+        "chronology": [
+            {
+                "id": "T1",
+                "event_date": "Unknown",
+                "known_at": "Unknown; upload date is not availability to management",
+                "recipient": "Unverified",
+                "event": "Reporting policy supplied",
+                "response": "No decision evidence",
+                "uncertainty": "Cannot establish prior use",
+                "observation_ids": ["O1"],
+            }
+        ],
+        "decision_brief": "Discuss A1; do not infer that missing reports never existed.",
+        "action_ids": ["A1"],
+        "next_review": "Proposed after a reporting cycle; inspect review and exception handling.",
+    }
+    return review
+
+
+def test_intelligent_analysis_survives_save_reopen_and_renders(tmp_path: Path) -> None:
+    record = build(intelligent_case(tmp_path), tmp_path)
+    output = tmp_path / "output"
+    assetti.save_record(record, output)
+    reopened = json.loads(next(output.glob("*.json")).read_text())
+    memo = next(output.glob("*.md")).read_text()
+    assert reopened == record
+    assert "Could substantiate an informal control" in memo
+    assert "upload date is not availability to management" in memo
+    assert "Outside agreed scope; no company-wide conclusion" in memo
+    assert "inspect review and exception handling" in memo
+    assert reopened["status"] == "draft_for_review"
+
+
+@pytest.mark.parametrize(
+    "section", ["coverage", "processes", "questions", "chronology"]
+)
+def test_intelligent_sections_reject_unbound_observations(
+    tmp_path: Path, section: str
+) -> None:
+    review = intelligent_case(tmp_path)
+    review["intelligent_review"][section][0]["observation_ids"] = ["MISSING"]
+    with pytest.raises(ValueError, match="unknown IDs"):
+        build(review, tmp_path)
+
+
+def test_intelligent_analysis_change_invalidates_professional_approval(
+    tmp_path: Path,
+) -> None:
+    review = intelligent_case(tmp_path)
+    review["professional_decision"] = decision(review)
+    review["intelligent_review"]["processes"][0]["operation"] = "Revised interpretation"
+    with pytest.raises(ValueError, match="exact proposal"):
+        build(review, tmp_path)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("version", True),
+        ("coverage", []),
+        ("questions", {}),
+        ("action_ids", ["MISSING"]),
+        ("decision_brief", ""),
+    ],
+)
+def test_incomplete_intelligent_records_rejected(
+    tmp_path: Path, field: str, value
+) -> None:
+    review = intelligent_case(tmp_path)
+    review["intelligent_review"][field] = value
+    with pytest.raises(ValueError):
+        build(review, tmp_path)

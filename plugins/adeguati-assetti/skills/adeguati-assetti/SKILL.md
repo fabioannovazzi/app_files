@@ -13,7 +13,8 @@ automatic crisis declaration. Directors retain their responsibilities; the
 commercialista reviews the proposed analysis. Neither a score nor a successful
 script establishes adequacy.
 
-Read `references/professional-method.md` and `references/record-contract.md`
+Read `references/intelligent-assessment.md`, `references/professional-method.md`
+and `references/record-contract.md`
 from the module root before analysis. The model selects scope, sources,
 proportionality, materiality, interpretation and recommendations. Python verifies
 exact bindings, hashes and record shape only. No questionnaire total, ratio,
@@ -113,6 +114,11 @@ review JSON in the output folder and run from the module root:
 ```bash
 python scripts/assetti_review.py --client-engagement <context-path> --review <run-output>/review_input.json
 ```
+
+For every new run, author the `intelligent_review` extension described in the
+record contract. Use its coverage, process evidence, targeted questions, chronology
+and decision brief to make the reasoning reviewable. Reassess hypotheses after
+answers; do not merely fill fields or run the helper and call that analysis.
 
 Default output policy: the Markdown assessment memo and versioned JSON record
 are normal outputs, not choices to propose;

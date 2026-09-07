@@ -8,7 +8,7 @@ from zipfile import ZipFile
 
 import pytest
 
-from tests.plugins.test_adeguati_assetti import review_for
+from tests.plugins.test_adeguati_assetti import intelligent_case, review_for
 
 __all__: list[str] = []
 
@@ -37,6 +37,7 @@ def test_packaged_review_runs_with_exact_archive_context(
     review = review_for(
         workspace["input_paths"][0], Path(workspace["context"]["run_root"]) / "inputs"
     )
+    review["intelligent_review"] = intelligent_case(tmp_path)["intelligent_review"]
     review_path = workspace["output_dir"] / "review_input.json"
     review_path.write_text(json.dumps(review))
 
@@ -59,4 +60,8 @@ def test_packaged_review_runs_with_exact_archive_context(
     record = json.loads(record_path.read_text())
     assert record["workflow_id"] == "adeguati-assetti"
     assert record["status"] == "draft_for_review"
-    assert record_path.with_suffix(".md").is_file()
+    assert record["review"]["intelligent_review"] == review["intelligent_review"]
+    assert (
+        "Could substantiate an informal control"
+        in record_path.with_suffix(".md").read_text()
+    )
