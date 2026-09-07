@@ -89,4 +89,4 @@ The user excluded Windows and Mac-specific qualification from this task. No addi
 
 ## CI environment correction
 
-The first input-correctness CI job reached 285 passes but failed ten cases because its minimal test environment omitted ReportLab (synthetic PDF fixture creation) and Polars (shared worker-capsule imports). Both are already declared repository dependencies. The job now installs them explicitly; production code and assertions are unchanged. Fresh CI remains required before merge.
+The first input-correctness CI job reached 285 passes but failed ten cases because its minimal test environment omitted ReportLab (synthetic PDF fixture creation) and Polars (shared worker-capsule imports). Both are already declared repository dependencies. The second run exposed the same shared import chain requiring fastexcel. The job now installs ReportLab and the complete declared Journal–Bank requirements used by the worker capsule; production code and assertions are unchanged. Fresh CI remains required before merge.
