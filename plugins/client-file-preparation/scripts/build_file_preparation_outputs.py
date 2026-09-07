@@ -10,7 +10,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 from string import Template
-from typing import Iterable, Sequence
+from typing import Iterable, Mapping, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PLUGIN_ROOT = SCRIPT_DIR.parent
@@ -1553,11 +1553,12 @@ def _write_combined_anomalies(
     xml_with_anomalies = [record for record in xml_records if record.anomalies]
     if xml_with_anomalies:
         lines.extend([f"## {copy['xml']}", ""])
-        for record in xml_with_anomalies:
+        for xml_record in xml_with_anomalies:
             localized = [
-                localize_formal_anomaly(value, language) for value in record.anomalies
+                localize_formal_anomaly(value, language)
+                for value in xml_record.anomalies
             ]
-            lines.append(f"- `{record.relative_path}`: {', '.join(localized)}")
+            lines.append(f"- `{xml_record.relative_path}`: {', '.join(localized)}")
     output_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return output_path
 
@@ -1854,6 +1855,7 @@ def build_file_preparation_outputs(
     max_pages: int = 50,
     run_id: str | None = None,
     run_root: Path | None = None,
+    kind_decisions: Mapping[str, Mapping[str, str]] | None = None,
 ) -> BuildResult:
     """Run the prototype first-intake workflow on a customer folder."""
 
@@ -1884,6 +1886,21 @@ def build_file_preparation_outputs(
         else root.parent / "output" / f"client-file-preparation-{stable_run_id}"
     )
     out_dir, resume_partial_run = _validated_output_dir(requested_out_dir)
+    decision_bytes = (
+        json.dumps(
+            dict(kind_decisions or {}), ensure_ascii=False, sort_keys=True, indent=2
+        )
+        + "\n"
+    )
+    decision_artifact = out_dir / "document_kind_decisions.json"
+    if resume_partial_run:
+        previous = (
+            decision_artifact.read_text(encoding="utf-8")
+            if decision_artifact.is_file()
+            else "{}\n"
+        )
+        if previous != decision_bytes:
+            raise ValueError("Document-kind decisions changed; prepare a successor run")
     records = scan_folder(
         root,
         target_year=target_year,
@@ -1913,6 +1930,7 @@ def build_file_preparation_outputs(
             )
     out_dir.mkdir(parents=True, exist_ok=True)
     out_dir.chmod(0o700)
+    decision_artifact.write_text(decision_bytes, encoding="utf-8")
     missing_dependency_count, _ = _write_environment_report(
         out_dir / "00_environment_check.md",
         require_ocr=require_ocr and enable_ocr,
@@ -1955,6 +1973,7 @@ def build_file_preparation_outputs(
     structured_fields = parse_structured_fiscal_fields(
         document_evidence,
         out_dir / "extracted",
+        kind_decisions=kind_decisions or {},
     )
     write_fiscal_fields_csv(
         structured_fields,
@@ -2118,6 +2137,11 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument("folder", type=Path, help="Cartella cliente.")
     parser.add_argument("--client-engagement", type=Path, required=True)
+    parser.add_argument(
+        "--document-kind-decisions",
+        type=Path,
+        help="Reviewed, text-hash-bound decisions from an authorized engagement input.",
+    )
     parser.add_argument("--year", type=int, default=None, help="Anno fiscale target.")
     parser.add_argument(
         "--out",
@@ -2159,7 +2183,8 @@ def main() -> int:
         context = load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="client-file-preparation",
-            input_paths=[args.folder],
+            input_paths=[args.folder]
+            + ([args.document_kind_decisions] if args.document_kind_decisions else []),
             output_dir=args.out,
         )
     except AssuranceContractError as exc:
@@ -2184,6 +2209,11 @@ def main() -> int:
         max_pages=args.max_pages,
         run_id=str(context["run_id"]),
         run_root=Path(context["run_root"]),
+        kind_decisions=(
+            json.loads(args.document_kind_decisions.read_text(encoding="utf-8"))
+            if args.document_kind_decisions
+            else None
+        ),
     )
     LOGGER.info("Output creati in %s", result.output_dir)
     LOGGER.info(

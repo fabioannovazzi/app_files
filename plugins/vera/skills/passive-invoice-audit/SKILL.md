@@ -1,6 +1,6 @@
 ---
 name: passive-invoice-audit
-description: Use when Vera must audit a population of passive FatturaPA invoices against actual booked accounting entries and surface only deterministic or GPT-5.6 Luna semantic exceptions for professional review.
+description: Use when Vera must audit a population of passive FatturaPA invoices against actual booked accounting entries and surface only deterministic or native Codex semantic exceptions for professional review.
 ---
 
 # Intelligent Passive-Invoice Audit

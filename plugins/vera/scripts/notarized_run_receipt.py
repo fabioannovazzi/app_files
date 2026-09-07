@@ -433,7 +433,7 @@ def _request_for_run(
         expected = build_receipt_request(
             report,
             receipt_id=str(existing["receipt_id"]),
-            plugin_version=plugin_version,
+            plugin_version=str(existing["plugin_version"]),
         )
         if existing != expected:
             raise NotarizedRunReceiptError(
@@ -451,6 +451,8 @@ def _request_for_run(
 
 def _validate_endpoint(value: str) -> str:
     parsed = urllib.parse.urlsplit(value)
+    if parsed.username is not None or parsed.password is not None:
+        raise NotarizedRunReceiptError("Receipt endpoint cannot contain credentials")
     expected_path = "/api/vera/run-receipts"
     production = (
         parsed.scheme == "https"
@@ -487,11 +489,28 @@ def _read_bounded_response(response: Any) -> bytes:
     return data
 
 
+class _RejectReceiptRedirects(urllib.request.HTTPRedirectHandler):
+    """Keep receipt requests on their validated destination."""
+
+    def redirect_request(
+        self,
+        req: urllib.request.Request,
+        fp: Any,
+        code: int,
+        msg: str,
+        headers: Any,
+        newurl: str,
+    ) -> None:
+        raise NotarizedRunReceiptError("Receipt service redirects are not permitted")
+
+
 def _request_json(
     request: urllib.request.Request,
     *,
-    opener: Callable[..., Any],
+    opener: Callable[..., Any] | None,
 ) -> dict[str, Any]:
+    if opener is None:
+        opener = urllib.request.build_opener(_RejectReceiptRedirects()).open
     try:
         with opener(
             request, timeout=_NETWORK_TIMEOUT_SECONDS
@@ -517,7 +536,7 @@ def _post_receipt_request(
     endpoint: str,
     payload: Mapping[str, Any],
     *,
-    opener: Callable[..., Any],
+    opener: Callable[..., Any] | None,
 ) -> dict[str, Any]:
     body = _canonical_bytes(payload)
     request = urllib.request.Request(
@@ -788,20 +807,65 @@ def _render_html(report: Mapping[str, Any], receipt: Mapping[str, Any]) -> str:
 """
 
 
+def _receipt_output_directory(
+    output: Path, report_path: Path, report: Mapping[str, Any]
+) -> Path:
+    """Keep late attestations outside an already sealed deliverable tree."""
+
+    run_root = output.parent
+    manifest_path = run_root / "artifact_manifest.json"
+    if output.name != "outputs" or not manifest_path.exists():
+        return output
+    if manifest_path.is_symlink():
+        raise NotarizedRunReceiptError("Artifact manifest cannot be a symlink")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("run_id") != report["run_id"]:
+        raise NotarizedRunReceiptError("Sealed output belongs to another report run")
+    try:
+        relative = report_path.relative_to(output).as_posix()
+    except ValueError as exc:
+        raise NotarizedRunReceiptError("Report is outside the sealed output") from exc
+    report_hash = hashlib.sha256(report_path.read_bytes()).hexdigest()
+    if not any(
+        item.get("path") == relative and item.get("sha256") == report_hash
+        for item in manifest.get("artifacts", [])
+    ):
+        raise NotarizedRunReceiptError(
+            "Report does not match the sealed artifact identity"
+        )
+    receipts = run_root / "receipts"
+    destination = receipts / report_hash
+    for directory in (receipts, destination):
+        if directory.is_symlink():
+            raise NotarizedRunReceiptError(
+                "Supplementary receipt directory cannot be a symlink"
+            )
+        directory.mkdir(exist_ok=True, mode=0o700)
+    # Preserve the idempotency key of an offline attempt sealed with the outputs.
+    original = output / _REQUEST_FILE
+    if original.exists():
+        if original.is_symlink() or not original.is_file():
+            raise NotarizedRunReceiptError("Original receipt request is unsafe")
+        _write_once_or_identical(destination / _REQUEST_FILE, original.read_bytes())
+    return destination
+
+
 def stamp_model_data_report(
     report_path: Path,
     *,
     output_dir: Path,
     plugin_root: Path,
     endpoint: str | None = None,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
 ) -> dict[str, Any]:
     """Stamp one validated local report and write portable JSON and HTML proofs."""
 
     output = output_dir.expanduser().resolve()
     if output_dir.is_symlink() or not output.is_dir():
         raise NotarizedRunReceiptError("receipt output directory must already exist")
-    report = _validated_report(report_path.expanduser().resolve())
+    report_path = report_path.expanduser().resolve()
+    report = _validated_report(report_path)
+    output = _receipt_output_directory(output, report_path, report)
     version = _plugin_version(plugin_root.expanduser().resolve())
     request_path = output / _REQUEST_FILE
     receipt_path = output / _RECEIPT_FILE
@@ -845,7 +909,7 @@ def verify_model_data_receipt(
     receipt_path: Path,
     *,
     report_path: Path,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
 ) -> dict[str, Any]:
     """Check the local digest and ask Mparanza for the retained signed proof."""
 

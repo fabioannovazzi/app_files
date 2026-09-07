@@ -1021,6 +1021,9 @@ def build_plan(
     status = "partial" if issues else "ready_for_professional_review"
     if any("disagrees" in i or "reconciliation failed" in i for i in issues):
         status = "blocked"
+        # Exact contradictions invalidate the submitted assessment as a whole;
+        # retain its prose in case, without labelling it accepted interpretation.
+        accepted = []
     plan = {
         "schema_version": "mparanza.business_planning_plan.v3",
         "workflow_id": "business-planning",
@@ -1034,11 +1037,17 @@ def build_plan(
         "accepted_narrative": accepted,
         "limitations": [
             *case["limitations"],
-            "Monthly period-end cash cannot establish an intramonth liquidity minimum.",
-            "Cash interest and tax are paid in the modeled period; deferred tax, leases and disposals are unsupported.",
-            "Revenue break-even assumes the reviewed variable/fixed cost split remains valid.",
-            "Funding requirement is the modeled pre-financing cash gap, not a recommended capital structure or contingency buffer.",
-            "DSCR uses disclosed CFADS; lender covenant definitions may differ.",
+            *(
+                [
+                    "Monthly period-end cash cannot establish an intramonth liquidity minimum.",
+                    "Cash interest and tax are paid in the modeled period; deferred tax, leases and disposals are unsupported.",
+                    "Revenue break-even assumes the reviewed variable/fixed cost split remains valid.",
+                    "Funding requirement is the modeled pre-financing cash gap, not a recommended capital structure or contingency buffer.",
+                    "DSCR uses disclosed CFADS; lender covenant definitions may differ.",
+                ]
+                if statements is not None
+                else []
+            ),
             "Mechanical readiness is not an assessment of viability, market attractiveness or financeability.",
         ],
     }

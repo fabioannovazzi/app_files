@@ -19,7 +19,7 @@
       "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
       "purpose": "Prepare the selected Vera module's published core or explicitly selected optional Python requirements in an isolated virtual environment on first use or after its requirement fingerprint or Python platform changes",
       "content": "Package names and version constraints from the selected published module requirements files, plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by the managed runtime.",
-      "retention": "Downloaded packages are stored in a fingerprinted user-scoped local Vera data directory until that local cache is removed. In a sandboxed Codex session the manager uses a stable private directory beneath the operating system's per-user temporary location so setup and subsequent execution resolve the same writable target. Package-index request-log retention is controlled by the configured index and is outside Vera's control.",
+      "retention": "Downloaded packages are stored in a fingerprinted user-scoped local Vera data directory until that local cache is removed. When CODEX_SANDBOX or CODEX_THREAD_ID identifies Codex execution, the manager uses a stable private directory beneath the operating system's per-user temporary location so an approved setup command and subsequent sandboxed execution resolve the same writable target. The thread identifier is used only as a presence signal; its value is not included in the directory name or sent to the package index. Package-index request-log retention is controlled by the configured index and is outside Vera's control. Validated environments are published as immutable generations using an atomic active pointer. Prior generations remain locally available for running readers until the local cache is removed; failed unpublished generations are removed.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -46,7 +46,7 @@
     },
     {
       "id": "user-scoped-runtime-isolation",
-      "control": "Managed packages are written outside plugin source and client workspaces to one fingerprinted virtual environment for the selected module and current Python platform. The location is write-probed before use and remains user-private when Codex requires the operating system's per-user temporary directory.",
+      "control": "Managed packages are written outside plugin source and client workspaces to fingerprinted private virtual-environment generations for the selected module and current Python platform. An operating-system lock serializes installation, and only a validated generation is published through an atomic active pointer. Setup failure preserves the previously active generation. Symlink targets and pointers are rejected. The location is write-probed before use and remains user-private when Codex requires the operating system's per-user temporary directory.",
       "implemented_by": [
         "scripts/managed_python_runtime.py",
         "scripts/_managed_python_runtime.py"
@@ -55,9 +55,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-11",
+    "reviewed_at": "2026-09-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "4f337998715bd0aa516c83b3238291f40b3c979ffbd8194e6765f68bc981a285"
+    "source_fingerprint": "aa1a2e89986a063072539a662f9566a15753ec67e06d238081b87db06d2bfffa"
   }
 }

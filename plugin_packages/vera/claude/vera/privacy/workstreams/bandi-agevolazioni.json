@@ -104,7 +104,7 @@
     },
     {
       "id": "sealed-model-contribution-boundary",
-      "control": "In Codex and Cowork, each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating above 500 items per collection, 200 stored excerpts or 2,000,000 packet bytes. Exact professional-selected IDs scope an over-limit global collection while the other required collections remain complete. The contribution is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests an exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
+      "control": "In Codex and Cowork, each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating above 500 items per collection, 200 stored excerpts or 2,000,000 packet bytes. Exact professional-selected IDs scope an over-limit global collection while the other required collections remain complete. Recording requires the digest of the exact packet supplied to the model and rejects a reconstructed scope or projected-content mismatch before mutating the register. Digest equality is caller-attested packet identity, not proof of provider receipt. The contribution is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests an exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
     },
     {
       "id": "opaque-portfolio-radar-boundary",
@@ -128,9 +128,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-05",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ed98fbf6737fbda7fc7ed957afe402cc4800e4c73b7820c20308b62398d57010"
+    "source_fingerprint": "68b9cfc10c92fceda2fb75ff9b8246458b6d528040f6b139a1b4d7e9b4bdee35"
   }
 }

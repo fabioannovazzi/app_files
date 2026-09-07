@@ -632,7 +632,10 @@ def _package_communications_locked(root: Path) -> Path:
             "No email, upload, or publication has occurred unless a separate external receipt records visible confirmation.",
         ],
         "next_actions": (
-            ["Keep the no-publication recommendation as the completed outcome."]
+            [
+                "After successful validation of this internal record, "
+                "retain the no-publication recommendation as the completed outcome."
+            ]
             if target_status == "no_publication_recommended"
             else [
                 "Visually inspect every PNG, HTML page, and PDF before external use.",

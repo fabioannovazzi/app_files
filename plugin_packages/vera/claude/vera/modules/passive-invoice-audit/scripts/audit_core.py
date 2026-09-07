@@ -2,23 +2,25 @@
 
 from __future__ import annotations
 
+import copy
 import csv
 import hashlib
 import importlib.util
 import json
 import logging
 import os
+import re
 import sqlite3
 import sys
 import time
 import zipfile
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, timezone
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path
-from typing import Any, Callable, Iterable, Mapping, Sequence
+from typing import Any, Iterable, Mapping, Protocol, Sequence
 
 from openpyxl import load_workbook
 from xlsxwriter import Workbook
@@ -40,9 +42,10 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 WORKFLOW_ID = "passive-invoice-audit"
-WORKFLOW_VERSION = "0.1.2"
+WORKFLOW_VERSION = "0.1.3"
 SCHEMA_VERSION = "vera.passive_invoice_audit.v1"
 CENT = Decimal("0.01")
+DEFAULT_WORKER_MODEL = "gpt-5.6-luna"
 MAX_ARCHIVE_MEMBERS = 100_000
 MAX_ARCHIVE_UNCOMPRESSED_BYTES = 4 * 1024 * 1024 * 1024
 MAX_INVOICE_XML_BYTES = 20 * 1024 * 1024
@@ -114,7 +117,21 @@ class SemanticReviewPending(AuditError):
     """Host must review the prepared packets before this job can complete."""
 
 
-LunaRunner = Callable[[str, Mapping[str, Any], Path, str, str, str], Mapping[str, Any]]
+class LunaRunner(Protocol):
+    """Native chunk runner with optional reviewed model selection."""
+
+    def __call__(
+        self,
+        prompt: str,
+        output_schema: Mapping[str, Any],
+        output_dir: Path,
+        workflow_id: str,
+        packet_sha256: str,
+        reasoning_effort: str,
+        /,
+        *,
+        worker_selection: Mapping[str, Any] | None = None,
+    ) -> Mapping[str, Any]: ...
 
 
 @dataclass(frozen=True)
@@ -126,7 +143,9 @@ class AuditConfig:
     max_retries: int = 2
     reasoning_effort: str = "low"
     amount_tolerance: Decimal = CENT
-    semantic_model: str = "gpt-5.6-luna"
+    worker_runtime: str = "codex-native"
+    worker_model: str = DEFAULT_WORKER_MODEL
+    worker_selection: Mapping[str, Any] | None = None
 
     def validate(self) -> None:
         """Reject unsafe or unsupported execution settings."""
@@ -139,12 +158,35 @@ class AuditConfig:
             raise AuditError("max_retries must be between 0 and 3")
         if self.reasoning_effort not in {"low", "medium", "high", "xhigh", "max"}:
             raise AuditError("Unsupported Luna reasoning effort")
-        if self.semantic_model not in {"gpt-5.6-luna", "haiku"}:
-            raise AuditError("Unsupported semantic worker")
-        if self.semantic_model == "haiku" and self.reasoning_effort != "low":
-            raise AuditError("Cowork Haiku does not accept Luna effort overrides")
+        # Exact runtime binding prevents cross-runtime recovery of model evidence.
+        if self.worker_runtime not in {"codex-native", "cowork"}:
+            raise AuditError("Unsupported worker runtime")
+        if self.worker_runtime == "cowork":
+            if (
+                self.worker_model != "haiku"
+                or self.reasoning_effort != "low"
+                or self.worker_selection is not None
+            ):
+                raise AuditError("Cowork Haiku rejects Claude model or effort overrides")
         if self.amount_tolerance < 0:
             raise AuditError("amount_tolerance cannot be negative")
+        if self.worker_runtime == "cowork":
+            return
+        if self.worker_selection is None:
+            if self.worker_model != DEFAULT_WORKER_MODEL:
+                raise AuditError(
+                    "An alternative worker model requires a reviewed selection"
+                )
+        else:
+            from luna_worker import resolve_worker_selection
+
+            model, _, _ = resolve_worker_selection(
+                workflow_id=WORKFLOW_ID,
+                reasoning_effort=self.reasoning_effort,
+                worker_selection=self.worker_selection,
+            )
+            if self.worker_model != model:
+                raise AuditError("Configured model differs from the reviewed selection")
 
 
 def _now() -> str:
@@ -234,24 +276,46 @@ def _normalized_date(value: Any) -> str:
     return text
 
 
-def _decimal(value: Any, *, allow_blank: bool = True) -> Decimal | None:
+def _decimal(
+    value: Any, *, allow_blank: bool = True, number_format: str = "canonical"
+) -> Decimal | None:
     text = _text(value)
     if not text and allow_blank:
         return None
     if not text:
         raise AuditError("Required decimal value is blank")
-    normalized = text.replace(" ", "")
-    if "," in normalized and "." in normalized:
-        if normalized.rfind(",") > normalized.rfind("."):
-            normalized = normalized.replace(".", "").replace(",", ".")
-        else:
-            normalized = normalized.replace(",", "")
-    elif "," in normalized:
+    # Interpretation follows the reviewed convention, never separator guessing.
+    normalized = text.strip()
+    # Accounting parentheses are an explicit negative sign, never a second sign.
+    # Fixed syntax keeps this arithmetic interpretation mechanically verifiable.
+    if (
+        normalized.startswith("(")
+        and normalized.endswith(")")
+        and normalized[1:2] not in {"+", "-"}
+    ):
+        normalized = "-" + normalized[1:-1]
+    patterns = {
+        "canonical": r"[+-]?[0-9]+(?:\.[0-9]+)?",
+        "dot_decimal": r"[+-]?(?:[0-9]+|[0-9]{1,3}(?:,[0-9]{3})+)(?:\.[0-9]+)?",
+        "comma_decimal": r"[+-]?(?:[0-9]+|[0-9]{1,3}(?:\.[0-9]{3})+)(?:,[0-9]+)?",
+    }
+    if number_format not in patterns:
+        raise AuditError(
+            "number_format must be canonical, dot_decimal or comma_decimal"
+        )
+    if not re.fullmatch(patterns[number_format], normalized):
+        raise AuditError(f"Invalid decimal for {number_format}: {text}")
+    if number_format == "dot_decimal":
+        normalized = normalized.replace(",", "")
+    elif number_format == "comma_decimal":
         normalized = normalized.replace(".", "").replace(",", ".")
     try:
-        return Decimal(normalized)
+        result = Decimal(normalized)
     except InvalidOperation as exc:
         raise AuditError(f"Invalid decimal value: {text}") from exc
+    if not result.is_finite():
+        raise AuditError(f"Decimal must be finite: {text}")
+    return result
 
 
 def _money(value: Decimal | None) -> str:
@@ -423,6 +487,9 @@ def load_ledger(
         raise AuditError(
             "Ledger mapping must be a JSON object of canonical to source headers"
         )
+    number_format = mapping.pop("number_format", "canonical")
+    if number_format not in {"canonical", "dot_decimal", "comma_decimal"}:
+        raise AuditError("Unsupported reviewed number_format")
     unknown = set(mapping) - REQUIRED_LEDGER_FIELDS - OPTIONAL_LEDGER_FIELDS
     missing = REQUIRED_LEDGER_FIELDS - set(mapping)
     if unknown:
@@ -441,10 +508,19 @@ def load_ledger(
         movement_id = _text(row.get("movement_id"))
         if not movement_id:
             raise AuditError(f"Ledger row {source_row_number} has no movement_id")
-        debit = _decimal(row.get("debit")) or Decimal("0")
-        credit = _decimal(row.get("credit")) or Decimal("0")
-        signed = _decimal(row.get("amount_signed"))
-        if signed is None:
+        debit_value = _decimal(row.get("debit"), number_format=number_format)
+        credit_value = _decimal(row.get("credit"), number_format=number_format)
+        debit = debit_value if debit_value is not None else Decimal("0")
+        credit = credit_value if credit_value is not None else Decimal("0")
+        if "amount_signed" in mapping:
+            signed = _decimal(
+                row["amount_signed"], allow_blank=False, number_format=number_format
+            )
+        else:
+            if debit_value is None and credit_value is None:
+                raise AuditError(
+                    f"Ledger row {source_row_number} has no debit or credit amount"
+                )
             signed = debit - credit
         normalized_fields = {
             canonical: (
@@ -455,6 +531,13 @@ def load_ledger(
             for canonical, value in row.items()
             if canonical not in {"amount_signed", "debit", "credit"}
         }
+        # All mapped monetary fields share the reviewed source convention;
+        # downstream comparisons consume canonical amounts only.
+        for field in ("gross_amount", "taxable_amount", "vat_amount"):
+            if field in row:
+                normalized_fields[field] = _money(
+                    _decimal(row[field], number_format=number_format)
+                )
         normalized.append(
             normalized_fields
             | {
@@ -513,7 +596,9 @@ def _movement_groups(rows: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, A
                 if explicit_gross is not None
                 else "largest_absolute_line"
             ),
-            "comparison_gross_amount": _money(explicit_gross or fallback_gross),
+            "comparison_gross_amount": _money(
+                explicit_gross if explicit_gross is not None else fallback_gross
+            ),
             "taxable_amount": _money(
                 _decimal(_first_consistent(lines, "taxable_amount"))
             ),
@@ -645,7 +730,7 @@ def _deterministic_findings(
             _finding(
                 "ambiguous_ledger_match",
                 "exception",
-                "More than one ledger movement met the reviewed exact-match rule",
+                "Ledger candidates cannot be assigned uniquely without reuse",
                 {},
             )
         )
@@ -827,18 +912,18 @@ def _deterministic_findings(
         polarity_mismatches = []
         for line in movement["lines"]:
             account_type = _text(line.get("account_type")).lower()
-            expected = expected_directions.get(account_type)
+            expected_direction = expected_directions.get(account_type)
             amount = _decimal(line.get("amount_signed"), allow_blank=False)
-            if expected is None or amount == 0:
+            if expected_direction is None or amount == 0:
                 continue
             observed = "positive" if amount and amount > 0 else "negative"
-            if observed != expected:
+            if observed != expected_direction:
                 polarity_mismatches.append(
                     {
                         "account_code": _text(line.get("account_code")),
                         "account_type": account_type,
                         "amount_signed": _money(amount),
-                        "expected_direction": expected,
+                        "expected_direction": expected_direction,
                     }
                 )
         if polarity_mismatches:
@@ -875,17 +960,19 @@ def match_population(
     )
     invoice_number_index: dict[str, set[str]] = defaultdict(set)
     supplier_date_index: dict[tuple[str, str], set[str]] = defaultdict(set)
-    for movement_id, movement in movements.items():
+    for movement_id, indexed_movement in movements.items():
         references = {
-            _normalized_invoice_number(movement.get("invoice_number")),
-            _normalized_invoice_number(movement.get("document_reference")),
+            _normalized_invoice_number(indexed_movement.get("invoice_number")),
+            _normalized_invoice_number(indexed_movement.get("document_reference")),
         } - {"0"}
         for reference in references:
             invoice_number_index[reference].add(movement_id)
-        supplier_id = _normalized_tax_identifier(movement.get("supplier_tax_id"))
+        supplier_id = _normalized_tax_identifier(
+            indexed_movement.get("supplier_tax_id")
+        )
         dates = {
-            _normalized_date(movement.get("document_date")),
-            _normalized_date(movement.get("entry_date")),
+            _normalized_date(indexed_movement.get("document_date")),
+            _normalized_date(indexed_movement.get("entry_date")),
         } - {""}
         if supplier_id:
             for movement_date in dates:
@@ -907,17 +994,20 @@ def match_population(
                     supplier_date_index[(supplier_id, invoice_date)]
                 )
             for movement_id in sorted(possible_movement_ids):
-                movement = movements[movement_id]
+                indexed_movement = movements[movement_id]
                 candidate_comparisons += 1
-                evidence = _candidate_evidence(invoice, movement, tolerance)
+                evidence = _candidate_evidence(invoice, indexed_movement, tolerance)
                 if _qualifies_match(evidence):
-                    candidates.append({"movement": movement, "evidence": evidence})
-                    movement_candidate_counts[str(movement["movement_id"])] += 1
+                    candidates.append(
+                        {"movement": indexed_movement, "evidence": evidence}
+                    )
+                    movement_candidate_counts[str(indexed_movement["movement_id"])] += 1
         candidate_sets.append(candidates)
     matching_seconds = time.perf_counter() - matching_started
     deterministic_started = time.perf_counter()
     matched_ids: set[str] = set()
     items: list[dict[str, Any]] = []
+    movement: dict[str, Any] | None
     for invoice, candidates in zip(invoices, candidate_sets, strict=True):
         key = (
             _normalized_tax_identifier(invoice.get("supplier_vat")),
@@ -963,6 +1053,16 @@ def match_population(
                 "match_state": match_state,
                 "matched_movement": movement,
                 "match_evidence": match_evidence,
+                "candidate_movements": [
+                    {
+                        "movement_id": candidate["movement"]["movement_id"],
+                        "ledger_reference": candidate["movement"].get(
+                            "ledger_reference", ""
+                        ),
+                        "evidence": candidate["evidence"],
+                    }
+                    for candidate in candidates
+                ],
                 "deterministic_findings": findings,
             }
         )
@@ -1412,7 +1512,22 @@ def _input_fingerprint(
                 "chunk_size": config.chunk_size,
                 "reasoning_effort": config.reasoning_effort,
                 "amount_tolerance": str(config.amount_tolerance),
-                "semantic_model": config.semantic_model,
+                **(
+                    {
+                        "worker_runtime": config.worker_runtime,
+                        "worker_model": config.worker_model,
+                    }
+                    if config.worker_runtime != "codex-native"
+                    else {}
+                ),
+                **(
+                    {
+                        "worker_model": config.worker_model,
+                        "selection_review": config.worker_selection,
+                    }
+                    if config.worker_selection is not None
+                    else {}
+                ),
             },
         }
     )
@@ -1455,16 +1570,22 @@ def _validated_chunk_result(
     packet_sha256: str,
     invoice_ids: Sequence[str],
     reasoning_effort: str,
-    semantic_model: str = "gpt-5.6-luna",
+    worker_runtime: str = "codex-native",
+    worker_model: str = DEFAULT_WORKER_MODEL,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     payload = raw_result.get("response_payload")
     if not isinstance(payload, Mapping):
         raise AuditError("Luna runner did not return a structured payload")
     model = raw_result.get("model")
     effort = raw_result.get("reasoning_effort")
-    if model != semantic_model:
-        raise AuditError("Semantic chunk does not match the configured worker")
-    expected_effort = "host_default" if semantic_model == "haiku" else reasoning_effort
+    if model != worker_model:
+        raise AuditError(f"Semantic chunk was not produced by {worker_model}")
+    if raw_result.get("selection_review") != worker_selection:
+        raise AuditError("Semantic chunk used a different selection review")
+    if raw_result.get("worker_runtime", "codex-native") != worker_runtime:
+        raise AuditError("Semantic chunk used a different worker runtime")
+    expected_effort = "host_default" if worker_runtime == "cowork" else reasoning_effort
     if effort != expected_effort:
         raise AuditError("Semantic chunk used a different reasoning effort")
     usage = raw_result.get("usage", {})
@@ -1483,7 +1604,13 @@ def _validated_chunk_result(
         "usage": dict(usage),
         "duration_ms": duration_ms,
         "model": model,
+        "worker_runtime": worker_runtime,
         "reasoning_effort": effort,
+        **(
+            {"selection_review": copy.deepcopy(worker_selection)}
+            if worker_selection is not None
+            else {}
+        ),
         "recovery_source": raw_result.get("recovery_source"),
     }
 
@@ -1499,7 +1626,13 @@ def _chunk_checkpoint(result: Mapping[str, Any]) -> dict[str, Any]:
         "usage": result["usage"],
         "duration_ms": result["duration_ms"],
         "model": result["model"],
+        "worker_runtime": result["worker_runtime"],
         "reasoning_effort": result["reasoning_effort"],
+        **(
+            {"selection_review": result["selection_review"]}
+            if result.get("selection_review") is not None
+            else {}
+        ),
         "recovery_source": result.get("recovery_source"),
     }
     return {**content, "content_sha256": _canonical_json_sha256(content)}
@@ -1512,7 +1645,9 @@ def _recover_checkpoint(
     packet_sha256: str,
     invoice_ids: Sequence[str],
     reasoning_effort: str,
-    semantic_model: str = "gpt-5.6-luna",
+    worker_runtime: str = "codex-native",
+    worker_model: str = DEFAULT_WORKER_MODEL,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     payload = json.loads(_ordinary_file_bytes(path, CHUNK_RESULT_NAME))
     if not isinstance(payload, dict):
@@ -1535,7 +1670,9 @@ def _recover_checkpoint(
         packet_sha256=packet_sha256,
         invoice_ids=invoice_ids,
         reasoning_effort=reasoning_effort,
-        semantic_model=semantic_model,
+        worker_runtime=worker_runtime,
+        worker_model=worker_model,
+        worker_selection=worker_selection,
     )
     return recovered | {"recovery_source": "chunk_checkpoint"}
 
@@ -1549,6 +1686,8 @@ def _recover_native_artifacts(
     packet_sha256: str,
     invoice_ids: Sequence[str],
     reasoning_effort: str,
+    worker_model: str = DEFAULT_WORKER_MODEL,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     response_bytes = _ordinary_file_bytes(
         chunk_dir / LUNA_RESPONSE_NAME, LUNA_RESPONSE_NAME
@@ -1569,9 +1708,11 @@ def _recover_native_artifacts(
     packet = receipt_payload.get("packet")
     process = receipt_payload.get("process")
     observation = receipt_payload.get("jsonl_observation")
-    if not all(
-        isinstance(value, Mapping)
-        for value in (requested, packet, process, observation)
+    if not (
+        isinstance(requested, Mapping)
+        and isinstance(packet, Mapping)
+        and isinstance(process, Mapping)
+        and isinstance(observation, Mapping)
     ):
         raise AuditError("Luna launch receipt is incomplete")
     prompt_bytes = prompt.encode("utf-8")
@@ -1588,7 +1729,8 @@ def _recover_native_artifacts(
         or receipt_payload.get("packet_sha256") != packet_sha256
         or receipt_payload.get("advisory_only") is not True
         or dict(packet) != expected_packet
-        or requested.get("model") != "gpt-5.6-luna"
+        or requested.get("model") != worker_model
+        or requested.get("selection_review") != worker_selection
         or requested.get("reasoning_effort") != reasoning_effort
         or requested.get("sandbox") != "read-only"
         or requested.get("ephemeral") is not True
@@ -1617,11 +1759,14 @@ def _recover_native_artifacts(
             "duration_ms": process.get("duration_ms", 0),
             "model": requested.get("model"),
             "reasoning_effort": requested.get("reasoning_effort"),
+            "selection_review": requested.get("selection_review"),
         },
         chunk_id=chunk_id,
         packet_sha256=packet_sha256,
         invoice_ids=invoice_ids,
         reasoning_effort=reasoning_effort,
+        worker_model=worker_model,
+        worker_selection=worker_selection,
     )
     return recovered | {"recovery_source": "native_artifacts"}
 
@@ -1669,7 +1814,7 @@ def _execute_chunk(
     worker_artifacts_present = any(
         os.path.lexists(chunk_dir / name) for name in LUNA_ARTIFACT_NAMES
     )
-    if worker_artifacts_present and config.semantic_model == "gpt-5.6-luna":
+    if worker_artifacts_present and config.worker_runtime == "codex-native":
         try:
             recovered = _recover_native_artifacts(
                 chunk_dir,
@@ -1679,6 +1824,8 @@ def _execute_chunk(
                 packet_sha256=packet_sha256,
                 invoice_ids=invoice_ids,
                 reasoning_effort=config.reasoning_effort,
+                worker_model=config.worker_model,
+                worker_selection=config.worker_selection,
             )
         except (AuditError, OSError, UnicodeDecodeError, json.JSONDecodeError):
             _archive_stale_chunk_artifacts(chunk_dir)
@@ -1696,12 +1843,24 @@ def _execute_chunk(
                 packet_sha256=packet_sha256,
                 invoice_ids=invoice_ids,
                 reasoning_effort=config.reasoning_effort,
-                semantic_model=config.semantic_model,
+                worker_runtime=config.worker_runtime,
+                worker_model=config.worker_model,
+                worker_selection=config.worker_selection,
             )
         except (AuditError, OSError, UnicodeDecodeError, json.JSONDecodeError):
             _archive_stale_chunk_artifacts(chunk_dir)
     raw_result = runner(
-        prompt, schema, chunk_dir, WORKFLOW_ID, packet_sha256, config.reasoning_effort
+        prompt,
+        schema,
+        chunk_dir,
+        WORKFLOW_ID,
+        packet_sha256,
+        config.reasoning_effort,
+        **(
+            {"worker_selection": copy.deepcopy(config.worker_selection)}
+            if config.worker_selection is not None
+            else {}
+        ),
     )
     result = _validated_chunk_result(
         raw_result,
@@ -1709,7 +1868,9 @@ def _execute_chunk(
         packet_sha256=packet_sha256,
         invoice_ids=invoice_ids,
         reasoning_effort=config.reasoning_effort,
-        semantic_model=config.semantic_model,
+        worker_runtime=config.worker_runtime,
+        worker_model=config.worker_model,
+        worker_selection=config.worker_selection,
     )
     _atomic_write_json(chunk_dir / CHUNK_RESULT_NAME, _chunk_checkpoint(result))
     return result
@@ -1803,6 +1964,7 @@ def _write_exception_workpaper(
         "booked_account_evidence",
         "professional_should_inspect",
         "ledger_reference",
+        "candidate_ledger_movements",
     ]
     for index, column in enumerate(columns):
         exception_sheet.write(0, index, column, header_format)
@@ -1828,8 +1990,13 @@ def _write_exception_workpaper(
             semantic.get("short_reason", ""),
             " | ".join(semantic.get("invoice_evidence", [])),
             " | ".join(semantic.get("booked_account_evidence", [])),
-            semantic.get("professional_should_inspect", ""),
+            row.get("professional_should_inspect", ""),
             movement.get("ledger_reference", ""),
+            "\n".join(
+                f"{candidate['movement_id']} | {candidate['ledger_reference']} | "
+                + ", ".join(candidate["evidence"])
+                for candidate in row.get("candidate_movements", [])
+            ),
         ]
         for column_number, value in enumerate(values):
             exception_sheet.write(row_number, column_number, value, wrap_format)
@@ -1877,6 +2044,8 @@ def run_audit(
 ) -> dict[str, Any]:
     """Run or resume the complete local audit and write exception-focused outputs."""
 
+    # Copy the review before fingerprinting or submitting chunks to threads.
+    config = replace(config, worker_selection=copy.deepcopy(config.worker_selection))
     config.validate()
     if (client_run_id is None) != (client_run_root is None):
         raise AuditError("client_run_id and client_run_root must be supplied together")
@@ -1937,7 +2106,7 @@ def run_audit(
             packets.append(packet)
     connection.commit()
     chunks = chunk_semantic_packets(packets, config.chunk_size)
-    pending: list[tuple[str, list[dict[str, Any]]]] = []
+    pending: list[tuple[str, list[Mapping[str, Any]]]] = []
     for chunk in chunks:
         digest = _sha256_json(chunk)
         chunk_id = f"chunk-{digest[:16]}"
@@ -2037,6 +2206,29 @@ def run_audit(
         ).fetchone()
         semantic = json.loads(stored[0]) if stored and stored[0] else None
         final_state, final_reasons = _finalize_item(item, semantic)
+        inspect = (semantic or {}).get("professional_should_inspect", "")
+        if not inspect and item["match_state"] == "invoice_not_found_in_ledger":
+            # Explain the exact matching outcome; do not infer an omitted booking.
+            inspect = (
+                "Check the supplied ledger scope and reviewed mapping against the "
+                "invoice supplier, number, date and gross amount. Request the "
+                "corresponding booked movement or clarification of why it is absent "
+                "from this extract; do not create a booking from this screening result."
+            )
+        elif not inspect and item["match_state"] == "ambiguous_match":
+            inspect = (
+                "Compare the listed candidate movements with the invoice and source "
+                "ledger. Clarify which movement belongs to this invoice and whether "
+                "another invoice claims it; do not select or reuse a movement without "
+                "supporting evidence."
+            )
+        elif not inspect and item["match_state"] == "duplicate_candidate":
+            inspect = (
+                "Compare the source XML documents sharing supplier, invoice number, "
+                "date and gross amount. Establish whether they are copies or distinct "
+                "obligations and inspect the listed ledger candidates before assigning "
+                "any movement; do not count a source copy as another obligation."
+            )
         final_item = dict(item) | {
             "schema_version": SCHEMA_VERSION,
             "semantic_packet": (
@@ -2050,6 +2242,7 @@ def run_audit(
             "semantic_result": semantic,
             "final_state": final_state,
             "final_exception_reasons": final_reasons,
+            "professional_should_inspect": inspect,
             "processed_at": _now(),
             "workflow_version": WORKFLOW_VERSION,
             "client_run_id": client_run_id,
@@ -2084,9 +2277,9 @@ def run_audit(
     summary = {
         "schema_version": SCHEMA_VERSION,
         "run_fingerprint": fingerprint,
-        "semantic_worker_requested": config.semantic_model,
+        "semantic_worker_requested": config.worker_model,
         "semantic_runtime": (
-            "cowork_subagent" if config.semantic_model == "haiku" else "codex_native"
+            "cowork_subagent" if config.worker_runtime == "cowork" else "codex_native"
         ),
         "status": (
             "awaiting_semantic_review"
@@ -2140,7 +2333,7 @@ def run_audit(
             "largest_absolute_line is only a fallback gross-comparison basis when no mapped gross amount is supplied",
         ],
     }
-    if config.semantic_model == "haiku":
+    if config.worker_runtime == "cowork":
         summary["limitations"].append(
             "Haiku is the requested Cowork subagent configuration; host-provided worker records are not independently authenticated model attestations. Legacy luna_* counters refer to the selected semantic worker. Empty usage and zero duration counters mean these measurements are unavailable from the host handoff."
         )
@@ -2173,24 +2366,46 @@ def evaluate_results(
 ) -> dict[str, Any]:
     """Measure material-issue recall, false positives, and human review rate."""
 
-    results = {
-        row["invoice"]["invoice_id"]: row
-        for row in (
-            json.loads(line)
-            for line in results_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        )
-    }
+    results: dict[str, dict[str, Any]] = {}
+    for line in results_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        invoice = row.get("invoice") if isinstance(row, dict) else None
+        invoice_id = invoice.get("invoice_id") if isinstance(invoice, dict) else None
+        if not isinstance(invoice_id, str) or not invoice_id.strip():
+            raise AuditError("Evaluation result requires a non-empty invoice_id")
+        if invoice_id in results:
+            raise AuditError("Duplicate evaluation result invoice_id")
+        if not isinstance(row.get("final_state"), str) or row["final_state"] not in {
+            "professional_review_required",
+            "no_issue_detected",
+        }:
+            raise AuditError("Evaluation result has an unsupported final_state")
+        results[invoice_id] = row
     labels = [
         json.loads(line)
         for line in labels_path.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
     valid_labels = {"problematic", "acceptable", "ambiguous"}
-    if any(label.get("label") not in valid_labels for label in labels):
+    if any(
+        not isinstance(label, dict)
+        or not isinstance(label.get("label"), str)
+        or label["label"] not in valid_labels
+        for label in labels
+    ):
         raise AuditError(
             "Evaluation labels must be problematic, acceptable, or ambiguous"
         )
+    labelled_ids: set[str] = set()
+    for label in labels:
+        invoice_id = label.get("invoice_id")
+        if not isinstance(invoice_id, str) or not invoice_id.strip():
+            raise AuditError("Evaluation label requires a non-empty invoice_id")
+        if invoice_id in labelled_ids:
+            raise AuditError("Duplicate evaluation label invoice_id")
+        labelled_ids.add(invoice_id)
     missing = [
         label["invoice_id"] for label in labels if label["invoice_id"] not in results
     ]
@@ -2215,9 +2430,13 @@ def evaluate_results(
     ]
     report = {
         "schema_version": "vera.passive_invoice_evaluation.v1",
+        "result_population": len(results),
         "labelled_population": len(labels),
+        "unlabelled_population": len(results) - len(labels),
+        "label_coverage": len(labels) / len(results) if results else None,
         "problematic_population": len(problematic),
         "acceptable_population": len(acceptable),
+        "ambiguous_population": len(labels) - len(problematic) - len(acceptable),
         "exception_recall": (
             sum(flagged(label["invoice_id"]) for label in problematic)
             / len(problematic)
@@ -2338,6 +2557,8 @@ def evaluate_synthetic_population(
 ) -> dict[str, Any]:
     """Run controlled corruptions through Luna and report detection recall."""
 
+    # Copy the review before fingerprinting or submitting chunks to threads.
+    config = replace(config, worker_selection=copy.deepcopy(config.worker_selection))
     config.validate()
     output_dir.mkdir(parents=True, exist_ok=True)
     generated = create_synthetic_population(
@@ -2384,10 +2605,10 @@ def evaluate_synthetic_population(
             duration_ms += chunk_result["duration_ms"]
 
     if awaiting:
-        report = {
+        report: dict[str, Any] = {
             "schema_version": "vera.passive_invoice_synthetic_evaluation.v1",
             "status": "awaiting_semantic_review",
-            "semantic_worker_requested": config.semantic_model,
+            "semantic_worker_requested": config.worker_model,
             "pending_chunks": sorted(awaiting),
             "exception_recall": None,
         }
@@ -2411,7 +2632,7 @@ def evaluate_synthetic_population(
     report = {
         "schema_version": "vera.passive_invoice_synthetic_evaluation.v1",
         "status": "completed",
-        "semantic_worker_requested": config.semantic_model,
+        "semantic_worker_requested": config.worker_model,
         "synthetic_population": len(result_rows),
         "exception_recall": (flagged / len(result_rows) if result_rows else None),
         "human_review_rate": (flagged / len(result_rows) if result_rows else None),

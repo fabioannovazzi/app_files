@@ -142,7 +142,7 @@ python ../../scripts/parse_fatturapa_xml.py <managed-input-folder> --year <anno>
 
 ## Outputs
 
-- `fatture_summary.csv`: one row per XML with supplier, customer, date, number, amount, currency, document type, IVA summary, natura codes, withholding, stamp duty, payment methods and anomalies.
+- `fatture_summary.csv`: one row per invoice body, retaining its source-file hash and body index, with supplier, customer, date, number, amount, currency, document type, IVA summary, natura codes, withholding, stamp duty, payment methods and anomalies. One XML file can therefore produce multiple rows; file count and invoice-body count are distinct.
 - `fatture_summary.jsonl`: same records in JSONL form when the full intake workflow is used.
 - `duplicate_candidates.csv`: likely duplicates based on supplier, number, date and amount.
 - `formal_anomalies.md`: readable anomaly memo for the studio.

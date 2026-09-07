@@ -1044,10 +1044,17 @@ def _derived_reporting_metrics(
     discount_reporting = (
         discount_local * fx_rate if discount_local is not None else None
     )
-    net_sales_reporting = gross_sales_reporting - (discount_reporting or Decimal(0))
+    # Exact subtraction requires both amounts; missing discount is not zero.
+    net_sales_reporting = (
+        gross_sales_reporting - discount_reporting
+        if discount_reporting is not None
+        else None
+    )
     cogs_reporting = cogs_local * fx_rate if cogs_local is not None else None
     gross_margin_reporting = (
-        net_sales_reporting - cogs_reporting if cogs_reporting is not None else None
+        net_sales_reporting - cogs_reporting
+        if net_sales_reporting is not None and cogs_reporting is not None
+        else None
     )
     return {
         "gross_sales_reporting": gross_sales_reporting,
@@ -1462,14 +1469,13 @@ def _build_summary(
     levels.append(("dimension", "transaction_currency"))
     totals: dict[tuple[str, str, str, str, str], Decimal] = defaultdict(Decimal)
     observed: set[tuple[str, str, str, str, str]] = set()
+    unavailable: set[tuple[str, str, str, str, str]] = set()
     for row in scenario_rows:
         scenario = row["scenario"]
         for summary_level, dimension_name in levels:
             dimension_value = "" if summary_level == "total" else row[dimension_name]
             for metric in metrics:
                 value = row[metric]
-                if value == "":
-                    continue
                 key = (
                     summary_level,
                     dimension_name,
@@ -1477,8 +1483,11 @@ def _build_summary(
                     metric,
                     scenario,
                 )
-                totals[key] += Decimal(value)
                 observed.add(key)
+                if value == "":
+                    unavailable.add(key)
+                else:
+                    totals[key] += Decimal(value)
 
     base_keys = sorted(
         {
@@ -1488,13 +1497,16 @@ def _build_summary(
     )
     rows: list[dict[str, str]] = []
     for level, name, value, metric in base_keys:
-        actual = totals.get((level, name, value, metric, SOURCE_SCENARIO))
-        plan = totals.get((level, name, value, metric, TARGET_SCENARIO))
-        if actual is None and plan is None:
-            continue
-        actual_value = actual or Decimal(0)
-        plan_value = plan or Decimal(0)
-        delta = plan_value - actual_value
+        actual_key = (level, name, value, metric, SOURCE_SCENARIO)
+        plan_key = (level, name, value, metric, TARGET_SCENARIO)
+        # A partial sum cannot represent the total of a population with gaps.
+        actual_value = None if actual_key in unavailable else totals.get(actual_key)
+        plan_value = None if plan_key in unavailable else totals.get(plan_key)
+        delta = (
+            plan_value - actual_value
+            if actual_value is not None and plan_value is not None
+            else None
+        )
         rows.append(
             {
                 "summary_level": level,
@@ -1502,10 +1514,14 @@ def _build_summary(
                 "dimension_value": value,
                 "metric": metric,
                 "unit": "count" if metric == "units" else unit,
-                "actual": decimal_text(actual_value),
-                "plan": decimal_text(plan_value),
-                "delta": decimal_text(delta),
-                "delta_pct_rounded_4dp": _rounded_pct(delta, actual_value),
+                "actual": "" if actual_value is None else decimal_text(actual_value),
+                "plan": "" if plan_value is None else decimal_text(plan_value),
+                "delta": "" if delta is None else decimal_text(delta),
+                "delta_pct_rounded_4dp": (
+                    _rounded_pct(delta, actual_value)
+                    if delta is not None and actual_value is not None
+                    else ""
+                ),
             }
         )
     return rows
@@ -1564,6 +1580,21 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
     )
     errors: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
+    for metric in ("units", "discount_local", "cogs_local"):
+        missing_ids = [
+            str(row["source_row_id"]) for row in source_rows if row[metric] is None
+        ]
+        if missing_ids:
+            warnings.append(
+                {
+                    "code": "missing_source_metric",
+                    "message": (
+                        f"{metric} is unavailable for {len(missing_ids)} source row(s); "
+                        "dependent values and affected summary totals remain unavailable"
+                    ),
+                    "identifiers": missing_ids,
+                }
+            )
     if source_profile["sparse_grains"]:
         warnings.append(
             {

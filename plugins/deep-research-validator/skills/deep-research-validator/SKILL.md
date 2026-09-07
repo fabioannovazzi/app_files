@@ -113,6 +113,9 @@ python scripts/inspect_sources.py <client-run-output>/document_inventory.json --
 ```
 
 Use `--no-fetch` if the environment cannot fetch URLs; then rely on listed references and local files.
+The source fetcher connects directly to validated public addresses and does not
+use environment proxies. If the network requires a proxy, use the available
+research tools or supplied local sources and record that acquisition route.
 
 6. Read `document_inventory.json`, `source_inventory.json`, and
    `extracted_document.md`. Select the material claims to review semantically. Prefer claims

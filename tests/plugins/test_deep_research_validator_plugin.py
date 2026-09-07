@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import importlib.util
 import hashlib
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import fitz
 import pytest
 from docx import Document
 
@@ -480,7 +481,7 @@ def test_inspect_sources_revalidates_redirect_destination(
     monkeypatch.setattr(
         inspect_mod.urllib.request,
         "build_opener",
-        lambda handler: RedirectingOpener(handler),
+        lambda handler, *_handlers: RedirectingOpener(handler),
     )
 
     payload = inspect_mod.inspect_sources(inventory)
@@ -545,7 +546,7 @@ def test_inspect_sources_allows_public_https_destination(
     monkeypatch.setattr(
         inspect_mod.urllib.request,
         "build_opener",
-        lambda _handler: PublicOpener(),
+        lambda *_handlers: PublicOpener(),
     )
 
     payload = inspect_mod.inspect_sources(inventory)
@@ -2767,3 +2768,327 @@ def test_deep_research_mcp_managed_output_reference_is_rejected_without_writes(
     assert response["structuredContent"]["ok"] is False
     assert _file_snapshot(tmp_path) == before
     assert not (tmp_path / "outside").exists()
+
+
+def test_source_pdf_capture_contains_extracted_pages_not_binary_bytes(
+    tmp_path: Path,
+) -> None:
+    module = load_script("inspect_sources", SCRIPTS_DIR / "inspect_sources.py")
+    source = tmp_path / "source.pdf"
+    with fitz.open() as document:
+        page = document.new_page()
+        page.insert_text((72, 72), "Synthetic filing deadline: thirty days.")
+        document.save(source, deflate=True)
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+
+    result = module.inspect_sources(
+        inventory,
+        source_files=[source],
+        fetch_urls=False,
+        capture_dir=tmp_path / "captures",
+        capture_base_dir=tmp_path,
+    )
+
+    record = result["sources"][0]
+    captured = (tmp_path / record["captured_text_path"]).read_text()
+    assert "Synthetic filing deadline: thirty days." in captured
+    assert "%PDF" not in captured
+    assert record["extraction"]["page_count"] == 1
+    assert record["extraction"]["pages_without_text"] == []
+    assert record["source_bytes_sha256"] != record["extracted_text_sha256"]
+
+
+@pytest.mark.parametrize(
+    "markup",
+    [
+        '<p title="amount > 10">Visible synthetic paragraph.</p>',
+        "<!-- hidden > comment --><p>Visible synthetic paragraph.</p>",
+        "<script>hidden > script</script><style>hidden > style</style>"
+        "<p>Visible synthetic paragraph.</p>",
+    ],
+)
+def test_html_capture_excludes_attributes_comments_and_scripts(
+    tmp_path: Path, markup: str
+) -> None:
+    module = load_script("inspect_sources", SCRIPTS_DIR / "inspect_sources.py")
+    source = tmp_path / "source.html"
+    source.write_text(f"<html><body>{markup}</body></html>", encoding="utf-8")
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+
+    result = module.inspect_sources(
+        inventory,
+        source_files=[source],
+        fetch_urls=False,
+        capture_dir=tmp_path / "captures",
+        capture_base_dir=tmp_path,
+    )
+
+    record = result["sources"][0]
+    captured = (tmp_path / record["captured_text_path"]).read_text()
+    assert record["status"] == "available"
+    assert captured.strip() == "Visible synthetic paragraph."
+    assert (
+        record["source_bytes_sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    )
+    assert (
+        record["extracted_text_sha256"] == hashlib.sha256(captured.encode()).hexdigest()
+    )
+
+
+def test_scanned_source_is_not_complete_text(tmp_path: Path) -> None:
+    module = load_script("inspect_sources", SCRIPTS_DIR / "inspect_sources.py")
+    source = tmp_path / "scan.pdf"
+    with fitz.open() as document:
+        document.new_page()
+        document.save(source)
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+
+    result = module.inspect_sources(inventory, source_files=[source], fetch_urls=False)
+
+    assert result["sources"][0]["status"] == "unreadable"
+    assert result["sources"][0]["extraction"]["pages_without_text"] == [1]
+
+
+def test_mixed_pdf_preserves_readable_page_and_discloses_missing_page(
+    tmp_path: Path,
+) -> None:
+    module = load_script("inspect_sources", SCRIPTS_DIR / "inspect_sources.py")
+    source = tmp_path / "mixed.pdf"
+    with fitz.open() as document:
+        document.new_page().insert_text((72, 72), "Synthetic readable first page.")
+        document.new_page()
+        document.save(source, deflate=True)
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+
+    result = module.inspect_sources(
+        inventory,
+        source_files=[source],
+        fetch_urls=False,
+        capture_dir=tmp_path / "captures",
+        capture_base_dir=tmp_path,
+    )
+
+    record = result["sources"][0]
+    assert record["status"] == "partial_text"
+    assert record["capture_scope"] == "incomplete_page_text"
+    assert record["extraction"]["page_count"] == 2
+    assert record["extraction"]["pages_without_text"] == [2]
+    assert (
+        "Synthetic readable first page."
+        in (tmp_path / record["captured_text_path"]).read_text()
+    )
+
+
+@pytest.mark.parametrize(
+    ("name", "raw", "scope"),
+    [
+        ("corrupt.pdf", b"%PDF-1.7\nnot a valid PDF", "extraction_failed"),
+        ("invalid.txt", b"text with invalid byte \xff", "unsupported_encoding"),
+        ("binary.dat", b"readable prefix\x00binary", "unsupported_format"),
+    ],
+)
+def test_unreadable_source_keeps_byte_identity_without_claiming_text(
+    tmp_path: Path,
+    name: str,
+    raw: bytes,
+    scope: str,
+) -> None:
+    module = load_script("inspect_sources", SCRIPTS_DIR / "inspect_sources.py")
+    source = tmp_path / name
+    source.write_bytes(raw)
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+
+    result = module.inspect_sources(inventory, source_files=[source], fetch_urls=False)
+
+    record = result["sources"][0]
+    assert record["status"] == "unreadable"
+    assert record["capture_scope"] == scope
+    assert record["character_count"] == 0
+    assert record["source_bytes_sha256"] == hashlib.sha256(raw).hexdigest()
+    assert record["extracted_text_sha256"] == hashlib.sha256(b"").hexdigest()
+
+
+@pytest.mark.parametrize("scheme", ["http", "https"])
+def test_source_fetch_rejects_dns_rebinding_before_socket_connect(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, scheme: str
+) -> None:
+    module = load_script("source_fetch_rebinding", "inspect_sources.py")
+    inventory = tmp_path / "document_inventory.json"
+    inventory.write_text(json.dumps({"urls": [f"{scheme}://public.example/source"]}))
+    addresses = iter(["93.184.216.34", "127.0.0.1"])
+
+    def resolve(_host, port, **_kwargs):
+        return [
+            (
+                module.socket.AF_INET,
+                module.socket.SOCK_STREAM,
+                6,
+                "",
+                (next(addresses), port),
+            )
+        ]
+
+    def no_socket(*_args, **_kwargs):
+        raise AssertionError("A rebound private address must never reach a socket")
+
+    monkeypatch.setattr(module.socket, "getaddrinfo", resolve)
+    monkeypatch.setattr(module.socket, "socket", no_socket)
+
+    result = module.inspect_sources(inventory)
+
+    assert result["sources"][0]["status"] == "blocked_non_public_destination"
+
+
+@pytest.mark.parametrize(
+    ("http_status", "declared_length", "expected_status", "expected_scope"),
+    [
+        (200, 6, "available", "complete_response"),
+        (206, 6, "partial_capture", "partial_response"),
+        (200, 60, "partial_capture", "incomplete_response"),
+    ],
+)
+def test_source_fetch_connects_to_validated_numeric_address(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    http_status: int,
+    declared_length: int,
+    expected_status: str,
+    expected_scope: str,
+) -> None:
+    import io
+
+    module = load_script("source_fetch_pinned_address", "inspect_sources.py")
+    inventory = tmp_path / "document_inventory.json"
+    inventory.write_text(json.dumps({"urls": ["http://public.example/source"]}))
+    connections = []
+    requests = []
+
+    class PublicSocket:
+        def settimeout(self, _timeout):
+            pass
+
+        def setsockopt(self, *_args):
+            pass
+
+        def connect(self, address):
+            connections.append(address)
+
+        def sendall(self, data):
+            requests.append(data)
+
+        def makefile(self, *_args):
+            return io.BytesIO(
+                f"HTTP/1.1 {http_status} OK\r\nContent-Type: text/plain\r\n".encode()
+                + f"Content-Length: {declared_length}\r\n\r\nSource".encode()
+            )
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(
+        module.socket,
+        "getaddrinfo",
+        lambda _host, port, **_kw: [
+            (
+                module.socket.AF_INET,
+                module.socket.SOCK_STREAM,
+                6,
+                "",
+                ("93.184.216.34", port),
+            )
+        ],
+    )
+    monkeypatch.setattr(module.socket, "socket", lambda *_args: PublicSocket())
+    monkeypatch.setenv("http_proxy", "http://127.0.0.1:8080")
+
+    result = module.inspect_sources(inventory)
+
+    assert result["sources"][0]["status"] == expected_status
+    assert result["sources"][0]["capture_scope"] == expected_scope
+    assert connections == [("93.184.216.34", 80)]
+    assert b"Host: public.example" in b"".join(requests)
+
+
+@pytest.mark.parametrize("make_directory", [False, True])
+def test_explicit_unavailable_source_remains_in_inventory(
+    tmp_path: Path, make_directory: bool
+) -> None:
+    module = load_script("source_missing_explicit", "inspect_sources.py")
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+    source = tmp_path / "unavailable.txt"
+    if make_directory:
+        source.mkdir()
+
+    result = module.inspect_sources(inventory, source_files=[source], run_root=tmp_path)
+
+    assert result["file_count"] == 1
+    assert len(result["sources"]) == 1
+    assert result["sources"][0]["status"] == "unreadable"
+    assert result["sources"][0]["path"] == "unavailable.txt"
+    assert result["sources"][0]["capture_scope"] == "unavailable_local_source"
+    assert "source_bytes_sha256" not in result["sources"][0]
+
+
+def test_managed_source_boundary_is_checked_before_reading(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_script("source_boundary_before_read", "inspect_sources.py")
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text('{"urls": []}')
+    run = tmp_path / "run"
+    run.mkdir()
+    outside = tmp_path / "outside.txt"
+    outside.write_text("Outside the authorized run")
+
+    def forbidden_read(_path: Path) -> bytes:
+        pytest.fail("Outside source was read before its boundary was checked")
+
+    monkeypatch.setattr(Path, "read_bytes", forbidden_read)
+    with pytest.raises(ValueError, match="outside the current customer run"):
+        module.inspect_sources(inventory, source_files=[outside], run_root=run)
+
+
+def test_source_review_keeps_case_sensitive_url_paths_distinct() -> None:
+    module = load_script("source_case_sensitive_review", "package_validation.py")
+    sources = {
+        "sources": [
+            {
+                "source_id": "source-001",
+                "url": "https://example.org/Rule",
+                "status": "available",
+                "excerpt": "Uppercase rule",
+            },
+            {
+                "source_id": "source-002",
+                "url": "https://example.org/rule",
+                "status": "available",
+                "excerpt": "Lowercase rule",
+            },
+        ]
+    }
+
+    audit = module.build_audit(
+        {"character_count": 40, "urls": []},
+        sources,
+        _claims_review(
+            [
+                _claim_review(
+                    "Uppercase rule",
+                    source_ref="https://example.org/Rule",
+                    cited_passage="Uppercase rule",
+                )
+            ]
+        ),
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    observation = audit["claim_observations"][0]["source_observations"][0]
+    assert observation["resolution_status"] == "resolved"
+    assert observation["source_id"] == "source-001"
+    assert observation["exact_passage_presence"] == "present"

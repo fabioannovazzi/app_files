@@ -317,10 +317,16 @@ Omit `--case` to evaluate every page independently. A case that contains no
 recognized layout is recorded as `not_recognized`; it does not reject the
 other examples and does not create a client analysis.
 
-For a release-quality regression check, run the reviewed gold manifest with
-`scripts/run_gold_benchmark.py`. Bind every source ID to the exact local PDF;
-the runner verifies both SHA-256 and page count before using it. The benchmark
-must keep these gates separate:
+For a release-quality regression check, `scripts/run_gold_benchmark.py` defaults
+to `evals/gold_official_cases.json`, using the two public Banca d'Italia guides
+linked in that manifest. Download those documents and pass their local paths
+as `--source official_guide=<path>` and
+`--source official_plain_guide=<path>`. Source fingerprints identify the edition
+under test. If the publisher changes a document, review its examples and update
+the expected facts and source record; do not ask the user to recover an old
+edition. The older `evals/gold_cases.json` remains an optional extended corpus,
+selected with `--manifest`; its third-party files are not prerequisites for
+the official-document check. An empty corpus is rejected. Keep these gates separate:
 
 - exact page-level extraction facts and population counts;
 - reviewed mappings, control totals, Decimal metrics, and expected rejection

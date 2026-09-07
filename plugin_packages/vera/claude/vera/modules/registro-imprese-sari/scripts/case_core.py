@@ -47,6 +47,7 @@ ITALIAN_TAX_CODE_RE = re.compile(
 ITALIAN_VAT_RE = re.compile(r"(?<!\d)\d{11}(?!\d)")
 PHONE_RE = re.compile(r"(?<!\w)(?:\+?39[ .-]?)?(?:0\d{1,3}|3\d{2})[ .-]?\d{5,8}(?!\w)")
 OFFICIAL_EXACT_HOSTS = {
+    "www.registroimprese.it",
     "supportospecialisticori.infocamere.it",
     "registroimprese.infocamere.it",
     "dire.registroimprese.it",

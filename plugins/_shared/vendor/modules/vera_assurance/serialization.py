@@ -7,7 +7,9 @@ import json
 import os
 import re
 import stat
-from collections.abc import Mapping, Sequence
+import sys
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -15,9 +17,11 @@ from typing import Any
 __all__ = [
     "SerializationValidationError",
     "artifact_receipt",
+    "build_review_execution_step",
     "canonical_json_bytes",
     "canonical_json_sha256",
     "file_snapshot",
+    "exclusive_file_lock",
     "validate_artifact_receipt",
     "write_json",
 ]
@@ -28,6 +32,27 @@ _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 class SerializationValidationError(ValueError):
     """Raised when a canonical value or artifact receipt is invalid."""
+
+
+def build_review_execution_step(
+    payload: Mapping[str, Any], workflow_name: str, command: Sequence[str]
+) -> dict[str, Any]:
+    """Build the shared mechanical trace fields; callers retain artifact I/O."""
+    data_posture = payload.get("data_posture")
+    local_files = (
+        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
+    )
+    inputs = (
+        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
+    )
+    return {
+        "step_id": f"{workflow_name}_review_session",
+        "kind": "deterministic_review_session",
+        "status": "passed",
+        "execution_location": "local_codex_workspace",
+        "command": list(command),
+        "inputs": [str(entry) for entry in inputs if entry],
+    }
 
 
 def _text(value: object, *, label: str) -> str:
@@ -257,3 +282,39 @@ def validate_artifact_receipt(
             "artifact receipt does not match current bytes"
         )
     return dict(receipt)
+
+
+@contextmanager
+def exclusive_file_lock(path: Path) -> Iterator[None]:
+    """Serialize filesystem mutations with a stable OS lock released on exit/crash."""
+
+    if path.is_symlink():
+        raise SerializationValidationError("Mutation lock cannot be a symlink")
+    descriptor = os.open(
+        path, os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600
+    )
+    try:
+        opened = os.fstat(descriptor)
+        if not stat.S_ISREG(opened.st_mode) or opened.st_nlink != 1:
+            raise SerializationValidationError(
+                "Mutation lock must be an ordinary single-link file"
+            )
+        if not opened.st_size:
+            os.write(descriptor, b"1")
+        if sys.platform == "win32":
+            import msvcrt
+
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        current = path.lstat()
+        if (opened.st_dev, opened.st_ino) != (current.st_dev, current.st_ino):
+            raise SerializationValidationError(
+                "Mutation lock changed while acquiring it"
+            )
+        yield
+    finally:
+        os.close(descriptor)

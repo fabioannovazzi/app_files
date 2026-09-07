@@ -25,6 +25,7 @@ REPOSITORY_ROOT = PLUGIN_ROOT.parents[1]
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 
 import extract_documents as extraction_module
+import parse_fiscal_forms as fiscal_module
 
 build_module = importlib.import_module("build_file_preparation_outputs")
 check_environment_module = importlib.import_module("check_environment")
@@ -36,8 +37,12 @@ from model_handoff import (
     MAX_HANDOFF_PAGE_BYTES,
     write_model_handoff,
 )
-from parse_fatturapa_xml import parse_fatturapa_file
-from parse_fiscal_forms import FiscalField, write_fiscal_fields_summary
+from parse_fatturapa_xml import parse_fatturapa_file, parse_xml_files, write_summary_csv
+from parse_fiscal_forms import (
+    FiscalField,
+    parse_structured_fiscal_fields,
+    write_fiscal_fields_summary,
+)
 from scan_folder import (
     CATEGORY_CH_GE_TAX,
     CATEGORY_CH_ZH_TAX,
@@ -649,6 +654,19 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     for item in model_items:
         model_items_by_kind.setdefault(item["kind"], []).append(item)
     assert len(model_items_by_kind["file_metadata"]) == result.file_count
+    metadata = model_items_by_kind["file_metadata"]
+    assert {item["category_status"] for item in metadata} == {"candidate"}
+    assert {item["category_basis"] for item in metadata} == {"lexical_hint"}
+    dispositions = json.loads(
+        (result.output_dir / "extracted/document_dispositions.json").read_text()
+    )["documents"]
+    assert {item["relative_path"] for item in metadata} == {
+        item["relative_path"] for item in dispositions
+    }
+    assert all(
+        item["fiscal_extraction_disposition"]["status"] != "not_evaluated"
+        for item in metadata
+    )
     assert len(model_items_by_kind["fiscal_field"]) == result.structured_field_count
     assert "email_request" not in model_items_by_kind
     high_confidence_document_refs = {
@@ -1329,12 +1347,12 @@ def test_ocr_page_limit_is_recorded_as_a_warning(
     monkeypatch.setattr(
         extraction_module,
         "_extract_with_pdfplumber",
-        lambda _path, _max_pages: ("", 5, ""),
+        lambda _path, _max_pages: ("", 5, "", None),
     )
     monkeypatch.setattr(
         extraction_module,
         "_extract_with_fitz",
-        lambda _path, _max_pages: ("", 5, ""),
+        lambda _path, _max_pages: ("", 5, "", None),
     )
     monkeypatch.setattr(
         extraction_module,
@@ -1586,6 +1604,69 @@ def test_ooxml_rejects_entity_declaration_after_large_leading_prefix(
     assert any(
         "DTD-/Entity-Deklarationen sind nicht zulässig" in note
         for note in evidence[0].notes
+    )
+
+
+@pytest.mark.parametrize("encoding", ["utf-16", "utf-16-le", "utf-16-be"])
+@pytest.mark.parametrize(
+    ("declaration", "content"),
+    [
+        (
+            "<!DOCTYPE w:document [<!ENTITY unsafe 'INERT_ENTITY_MARKER'>]>",
+            "&unsafe; harmless synthetic document text for extraction.",
+        ),
+        (
+            "<!DOCTYPE w:document>",
+            "Harmless synthetic document text for extraction.",
+        ),
+    ],
+)
+def test_ooxml_rejects_utf16_dtd_declarations(
+    tmp_path: Path, encoding: str, declaration: str, content: str
+) -> None:
+    customer = tmp_path / "customer"
+    customer.mkdir()
+    xml = (
+        "<?xml version='1.0' encoding='UTF-16'?>"
+        + declaration
+        + "<w:document xmlns:w='urn:test'><w:body><w:p><w:r>"
+        + f"<w:t>{content}</w:t>"
+        + "</w:r></w:p></w:body></w:document>"
+    )
+    with zipfile.ZipFile(customer / "unsafe.docx", "w") as archive:
+        archive.writestr("word/document.xml", xml.encode(encoding))
+
+    evidence = extraction_module.extract_documents(
+        scan_folder(customer), customer, tmp_path / "extracted", enable_ocr=False
+    )
+
+    assert evidence[0].extraction_method == "docx_unreadable"
+    assert evidence[0].readable is False
+    assert any("DTD/entity non consentite" in note for note in evidence[0].notes)
+
+
+@pytest.mark.parametrize("encoding", ["utf-16", "utf-16-le", "utf-16-be"])
+def test_ooxml_extracts_normal_utf16_xml(tmp_path: Path, encoding: str) -> None:
+    customer = tmp_path / "customer"
+    customer.mkdir()
+    expected_text = "Documento ordinario UTF-16: società e attività professionale."
+    xml = (
+        "<?xml version='1.0' encoding='UTF-16'?>"
+        "<w:document xmlns:w='urn:test'><w:body><w:p><w:r>"
+        f"<w:t>{expected_text}</w:t></w:r></w:p></w:body></w:document>"
+    )
+    with zipfile.ZipFile(customer / "safe.docx", "w") as archive:
+        archive.writestr("word/document.xml", xml.encode(encoding))
+    output_dir = tmp_path / "extracted"
+
+    evidence = extraction_module.extract_documents(
+        scan_folder(customer), customer, output_dir, enable_ocr=False
+    )
+
+    assert evidence[0].extraction_method == "docx_ooxml"
+    assert evidence[0].readable is True
+    assert expected_text in (output_dir / evidence[0].text_path).read_text(
+        encoding="utf-8"
     )
 
 
@@ -3118,3 +3199,252 @@ def test_mcp_apply_is_transactional_when_later_effect_is_invalid(
     assert payload["ok"] is False
     assert "not a sealed output" in payload["error"]
     assert _run_tree_bytes(result.output_dir) == before
+
+
+def test_invoice_summary_keeps_multiple_bodies_separate(tmp_path: Path) -> None:
+    source = tmp_path / "invoices.xml"
+    _write_invoice_xml(source)
+    text = source.read_text()
+    body = text.split("<FatturaElettronicaBody>", 1)[1].split(
+        "</FatturaElettronicaBody>", 1
+    )[0]
+    # The second body has a distinct date; monetary sections must remain per body.
+    second = body.replace("2025-06-15", "2025-07-15")
+    source.write_text(
+        text.replace(
+            "</FatturaElettronicaBody>",
+            "</FatturaElettronicaBody><FatturaElettronicaBody>"
+            + second
+            + "</FatturaElettronicaBody>",
+            1,
+        )
+    )
+
+    records = parse_xml_files([source], tmp_path)
+
+    assert len(records) == 2
+    assert records[0].body_index == 1
+    assert records[1].body_index == 2
+    assert records[0].invoice_date == "2025-06-15"
+    assert records[1].invoice_date == "2025-07-15"
+    assert records[0].vat_summary == records[1].vat_summary
+    assert records[0].vat_summary.count("aliquota=") == 1
+    assert records[0].source_sha256 == hashlib.sha256(source.read_bytes()).hexdigest()
+    write_summary_csv(records, tmp_path / "summary.csv")
+    with pytest.raises(ValueError, match="Multiple invoice bodies"):
+        parse_fatturapa_file(source)
+
+
+def fiscal_review_evidence(output: Path, *, readable: bool = True):
+    """Create a source whose misleading name suggests a different adapter."""
+    text = CU_TEXT
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "source.txt").write_text(text, encoding="utf-8")
+    return extraction_module.DocumentEvidence(
+        relative_path="F24-cover-letter.txt",
+        file_name="F24-cover-letter.txt",
+        extension=".txt",
+        category="unknown",
+        extraction_method="text",
+        readable=readable,
+        needs_ocr=False,
+        ocr_available=False,
+        page_count=1,
+        char_count=len(text),
+        text_path="source.txt",
+        confidence="high",
+        detected_fields_json="{}",
+        notes=(),
+    )
+
+
+def test_reviewed_document_kind_overrides_misleading_filename(tmp_path: Path) -> None:
+    source = fiscal_review_evidence(tmp_path)
+    decision = {
+        source.relative_path: {
+            "kind": "CU",
+            "basis": "model_review",
+            "text_sha256": hashlib.sha256(CU_TEXT.encode("utf-8")).hexdigest(),
+        }
+    }
+
+    fields = parse_structured_fiscal_fields([source], tmp_path, kind_decisions=decision)
+
+    assert fields
+    assert {field.document_kind for field in fields} == {"CU"}
+    assert {field.document_kind_status for field in fields} == {"reviewed"}
+    disposition = json.loads((tmp_path / "document_dispositions.json").read_text())
+    assert disposition["documents"][0]["candidate_kind"] == "F24"
+    assert disposition["documents"][0]["selected_kind"] == "CU"
+
+
+def test_stale_document_kind_review_cannot_authorize_changed_text(
+    tmp_path: Path,
+) -> None:
+    source = fiscal_review_evidence(tmp_path)
+    decision = {
+        source.relative_path: {
+            "kind": "CU",
+            "basis": "professional_review",
+            "text_sha256": "0" * 64,
+        }
+    }
+
+    with pytest.raises(ValueError, match="stale"):
+        parse_structured_fiscal_fields([source], tmp_path, kind_decisions=decision)
+
+
+def test_unreadable_fiscal_source_has_explicit_disposition(tmp_path: Path) -> None:
+    source = fiscal_review_evidence(tmp_path, readable=False)
+
+    fields = parse_structured_fiscal_fields([source], tmp_path)
+
+    assert fields == []
+    disposition = json.loads((tmp_path / "document_dispositions.json").read_text())
+    assert disposition["documents"] == [
+        {
+            "relative_path": source.relative_path,
+            "status": "unreadable",
+            "field_count": 0,
+        }
+    ]
+
+
+@pytest.mark.parametrize("xml_text", ["<broken", "<UnrelatedDocument/>"])
+def test_invalid_invoice_source_retains_byte_identity_without_inventing_a_body(
+    tmp_path: Path, xml_text: str
+) -> None:
+    source = tmp_path / "invalid.xml"
+    source.write_text(xml_text, encoding="utf-8")
+
+    record = parse_fatturapa_file(source)
+
+    assert record.malformed is True
+    assert record.body_index == 0
+    assert record.source_sha256 == hashlib.sha256(xml_text.encode()).hexdigest()
+
+
+def test_successor_intake_preserves_reviewed_kind_in_complete_model_handoff(
+    tmp_path: Path,
+) -> None:
+    customer = tmp_path / "customer"
+    customer.mkdir()
+    (customer / "F24-cover-letter.txt").write_text(CU_TEXT, encoding="utf-8")
+    first = build_file_preparation_outputs(
+        customer, output_dir=tmp_path / "first", enable_ocr=False
+    )
+    disposition = json.loads(
+        (first.output_dir / "extracted/document_dispositions.json").read_text()
+    )["documents"][0]
+    decisions = {
+        "F24-cover-letter.txt": {
+            "kind": "CU",
+            "basis": "model_review",
+            "text_sha256": disposition["text_sha256"],
+        }
+    }
+
+    successor = build_file_preparation_outputs(
+        customer,
+        output_dir=tmp_path / "successor",
+        enable_ocr=False,
+        kind_decisions=decisions,
+    )
+
+    _, items = _load_model_handoff(successor.output_dir)
+    metadata = next(item for item in items if item["kind"] == "file_metadata")
+    assert metadata["category_status"] == "candidate"
+    assert metadata["fiscal_extraction_disposition"]["selected_kind"] == "CU"
+    assert metadata["fiscal_extraction_disposition"]["status"] == "reviewed_kind"
+    fields = [item for item in items if item["kind"] == "fiscal_field"]
+    assert fields
+    assert {item["document_kind_status"] for item in fields} == {"reviewed"}
+    assert (
+        json.loads((successor.output_dir / "document_kind_decisions.json").read_text())
+        == decisions
+    )
+
+
+def test_standalone_fiscal_parser_cannot_invalidate_existing_review_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    extracted = tmp_path / "extracted"
+    extracted.mkdir()
+    sealed_review = tmp_path / "final_artifacts.json"
+    sealed_review.write_text('{"status":"pending_review"}\n')
+    monkeypatch.setattr(
+        fiscal_module,
+        "_parse_args",
+        lambda: types.SimpleNamespace(
+            extracted_dir=extracted, client_engagement=tmp_path / "context.json"
+        ),
+    )
+    monkeypatch.setattr(
+        fiscal_module, "load_client_engagement_context_file", lambda *args, **kwargs: {}
+    )
+
+    assert fiscal_module.main() == 2
+    assert sealed_review.read_text() == '{"status":"pending_review"}\n'
+    assert not (extracted / "structured_fiscal_fields.csv").exists()
+
+
+def test_mixed_pdf_retains_unread_page_in_normal_handoff(tmp_path: Path) -> None:
+    """A readable cover cannot hide a following image-only page."""
+    import fitz
+
+    customer = tmp_path / "customer"
+    customer.mkdir()
+    source = customer / "avviso_accertamento_IVA.pdf"
+    with fitz.open() as document, fitz.open() as scan:
+        document.new_page().insert_text(
+            (72, 72), "Synthetic cover: attached document awaits review."
+        )
+        scan.new_page().insert_text((72, 72), "Synthetic scanned page")
+        document.new_page().insert_image(
+            fitz.Rect(0, 0, 595, 842), stream=scan[0].get_pixmap().tobytes("png")
+        )
+        document.save(source)
+    output = tmp_path / "output"
+
+    build_file_preparation_outputs(customer, 2026, output, enable_ocr=False)
+
+    page = json.loads((output / "model_handoff_pages/page-0001.json").read_text())
+    metadata = next(item for item in page["items"] if item["kind"] == "file_metadata")
+    assert metadata["pdf_text_coverage"]["pages_with_text"] == [1]
+    assert metadata["pdf_text_coverage"]["pages_without_text"] == [2]
+    assert metadata["pdf_text_coverage"]["status"] == "partial"
+    assert metadata["category_status"] == "candidate"
+    report = (output / "extracted/extraction_report.md").read_text()
+    assert "pagine senza testo: [2]" in report
+    assert (output / "avviso/deadlines_and_amounts.csv").read_text().splitlines() == [
+        "relative_path,type,value"
+    ]
+
+
+def test_pdf_fallback_preserves_blank_page_coverage(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fallback page accounting survives even when it extracts no text."""
+    import fitz
+    import pdfplumber
+
+    customer = tmp_path / "customer"
+    customer.mkdir()
+    with fitz.open() as document:
+        document.new_page()
+        document.save(customer / "avviso.pdf")
+
+    def failed_open(*args: Any, **kwargs: Any) -> None:
+        raise ValueError("Synthetic primary-reader failure")
+
+    monkeypatch.setattr(pdfplumber, "open", failed_open)
+    records = scan_folder(customer)
+
+    evidence = extraction_module.extract_documents(
+        records, customer, tmp_path / "output", enable_ocr=False
+    )
+
+    assert evidence[0].pdf_text_coverage["pages_without_text"] == [1]
+    assert evidence[0].page_count == 1
+    assert evidence[0].readable is False
+    assert evidence[0].needs_ocr is True

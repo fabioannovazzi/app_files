@@ -139,6 +139,19 @@ standalone queue. They
 cannot change canonical perfect matches, ledgers, receipts, gates, or report
 readiness.
 
+The default worker remains Luna at max effort. `prepare` and `run-all` accept
+`--worker-selection <receipt.json>` for an explicitly reviewed alternative.
+Use the shared `vera.reviewed_decision_receipt.v1` format with decision type
+`worker-model-selection`, adapter `vera-native-worker` version `1`, and reviewed
+status. Its content must contain `workflow_id` (`journal-bank-reconciliation`),
+`model`, `reasoning_effort`, and `benchmark_sha256`; its source reference must be
+`benchmark-<digest>`. The selection file is an authorized engagement input.
+The graph binds this receipt, and launch/replay must use the same configuration.
+A local review declaration does not authenticate its reviewer, prove benchmark
+quality, or qualify another host. Compare representative outputs and obtain the
+actual selection review before using an alternative; do not manufacture a
+reviewed receipt to enable a model. The calling chat model remains unchanged.
+
 ## Local MCP Review UI
 
 Deterministic runs now emit `run_intake.json`, `review_payload.json`,

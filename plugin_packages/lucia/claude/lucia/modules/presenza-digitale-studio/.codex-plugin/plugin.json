@@ -1,6 +1,6 @@
 {
   "name": "presenza-digitale-studio",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Reviewable website refreshes and first websites for professional studios, built from verified studio material.",
   "author": {
     "name": "Mparanza",
@@ -37,7 +37,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Analizza il sito attuale dello studio e prepara una versione più chiara, contemporanea e responsive.",
+      "Analizza il sito attuale dello studio e prepara una versione pi\u00f9 chiara, contemporanea e responsive.",
       "Lo studio non ha ancora un sito: costruisci una prima presenza digitale professionale dai materiali verificati.",
       "Prepara una preview privata del nuovo sito e pubblicala solo dopo la mia approvazione."
     ],

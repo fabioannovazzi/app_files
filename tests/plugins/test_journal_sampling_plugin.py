@@ -2031,10 +2031,10 @@ def test_static_page_exposes_five_localized_model_data_flows() -> None:
         "Les références aux fichiers sont remplacées par des codes neutres",
         "Dateiverweise werden durch neutrale Codes ersetzt",
         "Las referencias a archivos se sustituyen por códigos neutros",
-        "The same reduced sample in every mode",
-        "mais cela ne pseudonymise pas les données professionnelles",
+        "The model always uses the same reduced sample.",
+        "Les références techniques sont remplacées par des codes neutres, mais cela ne pseudonymise pas les données professionnelles",
         "keine automatische Anonymisierung oder Nur-lokal-Garantie",
-        "El modelo utiliza siempre la misma muestra reducida",
+        "El modelo utiliza siempre la misma muestra reducida.",
     ):
         assert snippet in page
 
@@ -2879,7 +2879,10 @@ def test_mcp_rejects_unowned_implementation_path_before_stdio(
     tmp_path: Path,
 ) -> None:
     copied_plugin, _ = _copy_journal_implementation_tree(tmp_path)
-    (copied_plugin / "scripts" / "__pycache__").mkdir()
+    (copied_plugin / "scripts" / "unowned.py").write_text(
+        "raise RuntimeError('unowned implementation must not execute')\n",
+        encoding="utf-8",
+    )
     node = shutil.which("node")
     if node is None:
         pytest.skip("Node.js is required for the MCP implementation probe.")
@@ -3860,3 +3863,167 @@ def test_journal_review_transaction_enforces_size_bound_before_mutation(
     assert sentinel.read_bytes() == sentinel_bytes
     assert oversized.stat().st_size == 128 * 1024 * 1024 + 1
     assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
+
+
+@pytest.mark.parametrize(
+    ("requested", "expected_size", "large_stratum_size"),
+    [(1, 1, 0), (6, 6, 4), (30, 22, 20)],
+)
+def test_stratified_public_run_redistributes_small_strata(
+    tmp_path: Path, requested: int, expected_size: int, large_stratum_size: int
+) -> None:
+    core = load_core()
+    journal_path = tmp_path / "journal.xlsx"
+    rows = [["Data", "Conto", "Descrizione conto", "Descrizione", "Dare", "Avere"]]
+    rows.extend(
+        [
+            ["2025-01-01", account, "Expense", "Synthetic", 10, None]
+            for account in ["1000", "2000"] + ["3000"] * 20
+        ]
+    )
+    _save_workbook(journal_path, rows)
+    output_dir = tmp_path / "normalized"
+    core.inspect_path(journal_path, output_dir)
+    _approve_suggested_recipe(output_dir / "suggested_recipe.json")
+    core.normalize_path(journal_path, output_dir, output_dir / "suggested_recipe.json")
+
+    result = core.run_sample(
+        output_dir / "normalized_journal.csv",
+        tmp_path / "sample",
+        method="stratified",
+        size=requested,
+        group_column="account",
+    )
+
+    assert result.frame.height == expected_size
+    assert (
+        result.frame.filter(core.pl.col("account") == "3000").height
+        == large_stratum_size
+    )
+    assert result.audit["requested_size"] == requested
+    assert result.audit["sample_size"] == expected_size
+
+
+@pytest.mark.parametrize(
+    ("language", "title"),
+    [
+        ("it", "Campione casuale: 1 su 1"),
+        ("fr", "Échantillon aléatoire : 1 sur 1"),
+        ("de", "Stichprobe zufällig: 1 von 1"),
+    ],
+)
+def test_sample_review_preserves_requested_locale(
+    tmp_path: Path, language: str, title: str
+) -> None:
+    core = load_core()
+    source = tmp_path / "journal.xlsx"
+    out = tmp_path / "normalization"
+    _save_workbook(
+        source,
+        [
+            ["Data", "Conto", "Descrizione", "Dare", "Avere"],
+            ["2026-09-01", "120100", "Invoice INV-10001", 100, 0],
+        ],
+    )
+    core.inspect_path(source, out, language=language)
+    _approve_suggested_recipe(out / "suggested_recipe.json")
+    core.normalize_path(source, out, out / "suggested_recipe.json")
+    core.run_sample(
+        out / "normalized_journal.csv",
+        tmp_path / "sample",
+        method="random",
+        size=1,
+        language=language,
+    )
+    context = json.loads((tmp_path / "sample/model_review_context.json").read_text())
+    assert context["review"]["language"] == language
+    assert context["intake"]["language"] == language
+    assert title in [item["title"] for item in context["review"]["items"]]
+
+
+def test_managed_nested_review_validates_with_only_public_context(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    output_dir, arguments = _real_journal_review_case(core, tmp_path)
+    before = _journal_tree_image(output_dir)
+    result = _journal_transaction_call(
+        "validate_journal_sampling_review",
+        {
+            "client_engagement": arguments["client_engagement"],
+            "model_review_context": arguments["model_review_context"],
+        },
+    )
+    assert result["ok"] is True
+    assert _journal_tree_image(output_dir) == before
+
+
+@pytest.mark.parametrize(
+    "tool_name", ["save_journal_sampling_decisions", "apply_journal_sampling_decisions"]
+)
+def test_managed_nested_review_persists_with_only_public_context(
+    tmp_path: Path, tool_name: str
+) -> None:
+    output_dir, arguments = _real_journal_review_case(load_core(), tmp_path)
+    result = _journal_transaction_call(
+        tool_name,
+        {
+            "client_engagement": arguments["client_engagement"],
+            "model_review_context": arguments["model_review_context"],
+            "decisions": arguments["decisions"],
+            "reviewer": "Synthetic integration test",
+        },
+    )
+    assert result["ok"] is True
+
+
+def test_managed_nested_review_rejects_duplicate_context(tmp_path: Path) -> None:
+    output_dir, arguments = _real_journal_review_case(load_core(), tmp_path)
+    shutil.copyfile(
+        output_dir / "model_review_context.json",
+        output_dir.parent / "model_review_context.json",
+    )
+    result = _journal_transaction_call(
+        "validate_journal_sampling_review",
+        {
+            "client_engagement": arguments["client_engagement"],
+            "model_review_context": arguments["model_review_context"],
+        },
+    )
+    assert result["ok"] is False
+    assert "one matching persisted" in result["error"]
+
+
+def test_mus_repeated_threshold_hits_keep_unique_row_and_actual_count(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    journal_path = tmp_path / "journal.xlsx"
+    _save_workbook(
+        journal_path,
+        [
+            ["Date", "Account", "Description", "Debit", "Credit"],
+            ["2025-01-01", "1000", "Dominant debit", "1000.00", None],
+            ["2025-01-02", "2000", "Small debit", "1.00", None],
+            ["2025-01-03", "3000", "Small credit", None, "1.00"],
+        ],
+    )
+    normalized_dir = tmp_path / "normalized"
+    core.inspect_path(journal_path, normalized_dir)
+    recipe_path = normalized_dir / "suggested_recipe.json"
+    _approve_suggested_recipe(recipe_path)
+    core.normalize_path(journal_path, normalized_dir, recipe_path)
+
+    result = core.run_sample(
+        normalized_dir / "normalized_journal.csv",
+        tmp_path / "sample",
+        method="mus",
+        size=3,
+    )
+
+    assert result.frame.height == 1
+    assert result.frame.get_column("account").to_list() == ["1000"]
+    assert result.audit["requested_size"] == 3
+    assert result.audit["sample_size"] == 1
+    assert result.audit["population_size_after_filters"] == 3
+    assert result.audit["seed"] is None

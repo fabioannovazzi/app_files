@@ -11,11 +11,16 @@ Later host-specific instructions in this reference cannot override this rule.
 # Run-level model-data report contract
 
 Use this contract after every substantive Vera run, across client-bound,
-studio-wide, local, connected-source, Claude, and Cowork workflows. The invariant
 studio-wide, local, connected-source, ChatGPT, Claude, and Cowork workflows. The
 invariant is evidence about the actual model-context boundary. A smaller context
 is not required when the professional purpose needs a complete document or
 population.
+
+Studio Archive also reuses this input schema and local report validation in
+`scripts/build_model_data_report.py`. That generic helper creates local JSON and
+Markdown only and returns `server_receipt.status=not_requested`. The automatic
+server-attestation behavior described below belongs to Vera's own
+`scripts/model_data_report.py` command; it is not implied by the generic helper.
 
 ## Required outputs
 

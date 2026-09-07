@@ -7,7 +7,12 @@
     "skills/research-video/agents/openai.yaml",
     "skills/research-video/references/hosted-voice-bundle.schema.json",
     "skills/research-video/references/scene-plan.schema.json",
-    "skills/research-video/scripts/research_video.py"
+    "skills/research-video/scripts/research_video.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -61,6 +66,20 @@
         "A valid Mparanza session is required; every authenticated account is currently authorized because no Research Video email allowlist is applied.",
         "Mparanza builds the response in memory and does not write requests or audio to application storage; provider-side retention at OpenAI is not established by plugin source."
       ]
+    },
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
     }
   ],
   "security_controls": [
@@ -85,6 +104,6 @@
     "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "59bd0832b9cb0e93d103ce353a0d024cfbedf94630eb09394148acdafce32cd4"
+    "source_fingerprint": "5078a85d5cbbc174fb368162c49d30191cba2395690f73cb401cac540bc2df78"
   }
 }

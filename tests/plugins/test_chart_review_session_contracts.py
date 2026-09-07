@@ -32,6 +32,14 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+@pytest.fixture(autouse=True)
+def shared_assurance_import_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep canonical assurance available for lazy imports during calls."""
+    monkeypatch.syspath_prepend(
+        str(_repo_root() / "plugins" / "_shared" / "vendor" / "modules")
+    )
+
+
 def _load_review_session(plugin: str) -> Any:
     path = _repo_root() / PLUGIN_REVIEW_MODULES[plugin]
     scripts_path = str(path.parent)

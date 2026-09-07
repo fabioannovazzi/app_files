@@ -428,6 +428,16 @@ python scripts/intelligence_workflow.py \
   --model-session-ref <fresh-operator-attested-session-ref>
 ```
 
+   Retain the exact packet delivered to the model. Compute its SHA-256 with
+   `intelligence_contract.intelligence_packet_hash(packet)` (UTF-8 JSON with
+   `ensure_ascii=False`, `sort_keys=True`, and separators `(',', ':')`). The
+   required digest binds recording to that supplied packet. Repeat the same
+   `--task`, every `--subject-id`, and `--model-session-ref` used for packet
+   creation. Recording fails without mutation if that scope or packet content
+   has changed; regenerate and obtain a new response after input changes. This
+   binding does not authenticate provider execution or prove what the provider
+   received.
+
    Record the exact response and exact provider/model/template identity as a
    non-authoritative `MODEL_SUGGESTED` run:
 
@@ -437,6 +447,7 @@ python scripts/intelligence_workflow.py \
   --client-engagement <client_engagement_path> \
   record \
   --model-output <strict-output.json> \
+  --expected-packet-sha256 <sha256-of-exact-supplied-packet> \
   --provider <provider> \
   --model <exact-model> \
   --prompt-template-version bandi-intelligence-v2 \

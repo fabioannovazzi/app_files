@@ -1,0 +1,10 @@
+[run]
+include =
+    */plugins/management-control-pack/scripts/management_control_core.py
+    */plugins/passive-invoice-audit/scripts/audit_core.py
+    */plugins/client-file-preparation/scripts/parse_fatturapa_xml.py
+    */plugins/deep-research-validator/scripts/inspect_sources.py
+
+[report]
+show_missing = True
+fail_under = 80

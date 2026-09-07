@@ -1,6 +1,6 @@
 {
   "name": "centrale-rischi-review",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Reviewable Centrale Rischi exposure analysis for Vera from the official digital PDF or confirmed CSV and Excel exports.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -30,7 +30,12 @@
     "websiteURL": "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it",
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
-    "capabilities": ["Interactive", "Read", "Write", "Analysis"],
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
     "defaultPrompt": [
       "Analyse this Centrale Rischi PDF or export and separate short-, medium- and long-term exposures.",
       "List guarantees, overruns and prejudicial events supported by this report.",

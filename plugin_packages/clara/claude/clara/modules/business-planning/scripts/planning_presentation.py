@@ -28,6 +28,8 @@ ITALIAN = {
     "Audience": "Destinatari",
     "internal": "Uso interno",
     "Recommendation": "Raccomandazione",
+    "Business assessment withheld": "Valutazione del business sospesa",
+    "Correct the conflicting calculations and supporting claims, then review the recommendation again. The submitted assessment is retained in the case record; it is not presented as a conclusion.": "Correggere i calcoli e le affermazioni in conflitto, quindi riesaminare la raccomandazione. La valutazione ricevuta resta nel fascicolo e non viene presentata come conclusione.",
     "Proceed": "Procedere",
     "Test": "Testare prima del lancio",
     "Redesign": "Riprogettare",
@@ -49,12 +51,14 @@ ITALIAN = {
     "Sources and calculation references": "Fonti e riferimenti ai calcoli",
     "Source": "Fonte",
     "Reference": "Riferimento",
+    "Value": "Valore",
     "Claim / use": "Affermazione / utilizzo",
     "Location": "Pagina o celle",
     "Not specified": "Non specificato",
     "Action": "Azione",
     "Owner": "Responsabile",
     "When": "Quando",
+    "Undated operating period": "Periodo operativo senza data",
     "Evidence / decision criterion": "Prova / criterio di decisione",
     "Supporting evidence, calculations and review record": "Appendice tecnica: evidenze, calcoli e verifiche",
     "Chart data and calculation lineage": "Dati del grafico e riferimenti ai calcoli",
@@ -149,7 +153,16 @@ def validate_presentation(plan: dict[str, Any]) -> None:
     require(language(plan["case"]) in {"en", "it"}, "Unsupported report language")
     from planning_assessment import SECTIONS
 
-    narrative = {n["id"] for n in plan["accepted_narrative"]}
+    # Blocked reports retain submitted bindings for diagnostic validation only;
+    # their assessment, tables and actions are not rendered as conclusions.
+    narrative = {
+        n["id"]
+        for n in (
+            plan["case"]["narrative"]
+            if plan["status"] == "blocked"
+            else plan["accepted_narrative"]
+        )
+    }
     tables = indexed(p.get("tables", []), "presentation table")
     for table in tables.values():
         require(
@@ -309,7 +322,7 @@ def render_actions(plan: dict[str, Any], render_paragraph: Callable[[str], str])
         return ""
     heads = ["Action", "Owner", "When", "Evidence / decision criterion"]
     output = [
-        '<div class="action-table"><table><thead><tr>'
+        '<div class="action-table table-scroll"><table><thead><tr>'
         + "".join(f"<th>{label(h, lang)}</th>" for h in heads)
         + "</tr></thead><tbody>"
     ]
@@ -420,7 +433,7 @@ def render_sources(plan: dict[str, Any]) -> str:
             _table(
                 [
                     label("Reference", lang),
-                    case["reporting_currency"] or "Value",
+                    label("Value", lang),
                     label("Calculation", lang),
                 ],
                 bindings,
@@ -435,12 +448,16 @@ def render_sources(plan: dict[str, Any]) -> str:
             groups.setdefault(key, []).append(c)
         methods = []
         for (metric, formula, ids), values in groups.items():
-            periods = sorted({v["period"] for v in values})
+            periods = sorted({v["period"] for v in values if v["period"] is not None})
             scenarios = ", ".join(sorted({v["scenario"] for v in values}))
             methods.append(
                 [
                     metric + " / " + scenarios,
-                    periods[0] + " — " + periods[-1],
+                    (
+                        periods[0] + " — " + periods[-1]
+                        if periods
+                        else label("Undated operating period", lang)
+                    ),
                     formula,
                     ids,
                 ]

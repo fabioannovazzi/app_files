@@ -68,6 +68,10 @@ unit tests and package parity. The shared method alone is not runtime proof.
   no generic PII classifier or automatic removal of professional identifiers.
 - Strict, reference-closed recommendation output with task-scoped mutation
   permissions.
+- Required caller-supplied packet digest checked against the exact reconstructed
+  task, subjects, session, and content before recording; mismatches fail without
+  mutation. Packet creation stays read-only and exact record retries are idempotent.
+  The digest is operator-supplied binding, not authenticated provider evidence.
 - Private `intelligence_register.json` recording exact input hashes, packet hash,
   model identity, prompt-template version, output, operator, and lifecycle.
 - `MODEL_SUGGESTED`, `APPLYING`, `ACCEPTED`, `REJECTED`, `RETURNED`, and `STALE`

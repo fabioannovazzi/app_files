@@ -95,6 +95,12 @@ CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS = (
     "years",
     "notes",
 )
+CLIENT_FILE_PREPARATION_CANDIDATE_INVENTORY_COLUMNS = (
+    *CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS[:7],
+    "category_status",
+    "category_basis",
+    *CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS[7:],
+)
 EXPECTED_ARTIFACTS = (
     "run_intake.json",
     "case_facts_validated.json",
@@ -2822,10 +2828,11 @@ def _verify_client_file_preparation_source_snapshot(
     try:
         with inventory_path.open("r", encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle)
-            if (
-                tuple(reader.fieldnames or ())
-                != CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS
-            ):
+            inventory_columns = tuple(reader.fieldnames or ())
+            if inventory_columns not in {
+                CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS,
+                CLIENT_FILE_PREPARATION_CANDIDATE_INVENTORY_COLUMNS,
+            }:
                 raise ValidationError(
                     "Bound 01_document_inventory.csv has an unsupported column contract."
                 )
@@ -2837,10 +2844,19 @@ def _verify_client_file_preparation_source_snapshot(
 
     inventory_by_path: dict[str, dict[str, Any]] = {}
     for index, row in enumerate(inventory_rows):
-        if None in row or set(row) != set(CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS):
+        if None in row or set(row) != set(inventory_columns):
             raise ValidationError(
                 f"Bound inventory row {index + 2} does not match its column contract."
             )
+        if inventory_columns == CLIENT_FILE_PREPARATION_CANDIDATE_INVENTORY_COLUMNS:
+            if (
+                row["category_status"] != "candidate"
+                or row["category_basis"] != "lexical_hint"
+            ):
+                raise ValidationError(
+                    "Bound inventory categories must remain lexical candidates; "
+                    "professional decisions belong to the reviewed field handoff."
+                )
         relative_path = _source_snapshot_relative_path(
             row.get("relative_path"),
             field=f"bound_inventory.rows[{index}].relative_path",

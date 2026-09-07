@@ -24,7 +24,7 @@
       {
         "id": "client-file-evidence",
         "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
-        "content": "Default model_handoff pages contain one metadata record for every inventoried file, exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
+        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -55,7 +55,7 @@
   "security_controls": [
     {
       "id": "source-and-package-integrity",
-      "control": "The workflow does not follow source symlinks, binds extraction and resumable checkpoints to source and extracted-text hashes plus exact run settings, rejects source type, size, or byte drift, and seals reviewed outputs by hash."
+      "control": "The workflow does not follow source symlinks, binds extraction and resumable checkpoints to source and extracted-text hashes plus exact run settings, rejects source type, size, or byte drift, and seals reviewed outputs by hash. Reviewed fiscal adapter selections are bound to the exact extracted-text hash; every source retains an explicit extraction disposition. OOXML parsing rejects DTDs, entity declarations and external references at the parser boundary across supported encodings."
     },
     {
       "id": "review-persistence-binding",
@@ -63,7 +63,7 @@
     },
     {
       "id": "purpose-scoped-review-preview",
-      "control": "After deterministic classification, routine high-confidence document rows retain metadata and exact source references without repeated text previews; previews remain for exceptions, and fiscal evidence plus draft text remain available where professional review needs them."
+      "control": "After candidate classification, routine high-confidence document rows retain metadata and exact source references without repeated text previews; previews remain for exceptions, and fiscal evidence plus draft text remain available where professional review needs them."
     },
     {
       "id": "purpose-shaped-model-handoff",
@@ -79,9 +79,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d5373fd75a01f896517bc2c1c93ce5c2e5c90704c69924b09b138c5527af1b2e"
+    "source_fingerprint": "cf417be87bd44a0a2174b00318832f49b7a0150565c509dfd7bea181a91a7406"
   }
 }

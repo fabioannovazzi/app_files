@@ -142,6 +142,31 @@ class _FixtureHandler(BaseHTTPRequestHandler):
         if path == "/":
             self._write(200, "text/html; charset=utf-8", FIXTURE_HTML)
             return
+        if path == "/changed-selector":
+            self._write(
+                200,
+                "text/html; charset=utf-8",
+                FIXTURE_HTML.replace(b"client-code", b"client-reference"),
+            )
+            return
+        if path == "/unexpected-login":
+            self._write(
+                200,
+                "text/html; charset=utf-8",
+                b"<!doctype html><title>Synthetic sign-in required</title>"
+                b"<main><h1>Synthetic sign-in required</h1>"
+                b"<p>Operator handoff required. No credentials are collected.</p></main>",
+            )
+            return
+        if path == "/redirected-origin":
+            port = int(self.server.server_address[1])
+            self._write(
+                302,
+                "text/plain; charset=utf-8",
+                b"Synthetic redirect to a different loopback origin.\n",
+                {"Location": f"http://localhost:{port}/"},
+            )
+            return
         if path == "/healthz":
             body = json.dumps(
                 {"schema_version": SCHEMA_VERSION, "status": "ready"},
@@ -220,6 +245,25 @@ def _probe(port: int) -> None:
             or archive.read(DOWNLOAD_ENTRY_NAME) != DOWNLOAD_ENTRY_BYTES
         ):
             raise RuntimeError("Local acceptance fixture ZIP contents are invalid.")
+    changed_status, _, changed_body = _read_local_response(port, "/changed-selector")
+    if (
+        changed_status != 200
+        or b"client-code" in changed_body
+        or b'id="client-reference"' not in changed_body
+        or b">Client code</label>" not in changed_body
+    ):
+        raise RuntimeError("Changed-selector fixture must preserve semantic labels.")
+    login_status, _, login_body = _read_local_response(port, "/unexpected-login")
+    if login_status != 200 or b"No credentials are collected." not in login_body:
+        raise RuntimeError("Synthetic login fixture is invalid.")
+    redirect_status, redirect_headers, _ = _read_local_response(
+        port, "/redirected-origin"
+    )
+    if (
+        redirect_status != 302
+        or redirect_headers.get("location") != f"http://localhost:{port}/"
+    ):
+        raise RuntimeError("Synthetic cross-origin redirect is invalid.")
 
 
 def _ready_record(server: _FixtureServer) -> dict[str, object]:
@@ -231,6 +275,12 @@ def _ready_record(server: _FixtureServer) -> dict[str, object]:
         "origin": origin,
         "page_url": f"{origin}/",
         "health_url": f"{origin}/healthz",
+        "recovery_cases": {
+            "changed_selector_url": f"{origin}/changed-selector",
+            "unexpected_login_url": f"{origin}/unexpected-login",
+            "redirected_origin_url": f"{origin}/redirected-origin",
+            "redirect_target_origin": f"http://localhost:{port}",
+        },
         "process": {
             "heading": "Vera browser acceptance fixture",
             "client_code_label": "Client code",

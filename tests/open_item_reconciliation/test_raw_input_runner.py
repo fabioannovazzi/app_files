@@ -3,6 +3,7 @@ from __future__ import annotations
 import builtins
 import importlib.util
 import json
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -11,7 +12,10 @@ import pytest
 from openpyxl import Workbook, load_workbook
 
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "open-item-reconciliation" / "scripts"
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "open-item-reconciliation"
+    / "scripts"
 )
 RUNNER = SCRIPTS / "raw_input_runner.py"
 
@@ -1342,3 +1346,116 @@ def test_parse_ledger_balance_pages_extracts_pre_closing_balance():
     assert rows[0]["opening_balance_signed_debit_minus_credit"] == "1000.00"
     assert rows[0]["closing_balance_signed_debit_minus_credit"] == "1200.00"
     assert rows[1]["account"] == "9 / 5 / 3"
+
+
+def test_inventory_preserves_nested_imports_with_identical_basenames(tmp_path):
+    runner = load_runner()
+    first = tmp_path / "imports" / "first" / "source.txt"
+    second = tmp_path / "imports" / "second" / "source.txt"
+    first.parent.mkdir(parents=True)
+    second.parent.mkdir(parents=True)
+    first.write_text("first obligation")
+    second.write_text("second obligation")
+
+    rows = runner.source_inventory(tmp_path)
+
+    assert [row["source_file"] for row in rows] == [
+        "imports/first/source.txt",
+        "imports/second/source.txt",
+    ]
+    assert rows[0]["sha256"] != rows[1]["sha256"]
+
+
+def test_inventory_rejects_nested_source_link_before_read(tmp_path):
+    runner = load_runner()
+    root = tmp_path / "inputs"
+    nested = root / "imports"
+    nested.mkdir(parents=True)
+    outside = tmp_path / "outside.txt"
+    outside.write_text("not an imported source")
+    (nested / "linked.txt").symlink_to(outside)
+
+    with pytest.raises(ValueError, match="Linked source"):
+        runner.source_inventory(root)
+
+
+def test_invoice_series_reference_does_not_also_emit_bare_invoice_number():
+    runner = load_runner()
+
+    refs = runner.extract_invoice_refs("Bonifico Alpha fattura 1-FE", "2026-09-20")
+
+    assert refs == [("1-FE", "2026-09-20")]
+
+
+def test_nested_pdf_sources_with_same_name_keep_distinct_rows_and_receipts(tmp_path):
+    runner = load_runner()
+    root = tmp_path / "inputs"
+    first = root / "imports" / "first" / "open.pdf"
+    second = root / "imports" / "second" / "open.pdf"
+    first.parent.mkdir(parents=True)
+    second.parent.mkdir(parents=True)
+    for path, content in (
+        (first, "Partite aperte\n23FE01/000001\n01/09/2023\n100.00\n100.00"),
+        (second, "Partite aperte\n23FE01/000002\n01/09/2023\n200.00\n200.00"),
+    ):
+        # Native PyMuPDF types must be initialized in one interpreter; the
+        # suite's component-module isolation reloads Python SWIG wrappers.
+        subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import fitz,sys; d=fitz.open(); d.new_page().insert_text((60,60),sys.argv[2]); d.save(sys.argv[1]); d.close()",
+                str(path),
+                content,
+            ],
+            check=True,
+        )
+    decision = reviewed_source_input(
+        role="open_items",
+        adapter_family="open_items_text_v1",
+        direction_policy="customer",
+    )
+
+    result = runner.extract_normalized_records(
+        root,
+        {
+            "reviewed_source_decisions": {
+                "imports/first/open.pdf": decision,
+                "imports/second/open.pdf": decision,
+            }
+        },
+        output_dir=tmp_path / "output",
+    )
+
+    assert result["extraction_errors"] == []
+    assert [row["source_file"] for row in result["open_items"]] == [
+        "imports/first/open.pdf",
+        "imports/second/open.pdf",
+    ]
+    assert [row["amount"] for row in result["open_items"]] == ["100", "200"]
+    assert len(result["source_artifact_receipts"]) == 2
+    assert result["source_qualifications"][0]["status"] == "qualified"
+    assert result["source_qualifications"][1]["status"] == "qualified"
+
+
+def test_bank_movement_with_two_invoice_refs_has_one_amount_capacity():
+    runner = load_runner()
+    page = runner.SourcePage(
+        source_file="bank.pdf",
+        source_role="bank_statement",
+        source_page=1,
+        extraction_method="text",
+        text_length=0,
+        line_count=1,
+        text="20/09/26 20/09/26 1,830.00 Bonifico Alpha fatture 1-FE e 2-FE",
+    )
+    assumptions = direct_reviewed_assumptions(
+        "bank.pdf", role="bank_statement", adapter_family="bank_statement_text_v1"
+    )
+
+    rows = runner.parse_bank_statement_pages([page], assumptions)
+
+    assert len(rows) == 1
+    assert rows[0]["amount"] == "1830"
+    assert rows[0]["document_keys"] == "1FE|2026;2FE|2026"
+    assert rows[0]["record_id"] == "bank:bank.pdf:p1:l1:grouped"

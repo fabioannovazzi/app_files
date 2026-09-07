@@ -258,6 +258,11 @@ __all__ = [
 ]
 
 
+def _dictionary_or_empty(value: object) -> dict[str, Any]:
+    """Retain a dictionary value, otherwise use the existing empty fallback."""
+    return value if isinstance(value, dict) else {}
+
+
 def normalize_language(
     language: object | None,
     *,
@@ -1922,7 +1927,12 @@ def _suggest_print_layout(raw_df: pl.DataFrame) -> dict[str, Any]:
     account_col = _find_header_col(header, "conto", "account", "compte", "konto")
     debit_col = _find_header_col(header, "dare", "debit", "débit", "soll")
     credit_col = _find_header_col(header, "avere", "credit", "crédit", "haben")
-    if None in {date_col, account_col, debit_col, credit_col}:
+    if (
+        date_col is None
+        or account_col is None
+        or debit_col is None
+        or credit_col is None
+    ):
         return {}
     columns = {
         "date": int(date_col) + 1,
@@ -1979,7 +1989,7 @@ def _potential_print_monetary_columns(
 ) -> list[str]:
     """Return physical print-layout columns requiring monetary disposition."""
 
-    columns = layout.get("columns") if isinstance(layout.get("columns"), dict) else {}
+    columns = _dictionary_or_empty(layout.get("columns"))
     mapped_non_monetary = {
         column
         for field in (
@@ -2032,7 +2042,7 @@ def _print_plan(
     )
     decimal_separator = file_recipe.get("decimal_separator")
     thousands_separator = file_recipe.get("thousands_separator")
-    columns = layout.get("columns") if isinstance(layout.get("columns"), dict) else {}
+    columns = _dictionary_or_empty(layout.get("columns"))
     excluded_monetary_columns, exclusions_valid = _excluded_monetary_columns(
         file_recipe
     )
@@ -3307,7 +3317,7 @@ def inspect_path(
         **languages,
         "files": recipe_files,
     }
-    result = InspectionResult(
+    inspection_result = InspectionResult(
         files=inspections, total_rows=total_rows, suggested_recipe=suggested_recipe
     )
     if output_dir is not None:
@@ -3330,7 +3340,7 @@ def inspect_path(
             output_dir / "qualification_review_payload.json",
             review_payload,
         )
-    return result
+    return inspection_result
 
 
 def normalize_path(
@@ -3761,11 +3771,21 @@ def _stratified_sample(
     if group_column not in frame.columns:
         raise ValueError(f"Stratified sampling group column not found: {group_column}")
     groups = frame.partition_by(group_column, maintain_order=True)
-    per_group = max(1, math.ceil(size / len(groups)))
+    # Equal allocation with capacity redistribution preserves the requested size
+    # mechanically; encounter order breaks ties and seed 42 preserves replay.
+    allocations = [0] * len(groups)
+    remaining = min(size, frame.height)
+    while remaining:
+        for index, group in enumerate(groups):
+            if allocations[index] < group.height:
+                allocations[index] += 1
+                remaining -= 1
+                if not remaining:
+                    break
     parts = [
-        group.sample(n=min(per_group, group.height), seed=42)
-        for group in groups
-        if group.height > 0
+        group.sample(n=count, seed=42)
+        for group, count in zip(groups, allocations, strict=True)
+        if count
     ]
     return pl.concat(parts).head(size) if parts else frame.head(0)
 
@@ -4621,7 +4641,7 @@ def _build_sample_reproducibility(
         "implementation_sha256": implementation_sha256,
         "sampling_contract": {
             "method": method,
-            "seed": 42 if method == "random" else None,
+            "seed": 42 if method in {"random", "stratified"} else None,
             "requested_size": size,
             "group_column": group_column,
             "filters": {
@@ -5645,7 +5665,7 @@ def _expected_followup_context(
 ) -> dict[str, str]:
     if action not in {"reject", "mark_unclear", "request_more_documents"}:
         return {}
-    data = item.get("data") if isinstance(item.get("data"), dict) else {}
+    data = _dictionary_or_empty(item.get("data"))
     evidence = [value for value in item.get("evidence", []) if isinstance(value, dict)]
     records = [data, *evidence]
     fields = (
@@ -5862,7 +5882,7 @@ def _expected_application_effect(
     *,
     applied_at: str,
 ) -> dict[str, Any]:
-    data = item.get("data") if isinstance(item.get("data"), dict) else {}
+    data = _dictionary_or_empty(item.get("data"))
     target_artifact = (
         str(data.get("target_artifact") or "").strip()
         or str(item.get("output_path") or "").strip()
@@ -6298,14 +6318,17 @@ def _successor_run_and_final_payloads(
         ui=ui,
         applied=applied,
     )
+    if kind == "save":
+        run_status = "review_decisions_saved"
+        final_status = "review_saved_pending_application"
+    else:
+        if applied is None:
+            raise ValueError("Applied decisions are required for an apply successor")
+        run_status = final_status = str(applied["application_status"])
     run_intake = {
         **predecessor_run,
         "execution_trace": traces,
-        "status": (
-            "review_decisions_saved"
-            if kind == "save"
-            else str(applied["application_status"])
-        ),
+        "status": run_status,
         "review_successor": successor_binding,
     }
     blockers = (
@@ -6322,11 +6345,6 @@ def _successor_run_and_final_payloads(
         ]
         if applied is not None
         else []
-    )
-    final_status = (
-        "review_saved_pending_application"
-        if kind == "save"
-        else str(applied["application_status"])
     )
     final_artifacts: dict[str, Any] = {
         "schema_version": predecessor_final.get("schema_version", "1.0"),
@@ -7170,7 +7188,7 @@ def run_sample(
             "normalized_csv": normalized_csv_reference,
             "language": language_code,
             "method": method_key,
-            "seed": 42 if method_key == "random" else None,
+            "seed": 42 if method_key in {"random", "stratified"} else None,
             "requested_size": size,
             "population_size_before_filters": frame.height,
             "population_size_after_filters": population.height,

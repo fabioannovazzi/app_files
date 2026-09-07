@@ -17,8 +17,8 @@
       "kind": "hosted_service",
       "destination": "Mparanza's fixed HTTPS Vera run-receipt endpoint and public verification page",
       "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
-      "content": "Each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the installed Vera version, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest.",
-      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible.",
+      "content": "Each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Vera version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest.",
+      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible.",
       "activation": "automatic_per_durable_run",
       "optional": false,
       "requires_confirmation": false,
@@ -26,10 +26,11 @@
         "anthropic-cowork"
       ],
       "controls": [
-        "Every successful durable model-data report build invokes the receipt client automatically; there is no local enable, disable, or consent setting. If the service is unavailable, the completed work and local report remain intact, the retry-stable request remains pending, and the report command still succeeds without claiming that a server receipt exists.",
-        "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields.",
+        "Every successful durable model-data report build through Vera's own command invokes the receipt client automatically; there is no local enable, disable, or consent setting. If the service is unavailable, the completed work and local report remain intact, the retry-stable request remains pending, and the report command still succeeds without claiming that a server receipt exists. The generic Studio Archive report helper reuses local validation with server attestation disabled and reports not_requested; it does not invoke this external service.",
+        "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields. The default transport rejects HTTP redirects before any redirected request and rejects endpoint URLs containing credentials.",
         "The server rejects additional request fields, assigns its own timestamp, signs the complete retained record with Ed25519, stores only the minimal proof fields, applies request-size and rate limits, and fails closed when signing or verification keys are unavailable.",
-        "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance."
+        "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance.",
+        "Retries retain the original UUID and version. A retry after finalization verifies the retained report against the sealed artifact manifest and writes supplementary receipts outside the immutable output tree."
       ]
     }
   ],
@@ -44,7 +45,7 @@
     },
     {
       "id": "fixed-receipt-destination",
-      "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing.",
+      "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing. Endpoint credentials are rejected, and the default stamping and verification transport refuses redirects rather than following another destination.",
       "implemented_by": [
         "scripts/notarized_run_receipt.py"
       ],
@@ -55,6 +56,6 @@
     "reviewed_at": "2026-08-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "407c2a12c0ebf17a788794bf51041254f303a88676aa073c20a87a2021f0db6f"
+    "source_fingerprint": "d432388581a25928833164670d315e7ba4ba96fd3c99e03f9f93b099983edda7"
   }
 }

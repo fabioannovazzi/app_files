@@ -11,7 +11,7 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/12";
+export const RUNTIME_VERSION = "browser-capability-runtime/13";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v2";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
@@ -621,6 +621,7 @@ async function extractWithCandidateFallback(action, context, declaration, timeou
     }
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
+        assertAllowedUrl(await context.tab.url(), context.allowedOrigins);
         const value = await extractOutput(
           action,
           resolved.locator,
@@ -1113,6 +1114,9 @@ async function executeAction(action, context) {
   if (action.effect === "consequential" && !approvedConsequentialActions.has(action.id)) {
     throw new Error(`consequential action requires current operator approval: ${action.id}`);
   }
+  if (action.operation !== "goto") {
+    assertAllowedUrl(await tab.url(), context.allowedOrigins);
+  }
 
   let locatorCandidate = null;
   let locator = null;
@@ -1128,6 +1132,11 @@ async function executeAction(action, context) {
     };
   }
 
+  // Locator resolution is asynchronous: the page can navigate while it runs.
+  // A post-action check alone would disclose inputs before rejecting the run.
+  if (action.operation !== "goto") {
+    assertAllowedUrl(await tab.url(), context.allowedOrigins);
+  }
   if (action.operation === "goto") {
     const targetOrigin = action.target_origin ?? capability.site.allowed_origins[0];
     if (!capability.site.allowed_origins.includes(targetOrigin)) {

@@ -113,12 +113,16 @@
     {
       "id": "exact-initial-transition-and-successor-output-sets",
       "control": "Run, validate, render, save and apply enforce the same workflow-owned physical file and directory perimeter for the initial package, bounded review transition and accepted successor; foreign files, links, hardlink aliases, special entries and post-preflight swaps fail closed, and late failures restore the exact prior tree."
+    },
+    {
+      "id": "source-execution-with-inert-bytecode-cache",
+      "control": "Python entrypoints redirect bytecode lookup and disable bytecode writes before validating and loading the declared source implementation. Cache directories and regular bytecode files are excluded from the source receipt set; they are not treated as executable authority. Optional explicit repair removes only ordinary single-link .pyc files directly inside cache folders under this component own vendor tree, without traversing symlinks or falling back to shared vendor roots. This local maintenance path does not add model calls or external destinations."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-14",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5218c31b02c07856b63a551102a0c676cd95e463c29d782735c15524c5fb9ba3"
+    "source_fingerprint": "3c0ec4c6a640a6baa742f4ababaa348816a1972223fb1ea04c7e6f9f433fb1a5"
   }
 }

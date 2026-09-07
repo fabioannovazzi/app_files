@@ -102,12 +102,16 @@
     {
       "id": "exact-implementation-formula-output-and-successor-closure",
       "control": "Assured commands validate the exact 27-file implementation tree before workflow imports; semantic authority is source-bound and independent from the optional numerical source-role and calculation-formula decisions; numerical ledgers close every material appendix address; and save or apply seals an exact physical-output successor bound to the prior closure."
+    },
+    {
+      "id": "source-execution-with-inert-bytecode-cache",
+      "control": "Python entrypoints redirect bytecode lookup and disable bytecode writes before validating and loading the declared source implementation. Cache directories and regular bytecode files are excluded from the source receipt set; they are not treated as executable authority. Optional explicit repair removes only ordinary single-link .pyc files directly inside cache folders under this component own vendor tree, without traversing symlinks or falling back to shared vendor roots. This local maintenance path does not add model calls or external destinations."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-14",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e8ef2bee8cf9330c7e8ca8b32122d4f9524d242fa7f90a825164705a52faad32"
+    "source_fingerprint": "e7ad18b7c67f95ee27b016ce645415a6fa25adf07c0f3e05d9aec088ffab59f8"
   }
 }

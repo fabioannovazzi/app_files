@@ -13,6 +13,8 @@ from zipfile import ZipFile
 
 import pytest
 
+from tests.model_data_helpers import write_no_model_report
+
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_claude_plugin_zip.py"
 VERA_SOURCE_MANIFEST = ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json"
@@ -49,6 +51,73 @@ def load_privacy_validator():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _partial_build_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    builder = load_builder()
+    marketplace, configured_packages = builder.load_configuration()
+    packages = configured_packages[:2]
+    marketplace = replace(marketplace, catalog_path=tmp_path / "marketplace.json")
+    marketplace.catalog_path.write_text('{"plugins": []}', encoding="utf-8")
+    built = []
+
+    def package_entries(package):
+        return {
+            ".claude-plugin/plugin.json": json.dumps(
+                {
+                    "name": package.plugin,
+                    "displayName": package.plugin,
+                    "version": "0.1.211",
+                    "description": "Synthetic catalog fixture",
+                    "author": {"name": "Fixture"},
+                }
+            ).encode()
+        }
+
+    def build_package(package):
+        built.append(package.plugin)
+        return package.output_directory, package.output_zip
+
+    monkeypatch.setattr(
+        builder, "load_configuration", lambda _: (marketplace, packages)
+    )
+    monkeypatch.setattr(builder, "claude_package_entries", package_entries)
+    monkeypatch.setattr(builder, "build_package", build_package)
+    monkeypatch.setattr(builder, "verify_package", lambda _: [])
+    return builder, marketplace, packages, built
+
+
+def test_single_package_check_rejects_stale_catalog_without_writing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    builder, marketplace, packages, built = _partial_build_fixture(
+        tmp_path, monkeypatch
+    )
+
+    result = builder.main([packages[0].plugin, "--check"])
+
+    assert result == 1
+    assert built == []
+    assert marketplace.catalog_path.read_text(encoding="utf-8") == '{"plugins": []}'
+
+
+def test_single_package_build_refreshes_complete_catalog_without_other_rebuilds(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    builder, marketplace, packages, built = _partial_build_fixture(
+        tmp_path, monkeypatch
+    )
+
+    result = builder.main([packages[0].plugin])
+
+    assert result == 0
+    assert built == [packages[0].plugin]
+    catalog = json.loads(marketplace.catalog_path.read_text(encoding="utf-8"))
+    assert [entry["name"] for entry in catalog["plugins"]] == [
+        packages[0].plugin,
+        packages[1].plugin,
+    ]
+    assert catalog["plugins"][0]["version"] == "0.1.211"
 
 
 @pytest.fixture(scope="module")
@@ -947,6 +1016,13 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
     output_dir = Path(prepared["client_engagement"]["output_dir"])
     result_path = output_dir / "result.md"
     result_path.write_text("# Reviewed result\n", encoding="utf-8")
+    disclosures = write_no_model_report(
+        output_dir,
+        workflow_id,
+        str(run_id),
+        runtime_profile="anthropic-cowork",
+        report_script=script.parent / "build_model_data_report.py",
+    )
     finalized = run(
         "finalize-workflow",
         "--client-id",
@@ -958,13 +1034,14 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
         "--artifacts-json",
         json.dumps(
             [
+                *disclosures,
                 {
                     "artifact_id": "deliverable.result",
                     "path": "result.md",
                     "purpose": f"Reviewable {workflow_id} result",
                     "audience": "review",
                     "media_type": "text/markdown",
-                }
+                },
             ]
         ),
     )
@@ -1038,7 +1115,14 @@ def test_cowork_vendored_runtime_text_is_host_neutral(vera_entries) -> None:
     ]
     review_server = runtime_entries["modules/prompt-optimizer/scripts/review_server.py"]
     assert '"review_in_codex": "Professional Review"' in review_session
-    assert '"execution_location": "cowork_connected_folder"' in review_session
+    assert (
+        "from vera_assurance.serialization import build_review_execution_step"
+        in review_session
+    )
+    shared_trace = runtime_entries[
+        "modules/prompt-optimizer/vendor/modules/vera_assurance/serialization.py"
+    ]
+    assert '"execution_location": "cowork_connected_folder"' in shared_trace
     assert "Claude-written answer-generation instructions" in validate_prompt
     assert "REQUIRE_VERA_CUSTOMER_RUN = True" in review_server
     assert {

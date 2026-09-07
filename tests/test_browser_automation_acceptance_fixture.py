@@ -26,6 +26,12 @@ def test_acceptance_fixture_cli_binds_probes_and_closes() -> None:
     assert result["origin"].startswith("http://127.0.0.1:")
     assert result["page_url"] == f'{result["origin"]}/'
     assert result["health_url"] == f'{result["origin"]}/healthz'
+    assert result["recovery_cases"] == {
+        "changed_selector_url": f'{result["origin"]}/changed-selector',
+        "unexpected_login_url": f'{result["origin"]}/unexpected-login',
+        "redirected_origin_url": f'{result["origin"]}/redirected-origin',
+        "redirect_target_origin": result["origin"].replace("127.0.0.1", "localhost"),
+    }
     assert result["process"] == {
         "heading": "Vera browser acceptance fixture",
         "client_code_label": "Client code",

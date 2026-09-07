@@ -11,6 +11,7 @@ from typing import Any
 
 import pytest
 
+from tests.model_data_helpers import write_no_model_report
 from tests.plugins._financial_analysis_test_loader import (
     load_financial_analysis_scripts,
 )
@@ -289,7 +290,10 @@ def _managed_run(
         client_root,
         engagement_id,
         upstream["run"]["run_id"],
-        [
+        write_no_model_report(
+            upstream_output, "client-file-preparation", upstream["run"]["run_id"]
+        )
+        + [
             {
                 "artifact_id": artifact_id,
                 "path": source.name,

@@ -36,6 +36,38 @@ def test_clara_and_vera_share_the_same_runtime_implementation() -> None:
     assert clara_runtime.read_bytes() == RUNTIME_SOURCE.read_bytes()
 
 
+@pytest.mark.parametrize("payload", [[], None, {}, {"generation": "../outside"}])
+def test_invalid_generation_pointer_reports_runtime_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, payload: object
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    target = tmp_path / "runtime"
+    monkeypatch.setattr(runtime, "dependency_target", lambda *args: target)
+    target.with_name(target.name + ".active.json").write_text(json.dumps(payload))
+
+    assert runtime.activate_runtime(plugin_root, "studio-archive") is None
+
+
+def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+
+    assert ready is False
+    assert not target.exists()
+    assert "timed out" in detail
+    assert list((tmp_path / "data").rglob("*.active.json")) == []
+
+
 def make_packaged_component(root: Path) -> Path:
     scripts = root / "scripts"
     scripts.mkdir(parents=True)
@@ -429,6 +461,27 @@ def test_codex_runtime_uses_stable_private_temp_data_dir(
     assert list(result.glob(".mparanza-write-probe-*")) == []
 
 
+def test_codex_approved_command_uses_same_runtime_as_sandboxed_command(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "clara"
+    plugin_root.mkdir()
+    codex_temp = tmp_path / "codex-temp"
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("CODEX_SANDBOX", raising=False)
+    monkeypatch.setenv("CODEX_THREAD_ID", "synthetic-runtime-thread")
+    monkeypatch.setattr(runtime.tempfile, "gettempdir", lambda: str(codex_temp))
+    monkeypatch.setattr(runtime.Path, "home", lambda: tmp_path / "home")
+
+    result = runtime.plugin_data_dir(plugin_root)
+
+    assert result == (
+        codex_temp / "mparanza-managed-python" / f"uid-{os.getuid()}" / "clara"
+    )
+
+
 def test_marketplace_version_folder_uses_stable_manifest_plugin_name(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -645,6 +698,251 @@ def test_managed_launcher_installs_optional_requirements_and_runs_helper_once(
     assert marker.read_text(encoding="utf-8") == "started"
 
 
+def test_simultaneous_runtime_launches_install_one_generation(tmp_path: Path) -> None:
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    created = []
+
+    def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            created.append(command[-1])
+            time.sleep(0.05)
+            create_fake_virtualenv(Path(command[-1]))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(
+            runtime.ensure_runtime,
+            plugin_root,
+            "studio-archive",
+            data_dir=tmp_path / "data",
+            runner=runner,
+        )
+        second = executor.submit(
+            runtime.ensure_runtime,
+            plugin_root,
+            "studio-archive",
+            data_dir=tmp_path / "data",
+            runner=runner,
+        )
+        results = [first.result(), second.result()]
+
+    assert results[0][0] is True
+    assert results[1][0] is True
+    assert results[0][1] == results[1][1]
+    assert len(created) == 1
+
+
+@pytest.mark.parametrize("installed_version", ["1.0", "1.1"])
+def test_ready_receipt_records_resolved_version_from_same_requirement_range(
+    tmp_path: Path, installed_version: str
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    component = make_packaged_component(plugin_root)
+    (component / "requirements.txt").write_text("demo-dependency>=1.0,<2\n")
+
+    def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            target = Path(command[-1])
+            create_fake_virtualenv(target)
+            distribution = (
+                site_packages(target) / f"demo_dependency-{installed_version}.dist-info"
+            )
+            distribution.mkdir(parents=True)
+            (distribution / "METADATA").write_text(
+                f"Metadata-Version: 2.1\nName: demo-dependency\nVersion: {installed_version}\n"
+            )
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, _ = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+
+    receipt = json.loads((target / runtime.READY_FILENAME).read_text())
+    assert ready is True
+    assert receipt["installed_distributions"] == [
+        {"name": "demo-dependency", "version": installed_version}
+    ]
+    assert receipt["interpreter_version"] == sys.version
+    assert receipt["runtime_key"] == runtime.runtime_key()
+
+
+def test_simultaneous_processes_publish_one_runtime_generation(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    data_dir = tmp_path / "data"
+    worker_code = """
+import json
+import runpy
+import subprocess
+import sys
+import time
+from pathlib import Path
+helpers = runpy.run_path(sys.argv[1])
+runtime = helpers['load_runtime']()
+def runner(command, **kwargs):
+    if command[1:3] == ['-m', 'venv']:
+        time.sleep(0.1)
+        helpers['create_fake_virtualenv'](Path(command[-1]))
+    return subprocess.CompletedProcess(command, 0, '', '')
+ready, target, detail = runtime.ensure_runtime(
+    Path(sys.argv[2]), 'studio-archive', data_dir=Path(sys.argv[3]), runner=runner)
+print(json.dumps({'ready': ready, 'target': str(target), 'detail': detail}))
+"""
+    command = [
+        sys.executable,
+        "-B",
+        "-c",
+        worker_code,
+        __file__,
+        str(plugin_root),
+        str(data_dir),
+    ]
+    processes = [
+        subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+        for _ in range(2)
+    ]
+    try:
+        outputs = [process.communicate(timeout=15) for process in processes]
+    finally:
+        for process in processes:
+            if process.poll() is None:
+                process.kill()
+                process.wait(timeout=5)
+
+    first = json.loads(outputs[0][0])
+    second = json.loads(outputs[1][0])
+    assert processes[0].returncode == 0, outputs[0][1]
+    assert processes[1].returncode == 0, outputs[1][1]
+    assert first["ready"] is True
+    assert second["ready"] is True
+    assert first["target"] == second["target"]
+    assert len(list(data_dir.rglob("*.generation-*"))) == 1
+    assert len(list(data_dir.rglob("*.active.json"))) == 1
+
+
+def test_crashed_installer_releases_lock_without_publishing_generation(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    data_dir = tmp_path / "data"
+    crash_code = """
+import os
+import runpy
+import sys
+from pathlib import Path
+helpers = runpy.run_path(sys.argv[1])
+runtime = helpers['load_runtime']()
+def crash(command, **kwargs):
+    helpers['create_fake_virtualenv'](Path(command[-1]))
+    os._exit(73)
+runtime.ensure_runtime(Path(sys.argv[2]), 'studio-archive',
+                       data_dir=Path(sys.argv[3]), runner=crash)
+"""
+
+    crashed = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            "-c",
+            crash_code,
+            __file__,
+            str(plugin_root),
+            str(data_dir),
+        ],
+        timeout=10,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert crashed.returncode == 73, crashed.stderr
+    assert list(data_dir.rglob("*.active.json")) == []
+    abandoned = list(data_dir.rglob("*.generation-*"))
+    assert len(abandoned) == 1
+
+    def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, _ = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=data_dir, runner=runner
+    )
+
+    assert ready is True
+    assert target.is_dir()
+    assert target != abandoned[0]
+    assert len(list(data_dir.rglob("*.active.json"))) == 1
+
+
+def test_failed_runtime_replacement_preserves_published_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    first = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+    original_check = runtime._dependencies_ready
+    monkeypatch.setattr(
+        runtime,
+        "_dependencies_ready",
+        lambda selection, target, **kwargs: (
+            False if target == first[1] else original_check(selection, target, **kwargs)
+        ),
+    )
+
+    def failure(
+        command: list[str], **kwargs: object
+    ) -> subprocess.CompletedProcess[str]:
+        if "install" in command:
+            return subprocess.CompletedProcess(
+                command, 1, "", "simulated installation failure"
+            )
+        return runner(command, **kwargs)
+
+    result = runtime.ensure_runtime(
+        plugin_root, "studio-archive", data_dir=tmp_path / "data", runner=failure
+    )
+
+    assert result[0] is False
+    assert first[1].is_dir()
+    logical = runtime.dependency_target(
+        runtime.select_runtime(plugin_root, "studio-archive"), tmp_path / "data"
+    )
+    assert runtime._active_target(logical) == first[1]
+
+
+@pytest.mark.parametrize("link_name", ["runtime.active.json", "runtime"])
+def test_dangling_runtime_symlink_is_rejected_before_dependency_probe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, link_name: str
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    target = tmp_path / "runtime"
+    monkeypatch.setattr(runtime, "dependency_target", lambda *args: target)
+    (tmp_path / link_name).symlink_to(tmp_path / "absent")
+
+    assert runtime.activate_runtime(plugin_root, "studio-archive") is None
+
+
 @pytest.mark.parametrize("plugin", ["vera", "clara"])
 @pytest.mark.parametrize("folder", ["{plugin}", "{plugin}~g2", "{plugin}~g17"])
 def test_cowork_sync_generation_uses_claude_manifest_name(
@@ -658,6 +956,7 @@ def test_cowork_sync_generation_uses_claude_manifest_name(
     monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
     monkeypatch.delenv("PLUGIN_DATA", raising=False)
     monkeypatch.delenv("CODEX_SANDBOX", raising=False)
+    monkeypatch.delenv("CODEX_THREAD_ID", raising=False)
     monkeypatch.setattr(runtime.Path, "home", lambda: tmp_path / "home")
 
     result = runtime.plugin_data_dir(plugin_root)

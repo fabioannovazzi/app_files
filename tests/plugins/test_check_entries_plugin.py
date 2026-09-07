@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 import shutil
+import signal
 import stat
 import subprocess
 import sys
@@ -21,6 +22,7 @@ import pytest
 from reportlab.pdfgen import canvas
 
 from scripts.validate_plugin_review_contract import validate_contract
+from tests.model_data_helpers import write_no_model_report
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "check-entries" / "scripts"
@@ -554,6 +556,9 @@ def _qualified_journal(
                 start=1,
             )
         ]
+        declarations.extend(
+            write_no_model_report(normalization_dir.parent, "journal-sampling", run_id)
+        )
         ledger.finalize_run(client_root, engagement_id, run_id, declarations)
     return normalization_dir / "normalized_journal.csv"
 
@@ -805,6 +810,9 @@ def _v2_client_bound_check_inputs(
                 ),
             }
         )
+    declarations.extend(
+        write_no_model_report(journal_output, "journal-sampling", journal_run_id)
+    )
     archive_core.finalize_studio_client_workflow(
         client_id,
         engagement_id,
@@ -1137,15 +1145,34 @@ def _call_mcp_server(
     node = shutil.which("node")
     if node is None:
         pytest.skip("Node.js is required to exercise the Check Entries MCP server.")
-    completed = subprocess.run(
+    process = subprocess.Popen(
         [node, str(server_path), "--stdio"],
-        input="\n".join(json.dumps(message) for message in messages) + "\n",
-        capture_output=True,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        check=True,
-        timeout=10,
+        start_new_session=os.name != "nt",
     )
-    return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
+    # Each request performs a complete source replay. Bound each request rather
+    # than sharing one short deadline across the entire adversarial batch.
+    deadline = 30 * max(1, len(messages))
+    try:
+        stdout, stderr = process.communicate(
+            "\n".join(json.dumps(message) for message in messages) + "\n",
+            timeout=deadline,
+        )
+    except subprocess.TimeoutExpired:
+        if os.name != "nt":
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        else:
+            process.kill()
+        stdout, stderr = process.communicate()
+        pytest.fail(f"MCP batch exceeded {deadline}s; stderr: {stderr[-4000:]}")
+    assert process.returncode == 0, stderr[-4000:]
+    return [json.loads(line) for line in stdout.splitlines() if line.strip()]
 
 
 def _check_transaction_call(
@@ -3159,7 +3186,7 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     ]
     assert result.frame.to_dicts()[0]["status"] == "missing_support"
     assert result.frame.to_dicts()[0]["review_notes"] == (
-        "Ningún PDF justificativo contiene el identificador explícito del movimiento."
+        "Ningún documento justificativo aportado puede vincularse de forma inequívoca a este asiento."
     )
     assert review_payload["language"] == "es"
     assert review_payload["columns"] == [
@@ -3172,10 +3199,10 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     ]
     assert missing_item["recommended_action"] == "request_more_documents"
     assert missing_item["data"]["requested_document"] == (
-        "PDF justificativo del movimiento ES-1"
+        "Documento justificativo del movimiento ES-1"
     )
     assert missing_item["data"]["reason"] == (
-        "Ningún PDF justificativo contiene el identificador explícito del movimiento."
+        "Ningún documento justificativo aportado puede vincularse de forma inequívoca a este asiento."
     )
     assert artifact_item["title"] == "Libro de resultados de la comprobación"
     assert review_handoff.startswith(
@@ -3223,17 +3250,18 @@ def test_plugin_marks_missing_support_without_model_calls(tmp_path: Path) -> Non
     )
 
     assert row["status"] == "missing_support"
-    assert row["mismatches"] == "support_pdf"
+    assert row["mismatches"] == "support_document"
     assert missing_item["recommended_action"] == "request_more_documents"
     assert missing_item["data"]["requested_document"] == (
-        "Supporting PDF for movement 2001"
+        "Supporting document for movement 2001"
     )
     assert missing_item["data"]["reason"] == (
-        "No supporting PDF contains the explicit movement identifier."
+        "No supplied supporting document could be uniquely linked to this entry."
     )
     assert any(
         evidence.get("kind") == "missing_document_request"
-        and evidence.get("requested_document") == "Supporting PDF for movement 2001"
+        and evidence.get("requested_document")
+        == "Supporting document for movement 2001"
         for evidence in missing_item["evidence"]
     )
 
@@ -4364,6 +4392,9 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
                 ),
             }
         )
+    declarations.extend(
+        write_no_model_report(journal_output, "journal-sampling", journal_run_id)
+    )
     archive_core.finalize_studio_client_workflow(
         client_id,
         engagement_id,
@@ -4621,7 +4652,8 @@ def test_check_entries_v2_rejects_missing_normalization_diagnostics_binding(
         client_id,
         engagement_id,
         journal_run_id,
-        [
+        write_no_model_report(output, "journal-sampling", journal_run_id)
+        + [
             {
                 "artifact_id": "prepared.normalized_journal",
                 "path": "normalization/normalized_journal.csv",
@@ -7200,7 +7232,8 @@ def test_mismatched_credit_note_closes_signed_support_and_difference_ledger(
     assert row["support_amount_signed"] == "-11"
     assert row["amount_difference_signed"] == "-1"
     assert row["amount_difference_abs"] == "1"
-    assert row["amount_found"] is None
+    # Retain the XML's observed gross amount even when it differs from the journal.
+    assert row["amount_found"] == "11"
     ledger = result.audit["numeric_evidence_ledger"]
     value_by_field = {
         field: next(
@@ -9097,3 +9130,209 @@ def test_check_entries_accepts_upstream_incidental_bytecode(
 
     assert (output / "check_audit.json").is_file()
     assert cache.read_bytes() == b"inert generated cache"
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_request", "reason"),
+    [
+        (
+            "it",
+            "Documento giustificativo del movimento 2001",
+            "Nessun documento giustificativo fornito è collegabile in modo univoco a questa scrittura.",
+        ),
+        (
+            "fr",
+            "Pièce justificative du mouvement 2001",
+            "Aucune pièce justificative fournie ne peut être rattachée de façon univoque à cette écriture.",
+        ),
+        (
+            "de",
+            "Beleg für die Buchung 2001",
+            "Kein bereitgestellter Beleg konnte dieser Buchung eindeutig zugeordnet werden.",
+        ),
+    ],
+)
+@pytest.mark.parametrize("support_kind", ["empty", "unrelated_xml"])
+def test_missing_support_request_preserves_locale_and_document_choice(
+    tmp_path: Path,
+    language: str,
+    expected_request: str,
+    reason: str,
+    support_kind: str,
+) -> None:
+    core = load_core()
+    journal = _qualified_journal(
+        tmp_path,
+        [
+            {
+                "date": "2025-03-10",
+                "movement": "2001",
+                "description": "Payment",
+                "debit": "80",
+            }
+        ],
+    )
+    support = tmp_path / "support"
+    support.mkdir()
+    if support_kind == "unrelated_xml":
+        (support / "unrelated.xml").write_bytes(
+            _fatturapa_xml(
+                number="UNRELATED-99", invoice_date="2024-01-01", amount="999"
+            )
+        )
+    out = tmp_path / "out"
+    result = core.run_entry_checks(journal, support, out, language=language)
+    payload = json.loads((out / "review_payload.json").read_text())
+    item = next(
+        item for item in payload["items"] if item["item_type"] == "missing_support"
+    )
+    assert result.frame.to_dicts()[0]["mismatches"] == "support_document"
+    assert item["data"]["requested_document"] == expected_request
+    assert item["data"]["reason"] == reason
+
+
+def test_xml_amount_mismatch_preserves_observed_value(tmp_path: Path) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [
+            {
+                "date": "2025-05-02",
+                "movement": "AM-1",
+                "description": "Invoice AM-42",
+                "debit": "610",
+            }
+        ],
+    )
+    invoice = tmp_path / "invoice.xml"
+    invoice.write_bytes(
+        _fatturapa_xml(number="AM-42", invoice_date="2025-05-02", amount="600")
+    )
+    recipe = _reviewed_party_recipe(core, normalized, tmp_path / "recipe.json")
+    _reviewed_pdf_assertion_recipe(
+        core, normalized, invoice, recipe, support_locator="invoice.xml", direction=True
+    )
+    result = core.run_entry_checks(normalized, invoice, tmp_path / "out", recipe)
+    row = result.frame.to_dicts()[0]
+    assert row["status"] == "mismatch"
+    assert str(row["amount_found"]) == "600"
+    assert "amount" in row["mismatches"].split(",")
+    assert "missing_amount" not in row["mismatches"].split(",")
+
+
+def test_xml_date_mismatch_preserves_observed_date(tmp_path: Path) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [
+            {
+                "date": "2025-05-02",
+                "movement": "DATE-1",
+                "description": "Invoice DATE-42",
+                "debit": "100",
+            }
+        ],
+    )
+    invoice = tmp_path / "invoice.xml"
+    invoice.write_bytes(
+        _fatturapa_xml(number="DATE-42", invoice_date="2025-05-03", amount="100")
+    )
+    recipe = _reviewed_party_recipe(core, normalized, tmp_path / "recipe.json")
+    _reviewed_pdf_assertion_recipe(
+        core, normalized, invoice, recipe, support_locator="invoice.xml", direction=True
+    )
+    result = core.run_entry_checks(normalized, invoice, tmp_path / "out", recipe)
+    row = result.frame.to_dicts()[0]
+    assert row["status"] == "mismatch"
+    assert row["date_found"] == "2025-05-03"
+    assert "date" in row["mismatches"].split(",")
+    assert "missing_date" not in row["mismatches"].split(",")
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_start"),
+    [
+        ("it", "Individuato"),
+        ("fr", "Un XML FatturaPA"),
+        ("de", "Eine eindeutige FatturaPA-XML"),
+    ],
+)
+def test_xml_supported_review_note_uses_working_language(
+    tmp_path: Path, language: str, expected_start: str
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [
+            {
+                "date": "2025-05-02",
+                "movement": "LANG-1",
+                "description": "Invoice LANG-42",
+                "debit": "100",
+            }
+        ],
+    )
+    invoice = tmp_path / "invoice.xml"
+    invoice.write_bytes(
+        _fatturapa_xml(number="LANG-42", invoice_date="2025-05-02", amount="100")
+    )
+    recipe = _reviewed_party_recipe(core, normalized, tmp_path / "recipe.json")
+    _reviewed_pdf_assertion_recipe(
+        core, normalized, invoice, recipe, support_locator="invoice.xml", direction=True
+    )
+    result = core.run_entry_checks(
+        normalized, invoice, tmp_path / "out", recipe, language=language
+    )
+    row = result.frame.to_dicts()[0]
+    assert row["status"] == "ok"
+    assert row["review_notes"].startswith(expected_start)
+
+
+@pytest.mark.parametrize(
+    ("language", "phrase"),
+    [("it", "Individuato"), ("fr", "FatturaPA"), ("de", "FatturaPA-XML")],
+)
+@pytest.mark.parametrize(
+    ("direction_reviewed", "amount", "status"),
+    [(False, "100", "manual_review"), (True, "90", "mismatch")],
+)
+def test_xml_unresolved_review_notes_use_working_language(
+    tmp_path: Path,
+    language: str,
+    phrase: str,
+    direction_reviewed: bool,
+    amount: str,
+    status: str,
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [
+            {
+                "date": "2025-05-02",
+                "movement": "LANG-1",
+                "description": "Invoice LANG-42",
+                "debit": "100",
+            }
+        ],
+    )
+    invoice = tmp_path / "invoice.xml"
+    invoice.write_bytes(
+        _fatturapa_xml(number="LANG-42", invoice_date="2025-05-02", amount=amount)
+    )
+    recipe = _reviewed_party_recipe(core, normalized, tmp_path / "recipe.json")
+    _reviewed_pdf_assertion_recipe(
+        core,
+        normalized,
+        invoice,
+        recipe,
+        support_locator="invoice.xml",
+        direction=direction_reviewed,
+    )
+    result = core.run_entry_checks(
+        normalized, invoice, tmp_path / "out", recipe, language=language
+    )
+    row = result.frame.to_dicts()[0]
+    assert row["status"] == status
+    assert phrase in row["review_notes"]
+    assert not row["review_notes"].startswith("Matched")

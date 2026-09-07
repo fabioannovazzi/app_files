@@ -27,7 +27,7 @@ from audit_core import (
     evaluate_synthetic_population,
 )
 from cowork_worker import configured_runtime, run_cowork_chunk
-from luna_worker import run_luna_chunk
+from luna_worker import load_worker_selection, run_luna_chunk
 from vera_assurance import (
     AssuranceContractError,
     load_client_workflow_context_for_output,
@@ -57,24 +57,28 @@ def main() -> int:
     synthetic_evaluate.add_argument("--chunk-size", type=int, default=25)
     synthetic_evaluate.add_argument("--concurrency", type=int, default=2)
     synthetic_evaluate.add_argument("--max-retries", type=int, default=2)
+    synthetic_evaluate.add_argument("--worker-selection", type=Path)
     synthetic_evaluate.add_argument(
         "--reasoning-effort",
         choices=("low", "medium", "high", "xhigh", "max"),
-        default="low",
+        default=None,
     )
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     auxiliary_input = args.labels if args.command == "evaluate" else args.mutation_plan
+    auxiliary_inputs = [auxiliary_input]
+    if getattr(args, "worker_selection", None) is not None:
+        auxiliary_inputs.append(args.worker_selection)
     try:
         client_context = load_client_workflow_context_for_output(
             args.results,
             expected_workflow_id="passive-invoice-audit",
-            input_paths=[auxiliary_input],
+            input_paths=auxiliary_inputs,
         )
         validate_client_workflow_run(
             client_context,
             expected_workflow_id="passive-invoice-audit",
-            input_paths=[args.results, auxiliary_input],
+            input_paths=[args.results, *auxiliary_inputs],
             output_dir=args.output,
         )
     except AssuranceContractError as exc:
@@ -94,18 +98,39 @@ def main() -> int:
             "%s", json.dumps({"synthetic_packets": len(generated)}, indent=2)
         )
     else:
-        cowork = configured_runtime() == "cowork-haiku"
+        try:
+            cowork = configured_runtime() == "cowork-haiku"
+            if cowork:
+                if args.worker_selection is not None or args.reasoning_effort not in (
+                    None,
+                    "low",
+                ):
+                    raise ValueError(
+                        "Cowork Haiku rejects Codex model or effort overrides"
+                    )
+                model, effort, selection = "haiku", "low", None
+            else:
+                model, effort, selection = load_worker_selection(
+                    args.worker_selection,
+                    workflow_id="passive-invoice-audit",
+                    reasoning_effort=args.reasoning_effort,
+                )
+        except (OSError, ValueError) as exc:
+            logging.getLogger(__name__).error("WORKER_SELECTION_BLOCKED: %s", exc)
+            return 2
         report = evaluate_synthetic_population(
             args.results,
             args.mutation_plan,
             args.output,
             run_cowork_chunk if cowork else run_luna_chunk,
             AuditConfig(
-                semantic_model="haiku" if cowork else "gpt-5.6-luna",
+                worker_runtime="cowork" if cowork else "codex-native",
                 chunk_size=args.chunk_size,
                 concurrency=args.concurrency,
                 max_retries=args.max_retries,
-                reasoning_effort=args.reasoning_effort,
+                reasoning_effort=effort,
+                worker_model=model,
+                worker_selection=selection,
             ),
         )
         logging.getLogger(__name__).info(

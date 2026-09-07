@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import sys
 from decimal import Decimal
 from pathlib import Path
@@ -45,6 +46,32 @@ from vera_assurance import (  # noqa: E402
     validate_source_qualification,
     validate_studio_client_folder_binding,
 )
+from vera_assurance.serialization import (
+    build_review_execution_step,
+    exclusive_file_lock,
+)
+
+
+@pytest.mark.parametrize(
+    ("posture", "expected_inputs"),
+    [
+        ({"local_files_read": []}, []),
+        ({"local_files_read": ["reviewed.csv"]}, ["reviewed.csv"]),
+        ({"local_files_read": None}, ["fallback.csv"]),
+    ],
+)
+def test_review_trace_respects_explicit_input_posture(posture, expected_inputs):
+    payload = {"data_posture": posture, "input_paths": ["fallback.csv"]}
+    command = ["python", "review.py"]
+
+    step = build_review_execution_step(payload, "check-entries", command)
+
+    assert step["inputs"] == expected_inputs
+    assert step["step_id"] == "check-entries_review_session"
+    assert step["command"] == ["python", "review.py"]
+    assert step["command"] is not command
+    assert "execution_trace" not in payload
+    assert "outputs" not in step
 
 
 def _control(
@@ -1161,3 +1188,87 @@ def test_assurance_envelope_passed_gate_rejects_wrong_evidence_class(
 
     with pytest.raises(AssuranceEnvelopeError, match=message):
         validate_assurance_envelope(envelope, artifact_roots=tmp_path)
+
+
+def test_mutation_lock_rejects_an_overlapping_writer(tmp_path: Path) -> None:
+    lock = tmp_path / "mutation.lock"
+    with exclusive_file_lock(lock):
+        with pytest.raises(OSError):
+            with exclusive_file_lock(lock):
+                pytest.fail("An overlapping writer acquired the same mutation lock")
+
+
+def test_mutation_lock_is_reusable_after_a_failed_mutation(tmp_path: Path) -> None:
+    lock = tmp_path / "mutation.lock"
+    with pytest.raises(RuntimeError, match="interrupted"):
+        with exclusive_file_lock(lock):
+            raise RuntimeError("interrupted mutation")
+
+    with exclusive_file_lock(lock):
+        recovered = tmp_path / "recovered.txt"
+        recovered.write_text("recovered")
+    assert recovered.read_text() == "recovered"
+
+
+def test_mutation_lock_survives_owner_process_crash_without_stale_lock(
+    tmp_path: Path,
+) -> None:
+    lock = tmp_path / "mutation.lock"
+    crash_exit_code = 17
+    script = """
+import os
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from vera_assurance.serialization import exclusive_file_lock
+with exclusive_file_lock(Path(sys.argv[2])):
+    os._exit(int(sys.argv[3]))
+"""
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            script,
+            str(SHARED_MODULES),
+            str(lock),
+            str(crash_exit_code),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+
+    assert result.returncode == crash_exit_code, result.stderr
+    assert lock.is_file()
+    with exclusive_file_lock(lock):
+        assert lock.is_file()
+
+
+def test_mutation_lock_excludes_a_different_process(tmp_path: Path) -> None:
+    lock = tmp_path / "mutation.lock"
+    script = """
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from vera_assurance.serialization import exclusive_file_lock
+try:
+    with exclusive_file_lock(Path(sys.argv[2])):
+        raise SystemExit(1)
+except OSError:
+    raise SystemExit(0)
+"""
+
+    with exclusive_file_lock(lock):
+        result = subprocess.run(
+            [sys.executable, "-I", "-B", "-c", script, str(SHARED_MODULES), str(lock)],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+
+    assert result.returncode == 0, result.stderr

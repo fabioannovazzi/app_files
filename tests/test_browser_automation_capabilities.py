@@ -563,7 +563,7 @@ def test_browser_automation_skill_is_generic_model_led_and_low_friction() -> Non
     normalized = " ".join(skill.split())
 
     for expected in (
-        "chrome:control-chrome",
+        "Settings → Computer Use → Google Chrome",
         "connected Chrome extension",
         "tab.playwright",
         "guided",
@@ -573,7 +573,7 @@ def test_browser_automation_skill_is_generic_model_led_and_low_friction() -> Non
         "recoveryHandler",
         "Agenzia delle Entrate, TeamSystem, Gmail",
         "two distinct passed",
-        "no Computer Use or desktop-control fallback",
+        "no native desktop-control fallback",
         "native_gap",
         "capability_runtime.mjs",
         "capability_pipeline.py",
@@ -625,7 +625,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.5.7"
+    assert manifest["version"] == "0.5.8"
     assert {
         "chrome-extension",
         "playwright",
@@ -652,7 +652,7 @@ def test_vera_wrapper_resolves_generic_module_without_managed_playwright() -> No
     assert "connected Chrome extension" in wrapper
     assert "no third-party dependency" in wrapper
     assert "Never look for runtime scripts inside this wrapper directory" in wrapper
-    assert "no Computer Use or desktop-control fallback" in wrapper
+    assert "no native desktop-control fallback" in wrapper
     assert "native_gap" in wrapper
     assert "managed_python_runtime.py" not in wrapper
     assert "requirements-portal-recorder.txt" not in wrapper
@@ -683,7 +683,7 @@ def test_privacy_manifest_covers_live_control_metadata_and_portable_bundle() -> 
     )
     assert "fresh task tab" in boundary["content"]
     boundary_controls = " ".join(boundary["controls"])
-    assert "Do not use Computer Use" in boundary_controls
+    assert "Do not use native accessibility-tree control" in boundary_controls
     assert "native_gap" in boundary_controls
     assert "reserves Computer Use" not in json.dumps(privacy, ensure_ascii=False)
     assert "environment-scoped-validation" in controls

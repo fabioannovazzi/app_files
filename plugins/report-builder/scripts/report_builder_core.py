@@ -3703,6 +3703,48 @@ def write_tables_workbook(output_path: Path, analysis: dict[str, Any]) -> None:
                 evidence["scale"],
             ],
         )
+    # Size the retained technical labels and table previews without altering cells.
+    for sheet in workbook.worksheets:
+        sheet.sheet_view.showGridLines = False
+        widths: dict[int, int] = {}
+        for column in sheet.columns:
+            longest = max(
+                (
+                    len(line)
+                    for cell in column
+                    for line in str(cell.value if cell.value is not None else "").split(
+                        "\n"
+                    )
+                ),
+                default=0,
+            )
+            width = min(64, max(14, longest + 3))
+            widths[column[0].column] = width
+            sheet.column_dimensions[column[0].column_letter].width = width
+        for row in sheet.iter_rows():
+            line_count = 1
+            for cell in row:
+                cell.font = openpyxl.styles.Font(
+                    name="Arial",
+                    size=11,
+                    bold=cell.row == 1,
+                    color="FFFFFF" if cell.row == 1 else "172B4D",
+                )
+                cell.alignment = openpyxl.styles.Alignment(
+                    horizontal="right" if cell.data_type == "n" else "left",
+                    vertical="top",
+                    wrap_text=True,
+                )
+                if cell.row == 1:
+                    cell.fill = openpyxl.styles.PatternFill("solid", fgColor="0B2453")
+                capacity = widths[cell.column] - 3
+                text = str(cell.value if cell.value is not None else "")
+                lines = sum(
+                    max(1, (len(part) + capacity - 1) // capacity)
+                    for part in text.split("\n")
+                )
+                line_count = max(line_count, lines)
+            sheet.row_dimensions[row[0].row].height = min(409, 16 * line_count + 6)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output_path)
     _stabilize_office_package(output_path)

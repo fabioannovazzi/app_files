@@ -5,11 +5,15 @@ import sys
 import zipfile
 from pathlib import Path
 
+import pytest
 from docx import Document
 from openpyxl import load_workbook
 
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "open-item-reconciliation" / "scripts"
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "open-item-reconciliation"
+    / "scripts"
 )
 WORKFLOW = SCRIPTS / "reconciliation_workflow.py"
 
@@ -252,3 +256,191 @@ def test_office_outputs_are_byte_replayable_and_have_fixed_package_metadata(
             )
             core_properties = package.read("docProps/core.xml")
         assert b"2000-01-01T00:00:00Z" in core_properties
+
+
+def test_workflow_seals_thousands_formatted_amount_without_losing_digits(tmp_path):
+    workflow = load_workflow()
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=[
+            {
+                "record_id": "invoice-thousands",
+                "document_key": "INV-THOUSANDS",
+                "document_date": "2026-09-01",
+                "amount": "1220.00",
+                "currency": "EUR",
+            }
+        ],
+        evidence_rows=[],
+        assumptions={"scope_year": "2026", "cutoff_date": "2026-09-30"},
+        language="it",
+    )
+
+    assert result["checks_pass"] is True
+    assert result["reconciliation_rows"][0]["amount"] == "1220.00"
+    assert Path(result["word_path"]).is_file()
+
+
+def test_workflow_seals_partial_payment_summary_with_source_record_reference(tmp_path):
+    workflow = load_workflow()
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=[
+            {
+                "record_id": "invoice-partial",
+                "document_key": "INV-PARTIAL",
+                "document_date": "2026-09-01",
+                "amount": "1220.00",
+                "currency": "EUR",
+            }
+        ],
+        evidence_rows=[
+            {
+                "record_id": "payment-partial",
+                "document_key": "INV-PARTIAL",
+                "posting_date": "2026-09-20",
+                "amount": "488.00",
+                "currency": "EUR",
+                "evidence_type": "external_bank",
+            }
+        ],
+        assumptions={"scope_year": "2026", "cutoff_date": "2026-09-30"},
+        language="it",
+    )
+
+    assert result["checks_pass"] is True
+    assert "payment-partial" in document_text(result["word_path"])
+    row = result["reconciliation_rows"][0]
+    assert row["reconciliation_status"] == "partially_paid"
+    assert row["amount"] == "1220.00"
+    assert row["allocated_amount"] == "488.00"
+    assert row["residual_amount"] == "732.00"
+    assert row["relationship_control_status"] == "passed"
+    assert "732.00" in document_text(result["word_path"])
+
+
+@pytest.mark.parametrize(
+    "close_exact,expected_status", [(False, "unresolved"), (True, "closed")]
+)
+def test_grouped_bank_payment_uses_one_source_capacity_and_seals_report(
+    tmp_path, close_exact, expected_status
+):
+    workflow = load_workflow()
+    invoices = [
+        {
+            "record_id": "I1",
+            "document_key": "1FE|2026",
+            "document_no": "1-FE",
+            "document_date": "2026-09-01",
+            "amount": "1220.00",
+            "currency": "EUR",
+        },
+        {
+            "record_id": "I2",
+            "document_key": "2FE|2026",
+            "document_no": "2-FE",
+            "document_date": "2026-09-01",
+            "amount": "610.00",
+            "currency": "EUR",
+        },
+    ]
+    payment = {
+        "record_id": "P1",
+        "source_role": "bank_statement",
+        "document_key": "1FE|2026",
+        "document_keys": "1FE|2026;2FE|2026",
+        "description": "Bonifico fatture 1-FE e 2-FE",
+        "posting_date": "2026-09-20",
+        "amount": "1830.00",
+        "currency": "EUR",
+        "evidence_type": "external_bank",
+    }
+
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=invoices,
+        evidence_rows=[payment],
+        assumptions={
+            "scope_year": "2026",
+            "cutoff_date": "2026-09-30",
+            "promote_probable_bank_payments": close_exact,
+            "probable_bank_exact_matches_close": close_exact,
+        },
+        language="it",
+    )
+
+    assert result["checks_pass"] is True
+    assert result["reconciliation_rows"][0]["reconciliation_status"] == expected_status
+    assert result["reconciliation_rows"][1]["reconciliation_status"] == expected_status
+    assert Path(result["word_path"]).is_file()
+
+
+def test_post_cutoff_payment_seals_reports_without_closing_invoice(tmp_path):
+    workflow = load_workflow()
+
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=[
+            {
+                "record_id": "I1",
+                "source_role": "open_items",
+                "evidence_type": "open_item",
+                "document_key": "1FE|2026",
+                "document_date": "2026-09-01",
+                "amount": "1000.00",
+                "currency": "EUR",
+            }
+        ],
+        evidence_rows=[
+            {
+                "record_id": "P1",
+                "document_key": "1FE|2026",
+                "posting_date": "2026-10-02",
+                "amount": "1000.00",
+                "currency": "EUR",
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+            }
+        ],
+        assumptions={"scope_year": "2026", "cutoff_date": "2026-09-30"},
+        language="it",
+    )
+
+    assert result["checks_pass"] is True
+    assert result["reconciliation_rows"][0]["reconciliation_status"] == "unresolved"
+    assert "allocated_amount" not in result["reconciliation_rows"][0]
+    assert result["post_cutoff_candidates"]
+    assert Path(result["word_path"]).is_file()
+
+
+def test_public_report_counts_distinct_rows_once_after_document_alias_merge(tmp_path):
+    row_count = 1
+    workflow = load_workflow()
+    open_items = [
+        {
+            "record_id": f"open-{index}",
+            "document_key": "3FE|2026",
+            "document_no": "26FE01/000003",
+            "document_date": "2026-09-01",
+            "evidence_type": "open_item",
+            "amount": "1220.00",
+        }
+        for index in range(row_count)
+    ]
+
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=open_items,
+        evidence_rows=[],
+        assumptions={"scope_year": "2026", "cutoff_date": "2026-09-30"},
+    )
+
+    workbook = load_workbook(result["excel_path"], read_only=True)
+    sheet = workbook["Document source map"]
+    headers, values = list(sheet.values)
+    saved_row = dict(zip(headers, values))
+    workbook.close()
+    assert saved_row["document_aliases"] == "3FE|2026; 3|2026"
+    assert saved_row["open_item_rows"] == row_count
+    assert saved_row["reconciliation_status_counts"] == f"unresolved:{row_count}"
+    assert len(result["reconciliation_rows"]) == row_count

@@ -133,7 +133,7 @@
     },
     {
       "id": "accepted-package-render-and-receipt",
-      "control": "Deterministic renderers operate only after required semantic review acceptance, reject text that cannot fit declared safe geometry, measure circular headers, footers and contact rails, verify extractable PDF text without silent truncation, and record exact output, layout, font and visual-manifest hashes. The isolated visual assessment must bind every carousel slide and each rendered PDF with its exact page count before release. Packaging preserves the contribution's reviewed public source text and URL instead of injecting a generic profile note. It requires user-confirmed acceptance of the current render digest when present, writes validation_pending, and validation additionally requires user-confirmed acceptance bound to the exact package digest before it can create a receipt and finalize status. External receipt recording rechecks current outputs and receipt bindings, requires the approved exact destination and user-confirmed visible evidence, and cannot overwrite prior evidence."
+      "control": "Deterministic renderers operate only after required semantic review acceptance, reject text that cannot fit declared safe geometry, measure circular headers, footers and contact rails, verify extractable PDF text without silent truncation, and record exact output, layout, font and visual-manifest hashes. The isolated visual assessment must bind every carousel slide and each rendered PDF with its exact page count before release. Packaging preserves the contribution's reviewed public source text and URL instead of injecting a generic profile note. It requires user-confirmed acceptance of the current render digest when present, writes validation_pending, and validation of publishable communication additionally requires user-confirmed acceptance bound to the exact package digest. For an already accepted no_publish contribution, validation instead checks the six internal record kinds, exact accepted recommendation text and current semantic review event bindings; no packaged-output approval is invented. An explicit package rejection remains blocking. The resulting no_publication_recommended status cannot authorize external delivery. External receipt recording rechecks current outputs and receipt bindings, requires the approved exact destination and user-confirmed visible evidence, and cannot overwrite prior evidence."
     },
     {
       "id": "digest-bound-creative-direction-handoff",
@@ -148,6 +148,6 @@
     "reviewed_at": "2026-08-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "de9b2151bc201fb2634587964f8874c0161f89427facab9e0369fbb9b5200ef6"
+    "source_fingerprint": "a0df6e2eb5e96502cc93fef19d09f98fcd8c7857648df8f7379c8fe3d057843d"
   }
 }

@@ -1402,7 +1402,7 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
     assert (workspace / "studio_profile.json").is_file()
 
 
-def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
+def _prepared_no_publication_package(tmp_path: Path) -> Path:
     workspace = tmp_path / "studio-workspace"
     source = tmp_path / "official-source.txt"
     history = tmp_path / "approved-post.txt"
@@ -1551,12 +1551,53 @@ def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
     )
     _accept_required_reviews(run_dir)
     _run("package_communications.py", "--run-dir", str(run_dir))
-    _accept_packaged_output(run_dir)
+    return run_dir
+
+
+def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
+    run_dir = _prepared_no_publication_package(tmp_path)
     _run("validate_run.py", "--run-dir", str(run_dir))
     final = json.loads((run_dir / "final_artifacts.json").read_text(encoding="utf-8"))
     assert final["status"] == "no_publication_recommended"
     assert (run_dir / "no-publication-recommendation.md").is_file()
     assert not (run_dir / "drafts").exists()
+    assert final["validation_receipt"]["review_basis"] == (
+        "accepted_no_publication_decision_and_internal_record_validation"
+    )
+    assert "package_review_event_id" not in final["validation_receipt"]
+
+
+def test_no_publication_rejects_changed_record(tmp_path: Path) -> None:
+    run_dir = _prepared_no_publication_package(tmp_path)
+    (run_dir / "no-publication-recommendation.md").write_text(
+        "# No publication recommended\n\nChanged decision.\n", encoding="utf-8"
+    )
+
+    result = _run_result("validate_run.py", "--run-dir", str(run_dir))
+
+    assert result.returncode == 1
+    assert "hash mismatch" in result.stderr or "size mismatch" in result.stderr
+
+
+def test_no_publication_preserves_explicit_package_rejection(tmp_path: Path) -> None:
+    run_dir = _prepared_no_publication_package(tmp_path)
+    _run(
+        "record_review.py",
+        "--run-dir",
+        str(run_dir),
+        "--scope",
+        "packaged_output",
+        "--decision",
+        "rejected",
+        "--reviewer",
+        "Synthetic reviewer",
+        "--confirmed-by-user",
+    )
+
+    result = _run_result("validate_run.py", "--run-dir", str(run_dir))
+
+    assert result.returncode == 1
+    assert "return or rejection remains unresolved" in result.stderr
 
 
 def test_history_pseudonymization_rejects_incomplete_or_not_ready_documents(
@@ -1804,9 +1845,7 @@ def test_history_pseudonymization_rejects_incomplete_or_not_ready_documents(
                 "method": "isolated_derivative_only_privacy_review",
                 "assessor_session_id": "two-document-privacy-session-001",
                 "assessment_template_version": "professional-communication-history-privacy-assessment-v1",
-                "template_sha256": _prompt_digest(
-                    "history-privacy-assessment-v1.md"
-                ),
+                "template_sha256": _prompt_digest("history-privacy-assessment-v1.md"),
                 "raw_history_seen": False,
                 "identity_mapping_seen": False,
                 "pseudonymization_transcript_seen": False,

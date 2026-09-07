@@ -1,6 +1,6 @@
 {
   "name": "browser-automation",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Permette a un operatore di insegnare un processo web nel proprio Chrome e genera un developer pack e una capability intelligente e portabile.",
   "author": {
     "name": "Mparanza",
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "Automazione web",
     "shortDescription": "Insegna e rende portatile un processo web autorizzato.",
-    "longDescription": "Vera usa la sessione Chrome già connessa dell'operatore come capability factory generica. In modalità guided l'operatore mostra il processo, in autonomous il modello esplora soltanto passaggi sicuri, in hybrid fa entrambe le cose. Il primo risultato è un developer pack sanitizzato e revisionato per chi non può accedere al sito; dopo approvazione e replay il secondo è una capability process-specifica. Il runtime JSON usa Playwright per azioni, output strutturati, postcondizioni, rami e ricevute hash-linked. Il modello può proporre un locator per la stessa azione sicura o per un campo strutturato già circoscritto; la proposta non modifica automaticamente la capability e il run non conta come validazione. Non usa Computer Use o controller desktop come fallback: un passaggio nativo o fuori dal browser produce native_gap, viene consegnato all'operatore e resta fuori dalla validazione. L'operatore autentica personalmente e conferma soltanto azioni conseguenziali o ampliamenti sostanziali. I pacchetti escludono credenziali, cookie, storage, sessioni, output privati e file scaricati. Include un draft Gmail da riapprovare e rivalidare sul contratto Chrome-only e scaffold Agenzia e TeamSystem da completare con discovery live autorizzata.",
+    "longDescription": "Vera usa la sessione Chrome gi\u00e0 connessa dell'operatore come capability factory generica. In modalit\u00e0 guided l'operatore mostra il processo, in autonomous il modello esplora soltanto passaggi sicuri, in hybrid fa entrambe le cose. Il primo risultato \u00e8 un developer pack sanitizzato e revisionato per chi non pu\u00f2 accedere al sito; dopo approvazione e replay il secondo \u00e8 una capability process-specifica. Il runtime JSON usa Playwright per azioni, output strutturati, postcondizioni, rami e ricevute hash-linked. Il modello pu\u00f2 proporre un locator per la stessa azione sicura o per un campo strutturato gi\u00e0 circoscritto; la proposta non modifica automaticamente la capability e il run non conta come validazione. Non usa Computer Use o controller desktop come fallback: un passaggio nativo o fuori dal browser produce native_gap, viene consegnato all'operatore e resta fuori dalla validazione. L'operatore autentica personalmente e conferma soltanto azioni conseguenziali o ampliamenti sostanziali. I pacchetti escludono credenziali, cookie, storage, sessioni, output privati e file scaricati. Include un draft Gmail da riapprovare e rivalidare sul contratto Chrome-only e scaffold Agenzia e TeamSystem da completare con discovery live autorizzata.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -39,7 +39,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Usa la modalità hybrid nel mio Chrome autorizzato: ti mostro il processo principale, esplora soltanto rami sicuri e prepara un developer pack sanitizzato e una capability verificabile."
+      "Usa la modalit\u00e0 hybrid nel mio Chrome autorizzato: ti mostro il processo principale, esplora soltanto rami sicuri e prepara un developer pack sanitizzato e una capability verificabile."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

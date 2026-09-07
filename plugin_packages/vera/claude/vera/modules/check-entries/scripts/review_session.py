@@ -183,25 +183,12 @@ def _append_execution_trace(
     *,
     command: Sequence[str],
 ) -> None:
+    from vera_assurance.serialization import build_review_execution_step
+
     payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    data_posture = payload.get("data_posture")
-    local_files = (
-        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
-    )
-    inputs = (
-        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
-    )
-    payload["execution_trace"] = [
-        {
-            "step_id": f"{WORKFLOW_NAME}_review_session",
-            "kind": "deterministic_review_session",
-            "status": "passed",
-            "execution_location": "cowork_connected_folder",
-            "command": list(command),
-            "inputs": [str(entry) for entry in inputs if entry],
-            "outputs": _local_output_refs(final_artifacts_path),
-        }
-    ]
+    step = build_review_execution_step(payload, WORKFLOW_NAME, command)
+    step["outputs"] = _local_output_refs(final_artifacts_path)
+    payload["execution_trace"] = [step]
     _write_json(run_intake_path, payload)
 
 
@@ -356,17 +343,30 @@ def _entry_title(row: dict[str, Any], index: int, language: str) -> str:
 
 def _requested_support_document(row: dict[str, Any], language: str) -> str:
     movement = _clean_text(row.get("movement_number"))
-    if movement:
-        return (
-            f"PDF justificativo del movimiento {movement}"
-            if _is_spanish(language)
-            else f"Supporting PDF for movement {movement}"
-        )
-    return (
-        "PDF justificativo del asiento sin correspondencia"
-        if _is_spanish(language)
-        else "Supporting PDF for unmatched journal entry"
-    )
+    templates = {
+        "en": (
+            "Supporting document for movement {movement}",
+            "Supporting document for unmatched journal entry",
+        ),
+        "it": (
+            "Documento giustificativo del movimento {movement}",
+            "Documento giustificativo della scrittura senza riscontro",
+        ),
+        "fr": (
+            "Pièce justificative du mouvement {movement}",
+            "Pièce justificative de l’écriture sans correspondance",
+        ),
+        "de": (
+            "Beleg für die Buchung {movement}",
+            "Beleg für die nicht zugeordnete Buchung",
+        ),
+        "es": (
+            "Documento justificativo del movimiento {movement}",
+            "Documento justificativo del asiento sin correspondencia",
+        ),
+    }
+    identified, unidentified = templates.get(str(language).lower(), templates["en"])
+    return identified.format(movement=movement) if movement else unidentified
 
 
 def _entry_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str, Any]]:

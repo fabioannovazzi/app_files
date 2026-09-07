@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import errno
 import hashlib
+import importlib
 import json
 import os
 import re
@@ -25,10 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-if os.name == "nt":
-    import msvcrt as _PROCESS_LOCK_MODULE
-else:
-    import fcntl as _PROCESS_LOCK_MODULE
+_PROCESS_LOCK_MODULE = importlib.import_module("msvcrt" if os.name == "nt" else "fcntl")
 
 __all__ = [
     "ARTIFACT_AUDIENCES",
@@ -769,12 +767,54 @@ def load_input_receipt(
         _ordinary_file(stored, label="controlled input snapshot")
     return {
         **receipt,
+        "imported_names": _load_imported_names(input_root, receipt),
         "relative_path": stored.relative_to(client_root.resolve()).as_posix(),
         "receipt_relative_path": (input_root / "receipt.json")
         .relative_to(client_root.resolve())
         .as_posix(),
         "path": str(stored),
     }
+
+
+def _load_imported_names(input_root: Path, receipt: Mapping[str, Any]) -> list[str]:
+    """Read filename provenance without changing immutable content receipts."""
+
+    names_path = input_root / "import_names.json"
+    if not names_path.exists() and not names_path.is_symlink():
+        return [receipt["original_name"]]
+    payload = _validate_seal(
+        _read_json(names_path, label="imported filename register"),
+        label="imported filename register",
+    )
+    if (
+        set(payload) != {"input_id", "sha256", "names", "content_sha256"}
+        or payload["input_id"] != receipt["input_id"]
+        or payload["sha256"] != receipt["sha256"]
+    ):
+        raise LedgerError("Imported filename register has a different input identity.")
+    names = _validate_imported_names(payload["names"])
+    if receipt["original_name"] not in names:
+        raise LedgerError("Imported filename register omits the original name.")
+    return names
+
+
+def _validate_imported_names(value: object) -> list[str]:
+    if not isinstance(value, list) or not value or len(value) > _MAX_INPUTS:
+        raise LedgerError("Imported filenames must be a bounded nonempty list.")
+    names = []
+    for item in value:
+        name = _text(item, label="imported filename", maximum=255)
+        if Path(name).name != name or name in {
+            ".",
+            "..",
+            "receipt.json",
+            "import_names.json",
+        }:
+            raise LedgerError("Imported filename is unsafe.")
+        names.append(name)
+    if names != sorted(set(names)):
+        raise LedgerError("Imported filenames must be sorted and unique.")
+    return names
 
 
 def list_inputs(client_root: Path, engagement_id: str) -> tuple[dict[str, Any], ...]:
@@ -885,6 +925,7 @@ def import_document(
     if source != selected_source:
         raise LedgerError("Imported document path cannot contain symbolic links.")
     source_stat = _ordinary_file(source, label="import source")
+    _validate_imported_names([source.name])
     source_sha256 = _sha256_file(source)
     with _engagement_lock(root, engagement_id):
         engagement = load_engagement_manifest(root, engagement_id)
@@ -905,12 +946,29 @@ def import_document(
                     raise LedgerError(
                         "Matching input digest has a conflicting byte count."
                     )
+                names = sorted(set(receipt["imported_names"]) | {source.name})
+                added_name = names != receipt["imported_names"]
+                if added_name:
+                    # Exact byte identity proves a reused snapshot, not a second
+                    # economic obligation. Preserve the additional filename.
+                    _validate_imported_names(names)
+                    _write_json(
+                        input_dir / "import_names.json",
+                        _sealed(
+                            {
+                                "input_id": receipt["input_id"],
+                                "sha256": source_sha256,
+                                "names": names,
+                            }
+                        ),
+                    )
+                    receipt = load_input_receipt(root, engagement_id, input_dir.name)
                 return {
                     "status": "already_imported",
                     "receipt": receipt,
                     "imported_path": receipt["path"],
                     "original_preserved": True,
-                    "source_archive_mutated": False,
+                    "source_archive_mutated": added_name,
                 }
         input_id = _new_id("input")
         target = inputs_root / input_id
@@ -1168,6 +1226,7 @@ def _load_artifact_binding(
 
 def _input_binding(receipt: Mapping[str, Any]) -> dict[str, Any]:
     return {
+        "imported_names": receipt["imported_names"],
         "binding_id": receipt["input_id"],
         "kind": "import",
         "role": receipt["role"],
@@ -1229,8 +1288,15 @@ def _validate_input_manifest(payload: Mapping[str, Any]) -> dict[str, Any]:
     seen_paths: set[str] = set()
     seen_execution_paths: set[str] = set()
     for item in inputs:
-        if not isinstance(item, dict) or set(item) != required_input:
+        if (
+            not isinstance(item, dict)
+            or set(item) - {"imported_names"} != required_input
+        ):
             raise LedgerError("Run input binding shape is invalid.")
+        if "imported_names" in item:
+            _validate_imported_names(item["imported_names"])
+            if item["kind"] != "import":
+                raise LedgerError("Only imports carry imported filenames.")
         binding_id = _text(item["binding_id"], label="binding_id", maximum=260)
         if binding_id in seen_ids:
             raise LedgerError("Run input bindings must be unique.")
@@ -1705,7 +1771,12 @@ def prepare_run(
         maximum=200,
     )
     stored_key = (
-        "new:" + hashlib.sha256(normalized_key.encode("utf-8")).hexdigest()
+        "new:"
+        + (
+            hashlib.sha256(normalized_key.encode("utf-8")).hexdigest()
+            if idempotency_key
+            else secrets.token_hex(32)
+        )
         if new_run
         else normalized_key
     )
@@ -1784,7 +1855,7 @@ def prepare_run(
             }
             input_manifest = _sealed(inputs_content)
             created_at = _now_iso()
-            run: dict[str, Any] = {
+            run = {
                 "schema_version": RUN_MANIFEST_SCHEMA,
                 "client_id": client_id,
                 "engagement_id": engagement_id,
@@ -1927,6 +1998,66 @@ def finalize_run(
         return _finalize_run_locked(root, engagement_id, run_id, declarations)
 
 
+def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
+    """Require run-bound disclosure artifacts before sealing a professional run.
+
+    This is a mechanical identity/completeness gate. The report's own validator
+    owns its detailed schema and evidence interpretation, not this ledger.
+    """
+
+    output = Path(loaded["output_dir"])
+    report_path = output / "model_data_report.json"
+    markdown_path = output / "model_data_report.md"
+    if not report_path.is_file() or not markdown_path.is_file():
+        raise LedgerError(
+            "Finalization requires model_data_report.json and model_data_report.md, including no-model or unknown-transmission runs."
+        )
+    report = _read_json(report_path, label="model-data report")
+    _ordinary_file(markdown_path, label="model-data report Markdown")
+    if not markdown_path.read_text(encoding="utf-8").strip():
+        raise LedgerError("Model-data report Markdown is empty.")
+    if (
+        report.get("run_id") != loaded["run"]["run_id"]
+        or report.get("workflow_id") != loaded["run"]["workflow_id"]
+    ):
+        raise LedgerError("Model-data report belongs to another workflow run.")
+    if not isinstance(report.get("phases"), list) or not report["phases"]:
+        raise LedgerError(
+            "Model-data report must disclose at least one execution phase."
+        )
+    evidence = report.get("evidence")
+    normalized = {
+        key: value
+        for key, value in report.items()
+        if key not in {"report_id", "evidence", "limitations"}
+    }
+
+    def digest(payload: object) -> str:
+        return hashlib.sha256(
+            (
+                json.dumps(
+                    payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+                )
+                + "\n"
+            ).encode("utf-8")
+        ).hexdigest()
+
+    if not isinstance(evidence, Mapping) or evidence.get("input_sha256") != digest(
+        normalized
+    ):
+        raise LedgerError(
+            "Model-data report input hash is invalid; validate the report before finalization."
+        )
+    expected = digest(
+        {"input_sha256": evidence["input_sha256"], "files": evidence.get("files")}
+    )
+    if (
+        evidence.get("receipt_sha256") != expected
+        or report.get("report_id") != "model_data_" + expected[:24]
+    ):
+        raise LedgerError("Model-data report receipt hash is invalid.")
+
+
 def _finalize_run_locked(
     client_root: Path,
     engagement_id: str,
@@ -1943,6 +2074,7 @@ def _finalize_run_locked(
     files = _output_files(output_dir)
     if not files:
         raise LedgerError("An empty workflow output cannot be finalized.")
+    _require_model_data_artifacts(loaded)
     if isinstance(declarations, (str, bytes)) or len(declarations) > _MAX_ARTIFACTS:
         raise LedgerError("Artifact declarations are invalid or too numerous.")
     declared: dict[str, Mapping[str, Any]] = {}
@@ -1979,11 +2111,11 @@ def _finalize_run_locked(
         seen_ids.add(artifact_id)
     physical = {path.relative_to(output_dir).as_posix(): path for path in files}
     if set(declared) != set(physical):
-        missing = sorted(set(physical) - set(declared))
-        unexpected = sorted(set(declared) - set(physical))
+        undeclared_paths = sorted(set(physical) - set(declared))
+        missing_paths = sorted(set(declared) - set(physical))
         raise LedgerError(
             "Artifact declarations do not close the output tree; "
-            f"undeclared={missing}, missing={unexpected}."
+            f"undeclared={undeclared_paths}, missing={missing_paths}."
         )
     artifacts: list[dict[str, Any]] = []
     for relative_path in sorted(physical):

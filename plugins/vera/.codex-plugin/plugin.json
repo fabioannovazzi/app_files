@@ -1,9 +1,9 @@
 {
   "name": "vera",
-  "version": "0.1.209",
-  "description": "Vera affianca commercialisti e studi professionali in contabilità, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
+  "version": "0.1.211",
+  "description": "Vera affianca commercialisti e studi professionali in contabilit\u00e0, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
   "author": {
-    "name": "Fabio Annovazzi · Mparanza",
+    "name": "Fabio Annovazzi \u00b7 Mparanza",
     "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
@@ -90,8 +90,8 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "Assistente AI x commercialisti",
-    "longDescription": "Vera affianca commercialisti e studi professionali. Organizza documenti, controlla scritture, riconcilia movimenti e prepara report. Da Excel o CSV costruisce un pacchetto di controllo di gestione con P&L mensile, Budget, aging, cassa, concentrazione clienti e marginalità.\n\nPrepara il piano economico-finanziario e il fabbisogno di startup e imprese consolidate con ipotesi confermate, conto economico, cassa, stato patrimoniale, scenari e riconciliazione. Vera resta responsabile del risultato; un eventuale contributo strategico di Clara è integrato internamente nello stesso piano. Supporta inoltre bilancio civilistico OIC fino all’XBRL, bandi, avvisi e cartelle, INPS, Registro Imprese e DIRE, concordato preventivo e ricerche fiscali o normative.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
-    "developerName": "Fabio Annovazzi · Mparanza",
+    "longDescription": "Vera affianca commercialisti e studi professionali. Organizza documenti, controlla scritture, riconcilia movimenti e prepara report. Da Excel o CSV costruisce un pacchetto di controllo di gestione con P&L mensile, Budget, aging, cassa, concentrazione clienti e marginalit\u00e0.\n\nPrepara il piano economico-finanziario e il fabbisogno di startup e imprese consolidate con ipotesi confermate, conto economico, cassa, stato patrimoniale, scenari e riconciliazione. Vera resta responsabile del risultato; un eventuale contributo strategico di Clara \u00e8 integrato internamente nello stesso piano. Supporta inoltre bilancio civilistico OIC fino all\u2019XBRL, bandi, avvisi e cartelle, INPS, Registro Imprese e DIRE, concordato preventivo e ricerche fiscali o normative.\n\nVera mostra fonti, passaggi, ambiguit\u00e0 e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
+    "developerName": "Fabio Annovazzi \u00b7 Mparanza",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
@@ -106,7 +106,7 @@
     "defaultPrompt": [
       "Trasforma questi export contabili in un pacchetto di controllo di gestione con P&L, Budget, aging, cassa e concentrazione.",
       "Analizza il sito dello studio o costruiscine uno iniziale dai materiali verificati, poi prepara una preview responsive.",
-      "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere estrazione e celle incerte, poi genera l’XBRL finale."
+      "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere estrazione e celle incerte, poi genera l\u2019XBRL finale."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

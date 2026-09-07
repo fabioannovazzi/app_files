@@ -172,6 +172,10 @@ Resolve only ambiguities that change the result:
   `actual_amount` or the `sales_adjusted_amount`;
 - v2 preserves observed sparse Actual rows and does not impute zero sales,
   missing customer-months, or seasonality.
+- Missing optional units, discounts or COGS remain unavailable. Dependent net
+  sales, margins and incomplete summary totals remain blank, with source row
+  IDs in reconciliation warnings. Known values in unaffected groups remain
+  usable; a recorded zero is a known value.
 
 For a large assumption set, prepare the same review table in Markdown or case
 JSON and review it in batches. A separate HTML workbench is not part of v2.
@@ -241,7 +245,7 @@ python scripts/run_plan.py \
 
 5. Stop on failed reconciliation or any unmatched scope, unsupported driver,
    stale or changed source, ambiguous priority collision, incompatible driver
-   combination, or missing metric.
+   combination, or missing metric needed by an assumption.
 6. Read `model_use_manifest.json` after the run. For ordinary model-led review,
    use the assumption ledger, summary, reconciliation, and prepared-evidence
    lineage listed there. Do not load the complete row-level scenario by

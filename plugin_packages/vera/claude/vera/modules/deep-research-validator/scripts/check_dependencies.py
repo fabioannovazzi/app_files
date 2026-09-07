@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-import importlib.util
 import argparse
+import importlib.util
 import re
 import sys
 from pathlib import Path
 
 __all__ = ["main"]
 
-PACKAGE_IMPORTS: dict[str, str] = {}
+PACKAGE_IMPORTS: dict[str, str] = {"pymupdf": "fitz"}
 
 
 def plugin_root() -> Path:

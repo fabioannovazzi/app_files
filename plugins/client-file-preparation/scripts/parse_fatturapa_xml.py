@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import logging
 import sys
@@ -35,6 +36,7 @@ __all__ = [
     "localize_formal_anomaly",
     "parse_fatturapa_audit_file",
     "parse_fatturapa_file",
+    "parse_fatturapa_bodies",
     "parse_xml_files",
     "write_duplicate_candidates_csv",
     "write_formal_anomalies_markdown",
@@ -117,7 +119,7 @@ def localize_formal_anomaly(value: str, language: str) -> str:
 
 @dataclass(frozen=True)
 class InvoiceXmlRecord:
-    """Formal data extracted from one FatturaPA XML file."""
+    """Formal data extracted from one FatturaPA body, or an unreadable source."""
 
     relative_path: str
     file_name: str
@@ -138,6 +140,8 @@ class InvoiceXmlRecord:
     line_count: int
     malformed: bool
     anomalies: tuple[str, ...]
+    body_index: int = 1
+    source_sha256: str = ""
 
     @property
     def duplicate_key(self) -> str:
@@ -150,8 +154,10 @@ class InvoiceXmlRecord:
             ]
         )
 
-    def as_row(self) -> dict[str, str | bool]:
+    def as_row(self) -> dict[str, str | bool | int]:
         return {
+            "body_index": self.body_index,
+            "source_sha256": self.source_sha256,
             "relative_path": self.relative_path,
             "file_name": self.file_name,
             "supplier_vat": self.supplier_vat,
@@ -323,7 +329,12 @@ def _build_payment_methods(root: ET.Element) -> str:
 def _safe_xml_root(xml_path: Path) -> ET.Element:
     """Parse bounded XML after rejecting DTD and entity declarations."""
 
-    payload = xml_path.read_bytes()
+    return _safe_xml_payload(xml_path.read_bytes())
+
+
+def _safe_xml_payload(payload: bytes) -> ET.Element:
+    """Validate and parse the exact bytes used for source identity."""
+
     if len(payload) > MAX_XML_BYTES:
         raise ET.ParseError(f"XML exceeds the {MAX_XML_BYTES}-byte safety limit")
     if b"\x00" in payload:
@@ -335,101 +346,133 @@ def _safe_xml_root(xml_path: Path) -> ET.Element:
     return ET.fromstring(payload)  # nosec B314
 
 
-def parse_fatturapa_file(
+def parse_fatturapa_bodies(
     path: Path | str,
     base_dir: Path | str | None = None,
     target_year: int | None = None,
-) -> InvoiceXmlRecord:
-    """Parse one XML file and return formal invoice metadata."""
+) -> list[InvoiceXmlRecord]:
+    """Parse each body separately, preserving byte identity and body position."""
 
     xml_path = Path(path)
     base_path = Path(base_dir).resolve() if base_dir else xml_path.parent.resolve()
     relative = xml_path.resolve().relative_to(base_path).as_posix()
 
+    raw: bytes | None = None
     try:
-        root = _safe_xml_root(xml_path)
+        raw = xml_path.read_bytes()
+        root = _safe_xml_payload(raw)
+        if not _find_all(root, "FatturaElettronicaBody"):
+            raise ET.ParseError("FatturaElettronicaBody is missing")
     except (ET.ParseError, OSError) as exc:
-        return InvoiceXmlRecord(
-            relative_path=relative,
-            file_name=xml_path.name,
-            supplier_vat="",
-            supplier_name="",
-            customer_tax_id="",
-            customer_name="",
-            invoice_date="",
-            invoice_number="",
-            document_type="",
-            total_amount="",
-            currency="",
-            vat_summary="",
-            natura_codes="",
-            withholding_summary="",
-            stamp_duty="",
-            payment_methods="",
-            line_count=0,
-            malformed=True,
-            anomalies=(f"XML non leggibile: {exc}",),
-        )
+        return [
+            InvoiceXmlRecord(
+                relative_path=relative,
+                file_name=xml_path.name,
+                supplier_vat="",
+                supplier_name="",
+                customer_tax_id="",
+                customer_name="",
+                invoice_date="",
+                invoice_number="",
+                document_type="",
+                total_amount="",
+                currency="",
+                vat_summary="",
+                natura_codes="",
+                withholding_summary="",
+                stamp_duty="",
+                payment_methods="",
+                line_count=0,
+                malformed=True,
+                body_index=0,
+                source_sha256=(
+                    hashlib.sha256(raw).hexdigest() if raw is not None else ""
+                ),
+                anomalies=(f"XML non leggibile: {exc}",),
+            )
+        ]
 
     header = _find_first(root, "FatturaElettronicaHeader")
-    body = _find_first(root, "FatturaElettronicaBody")
-    general_data = _find_first(body, "DatiGeneraliDocumento")
-    supplier = _find_first(header, "CedentePrestatore")
-    customer = _find_first(header, "CessionarioCommittente")
+    bodies = _find_all(root, "FatturaElettronicaBody")
+    source_sha256 = hashlib.sha256(raw).hexdigest()
+    records = []
+    for body_index, body in enumerate(bodies, start=1):
+        general_data = _find_first(body, "DatiGeneraliDocumento")
+        supplier = _find_first(header, "CedentePrestatore")
+        customer = _find_first(header, "CessionarioCommittente")
 
-    invoice_date = _first_text(general_data, ["Data"])
-    invoice_number = _first_text(general_data, ["Numero"])
-    document_type = _first_text(general_data, ["TipoDocumento"])
-    total_amount = _normalize_amount(
-        _first_text(general_data, ["ImportoTotaleDocumento"])
-    )
-    currency = _first_text(general_data, ["Divisa"])
-    vat_summary, natura_codes = _build_vat_summary(root)
-    withholding_summary = _build_withholding_summary(root)
-    stamp_duty = _build_stamp_duty(root)
-    payment_methods = _build_payment_methods(root)
-    line_count = len(_find_all(root, "DettaglioLinee"))
+        invoice_date = _first_text(general_data, ["Data"])
+        invoice_number = _first_text(general_data, ["Numero"])
+        document_type = _first_text(general_data, ["TipoDocumento"])
+        total_amount = _normalize_amount(
+            _first_text(general_data, ["ImportoTotaleDocumento"])
+        )
+        currency = _first_text(general_data, ["Divisa"])
+        vat_summary, natura_codes = _build_vat_summary(body)
+        withholding_summary = _build_withholding_summary(body)
+        stamp_duty = _build_stamp_duty(body)
+        payment_methods = _build_payment_methods(body)
+        line_count = len(_find_all(body, "DettaglioLinee"))
 
-    anomalies: list[str] = []
-    if not document_type:
-        anomalies.append("tipo documento mancante")
-    if not invoice_date:
-        anomalies.append("data fattura mancante")
-    if not invoice_number:
-        anomalies.append("numero fattura mancante")
-    if not total_amount:
-        anomalies.append("importo totale documento mancante")
-    if not _party_vat(supplier):
-        anomalies.append("partita IVA / codice fiscale cedente mancante")
-    if target_year is not None and invoice_date:
-        if not invoice_date.startswith(str(target_year)):
-            anomalies.append(f"data fuori anno target {target_year}")
+        anomalies: list[str] = []
+        if not document_type:
+            anomalies.append("tipo documento mancante")
+        if not invoice_date:
+            anomalies.append("data fattura mancante")
+        if not invoice_number:
+            anomalies.append("numero fattura mancante")
+        if not total_amount:
+            anomalies.append("importo totale documento mancante")
+        if not _party_vat(supplier):
+            anomalies.append("partita IVA / codice fiscale cedente mancante")
+        if target_year is not None and invoice_date:
+            if not invoice_date.startswith(str(target_year)):
+                anomalies.append(f"data fuori anno target {target_year}")
 
-    riepiloghi = _find_all(root, "DatiRiepilogo")
-    if not riepiloghi:
-        anomalies.append("sezione DatiRiepilogo non individuata")
+        riepiloghi = _find_all(body, "DatiRiepilogo")
+        if not riepiloghi:
+            anomalies.append("sezione DatiRiepilogo non individuata")
 
-    return InvoiceXmlRecord(
-        relative_path=relative,
-        file_name=xml_path.name,
-        supplier_vat=_party_vat(supplier),
-        supplier_name=_party_name(supplier),
-        customer_tax_id=_party_vat(customer),
-        customer_name=_party_name(customer),
-        invoice_date=invoice_date,
-        invoice_number=invoice_number,
-        document_type=document_type,
-        total_amount=total_amount,
-        currency=currency,
-        vat_summary=vat_summary,
-        natura_codes=natura_codes,
-        withholding_summary=withholding_summary,
-        stamp_duty=stamp_duty,
-        payment_methods=payment_methods,
-        line_count=line_count,
-        malformed=False,
-        anomalies=tuple(anomalies),
-    )
+        records.append(
+            InvoiceXmlRecord(
+                relative_path=relative,
+                file_name=xml_path.name,
+                supplier_vat=_party_vat(supplier),
+                supplier_name=_party_name(supplier),
+                customer_tax_id=_party_vat(customer),
+                customer_name=_party_name(customer),
+                invoice_date=invoice_date,
+                invoice_number=invoice_number,
+                document_type=document_type,
+                total_amount=total_amount,
+                currency=currency,
+                vat_summary=vat_summary,
+                natura_codes=natura_codes,
+                withholding_summary=withholding_summary,
+                stamp_duty=stamp_duty,
+                payment_methods=payment_methods,
+                line_count=line_count,
+                malformed=False,
+                body_index=body_index,
+                source_sha256=source_sha256,
+                anomalies=tuple(anomalies),
+            )
+        )
+
+    return records
+
+
+def parse_fatturapa_file(
+    path: Path | str,
+    base_dir: Path | str | None = None,
+    target_year: int | None = None,
+) -> InvoiceXmlRecord:
+    """Read a single-body document; multi-body callers must use the body API."""
+
+    records = parse_fatturapa_bodies(path, base_dir, target_year)
+    if len(records) != 1:
+        raise ValueError("Multiple invoice bodies: use parse_fatturapa_bodies")
+    return records[0]
 
 
 def parse_fatturapa_audit_file(
@@ -588,9 +631,12 @@ def parse_xml_files(
 
     base_path = Path(base_dir)
     return [
-        parse_fatturapa_file(path, base_dir=base_path, target_year=target_year)
+        record
         for path in sorted(paths)
         if path.is_file()
+        for record in parse_fatturapa_bodies(
+            path, base_dir=base_path, target_year=target_year
+        )
     ]
 
 
@@ -603,6 +649,8 @@ def write_summary_csv(
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
+        "body_index",
+        "source_sha256",
         "relative_path",
         "file_name",
         "supplier_vat",

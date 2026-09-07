@@ -260,9 +260,15 @@ equality on a truly blank-date row with no stable reference.
   1. `reference` accepts conflict-free singleton reference candidates in
      batches. If multiple singleton bank rows target the same journal row,
      none wins by row order.
-  2. `amount_date_unique` is the first conflict-free singleton amount/date
+  2. `reference_group` accepts reviewed one-to-many or many-to-one shapes
+     defined by a shared identifier or a complete explicit reference list.
+     Lists are read only from the mapped reference field, contain at most 100
+     distinct alphanumeric identifiers, and must identify exactly one opposite
+     row per identifier. Missing, duplicated, or competing membership remains
+     unmatched. The same perimeter, date-window and amount checks apply.
+  3. `amount_date_unique` is the first conflict-free singleton amount/date
      batch after reference matching is exhausted.
-  3. `amount_date_single` is reserved for later conflict-free singleton waves:
+  4. `amount_date_single` is reserved for later conflict-free singleton waves:
      candidates that become singleton only because an earlier amount/date
      batch consumed other journal candidates.
 - Every singleton wave is evaluated against one unchanged candidate snapshot

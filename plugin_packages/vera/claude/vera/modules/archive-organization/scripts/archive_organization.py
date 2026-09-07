@@ -13,7 +13,8 @@ import stat
 import sys
 import tempfile
 from collections import defaultdict
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -1705,6 +1706,11 @@ def _rollback_drive_operations(
 ) -> list[str]:
     errors: list[str] = []
     for operation in reversed(journal["operations"]):
+        if operation["status"] in {"moving", "restoring"}:
+            errors.append(
+                "A Drive request was interrupted before its returned version was recorded; remote state requires review."
+            )
+            continue
         if operation["status"] != "applied":
             continue
         try:
@@ -1729,6 +1735,8 @@ def _rollback_drive_operations(
                 raise ArchiveOrganizationError(
                     "The original Google Drive path is no longer empty."
                 )
+            operation["status"] = "restoring"
+            _write_json(journal_path, journal)
             restored = gateway.move_file(
                 operation["file_id"],
                 old_parent_id=operation["target_parent_id"],
@@ -1784,17 +1792,11 @@ def _apply_google_drive_plan(
             raise ArchiveOrganizationError(
                 f"Approved Google Drive target already exists: {target.as_posix()}."
             )
-    lock_path = output_dir / "archive_apply.lock"
-    try:
-        lock_descriptor = os.open(
-            lock_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600
-        )
-    except FileExistsError as exc:
-        raise ArchiveOrganizationError(
-            "Another apply or rollback operation is active."
-        ) from exc
-    os.close(lock_descriptor)
     journal_path = output_dir / "apply_journal.json"
+    if journal_path.exists():
+        raise ArchiveOrganizationError(
+            "An existing Drive journal must be recovered before another apply."
+        )
     journal: dict[str, Any] = {
         "schema_version": JOURNAL_SCHEMA,
         "workflow": WORKFLOW_ID,
@@ -1853,6 +1855,8 @@ def _apply_google_drive_plan(
                 raise ArchiveOrganizationError(
                     f"Approved Google Drive target already exists: {target.as_posix()}."
                 )
+            operation["status"] = "moving"
+            _write_json(journal_path, journal)
             moved = selected_gateway.move_file(
                 operation["file_id"],
                 old_parent_id=operation["source_parent_id"],
@@ -1906,8 +1910,6 @@ def _apply_google_drive_plan(
                 else "all moved files were rolled back."
             )
         ) from exc
-    finally:
-        lock_path.unlink(missing_ok=True)
     return {
         "status": "applied",
         "storage_kind": "google_drive",
@@ -1919,7 +1921,99 @@ def _apply_google_drive_plan(
     }
 
 
+@contextmanager
+def _archive_lock(context: Mapping[str, Any]) -> Iterator[None]:
+    """Cover every run and both mutation directions for this registered client."""
+
+    from vera_assurance.serialization import exclusive_file_lock
+
+    root = Path(context["studio_client_folder"]["client_root"])
+    metadata = root / "Vera"
+    if metadata.is_symlink() or not metadata.is_dir():
+        raise ArchiveOrganizationError("Client metadata directory is unsafe")
+    try:
+        with exclusive_file_lock(metadata / ".archive-mutation.lock"):
+            yield
+    except (OSError, ValueError) as exc:
+        raise ArchiveOrganizationError(f"Archive mutation unavailable: {exc}") from exc
+
+
 def apply_approved_plan(
+    client_engagement: Path,
+    approved_plan_path: Path,
+    *,
+    explicit_approval: bool,
+    drive_gateway: Any | None = None,
+) -> dict[str, Any]:
+    """Apply approved moves under a client-wide crash-released mutation lock."""
+
+    if not explicit_approval:
+        raise ArchiveOrganizationError("Explicit apply approval is required.")
+    context = _load_context(client_engagement)
+    with _archive_lock(context):
+        return _apply_approved_plan_locked(
+            client_engagement,
+            approved_plan_path,
+            explicit_approval=explicit_approval,
+            drive_gateway=drive_gateway,
+        )
+
+
+def rollback_applied_plan(
+    client_engagement: Path, *, drive_gateway: Any | None = None
+) -> dict[str, Any]:
+    """Recover or reverse approved moves under the same client-wide lock."""
+
+    context = _load_context(client_engagement)
+    with _archive_lock(context):
+        return _rollback_applied_plan_locked(
+            client_engagement, drive_gateway=drive_gateway
+        )
+
+
+def _restore_local_operations(
+    root: Path, journal: dict[str, Any], journal_path: Path
+) -> None:
+    """Reconcile physical hashes before idempotently restoring the approved source."""
+
+    states = []
+    for operation in reversed(journal["operations"]):
+        source = _path_inside(root, operation["source_relative_path"])
+        target = _path_inside(root, operation["target_relative_path"])
+        source_present = source.exists() or source.is_symlink()
+        target_present = target.exists() or target.is_symlink()
+        for path, present in ((source, source_present), (target, target_present)):
+            if present:
+                _ordinary_source(path, label="recovery file")
+                if _sha256_file(path) != operation["sha256"]:
+                    raise ArchiveOrganizationError(
+                        "Recovery file changed or has an incomplete copy; preserved for review."
+                    )
+        if not source_present and not target_present:
+            raise ArchiveOrganizationError(
+                "Neither approved source nor destination is available for recovery."
+            )
+        states.append((operation, source, target, source_present, target_present))
+    journal["status"] = "rolling_back"
+    _write_json(journal_path, journal)
+    for operation, source, target, source_present, target_present in states:
+        if target_present:
+            if source_present:
+                # Recheck both copies immediately before removing the duplicate.
+                for path in (source, target):
+                    _ordinary_source(path, label="recovery file")
+                    if _sha256_file(path) != operation["sha256"]:
+                        raise ArchiveOrganizationError(
+                            "Recovery file changed; preserved for review."
+                        )
+                target.unlink()
+            else:
+                _copy_exclusive_then_unlink(root, target, source, operation["sha256"])
+        operation["status"] = "rolled_back"
+        _write_json(journal_path, journal)
+
+
+def _apply_approved_plan_locked(
     client_engagement: Path,
     approved_plan_path: Path,
     *,
@@ -1969,16 +2063,6 @@ def apply_approved_plan(
                     "Approved target path contains a symbolic link."
                 )
             cursor = cursor.parent
-    lock_path = output_dir / "archive_apply.lock"
-    try:
-        lock_descriptor = os.open(
-            lock_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600
-        )
-    except FileExistsError as exc:
-        raise ArchiveOrganizationError(
-            "Another apply or rollback operation is active."
-        ) from exc
-    os.close(lock_descriptor)
     journal_path = output_dir / "apply_journal.json"
     journal: dict[str, Any] = {
         "schema_version": JOURNAL_SCHEMA,
@@ -2002,11 +2086,19 @@ def apply_approved_plan(
             for item in actions
         ],
     }
+    if journal_path.exists():
+        previous = _read_json(journal_path, label="existing apply journal")
+        if previous.get("status") not in {"rolled_back", "rolled_back_after_failure"}:
+            raise ArchiveOrganizationError(
+                "An existing apply journal needs rollback/recovery before another apply."
+            )
     _write_json(journal_path, journal)
     try:
         for operation in journal["operations"]:
             source = _path_inside(root, operation["source_relative_path"])
             target = _path_inside(root, operation["target_relative_path"])
+            operation["status"] = "moving"
+            _write_json(journal_path, journal)
             _copy_exclusive_then_unlink(root, source, target, operation["sha256"])
             operation["status"] = "applied"
             _write_json(journal_path, journal)
@@ -2018,20 +2110,10 @@ def apply_approved_plan(
         journal["failure"] = str(exc)
         _write_json(journal_path, journal)
         rollback_errors: list[str] = []
-        for operation in reversed(journal["operations"]):
-            if operation["status"] != "applied":
-                continue
-            try:
-                _copy_exclusive_then_unlink(
-                    root,
-                    _path_inside(root, operation["target_relative_path"]),
-                    _path_inside(root, operation["source_relative_path"]),
-                    operation["sha256"],
-                )
-                operation["status"] = "rolled_back"
-            except (ArchiveOrganizationError, OSError) as rollback_exc:
-                rollback_errors.append(str(rollback_exc))
-            _write_json(journal_path, journal)
+        try:
+            _restore_local_operations(root, journal, journal_path)
+        except (ArchiveOrganizationError, OSError) as rollback_exc:
+            rollback_errors.append(str(rollback_exc))
         journal["status"] = (
             "partial_failure" if rollback_errors else "rolled_back_after_failure"
         )
@@ -2046,8 +2128,6 @@ def apply_approved_plan(
                 else "all applied operations were rolled back."
             )
         ) from exc
-    finally:
-        lock_path.unlink(missing_ok=True)
     return {
         "status": "applied",
         "applied_count": len(actions),
@@ -2057,7 +2137,7 @@ def apply_approved_plan(
     }
 
 
-def rollback_applied_plan(
+def _rollback_applied_plan_locked(
     client_engagement: Path,
     *,
     drive_gateway: Any | None = None,
@@ -2076,10 +2156,15 @@ def rollback_applied_plan(
     if journal.get("storage_kind") == "google_drive":
         drive_module = _google_drive_module()
         selected_gateway = drive_gateway or drive_module.load_google_drive_gateway()
-        if journal.get("status") != "applied":
-            raise ArchiveOrganizationError(
-                "Only a fully applied journal can be rolled back."
-            )
+        if journal.get("status") not in {
+            "applied",
+            "applying",
+            "apply_failed",
+            "partial_failure",
+            "rolled_back",
+            "rolled_back_after_failure",
+        }:
+            raise ArchiveOrganizationError("Drive journal state is not recoverable.")
         errors = _rollback_drive_operations(
             drive_module, selected_gateway, journal, journal_path
         )
@@ -2104,27 +2189,44 @@ def rollback_applied_plan(
         }
     if journal.get("storage_kind") != "local_filesystem":
         raise ArchiveOrganizationError("Apply journal storage kind is unsupported.")
-    if journal.get("status") != "applied":
+    if journal.get("status") not in {
+        "applied",
+        "applying",
+        "apply_failed",
+        "partial_failure",
+        "rolling_back",
+        "rolled_back",
+        "rolled_back_after_failure",
+    }:
+        raise ArchiveOrganizationError("Journal state does not support recovery.")
+    approved = _validated_approved(journal_path.parent / "approved_plan.json", context)
+    expected = [
+        (
+            item["item_id"],
+            item["source_relative_path"],
+            item["approved_target_relative_path"],
+            item["source_sha256"],
+        )
+        for item in approved["items"]
+        if item["approved_action"] in CHANGE_ACTIONS
+    ]
+    observed = [
+        (
+            item["item_id"],
+            item["source_relative_path"],
+            item["target_relative_path"],
+            item["sha256"],
+        )
+        for item in journal["operations"]
+    ]
+    if (
+        expected != observed
+        or journal.get("approved_plan_sha256") != approved["content_sha256"]
+    ):
         raise ArchiveOrganizationError(
-            "Only a fully applied journal can be rolled back."
+            "Recovery journal differs from the approved plan."
         )
-    for operation in reversed(journal["operations"]):
-        source = _path_inside(root, operation["source_relative_path"])
-        target = _path_inside(root, operation["target_relative_path"])
-        if source.exists() or source.is_symlink():
-            raise ArchiveOrganizationError("Rollback source path is no longer empty.")
-        _ordinary_source(target, label="rollback target")
-        if _sha256_file(target) != operation["sha256"]:
-            raise ArchiveOrganizationError("Rollback target changed after apply.")
-    for operation in reversed(journal["operations"]):
-        _copy_exclusive_then_unlink(
-            root,
-            _path_inside(root, operation["target_relative_path"]),
-            _path_inside(root, operation["source_relative_path"]),
-            operation["sha256"],
-        )
-        operation["status"] = "rolled_back"
-        _write_json(journal_path, journal)
+    _restore_local_operations(root, journal, journal_path)
     journal["status"] = "rolled_back"
     journal["completed_at"] = _now_iso()
     _write_json(journal_path, journal)

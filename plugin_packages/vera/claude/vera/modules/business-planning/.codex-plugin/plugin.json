@@ -1,9 +1,9 @@
 {
   "name": "business-planning",
-  "version": "0.2.7",
+  "version": "0.2.10",
   "description": "Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.",
   "author": {
-    "name": "Fabio Annovazzi · Mparanza",
+    "name": "Fabio Annovazzi \u00b7 Mparanza",
     "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
@@ -29,7 +29,7 @@
     "displayName": "Business Planning",
     "shortDescription": "Prepare one complete business plan.",
     "longDescription": "Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.",
-    "developerName": "Fabio Annovazzi · Mparanza",
+    "developerName": "Fabio Annovazzi \u00b7 Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/business-planning/index.html?lang=it",
     "privacyPolicyURL": "https://mparanza.com/privacy",

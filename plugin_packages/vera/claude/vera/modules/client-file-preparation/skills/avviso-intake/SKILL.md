@@ -128,6 +128,10 @@ is useful; never edit plugin source or generated ZIPs during a user-data run.
 
 - Extract practical elements only: file name, possible dates, possible amounts, protocol references, and documents to recover.
 - State clearly when an element is "da verificare".
+- Read each file's classification and extraction disposition from the shared
+  handoff. A filename hint does not establish the document's meaning, and an
+  unreadable or unsupported notice cannot be treated as reviewed. Inspect the
+  relevant source before interpreting practical references or missing evidence.
 
 ## Run
 

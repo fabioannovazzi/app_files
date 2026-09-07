@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, Literal, overload
 
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -193,10 +193,27 @@ def _xlsx_tables(
     data: bytes,
 ) -> list[tuple[str, tuple[str, ...], tuple[dict[str, Any], ...]]]:
     workbook = load_workbook(io.BytesIO(data), read_only=True, data_only=True)
+    formulas = load_workbook(io.BytesIO(data), read_only=True, data_only=False)
     tables: list[tuple[str, tuple[str, ...], tuple[dict[str, Any], ...]]] = []
     try:
         for worksheet in workbook.worksheets:
-            matrix = worksheet.iter_rows(values_only=True)
+            # Cached values are usable; an uncached formula is missing evidence,
+            # not zero. Keep its location for the affected section's error.
+            matrix = (
+                tuple(
+                    (
+                        f"Uncached formula: {worksheet.title}!{formula.coordinate}"
+                        if formula.data_type == "f" and value is None
+                        else value
+                    )
+                    for value, formula in zip(values, formula_row, strict=True)
+                )
+                for values, formula_row in zip(
+                    worksheet.iter_rows(values_only=True),
+                    formulas[worksheet.title].iter_rows(),
+                    strict=True,
+                )
+            )
             try:
                 headers, rows = _rows_from_matrix(matrix)
             except PackContractError as exc:
@@ -206,6 +223,7 @@ def _xlsx_tables(
             tables.append((worksheet.title, headers, rows))
     finally:
         workbook.close()
+        formulas.close()
     if not tables:
         raise PackContractError("The workbook contains no non-empty tables.")
     return tables
@@ -403,13 +421,12 @@ def build_inspection(
     }
     # Deduplicate the private source labels without exposing absolute paths.
     seen_sources: set[str] = set()
-    control["source_locations"] = [
-        item
-        for item in control["source_locations"]
-        if not (
-            item["source_id"] in seen_sources or seen_sources.add(item["source_id"])
-        )
-    ]
+    source_locations = []
+    for item in control["source_locations"]:
+        if item["source_id"] not in seen_sources:
+            source_locations.append(item)
+            seen_sources.add(item["source_id"])
+    control["source_locations"] = source_locations
     recipe = {
         "schema_version": RECIPE_SCHEMA,
         "workflow_id": WORKFLOW_ID,
@@ -445,13 +462,17 @@ def _text(value: Any, *, label: str, maximum: int = 200) -> str:
 
 def _parse_decimal(value: Any, *, label: str, number_format: str) -> Decimal:
     if value is None or (isinstance(value, str) and not value.strip()):
-        return Decimal("0")
+        raise PackContractError(f"{label} is missing; an explicit amount is required.")
     if isinstance(value, bool):
         raise PackContractError(f"{label} is not a monetary value.")
     if isinstance(value, Decimal):
+        if not value.is_finite():
+            raise PackContractError(f"{label} must be finite.")
         return value
     if isinstance(value, (int, float)):
-        return Decimal(str(value))
+        return _parse_decimal(
+            Decimal(str(value)), label=label, number_format=number_format
+        )
     text = str(value).strip().replace("\u00a0", "").replace(" ", "")
     if number_format == "comma_decimal":
         text = text.replace(".", "").replace(",", ".")
@@ -460,9 +481,12 @@ def _parse_decimal(value: Any, *, label: str, number_format: str) -> Decimal:
     else:
         raise PackContractError("number_format must be dot_decimal or comma_decimal.")
     try:
-        return Decimal(text)
+        parsed = Decimal(text)
     except InvalidOperation as exc:
         raise PackContractError(f"{label} is not a valid decimal: {value}") from exc
+    if not parsed.is_finite():
+        raise PackContractError(f"{label} must be finite.")
+    return parsed
 
 
 def _decimal_text(value: Decimal) -> str:
@@ -524,6 +548,18 @@ def _recipe_table(
     return table, raw
 
 
+@overload
+def _column(
+    mapping: Mapping[str, Any], logical: str, *, required: Literal[True]
+) -> str: ...
+
+
+@overload
+def _column(
+    mapping: Mapping[str, Any], logical: str, *, required: Literal[False] = False
+) -> str | None: ...
+
+
 def _column(
     mapping: Mapping[str, Any], logical: str, *, required: bool = False
 ) -> str | None:
@@ -551,11 +587,19 @@ def _amount(
         credit_column = _column(mapping, "credit")
         if not debit_column or not credit_column:
             raise PackContractError("Map amount or both debit and credit columns.")
+        debit_value, credit_value = row.get(debit_column), row.get(credit_column)
+        blank_debit = debit_value is None or str(debit_value).strip() == ""
+        blank_credit = credit_value is None or str(credit_value).strip() == ""
+        if mapping.get("blank_debit_credit_is_zero") is True and not (
+            blank_debit and blank_credit
+        ):
+            debit_value = "0" if blank_debit else debit_value
+            credit_value = "0" if blank_credit else credit_value
         debit = _parse_decimal(
-            row.get(debit_column), label=f"{label}.debit", number_format=number_format
+            debit_value, label=f"{label}.debit", number_format=number_format
         )
         credit = _parse_decimal(
-            row.get(credit_column), label=f"{label}.credit", number_format=number_format
+            credit_value, label=f"{label}.credit", number_format=number_format
         )
         rule = mapping.get("amount_rule")
         if rule == "credit_minus_debit":
@@ -794,7 +838,7 @@ def _pnl_section(
             "General ledger has no rows inside the reporting period."
         )
     rows: list[dict[str, Any]] = []
-    totals = defaultdict(Decimal)
+    totals: dict[str, Decimal] = defaultdict(Decimal)
     metric_labels = {
         "revenue": "Revenue",
         "gross_profit": "Gross profit",
@@ -890,6 +934,9 @@ def _budget_section(
                 row.get(category_col), label=f"budget row {index} category", maximum=160
             )
         else:
+            assert (
+                account_col is not None
+            )  # The mapping guard requires one of the two columns.
             account = _text(
                 row.get(account_col), label=f"budget row {index} account", maximum=160
             )
@@ -989,7 +1036,7 @@ def _aging_section(
         f"{buckets[1] + 1}_{buckets[2]}",
         f"over_{buckets[2]}",
     )
-    totals = defaultdict(Decimal)
+    totals: dict[str, Decimal] = defaultdict(Decimal)
     parties: dict[str, Decimal] = defaultdict(Decimal)
     control_total = Decimal("0")
     for index, row in enumerate(table.rows, start=2):
@@ -1083,6 +1130,7 @@ def _cash_section(
     )
     monthly: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
     latest: dict[str, tuple[date, Decimal]] = {}
+    ambiguous_accounts: set[str] = set()
     control_total = Decimal("0")
     for index, row in enumerate(table.rows, start=2):
         row_date = _parse_date(
@@ -1113,8 +1161,21 @@ def _cash_section(
                 if account_col
                 else "all_accounts"
             )
-            if account not in latest or row_date >= latest[account][0]:
+            if (
+                account in latest
+                and row_date == latest[account][0]
+                and balance != latest[account][1]
+            ):
+                ambiguous_accounts.add(account)
+            if account not in latest or row_date > latest[account][0]:
                 latest[account] = (row_date, balance)
+                ambiguous_accounts.discard(account)
+    if ambiguous_accounts:
+        raise PackContractError(
+            "Conflicting same-date balances at the latest reported date for "
+            + ", ".join(sorted(ambiguous_accounts))
+            + "; provide an authoritative closing-balance export."
+        )
     if not monthly:
         raise PackContractError("Bank export has no rows inside the reporting period.")
     rows = [
@@ -1243,7 +1304,7 @@ def _sales_sections(
         {
             "customer": name,
             "revenue": _decimal_text(value),
-            "share": _ratio_text(value / total_revenue) if total_revenue else "0",
+            "share": _ratio_text(value / total_revenue) if total_revenue else None,
         }
         for name, value in ranked_customers[:top_n]
     ]
@@ -1259,16 +1320,23 @@ def _sales_sections(
     )
     concentration = (
         {
-            "status": "available",
+            "status": "available" if total_revenue else "unavailable",
+            **(
+                {
+                    "reason": "Revenue shares are undefined: the supplied sales-detail rows total zero revenue."
+                }
+                if not total_revenue
+                else {}
+            ),
             "total_revenue": _decimal_text(total_revenue),
-            "top_1_share": _ratio_text(top1_share),
-            "top_5_share": _ratio_text(top5_share),
+            "top_1_share": _ratio_text(top1_share) if total_revenue else None,
+            "top_5_share": _ratio_text(top5_share) if total_revenue else None,
             "rows": customer_rows,
         }
         if customer_col
         else {"status": "unavailable", "reason": "Customer identity is not mapped."}
     )
-    if customer_col:
+    if customer_col and total_revenue:
         _metric(
             metrics,
             "customers.top1.share",
@@ -1301,12 +1369,17 @@ def _sales_sections(
                     "revenue": _decimal_text(revenue),
                     "direct_cost": _decimal_text(direct_cost),
                     "margin": _decimal_text(margin),
-                    "margin_rate": _ratio_text(margin / revenue) if revenue else "0",
+                    "margin_rate": _ratio_text(margin / revenue) if revenue else None,
+                    **(
+                        {"margin_rate_reason": "Undefined: service revenue is zero."}
+                        if not revenue
+                        else {}
+                    ),
                 }
             )
         profitability = {
             "status": "available",
-            "rows": service_rows[:50],
+            "rows": service_rows,
             "total_margin": _decimal_text(total_margin),
         }
         _metric(
@@ -1576,13 +1649,22 @@ def build_model_context_receipt(
     return receipt
 
 
+def _display_cell(row: Mapping[str, Any], column: str) -> str:
+    """Keep undefined quantities explicit in the readable report."""
+
+    value = row.get(column, "")
+    if value is None:
+        return str(row.get(column + "_reason", "Unavailable"))
+    return str(value)
+
+
 def _table_markdown(rows: Sequence[Mapping[str, Any]], columns: Sequence[str]) -> str:
     if not rows:
         return "_No rows available._"
     header = "| " + " | ".join(columns) + " |"
     separator = "| " + " | ".join("---" for _ in columns) + " |"
     body = [
-        "| " + " | ".join(str(row.get(column, "")) for column in columns) + " |"
+        "| " + " | ".join(_display_cell(row, column) for column in columns) + " |"
         for row in rows
     ]
     return "\n".join((header, separator, *body))
@@ -1696,7 +1778,7 @@ def _html_table(rows: Sequence[Mapping[str, Any]], columns: Sequence[str]) -> st
     body = "".join(
         "<tr>"
         + "".join(
-            f"<td>{html.escape(str(row.get(column, '')))}</td>" for column in columns
+            f"<td>{html.escape(_display_cell(row, column))}</td>" for column in columns
         )
         + "</tr>"
         for row in rows

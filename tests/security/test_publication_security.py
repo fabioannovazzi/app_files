@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import subprocess
 import tomllib
 from pathlib import Path
@@ -41,7 +43,7 @@ def test_sanitized_secret_example_contains_only_safe_values() -> None:
             assert value == ""
 
 
-def test_only_verified_cowork_zips_are_public() -> None:
+def test_public_cowork_archives_follow_release_configuration() -> None:
     public_vera_zip = (
         ROOT / "static" / "shared" / "vera" / "downloads" / "vera-cowork-plugin.zip"
     )
@@ -49,7 +51,6 @@ def test_only_verified_cowork_zips_are_public() -> None:
     public_clara_zip = (
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-cowork-plugin.zip"
     )
-    release_clara_zip = ROOT / "plugin_packages" / "clara" / "clara-claude-plugin.zip"
     public_lucia_zip = (
         ROOT / "static" / "shared" / "lucia" / "downloads" / "lucia-cowork-plugin.zip"
     )
@@ -59,9 +60,22 @@ def test_only_verified_cowork_zips_are_public() -> None:
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-plugin.zip",
     )
 
-    assert public_vera_zip.read_bytes() == release_vera_zip.read_bytes()
-    assert public_clara_zip.read_bytes() == release_clara_zip.read_bytes()
-    assert public_lucia_zip.read_bytes() == release_lucia_zip.read_bytes()
+    # Bounded diagnostics avoid expanding megabytes of binary ZIP differences.
+    assert (
+        hashlib.sha256(public_vera_zip.read_bytes()).digest()
+        == hashlib.sha256(release_vera_zip.read_bytes()).digest()
+    )
+    assert (
+        hashlib.sha256(public_lucia_zip.read_bytes()).digest()
+        == hashlib.sha256(release_lucia_zip.read_bytes()).digest()
+    )
+    configuration = json.loads(
+        (ROOT / "scripts" / "claude_plugin_packages.json").read_text()
+    )
+    clara = next(p for p in configuration["packages"] if p["plugin"] == "clara")
+    # Clara's candidate build cannot replace its independently promoted public ZIP.
+    assert "public_zip" not in clara
+    assert public_clara_zip.is_file()
     assert all(not path.exists() for path in retired_plugin_zips)
 
 

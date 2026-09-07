@@ -187,3 +187,23 @@ direttamente.
 
 Dopo una modifica, il rilascio ricostruisce il pacchetto Vera e ne verifica
 contenuto e test di integrità.
+
+### Document-kind review
+
+Filename/category/text hints are candidate classifications. Extracted fields
+retain `document_kind_status` in CSV, JSON and the bounded model handoff.
+Candidate extraction is not confirmation that the document is that form.
+
+A model or professional may supply `document_kind_decisions.json` in the
+extracted output directory before rerunning fiscal extraction. It maps each
+source's `relative_path` to `kind`, `basis` (`model_review` or
+`professional_review`), and `text_sha256` for the exact UTF-8 extracted text.
+The supported adapter names are those emitted by the candidate classifier;
+`unsupported` is an explicit abstention. Decisions for unknown sources, stale
+text, unsupported adapters or unknown review bases are rejected. The reviewer
+must inspect the document content rather than confirm its filename.
+
+Every input receives a record in `document_dispositions.json`, including
+unreadable documents and sources yielding no fields. Review this register before
+describing intake as complete. A reviewed document kind establishes extraction
+routing only; it does not validate the extracted values or legal conclusions.

@@ -1234,6 +1234,76 @@ test("executeCapability rejects draft or unreviewed provenance", async () => {
   );
 });
 
+for (const redirectDuringResolution of [false, true]) {
+  test(`executeCapability prevents input outside its origin before dispatch (${redirectDuringResolution ? "during locator resolution" : "initial page"})`, async () => {
+    const capability = syntheticCapability();
+    const tab = new FakeTab({}, redirectDuringResolution ? "https://example.com/" : "https://attacker.example/");
+    const delivered = [];
+    const registry = resultRegistry(tab);
+    registry[locatorKey("placeholder", null, "Search")][0].onAction = ({ value }) => delivered.push(value);
+    tab.playwright = new FakePlaywright(tab, registry);
+    if (redirectDuringResolution) {
+      const getByPlaceholder = tab.playwright.getByPlaceholder.bind(tab.playwright);
+      tab.playwright.getByPlaceholder = (...args) => {
+        const locator = getByPlaceholder(...args);
+        const isVisible = locator.isVisible.bind(locator);
+        locator.isVisible = async () => {
+          const visible = await isVisible();
+          tab.currentUrl = "https://attacker.example/";
+          return visible;
+        };
+        return locator;
+      };
+    }
+    const parent = await mkdtemp(join(tmpdir(), "browser-origin-before-action-"));
+
+    await assert.rejects(executeCapability({
+      tab,
+      capability,
+      inputs: { query: "synthetic-private-query", "max-results": 10 },
+      runDirectory: join(parent, "run"),
+      runId: "wrong-origin-run",
+    }), /origin_boundary_violation/);
+
+    assert.deepEqual(delivered, []);
+  });
+}
+
+test("executeCapability prevents extraction after navigation during output resolution", async () => {
+  const capability = syntheticCapability();
+  capability.entry_milestone = "collect";
+  capability.milestones = [capability.milestones[1]];
+  capability.outputs[0].type = "summary";
+  capability.outputs[0].fields = [];
+  const action = capability.milestones[0].actions[0];
+  action.locator_candidates = [candidate("role", "Result", "status")];
+  action.extract.mode = "text";
+  action.extract.fields = [];
+  const tab = new FakeTab({});
+  let contentRead = false;
+  const locator = new FakeLocator([new FakeNode({ text: "out-of-scope value" })], tab);
+  locator.isVisible = async () => {
+    tab.currentUrl = "https://attacker.example/";
+    return true;
+  };
+  locator.innerText = async () => {
+    contentRead = true;
+    return "out-of-scope value";
+  };
+  tab.playwright.getByRole = () => locator;
+  const parent = await mkdtemp(join(tmpdir(), "browser-origin-before-extraction-"));
+
+  await assert.rejects(executeCapability({
+    tab,
+    capability,
+    inputs: { query: "synthetic-query", "max-results": 10 },
+    runDirectory: join(parent, "run"),
+    runId: "wrong-origin-extraction",
+  }), /origin_boundary_violation/);
+
+  assert.equal(contentRead, false);
+});
+
 test("executeCapability fails closed when an action leaves the allowed origin", async () => {
   const capability = syntheticCapability();
   const tab = new FakeTab({});

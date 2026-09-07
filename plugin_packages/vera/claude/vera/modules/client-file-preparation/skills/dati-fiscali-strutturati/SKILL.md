@@ -147,6 +147,25 @@ The full `client-file-preparation` workflow already runs this automatically.
 
 ## Field Scope
 
+Filename categories and automatically selected document kinds are candidates.
+For ambiguous or misleading sources, inspect the relevant extracted text and
+use model-led interpretation with explicit abstention. Save a reviewed decision
+file in the engagement, keyed by source relative path,
+with `kind`, `basis` (`model_review` or `professional_review`) and the SHA-256 of
+the exact UTF-8 extracted text. The parser accepts only its supported adapter
+names or `unsupported`; stale decisions fail. Import that file as an authorized
+input to a successor `client-file-preparation` run and pass its path through
+`build_file_preparation_outputs.py --document-kind-decisions <path>`. The full
+builder regenerates the fields, review and handoff together and retains the
+decisions in its output. Do not rerun the standalone field parser against an
+already generated or sealed review package: that would leave its review stale.
+Do not treat acceptance of an inventory row as a document-kind decision.
+
+Review every source's `fiscal_extraction_disposition` in the handoff and the
+complete local `extracted/document_dispositions.json`. Report unreadable,
+unsupported, unevaluated and recognized-without-fields sources separately;
+an empty field list does not establish that a source contains no fiscal data.
+
 - `F24`: codice tributo, anno riferimento, importi a debito/credito, righe tabellari when readable.
 - `CU`: codici fiscali, years, common income/withholding/addizionale labels, numeric CU points when present in text.
 - `730`: liquidation labels and readable righi/quadri such as `RC1`, `E1`, `RN`, `RX`.

@@ -4,8 +4,10 @@ import hashlib
 import importlib.util
 import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from pathlib import Path
+from threading import Event
 from types import ModuleType
 
 import pytest
@@ -702,3 +704,298 @@ def test_google_api_gateway_uses_shared_drive_flags_and_parent_update(
     assert update_call[1]["removeParents"] == "parent_123"
     assert download_call[1]["supportsAllDrives"] is True
     assert moved["id"] == "file_123"
+
+
+@pytest.mark.parametrize(
+    ("phase", "boundary", "occurrence"),
+    [
+        (phase, boundary, occurrence)
+        for phase in ("apply", "rollback")
+        for boundary in ("write", "flush", "fsync", "unlink", "journal")
+        for occurrence in range(
+            1, (7 if phase == "apply" else 5) if boundary == "journal" else 3
+        )
+    ],
+)
+@pytest.mark.parametrize("timing", ["before", "after"])
+def test_interrupted_file_boundary_preserves_recoverable_bytes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    phase: str,
+    boundary: str,
+    occurrence: int,
+    timing: str,
+) -> None:
+    context_path, snapshot, originals = _prepared_run(tmp_path)
+    review = core.build_review_package(context_path, _proposals(tmp_path, snapshot))
+    approved = _review_and_approve(context_path, tmp_path, review)
+    approved_path = Path(approved["approved_plan_path"])
+    client_root = context_path.parents[5]
+    if phase == "rollback":
+        organizer.apply_approved_plan(
+            context_path, approved_path, explicit_approval=True
+        )
+
+    interrupted = False
+    calls = 0
+
+    def invoke(operation: object, *args: object, **kwargs: object) -> object:
+        nonlocal interrupted, calls
+        calls += 1
+        if calls == occurrence and timing == "before":
+            interrupted = True
+            raise KeyboardInterrupt("injected file boundary interruption")
+        result = operation(*args, **kwargs)
+        if calls == occurrence:
+            interrupted = True
+            raise KeyboardInterrupt("injected file boundary interruption")
+        return result
+
+    original_fdopen = organizer.os.fdopen
+    original_fsync = organizer.os.fsync
+    original_unlink = Path.unlink
+    original_write_json = organizer._write_json
+    binary_descriptors: set[int] = set()
+
+    class InterruptedWriter:
+        def __init__(self, handle: object) -> None:
+            self.handle = handle
+
+        def __enter__(self) -> object:
+            self.handle.__enter__()
+            return self
+
+        def __exit__(self, *args: object) -> object:
+            return self.handle.__exit__(*args)
+
+        def __getattr__(self, name: str) -> object:
+            return getattr(self.handle, name)
+
+        def write(self, data: bytes) -> object:
+            if boundary == "write":
+                return invoke(self.handle.write, data)
+            return self.handle.write(data)
+
+        def flush(self) -> object:
+            if boundary == "flush":
+                return invoke(self.handle.flush)
+            return self.handle.flush()
+
+    def fdopen(descriptor: int, mode: str, **kwargs: object) -> object:
+        handle = original_fdopen(descriptor, mode, **kwargs)
+        if mode == "wb":
+            binary_descriptors.add(descriptor)
+            return InterruptedWriter(handle)
+        binary_descriptors.discard(descriptor)
+        return handle
+
+    def fsync(descriptor: int) -> None:
+        if boundary == "fsync" and descriptor in binary_descriptors:
+            invoke(original_fsync, descriptor)
+        else:
+            original_fsync(descriptor)
+
+    def unlink(path: Path, *args: object, **kwargs: object) -> object:
+        if boundary == "unlink" and path.suffix != ".tmp":
+            return invoke(original_unlink, path, *args, **kwargs)
+        return original_unlink(path, *args, **kwargs)
+
+    def write_json(path: Path, payload: object) -> None:
+        if boundary == "journal" and path.name == "apply_journal.json":
+            invoke(original_write_json, path, payload)
+        else:
+            original_write_json(path, payload)
+
+    with monkeypatch.context() as faults:
+        faults.setattr(organizer.os, "fdopen", fdopen)
+        faults.setattr(organizer.os, "fsync", fsync)
+        faults.setattr(Path, "unlink", unlink)
+        faults.setattr(organizer, "_write_json", write_json)
+        with pytest.raises(KeyboardInterrupt, match="injected file boundary"):
+            if phase == "apply":
+                organizer.apply_approved_plan(
+                    context_path, approved_path, explicit_approval=True
+                )
+            else:
+                organizer.rollback_applied_plan(context_path)
+    assert interrupted
+
+    if boundary == "write" and timing == "before":
+        # An empty exclusive destination must remain visible for manual review.
+        before_recovery = {
+            str(path.relative_to(client_root)): path.read_bytes()
+            for path in client_root.rglob("*")
+            if path.is_file()
+        }
+        with pytest.raises(organizer.ArchiveOrganizationError, match="incomplete copy"):
+            organizer.rollback_applied_plan(context_path)
+        after_recovery = {
+            str(path.relative_to(client_root)): path.read_bytes()
+            for path in client_root.rglob("*")
+            if path.is_file()
+        }
+        assert after_recovery == before_recovery
+        for content in originals.values():
+            assert content in after_recovery.values()
+        return
+
+    if (
+        boundary == "journal"
+        and timing == "before"
+        and phase == "apply"
+        and occurrence == 1
+    ):
+        # No move occurred before the first durable journal existed.
+        for relative, content in originals.items():
+            assert (client_root / relative).read_bytes() == content
+        organizer.apply_approved_plan(
+            context_path, approved_path, explicit_approval=True
+        )
+    assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
+    for relative, content in originals.items():
+        assert (client_root / relative).read_bytes() == content
+    assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
+
+
+@pytest.mark.parametrize("competitor", ["apply", "rollback"])
+def test_public_mutation_rejects_competing_operation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, competitor: str
+) -> None:
+    context_path, snapshot, originals = _prepared_run(tmp_path)
+    review = core.build_review_package(context_path, _proposals(tmp_path, snapshot))
+    approved = _review_and_approve(context_path, tmp_path, review)
+    approved_path = Path(approved["approved_plan_path"])
+    entered = Event()
+    release = Event()
+    original_move = organizer._copy_exclusive_then_unlink
+
+    def paused_move(*args: object) -> None:
+        entered.set()
+        if not release.wait(timeout=5):
+            raise TimeoutError("test did not release the archive mutation")
+        original_move(*args)
+
+    with monkeypatch.context() as pause:
+        pause.setattr(organizer, "_copy_exclusive_then_unlink", paused_move)
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            applying = executor.submit(
+                organizer.apply_approved_plan,
+                context_path,
+                approved_path,
+                explicit_approval=True,
+            )
+            try:
+                assert entered.wait(timeout=5)
+                with pytest.raises(
+                    organizer.ArchiveOrganizationError,
+                    match="Archive mutation unavailable",
+                ):
+                    if competitor == "apply":
+                        organizer.apply_approved_plan(
+                            context_path, approved_path, explicit_approval=True
+                        )
+                    else:
+                        organizer.rollback_applied_plan(context_path)
+            finally:
+                release.set()
+            assert applying.result(timeout=5)["status"] == "applied"
+    assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
+    for relative, content in originals.items():
+        assert (context_path.parents[5] / relative).read_bytes() == content
+
+
+def test_rollback_preserves_changed_destination_for_review(tmp_path: Path) -> None:
+    context_path, snapshot, _ = _prepared_run(tmp_path)
+    review = core.build_review_package(context_path, _proposals(tmp_path, snapshot))
+    approved = _review_and_approve(context_path, tmp_path, review)
+    applied = organizer.apply_approved_plan(
+        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+    )
+    journal_path = Path(applied["journal_path"])
+    journal_before = journal_path.read_bytes()
+    operation = json.loads(journal_before)["operations"][0]
+    client_root = context_path.parents[5]
+    changed = client_root / operation["target_relative_path"]
+    changed.write_bytes(b"Later professional revision must survive recovery")
+
+    with pytest.raises(
+        organizer.ArchiveOrganizationError, match="preserved for review"
+    ):
+        organizer.rollback_applied_plan(context_path)
+
+    assert changed.read_bytes() == b"Later professional revision must survive recovery"
+    assert not (client_root / operation["source_relative_path"]).exists()
+    assert journal_path.read_bytes() == journal_before
+
+
+@pytest.mark.parametrize("phase", ["apply", "rollback"])
+def test_interrupted_move_recovers_from_physical_hashes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str
+) -> None:
+    context_path, snapshot, originals = _prepared_run(tmp_path)
+    review = core.build_review_package(context_path, _proposals(tmp_path, snapshot))
+    approved = _review_and_approve(context_path, tmp_path, review)
+    original_move = organizer._copy_exclusive_then_unlink
+
+    def interrupted(*args: object) -> None:
+        original_move(*args)
+        raise KeyboardInterrupt("simulate process death after filesystem change")
+
+    if phase == "rollback":
+        organizer.apply_approved_plan(
+            context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+        )
+    monkeypatch.setattr(organizer, "_copy_exclusive_then_unlink", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        if phase == "apply":
+            organizer.apply_approved_plan(
+                context_path,
+                Path(approved["approved_plan_path"]),
+                explicit_approval=True,
+            )
+        else:
+            organizer.rollback_applied_plan(context_path)
+    monkeypatch.setattr(organizer, "_copy_exclusive_then_unlink", original_move)
+
+    recovered = organizer.rollback_applied_plan(context_path)
+
+    assert recovered["status"] == "rolled_back"
+    client_root = context_path.parents[5]
+    for relative, content in originals.items():
+        assert (client_root / relative).read_bytes() == content
+    assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
+
+
+def test_interrupted_drive_response_retains_uncertain_move_for_review(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context_path, snapshot, gateway = _prepared_drive_run(tmp_path)
+    review = organizer.build_review_package(
+        context_path, _proposals(tmp_path, snapshot, category="ade")
+    )
+    approved = _review_and_approve(context_path, tmp_path, review)
+    original_move = gateway.move_file
+
+    def interrupted(*args, **kwargs):
+        original_move(*args, **kwargs)
+        raise KeyboardInterrupt("simulated lost Drive response")
+
+    monkeypatch.setattr(gateway, "move_file", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        organizer.apply_approved_plan(
+            context_path,
+            Path(approved["approved_plan_path"]),
+            explicit_approval=True,
+            drive_gateway=gateway,
+        )
+    monkeypatch.setattr(gateway, "move_file", original_move)
+
+    with pytest.raises(organizer.ArchiveOrganizationError, match="manual recovery"):
+        organizer.rollback_applied_plan(context_path, drive_gateway=gateway)
+
+    journal = json.loads(
+        (Path(review["output_dir"]) / "apply_journal.json").read_text()
+    )
+    assert journal["status"] == "partial_failure"
+    assert journal["operations"][0]["status"] == "moving"
+    assert "remote state requires review" in journal["rollback_errors"][0]

@@ -1,6 +1,6 @@
 {
   "name": "studio-archive",
-  "version": "0.1.33",
+  "version": "0.1.34",
   "description": "Gmail, WhatsApp Desktop e archivi cliente locali o Google Workspace tramite Vera.",
   "author": {
     "name": "Mparanza",
@@ -34,9 +34,9 @@
   "apps": "./.app.json",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Vera · Archivio dello Studio",
+    "displayName": "Vera \u00b7 Archivio dello Studio",
     "shortDescription": "Cerca un cliente in Gmail, WhatsApp Desktop, file locali o Google Drive.",
-    "longDescription": "In ChatGPT o Claude, Vera usa il connector Gmail di OpenAI installato e collegato separatamente per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Claude Desktop aggiunge l'accesso diretto a una cartella cliente locale oppure Google Drive, compresi gli Shared Drives autorizzati, e può consultare una chat uno-a-uno verificata nell'app WhatsApp Desktop locale tramite Computer Use. Il perimetro Drive è legato all'ID stabile della cartella; snapshot e aperture ricontrollano ID, versione, parent, capacità e checksum disponibili. I contenuti vengono letti solo quando richiesti e non sono copiati nell'indice permanente. Se Claude non è installato, Vera spiega il vantaggio, fornisce il link ufficiale e continua comunque il lavoro possibile in ChatGPT.",
+    "longDescription": "In ChatGPT o Claude, Vera usa il connector Gmail di OpenAI installato e collegato separatamente per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Claude Desktop aggiunge l'accesso diretto a una cartella cliente locale oppure Google Drive, compresi gli Shared Drives autorizzati, e pu\u00f2 consultare una chat uno-a-uno verificata nell'app WhatsApp Desktop locale tramite Computer Use. Il perimetro Drive \u00e8 legato all'ID stabile della cartella; snapshot e aperture ricontrollano ID, versione, parent, capacit\u00e0 e checksum disponibili. I contenuti vengono letti solo quando richiesti e non sono copiati nell'indice permanente. Se Claude non \u00e8 installato, Vera spiega il vantaggio, fornisce il link ufficiale e continua comunque il lavoro possibile in ChatGPT.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [

@@ -31,7 +31,7 @@
       {
         "id": "management-control-post-calculation-review",
         "purpose": "Interpret the exact management pack and identify observations, hypotheses, questions, missing evidence, and limitations",
-        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, monthly series capped at 60 rows per section, top receivables, payables, customers and services capped at 20 or the reviewed top-customer limit, source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default.",
+        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, calculated section rows capped at 60 per section (including monthly series and service profitability), top-party lists capped at 20, and customer rows additionally limited by the reviewed top-customer setting (1 to 50), source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -76,9 +76,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-25",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "45dd0eba7ba6a96d46a2e6a5b9593cc312c806261891c543ab4cc3d60ebec959"
+    "source_fingerprint": "70f8b4469e9510fdc876b7df110a9570cfd00e6bdb9aac3aaf8233bf0b1bc92d"
   }
 }

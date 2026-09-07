@@ -242,14 +242,27 @@
       "control": "The local WhatsApp route starts only from empty unique Search and composer controls, attempts Search with Command-F, and if Computer Use rejects that modifier chord continues only after a fresh full snapshot proves those controls remain uniquely exposed and empty with no send control. It then clicks the exact fresh Search index, rejects contradictory focus metadata, enters the confirmed phone one digit at a time, and checks the exact Search prefix and empty composer after every digit. Any mismatch stops; only one proven newly misdirected digit may be removed. Raw pre-verification state stays local, the exact result's More Info contact card must contain one confirmed-name heading and exact phone before the contact is opened, and only the verified target chat-table subtree may be returned."
     },
     {
+      "id": "local-model-data-report-finalization",
+      "control": "Durable Studio Archive finalization requires run-bound, hash-consistent model-data JSON and Markdown reports. The shared local helper validates supplied phase evidence and writes these artifacts without contacting a model or requesting a server attestation; it does not independently prove provider transmission or infer zero transmission from missing telemetry."
+    },
+    {
+      "id": "duplicate-import-filename-lineage",
+      "control": "Content-identical same-role imports reuse one immutable input receipt. A separate sealed filename register retains additional imported basenames without original absolute source paths. Each prepared run snapshots those names in its sealed input manifest; later imports do not rewrite earlier run snapshots. These names may enter selected-run model context with other import metadata and appear in downstream source inventories. Byte identity does not classify different-content documents as the same economic obligation."
+    },
+    {
       "id": "session-owned-archive-configuration",
-      "control": "Archive state defaults to an isolated session directory. The local MCP server passes one session identity to its helper processes. An operating-system lock is held from first configuration access until process exit; competing processes fail. Persisted ownership rejects other sessions between commands. Configuration reads use the pinned bytes, configuration writes validate the prior bytes, and public operations check for unexpected changes before returning. Atomic replacement is preserved. Explicit state-directory overrides remain subject to the same ownership and lock checks."
+      "control": "Default private state is isolated by a hash of the host-supplied session identity, with a process-specific identity when the host supplies none. The MCP server passes one stable session identity to its helper commands. Configuration persists its session owner; an OS lock covers each process lifetime after configuration access, other session owners are rejected, and public operations verify that the pinned configuration bytes did not change before returning. An explicit state directory remains subject to these ownership and locking checks. This is local session isolation, not authentication between users or encryption of the derived index."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c8c96002a5286ff4ee32b91128adbb5490b991095d7ae6ba35ca39837ea93e1f"
-  }
+    "source_fingerprint": "7c60822faac88b502739a349a4029fbf7ed1a920af689d613d8782d13695fb59"
+  },
+  "governed_repository_paths": [
+    "plugins/vera/scripts/model_data_report.py",
+    "plugins/vera/skills/vera/references/model-data-report-contract.md",
+    "plugins/studio-archive/scripts/build_model_data_report.py"
+  ]
 }

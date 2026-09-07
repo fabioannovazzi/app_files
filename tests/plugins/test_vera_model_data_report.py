@@ -3,6 +3,8 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import shutil
+import subprocess
 import sys
 import types
 from pathlib import Path
@@ -264,6 +266,61 @@ def test_report_validation_rejects_changed_payload_file(tmp_path: Path) -> None:
 
     with pytest.raises(module.ModelDataReportError, match="evidence file changed"):
         module.validate_model_data_report(report, evidence_root=tmp_path)
+
+
+@pytest.mark.parametrize(
+    "packaged", [False, True], ids=["source", "standalone-package"]
+)
+def test_studio_archive_report_helper_needs_no_receipt_module_or_network(
+    tmp_path: Path,
+    packaged: bool,
+) -> None:
+    component = ROOT / "plugins" / "studio-archive"
+    if packaged:
+        component = tmp_path / "isolated-component"
+        (component / "scripts").mkdir(parents=True)
+        (component / "vendor" / "modules").mkdir(parents=True)
+        shutil.copy2(
+            ROOT / "plugins/studio-archive/scripts/build_model_data_report.py",
+            component / "scripts/build_model_data_report.py",
+        )
+        shutil.copy2(SCRIPT_PATH, component / "vendor/modules/model_data_report.py")
+    output = tmp_path / "output"
+    output.mkdir()
+    (output / "mapping_payload.json").write_text("{}\n")
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(_reduced_request()))
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(component / "scripts/build_model_data_report.py"),
+            "build",
+            "--input",
+            str(request),
+            "--evidence-root",
+            str(output),
+            "--output-dir",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["server_receipt"] == {
+        "status": "not_requested",
+        "reason": "local_only",
+    }
+    report = json.loads((output / "model_data_report.json").read_text())
+    assert report["phases"][0]["outcome"] == "reduced_projection"
+    assert _load_module().validate_model_data_report(report, evidence_root=output)
+    assert (output / "model_data_report.md").is_file()
+    assert not (output / "model_data_receipt_request.json").exists()
 
 
 def test_cli_writes_json_and_markdown_idempotently(

@@ -171,6 +171,16 @@ or the contents of an accounting file.
    manifest is stale or edited. Do not copy, merge, or relabel another
    customer's files to make validation pass.
 
+Completed review rows must come from the current run's applied review decisions.
+Regenerate with those exact rows and the externally retained predecessor
+checkpoint. A `PASS` row copied from an earlier run is not authority for replacement
+sources, even when the invoice record ID is unchanged. Import replacement evidence
+as a new controlled input and review the resulting run again; retain the earlier
+source and result separately. For an explicitly requested replacement, include the
+prior run ID, old and new input IDs, and the reason for re-review in the new run
+`purpose`; Studio Archive preserves and exposes that sealed purpose with its input
+manifest. Do not infer replacement relationships from filenames alone.
+
 Call `finalize_studio_client_workflow` after the last output write and declare
 every physical file with a stable artifact ID, relative path, concrete purpose,
 audience, and media type. Review that closed declaration, then call

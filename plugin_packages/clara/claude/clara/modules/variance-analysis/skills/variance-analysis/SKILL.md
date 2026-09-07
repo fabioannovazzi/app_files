@@ -135,6 +135,10 @@ The recipe's `accounting_review` object is the control record for accounting use
 
 The engine deterministically checks numeric source totals against the calculated baseline and comparison, checks bridge closure, and exposes unresolved controls in the run intake and review artifacts. It must not choose the most meaningful root-cause alternative from concentration or row-count heuristics. Until the accounting and root-cause review record is complete, the generated narrative is a draft and must not claim client readiness.
 
+Source totals and applied materiality thresholds must be finite numbers. The
+source tie-out tolerance must also be finite and non-negative; an invalid
+tolerance remains an unresolved intake item and cannot authorize a reconciliation.
+
 For each alternative, review the sweep context and build a commentary with:
 
 - alternative number;

@@ -14,9 +14,11 @@ from email import policy
 from email.parser import BytesParser
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Iterable, Sequence, TypedDict, cast
 from xml.etree import ElementTree as ET
 
+from defusedxml import ElementTree as SafeET
+from defusedxml.common import DefusedXmlException
 from managed_ocr_runtime import activate_ocr_runtime
 from scan_folder import FileRecord
 
@@ -53,7 +55,7 @@ MAX_EMAIL_BYTES = 30 * 1024 * 1024
 MAX_TEXT_BYTES = 20 * 1024 * 1024
 MAX_PDF_BYTES = 100 * 1024 * 1024
 EXTRACTION_CHECKPOINT_NAME = "extraction_checkpoint.json"
-EXTRACTION_CHECKPOINT_SCHEMA_VERSION = 1
+EXTRACTION_CHECKPOINT_SCHEMA_VERSION = 2
 
 DIAGNOSTIC_PREFIX_COPY = {
     "percorso sorgente non locale o non normalizzato": {
@@ -317,6 +319,16 @@ def _localized_diagnostic(value: str, language: str) -> str:
     return value
 
 
+class _PDFTextCoverage(TypedDict):
+    basis: str
+    status: str
+    total_pages: int
+    processed_pages: list[int]
+    pages_with_text: list[int]
+    pages_without_text: list[int]
+    unprocessed_pages: list[int]
+
+
 @dataclass(frozen=True)
 class DocumentEvidence:
     """Text evidence extracted from one file in the customer folder."""
@@ -335,6 +347,7 @@ class DocumentEvidence:
     confidence: str
     detected_fields_json: str
     notes: tuple[str, ...]
+    pdf_text_coverage: _PDFTextCoverage | None = None
 
     def as_json(self) -> dict[str, object]:
         """Return a JSON-serializable representation."""
@@ -354,6 +367,7 @@ class DocumentEvidence:
             "needs_ocr": self.needs_ocr,
             "ocr_available": self.ocr_available,
             "page_count": self.page_count,
+            "pdf_text_coverage": json.dumps(self.pdf_text_coverage, sort_keys=True),
             "char_count": self.char_count,
             "text_path": self.text_path,
             "confidence": self.confidence,
@@ -456,6 +470,7 @@ def _document_evidence_from_json(payload: object) -> DocumentEvidence | None:
             confidence=str(payload["confidence"]),
             detected_fields_json=str(payload["detected_fields_json"]),
             notes=tuple(str(note) for note in notes_value),
+            pdf_text_coverage=payload["pdf_text_coverage"],
         )
     except (KeyError, TypeError, ValueError):
         return None
@@ -549,9 +564,13 @@ def _xml_local_name(tag: str) -> str:
 def _safe_xml_root(payload: bytes, *, source: str) -> ET.Element:
     """Parse bounded local XML without accepting DTD/entity declarations."""
 
-    if re.search(rb"<!\s*(?:DOCTYPE|ENTITY)\b", payload, flags=re.IGNORECASE):
-        raise ValueError(f"{source}: dichiarazioni DTD/entity non consentite")
-    return ET.fromstring(payload)
+    # Parser-level security checks cover every supported XML encoding.
+    try:
+        return SafeET.fromstring(
+            payload, forbid_dtd=True, forbid_entities=True, forbid_external=True
+        )
+    except DefusedXmlException as exc:
+        raise ValueError(f"{source}: dichiarazioni DTD/entity non consentite") from exc
 
 
 def _read_zip_member(archive: zipfile.ZipFile, name: str) -> bytes:
@@ -692,6 +711,7 @@ def _worksheet_text(root: ET.Element, shared: Sequence[str]) -> str:
                 (node for node in cell if _xml_local_name(node.tag) == "f"),
                 None,
             )
+            value: str | None
             if cell_type == "inlineStr":
                 value = " ".join(
                     node.text or ""
@@ -791,7 +811,7 @@ def _extract_eml(path: Path) -> tuple[str, str]:
             try:
                 content = part.get_content()
             except (LookupError, UnicodeError):
-                payload = part.get_payload(decode=True) or b""
+                payload = cast(bytes, part.get_payload(decode=True) or b"")
                 content = payload.decode("utf-8", errors="replace")
             text = content if isinstance(content, str) else str(content)
             bodies.append(_html_to_text(text) if content_type == "text/html" else text)
@@ -803,11 +823,31 @@ def _extract_eml(path: Path) -> tuple[str, str]:
         return "", f"lettura EML fallita: {exc}"
 
 
-def _extract_with_pdfplumber(path: Path, max_pages: int) -> tuple[str, int, str]:
+def _pdf_text_coverage(page_texts: Sequence[str], total_pages: int) -> _PDFTextCoverage:
+    """Account for extracted text per page without treating empty text as reviewed."""
+
+    missing = [index for index, text in enumerate(page_texts, 1) if not text.strip()]
+    unprocessed = list(range(len(page_texts) + 1, total_pages + 1))
+    return {
+        "basis": "embedded_text_only",
+        "status": "partial" if missing or unprocessed else "complete_text_layer",
+        "total_pages": total_pages,
+        "processed_pages": list(range(1, len(page_texts) + 1)),
+        "pages_with_text": [
+            index for index, text in enumerate(page_texts, 1) if text.strip()
+        ],
+        "pages_without_text": missing,
+        "unprocessed_pages": unprocessed,
+    }
+
+
+def _extract_with_pdfplumber(
+    path: Path, max_pages: int
+) -> tuple[str, int, str, _PDFTextCoverage | None]:
     try:
         import pdfplumber  # type: ignore[import-not-found]
     except Exception as exc:
-        return "", 0, f"pdfplumber non disponibile: {exc}"
+        return "", 0, f"pdfplumber non disponibile: {exc}", None
 
     try:
         page_texts: list[str] = []
@@ -821,16 +861,23 @@ def _extract_with_pdfplumber(path: Path, max_pages: int) -> tuple[str, int, str]
             if total_pages > len(page_texts)
             else ""
         )
-        return "\n\n".join(page_texts), len(page_texts), note
+        return (
+            "\n\n".join(page_texts),
+            len(page_texts),
+            note,
+            _pdf_text_coverage(page_texts, total_pages),
+        )
     except Exception as exc:
-        return "", 0, f"pdfplumber fallito: {exc}"
+        return "", 0, f"pdfplumber fallito: {exc}", None
 
 
-def _extract_with_fitz(path: Path, max_pages: int) -> tuple[str, int, str]:
+def _extract_with_fitz(
+    path: Path, max_pages: int
+) -> tuple[str, int, str, _PDFTextCoverage | None]:
     try:
         import fitz  # type: ignore[import-not-found]
     except Exception as exc:
-        return "", 0, f"PyMuPDF non disponibile: {exc}"
+        return "", 0, f"PyMuPDF non disponibile: {exc}", None
 
     try:
         page_texts: list[str] = []
@@ -844,9 +891,14 @@ def _extract_with_fitz(path: Path, max_pages: int) -> tuple[str, int, str]:
             if total_pages > len(page_texts)
             else ""
         )
-        return "\n\n".join(page_texts), len(page_texts), note
+        return (
+            "\n\n".join(page_texts),
+            len(page_texts),
+            note,
+            _pdf_text_coverage(page_texts, total_pages),
+        )
     except Exception as exc:
-        return "", 0, f"PyMuPDF fallito: {exc}"
+        return "", 0, f"PyMuPDF fallito: {exc}", None
 
 
 def _render_pdf_pages(path: Path, max_pages: int) -> tuple[list[object], int, str]:
@@ -1090,6 +1142,7 @@ def _extract_one(
 ) -> DocumentEvidence:
     extension = record.extension.lower()
     text = ""
+    pdf_text_coverage = None
     page_count = 0
     method = "unsupported"
     notes: list[str] = []
@@ -1167,15 +1220,23 @@ def _extract_one(
             page_count = 0
             error = ""
         else:
-            text, page_count, error = _extract_with_pdfplumber(path, max_pages)
+            text, page_count, error, pdf_text_coverage = _extract_with_pdfplumber(
+                path, max_pages
+            )
             method = "pdfplumber"
         if error:
             notes.append(error)
         if path.stat().st_size <= MAX_PDF_BYTES and not _text_is_useful(text):
-            text_fitz, page_count_fitz, error_fitz = _extract_with_fitz(path, max_pages)
+            text_fitz, page_count_fitz, error_fitz, coverage_fitz = _extract_with_fitz(
+                path, max_pages
+            )
+            if coverage_fitz is not None:
+                pdf_text_coverage = coverage_fitz
+                page_count = page_count_fitz
             if _text_is_useful(text_fitz):
                 text = text_fitz
                 page_count = page_count_fitz
+                pdf_text_coverage = coverage_fitz
                 method = "pymupdf"
             elif error_fitz:
                 notes.append(error_fitz)
@@ -1218,11 +1279,54 @@ def _extract_one(
             f"estensione non supportata per estrazione locale: {extension or '(nessuna)'}"
         )
 
+    partial_pdf = (
+        pdf_text_coverage is not None and pdf_text_coverage["status"] == "partial"
+    )
+    if pdf_text_coverage is not None and partial_pdf:
+        needs_ocr = bool(pdf_text_coverage["pages_without_text"]) or needs_ocr
+        labels = {
+            "it": (
+                "Solo testo incorporato nel PDF, non revisione completa",
+                "pagine con testo",
+                "pagine senza testo",
+                "pagine non elaborate",
+            ),
+            "en": (
+                "Embedded PDF text only, not a complete review",
+                "pages with text",
+                "pages without text",
+                "unprocessed pages",
+            ),
+            "fr": (
+                "Texte intégré au PDF uniquement, pas une révision complète",
+                "pages avec texte",
+                "pages sans texte",
+                "pages non traitées",
+            ),
+            "de": (
+                "Nur eingebetteter PDF-Text, keine vollständige Prüfung",
+                "Seiten mit Text",
+                "Seiten ohne Text",
+                "nicht verarbeitete Seiten",
+            ),
+            "es": (
+                "Solo texto integrado en PDF, no revisión completa",
+                "páginas con texto",
+                "páginas sin texto",
+                "páginas no procesadas",
+            ),
+        }[language]
+        notes.append(
+            f"{labels[0]}; {labels[1]}: {pdf_text_coverage['pages_with_text']}; "
+            f"{labels[2]}: {pdf_text_coverage['pages_without_text']}; "
+            f"{labels[3]}: {pdf_text_coverage['unprocessed_pages']}"
+        )
     readable = _text_is_useful(text)
     text_path = _write_text(output_dir / "pdf_text", record.relative_path, text)
     confidence = (
         "alta"
         if readable
+        and not partial_pdf
         and method
         in {
             "pdfplumber",
@@ -1245,6 +1349,7 @@ def _extract_one(
         needs_ocr=needs_ocr,
         ocr_available=ocr_available,
         page_count=page_count,
+        pdf_text_coverage=pdf_text_coverage,
         char_count=len(_normalize_text(text)),
         text_path=text_path,
         confidence=confidence,
@@ -1352,6 +1457,7 @@ def write_extraction_inventory_csv(
         "needs_ocr",
         "ocr_available",
         "page_count",
+        "pdf_text_coverage",
         "char_count",
         "text_path",
         "confidence",
@@ -1460,6 +1566,7 @@ def write_extraction_report(
                 f"- `{record.relative_path}`: {record.extraction_method}, "
                 f"{record.char_count} {copy['characters']}, {copy['confidence']} "
                 f"{confidence_copy.get(record.confidence, record.confidence)}"
+                + (" — " + ", ".join(record.notes) if record.notes else "")
             )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path

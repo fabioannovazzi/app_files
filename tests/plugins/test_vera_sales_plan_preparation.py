@@ -526,6 +526,80 @@ def test_prepare_sales_plan_case_rejects_units_effect_on_zero_units(
     }
 
 
+@pytest.mark.parametrize(
+    ("missing_column", "affected_metric"),
+    [
+        ("discount_local", "net_sales_reporting"),
+        ("discount_local", "gross_margin_reporting"),
+        ("cogs_local", "gross_margin_reporting"),
+        ("units", "units"),
+    ],
+)
+def test_plan_missing_metric_keeps_partial_totals_unavailable(
+    tmp_path: Path, missing_column: str, affected_metric: str
+) -> None:
+    module = _load_runner_module()
+    case_path = _copy_fixture(tmp_path)
+    rows = _read_csv(case_path.parent / "actual_sales.csv")
+    rows[2][missing_column] = ""
+    _rewrite_source_and_bind(case_path, rows)
+    output_dir = tmp_path / "output"
+
+    receipt = module.run_plan(case_path=case_path, output_dir=output_dir)
+
+    scenario = _read_csv(output_dir / "sales_plan_scenario.csv")
+    affected = next(row for row in scenario if row["row_id"] == "AC-de-bikes-2025-01")
+    assert affected[affected_metric] == ""
+    summary = _read_csv(output_dir / "scenario_summary.csv")
+    total = next(
+        row
+        for row in summary
+        if row["summary_level"] == "total" and row["metric"] == affected_metric
+    )
+    assert (
+        total["actual"],
+        total["plan"],
+        total["delta"],
+        total["delta_pct_rounded_4dp"],
+    ) == ("", "", "", "")
+    china = next(
+        row
+        for row in summary
+        if row["dimension_name"] == "country"
+        and row["dimension_value"] == "China"
+        and row["metric"] == affected_metric
+    )
+    assert china["actual"] != ""
+    gross = next(
+        row
+        for row in summary
+        if row["summary_level"] == "total" and row["metric"] == "gross_sales_reporting"
+    )
+    assert gross["actual"] == "3704"
+    reconciliation = json.loads((output_dir / "reconciliation.json").read_text())
+    assert reconciliation["warnings"][0]["code"] == "missing_source_metric"
+    assert reconciliation["warnings"][0]["identifiers"] == ["de-bikes-2025-01"]
+    assert receipt["report_ready"] is False
+
+
+def test_plan_explicit_zero_discount_preserves_known_net_sales(tmp_path: Path) -> None:
+    module = _load_runner_module()
+    case_path = _copy_fixture(tmp_path)
+    rows = _read_csv(case_path.parent / "actual_sales.csv")
+    rows[2]["discount_local"] = "0"
+    _rewrite_source_and_bind(case_path, rows)
+    output_dir = tmp_path / "output"
+
+    module.run_plan(case_path=case_path, output_dir=output_dir)
+
+    scenario = _read_csv(output_dir / "sales_plan_scenario.csv")
+    actual = next(row for row in scenario if row["row_id"] == "AC-de-bikes-2025-01")
+    assert actual["net_sales_reporting"] == "800"
+    assert actual["gross_margin_reporting"] == "320"
+    reconciliation = json.loads((output_dir / "reconciliation.json").read_text())
+    assert reconciliation["warnings"] == []
+
+
 def test_prepare_sales_plan_case_preserves_sparse_observed_grains(
     tmp_path: Path,
 ) -> None:
@@ -842,7 +916,9 @@ def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
     responses = [json.loads(line) for line in result.stdout.splitlines()]
     assert responses[0]["result"]["serverInfo"] == {
         "name": "vera-sales-plan",
-        "version": "0.1.6",
+        "version": json.loads(
+            (PLAN_ROOT / ".codex-plugin" / "plugin.json").read_text()
+        )["version"],
     }
     payload = responses[1]["result"]["structuredContent"]
     assert payload["workflow"] == "vera.sales_plan"
@@ -852,10 +928,10 @@ def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
         "sales_plan_scenario.csv",
         "assumption_application_ledger.csv",
         "scenario_summary.csv",
-            "reconciliation.json",
-            "prepared_evidence_manifest.json",
-            "model_use_manifest.json",
-            "plan_execution_receipt.json",
+        "reconciliation.json",
+        "prepared_evidence_manifest.json",
+        "model_use_manifest.json",
+        "plan_execution_receipt.json",
     ]
 
 

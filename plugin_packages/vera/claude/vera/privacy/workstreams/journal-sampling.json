@@ -69,12 +69,16 @@
     {
       "id": "exact-sample-output-and-successor-chain",
       "control": "The sample stage and each review successor seal the exact regular single-link file, directory and mode set, archive every trusted predecessor under its canonical stage identity, bind the successor to the predecessor manifest, and freshly rederive decisions, effects, counts and non-final gates before accepting save or apply."
+    },
+    {
+      "id": "source-execution-with-inert-bytecode-cache",
+      "control": "Python entrypoints redirect bytecode lookup and disable bytecode writes before validating and loading the declared source implementation. Cache directories and regular bytecode files are excluded from the source receipt set; they are not treated as executable authority. Optional explicit repair removes only ordinary single-link .pyc files directly inside cache folders under this component own vendor tree, without traversing symlinks or falling back to shared vendor roots. This local maintenance path does not add model calls or external destinations."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-14",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f545033b4fed33d582f8b161f70ebadb0ac1c8b96c9186a7b66a8bbcf04359b1"
+    "source_fingerprint": "ef1de31c9351ca8c2c33c014fef639495f89ee4c108b347e79b02eb3dbd1d1ae"
   }
 }

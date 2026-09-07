@@ -219,6 +219,7 @@ contains extracted document text and is not application-encrypted; protect it
 with a private operating-system account, full-disk encryption, and an
 appropriate backup policy.
 
+
 ### Session state ownership
 
 State now defaults to a private session subdirectory under

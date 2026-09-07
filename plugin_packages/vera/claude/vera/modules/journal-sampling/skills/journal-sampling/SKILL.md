@@ -251,6 +251,15 @@ Do not ask the user to edit JSON. Ask the user in business terms, then Claude up
 
 Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sampling uses seed `42`; MUS uses deterministic cumulative amount thresholds. Always preserve `sampling_audit.json` with filters, method, requested size, population size, and output paths.
 
+For stratified sampling, allocation is equal across encountered strata with
+capacity redistribution: exhausted strata yield their remaining allocation to
+others. Encounter order breaks allocation ties, and within-stratum selection
+uses seed 42. This fills the requested count up to the available population.
+Retain both requested and actual counts; a smaller population cannot supply a
+larger unique sample. This allocation alone does not establish monetary
+representativeness, confidence levels or defensible extrapolation weights;
+those require a reviewed sampling design.
+
 ## Expected Outputs
 
 - `inspection.json`;

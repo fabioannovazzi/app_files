@@ -1,0 +1,6 @@
+[run]
+include = */plugins/vera/scripts/_managed_python_runtime.py
+
+[report]
+show_missing = True
+fail_under = 80

@@ -24,6 +24,14 @@ import audit_core  # noqa: E402
 import luna_worker  # noqa: E402
 
 
+@pytest.fixture(autouse=True)
+def restore_component_imports(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Restore this component after the global harness clears plugin imports."""
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+    monkeypatch.setitem(sys.modules, "audit_core", audit_core)
+    monkeypatch.setitem(sys.modules, "luna_worker", luna_worker)
+
+
 def _write_invoice(
     path: Path,
     *,
@@ -192,6 +200,8 @@ class FixtureRunner:
         workflow_id: str,
         packet_sha256: str,
         reasoning_effort: str,
+        *,
+        worker_selection: Mapping[str, Any] | None = None,
     ) -> Mapping[str, Any]:
         self.calls += 1
         if self.fail:
@@ -217,7 +227,16 @@ class FixtureRunner:
             },
             "usage": {"input_tokens": 100, "output_tokens": 20},
             "duration_ms": 10,
-            "model": "gpt-5.6-luna",
+            "model": (
+                worker_selection["content"]["model"]
+                if worker_selection is not None
+                else "gpt-5.6-luna"
+            ),
+            **(
+                {"selection_review": worker_selection}
+                if worker_selection is not None
+                else {}
+            ),
             "reasoning_effort": reasoning_effort,
         }
 
@@ -236,6 +255,8 @@ class ArtifactThenCrashRunner:
         workflow_id: str,
         packet_sha256: str,
         reasoning_effort: str,
+        *,
+        worker_selection: Mapping[str, Any] | None = None,
     ) -> Mapping[str, Any]:
         self.calls += 1
         packets = json.loads(prompt.partition("PACKETS_JSON:\n")[2])
@@ -280,7 +301,16 @@ class ArtifactThenCrashRunner:
                 "output_schema_bytes": len(schema_bytes),
             },
             "requested_worker_configuration": {
-                "model": "gpt-5.6-luna",
+                "model": (
+                    worker_selection["content"]["model"]
+                    if worker_selection is not None
+                    else "gpt-5.6-luna"
+                ),
+                **(
+                    {"selection_review": worker_selection}
+                    if worker_selection is not None
+                    else {}
+                ),
                 "reasoning_effort": reasoning_effort,
                 "sandbox": "read-only",
                 "ephemeral": True,
@@ -316,7 +346,9 @@ class ArtifactThenCrashRunner:
 
 
 def _run_fixture_audit(
-    tmp_path: Path, runner: FixtureRunner
+    tmp_path: Path,
+    runner: FixtureRunner,
+    config: audit_core.AuditConfig | None = None,
 ) -> tuple[dict[str, Any], Path]:
     invoices = tmp_path / "invoices"
     invoices.mkdir(exist_ok=True)
@@ -330,7 +362,7 @@ def _run_fixture_audit(
         mapping_path=mapping,
         output_dir=output,
         runner=runner,
-        config=audit_core.AuditConfig(chunk_size=1, concurrency=1),
+        config=config or audit_core.AuditConfig(chunk_size=1, concurrency=1),
     )
     return summary, output
 
@@ -521,6 +553,97 @@ def test_missing_ledger_entry_is_an_exception(tmp_path: Path) -> None:
     assert "invoice_not_found_in_ledger" in {
         finding["code"] for finding in item["deterministic_findings"]
     }
+
+
+def test_unmatched_invoice_workpaper_preserves_actionable_source_request(
+    tmp_path: Path,
+) -> None:
+    invoices = tmp_path / "invoices"
+    invoices.mkdir()
+    _write_invoice(invoices / "invoice.xml")
+    ledger = _write_ledger(
+        tmp_path / "ledger.csv",
+        _ledger_rows(number="UNRELATED", supplier_vat="99999999999"),
+    )
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    output = tmp_path / "output"
+    runner = FixtureRunner({})
+
+    summary = audit_core.run_audit(
+        invoice_source=invoices,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=runner,
+    )
+
+    result = json.loads((output / "full_population.jsonl").read_text())
+    assert summary["luna_chunks_total"] == 0
+    assert result["semantic_result"] is None
+    assert result["final_state"] == "professional_review_required"
+    request = result["professional_should_inspect"]
+    assert "supplied ledger scope and reviewed mapping" in request
+    assert "Request the corresponding booked movement" in request
+    assert "do not create a booking" in request
+    workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
+    try:
+        sheet = workbook["Exceptions"]
+        headers = [cell.value for cell in sheet[1]]
+        assert (
+            sheet.cell(2, headers.index("professional_should_inspect") + 1).value
+            == request
+        )
+    finally:
+        workbook.close()
+
+
+@pytest.mark.parametrize("duplicate", [False, True])
+def test_unresolved_candidates_remain_visible_in_normal_workpaper(
+    tmp_path: Path, duplicate: bool
+) -> None:
+    invoices = tmp_path / "invoices"
+    invoices.mkdir()
+    _write_invoice(invoices / "one.xml")
+    if duplicate:
+        _write_invoice(invoices / "two.xml")
+    ledger = _write_ledger(
+        tmp_path / "ledger.csv",
+        _ledger_rows(movement_id="M1") + _ledger_rows(movement_id="M2"),
+    )
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    output = tmp_path / "output"
+
+    summary = audit_core.run_audit(
+        invoice_source=invoices,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=FixtureRunner({}),
+    )
+
+    assert summary["matched"] == 0
+    assert summary["luna_chunks_total"] == 0
+    result = json.loads((output / "full_population.jsonl").read_text().splitlines()[0])
+    assert result["matched_movement"] is None
+    assert [c["movement_id"] for c in result["candidate_movements"]] == ["M1", "M2"]
+    assert result["semantic_result"] is None
+    assert result["professional_should_inspect"]
+    workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
+    try:
+        sheet = workbook["Exceptions"]
+        headers = [cell.value for cell in sheet[1]]
+        candidates = sheet.cell(
+            2, headers.index("candidate_ledger_movements") + 1
+        ).value
+        assert "M1 | ledger.csv:movement=M1" in candidates
+        assert "M2 | ledger.csv:movement=M2" in candidates
+        assert "supplier_tax_id_exact" in candidates
+        assert (
+            sheet.cell(2, headers.index("professional_should_inspect") + 1).value
+            == result["professional_should_inspect"]
+        )
+    finally:
+        workbook.close()
 
 
 def test_duplicate_invoice_candidates_are_explicit(tmp_path: Path) -> None:
@@ -1111,16 +1234,14 @@ def test_native_worker_fails_closed_if_shared_capsule_reports_wrong_model(
         luna_worker.run_luna_chunk("prompt", {}, tmp_path, "workflow", "0" * 64, "low")
 
 
-def test_shared_capsule_is_pinned_to_intended_luna_model() -> None:
-    source = (
-        PLUGIN_ROOT.parent
-        / "journal-bank-reconciliation"
-        / "scripts"
-        / "semantic_review.py"
-    ).read_text(encoding="utf-8")
+def test_shared_capsule_retains_luna_low_without_reviewed_selection() -> None:
+    model, effort, review = luna_worker.resolve_worker_selection(
+        workflow_id="passive-invoice-audit",
+        reasoning_effort=None,
+        worker_selection=None,
+    )
 
-    assert 'model = "gpt-5.6-luna"' in source
-    assert "run_isolated_luna_worker" in source
+    assert (model, effort, review) == ("gpt-5.6-luna", "low", None)
 
 
 def test_real_luna_integration_is_opt_in() -> None:
@@ -1231,6 +1352,301 @@ def test_real_luna_integration_is_opt_in() -> None:
     assert decisions["real-luna-equipment-review"]["status"] != "no_issue_detected"
 
 
+@pytest.mark.parametrize("amount", ["", "NaN", "Infinity", "1,234", "1.2,3"])
+def test_ledger_rejects_missing_nonfinite_or_unreviewed_amount(
+    tmp_path: Path, amount: str
+) -> None:
+    rows = _ledger_rows()
+    rows[0]["amount_signed"] = amount
+    source = _write_ledger(tmp_path / "ledger.csv", rows)
+    mapping = _write_mapping(tmp_path / "mapping.json")
+
+    with pytest.raises(audit_core.AuditError, match="decimal"):
+        audit_core.load_ledger(source, mapping)
+
+
+@pytest.mark.parametrize(
+    "convention,amount,expected",
+    [
+        ("dot_decimal", "1,234.00", "1234.00"),
+        ("comma_decimal", "1.234,00", "1234.00"),
+        ("comma_decimal", "1,234", "1.23"),
+    ],
+)
+def test_ledger_applies_reviewed_number_convention(
+    tmp_path: Path, convention: str, amount: str, expected: str
+) -> None:
+    rows = _ledger_rows()
+    rows[0]["amount_signed"] = amount
+    source = _write_ledger(tmp_path / "ledger.csv", rows[:1])
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    declaration = json.loads(mapping.read_text())
+    # This signed-amount probe does not map the fixture's canonical totals.
+    del declaration["gross_amount"]
+    del declaration["taxable_amount"]
+    del declaration["vat_amount"]
+    declaration["number_format"] = convention
+    mapping.write_text(json.dumps(declaration))
+
+    loaded = audit_core.load_ledger(source, mapping)
+
+    assert loaded[0]["amount_signed"] == expected
+    assert loaded[0]["source_row"] == 2
+
+
+@pytest.mark.parametrize("duplicate_input", ["results", "labels"])
+def test_evaluation_rejects_duplicate_identity_before_writing_report(
+    tmp_path: Path, duplicate_input: str
+) -> None:
+    result = {
+        "invoice": {"invoice_id": "invoice-1"},
+        "final_state": "no_issue_detected",
+    }
+    label = {"invoice_id": "invoice-1", "label": "acceptable"}
+    results = tmp_path / "results.jsonl"
+    labels = tmp_path / "labels.jsonl"
+    report = tmp_path / "report.json"
+    results.write_text(
+        (json.dumps(result) + "\n") * (2 if duplicate_input == "results" else 1)
+    )
+    labels.write_text(
+        (json.dumps(label) + "\n") * (2 if duplicate_input == "labels" else 1)
+    )
+
+    with pytest.raises(audit_core.AuditError, match="Duplicate evaluation"):
+        audit_core.evaluate_results(results, labels, report)
+
+    assert not report.exists()
+
+
+def test_evaluation_reports_partial_label_coverage_and_ambiguous_population(
+    tmp_path: Path,
+) -> None:
+    results = tmp_path / "results.jsonl"
+    labels = tmp_path / "labels.jsonl"
+    rows = [
+        {
+            "invoice": {"invoice_id": "problem"},
+            "final_state": "professional_review_required",
+        },
+        {"invoice": {"invoice_id": "acceptable"}, "final_state": "no_issue_detected"},
+        {
+            "invoice": {"invoice_id": "ambiguous"},
+            "final_state": "professional_review_required",
+        },
+        {"invoice": {"invoice_id": "unlabelled"}, "final_state": "no_issue_detected"},
+    ]
+    labelled = [
+        {"invoice_id": "problem", "label": "problematic"},
+        {"invoice_id": "acceptable", "label": "acceptable"},
+        {"invoice_id": "ambiguous", "label": "ambiguous"},
+    ]
+    results.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    labels.write_text("".join(json.dumps(row) + "\n" for row in labelled))
+
+    report = audit_core.evaluate_results(results, labels)
+
+    assert report["result_population"] == 4
+    assert report["labelled_population"] == 3
+    assert report["unlabelled_population"] == 1
+    assert report["ambiguous_population"] == 1
+    assert report["label_coverage"] == 0.75
+    assert report["exception_recall"] == 1.0
+    assert report["false_positive_rate"] == 0.0
+    assert report["human_review_rate"] == pytest.approx(2 / 3)
+
+
+@pytest.mark.parametrize("invalid_state", ["", "unknown", None, [], {}])
+def test_evaluation_rejects_unknown_final_state(
+    tmp_path: Path, invalid_state: Any
+) -> None:
+    results = tmp_path / "results.jsonl"
+    labels = tmp_path / "labels.jsonl"
+    results.write_text(
+        json.dumps(
+            {"invoice": {"invoice_id": "invoice-1"}, "final_state": invalid_state}
+        )
+        + "\n"
+    )
+    labels.write_text(
+        json.dumps({"invoice_id": "invoice-1", "label": "acceptable"}) + "\n"
+    )
+
+    with pytest.raises(audit_core.AuditError, match="unsupported final_state"):
+        audit_core.evaluate_results(results, labels)
+
+
+def _reviewed_selection() -> dict[str, Any]:
+    content = {
+        "workflow_id": "passive-invoice-audit",
+        "model": "gpt-6-astra",
+        "reasoning_effort": "high",
+        "benchmark_sha256": "b" * 64,
+    }
+    return {
+        "schema_version": "vera.reviewed_decision_receipt.v1",
+        "decision_id": "synthetic-selection",
+        "decision_type": "worker-model-selection",
+        "status": "reviewed",
+        "reviewer_ref": "synthetic-reviewer",
+        "reviewed_on": "2026-09-05",
+        "adapter_id": "vera-native-worker",
+        "adapter_version": "1",
+        "source_artifact_refs": ["benchmark-" + "b" * 64],
+        "content": content,
+        "content_sha256": audit_core._canonical_json_sha256(content),
+    }
+
+
+def _reviewed_config(review: Mapping[str, Any]) -> audit_core.AuditConfig:
+    return audit_core.AuditConfig(
+        chunk_size=1,
+        concurrency=1,
+        max_retries=0,
+        reasoning_effort="high",
+        worker_model="gpt-6-astra",
+        worker_selection=review,
+    )
+
+
+def test_reviewed_model_is_retained_in_audit_database_and_checkpoint(
+    tmp_path: Path,
+) -> None:
+    review = _reviewed_selection()
+    runner = FixtureRunner({})
+
+    summary, output = _run_fixture_audit(tmp_path, runner, _reviewed_config(review))
+
+    assert summary["population"] == 1
+    with sqlite3.connect(output / "audit.sqlite3") as connection:
+        assert connection.execute(
+            "SELECT semantic_model FROM audit_items"
+        ).fetchone() == ("gpt-6-astra",)
+    checkpoint = json.loads(
+        next((output / "luna_chunks").glob("*/chunk_result.json")).read_text()
+    )
+    assert checkpoint["selection_review"] == review
+    assert checkpoint["reasoning_effort"] == "high"
+
+
+def test_changed_review_cannot_reuse_completed_audit(tmp_path: Path) -> None:
+    review = _reviewed_selection()
+    runner = FixtureRunner({})
+    _run_fixture_audit(tmp_path, runner, _reviewed_config(review))
+    changed_review = dict(review, reviewer_ref="another-reviewer")
+
+    with pytest.raises(audit_core.AuditError, match="different|changed"):
+        _run_fixture_audit(tmp_path, runner, _reviewed_config(changed_review))
+
+    assert runner.calls == 1
+
+
+def test_alternative_model_requires_review_before_output_creation(
+    tmp_path: Path,
+) -> None:
+    config = audit_core.AuditConfig(worker_model="gpt-6-astra")
+
+    with pytest.raises(audit_core.AuditError, match="requires a reviewed selection"):
+        _run_fixture_audit(tmp_path, FixtureRunner({}), config)
+
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.parametrize("changed_field", ["worker_model", "reasoning_effort"])
+def test_audit_configuration_must_agree_with_review(
+    tmp_path: Path, changed_field: str
+) -> None:
+    from dataclasses import replace
+
+    config = _reviewed_config(_reviewed_selection())
+    changed_value = "gpt-5.6-luna" if changed_field == "worker_model" else "low"
+    config = replace(config, **{changed_field: changed_value})
+
+    with pytest.raises(ValueError, match="differs from the reviewed selection"):
+        _run_fixture_audit(tmp_path, FixtureRunner({}), config)
+
+    assert not (tmp_path / "output").exists()
+
+
+def test_reviewed_model_native_artifacts_recover_without_another_call(
+    tmp_path: Path,
+) -> None:
+    invoices = tmp_path / "invoices"
+    invoices.mkdir()
+    _write_invoice(invoices / "invoice.xml")
+    ledger = _write_ledger(tmp_path / "ledger.csv", _ledger_rows())
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    output = tmp_path / "output"
+    config = _reviewed_config(_reviewed_selection())
+    with pytest.raises(audit_core.AuditError, match="resume"):
+        audit_core.run_audit(
+            invoice_source=invoices,
+            ledger_path=ledger,
+            mapping_path=mapping,
+            output_dir=output,
+            runner=ArtifactThenCrashRunner(),
+            config=config,
+        )
+    resumed = FixtureRunner({}, fail=True)
+
+    summary = audit_core.run_audit(
+        invoice_source=invoices,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=resumed,
+        config=config,
+    )
+
+    assert resumed.calls == 0
+    assert summary["luna_chunks_recovered"] == 1
+
+
+@pytest.mark.parametrize("field", ["model", "selection_review"])
+def test_recovery_rejects_rehashed_selection_tampering(
+    tmp_path: Path, field: str
+) -> None:
+    invoices = tmp_path / "invoices"
+    invoices.mkdir()
+    _write_invoice(invoices / "invoice.xml")
+    ledger = _write_ledger(tmp_path / "ledger.csv", _ledger_rows())
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    output = tmp_path / "output"
+    config = _reviewed_config(_reviewed_selection())
+    with pytest.raises(audit_core.AuditError, match="resume"):
+        audit_core.run_audit(
+            invoice_source=invoices,
+            ledger_path=ledger,
+            mapping_path=mapping,
+            output_dir=output,
+            runner=ArtifactThenCrashRunner(),
+            config=config,
+        )
+    receipt_path = next((output / "luna_chunks").glob("*/luna_launch_receipt.json"))
+    receipt = json.loads(receipt_path.read_text())
+    replacements = {"model": "gpt-5.6-luna", "selection_review": None}
+    receipt["requested_worker_configuration"][field] = replacements[field]
+    receipt.pop("content_sha256")
+    receipt["content_sha256"] = audit_core._canonical_json_sha256(receipt)
+    receipt_path.write_text(json.dumps(receipt))
+    runner = FixtureRunner({})
+
+    summary = audit_core.run_audit(
+        invoice_source=invoices,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=runner,
+        config=config,
+    )
+
+    assert runner.calls == 1
+    assert summary["luna_chunks_recovered"] == 0
+    assert (
+        receipt_path.parent / "recovery_attempts" / "attempt-001" / receipt_path.name
+    ).is_file()
+
+
 def _cowork_job(tmp_path: Path) -> dict[str, Any]:
     from cowork_worker import run_cowork_chunk
 
@@ -1243,7 +1659,9 @@ def _cowork_job(tmp_path: Path) -> dict[str, Any]:
         "mapping_path": _write_mapping(tmp_path / "mapping.json"),
         "output_dir": tmp_path / "output",
         "runner": run_cowork_chunk,
-        "config": audit_core.AuditConfig(semantic_model="haiku", concurrency=1),
+        "config": audit_core.AuditConfig(
+            worker_runtime="cowork", worker_model="haiku", concurrency=1
+        ),
     }
 
 
@@ -1424,7 +1842,7 @@ def test_cowork_synthetic_cli_preserves_pending_worker_selection(tmp_path, monke
     captured = {}
 
     def prepare(results, mutations, output, runner, config):
-        captured.update(runner=runner, model=config.semantic_model)
+        captured.update(runner=runner, model=config.worker_model)
         return {"status": "awaiting_semantic_review"}
 
     monkeypatch.setattr(cli, "evaluate_synthetic_population", prepare)
@@ -1463,3 +1881,294 @@ def test_cowork_accepts_single_json_fence_without_changing_raw_response(tmp_path
 
     assert summary["status"] == "completed"
     assert response_path.read_text() == raw
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"worker_runtime": "unknown"},
+        {"worker_model": "gpt-5.6-luna"},
+        {"reasoning_effort": "high"},
+        {"worker_selection": {"review_status": "reviewed"}},
+    ],
+)
+def test_cowork_rejects_conflicting_configuration_before_output(tmp_path, overrides):
+    from dataclasses import replace
+
+    job = _cowork_job(tmp_path)
+    job["config"] = replace(job["config"], **overrides)
+
+    with pytest.raises(audit_core.AuditError, match="runtime|overrides"):
+        audit_core.run_audit(**job)
+
+    assert not job["output_dir"].exists()
+
+
+def test_cowork_rejects_rehashed_checkpoint_from_other_runtime(tmp_path, monkeypatch):
+    job = _cowork_job(tmp_path)
+    from dataclasses import replace
+
+    _save_cowork_fixture_response(job)
+    job["config"] = replace(job["config"], max_retries=0)
+    write_json = audit_core._atomic_write_json
+
+    def interrupted_write(path, value):
+        write_json(path, value)
+        if path.name == "chunk_result.json":
+            raise audit_core.AuditError("simulated interruption after checkpoint")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(audit_core, "_atomic_write_json", interrupted_write)
+        with pytest.raises(audit_core.AuditError, match="simulated interruption"):
+            audit_core.run_audit(**job)
+    checkpoint_path = next(job["output_dir"].glob("luna_chunks/*/chunk_result.json"))
+    checkpoint = json.loads(checkpoint_path.read_text())
+    checkpoint.pop("content_sha256")
+    checkpoint["worker_runtime"] = "codex-native"
+    checkpoint["content_sha256"] = audit_core._canonical_json_sha256(checkpoint)
+    checkpoint_path.write_text(json.dumps(checkpoint))
+    checkpoint_path.with_name("cowork_response.json").unlink()
+
+    summary = audit_core.run_audit(**job)
+
+    assert summary["status"] == "awaiting_semantic_review"
+    assert summary["luna_chunks_completed"] == 0
+    assert not checkpoint_path.exists()
+    assert (
+        checkpoint_path.parent / "recovery_attempts/attempt-001/chunk_result.json"
+    ).is_file()
+
+
+@pytest.mark.parametrize(
+    "override",
+    [["--reasoning-effort", "high"], ["--worker-selection", "unread-review.json"]],
+)
+def test_cowork_synthetic_cli_rejects_codex_overrides_before_dispatch(
+    tmp_path, monkeypatch, override
+):
+    cli = _load_cli("evaluate_audit")
+    _configure_cowork(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        cli, "load_client_workflow_context_for_output", lambda *a, **kw: {}
+    )
+    monkeypatch.setattr(cli, "validate_client_workflow_run", lambda *a, **kw: None)
+    monkeypatch.setattr(
+        cli,
+        "load_worker_selection",
+        lambda *a, **kw: pytest.fail("Must not read a Codex review in Cowork"),
+    )
+    monkeypatch.setattr(
+        cli,
+        "evaluate_synthetic_population",
+        lambda *a, **kw: pytest.fail("Must not dispatch conflicting configuration"),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "evaluate_audit",
+            "synthetic-evaluate",
+            "--results",
+            str(tmp_path / "results.jsonl"),
+            "--mutation-plan",
+            str(tmp_path / "mutations.json"),
+            "--output",
+            str(tmp_path / "evaluation"),
+            *override,
+        ],
+    )
+
+    result = cli.main()
+
+    assert result == 2
+    assert not (tmp_path / "evaluation").exists()
+
+
+@pytest.mark.parametrize("selection,effort", [({}, "low"), (None, "high")])
+def test_cowork_runner_rejects_codex_overrides_before_handoff(
+    tmp_path, selection, effort
+):
+    from cowork_worker import run_cowork_chunk
+
+    with pytest.raises(audit_core.AuditError, match="rejects Codex"):
+        run_cowork_chunk(
+            "synthetic prompt",
+            {},
+            tmp_path,
+            "passive-invoice-audit",
+            "a" * 64,
+            effort,
+            worker_selection=selection,
+        )
+
+    assert not (tmp_path / "cowork_request.json").exists()
+
+
+def test_duplicate_only_audit_writes_exceptions_without_calling_worker(
+    tmp_path: Path,
+) -> None:
+    invoices = tmp_path / "invoices"
+    invoices.mkdir()
+    _write_invoice(invoices / "original.xml")
+    (invoices / "copy.xml").write_bytes((invoices / "original.xml").read_bytes())
+    ledger = _write_ledger(tmp_path / "ledger.csv", _ledger_rows())
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    output = tmp_path / "output"
+    runner = FixtureRunner({}, fail=True)
+
+    audit_core.run_audit(
+        invoice_source=invoices,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=runner,
+    )
+
+    population = [
+        json.loads(line)
+        for line in (output / "full_population.jsonl").read_text().splitlines()
+    ]
+    assert runner.calls == 0
+    assert len(population) == 2
+    assert {item["match_state"] for item in population} == {"duplicate_candidate"}
+    assert (output / "audit.sqlite3").is_file()
+    workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
+    try:
+        assert workbook["Exceptions"].max_row == 3
+    finally:
+        workbook.close()
+
+
+@pytest.mark.parametrize(
+    "convention,taxable,vat,gross,payable",
+    [
+        ("dot_decimal", "1,000.00", "234.56", "1,234.56", "-1,234.56"),
+        ("comma_decimal", "1.000,00", "234,56", "1.234,56", "-1.234,56"),
+        ("comma_decimal", "1.000,00", "234,56", "1.234,56", "(1.234,56)"),
+        ("dot_decimal", "1,000.00", "234.56", "1,234.56", "(1,234.56)"),
+        ("canonical", "1000.00", "234.56", "1234.56", "(1234.56)"),
+    ],
+)
+def test_audit_normalizes_every_mapped_amount_with_reviewed_convention(
+    tmp_path: Path,
+    convention: str,
+    taxable: str,
+    vat: str,
+    gross: str,
+    payable: str,
+) -> None:
+    """Locale and sign interpretation survive the public audit/report path."""
+    invoice = tmp_path / "invoice.xml"
+    _write_invoice(invoice)
+    rows = _ledger_rows(
+        number="UNRELATED-2",
+        supplier_vat="11111111111",
+        gross=gross,
+        taxable=taxable,
+        vat=vat,
+        payable=payable,
+    )
+    ledger = _write_ledger(tmp_path / "ledger.csv", rows)
+    original_source = ledger.read_bytes()
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    declaration = json.loads(mapping.read_text())
+    declaration["number_format"] = convention
+    mapping.write_text(json.dumps(declaration))
+    output = tmp_path / "output"
+    runner = FixtureRunner({}, fail=True)
+
+    summary = audit_core.run_audit(
+        invoice_source=invoice,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=runner,
+    )
+
+    orphan = json.loads((output / "ledger_entries_without_invoice.jsonl").read_text())
+    assert orphan["gross_amount"] == "1234.56"
+    assert orphan["taxable_amount"] == "1000.00"
+    assert orphan["vat_amount"] == "234.56"
+    assert orphan["signed_total"] == "0.00"
+    assert orphan["lines"][2]["amount_signed"] == "-1234.56"
+    assert orphan["lines"][2]["source_row"] == 4
+    assert orphan["lines"][2]["source_file"] == "ledger.csv"
+    assert ledger.read_bytes() == original_source
+    assert summary["matched"] == 0
+    assert runner.calls == 0
+    workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
+    try:
+        assert workbook["Ledger Orphans"].cell(2, 6).value == "1234.56"
+    finally:
+        workbook.close()
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("gross_amount", "1.234,56"),
+        ("taxable_amount", "NaN"),
+        ("vat_amount", "Infinity"),
+        ("amount_signed", "(-1,234.56)"),
+        ("amount_signed", "(+1,234.56)"),
+        ("amount_signed", "(1,234.56"),
+    ],
+)
+def test_audit_rejects_invalid_mapped_amount_before_success_outputs(
+    tmp_path: Path, field: str, value: str
+) -> None:
+    """Conflicting signs, conventions and nonfinite fields cannot become zero."""
+    invoice = tmp_path / "invoice.xml"
+    _write_invoice(invoice)
+    rows = _ledger_rows()
+    rows[0][field] = value
+    ledger = _write_ledger(tmp_path / "ledger.csv", rows)
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    declaration = json.loads(mapping.read_text())
+    declaration["number_format"] = "dot_decimal"
+    mapping.write_text(json.dumps(declaration))
+    output = tmp_path / "output"
+    runner = FixtureRunner({}, fail=True)
+
+    with pytest.raises(audit_core.AuditError, match="decimal"):
+        audit_core.run_audit(
+            invoice_source=invoice,
+            ledger_path=ledger,
+            mapping_path=mapping,
+            output_dir=output,
+            runner=runner,
+        )
+
+    assert not (output / "run_summary.json").exists()
+    assert not (output / "full_population.jsonl").exists()
+    assert runner.calls == 0
+
+
+def test_audit_preserves_explicit_zero_gross_in_comparison_and_workpaper(
+    tmp_path: Path,
+) -> None:
+    """A mapped zero cannot acquire an amount from unrelated ledger lines."""
+    invoice = tmp_path / "invoice.xml"
+    _write_invoice(invoice)
+    rows = _ledger_rows(number="UNRELATED-2", supplier_vat="11111111111", gross="0")
+    ledger = _write_ledger(tmp_path / "ledger.csv", rows)
+    mapping = _write_mapping(tmp_path / "mapping.json")
+    output = tmp_path / "output"
+
+    audit_core.run_audit(
+        invoice_source=invoice,
+        ledger_path=ledger,
+        mapping_path=mapping,
+        output_dir=output,
+        runner=FixtureRunner({}, fail=True),
+    )
+
+    orphan = json.loads((output / "ledger_entries_without_invoice.jsonl").read_text())
+    assert orphan["gross_amount"] == "0.00"
+    assert orphan["comparison_gross_amount"] == "0.00"
+    assert orphan["gross_amount_comparison_basis"] == "mapped_gross_amount"
+    workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
+    try:
+        assert workbook["Ledger Orphans"].cell(2, 6).value == "0.00"
+    finally:
+        workbook.close()

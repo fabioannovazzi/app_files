@@ -443,25 +443,12 @@ def _append_execution_trace(
     *,
     command: Sequence[str],
 ) -> None:
+    from vera_assurance.serialization import build_review_execution_step
+
     payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    data_posture = payload.get("data_posture")
-    local_files = (
-        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
-    )
-    inputs = (
-        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
-    )
-    payload["execution_trace"] = [
-        {
-            "step_id": f"{WORKFLOW_NAME}_review_session",
-            "kind": "deterministic_review_session",
-            "status": "passed",
-            "execution_location": "cowork_connected_folder",
-            "command": list(command),
-            "inputs": [str(entry) for entry in inputs if entry],
-            "outputs": _local_output_refs(final_artifacts_path),
-        }
-    ]
+    step = build_review_execution_step(payload, WORKFLOW_NAME, command)
+    step["outputs"] = _local_output_refs(final_artifacts_path)
+    payload["execution_trace"] = [step]
     _write_json(run_intake_path, payload)
 
 
@@ -584,6 +571,7 @@ def _document_item(
         | {
             "readable": evidence.readable if evidence else None,
             "extraction_method": evidence.extraction_method if evidence else None,
+            "pdf_text_coverage": evidence.pdf_text_coverage if evidence else None,
             "text_path": evidence.text_path if evidence else "",
             "structured_field_count": fiscal_field_count,
         },
@@ -1162,7 +1150,7 @@ def _package_integrity(outputs: Sequence[dict[str, Any]]) -> dict[str, str]:
             }
             for output in outputs
         ),
-        key=lambda output: output["path"].encode("utf-8"),
+        key=lambda output: str(output["path"]).encode("utf-8"),
     )
     canonical = json.dumps(
         canonical_outputs,
@@ -1334,6 +1322,19 @@ def write_review_session_artifacts(
 
     evidence_lookup = _evidence_by_path(document_evidence)
     field_counts = _fiscal_field_counts(structured_fields)
+    disposition_path = output_dir / "extracted" / "document_dispositions.json"
+    dispositions: dict[str, dict[str, Any]] = {}
+    if disposition_path.is_file():
+        disposition_payload = json.loads(disposition_path.read_text(encoding="utf-8"))
+        for disposition in disposition_payload["documents"]:
+            source = disposition["relative_path"]
+            if source in dispositions:
+                raise ValueError(f"Duplicate fiscal source disposition: {source}")
+            dispositions[source] = disposition
+        if set(dispositions) != {record.relative_path for record in records}:
+            raise ValueError(
+                "Fiscal dispositions must cover the exact source inventory"
+            )
     items: list[dict[str, Any]] = []
     items.extend(
         _document_item(
@@ -1346,6 +1347,13 @@ def write_review_session_artifacts(
         )
         for index, record in enumerate(records, start=1)
     )
+    # Preserve parser coverage and authority; inventory acceptance is not a
+    # semantic document-kind decision. No classification is inferred here.
+    for item in items:
+        source = item["data"]["relative_path"]
+        item["data"]["fiscal_extraction_disposition"] = dispositions.get(
+            source, {"relative_path": source, "status": "not_evaluated"}
+        )
     items.extend(
         _uncertain_document_items(
             records,

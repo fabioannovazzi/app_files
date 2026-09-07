@@ -27,11 +27,14 @@ FILL_BY_CONFIDENCE = {
 }
 
 MAIN_HEADERS = [
+    "Record refs",
     "id dettaglio",
     "partita",
     "data documento",
     "importo",
     "saldo",
+    "importo attribuito",
+    "residuo aperto",
     "data pagamento",
     "banca / fonte incasso",
     "modalita di pagamento",
@@ -47,6 +50,7 @@ MAIN_HEADERS = [
 ]
 
 DETAIL_HEADERS = [
+    "Record refs",
     "id dettaglio",
     "partita",
     "tipo evidenza",
@@ -239,6 +243,8 @@ def status_label(row: dict[str, Any]) -> str:
     """Translate reconciliation status to operational wording."""
 
     status = clean_text(row.get("reconciliation_status"))
+    if status == "partially_paid":
+        return "Pagata parzialmente - residuo aperto"
     if status == "closed":
         return "Riscontro forte"
     if status == "probable_payment":
@@ -321,7 +327,12 @@ def evidence_record_detail(
             or evidence.get("document_date")
         ),
         "importo evidenza": clean_text(amount),
-        "differenza": amount_difference(open_row.get("amount"), amount),
+        "differenza": (
+            "N/A - valute diverse"
+            if clean_text(open_row.get("currency"))
+            != clean_text(evidence.get("currency"))
+            else amount_difference(open_row.get("amount"), amount)
+        ),
         "fonte / banca": source_label(evidence),
         "descrizione evidenza": description[:500],
         "azione richiesta": default_action(open_row, confidence),
@@ -376,6 +387,9 @@ def bank_candidate_detail(
     amount_match = clean_text(candidate.get("candidate_amount_match")).upper() == "YES"
     raw_confidence = clean_text(candidate.get("candidate_confidence")).lower()
     confidence = "Alta" if amount_match and raw_confidence == "high" else "Media"
+    perimeter_mismatch = row.get("rule_applied") == "accounting_perimeter_mismatch"
+    if perimeter_mismatch:
+        confidence = "Bassa"
     return {
         "id dettaglio": row_id,
         "partita": clean_text(row.get("document_no"))
@@ -384,12 +398,20 @@ def bank_candidate_detail(
         "confidenza": confidence,
         "data evidenza": clean_text(candidate.get("bank_date")),
         "importo evidenza": clean_text(candidate.get("bank_amount")),
-        "differenza": clean_text(candidate.get("amount_difference_bank_minus_open")),
+        "differenza": (
+            "N/A - perimetro non coerente"
+            if perimeter_mismatch
+            else amount_difference(row.get("amount"), candidate.get("bank_amount"))
+        ),
         "fonte / banca": clean_text(candidate.get("bank_source_file"))
         or "Estratto banca",
         "descrizione evidenza": clean_text(candidate.get("bank_description"))[:500],
-        "azione richiesta": clean_text(candidate.get("required_follow_up"))
-        or "Verificare allocazione bancaria sulla specifica fattura.",
+        "azione richiesta": (
+            "Chiarire il conflitto di soggetto, controparte, valuta o unità prima di valutare l'allocazione."
+            if perimeter_mismatch
+            else clean_text(candidate.get("required_follow_up"))
+            or "Verificare allocazione bancaria sulla specifica fattura."
+        ),
         "riferimento fonte": source_reference(
             {
                 "source_file": candidate.get("bank_source_file"),
@@ -538,8 +560,16 @@ def main_row_from_detail(
             best.get("descrizione evidenza"),
         )
         compensazione = "SI - vedi dettaglio" if compensation else "NO"
-        has_evidence = confidence not in {"Non trovato", "N/A"}
-        non_pagata = "NO" if has_evidence else "SI"
+        status = clean_text(row.get("reconciliation_status"))
+        non_pagata = (
+            "NO"
+            if status == "closed"
+            else (
+                "PARZIALMENTE - residuo aperto"
+                if status == "partially_paid"
+                else "SI - chiusura non dimostrata al cut-off"
+            )
+        )
         ambiguous = (
             confidence in {"Media", "Bassa", "Non trovato"}
             or len(details) > 1
@@ -557,6 +587,8 @@ def main_row_from_detail(
         ),
         "importo": clean_text(row.get("amount")),
         "saldo": clean_text(row.get("balance")),
+        "importo attribuito": clean_text(row.get("allocated_amount")),
+        "residuo aperto": clean_text(row.get("residual_amount")),
         "data pagamento": data_pagamento,
         "banca / fonte incasso": banca,
         "modalita di pagamento": modalita,
@@ -599,9 +631,11 @@ def build_accountant_report_rows(
             bank_allocation_candidates=bank_candidates,
         )
         main = main_row_from_detail(row_id=row_id, row=row, details=details)
+        main["Record refs"] = clean_text(row.get("record_id"))
         main_rows.append(main)
         for detail_index, detail in enumerate(details, start=1):
             visible = {key: detail.get(key, "") for key in DETAIL_HEADERS}
+            visible["Record refs"] = clean_text(row.get("record_id"))
             visible["id dettaglio"] = f"{row_id}-{detail_index:03d}"
             detail_rows.append(visible)
         status = clean_text(main.get("stato riscontro"))

@@ -869,8 +869,23 @@ def test_search_normalization_does_not_infer_applicability() -> None:
     assert result["candidates"][0]["title"] == "Apertura posizione"
 
 
+@pytest.mark.parametrize(
+    ("official_url", "source_type"),
+    [
+        (
+            "https://supportospecialisticori.infocamere.it/sariWeb/ptpo",
+            "official_sari_selected_result",
+        ),
+        (
+            "https://www.registroimprese.it/assistenza?_supporto_WAR_supportoportlet_informativa=true",
+            "official_registro_imprese_guidance",
+        ),
+    ],
+)
 def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
     tmp_path: Path,
+    official_url: str,
+    source_type: str,
 ) -> None:
     registration = _load_script("register_official_source")
     initializer = _load_script("initialize_case")
@@ -885,9 +900,9 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
         output_dir=output_dir,
         run_id="SOURCE-TEST-001",
         source_id="SRC-001",
-        source_type="official_sari_selected_result",
+        source_type=source_type,
         title="Scheda SARI selezionata",
-        official_url="https://supportospecialisticori.infocamere.it/sariWeb/ptpo",
+        official_url=official_url,
         publisher="InfoCamere",
         territorial_applicability="Prato e Pistoia",
         authorization_basis="browser_assisted_metadata",
@@ -897,6 +912,7 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
     snapshot = tmp_path / "source.html"
     snapshot.write_text("contenuto non autorizzato", encoding="utf-8")
 
+    assert source["official_url"] == official_url
     assert source["artifact_path"] is None
     assert source["artifact_sha256"] is None
     assert source["selected_by"] == "professional_reviewer"
@@ -908,9 +924,9 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
             output_dir=output_dir,
             run_id="SOURCE-TEST-001",
             source_id="SRC-002",
-            source_type="official_sari_selected_result",
+            source_type=source_type,
             title="Scheda SARI selezionata",
-            official_url="https://supportospecialisticori.infocamere.it/sariWeb/ptpo",
+            official_url=official_url,
             publisher="InfoCamere",
             territorial_applicability="Prato e Pistoia",
             authorization_basis="browser_assisted_metadata",
@@ -925,6 +941,23 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
     assert run_intake["data_posture"]["external_routes_used"] == []
     assert "external_execution_approval" not in run_intake["data_posture"]
     assert run_intake["execution_trace"][-1]["kind"] == "local_source_registration"
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://www.registroimprese.it/assistenza",
+        "https://www.registroimprese.it.evil.example/assistenza",
+        "https://www.registroimprese.it@evil.example/assistenza",
+        "https://user@www.registroimprese.it/assistenza",
+        "https://www.registroimprese.it:444/assistenza",
+    ],
+)
+def test_registro_imprese_source_host_keeps_url_restrictions(url: str) -> None:
+    core = _load_script("case_core")
+
+    with pytest.raises(ValueError, match="allowlisted official HTTPS host"):
+        core.validate_official_source_url(url)
 
 
 def test_synthetic_case_validates_and_packages_only_for_professional_review(

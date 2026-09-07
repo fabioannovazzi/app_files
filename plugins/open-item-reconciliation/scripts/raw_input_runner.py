@@ -391,15 +391,43 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _source_name(path: Path, assumptions: dict[str, Any] | None) -> str:
+    """Use the full relative import identity, never a colliding basename."""
+    root = (assumptions or {}).get("_source_root")
+    if root and path.is_absolute():
+        return path.relative_to(Path(root)).as_posix()
+    return path.as_posix() if not path.is_absolute() else path.name
+
+
+def _source_files(root: Path) -> list[Path]:
+    """Enumerate nested regular inputs without following linked sources."""
+    if root.is_symlink() or not root.is_dir():
+        raise ValueError("Source root must be an ordinary directory")
+    pending = [root]
+    files = []
+    while pending:
+        for path in sorted(pending.pop().iterdir()):
+            if path.is_symlink():
+                raise ValueError("Linked source entries are not supported")
+            if path.name.startswith("."):
+                continue
+            if path.is_dir():
+                pending.append(path)
+            elif path.is_file() and path.stat().st_nlink == 1:
+                files.append(path)
+            else:
+                raise ValueError("Source entries must be ordinary single-link files")
+    return sorted(files)
+
+
 def source_inventory(
     input_dir: str | Path, assumptions: dict[str, Any] | None = None
 ) -> list[dict[str, Any]]:
-    root = Path(input_dir)
+    root = Path(input_dir).absolute()
+    assumptions = {**(assumptions or {}), "_source_root": str(root)}
     language = configured_language(assumptions, purpose="document")
     rows: list[dict[str, Any]] = []
-    for path in sorted(
-        p for p in root.iterdir() if p.is_file() and not p.name.startswith(".")
-    ):
+    for path in _source_files(root):
         resolution = resolve_source_role(
             path,
             assumptions=assumptions,
@@ -407,7 +435,7 @@ def source_inventory(
         )
         rows.append(
             {
-                "source_file": path.name,
+                "source_file": _source_name(path, assumptions),
                 "source_role": resolution["source_role"],
                 "suggested_source_role": resolution["suggested_source_role"],
                 "source_role_candidates": ";".join(
@@ -477,7 +505,11 @@ def _reviewed_source_decision(
     if not isinstance(decisions, dict):
         return None
     source_path = Path(path)
-    for key in (source_path.name, source_path.as_posix(), str(source_path)):
+    for key in (
+        _source_name(source_path, assumptions),
+        source_path.as_posix(),
+        str(source_path),
+    ):
         value = decisions.get(key)
         if isinstance(value, dict):
             return value
@@ -546,15 +578,19 @@ def _requested_source_adapter_families(
     mapping = supplied if isinstance(supplied, dict) else {}
     families: dict[str, str] = {}
     for path in paths:
-        value = mapping.get(path.name)
+        value = mapping.get(_source_name(path, assumptions))
         if not isinstance(value, dict):
             value = mapping.get(path.as_posix())
         if not isinstance(value, dict):
-            families[path.name] = ""
+            families[_source_name(path, assumptions)] = ""
         elif value.get("schema_version") == "vera.reviewed_decision_receipt.v1":
-            families[path.name] = str(value.get("adapter_id") or "")
+            families[_source_name(path, assumptions)] = str(
+                value.get("adapter_id") or ""
+            )
         else:
-            families[path.name] = str(value.get("adapter_family") or "")
+            families[_source_name(path, assumptions)] = str(
+                value.get("adapter_family") or ""
+            )
     return families
 
 
@@ -887,6 +923,7 @@ def extract_pdf_pages(
     cache_dir: Path,
     *,
     source_role: str = "unknown",
+    source_name: str | None = None,
     ocr_scanned: bool = True,
     use_cache: bool = True,
     dpi_scale: float = 2.0,
@@ -894,6 +931,7 @@ def extract_pdf_pages(
     progress_every_pages: int = 10,
     progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> list[SourcePage]:
+    source_name = source_name or path.name
     if pdfplumber is None:
         detail = f": {PDFPLUMBER_IMPORT_ERROR}" if PDFPLUMBER_IMPORT_ERROR else ""
         raise RuntimeError(f"pdfplumber is required for PDF extraction{detail}")
@@ -901,7 +939,7 @@ def extract_pdf_pages(
         path, cache_dir, ocr_scanned=ocr_scanned, dpi_scale=dpi_scale
     )
     if use_cache:
-        cached_pages = _read_pdf_page_cache(cache_path, path.name)
+        cached_pages = _read_pdf_page_cache(cache_path, source_name)
         if cached_pages is not None:
             for page in cached_pages:
                 page.source_role = source_role
@@ -909,7 +947,7 @@ def extract_pdf_pages(
                 progress_callback(
                     {
                         "event": "pdf_cache_hit",
-                        "source_file": path.name,
+                        "source_file": source_name,
                         "page_count": len(cached_pages),
                     }
                 )
@@ -921,7 +959,7 @@ def extract_pdf_pages(
             progress_callback(
                 {
                     "event": "pdf_file_start",
-                    "source_file": path.name,
+                    "source_file": source_name,
                     "page_count": page_count,
                 }
             )
@@ -937,7 +975,7 @@ def extract_pdf_pages(
                     progress_callback(
                         {
                             "event": "ocr_page_start",
-                            "source_file": path.name,
+                            "source_file": source_name,
                             "source_page": index + 1,
                             "page_count": page_count,
                         }
@@ -954,7 +992,7 @@ def extract_pdf_pages(
                     progress_callback(
                         {
                             "event": "ocr_page_done",
-                            "source_file": path.name,
+                            "source_file": source_name,
                             "source_page": index + 1,
                             "page_count": page_count,
                             "text_length": len(text),
@@ -964,7 +1002,7 @@ def extract_pdf_pages(
             total_text_length += len(text)
             pages.append(
                 SourcePage(
-                    source_file=path.name,
+                    source_file=source_name,
                     source_role=source_role,
                     source_page=index + 1,
                     extraction_method=method,
@@ -982,7 +1020,7 @@ def extract_pdf_pages(
                 progress_callback(
                     {
                         "event": "pdf_page_done",
-                        "source_file": path.name,
+                        "source_file": source_name,
                         "source_page": source_page,
                         "page_count": page_count,
                         "extraction_method": method,
@@ -994,7 +1032,7 @@ def extract_pdf_pages(
             progress_callback(
                 {
                     "event": "pdf_file_done",
-                    "source_file": path.name,
+                    "source_file": source_name,
                     "page_count": page_count,
                     "ocr_page_count": ocr_page_count,
                     "text_length": total_text_length,
@@ -1645,6 +1683,16 @@ def _bank_row_from_text(
                 "document_key": document_key(doc_no, doc_date) if doc_no else "",
             }
         )
+    if len(rows) > 1:
+        # One physical bank movement has one capacity, even with several invoice refs.
+        grouped = dict(rows[0])
+        grouped["record_id"] = (
+            f"bank:{page.source_file}:p{page.source_page}:l{source_row}:grouped"
+        )
+        grouped["document_keys"] = ";".join(
+            dict.fromkeys(row["document_key"] for row in rows)
+        )
+        return [grouped]
     return rows
 
 
@@ -1670,7 +1718,7 @@ def extract_invoice_refs(
     for match in re.finditer(r"\b(\d{1,7}[-/](?:FE|NE|FF|V\d+))\b", text, re.I):
         refs.append((match.group(1), fallback_date))
     for match in re.finditer(
-        r"\b(?:FATT(?:URA|URE|\.?)|INVOICE|INV\.?|FACTURE|FACTURA)\s*(?:N\.?|NO\.?)?\s*(\d{1,7})(?![-/]\d)\b",
+        r"\b(?:FATT(?:URA|URE|\.?)|INVOICE|INV\.?|FACTURE|FACTURA)\s*(?:N\.?|NO\.?)?\s*(\d{1,7})(?![-/][A-Z0-9])\b",
         text,
         re.I,
     ):
@@ -1725,8 +1773,12 @@ def parse_journal_xlsx(path: Path, assumptions: dict[str, Any]) -> list[dict[str
         language, "evidence_keywords", "compensation"
     ) + keyword_tuple(language, "evidence_keywords", "netting")
     adapter_family = source_adapter_family(path, "journal", assumptions)
-    money_convention = money_convention_for_source(assumptions, path.name)
-    date_convention = date_convention_for_source(assumptions, path.name)
+    money_convention = money_convention_for_source(
+        assumptions, _source_name(path, assumptions)
+    )
+    date_convention = date_convention_for_source(
+        assumptions, _source_name(path, assumptions)
+    )
     workbook = load_workbook(path, read_only=True, data_only=True)
     for sheet in workbook.worksheets:
         layout = journal_layout_for_sheet(sheet)
@@ -1814,8 +1866,8 @@ def parse_journal_xlsx(path: Path, assumptions: dict[str, Any]) -> list[dict[str
             for doc_no, doc_date in doc_refs:
                 rows.append(
                     {
-                        "record_id": f"journal:{path.name}:{sheet.title}:r{row_index}:{doc_no}",
-                        "source_file": path.name,
+                        "record_id": f"journal:{_source_name(path, assumptions)}:{sheet.title}:r{row_index}:{doc_no}",
+                        "source_file": _source_name(path, assumptions),
                         "source_sheet": sheet.title,
                         "source_row": row_index,
                         "source_role": "journal",
@@ -1952,8 +2004,12 @@ def parse_journal_rollforward_xlsx(
         return []
     workbook = load_workbook(path, read_only=True, data_only=True)
     adapter_family = source_adapter_family(path, "journal", assumptions)
-    money_convention = money_convention_for_source(assumptions, path.name)
-    date_convention = date_convention_for_source(assumptions, path.name)
+    money_convention = money_convention_for_source(
+        assumptions, _source_name(path, assumptions)
+    )
+    date_convention = date_convention_for_source(
+        assumptions, _source_name(path, assumptions)
+    )
     rows: list[dict[str, Any]] = []
     for sheet in workbook.worksheets:
         layout = journal_layout_for_sheet(sheet)
@@ -2029,8 +2085,8 @@ def parse_journal_rollforward_xlsx(
             signed = debit - credit
             rows.append(
                 {
-                    "record_id": f"journal_rollforward:{path.name}:{sheet.title}:r{row_index}",
-                    "source_file": path.name,
+                    "record_id": f"journal_rollforward:{_source_name(path, assumptions)}:{sheet.title}:r{row_index}",
+                    "source_file": _source_name(path, assumptions),
                     "source_sheet": sheet.title,
                     "source_row": row_index,
                     "source_role": "journal",
@@ -2468,8 +2524,12 @@ def parse_payment_order_zip(
     path: Path, assumptions: dict[str, Any]
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    money_convention = money_convention_for_source(assumptions, path.name)
-    date_convention = date_convention_for_source(assumptions, path.name)
+    money_convention = money_convention_for_source(
+        assumptions, _source_name(path, assumptions)
+    )
+    date_convention = date_convention_for_source(
+        assumptions, _source_name(path, assumptions)
+    )
     with zipfile.ZipFile(path) as zf:
         for member in sorted(zf.namelist()):
             if member.endswith("/") or not member.lower().endswith(
@@ -2535,8 +2595,8 @@ def parse_payment_order_zip(
                     continue
                 rows.append(
                     {
-                        "record_id": f"payment_order:{path.name}:{member}:{idx}",
-                        "source_file": f"{path.name}!{member}",
+                        "record_id": f"payment_order:{_source_name(path, assumptions)}:{member}:{idx}",
+                        "source_file": f"{_source_name(path, assumptions)}!{member}",
                         "source_role": "payment_order",
                         "document_no": doc_no,
                         "document_date": doc_date,
@@ -2566,7 +2626,7 @@ def extract_normalized_records(
     output_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     active = dict(assumptions or {})
-    root = Path(input_dir)
+    root = Path(input_dir).absolute()
     out_dir = validate_run_output_dir(
         Path(output_dir) if output_dir else root.parent / "output",
         input_dir=root,
@@ -2579,9 +2639,8 @@ def extract_normalized_records(
     )
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    files = sorted(
-        p for p in root.iterdir() if p.is_file() and not p.name.startswith(".")
-    )
+    active["_source_root"] = str(root)
+    files = _source_files(root)
     supplied_source_receipts = active.get("source_artifact_receipts")
     if supplied_source_receipts is None:
         source_receipts = build_source_receipts(root, files)
@@ -2607,7 +2666,6 @@ def extract_normalized_records(
     )
     active["_reviewed_source_decision_receipts"] = {
         **decisions_by_path,
-        **{Path(path).name: value for path, value in decisions_by_path.items()},
     }
     inventory = source_inventory(root, active)
     all_pages: list[SourcePage] = []
@@ -2617,7 +2675,7 @@ def extract_normalized_records(
     extraction_errors: list[dict[str, Any]] = []
     language = configured_language(active, purpose="document")
     source_resolutions = {
-        path.name: resolve_source_role(
+        _source_name(path, active): resolve_source_role(
             path,
             assumptions=active,
             language=language,
@@ -2625,22 +2683,22 @@ def extract_normalized_records(
         for path in files
     }
     source_adapters = {
-        path.name: (
+        _source_name(path, active): (
             source_adapter_family(
                 path,
-                source_resolutions[path.name]["source_role"],
+                source_resolutions[_source_name(path, active)]["source_role"],
                 active,
             )
-            or requested_adapters[path.name]
+            or requested_adapters[_source_name(path, active)]
         )
         for path in files
     }
     candidate_rows_by_source: dict[str, int] = defaultdict(int)
     spreadsheet_roles = {
-        source_resolutions[path.name]["source_role"]
+        source_resolutions[_source_name(path, active)]["source_role"]
         for path in files
         if path.suffix.lower() in {".xlsx", ".xlsm", ".xls", ".csv"}
-        and source_resolutions[path.name]["status"] == "reviewed"
+        and source_resolutions[_source_name(path, active)]["status"] == "reviewed"
     }
     prefer_spreadsheet_for_roles = set(active.get("prefer_spreadsheet_for_roles", []))
 
@@ -2694,21 +2752,21 @@ def extract_normalized_records(
 
     for path in files:
         try:
-            resolution = source_resolutions[path.name]
+            resolution = source_resolutions[_source_name(path, active)]
             role_from_name = resolution["source_role"]
-            adapter_family = source_adapters[path.name]
+            adapter_family = source_adapters[_source_name(path, active)]
             if active.get("verbose_extraction"):
                 print(
-                    f"[open-item-reconciliation] extracting {path.name} as {role_from_name}",
+                    f"[open-item-reconciliation] extracting {_source_name(path, active)} as {role_from_name}",
                     flush=True,
                 )
             if adapter_family and adapter_family not in SUPPORTED_ADAPTER_FAMILIES:
                 extraction_errors.append(
                     {
-                        "source_file": path.name,
+                        "source_file": _source_name(path, active),
                         "status": "unsupported_source_layout",
                         "reason": (
-                            decision_errors.get(path.name)
+                            decision_errors.get(_source_name(path, active))
                             or decision_errors.get(path.as_posix())
                             or (
                                 "The requested adapter is not in the supported "
@@ -2721,10 +2779,10 @@ def extract_normalized_records(
             if resolution["status"] != "reviewed":
                 extraction_errors.append(
                     {
-                        "source_file": path.name,
+                        "source_file": _source_name(path, active),
                         "status": resolution["status"],
                         "reason": (
-                            decision_errors.get(path.name)
+                            decision_errors.get(_source_name(path, active))
                             or decision_errors.get(path.as_posix())
                             or "Source-role suggestions are advisory. Record a "
                             "reviewed source decision before parsing."
@@ -2736,7 +2794,7 @@ def extract_normalized_records(
             if adapter_family not in SUPPORTED_ADAPTER_FAMILIES:
                 extraction_errors.append(
                     {
-                        "source_file": path.name,
+                        "source_file": _source_name(path, active),
                         "status": "unsupported_source_layout",
                         "reason": (
                             "No supported mechanically bounded adapter is available. "
@@ -2753,14 +2811,14 @@ def extract_normalized_records(
             ):
                 extraction_errors.append(
                     {
-                        "source_file": path.name,
+                        "source_file": _source_name(path, active),
                         "status": "skipped",
                         "reason": f"Skipped duplicate {role_from_name} PDF because spreadsheet source is available.",
                     }
                 )
                 if active.get("verbose_extraction"):
                     print(
-                        f"[open-item-reconciliation] skipped {path.name}: spreadsheet source available",
+                        f"[open-item-reconciliation] skipped {_source_name(path, active)}: spreadsheet source available",
                         flush=True,
                     )
                 continue
@@ -2769,6 +2827,7 @@ def extract_normalized_records(
                     path,
                     cache_dir,
                     source_role=role_from_name,
+                    source_name=_source_name(path, active),
                     language=language,
                     progress_every_pages=int(
                         active.get("pdf_progress_every_pages", 10)
@@ -2783,11 +2842,13 @@ def extract_normalized_records(
                 ]
                 parsed_evidence = apply_source_perimeter(
                     parsed_evidence,
-                    source_file=path.name,
+                    source_file=_source_name(path, active),
                     assumptions=active,
                 )
                 evidence_rows.extend(parsed_evidence)
-                candidate_rows_by_source[path.name] += len(parsed_evidence)
+                candidate_rows_by_source[_source_name(path, active)] += len(
+                    parsed_evidence
+                )
             elif (
                 path.suffix.lower() in {".xlsx", ".xlsm"}
                 and role_from_name == "journal"
@@ -2795,25 +2856,29 @@ def extract_normalized_records(
                 parsed_evidence = parse_journal_xlsx(path, active)
                 parsed_evidence = apply_source_perimeter(
                     parsed_evidence,
-                    source_file=path.name,
+                    source_file=_source_name(path, active),
                     assumptions=active,
                 )
                 evidence_rows.extend(parsed_evidence)
-                candidate_rows_by_source[path.name] += len(parsed_evidence)
+                candidate_rows_by_source[_source_name(path, active)] += len(
+                    parsed_evidence
+                )
                 journal_paths.append(path)
             elif path.suffix.lower() == ".zip" and role_from_name == "payment_order":
                 parsed_evidence = parse_payment_order_zip(path, active)
                 parsed_evidence = apply_source_perimeter(
                     parsed_evidence,
-                    source_file=path.name,
+                    source_file=_source_name(path, active),
                     assumptions=active,
                 )
                 evidence_rows.extend(parsed_evidence)
-                candidate_rows_by_source[path.name] += len(parsed_evidence)
+                candidate_rows_by_source[_source_name(path, active)] += len(
+                    parsed_evidence
+                )
             else:
                 extraction_errors.append(
                     {
-                        "source_file": path.name,
+                        "source_file": _source_name(path, active),
                         "status": "unsupported_source_layout",
                         "reason": (
                             f"No parser is registered for {path.suffix.lower()} "
@@ -2823,18 +2888,21 @@ def extract_normalized_records(
                 )
             if active.get("verbose_extraction"):
                 print(
-                    f"[open-item-reconciliation] done {path.name}: open_items={len(open_items) if 'open_items' in locals() else 'pending'} evidence_rows={len(evidence_rows)} pages={len(all_pages)}",
+                    f"[open-item-reconciliation] done {_source_name(path, active)}: open_items={len(open_items) if 'open_items' in locals() else 'pending'} evidence_rows={len(evidence_rows)} pages={len(all_pages)}",
                     flush=True,
                 )
         except (
             Exception
         ) as exc:  # keep run auditable instead of hiding extraction failures
             extraction_errors.append(
-                {"source_file": path.name, "error": f"{type(exc).__name__}: {exc}"}
+                {
+                    "source_file": _source_name(path, active),
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
             )
             if active.get("verbose_extraction"):
                 print(
-                    f"[open-item-reconciliation] error {path.name}: {type(exc).__name__}: {exc}",
+                    f"[open-item-reconciliation] error {_source_name(path, active)}: {type(exc).__name__}: {exc}",
                     flush=True,
                 )
 
@@ -2863,7 +2931,7 @@ def extract_normalized_records(
                         journal_path,
                         rollforward_assumptions,
                     ),
-                    source_file=journal_path.name,
+                    source_file=journal__source_name(path, active),
                     assumptions=active,
                 )
             )
@@ -2880,16 +2948,16 @@ def extract_normalized_records(
     source_qualifications = [
         build_file_source_qualification(
             path,
-            resolution=source_resolutions[path.name],
-            adapter_family=source_adapters[path.name],
+            resolution=source_resolutions[_source_name(path, active)],
+            adapter_family=source_adapters[_source_name(path, active)],
             reviewed_decision=_reviewed_source_decision(active, path),
             source_artifact_ref=next(
                 str(receipt["artifact_id"])
                 for receipt in source_receipts
-                if Path(str(receipt["path"])).name == path.name
+                if str(receipt["path"]) == _source_name(path, active)
             ),
-            candidate_row_count=candidate_rows_by_source[path.name],
-            emitted_row_count=candidate_rows_by_source[path.name],
+            candidate_row_count=candidate_rows_by_source[_source_name(path, active)],
+            emitted_row_count=candidate_rows_by_source[_source_name(path, active)],
         )
         for path in files
     ]
@@ -2901,21 +2969,23 @@ def extract_normalized_records(
         source_receipt = next(
             receipt
             for receipt in source_receipts
-            if Path(str(receipt["path"])).name == path.name
+            if str(receipt["path"]) == _source_name(path, active)
         )
         qualification = qualification_by_source_ref[str(source_receipt["artifact_id"])]
         inventory_row["source_artifact_id"] = source_receipt["artifact_id"]
-        inventory_row["source_adapter_family"] = source_adapters[path.name]
+        inventory_row["source_adapter_family"] = source_adapters[
+            _source_name(path, active)
+        ]
         inventory_row["source_qualification_id"] = qualification["qualification_id"]
         inventory_row["source_qualification_status"] = qualification["status"]
         if qualification["status"] == "unsupported_source_layout" and not any(
-            row.get("source_file") == path.name
+            row.get("source_file") == _source_name(path, active)
             and row.get("status") == "unsupported_source_layout"
             for row in extraction_errors
         ):
             extraction_errors.append(
                 {
-                    "source_file": path.name,
+                    "source_file": _source_name(path, active),
                     "status": "unsupported_source_layout",
                     "reason": "; ".join(qualification["limitations"])
                     or "The declared adapter did not emit qualified rows.",
@@ -3041,6 +3111,15 @@ def run_raw_input_reconciliation(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     extracted = extract_normalized_records(input_dir, active, output_dir=out_dir)
+    bindings_by_path = {
+        Path(binding["path"]).relative_to(Path(input_dir)).as_posix(): binding
+        for binding in client_engagement["input_bindings"]
+    }
+    for source in extracted["source_inventory"]:
+        binding = bindings_by_path[source["source_file"]]
+        imported_names = binding.get("imported_names", [])
+        if len(imported_names) > 1:
+            source["byte_identical_import_names"] = "; ".join(imported_names)
     review_rows = None
     review_rows_path = active.get("review_rows_path")
     if review_rows_path:
@@ -3091,6 +3170,7 @@ def run_raw_input_reconciliation(
     )
     missing_evidence_pack = build_missing_evidence_request_pack(
         result["reconciliation_rows"],
+        post_cutoff_candidates=result["post_cutoff_candidates"],
         source_inventory=extracted["source_inventory"],
         normalized_records=extracted["normalized_records"],
         entity_name=active.get("entity_name") or active.get("company_name") or "",

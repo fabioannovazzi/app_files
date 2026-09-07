@@ -14,6 +14,7 @@ from workflow_core import (
     atomic_write_json,
     canonical_digest,
     file_digest,
+    fresh_package_review_decision,
     load_json,
     package_digest,
     recompute_contribution_digest,
@@ -44,6 +45,7 @@ def _validate_run_locked(root: Path) -> list[str]:
     """Validate and finalize while the run writer lock prevents state races."""
 
     errors: list[str] = []
+    decisions: dict[str, dict[str, object]] = {}
     try:
         source_register = load_json(root / "source_register.json")
         workbench = load_json(root / "content_workbench.json")
@@ -62,7 +64,7 @@ def _validate_run_locked(root: Path) -> list[str]:
         contribution_digest = ""
         errors.append(str(exc))
     try:
-        require_accepted_reviews(root, workbench["required_review_scopes"])
+        decisions = require_accepted_reviews(root, workbench["required_review_scopes"])
     except ValueError as exc:
         errors.append(str(exc))
     if final.get("input_digest") != input_digest:
@@ -88,9 +90,61 @@ def _validate_run_locked(root: Path) -> list[str]:
         except (OSError, ValueError) as exc:
             errors.append(str(exc))
     package_review: dict[str, object] | None = None
+    review_binding: dict[str, object] = {}
     try:
         verify_package_manifest(root)
-        package_review = require_accepted_package_review(root)
+        if workbench["contribution"]["recommendation"] == "no_publish":
+            # Exact internal-record checks need no second semantic decision.
+            # Publishable packages still require review of their exact bytes.
+            allowed = {
+                "technical_basis",
+                "answer_contract",
+                "claim_model_assessment",
+                "editorial_model_assessment",
+                "no_publication_recommendation",
+                "artifact_card",
+            }
+            outputs = final.get("outputs", [])
+            if (
+                len(outputs) != len(allowed)
+                or {o.get("kind") for o in outputs} != allowed
+            ):
+                raise ValueError(
+                    "No-publication package must contain only its six internal records"
+                )
+            contribution = workbench["contribution"]
+            if contribution["channel_drafts"] or contribution["visual_story"]["slides"]:
+                raise ValueError(
+                    "No-publication contribution contains communication drafts"
+                )
+            recommendation = next(
+                o for o in outputs if o["kind"] == "no_publication_recommendation"
+            )
+            text = (root / recommendation["path"]).read_text(encoding="utf-8")
+            if (
+                text.partition("\n")[2].strip()
+                != contribution["recommendation_reason"].strip()
+            ):
+                raise ValueError(
+                    "No-publication record differs from the accepted decision"
+                )
+            existing = fresh_package_review_decision(root)
+            if existing and existing.get("decision") != "accepted":
+                raise ValueError(
+                    "Explicit packaged-output return or rejection remains unresolved"
+                )
+            review_binding = {
+                "review_basis": "accepted_no_publication_decision_and_internal_record_validation",
+                "semantic_review_event_ids": {
+                    scope: event["event_id"] for scope, event in decisions.items()
+                },
+            }
+        else:
+            package_review = require_accepted_package_review(root)
+            review_binding = {
+                "package_review_event_id": package_review["event_id"],
+                "package_review_artifact_digest": package_review["artifact_digest"],
+            }
     except (OSError, ValueError) as exc:
         errors.append(str(exc))
 
@@ -187,23 +241,16 @@ def _validate_run_locked(root: Path) -> list[str]:
                 errors.append("Validation receipt is stale for current inputs")
             if receipt.get("contribution_digest") != contribution_digest:
                 errors.append("Validation receipt is stale for current contribution")
-            if package_review is not None and (
-                receipt.get("package_review_event_id") != package_review.get("event_id")
-                or receipt.get("package_review_artifact_digest")
-                != package_review.get("artifact_digest")
-            ):
+            if any(receipt.get(key) != value for key, value in review_binding.items()):
                 errors.append("Validation receipt is stale for packaged-output review")
     if not errors and final.get("status") == "validation_pending":
-        if package_review is None:
-            return ["Accepted packaged_output review was not retained"]
         receipt_body = {
             "schema_version": 1,
             "validator": "professional_communication_validator_v2",
             "input_digest": input_digest,
             "contribution_digest": contribution_digest,
             "package_digest": current_package_digest,
-            "package_review_event_id": package_review["event_id"],
-            "package_review_artifact_digest": package_review["artifact_digest"],
+            **review_binding,
             "validated_at": utc_now(),
         }
         final["validation_receipt"] = {

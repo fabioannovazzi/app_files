@@ -315,7 +315,9 @@ def _write_docx(path: Path, title: str, required_text: list[str] | None = None) 
     document.save(path)
 
 
-def test_review_session_writes_open_item_reconciliation_contract(tmp_path: Path) -> None:
+def test_review_session_writes_open_item_reconciliation_contract(
+    tmp_path: Path,
+) -> None:
     review_session = load_review_session()
     output_dir = tmp_path / "out"
     output_dir.mkdir()
@@ -1140,7 +1142,9 @@ def test_raw_input_runner_rejects_git_workspace_output_dir(tmp_path: Path) -> No
         )
 
 
-def test_open_item_reconciliation_mcp_server_validates_and_renders_review_payload() -> None:
+def test_open_item_reconciliation_mcp_server_validates_and_renders_review_payload() -> (
+    None
+):
     review_payload = {
         "schema_version": "1.0",
         "plugin": "open-item-reconciliation",
@@ -1302,9 +1306,8 @@ def test_audit_mcp_rejects_expanded_tree_before_every_public_surface(
     surface: str,
 ) -> None:
     plugin_copy = _copy_audit_mcp_runtime(tmp_path)
-    rogue_cache = plugin_copy / "mcp" / "__pycache__"
-    rogue_cache.mkdir()
-    (rogue_cache / "rogue.pyc").write_bytes(b"rogue")
+    rogue_source = plugin_copy / "mcp" / "unauthorized.cjs"
+    rogue_source.write_text("throw new Error('unauthorized source');\n")
 
     with pytest.raises(subprocess.CalledProcessError) as raised:
         _call_mcp_server(
@@ -1362,9 +1365,8 @@ def test_audit_mcp_rejects_post_start_expansion_before_next_public_surface(
             "open-item-reconciliation-widgets"
         )
 
-        rogue_cache = plugin_copy / "mcp" / "__pycache__"
-        rogue_cache.mkdir()
-        (rogue_cache / "rogue.pyc").write_bytes(b"rogue")
+        rogue_source = plugin_copy / "mcp" / "unauthorized.cjs"
+        rogue_source.write_text("throw new Error('unauthorized source');\n")
         process.stdin.write(json.dumps(_audit_mcp_surface_message(surface)) + "\n")
         process.stdin.flush()
         process.stdin.close()
@@ -1597,9 +1599,7 @@ def test_open_item_reconciliation_mcp_server_accepts_local_review_paths(
     render_response = responses[3]["result"]
     assert "review_payload" not in render_response["structuredContent"]
     private_payload = render_response["_meta"]["private_review_payload"]
-    assert private_payload["review_payload"]["run_id"] == _customer_run_id(
-        output_dir
-    )
+    assert private_payload["review_payload"]["run_id"] == _customer_run_id(output_dir)
     assert private_payload["decision_policy"]["can_persist"] is True
     save_result = responses[4]["result"]["structuredContent"]
     assert save_result["ok"] is True
@@ -1670,7 +1670,9 @@ def test_open_item_reconciliation_mcp_failed_check_blocks_final_ready() -> None:
     assert result["final_artifacts"]["status"] == "blocked"
 
 
-def test_open_item_reconciliation_mcp_pending_required_review_blocks_final_ready() -> None:
+def test_open_item_reconciliation_mcp_pending_required_review_blocks_final_ready() -> (
+    None
+):
     review_payload = {
         "schema_version": "1.0",
         "plugin": "open-item-reconciliation",
@@ -2125,7 +2127,9 @@ def test_audit_mcp_ignores_timestamp_valid_local_bytecode_before_python_bridge_i
                     "name": "apply_open_item_reconciliation_decisions",
                     "arguments": {
                         "run_intake": run_intake,
-                        "expected_predecessor_checkpoint": predecessor["content_sha256"],
+                        "expected_predecessor_checkpoint": predecessor[
+                            "content_sha256"
+                        ],
                         "review_payload": review_payload,
                         "decisions": decisions,
                         "final_artifacts": final_artifacts,

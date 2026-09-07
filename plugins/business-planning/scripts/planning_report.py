@@ -268,7 +268,17 @@ def build_charts(plan: dict[str, Any]) -> list[dict[str, Any]]:
             add(
                 f"reported-adjusted-{sid}",
                 f"Reported versus adjusted EBITDA · {scenario['label']}",
-                [(c["metric"].replace("_", " "), [c["id"]]) for c in reported]
+                [
+                    (
+                        (
+                            f"Reported EBITDA ({index + 1})"
+                            if len(reported) > 1
+                            else "Reported EBITDA"
+                        ),
+                        [c["id"]],
+                    )
+                    for index, c in enumerate(reported)
+                ]
                 + [
                     (
                         "Accepted model EBITDA",
@@ -579,7 +589,19 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         f'<header><p class="eyebrow">Business plan · {tr("Audience")}: {e(tr(case["audience"]))}</p><h1>{e(case["entity_name"])}</h1><p class="lead">{e(case["planning_objective"])}</p><p>{e(case["company_stage"])} · {e(case["reporting_currency"] or "Currency not established")} · {horizon}</p></header>'
     ]
     assessment = case.get("assessment")
-    if assessment:
+    # A rejected calculation basis cannot support the submitted assessment as a
+    # conclusion; enforce the existing status without classifying prose meaning.
+    if plan["status"] == "blocked":
+        parts.append(
+            '<section id="assessment-withheld"><h2>'
+            + tr("Business assessment withheld")
+            + "</h2><p>"
+            + tr(
+                "Correct the conflicting calculations and supporting claims, then review the recommendation again. The submitted assessment is retained in the case record; it is not presented as a conclusion."
+            )
+            + "</p></section>"
+        )
+    elif assessment:
         parts.append(
             f'<section id="recommendation"><h2>{tr("Recommendation")}: {tr(assessment["decision"].capitalize())}</h2>'
         )
@@ -653,7 +675,7 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         + "".join(f"<li>{e(i)}</li>" for i in plan["unresolved_matters"])
         + "</ul>"
     )
-    if not assessment:
+    if not assessment and plan["status"] != "blocked":
         parts.extend(paragraph(i) for i in narrative)
         parts.extend(_svg(c) for c in plan["charts"])
     for r in refs.values():
