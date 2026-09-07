@@ -8,9 +8,11 @@
       "observed_at": "2026-09-07"
     },
     "vera": {
-      "version": "0.1.217",
+      "version": "0.1.218",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-07"
+      "observed_at": "2026-09-07",
+      "verification_record": "https://github.com/fabioannovazzi/app_files/pull/568",
+      "basis": "Published status confirmed in the merged release verification record."
     }
   }
 }
