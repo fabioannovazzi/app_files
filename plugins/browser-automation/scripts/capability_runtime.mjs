@@ -13,7 +13,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { DEFAULT_DOWNLOAD_DIRECTORY, observeDownloadDirectory } from "./download_directory.mjs";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/14";
+export const RUNTIME_VERSION = "browser-capability-runtime/15";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v2";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 

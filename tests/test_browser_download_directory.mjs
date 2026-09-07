@@ -52,13 +52,33 @@ test("overwriting an old file is not evidence of a new download", async (t) => {
   await assert.rejects(observation.wait(quick), /download-file-not-completed/);
 });
 
-test("preexisting unfinished download blocks observation and releases lock", async (t) => {
+for (const extension of ["crdownload", "part", "partial", "tmp"]) {
+  test(`preexisting .${extension} does not block a new completed download`, async (t) => {
+    const directory = await setup(t);
+    await writeFile(join(directory, `old.${extension}`), "old");
+    const observation = await observeDownloadDirectory(directory);
+    t.after(observation.close);
+    await writeFile(join(directory, "new.zip"), "abc");
+    assert.equal((await observation.wait(quick)).path, join(directory, "new.zip"));
+  });
+}
+
+test("old partial cannot be mistaken for the requested download when it completes", async (t) => {
   const directory = await setup(t);
-  await writeFile(join(directory, "old.crdownload"), "old");
-  await assert.rejects(observeDownloadDirectory(directory), /download-already-in-progress/);
-  await rm(join(directory, "old.crdownload"));
+  await writeFile(join(directory, "old.zip.crdownload"), "old");
   const observation = await observeDownloadDirectory(directory);
-  await observation.close();
+  t.after(observation.close);
+  await rename(join(directory, "old.zip.crdownload"), join(directory, "old.zip"));
+  await assert.rejects(observation.wait(quick), /download-directory-ambiguous/);
+});
+
+test("ignoring an old partial does not accept a new unfinished download", async (t) => {
+  const directory = await setup(t);
+  await writeFile(join(directory, "old.part"), "old");
+  const observation = await observeDownloadDirectory(directory);
+  t.after(observation.close);
+  await writeFile(join(directory, "new.zip.crdownload"), "abc");
+  await assert.rejects(observation.wait(quick), /download-file-not-completed/);
 });
 
 test("cooperating runners cannot share an observation window", async (t) => {

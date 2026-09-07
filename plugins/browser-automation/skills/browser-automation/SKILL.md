@@ -211,7 +211,10 @@ record byte length and SHA-256. Do not inspect `PlaywrightDownload.path()` when 
 is undocumented. For an existing redirected Downloads folder, pass its actual
 local path as `downloadDirectory`; never change Chrome settings or create a special
 folder. Avoid unrelated downloads during the verification window. Preexisting
-files, overwrites, partial downloads and ambiguous arrivals cannot pass. Receipt
+files, overwrites, new partial downloads and ambiguous arrivals cannot pass. Old
+partial files already present do not block a new download; leave them untouched.
+If one disappears during observation, the runtime reports ambiguity rather than
+attributing its completion to this run. Receipt
 code `download-directory-bytes-verified` describes folder-correlated evidence;
 see `references/capability-contract.md` for its attribution boundary. File contents
 remain local. No browser profile inspection or desktop-control fallback is needed.

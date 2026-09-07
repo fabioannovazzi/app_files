@@ -14,8 +14,9 @@ import {
 // Existing direct-path adapter tests opt into its documented API.
 const executeCapability = (options) => executeWithDefaultDownloads({ downloadDirectory: null, ...options });
 
-test("folder route verifies event-only downloads without calling an undocumented path API", async () => {
+test("folder route ignores stale partials and verifies event-only downloads without a path API", async () => {
   const parent = await mkdtemp(join(tmpdir(), "browser-folder-runtime-"));
+  await writeFile(join(parent, "abandoned.crdownload"), "untouched");
   const tab = new FakeTab({});
   let armed = false;
   tab.playwright = new FakePlaywright(tab, {
@@ -44,6 +45,7 @@ test("folder route verifies event-only downloads without calling an undocumented
   assert.equal(receipt.action_results.at(-1).evidence_code, "download-directory-bytes-verified");
   const output = JSON.parse(await readFile(summary.outputs_path, "utf8"));
   assert.equal(output.files[0].byte_length, 3);
+  assert.equal(await readFile(join(parent, "abandoned.crdownload"), "utf8"), "untouched");
   assert.equal(JSON.stringify(summary).includes("new.xml"), false);
 });
 

@@ -35,9 +35,16 @@ export async function observeDownloadDirectory(directory) {
   const close = () => rmdir(lock);
   try {
     const baseline = new Set(await readdir(root));
-    if ([...baseline].some((name) => PARTIAL.test(name))) {
-      throw new DownloadDirectoryError("download-already-in-progress");
-    }
+    const existingPartials = [...baseline].filter((name) => PARTIAL.test(name));
+    const newArrivals = async () => {
+      const names = new Set(await readdir(root));
+      // An old partial may have completed under a new name. Names alone cannot
+      // attribute that file to this run; unchanged old partials are irrelevant.
+      if (existingPartials.some((name) => !names.has(name))) {
+        throw new DownloadDirectoryError("download-directory-ambiguous");
+      }
+      return [...names].filter((name) => !baseline.has(name));
+    };
     return {
       close,
       async wait({ timeoutMs = 10000, stableMs = 1000, pollMs = 100 } = {}) {
@@ -46,7 +53,7 @@ export async function observeDownloadDirectory(directory) {
         let stableSince = 0;
         const observedFinalNames = new Set();
         while (performance.now() < deadline) {
-          const arrivals = (await readdir(root)).filter((name) => !baseline.has(name));
+          const arrivals = await newArrivals();
           const finished = arrivals.filter((name) => !PARTIAL.test(name));
           for (const name of finished) observedFinalNames.add(name);
           if (observedFinalNames.size > 1) {
@@ -84,7 +91,7 @@ export async function observeDownloadDirectory(directory) {
                       || identity(await lstat(path)) !== identity(before)) {
                     throw new DownloadDirectoryError("download-file-changed");
                   }
-                  const finalArrivals = (await readdir(root)).filter((name) => !baseline.has(name));
+                  const finalArrivals = await newArrivals();
                   if (finalArrivals.length !== 1 || finalArrivals[0] !== finished[0]) {
                     throw new DownloadDirectoryError("download-directory-ambiguous");
                   }
