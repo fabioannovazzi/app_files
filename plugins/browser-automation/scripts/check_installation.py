@@ -22,8 +22,11 @@ REQUIRED_COMPONENT_PATHS = (
     "scripts/check_dependencies.py",
     "scripts/capability_pipeline.py",
     "scripts/capability_runtime.mjs",
+    "scripts/download_directory.mjs",
     "scripts/discovery_pack.py",
     "scripts/discovery_runtime.mjs",
+    "scripts/teaching_checkpoint.py",
+    "references/teaching-checkpoint.md",
     "skills/browser-automation/SKILL.md",
 )
 

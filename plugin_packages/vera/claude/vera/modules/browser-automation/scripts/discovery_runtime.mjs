@@ -10,7 +10,7 @@
 
 import { canonicalJson, sha256Text } from "./capability_runtime.mjs";
 
-export const DISCOVERY_RUNTIME_VERSION = "browser-discovery-runtime/2";
+export const DISCOVERY_RUNTIME_VERSION = "browser-discovery-runtime/3";
 
 const DEFAULT_MAX_CONTROLS = 120;
 const MAX_CONTROLS = 250;
@@ -97,6 +97,9 @@ function stateProjection(state) {
     path: state.path,
     controls: state.controls,
     truncated: state.truncated,
+    frame_depth: state.frame_depth,
+    frame_origin: state.frame_origin,
+    frame_path: state.frame_path,
   };
 }
 
@@ -106,7 +109,13 @@ export async function captureControlState({
   allowedOrigins,
   maxControls = DEFAULT_MAX_CONTROLS,
   includeStructuredControls = false,
+  frameSelectors = [],
 }) {
+  // Explicit selection prevents unrelated frames from entering model context.
+  if (!Array.isArray(frameSelectors) || frameSelectors.length > 5 ||
+      frameSelectors.some((selector) => typeof selector !== "string" || !selector.trim())) {
+    throw new Error("frameSelectors must contain at most five non-empty selectors");
+  }
   const normalizedOrigins = validateOptions({
     allowedOrigins,
     maxControls,
@@ -115,7 +124,24 @@ export async function captureControlState({
   const currentUrl = await tab.url();
   const page = allowedPage(currentUrl, normalizedOrigins);
   const inventory = await tab.playwright.evaluate(
-    ({ controlLimit, includeStructured }) => {
+    ({ controlLimit, includeStructured, frames, origins }) => {
+      let observedDocument = document;
+      for (const selector of frames) {
+        const matches = observedDocument.querySelectorAll(selector);
+        if (matches.length !== 1 || matches[0].tagName.toLowerCase() !== "iframe") {
+          return { failure: "frame_not_unique" };
+        }
+        const nested = matches[0].contentDocument;
+        // Cross-origin frames require a documented frame API, never a bypass.
+        if (!nested) return { failure: "frame_unavailable" };
+        if (!origins.includes(new URL(nested.URL).origin)) {
+          return { failure: "frame_origin_not_allowed" };
+        }
+        observedDocument = nested;
+      }
+      if (!origins.includes(new URL(observedDocument.URL).origin)) {
+        return { failure: "page_origin_not_allowed" };
+      }
       const interactiveSelector = [
         "a[href]",
         "button",
@@ -133,7 +159,7 @@ export async function captureControlState({
         return normalized.slice(0, 120);
       };
       const isVisible = (element) => {
-        const style = window.getComputedStyle(element);
+        const style = observedDocument.defaultView.getComputedStyle(element);
         const bounds = element.getBoundingClientRect();
         return (
           style.visibility !== "hidden" &&
@@ -146,7 +172,7 @@ export async function captureControlState({
         if (element.labels?.length) return compact(element.labels[0].innerText);
         const id = element.getAttribute("id");
         if (!id) return null;
-        const label = Array.from(document.querySelectorAll("label")).find(
+        const label = Array.from(observedDocument.querySelectorAll("label")).find(
           (candidate) => candidate.htmlFor === id,
         );
         return compact(label?.innerText);
@@ -180,7 +206,7 @@ export async function captureControlState({
         if (tag === "button" || tag === "a") return compact(element.innerText);
         return null;
       };
-      const nodes = Array.from(document.querySelectorAll(interactiveSelector)).filter(
+      const nodes = Array.from(observedDocument.querySelectorAll(interactiveSelector)).filter(
         (element) =>
           isVisible(element) &&
           (includeStructured || element.closest(structuredSelector) == null),
@@ -207,13 +233,19 @@ export async function captureControlState({
         controls,
         total_control_count: nodes.length,
         truncated: nodes.length > controlLimit,
+        frame_count: observedDocument.querySelectorAll("iframe").length,
+        frame_origin: frames.length ? new URL(observedDocument.URL).origin : null,
+        frame_path: frames.length ? new URL(observedDocument.URL).pathname : null,
       };
     },
     {
       controlLimit: maxControls,
       includeStructured: includeStructuredControls,
+      frames: frameSelectors,
+      origins: [...normalizedOrigins],
     },
   );
+  if (inventory.failure) throw new Error(`guided discovery: ${inventory.failure}`);
   const state = {
     schema_version: "browser-control-state/v1",
     runtime_version: DISCOVERY_RUNTIME_VERSION,
@@ -222,6 +254,10 @@ export async function captureControlState({
     controls: inventory.controls.map(sanitizeControlMetadata),
     total_control_count: inventory.total_control_count,
     truncated: inventory.truncated,
+    frame_depth: frameSelectors.length,
+    frame_origin: inventory.frame_origin ?? null,
+    frame_path: inventory.frame_path ?? null,
+    unobserved_frame_count: inventory.frame_count ?? 0,
   };
   return {
     ...state,
@@ -236,7 +272,8 @@ export function diffControlStates(before, after) {
   const beforeControls = keyed(before.controls);
   const afterControls = keyed(after.controls);
   return {
-    path_changed: before.origin !== after.origin || before.path !== after.path,
+    path_changed: before.origin !== after.origin || before.path !== after.path ||
+      before.frame_origin !== after.frame_origin || before.frame_path !== after.frame_path,
     added_controls: [...afterControls]
       .filter(([key]) => !beforeControls.has(key))
       .map(([, control]) => control),
@@ -259,6 +296,8 @@ export async function observeGuidedWindow({
   maxControls = DEFAULT_MAX_CONTROLS,
   maxTransitions = 20,
   includeStructuredControls = false,
+  frameSelectors = [],
+  signal,
 }) {
   if (!Number.isInteger(durationMs) || durationMs < 1_000 || durationMs > MAX_GUIDED_WINDOW_MS) {
     throw new Error(`durationMs must be between 1000 and ${MAX_GUIDED_WINDOW_MS}`);
@@ -275,20 +314,25 @@ export async function observeGuidedWindow({
     allowedOrigins,
     maxControls,
     includeStructuredControls,
+    frameSelectors,
   });
   const initial = previous;
   const transitions = [];
-  while (Date.now() - startedAt < durationMs && transitions.length < maxTransitions) {
+  while (Date.now() - startedAt < durationMs && transitions.length < maxTransitions &&
+         !signal?.aborted) {
     await tab.playwright.waitForTimeout(pollIntervalMs);
+    if (signal?.aborted) break;
     const current = await captureControlState({
       tab,
       allowedOrigins,
       maxControls,
       includeStructuredControls,
+      frameSelectors,
     });
     if (current.control_fingerprint === previous.control_fingerprint) continue;
     transitions.push({
       sequence: transitions.length + 1,
+      elapsed_ms: Date.now() - startedAt,
       before: previous,
       after: current,
       delta: diffControlStates(previous, current),
@@ -299,6 +343,12 @@ export async function observeGuidedWindow({
     schema_version: "browser-guided-capture/v1",
     runtime_version: DISCOVERY_RUNTIME_VERSION,
     duration_ms: Date.now() - startedAt,
+    started_at: new Date(startedAt).toISOString(),
+    ended_at: new Date().toISOString(),
+    observing: false,
+    stop_reason: signal?.aborted ? "operator_pause" :
+      transitions.length >= maxTransitions ? "transition_limit" : "time_limit",
+    interpretation_required: true,
     initial,
     transitions,
     final: previous,

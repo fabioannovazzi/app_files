@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
 
 import {
   DISCOVERY_RUNTIME_VERSION,
@@ -109,6 +110,9 @@ test("observeGuidedWindow captures bounded operator-visible state changes", asyn
   });
 
   assert.equal(capture.transitions.length, 2);
+  assert.equal(capture.observing, false);
+  assert.equal(capture.stop_reason, "transition_limit");
+  assert.equal(capture.interpretation_required, true);
   assert.equal(capture.transitions[0].before.path, "/start");
   assert.equal(capture.transitions[1].after.path, "/finish");
   assert.deepEqual(capture.capture_policy, {
@@ -119,6 +123,126 @@ test("observeGuidedWindow captures bounded operator-visible state changes", asyn
     structured_control_values_excluded: true,
     private_identifier_tokens_redacted: true,
   });
+});
+
+test("guided observation reports a pause without pretending to watch afterward", async () => {
+  const controller = new AbortController();
+  controller.abort();
+  const capture = await observeGuidedWindow({
+    tab: fakeTab({ urls: ["https://example.test/"], inventories: [inventory([])] }),
+    allowedOrigins: ["https://example.test"],
+    signal: controller.signal,
+  });
+  assert.equal(capture.stop_reason, "operator_pause");
+  assert.equal(capture.observing, false);
+  assert.deepEqual(capture.transitions, []);
+});
+
+test("a timed window without changes still ends observation", async () => {
+  const capture = await observeGuidedWindow({
+    tab: fakeTab({ urls: ["https://example.test/"], inventories: [inventory([])] }),
+    allowedOrigins: ["https://example.test"],
+    durationMs: 1000,
+  });
+  assert.equal(capture.stop_reason, "time_limit");
+  assert.equal(capture.observing, false);
+  assert.equal(capture.transitions.length, 0);
+});
+
+function documentWithFrame(nested, url = "https://example.test/process") {
+  return {
+    URL: url,
+    querySelectorAll(selector) {
+      return selector === "iframe" && nested !== undefined
+        ? [{ tagName: "IFRAME", contentDocument: nested }] : [];
+    },
+  };
+}
+
+function domTab(document) {
+  return {
+    async url() { return "https://example.test/process"; },
+    playwright: {
+      async evaluate(fn, args) {
+        return runInNewContext(`(${fn.toString()})(args)`, { document, URL, args });
+      },
+    },
+  };
+}
+
+test("the observer selects nested same-origin frames without scanning their siblings", async () => {
+  const inner = documentWithFrame(undefined);
+  const tab = domTab(documentWithFrame(documentWithFrame(inner)));
+  const state = await captureControlState({
+    tab, allowedOrigins: ["https://example.test"], frameSelectors: ["iframe", "iframe"],
+  });
+  assert.equal(state.frame_depth, 2);
+  assert.equal(state.unobserved_frame_count, 0);
+  assert.equal(state.total_control_count, 0);
+});
+
+test("top-level capture reports frames it did not observe", async () => {
+  const state = await captureControlState({
+    tab: domTab(documentWithFrame(documentWithFrame(undefined))),
+    allowedOrigins: ["https://example.test"],
+  });
+  assert.equal(state.frame_depth, 0);
+  assert.equal(state.unobserved_frame_count, 1);
+});
+
+test("selected frame controls use the same redaction and exclude field values", async () => {
+  const button = {
+    tagName: "BUTTON", innerText: "Confirm 01234567890", value: "private-value",
+    getAttribute() { return null; },
+    getBoundingClientRect() { return { width: 20, height: 20 }; },
+    closest() { return null; },
+    matches() { return false; },
+  };
+  const nested = {
+    URL: "https://example.test/accounting?private=query",
+    defaultView: { getComputedStyle() { return { visibility: "visible", display: "block" }; } },
+    querySelectorAll(selector) { return selector.includes("button") ? [button] : []; },
+  };
+  const state = await captureControlState({
+    tab: domTab(documentWithFrame(nested)), allowedOrigins: ["https://example.test"],
+    frameSelectors: ["iframe"],
+  });
+  assert.equal(state.controls[0].name, "Confirm [private identifier]");
+  assert.equal(state.frame_path, "/accounting");
+  assert.equal(state.frame_origin, "https://example.test");
+  assert.doesNotMatch(JSON.stringify(state), /01234567890|private-value|private=query/);
+});
+
+test("ambiguous frame selectors are rejected before any child is read", async () => {
+  const document = {
+    URL: "https://example.test/process",
+    querySelectorAll() { return [{ tagName: "IFRAME" }, { tagName: "IFRAME" }]; },
+  };
+  await assert.rejects(captureControlState({
+    tab: domTab(document), allowedOrigins: ["https://example.test"], frameSelectors: ["iframe"],
+  }), { message: "guided discovery: frame_not_unique" });
+});
+
+test("a frame outside the boundary is rejected before control inspection", async () => {
+  const nested = { URL: "https://outside.test/private?token=secret" };
+  await assert.rejects(captureControlState({
+    tab: domTab(documentWithFrame(nested)),
+    allowedOrigins: ["https://example.test"], frameSelectors: ["iframe"],
+  }), { message: "guided discovery: frame_origin_not_allowed" });
+});
+
+test("an inaccessible cross-origin frame reports a bounded gap", async () => {
+  await assert.rejects(captureControlState({
+    tab: domTab(documentWithFrame(null)),
+    allowedOrigins: ["https://example.test"], frameSelectors: ["iframe"],
+  }), { message: "guided discovery: frame_unavailable" });
+});
+
+test("a missing frame does not silently fall back to the top-level page", async () => {
+  await assert.rejects(captureControlState({
+    tab: domTab(documentWithFrame(undefined)),
+    allowedOrigins: ["https://example.test"], frameSelectors: ["iframe"],
+  }), { message: "guided discovery: frame_not_unique" });
 });
 
 test("captureControlState redacts identifiers embedded in control metadata", async () => {

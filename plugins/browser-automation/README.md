@@ -17,6 +17,13 @@ risultato è la capability portabile specifica del processo.
 
 Il modulo include:
 
+- insegnamento di un esempio completo, interpretato un passaggio alla volta,
+  con annuncio esplicito quando l'osservazione termina;
+- checkpoint locali riprendibili con decisioni comprese, domande aperte e punto
+  esatto di ripresa, distinti dal developer pack revisionato;
+- osservazione di iframe same-origin selezionati esplicitamente, anche annidati,
+  senza includere valori dei campi o leggere frame estranei;
+
 - un osservatore guidato read-only che conserva solo percorsi senza query,
   metadati semantici dei controlli e fingerprint di stato;
 - una skill generica di discovery, developer handoff, generazione, replay e

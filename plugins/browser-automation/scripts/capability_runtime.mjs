@@ -11,7 +11,9 @@ import { createReadStream } from "node:fs";
 import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/13";
+import { DEFAULT_DOWNLOAD_DIRECTORY, observeDownloadDirectory } from "./download_directory.mjs";
+
+export const RUNTIME_VERSION = "browser-capability-runtime/14";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v2";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
@@ -1193,83 +1195,103 @@ async function executeAction(action, context) {
         },
       );
     }
-    let downloadPromise;
+    let directoryObservation = null;
     try {
-      downloadPromise = tab.playwright.waitForEvent("download", { timeoutMs });
-    } catch (error) {
-      throw new DownloadObservationError(
-        `download event listener could not start: ${error instanceof Error ? error.message : String(error)}`,
-        {
-          evidenceCode: "download-event-listener-failed",
-          mechanismHint,
-          observedPage: beforePage,
-        },
+      if (context.downloadDirectory !== null) {
+        directoryObservation = await observeDownloadDirectory(context.downloadDirectory);
+      }
+      let downloadPromise;
+      try {
+        downloadPromise = tab.playwright.waitForEvent("download", { timeoutMs });
+      } catch (error) {
+        throw new DownloadObservationError(
+          `download event listener could not start: ${error instanceof Error ? error.message : String(error)}`,
+          {
+            evidenceCode: "download-event-listener-failed",
+            mechanismHint,
+            observedPage: beforePage,
+          },
+        );
+      }
+      const downloadOutcomePromise = Promise.resolve(downloadPromise).then(
+        (download) => ({ download, error: null }),
+        (error) => ({ download: null, error }),
       );
-    }
-    const downloadOutcomePromise = Promise.resolve(downloadPromise).then(
-      (download) => ({ download, error: null }),
-      (error) => ({ download: null, error }),
-    );
-    await locator.click({ timeoutMs });
-    const downloadOutcome = await downloadOutcomePromise;
-    const afterUrl = await tab.url();
-    const afterPage = assertAllowedUrl(afterUrl, context.allowedOrigins);
-    if (downloadOutcome.error !== null || downloadOutcome.download == null) {
-      const pageChanged = new URL(beforeUrl).href !== new URL(afterUrl).href;
-      const evidenceCode = pageChanged
-        ? "download-event-not-observed-after-navigation"
-        : "download-event-not-observed-page-unchanged";
-      const detail = downloadOutcome.error instanceof Error
-        ? downloadOutcome.error.message
-        : String(downloadOutcome.error ?? "download event returned no object");
-      throw new DownloadObservationError(`download event was not observed: ${detail}`, {
-        evidenceCode,
+      await locator.click({ timeoutMs });
+      const downloadOutcome = await downloadOutcomePromise;
+      const afterUrl = await tab.url();
+      const afterPage = assertAllowedUrl(afterUrl, context.allowedOrigins);
+      if (downloadOutcome.error !== null || downloadOutcome.download == null) {
+        const pageChanged = new URL(beforeUrl).href !== new URL(afterUrl).href;
+        const evidenceCode = pageChanged
+          ? "download-event-not-observed-after-navigation"
+          : "download-event-not-observed-page-unchanged";
+        const detail = downloadOutcome.error instanceof Error
+          ? downloadOutcome.error.message
+          : String(downloadOutcome.error ?? "download event returned no object");
+        throw new DownloadObservationError(`download event was not observed: ${detail}`, {
+          evidenceCode,
+          mechanismHint,
+          observedPage: afterPage,
+        });
+      }
+      if (directoryObservation !== null) {
+        outputs[action.output_ref].push(await directoryObservation.wait({ timeoutMs }));
+        evidenceCode = "download-directory-bytes-verified";
+      } else {
+        const download = downloadOutcome.download;
+        if (typeof download?.path !== "function") {
+          throw new DownloadObservationError(
+            "connected Chrome runtime lacks download path evidence",
+            {
+              evidenceCode: "download-path-api-unavailable",
+              mechanismHint,
+              observedPage: afterPage,
+            },
+          );
+        }
+        let path;
+        try {
+          path = await download.path({ timeoutMs });
+        } catch (error) {
+          throw new DownloadObservationError(
+            `download path resolution failed: ${error instanceof Error ? error.message : String(error)}`,
+            {
+              evidenceCode: "download-path-resolution-failed",
+              mechanismHint,
+              observedPage: afterPage,
+            },
+          );
+        }
+        if (path == null) {
+          throw new DownloadObservationError(
+            `download did not produce a local path: ${action.id}`,
+            {
+              evidenceCode: "download-path-not-returned",
+              mechanismHint,
+              observedPage: afterPage,
+            },
+          );
+        }
+        outputs[action.output_ref].push(
+          await downloadedFileEvidence(path, {
+            mechanismHint,
+            observedPage: afterPage,
+          }),
+        );
+        evidenceCode = "download-bytes-verified";
+      }
+      mechanism = mechanismHint;
+    } catch (error) {
+      if (error instanceof DownloadObservationError) throw error;
+      throw new DownloadObservationError("local download verification failed", {
+        evidenceCode: error.evidenceCode ?? "download-directory-read-failed",
         mechanismHint,
-        observedPage: afterPage,
+        observedPage: beforePage,
       });
+    } finally {
+      await directoryObservation?.close();
     }
-    const download = downloadOutcome.download;
-    if (typeof download?.path !== "function") {
-      throw new DownloadObservationError(
-        "connected Chrome runtime lacks download path evidence",
-        {
-          evidenceCode: "download-path-api-unavailable",
-          mechanismHint,
-          observedPage: afterPage,
-        },
-      );
-    }
-    let path;
-    try {
-      path = await download.path({ timeoutMs });
-    } catch (error) {
-      throw new DownloadObservationError(
-        `download path resolution failed: ${error instanceof Error ? error.message : String(error)}`,
-        {
-          evidenceCode: "download-path-resolution-failed",
-          mechanismHint,
-          observedPage: afterPage,
-        },
-      );
-    }
-    if (path == null) {
-      throw new DownloadObservationError(
-        `download did not produce a local path: ${action.id}`,
-        {
-          evidenceCode: "download-path-not-returned",
-          mechanismHint,
-          observedPage: afterPage,
-        },
-      );
-    }
-    outputs[action.output_ref].push(
-      await downloadedFileEvidence(path, {
-        mechanismHint,
-        observedPage: afterPage,
-      }),
-    );
-    evidenceCode = "download-bytes-verified";
-    mechanism = mechanismHint;
   } else {
     throw new Error(`unsupported operation: ${action.operation}`);
   }
@@ -1372,6 +1394,7 @@ export async function executeCapability({
   recoveryHandler = null,
   clock = () => new Date().toISOString(),
   environment = {},
+  downloadDirectory = DEFAULT_DOWNLOAD_DIRECTORY,
 }) {
   validateRuntimeShape(capability);
   if (!tab?.playwright || typeof tab.url !== "function" || typeof tab.goto !== "function") {
@@ -1424,6 +1447,7 @@ export async function executeCapability({
     allowedOrigins,
     approvedConsequentialActions: approved,
     pendingRecoveryRequest: null,
+    downloadDirectory,
   };
 
   try {

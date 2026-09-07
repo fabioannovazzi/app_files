@@ -1,0 +1,26 @@
+name: Browser download verification
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/browser-automation/**'
+      - 'tests/test_browser*.mjs'
+      - '.github/workflows/browser-download.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download-files:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/test_browser_download_directory.mjs tests/test_browser_automation_runtime.mjs tests/test_browser_automation_discovery_runtime.mjs

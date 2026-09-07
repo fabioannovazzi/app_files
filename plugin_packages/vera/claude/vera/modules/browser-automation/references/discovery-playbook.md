@@ -79,6 +79,64 @@ performed by the `operator` or `model`.
 
 ## 4. Observe and interpret semantically
 
+### Lead one example to a checked result
+
+Start with one representative item and a verifiable end condition, not a timed
+tour. The operator explains professional choices in ordinary language; the
+model owns the records and draft. Reuse a supplied partial checkpoint. Do not
+ask the operator to repeat understood work or author JSON.
+
+Before observation, identify one meaningful step and its expected result. Say:
+“Mostrami questo passaggio e fermati sul risultato; ti dirò quando l'osservazione
+è terminata.” Run `observeGuidedWindow` for that step, then say “L'osservazione
+è terminata” as soon as it returns. Its `observing: false` and `stop_reason`
+mean the browser is no longer watched. A transition limit, timeout or pause is
+not process completion. Activity between calls is unobserved; if the operator
+moved on, record that gap and revisit only the affected step.
+
+Interpret the action, purpose, decision reason and actual outcome before
+another window. Briefly state what was understood; ask only a specific unresolved
+question. Changed buttons do not prove which click caused the change or that a
+posting succeeded. “Conferma” and returning to a list are insufficient evidence
+of a saved accounting entry. If essential dialog or decision evidence requires
+more than metadata, name the minimum additional data class and obtain the
+applicable permission. Do not silently expand capture or collect more
+inconclusive windows.
+
+For an explicitly identified same-origin iframe, pass `frameSelectors` to
+`captureControlState` and `observeGuidedWindow`: one selector per nesting level,
+for example `["iframe[title='Accounting']"]`. Use current inspected selectors,
+not an old session's generated frame ID. The observer checks the selected
+frame's origin and applies the same value exclusions and redaction inside it.
+`unobserved_frame_count` means child frames were excluded. Missing, ambiguous
+or cross-origin frames fail closed: report the gap instead of patching the
+installed observer. Discovery support does not add iframe execution support to
+the capability runner; retain that execution gap until supported and tested.
+
+### Save progress after each interpreted step
+
+Use `scripts/teaching_checkpoint.py` with `references/teaching-checkpoint.md`.
+Save the first paused checkpoint before demonstration, then append after each
+interpreted step and before clarification or interruption. A pending step is
+`unresolved`, with a concrete question and exact `resume_instruction`. Never
+mark an unexplained step understood merely to continue. Capture summaries keep
+only timestamps, counts, stop reasons and state hashes; raw inventories remain
+ephemeral. The model assesses meaning; the helper checks shape and revision
+integrity only.
+
+Maintain a non-executable draft alongside the checkpoint as soon as evidence
+supports valid milestones. Refresh the three linked discovery artifacts below
+for the understood scope, excluding unresolved actions. Do not invent steps to
+satisfy a validator. If a valid draft is not yet possible, retain the checkpoint
+and identify the missing evidence.
+
+A new task reads the checkpoint's objective, boundaries, understood steps,
+questions and resume instruction, then verifies the current browser state.
+`ready_for_review` is neither approval nor execution evidence. Use the existing
+pack validators and operator review below for the developer handoff. At a pause,
+deliver a clearly named partial checkpoint and next step; loose notes and
+model-data reports are not completed teaching packages.
+
 At every step:
 
 1. Inspect the current allowed origin and query-free path.

@@ -7,9 +7,45 @@ import test from "node:test";
 
 import {
   canonicalJson,
-  executeCapability,
+  executeCapability as executeWithDefaultDownloads,
   executionContractSha256,
 } from "../plugins/browser-automation/scripts/capability_runtime.mjs";
+
+// Existing direct-path adapter tests opt into its documented API.
+const executeCapability = (options) => executeWithDefaultDownloads({ downloadDirectory: null, ...options });
+
+test("folder route verifies event-only downloads without calling an undocumented path API", async () => {
+  const parent = await mkdtemp(join(tmpdir(), "browser-folder-runtime-"));
+  const tab = new FakeTab({});
+  let armed = false;
+  tab.playwright = new FakePlaywright(tab, {
+    [locatorKey("placeholder", null, "Search")]: [new FakeNode()],
+    [locatorKey("role", "button", "Download")]: [new FakeNode({
+      onAction: async () => {
+        assert.equal(armed, true);
+        await writeFile(join(parent, "new.xml"), "abc");
+      },
+    })],
+  });
+  tab.playwright.waitForEvent = async () => {
+    armed = true;
+    return {};
+  };
+  const folderCapability = syntheticDownloadCapability();
+  folderCapability.milestones[1].actions[0].timeout_ms = 3000;
+  const runParent = await mkdtemp(join(tmpdir(), "browser-folder-receipt-"));
+  const summary = await executeWithDefaultDownloads({
+    tab, capability: folderCapability,
+    inputs: { query: "invoice", "max-results": 10 },
+    runDirectory: join(runParent, "run"), runId: "folder-download",
+    downloadDirectory: parent,
+  });
+  const receipt = JSON.parse(await readFile(summary.receipt_path, "utf8"));
+  assert.equal(receipt.action_results.at(-1).evidence_code, "download-directory-bytes-verified");
+  const output = JSON.parse(await readFile(summary.outputs_path, "utf8"));
+  assert.equal(output.files[0].byte_length, 3);
+  assert.equal(JSON.stringify(summary).includes("new.xml"), false);
+});
 
 function locatorKey(kind, role, value) {
   return `${kind}:${role ?? ""}:${value ?? ""}`;
@@ -460,8 +496,11 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
     runLock.outputs_sha256,
     createHash("sha256").update(outputsText, "utf8").digest("hex"),
   );
-  assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
-  assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+  // POSIX permission bits do not represent Windows ACLs.
+  if (process.platform !== "win32") {
+    assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
+    assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+  }
 });
 
 test("goto accepts a committed exact target after the connected tab reports a timeout", async () => {

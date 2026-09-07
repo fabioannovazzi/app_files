@@ -60,6 +60,10 @@ neutral page first, or repeat a visibility checkpoint. If the extension is not
 connected, ask the operator to connect Google Chrome under Settings → Computer Use →
 Google Chrome, then stop; do not cycle through launch attempts.
 
+Local filesystem verification of browser downloads in the normal Downloads
+folder is part of the runtime, like writing receipts; it is not desktop control.
+The runtime handles it automatically without a documented download `path()` API.
+
 Browser Automation has no native desktop-control fallback. If a
 required step leaves Chrome or its DOM, stop the executable browser flow,
 return or record `native_gap`, and hand that exact step to the operator. Do not
@@ -104,7 +108,15 @@ consequential action or genuine ambiguity requires one.
 
 ### Discover or change a process
 
-Use the discovery playbook. Accept one of three session modes:
+Use the discovery playbook. Lead one representative example through a checked
+result. After each short observation window, announce that observation stopped,
+interpret the step and persist progress through `scripts/teaching_checkpoint.py`
+before continuing. Ask only about unresolved meaning, decisions or outcomes;
+do not collect repeated windows of unexplained control changes. Follow the
+playbook's explicit iframe and incremental checkpoint instructions. A partial
+checkpoint is not a reviewed developer pack.
+
+Accept one of three session modes:
 
 - `guided`: the operator demonstrates the process while the read-only discovery
   runtime polls bounded before/after control states;
@@ -193,16 +205,17 @@ outputs use `text` extraction mode. A required record, scalar, summary, or
 download set must be materially produced before a run can pass; an empty
 `record_set` is valid for a declared no-result branch. Download outputs are
 always `artifact_only` and record the local path, byte length, and file SHA-256
-in `outputs.json` without returning the path to the model. Before relying on a
-download action, feature-detect that the connected Chrome download event exposes
-`path()`. If it does not, the runtime returns the sanitized `native_gap`
-category with a bounded reason code. Failed download receipts distinguish event,
-navigation, path, and byte-read evidence gaps and may include only a categorical
-control-mechanism hint plus the post-click origin and query-free path. They do
-not retain the href, URL query, raw browser error, page content, or downloaded
-bytes. Do not claim ZIP retrieval, inspect the browser profile, or invoke a
-desktop-control fallback. Hand the native step to the operator and keep it
-outside clean replay evidence.
+in `outputs.json` without returning the path to the model. The default download route verifies the normal Downloads folder locally: snapshot
+before the event listener and click, wait for a single new completed file, then
+record byte length and SHA-256. Do not inspect `PlaywrightDownload.path()` when it
+is undocumented. For an existing redirected Downloads folder, pass its actual
+local path as `downloadDirectory`; never change Chrome settings or create a special
+folder. Avoid unrelated downloads during the verification window. Preexisting
+files, overwrites, partial downloads and ambiguous arrivals cannot pass. Receipt
+code `download-directory-bytes-verified` describes folder-correlated evidence;
+see `references/capability-contract.md` for its attribution boundary. File contents
+remain local. No browser profile inspection or desktop-control fallback is needed.
+
 
 Extraction field locators are resolved inside the action's already resolved
 root. When a field reads that root control itself, author
