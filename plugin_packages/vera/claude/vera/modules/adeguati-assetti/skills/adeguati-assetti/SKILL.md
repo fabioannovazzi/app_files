@@ -90,7 +90,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Revisione degli assetti organizzativi, amministrativi e contabili
+# Valutazione degli assetti organizzativi, amministrativi e contabili
 
 Help the professional assess whether this enterprise's responsibilities, processes
 and information support its actual activities and timely decisions. Deliver a

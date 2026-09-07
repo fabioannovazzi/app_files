@@ -58,12 +58,16 @@
     {
       "id": "hash-bound-canonical-review",
       "control": "final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex or Cowork, when local MCP is callable, validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Without local MCP, both runtimes consume the same canonical local review records and keep decisions pending unless persisted artifacts prove save and apply; unmanaged or legacy runs may still use an inline payload."
+    },
+    {
+      "id": "local-review-output-download",
+      "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-06",
+    "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "43e81cea83a938dfac17dd47e7da1926f31353bbd0fcfe554e513710c660c35c"
+    "source_fingerprint": "4bc377defcfe0611c6b87c4d24c259c253d08b573edffffa8819adcc2832c538"
   }
 }

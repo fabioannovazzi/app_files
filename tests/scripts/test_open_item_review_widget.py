@@ -53,8 +53,11 @@ def test_accounting_desk_separates_documents_and_withholds_unproven_settlement(
         pytest.skip("Node is required to execute the generated widget")
     html = ASSET.read_text(encoding="utf-8")
     javascript = re.search(r"<script>(.*?)</script>", html, re.DOTALL)[1]
-    javascript = javascript.split(
-        '    document.getElementById("search").addEventListener', 1
+    javascript = re.split(
+        r'^    document\.getElementById\("[^\"]+"\)\.addEventListener',
+        javascript,
+        maxsplit=1,
+        flags=re.MULTILINE,
     )[0]
     exercise = r"""
     const assert = require("node:assert/strict");

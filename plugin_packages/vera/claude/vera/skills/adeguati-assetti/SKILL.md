@@ -90,7 +90,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Revisione degli assetti
+# Adeguati assetti
 
 Resolve `../../modules/adeguati-assetti` from this skill directory in the installed
 package, or `../../../adeguati-assetti` in repository source. Read that module's

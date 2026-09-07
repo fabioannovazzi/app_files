@@ -277,7 +277,8 @@ def render_memo(record: dict[str, Any]) -> str:
     }
     review = record["review"]
     lines = [
-        "# Revisione degli assetti / Organizational arrangements review",
+        "# Valutazione degli assetti organizzativi, amministrativi e contabili / "
+        "Assessment of organizational, administrative and accounting arrangements",
         "",
         str(review["as_of"]),
         "",

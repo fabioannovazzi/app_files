@@ -382,6 +382,7 @@ const toolOutput = {
 const context = {
   Blob, URL, URLSearchParams, console, document, navigator: {}, setTimeout, clearTimeout,
   window: {
+    addEventListener() {},
     location: { search: "" },
     openai: {
       toolOutput, widgetState: null, lastState: null,
@@ -2429,3 +2430,62 @@ def test_non_plotting_review_apply_tool_updates_json_records_when_target_contrac
         (output_dir / "applied_decisions.json").read_text(encoding="utf-8")
     )
     assert applied["effects"][0]["structured_update"]["records_key"] == "results"
+
+
+@pytest.mark.parametrize(
+    ("plugin", "asset", "token_location"),
+    [
+        ("deep-research-validator", "deep-research-review-widget.html", "top"),
+        ("deep-research-validator", "deep-research-review-widget.html", "reference"),
+        ("prompt-optimizer", "prompt-optimizer-review-widget.html", "top"),
+        ("prompt-optimizer", "prompt-optimizer-review-widget.html", "reference"),
+        (
+            "client-file-preparation",
+            "client-file-preparation-review-widget.html",
+            "policy",
+        ),
+    ],
+)
+@pytest.mark.parametrize("operation", ["saveToolArgs", "applyToolArgs"])
+def test_token_bound_widget_requests_omit_full_review_payload(
+    plugin: str, asset: str, token_location: str, operation: str
+) -> None:
+    """A bound request sends the opaque token rather than copying case content."""
+    widget_path = ROOT / "plugins" / plugin / "assets" / asset
+    script = r"""
+const fs = require('node:fs');
+const vm = require('node:vm');
+const html = fs.readFileSync(process.argv[1], 'utf8');
+const transport = html.slice(html.indexOf('    function saveToolArgs()'), html.indexOf('    function parseToolResult'));
+const token = 'synthetic-bound-token';
+const payload = {run_intake: {private: 'source'}, review_payload: {private: 'case'}, ui_decisions: {}, final_artifacts: {}};
+if (process.argv[2] === 'top') payload.persistence_token = token;
+if (process.argv[2] === 'reference') payload.review_reference = {persistence_token: token};
+if (process.argv[2] === 'policy') payload.decision_policy = {persistence_token: token};
+const context = {state: {payload}, reviewPayload: () => payload.review_payload, collectDecisionInputs: () => [{item_id: 'case-1', action: 'accept'}], reviewerAliasValue: () => 'reviewer'};
+vm.createContext(context);
+const result = vm.runInContext(transport + '\n' + process.argv[3] + '()', context);
+process.stdout.write(JSON.stringify(result));
+"""
+    completed = subprocess.run(
+        [
+            _bundled_node_or_skip(),
+            "-e",
+            script,
+            str(widget_path),
+            token_location,
+            operation,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    request = json.loads(completed.stdout)
+    assert request["persistence_token"] == "synthetic-bound-token"
+    assert request["decisions"] == [{"item_id": "case-1", "action": "accept"}]
+    assert {
+        "run_intake",
+        "review_payload",
+        "ui_decisions",
+        "final_artifacts",
+    }.isdisjoint(request)

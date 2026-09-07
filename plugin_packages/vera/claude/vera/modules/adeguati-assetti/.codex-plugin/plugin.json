@@ -1,6 +1,6 @@
 {
   "name": "adeguati-assetti",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Esamina organizzazione, processi e informazioni aziendali, con evidenze e piano di miglioramento.",
   "author": {
     "name": "Mparanza",
@@ -18,7 +18,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Revisione degli assetti",
+    "displayName": "Adeguati assetti",
     "shortDescription": "Esamina responsabilità, processi, reporting ed evidenze operative.",
     "longDescription": "Prepara una valutazione motivata degli assetti organizzativi, amministrativi e contabili, con rilievi, azioni proporzionate e riesame delle azioni precedenti. Non certifica adeguatezza.",
     "developerName": "Mparanza",

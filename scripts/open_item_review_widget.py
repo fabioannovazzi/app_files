@@ -52,12 +52,14 @@ def customize_review(html: str) -> str:
         "    const PANEL_KEYS = ", helpers + "    const PANEL_KEYS = ", 1
     )
     html = html.replace("  </style>", css + "\n  </style>", 1)
-    start = html.index('      <section class="run-context"')
-    end = html.index('      <section class="review-actions">', start)
-    diagnostics = html[start:end]
+    start = html.index('      <details class="technical-details">')
+    diagnostics_start = html.index("</summary>", start) + len("</summary>")
+    diagnostics_end = html.index("</details>", diagnostics_start)
+    end = diagnostics_end + len("</details>")
+    diagnostics = html[diagnostics_start:diagnostics_end]
     html = html[:start] + html[end:]
     action_start = html.index('      <section class="review-actions">')
-    action_end = html.index('      <section class="state-strip"', action_start)
+    action_end = html.index("</section>", action_start) + len("</section>")
     actions = html[action_start:action_end]
     html = html[:action_start] + html[action_end:]
     html = html.replace(

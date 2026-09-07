@@ -3,7 +3,7 @@ name: adeguati-assetti
 description: Review an Italian company's organizational, administrative and accounting arrangements, distinguish policies from actual operation, and prepare sourced findings, proportionate improvement actions and follow-up.
 ---
 
-# Revisione degli assetti
+# Adeguati assetti
 
 Resolve `../../modules/adeguati-assetti` from this skill directory in the installed
 package, or `../../../adeguati-assetti` in repository source. Read that module's

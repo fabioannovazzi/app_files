@@ -940,3 +940,23 @@ def test_blank_opposite_entry_side_requires_reviewed_zero_convention(
     with expectation:
         pack = build_management_pack(tables, recipe)
         assert pack["metrics"]["pnl.total.revenue"]["value"] == "2400"
+
+
+def test_italian_html_formats_ratios_without_changing_exact_pack(
+    tmp_path: Path,
+) -> None:
+    import copy
+
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source, full=True)
+    tables, inspection = _inspection_for(source)
+    recipe = _reviewed_recipe(inspection, full=True)
+    recipe["language"] = "it"
+    pack = build_management_pack(tables, recipe)
+    before = copy.deepcopy(pack)
+    page = render_html(pack)
+    assert '<html lang="it">' in page
+    assert "Situazione attuale" in page
+    assert "Quota (%)" in page
+    assert "75.00%" in page
+    assert pack == before

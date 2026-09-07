@@ -103,6 +103,10 @@ not one isolated variance, reconciliation, due-diligence schedule, or generic
 report. The workflow accepts user-supplied `.xlsx`, `.xlsm`, `.csv`, or `.zip`
 exports and does not require an ERP connector.
 
+Set the reviewed recipe `language` to `it` for an Italian report and `en` for
+an English report. This controls presentation only; source text and exact
+accounting values remain unchanged.
+
 The normal pack includes every section supported by the supplied evidence:
 
 - monthly P&L and head metrics from the general ledger or management accounts;

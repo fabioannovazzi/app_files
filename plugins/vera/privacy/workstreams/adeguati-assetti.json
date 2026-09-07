@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "workstream": "adeguati-assetti",
-  "display_name": "Organizational, administrative and accounting arrangements review",
+  "display_name": "Assessment of organizational, administrative and accounting arrangements",
   "role": "workflow",
   "governed_paths": [
     "skills",
@@ -62,6 +62,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c2134327c6a7347697cf999528a0cdb8d147c52579f4baf74d3c1ddf635acd02"
+    "source_fingerprint": "968d88221f32df9dde22a2cc0721beb4fa785c4a909757b35fa96779a7c23499"
   }
 }

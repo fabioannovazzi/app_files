@@ -29,7 +29,7 @@ class IconSpec:
 SPECS = (
     IconSpec(
         "adeguati-assetti",
-        "Vera · Revisione degli assetti",
+        "Vera · Adeguati assetti",
         "#002060",
         "#00B0F0",
         "assetti",

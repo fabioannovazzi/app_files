@@ -1558,7 +1558,7 @@ UI_I18N: dict[str, dict[str, Any]] = {
         "text": {
             "loadingPayload": "Loading payload...",
             "mcpWidget": "MCP widget",
-            "reviewedSuffix": "reviewed",
+            "reviewedSuffix": "decisions selected",
             "decidedProgress": "{decided} / {total} decided",
             "runLabel": "Run",
             "noSourcePaths": "No source paths supplied",
@@ -1751,7 +1751,7 @@ UI_I18N: dict[str, dict[str, Any]] = {
         "text": {
             "loadingPayload": "Cargando datos...",
             "mcpWidget": "Widget MCP",
-            "reviewedSuffix": "revisados",
+            "reviewedSuffix": "decisiones seleccionadas",
             "decidedProgress": "{decided} / {total} decididos",
             "runLabel": "Ejecución",
             "noSourcePaths": "No se han indicado rutas de origen",
@@ -1944,7 +1944,7 @@ UI_I18N: dict[str, dict[str, Any]] = {
         "text": {
             "loadingPayload": "Caricamento payload...",
             "mcpWidget": "Widget MCP",
-            "reviewedSuffix": "rivisti",
+            "reviewedSuffix": "decisioni selezionate",
             "decidedProgress": "{decided} / {total} decisi",
             "runLabel": "Run",
             "noSourcePaths": "Nessun percorso sorgente fornito",
@@ -2137,7 +2137,7 @@ UI_I18N: dict[str, dict[str, Any]] = {
         "text": {
             "loadingPayload": "Chargement du payload...",
             "mcpWidget": "Widget MCP",
-            "reviewedSuffix": "revus",
+            "reviewedSuffix": "décisions sélectionnées",
             "decidedProgress": "{decided} / {total} decides",
             "runLabel": "Run",
             "noSourcePaths": "Aucun chemin source fourni",
@@ -2330,7 +2330,7 @@ UI_I18N: dict[str, dict[str, Any]] = {
         "text": {
             "loadingPayload": "Payload wird geladen...",
             "mcpWidget": "MCP-Widget",
-            "reviewedSuffix": "geprueft",
+            "reviewedSuffix": "Entscheidungen ausgewählt",
             "decidedProgress": "{decided} / {total} entschieden",
             "runLabel": "Run",
             "noSourcePaths": "Keine Quellpfade angegeben",
@@ -4028,6 +4028,15 @@ TEMPLATE = """<!doctype html>
       .progress-rail {{ min-width: 0; }}
       .execution-kv, .recovery-panel__line, .workflow-card--ledger .kv, .kv {{ grid-template-columns: 1fr; }}
     }}
+    .shell > * {{ order: 0 !important; min-width: 0; }}
+    .technical-details {{ border-top: 1px solid var(--border); padding: 12px 0; }}
+    .technical-details > summary {{ cursor: pointer; padding: 8px; }}
+    @media (max-width: 600px) {{
+      .summary {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+      .summary .metric {{ padding: 10px; min-height: 0; }}
+      .tabs, .state-filters {{ flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 4px; }}
+      .tabs > *, .state-filters > * {{ flex: 0 0 auto; white-space: nowrap; }}
+    }}
   </style>
 </head>
 <body>
@@ -4044,26 +4053,6 @@ TEMPLATE = """<!doctype html>
         </div>
       </section>
       <section class=\"summary\" id=\"summary\"></section>
-      <section class=\"run-context\" id=\"run-context\"></section>
-      <section class=\"data-posture\" id=\"data-posture\"></section>
-      <section class=\"execution-provenance\" id=\"execution-provenance\"></section>
-      <section class=\"safeguards\" id=\"review-safeguards\"></section>
-      <section class=\"review-actions\">
-        <div class=\"progress-meter\">
-          <strong id=\"decision-progress\">0 / 0 decided</strong>
-          <div class=\"progress-rail\" aria-hidden=\"true\"><span id=\"decision-progress-fill\"></span></div>
-          <span class=\"status-message\" id=\"save-status\"></span>
-        </div>
-{reviewer_alias_html}        <div class=\"action-buttons\">
-          <button class=\"button\" id=\"use-recommended\" type=\"button\">Use recommended</button>
-          <button class=\"button primary\" id=\"save-decisions\" type=\"button\">Save decisions</button>
-          <button class=\"button\" id=\"apply-decisions\" type=\"button\">Apply decisions</button>
-          <button class=\"button\" id=\"copy-decisions\" type=\"button\">Copy JSON</button>
-          <button class=\"button\" id=\"download-decisions\" type=\"button\">Download JSON</button>
-        </div>
-        <div class=\"review-store\" id=\"review-store\"></div>
-        <div class=\"recovery-panel\" id=\"recovery-panel\"></div>
-      </section>
       <section class=\"state-strip\" id=\"state-strip\"></section>
       <section class=\"toolbar\">
         <input id=\"search\" class=\"search\" type=\"search\" placeholder=\"{search}\">
@@ -4080,6 +4069,29 @@ TEMPLATE = """<!doctype html>
         </div>
       </section>
       <section class=\"artifact-strip\" id=\"artifact-strip\"></section>
+      <section class=\"review-actions\">
+        <div class=\"progress-meter\">
+          <strong id=\"decision-progress\">0 / 0 decided</strong>
+          <div class=\"progress-rail\" aria-hidden=\"true\"><span id=\"decision-progress-fill\"></span></div>
+          <span class=\"status-message\" id=\"save-status\"></span>
+        </div>
+{reviewer_alias_html}        <div class=\"action-buttons\">
+          <button class=\"button\" id=\"use-recommended\" type=\"button\">Use recommended</button>
+          <button class=\"button primary\" id=\"save-decisions\" type=\"button\">Save decisions</button>
+          <button class=\"button\" id=\"apply-decisions\" type=\"button\">Apply decisions</button>
+          <button class=\"button\" id=\"copy-decisions\" type=\"button\">Copy JSON</button>
+          <button class=\"button\" id=\"download-decisions\" type=\"button\">Download JSON</button>
+        </div>
+        <div class=\"review-store\" id=\"review-store\"></div>
+        <div class=\"recovery-panel\" id=\"recovery-panel\"></div>
+      </section>
+      <details class=\"technical-details\"><summary id=\"technical-title\">Technical details</summary>
+      <section class=\"run-context\" id=\"run-context\"></section>
+      <section class=\"data-posture\" id=\"data-posture\"></section>
+      <section class=\"execution-provenance\" id=\"execution-provenance\"></section>
+      <section class=\"safeguards\" id=\"review-safeguards\"></section>
+      </details>
+
     </div>
   </main>
   <script>
@@ -4179,7 +4191,12 @@ TEMPLATE = """<!doctype html>
     function esc(value) {{
       return String(value ?? \"\").replace(/[&<>\"']/g, (char) => ({{ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\", \"'\": \"&#39;\" }})[char]);
     }}
-    function humanize(value) {{ return String(value || \"\").replace(/[_-]+/g, \" \").replace(/\\b\\w/g, (char) => char.toUpperCase()); }}
+    const IT_METADATA_LABELS = {{"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato"}};
+    function humanize(value) {{
+      const key = String(value || \"\");
+      if (activeLanguage() === \"it\" && IT_METADATA_LABELS[key]) return IT_METADATA_LABELS[key];
+      return key.replace(/[_-]+/g, \" \").replace(/\\b\\w/g, (char) => char.toUpperCase());
+    }}
     function formatValue(value) {{
       if (value == null || value === \"\") return \"\";
       if (typeof value === \"boolean\") return value ? uiText(\"yes\", \"Yes\") : uiText(\"no\", \"No\");
@@ -4277,6 +4294,7 @@ TEMPLATE = """<!doctype html>
     function metric(label, value) {{ return `<article class=\"metric\"><span>${{esc(label)}}</span><strong>${{esc(value)}}</strong></article>`; }}
     function renderSummary() {{
       const payload = reviewPayload();
+      document.getElementById(\"technical-title\").textContent = ({{it: \"Dettagli tecnici\", en: \"Technical details\", fr: \"Détails techniques\", es: \"Detalles técnicos\", de: \"Technische Details\"}})[activeLanguage()];
       const summary = payload.summary || {{}};
       const issueCount = summary.issue_count ?? items().filter((item) => item.recommended_action && item.recommended_action !== \"accept\").length;
 {artifact_count_js}
@@ -4287,7 +4305,7 @@ TEMPLATE = """<!doctype html>
         metric(ui(\"metrics\", \"issues\", \"Issues\"), issueCount),
         metric(ui(\"metrics\", \"evidence\", \"Evidence\"), items().filter((item) => Array.isArray(item.evidence) && item.evidence.length).length),
         metric(ui(\"metrics\", \"artifacts\", \"Artifacts\"), artifactCount),
-        metric(ui(\"metrics\", \"reviewed\", \"Reviewed\"), `${{validDecisionCount()}} / ${{items().length}}`),
+        metric(uiText(\"reviewedSuffix\", \"Decisions selected\"), `${{validDecisionCount()}} / ${{items().length}}`),
       ].join(\"\");
     }}
     function renderProgress() {{
@@ -4771,7 +4789,7 @@ TEMPLATE = """<!doctype html>
       const decision = decisionFor(item.id);
       const fields = [[ui(\"fields\", \"type\", \"Type\"), humanize(item.item_type)], [ui(\"fields\", \"recommended\", \"Recommended\"), actionLabel(item.recommended_action || \"\")], [ui(\"fields\", \"decision\", \"Decision\"), decision ? actionLabel(decision.action) : \"\"], [ui(\"fields\", \"source\", \"Source\"), item.source_path || \"\"], [ui(\"fields\", \"output\", \"Output\"), item.output_path || \"\"]].filter(([, value]) => value);
       const status = statusFor(item);
-      return `<section class=\"review-heading\"><div><h3>${{esc(item.title)}}</h3><p>${{esc(supportLine(item) || uiText(\"readyDecision\", \"Ready for reviewer decision.\"))}}</p></div><span class=\"status-token\">${{esc(statusLabel(status))}}</span></section><dl>${{fields.map(([key, value]) => `<dt>${{esc(key)}}</dt><dd>${{esc(value)}}</dd>`).join(\"\")}}</dl>${{decisionControlsHtml(item)}}${{workflowDetailHtml(item)}}${{evidenceHtml(item)}}`;
+      return `<section class=\"review-heading\"><div><h3>${{esc(item.title)}}</h3><p>${{esc(supportLine(item) || uiText(\"readyDecision\", \"Ready for reviewer decision.\"))}}</p></div><span class=\"status-token\">${{esc(statusLabel(status))}}</span></section><dl>${{fields.map(([key, value]) => `<dt>${{esc(key)}}</dt><dd>${{esc(value)}}</dd>`).join(\"\")}}</dl>${{outputLinkHtml(item.source_path, true)}}${{outputLinkHtml(item.output_path)}}${{decisionControlsHtml(item)}}${{workflowDetailHtml(item)}}${{evidenceHtml(item)}}`;
     }}
     function renderDetails() {{ document.getElementById(\"details\").innerHTML = detailsHtml(itemById(state.selectedId)); }}
     function artifactRecords() {{
@@ -4914,8 +4932,25 @@ TEMPLATE = """<!doctype html>
       ].filter(Boolean);
       return notes.length ? `<div class=\"artifact-notes\">${{notes.join(\"\")}}</div>` : \"\";
     }}
+    function outputLinkHtml(path, source = false) {{
+      if (!path) return \"\";
+      const downloadable = !source && typeof window.localReviewDownloadOutput === \"function\";
+      const label = activeLanguage() === \"it\" ? (downloadable ? \"Scarica documento\" : \"Copia percorso\") : (downloadable ? \"Download file\" : \"Copy path\");
+      return `<button class=\"button\" type=\"button\" data-output-path=\"${{esc(path)}}\" data-copy-only=\"${{source}}\">${{esc(label)}}</button><span role=\"status\" class=\"output-link-status\"></span>`;
+    }}
+    async function handleOutputLink(event) {{
+      const button = event.target.closest(\"button[data-output-path]\");
+      if (!button) return;
+      const message = button.nextElementSibling;
+      try {{
+        if (button.dataset.copyOnly !== \"true\" && typeof window.localReviewDownloadOutput === \"function\") await window.localReviewDownloadOutput(button.dataset.outputPath);
+        else await navigator.clipboard.writeText(button.dataset.outputPath);
+        const downloaded = button.dataset.copyOnly !== \"true\" && typeof window.localReviewDownloadOutput === \"function\";
+        message.textContent = activeLanguage() === \"it\" ? (downloaded ? \"Documento scaricato.\" : \"Percorso copiato.\") : (downloaded ? \"File downloaded.\" : \"Path copied.\");
+      }} catch (error) {{ message.textContent = error.message || String(error); }}
+    }}
     function artifactRecordHtml(record) {{
-      return `<div class=\"artifact-item\"><strong>${{esc(record.path || record.title || uiText(\"output\", \"Output\"))}}</strong><span>${{esc(artifactMetaText(record))}}</span>${{artifactTagsHtml(record)}}${{artifactQaHtml(record)}}</div>`;
+      return `<div class=\"artifact-item\"><strong>${{esc(record.path || record.title || uiText(\"output\", \"Output\"))}}</strong><span>${{esc(artifactMetaText(record))}}</span>${{artifactTagsHtml(record)}}${{artifactQaHtml(record)}}${{outputLinkHtml(record.path)}}</div>`;
     }}
     function renderArtifacts() {{
       const records = artifactRecords();
@@ -5068,6 +5103,8 @@ TEMPLATE = """<!doctype html>
       renderChrome();
       renderSummary(); renderContext(); renderDataPosture(); renderExecutionProvenance(); renderReviewSafeguards(); renderTabs(); renderRows(); renderProgress(); renderArtifacts();
     }}
+    document.getElementById(\"artifact-strip\").addEventListener(\"click\", handleOutputLink);
+    document.getElementById(\"details\").addEventListener(\"click\", handleOutputLink);
     document.getElementById(\"search\").addEventListener(\"input\", (event) => {{ state.query = event.target.value; renderRows(); }});
     document.getElementById(\"tabs\").addEventListener(\"click\", (event) => {{ const button = event.target.closest(\"button[data-type]\"); if (!button) return; state.selectedType = button.dataset.type; state.selectedId = null; render(); }});
     document.getElementById(\"state-strip\").addEventListener(\"click\", (event) => {{ const button = event.target.closest(\"button[data-state-filter]\"); if (!button) return; state.selectedState = button.dataset.stateFilter; state.selectedId = null; render(); }});
@@ -5121,10 +5158,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "load_initial_extra_js": "",
         "render_chrome_extra_js": "",
         "event_listener_extra_js": "",
-        "artifact_count_js": (
-            "      const artifactCount = summary.artifact_count ?? items().filter((item) => "
-            'String(item.item_type || "").includes("artifact")).length;'
-        ),
+        "artifact_count_js": ("      const artifactCount = artifactRecords().length;"),
         "decision_input_js": r"""    function ensureDecision(item, action = null) {
       if (!item) return null;
       const current = state.decisions[item.id] || {};
@@ -5210,6 +5244,39 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         || pickPayload(host.structuredContent)
         || pickPayload(host)
         || FALLBACK;""",
+        }
+    if target["plugin"] in {"deep-research-validator", "prompt-optimizer"}:
+        return {
+            **legacy,
+            "tool_args_js": """    function saveToolArgs() {
+      const persistenceToken = state.payload.persistence_token || state.payload.review_reference?.persistence_token;
+      return {
+        ...(persistenceToken
+          ? { persistence_token: persistenceToken }
+          : {
+              run_intake: state.payload.run_intake || null,
+              review_payload: reviewPayload(),
+              ui_decisions: state.payload.ui_decisions || null,
+            }),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }
+    function applyToolArgs() {
+      const persistenceToken = state.payload.persistence_token || state.payload.review_reference?.persistence_token;
+      return {
+        ...(persistenceToken
+          ? { persistence_token: persistenceToken }
+          : {
+              run_intake: state.payload.run_intake || null,
+              review_payload: reviewPayload(),
+              ui_decisions: state.payload.ui_decisions || null,
+              final_artifacts: state.payload.final_artifacts || null,
+            }),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }""",
         }
     if target["plugin"] == "concordato-plan-review":
         return {
@@ -5453,25 +5520,29 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       }
     }""",
             "tool_args_js": """    function saveToolArgs() {
+      const token = state.payload.decision_policy?.persistence_token || null;
       return {
-        run_intake: state.payload.run_intake || null,
-        persistence_token: state.payload.decision_policy?.persistence_token || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
+        persistence_token: token,
+        ...(token ? {} : {
+          run_intake: state.payload.run_intake || null,
+          review_payload: reviewPayload(),
+          ui_decisions: state.payload.ui_decisions || null,
+        }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
         reviewer: reviewerAliasValue() || null,
       };
     }
     function applyToolArgs() {
+      const token = state.payload.decision_policy?.persistence_token || null;
       return {
-        run_intake: state.payload.run_intake || null,
-        persistence_token: state.payload.decision_policy?.persistence_token || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        ...(state.payload.decision_policy?.persistence_token
-          ? {}
-          : { final_artifacts: state.payload.final_artifacts || null }),
+        persistence_token: token,
+        ...(token ? {} : {
+          run_intake: state.payload.run_intake || null,
+          review_payload: reviewPayload(),
+          ui_decisions: state.payload.ui_decisions || null,
+          final_artifacts: state.payload.final_artifacts || null,
+        }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
         reviewer: reviewerAliasValue() || null,
@@ -5552,7 +5623,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     });
 """,
         "artifact_count_js": """      const writtenArtifactCount = artifactRecords().length;
-      const artifactCount = summary.artifact_count ?? (writtenArtifactCount || items().filter((item) => String(item.item_type || "").includes("artifact")).length);""",
+      const artifactCount = writtenArtifactCount;""",
         "decision_input_js": r"""    const MAX_REVIEWER_REFERENCE_LENGTH = 160;
     const REVIEWER_REFERENCE_SECRET_RE = /(?:password|passwd|api[_ -]?key|access[_ -]?token|refresh[_ -]?token|session[_ -]?(?:token|cookie)|authorization)\s*[:=]/i;
     const REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE = /^(?:sk-[A-Za-z0-9_-]{16,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.)/;

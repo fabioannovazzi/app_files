@@ -1,6 +1,6 @@
 {
   "name": "open-item-reconciliation",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "description": "Verifica se le partite indicate aperte al cut-off risultano ancora da chiudere, usando le evidenze contabili disponibili.",
   "author": {
     "name": "Mparanza",
@@ -29,7 +29,7 @@
   "interface": {
     "displayName": "Riconciliazione partite aperte",
     "shortDescription": "Verifica le partite dichiarate aperte al cut-off e segnala chiusure, residui ed eccezioni.",
-    "longDescription": "Workflow Codex che parte da una popolazione di partite dichiarate aperte a una data di cut-off e verifica quali risultano chiuse, parzialmente chiuse o ancora aperte. Usa come evidenza mastrini, giornale, estratti conto, distinte di pagamento, factoring, anticipi e compensazioni; conserva i riferimenti documentali e produce workpaper Excel/Word, diagnostiche, richieste di evidenze mancanti e punti da verificare. La riconciliazione diretta dei movimenti bancari con il giornale appartiene invece al workflow separato Riconciliazione banca-contabilit\u00e0.",
+    "longDescription": "Workflow Codex che parte da una popolazione di partite dichiarate aperte a una data di cut-off e verifica quali risultano chiuse, parzialmente chiuse o ancora aperte. Usa come evidenza mastrini, giornale, estratti conto, distinte di pagamento, factoring, anticipi e compensazioni; conserva i riferimenti documentali e produce workpaper Excel/Word, diagnostiche, richieste di evidenze mancanti e punti da verificare. La riconciliazione diretta dei movimenti bancari con il giornale appartiene invece al workflow separato Riconciliazione banca-contabilità.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
