@@ -19,7 +19,11 @@
     "scripts/self_relaunch.py",
     "scripts/managed_python_runtime.py",
     "scripts/_managed_python_runtime.py",
-    "components.json"
+    "components.json",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -61,29 +65,30 @@
       "id": "declared-python-dependency-retrieval",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI)",
-      "purpose": "Install Clara's exact declared Python dependencies into a user-scoped managed virtual environment when the fingerprinted dependency cache is absent, invalid, or no longer matches the Python platform",
-      "content": "Declared package names and version constraints from Clara requirements files, plus ordinary package-index request metadata; no user files, prompts, case data, or report content are sent",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
       "optional": true,
       "requires_confirmation": false,
       "controls": [
-        "Claude Cowork's trusted SessionStart hook and Codex's first dependency check install only requirements declared in the published Clara package.",
-        "Dependencies are installed into Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
-        "The manager validates imports after installation and keys reuse by the requirements fingerprint, Python ABI, and operating-system platform.",
-        "The reporting-engine component uses its own persistent managed virtual environment; the optional shared OCR runtime remains separate."
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
       ]
     },
     {
       "id": "direct-cli-python-dependency-setup",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
-      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
-      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
       "optional": false,
       "requires_confirmation": false,
       "controls": [
-        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
-        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
-        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
       ]
     },
     {
@@ -106,6 +111,6 @@
     "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "35b7f290a26de18e142390a3d6f95bf9a3b28c0144f0d4cad9ff41f802fc511c"
+    "source_fingerprint": "c55d8cbe9d9a1d6758b31e017c2232782233891c968b0a6a7fbb5ebc8ba2ba83"
   }
 }

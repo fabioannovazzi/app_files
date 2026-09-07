@@ -101,6 +101,7 @@ __all__ = [
 PACKAGE_IMPORTS = {
     "beautifulsoup4": "bs4",
     "opencv-python": "cv2",
+    "opencv-contrib-python": "cv2",
     "paddlepaddle": "paddle",
     "pillow": "PIL",
     "pymupdf": "fitz",

@@ -52,6 +52,9 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment["CLAUDE_PLUGIN_DATA"] = str(tmp_path / "plugin-data")
+    environment["MPARANZA_RUNTIME_ROOT"] = os.environ.get(
+        "MPARANZA_RUNTIME_ROOT", str(tmp_path / "shared-runtime")
+    )
     setup = subprocess.run(
         [
             sys.executable,
@@ -69,11 +72,13 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
     assert setup.returncode == 0, setup.stdout + setup.stderr
     import json
 
-    receipts = list((tmp_path / "plugin-data").rglob(".mparanza-python-runtime.json"))
-    assert len(receipts) == 1
-    receipt = json.loads(receipts[0].read_text())
-    assert receipt["interpreter_version"].startswith("3.12")
+    receipt_path = (
+        Path(environment["MPARANZA_RUNTIME_ROOT"]) / "venv/.mparanza-shared-ready.json"
+    )
+    receipt = json.loads(receipt_path.read_text())
+    assert "core" in receipt["features"]
     assert receipt["runtime_key"].startswith("cpython-312-")
+    assert not list((tmp_path / "plugin-data").rglob("pyvenv.cfg"))
 
     result = subprocess.run(
         [
@@ -173,6 +178,9 @@ def test_cowork_zip_renders_through_component_managed_runtime(
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment["CLAUDE_PLUGIN_DATA"] = str(tmp_path / "plugin-data")
+    environment["MPARANZA_RUNTIME_ROOT"] = os.environ.get(
+        "MPARANZA_RUNTIME_ROOT", str(tmp_path / "shared-runtime")
+    )
     output = tmp_path / "output"
 
     result = subprocess.run(

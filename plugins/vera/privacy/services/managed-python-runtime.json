@@ -7,7 +7,11 @@
     "scripts/check_dependencies.py",
     "scripts/_managed_python_runtime.py",
     "scripts/managed_python_runtime.py",
-    "skills/vera/SKILL.md"
+    "skills/vera/SKILL.md",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -17,9 +21,9 @@
       "id": "declared-core-dependency-retrieval",
       "kind": "hosted_service",
       "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
-      "purpose": "Prepare the selected Vera module's published core or explicitly selected optional Python requirements in an isolated virtual environment on first use or after its requirement fingerprint or Python platform changes",
-      "content": "Package names and version constraints from the selected published module requirements files, plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by the managed runtime.",
-      "retention": "Downloaded packages are stored in a fingerprinted user-scoped local Vera data directory until that local cache is removed. When CODEX_SANDBOX or CODEX_THREAD_ID identifies Codex execution, the manager uses a stable private directory beneath the operating system's per-user temporary location so an approved setup command and subsequent sandboxed execution resolve the same writable target. The thread identifier is used only as a presence signal; its value is not included in the directory name or sent to the package index. Package-index request-log retention is controlled by the configured index and is outside Vera's control. Validated environments are published as immutable generations using an atomic active pointer. Prior generations remain locally available for running readers until the local cache is removed; failed unpublished generations are removed.",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core requirements and explicitly approved optional OCR in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Published shared package names and version constraints plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by this runtime installer.",
+      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -27,10 +31,10 @@
         "openai-codex"
       ],
       "controls": [
-        "The manager installs only the selected module's published default requirements or explicit package-relative optional requirements graph and never derives package names from prompts, client files, or generated content.",
+        "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
         "When Codex blocks package-index access, the manager emits a bounded permission-required signal so the same declared-requirements command can be retried through Codex host network approval; it does not attempt an undeclared package or alternate installer.",
-        "The target is keyed by the recursive requirements fingerprint, Python ABI, and operating-system platform and is validated before use.",
-        "Each Vera module has a separate virtual environment, preventing incompatible requirement graphs or base-interpreter packages from being combined; the optional shared OCR runtime remains separate and requires its existing explicit approval."
+        "Readiness validates the common recipe, enabled features and supported Python runtime before use.",
+        "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
       ]
     },
     {
@@ -56,19 +60,21 @@
   "security_controls": [
     {
       "id": "published-requirements-only",
-      "control": "Runtime setup accepts only the selected packaged module's default or explicit package-relative requirements files and their local recursive includes.",
+      "control": "Setup validates package-relative selections and installs the published shared recipe. No package names or dependency instructions are accepted from client documents.",
       "implemented_by": [
         "scripts/managed_python_runtime.py",
-        "scripts/_managed_python_runtime.py"
+        "scripts/_managed_python_runtime.py",
+        "scripts/_shared_python_runtime.py"
       ],
       "on_violation": "An unknown module, missing requirements file, invalid target, or failed dependency validation stops the helper instead of executing it in a partial environment."
     },
     {
       "id": "user-scoped-runtime-isolation",
-      "control": "Managed packages are written outside plugin source and client workspaces to fingerprinted private virtual-environment generations for the selected module and current Python platform. An operating-system lock serializes installation, and only a validated generation is published through an atomic active pointer. Setup failure preserves the previously active generation. Symlink targets and pointers are rejected. The location is write-probed before use and remains user-private when Codex requires the operating system's per-user temporary directory. On Windows, compact directory names and a 128-bit hash of plugin, module, Python ABI/platform and requirements fingerprint reduce generated path length while preserving cache isolation. Existing environments are not moved or deleted.",
+      "control": "One fixed environment is located outside plugin source and client folders. An exclusive operating-system installation lock waits for running managed Python readers, which hold a shared lease through a startup hook. Setup removes the ready receipt before mutation and restores it only after pip check and component validation. Failed setup leaves execution unavailable until repair. Symlink roots, locks and metadata are rejected. The installer is launched from base Python to avoid self-deadlock. This lease is concurrency protection, not a security sandbox. Other historical environments are not automatically deleted.",
       "implemented_by": [
         "scripts/managed_python_runtime.py",
-        "scripts/_managed_python_runtime.py"
+        "scripts/_managed_python_runtime.py",
+        "scripts/_shared_python_runtime.py"
       ],
       "on_violation": "A target creation or validation failure returns a bounded setup error and the requested helper is not run."
     }
@@ -77,6 +83,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "e2f82cf40829703b846c7516193edd12c765d998b37d12aeb033f9895adeeac4"
+    "source_fingerprint": "9ae863b5ad9e24d0e9a19c0cb2178799851fc8916758dc5ad8a62a32559cc602"
   }
 }

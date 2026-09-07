@@ -79,6 +79,9 @@ def make_packaged_component(root: Path) -> Path:
     )
     (scripts / "managed_python_runtime.py").write_bytes(VERA_MANAGER.read_bytes())
     (scripts / "_managed_python_runtime.py").write_bytes(RUNTIME_SOURCE.read_bytes())
+    (scripts / "_shared_python_runtime.py").write_bytes(
+        RUNTIME_SOURCE.with_name("_shared_python_runtime.py").read_bytes()
+    )
     (root / "components.json").write_text(
         json.dumps({"schema_version": 1, "plugins": ["studio-archive"]}) + "\n",
         encoding="utf-8",

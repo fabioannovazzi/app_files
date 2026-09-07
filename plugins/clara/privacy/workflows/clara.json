@@ -27,7 +27,11 @@
     "contracts/real_data_pilot_semantic_review_receipt.v1.schema.json",
     "contracts/real_general_ledger_preparation_case.v1.schema.json",
     "contracts/real_general_ledger_semantic_decisions.v1.schema.json",
-    "scripts"
+    "scripts",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -152,42 +156,44 @@
       "id": "automatic-core-python-dependency-retrieval",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI) or the package index selected by the user's Python configuration",
-      "purpose": "Install Clara's exact declared core Python dependencies into a user-scoped managed runtime when the fingerprinted environment is absent, invalid, or superseded by a changed dependency contract",
-      "content": "Declared package names and version constraints from Clara requirements files, plus ordinary package-index request metadata; no user files, prompts, case data, or advisory content are sent",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
       "optional": false,
       "requires_confirmation": false,
       "controls": [
-        "The trusted SessionStart hook installs only requirements declared in the published Clara package; no case path, prompt, or source content is used to construct the package request.",
-        "Dependencies are installed into a fingerprinted virtual environment under Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
-        "The manager binds fingerprints to the Python ABI, validates dependencies before activation, reuses a healthy environment across restarts, activates upgrades atomically, and leaves the last working environment active if setup fails."
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
       ]
     },
     {
       "id": "selected-module-python-dependency-retrieval",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI) or the package index selected by the user's Python configuration",
-      "purpose": "Install the selected Clara module's exact declared Python dependencies into a persistent module-scoped managed runtime",
-      "content": "Package names and version constraints from the selected published module requirements file, plus ordinary package-index request metadata; no user files, prompts, case data, or advisory content are sent",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
       "optional": true,
       "requires_confirmation": false,
       "controls": [
-        "The module route runs only after the user selects work whose packaged module declares its own dependency contract.",
-        "The runtime manager accepts requirements only from a packaged Clara module and never constructs package requirements from case or conversation content.",
-        "The manager validates a fingerprinted module environment before activation and leaves the last working environment active if setup fails."
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
       ]
     },
     {
       "id": "approved-managed-ocr-runtime",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI)",
-      "purpose": "Install the optional shared PaddleOCR runtime after the user approves the roughly 500 MB first-use download",
-      "content": "Declared OCR package names and version constraints from Clara's published requirements-ocr.txt, plus ordinary package-index request metadata; no user files, document contents, prompts, case data, or advisory content are sent",
+      "purpose": "Enable the published optional PaddleOCR feature in the same shared environment after user approval.",
+      "content": "Package names and constraints from requirements-shared-ocr.txt and ordinary package-index request metadata; no client files or document content are sent by setup.",
       "optional": true,
       "requires_confirmation": true,
       "controls": [
         "The input preflight requests this setup only for images or visual-only PDFs that require local OCR.",
         "The Clara skill requires explicit user approval before the managed installer runs.",
-        "The installer uses only the published OCR requirements and writes to a fingerprinted user-scoped runtime shared with Vera."
+        "The installer uses only the published OCR recipe in the same shared environment as core dependencies, and retains this feature across subsequent core updates."
       ]
     },
     {
@@ -219,6 +225,6 @@
     "reviewed_at": "2026-08-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a05b3e24aee06ab2dbcd7261a82abb27075770bbb0d6a2387afaa0da8adfd3a4"
+    "source_fingerprint": "aaed15a6e443497608299afc68557b6f7c0c582cb3db3f46420ebaab40e06ce5"
   }
 }
