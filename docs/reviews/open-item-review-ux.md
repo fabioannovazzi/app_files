@@ -4,10 +4,11 @@ Working preview: http://127.0.0.1:56000/review
 
 Retained branch: `codex/open-item-review-ux` in
 `/Users/fabio/.codex/worktrees/a740/app_files`.
-Base: `4856ae9f3a80c8a7ba84a6d8caee09a64aa3a736`, the completed Vera
-audit/remediation release (PR #556). No merge, deployment or publication was
-performed for this implementation. Changes and generated candidate packages
-remain in this worktree for review.
+Implementation base: `4856ae9f3a80c8a7ba84a6d8caee09a64aa3a736`, the completed Vera
+audit/remediation release (PR #556). The subsequent authorized deployment
+candidate is rebased onto `21da5609` (PR #558), retaining the Python 3.12 runtime
+standardization and published-version announcement. Deployment evidence belongs
+to PR #559; Marketplace publication remains separate.
 
 ## What changed
 
@@ -110,10 +111,10 @@ add a model call or external connector.
 
 ## Remaining limits
 
-1. The update-notification suite has an unrelated environment-dependent failure:
-   the checkout's published manifest says Vera 0.1.205, while the installed cache
-   contains 0.1.212. Sixteen other update-notification cases pass. Publication
-   metadata and deployment were intentionally left outside this task.
+1. The implementation-stage update-notification failure (manifest 0.1.205 versus
+   installed 0.1.212) is resolved by upstream PR #558. All 468 focused workflow,
+   UI, package, icon and update-notification cases pass after rebasing. The public
+   announcement remains 0.1.212; building 0.1.213 does not announce it as Published.
 2. On a successor with failed accounting controls, repeating Apply with the old
    predecessor checkpoint is rejected with
    `external expected predecessor checkpoint does not match`. The failed repeat
