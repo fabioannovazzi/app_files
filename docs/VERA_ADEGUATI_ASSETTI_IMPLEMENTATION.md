@@ -42,6 +42,9 @@ change. It still asks only questions that materially affect the next step.
 - Lucia's matter-opening privacy record also binds the shared archive server.
   Its reviewed fingerprint was refreshed for the workflow-ID addition; all 27
   Lucia plugin tests pass. Both cross-product freshness checks now run in CI.
+- The shared CLI inventory now classifies both new module scripts and adds a
+  managed-context check. Its 151 tests pass. Public directory fixtures include
+  the new function, canonical label and Italian scope; all 181 website tests pass.
 - Five public-page languages and desktop/mobile layouts were inspected locally.
 - Codex, ChatGPT upload and Cowork projections have been rebuilt. The shared
   archive membership change also affects Clara and Lucia package bytes.

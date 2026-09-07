@@ -29,6 +29,7 @@ from vera_assurance import (  # noqa: E402
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("aml-review", "aml_review.py"),
+    ("adeguati-assetti", "assetti_review.py"),
     ("archive-organization", "archive_organization.py"),
     ("open-item-reconciliation", "audit_assurance.py"),
     ("open-item-reconciliation", "build_missing_evidence_requests.py"),
@@ -119,6 +120,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 # Maintenance and inspection CLIs do not create or resume a customer workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("aml-review", "check_dependencies.py"),
+    ("adeguati-assetti", "check_dependencies.py"),
     ("archive-organization", "check_dependencies.py"),
     ("open-item-reconciliation", "check_dependencies.py"),
     ("open-item-reconciliation", "implementation_bootstrap.py"),
