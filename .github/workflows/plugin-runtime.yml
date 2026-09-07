@@ -18,8 +18,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      # Shared test fixtures import the repository's HTML slide models.
-      - run: python -m pip install pytest pytest-cov beautifulsoup4 black==25.1.0 isort==6.0.1 mypy bandit
+      # Shared test modules import the repository's HTML and PDF readers.
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 pypdf black==25.1.0 isort==6.0.1 mypy bandit
       - name: Verify review records, evidence, decisions and real archive bindings
         run: python -m pytest -q tests/plugins/test_adeguati_assetti.py tests/plugins/test_adeguati_assetti_packages.py --cov=plugins/adeguati-assetti/scripts --cov-fail-under=80
       - name: Require lifecycle classification for every registered CLI
