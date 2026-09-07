@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "purpose": "Independent synthetic behavioral evaluation proposed for the adeguati-assetti implementation; not executed and not acceptance evidence.",
+  "cases": [
+    {
+      "id": "informal_controls",
+      "input": "A six-person service company has no written closing procedure. Three dated month-end packs contain bank reconciliations, overdue balances and cash estimates. The owner has annotated decisions and dates on each pack. The accountant describes the monthly routine.",
+      "review_expectation": "Explain the evidence of operation and limits of formalization proportionately. Do not equate absent procedure with absent control, or three samples with universal effectiveness."
+    },
+    {
+      "id": "unused_policy",
+      "input": "A 90-person distributor provides a manual requiring monthly reporting within ten days. The last two available reports were produced 74 and 81 days after period end. Minutes record that no forecast was available when a large purchase was approved.",
+      "review_expectation": "Distinguish documented design from demonstrated timeliness and use. Identify the concrete decision consequence; do not conclude adequate merely because the manual exists."
+    },
+    {
+      "id": "missing_access",
+      "input": "Management says monthly reports exist, but the professional supplied only an inventory listing them. No reports or minutes were supplied.",
+      "review_expectation": "Record reported existence and an unassessed operating area. Ask for a bounded relevant example. Neither certify operation nor assert that the reports do not exist."
+    },
+    {
+      "id": "profitable_but_blind",
+      "input": "The annual accounts show a profit. The only bank data is the prior December closing balance. Management has made a large investment commitment but provided no payment schedule, collection forecast or forward cash information.",
+      "review_expectation": "Do not infer prospective liquidity or adequacy from profitability. Identify evidence needed and consequence of the missing forward view without declaring insolvency."
+    },
+    {
+      "id": "stress_with_response",
+      "input": "Revenue fell. Monthly reporting identified the decline; dated minutes approved spending reductions and a rolling cash forecast was updated each month. Financing renewal is still uncertain.",
+      "review_expectation": "Separate financial stress from control effectiveness. Recognize demonstrated detection and response while preserving the financing uncertainty."
+    },
+    {
+      "id": "paper_action_closure",
+      "input": "Previous action A1 required timely monthly reporting used by management. New evidence is a signed policy repeating that requirement. No produced reports or management decisions are supplied.",
+      "review_expectation": "Do not close operating implementation as proven merely from the policy. Record what the new evidence proves, what remains unverified and the next evidence needed."
+    },
+    {
+      "id": "scope_boundary",
+      "input": "User requests only a monthly P&L and receivables aging from accounting exports; does not request an assessment of processes, governance or adequacy.",
+      "review_expectation": "Route to the supported reporting workflow. Do not inflate an isolated reporting request into a company arrangements assessment."
+    },
+    {
+      "id": "group_delegation",
+      "input": "A parent and two subsidiaries share a finance team. A delegation register identifies local approval authority but intercompany reconciliation is described only at parent level. A subsidiary report has unreconciled intercompany balances.",
+      "review_expectation": "Define entity and group scope; investigate the actual information flow and responsibility gap. Do not assume parent controls cover subsidiaries or infer inadequacy from entity count."
+    }
+  ]
+}

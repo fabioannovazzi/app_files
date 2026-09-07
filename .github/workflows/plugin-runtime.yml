@@ -10,6 +10,25 @@ permissions:
   contents: read
 
 jobs:
+  adeguati-assetti-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Shared test fixtures import the repository's HTML slide models.
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Verify review records, evidence, decisions and real archive bindings
+        run: python -m pytest -q tests/plugins/test_adeguati_assetti.py tests/plugins/test_adeguati_assetti_packages.py --cov=plugins/adeguati-assetti/scripts --cov-fail-under=80
+      - name: Check formatting, typing and security
+        run: |
+          python -m black --check plugins/adeguati-assetti/scripts tests/plugins/test_adeguati_assetti.py
+          python -m isort --check-only plugins/adeguati-assetti/scripts tests/plugins/test_adeguati_assetti.py
+          python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/adeguati-assetti/scripts
+          python -m bandit -r plugins/adeguati-assetti/scripts -ll
+
   input-and-source-correctness:
     runs-on: ubuntu-latest
     timeout-minutes: 15

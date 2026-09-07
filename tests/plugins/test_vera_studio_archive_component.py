@@ -30,6 +30,7 @@ CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
     "aml-review",
+    "adeguati-assetti",
     "open-item-reconciliation",
     "archive-organization",
     "client-file-preparation",

@@ -28,6 +28,13 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "adeguati-assetti",
+        "Vera · Revisione degli assetti",
+        "#002060",
+        "#00B0F0",
+        "assetti",
+    ),
+    IconSpec(
         "aml-review", "Vera · Revisione antiriciclaggio", "#002060", "#00B0F0", "aml"
     ),
     IconSpec(
@@ -339,6 +346,7 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "assetti": f"""<path d="M25 12h14v12H25zM10 40h14v12H10zM40 40h14v12H40zM32 24v8M17 40v-8h30v8" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="32" cy="32" r="3" fill="{accent}"/>""",
         "aml": f"""<path d="M15 17h20v15H15zM29 38h18v13H29z" fill="none" stroke="{paper}" stroke-width="3"/><path d="M25 32v12h4" fill="none" stroke="{paper}" stroke-width="3"/><circle cx="43" cy="22" r="7" fill="none" stroke="{accent}" stroke-width="3"/><path d="m48 27 6 6" stroke="{accent}" stroke-width="3"/>""",
         "organize": f"""
   <path d="M12 23a5 5 0 0 1 5-5h10l5 6h15a5 5 0 0 1 5 5v17a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5z" fill="{paper}"/>
