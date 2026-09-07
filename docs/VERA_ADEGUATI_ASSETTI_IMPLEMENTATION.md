@@ -39,6 +39,9 @@ change. It still asks only questions that materially affect the next step.
   the test now checks both the package and declared Python 3.12 downloads.
   Clara's two version-bound privacy fingerprints were reviewed and refreshed.
   The 33 affected Clara planner/privacy tests pass.
+- Lucia's matter-opening privacy record also binds the shared archive server.
+  Its reviewed fingerprint was refreshed for the workflow-ID addition; all 27
+  Lucia plugin tests pass. Both cross-product freshness checks now run in CI.
 - Five public-page languages and desktop/mobile layouts were inspected locally.
 - Codex, ChatGPT upload and Cowork projections have been rebuilt. The shared
   archive membership change also affects Clara and Lucia package bytes.
