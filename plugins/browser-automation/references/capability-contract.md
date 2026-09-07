@@ -146,10 +146,12 @@ persisting the private query in a receipt; remaining on the inbox route fails
 the postcondition.
 Download actions snapshot the operator's normal Downloads folder before arming
 an event listener and clicking. The event is required. The local verifier waits
-for exactly one new regular file, no partial downloads, and stable metadata,
+for exactly one new regular file, no new partial downloads, and stable metadata,
 then hashes its bytes and rechecks file identity. Existing files and overwrites
-are excluded. Concurrent arrivals, an existing partial download, or an unavailable
-folder stop the action with a sanitized reason code. The directory lock serializes
+are excluded. Preexisting partial files do not block a new download and remain untouched.
+If a preexisting partial disappears during observation, attribution is ambiguous:
+it may have completed under a new name. Concurrent arrivals or an unavailable
+folder also stop verification with a sanitized reason code. The directory lock serializes
 cooperating Vera runs. Do not run unrelated downloads during this short window:
 directory correlation cannot distinguish a single unrelated arrival from the
 clicked download. `download-directory-bytes-verified` records this evidence basis;
