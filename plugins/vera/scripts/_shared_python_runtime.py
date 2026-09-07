@@ -18,7 +18,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 2
+POLICY_REVISION = 3
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
 # while readers are running. This is concurrency protection, not a sandbox.
@@ -258,8 +258,24 @@ def _install(
     # unavailable and is repaired by the next serialized install, never reused.
     (path / RECEIPT).unlink(missing_ok=True)
     if not (path / "pyvenv.cfg").is_file():
+        try:
+            interpreter = api._python312_executable(run, allow_uv=False)
+        except ValueError as error:
+            if "require CPython 3.12" not in str(error):
+                raise
+            import importlib.util
+
+            bootstrap_path = Path(__file__).with_name("_python_bootstrap.py")
+            spec = importlib.util.spec_from_file_location(
+                "mparanza_python_bootstrap", bootstrap_path
+            )
+            if spec is None or spec.loader is None:
+                raise ValueError("Packaged Python bootstrap is unavailable")
+            bootstrap = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(bootstrap)
+            interpreter = bootstrap.provision(path.parent, run)
         result = run(
-            [api._python312_executable(run), "-m", "venv", "--without-pip", str(path)],
+            [interpreter, "-m", "venv", "--without-pip", str(path)],
             capture_output=True,
             text=True,
             check=False,

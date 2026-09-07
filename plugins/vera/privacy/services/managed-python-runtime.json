@@ -11,7 +11,8 @@
     "scripts/_shared_python_runtime.py",
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
-    "constraints-shared-macos-py312.txt"
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -40,10 +41,10 @@
     {
       "id": "declared-python312-retrieval",
       "kind": "hosted_service",
-      "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
-      "purpose": "Provision the single supported CPython 3.12 interpreter when it is absent and uv is available",
+      "destination": "PyPI files.pythonhosted.org for the pinned uv bootstrap, and Astral python-build-standalone CPython distributions on GitHub",
+      "purpose": "Provision the single supported CPython 3.12 interpreter when it is absent, automatically bootstrapping uv if needed",
       "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
-      "retention": "The interpreter remains in the uv-managed user installation until explicitly removed. Download request-log retention is controlled by the download provider.",
+      "retention": "When uv must be bootstrapped, the bootstrap executable and private interpreter remain inside shared runtime storage until removed. Download request-log retention is controlled by the providers.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -51,7 +52,7 @@
         "openai-codex"
       ],
       "controls": [
-        "Use an installed CPython 3.12 when available; otherwise only an already installed uv may provision the declared CPython 3.12 runtime.",
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
         "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
         "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
       ]
@@ -83,6 +84,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "9ae863b5ad9e24d0e9a19c0cb2178799851fc8916758dc5ad8a62a32559cc602"
+    "source_fingerprint": "3994a12eeded3d0be0a527ea7258352f6166e86cd1744281543f9a6f01cb3a0c"
   }
 }

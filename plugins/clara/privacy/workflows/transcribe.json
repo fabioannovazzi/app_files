@@ -19,7 +19,8 @@
     "scripts/_shared_python_runtime.py",
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
-    "constraints-shared-macos-py312.txt"
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -93,12 +94,12 @@
       "id": "declared-python312-retrieval",
       "kind": "public_research",
       "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
-      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent and uv is available",
+      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent, automatically bootstrapping uv if needed",
       "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
       "optional": false,
       "requires_confirmation": false,
       "controls": [
-        "Use an installed CPython 3.12 when available; otherwise only an already installed uv may provision the declared CPython 3.12 runtime.",
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
         "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
         "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
       ]
@@ -109,6 +110,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ed941b5a478927d9cfe14b7954e36f3b66fa191f5a5322662fbae75b0ca55401"
+    "source_fingerprint": "8188832962cf8ad90cc8aa81bdbe4606628f39b438bcc77710b733e3b6c0f2d9"
   }
 }

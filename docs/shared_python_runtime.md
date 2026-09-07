@@ -33,3 +33,15 @@ Local migration must verify the actual installed package launchers, representati
 core/document/chart/OCR workflows, and absence of active old-runtime readers before
 removing an explicit inventory of historical caches. A different dependency hash
 alone does not establish that an old environment is unused. Preserve OCR models.
+
+## Automatic first installation
+
+An existing shared environment is reused regardless of the host Python version.
+When Python 3.12 and uv are missing, setup downloads an official uv 0.12.10 wheel
+from PyPI, verifies its published SHA-256, and provisions CPython 3.12 under the
+shared runtime parent. No pip, uv, administrator access, shell-profile edits or
+system Python replacement is required for this bootstrap. Supported bootstrap
+platforms are macOS Intel/Apple Silicon, Windows x64/ARM64, and Linux x64/ARM64.
+Internet access and writable user storage are required; failures report the
+actual download, checksum or storage error and can be retried. Native workflow
+compatibility still requires acceptance testing on each supported platform.

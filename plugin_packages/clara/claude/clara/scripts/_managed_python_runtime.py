@@ -640,7 +640,7 @@ def ensure_runtime(
         return False, logical_target, str(error)
 
 
-def _python312_executable(runner: Runner) -> str:
+def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
     """Select CPython 3.12; optionally provision it through an installed uv."""
 
     if (
@@ -670,7 +670,7 @@ def _python312_executable(runner: Runner) -> str:
         )
         if result.returncode == 0 and result.stdout.strip():
             return result.stdout.strip()
-    uv = shutil.which("uv")
+    uv = shutil.which("uv") if allow_uv else None
     if uv:
         installed = runner(
             [uv, "python", "install", "cpython@3.12"],

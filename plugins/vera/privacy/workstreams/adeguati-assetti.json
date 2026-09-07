@@ -21,7 +21,7 @@
       {
         "id": "arrangements-evidence",
         "purpose": "Assess company arrangements, operating evidence, proportionate findings, actions and prior reviews",
-        "content": "Selected company descriptions, organization charts, staff roles and delegations, procedures, interview notes, minutes, management/accounting reports, forecasts, operating examples, prior reviews, action evidence and professional decisions. Initial assessment, source review, action planning and subsequent review may read complete relevant files and prior records. There is no fixed excerpt limit or automatic anonymization. Local Python verifies source bindings and hashes and renders records; it does not perform semantic assessment.",
+        "content": "Selected company descriptions, organization charts, staff roles and delegations, procedures, interview notes, minutes, management/accounting reports, forecasts, operating examples, prior reviews, action evidence and professional decisions. Initial assessment, source review, action planning and subsequent review may read complete relevant files and prior records. There is no fixed excerpt limit or automatic anonymization. Local Python verifies source bindings and hashes and renders records; it does not perform semantic assessment. Targeted questions and attributed answers, conflicting accounts, process/risk/control relationships and event-versus-information chronology may enter the same model context. The model revises hypotheses and writes a management discussion brief; the helper only validates linked records and renders them.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -62,6 +62,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "968d88221f32df9dde22a2cc0721beb4fa785c4a909757b35fa96779a7c23499"
+    "source_fingerprint": "7b3817904139ae8bd288da7ed88f9dde982269aad26df2a3927c89b9af82bd9a"
   }
 }

@@ -32,7 +32,7 @@ def fixture_runtime(tmp_path):
         plugin_root=root, requirements_files=[root / "requirements.txt"]
     )
     api = SimpleNamespace(
-        _python312_executable=lambda runner: sys.executable,
+        _python312_executable=lambda runner, **kwargs: sys.executable,
         runtime_key=lambda: "test-runtime",
         runtime_python=lambda p: p
         / ("Scripts/python.exe" if os.name == "nt" else "bin/python"),
@@ -227,6 +227,7 @@ def test_unready_interpreter_refuses_workflow_execution(tmp_path):
         "requirements-shared-ocr.txt",
         "constraints-shared-macos-py312.txt",
         "scripts/_shared_python_runtime.py",
+        "scripts/_python_bootstrap.py",
     ],
 )
 def test_products_ship_identical_shared_policy(filename):
@@ -248,6 +249,7 @@ def test_every_host_package_contains_the_shared_runtime_policy(product, host):
             "requirements-shared-ocr.txt",
             "constraints-shared-macos-py312.txt",
             "scripts/_shared_python_runtime.py",
+            "scripts/_python_bootstrap.py",
         )
     }
     with ZipFile(ROOT / f"plugin_packages/{product}/{product}-{host}.zip") as archive:
