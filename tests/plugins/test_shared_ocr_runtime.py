@@ -28,16 +28,23 @@ def load_runtime(name: str, path: Path) -> ModuleType:
     return module
 
 
-def populate_install_target(command: list[str]) -> None:
-    target = Path(command[command.index("--target") + 1])
-    for module_name in ("PIL", "cv2", "paddleocr", "paddle"):
-        module_dir = target / module_name
-        module_dir.mkdir(parents=True)
-        (module_dir / "__init__.py").write_text("", encoding="utf-8")
-
-
-def successful_runner(command: list[str], **_: Any) -> subprocess.CompletedProcess[str]:
-    populate_install_target(command)
+def successful_runner(
+    command: list[str], **kwargs: Any
+) -> subprocess.CompletedProcess[str]:
+    if "venv" in command:
+        target = Path(command[-1])
+        site = (
+            target
+            / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages"
+        )
+        site.mkdir(parents=True)
+        (target / "pyvenv.cfg").write_text("test")
+        (target / "bin").mkdir()
+        (target / "bin/python").write_text("test")
+        for name in ("PIL", "cv2", "paddleocr", "paddle"):
+            folder = site / name
+            folder.mkdir()
+            (folder / "__init__.py").write_text("")
     return subprocess.CompletedProcess(command, 0, "", "")
 
 
@@ -45,7 +52,7 @@ def test_clara_install_is_reused_by_vera(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("MPARANZA_SHARED_OCR_RUNTIME", str(tmp_path / "runtime"))
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
     clara = load_runtime(
         "clara_managed_ocr_runtime",
         CLARA_ROOT / "scripts" / "managed_ocr_runtime.py",
@@ -82,7 +89,7 @@ def test_managed_install_failure_returns_friendly_retry_message(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("MPARANZA_SHARED_OCR_RUNTIME", str(tmp_path / "runtime"))
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
     runtime = load_runtime(
         "failed_managed_ocr_runtime",
         CLARA_ROOT / "scripts" / "managed_ocr_runtime.py",
@@ -101,7 +108,7 @@ def test_managed_install_failure_returns_friendly_retry_message(
         "I couldn't install PaddleOCR right now. " "Shall I try the installation again?"
     )
     assert result.detail == "network unavailable"
-    assert not Path(result.runtime_path).exists()
+    assert runtime.activate_ocr_runtime(CLARA_ROOT / "requirements-ocr.txt") is None
 
 
 def test_status_uses_plain_language_first_use_prompt(
@@ -109,7 +116,7 @@ def test_status_uses_plain_language_first_use_prompt(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    monkeypatch.setenv("MPARANZA_SHARED_OCR_RUNTIME", str(tmp_path / "runtime"))
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
     runtime = load_runtime(
         "status_managed_ocr_runtime",
         CLARA_ROOT / "scripts" / "managed_ocr_runtime.py",

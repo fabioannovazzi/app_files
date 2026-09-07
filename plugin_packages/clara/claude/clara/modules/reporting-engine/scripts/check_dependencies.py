@@ -15,6 +15,7 @@ LOGGER = logging.getLogger(__name__)
 PACKAGE_IMPORTS = {
     "matplotlib-venn": "matplotlib_venn",
     "opencv-python": "cv2",
+    "opencv-contrib-python": "cv2",
     "pillow": "PIL",
     "python-dateutil": "dateutil",
     "python-docx": "docx",

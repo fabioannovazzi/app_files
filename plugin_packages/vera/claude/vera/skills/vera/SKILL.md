@@ -525,10 +525,9 @@ delegating form is:
 python scripts/check_dependencies.py --module <module>
 ```
 
-This command installs the selected module's published core requirements into a
-fingerprinted, user-scoped managed virtual environment only when it is absent,
-invalid, or no longer matches the requirements or Python platform. It reuses a
-ready environment across Claude restarts. Run every subsequent helper command for the
+This command prepares the published shared core requirements for Vera, Clara and
+Lucia in one user-scoped Python 3.12 environment and validates the selected module.
+It reuses the same environment across modules and restarts. Run every subsequent helper command for the
 selected module through Vera's managed launcher from the Vera root, even when a
 module skill shows the shorter standalone `python scripts/...` form:
 
@@ -537,13 +536,13 @@ python scripts/managed_python_runtime.py --module <module> run scripts/<helper>.
 ```
 
 The launcher uses that environment's own Python for the helper process. Do not run `pip
-install` directly and do not combine different Vera modules into one dependency
-environment.
+install` directly. All Vera modules and the Clara and Lucia products share this
+environment through the published shared requirements.
 
 If the module skill requires optional requirements or input-specific arguments,
 pass each optional file through Vera's delegating dependency check. The same
-selection must be repeated on the managed launcher so it reuses the exact
-fingerprinted environment:
+selection must be repeated on the managed launcher so it validates the same selection in the shared
+environment:
 
 ```bash
 python scripts/check_dependencies.py --module <module> \
@@ -672,4 +671,4 @@ visually validated on the basis of structural inspection alone.
 
 ## Supported Python runtime
 
-Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It selects an installed Python 3.12 or uses an existing `uv` installation to provision CPython 3.12. An older host interpreter may launch setup, but must not execute workflow helpers. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Component virtual environments remain separately scoped to their declared dependencies.
+Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It reuses the shared environment or selects an installed Python 3.12. If Python 3.12 and uv are absent, setup automatically downloads the published, SHA-256-verified uv bootstrap and provisions private CPython 3.12 inside shared runtime storage. Users do not install uv, change system Python, or edit PATH. Any supported host Python, including 3.14, may launch setup; workflow helpers run in the managed interpreter. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Vera, Clara and Lucia use one shared environment per operating-system host, outside plugin and client folders. Published shared recipes govern its dependencies. Optional OCR, once approved, is installed in that same environment and retained across updates. Setup waits for running workflows; after failed setup, repair the environment before using it again.

@@ -93,7 +93,7 @@
       "requires_confirmation": true,
       "controls": [
         "Ask the exact OCR installation question and proceed only after the user's explicit approval.",
-        "Install only the separately declared requirements-ocr.txt contract into the fingerprinted managed runtime; do not transmit the PDF or extracted case content to package or model sources.",
+        "Install the published shared OCR recipe in the same Vera, Clara and Lucia environment and validate the exact XBRL OCR pins. Stage and verify declared model assets under the shared runtime lock; do not transmit the PDF or case content to package or model sources.",
         "Accept exact dependency pins only; record the installed package versions and SHA-256 plus size of every required OCR model file; verify the complete receipt on every reuse; and surface drift, tampering, or installation failure instead of weakening the review gate."
       ],
       "runtime_profiles": [
@@ -204,6 +204,6 @@
     "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0df8854a663eab72bd7f40af08ebce93723f1cedae708e572b8e870ee7342796"
+    "source_fingerprint": "07095b1e9da1a51e1a42cc53fb61983bcbe24b876866214e6a898e7c01e048c6"
   }
 }

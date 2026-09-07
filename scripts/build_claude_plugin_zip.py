@@ -2613,7 +2613,12 @@ def _lucia_package_entries(
     )
     entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
     for name, content in source_entries.items():
-        if name.startswith("scripts/") or name == "requirements.txt":
+        if name.startswith("scripts/") or name in {
+            "requirements.txt",
+            "requirements-shared-core.txt",
+            "requirements-shared-ocr.txt",
+            "constraints-shared-macos-py312.txt",
+        }:
             entries[name] = content
     entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
     if "assets/icon.svg" in source_entries:

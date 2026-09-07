@@ -15,7 +15,12 @@
     "scripts/managed_python_runtime.py",
     "scripts/_managed_python_runtime.py",
     "requirements.txt",
-    "components.json"
+    "components.json",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -74,26 +79,27 @@
       "id": "direct-cli-python-dependency-setup",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
-      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
-      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
       "optional": false,
       "requires_confirmation": false,
       "controls": [
-        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
-        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
-        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
       ]
     },
     {
       "id": "declared-python312-retrieval",
       "kind": "public_research",
       "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
-      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent and uv is available",
+      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent, automatically bootstrapping uv if needed",
       "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
       "optional": false,
       "requires_confirmation": false,
       "controls": [
-        "Use an installed CPython 3.12 when available; otherwise only an already installed uv may provision the declared CPython 3.12 runtime.",
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
         "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
         "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
       ]
@@ -104,6 +110,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ad4af4b42693cc71fccf73431ea0380cf06466e088baa507f4b22de42b9a70e5"
+    "source_fingerprint": "8188832962cf8ad90cc8aa81bdbe4606628f39b438bcc77710b733e3b6c0f2d9"
   }
 }
