@@ -15,6 +15,10 @@ directory for its contracts, example capabilities, references, and validation
 commands.
 
 This is a generic capability factory with process-specific outputs. The
+model leads one example, interprets each demonstrated step and saves a resumable
+teaching checkpoint before continuing. It announces when observation stops;
+unexplained button changes are not a learned procedure. A paused checkpoint is
+distinct from a completed reviewed developer pack. The
 operator may demonstrate the process (`guided`), let the model explore safe
 reversible paths (`autonomous`), or combine both (`hybrid`). A reviewed
 sanitized developer pack lets another person understand and implement the
@@ -28,6 +32,10 @@ and existing Chrome profile. A separate Chrome plugin is not required. If the
 connection is unavailable, direct the operator to that settings page and stop
 the live run. Continue with useful process scoping or capability review, but
 never claim discovery, execution, or validation without browser evidence.
+
+Local filesystem verification of browser downloads in the normal Downloads
+folder is part of the runtime, like writing receipts; it is not desktop control.
+The runtime handles it automatically without a documented download `path()` API.
 
 This workflow has no native desktop-control fallback. A required
 native or non-browser step is a `native_gap`: hand that exact step to the
