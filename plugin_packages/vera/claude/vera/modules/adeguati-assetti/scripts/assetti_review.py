@@ -58,6 +58,91 @@ def _linked_ids(value: Any, known: set[str], label: str) -> None:
         raise ValueError(f"{label} contains duplicate or unknown IDs")
 
 
+# These are presentation/record fields, never a classifier of adequacy.
+_INTELLIGENT_SECTIONS = {
+    "coverage": (
+        "Perimetro motivato / Reasoned coverage",
+        {
+            "area": "Area / Area",
+            "status": "Stato / Status",
+            "reason": "Motivazione e limiti / Rationale and limits",
+        },
+    ),
+    "processes": (
+        "Rischi e funzionamento / Risks and operation",
+        {
+            "process": "Processo / Process",
+            "risk": "Rischio concreto / Concrete risk",
+            "responsibility": "Responsabilità effettive / Actual responsibilities",
+            "control": "Controllo e frequenza / Control and frequency",
+            "information_flow": "Informazioni e destinatari / Information and recipients",
+            "operation": "Funzionamento e controevidenze / Operation and counterevidence",
+            "gap": "Lacuna o limite / Gap or limitation",
+        },
+    ),
+    "questions": (
+        "Domande che cambiano la valutazione / Decision-relevant questions",
+        {
+            "question": "Domanda / Question",
+            "why_it_matters": "Effetto sulla valutazione / Assessment impact",
+            "evidence_needed": "Esempio da cercare / Evidence to seek",
+            "status": "Risposta e incertezze / Answer and uncertainty",
+        },
+    ),
+    "chronology": (
+        "Informazioni e decisioni nel tempo / Information and decision timeline",
+        {
+            "event_date": "Data del fatto / Event date",
+            "known_at": "Quando era conoscibile / When knowable",
+            "recipient": "Destinatario / Recipient",
+            "event": "Fatto / Event",
+            "response": "Decisione e seguito / Decision and follow-through",
+            "uncertainty": "Limiti temporali / Temporal uncertainty",
+        },
+    ),
+}
+
+
+def _intelligent_review(
+    value: Any, observation_ids: set[str], action_ids: set[str]
+) -> None:
+    """Check links and renderable shape; the model owns all semantic decisions."""
+    if (
+        not isinstance(value, dict)
+        or type(value.get("version")) is not int
+        or value["version"] != 1
+    ):
+        raise ValueError("Expected intelligent_review version 1")
+    for name, (_, fields) in _INTELLIGENT_SECTIONS.items():
+        rows = value.get(name)
+        if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+            raise ValueError(f"{name} must be an array of objects")
+        if name == "coverage" and not rows:
+            raise ValueError("Explain assessment coverage")
+        ids: set[str] = set()
+        for row in rows:
+            row_id = _text(row.get("id"), f"{name} ID")
+            if row_id in ids:
+                raise ValueError(f"Duplicate {name} ID")
+            ids.add(row_id)
+            for field in fields:
+                _text(row.get(field), f"{name} {field}")
+            if name == "coverage" and row["status"] not in {
+                "assessed",
+                "excluded",
+                "unresolved",
+            }:
+                raise ValueError("Unknown coverage status")
+            links = row.get("observation_ids")
+            if name == "coverage" and row["status"] != "assessed" and links == []:
+                continue
+            _linked_ids(links, observation_ids, f"{name} observations")
+    _text(value.get("decision_brief"), "decision brief")
+    _text(value.get("next_review"), "next review evidence and trigger")
+    if value.get("action_ids") != []:
+        _linked_ids(value.get("action_ids"), action_ids, "Decision brief actions")
+
+
 def build_record(
     review: dict[str, Any], *, input_root: Path, client_id: str, engagement_id: str
 ) -> dict[str, Any]:
@@ -213,6 +298,9 @@ def build_record(
                     value["current_action_ids"], action_ids, "Prior replacement actions"
                 )
 
+    if "intelligent_review" in review:
+        _intelligent_review(review["intelligent_review"], observation_ids, action_ids)
+
     proposal = {k: v for k, v in review.items() if k != "professional_decision"}
     proposal_hash = digest(proposal)
     decision = review.get("professional_decision")
@@ -293,6 +381,41 @@ def render_memo(record: dict[str, Any]) -> str:
         review["assessment"],
         "",
     ]
+    if "intelligent_review" in review:
+        intelligent = review["intelligent_review"]
+        lines.extend(
+            [
+                "## Decisioni da discutere / Decisions for discussion",
+                "",
+                intelligent["decision_brief"],
+                "",
+                ", ".join(intelligent["action_ids"]),
+                "",
+            ]
+        )
+        coverage_labels = {
+            "assessed": "Esaminato / Assessed",
+            "excluded": "Escluso / Excluded",
+            "unresolved": "Da chiarire / Unresolved",
+        }
+        for name, (title, fields) in _INTELLIGENT_SECTIONS.items():
+            lines.extend([f"## {title}", ""])
+            for row in intelligent[name]:
+                lines.extend([f"### {row['id']}", ""])
+                for field, label in fields.items():
+                    value = row[field]
+                    if name == "coverage" and field == "status":
+                        value = coverage_labels[value]
+                    lines.extend([f"**{label}:** {value}", ""])
+                lines.extend(
+                    [
+                        "**Evidenze / Evidence:** " + ", ".join(row["observation_ids"]),
+                        "",
+                    ]
+                )
+        lines.extend(
+            ["## Prossima verifica / Next review", "", intelligent["next_review"], ""]
+        )
     lines.extend(["## Evidenze e funzionamento / Evidence and operation", ""])
     for item in review["observations"]:
         lines.extend(

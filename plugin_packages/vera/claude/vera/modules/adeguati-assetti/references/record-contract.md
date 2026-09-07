@@ -63,3 +63,36 @@ The JSON and readable memo have content-addressed filenames; retries are idempot
 and cannot overwrite different output. The archive supplies client/run identity.
 Keep legal source validation and per-phase model-data reports as normal companion
 artifacts. Validation of this JSON alone does not establish delivery readiness.
+
+## Intelligent assessment extension
+
+For new runs include `intelligent_review` with `version: 1`. Historical v1 reviews
+without it remain readable for follow-up; omission is not evidence of a complete
+new assessment. All fields below are model-authored. Code checks shape and links,
+not whether scope, questions or conclusions are good.
+
+- `coverage`: nonempty array `{id, area, status, reason, observation_ids}`.
+  Status: `assessed`, `excluded`, `unresolved`. Assessed areas need observation
+  links; the other two may have `[]` with an explicit reason/limitation.
+- `processes`: array `{id, process, risk, responsibility, control,
+  information_flow, operation, gap, observation_ids}`. All narrative fields are
+  nonempty, including explicit unknowns. Use existing observations for evidence
+  and counterevidence, including dated attributed statements.
+- `questions`: array `{id, question, why_it_matters, evidence_needed, status,
+  observation_ids}`. Status is narrative: unanswered, response and attribution,
+  or why no longer needed. Preserve contradictions after an answer.
+- `chronology`: array `{id, event_date, known_at, recipient, event, response,
+  uncertainty, observation_ids}`. Dates are narrative so unknown dates and
+  intervals can be retained honestly; use ISO dates when known, and distinguish
+  document dates, upload dates and operating events.
+- `decision_brief`: nonempty narrative of decisions to discuss, supporting
+  finding/observation references, disagreements and unresolved choices.
+- `action_ids`: array of linked proposed actions, possibly empty.
+- `next_review`: nonempty narrative of proposed trigger, evidence to inspect and
+  unresolved commitments; no monitoring is scheduled by recording it.
+
+IDs must be unique within each section. Every process, question and chronology
+row links to one or more observations. Empty arrays for these sections are allowed
+when the case warrants it; explain the limitation or exclusion in coverage and
+the brief. Do not generate filler rows. The memo renders the complete extension,
+so the professional can read the reasoning without inspecting JSON.
