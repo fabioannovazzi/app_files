@@ -2150,8 +2150,10 @@ def test_audit_mcp_ignores_timestamp_valid_local_bytecode_before_python_bridge_i
     assert cache_path.read_bytes() == cache_before
 
 
+@pytest.mark.parametrize("generated_review", [False, True])
 def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(
     tmp_path: Path,
+    generated_review: bool,
 ) -> None:
     assurance = load_assurance()
     workflow = load_reconciliation_workflow()
@@ -2187,6 +2189,8 @@ def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(
         "fail_on_check_errors": False,
         "language": "en",
     }
+    if generated_review:
+        workflow_args.pop("review_rows")
     workflow.build_reconciliation_artifacts(**workflow_args)
     predecessor = json.loads(
         (output_dir / "assurance_receipts.json").read_text(encoding="utf-8")
@@ -2265,6 +2269,17 @@ def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(
     workflow_args["review_rows"] = authority["records"]
     workflow_args["expected_predecessor_checkpoint"] = predecessor["content_sha256"]
     workflow.build_reconciliation_artifacts(**workflow_args)
+    regenerated_review = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    regenerated_item = next(
+        item
+        for item in regenerated_review["items"]
+        if item.get("data", {}).get("record_id") == "open-1"
+    )
+    assert regenerated_item["data"]["document_no"] == "INV-1"
+    assert regenerated_item["data"]["amount"] == "100.00"
+    assert regenerated_item["data"]["review_status"] == "PASS"
     successor = assurance.validate_assurance_run(
         output_dir,
         expected_predecessor_checkpoint=predecessor["content_sha256"],
