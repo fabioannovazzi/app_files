@@ -811,7 +811,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
 
 
 @pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
-def test_committed_chatgpt_upload_uses_approved_card_copy(
+def test_committed_chatgpt_upload_preserves_workflow_instructions(
     plugin_name: str,
 ) -> None:
     builder = load_builder()
@@ -855,10 +855,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
                 if name.startswith(skill_prefix) and not name.endswith("/")
             }
             assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
-            if plugin_name == "clara":
-                assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
-            else:
-                assert "WORKFLOW.md" not in packaged_skill_files
+            assert "WORKFLOW.md" not in packaged_skill_files
 
     assert actual_bodies == expected_bodies
     assert len(actual_bodies) == len(public_skill_names)
@@ -1838,13 +1835,13 @@ def test_extracted_clara_dataset_intake_keeps_first_upload_unreviewed(
         timeout=60,
     )
 
+    assert result.returncode == 0, result.stderr
     receipt = json.loads(
         (output_dir / "dataset_intake.json").read_text(encoding="utf-8")
     )
     layer = json.loads(
         (output_dir / "semantic_layer.draft.json").read_text(encoding="utf-8")
     )
-    assert result.returncode == 0, result.stderr
     assert receipt["status"] == "review_required"
     assert all(
         mapping["state"] == "unknown"
@@ -1949,8 +1946,8 @@ def test_extracted_clara_attaches_refresh_to_existing_semantic_version(
         timeout=60,
     )
 
-    attachment = json.loads(output_path.read_text(encoding="utf-8"))
     assert result.returncode == 0, result.stderr
+    attachment = json.loads(output_path.read_text(encoding="utf-8"))
     assert attachment["attachment_status"] == "attached"
     assert attachment["compatibility"]["status"] == "compatible"
     assert attachment["semantic_version"] == 1
@@ -2089,14 +2086,20 @@ def test_extracted_clara_renders_distribution_with_variant(
     assert manifest["legacy_plugin_source"] == "distribution-analysis"
     assert recipe["options"]["charts"] == ["boxplot"]
     assert recipe["mappings"]["small_multiples_dimension"] == "Brand"
-    for stem in ("boxplot", "boxplot_small_multiples"):
-        chart_path = next(
-            path
-            for path in (output_dir / f"{stem}.html", output_dir / f"{stem}.png")
-            if path.is_file()
-        )
-        content = chart_path.read_bytes()
-        assert content.startswith(b"\x89PNG\r\n\x1a\n") or b"Plotly.newPlot" in content
+    # A working native exporter emits PNG; HTML is the supported fallback.
+    for chart_name in ("boxplot", "boxplot_small_multiples"):
+        png = output_dir / f"{chart_name}.png"
+        if png.is_file():
+            from PIL import Image
+
+            with Image.open(png) as image:
+                assert image.format == "PNG"
+                assert image.width > 0 and image.height > 0
+                image.verify()
+        else:
+            assert "Plotly.newPlot" in (output_dir / f"{chart_name}.html").read_text(
+                encoding="utf-8"
+            )
     summary_by_period = {row["Period"]: row for row in context["summary"]}
     assert summary_by_period == {
         "~Jun-2025": {

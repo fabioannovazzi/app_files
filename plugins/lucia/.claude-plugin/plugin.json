@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "lucia",
   "displayName": "Lucia",
-  "description": "Assistente AI per avvocati e studi legali. Struttura incarichi, analizza materiali e fonti, verifica affermazioni e prepara ricerche, documenti e risultati rivedibili, adattati al contesto e alla giurisdizione. Mostra fonti, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
+  "description": "Assistente AI per avvocati e studi legali. Struttura incarichi, analizza materiali e fonti, verifica affermazioni e prepara ricerche, documenti e risultati rivedibili, adattati al contesto e alla giurisdizione. Mostra fonti, ambiguit\u00e0 e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all\u2019avvocato.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",
@@ -22,5 +22,6 @@
     "law-firm-website",
     "professional-services"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "version": "0.1.31"
 }

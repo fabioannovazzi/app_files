@@ -322,8 +322,9 @@ claim, priority, class, voting, treatment, or evidence. The workflow does not
 automatically anonymize or pseudonymize those substantive identities.
 
 Before any write, the MCP path replays the trusted payload, assurance envelope,
-and whole-output closure. If MCP is unavailable, review the same payload in
-Markdown/chat and keep decisions pending until recorded.
+and whole-output closure. If MCP is unavailable, use the delivered semantic
+review and only the exact review or source files needed for the professional
+question, as described above; keep decisions pending until recorded.
 
 `ui_decisions.json` records the reviewer's pending or saved decisions.
 `applied_decisions.json` records only decisions actually applied to downstream

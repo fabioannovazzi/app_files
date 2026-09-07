@@ -77,11 +77,11 @@
       ],
       "controls": [
         "Use the live boundary only when the operator explicitly requests guided, autonomous or hybrid discovery or execution on an authorized site, account, and process; bind one session to the declared mode, origins, start state, end state, inputs, outputs, model-visible data classes, and side effects.",
-        "Use the installed Chrome control skill and the existing extension profile. Create a fresh task tab unless the operator explicitly identifies one existing tab; never enumerate unrelated tabs or launch a standalone Playwright browser, temporary profile, alternate browser controller, or repeated visibility probe.",
+        "Use Google Chrome connected under Settings → Computer Use → Google Chrome and the existing extension profile, following the current connection documentation. Create a fresh task tab unless the operator explicitly identifies one existing tab; never enumerate unrelated tabs or launch a standalone Playwright browser, temporary profile, alternate browser controller, or repeated visibility probe.",
         "Authentication and account, taxpayer, company, or workspace selection belong to the operator. Vera never asks for, inspects, types, stores, or transfers a username when used for secret entry, password, PIN, one-time code, SPID/CIE/CNS material, QR code, cookie, token, browser storage, session URL, or reusable login state.",
         "In guided mode use bounded read-only polling of query-free paths and targeted control roles, locally identifier-redacted accessible names, labels and placeholders, stable non-dynamic test IDs and generic state markers. Replace recognizable identifier-shaped substrings before returning metadata to the model, withhold a test ID containing one, and never treat the redaction marker as a literal locator. Do not inject a click logger, claim a raw event stream, retain raw guided capture, or read form values and business rows by default. If one specific private data class or screenshot is necessary, identify the exact data and purpose and require separate operator confirmation before reading it.",
         "Confirm at action time immediately before submitting, sending, signing, paying, publishing, deleting, changing access, uploading private data, or another material external side effect; ordinary read-only and reversible exploration does not require repeated confirmation.",
-        "Do not use Computer Use, accessibility-tree control, screenshot coordinates, or another desktop controller as a Browser Automation fallback. A required operating-system, native-dialog, or non-browser step is recorded as native_gap, handed to the operator, and excluded from capability execution and clean replay evidence.",
+        "Do not use native accessibility-tree control, screenshot coordinates, or another desktop controller as a Browser Automation fallback. A required operating-system, native-dialog, or non-browser step is recorded as native_gap, handed to the operator, and excluded from capability execution and clean replay evidence.",
         "Write sanitized discovery records, discovery evidence, developer packs and sealed capability bundles only to fresh owner-only local directories outside the Git workspace and published folders; never persist raw page content or overwrite an earlier bundle.",
         "Keep approval for the exact sanitized developer transfer separate from approval for capability authoring. The former permits sealing only the reviewed evidence, discovery record and non-executable draft; the latter is required before promotion. A changed record requires new authoring approval.",
         "Execute promoted capability JSON only through the packaged runtime in the connected Chrome tab. Keep artifact_only output values, local download paths, byte lengths, and file hashes in owner-only outputs.json and expose only output counts, the output-artifact path, and aggregate hashes unless the operator separately requests interpretation.",
@@ -92,8 +92,12 @@
   ],
   "security_controls": [
     {
+      "id": "pre-action-origin-boundary",
+      "control": "Before each non-navigation action the runtime checks the current origin both before and after asynchronous locator resolution. Extraction also checks immediately before reading each candidate. Existing post-action checks remain. Regressions cover a disallowed initial origin and navigation during input or extraction locator resolution, and verify that the guarded input or read does not occur. These checks do not claim atomic isolation against every possible browser navigation race."
+    },
+    {
       "id": "model-led-browser-extension-runtime",
-      "control": "The workflow binds to the existing Chrome extension profile, creates a fresh task tab by default, uses the model for semantic page and branch interpretation, and uses Playwright for bounded actions and assertions. It has no Computer Use or desktop-control fallback: a required native or non-browser step is a native_gap handed to the operator and excluded from capability execution and clean replay evidence. A connected Chrome binding replaces the old launcher and visibility ritual; unavailable Chrome produces one setup instruction rather than repeated launch attempts."
+      "control": "The workflow binds to the existing Chrome extension profile, creates a fresh task tab by default, uses the model for semantic page and branch interpretation, and uses Playwright for bounded actions and assertions. It has no native desktop-control fallback: a required native or non-browser step is a native_gap handed to the operator and excluded from capability execution and clean replay evidence. A connected Chrome binding replaces the old launcher and visibility ritual; unavailable Chrome produces one setup instruction rather than repeated launch attempts."
     },
     {
       "id": "targeted-model-context-by-default",
@@ -136,6 +140,6 @@
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "17b6be76501229862bddb8df9ad5ba43f5c736a3c13195be7f393d6c5fa68441"
+    "source_fingerprint": "8296e878b9578687523ddb3490debde159cab62b92f8090c816d1b20a34e6fff"
   }
 }

@@ -1194,8 +1194,11 @@ def document_source_map(
 
     reconciliation_by_key: dict[str, list[dict[str, Any]]] = {}
     for row in reconciliation_rows:
-        for key in record_document_keys(row):
-            mapped = key_to_representative.get(key, key)
+        # Alias resolution must count each record once per document group.
+        mapped_keys = {
+            key_to_representative.get(key, key) for key in record_document_keys(row)
+        }
+        for mapped in sorted(mapped_keys):
             reconciliation_by_key.setdefault(mapped, []).append(row)
 
     mapped_rows: dict[str, dict[str, Any]] = {}
@@ -2178,8 +2181,16 @@ def bank_allocation_candidates(
     tolerance = active.get("amount_tolerance", "0.01")
     promote_probable = assumption_enabled(active, "promote_probable_bank_payments")
     document_index = _reconciliation_document_index(reconciliation_rows)
+    allocated_partial_evidence = {
+        clean_text(row.get("matched_evidence_id"))
+        for row in reconciliation_rows
+        if row.get("reconciliation_status") == "partially_paid"
+    }
     bank_rows = [
-        row for row in evidence_rows if _is_bank_allocation_source(row, active)
+        row
+        for row in evidence_rows
+        if _is_bank_allocation_source(row, active)
+        and clean_text(row.get("record_id")) not in allocated_partial_evidence
     ]
 
     payment_rows_by_batch: dict[str, list[dict[str, Any]]] = {}
@@ -2469,7 +2480,7 @@ def promote_probable_bank_payments(
                 "matched_evidence_type": (
                     "external_bank" if exact_closure else "probable_external_bank"
                 ),
-                "matched_evidence_amounts": bank_candidate_amount_summary(candidate),
+                "matched_evidence_amounts": clean_text(candidate.get("bank_amount")),
                 "matched_evidence_id": clean_text(candidate.get("bank_record_id")),
                 "matched_evidence_reference": bank_reference,
                 "missing_evidence": (
@@ -2590,7 +2601,10 @@ def closed_bank_allocation_controls(
     }
     closed_by_evidence: dict[str, list[dict[str, Any]]] = {}
     for row in reconciliation_rows:
-        if clean_text(row.get("reconciliation_status")) != "closed":
+        if clean_text(row.get("reconciliation_status")) not in {
+            "closed",
+            "partially_paid",
+        }:
             continue
         evidence_id = clean_text(row.get("matched_evidence_id"))
         evidence = evidence_by_id.get(evidence_id)
@@ -2622,6 +2636,27 @@ def closed_bank_allocation_controls(
             Decimal("0"),
         )
         evidence_amount = abs(evidence_amount)
+        partial_payment = (
+            len(closed_rows) == 1
+            and closed_rows[0].get("reconciliation_status") == "partially_paid"
+            and closed_rows[0].get("rule_applied")
+            == "exact_document_partial_bank_payment"
+            and Decimal("0") < evidence_amount < face_amount
+            and parse_decimal(closed_rows[0].get("allocated_amount")) == evidence_amount
+            and parse_decimal(closed_rows[0].get("residual_amount"))
+            == face_amount - evidence_amount
+        )
+        if (
+            any(
+                row.get("reconciliation_status") == "partially_paid"
+                for row in closed_rows
+            )
+            and not partial_payment
+        ):
+            failures[evidence_id] = (
+                "Partial payment has inconsistent amounts or reused evidence."
+            )
+            continue
         pro_soluto_residual = face_amount - evidence_amount
         pro_soluto_disposition = bool(
             pro_soluto_residual > tolerance
@@ -2636,7 +2671,11 @@ def closed_bank_allocation_controls(
                 "Closure allocation exceeds the exact open-item face amount."
             )
             continue
-        if pro_soluto_residual > tolerance and not pro_soluto_disposition:
+        if (
+            pro_soluto_residual > tolerance
+            and not pro_soluto_disposition
+            and not partial_payment
+        ):
             if is_factoring_evidence(evidence, active):
                 failures[evidence_id] = (
                     "A partial factoring disposition requires an explicit "
@@ -2714,7 +2753,7 @@ def closed_bank_allocation_controls(
             row_identity = _row_identity(row)
             row_amount = (
                 evidence_amount
-                if pro_soluto_disposition
+                if pro_soluto_disposition or partial_payment
                 else amount_for_matching(row) or Decimal("0")
             )
             allocation_digest = hashlib.sha256(
@@ -2769,7 +2808,14 @@ def closed_bank_allocation_controls(
         except RelationshipContractError as exc:
             failures[evidence_id] = str(exc)
             continue
-        if not ledger["balanced"]:
+        partial_conserved = partial_payment and (
+            len(ledger["source_residuals"]) == 1
+            and parse_decimal(ledger["source_residuals"][0]["residual"]) == Decimal("0")
+            and len(ledger["target_residuals"]) == 1
+            and parse_decimal(ledger["target_residuals"][0]["residual"])
+            == face_amount - evidence_amount
+        )
+        if not ledger["balanced"] and not partial_conserved:
             failures[evidence_id] = (
                 "Closure allocation does not conserve the source and target amounts."
             )
@@ -2808,7 +2854,7 @@ def enforce_closed_bank_allocation_controls(
     controlled: list[dict[str, Any]] = []
     for row in reconciliation_rows:
         evidence_id = clean_text(row.get("matched_evidence_id"))
-        is_closed_row = row.get("reconciliation_status") == "closed"
+        is_closed_row = row.get("reconciliation_status") in {"closed", "partially_paid"}
         control_failure = failures.get(evidence_id, "")
         if (
             is_closed_row
@@ -2823,7 +2869,7 @@ def enforce_closed_bank_allocation_controls(
             updated = dict(row)
             updated.update(
                 {
-                    "prior_reconciliation_status": "closed",
+                    "prior_reconciliation_status": row.get("reconciliation_status"),
                     "prior_rule_applied": row.get("rule_applied"),
                     "reconciliation_status": "needs_evidence",
                     "evidence_level": "bridge_only",
@@ -2841,7 +2887,7 @@ def enforce_closed_bank_allocation_controls(
             controlled.append(updated)
             continue
         ledger = evidence_ledger_ids.get(evidence_id)
-        if ledger and row.get("reconciliation_status") == "closed":
+        if ledger and is_closed_row:
             updated = dict(row)
             updated.update(
                 {
@@ -2873,6 +2919,76 @@ def direct_supporting_bank_by_key(
         for key in record_document_keys(row):
             support_by_key.setdefault(key, []).append(row)
     return support_by_key
+
+
+def promote_partial_bank_payments(
+    reconciliation_rows: list[dict[str, Any]],
+    evidence_rows: list[dict[str, Any]],
+    assumptions: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Allocate exact, exclusive document references; never resolve ambiguity by order.
+
+    Decimal conservation and reference ownership are mechanically verifiable.
+    This does not infer payment purpose from descriptions or company names.
+    """
+    support = direct_supporting_bank_by_key(evidence_rows, assumptions)
+    candidates = [
+        {
+            clean_text(evidence.get("record_id")): evidence
+            for key in record_document_keys(row)
+            for evidence in support.get(key, [])
+        }
+        for row in reconciliation_rows
+    ]
+    used = {
+        clean_text(row.get("matched_evidence_id"))
+        for row in reconciliation_rows
+        if clean_text(row.get("matched_evidence_id"))
+    }
+    result = []
+    for row, matches in zip(reconciliation_rows, candidates):
+        if row.get("rule_applied") != "unresolved" or len(matches) != 1:
+            result.append(row)
+            continue
+        evidence_id, evidence = next(iter(matches.items()))
+        amount = amount_for_matching(row)
+        payment = amount_for_matching(evidence)
+        if (
+            not evidence_id
+            or evidence_id in used
+            or sum(evidence_id in other for other in candidates) != 1
+            or amount is None
+            or payment is None
+            or not Decimal("0") < payment < amount
+            or not parse_date(record_date(evidence))
+            or not parse_date(assumptions.get("cutoff_date"))
+            or record_date(evidence) > parse_date(assumptions.get("cutoff_date"))
+            or not clean_text(row.get("currency"))
+            or sum(
+                clean_text(other.get("record_id")) == evidence_id
+                for other in evidence_rows
+            )
+            != 1
+            or not accounting_perimeters_compatible(row, evidence)
+        ):
+            result.append(row)
+            continue
+        result.append(
+            {
+                **row,
+                "reconciliation_status": "partially_paid",
+                "rule_applied": "exact_document_partial_bank_payment",
+                "evidence_level": evidence_level(evidence, assumptions),
+                "matched_evidence_type": normalized_evidence_type(evidence),
+                "matched_evidence_id": evidence_id,
+                "matched_evidence_reference": evidence_reference(evidence),
+                "matched_evidence_amounts": evidence_amount_summary(evidence),
+                "allocated_amount": f"{payment:.2f}",
+                "residual_amount": f"{amount - payment:.2f}",
+                "missing_evidence": "Il residuo resta aperto: acquisire evidenza del suo regolamento.",
+            }
+        )
+    return result
 
 
 def add_supporting_bank_references(
@@ -3158,6 +3274,15 @@ def missing_evidence_message(
 ) -> str:
     active = merged_assumptions(assumptions)
     language = configured_language(active, purpose="report")
+    if rule == "opposing_open_document_amounts":
+        return {
+            "it": "Verificare la validità dello storno o rettifica riferita allo stesso documento e la causa del pagamento. Le righe di segno opposto non autorizzano il saldo bancario della sola fattura positiva; non classificare il pagamento senza supporto.",
+            "es": "Verificar la validez de la anulación o ajuste del mismo documento y la causa del pago. Las líneas de signo opuesto no autorizan liquidar únicamente la factura positiva con el banco; no clasificar el pago sin soporte.",
+            "en": "Verify the reversal or adjustment for the same document and the purpose of the payment. Opposing signed entries do not authorize bank settlement of the positive invoice alone; do not classify the payment without support.",
+        }.get(
+            language,
+            "Verify the reversal and payment purpose before allocating bank evidence.",
+        )
     messages = missing_evidence_messages(language)
     return (
         messages.get(rule)
@@ -3429,6 +3554,61 @@ def classify_open_item(
     return result
 
 
+def withhold_bank_settlement_for_opposing_entries(
+    rows: list[dict[str, Any]], assumptions: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Opposing signed entries require review before allocating bank evidence.
+
+    Exact document/perimeter identity and signed arithmetic establish a conflict,
+    not the legal validity or purpose of a reversal or payment.
+    """
+    by_document: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        if row.get("reconciliation_status") == "out_of_scope" or is_after_cutoff(
+            row, assumptions
+        ):
+            continue
+        for key in record_document_keys(row):
+            by_document.setdefault(key, []).append(row)
+    result = []
+    for row in rows:
+        amount = amount_for_matching(row) or Decimal("0")
+        opposing = any(
+            accounting_perimeters_compatible(row, other)
+            and amount * (amount_for_matching(other) or Decimal("0")) < 0
+            for key in record_document_keys(row)
+            for other in by_document.get(key, [])
+        )
+        bank_settlement = row.get("matched_evidence_type") == "external_bank"
+        if (
+            not opposing
+            or row.get("reconciliation_status") == "out_of_scope"
+            or (row.get("reconciliation_status") == "closed" and not bank_settlement)
+        ):
+            result.append(row)
+            continue
+        reviewed = dict(row)
+        for field in (
+            "matched_evidence_type",
+            "matched_evidence_amounts",
+            "matched_evidence_id",
+            "matched_evidence_reference",
+            "allocated_amount",
+            "residual_amount",
+        ):
+            reviewed.pop(field, None)
+        reviewed.update(
+            reconciliation_status="needs_evidence",
+            evidence_level="none",
+            rule_applied="opposing_open_document_amounts",
+            missing_evidence=missing_evidence_message(
+                "opposing_open_document_amounts", assumptions
+            ),
+        )
+        result.append(reviewed)
+    return result
+
+
 def reconcile_open_items(
     open_items: list[dict[str, Any]],
     evidence_rows: list[dict[str, Any]],
@@ -3481,6 +3661,12 @@ def reconcile_open_items(
     reconciliation_rows = promote_probable_bank_payments(
         reconciliation_rows, evidence_rows, active
     )
+    reconciliation_rows = promote_partial_bank_payments(
+        reconciliation_rows, evidence_rows, active
+    )
+    reconciliation_rows = withhold_bank_settlement_for_opposing_entries(
+        reconciliation_rows, active
+    )
     reconciliation_rows = add_supporting_bank_references(
         reconciliation_rows,
         evidence_rows,
@@ -3500,6 +3686,7 @@ def reconciliation_checks(
     """Return deterministic completeness gates for a reconciliation run."""
 
     valid_statuses = {
+        "partially_paid",
         "closed",
         PROBABLE_BANK_PAYMENT_STATUS,
         "open_supported",
@@ -3602,7 +3789,7 @@ def reconciliation_checks(
     unvalidated_bank_closures = [
         clean_text(row.get("record_id")) or clean_text(row.get("document_key"))
         for row in reconciliation_rows
-        if row.get("reconciliation_status") == "closed"
+        if row.get("reconciliation_status") in {"closed", "partially_paid"}
         and (
             clean_text(row.get("matched_evidence_type")) == "external_bank"
             or clean_text(row.get("rule_applied")) in BANK_ALLOCATION_CLOSURE_RULES
@@ -3978,7 +4165,7 @@ def codex_review_checks(
             ),
         ),
     )
-    valid_statuses = {"PENDING", "PASS", "FAIL", "UNRESOLVED"}
+    valid_statuses = {"partially_paid", "PENDING", "PASS", "FAIL", "UNRESOLVED"}
     statuses = [clean_text(row.get("review_status")).upper() for row in review_rows]
     invalid_statuses = sorted(
         {status for status in statuses if status and status not in valid_statuses}

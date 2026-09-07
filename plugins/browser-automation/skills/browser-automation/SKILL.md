@@ -45,9 +45,10 @@ sound.
 
 ## Required browser runtime
 
-Use the installed `chrome:control-chrome` skill and follow it completely. The
-connected Chrome extension and its in-skill `tab.playwright` API are the browser
-controller. Reuse the operator's existing Chrome binding and profile. Create a
+Use Google Chrome managed under Settings → Computer Use → Google Chrome.
+Follow the connected Chrome extension documentation exposed by the current
+Computer Use tools; its `tab.playwright` API is the browser controller. A
+separate `chrome:control-chrome` plugin is not required. Reuse the operator's existing Chrome binding and profile. Create a
 fresh task tab in that profile unless the operator explicitly identifies an
 existing tab to claim; do not enumerate or inspect unrelated open tabs.
 Do not start a standalone Playwright browser, temporary browser profile, CDP
@@ -56,10 +57,10 @@ launcher, recorder process, or second browser surface.
 If Chrome is connected, its enumerated or claimed tab is sufficient proof that
 the browser is available. Do not ask the operator to say `visibile`, open a
 neutral page first, or repeat a visibility checkpoint. If the extension is not
-connected, give the single concrete setup instruction from the Chrome skill and
-stop; do not cycle through launch attempts.
+connected, ask the operator to connect Google Chrome under Settings → Computer Use →
+Google Chrome, then stop; do not cycle through launch attempts.
 
-Browser Automation has no Computer Use or desktop-control fallback. If a
+Browser Automation has no native desktop-control fallback. If a
 required step leaves Chrome or its DOM, stop the executable browser flow,
 return or record `native_gap`, and hand that exact step to the operator. Do not
 inspect or operate operating-system dialogs through accessibility trees,

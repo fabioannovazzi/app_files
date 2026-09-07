@@ -42,6 +42,21 @@ The default Luna workload is 25 independently judged invoice packets per task,
 two concurrent native Codex workers, low reasoning effort, and two retries.
 Verbose packets are split earlier when the encoded prompt would exceed the
 240 KiB workflow limit.
+
+An explicitly reviewed alternative can be supplied with
+`--worker-selection /path/to/review.json` to `run_audit.py` or
+`evaluate_audit.py synthetic-evaluate`. This file must be an authorized
+engagement input. Use `vera.reviewed_decision_receipt.v1`, decision type
+`worker-model-selection`, adapter `vera-native-worker` version `1`, and reviewed
+status. Content contains `workflow_id` (`passive-invoice-audit`), `model`,
+`reasoning_effort` and `benchmark_sha256`; the source reference is
+`benchmark-<digest>`. An explicit `--reasoning-effort` must agree with that review.
+The audit binds the entire review and model choice into its job fingerprint and
+checks the same binding when recovering native artifacts or checkpoints. A
+changed selection requires a new job. A local review declaration is not reviewer
+authentication, proof of benchmark quality, or host qualification. No alternative
+is selected automatically.
+
 Reuse the same output directory to resume. The content-bound SQLite job rejects
 different inputs or controls, skips completed chunks, and resets interrupted
 `running` chunks to `pending`. A content-bound chunk checkpoint and the native
@@ -67,7 +82,11 @@ python scripts/evaluate_audit.py evaluate \
 ```
 
 The report prioritizes exception recall, false-positive rate, human review
-rate, and the complete list of missed material issues.
+rate, and the complete list of missed material issues. It also records result,
+labelled, unlabelled and ambiguous populations and label coverage. Rates apply
+to the labelled population; unlabelled invoices do not establish accuracy.
+Each result and label must identify one unique invoice. Duplicate identities,
+missing identities and unsupported final states reject before report creation.
 
 Synthetic test copies are created only from explicit mutation plans and are
 written separately; real packets and ledger data are never changed. Every
@@ -134,3 +153,22 @@ VERA_RUN_REAL_LUNA_INTEGRATION=1 \
 VERA_REAL_LUNA_OUTPUT_DIR=/path/to/fresh-luna-test \
 python -m pytest -q tests/test_passive_invoice_audit.py::test_real_luna_integration_is_opt_in
 ```
+
+### Ledger numeric convention
+
+The reviewed ledger mapping may include a reserved `number_format` entry:
+
+- `canonical` (default): ungrouped dot decimals, for example `1234.56`.
+- `dot_decimal`: dot decimals with optional comma groups, for example `1,234.56`.
+- `comma_decimal`: comma decimals with optional dot groups, for example `1.234,56`.
+
+Declare one convention for all mapped monetary columns, including gross,
+taxable and VAT amounts; the parser never guesses it per cell. One outer pair
+of parentheses denotes a negative amount, as does a leading minus. A plus or
+minus inside parentheses is rejected as a conflicting sign.
+A separator inconsistent with that convention, a nonfinite value, or a blank
+explicit signed amount is an input error. A debit/credit pair must contain at
+least one amount. Zero is a populated amount, not a blank: a mapped gross zero
+remains zero rather than using a ledger-line fallback. Original spellings remain
+in the source, linked by the
+retained source identity and physical row locator.

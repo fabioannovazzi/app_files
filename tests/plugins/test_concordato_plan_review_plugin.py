@@ -921,7 +921,10 @@ def test_mcp_rejects_unowned_implementation_path_before_stdio(
     tmp_path: Path,
 ) -> None:
     plugin_copy, _ = _copy_concordato_runtime(tmp_path, "mcp-rogue")
-    (plugin_copy / "scripts" / "__pycache__").mkdir()
+    (plugin_copy / "scripts" / "unowned.py").write_text(
+        "raise RuntimeError('unowned implementation must not execute')\n",
+        encoding="utf-8",
+    )
 
     with pytest.raises(subprocess.CalledProcessError):
         _call_mcp_server(
@@ -935,6 +938,20 @@ def test_mcp_rejects_unowned_implementation_path_before_stdio(
             ],
             server_path=plugin_copy / "mcp" / "server.cjs",
         )
+
+
+def test_mcp_accepts_inert_bytecode_cache(tmp_path: Path) -> None:
+    plugin_copy, _ = _copy_concordato_runtime(tmp_path, "mcp-cache")
+    cache = plugin_copy / "scripts" / "__pycache__"
+    cache.mkdir()
+    (cache / "unused.cpython-311.pyc").write_bytes(b"inert invalid bytecode")
+
+    responses = _call_mcp_server(
+        [{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}],
+        server_path=plugin_copy / "mcp" / "server.cjs",
+    )
+
+    assert responses[0]["result"]["tools"]
 
 
 def test_resealed_candidate_perimeter_reorder_withholds_authoritative_rows(

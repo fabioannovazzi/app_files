@@ -4537,6 +4537,38 @@ def _check_one_entry(
     }
 
 
+def _xml_review_note(language: str, outcome: str) -> str:
+    """Describe the observed XML check outcome in the working language."""
+    copy = {
+        "en": {
+            "matched": "Matched a unique FatturaPA XML using the invoice number and at least one corroborating field.",
+            "direction": "Matched the FatturaPA XML, but a source-bound reviewed journal-direction decision is required.",
+            "mismatch": "Matched a FatturaPA XML, but required fields or the reviewed party perimeter are missing or differ.",
+        },
+        "it": {
+            "matched": "Individuato un unico XML FatturaPA tramite il numero di fattura e almeno un altro campo coerente.",
+            "direction": "Individuato l’XML FatturaPA, ma occorre una decisione revisionata e collegata alla fonte sulla direzione Dare/Avere della scrittura.",
+            "mismatch": "Individuato un XML FatturaPA, ma alcuni campi richiesti o il perimetro delle controparti revisionato sono mancanti o non coincidono.",
+        },
+        "fr": {
+            "matched": "Un XML FatturaPA unique a été identifié par le numéro de facture et au moins un autre champ concordant.",
+            "direction": "Le XML FatturaPA a été identifié, mais une décision revue et liée à la source sur le sens débit/crédit de l’écriture est requise.",
+            "mismatch": "Un XML FatturaPA a été identifié, mais des champs requis ou le périmètre des contreparties revu sont absents ou différents.",
+        },
+        "de": {
+            "matched": "Eine eindeutige FatturaPA-XML wurde anhand der Rechnungsnummer und mindestens eines weiteren übereinstimmenden Feldes zugeordnet.",
+            "direction": "Die FatturaPA-XML wurde zugeordnet; eine geprüfte, quellengebundene Entscheidung zur Soll-/Haben-Richtung der Buchung fehlt jedoch.",
+            "mismatch": "Eine FatturaPA-XML wurde zugeordnet; erforderliche Felder oder der geprüfte Gegenparteienumfang fehlen jedoch oder weichen ab.",
+        },
+        "es": {
+            "matched": "Se encontró un único XML FatturaPA mediante el número de factura y al menos un campo corroborante.",
+            "direction": "Se encontró el XML FatturaPA, pero se requiere una decisión revisada y vinculada a la fuente sobre la dirección contable.",
+            "mismatch": "Se encontró un XML FatturaPA, pero faltan o no coinciden campos obligatorios o el perímetro de partes.",
+        },
+    }
+    return copy.get(language, copy["en"])[outcome]
+
+
 def _check_entry_with_support_ladder(
     entry: dict[str, Any],
     invoices: list[InvoiceRecord],
@@ -4683,8 +4715,17 @@ def _check_entry_with_support_ladder(
         )
         if direction_missing:
             mismatches.append("direction_requires_review")
-        required_checks = {"amount", "date", "currency", "direction"}
-        missing_checks = sorted(required_checks - set(comparison_signals))
+        observed_checks = {
+            "amount": entry.get("amount_abs") not in (None, "")
+            and invoice.total_amount is not None,
+            "date": _parse_date(entry.get("entry_date")) is not None
+            and _parse_date(invoice.invoice_date) is not None,
+            "currency": bool(expected_currency and invoice_currency),
+            "direction": not direction_missing,
+        }
+        missing_checks = sorted(
+            check for check, observed in observed_checks.items() if not observed
+        )
         mismatches.extend(f"missing_{check}" for check in missing_checks)
         status = (
             "manual_review"
@@ -4737,29 +4778,16 @@ def _check_entry_with_support_ladder(
             "matched_pdf": None,
             "checks_run": ",".join(comparison_signals),
             "mismatches": ",".join(mismatches),
-            "review_notes": (
+            "review_notes": _xml_review_note(
+                language,
                 (
-                    "Se encontró un único XML FatturaPA mediante el número de factura y al menos un campo corroborante."
-                    if language == "es"
-                    else "Matched a unique FatturaPA XML using the invoice number and at least one corroborating field."
-                )
-                if not mismatches
-                else (
-                    (
-                        "Se encontró el XML FatturaPA, pero se requiere una decisión revisada y vinculada a la fuente sobre la dirección contable."
-                        if language == "es"
-                        else "Matched the FatturaPA XML, but a source-bound reviewed journal-direction decision is required."
-                    )
-                    if direction_missing
-                    else (
-                        "Se encontró un XML FatturaPA, pero faltan o no coinciden campos obligatorios o el perímetro de partes."
-                        if language == "es"
-                        else "Matched a FatturaPA XML, but required fields or the reviewed party perimeter are missing or differ."
-                    )
-                )
+                    "matched"
+                    if not mismatches
+                    else "direction" if direction_missing else "mismatch"
+                ),
             ),
-            "amount_found": invoice.total_amount if "amount" in signals else None,
-            "date_found": invoice.invoice_date if "date" in signals else None,
+            "amount_found": invoice.total_amount,
+            "date_found": invoice.invoice_date,
             "beneficiary_found": (
                 entry.get("beneficiary_expected") if "beneficiary" in signals else None
             ),
@@ -4793,6 +4821,18 @@ def _check_entry_with_support_ladder(
         direction_decisions=direction_decisions,
         language=language,
     )
+    if pdf_result["status"] == "missing_support" and not xml_issue:
+        pdf_result["mismatches"] = "support_document"
+        pdf_result["review_notes"] = {
+            "en": "No supplied supporting document could be uniquely linked to this entry.",
+            "it": "Nessun documento giustificativo fornito è collegabile in modo univoco a questa scrittura.",
+            "fr": "Aucune pièce justificative fournie ne peut être rattachée de façon univoque à cette écriture.",
+            "de": "Kein bereitgestellter Beleg konnte dieser Buchung eindeutig zugeordnet werden.",
+            "es": "Ningún documento justificativo aportado puede vincularse de forma inequívoca a este asiento.",
+        }.get(
+            language,
+            "No supplied supporting document could be uniquely linked to this entry.",
+        )
     if xml_issue:
         weak_relationship = xml_issue == "invoice_relationship_requires_review"
         pdf_result["status"] = "manual_review"

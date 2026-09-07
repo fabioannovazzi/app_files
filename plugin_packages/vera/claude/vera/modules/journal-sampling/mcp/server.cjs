@@ -2707,6 +2707,27 @@ function resolveRunOutputDir(inputArgs) {
       throw new Error("Journal Sampling client_engagement context is invalid.");
     }
     outputReference = context.output_relative_path;
+    if (isPlainObject(inputArgs.model_review_context)) {
+      const outputRoot = path.join(path.dirname(contextPath), outputReference);
+      const rootEntry = generatedReviewPathEntryStat(outputRoot);
+      if (!rootEntry?.isDirectory() || rootEntry.isSymbolicLink()) {
+        throw new Error("Journal Sampling output directory is unavailable.");
+      }
+      const matches = [outputRoot, path.join(outputRoot, "sample")].filter((candidate) => {
+        const directory = generatedReviewPathEntryStat(candidate);
+        const contextFile = path.join(candidate, "model_review_context.json");
+        const file = generatedReviewPathEntryStat(contextFile);
+        if (!directory?.isDirectory() || directory.isSymbolicLink() ||
+            !file?.isFile() || file.isSymbolicLink() || file.nlink !== 1) return false;
+        const persisted = readJsonFileIfPresent(contextFile);
+        return isPlainObject(persisted) &&
+          journalReviewStableJson(persisted) === journalReviewStableJson(inputArgs.model_review_context);
+      });
+      if (matches.length !== 1) {
+        throw new Error("Journal Sampling requires one matching persisted model review context.");
+      }
+      outputReference = matches[0];
+    }
   }
   if (
     !path.isAbsolute(outputReference) &&

@@ -11,7 +11,10 @@ from openpyxl import load_workbook
 from scripts.validate_plugin_review_contract import validate_contract
 
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "open-item-reconciliation" / "scripts"
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "open-item-reconciliation"
+    / "scripts"
 )
 WORKFLOW = SCRIPTS / "reconciliation_workflow.py"
 
@@ -587,3 +590,36 @@ def test_write_word_report_includes_deterministic_check_summaries(tmp_path):
     assert "Aging partite aperte" in text
     assert "Mappa documento-fonti" in text
     assert "Possibili storni, giroconti o compensazioni" in text
+
+
+def test_word_report_keeps_source_control_receipts_out_of_financial_prose(tmp_path):
+    outputs = load_outputs()
+    assumptions = {
+        "cutoff_date": "2026-09-30",
+        "reviewed_source_decisions": {
+            "bank.pdf": {"money": {"reported_increment": "0.01"}}
+        },
+        "_reviewed_source_decision_receipts": {"private_control_marker": "receipt"},
+    }
+    path = tmp_path / "report.docx"
+
+    outputs.write_word_report(
+        path,
+        title="Riconciliazione",
+        metadata={},
+        summary_rows=[],
+        assumptions=assumptions,
+        next_steps=[],
+        language="it",
+    )
+
+    text = document_text(path)
+    assert "2026-09-30" in text
+    assert "reported_increment" not in text
+    assert "private_control_marker" not in text
+    assert (
+        assumptions["reviewed_source_decisions"]["bank.pdf"]["money"][
+            "reported_increment"
+        ]
+        == "0.01"
+    )

@@ -1,0 +1,7 @@
+[run]
+include =
+    */plugins/sales-plan/scripts/prepare_sales_plan_case.py
+
+[report]
+show_missing = True
+fail_under = 80

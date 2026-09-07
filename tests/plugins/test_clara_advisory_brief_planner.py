@@ -517,7 +517,7 @@ def test_advisory_planner_is_routed_packaged_and_public_in_five_locales() -> Non
     assert clara_page.count('"functions.advisoryPlanning":') == 5
 
 
-def test_advisory_planner_privacy_record_has_no_external_boundary() -> None:
+def test_advisory_planner_privacy_record_declares_only_dependency_setup() -> None:
     manifest = json.loads(
         (
             CLARA_ROOT / "privacy" / "workflows" / "advisory-brief-planner.json"
@@ -526,7 +526,10 @@ def test_advisory_planner_privacy_record_has_no_external_boundary() -> None:
     source = SCRIPT_PATH.read_text(encoding="utf-8")
 
     assert manifest["hosted_service_ids"] == []
-    assert manifest["boundaries_beyond_codex"] == []
+    boundaries = manifest["boundaries_beyond_codex"]
+    assert len(boundaries) == 1
+    assert boundaries[0]["id"] == "direct-cli-python-dependency-setup"
+    assert "not included in the pip install command" in boundaries[0]["content"]
     assert manifest["security_controls"] == []
     assert "query_llm" not in source
     assert "openai" not in source.casefold()

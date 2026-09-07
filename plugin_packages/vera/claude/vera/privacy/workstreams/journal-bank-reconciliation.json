@@ -23,7 +23,7 @@
       {
         "id": "bounded-column-mapping-and-run-review",
         "purpose": "Map source columns before deterministic reconciliation and review run-level controls and limitations",
-        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths",
+        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -51,6 +51,10 @@
   "external_boundaries": [],
   "security_controls": [
     {
+      "id": "generic-worker-output-leaf-check",
+      "control": "The shared structured-worker entrypoint checks the caller-supplied output directory for a symlink before resolving the path and before opening authentication boundary inputs or launching a process. Its regression supplies a symlink to another empty directory and verifies rejection without credential access or output writes. This check covers the supplied leaf; it does not claim atomic protection from all concurrent ancestor-path changes."
+    },
+    {
       "id": "client-engagement-path-isolation",
       "control": "Inspection and reconciliation require a digest-valid Studio Archive journal-bank-reconciliation context, accept bank, journal, sample, and recipe inputs only from that engagement, and write only to the context's run output root or a descendant."
     },
@@ -64,7 +68,7 @@
     },
     {
       "id": "bounded-validated-luna-resolution-funnel",
-      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a pinned deny-default Luna worker. It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
+      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a pinned deny-default Codex worker (Luna/max by default, or an explicitly reviewed selection). It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
     },
     {
       "id": "component-private-review-transport",
@@ -97,12 +101,20 @@
     {
       "id": "reviewable-blocked-native-package",
       "control": "A source-qualification or relationship-authority block emits no matches or material-value ledger, but still closes the exact reviewable initial package with normalized and unmatched partitions, empty match and residual schedules, a blocked relationship ledger, workbook, per-side source outcomes, audit, review payload, handoff, receipts, assurance envelope and final artifact manifest."
+    },
+    {
+      "id": "reviewed-native-model-selection",
+      "control": "An alternative worker model requires a reviewed-decision receipt bound to the workflow, model, effort and benchmark digest. CLI selection files are authorized engagement inputs. This checks a local review declaration, not reviewer authentication or benchmark quality; it never changes native host qualification or read boundaries. The default remains Luna. Configuration and review identity remain bound during replay and recovery."
+    },
+    {
+      "id": "source-execution-with-inert-bytecode-cache",
+      "control": "Python entrypoints redirect bytecode lookup and disable bytecode writes before validating and loading the declared source implementation. Cache directories and regular bytecode files are excluded from the source receipt set; they are not treated as executable authority. Optional explicit repair removes only ordinary single-link .pyc files directly inside cache folders under this component own vendor tree, without traversing symlinks or falling back to shared vendor roots. This local maintenance path does not add model calls or external destinations."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-04",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2f76ac58494ed0d6f1fe21ebc15e9696655555f3ba6818e883b4490d6c7f7ee8"
+    "source_fingerprint": "01580ad1ceaf1ef3b0fc6bd1aa24e2c73e0b5990a1875c1dc1a4fc6fbe00100e"
   }
 }

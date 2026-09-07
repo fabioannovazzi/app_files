@@ -390,6 +390,7 @@ ITALIAN_SHEET_LABELS = {
 }
 
 ITALIAN_FIELD_LABELS = {
+    "byte_identical_import_names": "Nomi importati con contenuto identico",
     "account": "Conto",
     "account_name": "Nome conto",
     "age_days_at_reference": "Giorni alla data di riferimento",
@@ -462,6 +463,7 @@ ITALIAN_FIELD_LABELS = {
 }
 
 ITALIAN_RECONCILIATION_STATUS_LABELS = {
+    "partially_paid": "Pagata parzialmente",
     "closed": "Chiusa da evidenza",
     "probable_payment": "Pagamento probabile da verificare",
     "open_supported": "Aperta ma supportata",
@@ -475,6 +477,7 @@ ITALIAN_RULE_LABELS = {
     "direct_external_or_documented": "Evidenza esterna o documentata diretta",
     "documented_compensation": "Compensazione documentata",
     "external_bank_match": "Movimento bancario esterno abbinato",
+    "opposing_open_document_amounts": "Righe dello stesso documento di segno opposto: verificare storno e causa del pagamento",
     "factoring_bridge_only": "Solo ponte factor/anticipo",
     "factoring_or_advance_match": "Factor o anticipo abbinato",
     "factoring_with_bank_or_external_support": "Factor con supporto bancario o esterno",
@@ -566,6 +569,7 @@ SPANISH_SHEET_LABELS = {
 }
 
 SPANISH_FIELD_LABELS = {
+    "byte_identical_import_names": "Nombres importados con contenido idéntico",
     "account": "Cuenta",
     "account_name": "Nombre de la cuenta",
     "age_days_at_reference": "Días a la fecha de referencia",
@@ -649,6 +653,7 @@ SPANISH_FIELD_LABELS = {
 }
 
 SPANISH_RECONCILIATION_STATUS_LABELS = {
+    "partially_paid": "Pagada parcialmente",
     "closed": "Cerrada por evidencia",
     "probable_payment": "Pago probable pendiente de verificación",
     "open_supported": "Abierta pero respaldada",
@@ -662,6 +667,7 @@ SPANISH_RULE_LABELS = {
     "direct_external_or_documented": "Evidencia directa externa o documentada",
     "documented_compensation": "Compensación documentada",
     "external_bank_match": "Movimiento bancario externo conciliado",
+    "opposing_open_document_amounts": "Líneas del mismo documento con signo opuesto: verificar anulación y causa del pago",
     "factoring_bridge_only": "Solo evidencia puente del factor o anticipo",
     "factoring_or_advance_match": "Factor o anticipo conciliado",
     "factoring_with_bank_or_external_support": "Factor con respaldo bancario o externo",
@@ -1769,6 +1775,9 @@ def _reversal_report_rows(
         }
     return [
         {
+            "Record refs": "; ".join(
+                filter(None, [row.get("open_record_id"), row.get("evidence_record_id")])
+            ),
             labels["document"]: row.get("document_no") or row.get("document_key", ""),
             labels["open_amount"]: _format_decimal(row.get("open_amount")),
             labels["evidence_amount"]: _format_decimal(row.get("evidence_amount")),
@@ -1820,16 +1829,20 @@ def _cutoff_window_summary_rows(
                 labels["evidence_type"]: evidence_type,
                 labels["rows"]: 0,
                 labels["amount"]: Decimal("0.00"),
+                "Record refs": [],
             },
         )
         bucket[labels["rows"]] += 1
         bucket[labels["amount"]] += _decimal(row.get("amount"))
+        if row.get("record_id"):
+            bucket["Record refs"].append(str(row["record_id"]))
     return [
         {
             labels["timing"]: row[labels["timing"]],
             labels["evidence_type"]: row[labels["evidence_type"]],
             labels["rows"]: row[labels["rows"]],
             labels["amount"]: _format_decimal(row[labels["amount"]]),
+            "Record refs": "; ".join(row["Record refs"]),
         }
         for row in sorted(
             buckets.values(),
@@ -1959,7 +1972,7 @@ def build_audit_workbook_sheets(
     labels = _labels(language)
     sheets: dict[str, list[dict[str, Any]]] = {
         "Assumptions": rows_from_mapping(
-            assumptions,
+            _report_assumptions(assumptions),
             labels["metadata_field"],
             labels["metadata_value"],
         ),
@@ -2075,6 +2088,21 @@ def write_excel_workpaper(
     return path
 
 
+def _report_assumptions(assumptions: dict[str, Any]) -> dict[str, Any]:
+    """Keep control receipts in canonical JSON, not in financial report prose."""
+    control_fields = {
+        "reviewed_source_decisions",
+        "source_artifact_receipts",
+        "reviewed_source_decision_receipts",
+        "review_rows_path",
+    }
+    return {
+        key: value
+        for key, value in assumptions.items()
+        if not key.startswith("_") and key not in control_fields
+    }
+
+
 def write_word_report(
     output_path: str | Path,
     title: str,
@@ -2097,6 +2125,7 @@ def write_word_report(
     checks: list[dict[str, Any]] | None = None,
     review_rows: list[dict[str, Any]] | None = None,
     language: str = "it",
+    reconciliation_rows: list[dict[str, Any]] | None = None,
 ) -> Path:
     """Write an explanatory Word report; detailed row evidence belongs in Excel."""
 
@@ -2180,6 +2209,45 @@ def write_word_report(
     scope = doc.add_paragraph(text["scope_copy"])
     _set_paragraph_spacing(scope)
     if source_inventory:
+        duplicate_imports = [
+            row for row in source_inventory if row.get("byte_identical_import_names")
+        ]
+        if duplicate_imports:
+            duplicate_labels = {
+                "it": (
+                    "Copie identiche delle fonti",
+                    "Fonte conteggiata",
+                    "Nomi importati con contenuto identico",
+                ),
+                "es": (
+                    "Copias idénticas de fuentes",
+                    "Fuente contabilizada",
+                    "Nombres importados con contenido idéntico",
+                ),
+                "en": (
+                    "Byte-identical source copies",
+                    "Counted source",
+                    "Imported names with identical content",
+                ),
+            }
+            heading, canonical_label, names_label = duplicate_labels[
+                (
+                    "it"
+                    if _is_italian(language)
+                    else "es" if _is_spanish(language) else "en"
+                )
+            ]
+            doc.add_heading(heading, level=2)
+            _add_table(
+                doc,
+                [
+                    {
+                        canonical_label: row["source_file"],
+                        names_label: row["byte_identical_import_names"],
+                    }
+                    for row in duplicate_imports
+                ],
+            )
         source_summary: dict[str, int] = {}
         for row in source_inventory:
             role = str(row.get("source_role") or row.get("role") or "unknown")
@@ -2213,6 +2281,46 @@ def write_word_report(
             level=2,
         )
         _add_table(doc, _localize_rows(summary_rows, language))
+
+    partial_rows = [
+        row
+        for row in reconciliation_rows or []
+        if row.get("reconciliation_status") == "partially_paid"
+    ]
+    if partial_rows:
+        doc.add_heading(
+            (
+                "Pagamenti parziali e residui aperti"
+                if _is_italian(language)
+                else (
+                    "Pagos parciales y saldos pendientes"
+                    if _is_spanish(language)
+                    else "Partial payments and outstanding balances"
+                )
+            ),
+            level=2,
+        )
+        _add_table(
+            doc,
+            [
+                {
+                    "Record refs": row["record_id"],
+                    "Importo" if _is_italian(language) else "Amount": row["amount"],
+                    (
+                        "Importo attribuito"
+                        if _is_italian(language)
+                        else "Allocated amount"
+                    ): row["allocated_amount"],
+                    (
+                        "Residuo aperto" if _is_italian(language) else "Residual amount"
+                    ): row["residual_amount"],
+                    "Evidenza" if _is_italian(language) else "Evidence": row[
+                        "matched_evidence_id"
+                    ],
+                }
+                for row in partial_rows
+            ],
+        )
 
     doc.add_heading(text["how_to_read"], level=1)
     _add_bullet_list(
@@ -2342,7 +2450,7 @@ def write_word_report(
         )
 
     doc.add_heading(labels["assumptions"], level=1)
-    for key, value in assumptions.items():
+    for key, value in _report_assumptions(assumptions).items():
         paragraph = doc.add_paragraph(
             f"{_field_label(key, language)}: {_localize_value(key, value, language)}",
             style="List Bullet",

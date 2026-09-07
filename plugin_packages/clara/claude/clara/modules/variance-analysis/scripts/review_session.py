@@ -255,6 +255,7 @@ def _review_copy(language: object | None) -> dict[str, Any]:
 
 _ACCOUNTING_QUESTION_TRANSLATIONS = {
     "it": {
+        "Provide a finite, non-negative source tie-out tolerance.": "Fornire una tolleranza finita e non negativa per la quadratura con i totali della fonte.",
         "Confirm the entity and consolidation perimeter.": "Confermare il perimetro societario e di consolidamento.",
         "Provide approved baseline and comparison source totals for tie-out.": "Fornire i totali approvati della fonte per base e confronto.",
         "Confirm the favorable/adverse sign convention.": "Confermare la convenzione favorevole/sfavorevole.",
@@ -264,6 +265,7 @@ _ACCOUNTING_QUESTION_TRANSLATIONS = {
         "Resolve the component-bridge reconciliation control.": "Risolvere il controllo di chiusura del bridge dei componenti.",
     },
     "es": {
+        "Provide a finite, non-negative source tie-out tolerance.": "Proporcione una tolerancia finita y no negativa para la conciliación con los totales fuente.",
         "Confirm the entity and consolidation perimeter.": "Confirme el perímetro de entidad y consolidación.",
         "Provide approved baseline and comparison source totals for tie-out.": "Proporcione los totales fuente aprobados de base y comparación.",
         "Confirm the favorable/adverse sign convention.": "Confirme la convención favorable/desfavorable.",
@@ -273,6 +275,7 @@ _ACCOUNTING_QUESTION_TRANSLATIONS = {
         "Resolve the component-bridge reconciliation control.": "Resuelva el control de cierre del puente de componentes.",
     },
     "fr": {
+        "Provide a finite, non-negative source tie-out tolerance.": "Fournir une tolérance finie et non négative pour le rapprochement avec les totaux source.",
         "Confirm the entity and consolidation perimeter.": "Confirmer le périmètre d’entité et de consolidation.",
         "Provide approved baseline and comparison source totals for tie-out.": "Fournir les totaux source approuvés de référence et de comparaison.",
         "Confirm the favorable/adverse sign convention.": "Confirmer la convention favorable/défavorable.",
@@ -282,6 +285,7 @@ _ACCOUNTING_QUESTION_TRANSLATIONS = {
         "Resolve the component-bridge reconciliation control.": "Résoudre le contrôle de bouclage du pont des composantes.",
     },
     "de": {
+        "Provide a finite, non-negative source tie-out tolerance.": "Eine endliche, nicht negative Toleranz für den Abgleich mit den Quellsummen angeben.",
         "Confirm the entity and consolidation perimeter.": "Unternehmens- und Konsolidierungskreis bestätigen.",
         "Provide approved baseline and comparison source totals for tie-out.": "Freigegebene Quellsummen für Basis und Vergleich angeben.",
         "Confirm the favorable/adverse sign convention.": "Konvention für günstige/ungünstige Abweichungen bestätigen.",
@@ -423,25 +427,12 @@ def _append_execution_trace(
     *,
     command: Sequence[str],
 ) -> None:
+    from vera_assurance.serialization import build_review_execution_step
+
     payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    data_posture = payload.get("data_posture")
-    local_files = (
-        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
-    )
-    inputs = (
-        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
-    )
-    payload["execution_trace"] = [
-        {
-            "step_id": f"{WORKFLOW_NAME}_review_session",
-            "kind": "deterministic_review_session",
-            "status": "passed",
-            "execution_location": "cowork_connected_folder",
-            "command": list(command),
-            "inputs": [str(entry) for entry in inputs if entry],
-            "outputs": _local_output_refs(final_artifacts_path),
-        }
-    ]
+    step = build_review_execution_step(payload, WORKFLOW_NAME, command)
+    step["outputs"] = _local_output_refs(final_artifacts_path)
+    payload["execution_trace"] = [step]
     _write_json(run_intake_path, payload)
 
 

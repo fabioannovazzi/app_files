@@ -346,7 +346,7 @@ def _source_aliases(source: dict[str, Any]) -> set[str]:
     ):
         value = _clean_text(source.get(field))
         if value:
-            aliases.add(value.casefold())
+            aliases.add(value)
     return aliases
 
 
@@ -356,7 +356,9 @@ def _resolve_source(
 ) -> tuple[str, dict[str, Any] | None]:
     """Resolve only exact identifiers; source relevance remains model-led."""
 
-    target = _clean_text(source_ref).casefold()
+    # URL paths and local source paths can be case-sensitive. Exact identity
+    # matching must not merge distinct evidence before semantic review.
+    target = _clean_text(source_ref)
     if not target:
         return "missing_reference", None
     matches = [source for source in sources if target in _source_aliases(source)]

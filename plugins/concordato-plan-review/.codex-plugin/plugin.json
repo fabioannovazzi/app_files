@@ -1,6 +1,6 @@
 {
   "name": "concordato-plan-review",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Professional review workspace for Italian concordato preventivo cases: procedure, documents, creditors, treatment, liquidation alternative, sources and uses, liquidity, issues, and exact supporting schedules.",
   "author": {
     "name": "Mparanza",
@@ -26,8 +26,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Concordato Preventivo",
-    "shortDescription": "Riesamina procedura, piano, attestazione, creditori, trattamento, alternativa liquidatoria, liquidità e questioni aperte.",
-    "longDescription": "Workspace Codex per la revisione professionale di un concordato preventivo italiano. Organizza quadro normativo, procedura, proposta, piano, attestazione e documenti autorevoli; struttura creditori, prelazioni, classi, voto, recuperi e tempi; confronta il trattamento con l'alternativa liquidatoria; calcola esattamente fonti e impieghi, funding gap e bridge di liquidità; registra assunzioni, contraddizioni, lacune e follow-up. Il tie-out numerico resta un'appendice opzionale. Codex propone l'interpretazione semantica e il professionista la conferma: il codice non emette pareri legali né attesta la fattibilità.",
+    "shortDescription": "Riesamina procedura, piano, attestazione, creditori, trattamento, alternativa liquidatoria, liquidit\u00e0 e questioni aperte.",
+    "longDescription": "Workspace Codex per la revisione professionale di un concordato preventivo italiano. Organizza quadro normativo, procedura, proposta, piano, attestazione e documenti autorevoli; struttura creditori, prelazioni, classi, voto, recuperi e tempi; confronta il trattamento con l'alternativa liquidatoria; calcola esattamente fonti e impieghi, funding gap e bridge di liquidit\u00e0; registra assunzioni, contraddizioni, lacune e follow-up. Il tie-out numerico resta un'appendice opzionale. Codex propone l'interpretazione semantica e il professionista la conferma: il codice non emette pareri legali n\u00e9 attesta la fattibilit\u00e0.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
@@ -40,8 +40,8 @@
     ],
     "defaultPrompt": [
       "Usa Concordato Preventivo sul fascicolo che indico.",
-      "Ricostruisci procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità, assunzioni e questioni aperte.",
-      "Fai confermare il modello semantico al professionista e usa il tie-out numerico soltanto come appendice quando è utile."
+      "Ricostruisci procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidit\u00e0, assunzioni e questioni aperte.",
+      "Fai confermare il modello semantico al professionista e usa il tie-out numerico soltanto come appendice quando \u00e8 utile."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

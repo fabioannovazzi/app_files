@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import importlib
 import json
 import re
@@ -271,3 +272,148 @@ def test_failed_stamp_keeps_same_minimal_request_for_retry(
         )
 
     assert (tmp_path / "model_data_receipt_request.json").read_bytes() == first_request
+
+
+def test_late_receipt_preserves_sealed_outputs_and_original_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    report_module, receipt_module = _modules(monkeypatch)
+    output = tmp_path / "outputs"
+    output.mkdir()
+    report_path = _report(report_module, output)
+
+    def unavailable(*args: object, **kwargs: object) -> None:
+        raise OSError("synthetic outage")
+
+    with pytest.raises(receipt_module.NotarizedRunReceiptError):
+        receipt_module.stamp_model_data_report(
+            report_path, output_dir=output, plugin_root=PLUGIN_ROOT, opener=unavailable
+        )
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
+    report = json.loads(report_path.read_text())
+    (tmp_path / "artifact_manifest.json").write_text(
+        json.dumps(
+            {
+                "run_id": report["run_id"],
+                "artifacts": [
+                    {
+                        "path": report_path.name,
+                        "sha256": hashlib.sha256(report_path.read_bytes()).hexdigest(),
+                    }
+                ],
+            }
+        )
+    )
+    opener, _store = _opener(tmp_path)
+
+    result = receipt_module.stamp_model_data_report(
+        report_path, output_dir=output, plugin_root=PLUGIN_ROOT, opener=opener
+    )
+
+    assert result["status"] == "stamped"
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
+    receipt_dir = Path(result["receipt_path"]).parent
+    assert receipt_dir.parent == tmp_path / "receipts"
+    assert (receipt_dir / "model_data_receipt_request.json").read_bytes() == before[
+        "model_data_receipt_request.json"
+    ]
+
+
+@pytest.mark.parametrize("operation", ["stamp", "verify"])
+@pytest.mark.parametrize("status", [301, 302, 303, 307, 308])
+def test_receipt_redirect_never_requests_second_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, operation: str, status: int
+) -> None:
+    import io
+    import urllib.request
+    import urllib.response
+    from email.message import Message
+
+    report_module, receipt_module = _modules(monkeypatch)
+    report_path = _report(report_module, tmp_path)
+    service, _store = _opener(tmp_path)
+    if operation == "verify":
+        receipt_module.stamp_model_data_report(
+            report_path, output_dir=tmp_path, plugin_root=PLUGIN_ROOT, opener=service
+        )
+    destinations = []
+
+    class RedirectingTransport(urllib.request.HTTPSHandler):
+        def https_open(self, request):
+            destinations.append(request.full_url)
+            if len(destinations) > 1:
+                raise AssertionError("Redirect reached a second destination")
+            headers = Message()
+            headers["Location"] = "https://other.example/receipt"
+            response = urllib.response.addinfourl(
+                io.BytesIO(b""), headers, request.full_url, status
+            )
+            response.msg = "Redirect"
+            return response
+
+    original_builder = urllib.request.build_opener
+    monkeypatch.setattr(
+        urllib.request,
+        "build_opener",
+        lambda *handlers: original_builder(*handlers, RedirectingTransport()),
+    )
+
+    with pytest.raises(receipt_module.NotarizedRunReceiptError):
+        if operation == "stamp":
+            receipt_module.stamp_model_data_report(
+                report_path, output_dir=tmp_path, plugin_root=PLUGIN_ROOT
+            )
+        else:
+            receipt_module.verify_model_data_receipt(
+                tmp_path / "model_data_receipt.json", report_path=report_path
+            )
+
+    assert len(destinations) == 1
+    assert destinations[0].startswith("https://mparanza.com/")
+
+
+def test_receipt_endpoint_credentials_rejected_before_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    report_module, receipt_module = _modules(monkeypatch)
+    report_path = _report(report_module, tmp_path)
+
+    def unexpected_request(*args, **kwargs):
+        raise AssertionError("Credential-bearing URL reached transport")
+
+    with pytest.raises(receipt_module.NotarizedRunReceiptError, match="credentials"):
+        receipt_module.stamp_model_data_report(
+            report_path,
+            output_dir=tmp_path,
+            plugin_root=PLUGIN_ROOT,
+            endpoint="https://user:password@mparanza.com/api/vera/run-receipts",
+            opener=unexpected_request,
+        )
+
+
+def test_duplicate_stamp_reuses_receipt_without_network_or_artifact_changes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    report_module, receipt_module = _modules(monkeypatch)
+    output = tmp_path / "outputs"
+    output.mkdir()
+    report_path = _report(report_module, output)
+    opener, _store = _opener(tmp_path)
+    original = receipt_module.stamp_model_data_report(
+        report_path, output_dir=output, plugin_root=PLUGIN_ROOT, opener=opener
+    )
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
+
+    def unexpected_network(*args: object, **kwargs: object) -> None:
+        pytest.fail("An identical stamp retry must reuse the valid local receipt")
+
+    repeated = receipt_module.stamp_model_data_report(
+        report_path,
+        output_dir=output,
+        plugin_root=PLUGIN_ROOT,
+        opener=unexpected_network,
+    )
+
+    assert repeated["status"] == "stamped"
+    assert repeated["receipt_path"] == original["receipt_path"]
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before

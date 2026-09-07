@@ -6,6 +6,7 @@ import json
 import re
 import subprocess
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 from types import ModuleType
 
@@ -30,6 +31,8 @@ from management_control_core import (  # noqa: E402
     build_model_context_receipt,
     finalize_commentary,
     load_source_tables,
+    render_html,
+    render_markdown,
     write_excel,
 )
 
@@ -799,3 +802,141 @@ def test_workflow_reads_only_the_bounded_post_calculation_context() -> None:
         "Read `execution_receipt.json`, `management_control_pack.json`, and"
         not in skill
     )
+
+
+@pytest.mark.parametrize("value", [None, "", "NaN", "Infinity", "=1000+1"])
+def test_missing_invalid_or_uncached_gl_amount_cannot_become_zero(
+    tmp_path: Path, value: object
+) -> None:
+    source = tmp_path / "inputs.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    workbook["GL"]["D2"] = value
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe = _reviewed_recipe(build_inspection(tables)[0])
+    recipe["control_totals"] = {}
+
+    with pytest.raises(PackContractError, match="missing|finite|valid decimal"):
+        build_management_pack(tables, recipe)
+
+
+def test_zero_revenue_keeps_costs_and_marks_shares_undefined(tmp_path: Path) -> None:
+    source = tmp_path / "inputs.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    for row in workbook["Sales"].iter_rows(min_row=2):
+        row[3].value = 0
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe = _reviewed_recipe(build_inspection(tables)[0])
+    recipe["control_totals"] = {}
+
+    pack = build_management_pack(tables, recipe)
+
+    assert pack["status"] == "partial"
+    assert pack["sections"]["customer_concentration"]["top_1_share"] is None
+    assert pack["sections"]["service_profitability"]["rows"][0]["margin_rate"] is None
+    assert pack["sections"]["service_profitability"]["total_margin"] == "-770"
+    assert "customers.top1.share" not in pack["metrics"]
+
+
+@pytest.mark.parametrize("renderer", [render_html, render_markdown])
+def test_readable_report_discloses_undefined_service_margin(
+    tmp_path: Path, renderer
+) -> None:
+    source = tmp_path / "inputs.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    for row in workbook["Sales"].iter_rows(min_row=2):
+        row[3].value = 0
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe = _reviewed_recipe(build_inspection(tables)[0])
+    recipe["control_totals"] = {}
+    pack = build_management_pack(tables, recipe)
+
+    report = renderer(pack)
+
+    assert "Undefined: service revenue is zero." in report
+    assert "the supplied sales-detail rows total zero revenue" in report
+    assert "2400" in report
+    assert "-450" in report
+    assert "-320" in report
+    assert "None" not in report
+
+
+@pytest.mark.parametrize("balances", [(100, 50), (50, 100)])
+def test_competing_closing_balances_are_explicitly_unavailable(
+    tmp_path: Path, balances: tuple[int, int]
+) -> None:
+    source = tmp_path / "inputs.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    bank = workbook["Bank"]
+    bank.delete_rows(2, bank.max_row)
+    bank.append(("2025-02-20", "Main", 100, balances[0]))
+    bank.append(("2025-02-20", "Main", -50, balances[1]))
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe = _reviewed_recipe(build_inspection(tables)[0])
+    recipe["control_totals"] = {}
+
+    pack = build_management_pack(tables, recipe)
+
+    assert pack["sections"]["cash_movement"]["status"] == "unavailable"
+    assert "Conflicting same-date" in pack["sections"]["cash_movement"]["reason"]
+    assert "cash.latest.reported_balance" not in pack["metrics"]
+
+
+def test_service_detail_preserves_more_than_fifty_services(tmp_path: Path) -> None:
+    source = tmp_path / "inputs.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    sales = workbook["Sales"]
+    sales.delete_rows(2, sales.max_row)
+    for index in range(51):
+        sales.append(("2025-02-20", "Customer", f"Service {index}", 100, 20))
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe = _reviewed_recipe(build_inspection(tables)[0])
+    recipe["control_totals"] = {}
+
+    pack = build_management_pack(tables, recipe)
+
+    assert len(pack["sections"]["service_profitability"]["rows"]) == 51
+    assert pack["sections"]["service_profitability"]["total_margin"] == "4080"
+
+
+@pytest.mark.parametrize(
+    "reviewed_zero_side, expectation",
+    [
+        (False, pytest.raises(PackContractError, match="missing")),
+        (True, nullcontext()),
+    ],
+)
+def test_blank_opposite_entry_side_requires_reviewed_zero_convention(
+    tmp_path: Path, reviewed_zero_side: bool, expectation
+) -> None:
+    source = tmp_path / "inputs.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    ledger = workbook["GL"]
+    ledger.cell(1, 4, "Debit")
+    ledger.cell(1, 5, "Credit")
+    for row in range(2, ledger.max_row + 1):
+        amount = ledger.cell(row, 4).value
+        ledger.cell(row, 4).value = -amount if amount < 0 else None
+        ledger.cell(row, 5).value = amount if amount >= 0 else None
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe = _reviewed_recipe(build_inspection(tables)[0])
+    mapping = recipe["tables"]["general_ledger"]
+    mapping["columns"].pop("amount")
+    mapping["columns"].update({"debit": "Debit", "credit": "Credit"})
+    mapping["amount_rule"] = "credit_minus_debit"
+    mapping["blank_debit_credit_is_zero"] = reviewed_zero_side
+
+    with expectation:
+        pack = build_management_pack(tables, recipe)
+        assert pack["metrics"]["pnl.total.revenue"]["value"] == "2400"

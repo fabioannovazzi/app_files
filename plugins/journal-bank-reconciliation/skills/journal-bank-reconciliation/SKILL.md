@@ -195,7 +195,7 @@ replay; Luna may reach at most `identifier_match`.
 The main reconciliation chat must keep its current model and remain the
 orchestrator and final review authority. Never change the model configuration
 of the current chat, never rerun the full reconciliation with Luna, and never
-send one worker call per candidate. Launch one separate ephemeral Luna Max
+send one worker call per candidate. By default, launch one separate ephemeral Luna Max
 worker for the bounded packet produced for that run.
 
 1. Prefer `semantic_review.py run-all` against the completed `reconciliation`
@@ -211,6 +211,13 @@ python scripts/semantic_review.py run-all <output-dir>/reconciliation \
   --required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match> \
   --client-engagement <client_engagement_path>
 ```
+
+An explicitly reviewed alternative may be supplied to `prepare` or `run-all`
+with `--worker-selection <receipt.json>`. Use the shared reviewed-decision
+contract with decision type `worker-model-selection`; the receipt binds the workflow, model,
+effort and benchmark digest. Treat it as an authorized engagement input and
+retain the same selection throughout replay. Do not invent a reviewed decision
+or treat a model choice as host qualification. Omit the option otherwise.
 
 Each preparation immediately writes the current deterministic plus cumulative
 `semantic_resolution_application.json`, `resolution_funnel.json`, and
@@ -404,9 +411,15 @@ equality on a truly blank-date row with no stable reference.
   1. `reference` accepts conflict-free singleton reference candidates in
      batches. If multiple singleton bank rows target the same journal row,
      none wins by row order.
-  2. `amount_date_unique` is the first conflict-free singleton amount/date
+  2. `reference_group` accepts reviewed one-to-many or many-to-one shapes
+     defined by a shared identifier or a complete explicit reference list.
+     Lists are read only from the mapped reference field, contain at most 100
+     distinct alphanumeric identifiers, and must identify exactly one opposite
+     row per identifier. Missing, duplicated, or competing membership remains
+     unmatched. The same perimeter, date-window and amount checks apply.
+  3. `amount_date_unique` is the first conflict-free singleton amount/date
      batch after reference matching is exhausted.
-  3. `amount_date_single` is reserved for later conflict-free singleton waves:
+  4. `amount_date_single` is reserved for later conflict-free singleton waves:
      candidates that become singleton only because an earlier amount/date
      batch consumed other journal candidates.
 - Every singleton wave is evaluated against one unchanged candidate snapshot

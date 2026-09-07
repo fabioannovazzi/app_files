@@ -206,3 +206,9 @@ headers, widths, totals, and visible review status.
 After substantive use, read and follow the `Plugin Improvement Feedback`
 section in the Vera router. Keep client data and source details out of any
 technical improvement note. Keep the improvement note local to chat or run artifacts.
+
+Missing numeric cells are unavailable, not zero. If a reviewed debit/credit
+export uses an empty opposite side to mean zero, set
+`blank_debit_credit_is_zero: true` on that table mapping. This applies only when
+one side contains an amount; both sides empty remain an error. Explicit amount
+columns, balances and uncached formula cells never inherit this exception.

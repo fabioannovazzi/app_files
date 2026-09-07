@@ -222,6 +222,11 @@ The catalog distinguishes user-facing workflows, cross-cutting assurance
 skills, subordinate intake skills, and developer governance. A cross-cutting
 skill is not a substitute for a missing operational workflow.
 
+Use `references/workflow-registry.json` for generated factual component
+membership, packaged skill/entrypoint paths, managed-run artifacts and host
+qualification requirements. Do not infer suitability or current host support
+from a listed entrypoint. Semantic routing remains in the catalog and skills.
+
 For an ordinary substantive legal, tax, or compliance question or source-backed
 professional drafting request, `quesito-legale-fiscale` is the matching
 specialist workflow. Prompt Optimizer and Deep Research Validator are its
@@ -245,7 +250,8 @@ which would duplicate the host namespace.
 Keep these host-sensitive boundaries inline so package projections can narrow
 them without changing the capability catalog:
 
-- `archive-organization`: a Codex Desktop-only, client-bound workflow that
+- `archive-organization`: a client-bound workflow with local-folder support in
+  Codex and Cowork, and Google Drive support when its declared connector is available, that
   snapshots a bounded registered local or Google Drive client folder, proposes semantic filing
   decisions, persists collaborator review, and requires a separate explicit
   apply action. Drive mode preserves stable file IDs and revalidates versions,

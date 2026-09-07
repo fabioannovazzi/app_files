@@ -10,7 +10,7 @@ import warnings
 from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, Iterator
 from zipfile import ZipFile
 
 import polars as pl
@@ -39,6 +39,30 @@ SHARED_VARIANCE_DRAW_WATERFALL_PATH = (
     / "charting"
     / "draw_waterfall.py"
 )
+
+
+@pytest.fixture(autouse=True)
+def isolate_plugin_imports() -> Iterator[None]:
+    """Keep standalone plugin imports independent of other plugin tests."""
+    script_names = {path.stem for path in SCRIPT_DIR.glob("*.py")}
+
+    def owned(name: str) -> bool:
+        return name == "modules" or name.startswith("modules.") or name in script_names
+
+    original_path = sys.path[:]
+    original_modules = {
+        name: module for name, module in sys.modules.copy().items() if owned(name)
+    }
+    for name in original_modules:
+        sys.modules.pop(name, None)
+    try:
+        yield
+    finally:
+        for name in list(sys.modules):
+            if owned(name):
+                sys.modules.pop(name, None)
+        sys.modules.update(original_modules)
+        sys.path[:] = original_path
 
 
 def load_core() -> Any:
@@ -125,14 +149,30 @@ def load_total_by_dimension_bridge_chart() -> Any:
 
 
 def load_ibcs_titles() -> Any:
-    if str(SCRIPT_DIR) not in sys.path:
+    # The standalone plugin imports its vendored ``modules`` package. Keep the
+    # application's identically named package out of this test-only import.
+    prior_path = list(sys.path)
+    prior_modules = {
+        name: module
+        for name, module in sys.modules.items()
+        if name == "modules" or name.startswith("modules.")
+    }
+    try:
+        for name in prior_modules:
+            del sys.modules[name]
         sys.path.insert(0, str(SCRIPT_DIR))
-    spec = importlib.util.spec_from_file_location("ibcs_titles", IBCS_TITLES_PATH)
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+        spec = importlib.util.spec_from_file_location("ibcs_titles", IBCS_TITLES_PATH)
+        assert spec and spec.loader
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        for name in list(sys.modules):
+            if name == "modules" or name.startswith("modules."):
+                del sys.modules[name]
+        sys.modules.update(prior_modules)
+        sys.path[:] = prior_path
 
 
 def load_vendor_draw_waterfall() -> Any:
@@ -167,9 +207,7 @@ def _node_binary() -> str:
     if node is not None:
         return node
     candidates = sorted(
-        (Path.home() / ".cache" / "codex-runtimes").glob(
-            "*/dependencies/node/bin/node"
-        )
+        (Path.home() / ".cache" / "codex-runtimes").glob("*/dependencies/node/bin/node")
     )
     if not candidates:
         pytest.skip("Node.js is required to exercise the Variance Analysis MCP server.")
@@ -799,17 +837,15 @@ def test_variance_model_use_keeps_full_calculation_and_targets_source_drilldown(
     assert drilldown["full_source_rows_scanned_locally"] == 4
     assert drilldown["in_scope_rows_scanned_locally"] == 4
     assert drilldown["matched_row_count"] == 2
-    assert {tuple(sorted(row)) for row in drilldown["rows"]} == {
-        ("period", "sales")
-    }
+    assert {tuple(sorted(row)) for row in drilldown["rows"]} == {("period", "sales")}
 
     changed_recipe_path = tmp_path / "changed_recipe.json"
     changed_recipe = json.loads(
         (output_dir / "used_recipe.json").read_text(encoding="utf-8")
     )
-    changed_recipe["options"]["include_percentages"] = not changed_recipe["options"].get(
-        "include_percentages", True
-    )
+    changed_recipe["options"]["include_percentages"] = not changed_recipe[
+        "options"
+    ].get("include_percentages", True)
     changed_recipe_path.write_text(json.dumps(changed_recipe), encoding="utf-8")
     rejected = subprocess.run(
         [
@@ -926,9 +962,7 @@ def test_variance_mcp_uses_hash_bound_local_reference_after_validation(
                 "method": "tools/call",
                 "params": {
                     "name": "render_variance_analysis_review",
-                    "arguments": {
-                        "persistence_token": reference["persistence_token"]
-                    },
+                    "arguments": {"persistence_token": reference["persistence_token"]},
                 },
             }
         )["result"]
@@ -1558,9 +1592,7 @@ def test_variance_plugin_inspects_xlsx_dates_and_plan_actual_scenario(
 
     assert inspection.payload["warnings"] == []
     assert inspection_payload["sample_rows"][0]["Orderdate"] == "2024-01-01"
-    assert "PrivateNote" in {
-        column["name"] for column in inspection_payload["columns"]
-    }
+    assert "PrivateNote" in {column["name"] for column in inspection_payload["columns"]}
     assert "PrivateNote" in inspection_payload["omitted_sample_columns"]
     assert "PrivateNote" not in inspection_payload["sampled_columns"]
     assert all("PrivateNote" not in row for row in inspection_payload["sample_rows"])
@@ -2300,7 +2332,9 @@ def test_root_cause_client_report_localizes_italian_draft_and_controls(
         "accounting_readiness": {
             "client_report_status": "draft_pending_professional_review",
             "accounting_status": "partial",
-            "unresolved_items": [],
+            "unresolved_items": [
+                "Provide a finite, non-negative source tie-out tolerance."
+            ],
         },
     }
 
@@ -2315,6 +2349,8 @@ def test_root_cause_client_report_localizes_italian_draft_and_controls(
     assert "# Bozza di analisi delle varianze vendite" in markdown
     assert "## Perimetro e controlli contabili" in markdown
     assert "Prodotto A - Prezzo, Volume e Mix" in markdown
+    assert "Fornire una tolleranza finita e non negativa" in markdown
+    assert "Provide a finite" not in markdown
     assert "calendar period" not in markdown
     assert "main driver" not in markdown.lower()
 
@@ -2862,6 +2898,12 @@ def test_managed_run_intake_uses_portable_paths_and_client_run_id(
         "output_relative_path": "outputs",
         "content_sha256": "5" * 64,
         "run_root": str(run_root),
+        "input_bindings": [
+            {
+                "path": str(input_path),
+                "imported_names": ["source.csv", "source-copy.csv"],
+            }
+        ],
     }
 
     result = review_session.write_run_intake(
@@ -2883,6 +2925,8 @@ def test_managed_run_intake_uses_portable_paths_and_client_run_id(
         == "outputs/inspection/suggested_recipe.json"
     )
     assert "run_root" not in payload["client_engagement"]
+    assert "input_bindings" not in payload["client_engagement"]
+    assert "source-copy.csv" not in json.dumps(payload)
     assert str(tmp_path) not in json.dumps(payload)
 
 
@@ -2914,6 +2958,63 @@ def test_accounting_readiness_blocks_failed_source_tie_out() -> None:
     assert readiness["component_bridge"]["status"] == "passed"
     assert readiness["accounting_status"] == "blocked"
     assert readiness["client_report_status"] == "draft_pending_professional_review"
+
+
+@pytest.mark.parametrize("tolerance", ["Infinity", "-Infinity", "NaN", -1])
+def test_accounting_readiness_rejects_invalid_tolerance(tolerance: object) -> None:
+    load_core()
+    controls = sys.modules["accounting_controls"]
+    review = controls.default_accounting_review()
+    review["perimeter"] = {"status": "established", "description": "Entity A"}
+    review["favorable_adverse_convention"] = {
+        "status": "established",
+        "description": "Positive sales variance is favorable.",
+    }
+    review["materiality"] = {"status": "not_applied"}
+    review["source_tie_out"] = {
+        "baseline_source_total": 100.0,
+        "comparison_source_total": 200.0,
+        "tolerance": tolerance,
+    }
+
+    readiness = controls.evaluate_accounting_readiness(
+        review,
+        amount_baseline=1000.0,
+        amount_comparison=2000.0,
+        max_abs_component_reconciliation_delta=900.0,
+    )
+
+    assert readiness["source_tie_out"]["status"] == "failed"
+    assert readiness["component_bridge"]["status"] == "failed"
+    assert readiness["accounting_status"] == "blocked"
+    assert (
+        "Provide a finite, non-negative source tie-out tolerance."
+        in readiness["unresolved_items"]
+    )
+
+
+@pytest.mark.parametrize("invalid_number", ["Infinity", "-Infinity", "NaN"])
+def test_accounting_intake_requests_finite_totals_and_materiality(
+    invalid_number: str,
+) -> None:
+    load_core()
+    controls = sys.modules["accounting_controls"]
+    review = controls.default_accounting_review()
+    review["source_tie_out"]["baseline_source_total"] = invalid_number
+    review["source_tie_out"]["comparison_source_total"] = 200.0
+    review["materiality"] = {
+        "status": "applied",
+        "threshold": invalid_number,
+        "basis": "Reviewed synthetic threshold",
+    }
+
+    questions = controls.accounting_intake_questions(review)
+
+    assert (
+        "Provide approved baseline and comparison source totals for tie-out."
+        in questions
+    )
+    assert "Complete the applied materiality threshold and basis." in questions
 
 
 def test_managed_variance_artifacts_use_only_run_relative_source_paths(
@@ -3109,3 +3210,63 @@ def test_skill_and_scripts_keep_codex_as_interpretation_layer() -> None:
     assert "requests" not in requirements_text.lower()
     assert "modules.llm" not in script_text
     assert "model_router" not in script_text
+
+
+def test_standard_variance_export_has_readable_canvas_and_consistent_text(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import plotly.graph_objects as go
+
+    core = load_core()
+    source = tmp_path / "sales.csv"
+    pl.DataFrame(
+        {
+            "product": ["A", "A", "B", "B"],
+            "period": ["PY", "AC", "PY", "AC"],
+            "sales": [100.0, 150.0, 100.0, 80.0],
+            "units": [10.0, 10.0, 10.0, 10.0],
+        }
+    ).write_csv(source)
+    recipe = tmp_path / "recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {
+                "mappings": {
+                    "period_column": "period",
+                    "baseline_period": "PY",
+                    "comparison_period": "AC",
+                    "amount_column": "sales",
+                    "units_column": "units",
+                    "dimensions": ["product"],
+                    "calculation_grain": ["product"],
+                },
+                "options": {
+                    "waterfall_chart": True,
+                    "waterfall_small_multiples": False,
+                    "root_cause_bridge": False,
+                    "root_cause_bridge_alternative_sweep": False,
+                },
+            }
+        )
+    )
+    figures = []
+
+    def capture_export(figure, path, **kwargs):
+        if Path(path).name == "waterfall.png":
+            figures.append(figure)
+        raise RuntimeError("Synthetic browser unavailable; use declared fallback")
+
+    monkeypatch.setattr(go.Figure, "write_image", capture_export)
+
+    core.run_variance_analysis(source, tmp_path / "output", recipe, language="en")
+
+    assert len(figures) == 1
+    figure = figures[0]
+    assert figure.layout.width >= 1000
+    assert figure.layout.height >= 450
+    assert figure.layout.paper_bgcolor == "white"
+    assert figure.layout.title.y == 0.95
+    assert figure.layout.font.size == figure.layout.title.font.size == 14
+    assert {
+        trace.textfont.size for trace in figure.data if trace.type == "waterfall"
+    } == {14}

@@ -25,6 +25,7 @@ if __name__ == "__main__":
                 "Managed Python launcher is missing; rebuild the plugin package."
             )
 
+
 import argparse
 import hashlib
 import json
@@ -128,8 +129,15 @@ def write_model_use_manifest(
         try:
             relative = path.relative_to(output_dir).as_posix()
         except ValueError as exc:
-            raise ModelUseError("default model artifact is outside the run output") from exc
-        if relative in seen or path.suffix.lower() not in {".csv", ".json", ".md", ".xlsx"}:
+            raise ModelUseError(
+                "default model artifact is outside the run output"
+            ) from exc
+        if relative in seen or path.suffix.lower() not in {
+            ".csv",
+            ".json",
+            ".md",
+            ".xlsx",
+        }:
             continue
         seen.add(relative)
         artifacts.append(
@@ -247,6 +255,7 @@ def extract_source_rows(
     """Write all exact in-scope source matches for one bounded question."""
 
     from variance_core import prepare_period_comparison_buckets, read_table
+
     from modules.chart_harness import apply_recipe_cohorts, apply_recipe_filters
 
     manifest_path = Path(manifest_path).resolve()
@@ -258,7 +267,9 @@ def extract_source_rows(
     if not reason or len(reason) > 1_000:
         raise ModelUseError("reason must contain 1 to 1000 characters")
     exact_filters = _filters(where)
-    requested_columns = list(dict.fromkeys(item.strip() for item in columns if item.strip()))
+    requested_columns = list(
+        dict.fromkeys(item.strip() for item in columns if item.strip())
+    )
     if not exact_filters:
         raise ModelUseError("at least one --where is required")
     if not requested_columns:
@@ -269,13 +280,13 @@ def extract_source_rows(
     referenced = {*requested_columns, *(column for column, _value in exact_filters)}
     unknown = sorted(referenced - allowed)
     if unknown:
-        raise ModelUseError(f"drilldown columns are not in the reviewed mapping: {unknown}")
+        raise ModelUseError(
+            f"drilldown columns are not in the reviewed mapping: {unknown}"
+        )
     recipe = json.loads(Path(recipe_path).read_text(encoding="utf-8"))
     if not isinstance(recipe, dict):
         raise ModelUseError("used recipe must be an object")
-    if _snapshot(recipe_path) != manifest["semantic_boundary"].get(
-        "recipe_snapshot"
-    ):
+    if _snapshot(recipe_path) != manifest["semantic_boundary"].get("recipe_snapshot"):
         raise ModelUseError("Variance recipe no longer matches the reviewed recipe")
     frame = read_table(input_path)
     source_rows = frame.height
@@ -303,7 +314,9 @@ def extract_source_rows(
         "workflow_id": "variance-analysis",
         "manifest_sha256": manifest["content_sha256"],
         "reason": reason,
-        "where": [{"column": column, "value": value} for column, value in exact_filters],
+        "where": [
+            {"column": column, "value": value} for column, value in exact_filters
+        ],
         "columns": requested_columns,
     }
     request_sha256 = _canonical_json_sha256(request)

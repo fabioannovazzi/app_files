@@ -1049,6 +1049,31 @@ def test_pdf_corpus_evaluation_cli_writes_coverage_only(tmp_path: Path) -> None:
     assert payload["analysis_generated"] is False
 
 
+@pytest.mark.parametrize(
+    ("sources", "error"),
+    [
+        ({}, "Gold sources are missing"),
+        ({"unused_source": {}}, "must declare at least one case"),
+    ],
+)
+def test_gold_benchmark_rejects_empty_corpus_without_pass_receipt(
+    tmp_path: Path, sources: dict, error: str
+) -> None:
+    manifest_path = tmp_path / "empty-corpus.json"
+    output_dir = tmp_path / "benchmark"
+    manifest_path.write_text(
+        json.dumps(
+            {"schema_version": gold_benchmark.BENCHMARK_SCHEMA, "sources": sources}
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match=error):
+        gold_benchmark.run_benchmark(manifest_path, {}, output_dir)
+
+    assert not (output_dir / "benchmark_receipt.json").exists()
+
+
 def test_gold_benchmark_runs_pdf_case_end_to_end(tmp_path: Path) -> None:
     source_pdf = tmp_path / "centrale-rischi-examples.pdf"
     manifest_path = tmp_path / "gold.json"
@@ -1177,7 +1202,14 @@ def test_gold_benchmark_rejects_semantic_review_with_missing_case(
                 "role": "Test fixture",
             }
         },
-        "extraction_cases": [],
+        "extraction_cases": [
+            {
+                "case_id": "fixture_p1",
+                "source_id": "fixture",
+                "pages": [1],
+                "row_counts": {"exposures": 2},
+            }
+        ],
         "negative_control_sources": [],
         "analysis_cases": [],
         "semantic_rubric": {"dimensions": {"factual_accuracy": {}}},
@@ -1619,16 +1651,11 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert "debitori ceduti" in page
     assert "summary totals" in page
     assert "OCR" not in page
-    assert (
-        'href="https://centrale-rischi-synthetic.fabio3143.chatgpt.site/"'
-        in page
-    )
+    assert 'href="https://centrale-rischi-synthetic.fabio3143.chatgpt.site/"' in page
     assert 'id="example"' in page
     assert manifest["workstream"] == "centrale-rischi-review"
     assert manifest["external_boundaries"] == []
-    mapping_class, review_class, commentary_class = manifest["model_context"][
-        "classes"
-    ]
+    mapping_class, review_class, commentary_class = manifest["model_context"]["classes"]
     assert "stable table IDs" in mapping_class["content"]
     assert "each table's source SHA-256 hash" in mapping_class["content"]
     assert "inventory SHA-256 hash" in mapping_class["content"]
@@ -1638,9 +1665,9 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert "up to 20 previous-record review rows" in review_class["content"]
     assert "up to 20 rows from each separate population" in review_class["content"]
     assert commentary_class["purpose"].startswith("Prepare an evidence-linked")
-    assert "metric IDs, control IDs or source-row locators" in commentary_class[
-        "content"
-    ]
+    assert (
+        "metric IDs, control IDs or source-row locators" in commentary_class["content"]
+    )
     assert "evidence-reference closure" in commentary_class["content"]
     assert "metric-linked" not in commentary_class["purpose"]
     assert "metric-reference closure" not in commentary_class["content"]

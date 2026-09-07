@@ -31,7 +31,7 @@ same engine with different site/process contracts.
   dispatches the executable JSON through `tab.playwright`. It owns bounded
   navigation, typed input substitution, locator fallback, waits, extraction,
   assertions, branches, downloads, and machine receipts.
-- The executable contract has no Computer Use or desktop-control fallback. A
+- The executable contract has no native desktop-control fallback. A
   required operating-system, native-dialog, or other non-browser step produces
   `native_gap`, stops the browser flow, and is handed to the operator. It cannot
   count as capability execution or clean replay evidence.

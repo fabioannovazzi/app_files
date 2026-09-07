@@ -801,6 +801,9 @@ def load_reconciliation_context(
         ),
         "source_inventory": load_sheet_rows(workbook_path, "Source inventory"),
         "normalized_records": load_sheet_rows(workbook_path, "Normalized records"),
+        "post_cutoff_candidates": load_sheet_rows(
+            workbook_path, "Post-cutoff candidates"
+        ),
     }
 
 
@@ -877,7 +880,7 @@ def section_for_row(row: dict[str, Any]) -> str:
         return "probable_payment"
     if status == "needs_evidence" and rule == "internal_closure_without_external":
         return "accounting_support_needed"
-    if status == "needs_evidence":
+    if status in {"needs_evidence", "partially_paid"}:
         return "missing_evidence_needed"
     if status == "open_supported":
         return "open_balance_confirmation"
@@ -890,6 +893,7 @@ def existing_reference(row: dict[str, Any]) -> str:
     for field in (
         "probable_bank_reference",
         "matched_evidence_reference",
+        "supporting_bank_reference",
         "evidence_reference",
         "source_reference",
     ):
@@ -907,6 +911,7 @@ def existing_description(row: dict[str, Any]) -> str:
     for field in (
         "probable_bank_description",
         "matched_evidence_description",
+        "supporting_bank_description",
         "evidence_description",
         "description",
     ):
@@ -954,7 +959,7 @@ def request_row(
     language: object,
 ) -> dict[str, Any]:
     texts = text_for(language)
-    return {
+    result = {
         "row_id": clean_text(row.get("record_id")),
         "side": side_label(row.get("expected_side"), language),
         "document": clean_text(row.get("document_no")),
@@ -976,6 +981,51 @@ def request_row(
         "requested_action": requested_action(section, language=language),
         "evidence_description": existing_description(row),
     }
+    if clean_text(row.get("reconciliation_status")) == "partially_paid":
+        paid = format_decimal(row.get("allocated_amount"))
+        residual = format_decimal(row.get("residual_amount"))
+        partial_texts = {
+            "it": (
+                "Pagamento parziale documentato: {paid}.",
+                "Per il solo residuo di {residual}, acquisire evidenza del saldo oppure conferma che resta aperto alla data di riferimento.",
+            ),
+            "en": (
+                "Documented partial payment: {paid}.",
+                "For the remaining {residual} only, obtain settlement evidence or confirmation that it remains open at the cut-off.",
+            ),
+            "fr": (
+                "Paiement partiel documenté : {paid}.",
+                "Pour le seul solde de {residual}, obtenir une preuve de règlement ou la confirmation qu’il reste ouvert à la date de référence.",
+            ),
+            "de": (
+                "Belegte Teilzahlung: {paid}.",
+                "Nur für den Restbetrag von {residual} einen Zahlungsnachweis oder die Bestätigung einholen, dass er am Stichtag noch offen ist.",
+            ),
+            "es": (
+                "Pago parcial documentado: {paid}.",
+                "Solo para el saldo de {residual}, obtener evidencia de liquidación o confirmación de que sigue pendiente a la fecha de corte.",
+            ),
+        }
+        available, action = partial_texts[normalize_language(language)]
+        result["amount"] = residual
+        result["available_evidence"] = available.format(paid=paid)
+        if reference := existing_reference(row):
+            result["available_evidence"] += texts["available"]["reference"].format(
+                reference=reference
+            )
+        result["targeted_missing_item"] = action.format(residual=residual)
+        result["requested_action"] = result["targeted_missing_item"]
+    if clean_text(row.get("rule_applied")) == "accounting_perimeter_mismatch":
+        actions = {
+            "it": "Il candidato non rispetta il perimetro verificato (soggetto, controparte, valuta o unità). Confermare i dati delle due fonti e fornire il riscontro documentale necessario; importi numericamente uguali non dimostrano la chiusura.",
+            "en": "The candidate does not share the reviewed entity, party, currency or unit. Confirm both source records and provide the necessary documentary support; numerically equal amounts do not establish settlement.",
+            "fr": "Le candidat ne respecte pas le périmètre vérifié (entité, contrepartie, devise ou unité). Confirmer les deux sources et fournir le justificatif nécessaire ; des montants numériquement égaux ne prouvent pas le règlement.",
+            "de": "Der Kandidat entspricht nicht dem geprüften Umfang (Unternehmen, Gegenpartei, Währung oder Einheit). Beide Quellen bestätigen und erforderliche Belege vorlegen; numerisch gleiche Beträge beweisen keine Zahlung.",
+            "es": "El candidato no comparte el perímetro revisado (entidad, contraparte, moneda o unidad). Confirmar ambas fuentes y aportar el soporte necesario; importes numéricamente iguales no demuestran la liquidación.",
+        }
+        result["targeted_missing_item"] = actions[normalize_language(language)]
+        result["requested_action"] = result["targeted_missing_item"]
+    return result
 
 
 def build_instructions(
@@ -1034,6 +1084,7 @@ def build_missing_evidence_request_pack(
     *,
     source_inventory: list[dict[str, Any]] | None = None,
     normalized_records: list[dict[str, Any]] | None = None,
+    post_cutoff_candidates: list[dict[str, Any]] | None = None,
     entity_name: str = "",
     counterparty_name: str = "",
     cutoff_date: object = "",
@@ -1049,16 +1100,58 @@ def build_missing_evidence_request_pack(
         section = section_for_row(row)
         if not section:
             continue
-        request_sections[section].append(
-            request_row(
-                row,
-                section=section,
-                entity_name=entity_name,
-                counterparty_name=counterparty_name,
-                cutoff_date=cutoff_date,
-                language=output_language,
-            )
+        request = request_row(
+            row,
+            section=section,
+            entity_name=entity_name,
+            counterparty_name=counterparty_name,
+            cutoff_date=cutoff_date,
+            language=output_language,
         )
+        later = [
+            candidate
+            for candidate in post_cutoff_candidates or []
+            if candidate.get("open_record_id") == row.get("record_id")
+        ]
+        if later and section != "reconciled_strong":
+            templates = {
+                "it": (
+                    "Evidenza candidata già acquisita successiva al cut-off: {details}.",
+                    "Confermare il saldo al {cutoff}; l'evidenza successiva non dimostra la chiusura a quella data. Se si dichiara una chiusura precedente, indicare solo il relativo documento mancante.",
+                ),
+                "en": (
+                    "Later candidate evidence already held: {details}.",
+                    "Confirm the balance at {cutoff}; later evidence does not establish settlement at that date. If earlier settlement is claimed, identify only its missing supporting document.",
+                ),
+                "fr": (
+                    "Élément candidat postérieur déjà disponible : {details}.",
+                    "Confirmer le solde au {cutoff} ; cet élément postérieur ne prouve pas le règlement à cette date. Si un règlement antérieur est déclaré, indiquer uniquement son justificatif manquant.",
+                ),
+                "de": (
+                    "Bereits vorliegender späterer Belegkandidat: {details}.",
+                    "Saldo zum {cutoff} bestätigen; der spätere Beleg beweist keine Zahlung zum Stichtag. Wird eine frühere Zahlung erklärt, nur den fehlenden Beleg dafür angeben.",
+                ),
+                "es": (
+                    "Evidencia candidata posterior ya disponible: {details}.",
+                    "Confirmar el saldo al {cutoff}; la evidencia posterior no demuestra la liquidación a esa fecha. Si se declara una liquidación anterior, indicar solo su justificante pendiente.",
+                ),
+            }
+            available, action = templates[output_language]
+            references = [
+                f"{clean_text(item.get('evidence_date'))}; {clean_text(item.get('evidence_source_file'))}; "
+                f"page={clean_text(item.get('evidence_source_page'))}; row={clean_text(item.get('evidence_source_row'))}; "
+                f"id={clean_text(item.get('evidence_record_id'))}"
+                for item in later
+            ]
+            request["available_evidence"] += " " + available.format(
+                details=" | ".join(references)
+            )
+            request["existing_reference"] += " | " + " | ".join(references)
+            request["targeted_missing_item"] = action.format(
+                cutoff=clean_text(cutoff_date) or "cut-off"
+            )
+            request["requested_action"] = request["targeted_missing_item"]
+        request_sections[section].append(request)
     return MissingEvidenceRequestPack(
         language=output_language,
         instructions=build_instructions(
@@ -1207,6 +1300,7 @@ def main(argv: list[str] | None = None) -> int:
         context["reconciliation_rows"],
         source_inventory=context["source_inventory"],
         normalized_records=context["normalized_records"],
+        post_cutoff_candidates=context["post_cutoff_candidates"],
         entity_name=args.entity_name,
         counterparty_name=args.counterparty_name,
         cutoff_date=args.cutoff_date,

@@ -3,10 +3,7 @@
 
 const fs = require("node:fs");
 const { randomUUID } = require("node:crypto");
-const archiveSessionId =
-  process.env.VERA_STUDIO_ARCHIVE_SESSION_ID ||
-  process.env.CODEX_THREAD_ID ||
-  randomUUID();
+const archiveSessionId = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.env.CODEX_THREAD_ID || randomUUID();
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");

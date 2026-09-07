@@ -4,8 +4,13 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import pytest
+
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "open-item-reconciliation" / "scripts"
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "open-item-reconciliation"
+    / "scripts"
 )
 ASSURANCE = SCRIPTS / "audit_assurance.py"
 
@@ -1665,3 +1670,274 @@ def test_additional_deterministic_analyses_explain_open_items():
     assert reversals[0]["open_record_id"] == "open-1"
     assert "opposite_sign_amount" in reversals[0]["candidate_reasons"]
     assert {row["record_id"] for row in cutoff_rows} >= {"ledger-1", "bank-1", "open-2"}
+
+
+def test_partial_bank_payment_retains_exact_residual_in_allocation_ledger():
+    helpers = load_helpers()
+    invoices = [
+        {
+            "record_id": "I1",
+            "document_key": "INV-1",
+            "amount": "1220.00",
+            "currency": "EUR",
+            "document_date": "2026-09-01",
+        }
+    ]
+    payments = [
+        {
+            "record_id": "P1",
+            "document_key": "INV-1",
+            "amount": "488.00",
+            "currency": "EUR",
+            "posting_date": "2026-09-20",
+            "evidence_type": "external_bank",
+        }
+    ]
+    assumptions = {"scope_year": "2026", "cutoff_date": "2026-09-30"}
+
+    rows = helpers.reconcile_open_items(invoices, payments, assumptions)
+
+    assert rows[0]["allocated_amount"] == "488.00"
+    assert rows[0]["residual_amount"] == "732.00"
+    ledgers, failures = helpers.closed_bank_allocation_controls(
+        rows, payments, assumptions
+    )
+    assert failures == {}
+    assert ledgers[0]["balanced"] is False
+    assert ledgers[0]["source_residuals"][0]["residual"] == "0"
+    assert ledgers[0]["target_residuals"][0]["residual"] == "732"
+
+
+def test_partial_bank_payment_does_not_choose_between_two_same_reference_invoices():
+    helpers = load_helpers()
+    invoices = [
+        {
+            "record_id": "I1",
+            "document_key": "INV-1",
+            "amount": "1220.00",
+            "currency": "EUR",
+            "document_date": "2026-09-01",
+        },
+        {
+            "record_id": "I2",
+            "document_key": "INV-1",
+            "amount": "1220.00",
+            "currency": "EUR",
+            "document_date": "2026-09-01",
+        },
+    ]
+    payments = [
+        {
+            "record_id": "P1",
+            "document_key": "INV-1",
+            "amount": "488.00",
+            "currency": "EUR",
+            "posting_date": "2026-09-20",
+            "evidence_type": "external_bank",
+        }
+    ]
+
+    rows = helpers.reconcile_open_items(
+        invoices, payments, {"scope_year": "2026", "cutoff_date": "2026-09-30"}
+    )
+
+    assert rows[0]["reconciliation_status"] == "unresolved"
+    assert rows[1]["reconciliation_status"] == "unresolved"
+    assert "allocated_amount" not in rows[0]
+    assert "allocated_amount" not in rows[1]
+
+
+@pytest.mark.parametrize(
+    "payment_patch",
+    [
+        {"currency": "USD"},
+        {"posting_date": "2026-10-02"},
+        {"posting_date": "not-a-date"},
+        {"document_key": "OTHER"},
+        {"amount": "-488.00"},
+        {"party_ref": "OTHER"},
+    ],
+)
+def test_partial_bank_payment_with_incompatible_evidence_is_not_allocated(
+    payment_patch,
+):
+    helpers = load_helpers()
+    invoices = [
+        {
+            "record_id": "I1",
+            "document_key": "INV-1",
+            "amount": "1220.00",
+            "currency": "EUR",
+            "document_date": "2026-09-01",
+        }
+    ]
+    payments = [
+        {
+            "record_id": "P1",
+            "document_key": "INV-1",
+            "amount": "488.00",
+            "currency": "EUR",
+            "posting_date": "2026-09-20",
+            "evidence_type": "external_bank",
+            **payment_patch,
+        }
+    ]
+
+    rows = helpers.reconcile_open_items(
+        invoices, payments, {"scope_year": "2026", "cutoff_date": "2026-09-30"}
+    )
+
+    assert rows[0]["reconciliation_status"] != "partially_paid"
+    assert "allocated_amount" not in rows[0]
+
+
+def test_partial_bank_payment_controls_reject_reused_evidence():
+    helpers = load_helpers()
+    payment = {
+        "record_id": "P1",
+        "document_key": "INV-1",
+        "amount": "488.00",
+        "currency": "EUR",
+        "posting_date": "2026-09-20",
+        "evidence_type": "external_bank",
+    }
+    partial = {
+        "record_id": "I1",
+        "document_key": "INV-1",
+        "amount": "1220.00",
+        "currency": "EUR",
+        "reconciliation_status": "partially_paid",
+        "rule_applied": "exact_document_partial_bank_payment",
+        "matched_evidence_id": "P1",
+        "allocated_amount": "488.00",
+        "residual_amount": "732.00",
+    }
+
+    rows = helpers.enforce_closed_bank_allocation_controls(
+        [partial, {**partial, "record_id": "I2"}], [payment]
+    )
+
+    assert rows[0]["relationship_control_status"] == "failed"
+    assert rows[1]["relationship_control_status"] == "failed"
+
+
+@pytest.mark.parametrize("promote_probable", [False, True])
+def test_opposing_invoice_entries_withhold_bank_settlement(promote_probable):
+    helpers = load_helpers()
+    common = {"document_key": "INV-2", "currency": "EUR", "party_ref": "party.alpha"}
+    invoices = [
+        {
+            **common,
+            "record_id": "invoice",
+            "amount": "1220",
+            "document_date": "2026-09-01",
+        },
+        {
+            **common,
+            "record_id": "reversal",
+            "amount": "-1220",
+            "document_date": "2026-09-02",
+        },
+    ]
+    payments = [
+        {
+            **common,
+            "record_id": "payment",
+            "amount": "1220",
+            "posting_date": "2026-09-20",
+            "evidence_type": "external_bank",
+        }
+    ]
+    assumptions = {
+        "scope_year": "2026",
+        "cutoff_date": "2026-09-30",
+        "promote_probable_bank_payments": promote_probable,
+    }
+
+    rows = helpers.reconcile_open_items(invoices, payments, assumptions)
+
+    assert [row["reconciliation_status"] for row in rows] == [
+        "needs_evidence",
+        "needs_evidence",
+    ]
+    assert [row["rule_applied"] for row in rows] == [
+        "opposing_open_document_amounts",
+        "opposing_open_document_amounts",
+    ]
+    assert rows[0].get("matched_evidence_id") is None
+    assert helpers.closed_bank_allocation_controls(rows, payments, assumptions) == (
+        [],
+        {},
+    )
+
+
+@pytest.mark.parametrize(
+    "reversal_patch",
+    [
+        {"document_key": "INV-OTHER"},
+        {"party_ref": "party.other"},
+        {"document_date": "2026-10-02"},
+    ],
+)
+def test_unrelated_or_subsequent_reversal_does_not_block_bank_settlement(
+    reversal_patch,
+):
+    helpers = load_helpers()
+    common = {"document_key": "INV-2", "currency": "EUR", "party_ref": "party.alpha"}
+    invoices = [
+        {
+            **common,
+            "record_id": "invoice",
+            "amount": "1220",
+            "document_date": "2026-09-01",
+        },
+        {
+            **common,
+            "record_id": "reversal",
+            "amount": "-1220",
+            "document_date": "2026-09-02",
+            **reversal_patch,
+        },
+    ]
+    payments = [
+        {
+            **common,
+            "record_id": "payment",
+            "amount": "1220",
+            "posting_date": "2026-09-20",
+            "evidence_type": "external_bank",
+        }
+    ]
+
+    rows = helpers.reconcile_open_items(
+        invoices, payments, {"scope_year": "2026", "cutoff_date": "2026-09-30"}
+    )
+
+    assert rows[0]["reconciliation_status"] == "closed"
+    assert rows[0]["matched_evidence_id"] == "payment"
+
+
+def test_document_source_map_preserves_distinct_rows_sharing_document_aliases():
+    helpers = load_helpers()
+    rows = [
+        {
+            "record_id": "open-positive",
+            "document_key": "3FE|2026",
+            "amount": "1220.00",
+            "evidence_type": "open_item",
+            "reconciliation_status": "needs_evidence",
+        },
+        {
+            "record_id": "open-negative",
+            "document_key": "3FE|2026",
+            "amount": "-1220.00",
+            "evidence_type": "open_item",
+            "reconciliation_status": "needs_evidence",
+        },
+    ]
+
+    result = helpers.document_source_map(rows, [], rows)
+
+    assert result[0]["open_item_rows"] == 2
+    assert result[0]["open_amount_total"] == "0.00"
+    assert result[0]["reconciliation_status_counts"] == "needs_evidence:2"

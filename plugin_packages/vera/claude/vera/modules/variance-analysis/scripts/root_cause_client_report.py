@@ -1497,6 +1497,9 @@ def _localized_control_text(value: Any, language: str) -> str:
     raw = str(value)
     translations = {
         "it": {
+            "Provide a finite, non-negative source tie-out tolerance.": (
+                "Fornire una tolleranza finita e non negativa per la quadratura con i totali della fonte."
+            ),
             "Confirm the entity and consolidation perimeter.": (
                 "Confermare il perimetro societario e di consolidamento."
             ),

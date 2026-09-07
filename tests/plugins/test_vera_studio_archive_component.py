@@ -16,6 +16,8 @@ from typing import Any
 
 import pytest
 
+from tests.model_data_helpers import write_no_model_report
+
 try:
     import fitz as _fitz
 except ImportError:
@@ -2077,6 +2079,7 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -
     )
     output_dir = Path(prepared["structuredContent"]["client_engagement"]["output_dir"])
     (output_dir / "result.txt").write_text("Reviewed result\n", encoding="utf-8")
+    disclosures = write_no_model_report(output_dir, "financial-analysis", run_id)
     finalized = _mcp_tool(
         "finalize_studio_client_workflow",
         {
@@ -2084,13 +2087,14 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -
             "engagement_id": engagement_id,
             "run_id": run_id,
             "artifacts": [
+                *disclosures,
                 {
                     "artifact_id": "review.result",
                     "path": "result.txt",
                     "purpose": "Present the result for professional review.",
                     "audience": "review",
                     "media_type": "text/plain",
-                }
+                },
             ],
         },
         state_dir=state_dir,
@@ -2247,7 +2251,8 @@ def test_mcp_starts_check_entries_from_a_completed_sample_without_internal_refer
             "client_id": client_id,
             "engagement_id": engagement_id,
             "run_id": sample_run_id,
-            "artifacts": declarations,
+            "artifacts": declarations
+            + write_no_model_report(output_dir, "journal-sampling", sample_run_id),
         },
         state_dir=state_dir,
     )

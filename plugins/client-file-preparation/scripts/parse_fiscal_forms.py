@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import logging
 import re
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Iterable, Mapping, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PLUGIN_ROOT = SCRIPT_DIR.parent
@@ -395,6 +396,7 @@ class FiscalField:
     confidence: str
     evidence: str
     warnings: tuple[str, ...]
+    document_kind_status: str = "candidate"
 
     def as_json(self) -> dict[str, object]:
         """Return a JSON-serializable representation."""
@@ -408,6 +410,7 @@ class FiscalField:
             "relative_path": self.relative_path,
             "file_name": self.file_name,
             "document_kind": self.document_kind,
+            "document_kind_status": self.document_kind_status,
             "section": self.section,
             "field_code": self.field_code,
             "label": self.label,
@@ -1134,20 +1137,89 @@ def _dedupe(fields: Iterable[FiscalField]) -> list[FiscalField]:
 def parse_structured_fiscal_fields(
     evidence: Sequence[DocumentEvidence],
     output_dir: Path | str,
+    *,
+    kind_decisions: Mapping[str, Mapping[str, str]] | None = None,
 ) -> list[FiscalField]:
     """Parse structured fiscal fields from extracted document text."""
 
     output_path = Path(output_dir)
     fields: list[FiscalField] = []
+    dispositions: list[dict[str, object]] = []
+    decisions_path = output_path / "document_kind_decisions.json"
+    if kind_decisions is None and decisions_path.is_file():
+        kind_decisions = json.loads(decisions_path.read_text(encoding="utf-8"))
+    if kind_decisions is not None and not isinstance(kind_decisions, Mapping):
+        raise ValueError(
+            "Document-kind decisions must map relative sources to decisions"
+        )
+    decisions = kind_decisions or {}
+    unknown = set(decisions) - {item.relative_path for item in evidence}
+    if unknown:
+        raise ValueError(
+            f"Document-kind decisions reference unknown sources: {sorted(unknown)}"
+        )
     for item in evidence:
+        disposition: dict[str, object] = {
+            "relative_path": item.relative_path,
+            "status": "unreadable",
+            "field_count": 0,
+        }
+        dispositions.append(disposition)
         if not item.readable or not item.text_path:
             continue
         text_path = output_path / item.text_path
+        if not text_path.resolve().is_relative_to(output_path.resolve()):
+            raise ValueError(
+                "Extracted document text must stay inside the output directory"
+            )
         try:
             text = text_path.read_text(encoding="utf-8")
-        except OSError:
+        except (OSError, UnicodeDecodeError) as exc:
+            disposition["reason"] = str(exc)
             continue
-        kind = _detect_kind(item, text)
+        text_sha256 = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        candidate = _detect_kind(item, text)
+        kind = candidate
+        decision = decisions.get(item.relative_path)
+        if decision is not None:
+            if (
+                not isinstance(decision, Mapping)
+                or decision.get("text_sha256") != text_sha256
+                or decision.get("basis") not in {"model_review", "professional_review"}
+                or not isinstance(decision.get("kind"), str)
+            ):
+                raise ValueError(
+                    f"Invalid or stale document-kind decision: {item.relative_path}"
+                )
+            kind = decision["kind"]
+            if kind not in {
+                "F24",
+                "CU",
+                "730",
+                "Redditi PF",
+                "Geneva tax documents",
+                "Zurich tax documents",
+                "CH salary certificate",
+                "CH tax return",
+                "CH tax assessment",
+                "UK year-end payroll",
+                "UK payslip",
+                "UK Self Assessment",
+                "UK HMRC notice",
+                "UK bank/investment tax certificate",
+                "unsupported",
+            }:
+                raise ValueError(f"Unsupported document-kind adapter: {kind}")
+        disposition.update(
+            {
+                "candidate_kind": candidate,
+                "selected_kind": kind,
+                "text_sha256": text_sha256,
+                "decision_basis": decision["basis"] if decision else "lexical_hint",
+                "status": "unsupported",
+            }
+        )
+        first_field = len(fields)
         if kind == "F24":
             fields.extend(_parse_f24(item, text))
         elif kind == "CU":
@@ -1160,6 +1232,34 @@ def parse_structured_fiscal_fields(
             fields.extend(_parse_swiss_tax_document(item, text, kind))
         elif kind.startswith("UK "):
             fields.extend(_parse_uk_tax_document(item, text, kind))
+        extracted = fields[first_field:]
+        if extracted:
+            disposition["status"] = "reviewed_kind" if decision else "candidate_kind"
+            disposition["field_count"] = len(extracted)
+            fields[first_field:] = [
+                replace(
+                    field, document_kind_status="reviewed" if decision else "candidate"
+                )
+                for field in extracted
+            ]
+        elif kind == "unsupported":
+            disposition["status"] = (
+                "reviewed_unsupported" if decision else "unsupported"
+            )
+        else:
+            disposition["status"] = (
+                "reviewed_kind_no_fields" if decision else "candidate_kind_no_fields"
+            )
+    output_path.mkdir(parents=True, exist_ok=True)
+    (output_path / "document_dispositions.json").write_text(
+        json.dumps(
+            {"schema_version": 1, "documents": dispositions},
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return _dedupe(fields)
 
 
@@ -1189,6 +1289,7 @@ def write_fiscal_fields_csv(
         "relative_path",
         "file_name",
         "document_kind",
+        "document_kind_status",
         "section",
         "field_code",
         "label",
@@ -1278,6 +1379,13 @@ def write_fiscal_fields_summary(
         f"# {copy['title']}",
         "",
         copy["limitation"],
+        {
+            "it": "I tipi di documento suggeriti automaticamente sono candidati, non classificazioni confermate. Il registro document_dispositions.json include anche fonti illeggibili e non supportate.",
+            "en": "Automatically suggested document kinds are candidates, not confirmed classifications. document_dispositions.json also records unreadable and unsupported sources.",
+            "fr": "Les types de documents suggérés automatiquement restent à confirmer. document_dispositions.json recense aussi les sources illisibles et non prises en charge.",
+            "de": "Automatisch vorgeschlagene Dokumentarten sind noch nicht bestätigt. document_dispositions.json enthält auch unlesbare und nicht unterstützte Quellen.",
+            "es": "Los tipos de documento sugeridos automáticamente están pendientes de confirmación. document_dispositions.json incluye también fuentes ilegibles y no admitidas.",
+        }[language],
         "",
         f"- {copy['field_count']}: {len(fields)}",
         f"- {copy['document_type_count']}: {len(by_kind)}",
@@ -1369,6 +1477,12 @@ def main() -> int:
         )
     except AssuranceContractError as exc:
         LOGGER.error("%s", exc)
+        return 2
+    if (args.extracted_dir.parent / "final_artifacts.json").exists():
+        LOGGER.error(
+            "The intake already has a review package. Prepare a successor run "
+            "with reviewed document-kind decisions instead of leaving stale review artifacts."
+        )
         return 2
     evidence = _load_document_evidence(args.extracted_dir / "documents.jsonl")
     fields = parse_structured_fiscal_fields(evidence, args.extracted_dir)

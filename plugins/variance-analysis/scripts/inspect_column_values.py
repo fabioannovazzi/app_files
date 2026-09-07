@@ -25,6 +25,7 @@ if __name__ == "__main__":
                 "Managed Python launcher is missing; rebuild the plugin package."
             )
 
+
 import argparse
 import json
 import sys
@@ -50,7 +51,9 @@ MAX_COLUMNS = 12
 MAX_ROWS = 10
 
 
-def inspect_columns(input_path: Path, columns: Sequence[str], output_path: Path) -> dict:
+def inspect_columns(
+    input_path: Path, columns: Sequence[str], output_path: Path
+) -> dict:
     requested = list(dict.fromkeys(item.strip() for item in columns if item.strip()))
     if not requested or len(requested) > MAX_COLUMNS:
         raise ValueError(f"request 1 to {MAX_COLUMNS} explicit columns")
@@ -91,7 +94,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     except (AssuranceContractError, OSError, ValueError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, sort_keys=True))
         return 2
-    print(json.dumps({"ok": True, "sample_rows": len(payload["sample_rows"])}, sort_keys=True))
+    print(
+        json.dumps(
+            {"ok": True, "sample_rows": len(payload["sample_rows"])}, sort_keys=True
+        )
+    )
     return 0
 
 

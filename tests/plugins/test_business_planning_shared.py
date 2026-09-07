@@ -69,11 +69,15 @@ def test_both_entry_points_have_identical_plans_and_html() -> None:
     assert vera["calculations"]["base/2027-03/sources_uses_difference"]["value"] == "0"
 
 
-def test_registered_skills_and_marketplace_cards_are_identical() -> None:
+def test_registered_business_workflow_and_marketplace_cards_are_identical() -> None:
     vera_root = REPO_ROOT / "plugins/vera"
     clara_root = REPO_ROOT / "plugins/clara"
     skill = "skills/business-planning/SKILL.md"
-    assert (vera_root / skill).read_text() == (clara_root / skill).read_text()
+    # Product-specific feedback routing does not change the shared analysis.
+    feedback_heading = "## Plugin Improvement Feedback"
+    vera_workflow = (vera_root / skill).read_text().split(feedback_heading, 1)[0]
+    clara_workflow = (clara_root / skill).read_text().split(feedback_heading, 1)[0]
+    assert vera_workflow == clara_workflow
     vera_cards = json.loads(
         (vera_root / "marketplace_skill_instructions.json").read_text()
     )

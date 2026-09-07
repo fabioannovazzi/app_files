@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 import shutil
 import subprocess
+from pathlib import Path
 
 import pytest
-
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -119,7 +118,9 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
     assert process.stdin is not None
     assert process.stdout is not None
 
-    def call_tool(message_id: int, tool: str, arguments: dict[str, object]) -> dict[str, object]:
+    def call_tool(
+        message_id: int, tool: str, arguments: dict[str, object]
+    ) -> dict[str, object]:
         process.stdin.write(
             json.dumps(
                 {
@@ -132,7 +133,14 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
             + "\n"
         )
         process.stdin.flush()
-        response = json.loads(process.stdout.readline())
+        line = process.stdout.readline()
+        if not line:
+            _, stderr = process.communicate(timeout=10)
+            pytest.fail(
+                f"{plugin} MCP exited before response {message_id}: "
+                f"exit={process.returncode}; stderr={stderr[-8000:]}"
+            )
+        response = json.loads(line)
         assert response["id"] == message_id
         assert "error" not in response
         return response["result"]

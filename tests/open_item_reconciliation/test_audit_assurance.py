@@ -446,6 +446,8 @@ def assured_browser_case(tmp_path: Path) -> tuple[object, Path, dict[str, object
 
 def successor_lifecycle_case(
     tmp_path: Path,
+    *,
+    managed: bool = False,
 ) -> tuple[
     object,
     object,
@@ -495,6 +497,14 @@ def successor_lifecycle_case(
         "fail_on_check_errors": False,
         "language": "en",
     }
+    if managed:
+        _, context = running_audit_context(tmp_path)
+        output_dir = Path(str(context["output_dir"]))
+        workflow_args.update(
+            output_dir=output_dir,
+            client_engagement=context,
+            run_id=context["run_id"],
+        )
     workflow.build_reconciliation_artifacts(**workflow_args)
     predecessor_bytes = {
         "assurance": (output_dir / "assurance_receipts.json").read_bytes(),
@@ -530,6 +540,39 @@ def successor_lifecycle_case(
         predecessor_bytes,
         first_apply,
     )
+
+
+def test_managed_successor_replays_with_matching_customer_context(
+    tmp_path: Path,
+) -> None:
+    assurance, _, output_dir, decisions, _, _ = successor_lifecycle_case(
+        tmp_path, managed=True
+    )
+
+    replay = assurance.validate_assurance_run(
+        output_dir,
+        expected_predecessor_checkpoint=decisions["expected_predecessor_checkpoint"],
+    )
+
+    assert replay["client_engagement"]["run_id"] == output_dir.parent.name
+    assert replay["professional_review_authority"]["predecessor_assurance_sha256"] == (
+        decisions["expected_predecessor_checkpoint"]
+    )
+
+
+def test_managed_successor_rejects_missing_customer_context(tmp_path: Path) -> None:
+    assurance, _, output_dir, decisions, _, _ = successor_lifecycle_case(
+        tmp_path, managed=True
+    )
+    (output_dir.parent / "context.json").unlink()
+
+    with pytest.raises(ValueError, match="customer-run context is unavailable"):
+        assurance.validate_assurance_run(
+            output_dir,
+            expected_predecessor_checkpoint=decisions[
+                "expected_predecessor_checkpoint"
+            ],
+        )
 
 
 def refreshed_artifact_receipt(
@@ -775,7 +818,7 @@ def test_implementation_contract_rejects_link_or_special_substitution(
     ["regular", "empty_directory", "symlink", "hardlink", "fifo"],
 )
 @pytest.mark.parametrize("cache_root", ["scripts", "shared_assurance"])
-def test_implementation_contract_rejects_every_cache_namespace_entry(
+def test_implementation_contract_ignores_inert_cache_namespace_entries(
     tmp_path: Path,
     rogue_kind: str,
     cache_root: str,
@@ -787,6 +830,7 @@ def test_implementation_contract_rejects_every_cache_namespace_entry(
         if cache_root == "scripts"
         else plugin_copy / "vendor" / "modules" / "vera_assurance"
     )
+    expected_receipts = assurance.build_implementation_receipts(plugin_copy)
     cache_dir = selected_root / "__pycache__"
     cache_dir.mkdir()
     rogue = cache_dir / "rogue"
@@ -802,22 +846,19 @@ def test_implementation_contract_rejects_every_cache_namespace_entry(
         os.link(link_target, rogue)
     elif rogue_kind == "fifo":
         os.mkfifo(rogue)
-    if cache_root == "scripts":
-        with pytest.raises(ValueError, match="implementation"):
-            assurance.build_implementation_receipts(plugin_copy)
-    else:
-        completed = subprocess.run(
-            [
-                sys.executable,
-                (plugin_copy / "scripts" / "audit_assurance.py").as_posix(),
-                "--help",
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        assert completed.returncode != 0
-        assert "implementation" in completed.stderr
+    assert assurance.build_implementation_receipts(plugin_copy) == expected_receipts
+    completed = subprocess.run(
+        [
+            sys.executable,
+            (plugin_copy / "scripts" / "audit_assurance.py").as_posix(),
+            "--help",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert "usage:" in completed.stdout
 
 
 @pytest.mark.parametrize(
@@ -828,7 +869,7 @@ def test_implementation_contract_rejects_every_cache_namespace_entry(
     "entrypoint_name",
     ["audit_assurance.py", "review_server.py"],
 )
-def test_public_python_entrypoints_reject_timestamp_valid_local_bytecode_before_import(
+def test_public_python_entrypoints_ignore_timestamp_valid_local_bytecode_before_import(
     tmp_path: Path,
     module_name: str,
     entrypoint_name: str,
@@ -875,9 +916,9 @@ def test_public_python_entrypoints_reject_timestamp_valid_local_bytecode_before_
         env=environment,
     )
 
-    assert completed.returncode != 0
+    assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
-    assert "exact 25-file contract" in completed.stderr
+    assert "usage:" in completed.stdout
 
 
 @pytest.mark.parametrize(
@@ -2016,9 +2057,9 @@ def test_successor_rejects_transition_history_forgery(
 
 
 def test_assurance_contract_is_documented_in_skill_and_workflow_reference() -> None:
-    skill = (PLUGIN_ROOT / "skills" / "open-item-reconciliation" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
+    skill = (
+        PLUGIN_ROOT / "skills" / "open-item-reconciliation" / "SKILL.md"
+    ).read_text(encoding="utf-8")
     workflow = (PLUGIN_ROOT / "references" / "workflow-reference.md").read_text(
         encoding="utf-8"
     )
@@ -3091,3 +3132,49 @@ def test_late_failure_preserves_exact_prior_assurance_tree(tmp_path: Path) -> No
         )
 
     assert image() == before
+
+
+def test_managed_run_rejects_completed_review_rows_without_current_decisions(
+    tmp_path: Path,
+) -> None:
+    _, context = running_audit_context(tmp_path)
+    workflow = load_script_module("unbound_review_workflow", WORKFLOW_PATH)
+    output_dir = Path(str(context["output_dir"]))
+    copied_review = [
+        {
+            "record_id": "invoice-8",
+            "review_status": "PASS",
+            "reviewer_ref": "reviewer.previous_run",
+            "reviewed_on": "2026-09-06",
+        }
+    ]
+
+    with pytest.raises(
+        ValueError, match="Completed review rows require this run's applied decisions"
+    ):
+        workflow.build_reconciliation_artifacts(
+            output_dir=output_dir,
+            client_engagement=context,
+            open_items=[
+                {
+                    "record_id": "invoice-8",
+                    "document_key": "INV-8",
+                    "amount": "100",
+                    "currency": "EUR",
+                }
+            ],
+            evidence_rows=[
+                {
+                    "record_id": "replacement-bank",
+                    "document_key": "INV-8",
+                    "amount": "110",
+                    "currency": "EUR",
+                    "evidence_type": "external_bank",
+                }
+            ],
+            assumptions={"scope_year": "2026", "assurance_run_date": "2026-09-06"},
+            review_rows=copied_review,
+        )
+
+    assert not (output_dir / "prepared_records.json").exists()
+    assert not (output_dir / "assurance_receipts.json").exists()

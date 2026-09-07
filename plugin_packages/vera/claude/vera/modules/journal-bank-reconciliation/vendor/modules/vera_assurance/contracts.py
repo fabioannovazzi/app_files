@@ -484,12 +484,33 @@ def _validate_v2_input_binding(value: object) -> dict[str, Any]:
             "path",
             "source_path",
         },
+        optional={"imported_names"},
         label="client workflow input binding",
     )
     binding_id = _text(binding["binding_id"], label="binding_id")
     kind = _text(binding["kind"], label="input kind")
     if kind not in {"import", "upstream_artifact"}:
         raise AssuranceContractError("input kind is unsupported")
+    imported_names: dict[str, Any] = {}
+    if "imported_names" in binding:
+        names = binding["imported_names"]
+        if (
+            kind != "import"
+            or not isinstance(names, list)
+            or not names
+            or len(names) > 10000
+            or any(
+                not isinstance(name, str)
+                or not name.strip()
+                or len(name) > 255
+                or Path(name).name != name
+                or name in {".", "..", "receipt.json", "import_names.json"}
+                for name in names
+            )
+            or names != sorted(set(names))
+        ):
+            raise AssuranceContractError("imported filenames are invalid")
+        imported_names["imported_names"] = names
     role = _bounded_identifier(binding["role"], label="input role", maximum=80)
     source_relative_path = _relative_path(
         binding["source_relative_path"], label="source_relative_path"
@@ -540,6 +561,7 @@ def _validate_v2_input_binding(value: object) -> dict[str, Any]:
         if binding_id != f"artifact:{upstream_run_id}:{upstream_artifact_id}":
             raise AssuranceContractError("upstream artifact binding_id is stale")
     return {
+        **imported_names,
         "binding_id": binding_id,
         "kind": kind,
         "role": role,

@@ -184,8 +184,12 @@ FINAL_OUTPUT_DIRECTORY = "assurance_final_outputs"
 FINAL_OUTPUT_INVENTORY = "final_output_inventory.json"
 RUN_TREE_SCHEMA_VERSION = "open_item_reconciliation.run_tree.v1"
 REVIEW_TRANSITION_SCHEMA_VERSION = "open_item_reconciliation.review_transition.v1"
-REVIEW_PAYLOAD_MAPPING_SCHEMA_VERSION = "open_item_reconciliation.review_payload_mapping.v1"
-RECONCILIATION_RESULTS_SCHEMA_VERSION = "open_item_reconciliation.reconciliation_results.v3"
+REVIEW_PAYLOAD_MAPPING_SCHEMA_VERSION = (
+    "open_item_reconciliation.review_payload_mapping.v1"
+)
+RECONCILIATION_RESULTS_SCHEMA_VERSION = (
+    "open_item_reconciliation.reconciliation_results.v3"
+)
 SOURCE_PROCESSING_FIELDS = frozenset(
     {
         "extraction_errors",
@@ -452,10 +456,13 @@ MATERIAL_VALUE_KEY_PARTS = (
     "allocation",
     "allocated",
 )
-MATERIAL_TEXT_RE = re.compile(r"(?<![\d.])-?\d+(?:[.,]\d{2,})(?![\d.])")
+RENDERED_DECIMAL_PATTERN = (
+    r"-?(?:\d{1,3}(?:,\d{3})+\.\d{2,}" r"|\d{1,3}(?:\.\d{3})+,\d{2,}|\d+[.,]\d{2,})"
+)
+MATERIAL_TEXT_RE = re.compile(rf"(?<![\d.,]){RENDERED_DECIMAL_PATTERN}(?![\d.,])")
 CURRENCY_TEXT_RE = re.compile(
-    r"(?i)(?:EUR|USD|GBP|CHF|€|\$|£)\s*([-+]?\d+(?:[.,]\d+)?)"
-    r"|([-+]?\d+(?:[.,]\d+)?)\s*(?:EUR|USD|GBP|CHF|€|\$|£)"
+    rf"(?i)(?:EUR|USD|GBP|CHF|€|\$|£)\s*({RENDERED_DECIMAL_PATTERN}|-?\d+)(?![\d.,])"
+    rf"|(?<![\d.,])({RENDERED_DECIMAL_PATTERN}|-?\d+)\s*(?:EUR|USD|GBP|CHF|€|\$|£)"
 )
 SOURCE_ROLES = {
     "open_items",
@@ -726,8 +733,6 @@ def _source_decision_input(
     if not isinstance(decisions, Mapping):
         return None
     value = decisions.get(relative_path)
-    if value is None:
-        value = decisions.get(Path(relative_path).name)
     return value if isinstance(value, Mapping) else None
 
 
@@ -1511,8 +1516,19 @@ def _is_review_transaction_output(output_dir: Path, run_root: Path) -> bool:
     )
 
 
+def _is_review_snapshot_output(output_dir: Path) -> bool:
+    """Recognize only code-owned predecessor snapshot locations."""
+    return output_dir.name == PREDECESSOR_RUN_SNAPSHOT_DIRECTORY and (
+        output_dir.parent.name.startswith(".audit-review-transition-capture-")
+        or (
+            re.fullmatch(r"[0-9a-f]{64}", output_dir.parent.name) is not None
+            and output_dir.parent.parent.name == "assurance_transition_history"
+        )
+    )
+
+
 def _current_client_engagement(
-    portable: Mapping[str, Any], *, output_dir: Path
+    portable: Mapping[str, Any], *, output_dir: Path, allow_snapshot: bool = False
 ) -> dict[str, Any]:
     """Hydrate a persisted run identity from its current customer tree."""
 
@@ -1522,6 +1538,14 @@ def _current_client_engagement(
         ".audit-review-transaction-"
     ):
         context_candidates.append(out_dir.parent.parent / "context.json")
+    if allow_snapshot and _is_review_snapshot_output(out_dir):
+        # A caller-anchored predecessor may be nested in retained history. Recover
+        # only the matching managed run, then exact-compare its portable identity.
+        context_candidates.extend(
+            parent / "context.json"
+            for parent in out_dir.parents
+            if parent.name == portable.get("run_id")
+        )
     context_path = next((path for path in context_candidates if path.is_file()), None)
     if context_path is None:
         raise AssuranceRunError(
@@ -1543,8 +1567,14 @@ def _current_client_engagement(
         )
     current_output = Path(current["output_dir"]).resolve()
     current_run_root = Path(current["run_root"]).resolve()
-    if out_dir != current_output and not _is_review_transaction_output(
-        out_dir, current_run_root
+    if (
+        out_dir != current_output
+        and not _is_review_transaction_output(out_dir, current_run_root)
+        and not (
+            allow_snapshot
+            and _is_review_snapshot_output(out_dir)
+            and current_run_root in out_dir.parents
+        )
     ):
         raise AssuranceRunError(
             "client engagement output_dir does not match the assurance run"
@@ -1557,6 +1587,7 @@ def _validated_client_engagement(
     *,
     output_dir: Path,
     source_root: Path | None,
+    allow_snapshot: bool = False,
 ) -> dict[str, Any] | None:
     """Replay a client boundary and bind it to this source and run directory."""
 
@@ -1570,12 +1601,20 @@ def _validated_client_engagement(
         normalized["schema_version"] == "vera.client_workflow_context.v2"
         and "output_dir" not in normalized
     ):
-        normalized = _current_client_engagement(normalized, output_dir=output_dir)
+        normalized = _current_client_engagement(
+            normalized, output_dir=output_dir, allow_snapshot=allow_snapshot
+        )
     normalized_output = Path(normalized["output_dir"]).resolve()
     normalized_run_root = Path(normalized.get("run_root") or normalized_output.parent)
     requested_output = Path(output_dir).resolve()
-    if requested_output != normalized_output and not _is_review_transaction_output(
-        requested_output, normalized_run_root
+    if (
+        requested_output != normalized_output
+        and not _is_review_transaction_output(requested_output, normalized_run_root)
+        and not (
+            allow_snapshot
+            and _is_review_snapshot_output(requested_output)
+            and normalized_run_root in requested_output.parents
+        )
     ):
         raise AssuranceRunError(
             "client engagement output_dir does not match the assurance run"
@@ -1667,6 +1706,7 @@ def prepare_assurance_run(
     source_qualifications: Sequence[Mapping[str, Any]] = (),
     client_engagement: Mapping[str, Any] | None = None,
     professional_review_authority: Mapping[str, Any] | None = None,
+    review_rows: Sequence[Mapping[str, Any]] | None = None,
     expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
     """Replay inputs and implementation, then seal the prepared population."""
@@ -1728,6 +1768,9 @@ def prepare_assurance_run(
         out_dir,
         current_professional_review=normalized_review_authority,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+    )
+    _require_managed_review_authority(
+        normalized_client_engagement, normalized_review_authority, review_rows
     )
     prepared_payload = {
         "schema_version": "open_item_reconciliation.prepared_records.v2",
@@ -2333,6 +2376,32 @@ def _review_projection(
         }
         for row in review_rows
     ]
+
+
+def _require_managed_review_authority(
+    client_engagement: Mapping[str, Any] | None,
+    authority: Mapping[str, Any] | None,
+    review_rows: Sequence[Mapping[str, Any]] | None,
+) -> None:
+    """Prevent record-ID-only review reuse after managed source replacement."""
+    rows = (
+        review_rows if review_rows is not None else (authority or {}).get("records", [])
+    )
+    if client_engagement is None or not any(
+        str(row.get("review_status") or "PENDING").strip().upper() != "PENDING"
+        for row in rows
+    ):
+        return
+    if (
+        authority is None
+        or authority["origin"] != "applied_decisions"
+        or authority["run_id"] != client_engagement["run_id"]
+        or authority["records"] != _review_projection(rows)
+    ):
+        raise AssuranceRunError(
+            "Completed review rows require this run's applied decisions and "
+            "matching external predecessor checkpoint; review replacement sources anew."
+        )
 
 
 def build_professional_review_authority(
@@ -3628,17 +3697,27 @@ def _material_text_values(value: object) -> set[str]:
         return set()
     values = set()
     for token in MATERIAL_TEXT_RE.findall(value):
-        normalized = token.replace(",", ".")
+        normalized = _normalize_rendered_decimal(token)
         canonical = _canonical_money(normalized)
         if canonical is not None:
             values.add(canonical)
     for match in CURRENCY_TEXT_RE.finditer(value):
         token = match.group(1) or match.group(2)
-        normalized = token.replace(",", ".")
+        normalized = _normalize_rendered_decimal(token)
         canonical = _canonical_money(normalized)
         if canonical is not None:
             values.add(canonical)
     return values
+
+
+def _normalize_rendered_decimal(token: str) -> str:
+    """Normalize validated Office display tokens without dropping digit groups."""
+
+    if "," in token and "." in token:
+        if token.rfind(".") > token.rfind(","):
+            return token.replace(",", "")
+        return token.replace(".", "").replace(",", ".")
+    return token.replace(",", ".")
 
 
 def _material_cell_value(value: object, *, material_column: bool) -> bool:
@@ -3854,6 +3933,12 @@ def _row_record_refs(
             direct_refs.add(record_id)
     if direct_refs:
         return sorted(direct_refs)
+    document_cell_tokens = {
+        token.strip()
+        for value in cell_tokens
+        for token in value.split(";")
+        if token.strip()
+    }
     document_refs: set[str] = set()
     for row in record_rows:
         record_id = str(row.get("record_id") or "").strip()
@@ -3864,7 +3949,7 @@ def _row_record_refs(
             for field in ("document_key", "document_no")
             if str(row.get(field) or "").strip()
         }
-        if document_tokens.intersection(cell_tokens):
+        if document_tokens.intersection(document_cell_tokens):
             document_refs.add(record_id)
     return sorted(document_refs)
 
@@ -3900,6 +3985,7 @@ def _status_context(
     reconciliation_rows: Sequence[Mapping[str, Any]],
 ) -> str | None:
     aliases = {
+        "partially_paid": {"pagata_parzialmente", "pagada_parcialmente"},
         "closed": {"chiusa_da_evidenza", "cerrada_por_evidencia"},
         "needs_evidence": {
             "serve_evidenza_aggiuntiva",
@@ -4041,6 +4127,140 @@ def _rendered_value_formula(
                 "category": external_category,
             }
 
+    for field in (
+        "allocated_amount",
+        "residual_amount",
+        "reported_increment",
+        "probable_bank_amount_difference",
+        "probable_bank_amount",
+    ):
+        aliases = {
+            "allocated_amount": "importo_attribuito",
+            "residual_amount": "residuo_aperto",
+        }
+        if header_token == field or header_token == aliases.get(field):
+            matching_owners = [
+                record_id
+                for record_id in owner_refs
+                if field in rows_by_id[record_id]
+                and _row_numeric_field_total(rows_by_id[record_id], field) == number
+            ]
+            if matching_owners:
+                return matching_owners[:1], {
+                    "kind": "record_field",
+                    "field": field,
+                    "absolute": False,
+                }
+
+    if header_token == "amount_difference_bank_minus_open":
+        open_ids = {str(row["record_id"]) for row in reconciliation_rows}
+        open_refs = [ref for ref in owner_refs if ref in open_ids]
+        bank_refs = [
+            ref
+            for ref in owner_refs
+            if ref not in open_ids
+            and rows_by_id[ref].get("source_role") == "bank_statement"
+        ]
+        if open_refs and len(bank_refs) == 1:
+            expected = _row_numeric_field_total(
+                rows_by_id[bank_refs[0]], "amount"
+            ) - sum(
+                (
+                    _row_numeric_field_total(rows_by_id[ref], "amount")
+                    for ref in open_refs
+                ),
+                Decimal("0"),
+            )
+            if number == expected:
+                return [bank_refs[0], *open_refs], {
+                    "kind": "bank_less_open_sum",
+                    "field": "amount",
+                }
+
+    if difference_header:
+        related = [
+            row
+            for row in reconciliation_rows
+            if str(row.get("record_id") or "") in owner_refs
+            and str(
+                row.get("matched_evidence_id")
+                or row.get("supporting_bank_record_id")
+                or ""
+            )
+            in rows_by_id
+        ]
+        if len(related) == 1:
+            item = related[0]
+            evidence_id = str(
+                item.get("matched_evidence_id") or item["supporting_bank_record_id"]
+            )
+            expected = abs(
+                _row_numeric_field_total(rows_by_id[evidence_id], "amount")
+            ) - abs(_row_numeric_field_total(item, "amount"))
+            if number == expected:
+                return [str(item["record_id"]), evidence_id], {
+                    "kind": "evidence_minus_open_amount",
+                    "field": "amount",
+                    "absolute_operands": True,
+                }
+
+    if difference_header:
+        reconciliation_ids = {str(row["record_id"]) for row in reconciliation_rows}
+        open_refs = [ref for ref in owner_refs if ref in reconciliation_ids]
+        evidence_refs = [ref for ref in owner_refs if ref not in reconciliation_ids]
+        if len(open_refs) == 1 and len(evidence_refs) == 1:
+            item, evidence = rows_by_id[open_refs[0]], rows_by_id[evidence_refs[0]]
+            same_perimeter = all(
+                item.get(field) == evidence.get(field)
+                for field in ("currency", "unit", "entity_ref", "party_ref")
+            )
+            expected = abs(_row_numeric_field_total(evidence, "amount")) - abs(
+                _row_numeric_field_total(item, "amount")
+            )
+            if same_perimeter and number == expected:
+                return [open_refs[0], evidence_refs[0]], {
+                    "kind": "evidence_minus_open_amount",
+                    "field": "amount",
+                    "absolute_operands": True,
+                }
+
+    if amount_header:
+        from build_missing_evidence_requests import TEXT, section_for_row
+
+        section_keys = {
+            section
+            for catalog in TEXT.values()
+            for section, label in catalog["sections"].items()
+            if label in values
+        }
+        if len(section_keys) == 1:
+            section = next(iter(section_keys))
+            selected = [
+                row
+                for row in reconciliation_rows
+                if section_for_row(dict(row)) == section
+            ]
+            if number == sum(
+                (
+                    _row_numeric_field_total(
+                        row,
+                        (
+                            "residual_amount"
+                            if row.get("reconciliation_status") == "partially_paid"
+                            else "amount"
+                        ),
+                    )
+                    for row in selected
+                ),
+                Decimal("0"),
+            ):
+                return [str(row["record_id"]) for row in selected], {
+                    "kind": "missing_evidence_section_sum",
+                    "section": section,
+                    "field": "amount",
+                    "field_by_status": {"partially_paid": "residual_amount"},
+                }
+
     if len(owners) > 1:
         reconciliation_ids = {
             str(row.get("record_id") or "") for row in reconciliation_rows
@@ -4078,7 +4298,12 @@ def _rendered_value_formula(
                 "field": "amount",
                 "absolute": True,
             }
-        for field in ("reported_increment", "balance"):
+        for field in (
+            "reported_increment",
+            "balance",
+            "allocated_amount",
+            "residual_amount",
+        ):
             field_value = _row_numeric_field_total(owner, field)
             if field in header_token and number == field_value:
                 return list(owner_refs), {
@@ -4900,11 +5125,16 @@ def _source_value_locator(
             )
         ]
         located = amount if amount in candidates else None
+        identity_text = source_line
+        if decision["content"]["adapter_family"] == "open_items_text_v1":
+            if source_value_row != source_row + 2 or source_row + 3 > len(lines):
+                raise AssuranceRunError("Open-item PDF source block is stale")
+            identity_text = "\n".join(lines[source_row - 1 : source_value_row])
         document_tokens = _source_document_tokens(row)
         if (
             strict_identity
             and document_tokens
-            and not any(token in source_line.casefold() for token in document_tokens)
+            and not any(token in identity_text.casefold() for token in document_tokens)
         ):
             raise AssuranceRunError("PDF source row document identity is stale")
         for field in ("document_date", "posting_date", "value_date"):
@@ -4915,7 +5145,7 @@ def _source_value_locator(
                 parsed
                 for token in re.findall(
                     r"\d{1,4}[./-]\d{1,2}[./-]\d{1,4}",
-                    source_line,
+                    identity_text,
                 )
                 if (
                     parsed := _source_date(
@@ -5348,6 +5578,7 @@ def _validate_closed_relationships(
     reconciliation_rows: Sequence[Mapping[str, Any]],
     evidence_rows: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
+    assumptions: Mapping[str, Any] | None = None,
 ) -> None:
     """Require current evidence plus one balanced relationship for every closure."""
 
@@ -5365,6 +5596,34 @@ def _validate_closed_relationships(
     ):
         raise AssuranceRunError("prepared evidence record identities must be unique")
     ledgers = [validate_allocation_ledger(ledger) for ledger in allocation_ledgers]
+    partial_rows = [
+        row
+        for row in reconciliation_rows
+        if row.get("reconciliation_status") == "partially_paid"
+    ]
+    if partial_rows:
+        expected_partial_ledgers, failures = closed_bank_allocation_controls(
+            [dict(row) for row in reconciliation_rows],
+            [dict(row) for row in evidence_rows],
+            dict(assumptions or {}),
+        )
+        expected_by_id = {
+            ledger["ledger_id"]: ledger for ledger in expected_partial_ledgers
+        }
+        actual_by_id = {ledger["ledger_id"]: ledger for ledger in ledgers}
+        for row in partial_rows:
+            evidence_id = str(row.get("matched_evidence_id") or "")
+            ledger_id = str(row.get("relationship_allocation_ledger_id") or "")
+            expected = expected_by_id.get(ledger_id)
+            if (
+                evidence_id in failures
+                or expected is None
+                or actual_by_id.get(ledger_id) != expected
+                or row.get("relationship_control_status") != "passed"
+            ):
+                raise AssuranceRunError(
+                    "partial payment lacks its exact evidence allocation and retained residual"
+                )
     for row in reconciliation_rows:
         if not _closed_status(row.get("reconciliation_status")):
             continue
@@ -5589,6 +5848,7 @@ def _finalize_assurance_run_in_place(
         reconciliation_rows=reconciliation_rows,
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=normalized_allocations,
+        assumptions=prepared["assumptions"],
     )
     context_review_authority = context.get("professional_review_authority")
     if context_review_authority is None:
@@ -5599,6 +5859,9 @@ def _finalize_assurance_run_in_place(
         professional_review = validate_professional_review_authority(
             context_review_authority
         )
+    _require_managed_review_authority(
+        client_engagement, professional_review, review_rows
+    )
     if professional_review["records"] != _review_projection(review_rows):
         raise AssuranceRunError(
             "rendered review rows do not match persisted professional review authority"
@@ -6231,6 +6494,7 @@ def validate_assurance_run(
         payload["client_engagement"],
         output_dir=out_dir,
         source_root=None,
+        allow_snapshot=_externally_anchored_run_sha256 is not None,
     )
     source_root = _resolved_source_root(
         payload["source_root"],
@@ -6292,6 +6556,7 @@ def validate_assurance_run(
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
         _externally_anchored_run_sha256=_externally_anchored_run_sha256,
     )
+    _require_managed_review_authority(client_engagement, professional_review, None)
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
     if (
         set(prepared)
@@ -6428,6 +6693,7 @@ def validate_assurance_run(
         reconciliation_rows=result["reconciliation_rows"],
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=allocations,
+        assumptions=prepared["assumptions"],
     )
 
     reconciliation_receipt = next(

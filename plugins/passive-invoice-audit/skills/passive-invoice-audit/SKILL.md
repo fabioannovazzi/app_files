@@ -1,6 +1,6 @@
 ---
 name: passive-invoice-audit
-description: Use when Vera must screen a large population of Italian passive FatturaPA invoices against actual booked ledger entries and produce an exception-focused professional workpaper using deterministic checks plus native Codex GPT-5.6 Luna semantic review.
+description: Use when Vera must screen a large population of Italian passive FatturaPA invoices against actual booked ledger entries and produce an exception-focused professional workpaper using deterministic checks plus native Codex semantic review.
 ---
 
 # Intelligent Passive-Invoice Audit
@@ -74,6 +74,15 @@ Use the Codex-native surface throughout the run:
 2. Inspect the ledger headers and a bounded source sample. Prepare a JSON map
    from canonical names to the exact source headers. Ask only about mapping or
    scope ambiguities that could change matching or interpretation.
+   Record the ledger's reviewed `number_format` in that map: `canonical`
+   (ungrouped dot decimals), `dot_decimal` (comma grouping), or `comma_decimal`
+   (dot grouping). Apply that single convention to all mapped monetary columns,
+   including gross, taxable and VAT amounts; do not guess from individual values.
+   One outer pair of parentheses means a negative amount, as does a leading
+   minus; reject a plus or minus inside parentheses. A mapped signed amount
+   must be populated; when using debit/credit, at least one side must be present.
+   Zero is populated, not blank: a mapped gross zero remains zero without a
+   ledger-line fallback.
 3. Require passive FatturaPA XML in a directory/XML/ZIP and an actual ledger in
    CSV/XLSX/XLSM. A chart of accounts, supplier master, previous periods, and
    client-specific account descriptions are optional evidence, never a
@@ -122,13 +131,18 @@ confidence percentages.
 
 ## Native Luna requirement
 
-Use only `gpt-5.6-luna` through the shared native Codex execution capsule in
-the journal–bank component. The capsule pins and hashes the installed Codex
+Default to `gpt-5.6-luna` through the shared native Codex execution capsule in
+the journal–bank component. An explicitly reviewed alternative may be supplied
+with `--worker-selection <receipt.json>` using the shared reviewed-decision
+contract with decision type `worker-model-selection`. It must bind this workflow,
+model, effort and benchmark digest; do not invent a reviewed record to enable a
+model. The selection is an authorized engagement input and remains bound to the
+audit and recovered chunks. The capsule pins and hashes the installed Codex
 binary, requests the exact model and configured effort, runs an ephemeral
 read-only worker, enforces JSON schema, and writes content-bound receipts.
 There is no direct model API call and no API key. If qualification fails, stop
-at that boundary; do not substitute Sol, Terra, another model, or another
-service.
+at that boundary; a selection review cannot override host qualification or
+authorize another service.
 
 Default transport is 25 invoice packets per task and two concurrent workers;
 limits are 1–50 and 1–4. Chunking reduces process overhead but does not relax
@@ -171,8 +185,10 @@ consent-based Plugin Improvement Feedback process for any transmission.
 
 ## Quali dati arrivano al modello
 
-Per questa funzione arrivano al modello GPT-5.6 Luna, tramite l'ambiente Codex
-già attivo, soltanto i pacchetti compatti delle fatture abbinate: identificativo
+Per questa funzione arrivano al modello selezionato, tramite l'ambiente Codex
+già attivo, soltanto i pacchetti compatti delle fatture abbinate. Il modello
+predefinito è GPT-5.6 Luna; un'alternativa richiede una decisione di selezione
+revisionata. I pacchetti contengono: identificativo
 e riferimenti della fattura, fornitore, data e numero, descrizioni e valori delle
 righe, riepiloghi IVA, causali e riferimenti a documenti collegati entro limiti
 dichiarati, ritenute e bollo, trattamento contabile effettivamente registrato,

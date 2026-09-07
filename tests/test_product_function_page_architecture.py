@@ -15,11 +15,17 @@ PRODUCT_PAGES = {
 
 
 def _javascript_string_values(source: str, key: str) -> list[str]:
-    pattern = rf'{re.escape(key)}\s*:\s*("(?:\\.|[^"\\])*")'
+    key_pattern = re.escape(key) if key.startswith('"') else rf'"?{re.escape(key)}"?'
+    pattern = rf'{key_pattern}\s*:\s*("(?:\\.|[^"\\])*")'
     return [json.loads(match) for match in re.findall(pattern, source)]
 
 
 def _function_page_copy(source: str, page_name: str) -> str:
+    if page_name in {"business-planning", "clara-business-planning"}:
+        return source.split("const businessPlanningCopy =", 1)[1].split(
+            "window.MPARANZA_FUNCTION_PAGES =", 1
+        )[0]
+
     if page_name == "bilancio-xbrl-it":
         return source.split("const bilancioModelData =", 1)[1].split(
             "Object.entries(bilancioModelData)", 1
@@ -849,7 +855,7 @@ def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> No
     assert len(standalone_pages) == 20
 
 
-def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
+def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
     injector = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
@@ -868,7 +874,8 @@ def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
             _function_page_copy(function_copy, page_name), "modelData"
         )
         assert len(values) == 5
-        assert all(len(value.split("\n\n")) == 3 for value in values)
+        expected_paragraphs = 4 if page_name == "bandi-agevolazioni" else 3
+        assert all(len(value.split("\n\n")) == expected_paragraphs for value in values)
 
     for page_name in (
         "deep-research-validator",

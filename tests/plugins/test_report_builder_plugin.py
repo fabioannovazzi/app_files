@@ -1416,7 +1416,10 @@ def test_mcp_rejects_unowned_implementation_path_before_local_require(
 ) -> None:
     # Arrange
     plugin_copy, _ = _copy_report_builder_runtime(tmp_path, "mcp-rogue")
-    (plugin_copy / "scripts" / "__pycache__").mkdir()
+    (plugin_copy / "scripts" / "unowned.py").write_text(
+        "raise RuntimeError('unowned implementation must not execute')\n",
+        encoding="utf-8",
+    )
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is required for MCP server checks")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -90,7 +91,14 @@ def test_bootstrap_installs_validates_and_exposes_dependencies(
         runner=fake_runner,
     )
 
-    target = bootstrap.dependency_target(plugin_root, data_dir)
+    logical_target = bootstrap.dependency_target(plugin_root, data_dir)
+    target = Path(commands[0][-1])
+    assert (
+        json.loads(
+            logical_target.with_name(logical_target.name + ".active.json").read_text()
+        )["generation"]
+        == target.name
+    )
     assert ready is True
     assert detail == f"Python runtime installed at {target}"
     assert target.is_dir()
@@ -154,6 +162,7 @@ def test_bootstrap_reuses_valid_fingerprinted_dependencies(
         env_file,
         runner=fake_runner,
     )
+    target = Path(commands[0][-1])
     commands.clear()
 
     ready, detail = bootstrap.bootstrap_dependencies(

@@ -32,5 +32,6 @@
   "skills": "./skills/",
   "agents": [
     "./agents/clara.md"
-  ]
+  ],
+  "version": "0.1.182"
 }

@@ -4,18 +4,24 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
 import logging
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import sysconfig
 import tempfile
-from collections.abc import Sequence
+import time
+import uuid
+from collections.abc import Iterator, Sequence
+from contextlib import contextmanager
 from dataclasses import dataclass
+from importlib import metadata
 from pathlib import Path
 from typing import Callable
 
@@ -238,7 +244,9 @@ def _directory_is_writable(path: Path, *, private: bool) -> bool:
         if probe_path is not None:
             try:
                 probe_path.unlink()
-            except OSError:
+            except OSError as error:
+                if error.errno not in {errno.EACCES, errno.EAGAIN, errno.EDEADLK}:
+                    raise
                 pass
         return False
     return True
@@ -251,7 +259,9 @@ def plugin_data_dir(plugin_root: Path) -> Path:
     candidates: list[tuple[Path, bool]] = []
     if configured:
         candidates.append((Path(configured).expanduser().resolve(), False))
-    if os.environ.get("CODEX_SANDBOX"):
+    # Approved Claude commands omit CODEX_SANDBOX but retain the thread identity.
+    # Keep setup and subsequent sandboxed execution in the same private runtime.
+    if os.environ.get("CODEX_SANDBOX") or os.environ.get("CODEX_THREAD_ID"):
         candidates.append((_codex_data_dir(plugin_root), True))
     candidates.append(
         (
@@ -311,6 +321,7 @@ def _bootstrap_pip(
         cwd=target,
         env=base_environment,
         capture_output=True,
+        timeout=120,
         check=False,
         text=True,
     )
@@ -330,6 +341,7 @@ def _bootstrap_pip(
         cwd=target,
         env=target_environment,
         capture_output=True,
+        timeout=120,
         check=False,
         text=True,
     )
@@ -416,7 +428,9 @@ def _receipt_matches(selection: RuntimeSelection, target: Path) -> bool:
         payload = json.loads((target / READY_FILENAME).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return False
-    return payload == _receipt_payload(selection)
+    return isinstance(payload, dict) and all(
+        payload.get(key) == value for key, value in _receipt_payload(selection).items()
+    )
 
 
 def _validation_command(selection: RuntimeSelection, target: Path) -> list[str]:
@@ -458,6 +472,7 @@ def _dependencies_ready(
             cwd=selection.requirement_root,
             env=runtime_environment(target),
             capture_output=True,
+            timeout=120,
             check=False,
             text=True,
         )
@@ -468,6 +483,104 @@ def _dependencies_ready(
     if completed.returncode != 0 and diagnostics is not None:
         diagnostics.append(_process_detail(completed))
     return completed.returncode == 0
+
+
+@contextmanager
+def _installation_lock(path: Path) -> Iterator[None]:
+    """Serialize installers; the OS releases this stable lock after a crash."""
+
+    if path.is_symlink():
+        raise OSError("Runtime lock cannot be a symlink")
+    descriptor = os.open(
+        path, os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600
+    )
+    try:
+        opened = os.fstat(descriptor)
+        if not stat.S_ISREG(opened.st_mode) or opened.st_nlink != 1:
+            raise OSError("Runtime lock must be an ordinary single-link file")
+        if opened.st_size == 0:
+            os.write(descriptor, b"1")
+        deadline = time.monotonic() + 60
+        while True:
+            try:
+                if sys.platform == "win32":
+                    import msvcrt
+
+                    os.lseek(descriptor, 0, os.SEEK_SET)
+                    msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+
+                    fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise OSError("Timed out waiting for another runtime installer")
+                time.sleep(0.05)
+        current = path.lstat()
+        if (opened.st_dev, opened.st_ino) != (current.st_dev, current.st_ino):
+            raise OSError("Runtime lock changed while waiting")
+        yield
+    finally:
+        os.close(descriptor)
+
+
+def _active_target(target: Path) -> Path:
+    """Resolve an atomically published generation without relocating its venv."""
+
+    pointer = target.with_name(target.name + ".active.json")
+    if pointer.is_symlink():
+        raise OSError("Runtime generation pointer cannot be a symlink")
+    if not pointer.exists():
+        if target.is_symlink():
+            raise OSError("Legacy runtime target cannot be a symlink")
+        return target
+    payload = json.loads(pointer.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Invalid runtime generation pointer")
+    name = payload.get("generation")
+    if (
+        not isinstance(name, str)
+        or not name.startswith(target.name + ".generation-")
+        or Path(name).name != name
+    ):
+        raise ValueError("Invalid runtime generation pointer")
+    selected = target.parent / name
+    if selected.is_symlink():
+        raise OSError("Runtime generation cannot be a symlink")
+    return selected
+
+
+def _publish_target(target: Path, generation: Path) -> None:
+    """Publish only a validated generation; keep prior generations for readers."""
+
+    pointer = target.with_name(target.name + ".active.json")
+    temporary = pointer.with_name(pointer.name + "." + uuid.uuid4().hex + ".tmp")
+    try:
+        with temporary.open("x", encoding="utf-8") as handle:
+            json.dump({"generation": generation.name}, handle)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, pointer)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def _resolved_dependencies(target: Path) -> list[dict[str, str]]:
+    """Read installed metadata, preserving evidence of the actual resolution."""
+
+    roots = [
+        target / "Lib" / "site-packages",
+        *target.glob("lib/python*/site-packages"),
+    ]
+    return sorted(
+        (
+            {"name": dist.metadata["Name"], "version": dist.version}
+            for dist in metadata.distributions(path=[str(root) for root in roots])
+            if dist.metadata["Name"]
+        ),
+        key=lambda item: (item["name"].casefold(), item["version"]),
+    )
 
 
 def ensure_runtime(
@@ -481,7 +594,23 @@ def ensure_runtime(
     """Install or reuse one persistent managed dependency target."""
 
     selection = select_runtime(plugin_root, module, requirements)
-    target = dependency_target(selection, data_dir)
+    logical_target = dependency_target(selection, data_dir)
+    try:
+        logical_target.parent.mkdir(parents=True, exist_ok=True)
+        with _installation_lock(
+            logical_target.with_name(logical_target.name + ".lock")
+        ):
+            return _install_generation(selection, logical_target, runner)
+    except (OSError, ValueError, KeyError) as error:
+        return False, logical_target, str(error)
+
+
+def _install_generation(
+    selection: RuntimeSelection, logical_target: Path, runner: Runner
+) -> tuple[bool, Path, str]:
+    """Prepare privately and publish after validation while holding the lock."""
+
+    target = _active_target(logical_target)
     if _dependencies_ready(
         selection,
         target,
@@ -490,10 +619,11 @@ def ensure_runtime(
     ):
         return True, target, f"Python runtime ready at {target}"
 
+    target = logical_target.with_name(
+        logical_target.name + ".generation-" + uuid.uuid4().hex
+    )
     try:
         target.parent.mkdir(parents=True, exist_ok=True)
-        if target.exists():
-            shutil.rmtree(target)
     except OSError as error:
         return False, target, str(error)
     try:
@@ -501,6 +631,7 @@ def ensure_runtime(
             [sys.executable, "-m", "venv", "--without-pip", str(target)],
             cwd=selection.requirement_root,
             capture_output=True,
+            timeout=120,
             check=False,
             text=True,
         )
@@ -528,6 +659,7 @@ def ensure_runtime(
             cwd=selection.requirement_root,
             env=pip_environment,
             capture_output=True,
+            timeout=900,
             check=False,
             text=True,
         )
@@ -559,9 +691,18 @@ def ensure_runtime(
                 + ("\n".join(diagnostics).strip() or "no diagnostic output"),
             )
         (target / READY_FILENAME).write_text(
-            json.dumps(_receipt_payload(selection), sort_keys=True) + "\n",
+            json.dumps(
+                _receipt_payload(selection)
+                | {
+                    "installed_distributions": _resolved_dependencies(target),
+                    "interpreter_version": sys.version,
+                },
+                sort_keys=True,
+            )
+            + "\n",
             encoding="utf-8",
         )
+        _publish_target(logical_target, target)
         return True, target, f"Python runtime installed at {target}"
     except (OSError, subprocess.SubprocessError) as error:
         shutil.rmtree(target, ignore_errors=True)
@@ -577,7 +718,7 @@ def activate_runtime(
 
     try:
         selection = select_runtime(plugin_root, module, requirements)
-        target = dependency_target(selection)
+        target = _active_target(dependency_target(selection))
     except (OSError, ValueError):
         return None
     if not _receipt_matches(selection, target):

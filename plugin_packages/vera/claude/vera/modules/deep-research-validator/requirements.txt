@@ -1,2 +1,3 @@
-# Standard library only for required deterministic checks.
+# Required PDF text extraction; OCR remains separately authorized.
+PyMuPDF>=1.24,<2
 # Optional DOCX export uses pypandoc or python-docx if available locally.

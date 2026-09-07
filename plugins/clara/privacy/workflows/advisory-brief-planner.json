@@ -7,7 +7,12 @@
     "scripts/validate_advisory_contract.py",
     "skills/advisory-brief-planner/SKILL.md",
     "skills/advisory-brief-planner/agents/openai.yaml",
-    "skills/advisory-brief-planner/references/advisory-contract.md"
+    "skills/advisory-brief-planner/references/advisory-contract.md",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -49,12 +54,27 @@
     "per_case_record_required": false
   },
   "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
+    }
+  ],
   "security_controls": [],
   "review": {
     "reviewed_at": "2026-08-16",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9f0a060eab4fd9755d2ebb6e6a0d02f3403ea2b7f9e8e6dc26d9dc3d28c36622"
+    "source_fingerprint": "59e5999ccb47b380f82230da177eea63cbc1dc74cbcaad5a0e58eb2c38b527ec"
   }
 }

@@ -73,7 +73,7 @@
     },
     {
       "id": "qualified-source-and-relationship-controls",
-      "control": "Row-level reconciliation uses only reviewed source roles and qualified source adapters, and enforces current source receipts, entity, party, currency, evidence-reuse, fan-out, and exact allocation-conservation controls before a row can close."
+      "control": "Row-level reconciliation uses only reviewed source roles and qualified source adapters, and enforces current source receipts, entity, party, currency, evidence-reuse, fan-out, and exact allocation-conservation controls before a row can close. Opposing signed entries for the same document and accounting perimeter withhold automatic bank settlement pending reversal and payment-purpose review; this mechanical conflict does not establish the validity of a reversal. Candidate report figures retain explicit invoice and evidence record references."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -85,13 +85,17 @@
     },
     {
       "id": "exact-implementation-and-successor-checkpoint",
-      "control": "Every assured Python and MCP entry validates the exact 25-file plugin and shared-assurance implementation tree before loading workflow logic; a later review requires the independently retained predecessor checkpoint, replays the archived predecessor rows, allocations and core checks, and rejects missing, wrong or self-resealed predecessor authority without mutating the canonical tree."
+      "control": "Every assured Python and MCP entry validates the exact 25-file plugin and shared-assurance implementation tree before loading workflow logic; a later review requires the independently retained predecessor checkpoint, replays the archived predecessor rows, allocations and core checks, and rejects missing, wrong or self-resealed predecessor authority without mutating the canonical tree. Anchored predecessor snapshots recover the current digest-valid customer-run context only within that same managed run; snapshot paths do not authorize a different customer context or bypass the external checkpoint. Managed runs reject completed review rows unless they exactly match applied decisions for that run; standalone record IDs and reviewer labels cannot carry approval to replacement inputs. Preparation, finalization and replay enforce this boundary alongside the retained predecessor transition."
+    },
+    {
+      "id": "duplicate-source-report-lineage",
+      "control": "The raw runner uses imported basenames from the context-bound run input manifest to label byte-identical duplicate copies in the local Word report and Excel source inventory while extracting only the canonical input once. These filenames may enter model context when the selected run or reports are opened; no additional original absolute source paths are added."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cadf88737aad193ef2b1666c7fb1259f88253df34359d3f4d6373417b3e59643"
+    "source_fingerprint": "28ac27dbc0af902090d22e3ca15f6227301df4add97acda868ec763d64f197fd"
   }
 }

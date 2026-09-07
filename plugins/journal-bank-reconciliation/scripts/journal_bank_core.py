@@ -4745,10 +4745,56 @@ def _unconflicted_reference_group_batch(
         ):
             journal_by_token.setdefault(token, []).append(row)
 
+    reference_groups = [
+        (token, bank_by_token[token], journal_by_token[token])
+        for token in sorted(set(bank_by_token) & set(journal_by_token))
+    ]
+
+    # An explicit list can name distinct invoice identifiers without a shared
+    # batch identifier. Preserve punctuation inside each identifier: splitting
+    # INV-1 into generic words/numbers would destroy the source identity.
+    def listed_references(row: dict[str, Any]) -> tuple[str, ...]:
+        value = str(row.get("reference") or "").strip().casefold()
+        parts = tuple(re.split(r"[\s,;|]+", value)) if value else ()
+        if not parts or len(parts) > 100 or len(set(parts)) != len(parts):
+            return ()
+        if any(
+            re.fullmatch(r"[a-z0-9]+(?:[-/.][a-z0-9]+)*", part) is None
+            or not any(char.isdigit() for char in part)
+            or not any(char.isalpha() for char in part)
+            or _is_generic_period_fragment(re.sub(r"[-/.]", "", part))
+            or GENERIC_PERIOD_REFERENCE_RE.fullmatch(re.sub(r"[-/.]", "", part))
+            for part in parts
+        ):
+            return ()
+        return parts
+
+    for anchors, counterparts, reverse in (
+        (available_bank, available_journal, False),
+        (available_journal, available_bank, True),
+    ):
+        by_reference: dict[str, list[dict[str, Any]]] = {}
+        for row in counterparts:
+            refs = listed_references(row)
+            if len(refs) == 1:
+                by_reference.setdefault(refs[0], []).append(row)
+        for anchor in anchors:
+            refs = listed_references(anchor)
+            if len(refs) < 2 or any(
+                len(by_reference.get(ref, [])) != 1 for ref in refs
+            ):
+                continue
+            members = [by_reference[ref][0] for ref in refs]
+            reference_groups.append(
+                (
+                    "explicit_list:" + "|".join(sorted(refs)),
+                    members if reverse else [anchor],
+                    [anchor] if reverse else members,
+                )
+            )
+
     grouped: dict[tuple[tuple[str, ...], tuple[str, ...]], dict[str, Any]] = {}
-    for token in sorted(set(bank_by_token) & set(journal_by_token)):
-        bank_group = bank_by_token[token]
-        journal_group = journal_by_token[token]
+    for token, bank_group, journal_group in reference_groups:
         bank_count = len(bank_group)
         journal_count = len(journal_group)
         one_to_many = bank_count == 1 and journal_count > 1

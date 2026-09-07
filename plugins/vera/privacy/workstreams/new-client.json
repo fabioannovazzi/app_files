@@ -58,7 +58,7 @@
     },
     {
       "id": "upstream-package-integrity",
-      "control": "Before promotion, the workflow verifies the sealed phase-one source snapshot and every declared output's type, size, byte hash, and package binding; drift is rejected."
+      "control": "Before promotion, the workflow verifies the sealed phase-one source snapshot and every declared output's type, size, byte hash, and package binding; drift is rejected. Inventory classification metadata in the candidate-aware format must remain category_status=candidate and category_basis=lexical_hint; professional decisions remain in the reviewed field handoff."
     },
     {
       "id": "phase-one-purpose-shaped-handoff",
@@ -82,9 +82,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "40cade1b6871891a0ba4afe6c2a51fd8a79202af23a12e8790d3af3df55e2836"
+    "source_fingerprint": "e1e15112c18f31ecf192a01d36472aae97cef0b2fb184fd0789fc93f585a0345"
   }
 }

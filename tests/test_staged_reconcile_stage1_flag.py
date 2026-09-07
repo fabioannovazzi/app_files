@@ -1,39 +1,11 @@
 from __future__ import annotations
 
-import importlib
-import sys
-import types
 from datetime import date
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "src"
-for path in (SRC, ROOT):
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
-
-
-def _ensure_package(name: str, path: Path) -> None:
-    if name in sys.modules:
-        return
-    pkg = types.ModuleType(name)
-    pkg.__path__ = [str(path)]  # type: ignore[attr-defined]
-    sys.modules[name] = pkg
-
-
-_ensure_package("src", SRC)
-_ensure_package("src.check_statements", SRC / "check_statements")
-
-models_mod = importlib.import_module("src.check_statements.models")
-pipeline_mod = importlib.import_module("src.check_statements.reconcile_pipeline")
-beneficiary_mod = importlib.import_module("src.check_statements.stages.beneficiary")
-
-Transaction = models_mod.Transaction
-staged_reconcile = pipeline_mod.staged_reconcile
-_stage6_beneficiary_invoice = beneficiary_mod._stage6_beneficiary_invoice
-_stage8_reference = importlib.import_module(
-    "src.check_statements.stages.iban_reference"
-)._stage8_reference
+from src.check_statements.models import Transaction
+from src.check_statements.reconcile_pipeline import staged_reconcile
+from src.check_statements.stages.beneficiary import _stage6_beneficiary_invoice
+from src.check_statements.stages.iban_reference import _stage8_reference
 
 
 def _txn(amount: float) -> Transaction:

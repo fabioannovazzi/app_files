@@ -358,6 +358,7 @@ def build_reconciliation_artifacts(
         reviewed_source_decisions=reviewed_source_decision_receipts or [],
         source_qualifications=source_qualifications or [],
         client_engagement=client_engagement,
+        review_rows=review_rows,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
     review_authority = assurance_context.get("professional_review_authority")
@@ -487,6 +488,7 @@ def build_reconciliation_artifacts(
         title=title or default_report_title(language),
         metadata=metadata or {},
         summary_rows=summary_from_reconciliation(reconciliation_rows),
+        reconciliation_rows=reconciliation_rows,
         assumptions=assumptions,
         next_steps=(
             next_steps

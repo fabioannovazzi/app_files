@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from tests_tagging_stub import ensure_tagging_stub  # isort: skip
+from tests.model_data_helpers import write_no_model_report
 
 __all__ = []
 
@@ -100,7 +101,12 @@ def vera_workflow_workspace(
                 client_root,
                 actual_engagement_id,
                 upstream_workspace["run_id"],
-                declarations,
+                declarations
+                + write_no_model_report(
+                    upstream_output,
+                    upstream_workspace["context"]["workflow_id"],
+                    upstream_workspace["run_id"],
+                ),
             )
             upstream_artifacts = [
                 {
@@ -109,6 +115,7 @@ def vera_workflow_workspace(
                     "role": "source",
                 }
                 for artifact in finalized["artifact_manifest"]["artifacts"]
+                if artifact["artifact_id"].startswith("pytest_artifact_")
             ]
         else:
             supplied = input_files or {
@@ -188,14 +195,14 @@ def _canonical_module_exists(name: str) -> bool:
     return candidate.with_suffix(".py").exists() or candidate.is_dir()
 
 
-def _is_plugin_local_module(module: types.ModuleType) -> bool:
+def _is_plugin_local_module(module: types.ModuleType, *, plugins_root: Path) -> bool:
     """Return whether a module was imported from a plugin-local source tree."""
 
     module_file = getattr(module, "__file__", None)
     if not module_file:
         return False
     try:
-        Path(module_file).resolve().relative_to((ROOT / "plugins").resolve())
+        Path(module_file).resolve().relative_to(plugins_root)
     except (OSError, RuntimeError, ValueError):
         return False
     return True
@@ -204,11 +211,13 @@ def _is_plugin_local_module(module: types.ModuleType) -> bool:
 def _discard_plugin_runtime_imports() -> None:
     """Remove process-local plugin modules and script paths between tests."""
 
+    # Resolve the common root once per pass, without caching module identities
+    # or paths across tests that may change imports or symlinks.
+    plugins_root = (ROOT / "plugins").resolve()
     for name, module in list(sys.modules.items()):
-        if _is_plugin_local_module(module):
+        if _is_plugin_local_module(module, plugins_root=plugins_root):
             _drop_imported_module(name)
 
-    plugins_root = (ROOT / "plugins").resolve()
     cleaned_path: list[str] = []
     for entry in sys.path:
         try:
@@ -221,13 +230,14 @@ def _discard_plugin_runtime_imports() -> None:
 def _remember_canonical_modules() -> None:
     """Retain the first repository module object imported under each name."""
 
+    repository_root = ROOT.resolve()
     for name, module in list(sys.modules.items()):
         if name != "modules" and not name.startswith(("modules.", "src.")):
             continue
         module_file = getattr(module, "__file__", None)
         if module_file:
             try:
-                relative_path = Path(module_file).resolve().relative_to(ROOT.resolve())
+                relative_path = Path(module_file).resolve().relative_to(repository_root)
             except (OSError, RuntimeError, ValueError):
                 continue
             if not relative_path.parts or relative_path.parts[0] not in {
@@ -245,7 +255,7 @@ def _remember_canonical_modules() -> None:
             for module_path in resolved_module_paths:
                 try:
                     relative_path = (
-                        Path(module_path).resolve().relative_to(ROOT.resolve())
+                        Path(module_path).resolve().relative_to(repository_root)
                     )
                 except (OSError, RuntimeError, TypeError, ValueError):
                     continue
@@ -384,10 +394,13 @@ def pytest_runtest_teardown(item: object) -> None:
         return
     prior_modules, prior_path, prior_environment = snapshot
 
+    plugins_root = (ROOT / "plugins").resolve()
     for name, module in list(sys.modules.items()):
         if name in prior_modules:
             continue
-        if getattr(module, "__spec__", None) is None or _is_plugin_local_module(module):
+        if getattr(module, "__spec__", None) is None or _is_plugin_local_module(
+            module, plugins_root=plugins_root
+        ):
             _drop_imported_module(name)
 
     for name, module in prior_modules.items():

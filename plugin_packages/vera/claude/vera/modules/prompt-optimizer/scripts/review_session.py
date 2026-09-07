@@ -335,25 +335,12 @@ def _append_execution_trace(
     *,
     command: Sequence[str],
 ) -> None:
+    from vera_assurance.serialization import build_review_execution_step
+
     payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    data_posture = payload.get("data_posture")
-    local_files = (
-        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
-    )
-    inputs = (
-        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
-    )
-    payload["execution_trace"] = [
-        {
-            "step_id": f"{WORKFLOW_NAME}_review_session",
-            "kind": "deterministic_review_session",
-            "status": "passed",
-            "execution_location": "cowork_connected_folder",
-            "command": list(command),
-            "inputs": [str(entry) for entry in inputs if entry],
-            "outputs": _local_output_refs(final_artifacts_path),
-        }
-    ]
+    step = build_review_execution_step(payload, WORKFLOW_NAME, command)
+    step["outputs"] = _local_output_refs(final_artifacts_path)
+    payload["execution_trace"] = [step]
     _write_json(run_intake_path, payload)
 
 

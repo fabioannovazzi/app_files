@@ -22,6 +22,7 @@ import openpyxl
 import pytest
 
 from scripts.validate_plugin_review_contract import validate_contract
+from tests.model_data_helpers import write_no_model_report
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "journal-bank-reconciliation" / "scripts"
@@ -1030,6 +1031,7 @@ def _mock_semantic_worker_runtime(
         },
     }
     qualified = {
+        "host_profile": semantic_review._resolve_host_profile(),
         "darwin_build": semantic_review.PINNED_DARWIN_BUILD,
         "codex_path": codex_path,
         "codex_binding": executable_bindings[codex_path],
@@ -1051,7 +1053,7 @@ def _mock_semantic_worker_runtime(
     monkeypatch.setattr(
         semantic_review,
         "_qualified_executables",
-        lambda codex_bin: qualified,
+        lambda codex_bin, **kwargs: qualified,
     )
     monkeypatch.setattr(
         semantic_review,
@@ -2042,23 +2044,23 @@ def test_plugin_inspects_and_runs_deterministic_journal_bank_reconciliation(
     assert matched_item["data"]["target_field"] == "review_note"
     assert unmatched_bank_item["recommended_action"] == "request_more_documents"
     assert unmatched_bank_item["data"]["requested_document"] == (
-        "Journal or ledger support for bank transaction FEE9"
+        "Scrittura del giornale o del mastro a supporto del movimento bancario FEE9"
     )
     assert unmatched_bank_item["data"]["reason"] == (
-        "Bank transaction has no deterministic journal match."
+        "Il movimento bancario non ha una corrispondenza nel giornale secondo i controlli eseguiti."
     )
     assert any(
         evidence.get("kind") == "missing_reconciliation_evidence"
         and evidence.get("requested_document")
-        == "Journal or ledger support for bank transaction FEE9"
+        == "Scrittura del giornale o del mastro a supporto del movimento bancario FEE9"
         for evidence in unmatched_bank_item["evidence"]
     )
     assert unmatched_journal_item["recommended_action"] == "request_more_documents"
     assert unmatched_journal_item["data"]["requested_document"] == (
-        "Bank statement or payment evidence for journal transaction SUP77"
+        "Estratto conto o prova del pagamento per il movimento del giornale SUP77"
     )
     assert unmatched_journal_item["data"]["reason"] == (
-        "Journal transaction has no deterministic bank match."
+        "Il movimento del giornale non ha una corrispondenza bancaria secondo i controlli eseguiti."
     )
     assert review_payload["summary"]["matched_count"] == 1
     assert review_payload["summary"]["unmatched_bank_count"] == 1
@@ -6038,8 +6040,17 @@ def test_profile_and_positional_mapping_remain_review_proposals(
     assert qualifications["qualifications"][0]["emitted_row_count"] == 0
 
 
+@pytest.mark.parametrize(
+    "replacement_rows",
+    [
+        [["2025-03-10", "80.00", "ABC123"], []],
+        [["2025-03-10", "90.00", "ABC123"]],
+    ],
+    ids=["changed-source-bytes", "changed-economic-amount"],
+)
 def test_reviewed_mapping_is_source_bound_and_stale_after_source_change(
     tmp_path: Path,
+    replacement_rows: list[list[str]],
 ) -> None:
     core = load_core()
     bank_path = tmp_path / "bank.csv"
@@ -6105,8 +6116,7 @@ def test_reviewed_mapping_is_source_bound_and_stale_after_source_change(
         bank_path,
         [
             ["Posting", "Value", "Doc ID"],
-            ["2025-03-10", "80.00", "ABC123"],
-            [],
+            *replacement_rows,
         ],
     )
     stale_output = tmp_path / "stale-run"
@@ -6810,7 +6820,9 @@ def test_mcp_rejects_unowned_implementation_path_before_stdio(
     tmp_path: Path,
 ) -> None:
     copied_plugin, _ = _copy_journal_bank_implementation(tmp_path)
-    (copied_plugin / "scripts" / "__pycache__").mkdir()
+    (copied_plugin / "scripts" / "unowned.py").write_text(
+        "raise RuntimeError('unowned code must not execute')\n", encoding="utf-8"
+    )
     node = shutil.which("node")
     if node is None:
         pytest.skip("Node.js is required for the MCP implementation probe.")
@@ -8141,6 +8153,14 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
         for index, path in enumerate(physical_outputs, start=1)
     ]
     renamed_client_root = renamed_context.parents[5]
+    declarations.extend(
+        write_no_model_report(
+            renamed_output, "journal-bank-reconciliation", running["run"]["run_id"]
+        )
+    )
+    physical_outputs = sorted(
+        path for path in renamed_output.rglob("*") if path.is_file()
+    )
     finalized = ledger.finalize_run(
         renamed_client_root,
         engagement["engagement_id"],
@@ -9555,8 +9575,22 @@ def test_semantic_validate_requires_pinned_launch_receipt(tmp_path: Path) -> Non
         )
 
 
+@pytest.mark.parametrize(
+    "field,value,error",
+    [
+        ("codex_sha256", "0" * 64, "codex_sha256"),
+        ("contract_id", "unqualified.profile.v2", "host profile"),
+        ("profile_sha256", "0" * 64, "profile_sha256"),
+        ("darwin_build", "unqualified-build", "darwin_build"),
+        ("codex_version", "codex-cli unqualified", "codex_version"),
+        ("qualification_basis", "capability_disabled", "qualification_basis"),
+    ],
+)
 def test_semantic_validate_rejects_rehashed_forged_launch_boundary(
     tmp_path: Path,
+    field: str,
+    value: str,
+    error: str,
 ) -> None:
     _, semantic_review, reconciliation_dir, semantic_dir = (
         _prepare_ambiguous_semantic_run(tmp_path)
@@ -9571,7 +9605,7 @@ def test_semantic_validate_rejects_rehashed_forged_launch_boundary(
     )
     receipt_path = semantic_dir / "luna_launch_receipt.json"
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    receipt["boundary"]["codex_sha256"] = "0" * 64
+    receipt["boundary"][field] = value
     receipt_content = dict(receipt)
     receipt_content.pop("content_sha256")
     receipt["content_sha256"] = semantic_review.canonical_json_sha256(receipt_content)
@@ -9580,7 +9614,7 @@ def test_semantic_validate_rejects_rehashed_forged_launch_boundary(
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="codex_sha256"):
+    with pytest.raises(ValueError, match=error):
         semantic_review.validate_semantic_review(
             reconciliation_dir,
             semantic_dir,
@@ -12104,3 +12138,726 @@ def test_journal_bank_mcp_save_commits_only_decision_file(tmp_path: Path) -> Non
     }
     assert changed_paths == {"ui_decisions.json"}
     assert list(output_dir.parent.glob(".journal-bank-apply-*")) == []
+
+
+def test_host_status_reports_unsupported_build_without_reading_credentials(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic, "_observed_darwin_build", lambda: "unqualified-build")
+    monkeypatch.setattr(
+        semantic, "_resolved_codex_binary", lambda _: Path("/synthetic/codex")
+    )
+    monkeypatch.setattr(
+        semantic, "_stable_executable_binding", lambda *args, **kwargs: {}
+    )
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail("A read-only host diagnostic must not open credentials"),
+    )
+
+    result = semantic.inspect_execution_host()
+
+    assert result["status"] == "unsupported"
+    assert result["checks"][0]["observed"] == "unqualified-build"
+    assert result["worker_executed"] is False
+    assert result["canaries_executed"] is False
+
+
+def test_matching_host_prerequisites_do_not_claim_worker_qualification(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic = load_semantic_review()
+    monkeypatch.setattr(
+        semantic, "_observed_darwin_build", lambda: semantic.PINNED_DARWIN_BUILD
+    )
+    monkeypatch.setattr(
+        semantic, "_resolved_codex_binary", lambda _: Path("/synthetic/codex")
+    )
+    monkeypatch.setattr(
+        semantic, "_stable_executable_binding", lambda *args, **kwargs: {}
+    )
+
+    result = semantic.inspect_execution_host()
+
+    assert result["status"] == "prerequisites_match"
+    assert result["worker_executed"] is False
+    assert "not run qualification" in result["limitation"]
+
+
+def test_generic_worker_rejects_output_symlink_before_reading_credentials(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    semantic = load_semantic_review()
+    destination = tmp_path / "destination"
+    destination.mkdir()
+    output = tmp_path / "output-link"
+    output.symlink_to(destination, target_is_directory=True)
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail("Invalid output must reject before reading credentials"),
+    )
+
+    with pytest.raises(ValueError, match="ordinary directory"):
+        semantic.run_isolated_luna_worker(
+            prompt="Synthetic boundary test",
+            output_schema={"type": "object"},
+            output_dir=output,
+            workflow_id="synthetic-boundary-test",
+            packet_sha256="a" * 64,
+        )
+
+    assert output.is_symlink()
+    assert list(destination.iterdir()) == []
+
+
+def _worker_selection_receipt(
+    semantic: Any, *, workflow_id: str = "synthetic-model-comparison"
+) -> dict[str, Any]:
+    content = {
+        "workflow_id": workflow_id,
+        "model": "gpt-6-astra",
+        "reasoning_effort": "high",
+        "benchmark_sha256": "b" * 64,
+    }
+    return {
+        "schema_version": "vera.reviewed_decision_receipt.v1",
+        "decision_id": "synthetic-selection",
+        "decision_type": "worker-model-selection",
+        "status": "reviewed",
+        "reviewer_ref": "synthetic-reviewer",
+        "reviewed_on": "2026-09-05",
+        "adapter_id": "vera-native-worker",
+        "adapter_version": "1",
+        "source_artifact_refs": ["benchmark-" + "b" * 64],
+        "content": content,
+        "content_sha256": semantic.canonical_json_sha256(content),
+    }
+
+
+@pytest.mark.parametrize("model", [None, "gpt-5.6-luna", "gpt-6-astra"])
+def test_generic_worker_uses_and_records_reviewed_model_selection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, model: str | None
+) -> None:
+    semantic = load_semantic_review()
+    review = _worker_selection_receipt(semantic)
+    expected_model = model or "gpt-5.6-luna"
+    expected_effort = "high" if model else "low"
+    review["content"]["model"] = expected_model
+    review["content_sha256"] = semantic.canonical_json_sha256(review["content"])
+    selected_review = review if model else None
+    response = {"answer": "synthetic"}
+    events = [
+        {"type": "thread.started", "thread_id": "synthetic-selection-thread"},
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "answer",
+                "type": "agent_message",
+                "text": json.dumps(response),
+            },
+        },
+        {"type": "turn.completed", "usage": {"input_tokens": 10, "output_tokens": 5}},
+    ]
+    captured = _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": "".join(json.dumps(event) + "\n" for event in events).encode(),
+            "stderr": b"",
+            "duration_ms": 1,
+        },
+    )
+
+    result = semantic.run_isolated_luna_worker(
+        prompt="Synthetic selection test",
+        output_schema={"type": "object"},
+        output_dir=tmp_path,
+        workflow_id="synthetic-model-comparison",
+        packet_sha256="a" * 64,
+        worker_selection=selected_review,
+    )
+
+    command = captured["command"]
+    assert command[command.index("--model") + 1] == expected_model
+    assert f'model_reasoning_effort="{expected_effort}"' in command
+    receipt = json.loads(result["launch_receipt"].read_text())
+    assert (
+        receipt["requested_worker_configuration"].get("selection_review")
+        == selected_review
+    )
+    assert receipt["requested_worker_configuration"]["model"] == expected_model
+    assert result["reasoning_effort"] == expected_effort
+    assert receipt["boundary"]["contract_id"] == semantic.WORKER_BOUNDARY_CONTRACT_ID
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("workflow_id", "another-workflow", "another workflow"),
+        ("model", "--unsafe-option", "model identifier"),
+        ("reasoning_effort", "unbounded", "reasoning effort"),
+        ("benchmark_sha256", "missing", "benchmark digest"),
+    ],
+)
+def test_generic_worker_rejects_invalid_selection_before_credentials(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: str,
+    message: str,
+) -> None:
+    semantic = load_semantic_review()
+    review = _worker_selection_receipt(semantic)
+    review["content"][field] = value
+    review["content_sha256"] = semantic.canonical_json_sha256(review["content"])
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail(
+            "Invalid selection must reject before credentials are accessed"
+        ),
+    )
+
+    with pytest.raises(ValueError, match=message):
+        semantic.run_isolated_luna_worker(
+            prompt="Synthetic selection test",
+            output_schema={"type": "object"},
+            output_dir=tmp_path,
+            workflow_id="synthetic-model-comparison",
+            packet_sha256="a" * 64,
+            worker_selection=review,
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("status", "draft", "reviewed status"),
+        ("content_sha256", "c" * 64, "digest is stale"),
+        ("source_artifact_refs", ["unrelated-benchmark"], "benchmark binding is stale"),
+    ],
+)
+def test_generic_worker_rejects_unreviewed_or_stale_selection(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: Any,
+    message: str,
+) -> None:
+    semantic = load_semantic_review()
+    review = _worker_selection_receipt(semantic)
+    review[field] = value
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail(
+            "Unreviewed selection must reject before credentials are accessed"
+        ),
+    )
+
+    with pytest.raises(ValueError, match=message):
+        semantic.run_isolated_luna_worker(
+            prompt="Synthetic selection test",
+            output_schema={"type": "object"},
+            output_dir=tmp_path,
+            workflow_id="synthetic-model-comparison",
+            packet_sha256="a" * 64,
+            worker_selection=review,
+        )
+
+
+def test_generic_worker_rejects_effort_conflicting_with_review(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic = load_semantic_review()
+    review = _worker_selection_receipt(semantic)
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail(
+            "Conflicting selection must reject before credentials are accessed"
+        ),
+    )
+
+    with pytest.raises(ValueError, match="differs from the reviewed selection"):
+        semantic.run_isolated_luna_worker(
+            prompt="Synthetic selection test",
+            output_schema={"type": "object"},
+            output_dir=tmp_path,
+            workflow_id="synthetic-model-comparison",
+            packet_sha256="a" * 64,
+            worker_selection=review,
+            reasoning_effort="low",
+        )
+
+
+def test_generic_worker_review_does_not_override_host_qualification(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic = load_semantic_review()
+    review = _worker_selection_receipt(semantic)
+    monkeypatch.setattr(semantic, "_codex_home_boundary_inputs", lambda: {})
+
+    def unsupported_host(_: object) -> None:
+        raise ValueError("Synthetic unsupported host")
+
+    monkeypatch.setattr(semantic, "_qualified_executables", unsupported_host)
+    monkeypatch.setattr(
+        semantic,
+        "_run_captured_process",
+        lambda *args, **kwargs: pytest.fail(
+            "A reviewed model must not bypass an unsupported host"
+        ),
+    )
+
+    with pytest.raises(ValueError, match="Synthetic unsupported host"):
+        semantic.run_isolated_luna_worker(
+            prompt="Synthetic selection test",
+            output_schema={"type": "object"},
+            output_dir=tmp_path,
+            workflow_id="synthetic-model-comparison",
+            packet_sha256="a" * 64,
+            worker_selection=review,
+        )
+
+
+def test_semantic_pipeline_preserves_reviewed_selection_through_generation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    review = _worker_selection_receipt(
+        semantic, workflow_id="journal-bank-reconciliation"
+    )
+    # Prepare the expected worker packet; run-all will archive and reproduce it.
+    prepared = semantic.prepare_semantic_review(
+        reconciliation, output, worker_selection=review
+    )
+    graph = json.loads(prepared["candidate_graph"].read_text())
+    response = _valid_semantic_response(graph)
+    events = [
+        {"type": "thread.started", "thread_id": "synthetic-reviewed-selection"},
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "answer",
+                "type": "agent_message",
+                "text": json.dumps(response),
+            },
+        },
+        {"type": "turn.completed", "usage": {"input_tokens": 10, "output_tokens": 5}},
+    ]
+    captured = _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": "".join(json.dumps(event) + "\n" for event in events).encode(),
+            "stderr": b"",
+            "duration_ms": 1,
+        },
+    )
+
+    result = semantic.run_semantic_resolution_pipeline(
+        reconciliation,
+        output,
+        required_resolution_level="classified",
+        worker_selection=review,
+    )
+
+    assert result["batch_count"] == 1
+    command = captured["command"]
+    assert command[command.index("--model") + 1] == "gpt-6-astra"
+    assert 'model_reasoning_effort="high"' in command
+    final_graph = json.loads((output / semantic.CANDIDATE_GRAPH_NAME).read_text())
+    assert final_graph["requested_worker_configuration"]["selection_review"] == review
+    assert final_graph["requested_worker_configuration"]["model"] == "gpt-6-astra"
+
+
+def test_semantic_launch_rejects_configuration_diverging_from_review(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    review = _worker_selection_receipt(
+        semantic, workflow_id="journal-bank-reconciliation"
+    )
+    prepared = semantic.prepare_semantic_review(
+        reconciliation, output, worker_selection=review
+    )
+    graph = json.loads(prepared["candidate_graph"].read_text())
+    graph["requested_worker_configuration"]["model"] = "another-model"
+    prepared["candidate_graph"].write_text(json.dumps(graph))
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail(
+            "Modified configuration must reject before credential access"
+        ),
+    )
+
+    with pytest.raises(ValueError, match="does not replay"):
+        semantic.run_semantic_worker(
+            reconciliation, output, prepared["candidate_graph"]
+        )
+
+
+def test_semantic_prepare_invalid_selection_preserves_existing_generation(
+    tmp_path: Path,
+) -> None:
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    semantic.prepare_semantic_review(reconciliation, output)
+    before = _tree_snapshot(output)
+    review = _worker_selection_receipt(
+        semantic, workflow_id="journal-bank-reconciliation"
+    )
+    review["status"] = "draft"
+
+    with pytest.raises(ValueError, match="reviewed status"):
+        semantic.prepare_semantic_review(
+            reconciliation, output, worker_selection=review
+        )
+
+    assert _tree_snapshot(output) == before
+
+
+def test_semantic_prepare_cli_loads_selection_as_authorized_input(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic = load_semantic_review()
+    review = _worker_selection_receipt(
+        semantic, workflow_id="journal-bank-reconciliation"
+    )
+    review_path = tmp_path / "selection.json"
+    review_path.write_text(json.dumps(review))
+    captured: dict[str, Any] = {}
+
+    def load_context(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        captured["input_paths"] = kwargs["input_paths"]
+        return {}
+
+    def prepare(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        captured["selection"] = kwargs["worker_selection"]
+        return {
+            "selected_component_count": 0,
+            "deferred_component_count": 0,
+            "worker_required": False,
+        }
+
+    monkeypatch.setattr(semantic, "load_client_engagement_context_file", load_context)
+    monkeypatch.setattr(semantic, "prepare_semantic_review", prepare)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "semantic_review.py",
+            "prepare",
+            str(tmp_path / "reconciliation"),
+            "--output-dir",
+            str(tmp_path / "output"),
+            "--required-level",
+            "classified",
+            "--client-engagement",
+            str(tmp_path / "context.json"),
+            "--worker-selection",
+            str(review_path),
+        ],
+    )
+
+    exit_code = semantic.main()
+
+    assert exit_code == 0
+    assert captured["selection"] == review
+    assert review_path in captured["input_paths"]
+
+
+def test_explicit_invoice_list_allocates_one_bank_payment_without_shared_batch(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    bank = tmp_path / "bank.csv"
+    journal = tmp_path / "journal.csv"
+    _save_csv(
+        bank,
+        [["Date", "Amount", "Reference"], ["2026-09-20", "1830.00", "INV-1 INV-2"]],
+    )
+    _save_csv(
+        journal,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-20", "1220.00", "INV-1"],
+            ["2026-09-20", "610.00", "INV-2"],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank,
+        journal,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"relationship_shape": "one_to_many"},
+    )
+    result = core.run_reconciliation(
+        bank, journal, tmp_path / "out", recipe, tolerance="0", date_window_days=0
+    )
+    assert result.matches.height == 2
+    assert result.unmatched_bank.is_empty()
+    assert result.unmatched_journal.is_empty()
+
+
+@pytest.mark.parametrize(
+    "references", ["INV-1 INV-2 INV-3", "INV-1 INV-1", "Q1-2026 Q2-2026"]
+)
+def test_explicit_reference_list_with_missing_duplicate_or_period_ids_stays_unmatched(
+    tmp_path: Path, references: str
+) -> None:
+    core = load_core()
+    bank = tmp_path / "bank.csv"
+    journal = tmp_path / "journal.csv"
+    _save_csv(
+        bank, [["Date", "Amount", "Reference"], ["2026-09-20", "1830", references]]
+    )
+    _save_csv(
+        journal,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-20", "1220", "INV-1"],
+            ["2026-09-20", "610", "INV-2"],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank,
+        journal,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"relationship_shape": "one_to_many"},
+    )
+    result = core.run_reconciliation(
+        bank, journal, tmp_path / "out", recipe, tolerance="0", date_window_days=0
+    )
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 1
+    assert result.unmatched_journal.height == 2
+
+
+def test_competing_explicit_reference_lists_do_not_reuse_journal_rows(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    bank = tmp_path / "bank.csv"
+    journal = tmp_path / "journal.csv"
+    _save_csv(
+        bank,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-20", "1830", "INV-1 INV-2"],
+            ["2026-09-20", "1830", "INV-2 INV-1"],
+        ],
+    )
+    _save_csv(
+        journal,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-20", "1220", "INV-1"],
+            ["2026-09-20", "610", "INV-2"],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank,
+        journal,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"relationship_shape": "one_to_many"},
+    )
+    result = core.run_reconciliation(
+        bank, journal, tmp_path / "out", recipe, tolerance="0", date_window_days=0
+    )
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 2
+    assert result.unmatched_journal.height == 2
+
+
+@pytest.mark.parametrize(
+    ("language", "bank_request", "journal_request"),
+    [
+        (
+            "it-IT",
+            "Scrittura del giornale o del mastro a supporto del movimento bancario BANK-9",
+            "Estratto conto o prova del pagamento per il movimento del giornale JOURNAL-7",
+        ),
+        (
+            "fr-FR",
+            "Écriture du journal ou du grand livre justifiant le mouvement bancaire BANK-9",
+            "Relevé bancaire ou preuve de paiement pour le mouvement du journal JOURNAL-7",
+        ),
+        (
+            "de-DE",
+            "Journal- oder Hauptbuchbeleg für die Bankbuchung BANK-9",
+            "Kontoauszug oder Zahlungsnachweis für die Journalbuchung JOURNAL-7",
+        ),
+    ],
+)
+def test_run_localizes_missing_evidence_requests_on_both_sides(
+    tmp_path: Path, language: str, bank_request: str, journal_request: str
+) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.xlsx"
+    journal_path = tmp_path / "journal.xlsx"
+    output_dir = tmp_path / "output"
+    _save_workbook(
+        bank_path,
+        [
+            ["Date", "Description", "Amount", "Reference"],
+            ["2026-01-15", "Invoice INV100", 75.25, "INV100"],
+            ["2026-01-16", "Bank evidence missing", -4.5, "BANK-9"],
+        ],
+    )
+    _save_workbook(
+        journal_path,
+        [
+            ["Date", "Description", "Debit", "Reference"],
+            ["2026-01-15", "Invoice INV100", 75.25, "INV100"],
+            ["2026-01-17", "Journal evidence missing", 110, "JOURNAL-7"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core, bank_path, journal_path, tmp_path / "recipe"
+    )
+
+    core.run_reconciliation(
+        bank_path, journal_path, output_dir, recipe_path, language=language
+    )
+
+    payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    bank_item = next(
+        item for item in payload["items"] if item["item_type"] == "unmatched_bank"
+    )
+    journal_item = next(
+        item for item in payload["items"] if item["item_type"] == "unmatched_journal"
+    )
+    assert bank_item["data"]["requested_document"] == bank_request
+    assert journal_item["data"]["requested_document"] == journal_request
+    assert bank_item["recommended_action"] == "request_more_documents"
+    assert journal_item["recommended_action"] == "request_more_documents"
+    assert any(
+        evidence.get("requested_document") == bank_request
+        for evidence in bank_item["evidence"]
+    )
+    assert any(
+        evidence.get("requested_document") == journal_request
+        for evidence in journal_item["evidence"]
+    )
+
+
+def test_host_profile_registry_is_single_immutable_legacy_envelope() -> None:
+    """Retained authority is not a mutable runtime registration mechanism."""
+    from dataclasses import FrozenInstanceError
+
+    semantic = load_semantic_review()
+    profiles = semantic._HOST_CAPABILITY_PROFILES
+    profile = profiles["journal_bank.luna_seatbelt_capsule.v1"]
+
+    with pytest.raises(FrozenInstanceError):
+        profile.darwin_build = "unqualified-build"
+    with pytest.raises(TypeError):
+        profiles["unqualified.profile.v2"] = profile
+
+    assert tuple(profiles) == ("journal_bank.luna_seatbelt_capsule.v1",)
+    assert profile.provenance == "retained_legacy"
+    assert profile.darwin_build == "25F84"
+    assert profile.codex_version == "codex-cli 0.148.0-alpha.21"
+    assert profile.seatbelt_sha256 == (
+        "c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be"
+    )
+    assert (
+        profile.qualification_basis == "pinned_hidden_view_image_outside_nonce_denied"
+    )
+    assert "view_image" not in profile.disabled_features
+    assert "code_mode" in profile.disabled_features
+    assert "code_mode_host" in profile.disabled_features
+
+
+@pytest.mark.parametrize("registry_state", ["missing", "unqualified", "wrong_identity"])
+def test_host_diagnostic_rejects_unknown_profile_before_host_or_credential_access(
+    monkeypatch: pytest.MonkeyPatch, registry_state: str
+) -> None:
+    from dataclasses import replace
+    from types import MappingProxyType
+
+    semantic = load_semantic_review()
+    original = semantic._HOST_CAPABILITY_PROFILES[semantic.WORKER_BOUNDARY_CONTRACT_ID]
+    registries = {
+        "missing": {},
+        "unqualified": {
+            original.contract_id: replace(original, provenance="candidate_unqualified")
+        },
+        "wrong_identity": {
+            original.contract_id: replace(original, contract_id="different.profile.v2")
+        },
+    }
+    monkeypatch.setattr(
+        semantic,
+        "_HOST_CAPABILITY_PROFILES",
+        MappingProxyType(registries[registry_state]),
+    )
+    monkeypatch.setattr(
+        semantic,
+        "_observed_darwin_build",
+        lambda: pytest.fail("Unknown profile must reject before host probes"),
+    )
+    monkeypatch.setattr(
+        semantic,
+        "_codex_home_boundary_inputs",
+        lambda: pytest.fail("A host diagnostic must not read credentials"),
+    )
+
+    with pytest.raises(ValueError, match="Unknown or unqualified"):
+        semantic.inspect_execution_host()
+
+
+@pytest.mark.parametrize("feature", ["shell_tool", "code_mode_host"])
+def test_semantic_validate_rejects_rehashed_profile_capability_argv_tamper(
+    tmp_path: Path, feature: str
+) -> None:
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    semantic.prepare_semantic_review(reconciliation, output)
+    graph = json.loads((output / "residual_candidate_graph.json").read_text())
+    response, events = _write_semantic_worker_result(
+        output, _valid_semantic_response(graph)
+    )
+    receipt_path = output / "luna_launch_receipt.json"
+    receipt = json.loads(receipt_path.read_text())
+    argv = receipt["process"]["redacted_argv"]
+    position = argv.index(feature)
+    del argv[position - 1 : position + 1]
+    content = dict(receipt)
+    content.pop("content_sha256")
+    receipt["content_sha256"] = semantic.canonical_json_sha256(content)
+    receipt_path.write_text(json.dumps(receipt))
+
+    with pytest.raises(ValueError, match="launch process receipt"):
+        semantic.validate_semantic_review(
+            reconciliation,
+            output,
+            output / "residual_candidate_graph.json",
+            response,
+            events,
+        )

@@ -48,7 +48,7 @@ if (
     or len(_BOOTSTRAP_BYTES) != _BOOTSTRAP_AFTER.st_size
 ):
     raise RuntimeError("Journal–Bank implementation bootstrap changed while read.")
-_BOOTSTRAP_NAMESPACE = {
+_BOOTSTRAP_NAMESPACE: dict[str, object] = {
     "__file__": _BOOTSTRAP_PATH,
     "__name__": "_journal_bank_implementation_bootstrap",
 }
@@ -56,7 +56,10 @@ _BOOTSTRAP_NAMESPACE = {
 exec(  # nosec B102
     compile(_BOOTSTRAP_BYTES, _BOOTSTRAP_PATH, "exec"), _BOOTSTRAP_NAMESPACE
 )
-_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"]()
+_ACTIVATE_BOUNDARY = _BOOTSTRAP_NAMESPACE["activate_implementation_boundary"]
+if not callable(_ACTIVATE_BOUNDARY):
+    raise RuntimeError("Journal–Bank bootstrap activation is not callable.")
+_ACTIVATE_BOUNDARY()
 _SCRIPTS_DIR = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))
 if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
@@ -79,9 +82,11 @@ import tempfile
 import time
 import uuid
 from collections import Counter, deque
+from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from types import MappingProxyType
+from typing import Any, Literal, Mapping, Sequence, overload
 
 import polars as pl
 from journal_bank_core import (
@@ -105,6 +110,7 @@ from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
     validate_client_workflow_run,
+    validate_reviewed_decision_receipt,
 )
 
 __all__ = [
@@ -125,6 +131,9 @@ __all__ = [
     "VALIDATED_SUGGESTIONS_NAME",
     "WORKER_RUN_NAME",
     "run_isolated_luna_worker",
+    "resolve_worker_selection",
+    "load_worker_selection",
+    "inspect_execution_host",
     "main",
     "prepare_semantic_review",
     "run_semantic_resolution_pipeline",
@@ -181,16 +190,6 @@ RESOLUTION_RANK = {level: rank for rank, level in enumerate(RESOLUTION_LEVELS)}
 DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
 
 WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
-PINNED_DARWIN_BUILD = "25F84"
-PINNED_CODEX_VERSION = "codex-cli 0.148.0-alpha.21"
-PINNED_CODEX_SHA256 = "5e508bd40c1bdd2d9798a269839c16935c71941e5709c097b0a527bee52977ab"
-PINNED_SANDBOX_EXEC_SHA256 = (
-    "8290e4be7387a0df83cd1559e86afd880464f269450573d012795761fe298f16"
-)
-PINNED_CAT_SHA256 = "9e4bb13f36ffcc1ff2152738e185637f5b7c97977044bb88a3708cbba2c351ec"
-SANDBOX_EXEC_PATH = Path("/usr/bin/sandbox-exec")
-SANDBOX_CANARY_PATH = Path("/bin/cat")
-
 SEATBELT_PROFILE = """(version 1)
 (deny default)
 (import "system.sb")
@@ -217,10 +216,6 @@ SEATBELT_PROFILE = """(version 1)
   (global-name "com.apple.SystemConfiguration.configd"))
 (allow network-outbound)
 """
-PINNED_SEATBELT_PROFILE_SHA256 = (
-    "c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be"
-)
-
 MAX_COMPONENT_BANK_ROWS = 20
 MAX_COMPONENT_JOURNAL_ROWS = 40
 MAX_COMPONENT_EDGES = 100
@@ -251,7 +246,7 @@ MAX_DETAIL_ITEMS = 5
 MAX_EVIDENCE_FIELDS = 8
 MAX_OPERATIONAL_BANK_ITEMS = 1_900
 
-DISABLED_WORKER_FEATURES = (
+_LEGACY_DISABLED_WORKER_FEATURES = (
     "apps",
     "auth_elicitation",
     "browser_use",
@@ -278,6 +273,75 @@ DISABLED_WORKER_FEATURES = (
     "unified_exec",
     "workspace_dependencies",
 )
+
+
+@dataclass(frozen=True)
+class _HostCapabilityProfile:
+    """Immutable exact security envelope; identity checks are reproducible."""
+
+    contract_id: str
+    provenance: str
+    platform: str
+    darwin_build: str
+    codex_version: str
+    codex_sha256: str
+    sandbox_exec_path: Path
+    sandbox_exec_sha256: str
+    canary_path: Path
+    canary_sha256: str
+    seatbelt_sha256: str
+    disabled_features: tuple[str, ...]
+    qualification_basis: str
+
+
+_HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyType(
+    {
+        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+            provenance="retained_legacy",
+            platform="Darwin",
+            darwin_build="25F84",
+            codex_version="codex-cli 0.148.0-alpha.21",
+            codex_sha256="5e508bd40c1bdd2d9798a269839c16935c71941e5709c097b0a527bee52977ab",
+            sandbox_exec_path=Path("/usr/bin/sandbox-exec"),
+            sandbox_exec_sha256="8290e4be7387a0df83cd1559e86afd880464f269450573d012795761fe298f16",
+            canary_path=Path("/bin/cat"),
+            canary_sha256="9e4bb13f36ffcc1ff2152738e185637f5b7c97977044bb88a3708cbba2c351ec",
+            seatbelt_sha256="c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be",
+            disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
+            qualification_basis="pinned_hidden_view_image_outside_nonce_denied",
+        )
+    }
+)
+
+
+def _resolve_host_profile(
+    contract_id: str = WORKER_BOUNDARY_CONTRACT_ID,
+) -> _HostCapabilityProfile:
+    """Resolve packaged legacy authority, never a runtime qualification claim."""
+    if not isinstance(contract_id, str):
+        raise ValueError("Unknown or unqualified native worker host profile")
+    profile = _HOST_CAPABILITY_PROFILES.get(contract_id)
+    if (
+        profile is None
+        or profile.contract_id != contract_id
+        or profile.provenance != "retained_legacy"
+    ):
+        raise ValueError("Unknown or unqualified native worker host profile")
+    return profile
+
+
+# Compatibility names are derived from the sole record; enforcement uses it.
+PINNED_DARWIN_BUILD = _resolve_host_profile().darwin_build
+PINNED_CODEX_VERSION = _resolve_host_profile().codex_version
+PINNED_CODEX_SHA256 = _resolve_host_profile().codex_sha256
+PINNED_SANDBOX_EXEC_SHA256 = _resolve_host_profile().sandbox_exec_sha256
+PINNED_CAT_SHA256 = _resolve_host_profile().canary_sha256
+PINNED_SEATBELT_PROFILE_SHA256 = _resolve_host_profile().seatbelt_sha256
+SANDBOX_EXEC_PATH = _resolve_host_profile().sandbox_exec_path
+SANDBOX_CANARY_PATH = _resolve_host_profile().canary_path
+DISABLED_WORKER_FEATURES = _resolve_host_profile().disabled_features
+
 
 CURRENT_GENERATION_FILES = (
     # Remove the completed marker and validated pair first so a partial archive
@@ -945,6 +1009,18 @@ def _resolution_state_payload(
     return {**content, "content_sha256": canonical_json_sha256(content)}
 
 
+@overload
+def _load_resolution_state(
+    path: Path, *, required: Literal[True]
+) -> dict[str, Any]: ...
+
+
+@overload
+def _load_resolution_state(
+    path: Path, *, required: Literal[False]
+) -> dict[str, Any] | None: ...
+
+
 def _load_resolution_state(path: Path, *, required: bool) -> dict[str, Any] | None:
     if not path.exists():
         if required:
@@ -1223,11 +1299,11 @@ def _artifact_roots_from_intake(
             raise ValueError(f"Run intake {field} must be an absolute path")
         return Path(value).expanduser()
 
-    declared_output = intake.get("output_dir")
+    declared_output_value = intake.get("output_dir")
     if (
-        not isinstance(declared_output, str)
-        or not Path(declared_output).is_absolute()
-        or Path(declared_output).expanduser().resolve() != output_dir
+        not isinstance(declared_output_value, str)
+        or not Path(declared_output_value).is_absolute()
+        or Path(declared_output_value).expanduser().resolve() != output_dir
     ):
         raise ValueError("Run intake output directory is stale")
     sample_value = assumptions.get("sample_path")
@@ -1696,7 +1772,13 @@ def _graph_content(
     client_engagement: Mapping[str, Any] | None = None,
     required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
     prior_resolution_state: Mapping[str, Any] | None = None,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    model, effort, selection_review = resolve_worker_selection(
+        workflow_id="journal-bank-reconciliation",
+        reasoning_effort="max" if worker_selection is None else None,
+        worker_selection=worker_selection,
+    )
     if (
         required_resolution_level not in RESOLUTION_RANK
         or required_resolution_level == "unresolved"
@@ -1826,15 +1908,20 @@ def _graph_content(
         },
         "requested_worker_configuration": {
             "execution": "separate_pinned_codex_exec",
-            "model": "gpt-5.6-luna",
-            "reasoning_effort": "max",
+            "model": model,
+            "reasoning_effort": effort,
+            **(
+                {"selection_review": selection_review}
+                if selection_review is not None
+                else {}
+            ),
             "ephemeral": True,
             "inner_sandbox": "read-only",
-            "outer_filesystem_boundary": WORKER_BOUNDARY_CONTRACT_ID,
+            "outer_filesystem_boundary": _resolve_host_profile().contract_id,
             "project_rules_loaded": False,
             "global_instructions_required_empty": True,
             "working_directory": "ephemeral_worker_capsule",
-            "disabled_features": list(DISABLED_WORKER_FEATURES),
+            "disabled_features": list(_resolve_host_profile().disabled_features),
             "main_chat_model_change": False,
         },
         "source_binding": source_binding,
@@ -2141,9 +2228,16 @@ def prepare_semantic_review(
     *,
     client_engagement: Mapping[str, Any] | None = None,
     required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Write a deterministic bounded graph, prompt, and worker output schema."""
 
+    # Reject an invalid selection before archiving any existing generation.
+    resolve_worker_selection(
+        workflow_id="journal-bank-reconciliation",
+        reasoning_effort="max" if worker_selection is None else None,
+        worker_selection=worker_selection,
+    )
     reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
     semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
     cumulative_state = _load_resolution_state(
@@ -2156,6 +2250,7 @@ def prepare_semantic_review(
         client_engagement=client_engagement,
         required_resolution_level=required_resolution_level,
         prior_resolution_state=cumulative_state,
+        worker_selection=worker_selection,
     )
     graph_path = _safe_output_path(semantic, CANDIDATE_GRAPH_NAME)
     schema_path = _safe_output_path(semantic, OUTPUT_SCHEMA_NAME)
@@ -2213,6 +2308,9 @@ def _validate_graph_and_preparation_files(
     required_resolution_level = resolution_policy.get("required_level")
     if not isinstance(required_resolution_level, str):
         raise ValueError("Candidate graph required resolution level is unavailable")
+    configuration = graph.get("requested_worker_configuration")
+    if not isinstance(configuration, dict):
+        raise ValueError("Candidate graph worker configuration is unavailable")
     prior_state = _load_resolution_state(
         _required_child(
             semantic / PRIOR_RESOLUTION_STATE_NAME,
@@ -2226,6 +2324,7 @@ def _validate_graph_and_preparation_files(
         client_engagement=client_engagement,
         required_resolution_level=required_resolution_level,
         prior_resolution_state=prior_state,
+        worker_selection=configuration.get("selection_review"),
     )
     if prior_state != expected_prior_state:
         raise ValueError("Prior semantic resolution state is stale or modified")
@@ -2258,7 +2357,7 @@ def _validate_graph_and_preparation_files(
     return graph
 
 
-def _darwin_build_version() -> str:
+def _observed_darwin_build() -> str:
     if platform.system() != "Darwin":
         raise ValueError("The isolated Luna worker is qualified only on macOS")
     try:
@@ -2275,9 +2374,75 @@ def _darwin_build_version() -> str:
         build = completed.stdout.decode("ascii").strip()
     except UnicodeDecodeError as exc:
         raise ValueError("macOS build output is invalid") from exc
-    if completed.returncode != 0 or build != PINNED_DARWIN_BUILD:
+    if completed.returncode != 0 or not build:
+        raise ValueError("Unable to identify the macOS build")
+    return build
+
+
+def _darwin_build_version(profile: _HostCapabilityProfile | None = None) -> str:
+    profile = profile or _resolve_host_profile()
+    build = _observed_darwin_build()
+    if build != profile.darwin_build:
         raise ValueError("The macOS build has not been qualified for Luna isolation")
     return build
+
+
+def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
+    """Inspect qualification prerequisites without credentials or a worker launch."""
+
+    profile = _resolve_host_profile()
+    checks: list[dict[str, Any]] = []
+    try:
+        build = _observed_darwin_build()
+    except ValueError as exc:
+        checks.append(
+            {"check": "os_build", "status": "unsupported", "reason": str(exc)}
+        )
+    else:
+        checks.append(
+            {
+                "check": "os_build",
+                "observed": build,
+                "required": profile.darwin_build,
+                "status": "matched" if build == profile.darwin_build else "unsupported",
+            }
+        )
+    try:
+        codex = _resolved_codex_binary(codex_bin)
+    except ValueError as exc:
+        checks.append(
+            {"check": "codex_binary", "status": "unsupported", "reason": str(exc)}
+        )
+        codex = None
+    for label, path, digest in (
+        ("codex_binary", codex, profile.codex_sha256),
+        ("sandbox_binary", profile.sandbox_exec_path, profile.sandbox_exec_sha256),
+        ("canary_binary", profile.canary_path, profile.canary_sha256),
+    ):
+        if path is None:
+            continue
+        try:
+            _stable_executable_binding(path, label=label, expected_sha256=digest)
+        except (OSError, ValueError) as exc:
+            checks.append({"check": label, "status": "unsupported", "reason": str(exc)})
+        else:
+            checks.append({"check": label, "status": "matched"})
+    return {
+        "schema_version": 1,
+        "qualification_profile": profile.contract_id,
+        "profile_provenance": profile.provenance,
+        "requested_model": "gpt-5.6-luna",
+        "required_codex_version": profile.codex_version,
+        "status": (
+            "prerequisites_match"
+            if all(item["status"] == "matched" for item in checks)
+            else "unsupported"
+        ),
+        "checks": checks,
+        "worker_executed": False,
+        "canaries_executed": False,
+        "limitation": "Matching prerequisites is not run qualification; native boundary canaries and validated worker output remain required.",
+    }
 
 
 def _resolved_codex_binary(codex_bin: Path | None) -> Path:
@@ -2303,7 +2468,9 @@ def _seatbelt_prefix(
     state_dir: Path,
     log_dir: Path,
     boundary_inputs: Mapping[str, Any],
+    host_profile: _HostCapabilityProfile | None = None,
 ) -> list[str]:
+    profile = host_profile or _resolve_host_profile()
     parameters = {
         "CODEX_BIN": executable,
         "CODEX_HOME_DIR": boundary_inputs["codex_home"],
@@ -2316,33 +2483,39 @@ def _seatbelt_prefix(
         "STATE_DIR": state_dir,
         "LOG_DIR": log_dir,
     }
-    command = [str(SANDBOX_EXEC_PATH)]
+    command = [str(profile.sandbox_exec_path)]
     for name, value in parameters.items():
         command.extend(["-D", f"{name}={value}"])
     command.extend(["-f", str(profile_path), str(executable)])
     return command
 
 
-def _qualified_executables(codex_bin: Path | None) -> dict[str, Any]:
-    build = _darwin_build_version()
+def _qualified_executables(
+    codex_bin: Path | None,
+    *,
+    profile_id: str = WORKER_BOUNDARY_CONTRACT_ID,
+) -> dict[str, Any]:
+    profile = _resolve_host_profile(profile_id)
+    build = _darwin_build_version(profile)
     resolved_codex = _resolved_codex_binary(codex_bin)
     return {
+        "host_profile": profile,
         "darwin_build": build,
         "codex_path": resolved_codex,
         "codex_binding": _stable_executable_binding(
             resolved_codex,
             label="Codex CLI",
-            expected_sha256=PINNED_CODEX_SHA256,
+            expected_sha256=profile.codex_sha256,
         ),
         "sandbox_exec_binding": _stable_executable_binding(
-            SANDBOX_EXEC_PATH,
+            profile.sandbox_exec_path,
             label="macOS sandbox-exec",
-            expected_sha256=PINNED_SANDBOX_EXEC_SHA256,
+            expected_sha256=profile.sandbox_exec_sha256,
         ),
         "canary_binding": _stable_executable_binding(
-            SANDBOX_CANARY_PATH,
+            profile.canary_path,
             label="macOS sandbox canary reader",
-            expected_sha256=PINNED_CAT_SHA256,
+            expected_sha256=profile.canary_sha256,
         ),
     }
 
@@ -2359,14 +2532,16 @@ def _qualification_canaries(
     boundary_inputs: Mapping[str, Any],
     executables: Mapping[str, Any],
 ) -> dict[str, Any]:
+    profile = executables["host_profile"]
     canary_prefix = _seatbelt_prefix(
-        executable=SANDBOX_CANARY_PATH,
+        executable=profile.canary_path,
         profile_path=profile_path,
         schema_path=schema_path,
         work_dir=capsule,
         state_dir=state_dir,
         log_dir=log_dir,
         boundary_inputs=boundary_inputs,
+        host_profile=profile,
     )
     allowed = _run_captured_process(
         [*canary_prefix, str(schema_path)],
@@ -2411,6 +2586,7 @@ def _qualification_canaries(
         state_dir=state_dir,
         log_dir=log_dir,
         boundary_inputs=boundary_inputs,
+        host_profile=profile,
     )
     version_result = _run_captured_process(
         [*codex_prefix, "--version"],
@@ -2424,7 +2600,7 @@ def _qualification_canaries(
         version = version_result["stdout"].decode("utf-8").strip()
     except UnicodeDecodeError as exc:
         raise ValueError("Codex version output is not UTF-8") from exc
-    if version_result["return_code"] != 0 or version != PINNED_CODEX_VERSION:
+    if version_result["return_code"] != 0 or version != profile.codex_version:
         raise ValueError("Codex version did not match the qualified worker")
     return {
         "exact_schema_read_succeeded": True,
@@ -2441,7 +2617,9 @@ def _worker_inner_argv(
     log_dir: Path,
     model: str = "gpt-5.6-luna",
     reasoning_effort: str = "max",
+    host_profile: _HostCapabilityProfile | None = None,
 ) -> list[str]:
+    profile = host_profile or _resolve_host_profile()
     command = [
         "exec",
         "--ephemeral",
@@ -2452,7 +2630,7 @@ def _worker_inner_argv(
         "--cd",
         str(capsule),
     ]
-    for feature in DISABLED_WORKER_FEATURES:
+    for feature in profile.disabled_features:
         command.extend(["--disable", feature])
     command.extend(
         [
@@ -2481,7 +2659,9 @@ def _redacted_worker_argv(
     *,
     model: str = "gpt-5.6-luna",
     reasoning_effort: str = "max",
+    host_profile: _HostCapabilityProfile | None = None,
 ) -> list[str]:
+    profile = host_profile or _resolve_host_profile()
     command = [
         "sandbox-exec",
         "<exact-boundary-parameters>",
@@ -2495,7 +2675,7 @@ def _redacted_worker_argv(
         "--cd",
         "<capsule>",
     ]
-    for feature in DISABLED_WORKER_FEATURES:
+    for feature in profile.disabled_features:
         command.extend(["--disable", feature])
     command.extend(
         [
@@ -2556,6 +2736,80 @@ def _worker_banner_attestation(
     }
 
 
+def resolve_worker_selection(
+    *,
+    workflow_id: str,
+    reasoning_effort: str | None,
+    worker_selection: Mapping[str, Any] | None,
+) -> tuple[str, str, dict[str, Any] | None]:
+    """Bind an explicit model choice to the shared reviewed-decision contract.
+
+    These mechanical checks prevent configuration drift; they do not authenticate
+    the reviewer or establish benchmark quality. Native host qualification is
+    enforced separately and cannot be overridden by this receipt.
+    """
+
+    allowed_efforts = {"none", "low", "medium", "high", "xhigh", "max"}
+    if worker_selection is None:
+        effort = "low" if reasoning_effort is None else reasoning_effort
+        if effort not in allowed_efforts:
+            raise ValueError("Unsupported Luna reasoning effort")
+        return "gpt-5.6-luna", effort, None
+
+    review = validate_reviewed_decision_receipt(
+        worker_selection,
+        expected_decision_type="worker-model-selection",
+        expected_adapter_id="vera-native-worker",
+        expected_adapter_version="1",
+        require_reviewed=True,
+    )
+    content = review["content"]
+    _exact_fields(
+        content,
+        required={"workflow_id", "model", "reasoning_effort", "benchmark_sha256"},
+        label="Reviewed worker selection",
+    )
+    model = content["model"]
+    effort = content["reasoning_effort"]
+    benchmark_sha256 = content["benchmark_sha256"]
+    if content["workflow_id"] != workflow_id:
+        raise ValueError("Worker selection belongs to another workflow")
+    if (
+        not isinstance(model, str)
+        or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,79}", model) is None
+    ):
+        raise ValueError("Reviewed worker model identifier is invalid")
+    if not isinstance(effort, str) or effort not in allowed_efforts:
+        raise ValueError("Reviewed worker reasoning effort is invalid")
+    if reasoning_effort is not None and reasoning_effort != effort:
+        raise ValueError("Requested effort differs from the reviewed selection")
+    if (
+        not isinstance(benchmark_sha256, str)
+        or re.fullmatch(r"[0-9a-f]{64}", benchmark_sha256) is None
+    ):
+        raise ValueError("Worker selection requires a benchmark digest")
+    if review["source_artifact_refs"] != [f"benchmark-{benchmark_sha256}"]:
+        raise ValueError("Worker selection benchmark binding is stale")
+    return model, effort, review
+
+
+def load_worker_selection(
+    path: Path,
+    *,
+    workflow_id: str,
+    reasoning_effort: str | None = None,
+) -> tuple[str, str, dict[str, Any] | None]:
+    """Read stable bounded review bytes and validate their selection binding."""
+    review = _strict_json_file(
+        path, maximum_bytes=MAX_PROMPT_BYTES, label="Reviewed worker selection"
+    )
+    return resolve_worker_selection(
+        workflow_id=workflow_id,
+        reasoning_effort=reasoning_effort,
+        worker_selection=review,
+    )
+
+
 def run_isolated_luna_worker(
     *,
     prompt: str,
@@ -2563,7 +2817,8 @@ def run_isolated_luna_worker(
     output_dir: Path,
     workflow_id: str,
     packet_sha256: str,
-    reasoning_effort: str = "low",
+    reasoning_effort: str | None = None,
+    worker_selection: Mapping[str, Any] | None = None,
     codex_bin: Path | None = None,
     timeout_seconds: int = WORKER_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
@@ -2575,8 +2830,11 @@ def run_isolated_luna_worker(
     process capture, event lifecycle, and content-bound launch receipt.
     """
 
-    if reasoning_effort not in {"none", "low", "medium", "high", "xhigh", "max"}:
-        raise ValueError("Unsupported Luna reasoning effort")
+    model, reasoning_effort, selection_review = resolve_worker_selection(
+        workflow_id=workflow_id,
+        reasoning_effort=reasoning_effort,
+        worker_selection=worker_selection,
+    )
     if (
         not workflow_id
         or len(workflow_id) > 80
@@ -2596,20 +2854,21 @@ def run_isolated_luna_worker(
     if len(schema_bytes) > MAX_PROMPT_BYTES:
         raise ValueError("Luna output schema exceeds the bounded packet limit")
 
-    output = output_dir.expanduser().resolve()
-    if output.is_symlink() or not output.is_dir():
+    unresolved_output = output_dir.expanduser().absolute()
+    if unresolved_output.is_symlink() or not unresolved_output.is_dir():
         raise ValueError("Luna output directory must already be an ordinary directory")
+    output = unresolved_output.resolve()
     artifact_names = (RESPONSE_NAME, EVENTS_NAME, STDERR_NAME, LAUNCH_RECEIPT_NAME)
     for name in artifact_names:
         _new_output_path(output, name)
 
     boundary_inputs = _codex_home_boundary_inputs()
     executables = _qualified_executables(codex_bin)
+    profile = executables["host_profile"]
     profile_sha256 = hashlib.sha256(SEATBELT_PROFILE.encode("utf-8")).hexdigest()
-    if profile_sha256 != PINNED_SEATBELT_PROFILE_SHA256:
+    if profile_sha256 != profile.seatbelt_sha256:
         raise ValueError("Seatbelt profile does not match the qualified boundary")
 
-    model = "gpt-5.6-luna"
     capsule = Path(
         tempfile.mkdtemp(prefix=".luna-worker-capsule.", dir=output)
     ).resolve()
@@ -2648,12 +2907,14 @@ def run_isolated_luna_worker(
             state_dir=state_dir,
             log_dir=log_dir,
             boundary_inputs=boundary_inputs,
+            host_profile=profile,
         )
         worker_inner = _worker_inner_argv(
             capsule=capsule,
             schema_path=capsule_schema,
             state_dir=state_dir,
             log_dir=log_dir,
+            host_profile=profile,
             model=model,
             reasoning_effort=reasoning_effort,
         )
@@ -2691,19 +2952,19 @@ def run_isolated_luna_worker(
             (
                 executables["codex_path"],
                 "Codex CLI",
-                PINNED_CODEX_SHA256,
+                profile.codex_sha256,
                 executables["codex_binding"],
             ),
             (
-                SANDBOX_EXEC_PATH,
+                profile.sandbox_exec_path,
                 "macOS sandbox-exec",
-                PINNED_SANDBOX_EXEC_SHA256,
+                profile.sandbox_exec_sha256,
                 executables["sandbox_exec_binding"],
             ),
             (
-                SANDBOX_CANARY_PATH,
+                profile.canary_path,
                 "macOS sandbox canary reader",
-                PINNED_CAT_SHA256,
+                profile.canary_sha256,
                 executables["canary_binding"],
             ),
         ):
@@ -2732,21 +2993,26 @@ def run_isolated_luna_worker(
             "requested_worker_configuration": {
                 "model": model,
                 "reasoning_effort": reasoning_effort,
+                **(
+                    {"selection_review": selection_review}
+                    if selection_review is not None
+                    else {}
+                ),
                 "sandbox": "read-only",
                 "ephemeral": True,
                 "project_rules_ignored": True,
                 "direct_model_api": False,
             },
             "boundary": {
-                "contract_id": WORKER_BOUNDARY_CONTRACT_ID,
-                "platform": "Darwin",
+                "contract_id": profile.contract_id,
+                "platform": profile.platform,
                 "darwin_build": executables["darwin_build"],
                 "profile_sha256": profile_sha256,
                 "codex_path": str(executables["codex_path"]),
                 "codex_sha256": executables["codex_binding"]["sha256"],
                 "codex_bytes": executables["codex_binding"]["byte_count"],
-                "codex_version": PINNED_CODEX_VERSION,
-                "sandbox_exec_path": str(SANDBOX_EXEC_PATH),
+                "codex_version": profile.codex_version,
+                "sandbox_exec_path": str(profile.sandbox_exec_path),
                 "sandbox_exec_sha256": executables["sandbox_exec_binding"]["sha256"],
                 "canary_reader_sha256": executables["canary_binding"]["sha256"],
                 "canaries": canaries,
@@ -2761,6 +3027,7 @@ def run_isolated_luna_worker(
                 "timed_out": False,
                 "duration_ms": process_result["duration_ms"],
                 "redacted_argv": _redacted_worker_argv(
+                    host_profile=profile,
                     model=model,
                     reasoning_effort=reasoning_effort,
                 ),
@@ -2813,6 +3080,11 @@ def run_isolated_luna_worker(
             "duration_ms": process_result["duration_ms"],
             "model": model,
             "reasoning_effort": reasoning_effort,
+            **(
+                {"selection_review": selection_review}
+                if selection_review is not None
+                else {}
+            ),
             "main_chat_model_change": False,
         }
     except (OSError, ValueError):
@@ -2937,9 +3209,13 @@ def run_semantic_worker(
         raise ValueError("Worker output schema is stale or modified")
     prompt_bytes = prompt_text.encode("utf-8")
     boundary_inputs = _codex_home_boundary_inputs()
-    executables = _qualified_executables(codex_bin)
+    executables = _qualified_executables(
+        codex_bin,
+        profile_id=graph["requested_worker_configuration"]["outer_filesystem_boundary"],
+    )
+    profile = executables["host_profile"]
     profile_sha256 = hashlib.sha256(SEATBELT_PROFILE.encode("utf-8")).hexdigest()
-    if profile_sha256 != PINNED_SEATBELT_PROFILE_SHA256:
+    if profile_sha256 != profile.seatbelt_sha256:
         raise ValueError("Seatbelt profile does not match the qualified boundary")
 
     capsule = Path(
@@ -2980,12 +3256,18 @@ def run_semantic_worker(
             state_dir=state_dir,
             log_dir=log_dir,
             boundary_inputs=boundary_inputs,
+            host_profile=profile,
         )
         worker_inner = _worker_inner_argv(
             capsule=capsule,
             schema_path=capsule_schema,
             state_dir=state_dir,
             log_dir=log_dir,
+            host_profile=profile,
+            model=graph["requested_worker_configuration"]["model"],
+            reasoning_effort=graph["requested_worker_configuration"][
+                "reasoning_effort"
+            ],
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
@@ -3025,25 +3307,25 @@ def run_semantic_worker(
             _stable_executable_binding(
                 executables["codex_path"],
                 label="Codex CLI",
-                expected_sha256=PINNED_CODEX_SHA256,
+                expected_sha256=profile.codex_sha256,
             )
             != executables["codex_binding"]
         ):
             raise ValueError("Codex CLI changed while Luna was running")
         if (
             _stable_executable_binding(
-                SANDBOX_EXEC_PATH,
+                profile.sandbox_exec_path,
                 label="macOS sandbox-exec",
-                expected_sha256=PINNED_SANDBOX_EXEC_SHA256,
+                expected_sha256=profile.sandbox_exec_sha256,
             )
             != executables["sandbox_exec_binding"]
         ):
             raise ValueError("macOS sandbox-exec changed while Luna was running")
         if (
             _stable_executable_binding(
-                SANDBOX_CANARY_PATH,
+                profile.canary_path,
                 label="macOS sandbox canary reader",
-                expected_sha256=PINNED_CAT_SHA256,
+                expected_sha256=profile.canary_sha256,
             )
             != executables["canary_binding"]
         ):
@@ -3063,15 +3345,15 @@ def run_semantic_worker(
             },
             "requested_worker_configuration": graph["requested_worker_configuration"],
             "boundary": {
-                "contract_id": WORKER_BOUNDARY_CONTRACT_ID,
-                "platform": "Darwin",
+                "contract_id": profile.contract_id,
+                "platform": profile.platform,
                 "darwin_build": executables["darwin_build"],
                 "profile_sha256": profile_sha256,
                 "codex_path": str(executables["codex_path"]),
                 "codex_sha256": executables["codex_binding"]["sha256"],
                 "codex_bytes": executables["codex_binding"]["byte_count"],
-                "codex_version": PINNED_CODEX_VERSION,
-                "sandbox_exec_path": str(SANDBOX_EXEC_PATH),
+                "codex_version": profile.codex_version,
+                "sandbox_exec_path": str(profile.sandbox_exec_path),
                 "sandbox_exec_sha256": executables["sandbox_exec_binding"]["sha256"],
                 "canary_reader_sha256": executables["canary_binding"]["sha256"],
                 "canaries": canaries,
@@ -3080,15 +3362,19 @@ def run_semantic_worker(
                 "installation_id_preexisting_and_unchanged": True,
                 "outbound_network_allowed": True,
                 "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
-                "qualification_basis": (
-                    "pinned_hidden_view_image_outside_nonce_denied"
-                ),
+                "qualification_basis": profile.qualification_basis,
             },
             "process": {
                 "return_code": process_result["return_code"],
                 "timed_out": False,
                 "duration_ms": process_result["duration_ms"],
-                "redacted_argv": _redacted_worker_argv(),
+                "redacted_argv": _redacted_worker_argv(
+                    host_profile=profile,
+                    model=graph["requested_worker_configuration"]["model"],
+                    reasoning_effort=graph["requested_worker_configuration"][
+                        "reasoning_effort"
+                    ],
+                ),
                 "response_sha256": response_sha256,
                 "response_bytes": len(response_bytes),
                 "events_sha256": events_sha256,
@@ -3637,27 +3923,37 @@ def _validate_launch_receipt(
     codex_path = boundary["codex_path"]
     if not isinstance(codex_path, str) or not Path(codex_path).is_absolute():
         raise ValueError("Luna launch Codex path is invalid")
+    profile = _resolve_host_profile(boundary["contract_id"])
+    if (
+        graph["requested_worker_configuration"]["outer_filesystem_boundary"]
+        != profile.contract_id
+    ):
+        raise ValueError("Luna graph and launch host profiles differ")
+    if graph["requested_worker_configuration"]["disabled_features"] != list(
+        profile.disabled_features
+    ):
+        raise ValueError("Luna graph host capabilities differ")
     expected_boundary = {
-        "contract_id": WORKER_BOUNDARY_CONTRACT_ID,
-        "platform": "Darwin",
-        "darwin_build": PINNED_DARWIN_BUILD,
-        "profile_sha256": PINNED_SEATBELT_PROFILE_SHA256,
-        "codex_sha256": PINNED_CODEX_SHA256,
-        "codex_version": PINNED_CODEX_VERSION,
-        "sandbox_exec_path": str(SANDBOX_EXEC_PATH),
-        "sandbox_exec_sha256": PINNED_SANDBOX_EXEC_SHA256,
-        "canary_reader_sha256": PINNED_CAT_SHA256,
+        "contract_id": profile.contract_id,
+        "platform": profile.platform,
+        "darwin_build": profile.darwin_build,
+        "profile_sha256": profile.seatbelt_sha256,
+        "codex_sha256": profile.codex_sha256,
+        "codex_version": profile.codex_version,
+        "sandbox_exec_path": str(profile.sandbox_exec_path),
+        "sandbox_exec_sha256": profile.sandbox_exec_sha256,
+        "canary_reader_sha256": profile.canary_sha256,
         "canaries": {
             "exact_schema_read_succeeded": True,
             "outside_capsule_read_denied": True,
-            "codex_version_inside_boundary": PINNED_CODEX_VERSION,
+            "codex_version_inside_boundary": profile.codex_version,
         },
         "global_instructions_absent_or_empty": True,
         "auth_file_readable_by_codex_process": True,
         "installation_id_preexisting_and_unchanged": True,
         "outbound_network_allowed": True,
         "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
-        "qualification_basis": "pinned_hidden_view_image_outside_nonce_denied",
+        "qualification_basis": profile.qualification_basis,
     }
     for key, expected in expected_boundary.items():
         if boundary[key] != expected:
@@ -3686,7 +3982,14 @@ def _validate_launch_receipt(
     if (
         process["return_code"] != 0
         or process["timed_out"] is not False
-        or process["redacted_argv"] != _redacted_worker_argv()
+        or process["redacted_argv"]
+        != _redacted_worker_argv(
+            host_profile=profile,
+            model=graph["requested_worker_configuration"]["model"],
+            reasoning_effort=graph["requested_worker_configuration"][
+                "reasoning_effort"
+            ],
+        )
         or process["response_sha256"] != response_sha256
         or process["response_bytes"] != response_bytes
         or process["events_sha256"] != events_sha256
@@ -4027,14 +4330,14 @@ def _apply_resolution_funnel(
     assignments: list[dict[str, Any]] = []
     for row in bank_rows:
         bank_id = str(row["transaction_id"])
-        matches_for_bank = deterministic_matches.get(bank_id)
+        selected_matches = deterministic_matches.get(bank_id)
         decision = semantic_decisions.get(bank_id)
-        if matches_for_bank is not None:
-            level = deterministic_resolution_level(matches_for_bank)
+        if selected_matches is not None:
+            level = deterministic_resolution_level(selected_matches)
             authority = "deterministic"
             journal_ids = [
                 str(match["journal_transaction_id"])
-                for match in matches_for_bank
+                for match in selected_matches
                 if match.get("journal_transaction_id")
             ]
             journal_id = journal_ids[0] if len(journal_ids) == 1 else None
@@ -4043,12 +4346,12 @@ def _apply_resolution_funnel(
             evidence_fields = [
                 "amount_abs",
                 "transaction_date",
-                *sorted({str(match.get("stage")) for match in matches_for_bank}),
+                *sorted({str(match.get("stage")) for match in selected_matches}),
             ]
             contradictions: list[str] = []
             rationale = (
                 "Deterministic relationship replay across "
-                f"{len(matches_for_bank)} allocation edge(s)."
+                f"{len(selected_matches)} allocation edge(s)."
             )
             requested_evidence: list[str] = []
             verdict = "matched"
@@ -4115,7 +4418,7 @@ def _apply_resolution_funnel(
                     "stable_identifier_matched": (
                         level in {"identifier_match", "perfect_match"}
                     ),
-                    "deterministic_relationship": matches_for_bank is not None,
+                    "deterministic_relationship": selected_matches is not None,
                     "exact_relationship": level == "perfect_match",
                 },
             }
@@ -4430,6 +4733,7 @@ def run_semantic_resolution_pipeline(
     required_resolution_level: str,
     codex_bin: Path | None = None,
     client_engagement: Mapping[str, Any] | None = None,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Run at most one worker when the complete residual fits one packet.
 
@@ -4443,6 +4747,7 @@ def run_semantic_resolution_pipeline(
         semantic_output_dir,
         client_engagement=client_engagement,
         required_resolution_level=required_resolution_level,
+        worker_selection=worker_selection,
     )
     reviewed_count = int(prepared["reviewed_bank_count"])
     if not prepared["worker_required"]:
@@ -4500,6 +4805,7 @@ def run_semantic_resolution_pipeline(
         semantic_output_dir,
         client_engagement=client_engagement,
         required_resolution_level=required_resolution_level,
+        worker_selection=worker_selection,
     )
     if final_preparation["worker_required"]:
         raise ValueError("Semantic resolution attempted an automatic second packet")
@@ -4548,9 +4854,19 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging.")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    host_status = subparsers.add_parser(
+        "host-status",
+        help="Inspect qualified host prerequisites without reading client files or credentials.",
+    )
+    host_status.add_argument("--codex-bin", type=Path)
     prepare = subparsers.add_parser("prepare", help="Prepare a bounded worker packet.")
     prepare.add_argument("reconciliation_dir", type=Path)
     prepare.add_argument("--output-dir", type=Path, required=True)
+    prepare.add_argument(
+        "--worker-selection",
+        type=Path,
+        help="Reviewed worker-model-selection receipt; omit to retain Luna/max.",
+    )
     prepare.add_argument(
         "--required-level",
         choices=RESOLUTION_LEVELS[1:],
@@ -4571,6 +4887,11 @@ def _parser() -> argparse.ArgumentParser:
         help="Minimum certainty that removes a bank movement from human review.",
     )
     run_all.add_argument("--codex-bin", type=Path)
+    run_all.add_argument(
+        "--worker-selection",
+        type=Path,
+        help="Reviewed worker-model-selection receipt; omit to retain Luna/max.",
+    )
     _add_client_engagement_argument(run_all)
     run_worker = subparsers.add_parser(
         "run-worker",
@@ -4593,7 +4914,7 @@ def _parser() -> argparse.ArgumentParser:
 
 def _load_cli_client_engagement(args: argparse.Namespace) -> dict[str, Any]:
     input_paths = [args.reconciliation_dir]
-    for name in ("candidate_graph",):
+    for name in ("candidate_graph", "worker_selection"):
         value = getattr(args, name, None)
         if value is not None:
             input_paths.append(value)
@@ -4628,6 +4949,13 @@ def _record_cli_validation_failure(
         LOGGER.error("Unable to record semantic worker limitation: %s", status_error)
 
 
+def _load_cli_worker_selection(args: argparse.Namespace) -> dict[str, Any] | None:
+    path = getattr(args, "worker_selection", None)
+    if path is None:
+        return None
+    return load_worker_selection(path, workflow_id="journal-bank-reconciliation")[2]
+
+
 def _record_cli_launch_failure(
     args: argparse.Namespace,
     client_engagement: Mapping[str, Any],
@@ -4656,6 +4984,10 @@ def main() -> int:
 
     args = _parser().parse_args()
     configure_logging(args.verbose)
+    if args.command == "host-status":
+        result = inspect_execution_host(args.codex_bin)
+        LOGGER.info("%s", json.dumps(result, sort_keys=True))
+        return 0 if result["status"] == "prerequisites_match" else 2
     try:
         client_engagement = _load_cli_client_engagement(args)
     except AssuranceContractError as exc:
@@ -4668,6 +5000,7 @@ def main() -> int:
                 args.output_dir,
                 client_engagement=client_engagement,
                 required_resolution_level=args.required_level,
+                worker_selection=_load_cli_worker_selection(args),
             )
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PREPARATION_FAILED: %s", exc)
@@ -4687,6 +5020,7 @@ def main() -> int:
                 required_resolution_level=args.required_level,
                 codex_bin=args.codex_bin,
                 client_engagement=client_engagement,
+                worker_selection=_load_cli_worker_selection(args),
             )
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PIPELINE_FAILED: %s", exc)

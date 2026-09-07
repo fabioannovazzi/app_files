@@ -23,7 +23,7 @@ for _vendor_root in (
 
 from audit_core import AuditConfig, run_audit
 from cowork_worker import configured_runtime, run_cowork_chunk
-from luna_worker import run_luna_chunk
+from luna_worker import load_worker_selection, run_luna_chunk
 from vera_assurance import AssuranceContractError, load_client_engagement_context_file
 
 __all__ = ["main"]
@@ -49,9 +49,14 @@ def _arguments() -> argparse.Namespace:
     parser.add_argument("--concurrency", type=int, default=2)
     parser.add_argument("--max-retries", type=int, default=2)
     parser.add_argument(
+        "--worker-selection",
+        type=Path,
+        help="Explicit reviewed worker-model-selection receipt.",
+    )
+    parser.add_argument(
         "--reasoning-effort",
         choices=("low", "medium", "high", "xhigh", "max"),
-        default="low",
+        default=None,
     )
     parser.add_argument("--amount-tolerance", type=Decimal, default=Decimal("0.01"))
     parser.add_argument("--verbose", action="store_true")
@@ -69,7 +74,11 @@ def main() -> int:
     input_paths = [args.invoices, args.ledger, args.ledger_mapping]
     input_paths.extend(
         path
-        for path in (args.history_jsonl, args.chart_of_accounts_json)
+        for path in (
+            args.history_jsonl,
+            args.chart_of_accounts_json,
+            args.worker_selection,
+        )
         if path is not None
     )
     try:
@@ -81,6 +90,24 @@ def main() -> int:
         )
     except AssuranceContractError as exc:
         logging.getLogger(__name__).error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
+        return 2
+    try:
+        cowork = configured_runtime() == "cowork-haiku"
+        if cowork:
+            if args.worker_selection is not None or args.reasoning_effort not in (
+                None,
+                "low",
+            ):
+                raise ValueError("Cowork Haiku rejects Codex model or effort overrides")
+            model, effort, selection = "haiku", "low", None
+        else:
+            model, effort, selection = load_worker_selection(
+                args.worker_selection,
+                workflow_id="passive-invoice-audit",
+                reasoning_effort=args.reasoning_effort,
+            )
+    except (OSError, ValueError) as exc:
+        logging.getLogger(__name__).error("WORKER_SELECTION_BLOCKED: %s", exc)
         return 2
 
     history = []
@@ -108,11 +135,13 @@ def main() -> int:
         output_dir=args.output,
         runner=run_cowork_chunk if cowork else run_luna_chunk,
         config=AuditConfig(
-            semantic_model="haiku" if cowork else "gpt-5.6-luna",
+            worker_runtime="cowork" if cowork else "codex-native",
             chunk_size=args.chunk_size,
             concurrency=args.concurrency,
             max_retries=args.max_retries,
-            reasoning_effort=args.reasoning_effort,
+            reasoning_effort=effort,
+            worker_model=model,
+            worker_selection=selection,
             amount_tolerance=args.amount_tolerance,
         ),
         ledger_sheet=args.ledger_sheet,

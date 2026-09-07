@@ -155,6 +155,12 @@ Use the existing shared financial engine for linked monthly scenarios and
 reconciliation. The optional `commercial` driver rows calculate price/volume,
 contribution and break-even before a complete cash model exists. Disclose their
 cost scope; this is not a cash-survival assessment or funding recommendation.
+When the source gives operating-period economics without a calendar date, keep
+`periods: []`, `financial: null`, commercial-row `period: null`, and the relevant
+assumptions' `effective_periods: []`. Their calculation IDs use `undated` in the
+period position. Describe the operating period and cost scope from the source;
+do not insert the briefing month or another placeholder date to satisfy the
+compiler. Dated financial models still require their actual monthly periods.
 If both models cover the same scenario and period, reconcile revenue and operating
 result. Use canonical calculation IDs in financial narrative. External numerical
 facts can instead bind to a source-backed `external_fact` evidence record.

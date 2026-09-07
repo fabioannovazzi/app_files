@@ -25,6 +25,7 @@ if __name__ == "__main__":
                 "Managed Python launcher is missing; rebuild the plugin package."
             )
 
+
 import logging
 import sys
 from pathlib import Path

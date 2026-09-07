@@ -155,6 +155,7 @@ def record_intelligence(
     output_dir: Path,
     client_engagement: Path,
     model_output: Mapping[str, Any],
+    expected_packet_sha256: str,
     provider: str,
     model: str,
     prompt_template_version: str,
@@ -212,6 +213,13 @@ def record_intelligence(
             subject_ids=subject_ids,
             model_session_ref=model_session_ref,
         )
+        # Exact packet identity is mechanically verifiable; semantic validity alone
+        # cannot detect a response recorded against a different scope or revision.
+        if intelligence_packet_hash(packet) != expected_packet_sha256:
+            raise ValueError(
+                "packet digest mismatch: use the exact task, subjects and session "
+                "from the supplied packet; regenerate after input changes"
+            )
         packet_secret_paths = prohibited_secret_value_paths(packet, path="packet")
         if packet_secret_paths:
             raise ValueError(
@@ -568,6 +576,7 @@ def main(argv: list[str] | None = None) -> int:
     packet_parser.add_argument("--model-session-ref", required=True)
     record_parser = subparsers.add_parser("record")
     record_parser.add_argument("--model-output", required=True, type=Path)
+    record_parser.add_argument("--expected-packet-sha256", required=True)
     record_parser.add_argument("--provider", required=True)
     record_parser.add_argument("--model", required=True)
     record_parser.add_argument("--prompt-template-version", required=True)
@@ -601,6 +610,7 @@ def main(argv: list[str] | None = None) -> int:
         payload = record_intelligence(
             **common,
             model_output=load_json_object(args.model_output),
+            expected_packet_sha256=args.expected_packet_sha256,
             provider=args.provider,
             model=args.model,
             prompt_template_version=args.prompt_template_version,

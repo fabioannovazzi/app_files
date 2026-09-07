@@ -480,7 +480,12 @@ ZIPs during a professional communication run.
     model-assessment records, exact accepted visuals, and a
     `validation_pending` final manifest. Inspect the exact packaged email,
     Markdown, HTML, graphics, PDF, technical basis, and artifact card, then
-    accept that package digest. Only after this exact-package review may
+    accept that package digest. For a `no_publish` decision already accepted in
+    the semantic review matrix, run validation directly: the package contains
+    only six internal records, not communication drafts. Validation checks the
+    exact accepted reason, input/output hashes and review bindings; it does not
+    invent a packaged-output approval. An explicit package rejection still stops
+    validation. For publishable communication, only after exact-package review may
     validation write the receipt and change the status to `final_ready` or
     `no_publication_recommended`:
 
@@ -563,8 +568,9 @@ ZIPs during a professional communication run.
   scopes, separate acceptance of exact rendered bytes when present, successful
   acceptance of the exact packaged channel files, successful deterministic
   validation, and a digest-bound validation receipt.
-  `no_publication_recommended` becomes complete only after the same package
-  validation step.
+  `no_publication_recommended` becomes complete after internal-record validation
+  binds the accepted semantic review events and exact package digest. It does
+  not require another human package approval and cannot authorize delivery.
 - External delivery receipt recording rechecks all current output hashes and
   binds the visible receipt to the accepted package and validation-receipt
   digests.

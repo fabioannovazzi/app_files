@@ -470,14 +470,14 @@ def draw_pvm_decomposition_ladder(
         global_range = _combined_trace_extent(traces)
         fig.update_xaxes(range=list(global_range), matches="x")
     fig = move_labels_up(fig, chart, panel_titles)
-    fig.update_yaxes(autorange="reversed", ticks="")
+    fig.update_yaxes(type="category", autorange="reversed", ticks="")
     if delta_percent_label:
-        _baseline_label, comparison_label = _periods(component_recipe)
         for index in range(len(aggregations)):
             fig.add_annotation(
                 text=delta_percent_label,
                 x=comparison_total,
-                y=comparison_label,
+                # Numeric-looking period labels are parsed as coordinates by Plotly.
+                y=len(variance_array) - 1,
                 showarrow=False,
                 xshift=42,
                 yshift=-18,
@@ -710,12 +710,13 @@ def _draw_fallback_trace(
     title: str,
     extent: tuple[float, float] | None = None,
     delta_percent_label: str = "",
+    font_size: int | None = None,
 ) -> int:
     """Draw one waterfall trace with Pillow and return the next y position."""
 
-    title_font = _font(18)
-    body_font = _font(13)
-    label_font = _font(12)
+    title_font = _font(font_size or 18)
+    body_font = _font(font_size or 13)
+    label_font = _font(font_size or 12)
     row_height = 34
     bar_height = 20
     labels = [_strip_order_prefix(_clean_html(label)) for label in trace.y]
@@ -790,6 +791,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
         for annotation in getattr(fig.layout, "annotations", [])
     ]
     meta = fig.layout.meta if isinstance(fig.layout.meta, dict) else {}
+    font_size = meta.get("waterfall_font_size")
     delta_percent_label = str(meta.get("pvm_delta_percent_label") or "")
     small_multiples_grid = meta.get("waterfall_small_multiples_grid")
     delta_percent_labels = [
@@ -810,7 +812,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
         height = max(int(fig.layout.height or 0), top + panel_height * rows + 35)
         image = Image.new("RGB", (width, height), COLORS["white"])
         draw = ImageDraw.Draw(image)
-        title_font = _font(22)
+        title_font = _font(font_size or 22)
         for index, line in enumerate(title_lines):
             draw.text(
                 (36, 24 + index * 28),
@@ -847,7 +849,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
         height = max(int(fig.layout.height or 0), top + max(panel_heights) + 50)
         image = Image.new("RGB", (width, height), COLORS["white"])
         draw = ImageDraw.Draw(image)
-        title_font = _font(22)
+        title_font = _font(font_size or 22)
         for index, line in enumerate(title_lines):
             draw.text(
                 (36, 24 + index * 28),
@@ -868,6 +870,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
                 title=panel_title,
                 extent=shared_extent,
                 delta_percent_label=delta_percent_label,
+                font_size=font_size,
             )
         image.save(path, format="PNG")
         return
@@ -879,7 +882,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
     )
     image = Image.new("RGB", (width, height), COLORS["white"])
     draw = ImageDraw.Draw(image)
-    title_font = _font(22)
+    title_font = _font(font_size or 22)
     line_height = 28
     for index, line in enumerate(title_lines):
         draw.text(
@@ -903,6 +906,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
             title=panel_title,
             extent=shared_extent,
             delta_percent_label=delta_percent_label,
+            font_size=font_size,
         )
     image.save(path, format="PNG")
 

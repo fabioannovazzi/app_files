@@ -8,7 +8,10 @@ import pytest
 from openpyxl import Workbook, load_workbook
 
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "open-item-reconciliation" / "scripts"
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "open-item-reconciliation"
+    / "scripts"
 )
 SCRIPT = SCRIPTS / "build_missing_evidence_requests.py"
 
@@ -265,3 +268,91 @@ def test_missing_evidence_workbook_localizes_operational_language(
     assert category in flat_text
     assert "probable_bank_payment_candidate" not in flat_text
     assert "open_supported" not in flat_text
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_partial_payment_requests_only_residual_and_keeps_bank_reference(
+    tmp_path, language
+):
+    module = load_missing_requests()
+    pack = module.build_missing_evidence_request_pack(
+        [
+            {
+                "record_id": "partial-1",
+                "reconciliation_status": "partially_paid",
+                "amount": "1220.00",
+                "allocated_amount": "488.00",
+                "residual_amount": "732.00",
+                "document_no": "INV-1",
+                "matched_evidence_reference": "bank.pdf; row=2",
+            }
+        ],
+        language=language,
+    )
+    request = pack.request_sections["missing_evidence_needed"][0]
+    assert request["amount"] == "732.00"
+    assert "488.00" in request["available_evidence"]
+    assert "732.00" in request["targeted_missing_item"]
+    assert request["existing_reference"] == "bank.pdf; row=2"
+    path = module.write_missing_evidence_workbook(tmp_path / "requests.xlsx", pack)
+    workbook = load_workbook(path, data_only=True)
+    sheet = workbook[
+        module.text_for(language)["sheet_names"]["missing_evidence_needed"][:31]
+    ]
+    assert sheet.max_row == 2
+    assert "732.00" in list(sheet.values)[1]
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_later_candidate_is_retained_without_claiming_cutoff_settlement(language):
+    module = load_missing_requests()
+    pack = module.build_missing_evidence_request_pack(
+        [
+            {
+                "record_id": "open-1",
+                "reconciliation_status": "unresolved",
+                "amount": "1000",
+            }
+        ],
+        post_cutoff_candidates=[
+            {
+                "open_record_id": "open-1",
+                "evidence_date": "2026-10-02",
+                "evidence_source_file": "bank.pdf",
+                "evidence_record_id": "bank-1",
+            }
+        ],
+        cutoff_date="2026-09-30",
+        language=language,
+    )
+    request = pack.request_sections["unresolved"][0]
+    assert "2026-10-02" in request["available_evidence"]
+    assert "bank.pdf" in request["existing_reference"]
+    assert "2026-09-30" in request["targeted_missing_item"]
+    assert request["amount"] == "1000.00"
+    assert pack.request_sections["reconciled_strong"] == []
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_perimeter_conflict_request_retains_rejected_bank_candidate(language):
+    module = load_missing_requests()
+    pack = module.build_missing_evidence_request_pack(
+        [
+            {
+                "record_id": "open-1",
+                "reconciliation_status": "needs_evidence",
+                "rule_applied": "accounting_perimeter_mismatch",
+                "amount": "100",
+                "supporting_bank_reference": "bank.pdf; row=2",
+                "supporting_bank_description": "USD payment",
+            }
+        ],
+        language=language,
+    )
+    request = pack.request_sections["missing_evidence_needed"][0]
+    assert request["existing_reference"] == "bank.pdf; row=2"
+    assert request["evidence_description"] == "USD payment"
+    assert (
+        request["targeted_missing_item"]
+        != module.text_for(language)["missing"]["missing_evidence_needed"]
+    )

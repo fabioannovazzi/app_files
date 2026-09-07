@@ -102,11 +102,52 @@ def _apply_ibcs_title(
     )
     title_html = ibcs_title_html(ibcs_title)
     rendered.figure.update_layout(title=_ibcs_title_layout(title_html))
+    if chart_kind == "pvm_decomposition_ladder":
+        font_size = 13
+        rendered.figure.update_layout(
+            font_size=font_size,
+            title_font_size=font_size,
+            legend_font_size=font_size,
+            title_y=0.95,
+            paper_bgcolor="white",
+            plot_bgcolor="white",
+        )
+        rendered.figure.update_annotations(font_size=font_size)
+        rendered.figure.update_xaxes(tickfont_size=font_size, title_font_size=font_size)
+        rendered.figure.update_yaxes(tickfont_size=font_size, title_font_size=font_size)
+        rendered.figure.update_traces(
+            textfont_size=font_size, selector={"type": "waterfall"}
+        )
+        meta = dict(rendered.figure.layout.meta or {})
+        meta["waterfall_font_size"] = font_size
+        rendered.figure.update_layout(meta=meta)
     margin = dict(rendered.figure.layout.margin.to_plotly_json())
     margin["t"] = max(int(margin.get("t") or 0), IBCS_TITLE_TOP_MARGIN)
+    if chart_kind == "pvm_decomposition_ladder":
+        # Outside delta labels need space beyond the last subplot's domain.
+        margin["r"] = max(int(margin.get("r") or 0), 60)
     rendered.figure.update_layout(margin=margin)
     if chart_kind == "standard_variance":
         rendered.figure.layout.annotations = ()
+        font_size = 14
+        meta = dict(rendered.figure.layout.meta or {})
+        meta["waterfall_font_size"] = font_size
+        rendered.figure.update_layout(
+            meta=meta,
+            title_y=0.95,
+            width=max(int(rendered.figure.layout.width or 0), 1000),
+            height=max(int(rendered.figure.layout.height or 0), 450),
+            paper_bgcolor="white",
+            plot_bgcolor="white",
+            font_size=font_size,
+            title_font_size=font_size,
+            legend_font_size=font_size,
+        )
+        rendered.figure.update_xaxes(tickfont_size=font_size, title_font_size=font_size)
+        rendered.figure.update_yaxes(tickfont_size=font_size, title_font_size=font_size)
+        rendered.figure.update_traces(
+            textfont_size=font_size, selector={"type": "waterfall"}
+        )
     audit = dict(rendered.audit)
     audit.update(
         {
@@ -118,7 +159,7 @@ def _apply_ibcs_title(
             "title_layout": {
                 "x": IBCS_TITLE_X,
                 "xanchor": "left",
-                "y": IBCS_TITLE_Y,
+                "y": rendered.figure.layout.title.y,
                 "yanchor": "top",
                 "top_margin": margin["t"],
             },

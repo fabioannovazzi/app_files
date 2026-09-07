@@ -21,14 +21,15 @@ sanitized developer pack lets another person understand and implement the
 process without receiving credentials or browser state. A later, separately
 approved capability is the executable handoff.
 
-The live route requires the installed Chrome control skill and the user's
-connected Chrome extension. It reuses existing Chrome state and does not launch
-or install a separate browser or Playwright package. If that Chrome surface is
-unavailable, report the one setup instruction provided by the Chrome skill and
-stop the live run. Continue with useful process scoping or capability review,
-but never claim discovery, execution, or validation without browser evidence.
+The live route uses Google Chrome managed under Settings → Computer Use →
+Google Chrome and the user's connected Chrome extension. Follow the current
+connection's browser API documentation and reuse its `tab.playwright` surface
+and existing Chrome profile. A separate Chrome plugin is not required. If the
+connection is unavailable, direct the operator to that settings page and stop
+the live run. Continue with useful process scoping or capability review, but
+never claim discovery, execution, or validation without browser evidence.
 
-This workflow has no Computer Use or desktop-control fallback. A required
+This workflow has no native desktop-control fallback. A required
 native or non-browser step is a `native_gap`: hand that exact step to the
 operator and exclude it from capability execution and clean replay evidence.
 

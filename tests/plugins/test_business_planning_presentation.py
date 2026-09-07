@@ -80,6 +80,41 @@ def test_native_tables_sources_and_legend_render_without_wrapper():
     assert "base/2027-01/revenue … base/2027-03/revenue (3)" in rendered
 
 
+def test_blocked_presentation_retains_bindings_without_rendering_conclusions():
+    case = presentation_case()
+    for row in case["financial"]["scenarios"][0]["schedule"]:
+        row["operating_expenses"] = "385"
+
+    plan = build_plan(case, source_root=FIXTURE)
+    rendered = compile_html(plan, source_root=FIXTURE)
+
+    assert plan["status"] == "blocked"
+    assert plan["accepted_narrative"] == []
+    assert plan["case"]["presentation"] == case["presentation"]
+    visible = rendered.split('<script type="application/json"')[0]
+    assert "Valutazione del business sospesa" in visible
+    assert 'id="table-annual"' not in visible
+    assert 'id="narrative-actions"' not in visible
+    assert "Tabella A, righe 1-3" in visible
+    assert "Authoritative calculation register" in visible
+
+
+@pytest.mark.parametrize("invalid_binding", ["caption", "action", "amount"])
+def test_blocked_presentation_still_rejects_broken_bindings(invalid_binding):
+    case = presentation_case()
+    for row in case["financial"]["scenarios"][0]["schedule"]:
+        row["operating_expenses"] = "385"
+    if invalid_binding == "caption":
+        case["presentation"]["tables"][0]["caption_id"] = "missing"
+    elif invalid_binding == "action":
+        case["presentation"]["actions"][0]["action_id"] = "missing"
+    else:
+        case["presentation"]["tables"][0]["rows"][0][1]["value"] = "2999"
+
+    with pytest.raises(PlanningError):
+        build_plan(case, source_root=FIXTURE)
+
+
 @pytest.mark.parametrize(
     "mutation",
     [

@@ -7,7 +7,10 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "open-item-reconciliation" / "scripts"
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "open-item-reconciliation"
+    / "scripts"
 )
 WORKFLOW = SCRIPTS / "reconciliation_workflow.py"
 
@@ -110,3 +113,58 @@ def test_write_accountant_report_workbook_creates_operational_tabs(tmp_path):
     assert "azione richiesta" in main_headers
     assert "Riscontro forte" in main_values
     assert workbook["Scheda operativa"].freeze_panes == "A2"
+
+
+def test_post_cutoff_evidence_does_not_label_unresolved_invoice_as_paid():
+    report = load_accountant_report()
+    invoice = {
+        "record_id": "I1",
+        "document_key": "INV-1",
+        "amount": "1000.00",
+        "reconciliation_status": "unresolved",
+        "rule_applied": "unresolved",
+        "evidence_level": "none",
+    }
+    payment = {
+        "record_id": "P1",
+        "document_key": "INV-1",
+        "amount": "1000.00",
+        "posting_date": "2026-10-02",
+        "evidence_type": "external_bank",
+        "source_role": "bank_statement",
+    }
+
+    main, detail, _ = report.build_accountant_report_rows(
+        [invoice], normalized_records=[payment]
+    )
+
+    assert main[0]["non pagata"] == "SI - chiusura non dimostrata al cut-off"
+    assert main[0]["data pagamento"] == "2026-10-02"
+    assert detail[0]["importo evidenza"] == "1000.00"
+
+
+def test_perimeter_rejected_candidate_has_no_numeric_difference_or_high_confidence():
+    report = load_accountant_report()
+    main, detail, _ = report.build_accountant_report_rows(
+        [
+            {
+                "record_id": "open-1",
+                "amount": "100",
+                "currency": "EUR",
+                "reconciliation_status": "needs_evidence",
+                "rule_applied": "accounting_perimeter_mismatch",
+            }
+        ],
+        bank_allocation_candidates=[
+            {
+                "candidate_open_record_ids": "open-1",
+                "candidate_amount_match": "YES",
+                "candidate_confidence": "high",
+                "bank_amount": "100",
+                "bank_description": "USD payment",
+            }
+        ],
+    )
+    assert detail[0]["confidenza"] == "Bassa"
+    assert detail[0]["differenza"] == "N/A - perimetro non coerente"
+    assert main[0]["differenza importo"] == "N/A - perimetro non coerente"

@@ -30,7 +30,7 @@
       {
         "id": "sales-plan-post-assumption-review",
         "purpose": "Review a complete deterministic Actual-to-Plan calculation without loading every scenario row by default",
-        "content": "The engine processes every observed in-scope Actual row and writes the complete Actual and Plan scenario. The default model context after calculation contains the assumption ledger, scenario summary, reconciliation and prepared-evidence lineage; the model-use manifest does not repeat the original Actual filename. Row-level scenario data is available only through a reason-recorded exact row-ID or column filter with explicitly requested output columns; the helper scans the complete sealed scenario and returns all exact matches without sampling. Vera performs no automatic anonymization or pseudonymization.",
+        "content": "The engine processes every observed in-scope Actual row and writes the complete Actual and Plan scenario. The default model context after calculation contains the assumption ledger, scenario summary, reconciliation and prepared-evidence lineage; missing-metric warnings in reconciliation include the metric name and exact affected source row IDs, and unavailable amounts remain blank rather than becoming partial totals; the model-use manifest does not repeat the original Actual filename. Row-level scenario data is available only through a reason-recorded exact row-ID or column filter with explicitly requested output columns; the helper scans the complete sealed scenario and returns all exact matches without sampling. Vera performs no automatic anonymization or pseudonymization.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -62,9 +62,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "92aaaf1130de88c4786511214520f52279f2e401d84f305a596d1635815ba762"
+    "source_fingerprint": "326c6e3d9e2c3237e8265544eda3dac2de8789df2b60da0c9f20bd1ca3760048"
   }
 }

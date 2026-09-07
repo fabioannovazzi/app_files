@@ -25,6 +25,31 @@ def test_financial_workpaper_alone_cannot_be_a_ready_business_plan() -> None:
     assert "Business assessment incomplete" in compile_html(plan, source_root=FIXTURE)
 
 
+@pytest.mark.parametrize("with_assessment", [True, False])
+def test_blocked_thin_margin_case_withholds_stale_unbound_conclusions(
+    with_assessment: bool,
+) -> None:
+    case = case_data()
+    for row in case["financial"]["scenarios"][0]["schedule"]:
+        row["operating_expenses"] = "385"
+    if not with_assessment:
+        case.pop("assessment")
+    plan = build_plan(case, source_root=FIXTURE)
+
+    rendered = compile_html(plan, source_root=FIXTURE)
+
+    assert plan["status"] == "blocked"
+    assert plan["accepted_narrative"] == []
+    assert plan["case"]["narrative"] == case["narrative"]
+    assert plan["calculations"]["base/2027-01/ebitda_margin"]["value"] == "0.015"
+    assert "Business assessment withheld" in rendered
+    visible_report = rendered.split('<script type="application/json"')[0]
+    assert "Both modeled scenarios lose money" not in visible_report
+    assert "Redesign the launch before committing further funds" not in visible_report
+    assert "Authoritative calculation register" in rendered
+    assert "Accepted observation disagrees" in rendered
+
+
 @pytest.mark.parametrize(
     "section",
     [
@@ -170,6 +195,66 @@ def test_unit_economics_remain_available_without_complete_cash_forecast() -> Non
     )
 
 
+def test_undated_commercial_economics_do_not_invent_forecast_month() -> None:
+    case = commercial_case()
+    case["financial"] = None
+    case["periods"] = []
+    case["observations"] = []
+    case["resolutions"] = []
+    case["assessment"]["charts"] = []
+    case["commercial"][0]["period"] = None
+    for assumption in case["assumptions"]:
+        assumption["effective_periods"] = []
+    case["presentation"] = {
+        "language": "en",
+        "tables": [],
+        "actions": [],
+        "source_notes": [],
+    }
+    case["narrative"].append(
+        {
+            "id": "undated-economics",
+            "kind": "finding",
+            "text": "Scoped operating result: {{result}}.",
+            "claims": {
+                "result": {
+                    "calculation_id": "base/undated/commercial_operating_result",
+                    "value": "-100",
+                }
+            },
+            "basis_ids": ["cash-timing"],
+            "rubric_id": None,
+            "review": case["review"],
+        }
+    )
+    case["assessment"]["sections"]["economics"] = ["undated-economics"]
+
+    plan = build_plan(case, source_root=FIXTURE)
+
+    assert plan["status"] == "partial"
+    assert plan["case"]["periods"] == []
+    assert (
+        plan["calculations"]["base/undated/commercial_operating_result"]["value"]
+        == "-100"
+    )
+    assert (
+        plan["calculations"]["base/undated/commercial_operating_result"]["period"]
+        is None
+    )
+    assert "Forecast horizon not yet established" in compile_html(
+        plan, source_root=FIXTURE
+    )
+    assert "Undated operating period" in compile_html(plan, source_root=FIXTURE)
+
+
+def test_undated_commercial_row_cannot_bypass_financial_period_scope() -> None:
+    case = commercial_case()
+    case["commercial"][0]["period"] = None
+
+    with pytest.raises(PlanningError, match="Unknown commercial period"):
+        build_plan(case, source_root=FIXTURE)
+
+
 def test_nonpositive_unit_contribution_has_no_finite_break_even() -> None:
     case = commercial_case()
     case["commercial"][0]["variable_cost_per_unit"] = "10"
@@ -226,6 +311,37 @@ def test_registered_idea_fixture_remains_provisional_and_decision_useful() -> No
     assert "paid bookings and actual job and travel time" in rendered
     assert not plan["calculations"] and not plan["charts"]
     assert plan == build_plan(case, source_root=FIXTURE, owner="Vera")
+
+
+def test_idea_assessment_does_not_claim_financial_model_limitations():
+    import json
+
+    case = json.loads((FIXTURE / "idea-case.json").read_text())
+
+    plan = build_plan(case, source_root=FIXTURE)
+
+    assert plan["statements"] is None
+    assert plan["limitations"] == case["limitations"] + [
+        "Mechanical readiness is not an assessment of viability, market attractiveness or financeability."
+    ]
+
+
+def test_reported_earnings_label_preserves_exact_evidence_binding():
+    from planning_report import build_charts
+
+    case = case_data()
+    plan = build_plan(case, source_root=FIXTURE)
+
+    charts = build_charts(plan)
+
+    chart = next(chart for chart in charts if chart["id"] == "reported-adjusted-base")
+    series = chart["series"][0]
+    assert series["label"] == "Reported EBITDA"
+    assert (
+        series["points"][0]["calculation_id"]
+        == "base/2027-01/reported_ebitda_client-ebitda"
+    )
+    assert series["points"][0]["value"] == "200"
 
 
 @pytest.mark.parametrize("owner", ["Clara", "Vera"])

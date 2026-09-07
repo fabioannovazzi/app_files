@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from math import isfinite
 from typing import Any
 
 __all__ = [
@@ -68,9 +69,11 @@ def _number(value: Any) -> float | None:
     if value is None or isinstance(value, bool):
         return None
     try:
-        return float(value)
-    except (TypeError, ValueError):
+        number = float(value)
+    except (TypeError, ValueError, OverflowError):
         return None
+    # Non-finite operands cannot establish an arithmetic reconciliation.
+    return number if isfinite(number) else None
 
 
 def accounting_intake_questions(review: dict[str, Any]) -> list[str]:
@@ -89,6 +92,9 @@ def accounting_intake_questions(review: dict[str, Any]) -> list[str]:
         questions.append("Confirm the entity and consolidation perimeter.")
 
     tie_out = normalized["source_tie_out"]
+    tolerance = _number(tie_out.get("tolerance"))
+    if tolerance is None or tolerance < 0:
+        questions.append("Provide a finite, non-negative source tie-out tolerance.")
     if (
         _number(tie_out.get("baseline_source_total")) is None
         or _number(tie_out.get("comparison_source_total")) is None

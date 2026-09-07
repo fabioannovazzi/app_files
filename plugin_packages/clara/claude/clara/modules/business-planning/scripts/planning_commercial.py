@@ -36,7 +36,8 @@ def calculate_commercial(
             isinstance(sid, str) and bool(sid) and "/" not in sid,
             "Invalid commercial scenario",
         )
-        require(period in case["periods"], "Unknown commercial period")
+        undated = period is None and not case["periods"] and case["financial"] is None
+        require(period in case["periods"] or undated, "Unknown commercial period")
         require((sid, period) not in seen, "Duplicate commercial period")
         seen.add((sid, period))
         require(
@@ -50,7 +51,8 @@ def calculate_commercial(
         for rid in basis:
             if refs[rid]["kind"] in {"assumption", "hypothesis"}:
                 require(
-                    period in refs[rid]["effective_periods"],
+                    (undated and not refs[rid]["effective_periods"])
+                    or period in refs[rid]["effective_periods"],
                     "Commercial assumption is ineffective",
                 )
         keys = ("units", "net_price", "variable_cost_per_unit", "fixed_cost")
@@ -68,11 +70,11 @@ def calculate_commercial(
         revenue = units * price
         operating_result = units * contribution - fixed
         metrics = {
-            "units": (units, "units", "Accepted volume assumption"),
+            "units": (units, "units", "Supplied volume assumption"),
             "net_price": (
                 price,
                 case["reporting_currency"] + "/unit",
-                "Accepted net realized price",
+                "Supplied net realized price",
             ),
             "revenue": (revenue, case["reporting_currency"], "units * net_price"),
             "contribution_per_unit": (
@@ -93,7 +95,8 @@ def calculate_commercial(
         }
         sources = sorted({s for rid in basis for s in refs[rid]["source_ids"]})
         for metric, (value, unit, formula) in metrics.items():
-            cid = f"{sid}/{period}/commercial_{metric}"
+            period_key = "undated" if undated else period
+            cid = f"{sid}/{period_key}/commercial_{metric}"
             calculations[cid] = dict(
                 id=cid,
                 scenario=sid,

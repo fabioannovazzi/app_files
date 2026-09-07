@@ -13,7 +13,9 @@
   ],
   "governed_repository_paths": [
     "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
-    "plugins/journal-bank-reconciliation/scripts/semantic_review.py"
+    "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
+    "plugins/vera/agents/passive-invoice-reviewer.md",
+    "plugins/vera/references/passive-invoice-cowork.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -25,16 +27,16 @@
       {
         "id": "ledger-mapping-and-run-review",
         "purpose": "Review the supplied ledger structure, exact source-to-canonical field mapping, run scope, outputs and limitations",
-        "content": "User instructions; source filenames and metadata; exact ledger headers and a bounded source sample needed to review the map; population, matching, deterministic exception and performance summaries; output paths and limitations",
+        "content": "User instructions; source filenames and metadata; exact ledger headers and a bounded source sample needed to review the map; population, matching, deterministic exception and performance summaries; output paths and limitations; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
         ]
       },
       {
-        "id": "compact-semantic-invoice-review-packets",
+        "id": "compact-luna-invoice-review-packets",
         "purpose": "Determine whether each matched invoice has a concrete material reason for professional review",
-        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, bounded causale and related-document references, withholding and stamp summaries, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five professional-linked reviewed historical treatments. Raw XML, payment instructions and IBAN, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt.",
+        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, bounded causale and related-document references, withholding and stamp summaries, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five professional-linked reviewed historical treatments. Raw XML, payment instructions and IBAN, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt. Codex sends the packet through its native capsule. Cowork writes the same bounded packet and schema to cowork_request.json for the packaged Haiku subagent; the parent retains the returned JSON and actual host invocation record. The host record binds content and requested configuration but does not independently authenticate the model identity.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -54,7 +56,7 @@
     },
     {
       "id": "reviewed-ledger-map-and-non-forced-matching",
-      "control": "Ledger rows enter only through an explicit canonical-to-source header map. Matching requires exact structured invoice references with corroborating supplier, date or amount evidence, or the exact supplier-date-amount combination; multiple candidates, duplicates, missing invoices and ledger orphans remain explicit instead of being forced."
+      "control": "Ledger rows enter only through an explicit canonical-to-source header map. Every mapped monetary column uses the same reviewed number convention; accounting parentheses denote a negative amount, conflicting signs reject, and explicit zero never invokes missing-value fallback. Matching requires exact structured invoice references with corroborating supplier, date or amount evidence, or the exact supplier-date-amount combination; multiple candidates, duplicates, missing invoices and ledger orphans remain explicit instead of being forced."
     },
     {
       "id": "deterministic-accounting-check-boundary",
@@ -62,11 +64,11 @@
     },
     {
       "id": "qualified-native-luna-worker",
-      "control": "In the Codex distribution only, the semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, fixes the model to gpt-5.6-luna, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
+      "control": "In Codex, the semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, defaults to gpt-5.6-luna or uses an explicitly reviewed alternative, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
     },
     {
       "id": "content-bound-restartable-job",
-      "control": "SQLite binds the audit to source, ledger, mapping, workflow and control digests; packet changes fail closed, completed content-addressed chunks are not repeated, interrupted chunks become pending, results are upserted by invoice ID, and content-bound chunk checkpoints plus validated native Luna artifacts recover results published immediately before interruption. Incomplete ordinary artifacts are preserved before retry and unsafe links fail closed."
+      "control": "SQLite binds the audit to source, ledger, mapping, workflow and control digests; packet changes fail closed, completed content-addressed chunks are not repeated, interrupted chunks become pending, results are upserted by invoice ID, and content-bound chunk checkpoints plus validated native Luna artifacts recover results published immediately before interruption. Incomplete ordinary artifacts are preserved before retry and unsafe links fail closed. Explicit model selections and the complete review declaration bind the job fingerprint, native-artifact recovery and chunk checkpoints; a changed review cannot reuse the prior job. Runtime identity is bound to the job and checkpoints; native artifact recovery is limited to Codex. Missing Cowork responses remain awaiting_semantic_review, never successfully screened."
     },
     {
       "id": "exception-focused-advisory-output",
@@ -77,14 +79,18 @@
       "control": "Synthetic evaluation accepts only an explicit mutation plan whose source is professionally labelled acceptable and already matched, unflagged and free of deterministic exceptions; it copies the packet to a separate output with a synthetic identifier, changes only booked account identifiers and descriptions while preserving ordinary line descriptions, retains original and replacement treatment, and never mutates the real ledger, packet, job database or source file."
     },
     {
-      "id": "cowork-packet-response-binding",
-      "control": "The Cowork distribution prepares content-hashed requests for the configured native Haiku subagent. Missing responses leave the audit pending. Ingestion checks request and response hashes, the host invocation reference, strict result fields and exact invoice coverage; host-recorded provenance is explicitly not authenticated model identity or Luna qualification. No direct API or API-key client is introduced."
+      "id": "reviewed-native-model-selection",
+      "control": "An alternative worker model requires a reviewed-decision receipt bound to the workflow, model, effort and benchmark digest. CLI selection files are authorized engagement inputs. This checks a local review declaration, not reviewer authentication or benchmark quality; it never changes native host qualification or read boundaries. The default remains Luna. Configuration and review identity remain bound during replay and recovery. This option applies only to Codex; Cowork rejects Codex model-selection receipts and nondefault effort overrides."
+    },
+    {
+      "id": "cowork-host-recorded-handoff",
+      "control": "The packaged Cowork agent requests Haiku with Read access and instructions limited to the exact request. The engine rejects symlink handoff files, wrong request/response digests, missing invocation identity, invalid result types or incomplete invoice coverage. These checks do not independently authenticate the host or enforce an OS read sandbox. The workflow does not invent usage, timing, model identity or review completion."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-05",
+    "reviewed_at": "2026-09-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "147f0764f441f6b2e539fae7b6127e786b365fb8c975cddcedf03ad98ae523eb"
+    "source_fingerprint": "5a1a192fdfe73424fe5f35a14cf813e6596f9a862469a2ace20bd9fd138ccea2"
   }
 }

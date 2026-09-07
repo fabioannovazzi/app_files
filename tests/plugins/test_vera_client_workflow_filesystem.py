@@ -12,6 +12,8 @@ from types import ModuleType
 
 import pytest
 
+from tests.model_data_helpers import write_no_model_report
+
 ROOT = Path(__file__).resolve().parents[2]
 SHARED_MODULES = ROOT / "plugins" / "_shared" / "vendor" / "modules"
 if str(SHARED_MODULES) not in sys.path:
@@ -114,18 +116,23 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
     ("variance-analysis", "review_preflight.py"),
 )
 
+# Maintenance and inspection CLIs do not create or resume a customer workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("aml-review", "check_dependencies.py"),
     ("archive-organization", "check_dependencies.py"),
     ("open-item-reconciliation", "check_dependencies.py"),
+    ("open-item-reconciliation", "implementation_bootstrap.py"),
     ("client-file-preparation", "check_dependencies.py"),
     ("client-file-preparation", "check_environment.py"),
     ("client-file-preparation", "managed_ocr_runtime.py"),
     ("client-file-preparation", "model_handoff.py"),
     ("new-client", "check_dependencies.py"),
     ("journal-sampling", "check_dependencies.py"),
+    ("journal-sampling", "implementation_bootstrap.py"),
     ("check-entries", "check_dependencies.py"),
+    ("check-entries", "implementation_bootstrap.py"),
     ("journal-bank-reconciliation", "check_dependencies.py"),
+    ("journal-bank-reconciliation", "implementation_bootstrap.py"),
     ("passive-invoice-audit", "check_dependencies.py"),
     ("business-planning", "check_dependencies.py"),
     ("business-planning", "run_strategic_plan.py"),
@@ -141,10 +148,12 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("financial-analysis", "check_dependencies.py"),
     ("financial-analysis", "model_use.py"),
     ("report-builder", "check_dependencies.py"),
+    ("report-builder", "implementation_bootstrap.py"),
     ("report-builder", "expand_model_context.py"),
     ("report-builder", "prepared_contract.py"),
     ("report-builder", "validate_review_integrity.py"),
     ("concordato-plan-review", "check_dependencies.py"),
+    ("concordato-plan-review", "implementation_bootstrap.py"),
     ("prompt-optimizer", "check_dependencies.py"),
     ("prompt-optimizer", "run_fiscalprompt_benchmark.py"),
     ("prompt-optimizer", "summarize_fiscalprompt_benchmark.py"),
@@ -285,7 +294,8 @@ def _completed_context(
         client_root,
         context["engagement_id"],
         run_id,
-        [
+        write_no_model_report(output_dir, workflow_id, run_id)
+        + [
             {
                 "artifact_id": "prepared.result",
                 "path": artifact.name,
@@ -1005,3 +1015,26 @@ def test_output_discovery_writer_loads_customer_run_from_its_output(
     ]
 
     assert loader_calls
+
+
+def test_finalization_rejects_missing_model_data_reports(tmp_path: Path) -> None:
+    ledger = _load_customer_ledger()
+    context_path, _, output_dir, run_id = _running_context(tmp_path, "journal-sampling")
+    context = json.loads(context_path.read_text(encoding="utf-8"))
+    (output_dir / "result.txt").write_text("reviewable result", encoding="utf-8")
+
+    with pytest.raises(ledger.LedgerError, match="requires model_data_report"):
+        ledger.finalize_run(
+            context_path.parents[5],
+            context["engagement_id"],
+            run_id,
+            [
+                {
+                    "artifact_id": "prepared.result",
+                    "path": "result.txt",
+                    "purpose": "Provide the workflow result.",
+                    "audience": "review",
+                    "media_type": "text/plain",
+                }
+            ],
+        )

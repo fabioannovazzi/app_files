@@ -43,6 +43,11 @@ class ModelHandoffResult:
     item_count: int
 
 
+def _dictionary_or_empty(value: object) -> dict[str, Any]:
+    """Retain a dictionary value, otherwise use the existing empty fallback."""
+    return value if isinstance(value, dict) else {}
+
+
 def _json_bytes(payload: Any, *, pretty: bool) -> bytes:
     if pretty:
         text = json.dumps(payload, ensure_ascii=False, indent=2)
@@ -128,7 +133,7 @@ def _file_metadata_items(
     for item in review_items:
         if item.get("item_type") != "document_inventory":
             continue
-        data = item.get("data") if isinstance(item.get("data"), dict) else {}
+        data = _dictionary_or_empty(item.get("data"))
         item_id = _clean_text(item.get("id"))
         records.append(
             {
@@ -142,12 +147,31 @@ def _file_metadata_items(
                 "modified_iso": _clean_text(data.get("modified_iso")),
                 "sha256": _clean_text(data.get("sha256")),
                 "category": _clean_text(data.get("category")),
+                "category_status": "candidate",
+                "category_basis": "lexical_hint",
+                "fiscal_extraction_disposition": {
+                    key: value
+                    for key, value in _dictionary_or_empty(
+                        data.get("fiscal_extraction_disposition")
+                    ).items()
+                    if key
+                    in {
+                        "status",
+                        "field_count",
+                        "candidate_kind",
+                        "selected_kind",
+                        "text_sha256",
+                        "decision_basis",
+                    }
+                }
+                or {"status": "not_evaluated"},
                 "confidence": _clean_text(data.get("confidence")),
                 "years": (
                     data.get("years") if isinstance(data.get("years"), list) else []
                 ),
                 "notes": _clean_text(data.get("notes")),
                 "readable": data.get("readable"),
+                "pdf_text_coverage": data.get("pdf_text_coverage"),
                 "extraction_method": _clean_text(data.get("extraction_method")),
                 "text_locator": _clean_text(data.get("text_path")),
                 "structured_field_count": data.get("structured_field_count", 0),
@@ -197,6 +221,7 @@ def _fiscal_field_items(
     records: list[dict[str, Any]] = []
     retained_fields = (
         "document_kind",
+        "document_kind_status",
         "section",
         "field_code",
         "label",
@@ -209,7 +234,7 @@ def _fiscal_field_items(
     for item in review_items:
         if item.get("item_type") != "extracted_fiscal_field":
             continue
-        data = item.get("data") if isinstance(item.get("data"), dict) else {}
+        data = _dictionary_or_empty(item.get("data"))
         citation_text = ""
         evidence_records = item.get("evidence")
         if isinstance(evidence_records, list):
@@ -243,7 +268,7 @@ def _missing_request_candidate_items(
     for item in review_items:
         if item.get("item_type") != "missing_document_request":
             continue
-        data = item.get("data") if isinstance(item.get("data"), dict) else {}
+        data = _dictionary_or_empty(item.get("data"))
         item_id = _clean_text(item.get("id"))
         records.append(
             {
@@ -279,7 +304,7 @@ def _email_request_items(
         if item is None:
             continue
         action = _clean_text(decision.get("action"))
-        data = item.get("data") if isinstance(item.get("data"), dict) else {}
+        data = _dictionary_or_empty(item.get("data"))
         reviewed_texts: list[str] = []
         if action == "accept":
             reviewed_texts = [_clean_text(data.get("request_text"))]
@@ -316,7 +341,7 @@ def _duplicate_group_items(
     for item in review_items:
         if item.get("item_type") != "duplicate_warning":
             continue
-        data = item.get("data") if isinstance(item.get("data"), dict) else {}
+        data = _dictionary_or_empty(item.get("data"))
         duplicate_type = _clean_text(data.get("duplicate_type"))
         group_key = _clean_text(data.get("group_key"))
         group = (duplicate_type, group_key)
@@ -352,7 +377,7 @@ def _xml_anomaly_items(
     for item in review_items:
         if item.get("item_type") != "formal_xml_anomaly":
             continue
-        data = item.get("data") if isinstance(item.get("data"), dict) else {}
+        data = _dictionary_or_empty(item.get("data"))
         anomalies = data.get("anomalies")
         if not isinstance(anomalies, list):
             anomalies = []
@@ -600,6 +625,7 @@ def write_model_handoff(output_dir: Path | str) -> ModelHandoffResult:
         },
         "content_policy": {
             "file_population": "one_metadata_item_per_inventory_file",
+            "classification": "filename_categories_are_candidates; use text-bound reviewed document kinds and disclose unsupported or unreadable sources",
             "document_excerpts": "flagged_review_evidence_only_max_600_characters",
             "fiscal_fields": "all_mapped_fields_with_max_600_character_citation",
             "email_drafting": "reviewed_missing_requests_only_with_generic_client_reference",

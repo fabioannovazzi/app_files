@@ -107,6 +107,25 @@ def _write(path: Path, payload: dict[str, object]) -> None:
     )
 
 
+def _expected_packet_hash(
+    scripts: dict[str, ModuleType],
+    workspace: dict[str, object],
+    session: str = "SESSION-INTEL-001",
+    task: str = "WORKFLOW_GUIDANCE",
+    subject_ids: tuple[str, ...] = ("SRC-CALL-001",),
+) -> str:
+    output_dir = Path(workspace["output_dir"])
+    packet = scripts["intelligence_contract"].build_intelligence_packet(
+        _read(output_dir / "case_intake.json"),
+        _read(output_dir / "source_register.json"),
+        _read(output_dir / "application_workbench.json"),
+        task,
+        subject_ids,
+        model_session_ref=session,
+    )
+    return scripts["intelligence_contract"].intelligence_packet_hash(packet)
+
+
 def _running_workspace(
     tmp_path: Path, *, selected_source: Path | None = None
 ) -> dict[str, object]:
@@ -731,6 +750,9 @@ def test_model_session_reference_cannot_be_reused_across_contributions(
         "model_session_ref": "SESSION-REUSE-001",
         "task": "WORKFLOW_GUIDANCE",
         "subject_ids": ["SRC-CALL-001"],
+        "expected_packet_sha256": _expected_packet_hash(
+            scripts, workspace, "SESSION-REUSE-001"
+        ),
     }
     scripts["intelligence"].record_intelligence(
         **common, idempotency_key="session-request-001"
@@ -881,6 +903,13 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
     output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
 
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "WORKFLOW_GUIDANCE",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=output,
@@ -894,6 +923,13 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
         subject_ids=["SRC-CALL-001"],
     )
     repeated = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "WORKFLOW_GUIDANCE",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=output,
@@ -916,6 +952,13 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
     conflicting_output["summary_it"] = "Different response under the same key."
     with pytest.raises(ValueError, match="already used for another response"):
         scripts["intelligence"].record_intelligence(
+            expected_packet_sha256=_expected_packet_hash(
+                scripts,
+                workspace,
+                "SESSION-INTEL-001",
+                "WORKFLOW_GUIDANCE",
+                ["SRC-CALL-001"],
+            ),
             output_dir=workspace["output_dir"],
             client_engagement=workspace["context_path"],
             model_output=conflicting_output,
@@ -951,6 +994,13 @@ def test_intelligence_refuses_secret_or_session_fields_before_recording(
 
     with pytest.raises(ValueError, match="prohibited secret/session fields"):
         scripts["intelligence"].record_intelligence(
+            expected_packet_sha256=_expected_packet_hash(
+                scripts,
+                workspace,
+                "SESSION-INTEL-001",
+                "WORKFLOW_GUIDANCE",
+                ["SRC-CALL-001"],
+            ),
             output_dir=workspace["output_dir"],
             client_engagement=workspace["context_path"],
             model_output=output,
@@ -991,6 +1041,13 @@ def test_professional_accept_applies_only_as_proposed(tmp_path: Path) -> None:
         "review_status": "confirmed",
     }
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "REQUIREMENT_DRAFTING",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=_model_output(
@@ -1036,6 +1093,13 @@ def test_reject_does_not_mutate_workbench_and_repeated_decision_is_idempotent(
     scripts, workspace = _initialized_case(tmp_path)
     output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "WORKFLOW_GUIDANCE",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=output,
@@ -1070,6 +1134,13 @@ def test_reject_does_not_mutate_workbench_and_repeated_decision_is_idempotent(
 def test_changed_case_marks_pending_intelligence_stale(tmp_path: Path) -> None:
     scripts, workspace = _initialized_case(tmp_path)
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "WORKFLOW_GUIDANCE",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
@@ -1107,6 +1178,13 @@ def test_validation_fails_closed_during_interrupted_intelligence_apply(
 ) -> None:
     scripts, workspace = _initialized_case(tmp_path)
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "WORKFLOW_GUIDANCE",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
@@ -1162,6 +1240,13 @@ def test_interrupted_acceptance_resumes_without_duplicate_application(
         "review_status": "confirmed",
     }
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "SOURCE_INTERPRETATION",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=_model_output(
@@ -1318,6 +1403,8 @@ def test_intelligence_record_cli_seals_response(tmp_path: Path) -> None:
             "cli-request-001",
             "--model-session-ref",
             "SESSION-CLI-RECORD",
+            "--expected-packet-sha256",
+            _expected_packet_hash(scripts, workspace, "SESSION-CLI-RECORD"),
             "--task",
             "WORKFLOW_GUIDANCE",
             "--subject-id",
@@ -1337,6 +1424,13 @@ def test_intelligence_record_cli_seals_response(tmp_path: Path) -> None:
 def test_intelligence_decide_cli_records_return(tmp_path: Path) -> None:
     scripts, workspace = _initialized_case(tmp_path)
     recorded = scripts["intelligence"].record_intelligence(
+        expected_packet_sha256=_expected_packet_hash(
+            scripts,
+            workspace,
+            "SESSION-INTEL-001",
+            "WORKFLOW_GUIDANCE",
+            ["SRC-CALL-001"],
+        ),
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
         model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
@@ -2351,3 +2445,93 @@ def test_workflow_acceptance_cases_include_real_exemplar_without_rules() -> None
         "a complete traceable state validates and packages"
         in synthetic["expected_public_behavior"]
     )
+
+
+@pytest.mark.parametrize(
+    "change", ["omitted_scope", "different_task", "source_revision"]
+)
+def test_record_intelligence_rejects_packet_drift_without_mutation(
+    tmp_path: Path, change: str
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    output_dir = workspace["output_dir"]
+    sources_path = output_dir / "source_register.json"
+    sources = _read(sources_path)
+    second_source = dict(sources["sources"][0])
+    second_source["source_id"] = "SRC-CALL-002"
+    sources["sources"].append(second_source)
+    _write(sources_path, sources)
+    packet_args = {
+        "output_dir": output_dir,
+        "client_engagement": workspace["context_path"],
+        "model_session_ref": "SESSION-BINDING-001",
+        "task": "SOURCE_INTERPRETATION",
+        "subject_ids": ["SRC-CALL-001"],
+    }
+    packet = scripts["intelligence"].create_intelligence_packet(**packet_args)
+    expected_digest = scripts["intelligence_contract"].intelligence_packet_hash(packet)
+    if change == "omitted_scope":
+        packet_args.pop("task")
+        packet_args.pop("subject_ids")
+    elif change == "different_task":
+        packet_args["task"] = "REQUIREMENT_DRAFTING"
+    else:
+        sources["sources"][0]["sha256"] = "a" * 64
+        _write(sources_path, sources)
+    before = {path.name: path.read_bytes() for path in output_dir.glob("*.json")}
+
+    with pytest.raises(ValueError, match="packet digest mismatch"):
+        scripts["intelligence"].record_intelligence(
+            **packet_args,
+            expected_packet_sha256=expected_digest,
+            model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
+            provider="openai",
+            model="gpt-test-pinned",
+            prompt_template_version="bandi-intelligence-v2",
+            recorded_by="codex-local",
+            idempotency_key="binding-request-001",
+        )
+
+    assert {
+        path.name: path.read_bytes() for path in output_dir.glob("*.json")
+    } == before
+
+
+def test_exact_supplied_packet_records_and_retries_without_mutation(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    output_dir = workspace["output_dir"]
+    before_packet = {path.name: path.read_bytes() for path in output_dir.glob("*.json")}
+    packet_args = {
+        "output_dir": output_dir,
+        "client_engagement": workspace["context_path"],
+        "model_session_ref": "SESSION-EXACT-001",
+        "task": "SOURCE_INTERPRETATION",
+        "subject_ids": ["SRC-CALL-001"],
+    }
+    packet = scripts["intelligence"].create_intelligence_packet(**packet_args)
+    assert {
+        path.name: path.read_bytes() for path in output_dir.glob("*.json")
+    } == before_packet
+    expected_digest = scripts["intelligence_contract"].intelligence_packet_hash(packet)
+    record_args = {
+        **packet_args,
+        "expected_packet_sha256": expected_digest,
+        "model_output": _model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
+        "provider": "openai",
+        "model": "gpt-test-pinned",
+        "prompt_template_version": "bandi-intelligence-v2",
+        "recorded_by": "codex-local",
+        "idempotency_key": "exact-request-001",
+    }
+    recorded = scripts["intelligence"].record_intelligence(**record_args)
+    before_retry = {path.name: path.read_bytes() for path in output_dir.glob("*.json")}
+
+    repeated = scripts["intelligence"].record_intelligence(**record_args)
+
+    assert recorded["packet_sha256"] == expected_digest
+    assert repeated == recorded
+    assert {
+        path.name: path.read_bytes() for path in output_dir.glob("*.json")
+    } == before_retry

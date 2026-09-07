@@ -603,8 +603,14 @@ def run_benchmark(
         raise ValueError("Unsupported gold-benchmark manifest schema.")
     output_dir.mkdir(parents=True, exist_ok=True)
     configured_sources = manifest.get("sources")
-    if not isinstance(configured_sources, Mapping):
+    if not isinstance(configured_sources, Mapping) or not configured_sources:
         raise ValueError("Gold sources are missing.")
+    # An empty all() is true, but cannot establish benchmark coverage.
+    if not any(
+        manifest.get(key)
+        for key in ("extraction_cases", "negative_control_sources", "analysis_cases")
+    ):
+        raise ValueError("Gold benchmark must declare at least one case.")
     verified_sources: dict[str, Path] = {}
     source_receipts: list[dict[str, Any]] = []
     for source_id, source_contract in configured_sources.items():
@@ -894,7 +900,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--manifest",
         type=Path,
-        default=PLUGIN_ROOT / "evals" / "gold_cases.json",
+        default=PLUGIN_ROOT / "evals" / "gold_official_cases.json",
     )
     parser.add_argument("--source", action="append", type=_source_argument, default=[])
     parser.add_argument("--output-dir", required=True, type=Path)

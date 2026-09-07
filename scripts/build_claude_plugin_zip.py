@@ -1734,7 +1734,15 @@ def project_cowork_skill(
             f"{projected_heading}\n\n{review_body}",
         )
     text = _project_optional_review_language(text)
+    shared_feedback_handoff = SPECIALIST_FEEDBACK_HANDOFF.replace(
+        "../vera/", "../clara/"
+    )
+    if SPECIALIST_FEEDBACK_HANDOFF in text and shared_feedback_handoff in text:
+        text = text.replace(
+            "Use only the feedback rule for the installed entry product:\n", ""
+        )
     text = text.replace(SPECIALIST_FEEDBACK_HANDOFF, "")
+    text = text.replace(shared_feedback_handoff, "")
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
@@ -1904,6 +1912,43 @@ def _omit_inert_module_host_metadata(relative_path: str) -> bool:
     return component not in MODULES_REQUIRING_HOST_DESCRIPTORS
 
 
+def _projected_repository_sources(
+    repository_path: str, entries: dict[str, bytes], workstreams: list[str]
+) -> list[str]:
+    """Locate each packaged copy of a governed canonical component or overlay."""
+
+    relative = Path(repository_path)
+    parts = relative.parts
+    if (
+        relative.is_absolute()
+        or ".." in parts
+        or len(parts) < 3
+        or parts[0] != "plugins"
+    ):
+        raise ValueError(f"unsupported projected repository path {repository_path}")
+    direct = (
+        Path(*parts[2:]) if parts[1] == "vera" else Path("modules", *parts[1:])
+    ).as_posix()
+    matches = {direct} if direct in entries else set()
+    builder = _load_codex_builder()
+    configs = builder.load_vendor_module_config()
+    canonical_source = (ROOT / relative).resolve()
+    for component in ["vera", *workstreams]:
+        config = configs.get(component)
+        for name, source in builder.shared_vendor_module_entries(config).items():
+            if source.resolve() != canonical_source:
+                continue
+            prefix = "" if component == "vera" else f"modules/{component}/"
+            destination = f"{prefix}vendor/modules/{name}"
+            if destination in entries:
+                matches.add(destination)
+    if not matches:
+        raise ValueError(
+            f"governed source is absent from Cowork package: {repository_path}"
+        )
+    return sorted(matches)
+
+
 def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
     """Bind Cowork privacy manifests to the exact projected implementation."""
 
@@ -1988,19 +2033,9 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
                 )
             projected_shared_paths = list(payload.get("governed_shared_paths", []))
             for repository_path in repository_paths:
-                parts = Path(repository_path).parts
-                if len(parts) < 3 or parts[0] != "plugins":
-                    raise ValueError(
-                        f"{workstream}: unsupported projected repository path "
-                        f"{repository_path}"
-                    )
-                projected_relative = Path("modules", *parts[1:]).as_posix()
-                if projected_relative not in entries:
-                    raise ValueError(
-                        f"{workstream}: governed source is absent from Cowork package: "
-                        f"{projected_relative}"
-                    )
-                projected_shared_paths.append(projected_relative)
+                projected_shared_paths.extend(
+                    _projected_repository_sources(repository_path, entries, workstreams)
+                )
             if repository_paths:
                 payload["governed_shared_paths"] = projected_shared_paths
                 payload.pop("governed_repository_paths", None)
@@ -3004,13 +3039,12 @@ def main(argv: list[str] | None = None) -> int:
                         LOGGER.error("  - %s", error)
                 else:
                     LOGGER.info("[OK] %s", package.plugin)
-            if len(selected) == len(configured):
-                catalog_errors = verify_catalog(marketplace, configured)
-                errors.extend(catalog_errors)
-                if catalog_errors:
-                    LOGGER.error("[FAIL] %s", marketplace.catalog_path)
-                else:
-                    LOGGER.info("[OK] %s", marketplace.catalog_path)
+            catalog_errors = verify_catalog(marketplace, configured)
+            errors.extend(catalog_errors)
+            if catalog_errors:
+                LOGGER.error("[FAIL] %s", marketplace.catalog_path)
+            else:
+                LOGGER.info("[OK] %s", marketplace.catalog_path)
             return 1 if errors else 0
 
         for package in selected:
@@ -3021,9 +3055,8 @@ def main(argv: list[str] | None = None) -> int:
                 output_directory,
                 output_zip,
             )
-        if len(selected) == len(configured):
-            catalog = build_catalog(marketplace, configured)
-            LOGGER.info("[BUILT] marketplace: %s", catalog)
+        catalog = build_catalog(marketplace, configured)
+        LOGGER.info("[BUILT] marketplace: %s", catalog)
         return 0
     except (
         BadZipFile,

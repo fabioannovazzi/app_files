@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "membership_source": "components.json",
+  "routing_policy": "Use the semantic workflow catalog and selected skill; entrypoint presence is not workflow suitability or host qualification.",
+  "managed_run_required_artifacts": [
+    "model_data_report.json",
+    "model_data_report.md"
+  ],
+  "host_qualification": {
+    "native_semantic_worker": {
+      "components": [
+        "journal-bank-reconciliation",
+        "passive-invoice-audit"
+      ],
+      "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",
+      "requirement": "Exact qualified native capsule and launch-time canaries; inspect current host before promising execution."
+    },
+    "browser_automation": {
+      "component": "browser-automation",
+      "requirement": "Connected Chrome with the documented Playwright tab API; native steps and unobservable downloads remain explicit gaps."
+    }
+  },
+  "components": [
+    {
+      "component_id": "open-item-reconciliation",
+      "skills": [
+        "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/open-item-reconciliation/scripts/audit_assurance.py",
+        "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
+        "modules/open-item-reconciliation/scripts/build_review_sample.py",
+        "modules/open-item-reconciliation/scripts/check_dependencies.py",
+        "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+        "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+        "modules/open-item-reconciliation/scripts/review_server.py"
+      ]
+    },
+    {
+      "component_id": "archive-organization",
+      "skills": [
+        "modules/archive-organization/skills/archive-organization/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/archive-organization/scripts/archive_organization.py",
+        "modules/archive-organization/scripts/check_dependencies.py"
+      ]
+    },
+    {
+      "component_id": "client-file-preparation",
+      "skills": [
+        "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
+        "modules/client-file-preparation/skills/client-file-preparation/SKILL.md",
+        "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
+        "modules/client-file-preparation/skills/email-cliente/SKILL.md",
+        "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+        "modules/client-file-preparation/scripts/check_dependencies.py",
+        "modules/client-file-preparation/scripts/check_environment.py",
+        "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+        "modules/client-file-preparation/scripts/model_handoff.py",
+        "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+        "modules/client-file-preparation/scripts/parse_fiscal_forms.py"
+      ]
+    },
+    {
+      "component_id": "new-client",
+      "skills": [
+        "modules/new-client/skills/new-client/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/new-client/scripts/check_dependencies.py",
+        "modules/new-client/scripts/delivery_manifest.py",
+        "modules/new-client/scripts/initialize_case.py",
+        "modules/new-client/scripts/package_new_client.py",
+        "modules/new-client/scripts/promote_client_file_preparation.py"
+      ]
+    },
+    {
+      "component_id": "aml-review",
+      "skills": [
+        "modules/aml-review/skills/aml-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/aml-review/scripts/aml_review.py",
+        "modules/aml-review/scripts/check_dependencies.py"
+      ]
+    },
+    {
+      "component_id": "journal-sampling",
+      "skills": [
+        "modules/journal-sampling/skills/journal-sampling/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/journal-sampling/scripts/check_dependencies.py",
+        "modules/journal-sampling/scripts/implementation_bootstrap.py",
+        "modules/journal-sampling/scripts/inspect_journal.py",
+        "modules/journal-sampling/scripts/normalize_journal.py",
+        "modules/journal-sampling/scripts/replay_normalization.py",
+        "modules/journal-sampling/scripts/review_successor.py",
+        "modules/journal-sampling/scripts/run_sample.py"
+      ]
+    },
+    {
+      "component_id": "check-entries",
+      "skills": [
+        "modules/check-entries/skills/check-entries/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/check-entries/scripts/apply_review_edits.py",
+        "modules/check-entries/scripts/check_dependencies.py",
+        "modules/check-entries/scripts/implementation_bootstrap.py",
+        "modules/check-entries/scripts/inspect_entries.py",
+        "modules/check-entries/scripts/run_checks.py"
+      ]
+    },
+    {
+      "component_id": "journal-bank-reconciliation",
+      "skills": [
+        "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
+        "modules/journal-bank-reconciliation/scripts/check_dependencies.py",
+        "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+        "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
+        "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
+        "modules/journal-bank-reconciliation/scripts/semantic_review.py"
+      ]
+    },
+    {
+      "component_id": "passive-invoice-audit",
+      "skills": [
+        "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/passive-invoice-audit/scripts/check_dependencies.py",
+        "modules/passive-invoice-audit/scripts/evaluate_audit.py",
+        "modules/passive-invoice-audit/scripts/run_audit.py"
+      ]
+    },
+    {
+      "component_id": "sales-plan",
+      "skills": [
+        "modules/sales-plan/skills/sales-plan/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/sales-plan/scripts/check_dependencies.py",
+        "modules/sales-plan/scripts/model_use.py",
+        "modules/sales-plan/scripts/prepare_sales_plan_case.py",
+        "modules/sales-plan/scripts/run_plan.py"
+      ]
+    },
+    {
+      "component_id": "business-planning",
+      "skills": [
+        "modules/business-planning/skills/business-planning/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/business-planning/scripts/check_dependencies.py",
+        "modules/business-planning/scripts/run_business_plan.py",
+        "modules/business-planning/scripts/run_strategic_plan.py"
+      ]
+    },
+    {
+      "component_id": "variance-analysis",
+      "skills": [
+        "modules/variance-analysis/skills/variance-analysis/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/variance-analysis/scripts/check_dependencies.py",
+        "modules/variance-analysis/scripts/inspect_column_values.py",
+        "modules/variance-analysis/scripts/inspect_inputs.py",
+        "modules/variance-analysis/scripts/model_use.py",
+        "modules/variance-analysis/scripts/review_preflight.py",
+        "modules/variance-analysis/scripts/run_variance.py"
+      ]
+    },
+    {
+      "component_id": "management-control-pack",
+      "skills": [
+        "modules/management-control-pack/skills/management-control-pack/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/management-control-pack/scripts/check_dependencies.py",
+        "modules/management-control-pack/scripts/finalize_pack.py",
+        "modules/management-control-pack/scripts/inspect_inputs.py",
+        "modules/management-control-pack/scripts/run_pack.py"
+      ]
+    },
+    {
+      "component_id": "centrale-rischi-review",
+      "skills": [
+        "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/centrale-rischi-review/scripts/check_dependencies.py",
+        "modules/centrale-rischi-review/scripts/evaluate_pdf_corpus.py",
+        "modules/centrale-rischi-review/scripts/finalize_analysis.py",
+        "modules/centrale-rischi-review/scripts/inspect_inputs.py",
+        "modules/centrale-rischi-review/scripts/run_analysis.py",
+        "modules/centrale-rischi-review/scripts/run_gold_benchmark.py"
+      ]
+    },
+    {
+      "component_id": "financial-analysis",
+      "skills": [
+        "modules/financial-analysis/skills/financial-analysis/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/financial-analysis/scripts/check_dependencies.py",
+        "modules/financial-analysis/scripts/model_use.py",
+        "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
+        "modules/financial-analysis/scripts/prepare_fdd_case.py",
+        "modules/financial-analysis/scripts/prepare_monthly_pnl_case.py",
+        "modules/financial-analysis/scripts/prepare_working_capital_case.py",
+        "modules/financial-analysis/scripts/run_pack.py",
+        "modules/financial-analysis/scripts/validate_case_contracts.py"
+      ]
+    },
+    {
+      "component_id": "report-builder",
+      "skills": [
+        "modules/report-builder/skills/report-builder/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/report-builder/scripts/apply_review_edits.py",
+        "modules/report-builder/scripts/build_report.py",
+        "modules/report-builder/scripts/check_dependencies.py",
+        "modules/report-builder/scripts/expand_model_context.py",
+        "modules/report-builder/scripts/implementation_bootstrap.py",
+        "modules/report-builder/scripts/inspect_inputs.py",
+        "modules/report-builder/scripts/prepared_contract.py",
+        "modules/report-builder/scripts/review_numeric_measures.py",
+        "modules/report-builder/scripts/seal_review_integrity.py",
+        "modules/report-builder/scripts/validate_review_integrity.py"
+      ]
+    },
+    {
+      "component_id": "concordato-plan-review",
+      "skills": [
+        "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/concordato-plan-review/scripts/apply_review_edits.py",
+        "modules/concordato-plan-review/scripts/check_dependencies.py",
+        "modules/concordato-plan-review/scripts/finalize_output_closure.py",
+        "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+        "modules/concordato-plan-review/scripts/replay_assurance.py",
+        "modules/concordato-plan-review/scripts/review_case_model.py",
+        "modules/concordato-plan-review/scripts/review_source_roles.py",
+        "modules/concordato-plan-review/scripts/run_concordato_review.py"
+      ]
+    },
+    {
+      "component_id": "comunicazione-professionale",
+      "skills": [
+        "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/comunicazione-professionale/scripts/check_dependencies.py",
+        "modules/comunicazione-professionale/scripts/initialize_workspace.py",
+        "modules/comunicazione-professionale/scripts/package_communications.py",
+        "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
+        "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
+        "modules/comunicazione-professionale/scripts/prepare_run.py",
+        "modules/comunicazione-professionale/scripts/promote_studio_profile.py",
+        "modules/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
+        "modules/comunicazione-professionale/scripts/record_contribution.py",
+        "modules/comunicazione-professionale/scripts/record_creative_direction_decision.py",
+        "modules/comunicazione-professionale/scripts/record_external_delivery.py",
+        "modules/comunicazione-professionale/scripts/record_history_privacy_assessment.py",
+        "modules/comunicazione-professionale/scripts/record_history_pseudonymization.py",
+        "modules/comunicazione-professionale/scripts/record_review.py",
+        "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
+        "modules/comunicazione-professionale/scripts/render_visuals.py",
+        "modules/comunicazione-professionale/scripts/validate_run.py"
+      ]
+    },
+    {
+      "component_id": "presenza-digitale-studio",
+      "skills": [
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/presenza-digitale-studio/scripts/check_dependencies.py",
+        "modules/presenza-digitale-studio/scripts/initialize_workspace.py",
+        "modules/presenza-digitale-studio/scripts/package_website.py",
+        "modules/presenza-digitale-studio/scripts/prepare_run.py",
+        "modules/presenza-digitale-studio/scripts/prepare_sites_binding.py",
+        "modules/presenza-digitale-studio/scripts/record_external_delivery.py",
+        "modules/presenza-digitale-studio/scripts/record_quality_assessment.py",
+        "modules/presenza-digitale-studio/scripts/record_review.py",
+        "modules/presenza-digitale-studio/scripts/record_site_brief.py",
+        "modules/presenza-digitale-studio/scripts/record_sites_delivery.py",
+        "modules/presenza-digitale-studio/scripts/validate_run.py",
+        "modules/presenza-digitale-studio/scripts/validate_site.py"
+      ]
+    },
+    {
+      "component_id": "prompt-optimizer",
+      "skills": [
+        "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/prompt-optimizer/scripts/apply_review_edits.py",
+        "modules/prompt-optimizer/scripts/check_dependencies.py",
+        "modules/prompt-optimizer/scripts/inspect_question.py",
+        "modules/prompt-optimizer/scripts/run_fiscalprompt_benchmark.py",
+        "modules/prompt-optimizer/scripts/summarize_fiscalprompt_benchmark.py",
+        "modules/prompt-optimizer/scripts/validate_prompt.py"
+      ]
+    },
+    {
+      "component_id": "deep-research-validator",
+      "skills": [
+        "modules/deep-research-validator/skills/deep-research-validator/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/deep-research-validator/scripts/apply_review_edits.py",
+        "modules/deep-research-validator/scripts/check_dependencies.py",
+        "modules/deep-research-validator/scripts/inspect_document.py",
+        "modules/deep-research-validator/scripts/inspect_sources.py",
+        "modules/deep-research-validator/scripts/package_validation.py"
+      ]
+    },
+    {
+      "component_id": "previdenza-inps",
+      "skills": [
+        "modules/previdenza-inps/skills/previdenza-inps/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
+        "modules/previdenza-inps/scripts/check_dependencies.py",
+        "modules/previdenza-inps/scripts/inventory_case.py",
+        "modules/previdenza-inps/scripts/package_case.py",
+        "modules/previdenza-inps/scripts/reconcile_contributions.py",
+        "modules/previdenza-inps/scripts/register_portal_export.py",
+        "modules/previdenza-inps/scripts/validate_case_records.py"
+      ]
+    },
+    {
+      "component_id": "registro-imprese-sari",
+      "skills": [
+        "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/registro-imprese-sari/scripts/check_dependencies.py",
+        "modules/registro-imprese-sari/scripts/initialize_case.py",
+        "modules/registro-imprese-sari/scripts/inventory_case.py",
+        "modules/registro-imprese-sari/scripts/package_practice.py",
+        "modules/registro-imprese-sari/scripts/register_official_source.py",
+        "modules/registro-imprese-sari/scripts/sari_connector.py",
+        "modules/registro-imprese-sari/scripts/validate_practice_case.py"
+      ]
+    },
+    {
+      "component_id": "bandi-agevolazioni",
+      "skills": [
+        "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/bandi-agevolazioni/scripts/check_dependencies.py",
+        "modules/bandi-agevolazioni/scripts/evaluate_intelligence.py",
+        "modules/bandi-agevolazioni/scripts/initialize_case.py",
+        "modules/bandi-agevolazioni/scripts/intelligence_workflow.py",
+        "modules/bandi-agevolazioni/scripts/link_sources.py",
+        "modules/bandi-agevolazioni/scripts/opportunity_radar.py",
+        "modules/bandi-agevolazioni/scripts/package_dossier.py",
+        "modules/bandi-agevolazioni/scripts/record_review.py",
+        "modules/bandi-agevolazioni/scripts/register_source.py",
+        "modules/bandi-agevolazioni/scripts/validate_application.py"
+      ]
+    },
+    {
+      "component_id": "bilancio-xbrl-it",
+      "skills": [
+        "modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/bilancio-xbrl-it/scripts/audit_schedule_taxonomy.py",
+        "modules/bilancio-xbrl-it/scripts/audit_statutory_presentation.py",
+        "modules/bilancio-xbrl-it/scripts/benchmark_performance.py",
+        "modules/bilancio-xbrl-it/scripts/build_taxonomy_catalogue.py",
+        "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
+        "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
+        "modules/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+        "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
+        "modules/bilancio-xbrl-it/scripts/run_background_job.py",
+        "modules/bilancio-xbrl-it/scripts/run_golden_cases.py",
+        "modules/bilancio-xbrl-it/scripts/run_xbrl_conformance.py",
+        "modules/bilancio-xbrl-it/scripts/service_bridge.py",
+        "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
+        "modules/bilancio-xbrl-it/scripts/xbrl_case.py"
+      ]
+    },
+    {
+      "component_id": "browser-automation",
+      "skills": [
+        "modules/browser-automation/skills/browser-automation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/browser-automation/scripts/acceptance_fixture.py",
+        "modules/browser-automation/scripts/capability_pipeline.py",
+        "modules/browser-automation/scripts/check_dependencies.py",
+        "modules/browser-automation/scripts/check_installation.py",
+        "modules/browser-automation/scripts/discovery_pack.py"
+      ]
+    },
+    {
+      "component_id": "studio-archive",
+      "skills": [
+        "modules/studio-archive/skills/studio-archive/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/studio-archive/scripts/build_model_data_report.py",
+        "modules/studio-archive/scripts/check_dependencies.py",
+        "modules/studio-archive/scripts/studio_archive.py"
+      ]
+    }
+  ],
+  "vera_wrapper_skills": [
+    "skills/aml-review/SKILL.md",
+    "skills/archive-organization/SKILL.md",
+    "skills/avviso-intake/SKILL.md",
+    "skills/bandi-agevolazioni/SKILL.md",
+    "skills/bilancio-xbrl-it/SKILL.md",
+    "skills/browser-automation/SKILL.md",
+    "skills/business-planning/SKILL.md",
+    "skills/centrale-rischi-review/SKILL.md",
+    "skills/check-entries/SKILL.md",
+    "skills/comunicazione-professionale/SKILL.md",
+    "skills/concordato-plan-review/SKILL.md",
+    "skills/dati-fiscali-strutturati/SKILL.md",
+    "skills/deep-research-validator/SKILL.md",
+    "skills/email-cliente/SKILL.md",
+    "skills/fatture-xml-check/SKILL.md",
+    "skills/financial-analysis/SKILL.md",
+    "skills/journal-bank-reconciliation/SKILL.md",
+    "skills/journal-sampling/SKILL.md",
+    "skills/management-control-pack/SKILL.md",
+    "skills/new-client/SKILL.md",
+    "skills/open-item-reconciliation/SKILL.md",
+    "skills/passive-invoice-audit/SKILL.md",
+    "skills/presenza-digitale-studio/SKILL.md",
+    "skills/previdenza-inps/SKILL.md",
+    "skills/privacy-surface-review/SKILL.md",
+    "skills/prompt-optimizer/SKILL.md",
+    "skills/quesito-legale-fiscale/SKILL.md",
+    "skills/registro-imprese-sari/SKILL.md",
+    "skills/report-builder/SKILL.md",
+    "skills/sales-plan/SKILL.md",
+    "skills/studio-archive/SKILL.md",
+    "skills/variance-analysis/SKILL.md",
+    "skills/vera/SKILL.md"
+  ]
+}

@@ -169,8 +169,13 @@ batch is accepted together; source row order never breaks target collisions.
    evidence is optional for this explicit-identifier stage. Conflict-free
    reference waves repeat until no further safe reference singleton remains.
 2. `reference_group`: one bank movement to many journal rows, or many bank
-   movements to one journal row, only when a shared stable reference defines
-   the complete group, the reviewed shape permits it, every row is inside the
+   movements to one journal row, only when a shared stable reference or a
+   complete explicit identifier list defines the group. Lists come only from
+   the mapped reference field; whitespace, comma, semicolon and pipe separate
+   identifiers, while internal punctuation is preserved. Each identifier must
+   contain letters and digits. At most 100 distinct identifiers are admitted;
+   missing or duplicated opposite-side identifiers withhold the entire group.
+   The reviewed shape must permit it, every row must be inside the
    reviewed perimeter, and exact Decimal group totals agree within tolerance.
    Any row participating in more than one possible group keeps all overlapping
    groups unmatched.

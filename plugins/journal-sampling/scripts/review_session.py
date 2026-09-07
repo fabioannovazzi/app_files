@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -37,10 +37,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "render_step": "Render the review workbench with `{tool}`.",
         "save_step": "Save reviewer actions with `{tool}`.",
         "apply_step": "Apply reviewer actions with `{tool}`.",
-        "handoff_notice": (
-            "Persistent save/apply requires the MCP or local-server review "
-            "surface. Static HTML fallback can copy or download decision JSON only."
-        ),
+        "handoff_notice": "Persistent save/apply requires the MCP or local-server review surface. "
+        "Static HTML fallback can copy or download decision JSON only.",
         "columns": (
             "Type",
             "Entry or artifact",
@@ -65,22 +63,28 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "audit": "Sampling audit JSON",
         },
         "workbook_sheet": "Sheet1",
-        "dependency_note": (
-            "Codex should run scripts/check_dependencies.py before helper scripts."
-        ),
+        "dependency_note": "Codex should run scripts/check_dependencies.py before helper scripts.",
         "data_posture_notes": [
-            "Sampling scripts read the normalized journal CSV locally and write bounded sample review artifacts.",
-            "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+            "Sampling scripts read the normalized journal CSV locally and write "
+            "bounded sample review artifacts.",
+            "No external connector, upload path, remote SQL, or hosted notebook "
+            "execution is used by default.",
         ],
         "caveats": [
-            "The deterministic sample is governed by sampling_audit.json; review does not change the sample without rerunning.",
-            "The MCP review payload is bounded; use CSV/XLSX/JSON outputs as the complete evidence set.",
-            "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
+            "The deterministic sample is governed by sampling_audit.json; review does not "
+            "change the sample without rerunning.",
+            "The MCP review payload is bounded; use CSV/XLSX/JSON outputs as the complete "
+            "evidence set.",
+            "ui_decisions.json is pending until Codex, the MCP widget, or fallback review "
+            "records decisions.",
         ],
         "next_actions": [
-            "Call validate_journal_sampling_review, then render_journal_sampling_review when MCP is available.",
-            "Review sampling parameters, filters, population counts, and sampled entries before delivery.",
-            "Change method, size, filters, or mappings and rerun when the sample basis is wrong.",
+            "Call validate_journal_sampling_review, then "
+            "render_journal_sampling_review when MCP is available.",
+            "Review sampling parameters, filters, population counts, and sampled "
+            "entries before delivery.",
+            "Change method, size, filters, or mappings and rerun when the sample "
+            "basis is wrong.",
         ],
     },
     "es": {
@@ -97,11 +101,9 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "render_step": "Abra el área de revisión con `{tool}`.",
         "save_step": "Guarde las decisiones del revisor con `{tool}`.",
         "apply_step": "Aplique las decisiones del revisor con `{tool}`.",
-        "handoff_notice": (
-            "El guardado y la aplicación persistentes requieren la superficie MCP "
-            "o el servidor local. El modo HTML estático solo permite copiar o "
-            "descargar el JSON de decisiones."
-        ),
+        "handoff_notice": "El guardado y la aplicación persistentes requieren la superficie MCP o "
+        "el servidor local. El modo HTML estático solo permite copiar o "
+        "descargar el JSON de decisiones.",
         "columns": (
             "Tipo",
             "Asiento o artefacto",
@@ -126,22 +128,228 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "audit": "JSON de auditoría del muestreo",
         },
         "workbook_sheet": "Muestra del diario",
-        "dependency_note": (
-            "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
-        ),
+        "dependency_note": "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts "
+        "auxiliares.",
         "data_posture_notes": [
-            "Los scripts de muestreo leen localmente el CSV del diario normalizado y generan artefactos acotados para la revisión de la muestra.",
-            "De forma predeterminada no se utilizan conectores externos, rutas de carga, SQL remoto ni cuadernos alojados.",
+            "Los scripts de muestreo leen localmente el CSV del diario "
+            "normalizado y generan artefactos acotados para la revisión de la "
+            "muestra.",
+            "De forma predeterminada no se utilizan conectores externos, rutas "
+            "de carga, SQL remoto ni cuadernos alojados.",
         ],
         "caveats": [
-            "La muestra determinista se rige por sampling_audit.json; la revisión no modifica la muestra sin volver a ejecutar el proceso.",
-            "Los datos de revisión MCP están acotados; utilice las salidas CSV, XLSX y JSON como conjunto completo de evidencias.",
-            "ui_decisions.json permanece pendiente hasta que Codex, el widget MCP o la revisión alternativa registren las decisiones.",
+            "La muestra determinista se rige por sampling_audit.json; la revisión no "
+            "modifica la muestra sin volver a ejecutar el proceso.",
+            "Los datos de revisión MCP están acotados; utilice las salidas CSV, XLSX y "
+            "JSON como conjunto completo de evidencias.",
+            "ui_decisions.json permanece pendiente hasta que Codex, el widget MCP o la "
+            "revisión alternativa registren las decisiones.",
         ],
         "next_actions": [
-            "Ejecute validate_journal_sampling_review y, cuando MCP esté disponible, render_journal_sampling_review.",
-            "Revise los parámetros, los filtros, los recuentos de la población y los asientos muestreados antes de la entrega.",
-            "Cambie el método, el tamaño, los filtros o las asignaciones y vuelva a ejecutar el proceso si la base de muestreo es incorrecta.",
+            "Ejecute validate_journal_sampling_review y, cuando MCP esté disponible, "
+            "render_journal_sampling_review.",
+            "Revise los parámetros, los filtros, los recuentos de la población y los "
+            "asientos muestreados antes de la entrega.",
+            "Cambie el método, el tamaño, los filtros o las asignaciones y vuelva a "
+            "ejecutar el proceso si la base de muestreo es incorrecta.",
+        ],
+    },
+    "it": {
+        "product_title": "Campionamento giornale",
+        "handoff_title": "Passaggio alla revisione",
+        "run_id": "ID esecuzione",
+        "review_payload": "Dati di revisione",
+        "run_intake": "Impostazioni esecuzione",
+        "pending_decisions": "Decisioni in sospeso",
+        "applied_decisions": "Decisioni applicate",
+        "final_artifacts": "Artefatti finali",
+        "review_in_codex": "Revisione in Codex",
+        "validate_step": "Convalidare i dati con `{tool}`.",
+        "render_step": "Aprire la revisione con `{tool}`.",
+        "save_step": "Salvare le decisioni con `{tool}`.",
+        "apply_step": "Applicare le decisioni con `{tool}`.",
+        "handoff_notice": "Il salvataggio e l’applicazione persistenti richiedono MCP o il server "
+        "locale. Il ripiego HTML statico consente solo di copiare o scaricare il "
+        "JSON delle decisioni.",
+        "columns": (
+            "Tipo",
+            "Scrittura o artefatto",
+            "Azione suggerita",
+            "Fonte",
+            "Output",
+            "Stato",
+        ),
+        "sampled_entry": "Scrittura campionata {index}",
+        "page": "pagina",
+        "row": "riga",
+        "sample_control": "Campione {method}: {sample_size} su {population}",
+        "methods": {
+            "random": "casuale",
+            "systematic": "sistematico",
+            "stratified": "stratificato",
+            "mus": "per unità monetaria",
+        },
+        "artifact_titles": {
+            "csv": "Campione del giornale CSV",
+            "xlsx": "Cartella Excel del campione",
+            "audit": "Tracciato di campionamento JSON",
+        },
+        "workbook_sheet": "Campione",
+        "dependency_note": "Codex deve eseguire scripts/check_dependencies.py prima degli script "
+        "operativi.",
+        "data_posture_notes": [
+            "Gli script leggono localmente il giornale normalizzato CSV e "
+            "producono artefatti di revisione del campione.",
+            "Per impostazione predefinita non vengono usati connettori esterni, "
+            "caricamenti, SQL remoto o notebook ospitati.",
+        ],
+        "caveats": [
+            "Il campione è governato da sampling_audit.json; la revisione non lo modifica "
+            "senza una nuova esecuzione.",
+            "La revisione MCP è delimitata; gli output CSV/XLSX/JSON costituiscono "
+            "l’insieme completo delle evidenze.",
+            "ui_decisions.json resta in sospeso finché Codex, il widget MCP o la revisione "
+            "alternativa non registrano le decisioni.",
+        ],
+        "next_actions": [
+            "Chiamare validate_journal_sampling_review, poi "
+            "render_journal_sampling_review quando MCP è disponibile.",
+            "Verificare parametri, filtri, conteggi della popolazione e scritture "
+            "campionate prima della consegna.",
+            "Se la base del campione è errata, modificare metodo, dimensione, filtri "
+            "o mapping e rieseguire.",
+        ],
+    },
+    "fr": {
+        "product_title": "Échantillonnage du journal",
+        "handoff_title": "Transmission pour révision",
+        "run_id": "ID d’exécution",
+        "review_payload": "Données de révision",
+        "run_intake": "Paramètres d’exécution",
+        "pending_decisions": "Décisions en attente",
+        "applied_decisions": "Décisions appliquées",
+        "final_artifacts": "Livrables finaux",
+        "review_in_codex": "Révision dans Codex",
+        "validate_step": "Valider les données avec `{tool}`.",
+        "render_step": "Ouvrir la révision avec `{tool}`.",
+        "save_step": "Enregistrer les décisions avec `{tool}`.",
+        "apply_step": "Appliquer les décisions avec `{tool}`.",
+        "handoff_notice": "L’enregistrement et l’application persistants nécessitent MCP ou le "
+        "serveur local. Le HTML statique permet uniquement de copier ou "
+        "télécharger le JSON des décisions.",
+        "columns": (
+            "Type",
+            "Écriture ou livrable",
+            "Action proposée",
+            "Source",
+            "Sortie",
+            "Statut",
+        ),
+        "sampled_entry": "Écriture échantillonnée {index}",
+        "page": "page",
+        "row": "ligne",
+        "sample_control": "Échantillon {method} : {sample_size} sur {population}",
+        "methods": {
+            "random": "aléatoire",
+            "systematic": "systématique",
+            "stratified": "stratifié",
+            "mus": "par unité monétaire",
+        },
+        "artifact_titles": {
+            "csv": "Échantillon du journal CSV",
+            "xlsx": "Classeur de l’échantillon",
+            "audit": "Piste d’échantillonnage JSON",
+        },
+        "workbook_sheet": "Échantillon",
+        "dependency_note": "Codex doit exécuter scripts/check_dependencies.py avant les scripts "
+        "opérationnels.",
+        "data_posture_notes": [
+            "Les scripts lisent localement le journal normalisé CSV et "
+            "produisent des livrables de révision de l’échantillon.",
+            "Aucun connecteur externe, téléversement, SQL distant ou notebook "
+            "hébergé n’est utilisé par défaut.",
+        ],
+        "caveats": [
+            "sampling_audit.json définit l’échantillon ; la révision ne le modifie pas "
+            "sans nouvelle exécution.",
+            "La révision MCP est limitée ; les sorties CSV/XLSX/JSON constituent "
+            "l’ensemble complet des preuves.",
+            "ui_decisions.json reste en attente jusqu’à l’enregistrement des décisions par "
+            "Codex, le widget MCP ou la révision alternative.",
+        ],
+        "next_actions": [
+            "Appeler validate_journal_sampling_review, puis "
+            "render_journal_sampling_review lorsque MCP est disponible.",
+            "Vérifier les paramètres, filtres, effectifs et écritures échantillonnées "
+            "avant livraison.",
+            "Si la base est incorrecte, modifier la méthode, la taille, les filtres "
+            "ou les correspondances et relancer.",
+        ],
+    },
+    "de": {
+        "product_title": "Journalstichprobe",
+        "handoff_title": "Übergabe zur Prüfung",
+        "run_id": "Lauf-ID",
+        "review_payload": "Prüfdaten",
+        "run_intake": "Laufparameter",
+        "pending_decisions": "Ausstehende Entscheidungen",
+        "applied_decisions": "Angewandte Entscheidungen",
+        "final_artifacts": "Endgültige Artefakte",
+        "review_in_codex": "Prüfung in Codex",
+        "validate_step": "Daten mit `{tool}` validieren.",
+        "render_step": "Prüfung mit `{tool}` öffnen.",
+        "save_step": "Entscheidungen mit `{tool}` speichern.",
+        "apply_step": "Entscheidungen mit `{tool}` anwenden.",
+        "handoff_notice": "Dauerhaftes Speichern und Anwenden erfordert MCP oder den lokalen "
+        "Server. Statisches HTML erlaubt nur das Kopieren oder Herunterladen der "
+        "Entscheidungs-JSON.",
+        "columns": (
+            "Typ",
+            "Buchung oder Artefakt",
+            "Vorgeschlagene Aktion",
+            "Quelle",
+            "Ausgabe",
+            "Status",
+        ),
+        "sampled_entry": "Ausgewählte Buchung {index}",
+        "page": "Seite",
+        "row": "Zeile",
+        "sample_control": "Stichprobe {method}: {sample_size} von {population}",
+        "methods": {
+            "random": "zufällig",
+            "systematic": "systematisch",
+            "stratified": "geschichtet",
+            "mus": "nach Geldeinheiten",
+        },
+        "artifact_titles": {
+            "csv": "Journalstichprobe CSV",
+            "xlsx": "Arbeitsmappe der Stichprobe",
+            "audit": "Stichprobenprotokoll JSON",
+        },
+        "workbook_sheet": "Stichprobe",
+        "dependency_note": "Codex muss scripts/check_dependencies.py vor den Arbeitsskripten "
+        "ausführen.",
+        "data_posture_notes": [
+            "Die Skripte lesen die normalisierte Journal-CSV lokal und erzeugen "
+            "Prüfartefakte für die Stichprobe.",
+            "Standardmäßig werden keine externen Konnektoren, Uploads, "
+            "Remote-SQL oder gehosteten Notebooks verwendet.",
+        ],
+        "caveats": [
+            "sampling_audit.json bestimmt die Stichprobe; eine Prüfung ändert sie nicht "
+            "ohne erneuten Lauf.",
+            "Die MCP-Prüfung ist begrenzt; CSV/XLSX/JSON-Ausgaben bilden den vollständigen "
+            "Nachweisbestand.",
+            "ui_decisions.json bleibt ausstehend, bis Codex, das MCP-Widget oder die "
+            "alternative Prüfung Entscheidungen speichert.",
+        ],
+        "next_actions": [
+            "validate_journal_sampling_review und anschließend bei verfügbarem MCP "
+            "render_journal_sampling_review aufrufen.",
+            "Vor Übergabe Parameter, Filter, Populationsgrößen und ausgewählte "
+            "Buchungen prüfen.",
+            "Bei fehlerhafter Grundlage Methode, Umfang, Filter oder Zuordnungen "
+            "ändern und erneut ausführen.",
         ],
     },
 }
@@ -297,25 +505,12 @@ def _append_execution_trace(
     *,
     command: Sequence[str],
 ) -> None:
+    from vera_assurance.serialization import build_review_execution_step
+
     payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    data_posture = payload.get("data_posture")
-    local_files = (
-        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
-    )
-    inputs = (
-        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
-    )
-    payload["execution_trace"] = [
-        {
-            "step_id": f"{WORKFLOW_NAME}_review_session",
-            "kind": "deterministic_review_session",
-            "status": "passed",
-            "execution_location": "local_codex_workspace",
-            "command": list(command),
-            "inputs": [str(entry) for entry in inputs if entry],
-            "outputs": _local_output_refs(final_artifacts_path),
-        }
-    ]
+    step = build_review_execution_step(payload, WORKFLOW_NAME, command)
+    step["outputs"] = _local_output_refs(final_artifacts_path)
+    payload["execution_trace"] = [step]
     _write_json(run_intake_path, payload)
 
 

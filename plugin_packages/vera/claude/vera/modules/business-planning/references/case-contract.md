@@ -247,6 +247,13 @@ channels with whole-business rows. Net price excludes discounts and applicable
 sales taxes. Explicitly disclose which acquisition, fulfilment, people and other
 costs are included or missing in `cost_scope` and in the economics narrative.
 
+For source-backed operating economics without a calendar date, `period` may be
+null only when the case has `periods: []` and `financial: null`. Referenced
+assumptions then use `effective_periods: []`. The calculation ID uses `undated`
+for its period component, while the calculation record preserves `period: null`.
+Do not invent a calendar placeholder; explain the operating period in the source
+and cost scope. A dated case or linked financial model cannot use this exception.
+
 Calculated IDs are `<scenario>/<period>/commercial_<metric>` for units, net_price,
 revenue, contribution_per_unit, operating_result and break_even_units. Break-even
 is unavailable for nonpositive unit contribution. These calculations remain usable

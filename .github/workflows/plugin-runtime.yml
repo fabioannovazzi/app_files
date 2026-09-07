@@ -10,6 +10,87 @@ permissions:
   contents: read
 
 jobs:
+  input-and-source-correctness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install declared workflow dependencies and test tools
+        run: >-
+          python -m pip install pytest pytest-cov python-docx "reportlab>=4.2.0"
+          -r plugins/client-file-preparation/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
+          -r plugins/passive-invoice-audit/requirements.txt
+          -r plugins/management-control-pack/requirements.txt
+          -r plugins/deep-research-validator/requirements.txt
+      - name: Exercise numeric inputs, XML identity and source extraction
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          plugins/client-file-preparation/tests/test_client_file_preparation.py
+          plugins/passive-invoice-audit/tests/test_passive_invoice_audit.py
+          tests/plugins/test_deep_research_validator_plugin.py
+          tests/plugins/test_management_control_pack.py
+          --cov --cov-config=tests/plugin_correctness.coveragerc
+          --cov-report=term-missing
+
+  sales-plan-correctness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest pytest-cov -r plugins/sales-plan/requirements.txt
+      - name: Verify Plan arithmetic, missing values, assumptions and MCP contract
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_sales_plan_preparation.py
+          --cov --cov-config=tests/plugin_sales_plan.coveragerc
+          --cov-report=term-missing
+
+  managed-runtime-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov mypy bandit
+      - name: Verify generated Vera workflow metadata
+        run: python scripts/build_vera_workflow_registry.py --check
+      - name: Exercise installation, concurrency and failure recovery
+        run: python -m pytest --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py --cov --cov-config=tests/plugin_runtime.coveragerc --cov-report=term-missing
+      - name: Check changed plugin kernels without the application's error suppression
+        run: python -m mypy --config-file=tests/plugin_runtime.mypy.ini
+      - name: Reject medium and high severity findings in changed plugin kernels
+        run: |
+          python - <<'PY'
+          import configparser
+          import subprocess
+          import sys
+          config = configparser.ConfigParser()
+          config.read("tests/plugin_runtime.mypy.ini")
+          paths = [path.strip() for path in config["mypy"]["files"].split(",") if path.strip()]
+          subprocess.run([sys.executable, "-m", "bandit", *paths, "-ll"], check=True)
+          PY
+
   vera-packaged-mcp:
     runs-on: ubuntu-latest
     timeout-minutes: 15

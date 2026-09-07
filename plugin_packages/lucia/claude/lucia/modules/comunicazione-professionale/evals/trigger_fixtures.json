@@ -4,7 +4,7 @@
   "should_trigger": [
     {
       "id": "new-tax-rule-email",
-      "prompt": "Vera, spiega questa nuova norma fiscale ai clienti con una email chiara e fonti verificabili.",
+      "prompt": "Spiega questa nuova norma fiscale ai clienti con una email chiara e fonti verificabili.",
       "required_signals": ["nuova norma", "clienti", "email", "fonti"]
     },
     {

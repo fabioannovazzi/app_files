@@ -13,7 +13,12 @@
     "skills/advisory-case-director/agents/openai.yaml",
     "skills/advisory-case-director/evals",
     "skills/advisory-case-director/references/case-direction-return.md",
-    "skills/advisory-case-director/references/operating-model.md"
+    "skills/advisory-case-director/references/operating-model.md",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -71,6 +76,20 @@
         "Separate market-level findings from unproven target execution or capability claims.",
         "Register the returned report and controlling sources in the case before revising the workpaper."
       ]
+    },
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
     }
   ],
   "security_controls": [
@@ -83,6 +102,6 @@
     "reviewed_at": "2026-08-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b4e62b8fd864e4dd6479d1dfb36797778337c95fada834e5b977c99e7c03d482"
+    "source_fingerprint": "3c78542e71a1fdf24855d6c88b1100b4eb3a0682b6167318548f79145ec691a4"
   }
 }

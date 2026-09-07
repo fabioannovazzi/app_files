@@ -14,6 +14,8 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 
+from tests.model_data_helpers import write_no_model_report
+
 ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE_CORE_PATH = ROOT / "plugins" / "studio-archive" / "scripts" / "archive_core.py"
 
@@ -390,6 +392,66 @@ def test_repeated_import_reuses_one_content_addressed_input(
     assert replayed["input_id"] == client_case.imported["input_id"]
     assert replayed["input_receipt"] == client_case.imported["input_receipt"]
     assert len(replayed["engagement"]["imports"]) == 1
+
+
+def test_duplicate_filename_is_retained_without_changing_prior_run(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    old_run = _prepare_run(archive_core, client_case, idempotency_key="before-copy")
+    receipt_path = (
+        Path(client_case.imported["input_receipt"]["path"]).parent / "receipt.json"
+    )
+    original_receipt = receipt_path.read_bytes()
+    duplicate = client_case.source.with_name("journal-copy.txt")
+    duplicate.write_bytes(client_case.source.read_bytes())
+
+    imported = archive_core.import_studio_client_document(
+        client_case.client_id,
+        duplicate,
+        "journal",
+        engagement_id=client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+
+    assert imported["input_id"] == client_case.imported["input_id"]
+    assert imported["input_receipt"]["imported_names"] == [
+        "journal-copy.txt",
+        "journal.txt",
+    ]
+    assert receipt_path.read_bytes() == original_receipt
+    replay = archive_core.ledger.load_run(
+        client_case.client_root,
+        client_case.engagement_id,
+        old_run["client_engagement"]["run_id"],
+    )
+    assert replay["context"]["input_bindings"][0]["imported_names"] == ["journal.txt"]
+    new_run = _prepare_run(archive_core, client_case, idempotency_key="after-copy")
+    assert new_run["client_engagement"]["input_bindings"][0]["imported_names"] == [
+        "journal-copy.txt",
+        "journal.txt",
+    ]
+
+
+def test_different_content_does_not_share_imported_filename_lineage(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    other = client_case.source.with_name("journal-other.txt")
+    other.write_text(
+        "Different obligation with the same reported amount", encoding="utf-8"
+    )
+
+    imported = archive_core.import_studio_client_document(
+        client_case.client_id,
+        other,
+        "journal",
+        engagement_id=client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+
+    assert imported["input_id"] != client_case.imported["input_id"]
+    assert imported["input_receipt"]["imported_names"] == ["journal-other.txt"]
 
 
 def test_concurrent_import_retries_resolve_to_one_input_receipt(
@@ -770,6 +832,9 @@ def test_lifecycle_seals_every_output_with_purpose_and_audience(
         state_dir=client_case.state_dir,
     )
     output_dir = Path(prepared["client_engagement"]["output_dir"])
+    report_declarations = write_no_model_report(
+        output_dir, "financial-analysis", run_id
+    )
     (output_dir / "review").mkdir()
     (output_dir / "review" / "analysis.txt").write_text(
         "Reviewed analysis\n",
@@ -781,7 +846,8 @@ def test_lifecycle_seals_every_output_with_purpose_and_audience(
         client_case.client_id,
         client_case.engagement_id,
         run_id,
-        [
+        report_declarations
+        + [
             {
                 "artifact_id": "review.analysis",
                 "path": "review/analysis.txt",
@@ -803,7 +869,8 @@ def test_lifecycle_seals_every_output_with_purpose_and_audience(
         client_case.client_id,
         client_case.engagement_id,
         run_id,
-        [
+        report_declarations
+        + [
             {
                 "artifact_id": "review.analysis",
                 "path": "review/analysis.txt",
@@ -835,6 +902,8 @@ def test_lifecycle_seals_every_output_with_purpose_and_audience(
     assert {item["path"] for item in artifacts} == {
         "diagnostics.json",
         "review/analysis.txt",
+        "model_data_report.json",
+        "model_data_report.md",
     }
     assert {item["audience"] for item in artifacts} == {"internal", "review"}
     assert all(item["purpose"] for item in artifacts)
@@ -858,6 +927,9 @@ def test_concurrent_finalizers_commit_one_authoritative_declaration_set(
         state_dir=client_case.state_dir,
     )
     output_dir = Path(prepared["client_engagement"]["output_dir"])
+    report_declarations = write_no_model_report(
+        output_dir, "financial-analysis", run_id
+    )
     (output_dir / "result.bin").write_bytes(b"reviewable output\n" * 131_072)
     participant_count = 8
     barrier = Barrier(participant_count)
@@ -870,7 +942,8 @@ def test_concurrent_finalizers_commit_one_authoritative_declaration_set(
                 client_case.client_id,
                 client_case.engagement_id,
                 run_id,
-                [
+                report_declarations
+                + [
                     {
                         "artifact_id": "review.result",
                         "path": "result.bin",
@@ -883,7 +956,11 @@ def test_concurrent_finalizers_commit_one_authoritative_declaration_set(
             )
         except archive_core.ArchiveError as exc:
             return "error", str(exc)
-        return "finalized", finalized["artifact_manifest"]["artifacts"][0]["purpose"]
+        return "finalized", next(
+            item["purpose"]
+            for item in finalized["artifact_manifest"]["artifacts"]
+            if item["artifact_id"] == "review.result"
+        )
 
     with ThreadPoolExecutor(max_workers=participant_count) as executor:
         futures = [
@@ -900,7 +977,14 @@ def test_concurrent_finalizers_commit_one_authoritative_declaration_set(
     )
     assert len(successes) == 1
     assert [result[0] for result in results].count("error") == participant_count - 1
-    assert authoritative["artifacts"][0]["purpose"] == successes[0][1]
+    assert (
+        next(
+            item["purpose"]
+            for item in authoritative["artifacts"]
+            if item["artifact_id"] == "review.result"
+        )
+        == successes[0][1]
+    )
 
 
 def test_finalization_rejects_an_output_that_changes_while_hashed(
@@ -921,6 +1005,9 @@ def test_finalization_rejects_an_output_that_changes_while_hashed(
         state_dir=client_case.state_dir,
     )
     output_dir = Path(prepared["client_engagement"]["output_dir"])
+    report_declarations = write_no_model_report(
+        output_dir, "financial-analysis", run_id
+    )
     output_path = output_dir / "changing.bin"
     output_path.write_bytes(b"A" * (2 * 1024 * 1024))
     original_read = archive_core.ledger.os.read
@@ -947,7 +1034,8 @@ def test_finalization_rejects_an_output_that_changes_while_hashed(
             client_case.client_id,
             client_case.engagement_id,
             run_id,
-            [
+            report_declarations
+            + [
                 {
                     "artifact_id": "review.changing",
                     "path": "changing.bin",
@@ -985,6 +1073,9 @@ def test_finalize_rejects_an_artifact_without_declared_media_type(
         state_dir=client_case.state_dir,
     )
     output_dir = Path(prepared["client_engagement"]["output_dir"])
+    report_declarations = write_no_model_report(
+        output_dir, "financial-analysis", run_id
+    )
     (output_dir / "result.txt").write_text("Reviewed result\n", encoding="utf-8")
 
     with pytest.raises(archive_core.ArchiveError, match="media_type"):
@@ -992,7 +1083,8 @@ def test_finalize_rejects_an_artifact_without_declared_media_type(
             client_case.client_id,
             client_case.engagement_id,
             run_id,
-            [
+            report_declarations
+            + [
                 {
                     "artifact_id": "review.result",
                     "path": "result.txt",
@@ -1382,3 +1474,22 @@ def test_old_customer_file_and_managed_snapshot_have_one_search_result(
         result["results"][0]["source_sha256"]
         == hashlib.sha256(old_file.read_bytes()).hexdigest()
     )
+
+
+def test_explicit_new_run_without_retry_key_creates_distinct_runs(
+    client_case: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    arguments = dict(
+        input_ids=[client_case.imported["input_id"]],
+        new_run=True,
+        state_dir=client_case.state_dir,
+    )
+    first = archive_core.prepare_studio_client_workflow(
+        client_case.engagement_id, "financial-analysis", **arguments
+    )
+    second = archive_core.prepare_studio_client_workflow(
+        client_case.engagement_id, "financial-analysis", **arguments
+    )
+    assert first["status"] == "prepared"
+    assert second["status"] == "prepared"
+    assert first["run"]["run_id"] != second["run"]["run_id"]

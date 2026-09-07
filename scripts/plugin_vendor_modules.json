@@ -151,6 +151,16 @@
       "module_roots": [
         "vera_assurance",
         "vera_ocr"
+      ],
+      "overlays": [
+        {
+          "source_root": "plugins/vera/scripts",
+          "module_roots": ["model_data_report.py"]
+        },
+        {
+          "source_root": "plugins/vera/skills/vera/references",
+          "module_roots": ["model-data-report-contract.md"]
+        }
       ]
     },
     "aml-review": {

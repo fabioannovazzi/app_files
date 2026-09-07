@@ -190,25 +190,12 @@ def _append_execution_trace(
     *,
     command: Sequence[str],
 ) -> None:
+    from vera_assurance.serialization import build_review_execution_step
+
     payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    data_posture = payload.get("data_posture")
-    local_files = (
-        data_posture.get("local_files_read") if isinstance(data_posture, dict) else None
-    )
-    inputs = (
-        local_files if isinstance(local_files, list) else payload.get("input_paths", [])
-    )
-    payload["execution_trace"] = [
-        {
-            "step_id": f"{WORKFLOW_NAME}_review_session",
-            "kind": "deterministic_review_session",
-            "status": "passed",
-            "execution_location": "local_codex_workspace",
-            "command": list(command),
-            "inputs": [str(entry) for entry in inputs if entry],
-            "outputs": _local_output_refs(final_artifacts_path),
-        }
-    ]
+    step = build_review_execution_step(payload, WORKFLOW_NAME, command)
+    step["outputs"] = _local_output_refs(final_artifacts_path)
+    payload["execution_trace"] = [step]
     _write_json(run_intake_path, payload)
 
 
@@ -334,6 +321,43 @@ def _match_title(row: dict[str, Any], index: int, language: str) -> str:
 def _requested_reconciliation_evidence(
     row: dict[str, Any], side: str, language: str
 ) -> tuple[str, str]:
+    localized = {
+        "it": (
+            "movimento non riconciliato",
+            "Scrittura del giornale o del mastro a supporto del movimento bancario {ref}",
+            "Il movimento bancario non ha una corrispondenza nel giornale secondo i controlli eseguiti.",
+            "Estratto conto o prova del pagamento per il movimento del giornale {ref}",
+            "Il movimento del giornale non ha una corrispondenza bancaria secondo i controlli eseguiti.",
+        ),
+        "fr": (
+            "mouvement non rapproché",
+            "Écriture du journal ou du grand livre justifiant le mouvement bancaire {ref}",
+            "Le mouvement bancaire n’a pas de correspondance dans le journal selon les contrôles effectués.",
+            "Relevé bancaire ou preuve de paiement pour le mouvement du journal {ref}",
+            "Le mouvement du journal n’a pas de correspondance bancaire selon les contrôles effectués.",
+        ),
+        "de": (
+            "nicht abgestimmte Buchung",
+            "Journal- oder Hauptbuchbeleg für die Bankbuchung {ref}",
+            "Die Bankbuchung hat nach den durchgeführten Prüfungen keine Zuordnung im Journal.",
+            "Kontoauszug oder Zahlungsnachweis für die Journalbuchung {ref}",
+            "Die Journalbuchung hat nach den durchgeführten Prüfungen keine Bankzuordnung.",
+        ),
+    }
+    if language in localized:
+        fallback, bank_request, bank_reason, journal_request, journal_reason = (
+            localized[language]
+        )
+        descriptor = (
+            _clean_text(row.get("reference") or row.get("movement_number"))
+            or _clean_text(row.get("amount_signed") or row.get("amount_abs"))
+            or fallback
+        )
+        return (
+            (bank_request.format(ref=descriptor), bank_reason)
+            if side == "bank"
+            else (journal_request.format(ref=descriptor), journal_reason)
+        )
     reference = _clean_text(row.get("reference") or row.get("movement_number"))
     amount = _clean_text(row.get("amount_signed") or row.get("amount_abs"))
     descriptor = (

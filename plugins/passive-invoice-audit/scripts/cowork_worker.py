@@ -40,6 +40,8 @@ def run_cowork_chunk(
     workflow_id: str,
     packet_sha256: str,
     reasoning_effort: str,
+    *,
+    worker_selection: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
     """Prepare a bounded request, then ingest its host-recorded worker response.
 
@@ -47,8 +49,8 @@ def run_cowork_chunk(
     dispatches the packaged Haiku agent and saves its response and tool record.
     Missing responses leave the audit pending, never successfully screened.
     """
-    if reasoning_effort != "low":
-        raise AuditError("Cowork Haiku does not accept Luna effort overrides")
+    if worker_selection is not None or reasoning_effort != "low":
+        raise AuditError("Cowork Haiku rejects Codex model or effort overrides")
     request = {
         "schema_version": "vera.cowork_semantic_request.v1",
         "workflow_id": workflow_id,
@@ -92,6 +94,7 @@ def run_cowork_chunk(
     return {
         "response_payload": response,
         "model": "haiku",
+        "worker_runtime": "cowork",
         "reasoning_effort": "host_default",
         "usage": {},
         "duration_ms": 0,

@@ -39,8 +39,8 @@ URL.
 
 ## 2. Connect to the operator's existing Chrome
 
-Use the installed Chrome control skill and its extension-backed Playwright
-surface. Reuse the current Chrome binding and profile, but create a fresh task
+Use Google Chrome connected under Settings → Computer Use → Google Chrome
+and follow its documented extension-backed `tab.playwright` surface. Reuse the current Chrome binding and profile, but create a fresh task
 tab unless the operator explicitly identifies a tab to claim. Do not enumerate
 or inspect unrelated tabs. Do not launch a separate Playwright browser,
 temporary profile, CDP process, or recorder browser.
@@ -100,7 +100,7 @@ session boundary may enable `includeStructuredControls` once. The observer then
 captures only the interactive control metadata plus a structured-context flag;
 it still excludes control values and does not use row text as a fallback name.
 
-Do not use Computer Use or another desktop controller for a required native
+Do not use native accessibility or another desktop controller for a required native
 operating-system or non-browser step. Record a `native_gap`, stop the executable
 browser flow, and hand that exact step to the operator. Keep the operator's
 native action outside portable capability steps and clean replay evidence.
