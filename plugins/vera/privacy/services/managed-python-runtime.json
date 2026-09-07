@@ -65,7 +65,7 @@
     },
     {
       "id": "user-scoped-runtime-isolation",
-      "control": "Managed packages are written outside plugin source and client workspaces to fingerprinted private virtual-environment generations for the selected module and current Python platform. An operating-system lock serializes installation, and only a validated generation is published through an atomic active pointer. Setup failure preserves the previously active generation. Symlink targets and pointers are rejected. The location is write-probed before use and remains user-private when Codex requires the operating system's per-user temporary directory.",
+      "control": "Managed packages are written outside plugin source and client workspaces to fingerprinted private virtual-environment generations for the selected module and current Python platform. An operating-system lock serializes installation, and only a validated generation is published through an atomic active pointer. Setup failure preserves the previously active generation. Symlink targets and pointers are rejected. The location is write-probed before use and remains user-private when Codex requires the operating system's per-user temporary directory. On Windows, compact directory names and a 128-bit hash of plugin, module, Python ABI/platform and requirements fingerprint reduce generated path length while preserving cache isolation. Existing environments are not moved or deleted.",
       "implemented_by": [
         "scripts/managed_python_runtime.py",
         "scripts/_managed_python_runtime.py"
@@ -77,6 +77,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "6b68dfb5f3e225c06b569702c5e5817122d73966661d9da1e799fc4ebe170912"
+    "source_fingerprint": "e2f82cf40829703b846c7516193edd12c765d998b37d12aeb033f9895adeeac4"
   }
 }
