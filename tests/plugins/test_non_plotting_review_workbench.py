@@ -316,7 +316,10 @@ def test_open_item_reconciliation_widget_preflights_external_checkpoint_before_a
     assert "const applicationArgs = applyToolArgs();" in apply_handler
     assert "await saveCurrentDecisions();" not in apply_handler
     assert "window.openai.callTool(applyTool, applicationArgs)" in apply_handler
-    assert "expected_predecessor_checkpoint: expectedPredecessorCheckpoint" in widget
+    assert apply_handler.index("const applicationArgs = applyToolArgs();") < (
+        apply_handler.index("window.openai.callTool(applyTool, applicationArgs)")
+    )
+    assert 'id="review-checkpoint"' in widget
     assert "retained through the separate review channel" in widget
 
 

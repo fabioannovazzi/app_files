@@ -7,6 +7,12 @@ skill to imitate a missing operational workflow.
 
 ## Professional workflows
 
+- `adeguati-assetti`: assess an Italian company's organizational, administrative
+  and accounting arrangements using proportionate review of responsibilities,
+  processes and actual reporting/operating evidence; prepare findings, improvement
+  actions and subsequent reviews. A management report alone is not an assetti
+  assessment; general legal questions remain in quesito-legale-fiscale.
+
 - `aml-review`: review Italian client AML evidence at onboarding or later review,
   reconstruct ownership and economic explanations, investigate inconsistencies,
   compare prior assessments and record professional decisions. New Client owns

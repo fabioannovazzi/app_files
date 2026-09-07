@@ -796,7 +796,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 30
+    expected_module_count = 31
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -805,7 +805,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 8
+    assert core.count('data-jurisdiction-item="it"') == 9
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -919,6 +919,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Preparazione piano vendite",
         "Preparare un business plan",
         "Analisi scostamenti",
+        "Revisione degli assetti",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
         "Analisi finanziaria e due diligence",
@@ -942,6 +943,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.plan.title": "Preparazione piano vendite",
         "module.businessPlanning.title": "Preparare un business plan",
         "module.variance.title": "Analisi scostamenti",
+        "module.assetti.title": "Revisione degli assetti",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
         "module.communication.title": "Comunicazione professionale",
@@ -952,6 +954,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "adeguati-assetti": "Revisione degli assetti",
         "archive-organization": "Riordino della cartella cliente",
         "open-item-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
@@ -988,7 +991,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 30
+    assert len(labels) == 31
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1521,7 +1524,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 30
+    expected_module_link_count = 31
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

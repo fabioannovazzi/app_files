@@ -255,7 +255,7 @@ def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     assert 'href="#jurisdiction"' not in vera
     assert "data-jurisdiction-section" not in vera
     assert "data-jurisdiction-nav" not in vera
-    assert vera.count('data-jurisdiction-item="it"') == 8
+    assert vera.count('data-jurisdiction-item="it"') == 9
     assert 'id="area-matters"' in vera
     assert 'id="area-analysis"' in vera
     assert 'id="area-research"' in vera
@@ -852,7 +852,7 @@ def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> No
                 "function-model-data.js" in page
             ), f"{page_path}: run-level report note is not loaded"
 
-    assert len(standalone_pages) == 20
+    assert len(standalone_pages) == 21
 
 
 def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> None:

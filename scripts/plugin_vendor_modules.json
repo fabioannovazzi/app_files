@@ -163,6 +163,9 @@
         }
       ]
     },
+    "adeguati-assetti": {
+      "module_roots": ["vera_assurance"]
+    },
     "aml-review": {
       "module_roots": [
         "vera_assurance"

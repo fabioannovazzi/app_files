@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
     "aml-review",
+    "adeguati-assetti",
     "archive-organization",
     "open-item-reconciliation",
     "bandi-agevolazioni",
@@ -1491,6 +1492,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "aml-review",
+        "adeguati-assetti",
         "bandi-agevolazioni",
         "browser-automation",
         "business-planning",
@@ -3620,9 +3622,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 30
-    assert core.count('class="module-row"') == 30
-    assert core.count('data-jurisdiction-item="it"') == 8
+    assert core.count(" data-module-link") == 31
+    assert core.count('class="module-row"') == 31
+    assert core.count('data-jurisdiction-item="it"') == 9
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -5265,6 +5267,7 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",
+        "adeguati-assetti": "https://mparanza.com/static/shared/adeguati-assetti/index.html",
         "archive-organization": (
             "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),

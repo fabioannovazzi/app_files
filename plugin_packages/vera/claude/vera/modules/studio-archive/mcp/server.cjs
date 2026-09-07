@@ -53,6 +53,7 @@ const TOOL_NAMES = {
 };
 const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "aml-review",
+  "adeguati-assetti",
   "open-item-reconciliation",
   "archive-organization",
   "client-file-preparation",

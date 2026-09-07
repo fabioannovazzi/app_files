@@ -3,6 +3,24 @@
   "version": 1,
   "should_trigger": [
     {
+      "id": "vera-adeguati-assetti",
+      "prompt": "Vera, valuta gli assetti organizzativi amministrativi e contabili di questa impresa: confronta procedure, report effettivi e decisioni e proponi miglioramenti proporzionati.",
+      "required_signals": [
+        "vera:adeguati-assetti",
+        "evidenze",
+        "funzionamento"
+      ]
+    },
+    {
+      "id": "vera-adeguati-assetti-follow-up",
+      "prompt": "Riesamina gli assetti del cliente usando la precedente valutazione e queste evidenze delle azioni: distingui cosa è attuato e cosa resta da verificare.",
+      "required_signals": [
+        "vera:adeguati-assetti",
+        "azioni",
+        "verificare"
+      ]
+    },
+    {
       "id": "vera-explicit",
       "prompt": "Ask Vera to inspect this accounting folder and choose the right review module.",
       "required_signals": ["Vera", "accounting folder", "review module"]

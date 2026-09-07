@@ -89,6 +89,16 @@
       ]
     },
     {
+      "component_id": "adeguati-assetti",
+      "skills": [
+        "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_review.py",
+        "modules/adeguati-assetti/scripts/check_dependencies.py"
+      ]
+    },
+    {
       "component_id": "journal-sampling",
       "skills": [
         "modules/journal-sampling/skills/journal-sampling/SKILL.md"
@@ -422,6 +432,7 @@
     }
   ],
   "vera_wrapper_skills": [
+    "skills/adeguati-assetti/SKILL.md",
     "skills/aml-review/SKILL.md",
     "skills/archive-organization/SKILL.md",
     "skills/avviso-intake/SKILL.md",

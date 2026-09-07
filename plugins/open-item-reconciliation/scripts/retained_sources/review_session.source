@@ -231,7 +231,9 @@ def _write_standalone_review_html(
     )
     needle = "  <script>\n    const CONFIG = "
     if needle not in html:
-        raise ValueError("open-item reconciliation widget script insertion point not found")
+        raise ValueError(
+            "open-item reconciliation widget script insertion point not found"
+        )
     html = html.replace(needle, injection + needle, 1)
     path = output_dir / "review_ui.html"
     path.write_text(html, encoding="utf-8")
@@ -1412,7 +1414,44 @@ def write_review_session_artifacts(
         if isinstance(row, dict)
     ]
     items: list[dict[str, Any]] = []
-    items.extend(_review_row_items(review_rows, language))
+    # Applied review authority contains only review fields. Restore display
+    # facts from this run's unique accounting record, without changing authority
+    # records, item identity, classification, or any persistence target.
+    accounting_by_id: dict[str, list[dict[str, Any]]] = {}
+    for row in reconciliation_rows:
+        record_id = _clean_text(row.get("record_id"))
+        if record_id:
+            accounting_by_id.setdefault(record_id, []).append(row)
+    display_rows = []
+    for row in review_rows:
+        matches = accounting_by_id.get(_clean_text(row.get("record_id")), [])
+        display_rows.append({**matches[0], **row} if len(matches) == 1 else dict(row))
+    accounting_items = _review_row_items(display_rows, language)
+    assurance_context = result.get("assurance_context") or {}
+    authority = assurance_context.get("professional_review_authority") or {}
+    if authority.get("origin") == "applied_decisions":
+        # prepare_assurance_run has replayed this exact predecessor history.
+        # Keep its item namespace when minimal authority rows are regenerated;
+        # otherwise a second apply would appear to be a different decision set.
+        checkpoint = authority["predecessor_assurance_sha256"]
+        mapping_path = (
+            output_dir
+            / "assurance_transition_history"
+            / checkpoint
+            / "review_payload_mapping.json"
+        )
+        mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
+        predecessor_ids: dict[str, list[str]] = {}
+        for entry in mapping["items"]:
+            if entry["record_id"]:
+                predecessor_ids.setdefault(entry["record_id"], []).append(
+                    entry["item_id"]
+                )
+        for item in accounting_items:
+            prior_ids = predecessor_ids.get(item["data"].get("record_id"), [])
+            if len(prior_ids) == 1:
+                item["id"] = prior_ids[0]
+    items.extend(accounting_items)
     items.extend(_source_processing_issue_items(extraction_errors, language))
     items.extend(_check_items(checks, language))
     items.extend(

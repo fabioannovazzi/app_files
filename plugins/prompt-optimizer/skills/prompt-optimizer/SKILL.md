@@ -97,23 +97,16 @@ data permit.
 
 Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
 
-The plugin has two host-mode behaviors:
+Choose the question interface from the tools available in the current host,
+not from the conversation mode. When a material choice is unresolved and a
+native question tool is available and permitted for that choice, use it with
+focused options derived from the case. Otherwise ask in ordinary chat. Wait
+for an answer when the unresolved choice is necessary to proceed; continue
+with explicit assumptions when it is not material.
 
-- Default mode is the normal starting point. Inspect the question, identify
-  material assumptions and doubts, then proceed with explicit assumptions unless
-  a material choice is unresolved. If a material choice is unresolved, state the
-  proposed defaults and say that the user can switch this chat to Plan mode to
-  change them with structured choices. The user may also answer in chat; if they
-  do, use that answer and continue in the same run.
-- Plan mode is an optional structured-intake lane. When `request_user_input` is
-  available and a material choice is unresolved, use the native widget instead
-  of a textual multiple-choice list. Use the recipe's preferred option as the
-  default and show only the most relevant options; the host-provided custom or
-  free-form path covers anything outside the listed choices.
-
-The plugin must never claim that it switched modes itself. Mode transitions are
-host/user controlled. Codex may ask the user to switch to Plan mode for
-structured intake, but it cannot programmatically enter or leave that mode.
+Do not require a mode switch or a local configuration change to answer intake
+questions. Tool availability does not itself justify asking a question. The
+plugin cannot switch conversation modes itself.
 
 Run UX:
 
@@ -129,8 +122,8 @@ Run UX:
    plain language when useful. Do not force a confirmation ceremony when the
    question already resolves them.
 4. If semantic review finds a material unresolved choice, propose the most
-   likely default and ask in chat; in Plan mode, use the native widget when
-   available.
+   likely default and use an available, permitted native question tool;
+   otherwise ask in chat.
 5. Ask only the material missing questions before drafting. Prefer at most 3
    numbered questions with a short "why this matters" phrase for each, unless
    a native widget is available for the same decision.
@@ -153,10 +146,10 @@ to fill a form.
 ## Intake And Confirmation
 
 First check whether the run has a material research-angle decision. If it does,
-Default mode should state the inferred defaults and pause only when confirmation
-is materially required, or invite the user to switch to Plan mode for native
-choices. In Plan mode, use `request_user_input` when it is available. If the
-user answers in chat, use that answer and continue in the same run.
+state the inferred defaults and pause only when confirmation is materially
+required. Use an available, permitted native question tool, or ask in chat
+when none is available. If the user answers in chat, use that answer and
+continue in the same run.
 
 Research-angle confirmation means the controlling frame before plugin-specific
 details: problem framing, decision lens, risk appetite, scope boundaries,
@@ -291,8 +284,8 @@ python scripts/inspect_question.py <managed-question-file> --client-engagement <
    display, validation scope, and source strategy. Ask only when an unresolved
    choice would materially change the answer.
 7. If confirmation is materially required, generate choices from the actual
-   facts. In Plan mode, prefer `request_user_input`; otherwise ask in chat and
-   wait. Do not use generic keyword-generated choices.
+   facts. Prefer an available, permitted native question tool; otherwise ask
+   in chat and wait. Do not use generic keyword-generated choices.
 8. Proceed with explicit assumptions and caveats when the matter is clear
    enough to answer. The default journey is question to answer to validated
    answer, without requiring the user to manage the optimizer.
@@ -459,8 +452,8 @@ pending unless they are recorded in `ui_decisions.json` and consumed into
 
 Do not build an HTML page for `angle_confirmation`,
 `jurisdiction_confirmation`, or a 2-3 option legal-framework choice. Those
-remain chat choices in Default mode and native Plan-mode choices when this
-conversation is in Plan mode and `request_user_input` is available.
+use an available, permitted native question tool or ordinary chat, regardless
+of conversation mode.
 
 ## Language Policy
 

@@ -527,9 +527,11 @@ def test_advisory_planner_privacy_record_declares_only_dependency_setup() -> Non
 
     assert manifest["hosted_service_ids"] == []
     boundaries = manifest["boundaries_beyond_codex"]
-    assert len(boundaries) == 1
+    assert len(boundaries) == 2
     assert boundaries[0]["id"] == "direct-cli-python-dependency-setup"
     assert "not included in the pip install command" in boundaries[0]["content"]
+    assert boundaries[1]["id"] == "declared-python312-retrieval"
+    assert "does not read client files" in boundaries[1]["content"]
     assert manifest["security_controls"] == []
     assert "query_llm" not in source
     assert "openai" not in source.casefold()

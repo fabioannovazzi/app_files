@@ -15,7 +15,7 @@ def test_default_source_root_is_derived_from_repository_root() -> None:
     assert builder.REPO_VIDEO_PILOT_SOURCE_ROOT == (
         builder.REPO_ROOT / "outputs" / "video-pilots"
     )
-    assert "/Users/fabio/" not in str(builder.REPO_VIDEO_PILOT_SOURCE_ROOT)
+    assert builder.REPO_ROOT == Path(builder.__file__).resolve().parents[1]
     expected_default = Path(
         os.environ.get(
             "MPARANZA_VIDEO_PILOT_SOURCE_ROOT",
