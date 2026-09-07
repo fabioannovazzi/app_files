@@ -2291,6 +2291,7 @@ const context = {
   setTimeout,
   clearTimeout,
   window: {
+    addEventListener() {},
     location: { search: "" },
     openai: {
       toolOutput,
