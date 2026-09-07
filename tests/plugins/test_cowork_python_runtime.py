@@ -15,6 +15,15 @@ __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.fixture(scope="session")
+def shared_runtime_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Exercise all package cases against one runtime, as on a real host."""
+    configured = os.environ.get("MPARANZA_RUNTIME_ROOT")
+    return (
+        Path(configured) if configured else tmp_path_factory.mktemp("mparanza-runtime")
+    )
+
+
 @pytest.mark.skipif(
     os.environ.get("RUN_COWORK_PYTHON_INTEGRATION") != "1",
     reason="Cold managed setup needs access to the published package registry",
@@ -41,6 +50,7 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
     plugin: str,
     module: str,
     entrypoint: str,
+    shared_runtime_root: Path,
 ) -> None:
     """Catch missing requirements/imports hidden by the developer environment."""
     plugin_root = tmp_path / f"{plugin}~g2"
@@ -52,9 +62,7 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment["CLAUDE_PLUGIN_DATA"] = str(tmp_path / "plugin-data")
-    environment["MPARANZA_RUNTIME_ROOT"] = os.environ.get(
-        "MPARANZA_RUNTIME_ROOT", str(tmp_path / "shared-runtime")
-    )
+    environment["MPARANZA_RUNTIME_ROOT"] = str(shared_runtime_root)
     setup = subprocess.run(
         [
             sys.executable,
@@ -157,6 +165,7 @@ def test_cowork_zip_renders_through_component_managed_runtime(
     bindings: dict[str, str],
     artifact: str,
     month_only: bool,
+    shared_runtime_root: Path,
 ) -> None:
     """Exercise lazy chart imports absent from entrypoint --help checks."""
     import json
@@ -178,9 +187,7 @@ def test_cowork_zip_renders_through_component_managed_runtime(
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment["CLAUDE_PLUGIN_DATA"] = str(tmp_path / "plugin-data")
-    environment["MPARANZA_RUNTIME_ROOT"] = os.environ.get(
-        "MPARANZA_RUNTIME_ROOT", str(tmp_path / "shared-runtime")
-    )
+    environment["MPARANZA_RUNTIME_ROOT"] = str(shared_runtime_root)
     output = tmp_path / "output"
 
     result = subprocess.run(
