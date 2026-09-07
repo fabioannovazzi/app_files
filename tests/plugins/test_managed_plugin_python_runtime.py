@@ -1134,3 +1134,92 @@ def test_setup_uses_only_python312_from_other_host_versions(
             ["/runtime/python3.12", "-m", "venv", "--without-pip", str(target)]
         ]
         assert "cpython-312" in str(target)
+
+
+@pytest.mark.parametrize("changed", ["plugin", "scope", "abi", "requirements"])
+def test_compact_windows_target_preserves_cache_isolation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, changed: str
+) -> None:
+    from dataclasses import replace
+    from types import SimpleNamespace
+
+    runtime = load_runtime()
+    root = tmp_path / "vera"
+    component = make_packaged_component(root)
+    monkeypatch.setattr(runtime, "sys", SimpleNamespace(platform="win32"))
+    monkeypatch.setattr(runtime, "runtime_key", lambda: "cpython-312-win-amd64")
+    selection = runtime.select_runtime(root, "studio-archive")
+    base = tmp_path / "data"
+    original = runtime.dependency_target(selection, base)
+    if changed == "plugin":
+        (root / ".codex-plugin/plugin.json").write_text('{"name":"clara"}')
+    elif changed == "scope":
+        selection = replace(selection, scope="another-module")
+    elif changed == "abi":
+        monkeypatch.setattr(runtime, "runtime_key", lambda: "cpython-313-win-amd64")
+    else:
+        (component / "requirements.txt").write_text("demo-dependency==2.0\n")
+
+    updated = runtime.dependency_target(selection, base)
+
+    assert updated != original
+    assert original.parent == base / "py"
+    assert len(original.name) == 32
+    assert updated == runtime.dependency_target(selection, base)
+
+
+def test_windows_short_generation_installs_and_is_reused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from contextlib import nullcontext
+    from pathlib import PureWindowsPath
+    from types import SimpleNamespace
+
+    runtime = load_runtime()
+    root = tmp_path / "vera"
+    make_packaged_component(root)
+    monkeypatch.setattr(
+        runtime,
+        "sys",
+        SimpleNamespace(
+            platform="win32",
+            version_info=sys.version_info,
+            executable=sys.executable,
+            version=sys.version,
+            implementation=sys.implementation,
+        ),
+    )
+    monkeypatch.setattr(runtime, "runtime_key", lambda: "cpython-312-win-amd64")
+    # This host exercises path construction and publication, not Windows locking.
+    monkeypatch.setattr(runtime, "_installation_lock", lambda path: nullcontext())
+    base = tmp_path / "data"
+    monkeypatch.setattr(runtime, "plugin_data_dir", lambda root: base)
+    commands = []
+
+    def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]), windows=True)
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        root, "studio-archive", runner=runner
+    )
+    reused, second, _ = runtime.ensure_runtime(root, "studio-archive", runner=runner)
+
+    assert ready and reused, detail
+    assert target == second == runtime.activate_runtime(root, "studio-archive")
+    assert sum(command[1:3] == ["-m", "venv"] for command in commands) == 1
+    assert len(target.name) == 67
+    representative = PureWindowsPath(
+        r"C:\Users\example.professional\AppData\Local\Temp\mpr\user-0123456789ab\vera"
+    ).joinpath(
+        *target.relative_to(base).parts,
+        "Lib",
+        "site-packages",
+        "googleapiclient",
+        "discovery_cache",
+        "documents",
+        "analyticsdata.v1beta.json",
+    )
+    assert len(str(representative)) < 260

@@ -220,7 +220,7 @@ def _codex_data_dir(plugin_root: Path) -> Path:
         user_key = f"user-{home_fingerprint}"
     return (
         Path(tempfile.gettempdir())
-        / "mparanza-managed-python"
+        / ("mpr" if sys.platform == "win32" else "mparanza-managed-python")
         / user_key
         / _plugin_name(plugin_root)
     ).resolve()
@@ -374,6 +374,20 @@ def dependency_target(
         if data_dir is not None
         else plugin_data_dir(selection.plugin_root)
     )
+    if sys.platform == "win32":
+        # Fixed-length hashing preserves cache isolation without spending the
+        # Windows path budget on repeated module, ABI and requirement names.
+        identity = json.dumps(
+            [
+                _plugin_name(selection.plugin_root),
+                selection.scope,
+                runtime_key(),
+                requirements_fingerprint(selection),
+            ],
+            separators=(",", ":"),
+        )
+        key = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:32]
+        return base / "py" / key
     return (
         base
         / DEPENDENCY_DIR_NAME
@@ -542,7 +556,7 @@ def _active_target(target: Path) -> Path:
     name = payload.get("generation")
     if (
         not isinstance(name, str)
-        or not name.startswith(target.name + ".generation-")
+        or not name.startswith((target.name + ".generation-", target.name + ".g-"))
         or Path(name).name != name
     ):
         raise ValueError("Invalid runtime generation pointer")
@@ -687,7 +701,9 @@ def _install_generation(
         return True, target, f"Python runtime ready at {target}"
 
     target = logical_target.with_name(
-        logical_target.name + ".generation-" + uuid.uuid4().hex
+        logical_target.name
+        + (".g-" if sys.platform == "win32" else ".generation-")
+        + uuid.uuid4().hex
     )
     try:
         target.parent.mkdir(parents=True, exist_ok=True)
