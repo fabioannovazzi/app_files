@@ -5245,6 +5245,39 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         || pickPayload(host)
         || FALLBACK;""",
         }
+    if target["plugin"] in {"deep-research-validator", "prompt-optimizer"}:
+        return {
+            **legacy,
+            "tool_args_js": """    function saveToolArgs() {
+      const persistenceToken = state.payload.persistence_token || state.payload.review_reference?.persistence_token;
+      return {
+        ...(persistenceToken
+          ? { persistence_token: persistenceToken }
+          : {
+              run_intake: state.payload.run_intake || null,
+              review_payload: reviewPayload(),
+              ui_decisions: state.payload.ui_decisions || null,
+            }),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }
+    function applyToolArgs() {
+      const persistenceToken = state.payload.persistence_token || state.payload.review_reference?.persistence_token;
+      return {
+        ...(persistenceToken
+          ? { persistence_token: persistenceToken }
+          : {
+              run_intake: state.payload.run_intake || null,
+              review_payload: reviewPayload(),
+              ui_decisions: state.payload.ui_decisions || null,
+              final_artifacts: state.payload.final_artifacts || null,
+            }),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }""",
+        }
     if target["plugin"] == "concordato-plan-review":
         return {
             **legacy,
@@ -5487,25 +5520,29 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       }
     }""",
             "tool_args_js": """    function saveToolArgs() {
+      const token = state.payload.decision_policy?.persistence_token || null;
       return {
-        run_intake: state.payload.run_intake || null,
-        persistence_token: state.payload.decision_policy?.persistence_token || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
+        persistence_token: token,
+        ...(token ? {} : {
+          run_intake: state.payload.run_intake || null,
+          review_payload: reviewPayload(),
+          ui_decisions: state.payload.ui_decisions || null,
+        }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
         reviewer: reviewerAliasValue() || null,
       };
     }
     function applyToolArgs() {
+      const token = state.payload.decision_policy?.persistence_token || null;
       return {
-        run_intake: state.payload.run_intake || null,
-        persistence_token: state.payload.decision_policy?.persistence_token || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        ...(state.payload.decision_policy?.persistence_token
-          ? {}
-          : { final_artifacts: state.payload.final_artifacts || null }),
+        persistence_token: token,
+        ...(token ? {} : {
+          run_intake: state.payload.run_intake || null,
+          review_payload: reviewPayload(),
+          ui_decisions: state.payload.ui_decisions || null,
+          final_artifacts: state.payload.final_artifacts || null,
+        }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
         reviewer: reviewerAliasValue() || null,
