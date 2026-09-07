@@ -496,8 +496,11 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
     runLock.outputs_sha256,
     createHash("sha256").update(outputsText, "utf8").digest("hex"),
   );
-  assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
-  assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+  // POSIX permission bits do not represent Windows ACLs.
+  if (process.platform !== "win32") {
+    assert.equal((await stat(summary.outputs_path)).mode & 0o777, 0o600);
+    assert.equal((await stat(runDirectory)).mode & 0o777, 0o700);
+  }
 });
 
 test("goto accepts a committed exact target after the connected tab reports a timeout", async () => {
