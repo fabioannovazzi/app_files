@@ -86,3 +86,7 @@ The user excluded Windows and Mac-specific qualification from this task. No addi
 | plugin_packages/lucia/lucia-chatgpt-upload.zip | `6f23be4140c16099bb1f3b933051796191ec4ca22771f8b31896a1c5a0a55fed` |
 | plugin_packages/lucia/lucia-claude-plugin.zip | `f2042a074dd020111e8ab79f50c4e53fde85d766d5a09d7f02a56525d65d4b20` |
 | plugin_packages/lucia/lucia-plugin.zip | `de880fd5e8b6d0f22b0393c49944d85a6e07bc90a7bfcad69eb1d512352aaed1` |
+
+## CI environment correction
+
+The first input-correctness CI job reached 285 passes but failed ten cases because its minimal test environment omitted ReportLab (synthetic PDF fixture creation) and Polars (shared worker-capsule imports). Both are already declared repository dependencies. The job now installs them explicitly; production code and assertions are unchanged. Fresh CI remains required before merge.
