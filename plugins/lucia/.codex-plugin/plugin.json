@@ -1,9 +1,9 @@
 {
   "name": "lucia",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "Lucia affianca avvocati indipendenti e studi legali nell'ottimizzare richieste professionali e verificare risposte, memorie, pareri e lettere rispetto a fonti, ragionamento e giudizio professionale.",
   "author": {
-    "name": "Fabio Annovazzi \u00b7 Mparanza",
+    "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
@@ -42,8 +42,8 @@
   "interface": {
     "displayName": "Lucia",
     "shortDescription": "Assistente AI per avvocati",
-    "longDescription": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali. Ottimizza prompt e struttura incarichi, analizza materiali e fonti, verifica affermazioni e ragionamento e prepara ricerche, documenti e risultati rivedibili.\n\nSupporta il lavoro legale attraverso workflow specialistici adattati al contesto, alla giurisdizione e al risultato atteso. Aiuta a strutturare attivit\u00e0, controllare documenti e fonti e mantenere collegati materiali, passaggi e decisioni.\n\nLucia mostra fonti, passaggi, ambiguit\u00e0 e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all\u2019avvocato.",
-    "developerName": "Fabio Annovazzi \u00b7 Mparanza",
+    "longDescription": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali. Ottimizza prompt e struttura incarichi, analizza materiali e fonti, verifica affermazioni e ragionamento e prepara ricerche, documenti e risultati rivedibili.\n\nSupporta il lavoro legale attraverso workflow specialistici adattati al contesto, alla giurisdizione e al risultato atteso. Aiuta a strutturare attività, controllare documenti e fonti e mantenere collegati materiali, passaggi e decisioni.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
+    "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
@@ -57,7 +57,7 @@
     "supportURL": "https://mparanza.com/support",
     "defaultPrompt": [
       "Prepara una risposta verificata a questo quesito legale o fiscale, con fonti e limiti professionali espliciti.",
-      "Prepara una comunicazione professionale da fonti verificate, pronta per la revisione dell\u2019avvocato.",
+      "Prepara una comunicazione professionale da fonti verificate, pronta per la revisione dell’avvocato.",
       "Crea o rinnova il sito informativo dello studio legale da materiali verificati."
     ],
     "brandColor": "#002060",

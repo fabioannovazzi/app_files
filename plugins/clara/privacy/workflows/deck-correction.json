@@ -89,6 +89,20 @@
         "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
         "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
       ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "public_research",
+      "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
+      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent and uv is available",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise only an already installed uv may provision the declared CPython 3.12 runtime.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ]
     }
   ],
   "security_controls": [],
@@ -96,6 +110,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "982fa7f5dac6c7a1d553c92ca97175876ffb8486baebbeb74e19b95070154654"
+    "source_fingerprint": "c08f5ac47580fd56bb7d68e4b37ee9e701cab15ae9274cfed196f08cd25ae790"
   }
 }

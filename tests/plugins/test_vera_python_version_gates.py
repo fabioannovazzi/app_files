@@ -1,4 +1,4 @@
-"""Keep component dependency gates compatible with Vera's Python 3.10 runtime."""
+"""Require the single supported Python 3.12 workflow runtime."""
 
 from __future__ import annotations
 
@@ -14,6 +14,12 @@ COMPONENTS = (
     "browser-automation",
     "studio-archive",
     "bilancio-xbrl-it",
+    "registro-imprese-sari",
+    "prompt-optimizer",
+    "new-client",
+    "bandi-agevolazioni",
+    "previdenza-inps",
+    "deep-research-validator",
 )
 
 
@@ -21,7 +27,9 @@ COMPONENTS = (
 @pytest.mark.parametrize(
     "tree", ["plugins", "plugin_packages/vera/claude/vera/modules"]
 )
-@pytest.mark.parametrize("version, expected", [((3, 9), 1), ((3, 10), 0), ((3, 11), 0)])
+@pytest.mark.parametrize(
+    "version, expected", [((3, 10), 1), ((3, 11), 1), ((3, 12), 0), ((3, 13), 1)]
+)
 def test_dependency_gate_accepts_managed_runtime(
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
@@ -37,15 +45,18 @@ def test_dependency_gate_accepts_managed_runtime(
     assert spec and spec.loader
     checker = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(checker)
+    monkeypatch.setattr(sys, "argv", [str(path)])
     monkeypatch.setattr(
-        checker, "sys", SimpleNamespace(version_info=version, stderr=sys.stderr)
+        checker, "sys", SimpleNamespace(**{**vars(sys), "version_info": version})
     )
-    monkeypatch.setattr(checker.importlib.util, "find_spec", lambda name: object())
+    if hasattr(checker, "importlib"):
+        monkeypatch.setattr(checker.importlib.util, "find_spec", lambda name: object())
     if component == "studio-archive":
         monkeypatch.setattr(checker, "_fts5_available", lambda: True)
 
-    result = checker.main([])
+    result = checker.main()
 
     assert result == expected
     if expected:
-        assert "Python 3.10 or newer" in caplog.text + capsys.readouterr().err
+        captured = capsys.readouterr()
+        assert "Python 3.12" in caplog.text + captured.err + captured.out

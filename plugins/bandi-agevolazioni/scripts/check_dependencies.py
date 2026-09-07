@@ -41,8 +41,8 @@ def main(argv: list[str] | None = None) -> int:
         for name in missing_files:
             LOGGER.error("Missing requirements file: %s", name)
         return 1
-    if sys.version_info < (3, 10):
-        LOGGER.error("Python 3.10 or newer is required")
+    if sys.version_info[:2] != (3, 12):
+        LOGGER.error("Python 3.12 is required")
         return 1
     missing_packages: list[str] = []
     for requirements_file in requirement_files:

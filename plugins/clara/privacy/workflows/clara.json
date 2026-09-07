@@ -189,6 +189,20 @@
         "The Clara skill requires explicit user approval before the managed installer runs.",
         "The installer uses only the published OCR requirements and writes to a fingerprinted user-scoped runtime shared with Vera."
       ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "public_research",
+      "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
+      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent and uv is available",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise only an already installed uv may provision the declared CPython 3.12 runtime.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ]
     }
   ],
   "security_controls": [
@@ -205,6 +219,6 @@
     "reviewed_at": "2026-08-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a95f504703482e3810492079af141e53f7c2e72c2e3a4b17b3a36df522bc20de"
+    "source_fingerprint": "96cdaf0ce4c1dcf52ac854c52ad0b395b57a4fb1db7befd7f66a9485dce24e20"
   }
 }

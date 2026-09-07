@@ -32,6 +32,25 @@
         "The target is keyed by the recursive requirements fingerprint, Python ABI, and operating-system platform and is validated before use.",
         "Each Vera module has a separate virtual environment, preventing incompatible requirement graphs or base-interpreter packages from being combined; the optional shared OCR runtime remains separate and requires its existing explicit approval."
       ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "hosted_service",
+      "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
+      "purpose": "Provision the single supported CPython 3.12 interpreter when it is absent and uv is available",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "retention": "The interpreter remains in the uv-managed user installation until explicitly removed. Download request-log retention is controlled by the download provider.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise only an already installed uv may provision the declared CPython 3.12 runtime.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ]
     }
   ],
   "security_controls": [
@@ -55,9 +74,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-05",
+    "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "aa1a2e89986a063072539a662f9566a15753ec67e06d238081b87db06d2bfffa"
+    "source_fingerprint": "13d7d2bb329a87ab08ea8e03da9fff77fd8c1c397d3b1a0ff0f637cd58b4a90a"
   }
 }

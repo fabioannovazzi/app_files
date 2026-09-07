@@ -669,3 +669,7 @@ visually validated on the basis of structural inspection alone.
   outside the case workspace. Keep the explicit, user-approved PaddleOCR setup
   above separate. Never ask the user to run pip or technical installation
   commands.
+
+## Supported Python runtime
+
+Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It selects an installed Python 3.12 or uses an existing `uv` installation to provision CPython 3.12. An older host interpreter may launch setup, but must not execute workflow helpers. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Component virtual environments remain separately scoped to their declared dependencies.

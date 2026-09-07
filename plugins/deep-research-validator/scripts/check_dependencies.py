@@ -66,8 +66,8 @@ def main(argv: list[str] | None = None) -> int:
     """Return 0 when required dependencies are importable."""
 
     args = _parse_args(argv)
-    if sys.version_info < (3, 10):
-        print("Python 3.10 or newer is required.", file=sys.stderr)
+    if sys.version_info[:2] != (3, 12):
+        print("Python 3.12 is required.", file=sys.stderr)
         return 1
 
     requirement_files = _selected_requirement_files(args.requirements)

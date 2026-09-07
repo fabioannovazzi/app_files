@@ -66,8 +66,8 @@ def main() -> int:
         )
         return 1
 
-    if sys.version_info < (3, 10):
-        print("UNSUPPORTED_PYTHON: Python 3.10 or newer is required")
+    if sys.version_info[:2] != (3, 12):
+        print("UNSUPPORTED_PYTHON: Python 3.12 is required")
         return 1
 
     missing: list[tuple[str, str, str]] = []

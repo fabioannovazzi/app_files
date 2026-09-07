@@ -45,6 +45,7 @@ Runner = Callable[..., subprocess.CompletedProcess[str]]
 READY_FILENAME = ".mparanza-python-runtime.json"
 NETWORK_PERMISSION_REQUIRED = "MPARANZA_NETWORK_PERMISSION_REQUIRED"
 DEPENDENCY_DIR_NAME = "python-dependencies"
+SUPPORTED_PYTHON = (3, 12)
 LOGGER = logging.getLogger(__name__)
 
 _NETWORK_FAILURE_MARKERS = (
@@ -185,7 +186,7 @@ def requirements_fingerprint(selection: RuntimeSelection) -> str:
 def runtime_key() -> str:
     """Return the Python ABI and platform key for native wheel compatibility."""
 
-    implementation = getattr(sys.implementation, "cache_tag", None) or "python"
+    implementation = "cpython-312"
     platform = sysconfig.get_platform().replace("/", "-").replace("\\", "-")
     return f"{implementation}-{platform}"
 
@@ -605,6 +606,72 @@ def ensure_runtime(
         return False, logical_target, str(error)
 
 
+def _python312_executable(runner: Runner) -> str:
+    """Select CPython 3.12; optionally provision it through an installed uv."""
+
+    if (
+        sys.version_info[:2] == SUPPORTED_PYTHON
+        and sys.implementation.name == "cpython"
+    ):
+        return sys.executable
+    candidates: list[list[str]] = []
+    executable = shutil.which("python3.12")
+    if executable:
+        candidates.append([executable])
+    launcher = shutil.which("py") if os.name == "nt" else None
+    if launcher:
+        candidates.append([launcher, "-3.12"])
+    probe = (
+        "import sys; "
+        "assert sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 12); "
+        "print(sys.executable)"
+    )
+    for candidate in candidates:
+        result = runner(
+            [*candidate, "-c", probe],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    uv = shutil.which("uv")
+    if uv:
+        installed = runner(
+            [uv, "python", "install", "cpython@3.12"],
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+        )
+        if installed.returncode != 0:
+            raise ValueError(_network_permission_detail(_process_detail(installed)))
+        found = runner(
+            [uv, "python", "find", "--managed-python", "cpython@3.12"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if found.returncode == 0 and found.stdout.strip():
+            candidate_path = found.stdout.strip()
+            verified = runner(
+                [candidate_path, "-c", probe],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+            if verified.returncode == 0 and verified.stdout.strip():
+                return verified.stdout.strip()
+    raise ValueError(
+        "Vera, Clara and Lucia require CPython 3.12. Install Python 3.12 or make uv "
+        "available for automatic setup, then rerun the dependency check. "
+        "Other Python versions are not used for workflow execution."
+    )
+
+
 def _install_generation(
     selection: RuntimeSelection, logical_target: Path, runner: Runner
 ) -> tuple[bool, Path, str]:
@@ -627,8 +694,9 @@ def _install_generation(
     except OSError as error:
         return False, target, str(error)
     try:
+        base_python = _python312_executable(runner)
         created = runner(
-            [sys.executable, "-m", "venv", "--without-pip", str(target)],
+            [base_python, "-m", "venv", "--without-pip", str(target)],
             cwd=selection.requirement_root,
             capture_output=True,
             timeout=120,
@@ -695,7 +763,11 @@ def _install_generation(
                 _receipt_payload(selection)
                 | {
                     "installed_distributions": _resolved_dependencies(target),
-                    "interpreter_version": sys.version,
+                    "interpreter_version": (
+                        sys.version
+                        if sys.version_info[:2] == SUPPORTED_PYTHON
+                        else "3.12"
+                    ),
                 },
                 sort_keys=True,
             )

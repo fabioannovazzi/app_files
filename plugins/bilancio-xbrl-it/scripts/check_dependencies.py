@@ -91,8 +91,8 @@ def main(argv: list[str] | None = None) -> int:
         help="Check the optional managed PaddleOCR runtime as well as core requirements.",
     )
     args = parser.parse_args(argv)
-    if sys.version_info < (3, 10):
-        LOGGER.error("Python 3.10 or newer is required")
+    if sys.version_info[:2] != (3, 12):
+        LOGGER.error("Python 3.12 is required")
         return 1
     plugin_root = Path(__file__).resolve().parents[1]
     requirement_files = (
