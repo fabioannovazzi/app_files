@@ -27,8 +27,8 @@ def check_dependencies(
     """Check the standard-library runtime and plugin-owned contract files."""
 
     issues: list[str] = []
-    if sys.version_info < (3, 10):
-        issues.append("Python 3.10 or newer is required.")
+    if sys.version_info[:2] != (3, 12):
+        issues.append("Python 3.12 is required.")
     selected_requirements = list(
         requirement_files or [PLUGIN_ROOT / "requirements.txt"]
     )

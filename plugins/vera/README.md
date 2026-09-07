@@ -186,3 +186,7 @@ and changes since a prior assessment for Italian clients. It prepares a sourced
 memo and records professional decisions through the existing client archive.
 Its Python helper reuses validated New Client arithmetic when available; screening
 reports are supplied by the studio and no automatic SOS or monitoring is included.
+
+## Python runtime
+
+Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.

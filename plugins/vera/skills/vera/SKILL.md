@@ -810,3 +810,7 @@ Open the returned link. The conversation lasts at most one minute: one opening
 question and, only if needed, one short follow-up. Starting it creates the
 request; completing it adds the user's explanation. Do not ask for another
 review or confirmation afterward.
+
+## Supported Python runtime
+
+Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It selects an installed Python 3.12 or uses an existing `uv` installation to provision CPython 3.12. An older host interpreter may launch setup, but must not execute workflow helpers. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Component virtual environments remain separately scoped to their declared dependencies.

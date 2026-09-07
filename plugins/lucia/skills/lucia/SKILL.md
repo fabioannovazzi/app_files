@@ -167,3 +167,7 @@ Keep the improvement note local to chat or run artifacts. Dopo un uso
 sostanziale, annota solo problemi tecnici o miglioramenti concreti emersi dal
 lavoro. Non includere contenuti del cliente, dati personali, segreti, fonti
 riservate o percorsi locali e non trasmettere automaticamente nulla.
+
+## Supported Python runtime
+
+Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It selects an installed Python 3.12 or uses an existing `uv` installation to provision CPython 3.12. An older host interpreter may launch setup, but must not execute workflow helpers. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Component virtual environments remain separately scoped to their declared dependencies.

@@ -113,3 +113,7 @@ leggibili da Codex.
 
 La descrizione completa è disponibile nella pagina
 [Gestione dei dati](https://mparanza.com/data-handling?lang=it).
+
+## Python runtime
+
+Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.

@@ -1102,3 +1102,7 @@ the imported content in a deliverable.
 
 The public plugin explainer is maintained at
 `static/shared/clara/index.html`.
+
+## Python runtime
+
+Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.

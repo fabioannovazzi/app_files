@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[2]
         ("clara", "set-overlap-analysis", "run_set_overlap.py"),
         ("vera", "passive-invoice-audit", "run_audit.py"),
         ("vera", "bilancio-xbrl-it", "xbrl_case.py"),
+        ("lucia", "studio-archive", "studio_archive.py"),
         ("vera", "bandi-agevolazioni", "validate_application.py"),
     ],
 )
@@ -66,6 +67,13 @@ def test_cowork_zip_provisions_declared_dependencies_and_loads_variance_engine(
         check=False,
     )
     assert setup.returncode == 0, setup.stdout + setup.stderr
+    import json
+
+    receipts = list((tmp_path / "plugin-data").rglob(".mparanza-python-runtime.json"))
+    assert len(receipts) == 1
+    receipt = json.loads(receipts[0].read_text())
+    assert receipt["interpreter_version"].startswith("3.12")
+    assert receipt["runtime_key"].startswith("cpython-312-")
 
     result = subprocess.run(
         [

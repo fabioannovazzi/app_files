@@ -28,12 +28,12 @@ def load_runtime() -> Any:
     return module
 
 
-def test_clara_and_vera_share_the_same_runtime_implementation() -> None:
-    clara_runtime = (
-        ROOT / "plugins" / "clara" / "scripts" / "_managed_python_runtime.py"
+@pytest.mark.parametrize("product", ["clara", "lucia"])
+def test_products_share_the_same_runtime_implementation(product: str) -> None:
+    product_runtime = (
+        ROOT / "plugins" / product / "scripts" / "_managed_python_runtime.py"
     )
-
-    assert clara_runtime.read_bytes() == RUNTIME_SOURCE.read_bytes()
+    assert product_runtime.read_bytes() == RUNTIME_SOURCE.read_bytes()
 
 
 @pytest.mark.parametrize("payload", [[], None, {}, {"generation": "../outside"}])
@@ -1040,7 +1040,7 @@ def test_failed_dependency_checker_preserves_runtime_rejection(tmp_path: Path) -
             create_fake_virtualenv(Path(command[-1]))
         if command[1].endswith("check_dependencies.py"):
             return subprocess.CompletedProcess(
-                command, 1, "", "Python 3.10 or newer is required"
+                command, 1, "", "Python 3.12 is required"
             )
         return subprocess.CompletedProcess(command, 0, "", "")
 
@@ -1049,11 +1049,11 @@ def test_failed_dependency_checker_preserves_runtime_rejection(tmp_path: Path) -
     )
 
     assert not ready
-    assert "Python 3.10 or newer is required" in detail
+    assert "Python 3.12 is required" in detail
     assert not target.exists()
 
 
-@pytest.mark.parametrize("version,expected", [((3, 9), 1), ((3, 10), 0)])
+@pytest.mark.parametrize("version,expected", [((3, 10), 1), ((3, 12), 0)])
 def test_xbrl_checker_supports_cowork_python_baseline(monkeypatch, version, expected):
     spec = importlib.util.spec_from_file_location(
         "xbrl_runtime_checker",
@@ -1065,3 +1065,72 @@ def test_xbrl_checker_supports_cowork_python_baseline(monkeypatch, version, expe
     monkeypatch.setattr(checker.importlib.util, "find_spec", lambda name: object())
 
     assert checker.main([]) == expected
+
+
+@pytest.mark.parametrize("host_version", [(3, 10), (3, 11), (3, 13)])
+@pytest.mark.parametrize("provider", ["installed", "uv", "missing", "wrong_version"])
+def test_setup_uses_only_python312_from_other_host_versions(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    host_version: tuple[int, int],
+    provider: str,
+) -> None:
+    from types import SimpleNamespace
+
+    runtime = load_runtime()
+    root = tmp_path / "vera"
+    make_packaged_component(root)
+    monkeypatch.setattr(
+        runtime,
+        "sys",
+        SimpleNamespace(
+            version_info=host_version,
+            platform=sys.platform,
+            implementation=sys.implementation,
+            executable=sys.executable,
+            version=sys.version,
+        ),
+    )
+    executables = {
+        "installed": {"python3.12": "/runtime/python3.12"},
+        "uv": {"uv": "/runtime/uv"},
+        "missing": {},
+        "wrong_version": {"python3.12": "/runtime/wrong-python"},
+    }
+    monkeypatch.setattr(runtime.shutil, "which", executables[provider].get)
+    commands: list[list[str]] = []
+
+    def runner(command: list[str], **_: Any) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if "-c" in command:
+            return subprocess.CompletedProcess(
+                command,
+                1 if provider == "wrong_version" else 0,
+                "/runtime/python3.12\n",
+                "",
+            )
+        if command[1:3] == ["python", "find"]:
+            return subprocess.CompletedProcess(command, 0, "/runtime/python3.12\n", "")
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        root,
+        "studio-archive",
+        data_dir=tmp_path / "data",
+        runner=runner,
+    )
+
+    creation = [command for command in commands if command[1:3] == ["-m", "venv"]]
+    if provider in ("missing", "wrong_version"):
+        assert not ready
+        assert "require CPython 3.12" in detail
+        assert creation == []
+        assert not target.exists()
+    else:
+        assert ready
+        assert creation == [
+            ["/runtime/python3.12", "-m", "venv", "--without-pip", str(target)]
+        ]
+        assert "cpython-312" in str(target)

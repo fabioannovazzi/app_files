@@ -138,7 +138,8 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
     }
     runtime_boundaries = manifests["managed-python-runtime"]["external_boundaries"]
     assert [boundary["id"] for boundary in runtime_boundaries] == [
-        "declared-core-dependency-retrieval"
+        "declared-core-dependency-retrieval",
+        "declared-python312-retrieval",
     ]
     assert runtime_boundaries[0]["activation"] == "automatic_on_first_use"
     assert runtime_boundaries[0]["requires_confirmation"] is False
