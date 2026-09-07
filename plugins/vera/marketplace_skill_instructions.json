@@ -200,7 +200,7 @@
       "instructions": "Vera esamina le evidenze AML del cliente. Leggi modules/aml-review/skills/aml-review/SKILL.md. Ricostruisci titolarità e motivazioni economiche, confronta le evidenze e la valutazione precedente, prepara domande mirate e una valutazione motivata per il commercialista. Screening da rapporti forniti; nessuna SOS automatica."
     },
     "adeguati-assetti": {
-      "display_name": "Revisione degli assetti",
+      "display_name": "Adeguati assetti",
       "short_description": "Esamina responsabilità, processi, reporting e funzionamento effettivo",
       "default_prompt": "Usa $adeguati-assetti per valutare gli assetti di questa impresa e preparare rilievi e un piano di miglioramento.",
       "instructions": "Leggi integralmente `../../modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md` e i suoi riferimenti. Valuta evidenze e funzionamento effettivo, mantieni esplicite le aree non verificate e consegna memo, rilievi, piano di miglioramento e record. Le decisioni restano al professionista; non attribuire un punteggio automatico di adeguatezza. Segui i confini di esecuzione, fascicolo e dati del modello di Vera."

@@ -919,7 +919,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Preparazione piano vendite",
         "Preparare un business plan",
         "Analisi scostamenti",
-        "Revisione degli assetti",
+        "Adeguati assetti",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
         "Analisi finanziaria e due diligence",
@@ -943,7 +943,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.plan.title": "Preparazione piano vendite",
         "module.businessPlanning.title": "Preparare un business plan",
         "module.variance.title": "Analisi scostamenti",
-        "module.assetti.title": "Revisione degli assetti",
+        "module.assetti.title": "Adeguati assetti",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
         "module.communication.title": "Comunicazione professionale",
@@ -954,7 +954,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
-        "adeguati-assetti": "Revisione degli assetti",
+        "adeguati-assetti": "Adeguati assetti",
         "archive-organization": "Riordino della cartella cliente",
         "open-item-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",

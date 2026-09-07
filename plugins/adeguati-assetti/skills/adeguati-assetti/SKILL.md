@@ -3,7 +3,7 @@ name: adeguati-assetti
 description: Review an Italian enterprise's organizational, administrative and accounting arrangements from documents and operating evidence; prepare a proportionate assessment, findings, improvement actions and follow-up for professional review. Use for adeguati assetti and organizational readiness, not merely financial reporting or a concordato plan.
 ---
 
-# Revisione degli assetti organizzativi, amministrativi e contabili
+# Valutazione degli assetti organizzativi, amministrativi e contabili
 
 Help the professional assess whether this enterprise's responsibilities, processes
 and information support its actual activities and timely decisions. Deliver a
