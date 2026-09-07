@@ -34,6 +34,11 @@ change. It still asks only questions that materially affect the next step.
   is 84.21%. These include source tampering, cross-engagement histories, exact
   decision binding, prior-action evidence and versioned output preservation.
 - Prompt Optimizer's 33 tests pass after updating the obsolete mode expectation.
+- Full-scope isolated batches exposed an unchanged Clara test expecting only one
+  dependency-download boundary. The exact baseline assertion was reproduced;
+  the test now checks both the package and declared Python 3.12 downloads.
+  Clara's two version-bound privacy fingerprints were reviewed and refreshed.
+  The 33 affected Clara planner/privacy tests pass.
 - Five public-page languages and desktop/mobile layouts were inspected locally.
 - Codex, ChatGPT upload and Cowork projections have been rebuilt. The shared
   archive membership change also affects Clara and Lucia package bytes.
