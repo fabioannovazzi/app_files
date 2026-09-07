@@ -520,7 +520,9 @@ def test_local_review_server_rejects_oversized_post_body(tmp_path: Path) -> None
 
 
 @pytest.mark.parametrize("route", ["/api/call-tool", "/api/download-output"])
-def test_local_review_server_rejects_missing_session_token(tmp_path: Path, route: str) -> None:
+def test_local_review_server_rejects_missing_session_token(
+    tmp_path: Path, route: str
+) -> None:
     server = load_server_module()
     workbench = server.LocalReviewWorkbench(
         plugin_dir=ROOT / "plugins" / "check-entries",
@@ -664,41 +666,72 @@ def test_archive_local_render_keeps_reference_in_same_process(tmp_path: Path) ->
     from scripts.audit_local_review_workbench_writeback import write_plugin_fixture
 
     module = load_server_module()
-    output_dir = tmp_path / 'archive-run'
-    write_plugin_fixture(ROOT, 'archive-organization', output_dir)
-    workbench = module.LocalReviewWorkbench(ROOT / 'plugins/archive-organization', output_dir)
+    output_dir = tmp_path / "archive-run"
+    write_plugin_fixture(ROOT, "archive-organization", output_dir)
+    workbench = module.LocalReviewWorkbench(
+        ROOT / "plugins/archive-organization", output_dir
+    )
     session = module.build_session_payload(workbench)
-    assert session['review_payload']['items']
-    assert session['review_payload']['plugin'] == 'archive-organization'
+    assert session["review_payload"]["items"]
+    assert session["review_payload"]["plugin"] == "archive-organization"
 
 
-def test_output_download_accepts_declared_file_and_rejects_escape(tmp_path: Path) -> None:
+def test_output_download_accepts_declared_file_and_rejects_escape(
+    tmp_path: Path,
+) -> None:
     module = load_server_module()
     output_dir = _fixture_output_dir(tmp_path)
-    workbench = module.LocalReviewWorkbench(ROOT / 'plugins/check-entries', output_dir)
-    artifact = output_dir / 'report.pdf'
-    artifact.write_bytes(b'%PDF-synthetic')
-    _write_json(output_dir / 'final_artifacts.json', {'outputs': [{'path': 'report.pdf'}]})
-    assert module._review_output_path(workbench, 'report.pdf') == artifact
-    with pytest.raises(ValueError, match='not declared'):
-        module._review_output_path(workbench, '../private.pdf')
+    workbench = module.LocalReviewWorkbench(ROOT / "plugins/check-entries", output_dir)
+    artifact = output_dir / "report.pdf"
+    artifact.write_bytes(b"%PDF-synthetic")
+    _write_json(
+        output_dir / "final_artifacts.json", {"outputs": [{"path": "report.pdf"}]}
+    )
+    assert module._review_output_path(workbench, "report.pdf") == artifact
+    with pytest.raises(ValueError, match="not declared"):
+        module._review_output_path(workbench, "../private.pdf")
     artifact.unlink()
-    outside = tmp_path / 'private.pdf'
-    outside.write_bytes(b'private')
+    outside = tmp_path / "private.pdf"
+    outside.write_bytes(b"private")
     artifact.symlink_to(outside)
-    with pytest.raises(ValueError, match='links'):
-        module._review_output_path(workbench, 'report.pdf')
+    with pytest.raises(ValueError, match="links"):
+        module._review_output_path(workbench, "report.pdf")
 
 
-def test_private_review_metadata_is_returned_only_to_browser_render(tmp_path: Path, monkeypatch) -> None:
+def test_private_review_metadata_is_returned_only_to_browser_render(
+    tmp_path: Path, monkeypatch
+) -> None:
     from types import SimpleNamespace
+
     module = load_server_module()
-    workbench = module.LocalReviewWorkbench(ROOT / 'plugins/check-entries', _fixture_output_dir(tmp_path))
+    workbench = module.LocalReviewWorkbench(
+        ROOT / "plugins/check-entries", _fixture_output_dir(tmp_path)
+    )
     render_name = module._render_tool_name(module._adapter(workbench))
-    public = {'ok': True, 'items': [{'case_handle': 'opaque'}]}
-    private = {'review_payload': {'items': [{'title': 'Synthetic private evidence'}]}}
-    response = {'id': 1, 'result': {'structuredContent': public, '_meta': {'private_review_payload': private}}}
-    monkeypatch.setattr(module.subprocess, 'run', lambda *a, **k: SimpleNamespace(returncode=0, stdout=json.dumps(response), stderr=''))
+    public = {"ok": True, "items": [{"case_handle": "opaque"}]}
+    private = {"review_payload": {"items": [{"title": "Synthetic private evidence"}]}}
+    response = {
+        "id": 1,
+        "result": {
+            "structuredContent": public,
+            "_meta": {"private_review_payload": private},
+        },
+    }
+    monkeypatch.setattr(
+        module.subprocess,
+        "run",
+        lambda *a, **k: SimpleNamespace(
+            returncode=0, stdout=json.dumps(response), stderr=""
+        ),
+    )
     assert module._mcp_tool_result(workbench, render_name, {}) == public
-    assert module._mcp_tool_result(workbench, render_name, {}, browser_payload=True) == private
-    assert module._mcp_tool_result(workbench, 'save_check_entries_decisions', {}, browser_payload=True) == public
+    assert (
+        module._mcp_tool_result(workbench, render_name, {}, browser_payload=True)
+        == private
+    )
+    assert (
+        module._mcp_tool_result(
+            workbench, "save_check_entries_decisions", {}, browser_payload=True
+        )
+        == public
+    )

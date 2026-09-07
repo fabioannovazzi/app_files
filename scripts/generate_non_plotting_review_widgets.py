@@ -5158,9 +5158,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "load_initial_extra_js": "",
         "render_chrome_extra_js": "",
         "event_listener_extra_js": "",
-        "artifact_count_js": (
-            "      const artifactCount = artifactRecords().length;"
-        ),
+        "artifact_count_js": ("      const artifactCount = artifactRecords().length;"),
         "decision_input_js": r"""    function ensureDecision(item, action = null) {
       if (!item) return null;
       const current = state.decisions[item.id] || {};

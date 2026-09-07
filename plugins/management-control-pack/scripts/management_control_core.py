@@ -1503,7 +1503,9 @@ def build_management_pack(
         "status": status,
         "report_status": "draft_pending_professional_review",
         "entity": _text(recipe.get("entity"), label="entity", maximum=200),
-        "language": "it" if str(recipe.get("language", "en")).lower().startswith("it") else "en",
+        "language": (
+            "it" if str(recipe.get("language", "en")).lower().startswith("it") else "en"
+        ),
         "reporting_period": {
             key: recipe["reporting_period"][key].isoformat()
             for key in ("start", "end", "cutoff")
@@ -1769,79 +1771,86 @@ def render_markdown(
     return "\n".join(lines)
 
 
-_HTML_IT = {'Management Control Pack': 'Controllo di gestione',
- 'Professional review': 'Revisione professionale',
- 'Interpretation': 'Interpretazione',
- 'Calculated observations': 'Osservazioni sui risultati',
- 'Hypotheses': 'Ipotesi',
- 'Questions': 'Domande',
- 'Limitations': 'Limiti',
- 'None recorded.': 'Nessuna voce registrata.',
- 'No rows available.': 'Nessun dato disponibile.',
- 'Head metrics': 'Indicatori principali',
- 'Current picture': 'Situazione attuale',
- 'Evidence coverage': 'Copertura documentale',
- 'What this export supports': 'Analisi supportate dai dati',
- 'Performance': 'Andamento economico',
- 'Monthly P&L': 'Conto economico mensile',
- 'Monthly P&amp;L': 'Conto economico mensile',
- 'Budget': 'Budget',
- 'EBITDA variance': 'Scostamento EBITDA',
- 'Working capital': 'Capitale circolante',
- 'Receivables aging': 'Scadenzario crediti',
- 'Payables aging': 'Scadenzario debiti',
- 'Liquidity': 'Liquidità',
- 'Cash movement': 'Movimenti di cassa',
- 'Concentration': 'Concentrazione',
- 'Top customers': 'Principali clienti',
- 'Profitability': 'Redditività',
- 'Services': 'Servizi',
- 'Cutoff': 'Data di riferimento',
- 'period': 'Periodo',
- 'revenue': 'Ricavi',
- 'gross_profit': 'Margine lordo',
- 'ebitda': 'EBITDA',
- 'net_result': 'Risultato netto',
- 'section': 'Sezione',
- 'status': 'Stato',
- 'reason': 'Motivo',
- 'actual_ebitda': 'EBITDA consuntivo',
- 'budget_ebitda': 'EBITDA budget',
- 'variance': 'Scostamento',
- 'bucket': 'Fascia di scaduto',
- 'amount': 'Importo',
- 'inflow': 'Entrate',
- 'outflow': 'Uscite',
- 'net': 'Saldo netto',
- 'customer': 'Cliente',
- 'share': 'Quota',
- 'service': 'Servizio',
- 'direct_cost': 'Costi diretti',
- 'margin': 'Margine',
- 'margin_rate': 'Margine',
- 'ready_for_professional_review': 'Pronto per revisione professionale',
- 'ready': 'Disponibile',
- 'partial': 'Parziale',
- 'blocked': 'Bloccato',
- 'unavailable': 'Non disponibile',
- 'available': 'Disponibile',
- 'monthly_pnl': 'Conto economico mensile',
- 'budget_variance': 'Scostamento budget',
- 'receivables_aging': 'Scadenzario crediti',
- 'payables_aging': 'Scadenzario debiti',
- 'cash_movement': 'Movimenti di cassa',
- 'customer_concentration': 'Concentrazione clienti',
- 'service_profitability': 'Redditività servizi'}
+_HTML_IT = {
+    "Management Control Pack": "Controllo di gestione",
+    "Professional review": "Revisione professionale",
+    "Interpretation": "Interpretazione",
+    "Calculated observations": "Osservazioni sui risultati",
+    "Hypotheses": "Ipotesi",
+    "Questions": "Domande",
+    "Limitations": "Limiti",
+    "None recorded.": "Nessuna voce registrata.",
+    "No rows available.": "Nessun dato disponibile.",
+    "Head metrics": "Indicatori principali",
+    "Current picture": "Situazione attuale",
+    "Evidence coverage": "Copertura documentale",
+    "What this export supports": "Analisi supportate dai dati",
+    "Performance": "Andamento economico",
+    "Monthly P&L": "Conto economico mensile",
+    "Monthly P&amp;L": "Conto economico mensile",
+    "Budget": "Budget",
+    "EBITDA variance": "Scostamento EBITDA",
+    "Working capital": "Capitale circolante",
+    "Receivables aging": "Scadenzario crediti",
+    "Payables aging": "Scadenzario debiti",
+    "Liquidity": "Liquidità",
+    "Cash movement": "Movimenti di cassa",
+    "Concentration": "Concentrazione",
+    "Top customers": "Principali clienti",
+    "Profitability": "Redditività",
+    "Services": "Servizi",
+    "Cutoff": "Data di riferimento",
+    "period": "Periodo",
+    "revenue": "Ricavi",
+    "gross_profit": "Margine lordo",
+    "ebitda": "EBITDA",
+    "net_result": "Risultato netto",
+    "section": "Sezione",
+    "status": "Stato",
+    "reason": "Motivo",
+    "actual_ebitda": "EBITDA consuntivo",
+    "budget_ebitda": "EBITDA budget",
+    "variance": "Scostamento",
+    "bucket": "Fascia di scaduto",
+    "amount": "Importo",
+    "inflow": "Entrate",
+    "outflow": "Uscite",
+    "net": "Saldo netto",
+    "customer": "Cliente",
+    "share": "Quota",
+    "service": "Servizio",
+    "direct_cost": "Costi diretti",
+    "margin": "Margine",
+    "margin_rate": "Margine",
+    "ready_for_professional_review": "Pronto per revisione professionale",
+    "ready": "Disponibile",
+    "partial": "Parziale",
+    "blocked": "Bloccato",
+    "unavailable": "Non disponibile",
+    "available": "Disponibile",
+    "monthly_pnl": "Conto economico mensile",
+    "budget_variance": "Scostamento budget",
+    "receivables_aging": "Scadenzario crediti",
+    "payables_aging": "Scadenzario debiti",
+    "cash_movement": "Movimenti di cassa",
+    "customer_concentration": "Concentrazione clienti",
+    "service_profitability": "Redditività servizi",
+}
 
-_HTML_IT.update({
-    "Revenue": "Ricavi", "Gross profit": "Margine lordo", "Net result": "Risultato netto",
-    "Total Revenue": "Ricavi totali", "Total Gross profit": "Margine lordo totale",
-    "Total EBITDA": "EBITDA totale", "Total Net result": "Risultato netto totale",
-    "Latest reported cash balance": "Ultimo saldo di cassa riportato",
-    "Total overdue receivables": "Crediti scaduti totali",
-    "Calculated facts and schema closure do not establish accounting correctness, source completeness, business causation, or professional approval.":
-    "I calcoli e la completezza dello schema non attestano la correttezza contabile, la completezza delle fonti, le cause economiche o l’approvazione professionale.",
-})
+_HTML_IT.update(
+    {
+        "Revenue": "Ricavi",
+        "Gross profit": "Margine lordo",
+        "Net result": "Risultato netto",
+        "Total Revenue": "Ricavi totali",
+        "Total Gross profit": "Margine lordo totale",
+        "Total EBITDA": "EBITDA totale",
+        "Total Net result": "Risultato netto totale",
+        "Latest reported cash balance": "Ultimo saldo di cassa riportato",
+        "Total overdue receivables": "Crediti scaduti totali",
+        "Calculated facts and schema closure do not establish accounting correctness, source completeness, business causation, or professional approval.": "I calcoli e la completezza dello schema non attestano la correttezza contabile, la completezza delle fonti, le cause economiche o l’approvazione professionale.",
+    }
+)
 
 
 def _html_label(value: str, language: str) -> str:
@@ -1860,9 +1869,13 @@ def _html_display_cell(row: Mapping[str, Any], column: str) -> str:
     return _display_cell(row, column)
 
 
-def _html_table(rows: Sequence[Mapping[str, Any]], columns: Sequence[str], language: str = "en") -> str:
+def _html_table(
+    rows: Sequence[Mapping[str, Any]], columns: Sequence[str], language: str = "en"
+) -> str:
     if not rows:
-        return '<p class="empty">' + _html_label('No rows available.', language) + '</p>'
+        return (
+            '<p class="empty">' + _html_label("No rows available.", language) + "</p>"
+        )
     head = "".join(
         f"<th>{html.escape((_HTML_IT.get(column, column.replace('_', ' ').title()) if language == 'it' else column.replace('_', ' ').title()) + (' (%)' if column in {'share', 'margin_rate'} else ''))}</th>"
         for column in columns
@@ -1870,7 +1883,8 @@ def _html_table(rows: Sequence[Mapping[str, Any]], columns: Sequence[str], langu
     body = "".join(
         "<tr>"
         + "".join(
-            f"<td>{html.escape(_html_label(_html_display_cell(row, column), language))}</td>" for column in columns
+            f"<td>{html.escape(_html_label(_html_display_cell(row, column), language))}</td>"
+            for column in columns
         )
         + "</tr>"
         for row in rows
@@ -1884,6 +1898,7 @@ def render_html(
     """Render a self-contained management command centre."""
 
     language = pack.get("language", "en")
+
     def label(value: str) -> str:
         return html.escape(_html_label(value, language))
 
@@ -1917,7 +1932,9 @@ def render_html(
                 "".join(f"<li>{html.escape(item['text'])}</li>" for item in items)
                 or f"<li>{label('None recorded.')}</li>"
             )
-            blocks.append(f"<article><h3>{label(title)}</h3><ul>{list_items}</ul></article>")
+            blocks.append(
+                f"<article><h3>{label(title)}</h3><ul>{list_items}</ul></article>"
+            )
         commentary_html = f'<section><p class="eyebrow">{label('Professional review')}</p><h2>{label('Interpretation')}</h2><div class="commentary">{"".join(blocks)}</div></section>'
     coverage_rows = pack["coverage"]
     pnl_rows = pack["sections"]["monthly_pnl"].get("rows", [])

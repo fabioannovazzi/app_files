@@ -637,8 +637,11 @@ def _node_executable() -> str:
 
 
 def _mcp_tool_result(
-    workbench: LocalReviewWorkbench, name: str, args: dict[str, Any],
-    *, browser_payload: bool = False,
+    workbench: LocalReviewWorkbench,
+    name: str,
+    args: dict[str, Any],
+    *,
+    browser_payload: bool = False,
 ) -> dict[str, Any]:
     message = {
         "jsonrpc": "2.0",
@@ -652,7 +655,8 @@ def _mcp_tool_result(
         # package and use its reference within the same bounded invocation.
         # callTool retains the server's binding, digest and persistence checks.
         command = [
-            _node_executable(), "-e",
+            _node_executable(),
+            "-e",
             "const fs = require('node:fs');"
             "const server = require(process.argv[1]);"
             "const request = JSON.parse(fs.readFileSync(0, 'utf8'));"
@@ -689,9 +693,17 @@ def _mcp_tool_result(
         raise ValueError("MCP tools/call result must be a JSON object")
     structured = result.get("structuredContent")
     if isinstance(structured, dict):
-        if browser_payload and name == _render_tool_name(_adapter(workbench)) and structured.get("ok") is not False:
+        if (
+            browser_payload
+            and name == _render_tool_name(_adapter(workbench))
+            and structured.get("ok") is not False
+        ):
             metadata = result.get("_meta")
-            private = metadata.get("private_review_payload") if isinstance(metadata, dict) else None
+            private = (
+                metadata.get("private_review_payload")
+                if isinstance(metadata, dict)
+                else None
+            )
             if isinstance(private, dict):
                 return private
         return structured
@@ -765,8 +777,12 @@ def _review_output_path(workbench: LocalReviewWorkbench, requested: str) -> Path
             continue
         if requested not in {raw, relative.as_posix()}:
             continue
-        if ".." in relative.parts or any(parent.is_symlink() for parent in (candidate, *candidate.parents)):
-            raise ValueError("Output links and paths outside the run are not downloadable")
+        if ".." in relative.parts or any(
+            parent.is_symlink() for parent in (candidate, *candidate.parents)
+        ):
+            raise ValueError(
+                "Output links and paths outside the run are not downloadable"
+            )
         if not candidate.is_file():
             raise ValueError("Declared output is not available")
         if candidate.stat().st_size > 50_000_000:
@@ -873,7 +889,9 @@ def _handler(
                 if not isinstance(payload, dict):
                     raise ValueError("request body must be a JSON object")
                 if route == "/api/download-output":
-                    output = _review_output_path(workbench, str(payload.get("path", "")))
+                    output = _review_output_path(
+                        workbench, str(payload.get("path", ""))
+                    )
                     with output.open("rb") as stream:
                         body = stream.read(50_000_001)
                     if len(body) > 50_000_000:
