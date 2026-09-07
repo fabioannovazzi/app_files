@@ -73,9 +73,11 @@ def test_public_cowork_archives_follow_release_configuration() -> None:
         (ROOT / "scripts" / "claude_plugin_packages.json").read_text()
     )
     clara = next(p for p in configuration["packages"] if p["plugin"] == "clara")
-    # Clara's candidate build cannot replace its independently promoted public ZIP.
-    assert "public_zip" not in clara
-    assert public_clara_zip.is_file()
+    assert ROOT / clara["public_zip"] == public_clara_zip
+    assert (
+        hashlib.sha256(public_clara_zip.read_bytes()).digest()
+        == hashlib.sha256((ROOT / clara["output_zip"]).read_bytes()).digest()
+    )
     assert all(not path.exists() for path in retired_plugin_zips)
 
 

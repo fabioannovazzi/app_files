@@ -1,8 +1,13 @@
 # Clara Cowork release acceptance
 
-A successful Codex run or ZIP build does not approve a Cowork release. The
-candidate must pass packaged script checks and a separately reviewed run of the
-actual Cowork agent. Both records refer to the ZIP SHA-256, not just its version.
+Clara follows the same release path as Vera and Lucia: one canonical version,
+Codex and Cowork packages built together, source-drift and public-download checks,
+and passing PR checks before deployment. See [Product release alignment](product_release_alignment.md).
+
+Native Cowork agent acceptance is a separate, optional qualification record. It
+is not required to keep the two host distributions aligned. Automated package
+checks do not claim native agent acceptance, and this workflow does not alter
+Marketplace publication status.
 
 ## Automatic candidate check
 

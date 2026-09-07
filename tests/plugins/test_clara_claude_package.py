@@ -79,16 +79,24 @@ def test_clara_package_uses_claude_archive_name(configured_clara) -> None:
     _, _, _, package = configured_clara
 
     assert package.output_zip.name == "clara-claude-plugin.zip"
-    assert package.public_zip is None  # Only the acceptance gate may promote Clara.
+    assert (
+        package.public_zip
+        == ROOT / "static/shared/clara/downloads/clara-cowork-plugin.zip"
+    )
 
 
-def test_clara_builder_cannot_overwrite_public_release(
-    configured_clara, tmp_path
+def test_clara_failed_build_preserves_public_release(
+    configured_clara, tmp_path, monkeypatch
 ) -> None:
     builder, _, _, package = configured_clara
     public = tmp_path / "public.zip"
     public.write_bytes(b"previous release")
-    with pytest.raises(ValueError, match="Promote Clara through"):
+
+    def fail_write(*args):
+        raise ValueError("Invalid candidate")
+
+    monkeypatch.setattr(builder, "_write_zip", fail_write)
+    with pytest.raises(ValueError, match="Invalid candidate"):
         builder.build_package(replace(package, public_zip=public))
     assert public.read_bytes() == b"previous release"
 
