@@ -125,9 +125,10 @@ python scripts/check_dependencies.py
 ```
 
 Per una verifica mirata usa `--module` con uno dei workflow registrati, per
-esempio `--module comunicazione-professionale`. Se manca un requisito,
-dichiaralo; non installare dipendenze a runtime. `requirements.txt` è l'unica
-dichiarazione dei pacchetti Python richiesti dal bundle.
+esempio `--module comunicazione-professionale`. Il gestore prepara soltanto le dipendenze pubblicate in
+`requirements-shared-core.txt`, condivise con Vera e Clara. Usa il launcher
+`python scripts/managed_python_runtime.py --module <workflow> run scripts/<helper>.py`
+per eseguire gli helper nello stesso ambiente. Non installare pacchetti arbitrari.
 
 Never write run outputs inside this Git workspace. Nel lavoro locale usa
 soltanto l'`output_dir` restituito dal ciclo privato dell'incarico e richiesto
@@ -170,4 +171,4 @@ riservate o percorsi locali e non trasmettere automaticamente nulla.
 
 ## Supported Python runtime
 
-Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It selects an installed Python 3.12 or uses an existing `uv` installation to provision CPython 3.12. An older host interpreter may launch setup, but must not execute workflow helpers. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Component virtual environments remain separately scoped to their declared dependencies.
+Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It reuses the shared environment or selects an installed Python 3.12. If Python 3.12 and uv are absent, setup automatically downloads the published, SHA-256-verified uv bootstrap and provisions private CPython 3.12 inside shared runtime storage. Users do not install uv, change system Python, or edit PATH. Any supported host Python, including 3.14, may launch setup; workflow helpers run in the managed interpreter. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Vera, Clara and Lucia use one shared environment per operating-system host, outside plugin and client folders. Published shared recipes govern its dependencies. Optional OCR, once approved, is installed in that same environment and retained across updates. Setup waits for running workflows; after failed setup, repair the environment before using it again.

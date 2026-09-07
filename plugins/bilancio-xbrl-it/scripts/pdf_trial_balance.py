@@ -61,6 +61,9 @@ def _bbox_union(
 def _normalized_bbox(value: object) -> tuple[float, float, float, float] | None:
     """Normalize common PaddleOCR rectangle and polygon shapes."""
 
+    tolist = getattr(value, "tolist", None)
+    if callable(tolist):
+        value = tolist()
     if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
         return None
     if len(value) == 4 and all(isinstance(item, (int, float)) for item in value):
@@ -106,6 +109,14 @@ def _mapping_words(value: Mapping[str, Any]) -> list[OcrWord]:
             break
     if boxes is None:
         boxes = []
+    # PaddleOCR 3 returns NumPy geometry and confidence arrays. ndarray does
+    # not implement collections.abc.Sequence; normalize before shape checks.
+    boxes_tolist = getattr(boxes, "tolist", None)
+    if callable(boxes_tolist):
+        boxes = boxes_tolist()
+    scores_tolist = getattr(scores, "tolist", None)
+    if callable(scores_tolist):
+        scores = scores_tolist()
     if not isinstance(boxes, Sequence) or isinstance(boxes, (str, bytes, bytearray)):
         return []
     words: list[OcrWord] = []

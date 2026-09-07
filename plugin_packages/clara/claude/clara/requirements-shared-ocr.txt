@@ -1,0 +1,20 @@
+# Shared Mparanza runtime: identical in Clara, Vera and Lucia.
+huggingface-hub>=0.28
+numpy==2.2.6
+numpy>=1.24,<2.3
+opencv-contrib-python==4.10.0.84
+paddleocr==3.6.0
+paddleocr>=2.7
+paddleocr>=3.0
+paddleocr>=3.2,<4
+paddlepaddle==3.3.1
+paddlepaddle>=2.6
+paddlepaddle>=3.0
+paddlepaddle>=3.2,<4
+paddlex>=3.2,<4
+paddlex[ocr-core]==3.6.1
+paddlex[ocr]>=3.0
+Pillow==11.1.0
+Pillow>=10.0
+Pillow>=11.1
+PyMuPDF>=1.24

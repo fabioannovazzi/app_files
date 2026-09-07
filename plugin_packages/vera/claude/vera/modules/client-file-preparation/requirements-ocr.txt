@@ -1,5 +1,5 @@
 # Shared Clara/Vera OCR runtime. Keep this package set aligned in both plugins.
 Pillow>=11.1
-opencv-python>=4.8
+opencv-contrib-python==4.10.0.84
 paddleocr>=3.0
 paddlepaddle>=3.0

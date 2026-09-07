@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -463,6 +464,52 @@ def test_scanned_pdf_uses_ocr_geometry_and_surfaces_low_confidence(
     assert extraction["tables"][0]["rows"][1]["cells"][5]["confidence"] == 0.80
 
 
+def test_scanned_pdf_preserves_paddle_numpy_geometry_and_confidence(
+    tmp_path, monkeypatch
+):
+    import numpy as np
+
+    source = tmp_path / "scan.pdf"
+    _write_pdf(source, text=False)
+    prediction = {
+        "rec_texts": [
+            "account",
+            "description",
+            "debit",
+            "balance",
+            "100",
+            "cash",
+            "50",
+            "140",
+        ],
+        "rec_boxes": np.array(
+            [
+                [40, 40, 140, 60],
+                [250, 40, 350, 60],
+                [460, 40, 560, 60],
+                [670, 40, 770, 60],
+                [40, 90, 140, 110],
+                [250, 90, 350, 110],
+                [460, 90, 560, 110],
+                [670, 90, 770, 110],
+            ]
+        ),
+        "rec_scores": np.array(
+            [0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.80], dtype=np.float32
+        ),
+    }
+    engine = SimpleNamespace(predict=lambda image: iter([prediction]))
+    monkeypatch.setattr(pdf_trial_balance, "_ocr_engine", lambda language: engine)
+
+    extraction = pdf_trial_balance.extract_pdf_tables(source, max_bytes=1024 * 1024)
+
+    assert extraction["ocr_used"] is True
+    assert extraction["tables"][0]["rows"][1]["cells"][3]["raw_value"] == "140"
+    assert extraction["tables"][0]["rows"][1]["cells"][3][
+        "confidence"
+    ] == pytest.approx(0.80)
+
+
 def test_image_only_pdf_with_ocr_disabled_requests_setup(tmp_path: Path) -> None:
     source = tmp_path / "scan.pdf"
     _write_pdf(source, text=False)
@@ -480,12 +527,14 @@ def _install_managed_ocr_test_runtime(
 ) -> tuple[Path, Any]:
     requirements = tmp_path / "requirements-ocr.txt"
     requirements.write_text("paddleocr==3.5.0\npaddlepaddle==3.3.1\n", encoding="utf-8")
-    monkeypatch.setattr(
-        managed_ocr_runtime, "_runtime_root", lambda: tmp_path / "runtime"
-    )
+    environment = tmp_path / "runtime/venv"
+    target = environment / "lib/python3.12/site-packages"
+    shared_path = ROOT / "plugins/vera/scripts/_shared_python_runtime.py"
+    spec = importlib.util.spec_from_file_location("xbrl_shared_test", shared_path)
+    shared = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(shared)
 
-    def package_runner(arguments: list[str], **_kwargs: object):
-        target = Path(arguments[arguments.index("--target") + 1])
+    def prepare(*args, **kwargs):
         for module in managed_ocr_runtime.REQUIRED_MODULES:
             package = target / module
             package.mkdir(parents=True)
@@ -501,7 +550,20 @@ def _install_managed_ocr_test_runtime(
                 f"Name: {package_name}\nVersion: {version}\n",
                 encoding="utf-8",
             )
-        return subprocess.CompletedProcess(arguments, 0, "", "")
+        return True, environment, "ready"
+
+    manager = SimpleNamespace(
+        ensure_runtime=prepare,
+        activate_runtime=lambda *args, **kwargs: (
+            environment if target.exists() else None
+        ),
+        runtime_python=lambda path: path / "bin/python",
+        _shared_runtime=lambda: shared,
+    )
+    monkeypatch.setattr(
+        managed_ocr_runtime, "_manager", lambda path: (tmp_path, manager)
+    )
+    monkeypatch.setattr(managed_ocr_runtime, "runtime_target", lambda path: target)
 
     def model_runner(arguments: list[str], **kwargs: object):
         environment = kwargs["env"]
@@ -515,7 +577,6 @@ def _install_managed_ocr_test_runtime(
 
     result = managed_ocr_runtime.install_ocr_runtime(
         requirements,
-        runner=package_runner,
         model_runner=model_runner,
     )
     return requirements, result

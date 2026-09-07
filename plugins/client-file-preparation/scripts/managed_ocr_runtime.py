@@ -8,10 +8,8 @@ import hashlib
 import importlib.machinery
 import json
 import os
-import shutil
 import subprocess
 import sys
-import tempfile
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Callable
@@ -37,9 +35,8 @@ INSTALL_FAILURE_MESSAGE = (
     "I couldn't install PaddleOCR right now. Shall I try the installation again?"
 )
 REQUIRED_MODULES = ("PIL", "cv2", "paddleocr", "paddle")
-RUNTIME_ROOT_ENV = "MPARANZA_SHARED_OCR_RUNTIME"
-RUNTIME_DIR_NAME = "paddleocr"
-READY_MARKER = ".mparanza-ocr-ready.json"
+RUNTIME_ROOT_ENV = "MPARANZA_RUNTIME_ROOT"
+_RUNTIME_LEASES = {}
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]
 
@@ -55,154 +52,147 @@ class SetupResult:
     detail: str = ""
 
 
-def _runtime_root() -> Path:
-    configured = os.environ.get(RUNTIME_ROOT_ENV)
-    if configured:
-        return Path(configured).expanduser().resolve()
-    return (
-        Path.home() / ".cache" / "mparanza" / "shared-runtimes" / RUNTIME_DIR_NAME
-    ).resolve()
+def _manager(requirements_path: Path):
+    """Find the owning product without using a client-project dependency path."""
+    import importlib.util
+
+    roots = [requirements_path.parent, *requirements_path.parents]
+    roots.append(requirements_path.parent.parent / "vera")
+    owner = next(
+        (root for root in roots if (root / "requirements-shared-core.txt").is_file()),
+        None,
+    )
+    if owner is None:
+        raise ValueError(
+            "Install the current Vera, Clara or Lucia package to use shared OCR."
+        )
+    source = owner / "scripts" / "_managed_python_runtime.py"
+    spec = importlib.util.spec_from_file_location("mparanza_ocr_manager", source)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("Shared Python runtime manager unavailable")
+    manager = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = manager
+    spec.loader.exec_module(manager)
+    return owner, manager
 
 
 def requirements_fingerprint(requirements_path: Path) -> str:
-    """Return a stable fingerprint for the declared shared OCR packages."""
-
-    normalized = sorted(
-        line.split("#", 1)[0].strip().lower()
-        for line in requirements_path.read_text(encoding="utf-8").splitlines()
-        if line.split("#", 1)[0].strip()
-    )
-    digest = hashlib.sha256("\n".join(normalized).encode("utf-8"))
-    return digest.hexdigest()[:16]
+    """Fingerprint the product-independent OCR recipe."""
+    owner, _ = _manager(requirements_path)
+    return hashlib.sha256(
+        (owner / "requirements-shared-ocr.txt").read_bytes()
+    ).hexdigest()[:16]
 
 
 def runtime_target(requirements_path: Path) -> Path:
-    """Return the persistent runtime used by both Clara and Vera."""
-
-    return _runtime_root() / requirements_fingerprint(requirements_path)
+    """Return OCR's site-packages in the sole shared environment."""
+    owner, manager = _manager(requirements_path)
+    selection = manager.select_runtime(
+        owner, requirements=["requirements-shared-ocr.txt"]
+    )
+    environment = manager.dependency_target(selection)
+    return environment / (
+        "Lib/site-packages"
+        if sys.platform == "win32"
+        else "lib/python3.12/site-packages"
+    )
 
 
 def _modules_present(target: Path) -> bool:
-    """Check exact top-level modules in the managed target.
-
-    This deterministic presence check is appropriate because package
-    installation is a mechanical filesystem contract, not semantic judgment.
-    """
-
-    if not target.is_dir():
-        return False
-    return all(
+    return target.is_dir() and all(
         importlib.machinery.PathFinder.find_spec(module, [str(target)]) is not None
         for module in REQUIRED_MODULES
     )
 
 
-def _runtime_ready(target: Path) -> bool:
-    return (target / READY_MARKER).is_file() and _modules_present(target)
-
-
 def _prepend_pythonpath(target: Path) -> None:
-    target_text = str(target)
-    if target_text not in sys.path:
-        sys.path.insert(0, target_text)
-    existing = os.environ.get("PYTHONPATH", "")
-    paths = [part for part in existing.split(os.pathsep) if part]
-    if target_text not in paths:
-        os.environ["PYTHONPATH"] = os.pathsep.join([target_text, *paths])
+    text = str(target)
+    if text not in sys.path:
+        sys.path.insert(0, text)
+    paths = [
+        part for part in os.environ.get("PYTHONPATH", "").split(os.pathsep) if part
+    ]
+    if text not in paths:
+        os.environ["PYTHONPATH"] = os.pathsep.join([text, *paths])
+
+
+def _hold_lease(environment: Path) -> bool:
+    """Keep externally activated native OCR packages unchanged until process exit."""
+    if environment in _RUNTIME_LEASES:
+        return True
+    lock = environment.parent / "runtime.lock"
+    if lock.is_symlink():
+        return False
+    try:
+        handle = lock.open("rb")
+    except OSError:
+        return False
+    try:
+        if sys.platform == "win32":
+            import msvcrt
+
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBRLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(handle.fileno(), fcntl.LOCK_SH | fcntl.LOCK_NB)
+    except OSError:
+        handle.close()
+        return False
+    _RUNTIME_LEASES[environment] = handle
+    return True
 
 
 def activate_ocr_runtime(requirements_path: Path) -> Path | None:
-    """Activate the persistent shared runtime when it is already ready."""
-
+    """Activate OCR only when the shared environment has a valid OCR receipt."""
+    owner, manager = _manager(requirements_path)
+    ready = manager.activate_runtime(
+        owner, requirements=["requirements-shared-ocr.txt"]
+    )
     target = runtime_target(requirements_path)
-    if not _runtime_ready(target):
+    if ready is None or not _modules_present(target):
+        return None
+    if not _hold_lease(ready):
+        return None
+    # Recheck after acquiring the lease to close the setup/activation race.
+    if (
+        manager.activate_runtime(owner, requirements=["requirements-shared-ocr.txt"])
+        is None
+    ):
+        _RUNTIME_LEASES.pop(ready).close()
         return None
     _prepend_pythonpath(target)
     return target
 
 
-def _installation_command(requirements_path: Path, target: Path) -> list[str]:
-    return [
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "--disable-pip-version-check",
-        "--no-input",
-        "--target",
-        str(target),
-        "-r",
-        str(requirements_path),
-    ]
-
-
 def install_ocr_runtime(
-    requirements_path: Path,
-    *,
-    runner: Runner = subprocess.run,
+    requirements_path: Path, *, runner: Runner = subprocess.run
 ) -> SetupResult:
-    """Install PaddleOCR once into the shared persistent runtime."""
-
-    requirements_path = requirements_path.expanduser().resolve()
-    target = runtime_target(requirements_path)
-    if _runtime_ready(target):
-        _prepend_pythonpath(target)
-        return SetupResult(
-            status="ready",
-            message=INSTALL_SUCCESS_MESSAGE,
-            runtime_path=str(target),
-            reused=True,
+    """Enable OCR in the existing shared environment, never a separate one."""
+    try:
+        owner, manager = _manager(requirements_path)
+        reused = (
+            manager.activate_runtime(
+                owner, requirements=["requirements-shared-ocr.txt"]
+            )
+            is not None
         )
-
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = Path(
-        tempfile.mkdtemp(prefix=f".{target.name}-", dir=target.parent)
-    ).resolve()
-    completed = runner(
-        _installation_command(requirements_path, temporary),
-        cwd=requirements_path.parent,
-        capture_output=True,
-        check=False,
-        text=True,
-    )
-    if completed.returncode != 0:
-        shutil.rmtree(temporary)
-        detail = (completed.stderr or completed.stdout).strip()
-        return SetupResult(
-            status="failed",
-            message=INSTALL_FAILURE_MESSAGE,
-            runtime_path=str(target),
-            reused=False,
-            detail=detail or "The managed installer returned an error.",
+        ready, _, detail = manager.ensure_runtime(
+            owner, requirements=["requirements-shared-ocr.txt"], runner=runner
         )
-    if not _modules_present(temporary):
-        shutil.rmtree(temporary)
+        target = runtime_target(requirements_path)
+        ready = ready and _modules_present(target)
+        if ready:
+            ready = activate_ocr_runtime(requirements_path) is not None
         return SetupResult(
-            status="failed",
-            message=INSTALL_FAILURE_MESSAGE,
-            runtime_path=str(target),
-            reused=False,
-            detail="The downloaded runtime did not contain every required module.",
+            "ready" if ready else "failed",
+            INSTALL_SUCCESS_MESSAGE if ready else INSTALL_FAILURE_MESSAGE,
+            str(target),
+            reused if ready else False,
+            "" if ready else detail,
         )
-
-    marker = {
-        "requirements_fingerprint": requirements_fingerprint(requirements_path),
-        "modules": list(REQUIRED_MODULES),
-    }
-    (temporary / READY_MARKER).write_text(
-        json.dumps(marker, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    if target.exists():
-        shutil.rmtree(target)
-    temporary.replace(target)
-    _prepend_pythonpath(target)
-    return SetupResult(
-        status="ready",
-        message=INSTALL_SUCCESS_MESSAGE,
-        runtime_path=str(target),
-        reused=False,
-    )
+    except (OSError, ValueError) as error:
+        return SetupResult("failed", INSTALL_FAILURE_MESSAGE, "", False, str(error))
 
 
 def _requirements_path(value: Path | None) -> Path:

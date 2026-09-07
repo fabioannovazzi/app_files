@@ -46,7 +46,7 @@
     "website-refresh",
     "first-website"
   ],
-  "version": "0.1.218",
+  "version": "0.1.219",
   "skills": "./skills/",
   "agents": [
     "./agents/vera.md",

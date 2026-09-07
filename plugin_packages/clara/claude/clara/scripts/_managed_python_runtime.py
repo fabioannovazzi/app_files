@@ -363,12 +363,28 @@ def _bootstrap_pip(
     )
 
 
+def _shared_runtime():
+    """Load the shared backend packaged beside this compatibility adapter."""
+    import importlib.util
+
+    path = Path(__file__).with_name("_shared_python_runtime.py")
+    spec = importlib.util.spec_from_file_location("mparanza_shared_runtime", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("Shared runtime implementation is unavailable")
+    implementation = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(implementation)
+    return implementation
+
+
 def dependency_target(
     selection: RuntimeSelection,
     data_dir: Path | None = None,
 ) -> Path:
     """Return the selected fingerprinted dependency target."""
 
+    shared = _shared_runtime()
+    if shared.enabled(selection.plugin_root):
+        return shared.target(selection.plugin_root)
     base = (
         data_dir.resolve()
         if data_dir is not None
@@ -401,6 +417,7 @@ def runtime_environment(target: Path) -> dict[str, str]:
     """Return an environment bound to the managed virtual environment."""
 
     environment = dict(os.environ)
+    environment.pop("MPARANZA_RUNTIME_INSTALLING", None)
     executable = runtime_python(target)
     existing_path = environment.get("PATH")
     environment["PATH"] = (
@@ -610,6 +627,9 @@ def ensure_runtime(
 
     selection = select_runtime(plugin_root, module, requirements)
     logical_target = dependency_target(selection, data_dir)
+    shared = _shared_runtime()
+    if shared.enabled(selection.plugin_root):
+        return shared.ensure(selection, logical_target, sys.modules[__name__], runner)
     try:
         logical_target.parent.mkdir(parents=True, exist_ok=True)
         with _installation_lock(
@@ -620,7 +640,7 @@ def ensure_runtime(
         return False, logical_target, str(error)
 
 
-def _python312_executable(runner: Runner) -> str:
+def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
     """Select CPython 3.12; optionally provision it through an installed uv."""
 
     if (
@@ -650,7 +670,7 @@ def _python312_executable(runner: Runner) -> str:
         )
         if result.returncode == 0 and result.stdout.strip():
             return result.stdout.strip()
-    uv = shutil.which("uv")
+    uv = shutil.which("uv") if allow_uv else None
     if uv:
         installed = runner(
             [uv, "python", "install", "cpython@3.12"],
@@ -806,6 +826,14 @@ def activate_runtime(
 
     try:
         selection = select_runtime(plugin_root, module, requirements)
+        shared = _shared_runtime()
+        if shared.enabled(selection.plugin_root):
+            target = dependency_target(selection)
+            return (
+                target
+                if shared.ready(selection, target, sys.modules[__name__])
+                else None
+            )
         target = _active_target(dependency_target(selection))
     except (OSError, ValueError):
         return None

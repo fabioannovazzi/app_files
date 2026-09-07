@@ -41,6 +41,7 @@ COMPONENTS = (
 PACKAGE_IMPORTS = {
     "imageio-ffmpeg": "imageio_ffmpeg",
     "opencv-python": "cv2",
+    "opencv-contrib-python": "cv2",
     "paddlepaddle": "paddle",
     "pillow": "PIL",
     "pymupdf": "fitz",

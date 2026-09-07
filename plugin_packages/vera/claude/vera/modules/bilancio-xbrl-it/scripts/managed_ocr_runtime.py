@@ -9,7 +9,6 @@ import importlib.machinery
 import importlib.metadata
 import json
 import os
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -41,7 +40,8 @@ OCR_MODEL_NAMES = (
     "latin_PP-OCRv5_mobile_rec",
     "en_PP-OCRv5_mobile_rec",
 )
-RUNTIME_ROOT_ENV = "MPARANZA_SHARED_OCR_RUNTIME"
+RUNTIME_ROOT_ENV = "MPARANZA_RUNTIME_ROOT"
+_RUNTIME_LEASES = {}
 RUNTIME_DIR_NAME = "paddleocr"
 READY_MARKER = ".mparanza-ocr-ready.json"
 READY_SCHEMA_VERSION = 2
@@ -61,13 +61,69 @@ class SetupResult:
     detail: str = ""
 
 
-def _runtime_root() -> Path:
-    configured = os.environ.get(RUNTIME_ROOT_ENV)
-    if configured:
-        return Path(configured).expanduser().resolve()
-    return (
-        Path.home() / ".cache" / "mparanza" / "shared-runtimes" / RUNTIME_DIR_NAME
-    ).resolve()
+def _manager(requirements_path: Path):
+    """Find the owning product without using a client-project dependency path."""
+    import importlib.util
+
+    roots = [requirements_path.parent, *requirements_path.parents]
+    roots.append(requirements_path.parent.parent / "vera")
+    owner = next(
+        (root for root in roots if (root / "requirements-shared-core.txt").is_file()),
+        None,
+    )
+    if owner is None:
+        raise ValueError(
+            "Install the current Vera, Clara or Lucia package to use shared OCR."
+        )
+    source = owner / "scripts" / "_managed_python_runtime.py"
+    spec = importlib.util.spec_from_file_location("mparanza_ocr_manager", source)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("Shared Python runtime manager unavailable")
+    manager = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = manager
+    spec.loader.exec_module(manager)
+    return owner, manager
+
+
+def runtime_target(requirements_path: Path) -> Path:
+    """Return OCR's site-packages in the sole shared environment."""
+    owner, manager = _manager(requirements_path)
+    selection = manager.select_runtime(
+        owner, requirements=["requirements-shared-ocr.txt"]
+    )
+    environment = manager.dependency_target(selection)
+    return environment / (
+        "Lib/site-packages"
+        if sys.platform == "win32"
+        else "lib/python3.12/site-packages"
+    )
+
+
+def _hold_lease(environment: Path) -> bool:
+    """Keep externally activated native OCR packages unchanged until process exit."""
+    if environment in _RUNTIME_LEASES:
+        return True
+    lock = environment.parent / "runtime.lock"
+    if lock.is_symlink():
+        return False
+    try:
+        handle = lock.open("rb")
+    except OSError:
+        return False
+    try:
+        if sys.platform == "win32":
+            import msvcrt
+
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBRLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(handle.fileno(), fcntl.LOCK_SH | fcntl.LOCK_NB)
+    except OSError:
+        handle.close()
+        return False
+    _RUNTIME_LEASES[environment] = handle
+    return True
 
 
 def _normalize_package_name(value: str) -> str:
@@ -109,7 +165,8 @@ def _requirements_fingerprint(requirements_path: Path) -> str:
 
 
 def _runtime_target(requirements_path: Path) -> Path:
-    return _runtime_root() / _requirements_fingerprint(requirements_path)
+    _locked_requirements(requirements_path)
+    return runtime_target(requirements_path)
 
 
 def _modules_present(target: Path) -> bool:
@@ -210,7 +267,7 @@ def _activate_path(target: Path) -> None:
     os.environ["PADDLE_PDX_CACHE_HOME"] = str(_model_cache(target))
 
 
-def _prefetch_models(target: Path, runner: Runner) -> None:
+def _prefetch_models(target: Path, runner: Runner, python: Path) -> None:
     """Download the declared public OCR models inside the approved install step."""
 
     _activate_path(target)
@@ -224,9 +281,9 @@ def _prefetch_models(target: Path, runner: Runner) -> None:
         "enable_mkldnn=False)\n"
     )
     completed = runner(
-        [sys.executable, "-c", code],
+        [str(python), "-c", code],
         cwd=target,
-        env=dict(os.environ),
+        env={**os.environ, "MPARANZA_RUNTIME_INSTALLING": "1"},
         capture_output=True,
         check=False,
         text=True,
@@ -237,11 +294,23 @@ def _prefetch_models(target: Path, runner: Runner) -> None:
 
 
 def activate_ocr_runtime(requirements_path: Path) -> Path | None:
-    """Activate the exact managed runtime only when its receipt is complete."""
-
+    """Verify the shared packages and XBRL model integrity before activation."""
     source = requirements_path.resolve()
     target = _runtime_target(source)
-    if not _runtime_ready(target, source):
+    owner, manager = _manager(source)
+    environment = manager.activate_runtime(
+        owner, requirements=["requirements-shared-ocr.txt"]
+    )
+    if environment is None or not _runtime_ready(target, source):
+        return None
+    if not _hold_lease(environment):
+        return None
+    if (
+        not _runtime_ready(target, source)
+        or manager.activate_runtime(owner, requirements=["requirements-shared-ocr.txt"])
+        is None
+    ):
+        _RUNTIME_LEASES.pop(environment).close()
         return None
     _activate_path(target)
     return target
@@ -253,80 +322,65 @@ def install_ocr_runtime(
     runner: Runner = subprocess.run,
     model_runner: Runner = subprocess.run,
 ) -> SetupResult:
-    """Install optional OCR dependencies after the user's explicit approval."""
-
+    """Enable shared OCR and retain the XBRL model integrity contract."""
     source = requirements_path.expanduser().resolve()
     target = _runtime_target(source)
-    if _runtime_ready(target, source):
-        _activate_path(target)
+    if activate_ocr_runtime(source) is not None:
         return SetupResult("ready", INSTALL_SUCCESS_MESSAGE, str(target), True)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = Path(
-        tempfile.mkdtemp(prefix=f".{target.name}-", dir=target.parent)
-    ).resolve()
-    completed = runner(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            "--disable-pip-version-check",
-            "--no-input",
-            "--target",
-            str(temporary),
-            "-r",
-            str(source),
-        ],
-        cwd=source.parent,
-        capture_output=True,
-        check=False,
-        text=True,
+    owner, manager = _manager(source)
+    ready, environment, detail = manager.ensure_runtime(
+        owner,
+        requirements=["requirements-shared-ocr.txt"],
+        runner=runner,
     )
-    if completed.returncode != 0 or not _modules_present(temporary):
-        shutil.rmtree(temporary)
-        detail = (completed.stderr or completed.stdout).strip()
+    if not ready:
+        return SetupResult(
+            "failed", INSTALL_FAILURE_MESSAGE, str(target), False, detail
+        )
+    if (
+        Path(sys.prefix).resolve() == environment.resolve()
+        or environment in _RUNTIME_LEASES
+    ):
         return SetupResult(
             "failed",
             INSTALL_FAILURE_MESSAGE,
             str(target),
             False,
-            detail or "The managed OCR installation was incomplete.",
+            "Exit running OCR workflows and run model setup from base Python.",
         )
+    shared = manager._shared_runtime()
     try:
-        _prefetch_models(temporary, model_runner)
-    except (OSError, RuntimeError) as exc:
-        shutil.rmtree(temporary)
+        with shared._writer(environment.parent / "runtime.lock"):
+            (target / READY_MARKER).unlink(missing_ok=True)
+            # Only model assets are staged; no second Python environment is created.
+            with tempfile.TemporaryDirectory(
+                prefix="ocr-models-", dir=environment.parent
+            ) as temporary:
+                staging = Path(temporary)
+                _prefetch_models(
+                    staging, model_runner, manager.runtime_python(environment)
+                )
+                models = _model_receipt(staging)
+                receipt = {
+                    "schema_version": READY_SCHEMA_VERSION,
+                    "requirements_fingerprint": _requirements_fingerprint(source),
+                    "requirements_sha256": _requirements_digest(source),
+                    "modules": list(REQUIRED_MODULES),
+                    "packages": _package_receipt(target, source),
+                    "models": models,
+                }
+                cache = _model_cache(target)
+                if cache.is_symlink():
+                    raise OSError("OCR model cache cannot be a symlink")
+                if cache.exists():
+                    cache.replace(staging / "previous-model-cache")
+                _model_cache(staging).replace(cache)
+                shared._write(target / READY_MARKER, receipt)
+    except (OSError, RuntimeError, ValueError, TypeError) as error:
         return SetupResult(
-            "failed",
-            INSTALL_FAILURE_MESSAGE,
-            str(target),
-            False,
-            f"The declared OCR models could not be prepared: {exc}",
+            "failed", INSTALL_FAILURE_MESSAGE, str(target), False, str(error)
         )
-    try:
-        receipt = {
-            "schema_version": READY_SCHEMA_VERSION,
-            "requirements_fingerprint": _requirements_fingerprint(source),
-            "requirements_sha256": _requirements_digest(source),
-            "modules": list(REQUIRED_MODULES),
-            "packages": _package_receipt(temporary, source),
-            "models": _model_receipt(temporary),
-        }
-        (temporary / READY_MARKER).write_text(
-            json.dumps(receipt, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
-    except (OSError, TypeError, ValueError) as exc:
-        shutil.rmtree(temporary)
-        return SetupResult(
-            "failed",
-            INSTALL_FAILURE_MESSAGE,
-            str(target),
-            False,
-            f"The managed OCR integrity receipt could not be created: {exc}",
-        )
-    if not _runtime_ready(temporary, source):
-        shutil.rmtree(temporary)
+    if activate_ocr_runtime(source) is None:
         return SetupResult(
             "failed",
             INSTALL_FAILURE_MESSAGE,
@@ -334,10 +388,6 @@ def install_ocr_runtime(
             False,
             "The managed OCR integrity receipt could not be verified.",
         )
-    if target.exists():
-        shutil.rmtree(target)
-    temporary.replace(target)
-    _activate_path(target)
     return SetupResult("ready", INSTALL_SUCCESS_MESSAGE, str(target), False)
 
 
