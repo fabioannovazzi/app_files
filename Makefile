@@ -15,3 +15,11 @@ check: setup
 
 cleanup-sessions:
 	@python scripts/cleanup_sessions.py --retention-hours 168
+
+# One canonical version per product; build both host distributions together.
+.PHONY: release-products check-product-releases
+release-products:
+	python scripts/build_product_release.py
+
+check-product-releases:
+	python scripts/build_product_release.py --check

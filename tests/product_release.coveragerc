@@ -1,0 +1,6 @@
+[run]
+include = */scripts/build_product_release.py
+
+[report]
+fail_under = 80
+show_missing = True

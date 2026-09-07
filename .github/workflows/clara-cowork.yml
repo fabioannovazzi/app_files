@@ -65,9 +65,9 @@ jobs:
           path = Path(os.environ["CLARA_EVIDENCE"])
           report = json.loads(path.read_text()) if path.is_file() else {}
           with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a") as summary:
-              summary.write("Clara candidate checks do not authorize publication.\n\n")
+              summary.write("Clara package checks run alongside the required product release alignment check.\n\n")
               summary.write(f"Script status: {report.get('status', 'unverified')}\n\n")
               summary.write(f"Version: {report.get('plugin', {}).get('version', 'unknown')}\n\n")
               summary.write(f"ZIP SHA-256: {report.get('zip_sha256', 'unknown')}\n\n")
-              summary.write("Actual Cowork plugin loading, startup hooks and fresh-session workflow: unverified. Supply reviewed evidence to the release promotion gate.\n")
+              summary.write("Native Cowork agent acceptance: unverified. It is separate from automated host-package alignment.\n")
           PY

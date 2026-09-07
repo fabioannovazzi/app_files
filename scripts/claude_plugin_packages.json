@@ -36,7 +36,8 @@
         "commercial-due-diligence",
         "reporting",
         "cowork"
-      ]
+      ],
+      "public_zip": "static/shared/clara/downloads/clara-cowork-plugin.zip"
     },
     {
       "plugin": "lucia",

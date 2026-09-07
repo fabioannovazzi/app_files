@@ -3,9 +3,10 @@
   "basis": "Version shown on the public ChatGPT plugin detail page; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.186",
+      "version": "0.1.188",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-07"
+      "observed_at": "2026-09-07",
+      "basis": "User confirmed Clara 0.1.188 is published on ChatGPT on 2026-09-07."
     },
     "vera": {
       "version": "0.1.218",
