@@ -1,0 +1,67 @@
+{
+  "schema_version": 3,
+  "workstream": "adeguati-assetti",
+  "display_name": "Organizational, administrative and accounting arrangements review",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "arrangements-evidence",
+        "purpose": "Assess company arrangements, operating evidence, proportionate findings, actions and prior reviews",
+        "content": "Selected company descriptions, organization charts, staff roles and delegations, procedures, interview notes, minutes, management/accounting reports, forecasts, operating examples, prior reviews, action evidence and professional decisions. Initial assessment, source review, action planning and subsequent review may read complete relevant files and prior records. There is no fixed excerpt limit or automatic anonymization. Local Python verifies source bindings and hashes and renders records; it does not perform semantic assessment.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "current-source-research",
+      "kind": "public_research",
+      "destination": "Current primary and professional public sources selected for the case",
+      "purpose": "Verify the current source basis for legal and professional proposals",
+      "content": "Legal or professional research topics, public-source queries and selected source URLs; direct client identifiers are not used in the public research route",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Record retrieval, version, temporal scope, and reuse status for selected sources.",
+        "Keep credentials, authentication codes, cookies, screening-provider tokens, and direct client identifiers out of public research."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "archive-binding",
+      "control": "The CLI requires a running portable v2 adeguati-assetti archive context and checks selected source paths against exact run receipts before reading them."
+    },
+    {
+      "id": "record-integrity",
+      "control": "Records bind source hashes, prior client and engagement identity, and exact proposal digests for decisions; content-addressed output never overwrites an earlier record."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-07",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "c2134327c6a7347697cf999528a0cdb8d147c52579f4baf74d3c1ddf635acd02"
+  }
+}

@@ -30,6 +30,8 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py tests/plugins/test_clara_claude_package.py
       - name: Verify shipped candidate matches canonical source
         run: python scripts/build_claude_plugin_zip.py clara --check
+      - name: Verify privacy reviews match the candidate source
+        run: python plugins/clara/skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
       - name: Exercise the actual ZIP with fresh managed dependencies
         run: >-
           python scripts/check_clara_cowork_release.py

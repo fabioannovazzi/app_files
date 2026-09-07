@@ -190,3 +190,11 @@ reports are supplied by the studio and no automatic SOS or monitoring is include
 ## Python runtime
 
 Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.
+
+## Revisione degli assetti
+
+`vera:adeguati-assetti` evaluates organizational, administrative and accounting
+arrangements from company evidence. It distinguishes documented procedures,
+reported practices, operating evidence and unknowns; delivers a memo, findings,
+proportionate action plan and version record; and revisits prior actions.
+Professional decisions remain explicit and no adequacy certification is issued.

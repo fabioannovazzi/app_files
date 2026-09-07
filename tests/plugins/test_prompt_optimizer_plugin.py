@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import importlib.util
 import hashlib
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -1248,7 +1248,10 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
     assert "validate_prompt_optimizer_review" in skill
     assert "render_prompt_optimizer_review" in skill
     assert "ui://widget/prompt-optimizer-review.html" in skill
-    assert "native Plan-mode choices" in skill
+    assert "native question tool" in skill
+    assert "regardless\nof conversation mode" in skill
+    assert "Do not require a mode switch or a local configuration change" in skill
+    assert "native Plan-mode choices" not in skill
     assert "draft_prompt_contract_review.json" in skill
     assert "--prompt-contract-review-file" in skill
 

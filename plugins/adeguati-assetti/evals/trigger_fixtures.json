@@ -1,0 +1,65 @@
+{
+  "plugin": "adeguati-assetti",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "small-informal-controls",
+      "prompt": "Valuta gli assetti di questa piccola impresa: non ha un manuale formale, ma allego report settimanali, deleghe e risposte documentate agli scostamenti.",
+      "required_signals": [
+        "adeguati-assetti",
+        "proporzionalità",
+        "evidenze operative"
+      ]
+    },
+    {
+      "id": "unused-policy",
+      "prompt": "La procedura richiede chiusure mensili; il responsabile dichiara che non viene applicata e i report arrivano con sei mesi di ritardo. Valuta gli assetti.",
+      "required_signals": [
+        "adeguati-assetti",
+        "funzionamento",
+        "conseguenze"
+      ]
+    },
+    {
+      "id": "missing-not-absent",
+      "prompt": "Valuta gli assetti da questi documenti. Il fascicolo non contiene i verbali; non sappiamo se esistano altrove.",
+      "required_signals": [
+        "adeguati-assetti",
+        "non verificato",
+        "domanda mirata"
+      ]
+    },
+    {
+      "id": "profit-not-adequacy",
+      "prompt": "L’impresa è in utile. Questo basta a dire che gli assetti sono adeguati? Esamina anche i processi e le informazioni fornite.",
+      "required_signals": [
+        "adeguati-assetti",
+        "evidenze",
+        "limiti"
+      ]
+    },
+    {
+      "id": "prior-action-closure",
+      "prompt": "Riesamina questa valutazione degli assetti. Il cliente dice di avere completato le azioni, ma non allega evidenze di attuazione.",
+      "required_signals": [
+        "adeguati-assetti",
+        "azioni precedenti",
+        "non verificato"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "report-only",
+      "prompt": "Prepara solo il reporting mensile da questi export contabili; non sto chiedendo una valutazione degli assetti."
+    },
+    {
+      "id": "legal-only",
+      "prompt": "Spiega in generale l’articolo 2086 senza analizzare una impresa."
+    },
+    {
+      "id": "concordato",
+      "prompt": "Rivedi questo piano di concordato preventivo."
+    }
+  ]
+}
