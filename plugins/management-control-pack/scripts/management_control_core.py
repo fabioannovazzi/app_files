@@ -1503,6 +1503,7 @@ def build_management_pack(
         "status": status,
         "report_status": "draft_pending_professional_review",
         "entity": _text(recipe.get("entity"), label="entity", maximum=200),
+        "language": "it" if str(recipe.get("language", "en")).lower().startswith("it") else "en",
         "reporting_period": {
             key: recipe["reporting_period"][key].isoformat()
             for key in ("start", "end", "cutoff")
@@ -1768,17 +1769,108 @@ def render_markdown(
     return "\n".join(lines)
 
 
-def _html_table(rows: Sequence[Mapping[str, Any]], columns: Sequence[str]) -> str:
+_HTML_IT = {'Management Control Pack': 'Controllo di gestione',
+ 'Professional review': 'Revisione professionale',
+ 'Interpretation': 'Interpretazione',
+ 'Calculated observations': 'Osservazioni sui risultati',
+ 'Hypotheses': 'Ipotesi',
+ 'Questions': 'Domande',
+ 'Limitations': 'Limiti',
+ 'None recorded.': 'Nessuna voce registrata.',
+ 'No rows available.': 'Nessun dato disponibile.',
+ 'Head metrics': 'Indicatori principali',
+ 'Current picture': 'Situazione attuale',
+ 'Evidence coverage': 'Copertura documentale',
+ 'What this export supports': 'Analisi supportate dai dati',
+ 'Performance': 'Andamento economico',
+ 'Monthly P&L': 'Conto economico mensile',
+ 'Monthly P&amp;L': 'Conto economico mensile',
+ 'Budget': 'Budget',
+ 'EBITDA variance': 'Scostamento EBITDA',
+ 'Working capital': 'Capitale circolante',
+ 'Receivables aging': 'Scadenzario crediti',
+ 'Payables aging': 'Scadenzario debiti',
+ 'Liquidity': 'Liquidità',
+ 'Cash movement': 'Movimenti di cassa',
+ 'Concentration': 'Concentrazione',
+ 'Top customers': 'Principali clienti',
+ 'Profitability': 'Redditività',
+ 'Services': 'Servizi',
+ 'Cutoff': 'Data di riferimento',
+ 'period': 'Periodo',
+ 'revenue': 'Ricavi',
+ 'gross_profit': 'Margine lordo',
+ 'ebitda': 'EBITDA',
+ 'net_result': 'Risultato netto',
+ 'section': 'Sezione',
+ 'status': 'Stato',
+ 'reason': 'Motivo',
+ 'actual_ebitda': 'EBITDA consuntivo',
+ 'budget_ebitda': 'EBITDA budget',
+ 'variance': 'Scostamento',
+ 'bucket': 'Fascia di scaduto',
+ 'amount': 'Importo',
+ 'inflow': 'Entrate',
+ 'outflow': 'Uscite',
+ 'net': 'Saldo netto',
+ 'customer': 'Cliente',
+ 'share': 'Quota',
+ 'service': 'Servizio',
+ 'direct_cost': 'Costi diretti',
+ 'margin': 'Margine',
+ 'margin_rate': 'Margine',
+ 'ready_for_professional_review': 'Pronto per revisione professionale',
+ 'ready': 'Disponibile',
+ 'partial': 'Parziale',
+ 'blocked': 'Bloccato',
+ 'unavailable': 'Non disponibile',
+ 'available': 'Disponibile',
+ 'monthly_pnl': 'Conto economico mensile',
+ 'budget_variance': 'Scostamento budget',
+ 'receivables_aging': 'Scadenzario crediti',
+ 'payables_aging': 'Scadenzario debiti',
+ 'cash_movement': 'Movimenti di cassa',
+ 'customer_concentration': 'Concentrazione clienti',
+ 'service_profitability': 'Redditività servizi'}
+
+_HTML_IT.update({
+    "Revenue": "Ricavi", "Gross profit": "Margine lordo", "Net result": "Risultato netto",
+    "Total Revenue": "Ricavi totali", "Total Gross profit": "Margine lordo totale",
+    "Total EBITDA": "EBITDA totale", "Total Net result": "Risultato netto totale",
+    "Latest reported cash balance": "Ultimo saldo di cassa riportato",
+    "Total overdue receivables": "Crediti scaduti totali",
+    "Calculated facts and schema closure do not establish accounting correctness, source completeness, business causation, or professional approval.":
+    "I calcoli e la completezza dello schema non attestano la correttezza contabile, la completezza delle fonti, le cause economiche o l’approvazione professionale.",
+})
+
+
+def _html_label(value: str, language: str) -> str:
+    return _HTML_IT.get(value, value) if language == "it" else value
+
+
+def _html_display_cell(row: Mapping[str, Any], column: str) -> str:
+    value = row.get(column)
+    if column in {"share", "margin_rate"} and value is not None and value != "":
+        try:
+            ratio = Decimal(str(value))
+            if ratio.is_finite():
+                return f"{ratio * 100:.2f}%"
+        except InvalidOperation:
+            pass
+    return _display_cell(row, column)
+
+
+def _html_table(rows: Sequence[Mapping[str, Any]], columns: Sequence[str], language: str = "en") -> str:
     if not rows:
-        return '<p class="empty">No rows available.</p>'
+        return '<p class="empty">' + _html_label('No rows available.', language) + '</p>'
     head = "".join(
-        f"<th>{html.escape(column.replace('_', ' ').title())}</th>"
+        f"<th>{html.escape((_HTML_IT.get(column, column.replace('_', ' ').title()) if language == 'it' else column.replace('_', ' ').title()) + (' (%)' if column in {'share', 'margin_rate'} else ''))}</th>"
         for column in columns
     )
     body = "".join(
         "<tr>"
         + "".join(
-            f"<td>{html.escape(_display_cell(row, column))}</td>" for column in columns
+            f"<td>{html.escape(_html_label(_html_display_cell(row, column), language))}</td>" for column in columns
         )
         + "</tr>"
         for row in rows
@@ -1790,6 +1882,10 @@ def render_html(
     pack: Mapping[str, Any], commentary: Mapping[str, Any] | None = None
 ) -> str:
     """Render a self-contained management command centre."""
+
+    language = pack.get("language", "en")
+    def label(value: str) -> str:
+        return html.escape(_html_label(value, language))
 
     head_ids = (
         "pnl.total.revenue",
@@ -1804,7 +1900,7 @@ def render_html(
         metric = pack["metrics"].get(metric_id)
         if metric:
             cards.append(
-                f'<article class="metric"><span>{html.escape(metric["label"])}</span>'
+                f'<article class="metric"><span>{label(metric["label"])}</span>'
                 f'<strong>{html.escape(metric["value"])}</strong><small>{html.escape(metric["unit"])}</small></article>'
             )
     commentary_html = ""
@@ -1819,10 +1915,10 @@ def render_html(
             items = commentary.get(key, [])
             list_items = (
                 "".join(f"<li>{html.escape(item['text'])}</li>" for item in items)
-                or "<li>None recorded.</li>"
+                or f"<li>{label('None recorded.')}</li>"
             )
-            blocks.append(f"<article><h3>{title}</h3><ul>{list_items}</ul></article>")
-        commentary_html = f'<section><p class="eyebrow">Professional review</p><h2>Interpretation</h2><div class="commentary">{"".join(blocks)}</div></section>'
+            blocks.append(f"<article><h3>{label(title)}</h3><ul>{list_items}</ul></article>")
+        commentary_html = f'<section><p class="eyebrow">{label('Professional review')}</p><h2>{label('Interpretation')}</h2><div class="commentary">{"".join(blocks)}</div></section>'
     coverage_rows = pack["coverage"]
     pnl_rows = pack["sections"]["monthly_pnl"].get("rows", [])
     budget_rows = pack["sections"]["budget_variance"].get("rows", [])
@@ -1837,19 +1933,19 @@ def render_html(
         else ("partial" if pack["status"] == "partial" else "ready")
     )
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Management Control Pack · {html.escape(pack['entity'])}</title>
+<html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{label("Management Control Pack")} · {html.escape(pack['entity'])}</title>
 <style>
 :root{{--navy:#002060;--blue:#0070c0;--cyan:#00b0f0;--ink:#171816;--muted:#68727d;--line:#dbe2ea;--paper:#fff;--soft:#f4f7fa;--red:#9e2f2f;--amber:#9a6416;--green:#116149}}
-*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 "Instrument Sans",Inter,Arial,sans-serif}}main{{width:min(1180px,calc(100% - 40px));margin:auto;padding:54px 0 80px}}header{{border-top:8px solid var(--navy);padding:38px 0 34px;border-bottom:1px solid var(--line)}}.eyebrow{{margin:0 0 10px;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}}h1{{margin:0;font-size:clamp(36px,6vw,72px);line-height:.98;letter-spacing:-.055em}}h2{{font-size:30px;letter-spacing:-.035em}}h3{{font-size:17px}}.meta{{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:var(--muted)}}.status{{display:inline-flex;padding:6px 10px;border:1px solid currentColor;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.08em}}.status.ready{{color:var(--green)}}.status.partial{{color:var(--amber)}}.status.blocked{{color:var(--red)}}section{{padding:42px 0;border-bottom:1px solid var(--line)}}.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}}.metric{{background:#fff;padding:22px;min-height:126px}}.metric span{{display:block;color:var(--muted)}}.metric strong{{display:block;margin-top:20px;font-size:28px;letter-spacing:-.03em}}.metric small{{color:var(--blue)}}.table-wrap{{overflow:auto;border:1px solid var(--line)}}table{{border-collapse:collapse;width:100%;min-width:620px}}th,td{{padding:11px 13px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}}th:first-child,td:first-child{{text-align:left}}th{{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.06em}}tbody tr:nth-child(even){{background:var(--soft)}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:26px}}.commentary{{display:grid;grid-template-columns:1fr 1fr;gap:18px}}.commentary article{{border-top:3px solid var(--cyan);padding:10px 18px 18px;background:var(--soft)}}.boundary{{margin-top:28px;padding:18px;border-left:3px solid var(--blue);background:var(--soft)}}.empty{{color:var(--muted)}}@media(max-width:800px){{.grid,.commentary{{grid-template-columns:1fr}}main{{width:min(100% - 24px,1180px)}}}}
-</style></head><body><main><header><p class="eyebrow">Vera · Management Control Pack</p><h1>{html.escape(pack['entity'])}</h1><div class="meta"><span>{pack['reporting_period']['start']} → {pack['reporting_period']['end']}</span><span>Cutoff {pack['reporting_period']['cutoff']}</span><span>{pack['currency']}</span><span class="status {status_class}">{html.escape(pack['status'])}</span></div></header>
-<section><p class="eyebrow">Head metrics</p><h2>Current picture</h2><div class="metrics">{"".join(cards)}</div></section>
-<section><p class="eyebrow">Evidence coverage</p><h2>What this export supports</h2>{_html_table(coverage_rows, ('section','status','reason'))}</section>
-<section><p class="eyebrow">Performance</p><h2>Monthly P&amp;L</h2>{_html_table(pnl_rows, ('period','revenue','gross_profit','ebitda','net_result'))}</section>
-<section class="grid"><article><p class="eyebrow">Budget</p><h2>EBITDA variance</h2>{_html_table(budget_rows, ('period','actual_ebitda','budget_ebitda','variance'))}</article><article><p class="eyebrow">Working capital</p><h2>Receivables aging</h2>{_html_table(ar_rows, ('bucket','amount'))}</article></section>
-<section class="grid"><article><p class="eyebrow">Working capital</p><h2>Payables aging</h2>{_html_table(ap_rows, ('bucket','amount'))}</article><article><p class="eyebrow">Liquidity</p><h2>Cash movement</h2>{_html_table(cash_rows, ('period','inflow','outflow','net'))}</article></section>
-<section class="grid"><article><p class="eyebrow">Concentration</p><h2>Top customers</h2>{_html_table(customer_rows, ('customer','revenue','share'))}</article><article><p class="eyebrow">Profitability</p><h2>Services</h2>{_html_table(service_rows, ('service','revenue','direct_cost','margin','margin_rate'))}</article></section>
-{commentary_html}<p class="boundary">{html.escape(pack['professional_boundary'])}</p></main></body></html>"""
+*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 "Instrument Sans",Inter,Arial,sans-serif}}main{{width:min(1180px,calc(100% - 40px));margin:auto;padding:54px 0 80px}}header{{border-top:8px solid var(--navy);padding:38px 0 34px;border-bottom:1px solid var(--line)}}.eyebrow{{margin:0 0 10px;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}}h1{{margin:0;font-size:clamp(36px,6vw,72px);line-height:.98;letter-spacing:-.055em}}h2{{font-size:30px;letter-spacing:-.035em}}h3{{font-size:17px}}.meta{{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:var(--muted)}}.status{{display:inline-flex;padding:6px 10px;border:1px solid currentColor;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.08em}}.status.ready{{color:var(--green)}}.status.partial{{color:var(--amber)}}.status.blocked{{color:var(--red)}}section{{padding:42px 0;border-bottom:1px solid var(--line)}}.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}}.metric{{background:#fff;padding:22px;min-height:126px}}.metric span{{display:block;color:var(--muted)}}.metric strong{{display:block;margin-top:20px;font-size:28px;letter-spacing:-.03em}}.metric small{{color:var(--blue)}}.table-wrap{{overflow:auto;border:1px solid var(--line)}}table{{border-collapse:collapse;width:100%;min-width:620px}}th,td{{padding:11px 13px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}}th:first-child,td:first-child{{text-align:left}}th{{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.06em}}tbody tr:nth-child(even){{background:var(--soft)}}.grid{{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px}}.grid>*,.commentary>*{{min-width:0}}.commentary{{display:grid;grid-template-columns:1fr 1fr;gap:18px}}.commentary article{{border-top:3px solid var(--cyan);padding:10px 18px 18px;background:var(--soft)}}.boundary{{margin-top:28px;padding:18px;border-left:3px solid var(--blue);background:var(--soft)}}.empty{{color:var(--muted)}}@media(max-width:800px){{.grid,.commentary{{grid-template-columns:1fr}}main{{width:min(100% - 24px,1180px)}}}}
+</style></head><body><main><header><p class="eyebrow">Vera · {label("Management Control Pack")}</p><h1>{html.escape(pack['entity'])}</h1><div class="meta"><span>{pack['reporting_period']['start']} → {pack['reporting_period']['end']}</span><span>{label("Cutoff")} {pack['reporting_period']['cutoff']}</span><span>{pack['currency']}</span><span class="status {status_class}">{label(pack['status'])}</span></div></header>
+<section><p class="eyebrow">{label('Head metrics')}</p><h2>{label('Current picture')}</h2><div class="metrics">{"".join(cards)}</div></section>
+<section><p class="eyebrow">{label('Evidence coverage')}</p><h2>{label('What this export supports')}</h2>{_html_table(coverage_rows, ('section','status','reason'), language)}</section>
+<section><p class="eyebrow">{label('Performance')}</p><h2>{label('Monthly P&amp;L')}</h2>{_html_table(pnl_rows, ('period','revenue','gross_profit','ebitda','net_result'), language)}</section>
+<section class="grid"><article><p class="eyebrow">{label('Budget')}</p><h2>{label('EBITDA variance')}</h2>{_html_table(budget_rows, ('period','actual_ebitda','budget_ebitda','variance'), language)}</article><article><p class="eyebrow">{label('Working capital')}</p><h2>{label('Receivables aging')}</h2>{_html_table(ar_rows, ('bucket','amount'), language)}</article></section>
+<section class="grid"><article><p class="eyebrow">{label('Working capital')}</p><h2>{label('Payables aging')}</h2>{_html_table(ap_rows, ('bucket','amount'), language)}</article><article><p class="eyebrow">{label('Liquidity')}</p><h2>{label('Cash movement')}</h2>{_html_table(cash_rows, ('period','inflow','outflow','net'), language)}</article></section>
+<section class="grid"><article><p class="eyebrow">{label('Concentration')}</p><h2>{label('Top customers')}</h2>{_html_table(customer_rows, ('customer','revenue','share'), language)}</article><article><p class="eyebrow">{label('Profitability')}</p><h2>{label('Services')}</h2>{_html_table(service_rows, ('service','revenue','direct_cost','margin','margin_rate'), language)}</article></section>
+{commentary_html}<p class="boundary">{label(pack['professional_boundary'])}</p></main></body></html>"""
 
 
 def _append_sheet(

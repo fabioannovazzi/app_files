@@ -398,6 +398,7 @@
         <div>
           <h1 id="page-title">Variance Analysis Review</h1>
           <p class="subtitle" id="subtitle">Loading payload...</p>
+          <p class="subtitle" id="review-boundary"></p>
         </div>
         <span class="pill" id="status-pill">MCP widget</span>
       </section>
@@ -565,6 +566,13 @@
     function renderStaticCopy() {
       const text = copy();
       document.documentElement.lang = language();
+      document.getElementById("review-boundary").textContent = ({
+        it: "Dettagli tecnici del pacchetto. Apri i grafici e i report dai link in chat e comunica lì le decisioni di revisione.",
+        en: "Package metadata. Open charts and reports using the links in chat and record your review decisions there.",
+        fr: "Métadonnées du dossier. Ouvrez les graphiques et rapports depuis les liens du chat et indiquez vos décisions dans le chat.",
+        de: "Paketmetadaten. Öffnen Sie Diagramme und Berichte über die Links im Chat und teilen Sie dort Ihre Prüfentscheidungen mit.",
+        es: "Metadatos del paquete. Abre los gráficos e informes desde los enlaces del chat e indica allí tus decisiones de revisión."
+      })[language()];
       document.title = text.pageTitle;
       document.getElementById("page-title").textContent = text.pageTitle;
       document.getElementById("search").placeholder = text.search;
@@ -639,7 +647,7 @@
           <span class="title">${esc(item.title)}</span>
           <span class="path">${esc(item.source_path || item.output_path || "")}</span>
         </span>
-        <span class="action">${esc(actionLabel(item.recommended_action || "review"))}</span>
+        <span class="action">${esc(statusLabel(item.status || "pending"))}</span>
       </button>`;
     }
 
@@ -661,7 +669,6 @@
       const text = copy();
       const fields = [
         [text.fields[0], typeLabel(item.item_type)],
-        [text.fields[1], actionLabel(item.recommended_action || "")],
         [text.fields[2], item.source_path || ""],
         [text.fields[3], item.output_path || ""],
         [text.fields[4], statusLabel(item.status || "")],

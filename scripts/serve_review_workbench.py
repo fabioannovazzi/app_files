@@ -471,6 +471,7 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
         workbench,
         _render_tool_name(_adapter(workbench)),
         render_args,
+        browser_payload=True,
     )
     if rendered.get("ok") is False:
         raise ValueError(str(rendered.get("error") or "plugin render tool failed"))
@@ -524,6 +525,18 @@ def _bridge_html(workbench: LocalReviewWorkbench, session_token: str) -> str:
         try {{ return JSON.parse(window.sessionStorage.getItem(stateKey) || "null"); }}
         catch {{ return null; }}
       }}
+      window.localReviewDownloadOutput = async (path) => {{
+        const response = await fetch("/api/download-output", {{
+          method: "POST",
+          headers: {{"Content-Type": "application/json", "{REVIEW_TOKEN_HEADER}": reviewToken}},
+          body: JSON.stringify({{path}}),
+        }});
+        if (!response.ok) {{ const error = await response.json(); throw new Error(error.error || "Output unavailable"); }}
+        const url = URL.createObjectURL(await response.blob());
+        const link = document.createElement("a");
+        link.href = url; link.download = path.split(/[\\/]/).pop() || "output";
+        link.click(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }};
       window.openai = {{
         toolOutput: serverPayload,
         widgetState: readState(),
@@ -624,7 +637,8 @@ def _node_executable() -> str:
 
 
 def _mcp_tool_result(
-    workbench: LocalReviewWorkbench, name: str, args: dict[str, Any]
+    workbench: LocalReviewWorkbench, name: str, args: dict[str, Any],
+    *, browser_payload: bool = False,
 ) -> dict[str, Any]:
     message = {
         "jsonrpc": "2.0",
@@ -632,8 +646,27 @@ def _mcp_tool_result(
         "method": "tools/call",
         "params": {"name": name, "arguments": args},
     }
+    command = [_node_executable(), workbench.mcp_server_path.as_posix(), "--stdio"]
+    if workbench.plugin_dir.name == "archive-organization":
+        # References belong to one server process. Validate the canonical local
+        # package and use its reference within the same bounded invocation.
+        # callTool retains the server's binding, digest and persistence checks.
+        command = [
+            _node_executable(), "-e",
+            "const fs = require('node:fs');"
+            "const server = require(process.argv[1]);"
+            "const request = JSON.parse(fs.readFileSync(0, 'utf8'));"
+            "try { const args = request.params.arguments;"
+            "const validated = server.callTool(server.TOOL_NAMES.validateReview, args);"
+            "const result = server.callTool(request.params.name, "
+            "{...args, review_reference: validated.review_reference.reference});"
+            "process.stdout.write(JSON.stringify({id:request.id,result:{structuredContent:result}}));"
+            "} catch(error) { process.stdout.write(JSON.stringify({id:request.id,"
+            "error:{message:error.message}})); }",
+            workbench.mcp_server_path.as_posix(),
+        ]
     completed = subprocess.run(
-        [_node_executable(), workbench.mcp_server_path.as_posix(), "--stdio"],
+        command,
         input=json.dumps(message) + "\n",
         capture_output=True,
         text=True,
@@ -656,6 +689,11 @@ def _mcp_tool_result(
         raise ValueError("MCP tools/call result must be a JSON object")
     structured = result.get("structuredContent")
     if isinstance(structured, dict):
+        if browser_payload and name == _render_tool_name(_adapter(workbench)) and structured.get("ok") is not False:
+            metadata = result.get("_meta")
+            private = metadata.get("private_review_payload") if isinstance(metadata, dict) else None
+            if isinstance(private, dict):
+                return private
         return structured
     return result
 
@@ -707,6 +745,34 @@ def create_review_http_server(
     )
     actual_port = httpd.server_address[1]
     return httpd, _review_url(safe_host, actual_port)
+
+
+def _review_output_path(workbench: LocalReviewWorkbench, requested: str) -> Path:
+    """Allow downloads only for declared regular output files within this run."""
+    session = _raw_session_payload(workbench)
+    records = session.get("final_artifacts", {}).get("outputs", [])
+    declared = [record.get("path") for record in records if isinstance(record, dict)]
+    declared += [item.get("output_path") for item in session["review_payload"]["items"]]
+    root = workbench.output_dir.resolve()
+    for raw in declared:
+        if not isinstance(raw, str) or not raw:
+            continue
+        candidate = Path(raw)
+        candidate = candidate if candidate.is_absolute() else root / candidate
+        try:
+            relative = candidate.relative_to(root)
+        except ValueError:
+            continue
+        if requested not in {raw, relative.as_posix()}:
+            continue
+        if ".." in relative.parts or any(parent.is_symlink() for parent in (candidate, *candidate.parents)):
+            raise ValueError("Output links and paths outside the run are not downloadable")
+        if not candidate.is_file():
+            raise ValueError("Declared output is not available")
+        if candidate.stat().st_size > 50_000_000:
+            raise ValueError("Open outputs larger than 50 MB from the run folder")
+        return candidate
+    raise ValueError("Output is not declared in this run")
 
 
 def _handler(
@@ -776,7 +842,7 @@ def _handler(
 
         def do_POST(self) -> None:
             route = urlparse(self.path).path
-            if route != "/api/call-tool":
+            if route not in {"/api/call-tool", "/api/download-output"}:
                 self.send_error(HTTPStatus.NOT_FOUND.value, "Not found")
                 return
             try:
@@ -799,11 +865,28 @@ def _handler(
                     )
                     return
                 length = int(self.headers.get("Content-Length", "0"))
+                if length < 0:
+                    raise ValueError("request body length must be non-negative")
                 if length > MAX_POST_BYTES:
                     raise ValueError(f"request body exceeds {MAX_POST_BYTES} bytes")
                 payload = json.loads(self.rfile.read(length).decode("utf-8"))
                 if not isinstance(payload, dict):
                     raise ValueError("request body must be a JSON object")
+                if route == "/api/download-output":
+                    output = _review_output_path(workbench, str(payload.get("path", "")))
+                    with output.open("rb") as stream:
+                        body = stream.read(50_000_001)
+                    if len(body) > 50_000_000:
+                        raise ValueError("Output exceeds the download size limit")
+                    self.send_response(HTTPStatus.OK.value)
+                    self.send_header("Content-Type", "application/octet-stream")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.send_header("Cache-Control", "no-store")
+                    self.send_header("X-Content-Type-Options", "nosniff")
+                    self.send_header("Content-Security-Policy", "sandbox")
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
                 name = payload.get("name")
                 args = (
                     payload.get("args") if isinstance(payload.get("args"), dict) else {}

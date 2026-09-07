@@ -379,6 +379,7 @@ const toolOutput = {
 const context = {
   Blob, URL, URLSearchParams, console, document, navigator: {}, setTimeout, clearTimeout,
   window: {
+    addEventListener() {},
     location: { search: "" },
     openai: {
       toolOutput, widgetState: null, lastState: null,

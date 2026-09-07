@@ -117,12 +117,16 @@
     {
       "id": "source-execution-with-inert-bytecode-cache",
       "control": "Python entrypoints redirect bytecode lookup and disable bytecode writes before validating and loading the declared source implementation. Cache directories and regular bytecode files are excluded from the source receipt set; they are not treated as executable authority. Optional explicit repair removes only ordinary single-link .pyc files directly inside cache folders under this component own vendor tree, without traversing symlinks or falling back to shared vendor roots. This local maintenance path does not add model calls or external destinations."
+    },
+    {
+      "id": "local-review-output-download",
+      "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-06",
+    "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e8182c6a5e8c9b22ee56860669bd5487927b97f6769e3f0dab63f9981dd2ff29"
+    "source_fingerprint": "8fee972fde976c321f75bf6f75567ec6ac10dbb3919d72676b492a41a5239ca8"
   }
 }

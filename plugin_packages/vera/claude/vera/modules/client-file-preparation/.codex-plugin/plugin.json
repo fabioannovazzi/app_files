@@ -1,6 +1,6 @@
 {
   "name": "client-file-preparation",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "Motore interno della fase New Client che prepara i documenti in ingresso: inventario, controlli formali, dati fiscali strutturati, memo e bozza email.",
   "author": {
     "name": "Mparanza",
@@ -30,7 +30,7 @@
   "apps": "./.app.json",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "New Client \u00b7 File Preparation",
+    "displayName": "New Client · File Preparation",
     "shortDescription": "Prima fase interna di New Client: prepara i documenti in ingresso per la revisione dello studio.",
     "longDescription": "Motore interno della fase di preparazione documentale di New Client per fascicoli Italia, Ginevra, Zurigo e Regno Unito. Controlla le dipendenze locali, usa OCR quando disponibile e applica script verificabili a inventario, estrazione PDF/OCR, FatturaPA XML, campi fiscali strutturati, duplicati e avvisi. Vera legge poi le evidenze e prepara scheda operativa, mancanze, domande al cliente, anomalie formali, dati strutturati e limiti come prima parte dell'unico percorso New Client.",
     "developerName": "Mparanza",

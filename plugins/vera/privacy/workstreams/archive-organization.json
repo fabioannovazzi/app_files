@@ -95,12 +95,16 @@
     {
       "id": "private-output-root",
       "control": "Policies, proposals, plans, review decisions, approvals, and journals are written only beneath the exact Studio Archive run output directory. Approved client-file destinations remain inside the same selected client root and cannot enter the Vera ledger subtree."
+    },
+    {
+      "id": "local-review-output-download",
+      "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-06",
+    "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "53b206b25e0ddd062b90bf8b14fc0b879b6f41d11e91b223d7736b6d24150f71"
+    "source_fingerprint": "687a4a94a56cb5a7edcbe72443e6db78408da96ded11ee3a441f10b030c75381"
   }
 }

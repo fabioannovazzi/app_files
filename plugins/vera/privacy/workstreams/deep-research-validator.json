@@ -68,12 +68,16 @@
     {
       "id": "content-addressed-source-captures",
       "control": "Normalized source captures with identical SHA-256 content reuse one canonical local text file. Every source record, URL, retrieval result, and duplicate-content alias remains in source_inventory.json so provenance and professional source review are preserved."
+    },
+    {
+      "id": "local-review-output-download",
+      "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-06",
+    "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "dbfebd9a796e553a2ec46d6e7b81a4c3abcc65a165a4bee40d61e629f9b8a59b"
+    "source_fingerprint": "1232be7053a325f7019d5df98b17f0b87bc83f3d546adc9be5e474fdaa227767"
   }
 }
