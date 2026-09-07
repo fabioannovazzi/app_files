@@ -154,17 +154,25 @@ and one safely percent-decoded URL representation. A process such as Gmail
 search can therefore require the exact `#search/{{query}}` route without
 persisting the private query in a receipt; remaining on the inbox route fails
 the postcondition.
-Download completion additionally requires the connected Chrome event object to
-expose `path()` so the runtime can hash actual local bytes. A missing method is
-a sanitized `native_gap`, not successful download evidence. The runtime must
-not replace that missing evidence with accessibility-tree, screenshot,
-coordinate, profile inspection, or platform-specific desktop automation. A
-failed download action records one bounded mechanical reason code distinguishing
-an unavailable or unobserved event, navigation without an event, unavailable or
-unresolved path evidence, and unreadable local bytes. It may also record a
-categorical control-mechanism hint and the post-click origin plus query-free
-path. It never persists the control href, URL query, raw browser error, page
-content, or downloaded bytes in the receipt.
+Download actions snapshot the operator's normal Downloads folder before arming
+an event listener and clicking. The event is required. The local verifier waits
+for exactly one new regular file, no partial downloads, and stable metadata,
+then hashes its bytes and rechecks file identity. Existing files and overwrites
+are excluded. Concurrent arrivals, an existing partial download, or an unavailable
+folder stop the action with a sanitized reason code. The directory lock serializes
+cooperating Vera runs. Do not run unrelated downloads during this short window:
+directory correlation cannot distinguish a single unrelated arrival from the
+clicked download. `download-directory-bytes-verified` records this evidence basis;
+it does not claim a browser-provided file identity.
+
+The default is the user's home Downloads directory. If Windows or Chrome uses a
+redirected Downloads directory, pass that existing directory as the local-only
+`downloadDirectory` runtime option; do not change Chrome settings or put personal
+paths into reusable capability JSON. No file names or contents enter receipts.
+Only local `outputs.json` contains the verified file path, byte length and hash.
+No browser profile inspection or desktop automation is needed. An adapter with a
+documented `path()` API can explicitly use `downloadDirectory: null`; the current
+Claude browser adapter must use the folder route and never invoke undocumented APIs.
 
 ## Run evidence
 
