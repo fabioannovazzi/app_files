@@ -121,8 +121,9 @@ enforce evidence closure, hash integrity, reference closure, required decisions
 and receipt freshness. It must not overrule the lawyer on meaning,
 applicability, conflict, deadline or strategy.
 
-Saved review state, applied scope receipts and the final artifact list remain
-separate and bound to the current intake digest.
+Saved review state (`pending_review_decisions.json`), applied scope receipts
+(`applied_decisions.json`) and the final artifact list (`final_artifacts.json`)
+remain separate and bound to the current intake digest.
 
 No original file is renamed, moved, deleted or overwritten. `folder_plan.json`
 is a proposal for a later approved organization action.

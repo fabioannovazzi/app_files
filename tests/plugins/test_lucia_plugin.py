@@ -32,6 +32,7 @@ PUBLIC_WORKFLOWS = (
     SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 )
 PUBLIC_SKILLS = PUBLIC_WORKFLOWS | ORCHESTRATION_WORKFLOWS
+WEBSITE_SKILLS = PUBLIC_SKILLS | {"studio-archive"}
 PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
 
@@ -85,6 +86,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
+    assert re.fullmatch(r"\d+\.\d+\.\d+", manifest["version"])
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -233,9 +235,7 @@ def test_lucia_professional_communication_privacy_boundary_is_current() -> None:
     assert manifest["review"]["source_fingerprint"] == actual
 
 
-@pytest.mark.parametrize(
-    "workflow", sorted(SHARED_ASSURANCE_WORKFLOWS | {"studio-archive"})
-)
+@pytest.mark.parametrize("workflow", sorted(SHARED_ASSURANCE_WORKFLOWS))
 def test_lucia_wrappers_resolve_canonical_shared_component(workflow: str) -> None:
     wrapper = (LUCIA_ROOT / "skills" / workflow / "SKILL.md").read_text(
         encoding="utf-8"
@@ -477,11 +477,13 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
             manifest["version"]
             == _json(LUCIA_ROOT / ".codex-plugin" / "plugin.json")["version"]
         )
-        approved_description = _json(LUCIA_ROOT / ".claude-plugin" / "plugin.json")[
+        cowork_description = _json(LUCIA_ROOT / ".claude-plugin/plugin.json")[
             "description"
         ]
-        assert manifest["description"] == approved_description
-        assert manifest["description"].startswith("Assistente AI per avvocati")
+        assert manifest["description"] == cowork_description
+        assert 0 < len(cowork_description) <= 500
+        assert cowork_description.startswith("Assistente AI per avvocati")
+        assert "giudizio professionale restano all’avvocato" in cowork_description
         assert manifest["skills"] == "./skills/"
         assert set(components["plugins"]) == PUBLIC_WORKFLOWS | {"studio-archive"}
         assert "skills/lucia/SKILL.md" in lucia_names
@@ -530,7 +532,7 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert 'class="section-block" id="core"' in page
     assert 'class="workstreams"' in page
     assert 'class="module-directory"' in page
-    assert page.count('class="module-row"') == len(PUBLIC_SKILLS | {"studio-archive"})
+    assert page.count('class="module-row"') == len(WEBSITE_SKILLS)
     assert 'id="assurance"' not in page
     assert 'id="data-boundary"' not in page
     assert "data-language-summary" in page
@@ -616,10 +618,10 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     """Exact labels should match mechanically across the two public surfaces."""
 
     canonical_labels = {
-        "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "prompt-optimizer": "Ottimizzazione prompt",
         "deep-research-validator": "Validazione ricerca",
+        "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
         "comunicazione-professionale": "Comunicazione professionale",
         "apertura-pratica": "Fascicolo nuova pratica",
         "presenza-digitale-studio": "Sito dello studio",
@@ -635,10 +637,10 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         r'<h4 data-i18n="module\.[^"]+\.title">([^<]+)</h4>', page
     )
     website_keys = {
-        "studio-archive": "module.archive.title",
         "quesito-legale-fiscale": "module.question.title",
         "prompt-optimizer": "module.prompt.title",
         "deep-research-validator": "module.research.title",
+        "studio-archive": "module.archive.title",
         "comunicazione-professionale": "module.communication.title",
         "apertura-pratica": "module.matter.title",
         "presenza-digitale-studio": "module.website.title",

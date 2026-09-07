@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "basis": "Version shown on the public ChatGPT plugin detail page; not inferred from a local candidate or installed cache.",
+  "plugins": {
+    "clara": {
+      "version": "0.1.186",
+      "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
+      "observed_at": "2026-09-07"
+    },
+    "vera": {
+      "version": "0.1.218",
+      "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
+      "observed_at": "2026-09-07",
+      "verification_record": "https://github.com/fabioannovazzi/app_files/pull/568",
+      "basis": "Published status confirmed in the merged release verification record."
+    }
+  }
+}
