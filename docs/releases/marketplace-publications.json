@@ -9,11 +9,11 @@
       "basis": "User confirmed Clara 0.1.188 is published on ChatGPT on 2026-09-07."
     },
     "vera": {
-      "version": "0.1.220",
+      "version": "0.1.221",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
       "observed_at": "2026-09-08",
-      "verification_record": "https://github.com/fabioannovazzi/app_files/pull/573",
-      "basis": "OpenAI Platform plugin submissions page directly showed Vera 0.1.220 Published on 2026-09-08."
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6a9f9d41a9588191b9f8cd0d624d17a7",
+      "basis": "OpenAI Platform plugin submissions page directly showed Vera 0.1.221 Published after publication and page refresh on 2026-09-08."
     }
   }
 }
