@@ -183,6 +183,12 @@ values. Keep acquisition, operator review, posting outcome and replay evidence
 separate. Never describe a planned connection as working or create a second
 tracker just to report progress.
 
+For invoice batches, continue the populated entry into the saved batch review
+described in `references/batch-review.md`, using `scripts/batch_review.py`.
+The normal human review happens after the batch; persist outcomes and exceptions
+as work proceeds so an interruption does not erase what happened. Keep this
+private business review separate from the sanitized teaching checkpoint.
+
 ### Save progress after each interpreted step
 
 Use `scripts/teaching_checkpoint.py` with `references/teaching-checkpoint.md`.

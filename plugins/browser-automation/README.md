@@ -65,3 +65,13 @@ recovery non entrano nel pacchetto portatile. Le precedenti ricevute Gmail
 restano nella storia Git ma non validano il nuovo contratto e non vengono
 incluse nel modulo; l'osservazione Windows del ramo senza risultati non
 sostituisce i due replay puliti richiesti per questa versione.
+
+## Saved batch review
+
+`batch_review.py` saves a private, revisioned JSON history and an offline HTML
+report for professional review after invoice processing. Exceptions appear first;
+each item separates proposed treatment, actual outcome, reason and evidence.
+Human checks and requested corrections persist across sessions. Corrections to
+completed postings are separate linked entries. The helper does not execute
+postings, decide accounting treatment or prove TeamSystem integration. See
+`references/batch-review.md`.
