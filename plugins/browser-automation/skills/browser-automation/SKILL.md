@@ -81,6 +81,13 @@ emitting one JSON ready record, closes every HTTP response, and uses no external
 assets. Use only the exact `page_url` and semantic controls declared in that
 record. Stop the fixture process when the test ends.
 
+For iframe observation acceptance, use `frame_case.page_url`, the exact
+`frame_case.frame_selectors`, and both the ready record's `origin` and
+`frame_case.frame_origin`. This selects the synthetic accounting page on a
+second loopback origin through Chrome's frame interface. Check that controls
+are observed, field values are excluded, and omitting the frame origin rejects
+capture with `frame_origin_not_allowed`.
+
 Navigate a fresh connected-Chrome task tab to `page_url`. If `tab.goto()`
 reports a timeout, do not immediately declare the local test failed: read the
 tab's current URL once. Continue only when it exactly equals `page_url` and the

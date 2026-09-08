@@ -154,15 +154,37 @@ function documentWithFrame(nested, url = "https://example.test/process") {
     URL: url,
     querySelectorAll(selector) {
       return selector === "iframe" && nested !== undefined
-        ? [{ tagName: "IFRAME", contentDocument: nested }] : [];
+        ? [{ tagName: "IFRAME", frameDocument: nested, get contentDocument() { throw new Error("Direct iframe access forbidden"); } }] : [];
     },
   };
 }
 
 function domTab(document) {
+  function frameScope(doc) {
+    return {
+      locator(selector) {
+        return {
+          async evaluateAll(fn) {
+            return fn(doc.querySelectorAll(selector));
+          },
+          async evaluate(fn, args) {
+            if (!doc) throw new Error("Unavailable frame containing private details");
+            assert.equal(selector, "html");
+            return runInNewContext(`(${fn.toString()})(element, args)`, {
+              element: { ownerDocument: doc }, URL, args,
+            });
+          },
+        };
+      },
+      frameLocator(selector) {
+        return frameScope(doc.querySelectorAll(selector)[0].frameDocument);
+      },
+    };
+  }
   return {
     async url() { return "https://example.test/process"; },
     playwright: {
+      ...frameScope(document),
       async evaluate(fn, args) {
         return runInNewContext(`(${fn.toString()})(args)`, { document, URL, args });
       },
@@ -371,4 +393,26 @@ test("queryFreeUrl removes query strings and fragments", () => {
     queryFreeUrl("https://example.test/path?private=value#step"),
     "https://example.test/path",
   );
+});
+
+
+test("explicitly allowed isolated frame uses Chrome frame API without contentDocument", async () => {
+  const nested = documentWithFrame(undefined, "https://accounting.test/econs?private=secret");
+  const state = await captureControlState({
+    tab: domTab(documentWithFrame(nested)),
+    allowedOrigins: ["https://example.test", "https://accounting.test"],
+    frameSelectors: ["iframe"],
+  });
+  assert.equal(state.frame_origin, "https://accounting.test");
+  assert.equal(state.frame_path, "/econs");
+  assert.doesNotMatch(JSON.stringify(state), /private=secret/);
+});
+
+test("an unapproved intermediate frame cannot be crossed to reach an allowed child", async () => {
+  const inner = documentWithFrame(undefined);
+  const middle = documentWithFrame(inner, "https://outside.test/");
+  await assert.rejects(captureControlState({
+    tab: domTab(documentWithFrame(middle)),
+    allowedOrigins: ["https://example.test"], frameSelectors: ["iframe", "iframe"],
+  }), { message: "guided discovery: frame_origin_not_allowed" });
 });
