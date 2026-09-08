@@ -17,11 +17,16 @@ risultato è la capability portabile specifica del processo.
 
 Il modulo include:
 
+- ripresa delle decisioni già spiegate, senza richiedere istruzioni tecniche
+  all'operatore o scelte di stile durante l'insegnamento;
+- acquisizione e verifica di una voce reale prima di ampliare un registro di
+  controllo; un foglio vuoto non dimostra un collegamento funzionante;
+
 - insegnamento di un esempio completo, interpretato un passaggio alla volta,
   con annuncio esplicito quando l'osservazione termina;
 - checkpoint locali riprendibili con decisioni comprese, domande aperte e punto
   esatto di ripresa, distinti dal developer pack revisionato;
-- osservazione di iframe same-origin selezionati esplicitamente, anche annidati,
+- osservazione di iframe con origini autorizzate selezionati esplicitamente, anche annidati,
   senza includere valori dei campi o leggere frame estranei;
 
 - un osservatore guidato read-only che conserva solo percorsi senza query,

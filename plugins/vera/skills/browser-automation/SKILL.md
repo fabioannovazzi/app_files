@@ -14,6 +14,17 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
+During teaching, the operator explains the work, and Vera owns its technical
+translation. Resume supplied checkpoints and saved decisions before asking new
+questions. Keep TeamSystem posting and Agenzia invoice download distinct.
+For record review, acquire one real record and its proposed mapping within the
+authorized data boundary, then produce one populated review entry before
+expanding a workbook. Choose a plain layout yourself; do not ask the operator to
+select spreadsheet styles, write code or reconstruct understood steps. Ask only
+one unresolved process question at a time. A template is not working extraction;
+a checked example is not a validated replay. Follow the module's acquisition
+loop and persist a precise next step.
+
 This is a generic capability factory with process-specific outputs. The
 model leads one example, interprets each demonstrated step and saves a resumable
 teaching checkpoint before continuing. It announces when observation stops;

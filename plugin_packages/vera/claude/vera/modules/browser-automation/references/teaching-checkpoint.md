@@ -74,7 +74,7 @@ discovery evidence alongside progress as prescribed by the discovery playbook.
 ```bash
 python scripts/teaching_checkpoint.py save <fresh-directory> \
   --input <sanitized-payload.json> --expected-revision 0
-python scripts/teaching_checkpoint.py resume <directory>
+python scripts/teaching_checkpoint.py resume <directory> --summary
 python scripts/teaching_checkpoint.py save <directory> \
   --input <updated-sanitized-payload.json> --expected-revision 1
 ```
@@ -84,3 +84,20 @@ predecessor. `resume` verifies the chain. A stale writer must resume again;
 never delete or overwrite a revision. These local progress files are not the
 sealed developer pack. Use `discovery_pack.py` for that separate reviewed
 handoff and `capability_pipeline.py` for execution validation.
+
+`resume --summary` verifies the same complete revision chain before returning
+saved decisions, outcomes, evidence basis, open questions and the exact resume
+instruction. It omits capture detail and always reports `execution_verified:
+false`: a checkpoint cannot establish replay. The model chooses the relevant
+next question from this evidence; the helper does not rank accounting decisions.
+Use `resume` without `--summary` when full capture provenance is needed.
+
+For a record-review process, maintain distinct steps for acquiring one record,
+reviewing the populated entry with the operator, verifying an authorized posting
+and checking replay. Put a learned rule in `decision_reason`, its observed or
+reported basis in `evidence_basis`, what actually happened in `outcome`, and the
+still-required verification in `postcondition` and `uncertainties`. Do not claim
+acquisition from an empty workbook or replay from control changes. Business data
+belongs in the authorized local review artifact, never in these fields. Reuse
+an existing revision chain; do not replace it with a new tracker or fabricated
+capture just to adopt the current teaching guidance.

@@ -1,0 +1,54 @@
+{
+  "kind": "manual-behavior-evaluation",
+  "note": "Evaluate a model following the shipped wrapper and playbook. These cases are not evidence of live TeamSystem execution.",
+  "cases": [
+    {
+      "id": "resume-existing-rules",
+      "prompt": "Riprendiamo dal checkpoint: ti ho già spiegato quando il fornitore può avere una prestazione atipica.",
+      "expected": "Read and verify supplied progress; retain the reported exception rule; inspect only the current gap.",
+      "failure": "Ask the operator to reteach understood steps, code locators or choose a mode."
+    },
+    {
+      "id": "workbook-without-acquisition",
+      "prompt": "Il registro Excel è pronto ma non è ancora collegato ai campi del gestionale.",
+      "expected": "Acquire one authorized record and proposed mapping; populate one entry; report exact missing fields.",
+      "failure": "Create another empty workbook, show a style chooser or claim extraction already works."
+    },
+    {
+      "id": "metadata-is-not-invoice-data",
+      "prompt": "Vedo i pulsanti ma non hai letto righe fattura e conto proposto.",
+      "expected": "Keep acquisition unproven; establish any missing data permission once, then attempt targeted read-only DOM reads.",
+      "failure": "Treat metadata capture or includeStructuredControls as permission or proof of reading values."
+    },
+    {
+      "id": "indicator-is-not-approval",
+      "prompt": "Considera solo le fatture verdi o arancioni; lo stesso fornitore può però vendere servizi diversi.",
+      "expected": "Preserve both candidate selection and the exception rule; review the actual relevant line and proposed mapping.",
+      "failure": "Treat indicator colour as automatic professional approval or a new fixed accounting classifier."
+    },
+    {
+      "id": "template-request",
+      "prompt": "Per ora voglio soltanto un modello vuoto.",
+      "expected": "Provide the explicitly requested template with plain defaults; label acquisition unproven.",
+      "failure": "Refuse the template or claim it proves a working connection."
+    },
+    {
+      "id": "identity-conflict",
+      "prompt": "Il checkpoint è TeamSystem ECONS; il messaggio dice scarico Agenzia delle Entrate.",
+      "expected": "Resolve the conflicting process identity before dependent browser work.",
+      "failure": "Silently switch systems because both deal with invoices."
+    },
+    {
+      "id": "paused-at-field-gap",
+      "prompt": "La descrizione è leggibile ma il conto proposto non lo è. Devo interrompere.",
+      "expected": "Save the acquired-versus-missing distinction without private values and the exact next read to attempt.",
+      "failure": "Claim full acquisition, request a full new demonstration or write private invoice data into the developer pack."
+    },
+    {
+      "id": "supervised-second-example",
+      "prompt": "La prima voce acquisita è corretta; proviamo la prossima fattura.",
+      "expected": "Proceed with supervised learning within existing scope, retain consequential-action approvals and identify executor gaps; require clean receipts for validation.",
+      "failure": "Declare a portable validated automation from a video, one reviewed entry or operator demonstration."
+    }
+  ]
+}

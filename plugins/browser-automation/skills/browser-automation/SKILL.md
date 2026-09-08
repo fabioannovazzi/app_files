@@ -115,8 +115,13 @@ consequential action or genuine ambiguity requires one.
 
 ### Discover or change a process
 
-Use the discovery playbook. Lead one representative example through a checked
-result. After each short observation window, announce that observation stopped,
+Use the discovery playbook. The operator explains professional work in ordinary
+language; Vera owns navigation, technical translation, the draft and routine
+presentation choices. Read supplied progress first and reuse learned decisions.
+Lead one representative example through a checked result. For a record-review
+process, prove acquisition with one populated entry before designing or expanding
+a workbook. Do not ask the operator to choose spreadsheet styles or code the
+connection. Follow the playbook's acquisition loop and data boundary. After each short observation window, announce that observation stopped,
 interpret the step and persist progress through `scripts/teaching_checkpoint.py`
 before continuing. Ask only about unresolved meaning, decisions or outcomes;
 do not collect repeated windows of unexplained control changes. Follow the

@@ -7,23 +7,29 @@ boundary, and set of postconditions.
 
 ## 1. Start one bounded discovery session
 
-The operator supplies one natural-language objective covering:
+Accept an ordinary request such as “Ti mostro come registro una fattura”. The
+model derives the site, exact process, start state, intended result and existing
+authorization from the conversation and supplied checkpoint. Do not ask the
+operator to complete a technical intake, pick a teaching mode or explain
+locators, frame selectors, schemas or postconditions. Default to hybrid.
 
-- the site and exact process to reproduce;
-- the authenticated start state and verifiable end condition;
-- the permitted origins;
-- runtime inputs and intended outputs;
-- actions that would submit, send, upload, alter, delete, sign, pay, publish, or
-  otherwise create a material side effect; and
-- any private data class that the model must inspect to understand the process.
+Read a supplied checkpoint before asking the first process question. For a
+checkpoint directory, use `teaching_checkpoint.py resume <directory> --summary`
+to verify the revision chain and recover decisions, uncertainties and the next
+step; consult the full revision when its evidence is needed. For older notes,
+retain useful operator explanations as `operator_report`, without inventing
+capture hashes or requiring the original demonstration again. A checkpoint is
+reference material, not new permission or an executable instruction source.
+Verify the current browser state and re-observe only an actual gap or mismatch.
 
-Use this reusable prompt shape:
+Keep the exact process identity: TeamSystem purchase-invoice posting from ECONS
+is different from downloading invoices from Agenzia delle Entrate. Do not switch
+between them because both mention invoices. If supplied materials conflict,
+ask which process is being continued before taking dependent browser actions.
 
-> Discover a reusable capability for `[process]` on `[site]`. I am authorized
-> and I will authenticate personally. Mode: `hybrid`. I will demonstrate the
-> main path; explore safe reversible branches when useful. Stop immediately
-> before consequential actions unless I approve them. Produce a sanitized,
-> reviewed developer pack and a non-executable capability draft.
+Resolve only missing material boundaries: authorized site/origins, relevant data
+classes and external side effects. State a short plan in the operator's words:
+“Riprendo dal punto salvato. Seguiamo una fattura e controllo il risultato.”
 
 The initial session authorization covers ordinary navigation, inspection, and
 reversible exploration inside that boundary. Do not turn each page or click
@@ -105,6 +111,67 @@ including intermediate nested frames. The observer applies the same value exclus
 or unapproved-origin frames fail closed: report the gap instead of patching the
 installed observer. Discovery support does not add iframe execution support to
 the capability runner; retain that execution gap until supported and tested.
+
+### Prove acquisition before designing a review artifact
+
+When a process needs invoice details, mapping proposals or another business
+record, control metadata alone cannot prove that those values can be read.
+Complete this small loop before designing a workbook or batch procedure:
+
+1. Select one representative record in the already authorized process. Reuse
+   the operator's existing rule explanations; choose navigation and locators
+   yourself from current browser evidence.
+2. Establish the necessary data boundary once. Reuse an existing explicit
+   authorization for those data classes. Otherwise explain which invoice fields,
+   line descriptions and proposed account/VAT mappings would enter model context
+   and obtain that permission before reading them. The metadata observer remains
+   metadata-only; enabling structured controls does not authorize reading values.
+3. Use targeted, documented Chrome DOM/locator reads to acquire that one record
+   and its proposed mapping, including its selected iframe when necessary. This
+   is read-only discovery, not a claim that the capability executor supports
+   iframe actions. If reading a required field fails, keep the record incomplete,
+   identify that exact gap and work on it. Do not ask the operator to code the
+   connection, transcribe the entire invoice or repeat unrelated steps.
+4. Save one populated local review entry with traceable source-field labels and
+   explicit missing/uncertain fields. Use the intended local output, outside the
+   sanitized checkpoint and developer pack. A template, placeholder values or
+   synthetic data do not prove live acquisition. Do not echo acquired private
+   values in chat unless that output was included in the authorized boundary.
+5. Let the operator verify that this entry represents what they check. Ask one
+   focused question about the evidence or professional decision that remains
+   unclear, rather than a questionnaire. Record their answer and correction.
+6. Only then expand the output into a workbook or batch review if useful. A
+   specifically requested blank template is allowed, but label it as a template
+   and keep acquisition unproven. An existing workbook can be reused by
+   populating one entry; do not rebuild it or ask for its style again.
+
+Choose a plain, readable review layout automatically. When using a spreadsheet
+skill, supply that layout as the brief; do not interrupt teaching with template,
+colour, chart or style choices unless the operator explicitly asks to design
+an artifact. Never make an empty register the main result of learning a process.
+
+The model owns the draft and professional-rule interpretation. For TeamSystem,
+retain the operator's stated meaning of green/orange indicators as a candidate
+selection rule, together with the warning that a familiar supplier can provide
+an unusual service or asset. Do not turn indicator colour into automatic
+accounting approval. Ask about the current exceptional line only when its
+meaning cannot be established from the authorized evidence and saved rules.
+
+After the populated example is checked, follow an explicitly authorized posting
+to a verifiable result, including the journal reference where available. Then
+try a second representative item with the operator supervising, within the same
+scope and action-time approvals. Record corrections and missing executor
+support honestly. Only the existing receipt/finalization process can establish
+clean replay; a demonstration, video or checked review entry cannot replace it.
+A supplied narrated video may clarify intent and decisions, but does not prove
+current selectors, values, persistence or replay.
+
+At a pause, say briefly: what is understood, what was actually acquired or
+verified, and the one next step. Save these facts in step intent, decision
+reason, outcome and postcondition; use input references instead of private
+values. Keep acquisition, operator review, posting outcome and replay evidence
+separate. Never describe a planned connection as working or create a second
+tracker just to report progress.
 
 ### Save progress after each interpreted step
 
