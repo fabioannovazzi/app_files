@@ -5,6 +5,7 @@ on:
     paths:
       - 'plugins/browser-automation/**'
       - 'tests/test_browser*.mjs'
+      - 'tests/test_browser_batch_review.py'
       - '.github/workflows/browser-download.yml'
   workflow_dispatch:
 
@@ -24,3 +25,8 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/test_browser_download_directory.mjs tests/test_browser_automation_runtime.mjs tests/test_browser_automation_discovery_runtime.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest
+      - run: python -m pytest --noconftest -q tests/test_browser_batch_review.py -o addopts=""

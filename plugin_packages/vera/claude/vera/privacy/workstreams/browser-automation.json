@@ -59,6 +59,15 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "private-batch-review",
+        "purpose": "Explain invoice decisions and let the professional inspect the saved batch after processing",
+        "content": "Authorized invoice identities, descriptions, amounts, proposed and actual account and tax treatment, client guidance, evidence references, observed outcomes, posting references and explicit human checks or correction requests may enter the selected model context. The standard-library helper stores private JSON revisions and offline escaped HTML outside portable packs and published folders; it performs no network calls or accounting actions. No credentials, session URLs or raw browser capture belong in this report.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -141,12 +150,16 @@
     {
       "id": "single-record-teaching-review",
       "control": "Teaching distinguishes metadata observation, authorized acquisition of one business record, operator review, posting evidence and clean replay. Additional required private data classes are named once and authorized before targeted DOM reads; acquisition uses the existing permitted data boundary. Populated review artifacts remain outside sanitized checkpoints and developer packs. Compact checkpoint summaries preserve declared provenance and questions, verify the revision chain and never establish execution."
+    },
+    {
+      "id": "private-batch-review-history",
+      "control": "Exclusive owner-only revision files, hash-chain verification, stale-writer rejection, escaped HTML without external resources and preservation of completed entries. Correction actions link to originals, and human review events are append-only. These checks establish artifact integrity, not semantic correctness or verified browser execution."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4111c29c03f6c5499689bf9bd456c6ce8d037f378f70baffbfd1045996816fe3"
+    "source_fingerprint": "cb3b4b209d3839f4eeb68beb72d67ad38502dcde3bde2bd5cb5d718ff1890ed4"
   }
 }

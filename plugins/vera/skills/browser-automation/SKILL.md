@@ -70,3 +70,9 @@ enter, retain, or transfer login secrets or reusable browser state.
 On a surface without compatible Chrome control, review or edit a supplied
 capability if useful, but state that live discovery and validation require Codex
 Desktop with the connected Chrome extension.
+
+For invoice batches, follow the module’s `references/batch-review.md` and use
+`scripts/batch_review.py`. Save a durable local report for review after processing,
+with exceptions first, proposed and actual treatment, reasons and source evidence.
+Francesco need not watch Vera work. Record his later checks and correction requests;
+never silently replace a posted entry or mistake a request for a completed fix.

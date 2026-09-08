@@ -301,6 +301,17 @@ values, or downloaded business files.
 The receiving operator authenticates in their own connected Chrome and performs
 their own validation.
 
+## End-of-process batch review
+
+For invoice batches, read `references/batch-review.md` and use
+`scripts/batch_review.py` to save decisions, actual outcomes and evidence locally.
+Francesco normally checks the saved report after processing; live commentary is
+optional. Persist each item and interruption, distinguish completed, set-aside,
+failed and unverified outcomes, and link the latest report with exceptions first.
+Record explicit human checks afterwards; completed postings remain unchanged and
+rectifications are separate linked actions. This reporting helper adds no browser
+executor support or posting authority.
+
 ## Consequential actions
 
 Browsing, inspection, filtering, and other read-only or reversible discovery
