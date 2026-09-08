@@ -18,7 +18,13 @@ from typing import Any
 
 from capability_pipeline import canonical_json_bytes, sha256_payload
 
-__all__ = ["read_checkpoint", "save_checkpoint", "validate_checkpoint", "main"]
+__all__ = [
+    "read_checkpoint",
+    "summarize_checkpoint",
+    "save_checkpoint",
+    "validate_checkpoint",
+    "main",
+]
 
 LOGGER = logging.getLogger(__name__)
 SCHEMA = "browser-teaching-checkpoint/v1"
@@ -141,6 +147,39 @@ def read_checkpoint(directory: Path) -> dict[str, Any]:
     return latest
 
 
+def summarize_checkpoint(directory: Path) -> dict[str, Any]:
+    """Project verified saved progress; the model chooses the next useful question.
+
+    Field selection and hash verification are mechanical. This summary never
+    decides whether a professional rule is correct or an acquisition succeeded.
+    """
+    record = read_checkpoint(directory)
+    payload = record["payload"]
+    return {
+        "revision": record["revision"],
+        "checkpoint_sha256": record["sha256"],
+        **{key: payload[key] for key in sorted(TEXT_FIELDS)},
+        "status": payload["status"],
+        "steps": [
+            {
+                key: step[key]
+                for key in (
+                    "id",
+                    "intent",
+                    "decision_reason",
+                    "outcome",
+                    "postcondition",
+                    "status",
+                    "evidence_basis",
+                    "uncertainties",
+                )
+            }
+            for step in payload["steps"]
+        ],
+        "execution_verified": False,
+    }
+
+
 def save_checkpoint(
     directory: Path, payload: dict[str, Any], *, expected_revision: int
 ) -> Path:
@@ -177,7 +216,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("directory", type=Path)
     parser.add_argument("--input", type=Path)
     parser.add_argument("--expected-revision", type=int, default=0)
+    parser.add_argument(
+        "--summary",
+        action="store_true",
+        help="Resume with saved decisions and open questions, without capture detail",
+    )
     args = parser.parse_args(argv)
+    if args.summary and args.command != "resume":
+        parser.error("--summary requires resume")
     try:
         if args.command == "save":
             if args.input is None:
@@ -191,7 +237,15 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             LOGGER.info(
-                "%s", json.dumps(read_checkpoint(args.directory), ensure_ascii=False)
+                "%s",
+                json.dumps(
+                    (
+                        summarize_checkpoint(args.directory)
+                        if args.summary
+                        else read_checkpoint(args.directory)
+                    ),
+                    ensure_ascii=False,
+                ),
             )
     except (ValueError, OSError) as exc:
         LOGGER.error("%s", exc)

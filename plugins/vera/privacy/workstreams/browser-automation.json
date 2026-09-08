@@ -138,12 +138,16 @@
     {
       "id": "selected-frame-origin-boundary",
       "control": "Guided observation selects only explicitly identified iframe paths through the connected Chrome frameLocator and locator evaluate APIs. Every selected frame origin, including intermediate nested frames, must match the declared allowed origins before inspecting controls. The target origin is rechecked in the same evaluation that projects controls. The frame uses the existing control metadata redaction and field-value exclusions; sibling frame contents and raw browser errors are excluded."
+    },
+    {
+      "id": "single-record-teaching-review",
+      "control": "Teaching distinguishes metadata observation, authorized acquisition of one business record, operator review, posting evidence and clean replay. Additional required private data classes are named once and authorized before targeted DOM reads; acquisition uses the existing permitted data boundary. Populated review artifacts remain outside sanitized checkpoints and developer packs. Compact checkpoint summaries preserve declared provenance and questions, verify the revision chain and never establish execution."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "47b887df687bc3d025bd6a862726b74c62977e3e53e60692f9539fa43e65dd42"
+    "source_fingerprint": "9c8e58d4db2630eadd934b026c0bfdae4858dfd61d146bdd3120089b4cf7cc0c"
   }
 }

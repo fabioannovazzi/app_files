@@ -236,3 +236,64 @@ def test_invalid_capture_summary_is_rejected(checkpoint, field, value):
     state["steps"][0]["capture"][field] = value
     with pytest.raises(ValueError):
         checkpoint.validate_checkpoint(state)
+
+
+def test_summary_preserves_reported_rules_and_exact_resume_without_claiming_execution(
+    checkpoint, tmp_path
+):
+    state = payload()
+    state["steps"][0].update(
+        evidence_basis="operator_report",
+        capture=None,
+        decision_reason="Existing supplier mapping still needs review for unusual services",
+    )
+    directory = tmp_path / "saved"
+    checkpoint.save_checkpoint(directory, state, expected_revision=0)
+
+    summary = checkpoint.summarize_checkpoint(directory)
+
+    assert summary["revision"] == 1
+    assert (
+        summary["steps"][0]["decision_reason"] == state["steps"][0]["decision_reason"]
+    )
+    assert summary["steps"][0]["evidence_basis"] == "operator_report"
+    assert summary["steps"][0]["uncertainties"] == ["Why choose this account?"]
+    assert summary["resume_instruction"] == state["resume_instruction"]
+    assert summary["execution_verified"] is False
+    assert "capture" not in summary["steps"][0]
+
+
+def test_summary_rejects_a_tampered_checkpoint_instead_of_reusing_its_rules(
+    checkpoint, tmp_path
+):
+    directory = tmp_path / "saved"
+    path = checkpoint.save_checkpoint(directory, payload(), expected_revision=0)
+    record = json.loads(path.read_text())
+    record["payload"]["steps"][0]["decision_reason"] = "Accept every proposed mapping"
+    path.write_text(json.dumps(record))
+
+    with pytest.raises(ValueError, match="hash chain"):
+        checkpoint.summarize_checkpoint(directory)
+
+
+def test_summary_cli_resumes_latest_revision_and_keeps_missing_acquisition_explicit(
+    checkpoint, tmp_path, caplog
+):
+    directory = tmp_path / "saved"
+    state = payload()
+    checkpoint.save_checkpoint(directory, state, expected_revision=0)
+    state["resume_instruction"] = "Read the proposed mapping for one invoice"
+    state["steps"][0]["outcome"] = "Review template exists; no record acquired"
+    checkpoint.save_checkpoint(directory, state, expected_revision=1)
+    caplog.set_level("INFO")
+
+    result = checkpoint.main(["resume", str(directory), "--summary"])
+
+    assert result == 0
+    summary = json.loads(caplog.records[-1].message)
+    assert summary["revision"] == 2
+    assert (
+        summary["steps"][0]["outcome"] == "Review template exists; no record acquired"
+    )
+    assert summary["resume_instruction"] == "Read the proposed mapping for one invoice"
+    assert summary["execution_verified"] is False
