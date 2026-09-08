@@ -28,8 +28,10 @@ used. Never put credentials, session URLs or raw browser captures in a review.
    in `expected_items`, or null when still unknown. Keep pending items visible;
    an unfinished or interrupted run is `paused`, never successful by implication.
 2. For each entry preserve the source document identity, intended action,
-   proposed treatment and brief evidence-based reason. Save before a consequential
-   attempt. In TeamSystem, include invoice/line descriptions, proposed account,
+   proposed treatment and brief evidence-based reason. Before a consequential attempt, save `unverified` with an explicit
+   “prepared; dispatch/result not yet confirmed” outcome and a reconciliation
+   question. A crash after dispatch must never leave the item looking unattempted.
+   After resuming, check the external state before any retry. In TeamSystem, include invoice/line descriptions, proposed account,
    VAT and other applicable treatment, amounts and the relevant client guidance,
    with exact source labels. Unknown fields stay explicit; do not invent values.
 3. Record what actually happened separately from the proposal. `completed`

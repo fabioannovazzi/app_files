@@ -413,6 +413,7 @@
       ],
       "python_entrypoints": [
         "modules/browser-automation/scripts/acceptance_fixture.py",
+        "modules/browser-automation/scripts/batch_review.py",
         "modules/browser-automation/scripts/capability_pipeline.py",
         "modules/browser-automation/scripts/check_dependencies.py",
         "modules/browser-automation/scripts/check_installation.py",
