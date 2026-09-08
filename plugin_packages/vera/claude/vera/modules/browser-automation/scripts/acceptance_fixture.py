@@ -142,6 +142,16 @@ class _FixtureHandler(BaseHTTPRequestHandler):
         if path == "/":
             self._write(200, "text/html; charset=utf-8", FIXTURE_HTML)
             return
+        if path == "/framed":
+            port = int(self.server.server_address[1])
+            body = (
+                "<!doctype html><title>Vera frame acceptance fixture</title>"
+                "<h1>Vera frame acceptance fixture</h1>"
+                f'<iframe id="accounting" title="Accounting" '
+                f'src="http://localhost:{port}/"></iframe>'
+            ).encode("utf-8")
+            self._write(200, "text/html; charset=utf-8", body)
+            return
         if path == "/changed-selector":
             self._write(
                 200,
@@ -245,6 +255,13 @@ def _probe(port: int) -> None:
             or archive.read(DOWNLOAD_ENTRY_NAME) != DOWNLOAD_ENTRY_BYTES
         ):
             raise RuntimeError("Local acceptance fixture ZIP contents are invalid.")
+    frame_status, _, frame_body = _read_local_response(port, "/framed")
+    if (
+        frame_status != 200
+        or b'id="accounting"' not in frame_body
+        or f'src="http://localhost:{port}/"'.encode() not in frame_body
+    ):
+        raise RuntimeError("Cross-origin frame fixture is invalid.")
     changed_status, _, changed_body = _read_local_response(port, "/changed-selector")
     if (
         changed_status != 200
@@ -275,6 +292,11 @@ def _ready_record(server: _FixtureServer) -> dict[str, object]:
         "origin": origin,
         "page_url": f"{origin}/",
         "health_url": f"{origin}/healthz",
+        "frame_case": {
+            "page_url": f"{origin}/framed",
+            "frame_origin": f"http://localhost:{port}",
+            "frame_selectors": ["iframe#accounting"],
+        },
         "recovery_cases": {
             "changed_selector_url": f"{origin}/changed-selector",
             "unexpected_login_url": f"{origin}/unexpected-login",

@@ -10,7 +10,7 @@
 
 import { canonicalJson, sha256Text } from "./capability_runtime.mjs";
 
-export const DISCOVERY_RUNTIME_VERSION = "browser-discovery-runtime/3";
+export const DISCOVERY_RUNTIME_VERSION = "browser-discovery-runtime/4";
 
 const DEFAULT_MAX_CONTROLS = 120;
 const MAX_CONTROLS = 250;
@@ -123,24 +123,35 @@ export async function captureControlState({
   });
   const currentUrl = await tab.url();
   const page = allowedPage(currentUrl, normalizedOrigins);
-  const inventory = await tab.playwright.evaluate(
-    ({ controlLimit, includeStructured, frames, origins }) => {
-      let observedDocument = document;
-      for (const selector of frames) {
-        const matches = observedDocument.querySelectorAll(selector);
-        if (matches.length !== 1 || matches[0].tagName.toLowerCase() !== "iframe") {
-          return { failure: "frame_not_unique" };
-        }
-        const nested = matches[0].contentDocument;
-        // Cross-origin frames require a documented frame API, never a bypass.
-        if (!nested) return { failure: "frame_unavailable" };
-        if (!origins.includes(new URL(nested.URL).origin)) {
-          return { failure: "frame_origin_not_allowed" };
-        }
-        observedDocument = nested;
-      }
+  let scope = tab.playwright;
+  for (const selector of frameSelectors) {
+    // Select exactly one frame through Chrome, including isolated frame documents.
+    // Read only origin metadata until the explicitly allowed boundary is checked.
+    let unique;
+    try {
+      unique = await scope.locator(selector).evaluateAll((elements) =>
+        elements.length === 1 && elements[0].tagName.toLowerCase() === "iframe");
+    } catch {
+      throw new Error("guided discovery: frame_unavailable");
+    }
+    if (!unique) throw new Error("guided discovery: frame_not_unique");
+    let origin;
+    try {
+      scope = scope.frameLocator(selector);
+      origin = await scope.locator("html").evaluate((element) =>
+        new URL(element.ownerDocument.URL).origin);
+    } catch {
+      throw new Error("guided discovery: frame_unavailable");
+    }
+    if (!normalizedOrigins.has(origin)) {
+      throw new Error("guided discovery: frame_origin_not_allowed");
+    }
+  }
+  const project = (elementOrOptions, frameOptions) => {
+      const { controlLimit, includeStructured, frames, origins } = frameOptions ?? elementOrOptions;
+      const observedDocument = frameOptions ? elementOrOptions.ownerDocument : document;
       if (!origins.includes(new URL(observedDocument.URL).origin)) {
-        return { failure: "page_origin_not_allowed" };
+        return { failure: frames.length ? "frame_origin_not_allowed" : "page_origin_not_allowed" };
       }
       const interactiveSelector = [
         "a[href]",
@@ -237,14 +248,22 @@ export async function captureControlState({
         frame_origin: frames.length ? new URL(observedDocument.URL).origin : null,
         frame_path: frames.length ? new URL(observedDocument.URL).pathname : null,
       };
-    },
-    {
-      controlLimit: maxControls,
-      includeStructured: includeStructuredControls,
-      frames: frameSelectors,
-      origins: [...normalizedOrigins],
-    },
-  );
+  };
+  const options = {
+    controlLimit: maxControls,
+    includeStructured: includeStructuredControls,
+    frames: frameSelectors,
+    origins: [...normalizedOrigins],
+  };
+  let inventory;
+  try {
+    inventory = frameSelectors.length
+      ? await scope.locator("html").evaluate(project, options)
+      : await tab.playwright.evaluate(project, options);
+  } catch (error) {
+    if (frameSelectors.length) throw new Error("guided discovery: frame_unavailable");
+    throw error;
+  }
   if (inventory.failure) throw new Error(`guided discovery: ${inventory.failure}`);
   const state = {
     schema_version: "browser-control-state/v1",

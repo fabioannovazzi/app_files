@@ -103,13 +103,16 @@ more than metadata, name the minimum additional data class and obtain the
 applicable permission. Do not silently expand capture or collect more
 inconclusive windows.
 
-For an explicitly identified same-origin iframe, pass `frameSelectors` to
+For an explicitly identified iframe, pass `frameSelectors` to
 `captureControlState` and `observeGuidedWindow`: one selector per nesting level,
 for example `["iframe[title='Accounting']"]`. Use current inspected selectors,
 not an old session's generated frame ID. The observer checks the selected
-frame's origin and applies the same value exclusions and redaction inside it.
+frame's origin through Chrome's documented `frameLocator` and locator
+`evaluate` APIs, without accessing the parent document's `contentDocument`.
+Each selected frame origin must be explicitly included in `allowedOrigins`,
+including intermediate nested frames. The observer applies the same value exclusions and redaction inside it.
 `unobserved_frame_count` means child frames were excluded. Missing, ambiguous
-or cross-origin frames fail closed: report the gap instead of patching the
+or unapproved-origin frames fail closed: report the gap instead of patching the
 installed observer. Discovery support does not add iframe execution support to
 the capability runner; retain that execution gap until supported and tested.
 

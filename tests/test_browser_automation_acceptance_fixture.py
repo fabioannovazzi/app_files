@@ -26,6 +26,11 @@ def test_acceptance_fixture_cli_binds_probes_and_closes() -> None:
     assert result["origin"].startswith("http://127.0.0.1:")
     assert result["page_url"] == f'{result["origin"]}/'
     assert result["health_url"] == f'{result["origin"]}/healthz'
+    assert result["frame_case"] == {
+        "page_url": f'{result["origin"]}/framed',
+        "frame_origin": result["origin"].replace("127.0.0.1", "localhost"),
+        "frame_selectors": ["iframe#accounting"],
+    }
     assert result["recovery_cases"] == {
         "changed_selector_url": f'{result["origin"]}/changed-selector',
         "unexpected_login_url": f'{result["origin"]}/unexpected-login',
