@@ -3,25 +3,230 @@
   "$id": "https://mparanza.com/schemas/bandi-agevolazioni/run-state-1.0.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "plugin", "workflow", "run_id", "created_at", "updated_at", "language", "phase", "status", "source_set_revision", "output_dir", "ready_to_file", "portal_actions_performed", "signature_actions_performed", "submission_actions_performed"],
+  "required": [
+    "schema_version",
+    "plugin",
+    "workflow",
+    "run_id",
+    "created_at",
+    "updated_at",
+    "language",
+    "phase",
+    "status",
+    "source_set_revision",
+    "output_dir",
+    "ready_to_file",
+    "portal_actions_performed",
+    "signature_actions_performed",
+    "submission_actions_performed"
+  ],
   "properties": {
-    "schema_version": {"const": "1.0"},
-    "plugin": {"const": "bandi-agevolazioni"},
-    "workflow": {"const": "bandi-agevolazioni"},
-    "run_id": {"$ref": "#/$defs/id"},
-    "created_at": {"type": "string", "format": "date-time"},
-    "updated_at": {"type": "string", "format": "date-time"},
-    "language": {"type": "string", "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z]{2,8})?$"},
-    "phase": {"type": "string", "minLength": 1},
-    "status": {"enum": ["needs_review", "reviewed"]},
-    "source_set_revision": {"type": "integer", "minimum": 0},
-    "output_dir": {"type": "string", "minLength": 1},
-    "ready_to_file": {"const": false},
-    "portal_actions_performed": {"const": false},
-    "signature_actions_performed": {"const": false},
-    "submission_actions_performed": {"const": false}
+    "schema_version": {
+      "const": "1.0"
+    },
+    "plugin": {
+      "const": "bandi-agevolazioni"
+    },
+    "workflow": {
+      "const": "bandi-agevolazioni"
+    },
+    "run_id": {
+      "$ref": "#/$defs/id"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z]{2,8})?$"
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
+    "source_set_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "output_dir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ready_to_file": {
+      "const": false
+    },
+    "portal_actions_performed": {
+      "type": "boolean"
+    },
+    "signature_actions_performed": {
+      "const": false
+    },
+    "submission_actions_performed": {
+      "type": "boolean"
+    },
+    "portal_preparation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approved_by",
+        "confirmation_basis",
+        "approved_scope_sha256",
+        "destination",
+        "actions"
+      ],
+      "properties": {
+        "approved_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confirmation_basis": {
+          "const": "explicit_user_confirmation"
+        },
+        "approved_scope_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "destination": {
+          "type": "string",
+          "pattern": "^https://[^/?#]+[^?#]*$"
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action",
+              "target",
+              "observed_result"
+            ],
+            "properties": {
+              "action": {
+                "enum": [
+                  "fill_field",
+                  "upload_attachment",
+                  "save_draft"
+                ]
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observed_result": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "submission_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approved_by",
+        "confirmation_basis",
+        "approved_scope_sha256",
+        "destination",
+        "final_review",
+        "observed_result"
+      ],
+      "properties": {
+        "approved_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confirmation_basis": {
+          "const": "explicit_final_submission_confirmation"
+        },
+        "approved_scope_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "destination": {
+          "type": "string",
+          "pattern": "^https://[^/?#]+[^?#]*$"
+        },
+        "final_review": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_result": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
   },
   "$defs": {
-    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"}
-  }
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "portal_actions_performed": {
+            "const": true
+          },
+          "submission_actions_performed": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "portal_preparation"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "portal_preparation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "portal_actions_performed": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "submission_actions_performed": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "submission_approval"
+        ],
+        "properties": {
+          "portal_actions_performed": {
+            "const": true
+          }
+        }
+      }
+    }
+  ]
 }

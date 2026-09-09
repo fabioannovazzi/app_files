@@ -467,7 +467,9 @@ def build_intelligence_packet(
             "suggestions_are_non_authoritative": True,
             "never_invent_facts_requirements_or_source_authority": True,
             "never_treat_faq_as_formal_amendment": True,
-            "never_authenticate_sign_save_pay_or_submit": True,
+            "never_authenticate_accept_declarations_sign_or_pay": True,
+            "portal_preparation_requires_approved_project_and_user_request": True,
+            "submission_requires_explicit_final_application_approval": True,
             "professional_review_required": True,
             "automatic_anonymization": False,
             "reviewed_facts_or_excerpts_may_identify_applicant": True,
@@ -601,8 +603,8 @@ def _next_task(
         return (
             IntelligenceTask.FORM_PORTAL_GUIDANCE,
             form_requirements,
-            "Prepare manual field guidance without interacting with a portal.",
-            "Authorized person reviews and enters fields manually.",
+            "Prepare reviewable field values for approved portal draft preparation.",
+            "User approves the project; available host tools may fill ordinary fields, upload approved attachments and save drafts. Protected controls stay manual.",
         )
     narrative_requirements = [
         str(item.get("requirement_id"))
@@ -749,7 +751,6 @@ def normalize_proposed_payload(
     if collection == "issues":
         normalized["status"] = "open"
     if collection == "form_fields":
-        normalized["manual_only"] = True
         protected = any(
             normalized.get(key) is True
             for key in (
@@ -758,6 +759,9 @@ def normalize_proposed_payload(
                 "submission_control",
             )
         )
+        # Protected control flags are a closed contract, not a label classifier.
+        if protected:
+            normalized["manual_only"] = True
         if protected and normalized.get("proposed_value") not in (None, ""):
             raise ValueError(
                 "protected portal controls cannot receive a proposed value"

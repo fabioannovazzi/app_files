@@ -52,7 +52,7 @@ Later host-specific instructions in this reference cannot override this rule.
 | Confirmed or blocked work cannot be overwritten | Update negative tests | Required |
 | Changed inputs invalidate undecided intelligence | Intake, source, and workbench stale tests | Required |
 | Interrupted acceptance is resumable and non-duplicating | `APPLYING` recovery tests | Required |
-| Protected portal actions remain empty and manual | Contract and final-validator negative tests | Required |
+| Protected field values remain empty; final submission needs separate approval | Contract and final-validator negative tests | Required |
 | Validation cannot pass during partial application | `APPLYING` audit test | Required |
 | Dossier discloses model contribution and decision state | Markdown, manifest, and hash assertions | Required |
 | Structural evaluation passes | `intelligence_quality_cases.json` at 100% | Required |
@@ -63,6 +63,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 Run the component tests, filesystem/privacy tests, plugin packaging tests, static
 format/type/security checks applicable to changed files, drift verification,
-and package rebuild. A release must retain `ready_to_file=false`, no portal
-actions, no secrets or credentials, and an explicit disclosure that structural
+and package rebuild. A release must retain `ready_to_file=false`, only approved
+portal preparation and separately authorized final submission, no authentication,
+declaration acceptance, signature, payment, secrets or credentials, and an explicit disclosure that structural
 evaluation does not establish legal accuracy.

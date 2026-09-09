@@ -238,6 +238,38 @@ def _validate_application_locked(
         issues.extend(validate_artifact_schema(label, payload))
         if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
             _issue(issues, "artifact_identity_mismatch", label, "plugin/run mismatch")
+    # Exact scope binding is mechanically reproducible; portal meaning is reviewed.
+    preparation = _object(run_state, "portal_preparation")
+    if preparation and preparation.get("approved_scope_sha256") != current_scope_hash(
+        output_dir, run_id=run_id, scope="dossier"
+    ):
+        _issue(
+            issues,
+            "portal_preparation_approval_stale",
+            "run_state.portal_preparation.approved_scope_sha256",
+            "portal preparation approval must match the current dossier scope",
+        )
+    submission = _object(run_state, "submission_approval")
+    if submission and submission.get("approved_scope_sha256") != current_scope_hash(
+        output_dir, run_id=run_id, scope="dossier"
+    ):
+        _issue(
+            issues,
+            "submission_approval_stale",
+            "run_state.submission_approval.approved_scope_sha256",
+            "submission approval must match the current dossier scope",
+        )
+    if (
+        preparation
+        and submission
+        and preparation.get("destination") != submission.get("destination")
+    ):
+        _issue(
+            issues,
+            "submission_destination_mismatch",
+            "run_state.submission_approval.destination",
+            "submission destination must match the prepared application",
+        )
     applying_intelligence = [
         str(item.get("intelligence_run_id"))
         for item in intelligence.get("runs", [])

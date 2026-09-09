@@ -5,32 +5,74 @@
     {
       "id": "client-opportunity-radar",
       "prompt": "Vera, costruisci il profilo agevolativo di questa impresa padovana e cerca in modo sistematico le opportunità ufficiali compatibili.",
-      "required_signals": ["profilo agevolativo", "opportunità ufficiali", "impresa"]
+      "required_signals": [
+        "profilo agevolativo",
+        "opportunità ufficiali",
+        "impresa"
+      ]
     },
     {
       "id": "new-call-portfolio-match",
       "prompt": "È uscito questo nuovo bando: confrontalo con i profili opachi del portafoglio e dimmi quali clienti meritano una revisione professionale.",
-      "required_signals": ["nuovo bando", "profili opachi", "revisione professionale"]
+      "required_signals": [
+        "nuovo bando",
+        "profili opachi",
+        "revisione professionale"
+      ]
     },
     {
       "id": "grant-source-monitoring",
       "prompt": "Monitora le fonti ufficiali previste e conserva annunciato, prossima apertura, aperto, sospeso e chiuso senza contattare i clienti.",
-      "required_signals": ["fonti ufficiali", "prossima apertura", "senza contattare"]
+      "required_signals": [
+        "fonti ufficiali",
+        "prossima apertura",
+        "senza contattare"
+      ]
     },
     {
       "id": "grant-application-dossier",
       "prompt": "Vera, prepara il dossier per questo bando usando avviso, allegati, FAQ e documenti dell'impresa.",
-      "required_signals": ["bando", "FAQ", "dossier"]
+      "required_signals": [
+        "bando",
+        "FAQ",
+        "dossier"
+      ]
     },
     {
       "id": "subsidized-finance-cost-review",
       "prompt": "Controlla requisiti, esclusioni, spese ammissibili, preventivi e moduli di questa domanda di finanza agevolata.",
-      "required_signals": ["requisiti", "spese ammissibili", "moduli"]
+      "required_signals": [
+        "requisiti",
+        "spese ammissibili",
+        "moduli"
+      ]
     },
     {
       "id": "portal-field-map-without-submission",
       "prompt": "Prepara una guida campo per campo per il portale del bando, ma lascia credenziali, dichiarazioni, firma e invio alla persona autorizzata.",
-      "required_signals": ["campo per campo", "firma", "persona autorizzata"]
+      "required_signals": [
+        "campo per campo",
+        "firma",
+        "persona autorizzata"
+      ]
+    },
+    {
+      "id": "approved-portal-preparation",
+      "prompt": "Ho approvato questo progetto: compila i campi, carica gli allegati approvati e salva la bozza sul portale.",
+      "required_signals": [
+        "approvato",
+        "compila",
+        "bozza"
+      ]
+    },
+    {
+      "id": "approved-final-submission",
+      "prompt": "Confermo il riepilogo finale della domanda che mi hai mostrato: autorizzo l’invio di questa versione.",
+      "required_signals": [
+        "riepilogo finale",
+        "autorizzo",
+        "invio"
+      ]
     }
   ],
   "should_not_trigger": [

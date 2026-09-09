@@ -108,8 +108,11 @@ unit tests and package parity. The shared method alone is not runtime proof.
 - An in-plugin provider call or cheaper wrapper call. Claude or another caller
   supplies the model response and records its exact identity; the workflow does
   not hide provider cost or provenance.
-- Live portal automation, authentication, declaration acceptance, signature,
-  payment, save, or transmission.
+- A bundled portal driver. Approved field entry, attachment upload and draft
+  saving use available host browser tools under `portal-preparation.md`; their
+  live success must be verified on the actual portal. Authentication,
+  declaration acceptance, signature and payment remain manual. Final submission
+  requires explicit approval of the exact final application and receipt checks.
 - Autonomous acceptance, professional confirmation, legal conclusion, source
   hierarchy, or eligibility rule library.
 - A claim of semantic quality from structural tests alone.

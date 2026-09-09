@@ -554,7 +554,8 @@ def test_component_contract_and_vera_wrapper_are_present() -> None:
     assert manifest["name"] == "bandi-agevolazioni"
     assert "Never invent" in skill
     assert "Never contact a matched client automatically" in skill
-    assert "without contacting clients, authenticating, signing, or filing" in wrapper
+    assert "submission requires" in skill
+    assert "submit only after explicit final approval" in wrapper
     assert "modules/bandi-agevolazioni" in wrapper
 
 
@@ -2535,3 +2536,101 @@ def test_exact_supplied_packet_records_and_retries_without_mutation(
     assert {
         path.name: path.read_bytes() for path in output_dir.glob("*.json")
     } == before_retry
+
+
+def _portal_case(tmp_path: Path, *, submit: bool = False):
+    scripts, workspace = _initialized_case(tmp_path)
+    output = workspace["output_dir"]
+    _reviewable_workbench(output)
+    _accept_all_reviews(scripts, workspace)
+    state = _read(output / "run_state.json")
+    scope = scripts["review"].current_scope_hash(
+        output, run_id=state["run_id"], scope="dossier"
+    )
+    state["portal_actions_performed"] = True
+    state["portal_preparation"] = {
+        "approved_by": "PROFESSIONAL-001",
+        "confirmation_basis": "explicit_user_confirmation",
+        "approved_scope_sha256": scope,
+        "destination": "https://example.org/application/001",
+        "actions": [
+            {
+                "action": "save_draft",
+                "target": "Application 001",
+                "observed_result": "Draft saved and values checked",
+            }
+        ],
+    }
+    if submit:
+        state["submission_actions_performed"] = True
+        state["submission_approval"] = {
+            "approved_by": "PROFESSIONAL-001",
+            "confirmation_basis": "explicit_final_submission_confirmation",
+            "approved_scope_sha256": scope,
+            "destination": "https://example.org/application/001",
+            "final_review": "Application 001, approved project and attachments; submit now",
+            "observed_result": "Submitted; protocol TEST-001",
+        }
+    return scripts, workspace, state
+
+
+@pytest.mark.parametrize("submit", [False, True])
+def test_approved_portal_action_can_validate_and_package(tmp_path: Path, submit: bool):
+    scripts, workspace, state = _portal_case(tmp_path, submit=submit)
+    _write(workspace["output_dir"] / "run_state.json", state)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"], client_engagement=workspace["context_path"]
+    )
+
+    assert audit["status"] == "passed"
+    assert audit["submission_actions_performed"] is submit
+    assert audit["ready_to_file"] is False
+    result = scripts["package"].package_dossier(
+        output_dir=workspace["output_dir"], client_engagement=workspace["context_path"]
+    )
+    assert result
+
+
+@pytest.mark.parametrize("defect", ["missing", "project_only", "stale", "destination"])
+def test_submission_without_matching_final_approval_fails(tmp_path: Path, defect: str):
+    scripts, workspace, state = _portal_case(tmp_path, submit=True)
+    if defect == "missing":
+        del state["submission_approval"]
+    elif defect == "project_only":
+        state["submission_approval"][
+            "confirmation_basis"
+        ] = "explicit_user_confirmation"
+    elif defect == "stale":
+        state["submission_approval"]["approved_scope_sha256"] = "0" * 64
+    else:
+        state["submission_approval"][
+            "destination"
+        ] = "https://example.org/application/002"
+    _write(workspace["output_dir"] / "run_state.json", state)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"], client_engagement=workspace["context_path"]
+    )
+
+    assert audit["status"] == "failed"
+
+
+@pytest.mark.parametrize("defect", ["missing", "stale", "protected_action"])
+def test_preparation_requires_current_approval_and_allowed_actions(
+    tmp_path: Path, defect: str
+):
+    scripts, workspace, state = _portal_case(tmp_path)
+    if defect == "missing":
+        del state["portal_preparation"]
+    elif defect == "stale":
+        state["portal_preparation"]["approved_scope_sha256"] = "0" * 64
+    else:
+        state["portal_preparation"]["actions"][0]["action"] = "submit_application"
+    _write(workspace["output_dir"] / "run_state.json", state)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"], client_engagement=workspace["context_path"]
+    )
+
+    assert audit["status"] == "failed"
