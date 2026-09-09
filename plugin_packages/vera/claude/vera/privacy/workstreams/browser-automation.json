@@ -77,6 +77,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "econs-automatic-review-acquisition",
+        "purpose": "Prepare an invoice review from saved, reviewed Playwright acquisition phases without accounting writes",
+        "content": "The selected Codex model can read exact authorized company codes, invoice identities and numbers, suppliers, invoice states, full line descriptions, existing accounts, VAT codes and amount text, plus review proposals and missing-field exceptions. The collector reads the declared complete population through bounded phase capabilities, checks independent counts and identities, and saves private phase outputs and the existing JSON/HTML batch review after each invoice. Existing mappings remain source evidence, not automatically endorsed proposals. No automatic anonymization or local-only model processing is claimed. The saved profile includes inspected frame selectors and allowed origins; all phases require reviewed discovery. Raw HTML, screenshots, login secrets, cookies and session URLs are outside this acquisition contract. Results remain outside Git and portable developer/capability bundles.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -154,7 +162,7 @@
     },
     {
       "id": "selected-frame-origin-boundary",
-      "control": "Guided observation selects only explicitly identified iframe paths through the connected Chrome frameLocator and locator evaluate APIs. Every selected frame origin, including intermediate nested frames, must match the declared allowed origins before inspecting controls. The target origin is rechecked in the same evaluation that projects controls. The frame uses the existing control metadata redaction and field-value exclusions; sibling frame contents and raw browser errors are excluded."
+      "control": "Guided observation selects only explicitly identified iframe paths through the connected Chrome frameLocator and locator evaluate APIs. Every selected frame origin, including intermediate nested frames, must match the declared allowed origins before inspecting controls. The target origin is rechecked in the same evaluation that projects controls. The frame uses the existing control metadata redaction and field-value exclusions; sibling frame contents and raw browser errors are excluded. Saved capability execution also selects the reviewed runtime.frame_selectors path, checks frame uniqueness and each actual allowed origin before locator work, before reads/actions and after actions, and applies locator postconditions in that scope. Missing or unapproved frames cannot establish invoice absence. The frame path is included in the execution hash. These checks do not guarantee atomic isolation from all navigation races."
     },
     {
       "id": "single-record-teaching-review",
@@ -167,12 +175,16 @@
     {
       "id": "exact-reviewed-development-export",
       "control": "Prepare a fresh owner-only folder; project only referenced checkpoint evidence metadata; require a reference to actual operator approval and the exact review manifest hash before export. Reject changed, unlisted, oversized or symlink files, unsafe archive paths and invalid source references. Export one ZIP without sending it or inventing a CR number. Observed findings require observed checkpoint references; this does not certify semantic correctness. Partial evidence remains usable with explicit gaps."
+    },
+    {
+      "id": "econs-read-only-profile-and-population-checks",
+      "control": "The collector validates all three saved capabilities before browser actions and rejects consequential actions, non-none confirmations, form editing and download operations. The reviewed profile determines the meaning of navigation clicks; code does not infer posting semantics from button names. Exact company/invoice identities, unique IDs, independent row counts and explicit company exclusions govern acquisition. Missing fields remain exceptions; later failures retain earlier review revisions. The managed interpreter invokes fixed local validators and the existing batch report helper with argv and no shell. Fresh run directories must be outside a detected Git checkout; output files use exclusive creation and POSIX owner-only modes. These checks do not attest to live ECONS correctness or Windows ACLs."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-26",
+    "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2e83895e0b0f69bb0791d7aa71f917f6ed3f316bb0954ca8b3cffd23989e27a4"
+    "source_fingerprint": "6cdccc6306dd264f8b246ad2698481a83b22e3dce32c3b3feaceeb8c84efc5af"
   }
 }
