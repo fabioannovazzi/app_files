@@ -304,6 +304,7 @@ def test_no_debt_service_and_zero_revenue_do_not_invent_ratios() -> None:
     case = case_data()
     case["observations"], case["resolutions"], case["narrative"] = [], [], []
     case.pop("assessment")
+    case.pop("cycle")
     case["required_sections"] = ["financial"]
     row = case["financial"]["scenarios"][0]["schedule"][0]
     row["revenue"] = "0"

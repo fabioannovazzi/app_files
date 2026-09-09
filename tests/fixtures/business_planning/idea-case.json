@@ -219,5 +219,30 @@
       ]
     },
     "charts": []
+  },
+  "cycle": {
+    "id": "initial",
+    "parent_source_id": null,
+    "question": "What evidence would justify testing this idea?",
+    "trigger_ids": [
+      "user-idea"
+    ],
+    "analysis_ids": [
+      "market"
+    ],
+    "decision_ids": [
+      "recommendation"
+    ],
+    "next_test_ids": [
+      "actions"
+    ],
+    "reopen_when_ids": [
+      "change"
+    ],
+    "reassessed_ids": []
+  },
+  "financing": {
+    "purpose": "internal",
+    "assessments": []
   }
 }

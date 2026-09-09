@@ -555,7 +555,8 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
     def paragraph(identifier: str, repeat: bool = False) -> str:
         if identifier in rendered_narrative and not repeat:
             return ""
-        rendered_narrative.add(identifier)
+        if not repeat:
+            rendered_narrative.add(identifier)
         n = narrative.get(identifier)
         if n is None:
             return '<p class="limitation">This conclusion is withheld pending correction of its supporting claims.</p>'
@@ -602,9 +603,13 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             + "</p></section>"
         )
     elif assessment:
-        parts.append(
-            f'<section id="recommendation"><h2>{tr("Recommendation")}: {tr(assessment["decision"].capitalize())}</h2>'
+        recommendation_heading = (
+            tr("Recommendation") + ": " + tr(assessment["decision"].capitalize())
+            if assessment["recommendation"]
+            and set(assessment["recommendation"]) <= set(narrative)
+            else tr("Recommendation pending evidence and review")
         )
+        parts.append(f'<section id="recommendation"><h2>{recommendation_heading}</h2>')
         parts.extend(paragraph(i) for i in assessment["recommendation"])
         if plan["status"] != "ready_for_professional_review":
             parts.append(
@@ -619,6 +624,9 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         parts.append("<h3>" + tr("What would change the recommendation") + "</h3>")
         parts.extend(paragraph(i) for i in assessment["would_change"])
         parts.append("</section>")
+        from planning_decision_report import render_cycle
+
+        parts.append(render_cycle(plan, lambda i: paragraph(i, repeat=True)))
         for section, heading in SECTIONS.items():
             parts.append(f'<section id="{section}"><h2>{e(tr(heading))}</h2>')
             table_captions = {
@@ -656,6 +664,9 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
         parts.append(
             "<section><h2>Business assessment incomplete</h2><p>The available calculations and notes do not yet constitute a business plan. A recommendation and the business questions still need to be addressed.</p></section>"
         )
+    from planning_decision_report import render_financing
+
+    parts.append(render_financing(plan, lambda i: paragraph(i, repeat=True)))
     parts.append(
         "<section><h2>" + tr("Material uncertainties and limitations") + "</h2><ul>"
     )
@@ -785,7 +796,9 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
       body{font:10pt/1.45 Arial,sans-serif}main{padding:0}
       h1{font-size:26pt;letter-spacing:-.5px}h2{font-size:17pt;margin:0 0 12px}h3{font-size:12pt}
       .lead{font-size:13pt}section{padding:18px 0}article{margin-bottom:12px}
-      h1,h2,h3{break-after:avoid-page;page-break-after:avoid}
+      h1,h2,h3,h4{break-after:avoid-page;page-break-after:avoid}
+      article{break-inside:avoid-page;page-break-inside:avoid}
+      .planning-history{display:none!important}
       p,li{orphans:3;widows:3}figure{margin:16px 0;break-inside:avoid-page}
       .decision-table{break-inside:avoid-page}
       .decision-table h3{break-after:avoid-page}
@@ -875,6 +888,8 @@ def write_package(
         "business_plan.json": plan,
         "input_manifest.json": plan["case"]["sources"],
         "calculations.json": plan["calculations"],
+        "planning_cycle.json": plan["planning_cycle"],
+        "financing_assessments.json": plan["financing_assessments"],
         "report_structure.json": plan,
         "reconciliation.json": (
             plan["statements"]["reconciliation"]

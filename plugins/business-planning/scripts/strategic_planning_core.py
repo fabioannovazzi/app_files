@@ -211,11 +211,16 @@ def validate_case_workspace_boundary(
         raise StrategicPlanningContractError(
             "strategic_business_plan_case.json must be at the Clara case-workspace root"
         )
-    if output_dir.resolve() != workspace / "business-plan":
+    output_root = workspace / "business-plan"
+    if not output_dir.resolve().is_relative_to(output_root):
         raise StrategicPlanningContractError(
-            "output directory must be <case-workspace>/business-plan"
+            "output directory must be <case-workspace>/business-plan or a revision beneath it"
         )
-    if output_dir.is_symlink():
+    if any(
+        path.is_symlink()
+        for path in (output_dir, *output_dir.parents)
+        if path == output_root or path.is_relative_to(output_root)
+    ):
         raise StrategicPlanningContractError(
             "Clara business-plan output directory must not be a symlink"
         )
