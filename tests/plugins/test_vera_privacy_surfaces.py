@@ -587,7 +587,8 @@ def test_vera_governance_uses_runtime_profiles_without_double_confirmation() -> 
         for profile in profiles
     )
     assert "approved Codex" not in review
-    assert "do not ask again" in review
+    assert "only where the host permits prior" in review
+    assert "never overrides action-time confirmation or a denied operation" in review
 
 
 def test_vera_component_guidance_avoids_fake_minimums_and_ambiguous_authority() -> None:

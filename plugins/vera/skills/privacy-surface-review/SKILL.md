@@ -37,7 +37,8 @@ merely because the selected model runtime reads professional case data.
    applicable runtime profiles, whether it is optional, whether confirmation is
    required, and the controls enforced by the workflow. A separate confirmation
    is required only when the route is optional and the user has not already
-   chosen it. The user's explicit route choice is the confirmation; do not ask again.
+   chosen it. Reuse the user's explicit route choice only where the host permits prior
+   approval; it never overrides action-time confirmation or a denied operation.
 8. Record only concrete security controls and the account boundary selected by
    the firm or user. An empty security-control array is more accurate than
    relabelling local processing, draft status, or policy wording as security.
