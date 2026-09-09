@@ -64,6 +64,7 @@ ROLES = {
     "user_statement",
     "professional_review",
     "financial_model",
+    "prior_plan",
     "external_evidence",
     "model_hypothesis",
 }
@@ -210,7 +211,8 @@ def _review_case(case: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         "required_sections",
     }
     require(
-        set(case) - {"assessment", "commercial", "presentation"} == allowed,
+        set(case) - {"assessment", "commercial", "presentation", "cycle", "financing"}
+        == allowed,
         f"Shared case fields differ: {sorted(set(case) ^ allowed)}",
     )
     for key in (
@@ -1007,6 +1009,17 @@ def build_plan(
 
     accepted, narrative_issues = review_narrative(case, calculations)
     issues.extend(narrative_issues)
+    from planning_cycle import review_cycle
+
+    planning_cycle, cycle_issues, stale = review_cycle(case, source_root, accepted)
+    issues.extend(cycle_issues)
+    accepted = [n for n in accepted if n["id"] not in stale]
+    from planning_financing import review_financing
+
+    financing_assessments, financing_issues = review_financing(
+        case, accepted, calculations
+    )
+    issues.extend(financing_issues)
     from planning_assessment import review_assessment
 
     issues.extend(review_assessment(case, accepted))
@@ -1035,6 +1048,8 @@ def build_plan(
         "calculations": calculations,
         "comparisons": comparisons,
         "accepted_narrative": accepted,
+        "planning_cycle": planning_cycle,
+        "financing_assessments": financing_assessments,
         "limitations": [
             *case["limitations"],
             *(

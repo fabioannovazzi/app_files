@@ -1,9 +1,9 @@
 {
   "name": "business-planning",
-  "version": "0.2.10",
-  "description": "Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.",
+  "version": "0.3.0",
+  "description": "Develop and revise a business plan as evidence changes: assess pricing, competition, operations, cash and financing through bank debt or venture equity. Vera and Clara use the same workflow and report.",
   "author": {
-    "name": "Fabio Annovazzi \u00b7 Mparanza",
+    "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
@@ -27,9 +27,9 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Business Planning",
-    "shortDescription": "Prepare one complete business plan.",
-    "longDescription": "Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.",
-    "developerName": "Fabio Annovazzi \u00b7 Mparanza",
+    "shortDescription": "Revise a business plan and assess financing.",
+    "longDescription": "Develop and revise a business plan as evidence changes: assess pricing, competition, operations, cash and financing through bank debt or venture equity. Vera and Clara use the same workflow and report.",
+    "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/business-planning/index.html?lang=it",
     "privacyPolicyURL": "https://mparanza.com/privacy",
@@ -41,7 +41,7 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Use $business-planning to prepare a business plan from these files. Assess whether the business makes sense and recommend what to do next."
+      "Use $business-planning to assess this business and develop a plan we can revise as evidence changes, including its proposed financing."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

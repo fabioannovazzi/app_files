@@ -17,7 +17,12 @@
     "repository/plugins/business-planning/scripts/check_dependencies.py",
     "repository/plugins/business-planning/requirements-pdf.txt",
     "repository/plugins/business-planning/scripts/planning_assessment.py",
-    "repository/plugins/business-planning/scripts/planning_commercial.py"
+    "repository/plugins/business-planning/scripts/planning_commercial.py",
+    "repository/plugins/business-planning/scripts/planning_cycle.py",
+    "repository/plugins/business-planning/scripts/planning_financing.py",
+    "repository/plugins/business-planning/scripts/planning_decision_report.py",
+    "repository/plugins/business-planning/scripts/planning_presentation.py",
+    "repository/plugins/business-planning/references/financing-assessment.md"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -31,6 +36,11 @@
         "id": "business-planning-analysis-and-report",
         "purpose": "Prepare one business analysis using the shared financial model and report compiler",
         "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. Missing inputs in one scenario do not suppress independently complete scenarios; unavailable scenario calculations and dependent claims remain explicit in the report. The model also authors the business recommendation, alternatives, next actions and chart selection. User idea snapshots, provisional interpretations, source-backed external numerical facts and optional commercial price/volume drivers can enter this same context. Pending professional review remains explicit and does not silently discard ordinary interpretation. Supporting workpapers are accessible in a collapsed report appendix; this does not remove them from the HTML file."
+      },
+      {
+        "id": "business-planning-iteration-and-financing",
+        "purpose": "Continue the same business case and assess its proposed financing",
+        "content": "The selected model may also read the previous registered planning snapshot, the current question, new customer or competitor evidence, changed assumptions, exact input differences, reconsidered conclusions, proposed tests and reopening conditions. Financing assessments may include borrower and existing-debt evidence, proposed lender or investor identity and terms, funding purpose, bank repayment scenarios or equity milestones, cash runway and ownership/return discussion. These are case data, not automatically anonymized. The prior snapshot is hashed and case-bound, and its embedded source restrictions are checked for the new audience. Old case approval cannot silently approve changed inputs. Earlier report folders are preserved; Clara permits revision folders beneath business-plan. The current report contains the cycle and financing reasoning; internal workpapers contain history and exact differences. No lender or investor application is sent by the compiler."
       }
     ]
   },
@@ -54,7 +64,22 @@
     "per_case_record_required": false
   },
   "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "planning-public-research",
+      "kind": "public_research",
+      "destination": "Host-provided search services and public market, competitor and financier websites selected for the mandate",
+      "purpose": "Investigate pricing, demand, competitor developments and actual financing requirements for the current planning question",
+      "content": "Queries based on public product, market and financier facts; public URLs and relevant retrieved pages or excerpts. The skill prohibits private case documents, unpublished forecasts, interview details and personal identifiers in queries. The compiler itself performs no network research.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "A research mandate or explicit route choice is authorization; clarify an optional unchosen route once, not once per query.",
+        "Keep research read-only; do not contact customers, competitors, banks or investors or submit applications without explicit authority.",
+        "Query selection and compliance with these instructions remain model-led; there is no automatic anonymization or query-content classifier."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "clara-case-workspace-isolation",
@@ -74,9 +99,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-05",
+    "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2eac3ba8b00b6247a2c9b918cfbf740588b5f4581f0acb951dc648157703cad8"
+    "source_fingerprint": "c5613cf0f8b8eaaa3416854e33be2b90af63e646be33e30b1b4e425b50046b19"
   }
 }

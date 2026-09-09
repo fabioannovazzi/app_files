@@ -14,7 +14,9 @@ This is the same Business Planning function in Vera and Clara. The user's busine
 question determines the analysis, evidence and report. Both cover the business
 proposition, demand, operations, economics, cash, options and recommendation.
 Neither product has a different angle or supplies a separate contribution.
-Use one case, financial model and report compiler throughout.
+Use one case, financial model and report compiler throughout. Resume the same case
+for successive pricing, market, competition and financing decisions; preserve each
+iteration and distinguish bank debt from venture equity assessment.
 
 The shared skill handles the invoking product's existing storage integration.
 This affects file location and access checks only, never analytical scope,

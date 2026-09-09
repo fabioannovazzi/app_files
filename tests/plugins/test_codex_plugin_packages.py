@@ -4216,8 +4216,8 @@ def test_business_planning_pages_use_identical_localized_function_copy() -> None
     assert set(shared_copy) == {"it", "en", "fr", "de", "es"}
     assert copy.count("copy: businessPlanningCopy") == 2
     assert shared_copy["en"]["name"] == "Business plan"
-    assert "The function is the same in Vera and Clara" in shared_copy["en"]["summary"]
-    assert "Business Planning skill" in shared_copy["en"]["prompt"]
+    assert "same function in Vera and Clara" in shared_copy["en"]["summary"]
+    assert "Resume this business plan" in shared_copy["en"]["prompt"]
     assert "shared calculation IDs" in shared_copy["en"]["modelData"]
     navigation = (ROOT / "static/shared/function-page-navigation.js").read_text()
     overrides = navigation.split("const fallbackNames =", 1)[1].split(

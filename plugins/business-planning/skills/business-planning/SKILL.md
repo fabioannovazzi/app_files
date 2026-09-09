@@ -1,12 +1,14 @@
 ---
 name: business-planning
-description: Prepare one business plan from an idea or documents. Assess the business, market, operations, economics, cash, alternatives and next actions; lead with a reasoned recommendation. Identical in Vera and Clara.
+description: Develop and repeatedly revise a business plan as evidence changes. Test pricing, competition and operations; assess bank debt or venture equity against the same business and cash model. Identical in Vera and Clara.
 ---
 
 # Business Planning
 
 Help the user decide whether a business is worth pursuing, how it could work,
-and what to do next. Vera and Clara invoke the same function, calculations and
+how it could be financed, and what to test next. Planning is a repeated exercise:
+the report records the current reasoning, not the end of the work.
+Vera and Clara invoke the same function, calculations and
 report. There is no product-specific angle or user-facing handoff.
 
 A normal request such as “Prepare a business plan from these files” is sufficient.
@@ -21,6 +23,104 @@ stage, decision, audience and material constraints from what is available. Ask
 only questions whose answers could materially change the recommendation or scope.
 Do useful provisional analysis while answers remain open. An idea does not need
 historical accounts or a fabricated balance sheet to deserve an assessment.
+
+Establish whether this is internal planning, a financing request, or a still-open
+choice. Use `financing.purpose`; `audience` governs source sharing and must not be
+used to infer the financing instrument. Read the actual request, financier, use of
+funds and terms when supplied. Ask only for a missing decision that affects the
+analysis; preserve unknown amounts, terms and horizons instead of inventing them.
+
+## Resume, investigate, revise, decide
+
+On a follow-up, find the latest applicable run in the same registered case before
+starting another plan. Read its current recommendation, open tests, assumptions,
+funding assessment and selected evidence. If there are competing branches and the
+user's question does not identify one, resolve that choice. Never silently treat
+an older branch as the current plan.
+
+For each meaningful round:
+
+1. State the business question and trigger: a proposed price, customer evidence,
+   competitor move, operating constraint, financing term or result of a prior test.
+2. Investigate what would make the change commercially plausible. For pricing,
+   examine customer alternatives, willingness to pay, segmentation, switching and
+   acquisition/retention effects before choosing volume assumptions. For a
+   competitor response, distinguish the observed move from hypothetical customer
+   reactions. A spreadsheet sensitivity is a conditional calculation, not market
+   evidence. Use available customer research and actual behavior; propose a real
+   test when desk research cannot establish the response.
+3. Research current public market or financier information when the mandate
+   requires it, using available host research tools. Preserve dated sources, URLs
+   and relevant excerpts locally as selected evidence. Form queries from public
+   product, market and financier facts; do not send private case documents,
+   unpublished forecasts, interview details or personal identifiers in queries.
+   A supplied research mandate authorizes the route; otherwise clarify an optional
+   external research route once when needed. Never contact customers, competitors,
+   banks or investors, or submit a financing application without explicit authority.
+4. Revise the affected assumptions and linked scenarios; state what changed and
+   why. Reconsider carried conclusions, including those that remain valid. Update
+   their numeric bindings. New market evidence may change conclusions even when
+   financial inputs stay unchanged. Do not treat unchanged wording as proof of a
+   fresh assessment. Record actually reassessed IDs; code checks the record, not
+   whether the reasoning was performed well.
+5. Explain the consequences for the decision and financing, choose an action or
+   test, and record what evidence/event should reopen it. Stopping or retaining the
+   existing plan is a valid decision. Proposed tests are not observed results.
+
+Register the preceding `business_plan.json` as a `prior_plan` source in the new
+run, preserving its exact bytes and restrictions; do not reuse an old source
+receipt for changed bytes. Keep the same `case_id`, assign a new cycle ID, and bind
+`cycle.parent_source_id` to that snapshot. For an initial cycle it is null. Remove
+the older parent-source registration and its archive-only evidence record from
+the new selected inputs; the immediate parent preserves the earlier history.
+Do not remove evidence still used by a current claim: retain its original source.
+An imported older plan can be the first parent; do not invent unrecorded history.
+
+Use a fresh output folder for every persisted round. Never overwrite a prior
+report. The compiler records exact input changes and linked history and withholds
+carried narrative not marked reconsidered. Preserve original professional review
+records in the parent; leave the new case and revised conclusions pending until
+actually reviewed. An unchanged old approval cannot certify changed evidence.
+Ordinary local exploration and provisional reports need no approval ceremony.
+
+Persist each substantive round, including unresolved work. Give the user the
+answer, what changed, and the next test; provide the current report as its record.
+Do not demand a polished PDF or full rewrite for every conversational clarification.
+Continue the next round from the saved state when the user provides new evidence.
+Do not schedule monitoring unless asked.
+
+## Assess the financing decision
+
+Read [financing assessment guidance](../../references/financing-assessment.md).
+Use the same business evidence and scenarios for all financing alternatives.
+Author one assessment per proposed instrument: `bank_debt` or `venture_equity`;
+a combined funding proposal can have both. Other instruments need an explicit
+scope decision, not silent classification into either route.
+
+For a bank, explain why the business can generate the cash required to repay the
+specific proposed borrowing, including adverse commercial/operating conditions,
+existing obligations, sponsor resources and the lender's actual requirements.
+For venture equity, explain market potential, defensible advantage, traction,
+execution, funded milestones, runway, ownership/dilution and possible investor
+returns. Do not substitute an exit story for loan repayment or a DSCR test for
+venture potential. An attractive business can be unsuitable for either instrument.
+
+Bind quantified financing narrative to canonical calculations or genuine external
+facts, and reconcile the request and repayment/milestone dates to the model.
+`coverage_end_period` states the last repayment month for the proposed borrowing,
+or the funded milestone/next funding date for equity; use null when unknown.
+The engine supports at most sixty monthly periods. A longer repayment horizon
+remains explicitly incomplete; do not truncate the loan or assume refinancing.
+Actual covenant definitions, collateral, credit evidence, terms and investor
+criteria require their sources. Never invent universal thresholds or an approval
+probability. Code verifies references and coverage; the model judges suitability.
+
+Reassess financing after each material business revision. The output explains
+whether to explore, prepare or revise the request, or why it is unsuitable, and
+what evidence or changes would alter that view. It is not a bank credit decision,
+investment-committee approval or a claim that a specific financier will accept it.
+
+## Assess the business in every iteration
 
 Answer these questions in one coherent argument:
 
@@ -175,7 +275,7 @@ Clara binds the same case to the selected advisory case workspace:
 ```bash
 python scripts/run_strategic_plan.py --case <workspace>/business_plan_case.json \
   --case-workspace <workspace> --source-root <workspace> \
-  --output-dir <workspace>/business-plan
+  --output-dir <workspace>/business-plan/<cycle-id>
 ```
 
 These are storage adapters only. Legacy v1/v2 and counterpart-contribution files

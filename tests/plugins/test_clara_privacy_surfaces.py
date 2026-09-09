@@ -208,12 +208,14 @@ def test_clara_hosted_records_use_source_backed_retention_and_cleanup() -> None:
 
     research_video_voice = manifests["research-video-voice"]
     assert research_video_voice["retention"]["status"] == "partially_documented"
-    assert "does not write narration requests or audio" in research_video_voice[
-        "retention"
-    ]["statement"]
-    assert "not established by the plugin source" in research_video_voice[
-        "retention"
-    ]["statement"]
+    assert (
+        "does not write narration requests or audio"
+        in research_video_voice["retention"]["statement"]
+    )
+    assert (
+        "not established by the plugin source"
+        in research_video_voice["retention"]["statement"]
+    )
 
 
 def test_clara_register_includes_non_case_automatic_network_boundaries() -> None:
@@ -299,6 +301,7 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
                     "bounded-authorized-public-research",
                     "consented-plugin-feedback",
                     "openai-speech-generation",
+                    "planning-public-research",
                     "send-participant-link",
                 }
 

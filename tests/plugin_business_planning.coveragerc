@@ -1,0 +1,8 @@
+[run]
+source = plugins/business-planning/scripts
+patch = subprocess
+relative_files = True
+
+[report]
+fail_under = 80
+show_missing = True
