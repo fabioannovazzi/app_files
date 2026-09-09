@@ -68,6 +68,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "saved-teaching-development-request",
+        "purpose": "Prepare a reviewed development handoff from saved work without repeating teaching",
+        "content": "The model reads selected saved teaching notes from the known case or run folder and drafts sanitized findings, their evidence basis, requested work, gaps, limits and acceptance checks. The local ZIP contains that reviewed text, referenced checkpoint IDs and bounded capture metadata, file hashes and optionally an already reviewed sealed developer pack. Raw checkpoints, business batch reviews, downloaded files, credentials and session data are excluded. The helper makes no network calls. Only an explicitly authorized separate CR submission sends request.json through the existing plugin-feedback service to mparanza.com; the ZIP is not uploaded by that API. The model and operator review semantic privacy; hashes check integrity only.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -154,12 +163,16 @@
     {
       "id": "private-batch-review-history",
       "control": "Exclusive owner-only revision files, hash-chain verification, stale-writer rejection, escaped HTML without external resources and preservation of completed entries. Correction actions link to originals, and human review events are append-only. These checks establish artifact integrity, not semantic correctness or verified browser execution."
+    },
+    {
+      "id": "exact-reviewed-development-export",
+      "control": "Prepare a fresh owner-only folder; project only referenced checkpoint evidence metadata; require a reference to actual operator approval and the exact review manifest hash before export. Reject changed, unlisted, oversized or symlink files, unsafe archive paths and invalid source references. Export one ZIP without sending it or inventing a CR number. Observed findings require observed checkpoint references; this does not certify semantic correctness. Partial evidence remains usable with explicit gaps."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cb3b4b209d3839f4eeb68beb72d67ad38502dcde3bde2bd5cb5d718ff1890ed4"
+    "source_fingerprint": "2e83895e0b0f69bb0791d7aa71f917f6ed3f316bb0954ca8b3cffd23989e27a4"
   }
 }

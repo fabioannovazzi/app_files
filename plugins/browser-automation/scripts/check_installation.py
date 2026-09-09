@@ -27,6 +27,8 @@ REQUIRED_COMPONENT_PATHS = (
     "scripts/discovery_runtime.mjs",
     "scripts/teaching_checkpoint.py",
     "scripts/batch_review.py",
+    "scripts/development_request.py",
+    "references/development-request.md",
     "references/batch-review.md",
     "references/teaching-checkpoint.md",
     "skills/browser-automation/SKILL.md",

@@ -76,3 +76,11 @@ For invoice batches, follow the module’s `references/batch-review.md` and use
 with exceptions first, proposed and actual treatment, reasons and source evidence.
 Francesco need not watch Vera work. Record his later checks and correction requests;
 never silently replace a posted entry or mistake a request for a completed fix.
+
+When asked to prepare the saved work for Fabio or a developer, follow the module’s
+`references/development-request.md`. Vera locates saved evidence in the known run,
+prepares a sanitized development request with results, gaps and acceptance checks,
+shows the exact contents for review and exports one approved ZIP. Do not ask the
+operator to locate code, reconstruct known steps or zip files. A working local
+process can be handed off without calling it broken. CR registration uses the
+existing explicit submission route only when transmission is authorized.

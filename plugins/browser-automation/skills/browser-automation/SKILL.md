@@ -111,6 +111,16 @@ screen. Resume when the operator says login and account/profile selection are
 complete. Do not ask for additional progress confirmations unless a later
 consequential action or genuine ambiguity requires one.
 
+## Prepare a development request from saved work
+
+For “prepara per Fabio”, “send the developer what we learned”, or an explicit
+development handoff, read `references/development-request.md` and use
+`scripts/development_request.py`. Recover the known run/checkpoint yourself,
+preserve verified versus reported outcomes, prepare a concrete content review,
+then export one approved ZIP. This works with partial evidence and does not
+require pretending the local process failed or that a capability is validated.
+Do not restart teaching or ask the operator to find code or assemble files.
+
 ## Choose the operation
 
 ### Discover or change a process
@@ -386,9 +396,10 @@ Keep the run concise:
    contents), capability path, state, validation evidence, known limits, and
    receiving-operator next action.
 
-No generated ZIPs belong to a discovery or capability run. A portable
-capability is the sealed owner-only folder; release packaging is a separate
-developer workflow.
+A portable executable capability remains a sealed folder. For an explicitly
+requested development handoff, `development_request.py` may export the exact
+reviewed sanitized request and optional developer pack as one ZIP. This exception
+does not permit zipping arbitrary run folders or private business outputs.
 
 Never write run outputs inside this Git workspace, `static/shared`,
 `protected_downloads`, or another published folder. Product-maintained example

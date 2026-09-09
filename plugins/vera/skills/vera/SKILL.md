@@ -671,6 +671,10 @@ visually validated on the basis of structural inspection alone.
   above separate. Never ask the user to run pip or technical installation
   commands.
 
+For an explicit request to prepare a learned browser process for Fabio or a
+developer, route to `browser-automation` and its saved development-request
+handoff. Do not turn this into an unsolicited feedback survey or interview.
+
 ## Plugin Improvement Feedback
 
 Keep failures and suggestions as two separate paths.
