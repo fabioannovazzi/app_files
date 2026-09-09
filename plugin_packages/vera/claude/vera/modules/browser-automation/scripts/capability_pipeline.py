@@ -529,6 +529,11 @@ def _validate_process(value: Any, *, scope: str, errors: list[str]) -> None:
 
 
 def _validate_runtime(value: Any, *, scope: str, errors: list[str]) -> None:
+    optional = (
+        {"frame_selectors"}
+        if isinstance(value, Mapping) and "frame_selectors" in value
+        else set()
+    )
     runtime = _exact_keys(
         value,
         {
@@ -537,7 +542,8 @@ def _validate_runtime(value: Any, *, scope: str, errors: list[str]) -> None:
             "semantic_driver",
             "mechanical_driver",
             "os_fallback",
-        },
+        }
+        | optional,
         scope=scope,
         errors=errors,
     )
@@ -553,6 +559,19 @@ def _validate_runtime(value: Any, *, scope: str, errors: list[str]) -> None:
     for key, expected_value in expected.items():
         if runtime.get(key) != expected_value:
             errors.append(f"{scope}.{key} must be {expected_value!r}")
+    if "frame_selectors" in runtime:
+        frames = runtime["frame_selectors"]
+        if (
+            not isinstance(frames, list)
+            or len(frames) > 5
+            or any(
+                not _non_empty_text(item) or len(item) > 300 or "{{" in item
+                for item in frames
+            )
+        ):
+            errors.append(
+                f"{scope}.frame_selectors must contain at most five fixed selectors"
+            )
 
 
 def _validate_authority(value: Any, *, scope: str, errors: list[str]) -> None:

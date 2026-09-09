@@ -119,8 +119,10 @@ Each selected frame origin must be explicitly included in `allowedOrigins`,
 including intermediate nested frames. The observer applies the same value exclusions and redaction inside it.
 `unobserved_frame_count` means child frames were excluded. Missing, ambiguous
 or unapproved-origin frames fail closed: report the gap instead of patching the
-installed observer. Discovery support does not add iframe execution support to
-the capability runner; retain that execution gap until supported and tested.
+installed observer. The capability runner supports reviewed
+`runtime.frame_selectors` with the same explicit frame-origin boundary. Use
+actually inspected selectors in the discovery and capability contract;
+synthetic runtime tests do not establish a live ECONS binding.
 
 ### Prove acquisition before designing a review artifact
 
@@ -137,9 +139,9 @@ Complete this small loop before designing a workbook or batch procedure:
    and obtain that permission before reading them. The metadata observer remains
    metadata-only; enabling structured controls does not authorize reading values.
 3. Use targeted, documented Chrome DOM/locator reads to acquire that one record
-   and its proposed mapping, including its selected iframe when necessary. This
-   is read-only discovery, not a claim that the capability executor supports
-   iframe actions. If reading a required field fails, keep the record incomplete,
+   and its proposed mapping, including its selected iframe when necessary. For
+   saved execution, bind the inspected path in `runtime.frame_selectors`.
+   If reading a required field fails, keep the record incomplete,
    identify that exact gap and work on it. Do not ask the operator to code the
    connection, transcribe the entire invoice or repeat unrelated steps.
 4. Save one populated local review entry with traceable source-field labels and

@@ -106,6 +106,16 @@ evidence, capability, and receipt validators reject every other HTTP origin.
 
 ## Locator order
 
+An optional `runtime.frame_selectors` array selects at most five fixed nested
+iframes. The path belongs to the reviewed discovery and execution hash, not an
+unrecorded runner option. Each frame must resolve uniquely and its actual origin
+must be explicitly allowed, including intermediate frames. The runtime resolves
+and checks the path before locator work, again before reading or acting, and
+after actions. Locators and locator postconditions use the selected frame;
+`goto`, URL conditions and download events still refer to the top-level tab.
+A missing or unapproved frame cannot satisfy an invoice-absent condition. These
+checks are not atomic isolation against every possible navigation race.
+
 Prefer role and accessible name, then label, placeholder, stable test ID, or
 bounded visible text for interactive controls. CSS may appear as a fallback.
 The guided-capture private-identifier marker is evidence that local redaction

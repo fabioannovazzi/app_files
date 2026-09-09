@@ -77,6 +77,12 @@ with exceptions first, proposed and actual treatment, reasons and source evidenc
 Francesco need not watch Vera work. Record his later checks and correction requests;
 never silently replace a posted entry or mistake a request for a completed fix.
 
+For automatic ECONS review preparation, use the module's
+`references/econs-review.md` and `scripts/econs_review.mjs`. Reuse the saved
+reviewed Playwright profile; on first use Vera fills only missing live screen
+bindings. Collect full invoice lines and existing account/VAT mappings into the
+populated local review, then add model-led proposals. This route does not post.
+
 When asked to prepare the saved work for Fabio or a developer, follow the module’s
 `references/development-request.md`. Vera locates saved evidence in the known run,
 prepares a sanitized development request with results, gaps and acceptance checks,
