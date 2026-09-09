@@ -1,19 +1,20 @@
 {
   "schema_version": 1,
-  "basis": "Version shown on the public ChatGPT plugin detail page; not inferred from a local candidate or installed cache.",
+  "basis": "Version directly confirmed as Published in OpenAI Platform; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.188",
+      "version": "0.1.189",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-07",
-      "basis": "User confirmed Clara 0.1.188 is published on ChatGPT on 2026-09-07."
+      "observed_at": "2026-09-09",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa13a915590819182fffacc0937af49",
+      "basis": "OpenAI Platform directly showed Clara 0.1.189 Published after all 15 skill checks passed and Publish Version completed on 2026-09-09."
     },
     "vera": {
-      "version": "0.1.223",
+      "version": "0.1.225",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-08",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6a9fef478b5c8191bb3fe8c32271ac09",
-      "basis": "OpenAI Platform directly showed Vera 0.1.223 Published after publication and page refresh on 2026-09-08."
+      "observed_at": "2026-09-09",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa115b609808191bf74cabd0757223b",
+      "basis": "OpenAI Platform directly showed Vera 0.1.225 Published after all 34 skill checks passed and Publish Version completed on 2026-09-09."
     }
   }
 }
