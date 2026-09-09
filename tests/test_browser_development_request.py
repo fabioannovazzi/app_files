@@ -52,7 +52,9 @@ def test_partial_teaching_produces_one_reviewed_zip_without_fake_cr(helper, tmp_
     directory = tmp_path / "review"
     prepared = helper.prepare_request(request(), directory)
     assert prepared["archive_created"] is False
-    assert "Riferito dall’operatore" in (directory / "RICHIESTA.md").read_text()
+    assert "Riferito dall’operatore" in (directory / "RICHIESTA.md").read_text(
+        encoding="utf-8"
+    )
     archive = helper.export_request(
         directory,
         tmp_path / "request.zip",
@@ -150,7 +152,7 @@ def test_checkpoint_projection_excludes_private_teaching_text(helper, tmp_path):
     helper.prepare_request(
         payload, tmp_path / "review", checkpoint=tmp_path / "checkpoint"
     )
-    sources = (tmp_path / "review/sources.json").read_text()
+    sources = (tmp_path / "review/sources.json").read_text(encoding="utf-8")
     assert "PRIVATE CLIENT SECRET" not in sources
     assert (
         json.loads(sources)["step_evidence"][0]["capture"]["before_sha256"] == "a" * 64
@@ -263,7 +265,9 @@ def test_cli_prepare_export_verify_and_malformed_file(helper, tmp_path):
         helper.main(["prepare", "--input", str(source), "--output", str(directory)])
         == 0
     )
-    manifest = json.loads((directory / "review-manifest.json").read_text())
+    manifest = json.loads(
+        (directory / "review-manifest.json").read_text(encoding="utf-8")
+    )
     archive = tmp_path / "request.zip"
     assert (
         helper.main(
