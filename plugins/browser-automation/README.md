@@ -75,3 +75,10 @@ Human checks and requested corrections persist across sessions. Corrections to
 completed postings are separate linked entries. The helper does not execute
 postings, decide accounting treatment or prove TeamSystem integration. See
 `references/batch-review.md`.
+
+## Development handoff
+
+“Prepare this for Fabio” uses the saved-work route in
+`references/development-request.md`. Vera prepares a reviewed sanitized request
+and one ZIP, including an existing approved technical pack when available.
+Partial evidence remains useful without inventing a capability or a CR number.

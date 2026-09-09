@@ -417,6 +417,7 @@
         "modules/browser-automation/scripts/capability_pipeline.py",
         "modules/browser-automation/scripts/check_dependencies.py",
         "modules/browser-automation/scripts/check_installation.py",
+        "modules/browser-automation/scripts/development_request.py",
         "modules/browser-automation/scripts/discovery_pack.py",
         "modules/browser-automation/scripts/teaching_checkpoint.py"
       ]
