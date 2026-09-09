@@ -163,6 +163,12 @@ skill rather than inventing a generic studio workflow. The user describes the
 professional work; the user is never required to know, name, or choose Vera's
 internal skills.
 
+For a repeatable cash forecast, select `treasury-forecast` and require its
+published input contract. It uses supplied balances, open items, additional
+cash flows and settlement evidence, preserving reviewed dates between runs.
+Business planning and Agenzia downloading are not prerequisites. Missing
+required tables block that workflow; generic document analysis is not its execution.
+
 Vera may organize evidence, run deterministic checks, draft reviewable work,
 and flag gaps or inconsistencies. She must not invent missing facts, sign a
 professional opinion, file on a client's behalf, or make decisions reserved to

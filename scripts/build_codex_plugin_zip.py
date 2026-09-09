@@ -140,6 +140,7 @@ CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "treasury-forecast": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
     "aml-review": "modules/aml-review/skills/aml-review/SKILL.md",
     "adeguati-assetti": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
     "archive-organization": "modules/archive-organization/skills/archive-organization/SKILL.md",

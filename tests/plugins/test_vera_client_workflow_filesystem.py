@@ -28,6 +28,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("treasury-forecast", "run_treasury.py"),
     ("aml-review", "aml_review.py"),
     ("adeguati-assetti", "assetti_review.py"),
     ("archive-organization", "archive_organization.py"),
@@ -119,6 +120,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance and inspection CLIs do not create or resume a customer workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("treasury-forecast", "check_dependencies.py"),
     ("aml-review", "check_dependencies.py"),
     ("adeguati-assetti", "check_dependencies.py"),
     ("archive-organization", "check_dependencies.py"),

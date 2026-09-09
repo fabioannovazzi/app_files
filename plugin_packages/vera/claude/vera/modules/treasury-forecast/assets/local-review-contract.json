@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "transport": "loopback_http",
+  "entrypoint": "scripts/run_treasury.py",
+  "server": "scripts/treasury_server.py",
+  "persistence": "scripts/treasury_session.py",
+  "review_asset": "assets/review.html",
+  "state_artifact": "treasury_session.json",
+  "reason": "Treasury dates must recalculate exact daily cash and create a new immutable forecast version. The local server uses the same source-bound session engine as the CLI.",
+  "validation": "tests/plugins/test_treasury_delivery.py covers HTTP writes, state reopening, stale-source rejection and artifact readback."
+}

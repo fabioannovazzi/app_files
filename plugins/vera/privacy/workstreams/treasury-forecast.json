@@ -1,0 +1,69 @@
+{
+  "schema_version": 3,
+  "workstream": "treasury-forecast",
+  "display_name": "Budget di tesoreria",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "references",
+    "scripts",
+    "assets",
+    "requirements.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "treasury-intake",
+        "purpose": "Confirm eligibility, supplied scope and fixed table roles.",
+        "content": "Company identity, account balances, bank movements, customer and supplier identities, outstanding obligations, payroll/tax/debt and other supplied planned cash flows, settlement allocations and non-cash adjustment evidence. Optional supplied FatturaPA XML is parsed by the bundled client-file-preparation parser. Codex or Cowork may read the complete selected sources when needed; there is no automatic anonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "treasury-review-and-update",
+        "purpose": "Review expected dates, explain cash changes and record the professional decision.",
+        "content": "Current and previous forecast records, expected dates and their supporting explanations, reviewer's declared identity, review date and conclusion, actual cash evidence and changes. model_context.json starts with up to 100 events and issues and indicates truncation; selected records and complete local sources remain readable by the selected host. Local scripts do not call a model or the network. A loopback review page reads the local session and writes the decisions consumed by recalculation.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "archive-input-binding",
+      "control": "Each case command requires a current running portable v2 Studio Archive treasury context. Source tables must be exact receipted files within run inputs; traversal and symlinks are rejected. No case outputs are written into the plugin tree."
+    },
+    {
+      "id": "bound-version-review",
+      "control": "Source hashes, prepared-input digest, record digest and the pinned artifact inventory are checked on review. Stale writes and concurrent review writes fail; accepted versions cannot be edited in that session."
+    },
+    {
+      "id": "loopback-review",
+      "control": "The review server binds 127.0.0.1, requires an ephemeral token for case API data and exact same-origin headers for writes, serves only declared static assets, and revalidates the archive before every case API request."
+    },
+    {
+      "id": "untrusted-rendering",
+      "control": "Supplied strings are escaped in HTML and assigned with textContent in the review page. Excel text cells are forced to strings and CSV formula prefixes in text columns are escaped."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-09",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "faa4308f3e7a24e7b108480ca850cb2dee6c66c7b747afb26499ad74fa656bba"
+  }
+}

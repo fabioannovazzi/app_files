@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vera · Budget di tesoreria</title><link rel="stylesheet" href="review.css"><script src="custom_select.js" defer></script><script src="review.js" defer></script></head>
+<body><main>
+<p class="eyebrow">VERA · BUDGET DI TESORERIA</p><h1 id="company">Revisione della previsione</h1>
+<p id="period"></p><p id="coverage"></p><p id="status" role="status"></p>
+<div class="summary" id="summary"></div>
+<section aria-label="Andamento della cassa"><h2>Saldo a fine giornata</h2><svg id="cash-chart" viewBox="0 0 900 240" role="img" aria-label="Saldi giornalieri previsti" style="width:100%;height:auto"></svg><p id="chart-caption"></p></section>
+<section><h2>Incassi e pagamenti attesi</h2><p>Controlla le date e la base della previsione. Salva le modifiche per ricalcolare i saldi prima di accettare.</p>
+<label>Cerca nella pagina <input id="search" type="search" placeholder="Voce o riferimento"></label>
+<div class="scroll"><table><thead><tr><th>Voce</th><th>Flusso EUR</th><th>Data attesa</th><th>Base della previsione</th></tr></thead><tbody id="events"></tbody></table></div>
+<div class="actions"><button id="previous" class="secondary">Precedenti</button><span id="page"></span><button id="next" class="secondary">Successivi</button><button id="save">Salva e ricalcola</button><button id="reload" class="secondary">Annulla modifiche non salvate</button></div></section>
+<section><h2>Variazioni e questioni da esaminare</h2><p id="comparison"></p><ul id="changes"></ul><ul id="issues"></ul></section>
+<section><h2>Registra la revisione</h2><p>La conferma riguarda questa versione e le ipotesi indicate. Non certifica che gli incassi avverranno nelle date previste.</p>
+<div class="review-fields"><label>Revisore <input id="reviewer" autocomplete="name"></label><label>Data della revisione <input id="review-date" type="date"></label><label>Conclusione <textarea id="conclusion" placeholder="Esito della revisione e ipotesi rilevanti"></textarea></label></div>
+<div class="actions"><button id="accept">Accetta questa previsione</button><button id="workbook" class="secondary">Scarica Excel</button><button id="report" class="secondary">Apri prospetto</button></div></section>
+<section><h2>Alternativa sulla data di un flusso</h2><p>Scegli una voce della pagina corrente. L'alternativa viene conservata nella pratica e rimane separata dalla previsione di base.</p><div class="review-fields"><label>Flusso <select id="scenario-id"></select></label><label>Data alternativa <input id="scenario-date" type="date"></label></div><button id="scenario" class="secondary">Calcola alternativa</button><p id="scenario-result"></p></section>
+<p class="footnote">I saldi sono chiusure giornaliere. Il prospetto comprende i flussi e le ipotesi forniti; non garantisce liquidità infragiornaliera. Le versioni salvate restano conservate nella pratica.</p>
+</main></body></html>

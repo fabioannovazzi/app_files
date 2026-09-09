@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Budget di tesoreria" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<rect x="13" y="17" width="38" height="35" rx="4" fill="none" stroke="#F7F0DF" stroke-width="3"/><path d="M22 12v10M42 12v10M13 28h38" stroke="#F7F0DF" stroke-width="3"/><path d="m19 39 8-5 8 12 10-10" fill="none" stroke="#00B0F0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

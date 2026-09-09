@@ -201,6 +201,16 @@
       ]
     },
     {
+      "component_id": "treasury-forecast",
+      "skills": [
+        "modules/treasury-forecast/skills/treasury-forecast/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/treasury-forecast/scripts/check_dependencies.py",
+        "modules/treasury-forecast/scripts/run_treasury.py"
+      ]
+    },
+    {
       "component_id": "centrale-rischi-review",
       "skills": [
         "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md"
@@ -467,6 +477,7 @@
     "skills/report-builder/SKILL.md",
     "skills/sales-plan/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md"
   ]
