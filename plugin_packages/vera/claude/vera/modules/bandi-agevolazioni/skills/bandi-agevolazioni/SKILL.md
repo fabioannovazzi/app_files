@@ -1,6 +1,6 @@
 ---
 name: bandi-agevolazioni
-description: Use when Vera must discover, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance from official sources and client evidence; produces a reviewable opportunity radar or application dossier and never authenticates, contacts clients, signs, or files.
+description: Use when Vera must discover, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance from official sources and client evidence; produces a reviewable opportunity radar or application dossier and never authenticates, contacts clients or signs; portal submission requires explicit approval of the final application.
 ---
 
 ## Cowork execution contract
@@ -127,9 +127,12 @@ private Studio Archive client-run output described below.
   the meaning, applicability, or authority of a source.
 - Never request, store, replay, or export credentials, SPID/CIE/CNS material,
   cookies, tokens, one-time codes, delegations, or signatures.
-- Never log in, fill a live portal, accept a declaration, sign, pay, save a
-  portal draft, or submit an application. Produce field-by-field guidance and
-  stop before every portal action.
+- After explicit approval of the project and portal preparation, follow
+  `references/portal-preparation.md`: fill ordinary fields, upload approved
+  attachments and save a draft in the user-authenticated application.
+- Never authenticate, accept declarations, sign or pay. Submission is allowed
+  only after explicit user approval of the exact final application under
+  `references/portal-preparation.md`, never from project approval alone.
 - Never use `ready` as a synonym for eligible or accepted. Keep documentary
   readiness separate from the assessment outcome. `ready_to_file` is always
   false.
@@ -513,8 +516,11 @@ python scripts/package_dossier.py \
 7. Show the professional the exact readiness/outcome matrix, missing evidence,
    unresolved interpretations, red flags, draft form fields, and narrative
    claims. Do not hide negative or uncertain findings in polished prose.
-8. Provide portal assistance only as a manual field map. The authorized person
-   owns authentication, declarations, signature, saving, and transmission.
+8. For approved portal preparation, read `references/portal-preparation.md`
+   and use available host browser tools. Project approval and the request to
+   compile authorize ordinary fields, approved attachments and draft saving;
+   do not ask again for each field. Authentication, declarations, signature,
+   and payment remain manual. Submission requires explicit final approval.
 
 ## Status contract
 

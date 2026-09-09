@@ -59,7 +59,7 @@ professional confirmation remains separate.
 
 Use model reasoning for source interpretation, atomic requirement drafting,
 evidence mapping, eligibility and exclusion reasoning, cost classification,
-manual portal guidance, narrative drafting, conflict significance, missing
+reviewed portal field preparation, narrative drafting, conflict significance, missing
 information and red flags, adversarial authority simulation, and contextual
 workflow guidance. These jobs depend on language, context, and professional
 meaning. The model must expose rationale, evidence references, requested
@@ -89,9 +89,9 @@ authority.
   professional authority through formatting: facts remain model inferences,
   assessments remain model-led, issues remain open, and all artifacts remain
   proposed.
-- Protected declaration, authentication, signature, payment, save, and
-  submission controls are deterministic because the prohibition is a product
-  security boundary, not a semantic judgment.
+- Protected field values stay empty under an exact artifact contract. Browser
+  action effects are inspected semantically. Submission requires separate
+  final user approval; project approval permits only draft preparation.
 - Stale-input detection and two-phase application are deterministic because the
   same accepted suggestion must bind to the same bytes and recover without
   duplicate or partial application.
@@ -127,7 +127,7 @@ The professional owns source authority, interpretation, applicability,
 eligibility and exclusion conclusions, cost admissibility, factual acceptance,
 narrative claims, issue resolution, and dossier disposition. The authorized
 person additionally owns portal authentication, declarations, signature,
-payment, saving, and transmission. Vera never represents a suggestion,
+and payment. Approved preparation and explicitly authorized final submission follow `portal-preparation.md`. Vera never represents a suggestion,
 simulation, accepted contribution, or dossier as an authority decision or as
 ready to file.
 

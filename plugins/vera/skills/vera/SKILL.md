@@ -362,7 +362,10 @@ them without changing the capability catalog:
   subsidized-finance applications from calls, amendments, annexes, official
   FAQs, forms, and beneficiary evidence. Never claim exhaustive discovery,
   invent eligibility, treat FAQ as an amendment, contact clients automatically,
-  receive portal credentials, sign, or submit.
+  receive portal credentials or sign. After project approval and a request to
+  compile, use available browser tools for fields, approved attachments and draft
+  saving. Submit only after explicit approval of the exact final application,
+  following the bandi portal-preparation reference.
 - `comunicazione-professionale`: event-driven editorial work from exact selected
   sources and prior studio communications in a private studio-wide workspace.
   The professional selects every prior communication; the workflow never scans

@@ -84,8 +84,8 @@
       "kind": "portal_boundary",
       "required_behavior": [
         "reject stored credentials, session material, one-time codes, signatures, and declaration acceptance",
-        "provide manual field guidance only",
-        "leave authentication, saving, signature, payment, and transmission to the authorized person"
+        "fill approved ordinary fields, upload approved attachments and save drafts after project approval and user request",
+        "leave authentication, declarations, signature and payment manual; submit only after explicit approval of the exact final application"
       ]
     },
     {

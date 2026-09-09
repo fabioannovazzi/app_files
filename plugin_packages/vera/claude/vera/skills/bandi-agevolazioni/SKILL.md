@@ -1,6 +1,6 @@
 ---
 name: bandi-agevolazioni
-description: Use when Vera must discover source-first through a professionally reviewed query-scoped source selection, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance without contacting clients, authenticating, signing, or filing.
+description: Use when Vera must discover source-first through a professionally reviewed query-scoped source selection, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance without contacting clients, authenticating or signing; can prepare an approved portal draft and submit only after explicit final approval.
 ---
 
 ## Cowork execution contract

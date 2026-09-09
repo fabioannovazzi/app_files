@@ -51,6 +51,15 @@
         "runtime_profiles": [
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "approved-portal-preparation",
+        "purpose": "Prepare and verify an approved application draft",
+        "content": "Available host browser tools expose the selected application screens, applicant identity, approved field values, project details, attachment names and visible validation or save results to the selected model runtime. The workflow does not request or record authentication secrets. It writes approved values and approved attachment files to the official portal after the user chooses this route. There is no automatic anonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -75,6 +84,26 @@
         "Keep source cursors, scan snapshots and coverage history in the owner-only private radar workspace; send only the public act identifier, date or URL needed for read-only source retrieval.",
         "Register exact selected source bytes and metadata before using them for confirmed requirements."
       ]
+    },
+    {
+      "id": "approved-portal-draft",
+      "kind": "external_connector",
+      "destination": "The official application portal and exact applicant draft chosen by the user",
+      "purpose": "Enter approved fields, upload approved attachments, save a draft and, after separate explicit final approval, submit the exact application",
+      "content": "Approved applicant and project values and approved attachment files; private run records retain destination without query or session material, approved scope hash and observed action results",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The user approves the project and requests portal preparation; existing explicit authorization suffices without repeated per-field confirmation.",
+        "The user authenticates. Inspect destination, applicant, draft and each control effect before writing; stop for new decisions or unclear effects.",
+        "Preparation approval permits ordinary fields, approved uploads and draft saving. Submission requires explicit approval after showing the exact final portal summary. Authentication, declaration acceptance, signature and payment remain manual, including combined controls.",
+        "Verify visible values, attachment list and draft-save result. Host tool availability is checked; no bundled portal driver or universal portal compatibility is claimed.",
+        "After submission inspect status and receipt/protocol; uncertain results require inspection before retry, never an automatic duplicate submission."
+      ]
     }
   ],
   "security_controls": [
@@ -87,8 +116,8 @@
       "control": "Exhaustive JSON Schema validation rejects unknown artifact fields; a recursive normalized-key guard rejects credential/session field classes; and narrow value patterns block unmistakable passwords, bearer or session tokens, API secrets and private-key material before a structured model packet, radar proposal or dossier can pass. The value guard is not a generic personal-data detector and does not remove names, tax identifiers or other professionally relevant facts."
     },
     {
-      "id": "no-portal-transaction",
-      "control": "The workflow may prepare field-by-field guidance but never authenticates, writes to a live portal, saves an application, accepts declarations, signs, pays, files, or submits; protected controls remain manual and empty."
+      "id": "portal-preparation-record-contract",
+      "control": "Run-state schema distinguishes draft actions from submission attempts. Submission requires a separate explicit_final_submission_confirmation record, approved scope hash, destination, final review and observed result. Validator rejects stale scope hashes and mismatched preparation/submission destinations; ready_to_file and signature flags stay false. These are artifact checks, not authenticated browser execution or an authorization engine."
     },
     {
       "id": "crash-safe-case-mutation-lock",
@@ -128,9 +157,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-06",
+    "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b94c72aeb6d8f4a98b9328584b808b0c70d0f70cee3ebaddd6a0136f9d69c025"
+    "source_fingerprint": "cfcacbeed801a137ea65343b4fa19ce35d891c319602abe5842a1100d7915443"
   }
 }

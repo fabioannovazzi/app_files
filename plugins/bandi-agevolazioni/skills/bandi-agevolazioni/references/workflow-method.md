@@ -89,8 +89,9 @@ The deterministic families have these bounded justifications:
 Build the document checklist from confirmed requirements. Classify each cost
 against its exact cost requirement and quotation/evidence; never generalize from
 keywords. Cross-reference form and narrative fields to facts and requirements.
-Declaration acceptance, signature, payment, saving, and transmission controls
-remain empty and manual.
+Declaration acceptance, signature and payment controls remain empty and manual.
+Submission fields also remain empty: an explicit final approval authorizes the
+separate submission action, never a generated or prefilled declaration.
 
 For each narrative, separate sourced factual claims, professional judgments,
 and drafting choices. Do not add unsupported benefits, impacts, dates, jobs,
@@ -123,11 +124,13 @@ can be `reviewed` and `pass`.
 
 ## 8. Portal and handoff boundary
 
-Produce a manual field map containing the portal label, proposed non-protected
-value, source facts, requirement links, readiness, and rationale. Never receive
-credentials or session material and never interact with a live application.
-The authorized person performs authentication, declarations, signature, save,
-payment, and transmission.
+Produce a reviewed field map containing the portal label, approved non-protected
+value, source facts, requirement links, readiness, and rationale. Follow
+`portal-preparation.md` to enter approved fields, upload approved attachments
+and save a draft using available host tools after user authentication. Never
+receive credentials or session material. The authorized person performs
+authentication, declarations, signature and payment. Final submission may be
+performed only after the separate explicit approval in `portal-preparation.md`.
 
 Package only after deterministic validation passes. The dossier remains a
 professional-review artifact with `ready_to_file=false`. Studio Archive owns

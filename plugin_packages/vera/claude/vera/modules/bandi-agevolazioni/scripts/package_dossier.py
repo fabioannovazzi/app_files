@@ -555,7 +555,7 @@ def _render_markdown(
                 for item in [
                     *workbench["dossier"].get("limitations", []),
                     *audit.get("limitations", []),
-                    "La persona autorizzata conserva autenticazione, dichiarazioni, firma, salvataggio sul portale e trasmissione.",
+                    "Dopo approvazione del progetto, Vera può compilare campi ordinari, caricare allegati approvati e salvare una bozza con gli strumenti disponibili. Autenticazione, dichiarazioni, firma e pagamento restano alla persona autorizzata. Vera può inviare solo dopo autorizzazione esplicita della domanda finale mostrata in riepilogo.",
                     "Gli identificativi dei revisori sono dichiarati localmente e non autenticati da questo workflow.",
                 ]
             ),

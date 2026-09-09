@@ -875,10 +875,18 @@ def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> Non
         )
         assert len(values) == 5
         expected_paragraphs = (
-            4
-            if page_name
-            in {"bandi-agevolazioni", "business-planning", "clara-business-planning"}
-            else 3
+            5
+            if page_name == "bandi-agevolazioni"
+            else (
+                4
+                if page_name
+                in {
+                    "bandi-agevolazioni",
+                    "business-planning",
+                    "clara-business-planning",
+                }
+                else 3
+            )
         )
         assert all(len(value.split("\n\n")) == expected_paragraphs for value in values)
 
