@@ -31,7 +31,8 @@
     "studio-archive"
   ],
   "shared_services": [
-    "run-receipt-stamping"
+    "run-receipt-stamping",
+    "document-personalization"
   ],
   "workflow_roles": {
     "new-client": {
