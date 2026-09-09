@@ -13,7 +13,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { DEFAULT_DOWNLOAD_DIRECTORY, observeDownloadDirectory } from "./download_directory.mjs";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/15";
+export const RUNTIME_VERSION = "browser-capability-runtime/16";
 export const RECEIPT_SCHEMA = "browser-run-receipt/v2";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
@@ -236,6 +236,11 @@ function validateRuntimeShape(capability) {
   if (!milestoneIds.has(capability.entry_milestone)) {
     throw new Error("entry milestone is not declared");
   }
+  const frames = Object.hasOwn(capability.runtime ?? {}, "frame_selectors") ? capability.runtime.frame_selectors : [];
+  if (!Array.isArray(frames) || frames.length > 5 || frames.some((selector) =>
+    typeof selector !== "string" || !selector.trim() || selector.length > 300 || selector.includes("{{"))) {
+    throw new Error("frame_selectors must contain at most five fixed selectors");
+  }
   if (
     capability.runtime?.browser !== "existing_chrome" ||
     capability.runtime?.controller !== "chrome_extension" ||
@@ -357,6 +362,23 @@ function assertAllowedUrl(url, allowedOrigins) {
     throw new Error(`browser left allowed origins: ${origin}`);
   }
   return { origin, path: queryFreePath(url) };
+}
+
+async function executionScope(context) {
+  // Frame identity and origins are mechanical boundaries, not page interpretation.
+  // Resolve again before each read/action: SPA frames can be replaced or navigate.
+  assertAllowedUrl(await context.tab.url(), context.allowedOrigins);
+  let scope = context.tab.playwright;
+  for (const selector of context.capability.runtime.frame_selectors ?? []) {
+    const unique = await scope.locator(selector).evaluateAll((elements) =>
+      elements.length === 1 && elements[0].tagName.toLowerCase() === "iframe");
+    if (!unique) throw new Error("execution frame_not_unique");
+    scope = scope.frameLocator(selector);
+    const origin = await scope.locator("html").evaluate((element) =>
+      new URL(element.ownerDocument.URL).origin);
+    if (!context.allowedOrigins.has(origin)) throw new Error("execution frame_origin_not_allowed");
+  }
+  return scope;
 }
 
 function locatorFromCandidate(base, candidate, inputs) {
@@ -597,7 +619,7 @@ async function extractWithCandidateFallback(action, context, declaration, timeou
   const failures = [];
   let fieldFailure = null;
   const firstResolved = await resolveLocator(
-    context.tab.playwright,
+    await executionScope(context),
     action.locator_candidates,
     context.inputs,
     { wait: true, timeoutMs },
@@ -615,7 +637,7 @@ async function extractWithCandidateFallback(action, context, declaration, timeou
       resolved = firstResolved;
     } else {
       try {
-        resolved = await resolveLocator(context.tab.playwright, [candidate], context.inputs);
+        resolved = await resolveLocator(await executionScope(context), [candidate], context.inputs);
       } catch (error) {
         failures.push(error instanceof Error ? error.message : String(error));
         continue;
@@ -623,7 +645,7 @@ async function extractWithCandidateFallback(action, context, declaration, timeou
     }
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
-        assertAllowedUrl(await context.tab.url(), context.allowedOrigins);
+        await executionScope(context);
         const value = await extractOutput(
           action,
           resolved.locator,
@@ -992,6 +1014,8 @@ async function attemptModelRecovery({
 async function evaluateCondition(condition, context) {
   const { tab, capability, inputs, outputs } = context;
   const timeoutMs = boundedTimeout(condition.timeout_ms);
+  // Boundary failures must never count as a hidden invoice or an absent popup.
+  const scope = await executionScope(context);
   switch (condition.kind) {
     case "always":
       return true;
@@ -1013,7 +1037,7 @@ async function evaluateCondition(condition, context) {
     }
     case "locator_visible": {
       try {
-        await resolveLocator(tab.playwright, condition.locator_candidates, inputs, {
+        await resolveLocator(scope, condition.locator_candidates, inputs, {
           wait: true,
           timeoutMs,
         });
@@ -1024,15 +1048,16 @@ async function evaluateCondition(condition, context) {
     }
     case "locator_hidden": {
       try {
-        await resolveLocator(tab.playwright, condition.locator_candidates, inputs, { timeoutMs });
+        await resolveLocator(scope, condition.locator_candidates, inputs, { timeoutMs });
         return false;
       } catch {
+        await executionScope(context);
         return true;
       }
     }
     case "locator_text_contains": {
       try {
-        const { locator } = await resolveLocator(tab.playwright, condition.locator_candidates, inputs, {
+        const { locator } = await resolveLocator(scope, condition.locator_candidates, inputs, {
           wait: true,
           timeoutMs,
         });
@@ -1117,13 +1142,13 @@ async function executeAction(action, context) {
     throw new Error(`consequential action requires current operator approval: ${action.id}`);
   }
   if (action.operation !== "goto") {
-    assertAllowedUrl(await tab.url(), context.allowedOrigins);
+    await executionScope(context);
   }
 
   let locatorCandidate = null;
   let locator = null;
   if (!["goto", "extract"].includes(action.operation)) {
-    const resolved = await resolveLocator(tab.playwright, action.locator_candidates, inputs, {
+    const resolved = await resolveLocator(await executionScope(context), action.locator_candidates, inputs, {
       wait: action.operation === "wait_for",
       timeoutMs,
     });
@@ -1137,7 +1162,7 @@ async function executeAction(action, context) {
   // Locator resolution is asynchronous: the page can navigate while it runs.
   // A post-action check alone would disclose inputs before rejecting the run.
   if (action.operation !== "goto") {
-    assertAllowedUrl(await tab.url(), context.allowedOrigins);
+    await executionScope(context);
   }
   if (action.operation === "goto") {
     const targetOrigin = action.target_origin ?? capability.site.allowed_origins[0];
@@ -1297,6 +1322,7 @@ async function executeAction(action, context) {
   }
 
   const page = assertAllowedUrl(await tab.url(), context.allowedOrigins);
+  await executionScope(context);
   await verifyPostcondition(action.postcondition, context);
   const outputValue = action.output_ref == null ? null : outputs[action.output_ref];
   const outputDeclaration =

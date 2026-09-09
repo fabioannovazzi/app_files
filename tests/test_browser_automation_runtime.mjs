@@ -137,6 +137,60 @@ class FakeTab {
   async url() { return this.currentUrl; }
 }
 
+test("execution inside nested allowed iframes scopes extraction away from the parent page", async () => {
+  const tab = new FakeTab({});
+  const capability = syntheticCapability();
+  const plain = new FakeTab({});
+  const frames = ["iframe[title='Outer']", "iframe[title='Accounting']"];
+  capability.runtime.frame_selectors = frames;
+  capability.site.allowed_origins.push("https://frame.example");
+  // Reuse the actual synthetic record flow for the leaf Playwright scope.
+  const fixture = JSON.parse(await readFile(new URL("./fixtures/browser_automation_runtime/capability.json", import.meta.url), "utf8"));
+  capability.milestones = [{
+    id: "extract-frame", intent: "Read the selected frame", preconditions: [],
+    actions: [{ ...fixture.milestones[2].actions[0], id: "extract-frame-records", output_ref: "frame-text",
+      locator_candidates: [candidate("text", "Frame result")],
+      extract: { mode: "text", max_items: 1, limit_input_ref: null, empty_allowed: false, dedupe_by: [], fields: [] },
+      postcondition: nonePostcondition() }],
+    transitions: [{ when: { ...nonePostcondition(), kind: "always" }, next_milestone: null, terminal: true }],
+  }];
+  capability.inputs = [];
+  capability.outputs = [{ name: "frame-text", type: "summary", sensitivity: "private", delivery: "model_summary", description: "Synthetic frame text", fields: [] }];
+  capability.entry_milestone = "extract-frame";
+  capability.completion = { required_outputs: ["frame-text"], terminal_milestones: ["extract-frame"] };
+  const leaf = new FakePlaywright(tab, { [locatorKey("text", null, "Frame result")]: [new FakeNode({ text: "Selected frame value" })] });
+  const attach = (scope, child, selector) => {
+    const original = scope.locator.bind(scope);
+    scope.locator = (value) => value === selector ? { evaluateAll: async () => true }
+      : value === "html" ? { evaluate: async () => "https://frame.example" } : original(value);
+    scope.frameLocator = (value) => { assert.equal(value, selector); return child; };
+  };
+  leaf.locator = () => ({ evaluate: async () => "https://frame.example" });
+  attach(plain.playwright, leaf, frames[1]);
+  attach(tab.playwright, plain.playwright, frames[0]);
+  const parent = await mkdtemp(join(tmpdir(), "browser-frame-execution-"));
+  const result = await executeCapability({ tab, capability, runDirectory: join(parent, "run"), runId: "frame-read" });
+  assert.equal(result.result, "passed");
+  assert.equal(result.delivered_outputs["frame-text"], "Selected frame value");
+  const changed = structuredClone(capability);
+  changed.runtime.frame_selectors = ["iframe[title='Other']"];
+  assert.notEqual(executionContractSha256(changed), executionContractSha256(capability));
+});
+
+test("a missing iframe cannot satisfy a locator-hidden terminal condition", async () => {
+  const capability = syntheticCapability();
+  capability.runtime.frame_selectors = ["iframe[title='Missing']"];
+  const tab = new FakeTab({});
+  tab.playwright.locator = () => ({ evaluateAll: async () => false });
+  capability.milestones = [{ id: "hidden", intent: "Check absence", preconditions: [], actions: [],
+    transitions: [{ when: { ...nonePostcondition(), kind: "locator_hidden", locator_candidates: [candidate("text", "Invoice")] }, terminal: true, next_milestone: null }] }];
+  capability.entry_milestone = "hidden";
+  capability.completion = { required_outputs: [], terminal_milestones: ["hidden"] };
+  const parent = await mkdtemp(join(tmpdir(), "browser-frame-missing-"));
+  await assert.rejects(() => executeCapability({ tab, capability, inputs: { query: "x", "max-results": 1 }, runDirectory: join(parent, "run"), runId: "missing-frame" }),
+    (error) => error.runSummary?.result === "failed" && error.runSummary?.terminal_milestone === null);
+});
+
 function candidate(kind, value, role = null) {
   return { kind, role, value, exact: true };
 }
