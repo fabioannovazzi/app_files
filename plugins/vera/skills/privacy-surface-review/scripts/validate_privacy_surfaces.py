@@ -672,6 +672,41 @@ def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> lis
         errors.append(f"{service_id}: schema_version must be 2")
     if payload["service_id"] != service_id:
         errors.append(f"{service_id}: manifest service_id does not match filename")
+    if payload.get("service_kind") == "local_profile":
+        if payload["external_boundaries"] != []:
+            errors.append(f"{service_id}: local profile cannot declare external routes")
+        context = payload.get("model_context", {})
+        if (
+            not isinstance(context, dict)
+            or context.get("policy") != MODEL_CONTEXT_POLICY
+        ):
+            errors.append(f"{service_id}: local profile requires model_context policy")
+        else:
+            classes = context.get("classes")
+            if not isinstance(classes, list) or not classes:
+                errors.append(
+                    f"{service_id}: local profile requires model context classes"
+                )
+            else:
+                for item in classes:
+                    if not isinstance(item, dict) or not all(
+                        isinstance(item.get(key), str) and item[key].strip()
+                        for key in ("id", "purpose", "content")
+                    ):
+                        errors.append(f"{service_id}: invalid model context class")
+                        continue
+                    profiles = item.get("runtime_profiles")
+                    if (
+                        not isinstance(profiles, list)
+                        or not profiles
+                        or any(
+                            profile not in payload["runtime_profiles"]
+                            for profile in profiles
+                        )
+                    ):
+                        errors.append(f"{service_id}: invalid model context runtime")
+    elif "service_kind" in payload or not payload["external_boundaries"]:
+        errors.append(f"{service_id}: external service requires an external route")
     if (
         not isinstance(payload["display_name"], str)
         or not payload["display_name"].strip()
