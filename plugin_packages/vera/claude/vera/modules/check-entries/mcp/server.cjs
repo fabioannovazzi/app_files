@@ -588,8 +588,8 @@ function toolUiMeta(resourceUri, toolName = null) {
     "openai/widgetAccessible": true,
   };
   if (toolName === TOOL_NAMES.renderReview) {
-    meta["openai/toolInvocation/invoking"] = "Rendering Check Entries review";
-    meta["openai/toolInvocation/invoked"] = "Rendered Check Entries review";
+    meta["openai/toolInvocation/invoking"] = "Rendering Vouching review";
+    meta["openai/toolInvocation/invoked"] = "Rendered Vouching review";
   }
   return meta;
 }
@@ -598,7 +598,7 @@ function widgetResourceMeta(uri) {
   return {
     ui: { resourceUri: uri },
     "openai/widgetDescription":
-      "Interactive Check Entries review surface for support coverage, mismatches, missing support, manual-review rows, PDF extraction, and generated artifacts.",
+      "Interactive Vouching review surface for support coverage, mismatches, missing support, manual-review rows, PDF extraction, and generated artifacts.",
     "openai/widgetPrefersBorder": false,
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
@@ -681,9 +681,9 @@ function toolDefinitions() {
   return [
     {
       name: TOOL_NAMES.validateReview,
-      title: "Validate Check Entries review payload",
+      title: "Validate Vouching review payload",
       description:
-        "Validate the Check Entries review-session payload before rendering. Call this first, then render_check_entries_review.",
+        "Validate the Vouching review-session payload before rendering. Call this first, then render_check_entries_review.",
       inputSchema,
       annotations: {
         readOnlyHint: true,
@@ -694,9 +694,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.renderReview,
-      title: "Render Check Entries review",
+      title: "Render Vouching review",
       description:
-        "Render a Check Entries review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts.",
+        "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
@@ -708,7 +708,7 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.caseContext,
-      title: "Get selected Check Entries case context",
+      title: "Get selected Vouching case context",
       description:
         "Return purpose-limited entry and support facts for up to 25 selected cases. Exact identifiers stay out by default and can be requested only when needed for the evidence judgment.",
       inputSchema: caseContextSchema,
@@ -721,9 +721,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.saveDecisions,
-      title: "Save Check Entries review decisions",
+      title: "Save Vouching review decisions",
       description:
-        "Validate Check Entries row decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
+        "Validate Vouching row decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -734,9 +734,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.applyDecisions,
-      title: "Apply Check Entries review decisions",
+      title: "Apply Vouching review decisions",
       description:
-        "Validate Check Entries review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
+        "Validate Vouching review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -753,9 +753,9 @@ function resources() {
     {
       uri: WIDGET_URI,
       name: "check_entries_review_widget",
-      title: "Check Entries review widget",
+      title: "Vouching review widget",
       description:
-        "Renders Check Entries review-session payloads with searchable rows and evidence details.",
+        "Renders Vouching review-session payloads with searchable rows and evidence details.",
       mimeType: WIDGET_MIME_TYPE,
       _meta: widgetResourceMeta(WIDGET_URI),
     },
@@ -763,7 +763,7 @@ function resources() {
 }
 
 function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown Check Entries widget resource: ${uri}`);
+  if (uri !== WIDGET_URI) throw new Error(`unknown Vouching widget resource: ${uri}`);
   return fs.readFileSync(
     path.join(PLUGIN_ROOT, "assets", "check-entries-review-widget.html"),
     "utf8",
@@ -941,7 +941,7 @@ function validateReviewPayload(inputArgs) {
     },
   };
   if (payloadBytes(payload) > MAX_PAYLOAD_BYTES) {
-    throw new Error(`Check Entries widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
+    throw new Error(`Vouching widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
   }
   return payload;
 }
@@ -1404,7 +1404,7 @@ function saveDecisionPayload(inputArgs) {
       message: persisted
         ? isSpanish(language)
           ? `Se guardaron ${uiDecisions.decision_count} decisiones de Comprobación de asientos.`
-          : `Saved ${uiDecisions.decision_count} Check Entries decisions.`
+          : `Saved ${uiDecisions.decision_count} Vouching decisions.`
         : isSpanish(language)
           ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
           : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
@@ -1484,11 +1484,11 @@ function resolveRunOutputDir(inputArgs) {
     return path.resolve(outputReference);
   }
   if (!contextValue || !path.isAbsolute(contextValue)) {
-    throw new Error("Check Entries persistence requires the current client_engagement context.");
+    throw new Error("Vouching persistence requires the current client_engagement context.");
   }
   const contextPath = path.resolve(contextValue);
   if (contextPath !== contextValue || path.basename(contextPath) !== "context.json") {
-    throw new Error("Check Entries client_engagement path is invalid.");
+    throw new Error("Vouching client_engagement path is invalid.");
   }
   const contextStat = generatedReviewPathEntryStat(contextPath);
   if (
@@ -1497,10 +1497,10 @@ function resolveRunOutputDir(inputArgs) {
     contextStat.isSymbolicLink() ||
     contextStat.nlink !== 1
   ) {
-    throw new Error("Check Entries client_engagement context is unavailable.");
+    throw new Error("Vouching client_engagement context is unavailable.");
   }
   if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
-    throw new Error("Check Entries output reference is not run-root-relative.");
+    throw new Error("Vouching output reference is not run-root-relative.");
   }
   const runRoot = path.dirname(contextPath);
   const resolved = path.isAbsolute(outputReference)
@@ -1513,7 +1513,7 @@ function resolveRunOutputDir(inputArgs) {
     relative.startsWith(`..${path.sep}`) ||
     path.isAbsolute(relative)
   ) {
-    throw new Error("Check Entries output reference leaves the customer run.");
+    throw new Error("Vouching output reference leaves the customer run.");
   }
   return resolved;
 }
@@ -1630,7 +1630,7 @@ function checkEntriesPhysicalTree(outputDir) {
         .split(path.sep)
         .join("/");
       if (observed.isSymbolicLink()) {
-        throw new Error("Check Entries physical output set contains a symlink");
+        throw new Error("Vouching physical output set contains a symlink");
       }
       if (observed.isDirectory()) {
         directories.add(relativePath);
@@ -1638,7 +1638,7 @@ function checkEntriesPhysicalTree(outputDir) {
         continue;
       }
       if (!observed.isFile() || observed.nlink !== 1) {
-        throw new Error("Check Entries physical output set contains an unsafe file");
+        throw new Error("Vouching physical output set contains an unsafe file");
       }
       files.add(relativePath);
     }
@@ -1654,19 +1654,19 @@ function checkEntriesPhysicalReviewPaths(envelope) {
       ["draft", "reviewed"].includes(decision.status),
   );
   if (successors.length > 1) {
-    throw new Error("Check Entries has multiple physical review successors");
+    throw new Error("Vouching has multiple physical review successors");
   }
   if (!successors.length) return new Set();
   const content = successors[0].content;
   if (!isPlainObject(content) || !Array.isArray(content.effects)) {
-    throw new Error("Check Entries physical review successor is malformed");
+    throw new Error("Vouching physical review successor is malformed");
   }
   const paths = new Set(["applied_decisions.json"]);
   const edits = [];
   for (const effect of content.effects) {
     if (!isPlainObject(effect) || effect.action !== "edit") continue;
     if (effect.target_artifact !== "check_results.csv") {
-      throw new Error("Check Entries physical review edit is unsupported");
+      throw new Error("Vouching physical review edit is unsupported");
     }
     const itemId = safePathSegment(effect.item_id, "item");
     const expectedRevision = `revisions/check_results__${itemId}.txt`;
@@ -1674,12 +1674,12 @@ function checkEntriesPhysicalReviewPaths(envelope) {
       `revisions/originals/check_results__${itemId}.csv`;
     if (effect.revision_artifact != null) {
       if (effect.revision_artifact !== expectedRevision) {
-        throw new Error("Check Entries physical revision path is stale");
+        throw new Error("Vouching physical revision path is stale");
       }
       paths.add(expectedRevision);
     }
     if (effect.original_artifact_backup !== expectedBackup) {
-      throw new Error("Check Entries physical backup path is stale");
+      throw new Error("Vouching physical backup path is stale");
     }
     paths.add(expectedBackup);
     edits.push(effect);
@@ -1707,16 +1707,16 @@ function validateCheckEntriesPhysicalOutputSet(outputDir, envelope) {
     !sameSet(actual.files, expectedFiles) ||
     !sameSet(actual.directories, expectedDirectories)
   ) {
-    throw new Error("Check Entries physical output set is not exact");
+    throw new Error("Vouching physical output set is not exact");
   }
 }
 
 const CHECK_ENTRIES_TRANSACTION_FAILURE =
-  "Check Entries review transaction failed safely.";
+  "Vouching review transaction failed safely.";
 const CHECK_ENTRIES_ROLLBACK_FAILURE =
-  "Check Entries review transaction could not be restored safely.";
+  "Vouching review transaction could not be restored safely.";
 const CHECK_ENTRIES_AUTHORIZATION_FAILURE =
-  "Check Entries persisted review authorization failed.";
+  "Vouching persisted review authorization failed.";
 
 function checkEntriesMappedTransactionError(error) {
   const message = error instanceof Error ? error.message : "";
@@ -1728,8 +1728,8 @@ function checkEntriesMappedTransactionError(error) {
     return null;
   }
   if (
-    message.startsWith("Check Entries assurance preflight ") ||
-    message.startsWith("Check Entries review application ")
+    message.startsWith("Vouching assurance preflight ") ||
+    message.startsWith("Vouching review application ")
   ) {
     return message;
   }
@@ -2105,7 +2105,7 @@ function canonicalRunRelativePath(value) {
     value !== value.trim() ||
     /[\u0000-\u001f\u007f]/.test(value)
   ) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   const text = value;
   if (
@@ -2118,7 +2118,7 @@ function canonicalRunRelativePath(value) {
     text.startsWith("../") ||
     path.posix.normalize(text) !== text
   ) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   return text;
 }
@@ -2142,13 +2142,13 @@ function declaredCanonicalPaths(record) {
     if (value == null) continue;
     if (Array.isArray(value)) {
       if (!canonicalRunRelativeStringArray(value)) {
-        throw new Error("Check Entries review application returned an invalid result.");
+        throw new Error("Vouching review application returned an invalid result.");
       }
       paths.push(...value);
     } else if (typeof value === "string") {
       paths.push(canonicalRunRelativePath(value));
     } else {
-      throw new Error("Check Entries review application returned an invalid result.");
+      throw new Error("Vouching review application returned an invalid result.");
     }
   }
   return paths;
@@ -2159,7 +2159,7 @@ function collectReviewApplicationPaths(appliedDecisions, finalArtifacts) {
   const finalOutputs = Array.isArray(finalArtifacts?.outputs) ? finalArtifacts.outputs : [];
   for (const output of finalOutputs) {
     if (!isPlainObject(output) || typeof output.path !== "string") {
-      throw new Error("Check Entries review application returned an invalid result.");
+      throw new Error("Vouching review application returned an invalid result.");
     }
     paths.push(output.path);
   }
@@ -2353,7 +2353,7 @@ function validateCheckEntriesOrdinaryImplementationPath(
 ) {
   const rootEntry = fs.lstatSync(rootPath);
   if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
-    throw new Error("Check Entries implementation root is unsafe");
+    throw new Error("Vouching implementation root is unsafe");
   }
   let current = rootPath;
   const parts = relativePath.split("/");
@@ -2361,16 +2361,16 @@ function validateCheckEntriesOrdinaryImplementationPath(
     current = path.join(current, part);
     const observed = fs.lstatSync(current);
     if (observed.isSymbolicLink()) {
-      throw new Error("Check Entries implementation path is unsafe");
+      throw new Error("Vouching implementation path is unsafe");
     }
     if (index < parts.length - 1) {
       if (!observed.isDirectory()) {
-        throw new Error("Check Entries implementation parent is unsafe");
+        throw new Error("Vouching implementation parent is unsafe");
       }
       continue;
     }
     if (!observed.isFile() || observed.nlink !== 1) {
-      throw new Error("Check Entries implementation file is unsafe");
+      throw new Error("Vouching implementation file is unsafe");
     }
   }
 }
@@ -2388,13 +2388,13 @@ function validateCheckEntriesImplementationContract(
     !Array.isArray(envelope.implementation_artifact_refs) ||
     !canonicalJsonEqual(envelope.implementation_artifact_refs, expectedIds)
   ) {
-    throw new Error("Check Entries implementation reference set is not exact");
+    throw new Error("Vouching implementation reference set is not exact");
   }
   const implementationReceipts = envelope.artifact_receipts.filter(
     (receipt) => isPlainObject(receipt) && receipt.role === "implementation",
   );
   if (implementationReceipts.length !== specifications.length) {
-    throw new Error("Check Entries implementation receipt set is not exact");
+    throw new Error("Vouching implementation receipt set is not exact");
   }
   if (
     !canonicalJsonEqual(
@@ -2402,7 +2402,7 @@ function validateCheckEntriesImplementationContract(
       expectedIds,
     )
   ) {
-    throw new Error("Check Entries implementation receipt order is not canonical");
+    throw new Error("Vouching implementation receipt order is not canonical");
   }
   for (const specification of specifications) {
     const receipt = artifactById.get(specification.artifact_id);
@@ -2414,7 +2414,7 @@ function validateCheckEntriesImplementationContract(
       !canonicalFieldEqual(receipt, specification, "path") ||
       !canonicalFieldEqual(receipt, specification, "media_type")
     ) {
-      throw new Error("Check Entries implementation receipt is malformed");
+      throw new Error("Vouching implementation receipt is malformed");
     }
     validateCheckEntriesOrdinaryImplementationPath(
       roots[specification.root_id],
@@ -2942,18 +2942,18 @@ function validateRunArtifactReceipt(outputDir, receipt) {
     !Number.isInteger(receipt.byte_count) ||
     receipt.byte_count < 0
   ) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   const relativePath = canonicalRunRelativePath(receipt.path);
   const absolutePath = path.join(outputDir, relativePath);
   const entryStat = pathEntryStat(absolutePath);
   if (!entryStat || !entryStat.isFile() || entryStat.isSymbolicLink() || entryStat.nlink !== 1) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   const payload = fs.readFileSync(absolutePath);
   const digest = crypto.createHash("sha256").update(payload).digest("hex");
   if (payload.length !== receipt.byte_count || digest !== receipt.sha256) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
 }
 
@@ -2964,7 +2964,7 @@ function validatePersistedAssurancePostcondition(
   canonicalOutputDir,
 ) {
   if (persistedApplied.assurance_replayed !== true) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   const envelope = readJsonFileIfPresent(
     path.join(outputDir, "assurance_envelope.json"),
@@ -2975,12 +2975,12 @@ function validatePersistedAssurancePostcondition(
     persistedFinalArtifacts?.assurance_envelope?.content_sha256 !== envelope.content_sha256 ||
     audit?.assurance_envelope?.content_sha256 !== envelope.content_sha256
   ) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   const persistedAuthority = validateCheckEntriesAssuranceAuthority(outputDir, {
     required: true,
     canonicalOutputDir,
-    failureMessage: "Check Entries review application returned an invalid result.",
+    failureMessage: "Vouching review application returned an invalid result.",
   });
   const childPreflight = preflightWorkflowSpecificReviewApplication(outputDir);
   validatePreflightAcknowledgement(childPreflight, persistedAuthority);
@@ -3024,22 +3024,22 @@ function expectedWorkflowNativeBackupPaths(expectedEffects, expectedFinalOutputP
 
 function validateFinalOutputPostcondition(outputDir, finalOutputs, allowedPaths) {
   if (!Array.isArray(finalOutputs)) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
   const actualPaths = [];
   for (const output of finalOutputs) {
     if (!isPlainObject(output)) {
-      throw new Error("Check Entries review application returned an invalid result.");
+      throw new Error("Vouching review application returned an invalid result.");
     }
     const outputPath = canonicalRunRelativePath(output.path);
     if (outputPath !== output.path) {
-      throw new Error("Check Entries review application returned an invalid result.");
+      throw new Error("Vouching review application returned an invalid result.");
     }
     actualPaths.push(outputPath);
     for (const fieldName of ["source_artifact", "revision_artifact"]) {
       const value = output[fieldName];
       if (value != null && canonicalRunRelativePath(value) !== value) {
-        throw new Error("Check Entries review application returned an invalid result.");
+        throw new Error("Vouching review application returned an invalid result.");
       }
     }
     const absolutePath = path.join(outputDir, outputPath);
@@ -3054,7 +3054,7 @@ function validateFinalOutputPostcondition(outputDir, finalOutputs, allowedPaths)
           output.size_bytes < 0 ||
           output.size_bytes !== outputStat.size))
     ) {
-      throw new Error("Check Entries review application returned an invalid result.");
+      throw new Error("Vouching review application returned an invalid result.");
     }
     if (output.artifact_receipt != null) {
       if (
@@ -3062,7 +3062,7 @@ function validateFinalOutputPostcondition(outputDir, finalOutputs, allowedPaths)
         output.artifact_receipt.root_id !== "run" ||
         output.artifact_receipt.path !== outputPath
       ) {
-        throw new Error("Check Entries review application returned an invalid result.");
+        throw new Error("Vouching review application returned an invalid result.");
       }
       validateRunArtifactReceipt(outputDir, output.artifact_receipt);
     }
@@ -3073,7 +3073,7 @@ function validateFinalOutputPostcondition(outputDir, finalOutputs, allowedPaths)
     uniqueActualPaths.length !== actualPaths.length ||
     !canonicalJsonEqual(uniqueActualPaths.sort(), uniqueAllowedPaths.sort())
   ) {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   }
 }
 
@@ -3097,7 +3097,7 @@ function validatePersistedWorkflowApplication({
   canonicalOutputDir,
 }) {
   const invalid = () => {
-    throw new Error("Check Entries review application returned an invalid result.");
+    throw new Error("Vouching review application returned an invalid result.");
   };
   const persistedApplied = readJsonFileIfPresent(appliedOutputPath);
   const persistedFinalArtifacts = readJsonFileIfPresent(finalArtifactsPath);
@@ -3850,7 +3850,7 @@ function validateAssuredReviewWrite(
       effect.target_field !== "review_notes"
     ) {
       throw new Error(
-        `assured review item does not authorize a Check Entries note edit: ${effect.item_id}`,
+        `assured review item does not authorize a Vouching note edit: ${effect.item_id}`,
       );
     }
   }
@@ -4234,7 +4234,7 @@ function applyDecisionPayload(inputArgs) {
               required: true,
               canonicalOutputDir: outputDir,
               failureMessage:
-                "Check Entries review application returned an invalid result.",
+                "Vouching review application returned an invalid result.",
             },
           );
           const childPreflight =
@@ -4415,7 +4415,7 @@ function applyDecisionPayloadWrites({
     message: persisted
       ? isSpanish(language)
         ? `Se aplicaron ${responseAppliedDecisions.decision_count} decisiones de Comprobación de asientos.`
-        : `Applied ${responseAppliedDecisions.decision_count} Check Entries decisions.`
+        : `Applied ${responseAppliedDecisions.decision_count} Vouching decisions.`
       : isSpanish(language)
         ? "Las decisiones aplicadas son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
         : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
@@ -4507,14 +4507,14 @@ function sanitizedChildFailure(completed, fallback) {
 function workflowChildMessages(phase) {
   return phase === "preflight"
     ? {
-        start: "Check Entries assurance preflight could not start.",
-        failure: "Check Entries assurance preflight failed.",
-        invalid: "Check Entries assurance preflight returned an invalid result.",
+        start: "Vouching assurance preflight could not start.",
+        failure: "Vouching assurance preflight failed.",
+        invalid: "Vouching assurance preflight returned an invalid result.",
       }
     : {
-        start: "Check Entries review application could not start.",
-        failure: "Check Entries review application failed.",
-        invalid: "Check Entries review application returned an invalid result.",
+        start: "Vouching review application could not start.",
+        failure: "Vouching review application failed.",
+        invalid: "Vouching review application returned an invalid result.",
       };
 }
 
@@ -4597,7 +4597,7 @@ function preflightClientRun(outputDir, expectedRunId) {
     !result.client_run_id.trim() ||
     result.client_run_id !== expectedRunId
   ) {
-    throw new Error("Check Entries customer-run preflight returned an invalid result.");
+    throw new Error("Vouching customer-run preflight returned an invalid result.");
   }
   return result;
 }
@@ -4624,7 +4624,7 @@ function validatePreflightAcknowledgement(acknowledgement, authority) {
     acknowledgement.material_rederived !== true
   ) {
     throw new Error(
-      "Check Entries assurance preflight returned an invalid result.",
+      "Vouching assurance preflight returned an invalid result.",
     );
   }
   const authorityFields = [
@@ -4639,7 +4639,7 @@ function validatePreflightAcknowledgement(acknowledgement, authority) {
       !canonicalJsonEqual(acknowledgement[fieldName], authority[fieldName])
     ) {
       throw new Error(
-        "Check Entries assurance preflight returned an invalid result.",
+        "Vouching assurance preflight returned an invalid result.",
       );
     }
   }
@@ -4700,7 +4700,7 @@ function callTool(name, args = {}) {
     result.review_type = issued.context.privatePayload.review_payload.review_type || null;
     result.message = isSpanish(languageFromArgs(issued.context.privatePayload))
       ? "Los datos de revisión son válidos. El payload completo permanece fuera del contexto del modelo; use la referencia opaca para abrir el widget y solicite solo los casos que necesite interpretar."
-      : "Check Entries review payload is valid. The complete payload stays out of model context; use the opaque reference to render the widget and request only cases that need interpretation.";
+      : "Vouching review payload is valid. The complete payload stays out of model context; use the opaque reference to render the widget and request only cases that need interpretation.";
     return result;
   }
   if (name === TOOL_NAMES.renderReview) {
@@ -4725,7 +4725,7 @@ function callTool(name, args = {}) {
   throw new Error(
     isSpanish(languageFromArgs(args))
       ? `herramienta desconocida del widget de Comprobación de asientos: ${name}`
-      : `unknown Check Entries widget tool: ${name}`,
+      : `unknown Vouching widget tool: ${name}`,
   );
 }
 

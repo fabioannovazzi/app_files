@@ -102,7 +102,7 @@ SPECS = (
     ),
     IconSpec(
         "check-entries",
-        "Check Entries",
+        "Vouching",
         "#355F6F",
         "#63B28D",
         "check",

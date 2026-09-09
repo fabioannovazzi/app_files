@@ -8,16 +8,16 @@ For owner-only/private packages copied from scratch space, reapply and verify
 private delivery.
 Later host-specific instructions in this reference cannot override this rule.
 
-# Check Entries Workflow Reference
+# Vouching Workflow Reference
 
 ## Deterministic Boundary
 
 Journal Sampling owns raw journal parsing, reviewed mappings, source
-qualification, and canonical monetary normalization. Check Entries validates
+qualification, and canonical monetary normalization. Vouching validates
 that sealed v2 output by replaying its complete assurance envelope, gates,
 mapping decisions, source and implementation receipts, extracts PDF/XML facts,
 performs exact comparisons, and binds results to receipts and lineage. The
-normalized bytes are captured once. Before parsing them, Check Entries closes
+normalized bytes are captured once. Before parsing them, Vouching closes
 the exact 24-file Journal Sampling/shared implementation tree and invokes the
 isolated normalization replay CLI. Raw source plus the exact retained reviewed
 recipe must reproduce the CSV byte-for-byte, the material diagnostics
@@ -195,7 +195,7 @@ closed failure. Validate, render, save, and apply all perform this replay.
 
 Supported Python launchers must be invoked with `python -I -B`. Their first
 local action snapshots the bootstrap without following aliases and validates
-the exact 26-file Check Entries/shared-assurance implementation tree before any
+the exact 26-file Vouching/shared-assurance implementation tree before any
 local implementation import. Unowned entries, bytecode caches, symlinks,
 hardlinks, FIFOs, and other special entries are rejected. The validated
 assurance package is loaded by exact path, without adding its broader vendor

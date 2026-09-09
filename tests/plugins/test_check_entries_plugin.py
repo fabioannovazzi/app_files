@@ -1985,7 +1985,7 @@ def test_plugin_inspects_entries_and_runs_deterministic_checks(
         if output["path"] == "review_notes.md"
     )
     assert review_notes_output["required_text"] == [
-        "# Check Entries Review Notes",
+        "# Vouching Review Notes",
         "## Status Counts",
         "## Review Policy",
     ]
@@ -5781,7 +5781,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     }
     assert "ui://widget/check-entries-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
-    assert "Check Entries Review" in widget_html
+    assert "Vouching Review" in widget_html
     assert "Save decisions" in widget_html
     assert "Apply decisions" in widget_html
     assert "Applica decisioni" in widget_html

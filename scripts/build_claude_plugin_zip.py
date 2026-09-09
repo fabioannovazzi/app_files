@@ -383,7 +383,7 @@ missing evidence, unresolved decisions, and applicable blockers visible in the
 artifact card and final response.""",
     "modules/check-entries/skills/check-entries/SKILL.md": """The normal Cowork completion point is delivery
 of the reviewable draft, artifact card, and source/review files in the connected
-folder. When the Check Entries review MCP is callable, pass the local
+folder. When the Vouching review MCP is callable, pass the local
 `review_payload.json` path to validation so the server loads the private file
 without placing it in model context. Begin from the returned non-identifying
 case index and opaque review reference, then request no more than 25
@@ -1088,7 +1088,7 @@ name, filename, folder, or document content.""",
         text,
         r"(?ms)^- Never request, store, or replay SPID/CIE/CNS credentials, "
         r"cookies, tokens, or\n"
-        r"  one-time codes\..*?(?=^- For Check Entries)",
+        r"  one-time codes\..*?(?=^- For Vouching)",
         "- Never request, store, or replay SPID/CIE/CNS credentials, cookies,\n"
         "  tokens, or one-time codes. For INPS work in Cowork, use only files\n"
         "  already supplied in the connected folder or registered official\n"

@@ -30,7 +30,7 @@ WORKBENCH_WIDGETS = [
     (
         "check-entries",
         "assets/check-entries-review-widget.html",
-        "Check Entries Review",
+        "Vouching Review",
     ),
     (
         "deep-research-validator",

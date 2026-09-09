@@ -3,7 +3,13 @@ name: check-entries
 description: Use when comparing qualified Journal Sampling entries with FatturaPA XML or supporting PDFs, running exact evidence checks, and producing lineage-bound review outputs.
 ---
 
-# Check Entries
+# Vouching
+
+Use the localized public name: **Vouching** (en), **Verifica documentale** (it),
+**Contrôle sur pièces** (fr), **Belegprüfung** (de), and
+**Verificación documental** (es). Explain that the workflow compares sampled
+entries with supporting documents. The internal skill identifier remains
+`check-entries`.
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 

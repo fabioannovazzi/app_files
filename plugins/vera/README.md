@@ -137,7 +137,7 @@ Folder renames and a fresh local installation recover from the portable
 manifests. Retention reporting never deletes data automatically.
 
 Journal Sampling declares its normalized population, diagnostics, and exact
-sample as artifacts. Each Check Entries support evidence batch is represented
+sample as artifacts. Each Vouching support evidence batch is represented
 by a separate run bound to those exact Journal Sampling artifacts and its own
 immutable support receipts; an intentionally separate identical selection uses
 the explicit new-run option. It checks only the bound sample, and later imports

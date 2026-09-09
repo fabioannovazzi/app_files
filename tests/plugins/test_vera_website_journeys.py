@@ -848,7 +848,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert (
         'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>' in core
     )
-    assert "Controllo scritture · FatturaPA" not in core
+    assert "Verifica documentale · FatturaPA" not in core
     for area_href in (
         "#area-clients",
         "#area-matters",
@@ -913,7 +913,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Revisione concordato preventivo",
         "Automazione web",
         "Campionamento scritture contabili",
-        "Controllo scritture",
+        "Verifica documentale",
         "Audit intelligente fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
@@ -940,7 +940,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.archiveOrganization.title": "Riordino della cartella cliente",
         "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
         "module.sampling.title": "Campionamento scritture contabili",
-        "module.entries.title": "Controllo scritture",
+        "module.entries.title": "Verifica documentale",
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
         "module.businessPlanning.title": "Preparare un business plan",
@@ -963,7 +963,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
         "bilancio-xbrl-it": "Bilancio OIC e XBRL",
-        "check-entries": "Controllo scritture",
+        "check-entries": "Verifica documentale",
         "concordato-plan-review": "Revisione concordato preventivo",
         "comunicazione-professionale": "Comunicazione professionale",
         "dati-fiscali-strutturati": "Estrazione dati fiscali",

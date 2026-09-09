@@ -683,7 +683,7 @@ validated on the basis of structural inspection alone.
   tokens, or one-time codes. For INPS work in Cowork, use only files
   already supplied in the connected folder or registered official
   portal exports. Do not access or capture a live portal session.
-- For Check Entries invoice acquisition, try a bulk FatturaPA ZIP first. If the
+- For Vouching invoice acquisition, try a bulk FatturaPA ZIP first. If the
   user chooses connection, use only a callable provider-specific connector with
   confirmed authority and read/export scope, then pass its local export to the
   module with connector provenance. Never pretend that a generic SdI connector

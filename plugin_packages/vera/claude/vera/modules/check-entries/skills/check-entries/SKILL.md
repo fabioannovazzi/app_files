@@ -5,20 +5,26 @@ description: Use when a user wants Claude to compare qualified Journal Sampling 
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive Check Entries `client_engagement` context. Inspection uses its `inspection` child and checks use its `checks` child. Do not invent a sibling output folder or run an unbound product CLI.
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive Vouching `client_engagement` context. Inspection uses its `inspection` child and checks use its `checks` child. Do not invent a sibling output folder or run an unbound product CLI.
 
 The context is a portable customer-folder run record, not a machine-local
 workspace pointer. Load it through the workflow gate so current absolute paths
 are hydrated after a folder rename. Use only its exact upstream and support
 bindings; never scan all files imported into the engagement.
 
-# Check Entries
+# Vouching
+
+Use the localized public name: **Vouching** (en), **Verifica documentale** (it),
+**Contrôle sur pièces** (fr), **Belegprüfung** (de), and
+**Verificación documental** (es). Explain that the workflow compares sampled
+entries with supporting documents. The internal skill identifier remains
+`check-entries`.
 
 Use this skill when sampled, qualified journal entries must be checked against
 supporting documents. Three artifacts define the semantic boundary from one
 finalized Journal Sampling run: `normalized_journal.csv`, its sealed
 `normalization_diagnostics.json`, and `journal_sample.csv`. Bind those three
-artifacts plus every normalization companion that Check Entries reads to replay
+artifacts plus every normalization companion that Vouching reads to replay
 assurance: `normalization_recipe.json`, `suggested_recipe.json`,
 `reviewed_decisions.json`, `assurance_gates.json`, `assurance_envelope.json`,
 and `qualification_review_payload.json`. The normalized population and
@@ -51,7 +57,7 @@ is useful; never edit plugin source or generated ZIPs during a user-data run.
 ## Core Principle
 
 Journal Sampling owns source parsing, reviewed mappings, source qualification,
-and canonical monetary preparation. Check Entries deterministically validates
+and canonical monetary preparation. Vouching deterministically validates
 that sealed boundary, extracts support facts, performs exact comparisons, binds
 receipts and lineage, and exports review artifacts. Claude owns evidence
 sufficiency and professional conclusions. Helper scripts must not make direct OpenAI API calls.
@@ -70,7 +76,7 @@ Required:
 - one explicit evidence batch: a FatturaPA ZIP/XML, a local export produced by
   an authorized accounting-system connector, or one or more supporting PDFs,
   each imported into that engagement as an immutable `support` receipt;
-- a Check Entries run prepared from only those upstream artifact references and
+- a Vouching run prepared from only those upstream artifact references and
   support `input_ids`, then moved to `running` before execution.
 
 Optional:
@@ -79,9 +85,9 @@ Optional:
 - date window in days;
 - working language and source-document language.
 
-Raw XLS/XLSX/CSV/PDF journals never enter Check Entries execution. Run Journal
+Raw XLS/XLSX/CSV/PDF journals never enter Vouching execution. Run Journal
 Sampling first. Ambiguous or inferred mappings must be reviewed and hash-bound
-there before Check Entries can run. A support import does not create a Check
+there before Vouching can run. A support import does not create a Check
 Entries context or automatically add itself to an existing run.
 
 ## First Run Workflow
@@ -104,14 +110,14 @@ Entries context or automatically add itself to an existing run.
    When the user chooses connection, use a callable provider-specific connector
    only after confirming the studio/client has authorized access. Restrict the
    connector action to read/export for the selected client and period, record
-   the connector name, and pass its local ZIP/folder result to Check Entries.
+   the connector name, and pass its local ZIP/folder result to Vouching.
    If no connector for the named accounting system is callable, say so rather
    than simulating a connection; ask which provider must be integrated or move
    to the targeted-PDF fallback at the user's direction.
    Explain that each external original is preserved. After the user authorizes
    a controlled copy, call `import_studio_client_document` with role `support`
    and the selected `engagement_id` for each file. Retain the returned immutable
-   `input_ids`; import does not prepare or start Check Entries. Do not accept
+   `input_ids`; import does not prepare or start Vouching. Do not accept
    support from another customer folder or engagement directly.
 3. Call `start_check_entries_from_sample` with the selected `client_id`,
    `engagement_id`, completed Journal Sampling `sample_run_id`, and only the
@@ -143,8 +149,8 @@ python scripts/inspect_entries.py <bound-normalized-journal> <bound-support-path
 6. Read `inspection.json` and `suggested_recipe.json`. If source qualification,
    diagnostics hash, receipt, row closure, or exact monetary closure fails, stop
    and return to Journal Sampling. Do not repair or infer preparation inside
-   Check Entries.
-7. Record only Check Entries settings such as exact amount tolerance and date
+   Vouching.
+7. Record only Vouching settings such as exact amount tolerance and date
    window in the work-folder recipe.
 8. Run deterministic checks:
 
@@ -326,7 +332,7 @@ judgment, leave the arrays empty and keep the row in manual review.
 
 The normal Cowork completion point is delivery
 of the reviewable draft, artifact card, and source/review files in the connected
-folder. When the Check Entries review MCP is callable, pass the local
+folder. When the Vouching review MCP is callable, pass the local
 `review_payload.json` path to validation so the server loads the private file
 without placing it in model context. Begin from the returned non-identifying
 case index and opaque review reference, then request no more than 25
@@ -364,11 +370,11 @@ Store both assumptions in the generated recipe and preserve them in diagnostics/
 Starter prompts:
 
 ```text
-IT: Usa Check Entries per il cliente <cliente>. Riprendi il campione Journal Sampling <campione> e controllalo contro questo lotto di supporti <percorso>. Lingua: it. Lingua documenti: auto.
-EN: Use Check Entries for <client>. Resume Journal Sampling sample <sample> and check it against this support batch <path>. Language: en. Document language: auto.
-FR: Utilise Check Entries pour <client>. Reprends l'échantillon Journal Sampling <échantillon> et contrôle-le avec ce lot de justificatifs <chemin>. Langue: fr. Langue des documents: auto.
-DE: Verwende Check Entries für <Mandant>. Öffne die Journal-Sampling-Stichprobe <Stichprobe> und prüfe sie gegen diesen Belegsatz <Pfad>. Sprache: de. Dokumentsprache: auto.
-ES: Usa Check Entries para <cliente>. Reanuda la muestra de Journal Sampling <muestra> y compruébala con este lote de soportes <ruta>. Idioma: es. Idioma de los documentos: auto.
+IT: Usa Verifica documentale per il cliente <cliente>. Riprendi il campione Journal Sampling <campione> e controllalo contro questo lotto di supporti <percorso>. Lingua: it. Lingua documenti: auto.
+EN: Use Vouching for <client>. Resume Journal Sampling sample <sample> and check it against this support batch <path>. Language: en. Document language: auto.
+FR: Utilise Contrôle sur pièces pour <client>. Reprends l'échantillon Journal Sampling <échantillon> et contrôle-le avec ce lot de justificatifs <chemin>. Langue: fr. Langue des documents: auto.
+DE: Verwende Belegprüfung für <Mandant>. Öffne die Journal-Sampling-Stichprobe <Stichprobe> und prüfe sie gegen diesen Belegsatz <Pfad>. Sprache: de. Dokumentsprache: auto.
+ES: Usa Verificación documental para <cliente>. Reanuda la muestra de Journal Sampling <muestra> y compruébala con este lote de soportes <ruta>. Idioma: es. Idioma de los documentos: auto.
 ```
 
 ## Failure Modes

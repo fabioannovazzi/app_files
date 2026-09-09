@@ -354,11 +354,11 @@ def test_function_page_menus_use_literal_section_and_destination_labels() -> Non
             "Muestreo del diario",
         ),
         ("journal-sampling", "nav.next"): (
-            "Controllo scritture",
-            "Check entries",
-            "Contrôle des écritures",
-            "Buchungen prüfen",
-            "Comprobar asientos",
+            "Verifica documentale",
+            "Vouching",
+            "Contrôle sur pièces",
+            "Belegprüfung",
+            "Verificación documental",
         ),
         ("journal-bank-reconciliation", "nav.next"): (
             "Partite aperte",

@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "workstream": "check-entries",
-  "display_name": "Check Entries",
+  "display_name": "Vouching",
   "role": "workflow",
   "governed_paths": [
     "skills",
@@ -127,6 +127,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5b6c3d5659c5434bc2f2d61b16f18a15de1035436ed1f067ca4f8eca18977f4c"
+    "source_fingerprint": "46c45dc8331cd3410f5a0e6012a3a6034d273775b5c8213011cd005f3d82a48d"
   }
 }

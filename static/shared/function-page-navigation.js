@@ -188,11 +188,11 @@
       es: "Reorganizar la carpeta del cliente",
     },
     "check-entries": {
-      it: "Verifica delle scritture con i documenti di supporto",
-      en: "Check entries against supporting documents",
-      fr: "Vérifier les écritures avec les justificatifs",
-      de: "Buchungen mit Belegen prüfen",
-      es: "Comprobar los asientos con los documentos justificativos",
+      it: "Verifica documentale",
+      en: "Vouching",
+      fr: "Contrôle sur pièces",
+      de: "Belegprüfung",
+      es: "Verificación documental",
     },
     "concordato-plan-review": {
       it: "Revisione del concordato preventivo",
