@@ -7,6 +7,8 @@
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
       "observed_at": "2026-09-09",
       "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa13a915590819182fffacc0937af49",
+      "review_fingerprint_submission": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa13f2020448191b0224847950738b6",
+      "package_review_note": "The replacement archive changes only privacy/hosted-services/plugin-update-check.json to cover the published version notice; executable files and the Cowork archive are unchanged.",
       "basis": "OpenAI Platform directly showed Clara 0.1.189 Published after all 15 skill checks passed and Publish Version completed on 2026-09-09."
     },
     "vera": {
