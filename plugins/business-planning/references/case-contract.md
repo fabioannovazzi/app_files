@@ -12,7 +12,7 @@ proof that any earlier client report executed the registered workflow.
 
 ## Case fields
 
-The base fields below are required; `assessment` is additionally required for readiness, and `commercial` and `presentation` are optional. Unknown top-level fields are rejected:
+The base fields below are required; `assessment`, `cycle` and `financing` are additionally required for readiness, and `commercial` and `presentation` are optional. Unknown top-level fields are rejected:
 
 | Field | Contract |
 | --- | --- |
@@ -39,7 +39,7 @@ Each source has a unique `id`, relative `path` below `--source-root`, actual
 `sha256`, explicit `version`, `role`, `review_status`, `intended_audience` list,
 and `confidentiality={classification, allowed_audiences}`. Roles are
 `client_document`, `professional_review`, `financial_model`, `external_evidence`,
-`model_hypothesis`. Review statuses are `reviewed`, `confirmed`, `unverified`.
+`model_hypothesis`, `user_statement`, `prior_plan`. Review statuses are `reviewed`, `confirmed`, `unverified`.
 Every selected file is rehashed at execution and again before report compilation.
 Vera additionally checks every input against exact Studio Archive receipts;
 Clara checks the selected case-workspace boundary.
@@ -280,3 +280,79 @@ References are validated, not fetched or substantively verified by the renderer.
 Tables and action criteria cannot bypass the narrative validation contract.
 The readable sources appendix is printed; the full technical register remains
 available in HTML/JSON/CSV. Presentation participates in canonical replay.
+
+## Planning cycle (required for readiness)
+
+`cycle` has exactly:
+
+- `id`: a new, nonempty revision identifier, unique in the selected history.
+- `parent_source_id`: null initially, otherwise the ID of exactly one selected
+  `prior_plan` source containing the preceding `business_plan.json` bytes.
+- `question`: the current business question in ordinary language.
+- `trigger_ids`: a nonempty list of current evidence/assumption IDs establishing
+  the new question or evidence; a labelled hypothesis is allowed.
+- `analysis_ids`, `decision_ids`, `next_test_ids`, `reopen_when_ids`: nonempty
+  lists of narrative IDs. Unknowns and proposed tests must be explicit.
+- `reassessed_ids`: current narrative IDs actually reconsidered by the model in
+  this round. This is not a professional approval or evidence that a test occurred.
+
+The preceding report is a registered local input subject to the same source hash,
+engagement/workspace and audience rules. It must identify the same `case_id` and
+have consistent snapshot/content hashes. Its embedded source restrictions are
+checked for the new audience too; relabelling the parent as public does not release
+its contents. A parent snapshot establishes recorded state, not the truth of its
+sources, authorship, chronological uniqueness or human approval. Earlier sources
+are not refetched merely to resume. Current selected inputs are independently
+rehashed and current calculations are replayed as usual.
+
+The compiled `planning_cycle` contains the parent hash, prior cycle IDs/questions,
+exact before/after changes for authored business inputs, and withheld narrative
+IDs. If the planning basis differs, every carried narrative must be recorded as
+reassessed; otherwise it is withheld. Code does not decide which new competitor
+fact is relevant. If a changed case reuses its previous professional review, the
+report remains provisional. Fresh approvals must be actual, never fabricated.
+
+Save successive outputs in fresh directories. Clara accepts
+`<workspace>/business-plan/<cycle-id>` as well as the original root folder; Vera
+uses each registered run's output directory. Deliberate branches may share a
+parent; the host resolves which branch the user intends to continue. Previous
+outputs are never overwritten. `planning_cycle.json` is an internal workpaper;
+the current report includes the question, learning, decision and next test.
+
+## Financing mandate (required for readiness)
+
+`financing` has exactly `purpose` and `assessments`. Purpose is `internal` (no
+requests), `financing` (one or more assessments) or `undecided` (partial, with no
+invented requests). It is independent of the source-permission `audience`.
+
+Each assessment has exactly:
+
+- `id`: unique assessment ID; `instrument`: `bank_debt` or `venture_equity`.
+- `provider`: actual/proposed financier name, or null if not selected. Naming one
+  does not verify its requirements; the narrative must provide evidence or gaps.
+- `request_ids`, `rationale_ids`: nonempty narrative ID lists explaining the
+  request, terms, funding purpose and conclusion, with existing typed numbers.
+- `conclusion`: model-authored `explore`, `prepare_request`, `revise_request` or
+  `not_suitable`. No arithmetic threshold selects this value.
+- `sections`: bank keys `business_credibility`, `use_and_structure`, `repayment`,
+  `downside`, `borrower`, `security`, `requirements`; equity keys `market`,
+  `advantage`, `traction`, `team`, `milestones`, `runway`, `returns`, `requirements`.
+  Each maps to nonempty narrative ID lists. An explicit unknown is an answer;
+  code checks reference coverage, the model reviews substantive adequacy.
+- `scenario_ids`: unique IDs of the financial scenarios used in this assessment.
+- `coverage_end_period`: proposed borrowing's final repayment month or equity
+  funding milestone/next funding month (`YYYY-MM`), or null when unknown.
+
+The compiler binds available monthly cash, funding gap and, for debt, debt service,
+CFADS and DSCR records for the selected scenarios through that endpoint. Unknown
+terms, absent cash inputs or an endpoint beyond the modeled horizon leave coverage
+incomplete. Null DSCR when no debt service is due is not itself a failure. The
+model must reconcile the actual request and obligations to the schedule; dates
+and source labels alone do not establish a valid lending/investment assessment.
+
+`financing_assessments` records these calculation IDs, coverage, unresolved
+matters and whether the narrative is available. Missing narrative is withheld;
+preparing a request cannot be presented as complete with missing evidence/review.
+A reasoned refusal or exploratory finding can remain visible provisionally.
+The HTML/PDF shows each assessment with the same underlying business report;
+`financing_assessments.json` is an internal workpaper. No submission occurs.

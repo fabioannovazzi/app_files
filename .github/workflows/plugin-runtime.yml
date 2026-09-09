@@ -10,6 +10,32 @@ permissions:
   contents: read
 
 jobs:
+  business-planning-decisions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install declared planning and validation dependencies
+        run: python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit -r plugins/business-planning/requirements.txt
+      - name: Exercise planning revisions, financing and registered entry points
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_business_planning.py
+          tests/plugins/test_business_planning_shared.py
+          tests/plugins/test_business_planning_decision.py
+          tests/plugins/test_business_planning_presentation.py
+          tests/plugins/test_business_planning_loop.py
+          --cov --cov-config=tests/plugin_business_planning.coveragerc
+      - name: Check planning code quality
+        run: |
+          python -m black --check plugins/business-planning/scripts tests/plugins/test_business_planning_loop.py
+          python -m isort --check-only plugins/business-planning/scripts tests/plugins/test_business_planning_loop.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/business-planning/scripts/planning_cycle.py plugins/business-planning/scripts/planning_financing.py plugins/business-planning/scripts/planning_decision_report.py
+          python -m bandit -r plugins/business-planning/scripts -ll
+
   adeguati-assetti-integrity:
     runs-on: ubuntu-latest
     timeout-minutes: 10

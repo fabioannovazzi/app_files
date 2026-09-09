@@ -165,9 +165,9 @@
     },
     "business-planning": {
       "display_name": "Prepare a business plan",
-      "short_description": "Assess the business and prepare one complete plan",
-      "default_prompt": "Use $business-planning to prepare a business plan from these files. Assess whether the business makes sense and recommend what to do next.",
-      "instructions": "Prepare one business plan covering the proposition, customers and demand, operations, economics, cash needs, options, recommendation and next actions. Adapt the analysis to the business question and available evidence. Use the same shared workflow, case, financial model and report in Vera and Clara; do not assign product-specific angles or request a contribution from the other product."
+      "short_description": "Develop and revise a business plan and assess financing",
+      "default_prompt": "Use $business-planning to assess this business, test its assumptions and develop a plan we can revise as evidence changes. Assess the proposed financing if relevant.",
+      "instructions": "Develop a business plan through repeated evidence-led decisions about customers, pricing, competitors, operations, economics and cash. Resume the same case on follow-ups, preserve revisions, explain changed assumptions and consequences, and record the next test. For financing, assess bank repayment capacity and proposed loan terms or venture market potential, milestones, runway and investor return using the same business evidence and model. Keep missing evidence explicit; do not predict approval. Vera and Clara use the identical shared workflow and report."
     },
     "variance-analysis": {
       "display_name": "Analisi scostamenti",

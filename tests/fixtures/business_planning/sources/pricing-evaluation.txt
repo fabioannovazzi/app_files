@@ -1,0 +1,37 @@
+SYNTHETIC DEVELOPER EVALUATION. No real company, customer research, lender offer,
+professional review, investor interest or market validation is represented here.
+
+A hypothetical refill subscription is evaluated monthly from January through
+March 2027. Opening cash and equity are EUR 50; all other opening balances are
+zero. Receivables, inventory, payables, other balances, depreciation, taxes,
+capex and dividends are zero in this deliberately simplified exercise. Customers
+pay and variable fulfilment costs are paid in the same month. These simplifications
+are not a template for a live business plan.
+
+Initial round: 100 subscriptions monthly at EUR 10 net price, EUR 6 variable
+fulfilment cost per subscription and EUR 500 fixed operating costs per month.
+The initial demand level is an untested hypothesis. A proposed EUR 200 loan is
+drawn in January and repaid as EUR 100 in February and EUR 100 in March. Cash
+interest is EUR 10 in each month. No fees or collateral are assumed in the example;
+a live case would need actual terms and borrower evidence.
+
+Price round: a fictional pilot supplies evidence of acceptance at EUR 12 among
+its pilot segment. The conditional base case retains 100 subscriptions monthly;
+acceptance outside that segment remains unproven. Costs and proposed debt terms
+are unchanged. The task is to investigate external validity, not assume a price
+change has no volume effect.
+
+Competitor round: a hypothetical rival offer motivates a scenario with only
+80 retained subscriptions per month at EUR 12. The rival response and customer
+loss are explicitly a hypothesis to test, not observed market facts. Variable
+cost remains EUR 6 per subscription, fixed cost EUR 500, and debt terms unchanged.
+
+Equity round: keep the competitor-round operating assumptions but replace the
+proposed loan with EUR 200 equity in January; no new debt, interest or repayment.
+No venture-scale market, defensible advantage, valuation, ownership offer, exit
+multiple or return is established. Equity can fund this limited cash horizon
+without proving profitability or suitability for a VC.
+
+Expected closing cash derived independently for regression review: initial
+EUR -280; price EUR 320; competitor EUR -40; equity EUR 190. Monthly operating
+results respectively EUR -100, EUR 100, EUR -20 and EUR -20.
