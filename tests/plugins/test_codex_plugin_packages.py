@@ -2691,6 +2691,19 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "working directory" in normalized_skill_text
                 continue
             for snippet in required_snippets:
+                if (
+                    plugin_root.name == "browser-automation"
+                    and snippet == "generated ZIPs"
+                ):
+                    assert (
+                        "`development_request.py` may export the exact"
+                        in normalized_skill_text
+                    )
+                    assert (
+                        "does not permit zipping arbitrary run folders"
+                        in normalized_skill_text
+                    )
+                    continue
                 assert (
                     snippet in skill_text or snippet in normalized_skill_text
                 ), f"{plugin_root.name}: {skill_file}"
