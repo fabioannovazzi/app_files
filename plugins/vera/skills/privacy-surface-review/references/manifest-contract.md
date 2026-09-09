@@ -56,13 +56,6 @@ only the applicable profile IDs on that boundary.
 
 ## Shared-service fields
 
-A shared local profile service sets `service_kind: local_profile`, has no
-`external_boundaries`, and includes `model_context` with the same policy and
-class shape as a workstream. This distinguishes local persistence supporting
-the host model from an independent network service; it is not a local-only
-model-processing guarantee. Existing external services still declare at least
-one external boundary.
-
 Shared-service manifests use schema version `2` and record `service_id`,
 `display_name`, `governed_paths`, applicable `runtime_profiles`, every
 `external_boundary`, concrete

@@ -157,18 +157,8 @@ and professional judgment decide semantic necessity.
 
 ## Client-first workflow in Codex
 
-Approved document-convention teaching within `quesito-legale-fiscale` is also a
-studio-wide exception: follow that skill's `references/document-style.md` when
-the user wants Vera to learn, reuse or revise how they write a professional
-document, including accertamenti responses. Teach only from selected examples
-in the exact personal/studio workspace outside plugin files. This exception is
-limited to style teaching; new case drafting and validation still use separate
-Studio Archive runs. Do not infer substantive positions from writing style or
-claim an operational accertamenti pipeline. The `document-personalization`
-shared service records this local storage and model-context boundary.
-
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. Four studio-wide workflows are
+customer folder is its durable source of truth. Three studio-wide workflows are
 explicit exceptions. The pre-client `bandi-agevolazioni` opportunity radar
 cannot belong to one customer folder. `comunicazione-professionale` learns the
 studio's approved editorial voice and output formats across communications,
