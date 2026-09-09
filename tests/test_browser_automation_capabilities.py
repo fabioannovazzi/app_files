@@ -219,6 +219,29 @@ def test_contract_requires_extension_model_and_playwright_runtime_split() -> Non
     assert "runtime.semantic_driver must be 'model'" in errors
 
 
+@pytest.mark.parametrize(
+    "frames", [None, "iframe", [""], ["{{frame}}"], ["iframe"] * 6]
+)
+def test_contract_rejects_unbounded_or_dynamic_frame_paths(frames: object) -> None:
+    contract = _load_contract()
+    payload = _capability("gmail-search-export")
+    payload["runtime"]["frame_selectors"] = frames
+
+    errors = contract.validate_capability(payload)
+
+    assert any("frame_selectors" in error for error in errors)
+
+
+def test_contract_accepts_fixed_selected_frame_path() -> None:
+    contract = _load_contract()
+    payload = _capability("gmail-search-export")
+    payload["runtime"]["frame_selectors"] = ["iframe[title='Accounting']"]
+
+    errors = contract.validate_capability(payload)
+
+    assert errors == []
+
+
 def test_contract_requires_semantic_locator_before_css_fallback() -> None:
     contract = _load_contract()
     payload = _capability("gmail-search-export")
@@ -625,7 +648,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.5.15"
+    assert manifest["version"] == "0.5.16"
     assert {
         "chrome-extension",
         "playwright",

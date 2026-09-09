@@ -160,6 +160,18 @@ authorization.
 
 ## Choose the operation
 
+### Prepare an ECONS invoice review automatically
+
+For automatic review preparation in TeamSystem Studio ECONS, read
+`references/econs-review.md` and use `scripts/econs_review.mjs`. Reuse the
+saved local phase profile, or finish only the missing screen bindings from
+the supplied teaching evidence. Vera owns the Playwright setup. The collector
+visits eligible non-excluded companies, acquires invoice lines and existing
+mappings, checks identities and population counts, and saves the existing batch
+review after each invoice. This route has no posting or account-editing action.
+Complete the model-led review from those acquired values; do not endorse a
+mapping merely because it exists. Synthetic tests are not live ECONS validation.
+
 ### Discover or change a process
 
 Use the discovery playbook. The operator explains professional work in ordinary

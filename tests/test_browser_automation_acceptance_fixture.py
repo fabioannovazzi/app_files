@@ -1,13 +1,29 @@
 from __future__ import annotations
 
 import json
+import runpy
+import socket
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENT = ROOT / "plugins" / "browser-automation"
 SCRIPT = COMPONENT / "scripts" / "acceptance_fixture.py"
+
+
+def test_acceptance_fixture_self_check_releases_its_loopback_socket() -> None:
+    run_self_check = runpy.run_path(str(SCRIPT))["run_self_check"]
+
+    result = run_self_check()
+
+    assert result["status"] == "ready"
+    address = urlsplit(result["origin"])
+    with pytest.raises(OSError):
+        socket.create_connection((address.hostname, address.port), timeout=0.2)
 
 
 def test_acceptance_fixture_cli_binds_probes_and_closes() -> None:

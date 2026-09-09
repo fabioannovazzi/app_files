@@ -7,6 +7,7 @@ on:
       - 'tests/test_browser*.mjs'
       - 'tests/test_browser_batch_review.py'
       - 'tests/test_browser_development_request.py'
+      - 'tests/test_browser_teaching_checkpoint.py'
       - '.github/workflows/browser-download.yml'
   workflow_dispatch:
 
@@ -30,4 +31,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install pytest
-      - run: python -m pytest --noconftest -q tests/test_browser_batch_review.py tests/test_browser_development_request.py -o addopts=""
+      - run: python -m pytest --noconftest -q tests/test_browser_batch_review.py tests/test_browser_development_request.py tests/test_browser_teaching_checkpoint.py -o addopts=""
+      - name: Check automatic ECONS review acquisition
+        shell: bash
+        run: ECONS_TEST_PYTHON="$(python -c 'import sys; print(sys.executable)')" node --test tests/test_browser_econs_review.mjs
