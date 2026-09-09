@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {"prompt": "Aggiorna il budget di tesoreria con questi saldi, partite aperte, incassi e impegni previsti.", "expected_workflow": "treasury-forecast", "reason": "Rolling cash forecast with supplied structured evidence."},
+    {"prompt": "Quali pagamenti rischiano di scoprirsi se questo incasso slitta? Ho le sei tabelle e la previsione accettata.", "expected_workflow": "treasury-forecast", "reason": "Date alternative on an evidenced forecast."},
+    {"prompt": "Fai un budget di tesoreria: ho soltanto tre fatture PDF.", "expected_workflow": "treasury-forecast", "expected_status": "blocked", "reason": "Supported purpose, missing actual bank and forecast input populations."},
+    {"prompt": "Scarica le fatture dall'Agenzia delle Entrate.", "expected_workflow": "browser-automation", "reason": "Acquisition is a separate capability and treasury must not claim to download."},
+    {"prompt": "Prepara un business plan per una nuova attività.", "expected_workflow": "business-planning", "reason": "A business plan is outside this bounded treasury process."},
+    {"prompt": "Verifica se le partite al cut-off sono davvero ancora aperte.", "expected_workflow": "open-item-reconciliation", "reason": "Tests existing outstanding balances rather than forecasting future cash."}
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "plugin": "treasury-forecast",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "treasury-1",
+      "prompt": "Aggiorna il budget di tesoreria con questi saldi, partite aperte, incassi e impegni previsti.",
+      "required_signals": [
+        "tesoreria"
+      ]
+    },
+    {
+      "id": "treasury-2",
+      "prompt": "Quali pagamenti rischiano di scoprirsi se questo incasso slitta? Ho le sei tabelle e la previsione accettata.",
+      "required_signals": [
+        "previsione"
+      ]
+    },
+    {
+      "id": "treasury-3",
+      "prompt": "Fai un budget di tesoreria: ho soltanto tre fatture PDF.",
+      "required_signals": [
+        "tesoreria"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "treasury-4",
+      "prompt": "Scarica le fatture dall'Agenzia delle Entrate."
+    },
+    {
+      "id": "treasury-5",
+      "prompt": "Prepara un business plan per una nuova attività."
+    },
+    {
+      "id": "treasury-6",
+      "prompt": "Verifica se le partite al cut-off sono davvero ancora aperte."
+    }
+  ]
+}

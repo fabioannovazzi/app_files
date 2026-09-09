@@ -170,6 +170,11 @@
       "module_roots": [
         "vera_assurance"
       ]
+    },
+    "treasury-forecast": {
+      "module_roots": [
+        "vera_assurance"
+      ]
     }
   }
 }

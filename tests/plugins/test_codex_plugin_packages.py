@@ -15,6 +15,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
     "archive-organization",
@@ -72,6 +73,7 @@ VERA_DISCOVERY_TERMS = (
     "circolari clienti",
 )
 VERA_PUBLIC_PAGE_PATHS = (
+    Path("static/shared/treasury-forecast/index.html"),
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
@@ -1491,6 +1493,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "treasury-forecast",
         "aml-review",
         "adeguati-assetti",
         "bandi-agevolazioni",
@@ -3635,8 +3638,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 31
-    assert core.count('class="module-row"') == 31
+    assert core.count(" data-module-link") == 32
+    assert core.count('class="module-row"') == 32
     assert core.count('data-jurisdiction-item="it"') == 9
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
@@ -5327,6 +5330,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "management-control-pack": (
             "https://mparanza.com/static/shared/management-control-pack/index.html?lang=it"
         ),
+        "treasury-forecast": "https://mparanza.com/static/shared/treasury-forecast/index.html",
         "centrale-rischi-review": (
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),

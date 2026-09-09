@@ -608,6 +608,36 @@ def _contains_all(text: str, terms: tuple[str, ...]) -> bool:
     return all(term.lower() in lowered for term in terms)
 
 
+def _has_native_http_review(plugin_dir: Path, skill_text: str) -> bool:
+    """Recognize an explicit local-server contract; runtime tests prove writeback."""
+    path = plugin_dir / "assets" / "local-review-contract.json"
+    if not path.is_file():
+        return False
+    try:
+        contract = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if not isinstance(contract, dict) or contract.get("schema_version") != 1:
+        return False
+    if contract.get("transport") != "loopback_http":
+        return False
+    for key in ("entrypoint", "server", "persistence", "review_asset"):
+        relative = contract.get(key)
+        if not isinstance(relative, str) or Path(relative).is_absolute():
+            return False
+        source = plugin_dir / relative
+        if ".." in Path(relative).parts or not source.is_file() or source.is_symlink():
+            return False
+    state = contract.get("state_artifact")
+    return (
+        isinstance(state, str)
+        and Path(state).name == state
+        and state in skill_text
+        and contract["entrypoint"] in skill_text
+        and "final_artifacts.json" in skill_text
+    )
+
+
 def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
     skill_files, skill_text = _combined_skill_text(plugin_dir)
     lowered_skill_text = skill_text.lower()
@@ -616,6 +646,7 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
     asset_files = _asset_files(plugin_dir)
     asset_text = "\n".join(_asset_texts(plugin_dir))
     lowered_asset_text = asset_text.lower()
+    native_http_review = _has_native_http_review(plugin_dir, skill_text)
 
     report = PluginInteractionReport(plugin=plugin_dir.name, skill_files=skill_files)
     report.mcp_review_widget = (
@@ -640,6 +671,7 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
         )
         or "ui_decisions.json" in lowered_skill_text
         or native_saved_review
+        or native_http_review
     )
     report.generated_workbench_asset = (
         plugin_dir / "assets" / "review-workbench-adapter.json"
@@ -647,7 +679,7 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
     report.local_html_review_asset = "review-widget" in lowered_asset_text or any(
         "review" in path.name.lower() for path in asset_files
     )
-    report.has_local_browser_writeback = (
+    report.has_local_browser_writeback = native_http_review or (
         report.generated_workbench_asset
         and (plugin_dir / "mcp" / "server.cjs").exists()
         and (
@@ -667,12 +699,14 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
     report.has_approval_boundary_language = _contains_all(
         skill_text, APPROVAL_BOUNDARY_TERMS
     )
-    report.has_decision_contract_language = _contains_all(
-        skill_text, DECISION_CONTRACT_TERMS
-    ) or (
-        native_saved_review
-        and _contains_all(
-            skill_text, ("applied_decisions.json", "final_artifacts.json")
+    report.has_decision_contract_language = (
+        _contains_all(skill_text, DECISION_CONTRACT_TERMS)
+        or native_http_review
+        or (
+            native_saved_review
+            and _contains_all(
+                skill_text, ("applied_decisions.json", "final_artifacts.json")
+            )
         )
     )
 
@@ -715,7 +749,11 @@ def _audit_plugin(plugin_dir: Path) -> PluginInteractionReport:
             )
         )
 
-    if report.local_html_review_asset and not report.mcp_review_widget:
+    if (
+        report.local_html_review_asset
+        and not report.mcp_review_widget
+        and not native_http_review
+    ):
         report.issues.append(
             InteractionIssue(
                 severity="medium",

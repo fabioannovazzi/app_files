@@ -220,3 +220,24 @@ jobs:
           python -m isort --check-only plugins/bandi-agevolazioni/scripts/opportunity_radar.py tests/plugins/test_bandi_institutional_discovery.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/bandi-agevolazioni/scripts/opportunity_radar.py
           python -m bandit -q plugins/bandi-agevolazioni/scripts/opportunity_radar.py
+
+  treasury-forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/treasury-forecast/requirements.txt
+      - name: Verify successive forecasts, archive intake and saved review
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_treasury_forecast.py tests/plugins/test_treasury_delivery.py
+          --cov=plugins/treasury-forecast/scripts --cov-report=term-missing --cov-fail-under=80
+      - name: Check treasury code quality
+        run: |
+          python -m black --check plugins/treasury-forecast/scripts tests/plugins/test_treasury_forecast.py tests/plugins/test_treasury_delivery.py
+          python -m isort --check-only plugins/treasury-forecast/scripts tests/plugins/test_treasury_forecast.py tests/plugins/test_treasury_delivery.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/treasury-forecast/scripts
+          python -m bandit -q -r plugins/treasury-forecast/scripts
