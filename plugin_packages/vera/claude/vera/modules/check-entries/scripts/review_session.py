@@ -832,7 +832,7 @@ def _output_records(
                 ]
                 if audit.get("language") == "es"
                 else [
-                    "# Check Entries Review Notes",
+                    "# Vouching Review Notes",
                     "## Status Counts",
                     "## Review Policy",
                 ]
@@ -1129,7 +1129,13 @@ def write_review_session_artifacts(
         output_dir,
         run_id=run_id,
         title=(
-            "Comprobación de asientos" if _is_spanish(language) else "Check Entries"
+            {
+                "it": "Verifica documentale",
+                "en": "Vouching",
+                "fr": "Contrôle sur pièces",
+                "de": "Belegprüfung",
+                "es": "Verificación documental",
+            }.get(language, "Vouching")
         ),
         validate_tool="validate_check_entries_review",
         render_tool="render_check_entries_review",

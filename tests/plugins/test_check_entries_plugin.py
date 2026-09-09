@@ -1985,7 +1985,7 @@ def test_plugin_inspects_entries_and_runs_deterministic_checks(
         if output["path"] == "review_notes.md"
     )
     assert review_notes_output["required_text"] == [
-        "# Check Entries Review Notes",
+        "# Vouching Review Notes",
         "## Status Counts",
         "## Review Policy",
     ]
@@ -3021,7 +3021,7 @@ def test_mcp_replay_rejects_changed_transitive_implementation(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries persisted review authorization failed."
+        == "Vouching persisted review authorization failed."
     )
 
 
@@ -3114,7 +3114,7 @@ def test_review_preflight_rejects_unrelated_check_result_mutation(
     assert result["isError"] is True
     assert (
         result["structuredContent"]["error"]
-        == "Check Entries persisted review authorization failed."
+        == "Vouching persisted review authorization failed."
     )
     assert row["amount_abs"] == "999"
     assert row["review_notes"] == original_note
@@ -5781,7 +5781,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     }
     assert "ui://widget/check-entries-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
-    assert "Check Entries Review" in widget_html
+    assert "Vouching Review" in widget_html
     assert "Save decisions" in widget_html
     assert "Apply decisions" in widget_html
     assert "Applica decisioni" in widget_html
@@ -5935,7 +5935,7 @@ def test_check_entries_mcp_server_rejects_invalid_review_decisions(
     assert result["isError"] is True
     assert (
         result["structuredContent"]["error"]
-        == "Check Entries review transaction failed safely."
+        == "Vouching review transaction failed safely."
     )
     assert not (output_dir / "ui_decisions.json").exists()
 
@@ -6128,7 +6128,7 @@ def test_check_entries_mcp_rejects_invalid_run_intake_before_any_write(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries persisted review authorization failed."
+        == "Vouching persisted review authorization failed."
     )
     assert ui_path.read_bytes() == before_ui
     assert final_path.read_bytes() == before_final
@@ -6977,7 +6977,7 @@ def test_mcp_apply_python_failure_rolls_back_exact_output_tree(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries assurance preflight failed."
+        == "Vouching assurance preflight failed."
     )
     assert _tree_snapshot(output_dir) == prior
 
@@ -7408,7 +7408,7 @@ def test_mcp_review_transaction_restores_trusted_bytes_and_modes_after_commit_fa
     assert marker.read_text(encoding="utf-8") == "commit fault triggered\n"
     assert response["isError"] is True
     error = response["structuredContent"]["error"]
-    assert error == "Check Entries review transaction failed safely."
+    assert error == "Vouching review transaction failed safely."
     assert len(error) <= 240
     assert "\n" not in error
     assert "/" not in error
@@ -7502,7 +7502,7 @@ def test_mcp_review_transaction_bounds_fail_before_canonical_mutation(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries review transaction failed safely."
+        == "Vouching review transaction failed safely."
     )
     assert not marker.exists()
     assert (
@@ -7887,7 +7887,7 @@ def test_mcp_dangling_canonical_output_swap_restores_exact_prior_tree(
     # Assert
     assert response["isError"] is True
     assert response["structuredContent"]["error"] == (
-        "Check Entries review application failed."
+        "Vouching review application failed."
     )
     assert "rollback was incomplete" not in response["structuredContent"]["error"]
     assert not output_dir.is_symlink()
@@ -8079,7 +8079,7 @@ def test_mcp_apply_rejects_fake_ready_child_without_mutation(
     # Assert
     assert response["isError"] is True
     assert response["structuredContent"]["error"] == (
-        "Check Entries assurance preflight returned an invalid result."
+        "Vouching assurance preflight returned an invalid result."
     )
     assert _transaction_tree_state(output_dir) == before
     assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
@@ -8145,7 +8145,7 @@ def test_mcp_preflight_child_failure_is_bounded_and_discloses_no_paths(
     # Assert
     assert response["isError"] is True
     error = response["structuredContent"]["error"]
-    assert error == "Check Entries assurance preflight failed."
+    assert error == "Vouching assurance preflight failed."
     assert len(error) <= 240
     assert error.count("failed") == 1
     assert "\n" not in error
@@ -8226,7 +8226,7 @@ def test_mcp_apply_child_failure_is_bounded_and_rolls_back_link_swap(
     # Assert
     assert response["isError"] is True
     error = response["structuredContent"]["error"]
-    assert error == "Check Entries review application failed."
+    assert error == "Vouching review application failed."
     assert len(error) <= 240
     assert error.count("failed") == 1
     assert "\n" not in error
@@ -8290,7 +8290,7 @@ def test_mcp_preflight_child_start_failure_is_fixed_and_rolls_back(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries assurance preflight could not start."
+        == "Vouching assurance preflight could not start."
     )
     assert blocked_executable.as_posix() not in response["structuredContent"]["error"]
     assert _tree_snapshot(output_dir) == before
@@ -8345,7 +8345,7 @@ def test_mcp_apply_child_start_failure_is_fixed_and_rolls_back(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries review application could not start."
+        == "Vouching review application could not start."
     )
     assert wrapper.as_posix() not in response["structuredContent"]["error"]
     assert _tree_snapshot(output_dir) == before
@@ -8357,11 +8357,11 @@ def test_mcp_apply_child_start_failure_is_fixed_and_rolls_back(
     [
         (
             "preflight",
-            "Check Entries assurance preflight returned an invalid result.",
+            "Vouching assurance preflight returned an invalid result.",
         ),
         (
             "apply",
-            "Check Entries review application returned an invalid result.",
+            "Vouching review application returned an invalid result.",
         ),
     ],
 )
@@ -8584,7 +8584,7 @@ def test_mcp_forged_shaped_apply_result_cannot_commit_or_pollute_trace(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries review application returned an invalid result."
+        == "Vouching review application returned an invalid result."
     )
     assert _tree_snapshot(output_dir) == before
     assert outside.read_bytes() == outside_before
@@ -8882,7 +8882,7 @@ def test_mcp_contradictory_persisted_child_state_fails_closed(
     assert response["isError"] is True
     assert (
         response["structuredContent"]["error"]
-        == "Check Entries review application returned an invalid result."
+        == "Vouching review application returned an invalid result."
     )
     assert _tree_snapshot(output_dir) == before
     serialized = json.dumps(

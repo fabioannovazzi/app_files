@@ -90,7 +90,13 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Check Entries
+# Vouching
+
+Use the localized public name: **Vouching** (en), **Verifica documentale** (it),
+**Contrôle sur pièces** (fr), **Belegprüfung** (de), and
+**Verificación documental** (es). Explain that the workflow compares sampled
+entries with supporting documents. The internal skill identifier remains
+`check-entries`.
 
 
 

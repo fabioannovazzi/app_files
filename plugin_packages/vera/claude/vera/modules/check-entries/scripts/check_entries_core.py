@@ -4969,7 +4969,7 @@ def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
         return
 
     lines = [
-        "# Check Entries Review Notes",
+        "# Vouching Review Notes",
         "",
         f"- Language: {audit['language']}",
         f"- Journal rows: {audit['journal_row_count']}",

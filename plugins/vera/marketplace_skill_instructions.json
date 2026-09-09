@@ -38,7 +38,7 @@
       "instructions": "Allega il bilancio di verifica in CSV, Excel o PDF leggibile/scansionato, l'eventuale XBRL precedente e i documenti di supporto disponibili. Vera deve risolvere `../../modules/bilancio-xbrl-it` da questa skill, leggere integralmente la skill `skills/bilancio-xbrl-it/SKILL.md` del modulo e tutti i riferimenti che richiede, trattare il modulo risolto come directory di lavoro ed eseguire `python scripts/check_dependencies.py` prima degli script di supporto. Il workflow completo rende rivedibili estrazione, mappature, prospetti, nota integrativa e controlli prima dell'esportazione XBRL deterministica; Vera non approva né deposita il bilancio."
     },
     "check-entries": {
-      "display_name": "Controllo scritture",
+      "display_name": "Verifica documentale",
       "short_description": "Confronta scritture campionate e documenti di supporto",
       "default_prompt": "Usa $check-entries per confrontare queste scritture campionate con le fatture e segnalare anomalie o documenti mancanti.",
       "instructions": "Fornisci il campione qualificato prodotto da Journal Sampling e allega le FatturePA XML o i PDF di supporto. Vera confronta le sole scritture campionate con le evidenze e restituisce esiti per riga, anomalie e richieste puntuali per i documenti mancanti."

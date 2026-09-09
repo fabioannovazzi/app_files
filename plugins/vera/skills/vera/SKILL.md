@@ -200,7 +200,7 @@ explicit sequence:
 2. Create or select one explicit engagement.
 3. After authorization, import each selected file as an immutable, receipted
    input. Use role `source` generally, `journal` for Journal Sampling, and
-   `support` for Check Entries evidence. Import does not prepare or start a run.
+   `support` for Vouching evidence. Import does not prepare or start a run.
 4. Prepare the selected workflow from the exact input IDs and exact finalized
    same-engagement upstream artifacts it needs. The same request is idempotent;
    a new run must be explicit.
@@ -224,7 +224,7 @@ New Client's subordinate Client File Preparation phase receives its own run
 under the same engagement. New Client may consume that prior run only through
 its verified final-artifact binding. Journal Sampling finalizes the exact
 normalized population, diagnostics, sample, and normalization assurance
-companions that Check Entries actually replays. Each Check Entries evidence
+companions that Vouching actually replays. Each Vouching evidence
 batch receives a separate run bound to that complete exact handoff and its own
 support receipts; an intentionally separate identical selection uses the
 explicit new-run option. It checks only the sample and never discovers later
@@ -677,7 +677,7 @@ validated on the basis of structural inspection alone.
   one-time codes. An INPS browser capture requires a user-authenticated tab and
   remains read-only. Separately verify access/delegation authority and portal
   permission for software-assisted capture.
-- For Check Entries invoice acquisition, try a bulk FatturaPA ZIP first. If the
+- For Vouching invoice acquisition, try a bulk FatturaPA ZIP first. If the
   user chooses connection, use only a callable provider-specific connector with
   confirmed authority and read/export scope, then pass its local export to the
   module with connector provenance. Never pretend that a generic SdI connector

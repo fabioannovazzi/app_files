@@ -1,8 +1,8 @@
-# Check Entries Codex Plugin
+# Vouching Codex Plugin
 
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/check-entries) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
-Check Entries is a Codex workflow plugin for comparing the exact entries
+Vouching is a Codex workflow plugin for comparing the exact entries
 selected by Journal Sampling with Italian FatturaPA XMLs and supporting PDF
 documents.
 
@@ -11,13 +11,13 @@ The plugin starts from a qualified prepared-evidence boundary:
 - Studio Archive must identify the stable client and customer folder, create or
   select an engagement, and retain each authorized support file as an immutable
   input receipt. Import does not create or start a run.
-- Studio Archive prepares one Check Entries run from exact support `input_ids`
+- Studio Archive prepares one Vouching run from exact support `input_ids`
   and exact finalized upstream artifact references, then starts it. Both product
   CLIs use only its hydrated run-local input bindings and exact output path.
   Cross-client, cross-engagement, unbound, and invented paths are rejected.
 - Journal Sampling must first finalize `normalized_journal.csv`, sealed
   `normalization_diagnostics.json`, and `journal_sample.csv` as three exact
-  artifacts. Check Entries replays the complete
+  artifacts. Vouching replays the complete
   upstream assurance envelope, gate register, reviewed mapping decisions,
   original-source receipts, retained reviewed-recipe receipt, normalized
   receipt, and exact 24-file Journal Sampling/shared implementation receipt
@@ -56,8 +56,8 @@ run's lifecycle and input manifest, a closed execution view, outputs, and the
 artifact manifest. Machine-local Studio Archive state contains only rebuildable
 configuration/search pointers and optional private contact metadata.
 
-The explicit Check Entries flow is: resume the exact finalized Journal Sampling
-run; import one support evidence batch; prepare a separate Check Entries run
+The explicit Vouching flow is: resume the exact finalized Journal Sampling
+run; import one support evidence batch; prepare a separate Vouching run
 from that batch and the exact normalized-population, diagnostics, and sample
 artifacts; start; inspect and check only bound inputs; finalize every physical
 output with a purpose and audience; review; and complete. A materially different
@@ -92,7 +92,7 @@ review-decision/effect lineage. Missing or changed original inputs fail closed.
 MCP validate, render, save, and apply paths all invoke this fresh preflight.
 
 Before any supported Python launcher imports local implementation modules, a
-bootstrap closes the exact 26-file Check Entries/shared-assurance contract and
+bootstrap closes the exact 26-file Vouching/shared-assurance contract and
 rejects every unowned path, bytecode cache, symlink, hardlink, FIFO, or other
 special entry. The validated assurance package is loaded from its exact
 directory without exposing the broader vendor parent as an import root. MCP

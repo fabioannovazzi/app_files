@@ -4506,11 +4506,11 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
     )
 
     for snippet in (
-        "Check Entries",
-        "Collega ogni scrittura campionata al supporto disponibile.",
-        "Connect every sampled entry to its available support.",
-        "Reliez chaque écriture échantillonnée à son justificatif disponible.",
-        "Verbinden Sie jede Stichprobenbuchung mit dem verfügbaren Beleg.",
+        "Vouching",
+        "Verifica documentale",
+        "Vouching",
+        "Contrôle sur pièces",
+        "Belegprüfung",
         "Cosa dai / cosa ottieni",
         "Entry checks tied to documents",
         "Controlli con supporto collegato",
