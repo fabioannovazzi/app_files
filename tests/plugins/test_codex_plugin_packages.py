@@ -507,8 +507,8 @@ def test_vera_prefers_word_for_local_docx_visual_review() -> None:
     )
     assert "LibreOffice may be used only as a fallback" in normalized_skill_text
     assert (
-        "A LibreOffice launch, conversion, or local permission failure is not evidence "
-        "that visual review is impossible" in normalized_skill_text
+        "A permission denial or security block is not a compatibility failure"
+        in normalized_skill_text
     )
     assert "Never describe a DOCX as visually validated" in normalized_skill_text
 
