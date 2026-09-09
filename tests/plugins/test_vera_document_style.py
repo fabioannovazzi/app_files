@@ -491,6 +491,16 @@ def test_repeated_attach_preserves_the_same_snapshot(tmp_path: Path) -> None:
     assert result == first
 
 
+def test_concurrent_attachment_cannot_replace_another_writer(tmp_path: Path) -> None:
+    workspace, _ = approved(tmp_path)
+    context, output = case_run(tmp_path)
+    (output / ".writer-lock").mkdir()
+
+    with pytest.raises(ValueError, match="busy"):
+        style.attach(workspace, "response", context, output, "Selected response", "it")
+    assert not (output / "document_style.json").exists()
+
+
 def test_new_profile_revision_does_not_overwrite_existing_case(tmp_path: Path) -> None:
     workspace, example = approved(tmp_path)
     context, output = case_run(tmp_path)

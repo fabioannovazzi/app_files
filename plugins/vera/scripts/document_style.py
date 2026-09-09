@@ -456,13 +456,14 @@ def attach(
         }
     )
     target = output / "document_style.json"
-    if target.exists():
-        if _read(target)["payload"] != snapshot:
-            raise ValueError(
-                "Run already bound to another profile revision; start a new run"
-            )
-        return _read(target)
-    return _save(target, snapshot)
+    with _lock(output):
+        if target.exists():
+            if _read(target)["payload"] != snapshot:
+                raise ValueError(
+                    "Run already bound to another profile revision; start a new run"
+                )
+            return _read(target)
+        return _save(target, snapshot)
 
 
 def record_review(

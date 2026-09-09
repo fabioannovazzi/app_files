@@ -57,7 +57,7 @@
     "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "8f246dfe42b379337ba7e88f36e4a01086832f28934e1b1e15dc10c7ece83cb1"
+    "source_fingerprint": "d2b9be6850b8888f5d1421bab7cf1b48ce6579578b414ac65530085874c3898e"
   },
   "service_kind": "local_profile"
 }
