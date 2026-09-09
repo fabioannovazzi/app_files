@@ -74,7 +74,7 @@ COWORK_OMITTED_PATHS = frozenset(
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
     }
 )
-COWORK_SHARED_SERVICES = ("run-receipt-stamping", "document-personalization")
+COWORK_SHARED_SERVICES = ("run-receipt-stamping",)
 PROJECTION_ONLY_PATHS = frozenset(
     {
         "marketplace_skill_instructions.json",
@@ -1027,10 +1027,9 @@ name, filename, folder, or document content.""",
         r"`\.\./\.\./privacy/services/`\..*?"
         r"^Ask for confirmation only",
         (
-            "The Cowork package registers `run-receipt-stamping` and "
-            "`document-personalization` once in `../../privacy/services/`. "
-            "Their manifests describe the Mparanza receipt boundary and "
-            "private approved document conventions respectively.\n\n"
+            "The Cowork package registers `run-receipt-stamping` once in "
+            "`../../privacy/services/`; its manifest describes the optional "
+            "firm-level Mparanza receipt boundary.\n\n"
             "Ask for confirmation only"
         ),
         text,
@@ -2075,8 +2074,6 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
                 )
             payload.pop("governed_repository_paths", None)
             payload["runtime_profiles"] = ["anthropic-cowork"]
-            for model_class in payload.get("model_context", {}).get("classes", []):
-                model_class["runtime_profiles"] = ["anthropic-cowork"]
             for boundary in payload.get("external_boundaries", []):
                 if not isinstance(boundary, dict):
                     raise ValueError(

@@ -165,7 +165,7 @@ the current model context when the professional task requires it. Ordinary Vera
 work does not show a privacy notice or ask for privacy consent merely because
 the model reads that material.
 
-The Cowork package registers `run-receipt-stamping` and `document-personalization` once in `../../privacy/services/`. Their manifests describe the Mparanza receipt boundary and private approved document conventions respectively.
+The Cowork package registers `run-receipt-stamping` once in `../../privacy/services/`; its manifest describes the optional firm-level Mparanza receipt boundary.
 
 Ask for confirmation only when a genuinely optional boundary beyond the current
 model runtime has not already been chosen by the user. The user's explicit

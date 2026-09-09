@@ -5,17 +5,6 @@ description: Use when Vera receives a substantive legal, tax, or compliance ques
 
 # Risposta A Quesiti Legali E Fiscali
 
-For learning, reusing or revising a professional's document conventions,
-including drafts concerning accertamenti, read and follow
-`references/document-style.md`. This includes pre-case teaching from selected
-examples. It is optional personalization of this drafting journey, not a new
-operational assessment or filing pipeline. On later drafting requests, consult
-only the already selected personal/studio workspace for a suitable approved
-profile; never search other workspaces or silently learn from edits.
-When the request is only to teach or revise conventions, complete that guide's
-teaching flow and stop after its result; do not require a new legal question or
-open a client engagement merely to create a studio style profile.
-
 This is Vera's user-facing specialist workflow for an ordinary substantive
 legal, tax, or compliance question. Select it automatically from the user's
 question. Do not require the user to invoke, choose, or understand the internal

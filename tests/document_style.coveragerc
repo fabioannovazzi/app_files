@@ -1,6 +1,0 @@
-[run]
-include = */plugins/vera/scripts/document_style.py
-
-[report]
-show_missing = True
-fail_under = 80

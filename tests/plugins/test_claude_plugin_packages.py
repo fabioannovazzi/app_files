@@ -390,13 +390,9 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
 ) -> None:
     projected_components = json.loads(vera_entries["components.json"])
 
-    assert projected_components["shared_services"] == [
-        "run-receipt-stamping",
-        "document-personalization",
-    ]
+    assert projected_components["shared_services"] == ["run-receipt-stamping"]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
-        "privacy/services/run-receipt-stamping.json",
-        "privacy/services/document-personalization.json",
+        "privacy/services/run-receipt-stamping.json"
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     receipt_service = json.loads(
