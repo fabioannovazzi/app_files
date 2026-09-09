@@ -194,9 +194,9 @@ Use this sequence for every client-bound Vera workflow:
 8. Review the declaration, then run `complete-workflow`. Record `fail-workflow`
    or `cancel-workflow` instead of presenting a partial folder as a result.
 
-Journal Sampling and Vouching keep their exact handoff: finalize the
+Journal Sampling and Check Entries keep their exact handoff: finalize the
 normalized population, diagnostics, and sample first; import each later support
-batch separately; then use `start-check-entries-from-sample`. Vouching
+batch separately; then use `start-check-entries-from-sample`. Check Entries
 checks only the bound sample and never discovers later files implicitly.
 
 ## Local document search
