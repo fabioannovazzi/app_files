@@ -18,6 +18,19 @@ folders, browser profiles or the whole computer. Ask for the case/run folder onl
 if the context gives no bounded location; do not ask Francesco to identify a
 script or produce technical files himself.
 
+If no checkpoint exists, do not stop at “nothing was recorded”. Use the scoped
+conversation and technical diagnosis already available to draft an evidence-only
+request with `--checkpoint` omitted. Attribute earlier assistant/tool summaries
+explicitly in each finding; they are not fresh observations or operator testimony
+merely because they appear in chat. The `operator_report` category is the existing
+reported-evidence transport label: the summary must name the actual source.
+Use `unknown` for unsupported outcomes or conflicting accounts and describe the
+conflict in `gaps`. Record version and process per source; an old release's failure
+does not establish a current failure. Do not merge unrelated process evidence.
+If useful, save recovered procedure notes separately with reported provenance;
+never manufacture capture timestamps or hashes. A CR diagnosis alone can support
+a development request, but not a claim of completed teaching.
+
 Vera reads the saved material and drafts the request. Explain the actual process,
 what worked and on which evidence, the remaining development work, gaps and
 concrete acceptance checks. Preserve the difference between an observed result,

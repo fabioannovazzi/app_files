@@ -22,6 +22,7 @@ __all__ = [
     "read_checkpoint",
     "summarize_checkpoint",
     "save_checkpoint",
+    "write_progress_report",
     "validate_checkpoint",
     "main",
 ]
@@ -166,6 +167,7 @@ def summarize_checkpoint(directory: Path) -> dict[str, Any]:
                 for key in (
                     "id",
                     "intent",
+                    "action",
                     "decision_reason",
                     "outcome",
                     "postcondition",
@@ -178,6 +180,74 @@ def summarize_checkpoint(directory: Path) -> dict[str, Any]:
         ],
         "execution_verified": False,
     }
+
+
+def write_progress_report(directory: Path) -> Path:
+    """Render saved declarations, never infer execution from recording.
+
+    Revision and evidence labels are mechanically verifiable. Professional
+    meaning and the adequacy of each postcondition remain model-led judgments.
+    A missing report can be rebuilt after interruption without rewriting progress.
+    """
+    record = read_checkpoint(directory)
+    payload = record["payload"]
+    labels = {
+        "observed": "Osservazione registrata",
+        "operator_report": "Riferito, non verificato da questa registrazione",
+        "unknown": "Da verificare",
+    }
+    lines = [
+        "# Procedura appresa — riepilogo da controllare",
+        "",
+        f"Obiettivo: {payload['objective']}",
+        f"Partenza: {payload['start_state']}",
+        f"Risultato atteso: {payload['end_condition']}",
+        "",
+        "## Cosa è stato salvato",
+        f"Revisione: {record['revision']}",
+        f"File: checkpoint-{record['revision']:04d}.json",
+        f"Impronta: {record['sha256']}",
+        f"Passaggi registrati: {len(payload['steps'])}",
+        "La registrazione non certifica esecuzione, correttezza professionale o replay.",
+        "Il pacchetto per lo sviluppatore richiede una revisione separata.",
+        "",
+        "## Cosa manca e da dove riprendere",
+        payload["resume_instruction"],
+    ]
+    for step in payload["steps"]:
+        lines.extend(
+            f"- {step['id']}: {question}" for question in step["uncertainties"]
+        )
+    lines += ["", "## Passaggi, risultati dichiarati e prove"]
+    if not payload["steps"]:
+        lines.append("Registrazione avviata; nessun passaggio ancora acquisito.")
+    for step in payload["steps"]:
+        lines += [
+            "",
+            f"### {step['id']}: {step['intent']}",
+            f"Azione: {step['action']}",
+            f"Motivo della scelta: {step['decision_reason']}",
+            f"Risultato dichiarato: {step['outcome']}",
+            f"Controllo del risultato: {step['postcondition']}",
+            f"Evidenza: {labels[step['evidence_basis']]}",
+        ]
+    lines += [
+        "",
+        "Questo riepilogo resta locale. Non è un pacchetto approvato da inviare.",
+        "",
+    ]
+    content = "\n".join(lines).encode("utf-8")
+    path = directory / f"riepilogo-{record['revision']:04d}.md"
+    if path.is_symlink():
+        raise ValueError("progress report must not be a symlink")
+    if path.exists():
+        if path.read_bytes() != content:
+            raise ValueError("progress report differs from saved checkpoint")
+        return path
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "wb") as stream:
+        stream.write(content)
+    return path
 
 
 def save_checkpoint(
@@ -206,13 +276,14 @@ def save_checkpoint(
     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(descriptor, "wb") as stream:
         stream.write(canonical_json_bytes(record))
+    write_progress_report(directory)
     return path
 
 
 def main(argv: list[str] | None = None) -> int:
     """Save or resume one explicitly supplied local teaching checkpoint."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("save", "resume"))
+    parser.add_argument("command", choices=("start", "save", "resume", "report"))
     parser.add_argument("directory", type=Path)
     parser.add_argument("--input", type=Path)
     parser.add_argument("--expected-revision", type=int, default=0)
@@ -225,16 +296,24 @@ def main(argv: list[str] | None = None) -> int:
     if args.summary and args.command != "resume":
         parser.error("--summary requires resume")
     try:
-        if args.command == "save":
+        if args.command in {"start", "save"}:
             if args.input is None:
                 parser.error("save requires --input")
             payload = json.loads(args.input.read_text(encoding="utf-8"))
+            if args.command == "start" and (
+                payload.get("steps") != [] or args.expected_revision != 0
+            ):
+                raise ValueError(
+                    "start requires an empty initial checkpoint and revision zero"
+                )
             LOGGER.info(
                 "Saved %s",
                 save_checkpoint(
                     args.directory, payload, expected_revision=args.expected_revision
                 ),
             )
+        elif args.command == "report":
+            LOGGER.info("%s", write_progress_report(args.directory))
         else:
             LOGGER.info(
                 "%s",

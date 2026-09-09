@@ -297,3 +297,108 @@ def test_summary_cli_resumes_latest_revision_and_keeps_missing_acquisition_expli
     )
     assert summary["resume_instruction"] == "Read the proposed mapping for one invoice"
     assert summary["execution_verified"] is False
+
+
+def test_start_creates_reviewable_empty_session(checkpoint, tmp_path):
+    state = payload()
+    state.update(status="paused", steps=[])
+    source = tmp_path / "intake.json"
+    source.write_text(json.dumps(state))
+    directory = tmp_path / "session"
+
+    assert checkpoint.main(["start", str(directory), "--input", str(source)]) == 0
+
+    assert checkpoint.read_checkpoint(directory)["revision"] == 1
+    report = (directory / "riepilogo-0001.md").read_text()
+    assert "nessun passaggio ancora acquisito" in report
+    assert "non certifica esecuzione" in report
+
+
+def test_report_recovers_after_interruption_without_repeating_action(
+    checkpoint, tmp_path
+):
+    directory = tmp_path / "session"
+    checkpoint.save_checkpoint(directory, payload(), expected_revision=0)
+    report = directory / "riepilogo-0001.md"
+    report.unlink()
+
+    restored = checkpoint.write_progress_report(directory)
+
+    assert restored == report
+    assert "Account dialog opened" in report.read_text()
+    assert checkpoint.read_checkpoint(directory)["revision"] == 1
+
+
+def test_changed_report_is_rejected(checkpoint, tmp_path):
+    directory = tmp_path / "session"
+    checkpoint.save_checkpoint(directory, payload(), expected_revision=0)
+    (directory / "riepilogo-0001.md").write_text("All executions verified")
+
+    with pytest.raises(ValueError, match="differs"):
+        checkpoint.write_progress_report(directory)
+
+
+@pytest.mark.parametrize(
+    "process",
+    [
+        "Retrieve a certificate",
+        "Review reconciliation exceptions",
+        "Export a sales report",
+    ],
+)
+def test_different_processes_resume_and_export_reviewed_learning(
+    checkpoint, tmp_path, process
+):
+    import development_request
+
+    directory = tmp_path / "teaching"
+    state = payload()
+    state.update(objective=process, steps=[], status="paused")
+    checkpoint.save_checkpoint(directory, state, expected_revision=0)
+    state["steps"] = payload()["steps"]
+    state["steps"][0].update(
+        intent=process,
+        action="Open the selected result",
+        outcome="Operator reports the result was available",
+        decision_reason="Use the period agreed with the operator",
+        evidence_basis="operator_report",
+        capture=None,
+    )
+    checkpoint.save_checkpoint(directory, state, expected_revision=1)
+    resumed = checkpoint.summarize_checkpoint(directory)
+    request = {
+        "schema_version": "browser-development-request/v1",
+        "request_id": "reusable-process",
+        "title": process,
+        "process": process,
+        "objective": process,
+        "source_version": "unknown",
+        "findings": [
+            {
+                "summary": resumed["steps"][0]["outcome"],
+                "basis": "operator_report",
+                "step_ids": ["choose-account"],
+            }
+        ],
+        "requested_work": ["Implement the recorded procedure"],
+        "acceptance_checks": [
+            "Verify the resulting artifact on one authorized example"
+        ],
+        "gaps": ["No observed final result or clean replay"],
+        "known_limits": ["Reported steps only"],
+    }
+    review = tmp_path / "review"
+    prepared = development_request.prepare_request(
+        request, review, checkpoint=directory
+    )
+    archive = development_request.export_request(
+        review,
+        tmp_path / "handoff.zip",
+        expected_sha256=prepared["review_sha256"],
+        approval_id="test-explicit-content-approval",
+    )
+
+    assert development_request.verify_archive(archive)
+    assert resumed["execution_verified"] is False
+    assert "Riferito, non verificato" in (directory / "riepilogo-0002.md").read_text()
+    assert "No observed final result" in (review / "RICHIESTA.md").read_text()

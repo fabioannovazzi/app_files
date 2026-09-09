@@ -72,7 +72,7 @@ than merely observing a button change. Keep the current draft and linked
 discovery evidence alongside progress as prescribed by the discovery playbook.
 
 ```bash
-python scripts/teaching_checkpoint.py save <fresh-directory> \
+python scripts/teaching_checkpoint.py start <fresh-directory> \
   --input <sanitized-payload.json> --expected-revision 0
 python scripts/teaching_checkpoint.py resume <directory> --summary
 python scripts/teaching_checkpoint.py save <directory> \
@@ -101,3 +101,53 @@ acquisition from an empty workbook or replay from control changes. Business data
 belongs in the authorized local review artifact, never in these fields. Reuse
 an existing revision chain; do not replace it with a new tracker or fabricated
 capture just to adopt the current teaching guidance.
+
+## Automatic end-of-session report
+
+`start` requires an empty step list and revision zero. `save` appends progress;
+each successful write also creates `riepilogo-NNNN.md` beside that revision.
+The report shows saved actions, reasons, declared outcomes, evidence labels,
+open questions and the precise next step. It never certifies execution from a
+checkpoint. Link the latest report at completion, pause or failure, not only
+when the operator asks for it.
+
+```bash
+python scripts/teaching_checkpoint.py report <directory>
+```
+
+This verifies the revision chain and returns the report path. If interrupted
+after saving a checkpoint but before writing its report, `resume --summary`
+recovers the saved revision and `report` regenerates its missing report. Do not
+retry the save with a stale revision or repeat the browser action. A modified
+report is rejected rather than silently trusted or overwritten. The report is
+local working material, not automatically approved for transfer; use the selected,
+sanitized development request and its separate exact-content review for that.
+
+The schema does not hard-code sites, professions or invoice fields. Capture
+conditional decisions and exception paths explicitly, retaining unknowns rather
+than inventing a rule from one example. Existing notes can be imported with
+reported provenance, including explanations of manual steps; browser capture
+hashes remain reserved for actual browser observations. A recorded manual step
+does not acquire an executable implementation by being saved.
+
+## Download steps during teaching
+
+For each authorized exploratory download, use the shipped
+`download_directory.mjs` observer in the supported persistent Node runtime:
+`observeDownloadDirectory(actualDownloadsDirectory)` before the click, then
+`observation.wait()` afterwards, with `observation.close()` in `finally`.
+This reuses the same folder verification mechanics as capability execution.
+Persist the returned path, byte length and SHA-256 only in the private run
+artifact, not the sanitized checkpoint or chat. Record a sanitized outcome and
+its provenance separately. Verify downloads sequentially, one observation per
+click. Never invent a capability or promote a scaffold to invoke the runner.
+
+The directory evidence establishes one new stable file and its bytes in that
+window; it does not establish invoice identity or completeness of a batch.
+Record any download event separately. Missing event evidence is not proof that
+no file was saved, and an event alone is not proof of a saved file. Ambiguous or
+unfinished arrivals remain unverified; leave existing files untouched. If the
+host cannot run the local observer, record that gap instead of improvising a
+profile inspection or bypassing a permission boundary. For an executable
+capability, use `executeCapability` and its existing receipt contract, including
+its event requirement; teaching evidence does not replace clean replay receipts.

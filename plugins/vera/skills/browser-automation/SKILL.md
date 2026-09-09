@@ -14,6 +14,14 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
+When learning is requested, follow the module's start-recording protocol before
+acting: `teaching_checkpoint.py start`, verified resume, incremental saves and a
+linked `report` at completion or interruption. Do not substitute a CR or a chat
+recap for recorded teaching. The checkpoint format serves different processes;
+keep the actual process boundary and provenance explicit. For an older unrecorded
+conversation, prepare the partial development request from available attributed
+notes rather than inventing observations or restarting the demonstration.
+
 During teaching, the operator explains the work, and Vera owns its technical
 translation. Resume supplied checkpoints and saved decisions before asking new
 questions. Keep TeamSystem posting and Agenzia invoice download distinct.
