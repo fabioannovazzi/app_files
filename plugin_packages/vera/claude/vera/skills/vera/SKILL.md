@@ -313,7 +313,14 @@ them without changing the capability catalog:
   and rollback path;
 - `browser-automation`: a Claude Desktop capability factory that reuses the
   authorized operator's connected Chrome profile in guided, autonomous, or
-  hybrid mode. The operator can demonstrate one bounded web process, let the
+  hybrid mode. Requests to learn, remember how a procedure is done, or make
+  performed work repeatable must enter this route before acting, including when
+  combined with an execution request. Start and verify its private teaching
+  checkpoint first, save each meaningful step and link the automatically saved
+  end-of-session report. Ordinary computer use or a CR diagnosis does not count
+  as procedure acquisition. The same evidence structure serves different web
+  processes, with explicit decisions, outcomes and gaps; it does not grant tools
+  or execution authority for unsupported steps. The operator can demonstrate one bounded web process, let the
   model explore safe reversible paths, or combine both. It first produces a
   separately reviewed sanitized developer pack so a developer without site
   access can understand the process, then turns approved evidence into one

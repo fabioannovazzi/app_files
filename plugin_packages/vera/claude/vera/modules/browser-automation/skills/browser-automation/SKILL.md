@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: "Use when an authorized operator or developer wants Vera to discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
+description: "Use when an authorized operator or developer wants Vera to learn, teach, discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
 ---
 
 ## Cowork execution contract

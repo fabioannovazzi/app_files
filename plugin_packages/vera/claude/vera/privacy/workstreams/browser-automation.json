@@ -167,12 +167,16 @@
     {
       "id": "exact-reviewed-development-export",
       "control": "Prepare a fresh owner-only folder; project only referenced checkpoint evidence metadata; require a reference to actual operator approval and the exact review manifest hash before export. Reject changed, unlisted, oversized or symlink files, unsafe archive paths and invalid source references. Export one ZIP without sending it or inventing a CR number. Observed findings require observed checkpoint references; this does not certify semantic correctness. Partial evidence remains usable with explicit gaps."
+    },
+    {
+      "id": "durable-learning-progress-report",
+      "control": "Learning requests route to an initial verified checkpoint before exploration. Every saved revision also creates an owner-only immutable Italian report of declared steps, evidence and gaps. Reports verify the checkpoint hash chain and reject altered report contents; a missing report can be rebuilt without repeating actions. The report does not establish execution or transfer approval. Older conversations can support attributed partial requests without fabricated observations; semantic selection and sanitization remain model and operator responsibilities."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2e83895e0b0f69bb0791d7aa71f917f6ed3f316bb0954ca8b3cffd23989e27a4"
+    "source_fingerprint": "83b52b5f1dd6efc64d3b6008f7bb0e202a9fa0d274d772e9655c76f739774c3d"
   }
 }
