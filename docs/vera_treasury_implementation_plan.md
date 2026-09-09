@@ -76,11 +76,11 @@ determinism. Ambiguous commercial meaning remains a model/professional judgment.
 - Vera routing, public page, privacy review and package integration: implemented.
 - Treasury validation: 58 passing tests, 88.74% script coverage. Browser-tested
   date edit, save, reload, acceptance, persisted review details and separate alternative.
-- Package validation: 601 passed, 2 skipped in the complete local combined suite.
+- Package and privacy validation after the final rebase: 642 passed, 2 skipped.
 - Relevant privacy, workflow-registry and icon checks: 33 passed.
 - Interaction checks including the explicit local-server contract: 18 passed.
 - Black, Isort, Mypy and Bandit for new runtime code: passed.
-- Built and aligned source packages: Vera 0.1.228, Clara 0.1.190, Lucia 0.1.39.
+- Built and aligned source packages: Vera 0.1.229, Clara 0.1.190, Lucia 0.1.39.
   Clara and Lucia include the updated shared archive workflow allowlist and were
   rebuilt together; they do not gain the treasury feature.
 - GitHub CI, merge, deployment and public-byte verification: pending.
