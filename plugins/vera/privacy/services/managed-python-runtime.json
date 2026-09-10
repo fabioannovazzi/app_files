@@ -15,7 +15,8 @@
     "scripts/_python_bootstrap.py"
   ],
   "runtime_profiles": [
-    "openai-codex"
+    "openai-codex",
+    "anthropic-cowork"
   ],
   "external_boundaries": [
     {
@@ -29,11 +30,12 @@
       "optional": false,
       "requires_confirmation": false,
       "runtime_profiles": [
-        "openai-codex"
+        "openai-codex",
+        "anthropic-cowork"
       ],
       "controls": [
         "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
-        "When Codex blocks package-index access, the manager emits a bounded permission-required signal so the same declared-requirements command can be retried through Codex host network approval; it does not attempt an undeclared package or alternate installer.",
+        "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
         "Readiness validates the common recipe, enabled features and supported Python runtime before use.",
         "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
       ]
@@ -49,7 +51,8 @@
       "optional": false,
       "requires_confirmation": false,
       "runtime_profiles": [
-        "openai-codex"
+        "openai-codex",
+        "anthropic-cowork"
       ],
       "controls": [
         "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",

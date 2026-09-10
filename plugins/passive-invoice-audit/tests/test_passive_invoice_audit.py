@@ -144,6 +144,23 @@ def _write_mapping(path: Path) -> Path:
     return path
 
 
+def test_empty_invoice_archive_is_blocked_as_missing_input(tmp_path: Path) -> None:
+    invoice_archive = tmp_path / "invoices.zip"
+    with zipfile.ZipFile(invoice_archive, "w") as archive:
+        archive.writestr("README.txt", "No invoice XML files")
+    ledger = _write_ledger(tmp_path / "ledger.csv", _ledger_rows())
+    mapping = _write_mapping(tmp_path / "mapping.json")
+
+    with pytest.raises(audit_core.AuditError, match="Invoice population is empty"):
+        audit_core.run_audit(
+            invoice_source=invoice_archive,
+            ledger_path=ledger,
+            mapping_path=mapping,
+            output_dir=tmp_path / "output",
+            runner=FixtureRunner({}),
+        )
+
+
 def _parsed_item(
     tmp_path: Path,
     *,
@@ -1819,6 +1836,45 @@ def test_cowork_cli_returns_pending_and_preserves_outputs(tmp_path, monkeypatch)
     assert (job["output_dir"] / "exception_workpaper.xlsx").is_file()
     request = next(job["output_dir"].glob("luna_chunks/*/cowork_request.json"))
     assert json.loads(request.read_text())["requested_model"] == "haiku"
+
+
+def test_audit_cli_returns_blocked_for_missing_invoice_population(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cli = _load_cli("run_audit")
+    monkeypatch.setattr(
+        cli,
+        "load_client_engagement_context_file",
+        lambda *args, **kwargs: {"run_id": "synthetic", "run_root": str(tmp_path)},
+    )
+    monkeypatch.setattr(cli, "configured_runtime", lambda: "codex-native")
+    monkeypatch.setattr(
+        cli, "load_worker_selection", lambda *args, **kwargs: ("test", "low", None)
+    )
+
+    def blocked_audit(**kwargs):
+        raise cli.AuditError("Invoice population is empty")
+
+    monkeypatch.setattr(cli, "run_audit", blocked_audit)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_audit",
+            "--invoices",
+            str(tmp_path / "invoices.zip"),
+            "--ledger",
+            str(tmp_path / "ledger.csv"),
+            "--ledger-mapping",
+            str(tmp_path / "mapping.json"),
+            "--output",
+            str(tmp_path / "output"),
+            "--client-engagement",
+            str(tmp_path / "context.json"),
+        ],
+    )
+
+    assert cli.main() == 2
 
 
 def test_cowork_dependency_check_does_not_require_codex(tmp_path, monkeypatch):

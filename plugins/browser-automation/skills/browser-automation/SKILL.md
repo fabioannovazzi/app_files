@@ -458,3 +458,17 @@ capabilities in this module are source code, not run outputs.
 
 Keep the improvement note local to chat or run artifacts. Do not transmit it,
 include account or portal data in it, or turn a workflow result into feedback.
+
+## Complete ECONS mappings and registrations
+
+When authorized to process ECONS purchase invoices, read the processing section
+of `references/econs-review.md` in the resolved browser-automation module. Reuse
+the acquisition profile and add the reviewed processing phases. Run
+`collectEconsReview` with its `processing` option. Vera supplies the model-led
+queue classification, journal review and posting-approval callbacks in the host
+Node session; no separate model API is configured. Preserve the exact client's
+tax treatment and complete report, including green and orange invoices. A
+missing binding is a local setup gap to resolve from the actual screen, not a
+reason to ask the operator to rewrite selectors or repeat the whole lesson.
+Report this as implemented workflow support until two clean runs on the target
+ECONS environment have been recorded; synthetic tests cannot establish that.

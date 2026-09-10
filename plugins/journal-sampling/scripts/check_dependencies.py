@@ -62,7 +62,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
-import importlib.util
+import importlib
 import re
 from pathlib import Path
 
@@ -136,7 +136,9 @@ def main() -> int:
             if not package:
                 continue
             module_name = import_name(package)
-            if importlib.util.find_spec(module_name) is None:
+            try:
+                importlib.import_module(module_name)
+            except (ImportError, OSError):
                 missing.append((requirements_file.name, package, module_name))
 
     if missing:

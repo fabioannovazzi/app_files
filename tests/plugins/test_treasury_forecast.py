@@ -243,6 +243,50 @@ def test_third_update_removes_settled_residuals_without_adding_receipts_again() 
     assert result["comparison"] is None
 
 
+def test_new_plan_settled_in_same_update_is_not_forecast_again() -> None:
+    original = first()
+    original["accounts"][0]["balance"] = "1000.00"
+    original["open_items"] = []
+    original["planned_flows"] = []
+    previous = accept(original)
+    data = copy.deepcopy(original)
+    data["as_of"] = "2026-09-18"
+    data["accounts"][0]["balance"] = "900.00"
+    data["bank_movements"] = [
+        {
+            "movement_id": "M1",
+            "account_id": "bank-a",
+            "date": "2026-09-18",
+            "amount": "-100.00",
+            "description": "New plan paid",
+        }
+    ]
+    data["planned_flows"] = [
+        {
+            "flow_id": "P1",
+            "side": "payable",
+            "amount": "100.00",
+            "expected_date": "2026-09-30",
+            "description": "New supplied plan",
+            "basis": "Synthetic plan",
+        }
+    ]
+    data["allocations"] = [
+        {
+            "allocation_id": "A1",
+            "movement_id": "M1",
+            "target_type": "plan",
+            "target_id": "P1",
+            "amount": "100.00",
+        }
+    ]
+
+    result = core.build_forecast(data, previous=previous)
+
+    assert result["daily"][-1]["closing_cash"] == "900.00"
+    assert result["events"] == []
+
+
 def test_comparison_uses_common_horizon_and_separates_extension() -> None:
     original = first()
     original["horizon_end"] = "2026-09-30"

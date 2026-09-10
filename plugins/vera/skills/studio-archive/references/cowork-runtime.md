@@ -42,23 +42,21 @@ capability was unavailable.
 
 ## Packaged command
 
-Resolve `../../modules/studio-archive` from this skill directory and use this
-command from that module root:
+Resolve the installed Vera root from this skill directory. Run the portable
+ledger through its managed launcher, including the startup check:
 
 ```bash
-python scripts/studio_archive.py <command> [arguments]
+python3 scripts/check_dependencies.py --module studio-archive
+python3 scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py --help
+python3 scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py <command> [arguments]
 ```
 
-Do not install packages at runtime. Before the base ledger route, confirm only
-that the packaged CLI starts:
-
-```bash
-python scripts/studio_archive.py --help
-```
-
-Before local indexing, extraction, OCR, or Google client code, run the relevant
-packaged dependency check. If it fails, keep the portable ledger available and
-state exactly which optional route could not run.
+The bootstrap may start under ambient Python; the workflow runs under managed
+CPython 3.12. Setup uses only published shared requirements and respects host
+network permissions. Optional OCR remains an explicitly approved feature. A
+setup failure must be resolved before execution; do not bypass it with an
+ambient interpreter. Run relevant optional dependency checks before indexing,
+extraction, OCR or Google client code.
 
 ## Connected archive setup
 

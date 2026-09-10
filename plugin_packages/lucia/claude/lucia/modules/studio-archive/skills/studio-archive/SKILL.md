@@ -35,8 +35,10 @@ If the enclosing plugin does not ship this managed launcher, use the module's
 dependency checker and only already-installed dependencies; do not assume that a
 standalone module script provisions them.
 
-The managed launchers provision and reuse an isolated environment containing only the
-module's published requirements. This declared dependency setup is authorized as
+The managed launcher provisions and reuses one user-scoped CPython 3.12
+environment per OS host with the published shared requirements, outside client
+folders. Modules and products share this dependency environment; it does not
+isolate client matters. This declared dependency setup is authorized as
 part of running the workflow; never install arbitrary packages or use ambient
 Python for subsequent module helpers. Repeat any declared `--requirements` options
 on both commands. Missing ambient imports are a reason to run this setup, not to
@@ -129,23 +131,21 @@ capability was unavailable.
 
 ## Packaged command
 
-Resolve `../../modules/studio-archive` from this skill directory and use this
-command from that module root:
+Resolve the installed Vera root from this skill directory. Run the portable
+ledger through its managed launcher, including the startup check:
 
 ```bash
-python scripts/studio_archive.py <command> [arguments]
+python3 scripts/check_dependencies.py --module studio-archive
+python3 scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py --help
+python3 scripts/managed_python_runtime.py --module studio-archive run scripts/studio_archive.py <command> [arguments]
 ```
 
-Do not install packages at runtime. Before the base ledger route, confirm only
-that the packaged CLI starts:
-
-```bash
-python scripts/studio_archive.py --help
-```
-
-Before local indexing, extraction, OCR, or Google client code, run the relevant
-packaged dependency check. If it fails, keep the portable ledger available and
-state exactly which optional route could not run.
+The bootstrap may start under ambient Python; the workflow runs under managed
+CPython 3.12. Setup uses only published shared requirements and respects host
+network permissions. Optional OCR remains an explicitly approved feature. A
+setup failure must be resolved before execution; do not bypass it with an
+ambient interpreter. Run relevant optional dependency checks before indexing,
+extraction, OCR or Google client code.
 
 ## Connected archive setup
 

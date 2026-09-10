@@ -21,7 +21,7 @@ for _vendor_root in (
             sys.path.insert(0, str(_vendor_root))
         break
 
-from audit_core import AuditConfig, run_audit
+from audit_core import AuditConfig, AuditError, run_audit
 from cowork_worker import configured_runtime, run_cowork_chunk
 from luna_worker import load_worker_selection, run_luna_chunk
 from vera_assurance import AssuranceContractError, load_client_engagement_context_file
@@ -128,28 +128,32 @@ def main() -> int:
         ):
             raise ValueError("Chart of accounts must be a JSON object of strings")
     cowork = configured_runtime() == "cowork-haiku"
-    summary = run_audit(
-        invoice_source=args.invoices,
-        ledger_path=args.ledger,
-        mapping_path=args.ledger_mapping,
-        output_dir=args.output,
-        runner=run_cowork_chunk if cowork else run_luna_chunk,
-        config=AuditConfig(
-            worker_runtime="cowork" if cowork else "codex-native",
-            chunk_size=args.chunk_size,
-            concurrency=args.concurrency,
-            max_retries=args.max_retries,
-            reasoning_effort=effort,
-            worker_model=model,
-            worker_selection=selection,
-            amount_tolerance=args.amount_tolerance,
-        ),
-        ledger_sheet=args.ledger_sheet,
-        history=history,
-        chart_of_accounts=chart_of_accounts,
-        client_run_id=str(client_context["run_id"]),
-        client_run_root=Path(str(client_context["run_root"])),
-    )
+    try:
+        summary = run_audit(
+            invoice_source=args.invoices,
+            ledger_path=args.ledger,
+            mapping_path=args.ledger_mapping,
+            output_dir=args.output,
+            runner=run_cowork_chunk if cowork else run_luna_chunk,
+            config=AuditConfig(
+                worker_runtime="cowork" if cowork else "codex-native",
+                chunk_size=args.chunk_size,
+                concurrency=args.concurrency,
+                max_retries=args.max_retries,
+                reasoning_effort=effort,
+                worker_model=model,
+                worker_selection=selection,
+                amount_tolerance=args.amount_tolerance,
+            ),
+            ledger_sheet=args.ledger_sheet,
+            history=history,
+            chart_of_accounts=chart_of_accounts,
+            client_run_id=str(client_context["run_id"]),
+            client_run_root=Path(str(client_context["run_root"])),
+        )
+    except AuditError as exc:
+        logging.getLogger(__name__).error("AUDIT_BLOCKED: %s", exc)
+        return 2
     if summary["status"] == "awaiting_semantic_review":
         logging.getLogger(__name__).warning(
             "Semantic review pending: dispatch prepared cowork_request.json files, save validated worker responses, and resume the same command."

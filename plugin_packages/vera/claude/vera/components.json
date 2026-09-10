@@ -32,7 +32,8 @@
     "studio-archive"
   ],
   "shared_services": [
-    "run-receipt-stamping"
+    "run-receipt-stamping",
+    "managed-python-runtime"
   ],
   "workflow_roles": {
     "new-client": {

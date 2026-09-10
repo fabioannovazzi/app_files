@@ -90,11 +90,12 @@ implementation of each specialist workflow remains in its existing
 `plugins/<module>` directory. Package builders embed those modules under
 `modules/` so each distributable is self-contained.
 
-Before a module helper runs, Vera prepares only that module's published core
-requirements in a fingerprinted, user-scoped managed virtual environment and reuses it
-across restarts. Helpers run through `scripts/managed_python_runtime.py`; module
-environments are isolated from one another, and the optional shared OCR runtime
-remains a separate explicitly approved setup.
+Before a module helper runs, Vera prepares the published shared core recipe in
+one user-scoped CPython 3.12 environment per operating-system host, outside
+client folders. Vera, Clara and Lucia reuse that environment across restarts.
+Helpers run through `scripts/managed_python_runtime.py`. Optional OCR requires
+explicit approval and is then retained in the same environment. This dependency
+environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
 
@@ -160,8 +161,9 @@ Skills select behavior from capabilities that are actually callable:
    it.
 
 Missing optional capabilities narrow the execution; they do not justify
-inventing results or silently changing the evidence basis. Vera never installs
-packages at runtime.
+inventing results or silently changing the evidence basis. Vera installs only the published dependency recipes through its managed
+launcher when needed; it never derives package names from prompts or client files.
+Optional OCR requires explicit approval, and host network denials stop setup.
 
 ## Privacy and professional review
 
@@ -189,7 +191,13 @@ reports are supplied by the studio and no automatic SOS or monitoring is include
 
 ## Python runtime
 
-Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.
+The managed workflow launcher requires **CPython 3.12**. It reuses an installed
+3.12 interpreter or provisions one with uv; when uv is absent, the bootstrap
+downloads its pinned wheel and verifies its SHA-256. Setup installs the published
+shared requirements into the common environment. A failed setup stops execution.
+The underlying Studio Archive CLI does not itself enforce a Python minor version;
+run it through the managed launcher to enforce this supported-runtime contract,
+including for the base portable ledger in Cowork.
 
 ## Adeguati assetti
 

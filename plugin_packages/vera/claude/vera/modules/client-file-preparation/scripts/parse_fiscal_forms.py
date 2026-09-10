@@ -437,6 +437,10 @@ def _normalize_amount(value: str) -> str:
             cleaned = cleaned.replace(",", "")
     elif "," in cleaned:
         cleaned = cleaned.replace(".", "").replace(",", ".")
+    elif re.fullmatch(r"[+-]?\d{1,3}(?:\.\d{3})+", cleaned):
+        # Italian fiscal documents use dot-grouped thousands; this shape is
+        # mechanically distinct from the canonical two-decimal amounts below.
+        cleaned = cleaned.replace(".", "")
     try:
         return str(Decimal(cleaned).quantize(Decimal("0.01")))
     except InvalidOperation:

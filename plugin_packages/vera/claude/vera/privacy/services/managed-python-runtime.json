@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "service_id": "managed-python-runtime",
+  "display_name": "Managed Python runtime",
+  "governed_paths": [
+    "components.json",
+    "scripts/check_dependencies.py",
+    "scripts/_managed_python_runtime.py",
+    "scripts/managed_python_runtime.py",
+    "skills/vera/SKILL.md",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py"
+  ],
+  "runtime_profiles": [
+    "anthropic-cowork"
+  ],
+  "external_boundaries": [
+    {
+      "id": "declared-core-dependency-retrieval",
+      "kind": "hosted_service",
+      "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core requirements and explicitly approved optional OCR in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Published shared package names and version constraints plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by this runtime installer.",
+      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
+        "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
+        "Readiness validates the common recipe, enabled features and supported Python runtime before use.",
+        "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
+      ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "hosted_service",
+      "destination": "PyPI files.pythonhosted.org for the pinned uv bootstrap, and Astral python-build-standalone CPython distributions on GitHub",
+      "purpose": "Provision the single supported CPython 3.12 interpreter when it is absent, automatically bootstrapping uv if needed",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "retention": "When uv must be bootstrapped, the bootstrap executable and private interpreter remain inside shared runtime storage until removed. Download request-log retention is controlled by the providers.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "published-requirements-only",
+      "control": "Setup validates package-relative selections and installs the published shared recipe. No package names or dependency instructions are accepted from client documents.",
+      "implemented_by": [
+        "scripts/managed_python_runtime.py",
+        "scripts/_managed_python_runtime.py",
+        "scripts/_shared_python_runtime.py"
+      ],
+      "on_violation": "An unknown module, missing requirements file, invalid target, or failed dependency validation stops the helper instead of executing it in a partial environment."
+    },
+    {
+      "id": "user-scoped-runtime-isolation",
+      "control": "One fixed environment is located outside plugin source and client folders. An exclusive operating-system installation lock waits for running managed Python readers, which hold a shared lease through a startup hook. Setup removes the ready receipt before mutation and restores it only after pip check and component validation. Failed setup leaves execution unavailable until repair. Symlink roots, locks and metadata are rejected. The installer is launched from base Python to avoid self-deadlock. This lease is concurrency protection, not a security sandbox. Other historical environments are not automatically deleted.",
+      "implemented_by": [
+        "scripts/managed_python_runtime.py",
+        "scripts/_managed_python_runtime.py",
+        "scripts/_shared_python_runtime.py"
+      ],
+      "on_violation": "A target creation or validation failure returns a bounded setup error and the requested helper is not run."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-07",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "2a6ff930058e3c33b89d25cb20921988167f3b0e1c43765099c3e54148129882"
+  }
+}

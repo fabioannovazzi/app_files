@@ -142,11 +142,105 @@ not automatically endorsed proposals. Apply the saved professional guidance to
 each invoice; leave ambiguities as concrete questions for Francesco. Link the
 populated HTML review. No posting follows from this route.
 
+## Optional mapping and registration after acquisition
+
+CR-42 supplies operator-reported accounting steps, not executable live locators.
+For an explicitly authorized processing batch, pass `processing` to the same
+`collectEconsReview` call. Every browser phase still runs through the existing
+capability executor. The read-only mode remains available without this option.
+The phase files are validated before any browser actions. Each selected client
+gets a separate immutable JSON/HTML report alongside the batch report, saved
+after each invoice and before any mapping or registration attempt. The returned
+`client_reviews` links identify those files. Keep later human checks and linked
+corrections through `batch_review.py`; never rewrite completed postings.
+
+`processing` contains `profile`, `classifyInvoices`, `reviewJournal` and
+`approvePosting`. Vera implements these callbacks using the current host model
+and available authorization; they are not an invitation for the professional
+to write code or an automatic source of approval. No helper calls a second LLM.
+
+The private profile has `schema_version: "econs-processing-profile/v1"`,
+`complete_status` and `non_posted_view` with the exact observed state labels,
+and `phases: {select, map, journal, post, verify, exit}`. Every phase is a
+reviewed `browser-capability/v2`, with the same authorized origins as acquisition
+and the actual observed frame path. Do not invent a selector, a discovery hash
+or a status label from this reference. Preserve each phase's real start and end
+state. All inputs are required text except `checked`, which is boolean.
+
+| Phase | Inputs available | Required observed result |
+| --- | --- | --- |
+| select | company-code, invoice-id, invoice-number, supplier, line-id, checked | One `set_checked` using `checked`; a visible selection-state output |
+| map | company-code, invoice-id, invoice-number, supplier, anchor-line-id, checked | Open Mappature on the associated anchor; `associate-all` uses `set_checked`, then distinct `confirm-mapping` clicks the popup confirmation; output showing return to the invoice |
+| journal | company-code, invoice-id, invoice-number, supplier | `journal` record with those four identity fields plus account, net, cost, vat, total, debit, credit |
+| post | company-code, invoice-id, invoice-number, supplier | Exactly one consequential `confirm-registration` click with `action_time` confirmation; `posting` record with company-code, invoice-id, protocol |
+| verify | company-code, invoice-id, invoice-number, supplier | `company` record with company-code and view; complete `invoices` record set with invoice-id; independent `invoice-count` scalar |
+| exit | company-code, invoice-id, invoice-number, supplier | Reviewed reversible return to a known list and visible-state output; a failure stops the batch |
+
+Declare only inputs a phase uses. All required outputs must use
+`model_and_artifact`; record fields are text. Amount fields are exact Italian
+amount text (for example `1.234,56`), with no currency decoration. Acquire the
+actual source value or keep a format gap; do not silently reinterpret a decimal
+dot. Zero remaining invoices requires the observed no-result branch and an
+independent zero count, not a missing table or unavailable iframe.
+
+`classifyInvoices({company, invoices})` returns `company_code`,
+`red_invoice_ids` and a reason from the model's interpretation of the observed
+indicator and saved professional guidance. Green and orange items stay in the
+processing population and report. The mechanical queue excludes only those exact
+red IDs; more than two consecutive reds suspends the remainder of that client.
+A tail of only reds generates exceptions without opening further invoice details.
+The studio exclusion list is unchanged. Colours never approve accounting.
+
+Before writing mappings, the executor rereads the invoice and requires its
+identity and complete lines to match acquisition. At least two existing lines
+must share the same account before filling missing associations; every selected
+line must have the same VAT code. Discordant accounts, mixed VAT, incomplete
+populations and missing descriptions stop the document. A virtualized grid must
+use its observed complete-selection or paging path and reconcile against the
+independent count; visible rows alone do not pass. The executor selects every
+line with `checked: true`, opens the associated anchor, sets the association
+checkbox to true (never toggles it blindly), and confirms the popup. A fresh
+complete reread must show the expected account on every unchanged line and the
+profile's observed complete status. Otherwise the document is saved as an
+exception and exited; it is never registered automatically.
+
+`reviewJournal({invoice, detail, journal})` returns `approved`, `reason`,
+`company_code`, `treatment_source`, `vat_nondeductible_percent`, and an optional
+`rounding_explanation`. The model must read the actual client's treatment,
+including pro rata, and review the displayed journal. The reason and source
+must identify the client-specific basis. No treatment is inferred from colour
+or applied from another client. The supported journal has one concordant cost
+account: debit equals credit and total, cost plus VAT equals total, and 100%
+non-deductible VAT requires cost equal to total with no separate VAT amount.
+Other journal shapes remain exceptions for professional review. A discrepancy
+between invoice-line sum and displayed net needs an explicit explanation; the
+helper never generates an unexplained balancing adjustment.
+
+`approvePosting({invoice, journal, journal_sha256, action})` returns true only
+when the exact current registration is authorized under the host's rules.
+The report is saved as unverified before dispatch. Completion requires the
+captured protocol and invoice absence from the complete Non contab. population
+of the same client, in the profile's exact list view. Ambiguous outcomes remain
+unverified and must be reconciled before retrying. Inspect phase receipts and
+private outputs to resolve the specific gap. Mapping confirmation and
+registration confirmation are separate phases and approvals.
+
+Save two clean sets of phase receipts on the actual ECONS environment, with no
+locator changes or recovery, before calling the process locally validated.
+Use the existing capability finalizer per phase; retain the batch and per-client
+reports as outcome evidence. A source release or two synthetic runs do not prove
+live compatibility. Announce the beginning and end of guided observation
+windows, bind missing structured controls explicitly, and append checkpoint
+increments before continuing. Control metadata never stands in for accounting
+values or verified results.
+
 ## What data reaches the model
 
 The selected Claude model can read authorized company and invoice identities,
 supplier, invoice state, complete descriptions, existing accounts, VAT codes
-and amount text, plus review proposals and exceptions. These values are not
+and amount text, plus client-specific pro rata, proposed/displayed journals,
+registration protocol, review decisions and exceptions. Optional processing
+changes mappings and posts only through the authorized ECONS browser session. These values are not
 automatically anonymized; model processing is not local-only. Private JSON and
 offline HTML stay in the selected local run directory and must not enter Git,
 a developer pack or a public package. Login secrets, cookies, session URLs,

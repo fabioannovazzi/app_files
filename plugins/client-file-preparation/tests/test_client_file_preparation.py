@@ -37,7 +37,12 @@ from model_handoff import (
     MAX_HANDOFF_PAGE_BYTES,
     write_model_handoff,
 )
-from parse_fatturapa_xml import parse_fatturapa_file, parse_xml_files, write_summary_csv
+from parse_fatturapa_xml import (
+    parse_fatturapa_audit_file,
+    parse_fatturapa_file,
+    parse_xml_files,
+    write_summary_csv,
+)
 from parse_fiscal_forms import (
     FiscalField,
     parse_structured_fiscal_fields,
@@ -126,7 +131,13 @@ def _load_model_handoff(
     return handoff, items
 
 
-def _write_invoice_xml(path: Path, date: str = "2025-06-15") -> None:
+def _write_invoice_xml(
+    path: Path,
+    date: str = "2025-06-15",
+    *,
+    quantity: str = "1",
+    unit_price: str = "100.00",
+) -> None:
     path.write_text(
         f"""<?xml version="1.0" encoding="UTF-8"?>
 <FatturaElettronica>
@@ -151,7 +162,7 @@ def _write_invoice_xml(path: Path, date: str = "2025-06-15") -> None:
       </DatiGeneraliDocumento>
     </DatiGenerali>
     <DatiBeniServizi>
-      <DettaglioLinee><NumeroLinea>1</NumeroLinea><Descrizione>Servizio test</Descrizione><PrezzoTotale>100.00</PrezzoTotale></DettaglioLinee>
+      <DettaglioLinee><NumeroLinea>1</NumeroLinea><Descrizione>Servizio test</Descrizione><Quantita>{quantity}</Quantita><PrezzoUnitario>{unit_price}</PrezzoUnitario><PrezzoTotale>100.00</PrezzoTotale></DettaglioLinee>
       <DatiRiepilogo><AliquotaIVA>22.00</AliquotaIVA><ImponibileImporto>100.00</ImponibileImporto><Imposta>22.00</Imposta></DatiRiepilogo>
     </DatiBeniServizi>
   </FatturaElettronicaBody>
@@ -429,6 +440,18 @@ def test_parse_fatturapa_file_extracts_formal_invoice_fields(tmp_path: Path) -> 
     assert record.vat_summary == "aliquota=22.00, imponibile=100.00, imposta=22.00"
     assert record.line_count == 1
     assert record.anomalies == ()
+
+
+def test_fatturapa_audit_preserves_quantity_and_unit_price_precision(
+    tmp_path: Path,
+) -> None:
+    xml_path = tmp_path / "invoice.xml"
+    _write_invoice_xml(xml_path, quantity="0.125", unit_price="1234.5678")
+
+    records = parse_fatturapa_audit_file(xml_path, base_dir=tmp_path)
+
+    assert records[0]["lines"][0]["quantity"] == "0.125"
+    assert records[0]["lines"][0]["unit_price"] == "1234.5678"
 
 
 def test_parse_fatturapa_file_rejects_entity_declarations(tmp_path: Path) -> None:
@@ -3256,6 +3279,37 @@ def fiscal_review_evidence(output: Path, *, readable: bool = True):
         detected_fields_json="{}",
         notes=(),
     )
+
+
+def test_fiscal_amount_with_dot_grouped_thousands_is_not_scaled_down(
+    tmp_path: Path,
+) -> None:
+    text = (
+        "Modello F24 sezione erario. Codice tributo 4001. "
+        "Anno riferimento 2025. Importo a debito versato € 1.234."
+    )
+    tmp_path.joinpath("source.txt").write_text(text, encoding="utf-8")
+    source = extraction_module.DocumentEvidence(
+        relative_path="F24_2025.txt",
+        file_name="F24_2025.txt",
+        extension=".txt",
+        category=CATEGORY_F24,
+        extraction_method="text",
+        readable=True,
+        needs_ocr=False,
+        ocr_available=False,
+        page_count=1,
+        char_count=len(text),
+        text_path="source.txt",
+        confidence="high",
+        detected_fields_json="{}",
+        notes=(),
+    )
+
+    fields = parse_structured_fiscal_fields([source], tmp_path)
+
+    amount = next(field for field in fields if field.value_type == "amount")
+    assert amount.normalized_value == "1234.00"
 
 
 def test_reviewed_document_kind_overrides_misleading_filename(tmp_path: Path) -> None:
