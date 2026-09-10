@@ -1535,7 +1535,16 @@ def external_amount_total(
         tuple[str, ...] | list[str]
     ) = DEFAULT_EXTERNAL_AMOUNT_FIELDS,
 ) -> Decimal:
-    return sum_amounts([row.get(field) for field in external_amount_fields])
+    total = Decimal("0.00")
+    for field in external_amount_fields:
+        raw = row.get(field)
+        if not clean_text(raw):
+            continue
+        parsed = parse_decimal(raw)
+        if parsed is None:
+            raise ValueError(f"{field} must be a canonical decimal")
+        total += parsed
+    return total.quantize(Decimal("0.01"))
 
 
 def amount_for_matching(

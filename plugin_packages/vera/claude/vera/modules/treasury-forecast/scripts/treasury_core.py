@@ -335,6 +335,16 @@ def _events(
                 continue
             event_id = f"{kind}:{row[identity_key]}"
             amount = _signed(row)
+            if kind == "plan" and row[identity_key] not in prior_plans:
+                settlement = paid.get(event_id, ZERO)
+                if settlement > abs(amount):
+                    raise TreasuryError(
+                        f"Plan settlement exceeds the current amount: {row[identity_key]}"
+                    )
+                # A newly introduced plan has not supplied a prior residual.
+                # Subtract same-period cash mechanically so it is not forecast twice.
+                residual = abs(amount) - settlement
+                amount = residual if amount > ZERO else -residual
             if amount == ZERO:
                 continue
             source_date = row[date_key]

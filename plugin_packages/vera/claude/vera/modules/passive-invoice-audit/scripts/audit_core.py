@@ -2069,6 +2069,11 @@ def run_audit(
     parse_started = time.perf_counter()
     invoices = parse_invoice_population(invoice_source, output_dir / ".invoice_staging")
     parse_seconds = time.perf_counter() - parse_started
+    if not invoices:
+        connection.close()
+        raise AuditError(
+            "Invoice population is empty; provide at least one readable FatturaPA XML invoice"
+        )
     ledger_rows = load_ledger(ledger_path, mapping_path, sheet=ledger_sheet)
     timing: dict[str, float] = {}
     items, orphans = match_population(

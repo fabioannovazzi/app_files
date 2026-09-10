@@ -3732,6 +3732,8 @@ def _apply_filters(
             if isinstance(min_abs, Decimal)
             else parse_localized_decimal(min_abs, label="min_abs")
         )
+        if threshold < 0:
+            raise ValueError("min_abs must be non-negative")
         mask = [
             parse_canonical_decimal(value, label="amount_abs") >= threshold
             for value in result.get_column("amount_abs").to_list()

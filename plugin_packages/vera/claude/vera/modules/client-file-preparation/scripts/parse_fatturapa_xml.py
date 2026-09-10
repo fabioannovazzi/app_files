@@ -259,6 +259,18 @@ def _normalize_amount(value: str) -> str:
         return value
 
 
+def _normalize_decimal(value: str) -> str:
+    """Normalize an XML decimal without discarding source precision."""
+
+    if not value:
+        return ""
+    normalized = value.replace(".", "").replace(",", ".") if "," in value else value
+    try:
+        return str(Decimal(normalized))
+    except InvalidOperation:
+        return value
+
+
 def _join_unique(values: Iterable[str]) -> str:
     return "; ".join(sorted({value for value in values if value}))
 
@@ -503,9 +515,9 @@ def parse_fatturapa_audit_file(
                 {
                     "line_number": _first_text(line, ["NumeroLinea"]),
                     "description": _first_text(line, ["Descrizione"]),
-                    "quantity": _normalize_amount(_first_text(line, ["Quantita"])),
+                    "quantity": _normalize_decimal(_first_text(line, ["Quantita"])),
                     "unit": _first_text(line, ["UnitaMisura"]),
-                    "unit_price": _normalize_amount(
+                    "unit_price": _normalize_decimal(
                         _first_text(line, ["PrezzoUnitario"])
                     ),
                     "line_total": _normalize_amount(

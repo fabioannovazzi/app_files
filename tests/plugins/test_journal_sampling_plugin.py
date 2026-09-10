@@ -21,6 +21,7 @@ from scripts.validate_plugin_review_contract import validate_contract
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "journal-sampling" / "scripts"
 CORE_PATH = SCRIPT_DIR / "journal_sampling_core.py"
+CHECK_DEPENDENCIES_PATH = SCRIPT_DIR / "check_dependencies.py"
 MCP_SERVER_PATH = ROOT / "plugins" / "journal-sampling" / "mcp" / "server.cjs"
 TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("plugin", "scripts/check_dependencies.py"),
@@ -137,6 +138,16 @@ def load_core() -> Any:
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_dependency_checker() -> Any:
+    module_name = "journal_sampling_check_dependencies_test"
+    spec = importlib.util.spec_from_file_location(module_name, CHECK_DEPENDENCIES_PATH)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -259,6 +270,39 @@ def _prepare_assured_population(
     _approve_suggested_recipe(recipe_path)
     core.normalize_path(journal_path, normalization_dir, recipe_path)
     return journal_path, normalization_dir / "normalized_journal.csv"
+
+
+def test_dependency_check_imports_each_declared_module(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    checker = load_dependency_checker()
+    requirements = tmp_path / "requirements.txt"
+    requirements.write_text("broken-dependency==1\n", encoding="utf-8")
+    monkeypatch.setattr(
+        checker, "selected_requirement_files", lambda _files: [requirements]
+    )
+    monkeypatch.setattr(checker, "import_name", lambda _package: "broken_dependency")
+
+    def fail_import(_module_name: str) -> None:
+        raise ImportError("synthetic import failure")
+
+    monkeypatch.setattr(checker.importlib, "import_module", fail_import)
+    monkeypatch.setattr(sys, "argv", ["check_dependencies.py"])
+
+    assert checker.main() == 1
+
+
+def test_negative_minimum_amount_is_rejected_before_sample_output(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    _, normalized_csv = _prepare_assured_population(core, tmp_path)
+    sample_dir = tmp_path / "sample"
+
+    with pytest.raises(ValueError, match="min_abs must be non-negative"):
+        core.run_sample(normalized_csv, sample_dir, min_abs="-100")
+
+    assert not sample_dir.exists()
 
 
 def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:

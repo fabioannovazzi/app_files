@@ -83,6 +83,14 @@ def test_grouped_factor_external_total_can_match_without_side_line():
     assert helpers.side_aware_closure_match(open_item, closure, "customer")
 
 
+def test_grouped_external_total_rejects_a_present_corrupt_amount():
+    helpers = load_helpers()
+    closure = {"bank_amount": "100.00", "factoring_amount": "CORRUPT"}
+
+    with pytest.raises(ValueError, match="factoring_amount"):
+        helpers.external_amount_total(closure)
+
+
 def test_reconcile_uses_grouped_external_total_with_expected_side():
     helpers = load_helpers()
     rows = helpers.reconcile_open_items(
