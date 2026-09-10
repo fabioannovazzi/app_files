@@ -12,11 +12,11 @@
       "basis": "OpenAI Platform directly showed Clara 0.1.189 Published after all 15 skill checks passed and Publish Version completed on 2026-09-09."
     },
     "vera": {
-      "version": "0.1.233",
+      "version": "0.1.235",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-09",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa195bf68c0819182376acce34fbec2",
-      "basis": "OpenAI Platform directly showed Vera 0.1.233 Published after the user authorized the terms and compliance declarations, submission was approved and Publish Version completed on 2026-09-09."
+      "observed_at": "2026-09-10",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa2727214348191b35fc7f1d25ee2e1",
+      "basis": "OpenAI Platform directly showed Vera 0.1.235 Published after all 35 skill scans passed, the user authorized the terms and publisher declarations, and Publish Version completed on 2026-09-10."
     }
   }
 }
