@@ -1,0 +1,7 @@
+[run]
+include = plugins/vera/scripts/adversarial_opinion.py
+relative_files = True
+
+[report]
+fail_under = 80
+show_missing = True

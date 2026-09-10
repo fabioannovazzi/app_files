@@ -15,21 +15,31 @@ this skill as the matching specialist workflow for that journey, then:
 
 1. Read `../prompt-optimizer/SKILL.md` completely and follow it before drafting
    or research. It prepares the answer contract, source posture, generation
-   route, and generation instructions.
+   route, and generation instructions. Set `adversarial_policy` to `required`
+   in this journey’s original `answer_contract.json`.
 2. Generate the contracted answer directly when the current runtime can meet
    the required standard, or prepare the explicit ChatGPT Deep Research handoff
    when native Deep Research is materially needed.
 3. Read `../deep-research-validator/SKILL.md` completely and follow it before
    delivering a generated or supplied answer. Reuse the same answer contract,
    correct supported defects, and keep professional-judgment items explicit.
-4. Deliver the reviewed or corrected answer, its sources and validation limits
-   as one result. Do not stop after prompt preparation when direct generation is
+   When local tooling exists, package this opinion in `position/` under the
+   validation run and keep that run open.
+4. Read `../adversarial-opinion/SKILL.md` completely and follow it regardless
+   of the original validation outcome. Develop and review the strongest
+   substantiated opposing case with the current model; a reasoned negative or
+   evidence-limited result is valid. Preserve both opinions and compare them.
+5. Deliver the reviewed or corrected answer, its sources and validation limits
+   together with the opposing opinion, comparison and separate reviews as one
+   result. Verify `opinion_delivery.json` through the adversarial helper before
+   durable delivery. Do not stop after prompt preparation when direct generation is
    available, and do not describe a structurally complete record as proof of
    legal or tax correctness.
 
-The two underlying skills remain separate stages with separate Studio Archive
+Planning and answer review retain separate Studio Archive
 runs in the same client engagement when local Vera run capabilities are
-available. This orchestration skill does not create a third client workstream,
+available. Original validation and the adversarial stage share the latter run.
+This orchestration skill does not create a third client workstream,
 duplicate their artifacts, or introduce a new external data route. In ChatGPT
 or another surface without local run tooling, continue with the useful in-chat
 version required by the Vera runtime contract and state which durable artifacts
@@ -43,7 +53,7 @@ specialist-workflow outcome.
 Before substantive delivery, disclose:
 
 ```text
-Vera workflow: vera:quesito-legale-fiscale -> vera:prompt-optimizer -> vera:deep-research-validator
+Vera workflow: vera:quesito-legale-fiscale -> vera:prompt-optimizer -> vera:deep-research-validator -> vera:adversarial-opinion
 ```
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.

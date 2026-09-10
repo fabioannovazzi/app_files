@@ -11,7 +11,11 @@
     "assets/deep-research-review-widget.html"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "scripts/adversarial_opinion.py",
+    "skills/adversarial-opinion/SKILL.md",
+    "skills/adversarial-opinion/references/durable-opinion.md",
+    "skills/quesito-legale-fiscale/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -24,6 +28,15 @@
         "id": "report-and-source-review",
         "purpose": "Assess answer-contract conformance, claim coverage, source identity, semantic support, reasoning quality, professional-judgment boundaries, and proposed corrections",
         "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files, including extracted PDF page text and page-coverage status, and HTML text parsed without tag attributes, comments, scripts or styles; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions. The canonical review record keeps each claim or scope assessment once and uses local references for mechanical observations and the complete audit rather than duplicating those records in each review item.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "opposing-position-and-comparison",
+        "purpose": "Develop and review a substantive opposing case independently of the original validation outcome and compare both positions",
+        "content": "Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -50,6 +63,23 @@
         "Persist normalized captured text only in the private run output so exact-passage observations can be scoped to the specifically cited source.",
         "Use --no-fetch and local source files when network retrieval is unavailable or inappropriate."
       ]
+    },
+    {
+      "id": "opposing-case-research",
+      "kind": "public_research",
+      "destination": "Public official and reliable-source websites selected for the opposing case",
+      "purpose": "Investigate competing authorities, interpretations, exceptions and factual premises beyond the original citations when needed",
+      "content": "Model-selected issue queries, material case facts when required by the research purpose, public URLs and retrieved source text",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use current host research capabilities and preserve actual queries, source identities, source captures and access limits.",
+        "The opinion helper has no network or model API client; cited-URL acquisition uses the existing validator route."
+      ]
     }
   ],
   "security_controls": [
@@ -72,12 +102,16 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "exact-opinion-pair-binding",
+      "control": "The opinion CLI requires the existing deep-research-validator Studio Archive context. Fixed phase directories stay beneath its output root; traversal and symlink artifacts are rejected. Preparation binds every original phase file; delivery binds both packages and the comparison. Verification rejects changed, missing or newly added phase files and recomputes both validation records. Hashes establish local integrity, not provider attestation or legal correctness."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "080c375edd00bcbcc584a41d0267a0e6bbe02b9a6695a7128c8e706346390eb3"
+    "source_fingerprint": "fe1d209b21471674bac3334765e2a8af95c1309c7ce79eb685ee8483f2a03e4a"
   }
 }

@@ -28,6 +28,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "opposing-position-and-comparison",
+        "purpose": "Develop and review a substantive opposing case independently of the original validation outcome and compare both positions",
+        "content": "Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -49,6 +58,23 @@
         "Read at most 1,000,001 response bytes per URL to detect truncation, retain at most the first 1,000,000 bytes, and use a bounded timeout.",
         "Persist normalized captured text only in the private run output so exact-passage observations can be scoped to the specifically cited source.",
         "Use --no-fetch and local source files when network retrieval is unavailable or inappropriate."
+      ]
+    },
+    {
+      "id": "opposing-case-research",
+      "kind": "public_research",
+      "destination": "Public official and reliable-source websites selected for the opposing case",
+      "purpose": "Investigate competing authorities, interpretations, exceptions and factual premises beyond the original citations when needed",
+      "content": "Model-selected issue queries, material case facts when required by the research purpose, public URLs and retrieved source text",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use current host research capabilities and preserve actual queries, source identities, source captures and access limits.",
+        "The opinion helper has no network or model API client; cited-URL acquisition uses the existing validator route."
       ]
     }
   ],
@@ -72,12 +98,22 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "exact-opinion-pair-binding",
+      "control": "The opinion CLI requires the existing deep-research-validator Studio Archive context. Fixed phase directories stay beneath its output root; traversal and symlink artifacts are rejected. Preparation binds every original phase file; delivery binds both packages and the comparison. Verification rejects changed, missing or newly added phase files and recomputes both validation records. Hashes establish local integrity, not provider attestation or legal correctness."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9572d4f745122ab085cab14e598a860eb3f500f822bbe545e559437b5437bdab"
-  }
+    "source_fingerprint": "7ff5db709b4d3dcdf9b841d3dc7c9a1458e07b0d49ad1d2f661db72ff61bfc21"
+  },
+  "governed_repository_paths": [
+    "plugins/vera/scripts/adversarial_opinion.py",
+    "plugins/vera/skills/adversarial-opinion/SKILL.md",
+    "plugins/vera/skills/adversarial-opinion/references/durable-opinion.md",
+    "plugins/vera/skills/quesito-legale-fiscale/SKILL.md"
+  ]
 }
