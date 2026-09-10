@@ -284,9 +284,9 @@ from a listed entrypoint. Semantic routing remains in the catalog and skills.
 
 For an ordinary substantive legal, tax, or compliance question or source-backed
 professional drafting request, `quesito-legale-fiscale` is the matching
-specialist workflow. Prompt Optimizer and Deep Research Validator are its
-sequential internal assurance stages; the user does not need to invoke either
-one.
+specialist workflow. Its four stages are preparation, research and drafting,
+validation of the original, and adversarial examination with comparison. The
+user does not need to invoke the internal stages.
 
 After selecting a workflow, open `../<skill-name>/SKILL.md` using the exact bare
 skill name from the catalog, read that file completely, and follow it before
@@ -420,7 +420,8 @@ them without changing the capability catalog:
 - `quesito-legale-fiscale`: client-bound orchestration for one substantive
   legal, tax, or compliance question or source-backed professional draft. It
   prepares the answer contract, generates or hands off the answer, and validates
-  the completed answer. It never turns an unsupported operational return,
+  the completed answer, then routinely develops and reviews the strongest
+  opposing case and compares the two positions. It never turns an unsupported operational return,
   declaration, filing, or form into a generic answer workflow.
 
 ## Workflow provenance
@@ -463,6 +464,9 @@ assurance schemas preserve the same validation dimensions without placing
 studio-wide editorial work in one client's Studio Archive engagement.
 Treat those artifacts as the prompt-optimizer and deep-research-validator
 stages for that contribution; do not run the client-bound modules again.
+The adversarial-opinion stage below applies to `quesito-legale-fiscale`; this
+change does not add a counter-opinion to studio communications or other
+registered workflows.
 
 1. Route the question internally through `prompt-optimizer`. Complete only the
    material intake, jurisdiction confirmation, source curation, answer
@@ -471,7 +475,8 @@ stages for that contribution; do not run the client-bound modules again.
    The inspection layer does not decide whether angle or jurisdiction
    confirmation is needed; ask only when semantic review finds a consequential
    ambiguity.
-2. Write `answer_contract.json` before generation. Keep generation route
+2. Write `answer_contract.json` before generation. For `quesito-legale-fiscale`,
+   set `adversarial_policy` to `required` in the original contract. Keep generation route
    separate from document type:
    - `generation_route` is `codex_direct`, `chatgpt_deep_research`, or
      `external_document`;
@@ -503,7 +508,9 @@ stages for that contribution; do not run the client-bound modules again.
 7. When a generated or external answer is available, route it through
    `deep-research-validator` with the same `answer_contract.json`. The validator
    applies to short letters and other professional documents as well as
-   research reports.
+   research reports. For `quesito-legale-fiscale`, package the original in
+   `position/` beneath the prepared validation run and keep that run open for
+   the adversarial stage.
 8. Keep the validation dimensions explicit and separate:
    - mechanical observations: document/source access, exact identifier
      resolution, exact passage presence in the specifically cited source
@@ -523,14 +530,23 @@ stages for that contribution; do not run the client-bound modules again.
    their issue-specific actions rather than a single pass/fail label.
 10. Correct support or reasoning defects when the evidence permits. Mark
    judgment-dependent conclusions for professional review rather than
-   presenting them as validated facts. Deliver the corrected document,
-   validation record, unresolved issues, and final answer as the end of the
-   same journey. Recording a proposed fix is not correction: regenerate the
+   presenting them as validated facts. Preserve the corrected document,
+   validation record and unresolved issues for the next stage. Recording a proposed fix is not correction: regenerate the
    answer semantically and rerun packaging before it can be delivery-ready.
    The packaging layer may reject mechanically contradictory review states—for
    example a contradicted claim retained with no issue treatment, a rejected
    claim marked ready, or a completed correction paired with a no-defect
    outcome—but it must never assign the semantic support or reasoning status.
+
+11. For `quesito-legale-fiscale`, read and follow `../adversarial-opinion/SKILL.md`
+   before delivery, independently of the original validation outcome. Use the
+   current model; model diversity is not required. Develop and review a
+   substantive opposing case, or a reasoned no-substantial-case/evidence-limited
+   result, and compare both positions for the professional. Keep this work
+   within the same validation run. Verify the combined `opinion_delivery.json`
+   with the documented helper before delivering the original, opposing result,
+   comparison and separate reviews. When local tooling is unavailable, perform
+   the substantive exercise in chat and state the missing durable evidence.
 
 If native Deep Research is unavailable to the user because of plan, country,
 workspace policy, or current-surface limitations, state that limitation.
@@ -541,7 +557,8 @@ product mode.
 `quesito-legale-fiscale` does not create a third Studio Archive workstream or a
 new external data route. The preparation stage remains governed by the
 `prompt-optimizer` workstream record, and the answer-review stage remains
-governed by the `deep-research-validator` workstream record.
+governed by the `deep-research-validator` workstream record, including the
+adversarial research, opposing review and final comparison.
 
 For a selected local workflow module that actually needs scripts, files, or MCP,
 resolve its root in this order:

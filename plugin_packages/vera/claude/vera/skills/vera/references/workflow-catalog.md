@@ -123,7 +123,8 @@ skill to imitate a missing operational workflow.
   question, or prepare source-backed professional drafting, through one
   question-to-reviewed-answer journey. It orchestrates prompt preparation,
   direct generation or an explicit Deep Research handoff, and answer
-  validation without asking the user to select those internal stages. It does
+  validation, followed by a routine adversarial opinion and comparison,
+  without asking the user to select those internal stages. It does
   not substitute for an operational return, declaration, filing, or form.
 - `registro-imprese-sari`: prepare Registro Imprese, REA, Comunicazione Unica,
   or DIRE work from official guidance without filing or signing.
@@ -164,7 +165,11 @@ only when the request is specifically limited to their bounded output.
 - `deep-research-validator`: validate the generated or supplied answer against
   that contract, sources, reasoning, and professional-judgment boundary.
 
-Use these two skills automatically for accepted source-backed question and
+- `adversarial-opinion`: after original validation in `quesito-legale-fiscale`,
+  develop and review the strongest evidence-bound opposing case and compare
+  both positions, regardless of the validation outcome, using the current model.
+
+Use the planner and validator automatically for accepted source-backed question and
 drafting work through `quesito-legale-fiscale` or another registered workflow.
 They are sequential internal stages, not the specialist workflow the user must
 select. They do not establish the completeness or correctness of an

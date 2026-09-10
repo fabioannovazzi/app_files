@@ -776,8 +776,15 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
     # Exact identity closure is mechanically verifiable and prevents public
     # inventory drift without classifying workflow meaning or user intent.
     assert set(re.findall(r'data-vera-workflow="([^"]+)"', core)) == (
-        _catalog_workflow_names(
-            catalog, "Professional workflows", "Subordinate intake workflows"
+        set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
+        - _catalog_workflow_names(
+            catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
+        )
+        - _catalog_workflow_names(
+            catalog, "Cross-cutting answer assurance", "Run-wide model-data evidence"
+        )
+        - _catalog_workflow_names(
+            catalog, "Developer governance", "Public process explanations"
         )
     )
     assert set(
@@ -785,7 +792,9 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
     ) == _catalog_workflow_names(
         catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
     )
-    assert not re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)
+    assert set(re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)) == {
+        "adversarial-opinion"
+    }
     for internal_href in (
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -796,7 +805,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 32
+    expected_module_count = 33
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -872,6 +881,7 @@ def test_vera_hub_separates_research_from_studio_communication() -> None:
     assert set(re.findall(r'href="([^"]+)"', research)) == {
         "../bandi-agevolazioni/index.html",
         "../quesito-legale-fiscale/index.html",
+        "../adversarial-opinion/index.html",
     }
     assert set(re.findall(r'href="([^"]+)"', communication)) == {
         "../comunicazione-professionale/index.html",
@@ -929,6 +939,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Report finanziario enti locali",
         "Bandi e agevolazioni",
         "Risposta a quesiti legali e fiscali",
+        "Parere contrapposto",
         "Comunicazione professionale",
         "Sito dello studio",
     ]
@@ -953,6 +964,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
         "module.question.title": "Risposta a quesiti legali e fiscali",
+        "module.adversarial.title": "Parere contrapposto",
     }
 
     # The public directory and marketplace use one canonical naming contract.
@@ -981,6 +993,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "presenza-digitale-studio": "Sito dello studio",
         "prompt-optimizer": "Ottimizzazione prompt",
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
+        "adversarial-opinion": "Parere contrapposto",
         "registro-imprese-sari": "Pratiche Registro Imprese",
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
@@ -995,7 +1008,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 32
+    assert len(labels) == 33
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1528,7 +1541,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 32
+    expected_module_link_count = 33
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

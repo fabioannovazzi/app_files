@@ -2673,6 +2673,14 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "../prompt-optimizer/SKILL.md" in normalized_skill_text
                 assert "../deep-research-validator/SKILL.md" in normalized_skill_text
                 continue
+            if plugin_root.name == "vera" and (
+                skill_file.parent.name == "adversarial-opinion"
+            ):
+                assert "vera:quesito-legale-fiscale" in normalized_skill_text
+                assert "vera:deep-research-validator" in normalized_skill_text
+                assert "references/durable-opinion.md" in normalized_skill_text
+                assert "Plugin Improvement Feedback" in normalized_skill_text
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
@@ -3638,8 +3646,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 32
-    assert core.count('class="module-row"') == 32
+    assert core.count(" data-module-link") == 33
+    assert core.count('class="module-row"') == 33
     assert core.count('data-jurisdiction-item="it"') == 9
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core

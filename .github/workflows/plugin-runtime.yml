@@ -10,6 +10,34 @@ permissions:
   contents: read
 
 jobs:
+  adversarial-opinion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 pypdf python-docx black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Verify separately reviewed opinions and completed-case integrity
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_adversarial_opinion.py
+          tests/plugins/test_vera_validated_answer_pipeline.py
+          tests/plugins/test_vera_router_contract.py
+          tests/plugins/test_vera_website_journeys.py
+          --cov --cov-config=tests/plugin_adversarial.coveragerc
+      - name: Check formatting, typing and security
+        run: |
+          python -m black --check plugins/vera/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py
+          python -m isort --check-only plugins/vera/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/adversarial_opinion.py
+          python -m bandit -q plugins/vera/scripts/adversarial_opinion.py
+          node --check static/shared/product-function-pages.js
+
   business-planning-decisions:
     runs-on: ubuntu-latest
     timeout-minutes: 10
