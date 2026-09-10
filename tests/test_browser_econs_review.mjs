@@ -252,3 +252,150 @@ test("frame navigation during locator resolution is rejected before invoice fiel
   assert.equal(receipt.result, "failed");
   assert.equal(receipt.outputs[0].record_count, 0);
 });
+
+// Exercise the real capability executor against a synthetic ECONS adapter.
+// Synthetic receipts prove implementation behavior, never live portal support.
+const { planEconsMapping, italianCents, verifyEconsJournal } = await import('../plugins/browser-automation/scripts/econs_processing.mjs');
+function processingProfile() {
+  const phases = {};
+  const shapes = { journal: ['company-code', 'invoice-id', 'invoice-number', 'supplier', 'account', 'net', 'cost', 'vat', 'total', 'debit', 'credit'],
+    posting: ['company-code', 'invoice-id', 'protocol'], company: ['company-code', 'view'], invoices: ['invoice-id'] };
+  for (const name of ['select', 'map', 'journal', 'post', 'verify', 'exit']) {
+    const cap = structuredClone(base);
+    cap.capability_id = `synthetic-processing-${name}`;
+    cap.inputs = ['company-code', 'invoice-id', 'invoice-number', 'supplier', ...(name === 'select' ? ['line-id', 'checked'] : name === 'map' ? ['anchor-line-id', 'checked'] : [])].map((key) => ({
+      name: key, type: key === 'checked' ? 'boolean' : 'text', required: true, sensitivity: 'private_runtime_only', purpose: 'Synthetic context', enum_values: [] }));
+    const outputNames = name === 'journal' ? ['journal'] : name === 'post' ? ['posting'] : name === 'verify' ? ['company', 'invoices', 'invoice-count'] : ['ready'];
+    cap.outputs = outputNames.map((key) => ({ name: key, type: key === 'invoices' ? 'record_set' : ['invoice-count', 'ready'].includes(key) ? 'scalar' : 'record',
+      sensitivity: 'private', delivery: 'model_and_artifact', description: 'Synthetic check', fields: (shapes[key] ?? []).map((field) => ({ name: field, type: 'text', required: true })) }));
+    function action(id, operation, locator = id) {
+      return { ...structuredClone(base.milestones[1].actions[0]), id, operation, input_ref: operation === 'set_checked' ? 'checked' : null,
+        locator_candidates: [candidate(locator)], postcondition: condition('none') };
+    }
+    const phaseActions = name === 'select' ? [action('select-line', 'set_checked', 'line-{{line-id}}')] : name === 'map' ? [action('open-mapping', 'click'), action('associate-all', 'set_checked'), action('confirm-mapping', 'click')] : [action(`open-${name}`, 'click')];
+    if (name === 'post') Object.assign(phaseActions[0], { id: 'confirm-registration', effect: 'consequential', confirmation: 'action_time' });
+    for (const output of cap.outputs) phaseActions.push({ ...action(`extract-${output.name}`, 'extract', output.name), effect: 'read_only', output_ref: output.name,
+      extract: { mode: output.type === 'record_set' ? 'list' : output.type === 'record' ? 'single' : 'text', max_items: output.type === 'record_set' ? 100 : 1, limit_input_ref: null, empty_allowed: output.type === 'record_set', dedupe_by: [],
+        fields: output.fields.map((field) => ({ name: field.name, locator_candidates: [candidate(field.name)], read: { kind: 'text_content', attribute: null }, required: true })) } });
+    cap.entry_milestone = name;
+    cap.milestones = [{ id: name, intent: 'Synthetic processing phase', preconditions: [], actions: phaseActions, transitions: [{ when: condition(), terminal: true, next_milestone: null }] }];
+    cap.completion = { terminal_milestones: [name], required_outputs: outputNames };
+    phases[name] = cap;
+  }
+  return { schema_version: 'econs-processing-profile/v1', complete_status: 'complete', non_posted_view: 'non-posted', phases };
+}
+
+class ProcessingTab extends EconsTab {
+  constructor(options = {}) {
+    super(); this.options = options; this.checked = options.checked ?? false; this.checkboxValues = []; this.postCount = 0; this.mapped = false;
+    this.playwright.getByTestId = (key) => this.output(key);
+  }
+  output(key) {
+    const locator = super.output(key);
+    const id = this.phase === 'detail-2' ? '2' : '1';
+    if (key === 'lines') locator.nodes = [
+      { 'line-id': '1', description: 'Long full source description', account: 'COST', 'vat-code': '22', amount: '10,00' },
+      { 'line-id': '2', description: 'Second invoice line', account: this.options.discordant ? 'OTHER' : 'COST', 'vat-code': '22', amount: '10,00' },
+      { 'line-id': '3', description: 'Third invoice line', account: this.mapped ? 'COST' : '', 'vat-code': '22', amount: '10,00' },
+    ];
+    if (key === 'line-count') locator.nodes = [{ text: this.options.partialLines ? '4' : '3' }];
+    if (key === 'invoice' && this.mapped) locator.nodes[0].status = 'complete';
+    if (key === 'journal') locator.nodes = [{ 'company-code': 'A', 'invoice-id': id, 'invoice-number': `N${id}`, supplier: 'Synthetic supplier', account: 'COST', net: '30,00', cost: '36,60', vat: '0,00', total: '36,60', debit: '36,60', credit: this.options.unbalanced ? '36,59' : '36,60' }];
+    if (key === 'posting') locator.nodes = [{ 'company-code': 'A', 'invoice-id': id, protocol: 'SYNTHETIC-PROTOCOL' }];
+    if (this.verifying && key === 'company') locator.nodes = [{ 'company-code': this.options.wrongVerifyCompany ? 'B' : 'A', view: 'non-posted' }];
+    if (this.verifying && key === 'invoices') locator.nodes = this.options.stillPresent ? [{ 'invoice-id': id }] : [{ 'invoice-id': '2' }];
+    if (this.verifying && key === 'invoice-count') locator.nodes = [{ text: '1' }];
+    locator.setChecked = async (value) => { this.checkboxValues.push([key, value]); if (key === 'associate-all') this.checked = value; };
+    if (['open-mapping', 'confirm-mapping', 'open-journal', 'open-post', 'open-verify', 'open-exit'].includes(key)) locator.click = async () => {
+      this.opened.push(key);
+      if (key === 'confirm-mapping' && !this.options.mappingFailed) this.mapped = this.checked;
+      if (key === 'open-post') this.postCount += 1;
+      if (key === 'open-verify') this.verifying = true;
+      if (key === 'open-exit') this.verifying = false;
+    };
+    return locator;
+  }
+}
+function processing(changes = {}) {
+  return { profile: processingProfile(), classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: ['2'], reason: 'Operator-reviewed synthetic red indicator' }),
+    reviewJournal: async () => ({ approved: true, reason: 'Ditta con indetraibilità confermata al 100%', company_code: 'A', treatment_source: 'Configurazione ditta verificata', vat_nondeductible_percent: 100 }),
+    approvePosting: async () => true, ...changes };
+}
+
+for (const checked of [false, true]) test(`mapping and posting preserve checkbox state from ${checked} and save the client report`, async () => {
+  const tab = new ProcessingTab({ checked });
+  const result = await run(tab, { processing: processing() });
+  assert.equal(result.status, 'processed');
+  assert.equal(result.completed, 1);
+  assert.equal(tab.postCount, 1);
+  assert.deepEqual(tab.checkboxValues, [['line-1', true], ['line-2', true], ['line-3', true], ['associate-all', true]]);
+  const html = await readFile(result.client_reviews[0], 'utf8');
+  assert.match(html, /SYNTHETIC-PROTOCOL/);
+  assert.match(html, /100%/);
+  assert.match(html, /Long full source description/);
+  assert.match(html, /rossa/);
+});
+
+for (const scenario of ['discordant', 'mappingFailed', 'unbalanced', 'wrongVerifyCompany', 'stillPresent']) test(`${scenario} remains an exception with no unsafe retry`, async () => {
+  const tab = new ProcessingTab({ [scenario]: true });
+  const result = await run(tab, { processing: processing() });
+  assert.equal(result.completed, 0);
+  assert.equal(tab.postCount, ['wrongVerifyCompany', 'stillPresent'].includes(scenario) ? 1 : 0);
+  const record = JSON.parse(await readFile(result.review_path.replace(/\.html$/, '.json'), 'utf8'));
+  assert.equal(record.payload.entries[0].status, tab.postCount ? 'unverified' : 'set_aside');
+  assert.ok(tab.opened.includes('open-exit'));
+});
+
+test('unapproved posting never dispatches registration', async () => {
+  const tab = new ProcessingTab();
+  const result = await run(tab, { processing: processing({ approvePosting: async () => false }) });
+  assert.equal(tab.postCount, 0);
+  assert.equal(result.completed, 0);
+});
+
+test('Italian money retains thousands and cents and rejects decimal-dot ambiguity', () => {
+  assert.equal(italianCents('1.234,56'), 123456n);
+  assert.equal(italianCents('12'), 1200n);
+  assert.throws(() => italianCents('12.34'), /invalid_italian/);
+});
+
+test('complete line population and matching VAT are required before mapping', () => {
+  const detail = { 'line-count': '3', lines: [{ 'line-id': '1', description: 'A', account: 'C', 'vat-code': '22', amount: '1,00' }, { 'line-id': '2', description: 'B', account: 'C', 'vat-code': '22', amount: '1,00' }, { 'line-id': '3', description: 'C', account: '', 'vat-code': '10', amount: '1,00' }] };
+  assert.throws(() => planEconsMapping(detail), /different_vat/);
+  assert.throws(() => planEconsMapping({ ...detail, 'line-count': '4' }), /incomplete_line_population/);
+});
+
+test('a changed journal after approval stops before registration', async () => {
+  const tab = new ProcessingTab();
+  const result = await run(tab, { processing: processing({ approvePosting: async () => { tab.options.unbalanced = true; return true; } }) });
+  assert.equal(result.completed, 0);
+  assert.equal(tab.postCount, 0);
+});
+
+test('rounding differences require a professional explanation and 100 percent VAT must remain in cost', () => {
+  const invoice = { 'company-code': 'A', 'invoice-id': '1', 'invoice-number': 'N1', supplier: 'S' };
+  const journal = { ...invoice, account: 'C', net: '1,01', cost: '1,22', vat: '0,00', total: '1,22', debit: '1,22', credit: '1,22' };
+  const detail = { lines: [{ amount: '1,00' }] };
+  const review = { approved: true, reason: 'Confirmed company treatment', company_code: 'A', treatment_source: 'Company configuration', vat_nondeductible_percent: 100 };
+  assert.throws(() => verifyEconsJournal(journal, invoice, detail, { account: 'C' }, review), /unexplained_rounding/);
+  assert.doesNotThrow(() => verifyEconsJournal(journal, invoice, detail, { account: 'C' }, { ...review, rounding_explanation: 'Source invoice rounding reviewed' }));
+  assert.throws(() => verifyEconsJournal({ ...journal, cost: '1,00', vat: '0,22' }, invoice, detail, { account: 'C' }, review), /not_in_cost/);
+});
+
+test('more than two consecutive red items suspend the remaining client and preserve every item in its report', async () => {
+  const tab = new ProcessingTab();
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'invoices' && !tab.verifying) locator.nodes = ['1', '2', '3', '4', '5'].map((id) => ({ 'invoice-id': id, 'invoice-number': `N${id}`, supplier: 'Synthetic supplier', status: ['2', '3', '4'].includes(id) ? 'red' : 'green' }));
+    if (key === 'invoice-count' && !tab.verifying) locator.nodes = [{ text: '5' }];
+    return locator;
+  };
+  const result = await run(tab, { processing: processing({ classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: ['2', '3', '4'], reason: 'Reviewed synthetic indicators' }) }) });
+  assert.equal(result.completed, 1);
+  assert.equal(tab.postCount, 1);
+  assert.ok(!tab.opened.includes('detail-5'));
+  const report = JSON.parse(await readFile(result.client_reviews[0].replace(/\.html$/, '.json'), 'utf8'));
+  assert.equal(report.payload.entries.length, 5);
+  assert.match(report.payload.entries[4].outcome, /oltre due rossi/);
+});

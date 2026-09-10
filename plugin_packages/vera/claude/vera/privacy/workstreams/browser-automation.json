@@ -85,6 +85,14 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "econs-mapping-and-registration-review",
+        "purpose": "Review and execute the authorized client-specific ECONS mapping and registration procedure",
+        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -183,12 +191,16 @@
     {
       "id": "durable-learning-progress-report",
       "control": "Learning requests route to an initial verified checkpoint before exploration. Every saved revision also creates an owner-only immutable Italian report of declared steps, evidence and gaps. Reports verify the checkpoint hash chain and reject altered report contents; a missing report can be rebuilt without repeating actions. The report does not establish execution or transfer approval. Older conversations can support attributed partial requests without fabricated observations; semantic selection and sanitization remain model and operator responsibilities."
+    },
+    {
+      "id": "econs-verified-processing-and-durable-attempts",
+      "control": "Processing validates reviewed phase profiles before actions; requires matching origins, current invoice identity and complete independent row counts; sets association checkboxes true; rereads mappings; verifies displayed journal arithmetic and per-client treatment review; and saves an unverified report before registration. Completion requires a protocol and absence from the same client Non contab. population. Exceptions exit through a reviewed reversible phase; failed exit stops the batch. Exact checks do not certify accounting meaning, live selectors or professional approval. Two clean target-system runs remain necessary."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "031d6701881d8f026db23862673220326c9f51a683ce9c1b1d9c7115aa104800"
+    "source_fingerprint": "6697f8722676d117014ef3c21efa8adf80d145ea7e0dfc2aceb0cf24dd6e72ea"
   }
 }

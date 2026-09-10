@@ -390,11 +390,27 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
 ) -> None:
     projected_components = json.loads(vera_entries["components.json"])
 
-    assert projected_components["shared_services"] == ["run-receipt-stamping"]
+    assert projected_components["shared_services"] == [
+        "run-receipt-stamping",
+        "managed-python-runtime",
+    ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
-        "privacy/services/run-receipt-stamping.json"
+        "privacy/services/run-receipt-stamping.json",
+        "privacy/services/managed-python-runtime.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
+    runtime_service = json.loads(
+        vera_entries["privacy/services/managed-python-runtime.json"]
+    )
+    assert runtime_service["runtime_profiles"] == ["anthropic-cowork"]
+    assert {boundary["id"] for boundary in runtime_service["external_boundaries"]} == {
+        "declared-core-dependency-retrieval",
+        "declared-python312-retrieval",
+    }
+    assert all(
+        boundary["runtime_profiles"] == ["anthropic-cowork"]
+        for boundary in runtime_service["external_boundaries"]
+    )
     receipt_service = json.loads(
         vera_entries["privacy/services/run-receipt-stamping.json"]
     )

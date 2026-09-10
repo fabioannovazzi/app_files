@@ -48,6 +48,23 @@
         "The selected model runtime chooses domains from the confirmed framework; deterministic scripts do not choose legal sources.",
         "The workflow does not request credentials or authenticated-source access."
       ]
+    },
+    {
+      "id": "chatgpt-deep-research-handoff",
+      "kind": "hosted_service",
+      "destination": "ChatGPT Deep Research in the separate ChatGPT account or workspace chosen by the user",
+      "purpose": "Generate the answer when the user chooses the optional chatgpt_deep_research route",
+      "content": "The full optimized_prompt.md including material client names, facts, dates, amounts and questions, plus source_domains_comma.txt. The manual paste is a transfer to ChatGPT model processing, separate from the originating Codex or Cowork session. No automatic anonymization or local-only processing is promised.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Before handoff identify the exact prompt and destination. Obtain the route choice if not already explicit; the user pastes the reviewed content into their chosen ChatGPT account. No script uploads it.",
+        "The user checks the destination account or workspace plan, training controls and retention before professional use or when terms change. Vera cannot inspect or enforce them. Codex and Cowork runtime profiles do not describe this separate destination."
+      ]
     }
   ],
   "security_controls": [
@@ -68,6 +85,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "763e91bdf8d5f9563c1ec3cfb0b3bb04d3feb33e3b866a252efba998859c5588"
+    "source_fingerprint": "20b44fd10854d0554fe0fe7a5c8a4f9847aff9531c9ba576eac2a3e18e26a0da"
   }
 }
