@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "evaluation_method": "model_led_intent_review; examples are not a runtime classifier",
+  "cases": [
+    {
+      "id": "new_tax_credit",
+      "request": "Informami sul nuovo credito di imposta: come funziona, a chi spetta, quali spese copre e quali sono le scadenze.",
+      "expected_policy": "not_required",
+      "reason": "An informational overview, without a concrete position to assess."
+    },
+    {
+      "id": "deep_research_credit",
+      "request": "Usa Deep Research per spiegarmi il nuovo credito di imposta e i chiarimenti ancora mancanti.",
+      "expected_policy": "not_required",
+      "reason": "Research mode and missing guidance do not create an opposing-opinion assignment."
+    },
+    {
+      "id": "casual_parere",
+      "request": "Dammi un parere sul nuovo credito: vorrei capire come funziona in generale.",
+      "expected_policy": "not_required",
+      "reason": "The requested result is an explanation despite the casual word parere."
+    },
+    {
+      "id": "facts_for_scope",
+      "request": "Ho una piccola impresa manifatturiera. Riassumi i requisiti e le esclusioni del nuovo credito, senza valutare ancora i nostri investimenti.",
+      "expected_policy": "not_required",
+      "reason": "Company context narrows an informative overview; the user excludes case assessment."
+    },
+    {
+      "id": "sources_disagree",
+      "request": "Spiegami quali interpretazioni diverse sono emerse nella prassi su questa agevolazione.",
+      "expected_policy": "not_required",
+      "reason": "Describe competing interpretations within the research; no separate client position is requested."
+    },
+    {
+      "id": "concrete_opinion",
+      "request": "Redigi un parere motivato sulla spettanza del credito al nostro investimento descritto negli allegati.",
+      "expected_policy": "required",
+      "reason": "The deliverable assesses a concrete entitlement position."
+    },
+    {
+      "id": "position_without_label",
+      "request": "Sostieni, con fonti e ragionamento, perché il nostro investimento rientra tra quelli ammessi.",
+      "expected_policy": "required",
+      "reason": "A concrete argument is requested without the word parere."
+    },
+    {
+      "id": "explicit_opponent",
+      "request": "Partendo da questo parere già validato, sviluppa il parere contrapposto.",
+      "expected_policy": "required",
+      "reason": "An explicit opposing examination is requested; original validation does not suppress it."
+    },
+    {
+      "id": "explicit_omit",
+      "request": "Redigi un parere sulla spettanza del credito a questo investimento, ma senza parere contrapposto.",
+      "expected_policy": "not_required",
+      "reason": "The explicit instruction to omit controls this assignment."
+    },
+    {
+      "id": "general_vague",
+      "request": "Cosa pensi del nuovo credito di imposta? Vorrei una panoramica iniziale.",
+      "expected_policy": "not_required",
+      "reason": "No concrete position is requested; proceed with an informative overview."
+    },
+    {
+      "id": "later_position",
+      "request": "Ora passa dalla panoramica a un parere motivato: valuta se il nostro investimento negli allegati può beneficiare del credito.",
+      "expected_policy": "required",
+      "reason": "The user now requests a concrete position; update the prior informational contract."
+    },
+    {
+      "id": "english_informational",
+      "request": "Research the new tax credit, its requirements, exclusions and open questions.",
+      "expected_policy": "not_required",
+      "reason": "Informational scope applies across conversation languages."
+    },
+    {
+      "id": "english_position",
+      "request": "Assess whether our investment qualifies and write a reasoned legal opinion on our entitlement.",
+      "expected_policy": "required",
+      "reason": "An applied entitlement opinion is requested."
+    }
+  ]
+}

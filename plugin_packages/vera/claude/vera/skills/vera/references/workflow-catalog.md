@@ -165,9 +165,13 @@ only when the request is specifically limited to their bounded output.
 - `deep-research-validator`: validate the generated or supplied answer against
   that contract, sources, reasoning, and professional-judgment boundary.
 
-- `adversarial-opinion`: after original validation in `quesito-legale-fiscale`,
-  develop and review the strongest evidence-bound opposing case and compare
-  both positions, regardless of the validation outcome, using the current model.
+- `adversarial-opinion`: in `quesito-legale-fiscale`, apply
+  `references/adversarial-scope.md` from that workflow. Informational research
+  ends after validation. An opinion on a concrete position or an explicit
+  request includes the opposing examination, subject to user instructions.
+  When required, develop, review and compare the strongest evidence-bound
+  opposing case regardless of the original validation outcome, using the
+  current model.
 
 Use the planner and validator automatically for accepted source-backed question and
 drafting work through `quesito-legale-fiscale` or another registered workflow.

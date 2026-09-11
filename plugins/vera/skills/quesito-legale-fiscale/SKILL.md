@@ -15,8 +15,10 @@ this skill as the matching specialist workflow for that journey, then:
 
 1. Read `../prompt-optimizer/SKILL.md` completely and follow it before drafting
    or research. It prepares the answer contract, source posture, generation
-   route, and generation instructions. Set `adversarial_policy` to `required`
-   in this journey’s original `answer_contract.json`.
+   route, and generation instructions. Read `references/adversarial-scope.md`
+   and follow it to record the model-led `adversarial_policy` and rationale:
+   informational research uses `not_required`; an opinion on a concrete
+   position uses `required`, subject to the user's explicit instruction.
 2. Follow `../prompt-optimizer/references/research-choice.md`: after preparing
    the question, offer the available OpenAI Deep Research plugin for research
    and drafting, or Vera's usual research. Wait for the choice unless it is
@@ -26,16 +28,19 @@ this skill as the matching specialist workflow for that journey, then:
 3. Read `../deep-research-validator/SKILL.md` completely and follow it before
    delivering a generated or supplied answer. Reuse the same answer contract,
    correct supported defects, and keep professional-judgment items explicit.
-   When local tooling exists, package this opinion in `position/` under the
-   validation run and keep that run open.
-4. Read `../adversarial-opinion/SKILL.md` completely and follow it regardless
+   With `not_required`, finish the ordinary validation workflow and deliver
+   the reviewed answer with sources and limits. With `required` and local
+   tooling, package the original in `position/` and keep the validation run open.
+4. Only with `adversarial_policy: required`, read
+   `../adversarial-opinion/SKILL.md` completely and follow it regardless
    of the original validation outcome. Develop and review the strongest
    substantiated opposing case with the current model; a reasoned negative or
    evidence-limited result is valid. Preserve both opinions and compare them.
-5. Deliver the reviewed or corrected answer, its sources and validation limits
-   together with the opposing opinion, comparison and separate reviews as one
-   result. Verify `opinion_delivery.json` through the adversarial helper before
-   durable delivery. Do not stop after prompt preparation when direct generation is
+5. Deliver the reviewed or corrected answer, its sources and validation limits.
+   When the opposing examination was required, include its reviewed result and
+   comparison and verify `opinion_delivery.json` through the adversarial helper
+   before durable delivery. Informational research can finish after validation
+   without an opposing document or combined opinion package. Do not stop after prompt preparation when direct generation is
    available, and do not describe a structurally complete record as proof of
    legal or tax correctness.
 
@@ -53,10 +58,12 @@ declaration, filing, statutory form, signature, payment, or submission. Select
 the dedicated Vera workflow when one exists; otherwise use Vera's no-matching-
 specialist-workflow outcome.
 
-Before substantive delivery, disclose:
+Before substantive delivery, disclose the stages actually performed:
 
 ```text
-Vera workflow: vera:quesito-legale-fiscale -> vera:prompt-optimizer -> vera:deep-research-validator -> vera:adversarial-opinion
+Vera workflow: vera:quesito-legale-fiscale -> vera:prompt-optimizer -> vera:deep-research-validator
 ```
+
+Append `-> vera:adversarial-opinion` only when the opposing examination ran.
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.

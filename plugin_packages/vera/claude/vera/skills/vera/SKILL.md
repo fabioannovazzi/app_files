@@ -464,9 +464,12 @@ assurance schemas preserve the same validation dimensions without placing
 studio-wide editorial work in one client's Studio Archive engagement.
 Treat those artifacts as the prompt-optimizer and deep-research-validator
 stages for that contribution; do not run the client-bound modules again.
-The adversarial-opinion stage below applies to `quesito-legale-fiscale`; this
-change does not add a counter-opinion to studio communications or other
-registered workflows.
+Within `quesito-legale-fiscale`, adversarial examination applies to an opinion
+on a concrete position or an explicit request for an opposing opinion.
+Informational legal or fiscal research ends after validation. Follow
+`../quesito-legale-fiscale/references/adversarial-scope.md` for this model-led
+intent decision. This does not add a counter-opinion to studio communications
+or other registered workflows.
 
 1. Route the question internally through `prompt-optimizer`. Complete only the
    material intake, jurisdiction confirmation, source curation, answer
@@ -476,8 +479,11 @@ registered workflows.
    confirmation is needed; ask only when semantic review finds a consequential
    ambiguity.
 2. Write `answer_contract.json` before generation. For `quesito-legale-fiscale`,
-   set `adversarial_policy` to `required` in the original contract. Keep generation route
-   separate from document type:
+   follow that scope reference and record `adversarial_policy` (`required` or
+   `not_required`) with `adversarial_rationale` in the original contract.
+   Respect explicit user instructions. Do not infer this policy from tax/legal
+   keywords, document labels, the research mode or the validation outcome.
+   Keep generation route separate from document type:
    - `generation_route` is `codex_direct`, `deep_research_plugin`,
      `chatgpt_deep_research`, or `external_document`;
    - `document_type` is the requested answer artifact, such as a research
@@ -513,9 +519,10 @@ registered workflows.
 7. When a generated or external answer is available, route it through
    `deep-research-validator` with the same `answer_contract.json`. The validator
    applies to short letters and other professional documents as well as
-   research reports. For `quesito-legale-fiscale`, package the original in
-   `position/` beneath the prepared validation run and keep that run open for
-   the adversarial stage.
+   research reports. Only when `adversarial_policy` is `required`, package the
+   original in `position/` beneath the validation run and keep that run open for
+   the adversarial stage. Otherwise use the ordinary validator packaging and
+   finish the reviewed-answer journey without an adversarial package.
 8. Keep the validation dimensions explicit and separate:
    - mechanical observations: document/source access, exact identifier
      resolution, exact passage presence in the specifically cited source
@@ -543,7 +550,8 @@ registered workflows.
    claim marked ready, or a completed correction paired with a no-defect
    outcome—but it must never assign the semantic support or reasoning status.
 
-11. For `quesito-legale-fiscale`, read and follow `../adversarial-opinion/SKILL.md`
+11. For `quesito-legale-fiscale` with `adversarial_policy: required`, read and
+   follow `../adversarial-opinion/SKILL.md`
    before delivery, independently of the original validation outcome. Use the
    current model; model diversity is not required. Develop and review a
    substantive opposing case, or a reasoned no-substantial-case/evidence-limited
@@ -552,6 +560,9 @@ registered workflows.
    with the documented helper before delivering the original, opposing result,
    comparison and separate reviews. When local tooling is unavailable, perform
    the substantive exercise in chat and state the missing durable evidence.
+   With `not_required`, deliver the reviewed answer, sources and limits and
+   complete the ordinary validation run; do not invoke the adversarial helper
+   or require `opinion_delivery.json`. Report only the stages actually run.
 
 If a selected Deep Research route is unavailable or fails, state the actual
 limitation and obtain the user's alternative route choice. Do not silently

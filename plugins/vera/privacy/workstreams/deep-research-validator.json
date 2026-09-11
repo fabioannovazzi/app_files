@@ -32,7 +32,7 @@
       {
         "id": "opposing-position-and-comparison",
         "purpose": "Develop and review a substantive opposing case independently of the original validation outcome and compare both positions",
-        "content": "Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
+        "content": "Only when the contracted adversarial policy is required for a concrete opinion or an explicit opposing-opinion request. Informational research alone does not create this phase. Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -64,7 +64,7 @@
       "id": "opposing-case-research",
       "kind": "public_research",
       "destination": "Public official and reliable-source websites selected for the opposing case",
-      "purpose": "Investigate competing authorities, interpretations, exceptions and factual premises beyond the original citations when needed",
+      "purpose": "When adversarial_policy is required, investigate competing authorities, interpretations, exceptions and factual premises beyond the original citations when needed",
       "content": "Model-selected issue queries, material case facts when required by the research purpose, public URLs and retrieved source text",
       "optional": false,
       "requires_confirmation": false,
@@ -108,12 +108,13 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3b5ed245556a585eab71564550258cc6b4733ee255b8d707e1f03732d531955e"
+    "source_fingerprint": "83624766ecd7b48e05df53908e8c8a2fa17b8c0da21d5c67f4e63e0a4069f11a"
   },
   "governed_repository_paths": [
     "plugins/vera/scripts/adversarial_opinion.py",
     "plugins/vera/skills/adversarial-opinion/SKILL.md",
     "plugins/vera/skills/adversarial-opinion/references/durable-opinion.md",
-    "plugins/vera/skills/quesito-legale-fiscale/SKILL.md"
+    "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
+    "plugins/vera/skills/quesito-legale-fiscale/references/adversarial-scope.md"
   ]
 }

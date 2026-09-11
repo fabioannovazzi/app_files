@@ -3566,11 +3566,11 @@ def test_prompt_optimizer_workflow_hides_internal_file_handoff_in_every_locale()
     )
 
     for user_facing_copy in (
-        "Avvia Deep Research con il brief e i siti già preparati.",
-        "Start Deep Research with the prepared brief and source sites.",
-        "Lancez Deep Research avec le brief et les sites sources déjà préparés.",
-        "Inicie Deep Research con el encargo y los sitios fuente ya preparados.",
-        "Starten Sie Deep Research mit dem vorbereiteten Briefing und den Quellwebsites.",
+        "Prima della generazione, Vera chiede se usare il plugin Deep Research",
+        "Before generation, Vera asks whether to use the OpenAI Deep Research plugin",
+        "Avant la génération, Vera propose le plugin Deep Research",
+        "Antes de generar la respuesta, Vera ofrece el plugin Deep Research",
+        "Vor der Erstellung bietet Vera das in der Sitzung verfügbare OpenAI-Plugin Deep Research",
     ):
         assert user_facing_copy in page
 
@@ -3582,6 +3582,56 @@ def test_prompt_optimizer_workflow_hides_internal_file_handoff_in_every_locale()
         "Nutzen Sie optimized_prompt.md als Anweisung",
     ):
         assert internal_handoff not in page
+
+
+@pytest.mark.parametrize(
+    ("language", "information_work", "information_stage", "position"),
+    [
+        ("it", "per informarsi", "ricerca informativa", "posizione concreta"),
+        ("en", "informational research", "informational research", "concrete position"),
+        ("fr", "recherche informative", "recherche informative", "position concrète"),
+        ("de", "informationsrecherche", "informationsrecherche", "konkreten position"),
+        (
+            "es",
+            "investigación informativa",
+            "investigación informativa",
+            "posición concreta",
+        ),
+    ],
+)
+def test_legal_research_pages_distinguish_information_from_opinions(
+    language: str, information_work: str, information_stage: str, position: str
+) -> None:
+    source = (ROOT / "static/shared/product-function-pages.js").read_text()
+    planner = (ROOT / "static/shared/prompt-optimizer/index.html").read_text()
+    question = source.split('    "quesito-legale-fiscale": {', 1)[1].split(
+        '\n    "', 1
+    )[0]
+    opposing = source.split('    "adversarial-opinion": {', 1)[1].split('\n    "', 1)[0]
+    question_locale = re.search(
+        rf"        {language}: \{{\n.*?\n        \}},", question, re.S
+    ).group()
+    opposing_locale = re.search(
+        rf"        {language}: \{{\n.*?\n        \}},", opposing, re.S
+    ).group()
+    planner_locale = re.search(
+        rf"^      {language}: \{{\n.*?^      \}}", planner, re.M | re.S
+    ).group()
+
+    work = json.loads(re.search(r'work: (".*"),', question_locale).group(1)).casefold()
+    activation = json.loads(
+        re.search(r'useWhen: (".*"),', opposing_locale).group(1)
+    ).casefold()
+    research_choice = json.loads(
+        re.search(r'"workflow.item4.copy": (".*"),', planner_locale).group(1)
+    ).casefold()
+
+    assert information_work in work
+    assert position in work
+    assert information_stage in activation
+    assert position in activation
+    assert information_stage in research_choice
+    assert position in research_choice
 
 
 def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_preparation() -> (

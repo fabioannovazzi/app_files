@@ -15,7 +15,8 @@
     "scripts/adversarial_opinion.py",
     "skills/adversarial-opinion/SKILL.md",
     "skills/adversarial-opinion/references/durable-opinion.md",
-    "skills/quesito-legale-fiscale/SKILL.md"
+    "skills/quesito-legale-fiscale/SKILL.md",
+    "skills/quesito-legale-fiscale/references/adversarial-scope.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -36,7 +37,7 @@
       {
         "id": "opposing-position-and-comparison",
         "purpose": "Develop and review a substantive opposing case independently of the original validation outcome and compare both positions",
-        "content": "Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
+        "content": "Only when the contracted adversarial policy is required for a concrete opinion or an explicit opposing-opinion request. Informational research alone does not create this phase. Complete reviewed original opinion, material case facts, original answer contract, sources and validation limits; actual research queries and selected public source texts; complete opposing opinion or reasoned negative or evidence-limited result; source, support, reasoning and professional-judgment reviews; search record, comparison and its semantic review. The same selected model runtime may perform every phase. Local code hashes phase files and checks structure and declared states; it does not generate legal arguments or choose an outcome.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -68,7 +69,7 @@
       "id": "opposing-case-research",
       "kind": "public_research",
       "destination": "Public official and reliable-source websites selected for the opposing case",
-      "purpose": "Investigate competing authorities, interpretations, exceptions and factual premises beyond the original citations when needed",
+      "purpose": "When adversarial_policy is required, investigate competing authorities, interpretations, exceptions and factual premises beyond the original citations when needed",
       "content": "Model-selected issue queries, material case facts when required by the research purpose, public URLs and retrieved source text",
       "optional": false,
       "requires_confirmation": false,
@@ -112,6 +113,6 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "94b65c859d97251cbf0352466dc78ed782b55fac12e7142d93632f289a10b0dd"
+    "source_fingerprint": "9be28c9e2f67a4f6bb819f26df452f85a9badee39cd35ae79d8e9896a8d3a234"
   }
 }
