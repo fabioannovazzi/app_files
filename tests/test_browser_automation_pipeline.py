@@ -233,7 +233,7 @@ def _receipt(
                 }
             )
     return {
-        "schema_version": "browser-run-receipt/v2",
+        "schema_version": "browser-run-receipt/v3",
         "runtime_version": "browser-capability-runtime/2",
         "run_id": run_id,
         "capability_id": capability["capability_id"],
@@ -262,6 +262,7 @@ def _receipt(
         "locator_changes_during_run": False,
         "private_evidence_retained": False,
         "environment": {
+            "execution_mode": "live_connected_chrome",
             "browser": "existing_chrome",
             "controller": "chrome_extension",
             "origin_ui": "Gmail",
@@ -407,7 +408,7 @@ def _download_receipt(
                 }
             )
     return {
-        "schema_version": "browser-run-receipt/v2",
+        "schema_version": "browser-run-receipt/v3",
         "runtime_version": "browser-capability-runtime/12",
         "run_id": run_id,
         "capability_id": capability["capability_id"],
@@ -436,6 +437,7 @@ def _download_receipt(
         "locator_changes_during_run": False,
         "private_evidence_retained": False,
         "environment": {
+            "execution_mode": "live_connected_chrome",
             "browser": "existing_chrome",
             "controller": "chrome_extension",
             "origin_ui": "Synthetic",
@@ -1186,6 +1188,30 @@ def test_model_recovery_receipts_cannot_count_as_clean_validation(
             discovered_path,
             receipts,
             tmp_path / "validated.json",
+        )
+
+
+@pytest.mark.parametrize("mode", ["simulated", "unverified"])
+def test_finalizer_rejects_passed_non_live_receipts(tmp_path: Path, mode: str) -> None:
+    pipeline = _pipeline()
+    discovery = _discovery(approved=True)
+    draft = _draft_for_discovery(discovery)
+    discovered_path = tmp_path / "discovered.json"
+    pipeline.promote_capability(
+        _write_json(tmp_path / "draft.json", draft),
+        _write_json(tmp_path / "discovery.json", discovery),
+        discovered_path,
+    )
+    discovered = json.loads(discovered_path.read_text())
+    receipt = _receipt(discovered, run_id="non-live-run")
+    receipt["environment"].update(execution_mode=mode, browser=mode, controller=mode)
+    path = _write_run_evidence(tmp_path / "run", receipt)
+
+    with pytest.raises(
+        ValueError, match="not live connected-Chrome validation evidence"
+    ):
+        pipeline.finalize_capability(
+            discovered_path, [path, path], tmp_path / "validated.json"
         )
 
 

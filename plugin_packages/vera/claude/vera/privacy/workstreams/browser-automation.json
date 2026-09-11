@@ -93,6 +93,14 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "browser-session-and-invoice-prototype-status",
+        "purpose": "Resume the same authorized task after a login handoff and report the actual scope and progress of individual invoice downloads",
+        "content": "The model receives the handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. For the Agenzia prototype the model reads the exact authorized date filters, direction and independent population counts; output summaries contain direction counts, pages visited, execution mode, prototype status and sanitized failure metadata. Local run revisions retain file paths, byte lengths, hashes and hashed detail identities; downloaded invoice content is not returned or transferred. Existing authorization and data disclosures govern any targeted account or business-data reading.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -195,12 +203,20 @@
     {
       "id": "econs-verified-processing-and-durable-attempts",
       "control": "Processing validates reviewed phase profiles before actions; requires matching origins, current invoice identity and complete independent row counts; sets association checkboxes true; rereads mappings; verifies displayed journal arithmetic and per-client treatment review; and saves an unverified report before registration. Completion requires a protocol and absence from the same client Non contab. population. Exceptions exit through a reviewed reversible phase; failed exit stops the batch. Exact checks do not certify accounting meaning, live selectors or professional approval. Two clean target-system runs remain necessary."
+    },
+    {
+      "id": "turn-scoped-browser-handoff-and-same-tab-recovery",
+      "control": "The handoff helper calls the current host markHandoff API on the actual task tab and reports failure without claiming retention. The skill requires a new mark before each unfinished turn. Session diagnosis probes the selected tab and reacquires only the same ID once; other allowed-origin candidate IDs are reported without selecting an account. Exact missing-tab, empty-inventory and unavailable-binding outcomes remain distinct and do not infer an extension cause. Reports exclude raw URLs, titles, identifiers and browser errors."
+    },
+    {
+      "id": "explicit-execution-mode-and-durable-invoice-prototype",
+      "control": "Receipt v3 defaults execution mode to unverified. Simulated or unverified runs cannot pass capability finalization; only an explicit live_connected_chrome declaration is eligible, without claiming cryptographic attestation. Real-browser fixture results remain limited to that fixture. The individual invoice runner always retains prototype status, writes initial and per-download revisions and final outputs on handled failures, rejects repeated detail identities and checks download counts against independently observed totals. These checks do not establish live Agenzia compatibility, account correctness or professional validation."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-09",
+    "reviewed_at": "2026-09-11",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6697f8722676d117014ef3c21efa8adf80d145ea7e0dfc2aceb0cf24dd6e72ea"
+    "source_fingerprint": "3a8c184b5b98408ebd561c2633cb37347834c0bd49d3f84395339c523cd5c3b3"
   }
 }

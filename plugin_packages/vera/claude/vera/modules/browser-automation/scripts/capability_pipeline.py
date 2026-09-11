@@ -42,7 +42,7 @@ LOGGER = logging.getLogger(__name__)
 
 CAPABILITY_SCHEMA = "browser-capability/v2"
 DISCOVERY_SCHEMA = "browser-discovery/v2"
-RECEIPT_SCHEMA = "browser-run-receipt/v2"
+RECEIPT_SCHEMA = "browser-run-receipt/v3"
 RUN_LOCK_SCHEMA = "browser-run-lock/v1"
 RECOVERY_RUN_LOCK_SCHEMA = "browser-run-lock/v2"
 RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2"
@@ -2001,15 +2001,26 @@ def validate_run_receipt(payload: Any) -> list[str]:
         errors.append("receipt.private_evidence_retained must be false")
     environment = _exact_keys(
         receipt.get("environment"),
-        {"browser", "controller", "origin_ui", "locale"},
+        {"browser", "controller", "origin_ui", "locale", "execution_mode"},
         scope="receipt.environment",
         errors=errors,
     )
     if environment is not None:
-        if environment.get("browser") != "existing_chrome":
-            errors.append("receipt.environment.browser must be existing_chrome")
-        if environment.get("controller") != "chrome_extension":
-            errors.append("receipt.environment.controller must be chrome_extension")
+        mode = environment.get("execution_mode")
+        if mode not in {"unverified", "simulated", "live_connected_chrome"}:
+            errors.append("receipt.environment.execution_mode is unsupported")
+        expected_browser = (
+            "existing_chrome" if mode == "live_connected_chrome" else mode
+        )
+        expected_controller = (
+            "chrome_extension" if mode == "live_connected_chrome" else mode
+        )
+        if environment.get("browser") != expected_browser:
+            errors.append("receipt.environment.browser does not match execution_mode")
+        if environment.get("controller") != expected_controller:
+            errors.append(
+                "receipt.environment.controller does not match execution_mode"
+            )
         for field in ("origin_ui", "locale"):
             if not _non_empty_text(environment.get(field)):
                 errors.append(f"receipt.environment.{field} must be non-empty")
@@ -2321,6 +2332,10 @@ def _verified_receipt(
         raise ValueError(f"receipt {path} is not canonical runtime output")
     if receipt["result"] != "passed":
         raise ValueError(f"receipt {path} did not pass")
+    if receipt["environment"]["execution_mode"] != "live_connected_chrome":
+        raise ValueError(
+            f"receipt {path} is not live connected-Chrome validation evidence"
+        )
     if receipt["locator_changes_during_run"] is True:
         raise ValueError(
             f"receipt {path} used model recovery and is not a clean validation run"

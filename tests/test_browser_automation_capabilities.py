@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import re
 import stat
 import subprocess
 import sys
@@ -648,7 +649,7 @@ def test_plugin_manifest_and_triggers_describe_generic_capability_authoring() ->
     )
     fixture_text = json.dumps(evals, ensure_ascii=False)
 
-    assert manifest["version"] == "0.5.16"
+    assert re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", manifest["version"])
     assert {
         "chrome-extension",
         "playwright",

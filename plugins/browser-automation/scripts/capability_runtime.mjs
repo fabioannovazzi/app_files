@@ -12,9 +12,10 @@ import { chmod, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
 import { DEFAULT_DOWNLOAD_DIRECTORY, observeDownloadDirectory } from "./download_directory.mjs";
+import { browserFailureCode } from "./browser_session.mjs";
 
-export const RUNTIME_VERSION = "browser-capability-runtime/16";
-export const RECEIPT_SCHEMA = "browser-run-receipt/v2";
+export const RUNTIME_VERSION = "browser-capability-runtime/17";
+export const RECEIPT_SCHEMA = "browser-run-receipt/v3";
 export const RECOVERY_PROPOSAL_SCHEMA = "browser-recovery-proposals/v2";
 
 const EXECUTABLE_STATES = new Set(["discovered", "validated_local"]);
@@ -810,6 +811,8 @@ function sanitizedErrorMetadata(code, detail, reasonCode = null) {
 }
 
 function classifyRunFailure(error) {
+  const browserFailure = browserFailureCode(error);
+  if (browserFailure !== null) return browserFailure;
   const detail = error instanceof Error ? error.message : String(error);
   if (error instanceof DownloadObservationError) return "native_gap";
   if (error instanceof LocatorResolutionError) return "locator_resolution_failed";
@@ -1390,6 +1393,10 @@ function publicSummary(
   return {
     run_id: receipt.run_id,
     result: receipt.result,
+    execution_mode: receipt.environment.execution_mode,
+    validation_eligible: receipt.result === "passed" &&
+      receipt.environment.execution_mode === "live_connected_chrome" &&
+      !receipt.locator_changes_during_run,
     capability_id: receipt.capability_id,
     completed_milestones: receipt.completed_milestones,
     terminal_milestone: receipt.terminal_milestone,
@@ -1423,8 +1430,9 @@ export async function executeCapability({
   downloadDirectory = DEFAULT_DOWNLOAD_DIRECTORY,
 }) {
   validateRuntimeShape(capability);
-  if (!tab?.playwright || typeof tab.url !== "function" || typeof tab.goto !== "function") {
-    throw new Error("executeCapability requires a connected Chrome tab");
+  const executionMode = environment.execution_mode ?? "unverified";
+  if (!["unverified", "simulated", "live_connected_chrome"].includes(executionMode)) {
+    throw new Error("unsupported browser execution mode");
   }
   if (!SAFE_ID.test(runId ?? "")) {
     throw new Error("runId must be a lower-case slug");
@@ -1477,6 +1485,9 @@ export async function executeCapability({
   };
 
   try {
+    if (!tab?.playwright || typeof tab.url !== "function" || typeof tab.goto !== "function") {
+      throw new Error("connected Chrome runtime lacks the required tab API");
+    }
     for (let transitionCount = 0; transitionCount < MAX_TRANSITIONS; transitionCount += 1) {
       const milestone = milestones.get(currentMilestoneId);
       if (milestone == null) {
@@ -1620,8 +1631,9 @@ export async function executeCapability({
     locator_changes_during_run: recoveryProposals.length > 0,
     private_evidence_retained: false,
     environment: {
-      browser: "existing_chrome",
-      controller: "chrome_extension",
+      execution_mode: executionMode,
+      browser: executionMode === "live_connected_chrome" ? "existing_chrome" : executionMode,
+      controller: executionMode === "live_connected_chrome" ? "chrome_extension" : executionMode,
       origin_ui: capability.site.name,
       locale: environment.locale ?? "unknown",
     },
