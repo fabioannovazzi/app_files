@@ -14,6 +14,47 @@
 <body data-function-page="clara-data-analysis">
   <div id="function-page-root"></div>
   <script src="../product-function-pages.js"></script>
+  <script>
+    (() => {
+      const page = window.MPARANZA_FUNCTION_PAGES["clara-data-analysis"];
+      page.publicExampleHref = "https://officina-nord-budget-demo.fabio3143.chatgpt.site";
+      const exampleCopy = {
+        "it": {
+          "publicExampleLabel": "Esempio pubblico",
+          "publicExampleTitle": "Budget e forecast con tabelle in stile IBCS",
+          "publicExampleSummary": "Esempio in italiano con dati sintetici, scostamenti in euro e percentuale. Accesso senza login.",
+          "publicExampleLinkLabel": "Apri l’esempio di budget e forecast"
+        },
+        "en": {
+          "publicExampleLabel": "Public example",
+          "publicExampleTitle": "Budget and forecast with IBCS-style tables",
+          "publicExampleSummary": "Italian-language example with synthetic data and variances in euros and percentages. No login required.",
+          "publicExampleLinkLabel": "Open the budget and forecast example"
+        },
+        "fr": {
+          "publicExampleLabel": "Exemple public",
+          "publicExampleTitle": "Budget et prévision avec tableaux de style IBCS",
+          "publicExampleSummary": "Exemple en italien avec des données fictives et des écarts en euros et en pourcentage. Sans connexion.",
+          "publicExampleLinkLabel": "Ouvrir l’exemple de budget et de prévision"
+        },
+        "de": {
+          "publicExampleLabel": "Öffentliches Beispiel",
+          "publicExampleTitle": "Budget und Prognose mit Tabellen im IBCS-Stil",
+          "publicExampleSummary": "Beispiel auf Italienisch mit synthetischen Daten und Abweichungen in Euro und Prozent. Ohne Anmeldung.",
+          "publicExampleLinkLabel": "Budget- und Prognosebeispiel öffnen"
+        },
+        "es": {
+          "publicExampleLabel": "Ejemplo público",
+          "publicExampleTitle": "Presupuesto y previsión con tablas de estilo IBCS",
+          "publicExampleSummary": "Ejemplo en italiano con datos sintéticos y desviaciones en euros y porcentajes. Sin iniciar sesión.",
+          "publicExampleLinkLabel": "Abrir el ejemplo de presupuesto y previsión"
+        }
+      };
+      Object.entries(exampleCopy).forEach(([language, copy]) => {
+        Object.assign(page.copy[language], copy);
+      });
+    })();
+  </script>
   <script src="../product-function-page.js"></script>
 </body>
 </html>
