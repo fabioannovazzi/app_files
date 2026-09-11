@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import os
 import re
 import stat
 import subprocess
@@ -519,10 +520,11 @@ def test_seal_writes_owner_only_deterministic_non_overwriting_bundle(
         json.loads(validated.read_text(encoding="utf-8"))
     )
     assert lock["capability_id"] == "gmail-search-export"
-    assert stat.S_IMODE(target.stat().st_mode) == 0o700
-    for path in target.rglob("*"):
-        expected_mode = 0o700 if path.is_dir() else 0o600
-        assert stat.S_IMODE(path.stat().st_mode) == expected_mode
+    if os.name != "nt":  # Windows ACLs are not expressed by POSIX mode bits.
+        assert stat.S_IMODE(target.stat().st_mode) == 0o700
+        for path in target.rglob("*"):
+            expected_mode = 0o700 if path.is_dir() else 0o600
+            assert stat.S_IMODE(path.stat().st_mode) == expected_mode
     with pytest.raises(FileExistsError, match="refusing to overwrite"):
         contract.seal_capability(
             validated, tmp_path / "bundle", discovery_path, receipt_paths

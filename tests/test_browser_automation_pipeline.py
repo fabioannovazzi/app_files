@@ -5,6 +5,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
 import stat
 import subprocess
 import sys
@@ -1118,7 +1119,8 @@ def test_discovery_approval_gate_fails_closed_and_promotes_exact_record(
     assert promoted["status"] == "discovered"
     assert promoted["provenance"]["source"] == "authorized_live_discovery"
     assert promoted["provenance"]["discovery_approval_id"] == "operator-review-one"
-    assert stat.S_IMODE(output_path.stat().st_mode) == 0o600
+    if os.name != "nt":  # POSIX mode bits are not Windows ACLs.
+        assert stat.S_IMODE(output_path.stat().st_mode) == 0o600
 
 
 def test_promotion_rejects_a_different_reviewed_record(tmp_path: Path) -> None:
@@ -1243,12 +1245,13 @@ def test_two_machine_receipts_finalize_and_seal_a_reviewed_capability(
     assert validated["status"] == "validated_local"
     assert len(validated["validation"]["receipts"]) == 2
     assert pipeline.verify_bundle(bundle) == []
-    assert stat.S_IMODE(bundle.stat().st_mode) == 0o700
-    assert all(
-        stat.S_IMODE(path.stat().st_mode) == 0o600
-        for path in bundle.rglob("*")
-        if path.is_file()
-    )
+    if os.name != "nt":  # Keep all integrity assertions active on Windows.
+        assert stat.S_IMODE(bundle.stat().st_mode) == 0o700
+        assert all(
+            stat.S_IMODE(path.stat().st_mode) == 0o600
+            for path in bundle.rglob("*")
+            if path.is_file()
+        )
     lock = json.loads((bundle / "capability.lock.json").read_text(encoding="utf-8"))
     assert "README.md" in lock["files"]
     assert len(list((bundle / "run-locks").glob("*.json"))) == 2
