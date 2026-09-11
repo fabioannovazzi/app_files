@@ -478,19 +478,24 @@ registered workflows.
 2. Write `answer_contract.json` before generation. For `quesito-legale-fiscale`,
    set `adversarial_policy` to `required` in the original contract. Keep generation route
    separate from document type:
-   - `generation_route` is `codex_direct`, `chatgpt_deep_research`, or
-     `external_document`;
+   - `generation_route` is `codex_direct`, `deep_research_plugin`,
+     `chatgpt_deep_research`, or `external_document`;
    - `document_type` is the requested answer artifact, such as a research
      report, legal memo, one-page letter, response letter, checklist, or
      counsel brief.
-   Infer both with model-led judgment when the facts make them clear. Ask only
-   when an unresolved choice would materially change the answer.
-3. Use `codex_direct` when the requested answer can be generated to the
-   required standard in the current Claude workflow. Generate the draft, retain
-   its answer contract and sources, and continue directly to validation.
-4. Use `chatgpt_deep_research` when native Deep Research is materially needed.
-   Native Deep Research is available through the ChatGPT window, not as an
-   ordinary Claude or Work tool. Present one concise handoff containing:
+   Infer the document type from the request. For `quesito-legale-fiscale`,
+   follow `../prompt-optimizer/references/research-choice.md`: after preparing
+   the question, offer the available OpenAI Deep Research plugin or ordinary
+   Vera research before finalizing the route. Reuse an explicit choice for
+   this answer; otherwise wait for it before generation.
+3. Use `deep_research_plugin` when the user selects the installed OpenAI
+   `deep-research` skill. Read and follow that skill in the current host with
+   the prepared brief, answer contract and selected sources, then resume
+   validation. Use `codex_direct` for the ordinary route. Both routes retain
+   the generated answer, source record and the same answer contract.
+4. Use `chatgpt_deep_research` for a separately chosen native ChatGPT Deep
+   Research handoff. This is distinct from the installed plugin route.
+   Present one concise handoff containing:
    - the complete text of `optimized_prompt.md`, or a direct local link;
    - the complete contents of `source_domains_comma.txt`;
    - the `answer_contract.json` document type and output requirements;
@@ -500,7 +505,7 @@ registered workflows.
    posture, and issue—not from keywords or a deterministic classifier. Ask the
    user only when competing policies would materially change the professional
    result and the confirmed posture does not resolve the choice.
-6. Keep the Deep Research handoff explicit. Vera cannot claim to start,
+6. Keep the separate ChatGPT handoff explicit. Vera cannot claim to start,
    monitor, interrupt, or retrieve a native run unless a callable host tool
    expressly provides that capability. End with one instruction to return the
    completed answer in the same conversation as Markdown, text, HTML, readable
@@ -548,11 +553,10 @@ registered workflows.
    comparison and separate reviews. When local tooling is unavailable, perform
    the substantive exercise in chat and state the missing durable evidence.
 
-If native Deep Research is unavailable to the user because of plan, country,
-workspace policy, or current-surface limitations, state that limitation.
-Offer an ordinary source-backed web-research run only as a clearly labelled
-alternative with its own evidence limits; never imply that it is the same
-product mode.
+If a selected Deep Research route is unavailable or fails, state the actual
+limitation and obtain the user's alternative route choice. Do not silently
+substitute ordinary research or move case material to another account. Follow
+the availability handling in `../prompt-optimizer/references/research-choice.md`.
 
 `quesito-legale-fiscale` does not create a third Studio Archive workstream or a
 new external data route. The preparation stage remains governed by the

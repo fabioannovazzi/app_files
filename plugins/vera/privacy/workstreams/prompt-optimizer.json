@@ -23,7 +23,7 @@
       {
         "id": "question-and-prompt",
         "purpose": "Understand the professional question, define the answer and validation contract, write route-specific generation instructions, and review their semantic conformance",
-        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions. The canonical review record references the full prompt audit instead of duplicating that audit in each failed check, and it does not include a question-text preview. In Vera’s legal-question journey the original answer contract also records adversarial_policy=required for routine opposing-case examination after original validation.",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions. The canonical review record references the full prompt audit instead of duplicating that audit in each failed check, and it does not include a question-text preview. In Vera’s legal-question journey the original answer contract also records adversarial_policy=required for routine opposing-case examination after original validation. The preparation also records the user choice between an available installed OpenAI Deep Research skill and ordinary Vera research. The installed skill receives the same full prepared brief, answer contract, selected case material and curated source list in the current host; its public queries and selected source text may enter that host model context. This is distinct from the separately chosen manual ChatGPT handoff and does not itself select another account, grant connected-source access or create a new model API route.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -82,9 +82,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-07",
+    "reviewed_at": "2026-09-11",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "20b44fd10854d0554fe0fe7a5c8a4f9847aff9531c9ba576eac2a3e18e26a0da"
+    "source_fingerprint": "ee6d8c737520482b0e17db553ffda0641215109e8085f20d27f715848313510a"
   }
 }

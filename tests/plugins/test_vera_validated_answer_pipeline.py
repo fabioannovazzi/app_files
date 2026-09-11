@@ -186,6 +186,7 @@ def _claims_review(document_type: str) -> dict[str, Any]:
     ("generation_route", "document_type"),
     [
         ("codex_direct", "one-page legal letter"),
+        ("deep_research_plugin", "two-page legal memo"),
         ("chatgpt_deep_research", "legal research report"),
     ],
 )

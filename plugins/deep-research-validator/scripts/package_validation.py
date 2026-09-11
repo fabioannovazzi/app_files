@@ -87,6 +87,7 @@ ANSWER_CONTRACT_ENUMS = {
     "generation_route": {
         "chatgpt_deep_research",
         "codex_direct",
+        "deep_research_plugin",
         "external_document",
     },
     "jurisdiction_status": {

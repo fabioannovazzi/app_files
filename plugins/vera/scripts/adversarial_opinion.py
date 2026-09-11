@@ -265,6 +265,8 @@ def _counter_contract(original: dict[str, Any]) -> dict[str, Any]:
     result = dict(original)
     result.pop("adversarial_policy", None)
     result.update(
+        # The optional research choice belongs to original-answer generation only.
+        generation_route="codex_direct",
         document_type="adversarial opinion or reasoned search result",
         purpose="Develop and assess the strongest evidence-bound opposing case to the bound original position.",
         audience="Professional reviewing the original position",

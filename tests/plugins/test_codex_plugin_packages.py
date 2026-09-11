@@ -11,6 +11,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
+from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
@@ -3364,7 +3365,13 @@ def test_vera_process_model_data_copy_omits_provider_mapping(
     relative_path: Path,
 ) -> None:
     page = (ROOT / relative_path).read_text(encoding="utf-8")
-    model_data = page[page.index("data-model-data-workflow=") :]
+    section = BeautifulSoup(page, "html.parser").select_one(
+        "[data-model-data-workflow]"
+    )
+    assert section is not None
+    # Check the data explanation and its translations, not unrelated later script copy.
+    translations = re.findall(r'"model\.[^"]+"\s*:\s*"((?:\\.|[^"\\])*)"', page)
+    model_data = section.get_text(" ", strip=True) + "\n" + "\n".join(translations)
 
     assert "OpenAI" not in model_data
     assert "Anthropic" not in model_data

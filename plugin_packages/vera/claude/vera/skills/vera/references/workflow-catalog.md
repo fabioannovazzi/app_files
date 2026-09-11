@@ -122,7 +122,7 @@ skill to imitate a missing operational workflow.
 - `quesito-legale-fiscale`: answer a substantive legal, tax, or compliance
   question, or prepare source-backed professional drafting, through one
   question-to-reviewed-answer journey. It orchestrates prompt preparation,
-  direct generation or an explicit Deep Research handoff, and answer
+  a choice of available Deep Research plugin or ordinary research, and answer
   validation, followed by a routine adversarial opinion and comparison,
   without asking the user to select those internal stages. It does
   not substitute for an operational return, declaration, filing, or form.
