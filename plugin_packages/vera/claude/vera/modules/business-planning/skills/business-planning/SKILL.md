@@ -325,6 +325,28 @@ not a case-specific renderer, HTML patch or monkey-patch. Set `language` explici
 for report labels, chart axes and number formatting. Keep one recommendation-led
 report; tables support the reasoning rather than replace it.
 
+For a monetary comparison, use the existing shared reporting table through
+`presentation.tables[].comparison`: show the two values, absolute variance in
+the reporting currency, and percentage variance together. The component reuses
+Period Comparison's variance bars and percentage pins; do not create a one-off
+Markdown substitute or a new renderer. Choose comparable periods and a meaningful
+baseline explicitly. Seven months of actuals versus twelve months of forecast
+are different coverage: present that distinction, not a like-for-like variance.
+
+Select the existing planning charts that explain the forecast and its assumptions,
+and place them with their interpretation in the same report. A substantive plan
+or forecast report must not end as a small chat table when the compiler and data
+can produce the normal report. Chat contains the short finding and report link.
+Respect an explicit request for a quick answer or a reduced output.
+
+Keep monetary values right-aligned, units and periods visible, totals emphasized,
+and both variance measures adjacent. Select favorable directions per row from
+the accounting meaning: higher revenue and higher expense are not the same.
+Leave unspecified directions neutral. Zero or negative baselines retain their
+amount variance and a labelled unavailable percentage. Do not manufacture monthly
+detail, a baseline or supporting evidence to make a chart possible. Preserve the
+source bindings and professional review in the report, including hosted versions.
+
 For comparisons, bind numeric table cells to exact canonical calculation IDs or
 explicitly labelled source observations. Give every table a narrative caption
 explaining period, scope, exclusions and decision consequence. Observations are

@@ -20,6 +20,14 @@ from tests.plugins.test_business_planning_shared import (
 )
 
 
+@pytest.fixture(autouse=True)
+def bind_reporting_component(monkeypatch):
+    """Restore the shared component path after repository import isolation."""
+    monkeypatch.syspath_prepend(
+        str(Path(__file__).resolve().parents[2] / "plugins/_shared/vendor/modules")
+    )
+
+
 def presentation_case():
     case = case_data()
     case["presentation"] = {
@@ -78,6 +86,110 @@ def test_native_tables_sources_and_legend_render_without_wrapper():
     assert "Fondatori" in rendered and "Prova / criterio di decisione" in rendered
     assert rendered.count('id="narrative-actions"') == 1
     assert "base/2027-01/revenue … base/2027-03/revenue (3)" in rendered
+
+
+def comparison_case():
+    case = presentation_case()
+    case["presentation"]["tables"] = [
+        {
+            "id": "forecast-comparison",
+            "title": "Gennaio 2027 · Base e scenario avverso",
+            "section": "economics",
+            "headers": ["Voce", "Base", "Avverso"],
+            "rows": [
+                [
+                    {"text": "Ricavi"},
+                    {"calculation_ids": ["base/2027-01/revenue"], "value": "1000"},
+                    {"calculation_ids": ["downside/2027-01/revenue"], "value": "800"},
+                ],
+                [
+                    {"text": "Costi variabili"},
+                    {"calculation_ids": ["base/2027-01/cogs"], "value": "600"},
+                    {"calculation_ids": ["downside/2027-01/cogs"], "value": "600"},
+                ],
+                [
+                    {"text": "EBITDA"},
+                    {"calculation_ids": ["base/2027-01/ebitda"], "value": "-100"},
+                    {"calculation_ids": ["downside/2027-01/ebitda"], "value": "-300"},
+                ],
+                [
+                    {"text": "Imposte"},
+                    {"calculation_ids": ["base/2027-01/tax_expense"], "value": "0"},
+                    {"calculation_ids": ["downside/2027-01/tax_expense"], "value": "0"},
+                ],
+            ],
+            "comparison": {
+                "baseline_column": 1,
+                "comparison_column": 2,
+                "favorable_directions": ["higher", "lower", "higher", "lower"],
+                "row_types": ["detail", "detail", "subtotal", "detail"],
+            },
+            "caption_id": "profit-risk",
+        }
+    ]
+    return case
+
+
+def test_monetary_report_reuses_variance_bars_and_pins_with_both_measures():
+    case = comparison_case()
+
+    rendered = compile_html(build_plan(case, source_root=FIXTURE), source_root=FIXTURE)
+
+    assert 'class="reporting-comparison"' in rendered
+    assert 'class="variance-bar negative"' in rendered
+    assert 'class="variance-pin-line negative"' in rendered
+    assert ">-0,2<" in rendered
+    assert ">-20,0%<" in rendered
+    assert 'class="detail-row lower"' in rendered
+    assert 'class="summary-row"' in rendered
+    assert 'id="ebitda-scenarios"' in rendered
+    assert "base/2027-01/revenue" in rendered
+
+
+def test_zero_and_negative_baselines_keep_amount_variance_without_percentage():
+    from planning_presentation import comparison_rows
+
+    case = comparison_case()
+    plan = build_plan(case, source_root=FIXTURE)
+
+    rows, unit = comparison_rows(case["presentation"]["tables"][0], plan)
+
+    assert unit == "EUR"
+    assert rows[2]["absolute_variance"] == "-200"
+    assert rows[2]["relative_variance"] is None
+    assert rows[3]["absolute_variance"] == "0"
+    assert rows[3]["relative_variance"] is None
+
+
+@pytest.mark.parametrize(
+    "comparison",
+    [
+        {"baseline_column": 0, "comparison_column": 2},
+        {"baseline_column": 1, "comparison_column": 1},
+        {"baseline_column": True, "comparison_column": 2},
+        {
+            "baseline_column": 1,
+            "comparison_column": 2,
+            "favorable_directions": ["higher"],
+        },
+        {"baseline_column": 1, "comparison_column": 2, "row_types": ["guessed"] * 4},
+    ],
+)
+def test_invalid_financial_comparison_contract_is_rejected(comparison):
+    case = comparison_case()
+    case["presentation"]["tables"][0]["comparison"] = comparison
+
+    with pytest.raises(PlanningError):
+        build_plan(case, source_root=FIXTURE)
+
+
+def test_single_value_table_is_not_misclassified_as_variance():
+    rendered = compile_html(
+        build_plan(presentation_case(), source_root=FIXTURE), source_root=FIXTURE
+    )
+
+    assert 'class="reporting-comparison"' not in rendered
+    assert ">3.000<" in rendered
 
 
 def test_blocked_presentation_retains_bindings_without_rendering_conclusions():

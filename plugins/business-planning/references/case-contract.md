@@ -273,6 +273,32 @@ Example cell: `{"calculation_ids": ["base/2027-01/revenue", "base/2027-02/revenu
 "operation": "sum", "value": "2000", "decimals": 0}`. The actual value must equal
 the referenced calculations. No free-standing financial values are accepted.
 
+### Monetary comparison tables
+
+When a table compares monetary values, add `comparison` to the existing table:
+
+```json
+{"baseline_column": 1, "comparison_column": 2,
+ "favorable_directions": ["higher", "lower", "higher"],
+ "row_types": ["detail", "detail", "total"]}
+```
+
+The table has three authored columns: row label, first value, second value. Both
+value cells retain their normal exact calculation/observation bindings; indices
+1 and 2 select which is the baseline. The shared renderer adds absolute variance
+(comparison minus baseline) and percentage variance (delta / baseline × 100),
+using the existing Period Comparison bars/pins. All rows use the same reporting
+currency. No extra model-authored delta cells or percentage-only table is needed.
+
+`favorable_directions` and `row_types` are optional lists matching the row count.
+Directions are `higher`, `lower`, or `neutral` (default); row types are `detail`
+(default), `subtotal`, or `total`. These are explicit author decisions; the code
+does not infer them from labels or signs. A zero or negative baseline gives an
+unavailable percentage while retaining both amounts and their difference.
+The narrative caption explains the compared periods, scope, assumptions, sign
+convention and consequence. Do not compare partial-year and full-year values as
+like-for-like performance or invent a baseline for a single-scenario statement.
+
 Actions have exactly `action_id`, `owner`, `when`, `criterion_id`. Both IDs refer
 to accepted narrative; owner and timing are nonempty text. Source notes contain
 `source_id`, `claim`, `locator`, optionally `url` (HTTP(S), no credentials).

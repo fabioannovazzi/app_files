@@ -22,7 +22,8 @@
     "repository/plugins/business-planning/scripts/planning_financing.py",
     "repository/plugins/business-planning/scripts/planning_decision_report.py",
     "repository/plugins/business-planning/scripts/planning_presentation.py",
-    "repository/plugins/business-planning/references/financing-assessment.md"
+    "repository/plugins/business-planning/references/financing-assessment.md",
+    "repository/plugins/_shared/vendor/modules/reporting_table.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -102,6 +103,6 @@
     "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c5613cf0f8b8eaaa3416854e33be2b90af63e646be33e30b1b4e425b50046b19"
+    "source_fingerprint": "9aa96107c024cdda5fa4caded614adacfc9d597b4e980d16c3615790fcc8ce19"
   }
 }

@@ -110,3 +110,16 @@ calculated drivers, reviewed favorable/adverse convention, unresolved data or
 judgment items, and links to the tables and variance plots. Narrative causes
 must be attributed to supplied evidence or clearly labeled as hypotheses
 requiring professional confirmation.
+
+## Financial report presentation
+
+For comparable monetary results, show the baseline and comparison values together
+with both absolute variance in the reporting currency and percentage variance.
+Use the existing workflow's reporting charts and structured tables, with units,
+periods, aligned numbers, explicit totals and source-supported interpretation.
+Do not finish a substantive report with only a compact chat table when normal
+artifacts are supported. Use the existing generated report and chart artifacts;
+do not invent a custom renderer or manufacture a baseline or monthly breakdown.
+Keep zero/negative-base percentages explicitly unavailable where misleading,
+retain amount differences, and establish favorable/adverse meaning by account.
+A user-requested quick answer or reduced output remains valid.

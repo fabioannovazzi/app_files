@@ -15,7 +15,12 @@
   "plugins": {
     "distribution-analysis": {},
     "mix-contribution-analysis": {},
-    "period-comparison": {},
+    "period-comparison": {
+      "overlays": [{
+        "source_root": "plugins/_shared/vendor/modules",
+        "module_roots": ["reporting_table.py"]
+      }]
+    },
     "scatter-bubble-analysis": {},
     "set-overlap-analysis": {},
     "variance-analysis": {
@@ -43,7 +48,8 @@
       "module_roots": [
         "vera_assurance",
         "vera_financial_analysis",
-        "vera_ocr"
+        "vera_ocr",
+        "reporting_table.py"
       ]
     },
     "open-item-reconciliation": {
@@ -98,7 +104,8 @@
     },
     "business-planning": {
       "module_roots": [
-        "vera_assurance"
+        "vera_assurance",
+        "reporting_table.py"
       ]
     },
     "financial-analysis": {

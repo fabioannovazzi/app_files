@@ -11,7 +11,8 @@
     "assets"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "vendor/modules/reporting_table.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -91,6 +92,6 @@
     "reviewed_at": "2026-09-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "606301fb4c180e00db27539daf26d3e634e4df56d659c275fee5cd7b2532b074"
+    "source_fingerprint": "158a91d4e68eb1db0dc027f2576162eb89a4de5dbe7f8b1951e7dcb26d17b615"
   }
 }
