@@ -15,6 +15,7 @@ import io
 import json
 import re
 import zipfile
+from calendar import monthrange
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -659,6 +660,15 @@ def _review_recipe(recipe: Mapping[str, Any], inventory_sha256: str) -> dict[str
     }
     if normalized["reporting_period"]["start"] > normalized["reporting_period"]["end"]:
         raise PackContractError("Reporting period start is after end.")
+    if (
+        normalized["reporting_period"]["cutoff"]
+        < normalized["reporting_period"]["start"]
+    ):
+        raise PackContractError("Cutoff precedes the reporting start.")
+    audience = recipe.get("audience", "internal")
+    if audience not in {"internal", "client", "public_demo"}:
+        raise PackContractError("audience must be internal, client or public_demo.")
+    normalized["audience"] = audience
     return normalized
 
 
@@ -780,18 +790,20 @@ def _pnl_section(
     recipe: Mapping[str, Any],
     table_map: Mapping[str, SourceTable],
     metrics: dict[str, dict[str, Any]],
+    *,
+    role: str = "general_ledger",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    table, mapping = _recipe_table(recipe, table_map, "general_ledger", required=True)  # type: ignore[misc]
+    table, mapping = _recipe_table(recipe, table_map, role, required=True)  # type: ignore[misc]
     date_col = _column(mapping, "date", required=True)
     category_col = _column(mapping, "category")
     account_col = _column(mapping, "account_code")
     if not category_col and not account_col:
-        raise PackContractError(
-            "General ledger requires category or account_code mapping."
-        )
+        raise PackContractError(f"{role} requires category or account_code mapping.")
     account_categories = _account_categories(recipe, table_map)
     start = recipe["reporting_period"]["start"]
     end = recipe["reporting_period"]["end"]
+    if role == "general_ledger":
+        end = min(end, recipe["reporting_period"]["cutoff"])
     number_format = str(recipe.get("number_format", "dot_decimal"))
     date_format = str(recipe.get("date_format", "%Y-%m-%d"))
     monthly: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
@@ -799,7 +811,7 @@ def _pnl_section(
     for index, row in enumerate(table.rows, start=2):
         row_date = _parse_date(
             row.get(date_col),
-            label=f"general_ledger row {index} date",
+            label=f"{role} row {index} date",
             date_format=date_format,
         )
         if row_date < start or row_date > end:
@@ -807,13 +819,13 @@ def _pnl_section(
         if category_col:
             source_category = _text(
                 row.get(category_col),
-                label=f"general_ledger row {index} category",
+                label=f"{role} row {index} category",
                 maximum=160,
             )
         else:
             account = _text(
                 row.get(account_col),
-                label=f"general_ledger row {index} account",
+                label=f"{role} row {index} account",
                 maximum=160,
             )
             source_category = account_categories.get(account, "")
@@ -826,7 +838,7 @@ def _pnl_section(
             _amount(
                 row,
                 mapping,
-                label=f"general_ledger row {index}",
+                label=f"{role} row {index}",
                 number_format=number_format,
             )
             * category_multiplier
@@ -834,9 +846,7 @@ def _pnl_section(
         control_total += amount
         monthly[row_date.strftime("%Y-%m")][category] += amount
     if not monthly:
-        raise PackContractError(
-            "General ledger has no rows inside the reporting period."
-        )
+        raise PackContractError(f"{role} has no rows inside the reporting period.")
     rows: list[dict[str, Any]] = []
     totals: dict[str, Decimal] = defaultdict(Decimal)
     metric_labels = {
@@ -898,7 +908,17 @@ def _pnl_section(
         "status": "available",
         "rows": rows,
         "totals": {key: _decimal_text(value) for key, value in totals.items()},
-    }, _control("general_ledger", control_total, recipe)
+    }, _control(role, control_total, recipe)
+
+
+def _months(start: date, end: date) -> list[str]:
+    """Enumerate calendar months for an explicitly reviewed reporting window."""
+    result = []
+    cursor = start.replace(day=1)
+    while cursor <= end:
+        result.append(cursor.strftime("%Y-%m"))
+        cursor = date(cursor.year + (cursor.month == 12), cursor.month % 12 + 1, 1)
+    return result
 
 
 def _budget_section(
@@ -907,98 +927,163 @@ def _budget_section(
     pnl: Mapping[str, Any],
     metrics: dict[str, dict[str, Any]],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    resolved = _recipe_table(recipe, table_map, "budget")
-    if resolved is None:
+    if _recipe_table(recipe, table_map, "budget") is None:
         raise PackContractError("Budget export was not mapped.")
-    table, mapping = resolved
-    date_col = _column(mapping, "date", required=True)
-    category_col = _column(mapping, "category")
-    account_col = _column(mapping, "account_code")
-    if not category_col and not account_col:
-        raise PackContractError("Budget requires category or account_code mapping.")
-    account_categories = _account_categories(recipe, table_map)
-    number_format = str(recipe.get("number_format", "dot_decimal"))
-    date_format = str(recipe.get("date_format", "%Y-%m-%d"))
-    start = recipe["reporting_period"]["start"]
-    end = recipe["reporting_period"]["end"]
-    monthly: dict[str, dict[str, Decimal]] = defaultdict(lambda: defaultdict(Decimal))
-    control_total = Decimal("0")
-    for index, row in enumerate(table.rows, start=2):
-        row_date = _parse_date(
-            row.get(date_col), label=f"budget row {index} date", date_format=date_format
+    try:
+        budget, control = _pnl_section(recipe, table_map, {}, role="budget")
+    except PackContractError as exc:
+        raise PackContractError(str(exc).replace("budget has", "Budget has")) from exc
+    period = recipe["reporting_period"]
+    start, end, cutoff = period["start"], period["end"], period["cutoff"]
+    actuals = {row["period"]: row for row in pnl["rows"]}
+    budgets = {row["period"]: row for row in budget["rows"]}
+    elapsed = _months(start, min(end, cutoff))
+    if (
+        min(end, cutoff).day
+        != monthrange(min(end, cutoff).year, min(end, cutoff).month)[1]
+        or start.day != 1
+    ):
+        raise PackContractError(
+            "Monthly budget comparisons require complete months; use a month-end cutoff and month-start reporting date."
         )
-        if row_date < start or row_date > end:
-            continue
-        if category_col:
-            source_category = _text(
-                row.get(category_col), label=f"budget row {index} category", maximum=160
-            )
-        else:
-            assert (
-                account_col is not None
-            )  # The mapping guard requires one of the two columns.
-            account = _text(
-                row.get(account_col), label=f"budget row {index} account", maximum=160
-            )
-            source_category = account_categories.get(account, "")
-            if not source_category:
-                raise PackContractError(
-                    f"Budget account {account} has no reviewed category mapping."
-                )
-        category, multiplier = _normalized_category(source_category, recipe)
-        amount = (
-            _amount(
-                row, mapping, label=f"budget row {index}", number_format=number_format
-            )
-            * multiplier
-        )
-        monthly[row_date.strftime("%Y-%m")][category] += amount
-        control_total += amount
-    if not monthly:
-        raise PackContractError("Budget has no rows inside the reporting period.")
-    actual_rows = {str(row["period"]): row for row in pnl["rows"]}
+    missing = [
+        month for month in elapsed if month not in actuals or month not in budgets
+    ]
+    comparisons: list[dict[str, Any]] = []
     rows: list[dict[str, Any]] = []
-    for period in sorted(set(actual_rows) | set(monthly)):
-        actual = Decimal(str(actual_rows.get(period, {}).get("ebitda", "0")))
-        budget_values = monthly.get(period, {})
-        budget = (
-            budget_values.get("revenue", Decimal("0"))
-            + budget_values.get("cogs", Decimal("0"))
-            + budget_values.get("operating_expense", Decimal("0"))
-            + budget_values.get("other_operating", Decimal("0"))
-        )
-        variance = actual - budget
+    limitations: list[str] = []
+    keys = (*CANONICAL_CATEGORIES, "gross_profit", "ebitda", "ebit", "net_result")
+
+    def compare(
+        view: str, scenario: str, months: list[str], values: Mapping[str, Any]
+    ) -> None:
+        for key in keys:
+            baseline = sum((Decimal(budgets[m][key]) for m in months), Decimal(0))
+            comparison = sum((Decimal(values[m][key]) for m in months), Decimal(0))
+            variance = comparison - baseline
+            # Expenses stay signed in the pack. The report displays positive costs.
+            cost = key in {
+                "cogs",
+                "operating_expense",
+                "depreciation_amortization",
+                "interest",
+                "tax",
+            }
+            displayed_base = -baseline if cost else baseline
+            displayed_delta = -variance if cost else variance
+            relative = (
+                displayed_delta / displayed_base * 100 if displayed_base > 0 else None
+            )
+            comparisons.append(
+                {
+                    "view": view,
+                    "scenario": scenario,
+                    "metric": key,
+                    "baseline": _decimal_text(baseline),
+                    "comparison": _decimal_text(comparison),
+                    "variance": _decimal_text(variance),
+                    "variance_pct": (
+                        _ratio_text(relative) if relative is not None else None
+                    ),
+                }
+            )
+            _metric(
+                metrics,
+                f"budget.{view}.{key}_variance",
+                f"{key} variance {view}",
+                variance,
+                unit=recipe["currency"],
+                section="budget_variance",
+                period=view,
+            )
+
+    for month in elapsed:
+        if month in missing:
+            continue
+        compare(month, "AC", [month], actuals)
+        ebitda = next(row for row in reversed(comparisons) if row["metric"] == "ebitda")
         rows.append(
             {
-                "period": period,
-                "actual_ebitda": _decimal_text(actual),
-                "budget_ebitda": _decimal_text(budget),
-                "variance": _decimal_text(variance),
+                "period": month,
+                "actual_ebitda": ebitda["comparison"],
+                "budget_ebitda": ebitda["baseline"],
+                "variance": ebitda["variance"],
+                "variance_pct": ebitda["variance_pct"],
             }
         )
-        _metric(
-            metrics,
-            f"budget.{period}.ebitda_variance",
-            f"EBITDA variance {period}",
-            variance,
-            unit=recipe["currency"],
-            section="budget_variance",
-            period=period,
+    if not missing:
+        compare("total", "AC", elapsed, actuals)
+    else:
+        limitations.append(
+            "Actual/Budget comparison unavailable for: "
+            + ", ".join(missing)
+            + "; cumulative comparison omitted."
         )
-    total_variance = sum((Decimal(row["variance"]) for row in rows), Decimal("0"))
-    _metric(
-        metrics,
-        "budget.total.ebitda_variance",
-        "Total EBITDA variance",
-        total_variance,
-        unit=recipe["currency"],
-        section="budget_variance",
-    )
+    extra_controls: list[dict[str, Any]] = []
+    if _recipe_table(recipe, table_map, "forecast") is not None:
+        try:
+            if (
+                cutoff.day != monthrange(cutoff.year, cutoff.month)[1]
+                or start.day != 1
+                or end.day != monthrange(end.year, end.month)[1]
+            ):
+                raise PackContractError(
+                    "Monthly forecast requires a month-end cutoff and full reporting months."
+                )
+            remaining = [
+                month
+                for month in _months(start, end)
+                if month > cutoff.strftime("%Y-%m")
+            ]
+            if not remaining:
+                raise PackContractError("Forecast has no remaining reporting months.")
+            # Only reviewed remaining-period estimates contribute, never a second actual.
+            future_recipe = {
+                **recipe,
+                "reporting_period": {
+                    **period,
+                    "start": date.fromisoformat(remaining[0] + "-01"),
+                },
+            }
+            forecast, forecast_control = _pnl_section(
+                future_recipe, table_map, {}, role="forecast"
+            )
+            extra_controls.append(forecast_control)
+            future = {row["period"]: row for row in forecast["rows"]}
+            all_months = _months(start, end)
+            absent = [
+                m
+                for m in all_months
+                if m not in budgets
+                or (m in remaining and m not in future)
+                or (m not in remaining and m not in actuals)
+            ]
+            if absent:
+                raise PackContractError(
+                    "Full-period forecast unavailable; missing Actual, Budget or remaining Forecast months: "
+                    + ", ".join(absent)
+                )
+            compare("forecast", "FC", all_months, {**actuals, **future})
+        except PackContractError as exc:
+            limitations.append(str(exc))
     return {
-        "status": "available",
+        "status": "partial" if limitations else "available",
         "rows": rows,
-        "total_ebitda_variance": _decimal_text(total_variance),
-    }, _control("budget", control_total, recipe)
+        "comparison_rows": comparisons,
+        "total_ebitda_variance": metrics.get("budget.total.ebitda_variance", {}).get(
+            "value"
+        ),
+        "limitations": limitations,
+        "additional_controls": extra_controls,
+        "forecast_basis": _text(
+            recipe.get(
+                "forecast_basis",
+                "Reviewed remaining-month forecast export; assumptions require professional review.",
+            ),
+            label="forecast_basis",
+            maximum=2400,
+        ),
+    }, control
 
 
 def _aging_section(
@@ -1436,6 +1521,8 @@ def build_management_pack(
             limitations.append(f"{section_name}: {exc}")
         else:
             controls.append(control)
+            controls.extend(section.get("additional_controls", []))
+            limitations.extend(section.get("limitations", []))
         sections[section_name] = section
         coverage.append(
             {
@@ -1511,6 +1598,7 @@ def build_management_pack(
             for key in ("start", "end", "cutoff")
         },
         "currency": recipe["currency"],
+        "audience": recipe["audience"],
         "inventory_sha256": inventory["inventory_sha256"],
         "recipe_sha256": hashlib.sha256(_canonical_json_bytes(raw_recipe)).hexdigest(),
         "coverage": coverage,
@@ -1534,9 +1622,16 @@ def build_model_context(pack: Mapping[str, Any]) -> dict[str, Any]:
     for name, section in sections.items():
         if not isinstance(section, dict):
             continue
-        item = {key: value for key, value in section.items() if key != "rows"}
+        item = {
+            key: value
+            for key, value in section.items()
+            if key not in {"rows", "comparison_rows"}
+        }
         if isinstance(section.get("rows"), list):
             item["rows"] = section["rows"][:MAX_MODEL_ROWS]
+        if isinstance(section.get("comparison_rows"), list):
+            item["comparison_rows"] = section["comparison_rows"][:MAX_MODEL_ROWS]
+            item["comparison_row_count"] = len(section["comparison_rows"])
         if isinstance(section.get("top_parties"), list):
             item["top_parties"] = section["top_parties"][:20]
         projected[name] = item
@@ -1707,7 +1802,7 @@ def render_markdown(
         (
             "Budget variance",
             pack["sections"]["budget_variance"].get("rows", []),
-            ("period", "actual_ebitda", "budget_ebitda", "variance"),
+            ("period", "actual_ebitda", "budget_ebitda", "variance", "variance_pct"),
         ),
         (
             "Receivables aging",
@@ -1734,6 +1829,26 @@ def render_markdown(
             pack["sections"]["service_profitability"].get("rows", []),
             ("service", "revenue", "direct_cost", "margin", "margin_rate"),
         ),
+    )
+    comparison_rows = pack["sections"]["budget_variance"].get("comparison_rows", [])
+    lines.extend(
+        (
+            "## Budget comparisons",
+            "",
+            _table_markdown(
+                comparison_rows,
+                (
+                    "view",
+                    "scenario",
+                    "metric",
+                    "baseline",
+                    "comparison",
+                    "variance",
+                    "variance_pct",
+                ),
+            ),
+            "",
+        )
     )
     for title, rows, columns in detail_sections:
         lines.extend((f"## {title}", "", _table_markdown(rows, columns), ""))
@@ -1773,6 +1888,11 @@ def render_markdown(
 
 _HTML_IT = {
     "Management Control Pack": "Controllo di gestione",
+    "draft_pending_professional_review": "Bozza da rivedere",
+    "Receivables export was not mapped.": "Export crediti non fornito o non mappato.",
+    "Payables export was not mapped.": "Export debiti non fornito o non mappato.",
+    "Bank export was not mapped.": "Export banca non fornito o non mappato.",
+    "Sales-line export was not mapped.": "Dettaglio vendite non fornito o non mappato.",
     "Professional review": "Revisione professionale",
     "Interpretation": "Interpretazione",
     "Calculated observations": "Osservazioni sui risultati",
@@ -1854,7 +1974,13 @@ _HTML_IT.update(
 
 
 def _html_label(value: str, language: str) -> str:
-    return _HTML_IT.get(value, value) if language == "it" else value
+    if language == "it":
+        return _HTML_IT.get(value, value)
+    return (
+        "Draft pending professional review"
+        if value == "draft_pending_professional_review"
+        else value
+    )
 
 
 def _html_display_cell(row: Mapping[str, Any], column: str) -> str:
@@ -1897,6 +2023,9 @@ def render_html(
 ) -> str:
     """Render a self-contained management command centre."""
 
+    from budget_presentation import render_budget_comparisons
+
+    budget_html = render_budget_comparisons(pack)
     language = pack.get("language", "en")
 
     def label(value: str) -> str:
@@ -1916,7 +2045,7 @@ def render_html(
         if metric:
             cards.append(
                 f'<article class="metric"><span>{label(metric["label"])}</span>'
-                f'<strong>{html.escape(metric["value"])}</strong><small>{html.escape(metric["unit"])}</small></article>'
+                f'<strong>{html.escape(f"{Decimal(metric["value"]):,.0f}".replace(",", ".") if language == "it" else f"{Decimal(metric["value"]):,.0f}")}</strong><small>{html.escape(metric["unit"])}</small></article>'
             )
     commentary_html = ""
     if commentary:
@@ -1938,7 +2067,6 @@ def render_html(
         commentary_html = f'<section><p class="eyebrow">{label('Professional review')}</p><h2>{label('Interpretation')}</h2><div class="commentary">{"".join(blocks)}</div></section>'
     coverage_rows = pack["coverage"]
     pnl_rows = pack["sections"]["monthly_pnl"].get("rows", [])
-    budget_rows = pack["sections"]["budget_variance"].get("rows", [])
     ar_rows = pack["sections"]["receivables_aging"].get("buckets", [])
     ap_rows = pack["sections"]["payables_aging"].get("buckets", [])
     cash_rows = pack["sections"]["cash_movement"].get("rows", [])
@@ -1949,20 +2077,31 @@ def render_html(
         if pack["status"] == "blocked"
         else ("partial" if pack["status"] == "partial" else "ready")
     )
-    return f"""<!doctype html>
+    rendered = f"""<!doctype html>
 <html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{label("Management Control Pack")} · {html.escape(pack['entity'])}</title>
 <style>
 :root{{--navy:#002060;--blue:#0070c0;--cyan:#00b0f0;--ink:#171816;--muted:#68727d;--line:#dbe2ea;--paper:#fff;--soft:#f4f7fa;--red:#9e2f2f;--amber:#9a6416;--green:#116149}}
-*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 "Instrument Sans",Inter,Arial,sans-serif}}main{{width:min(1180px,calc(100% - 40px));margin:auto;padding:54px 0 80px}}header{{border-top:8px solid var(--navy);padding:38px 0 34px;border-bottom:1px solid var(--line)}}.eyebrow{{margin:0 0 10px;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}}h1{{margin:0;font-size:clamp(36px,6vw,72px);line-height:.98;letter-spacing:-.055em}}h2{{font-size:30px;letter-spacing:-.035em}}h3{{font-size:17px}}.meta{{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:var(--muted)}}.status{{display:inline-flex;padding:6px 10px;border:1px solid currentColor;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.08em}}.status.ready{{color:var(--green)}}.status.partial{{color:var(--amber)}}.status.blocked{{color:var(--red)}}section{{padding:42px 0;border-bottom:1px solid var(--line)}}.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}}.metric{{background:#fff;padding:22px;min-height:126px}}.metric span{{display:block;color:var(--muted)}}.metric strong{{display:block;margin-top:20px;font-size:28px;letter-spacing:-.03em}}.metric small{{color:var(--blue)}}.table-wrap{{overflow:auto;border:1px solid var(--line)}}table{{border-collapse:collapse;width:100%;min-width:620px}}th,td{{padding:11px 13px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}}th:first-child,td:first-child{{text-align:left}}th{{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.06em}}tbody tr:nth-child(even){{background:var(--soft)}}.grid{{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px}}.grid>*,.commentary>*{{min-width:0}}.commentary{{display:grid;grid-template-columns:1fr 1fr;gap:18px}}.commentary article{{border-top:3px solid var(--cyan);padding:10px 18px 18px;background:var(--soft)}}.boundary{{margin-top:28px;padding:18px;border-left:3px solid var(--blue);background:var(--soft)}}.empty{{color:var(--muted)}}@media(max-width:800px){{.grid,.commentary{{grid-template-columns:1fr}}main{{width:min(100% - 24px,1180px)}}}}
-</style></head><body><main><header><p class="eyebrow">Vera · {label("Management Control Pack")}</p><h1>{html.escape(pack['entity'])}</h1><div class="meta"><span>{pack['reporting_period']['start']} → {pack['reporting_period']['end']}</span><span>{label("Cutoff")} {pack['reporting_period']['cutoff']}</span><span>{pack['currency']}</span><span class="status {status_class}">{label(pack['status'])}</span></div></header>
+*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 "Instrument Sans",Inter,Arial,sans-serif}}main{{width:min(1180px,calc(100% - 40px));margin:auto;padding:30px 0 60px}}header{{border-top:8px solid var(--navy);padding:24px 0;border-bottom:1px solid var(--line)}}.eyebrow{{margin:0 0 10px;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}}h1{{margin:0;font-size:clamp(28px,4vw,48px);line-height:1.1;letter-spacing:-.055em}}h2{{font-size:30px;letter-spacing:-.035em}}h3{{font-size:17px}}.meta{{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:var(--muted)}}.status{{display:inline-flex;padding:6px 10px;border:1px solid currentColor;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.08em}}.status.ready{{color:var(--green)}}.status.partial{{color:var(--amber)}}.status.blocked{{color:var(--red)}}section{{padding:28px 0;border-bottom:1px solid var(--line)}}.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}}.metric{{background:#fff;padding:22px;min-height:110px}}.metric span{{display:block;color:var(--muted)}}.metric strong{{display:block;margin-top:12px;font-size:28px;letter-spacing:-.03em}}.metric small{{color:var(--blue)}}.table-wrap{{overflow:auto;border:1px solid var(--line)}}table{{border-collapse:collapse;width:100%;min-width:620px}}th,td{{padding:11px 13px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}}th:first-child,td:first-child{{text-align:left}}th{{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.06em}}tbody tr:nth-child(even){{background:var(--soft)}}.grid{{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px}}.grid>*,.commentary>*{{min-width:0}}.commentary{{display:grid;grid-template-columns:1fr 1fr;gap:18px}}.commentary article{{border-top:3px solid var(--cyan);padding:10px 18px 18px;background:var(--soft)}}.boundary{{margin-top:28px;padding:18px;border-left:3px solid var(--blue);background:var(--soft)}}.empty{{color:var(--muted)}}@media(max-width:800px){{.grid,.commentary{{grid-template-columns:1fr}}main{{width:min(100% - 24px,1180px)}}}}
+</style></head><body><main><header><p class="eyebrow">{label("Management Control Pack")}</p><h1>{html.escape(pack['entity'])}</h1><div class="meta"><span>{pack['reporting_period']['start']} → {pack['reporting_period']['end']}</span><span>{label("Cutoff")} {pack['reporting_period']['cutoff']}</span><span>{pack['currency']}</span><span>{label(pack['report_status'])}</span><span class="status {status_class}">{label(pack['status'])}</span></div></header>
 <section><p class="eyebrow">{label('Head metrics')}</p><h2>{label('Current picture')}</h2><div class="metrics">{"".join(cards)}</div></section>
+{budget_html}
+{commentary_html}
 <section><p class="eyebrow">{label('Evidence coverage')}</p><h2>{label('What this export supports')}</h2>{_html_table(coverage_rows, ('section','status','reason'), language)}</section>
 <section><p class="eyebrow">{label('Performance')}</p><h2>{label('Monthly P&amp;L')}</h2>{_html_table(pnl_rows, ('period','revenue','gross_profit','ebitda','net_result'), language)}</section>
-<section class="grid"><article><p class="eyebrow">{label('Budget')}</p><h2>{label('EBITDA variance')}</h2>{_html_table(budget_rows, ('period','actual_ebitda','budget_ebitda','variance'), language)}</article><article><p class="eyebrow">{label('Working capital')}</p><h2>{label('Receivables aging')}</h2>{_html_table(ar_rows, ('bucket','amount'), language)}</article></section>
+<section><article><p class="eyebrow">{label('Working capital')}</p><h2>{label('Receivables aging')}</h2>{_html_table(ar_rows, ('bucket','amount'), language)}</article></section>
 <section class="grid"><article><p class="eyebrow">{label('Working capital')}</p><h2>{label('Payables aging')}</h2>{_html_table(ap_rows, ('bucket','amount'), language)}</article><article><p class="eyebrow">{label('Liquidity')}</p><h2>{label('Cash movement')}</h2>{_html_table(cash_rows, ('period','inflow','outflow','net'), language)}</article></section>
 <section class="grid"><article><p class="eyebrow">{label('Concentration')}</p><h2>{label('Top customers')}</h2>{_html_table(customer_rows, ('customer','revenue','share'), language)}</article><article><p class="eyebrow">{label('Profitability')}</p><h2>{label('Services')}</h2>{_html_table(service_rows, ('service','revenue','direct_cost','margin','margin_rate'), language)}</article></section>
-{commentary_html}<p class="boundary">{label(pack['professional_boundary'])}</p></main></body></html>"""
+<p class="boundary">{label(pack['professional_boundary'])}</p></main></body></html>"""
+    # Coverage already explains absent sources; keep the body focused on supported sections.
+    rendered = re.sub(
+        r'<article>[^<]*(?:(?!</article>).)*?<p class="empty">[^<]+</p></article>',
+        "",
+        rendered,
+        flags=re.DOTALL,
+    )
+    rendered = re.sub(r'<section(?: class="grid")?>\s*</section>', "", rendered)
+    return rendered
 
 
 def _append_sheet(
@@ -2111,6 +2250,20 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
     summary.page_setup.fitToWidth = 1
     summary.page_setup.fitToHeight = 1
     summary.print_title_rows = "9:9"
+    _append_sheet(
+        workbook,
+        "Budget comparisons",
+        pack["sections"]["budget_variance"].get("comparison_rows", []),
+        (
+            "view",
+            "scenario",
+            "metric",
+            "baseline",
+            "comparison",
+            "variance",
+            "variance_pct",
+        ),
+    )
     section_specs = (
         (
             "Monthly P&L",
@@ -2128,7 +2281,7 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
         (
             "Budget variance",
             pack["sections"]["budget_variance"].get("rows", []),
-            ("period", "actual_ebitda", "budget_ebitda", "variance"),
+            ("period", "actual_ebitda", "budget_ebitda", "variance", "variance_pct"),
         ),
         (
             "AR aging",

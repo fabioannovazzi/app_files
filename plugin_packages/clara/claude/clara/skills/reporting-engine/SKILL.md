@@ -1,6 +1,6 @@
 ---
 name: reporting-engine
-description: Use when Clara needs CSV/XLSX/Parquet dataset intake, Sales/Discount/COGS identification, chart capability evidence, dataset profiling, a source-backed dataset semantic layer, mechanical compatibility checks, or reporting contract inspection before chart/report selection.
+description: Use when Clara needs budgeting/forecast reports with both variances and Sites delivery, CSV/XLSX/Parquet dataset intake, Sales/Discount/COGS identification, chart capability evidence, dataset profiling, a source-backed dataset semantic layer, mechanical compatibility checks, or reporting contract inspection before chart/report selection.
 ---
 
 ## Cowork execution contract
@@ -27,6 +27,48 @@ assumptions, contradictions, and consultant decisions visible.
 Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
+
+## Budget monitoring and forecast reports
+
+For Actual/Budget monitoring, use `../../modules/reporting-engine/scripts/budget_report.py`
+from this skill. This route reuses the management-control calculation core and
+shared IBCS-style reporting table, separately from Business Planning. Run the
+normal dependency check below (`requirements.txt` includes openpyxl).
+
+1. `python scripts/budget_report.py inspect --input <exports.xlsx> --output-dir <new-inspection-folder>`
+2. Read the bounded inspection and author/review its recipe for the user: source
+   roles, signed amounts, category/account mappings, reporting start/end, closed
+   month cutoff, currency, controls, audience and optional forecast assumptions.
+   Ask only unresolved business decisions; never ask the user to edit JSON.
+3. `python scripts/budget_report.py run --input <exports.xlsx> --recipe <reviewed.json> --output-dir <new-report-folder>`
+4. Read `model_context.json`, not raw populations by default, and prepare
+   commentary bound to its metric IDs and pack hash. Treat observations and
+   hypotheses separately; professional review remains explicit.
+5. If the user requests Sites: `python scripts/budget_report.py site --input <exports.xlsx> --recipe <reviewed.json> --pack <management_control_pack.json> --commentary <commentary.json> --audience <client> --output-dir <new-site-folder>`.
+
+Repeat `--input` for separate exports. The optional `forecast` role uses the same
+reviewed columns as Budget; `forecast_basis` states its source and assumptions.
+Actuals through cutoff plus remaining-month estimates form the full-period
+forecast. Do not infer future values or fill missing months with zeros. Complete
+monthly periods are required; missing months withhold cumulative comparisons.
+Both amount and percentage deltas remain visible, with unavailable percentages
+for zero/negative bases. Cost reductions are favorable. Controls only switch
+precomputed views with common scales; no IBCS certification is claimed.
+
+Set recipe `audience` to internal, client or public_demo; only synthetic examples
+may use public_demo. Review all content for those readers. This Clara entry point
+uses Clara's selected project/output scope and does not require Vera Studio
+Archive. It does not direct Clara through Vera's client-bound entry points.
+
+The Sites helper replays sources and the pack, checks audience equality, rejects
+blocked reports and preserves earlier outputs. Publish its exact static `dist`
+through Sites using the available hosting capability and existing authorization.
+All financial views, optional customer/supplier/service labels, commentary and
+limitations in the HTML reach Sites, including hidden views. Original exports,
+raw populations and full pack JSON are not copied into the public output. No
+automatic redaction occurs. Verify deployment and visitor access; sending
+invitations needs authorized recipients. Reuse the Site ID for an explicitly
+requested, reviewed refresh; there is no automatic recurring update.
 
 ## Output Location Rule
 

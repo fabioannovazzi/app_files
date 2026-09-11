@@ -303,6 +303,7 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
                     "openai-speech-generation",
                     "planning-public-research",
                     "planning-sites-report",
+                    "budget-sites-report",
                     "send-participant-link",
                 }
 

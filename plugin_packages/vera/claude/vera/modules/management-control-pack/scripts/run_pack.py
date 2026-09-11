@@ -4,8 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
-import json
 import logging
 import sys
 from pathlib import Path
@@ -23,19 +21,12 @@ for _vendor_root in (
         break
 
 from management_control_core import (  # noqa: E402
-    COMMENTARY_SCHEMA,
     PackContractError,
     build_management_pack,
-    build_model_context,
-    build_model_context_receipt,
     load_json,
     load_source_tables,
-    render_html,
-    render_markdown,
-    sha256_file,
-    write_excel,
-    write_json,
 )
+from management_delivery import write_pack_outputs  # noqa: E402
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -67,80 +58,9 @@ def main(argv: list[str] | None = None) -> int:
         pack = build_management_pack(tables, recipe)
     except (AssuranceContractError, PackContractError, OSError, ValueError) as exc:
         parser.error(str(exc))
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    pack_path = args.output_dir / "management_control_pack.json"
-    write_json(pack_path, pack)
-    model_context = build_model_context(pack)
-    write_json(args.output_dir / "model_context.json", model_context)
-    write_json(
-        args.output_dir / "model_context_receipt.json",
-        build_model_context_receipt(pack, model_context),
+    write_pack_outputs(
+        pack, inputs=args.input, recipe_path=args.recipe, output_dir=args.output_dir
     )
-    (args.output_dir / "management_control_facts.md").write_text(
-        render_markdown(pack), encoding="utf-8"
-    )
-    (args.output_dir / "management_control_dashboard.html").write_text(
-        render_html(pack), encoding="utf-8"
-    )
-    write_excel(args.output_dir / "management_control_pack.xlsx", pack)
-    pack_sha256 = sha256_file(pack_path)
-    commentary_template = {
-        "schema_version": COMMENTARY_SCHEMA,
-        "workflow_id": "management-control-pack",
-        "pack_sha256": pack_sha256,
-        "observations": [],
-        "hypotheses": [],
-        "questions": [],
-        "limitations": [],
-    }
-    write_json(args.output_dir / "commentary_template.json", commentary_template)
-    output_names = (
-        "management_control_pack.json",
-        "model_context.json",
-        "model_context_receipt.json",
-        "management_control_facts.md",
-        "management_control_dashboard.html",
-        "management_control_pack.xlsx",
-        "commentary_template.json",
-    )
-    receipt = {
-        "schema_version": "vera.management_control_execution_receipt.v1",
-        "workflow_id": "management-control-pack",
-        "status": pack["status"],
-        "recipe_sha256": sha256_file(args.recipe),
-        "inputs": [
-            {
-                "input_id": f"input_{index:03d}",
-                "sha256": sha256_file(path),
-                "byte_count": path.stat().st_size,
-            }
-            for index, path in enumerate(args.input, start=1)
-        ],
-        "outputs": [
-            {
-                "path": name,
-                "sha256": sha256_file(args.output_dir / name),
-                "byte_count": (args.output_dir / name).stat().st_size,
-            }
-            for name in output_names
-        ],
-        "implementation_reason": (
-            "Exact arithmetic, period membership after reviewed mappings, aging buckets, "
-            "and output hashes are deterministic because they are mechanically verifiable."
-        ),
-    }
-    receipt["content_sha256"] = hashlib.sha256(
-        (
-            json.dumps(
-                receipt,
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            )
-            + "\n"
-        ).encode("utf-8")
-    ).hexdigest()
-    write_json(args.output_dir / "execution_receipt.json", receipt)
     LOGGER.info("Wrote Management Control Pack with status %s.", pack["status"])
     return 0 if pack["status"] != "blocked" else 2
 

@@ -116,7 +116,8 @@
     },
     "management-control-pack": {
       "module_roots": [
-        "vera_assurance"
+        "vera_assurance",
+        "reporting_table.py"
       ]
     },
     "centrale-rischi-review": {

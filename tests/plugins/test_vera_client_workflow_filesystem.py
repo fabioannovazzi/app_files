@@ -62,6 +62,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("management-control-pack", "inspect_inputs.py"),
     ("management-control-pack", "run_pack.py"),
     ("management-control-pack", "finalize_pack.py"),
+    ("management-control-pack", "prepare_report_site.py"),
     ("centrale-rischi-review", "inspect_inputs.py"),
     ("centrale-rischi-review", "run_analysis.py"),
     ("centrale-rischi-review", "finalize_analysis.py"),

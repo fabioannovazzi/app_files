@@ -2119,6 +2119,41 @@
     },
   };
 
+
+  // Budget reporting uses the shared calculation core and explicit Sites delivery.
+  const budgetDeliveryCopy = {
+  "it": [
+    "Conto economico mensile, consuntivo e budget con scostamenti in valuta e percentuale, previsione a fine periodo da consuntivi e stime rivedute, oltre alle sezioni gestionali disponibili.",
+    "Report HTML con tabelle in stile IBCS, barre degli scostamenti in valuta e indicatori percentuali. Le selezioni mostrano mesi, progressivo e forecast già calcolati. Su richiesta, lo stesso report viene pubblicato con Sites per i lettori scelti.",
+    "La pubblicazione richiesta con Sites trasferisce l’intero HTML, inclusi dati finanziari nelle viste nascoste, ipotesi del forecast, commenti e nomi presenti nelle tabelle opzionali. Gli export originali, le popolazioni complete e il JSON del pacchetto non sono copiati nella pagina pubblica. Accesso, conservazione ed eliminazione dipendono da Sites. Le fonti vengono ricontrollate prima di ogni nuova pubblicazione; non è un monitoraggio automatico."
+  ],
+  "en": [
+    "Monthly P&L, Actual/Budget comparisons with amount and percentage variances, a full-period forecast combining actuals and reviewed estimates, plus supported management sections.",
+    "HTML report with IBCS-style tables, amount-variance bars and percentage indicators. Controls reveal precomputed months, cumulative actuals and forecast. On request, the same report is published through Sites for the chosen readers.",
+    "Requested Sites publication transfers the entire HTML, including financial data in hidden views, forecast assumptions, commentary and names in optional tables. Original exports, complete source populations and pack JSON are not copied into the public page. Access, retention and deletion depend on Sites. Sources are checked again before each new publication; this is not automatic monitoring."
+  ],
+  "fr": [
+    "Compte de résultat mensuel, réalisé/budget avec écarts en montant et en pourcentage, prévision de fin de période combinant réalisé et estimations revues, ainsi que les sections de gestion disponibles.",
+    "Rapport HTML avec tableaux de style IBCS, barres des écarts en montant et indicateurs en pourcentage. Les commandes affichent les mois, le cumul et la prévision déjà calculés. Sur demande, le même rapport est publié avec Sites pour les lecteurs choisis.",
+    "La publication demandée avec Sites transfère tout le HTML, y compris les données des vues masquées, hypothèses de prévision, commentaires et noms des tableaux optionnels. Les exports originaux, populations sources complètes et JSON du dossier ne sont pas copiés dans la page publique. Accès, conservation et suppression dépendent de Sites. Les sources sont revérifiées avant chaque publication ; aucun suivi automatique."
+  ],
+  "de": [
+    "Monatliche GuV, Ist/Budget-Vergleiche mit absoluten und prozentualen Abweichungen, Periodenprognose aus Istwerten und geprüften Schätzungen sowie verfügbare Managementauswertungen.",
+    "HTML-Bericht mit Tabellen im IBCS-Stil, Balken für absolute Abweichungen und Prozentindikatoren. Die Auswahl zeigt bereits berechnete Monate, kumulierte Werte und Prognosen. Auf Wunsch wird derselbe Bericht über Sites für die ausgewählten Leser veröffentlicht.",
+    "Die angeforderte Sites-Veröffentlichung überträgt das gesamte HTML einschließlich ausgeblendeter Finanzdaten, Prognoseannahmen, Kommentare und Namen in optionalen Tabellen. Originalexporte, vollständige Quelldaten und Paket-JSON werden nicht in die öffentliche Seite kopiert. Zugriff, Speicherung und Löschung hängen von Sites ab. Quellen werden vor jeder Veröffentlichung erneut geprüft; keine automatische Überwachung."
+  ],
+  "es": [
+    "Cuenta de resultados mensual, comparación real/presupuesto con desviaciones en importe y porcentaje, previsión de cierre con datos reales y estimaciones revisadas, más las secciones de gestión disponibles.",
+    "Informe HTML con tablas de estilo IBCS, barras de desviaciones en importe e indicadores porcentuales. Los controles muestran meses, acumulado y previsión ya calculados. Bajo petición, el mismo informe se publica con Sites para los lectores elegidos.",
+    "La publicación solicitada con Sites transfiere todo el HTML, incluidos datos en vistas ocultas, supuestos de previsión, comentarios y nombres en tablas opcionales. Los archivos originales, poblaciones completas y JSON del paquete no se copian en la página pública. Acceso, conservación y eliminación dependen de Sites. Las fuentes se comprueban antes de cada publicación; no hay seguimiento automático."
+  ]
+};
+  Object.entries(budgetDeliveryCopy).forEach(([language, text]) => {
+    const page = window.MPARANZA_FUNCTION_PAGES["clara-data-analysis"].copy[language];
+    page.output += " " + text[1];
+    page.modelData.push(text[2]);
+  });
+
   Object.entries(clearNames).forEach(([page, names]) => {
     Object.entries(names).forEach(([language, name]) => {
       window.MPARANZA_FUNCTION_PAGES[page].copy[language].name = name;
