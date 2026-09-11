@@ -94,6 +94,12 @@ override this Cowork contract.
 
 # Plan The Answer
 
+For Vera's `quesito-legale-fiscale` journey, read and follow
+`references/research-choice.md`. Resolve that user choice after preparing the
+question and before finalizing the generation route and semantic review in the
+module below. An available Deep Research plugin is a user-selected second-stage
+route even when ordinary research could also meet the requested standard.
+
 
 
 Resolve `../../modules/prompt-optimizer` from this skill directory when it

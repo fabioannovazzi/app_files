@@ -882,8 +882,20 @@ Flag residual uncertainty.
     )
 
 
-def test_validate_prompt_supports_direct_one_page_letter_contract(
+@pytest.mark.parametrize(
+    ("generation_route", "instruction"),
+    [
+        ("codex_direct", "Use `optimized_prompt.md` as the instructions"),
+        (
+            "deep_research_plugin",
+            "Use the installed OpenAI Deep Research skill with `optimized_prompt.md`.",
+        ),
+    ],
+)
+def test_validate_prompt_preserves_current_host_route_and_letter_contract(
     tmp_path: Path,
+    generation_route: str,
+    instruction: str,
 ) -> None:
     validate_mod = load_script(
         "prompt_optimizer_validate_direct_letter",
@@ -907,7 +919,7 @@ Flag residual uncertainty and avoid overstating judgment-dependent conclusions.
 """
     contract = _answer_contract(
         document_type="one-page legal letter",
-        generation_route="codex_direct",
+        generation_route=generation_route,
         question_domain="legal",
     )
     contract["evidence_display"] = "source_record_only"
@@ -926,9 +938,18 @@ Flag residual uncertainty and avoid overstating judgment-dependent conclusions.
 
     assert audit["status"] == "pass"
     assert audit["checks"]["citation_rules"] is True
-    assert audit["answer_contract"]["generation_route"] == "codex_direct"
-    assert "Use `optimized_prompt.md` as the instructions" in readme
+    assert audit["answer_contract"]["generation_route"] == generation_route
+    assert audit["answer_contract"]["document_type"] == "one-page legal letter"
+    assert instruction in readme
     assert "Paste `optimized_prompt.md` into Deep Research" not in readme
+    assert "websites field" not in readme
+    final_artifacts = json.loads(paths["final_artifacts"].read_text(encoding="utf-8"))
+    readme_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "README_HUMAN.md"
+    )
+    assert instruction in "\n".join(readme_output["required_text"])
 
 
 def test_validate_answer_contract_rejects_unresolved_required_shape() -> None:

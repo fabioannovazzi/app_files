@@ -108,7 +108,7 @@
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7ff5db709b4d3dcdf9b841d3dc7c9a1458e07b0d49ad1d2f661db72ff61bfc21"
+    "source_fingerprint": "3b5ed245556a585eab71564550258cc6b4733ee255b8d707e1f03732d531955e"
   },
   "governed_repository_paths": [
     "plugins/vera/scripts/adversarial_opinion.py",

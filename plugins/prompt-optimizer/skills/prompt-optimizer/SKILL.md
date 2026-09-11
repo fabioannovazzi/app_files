@@ -128,7 +128,8 @@ Run UX:
    numbered questions with a short "why this matters" phrase for each, unless
    a native widget is available for the same decision.
 6. Do not ask whether to optimize, package, validate, or write source-domain
-   sidecars. Infer `generation_route` and `document_type` from the question
+   sidecars. Preserve an explicit route choice and follow the entry product's
+   research-choice handoff before inferring a route. Infer `document_type` from the question
    when they are clear. Ask only when the choice materially changes the answer
    and cannot be inferred.
 7. After required choices are fixed, state a concise execution plan naming
@@ -292,8 +293,8 @@ python scripts/inspect_question.py <managed-question-file> --client-engagement <
 9. Write `draft_answer_contract.json` in Codex. It must contain:
    - `schema_version`: `1.0`;
    - `question_domain`: `legal`, `tax`, `compliance`, or `mixed`;
-   - `generation_route`: `codex_direct`, `chatgpt_deep_research`, or
-     `external_document`;
+   - `generation_route`: `codex_direct`, `deep_research_plugin`,
+     `chatgpt_deep_research`, or `external_document`;
    - free-text `document_type`, `purpose`, `audience`, `output_language`, and
      `jurisdiction`;
    - `jurisdiction_status`: `confirmed`, `assumed`, `unresolved`, or
@@ -344,9 +345,14 @@ python scripts/validate_prompt.py <managed-question-file> <client-run-output>/dr
    `prompt_contract_review.json`,
    `source_domains_comma.txt`, `source_domains.txt`, `prompt_package.md`,
    `README_HUMAN.md`, and `prompt_audit.json`. For
-   `chatgpt_deep_research`, provide the ChatGPT-window handoff. For
-   `codex_direct`, use the instructions to generate the answer in Codex and
-   continue directly to answer validation.
+   `deep_research_plugin`, read and follow the installed OpenAI `deep-research`
+   skill with the prepared brief, source list and contracted output, then
+   continue to answer validation. This route must reflect the user's explicit
+   choice and an available skill. Reuse confirmed intake and preserve the
+   contracted scope, format and length over the research skill's defaults.
+   For `chatgpt_deep_research`, provide the separately chosen ChatGPT-window
+   handoff. For `codex_direct`, use the instructions to generate the answer in
+   Codex and continue directly to answer validation.
 
 ## Prompt Requirements
 

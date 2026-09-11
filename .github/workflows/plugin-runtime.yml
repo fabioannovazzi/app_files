@@ -27,6 +27,7 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_adversarial_opinion.py
           tests/plugins/test_vera_validated_answer_pipeline.py
+          tests/plugins/test_prompt_optimizer_plugin.py
           tests/plugins/test_vera_router_contract.py
           tests/plugins/test_vera_website_journeys.py
           --cov --cov-config=tests/plugin_adversarial.coveragerc

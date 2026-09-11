@@ -42,10 +42,16 @@ def _write(path: Path, value: dict[str, Any]) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
 
-def _phase(path: Path, examples: Any, *, opposing: bool = False) -> None:
+def _phase(
+    path: Path,
+    examples: Any,
+    *,
+    opposing: bool = False,
+    generation_route: str = "codex_direct",
+) -> None:
     path.mkdir(exist_ok=True)
     if not (path / "answer_contract.json").is_file():
-        contract = examples._answer_contract("codex_direct", "legal opinion")
+        contract = examples._answer_contract(generation_route, "legal opinion")
         contract["adversarial_policy"] = "required"
         _write(path / "answer_contract.json", contract)
     review = examples._claims_review("legal opinion")
@@ -362,15 +368,27 @@ def test_cli_rejects_unbound_client_context(tmp_path: Path) -> None:
     assert not (tmp_path / "adversarial_brief.json").exists()
 
 
-def test_counter_contract_does_not_recurse(
-    tmp_path: Path, opinion: Any, examples: Any
+@pytest.mark.parametrize(
+    "generation_route",
+    [
+        "codex_direct",
+        "deep_research_plugin",
+        "chatgpt_deep_research",
+        "external_document",
+    ],
+)
+def test_counter_contract_uses_current_host_without_repeating_original_route(
+    tmp_path: Path, opinion: Any, examples: Any, generation_route: str
 ) -> None:
-    _phase(tmp_path / "position", examples)
+    _phase(tmp_path / "position", examples, generation_route=generation_route)
+    original = (tmp_path / "position/answer_contract.json").read_bytes()
 
     brief = opinion.prepare_adversarial(tmp_path)
 
     assert "adversarial_policy" not in brief["counter_contract"]
+    assert brief["counter_contract"]["generation_route"] == "codex_direct"
     assert brief["counter_contract"]["validation_scope"] == "all_material_claims"
+    assert (tmp_path / "position/answer_contract.json").read_bytes() == original
 
 
 @pytest.fixture

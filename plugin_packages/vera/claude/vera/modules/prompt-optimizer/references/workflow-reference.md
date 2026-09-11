@@ -74,8 +74,8 @@ or compliance question; do not ask whether they want a prompt optimized.
 Claude must write `answer_contract.json` before generation. Keep these decisions
 separate:
 
-- generation route: `codex_direct`, `chatgpt_deep_research`, or
-  `external_document`;
+- generation route: `codex_direct`, `deep_research_plugin`,
+  `chatgpt_deep_research`, or `external_document`;
 - document type: the requested artifact, such as a research report, legal memo,
   one-page letter, response letter, checklist, or counsel brief.
 - validation scope: all material claims by default, selected material claims
@@ -89,9 +89,12 @@ Choose both with model-led judgment or user confirmation. Deterministic scripts
 only validate that the explicit contract has the required fields and allowed
 codes. They must not infer the route or document type from keywords.
 
-Native Deep Research is a ChatGPT-window handoff, not a Claude or Work tool.
-Direct Claude drafting skips that handoff but still carries the answer contract
-and source record into the validator.
+`deep_research_plugin` uses the installed OpenAI `deep-research` skill in the
+current host after the user selects it. Carry the prepared brief, source list,
+confirmed intake and requested artifact into that skill, then resume answer
+validation. `chatgpt_deep_research` is the separate ChatGPT-window handoff.
+Direct drafting and the installed-plugin route both skip that manual handoff
+while preserving the answer contract and source record for the validator.
 
 ## Output Language And Jurisdiction Scope
 

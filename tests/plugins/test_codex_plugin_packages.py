@@ -3363,8 +3363,16 @@ def test_new_client_jurisdiction_pages_render_current_model_data_last() -> None:
 def test_vera_process_model_data_copy_omits_provider_mapping(
     relative_path: Path,
 ) -> None:
+    from bs4 import BeautifulSoup
+
     page = (ROOT / relative_path).read_text(encoding="utf-8")
-    model_data = page[page.index("data-model-data-workflow=") :]
+    section = BeautifulSoup(page, "html.parser").select_one(
+        "[data-model-data-workflow]"
+    )
+    assert section is not None
+    # Check the data explanation and its translations, not unrelated later script copy.
+    translations = re.findall(r'"model\.[^"]+"\s*:\s*"((?:\\.|[^"\\])*)"', page)
+    model_data = section.get_text(" ", strip=True) + "\n" + "\n".join(translations)
 
     assert "OpenAI" not in model_data
     assert "Anthropic" not in model_data

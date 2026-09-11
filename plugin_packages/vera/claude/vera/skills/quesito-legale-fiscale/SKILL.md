@@ -106,9 +106,12 @@ this skill as the matching specialist workflow for that journey, then:
    or research. It prepares the answer contract, source posture, generation
    route, and generation instructions. Set `adversarial_policy` to `required`
    in this journey’s original `answer_contract.json`.
-2. Generate the contracted answer directly when the current runtime can meet
-   the required standard, or prepare the explicit ChatGPT Deep Research handoff
-   when native Deep Research is materially needed.
+2. Follow `../prompt-optimizer/references/research-choice.md`: after preparing
+   the question, offer the available OpenAI Deep Research plugin for research
+   and drafting, or Vera's usual research. Wait for the choice unless it is
+   already explicit for this answer. Execute the selected route with the same
+   brief and answer contract, then continue to validation. Keep a separately
+   chosen ChatGPT-window handoff distinct from the installed plugin.
 3. Read `../deep-research-validator/SKILL.md` completely and follow it before
    delivering a generated or supplied answer. Reuse the same answer contract,
    correct supported defects, and keep professional-judgment items explicit.

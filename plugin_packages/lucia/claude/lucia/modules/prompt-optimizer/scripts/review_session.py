@@ -74,6 +74,10 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "# How to use these files",
             "Use `optimized_prompt.md` as the instructions for generating the answer.",
         ],
+        "readme_required_research_plugin": [
+            "# How to use these files",
+            "Use the installed OpenAI Deep Research skill with `optimized_prompt.md`.",
+        ],
         "dependency_note": "Claude should run scripts/check_dependencies.py before helper scripts.",
         "data_notes": [
             "Prompt validation receives question and prompt text from the current Claude/user workflow.",
@@ -88,7 +92,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "next_actions": [
             "Call validate_prompt_optimizer_review, then render_prompt_optimizer_review when MCP is available.",
             "Repair draft_prompt.md and rerun validation if prompt_audit.json fails.",
-            "Use optimized_prompt.md in Deep Research and source_domains_comma.txt in the websites field.",
+            "Follow the selected generation route and instructions in README_HUMAN.md.",
         ],
     },
     "es": {
@@ -145,6 +149,10 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "# Cómo utilizar estos archivos",
             "Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
         ],
+        "readme_required_research_plugin": [
+            "# Cómo utilizar estos archivos",
+            "Use la skill Deep Research de OpenAI instalada con `optimized_prompt.md`.",
+        ],
         "dependency_note": "Claude debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares.",
         "data_notes": [
             "La validación recibe la pregunta y el prompt del flujo actual de Claude y del usuario.",
@@ -159,7 +167,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "next_actions": [
             "Ejecute validate_prompt_optimizer_review y, cuando MCP esté disponible, render_prompt_optimizer_review.",
             "Corrija draft_prompt.md y vuelva a validar si prompt_audit.json falla.",
-            "Use optimized_prompt.md en Deep Research y source_domains_comma.txt en el campo de sitios web.",
+            "Siga la ruta de generación elegida y las instrucciones de README_HUMAN.md.",
         ],
     },
 }
@@ -547,6 +555,11 @@ def _output_records(
     readme_required_key = (
         "readme_required_deep_research" if deep_research else "readme_required_direct"
     )
+    if (
+        isinstance(answer_contract, dict)
+        and answer_contract.get("generation_route") == "deep_research_plugin"
+    ):
+        readme_required_key = "readme_required_research_plugin"
     required_text_by_path = {
         "prompt_package.md": copy["package_required"],
         "README_HUMAN.md": copy[readme_required_key],

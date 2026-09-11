@@ -93,6 +93,7 @@ ANSWER_CONTRACT_ENUMS = {
     "generation_route": {
         "chatgpt_deep_research",
         "codex_direct",
+        "deep_research_plugin",
         "external_document",
     },
     "jurisdiction_status": {
@@ -742,6 +743,7 @@ def _package_markdown(
     contract_review = audit.get("prompt_contract_review") or {}
     contract_review_audit = audit.get("prompt_contract_review_audit") or {}
     deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
+    research_plugin = answer_contract.get("generation_route") == "deep_research_plugin"
     contract_labels = (
         (
             "Dominio de la pregunta",
@@ -829,6 +831,13 @@ def _package_markdown(
                 "- Keep `prompt_contract_review.json` as the semantic prompt review.",
                 "- Treat `prompt_audit.json` as machine-readable validation metadata.",
             ]
+        )
+    if research_plugin:
+        # Render the explicitly selected route; code does not choose the research method.
+        use_lines[0] = (
+            "- Use la skill Deep Research de OpenAI instalada con `optimized_prompt.md`."
+            if spanish
+            else "- Use the installed OpenAI Deep Research skill with `optimized_prompt.md`."
         )
     source_domain_text = (
         "\n".join(f"- {domain}" for domain in source_domains)
@@ -1088,6 +1097,7 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
     source_domains = audit.get("source_domains") or []
     answer_contract = audit.get("answer_contract") or {}
     deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
+    research_plugin = answer_contract.get("generation_route") == "deep_research_plugin"
     if _package_language(audit) == "es":
         if deep_research:
             website_instruction = (
@@ -1107,6 +1117,8 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
             if deep_research
             else "1. Use `optimized_prompt.md` como instrucciones para generar la respuesta."
         )
+        if research_plugin:
+            first_instruction = "1. Use la skill Deep Research de OpenAI instalada con `optimized_prompt.md`."
         return "\n".join(
             [
                 "# Cómo utilizar estos archivos",
@@ -1141,6 +1153,8 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
         if deep_research
         else "1. Use `optimized_prompt.md` as the instructions for generating the answer."
     )
+    if research_plugin:
+        first_instruction = "1. Use the installed OpenAI Deep Research skill with `optimized_prompt.md`."
     return "\n".join(
         [
             "# How to use these files",
