@@ -25,6 +25,14 @@ __all__ = [
 ]
 
 ITALIAN = {
+    "Period": "Periodo",
+    "Comparison": "Confronto",
+    "Print current view": "Stampa la vista corrente",
+    "client": "Cliente",
+    "Report sections": "Sezioni del report",
+    "Income statement": "Conto economico",
+    "Cash": "Cassa",
+    "Sources": "Fonti",
     "Current planning question": "Domanda di questa iterazione",
     "What we learned": "Che cosa abbiamo appreso",
     "Decision in this round": "Decisione di questa iterazione",
@@ -181,7 +189,8 @@ def validate_presentation(plan: dict[str, Any]) -> None:
     p = plan["case"].get("presentation", {})
     require(
         isinstance(p, dict)
-        and set(p) <= {"language", "tables", "actions", "source_notes"},
+        and set(p)
+        <= {"language", "tables", "actions", "source_notes", "comparison_groups"},
         "Unexpected presentation fields",
     )
     require(language(plan["case"]) in {"en", "it"}, "Unsupported report language")
@@ -280,6 +289,9 @@ def validate_presentation(plan: dict[str, Any]) -> None:
                 )
         if "comparison" in table:
             comparison_rows(table, plan)
+    from planning_interaction import validate_groups
+
+    validate_groups(p, tables)
     require(isinstance(p.get("actions", []), list), "Actions must be a list")
     for action in p.get("actions", []):
         require(isinstance(action, dict), "Action must be an object")
@@ -412,10 +424,10 @@ def render_tables(
     from planning_report import _table
 
     lang = language(plan["case"])
-    output = []
-    for table in plan["case"].get("presentation", {}).get("tables", []):
-        if table["section"] != section:
-            continue
+
+    def render_table(
+        table: dict[str, Any], scale_rows: list[dict[str, Any]] | None = None
+    ) -> str:
         if "comparison" in table:
             from reporting_table import render_reporting_table
 
@@ -438,11 +450,9 @@ def render_tables(
                 language=lang,
                 fragment=True,
                 row_label_width=220,
+                scale_rows=scale_rows,
             )
-            output.append(
-                f'<div id="table-{html.escape(table["id"], quote=True)}">{component}{render_paragraph(table["caption_id"])}</div>'
-            )
-            continue
+            return f'<div id="table-{html.escape(table["id"], quote=True)}">{component}{render_paragraph(table["caption_id"])}</div>'
         rows = []
         for row in table["rows"]:
             cells = []
@@ -460,9 +470,30 @@ def render_tables(
                         )
                     )
             rows.append(cells)
-        output.append(
-            f'<div class="decision-table" id="table-{html.escape(table["id"])}"><h3>{html.escape(table["title"])}</h3>{_table(table["headers"], rows)}{render_paragraph(table["caption_id"])}</div>'
-        )
+        return f'<div class="decision-table" id="table-{html.escape(table["id"])}"><h3>{html.escape(table["title"])}</h3>{_table(table["headers"], rows)}{render_paragraph(table["caption_id"])}</div>'
+
+    from planning_interaction import render_group
+
+    presentation = plan["case"].get("presentation", {})
+    tables = {t["id"]: t for t in presentation.get("tables", [])}
+    groups = presentation.get("comparison_groups", [])
+    grouped = {v["table_id"] for g in groups for v in g["views"]}
+    output = [
+        render_table(t)
+        for t in tables.values()
+        if t["section"] == section and t["id"] not in grouped
+    ]
+    for group in groups:
+        if tables[group["views"][0]["table_id"]]["section"] == section:
+            output.append(
+                render_group(
+                    group,
+                    tables,
+                    lang,
+                    render_table,
+                    lambda t: comparison_rows(t, plan)[0],
+                )
+            )
     return "".join(output)
 
 

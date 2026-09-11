@@ -118,7 +118,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
     ("variance-analysis", "review_preflight.py"),
 )
 
-# Maintenance and inspection CLIs do not create or resume a customer workflow.
+# Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("treasury-forecast", "check_dependencies.py"),
     ("aml-review", "check_dependencies.py"),
@@ -140,6 +140,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("passive-invoice-audit", "check_dependencies.py"),
     ("business-planning", "check_dependencies.py"),
     ("business-planning", "run_strategic_plan.py"),
+    ("business-planning", "prepare_report_site.py"),
     ("sales-plan", "check_dependencies.py"),
     ("sales-plan", "model_use.py"),
     ("variance-analysis", "check_dependencies.py"),

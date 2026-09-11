@@ -307,6 +307,36 @@ Tables and action criteria cannot bypass the narrative validation contract.
 The readable sources appendix is printed; the full technical register remains
 available in HTML/JSON/CSV. Presentation participates in canonical replay.
 
+Optional `presentation.comparison_groups` arranges existing monetary comparison
+tables into period/scenario views. It does not define a second numerical model:
+
+```json
+{
+  "id": "forecast",
+  "title": "Income statement comparison",
+  "views": [
+    {"table_id": "january-downside", "period": "January", "scenario": "Downside versus base"},
+    {"table_id": "february-downside", "period": "February", "scenario": "Downside versus base"}
+  ]
+}
+```
+
+Each group requires at least two uniquely labelled views, all in one report
+section. Each table may belong to only one view. Its typed cells, comparison
+metadata and caption remain mandatory. Author meaningful comparable periods and
+scenario labels from the actual evidence; the validator checks references and
+uniqueness, not professional comparability. Selectors include only defined
+combinations. All views share the monetary unit and variance scales. JavaScript
+only controls visibility; all figures and interpretations remain compiler output.
+With JavaScript unavailable, all views remain readable. PDF export includes all
+views; browser printing uses the current selection.
+
+`prepare_report_site.py` revalidates a persisted plan and copies the exact compiled
+HTML into a fresh static Sites candidate. It requires an explicit matching
+audience and rejects blocked plans before writing. See
+[Sites delivery](sites-delivery.md) for hosting, source-content disclosure,
+recipient access, refresh and delivery evidence.
+
 ## Planning cycle (required for readiness)
 
 `cycle` has exactly:

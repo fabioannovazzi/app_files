@@ -810,7 +810,19 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
       .chart-legend{font-size:9pt}svg text{font-family:Arial,sans-serif}
     }
     """
-    return f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(case["entity_name"])} · Business Planning</title><style>{style}</style></head><body><main>{"".join(parts)}</main><script type="application/json" id="validated-plan">{payload}</script></body></html>'
+    from planning_interaction import interaction_assets
+
+    interaction_style, interaction_script = interaction_assets()
+    style += interaction_style
+    print_button = f'<button class="report-print" data-report-print hidden>{e(tr("Print current view"))}</button>'
+    if assessment and plan["status"] != "blocked":
+        print_button = (
+            f'<nav class="report-navigation" aria-label="{e(tr("Report sections"))}">'
+            f'<a href="#economics">{e(tr("Income statement"))}</a>'
+            f'<a href="#cash">{e(tr("Cash"))}</a>'
+            f'<a href="#reader-sources">{e(tr("Sources"))}</a></nav>' + print_button
+        )
+    return f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(case["entity_name"])} · Business Planning</title><style>{style}</style></head><body><main>{parts[0]}{print_button}{"".join(parts[1:])}</main><script type="application/json" id="validated-plan">{payload}</script><script>{interaction_script}</script></body></html>'
 
 
 def export_pdf(
@@ -842,6 +854,7 @@ def export_pdf(
             page.route("**/*", lambda route: route.abort())
             page.set_content(rendered)
             page.evaluate("document.fonts.ready")
+            page.evaluate("document.body.classList.add('print-all-comparisons')")
             from planning_presentation import label, language
 
             lang = language(plan["case"])

@@ -347,6 +347,14 @@ amount variance and a labelled unavailable percentage. Do not manufacture monthl
 detail, a baseline or supporting evidence to make a chart possible. Preserve the
 source bindings and professional review in the report, including hosted versions.
 
+For useful period or scenario selection, define `presentation.comparison_groups`
+over those existing comparison tables. Every view has its own checked figures,
+period, baseline, scenario and caption. The browser selects a precompiled view;
+it does not recalculate the plan or rewrite the recommendation. Both variances
+stay visible, and each group shares unit and bar/pin scales across its views.
+Keep a static report when only one comparison is useful. Do not invent scenarios
+or recast different coverage as a like-for-like comparison to populate controls.
+
 For comparisons, bind numeric table cells to exact canonical calculation IDs or
 explicitly labelled source observations. Give every table a narrative caption
 explaining period, scope, exclusions and decision consequence. Observations are
@@ -364,6 +372,19 @@ URLs in the standalone PDF. Inspect every PDF page for legends, table overflow,
 stranded headings, draft labels and accessible sources. Do not insert a blanket
 claim that no sharing has ever occurred; communication history belongs to run
 records and must reflect actual events.
+
+### Deliver through Sites when requested
+
+For “share this report with my client as a site”, reuse the current compiled
+report and the host's Sites capability. Read
+[the report-to-Sites procedure](../../references/sites-delivery.md). Prepare and
+publish the complete report for the selected audience, then provide its live link.
+Do not stop at a chat table, an unhosted HTML file or instructions for the user to
+build a website. A Sites request authorizes this route; apply the host's actual
+publication and access rules without asking the user to repeat that choice.
+Never send client invitations or messages without the user's recipient authority.
+If Sites is unavailable in the selected host, deliver the validated local HTML
+and explain that hosting remains incomplete. Do not claim automatic refresh.
 
 ### Registered execution and output location
 

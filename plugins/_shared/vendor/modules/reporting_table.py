@@ -137,10 +137,13 @@ def render_reporting_table(
     language: str = "en",
     fragment: bool = False,
     row_label_width: int | None = None,
+    scale_rows: list[dict[str, Any]] | None = None,
 ) -> str:
     """Write a compact scenario and variance table artifact."""
 
-    scale, scale_label = _table_value_scale(rows)
+    # An interactive group shares its unit and variance scales across views.
+    scale_basis = rows if scale_rows is None else [*rows, *scale_rows]
+    scale, scale_label = _table_value_scale(scale_basis)
     measure_suffix = (
         ""
         if scale_label == "units"
@@ -151,13 +154,13 @@ def render_reporting_table(
         )
     )
     max_abs_absolute = max(
-        (abs(float(row["absolute_variance"])) for row in rows),
+        (abs(float(row["absolute_variance"])) for row in scale_basis),
         default=0.0,
     )
     max_abs_relative = max(
         (
             abs(float(row["relative_variance"]))
-            for row in rows
+            for row in scale_basis
             if row.get("relative_variance") is not None
         ),
         default=0.0,
