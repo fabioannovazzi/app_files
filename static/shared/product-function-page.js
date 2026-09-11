@@ -155,7 +155,7 @@
             <p class="pf-section__copy">${text.publicExampleSummary}</p>
             <div class="pf-public-example__links">
               <a class="pf-public-example__primary" href="${page.publicExampleHref}">${text.publicExampleLinkLabel}</a>
-              <a href="${page.publicExampleSourceHref}" target="_blank" rel="noreferrer">${text.publicExampleSourceLabel}</a>
+              ${page.publicExampleSourceHref && text.publicExampleSourceLabel ? `<a href="${page.publicExampleSourceHref}" target="_blank" rel="noreferrer">${text.publicExampleSourceLabel}</a>` : ""}
             </div>
           </div>
         </div>
