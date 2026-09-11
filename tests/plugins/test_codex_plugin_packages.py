@@ -11,7 +11,6 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
-from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
@@ -3364,6 +3363,8 @@ def test_new_client_jurisdiction_pages_render_current_model_data_last() -> None:
 def test_vera_process_model_data_copy_omits_provider_mapping(
     relative_path: Path,
 ) -> None:
+    from bs4 import BeautifulSoup
+
     page = (ROOT / relative_path).read_text(encoding="utf-8")
     section = BeautifulSoup(page, "html.parser").select_one(
         "[data-model-data-workflow]"
