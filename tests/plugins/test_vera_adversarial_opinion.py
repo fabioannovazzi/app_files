@@ -202,6 +202,75 @@ def test_preparation_does_not_gate_on_original_validation_outcome(
     assert (tmp_path / "adversarial/answer_contract.json").is_file()
 
 
+@pytest.mark.parametrize("generation_route", ["codex_direct", "deep_research_plugin"])
+def test_informational_contract_cannot_start_an_opposing_examination(
+    tmp_path: Path, opinion: Any, examples: Any, generation_route: str
+) -> None:
+    _phase(tmp_path / "position", examples, generation_route=generation_route)
+    path = tmp_path / "position/answer_contract.json"
+    contract = json.loads(path.read_text())
+    contract.update(
+        adversarial_policy="not_required",
+        adversarial_rationale="The user asked to understand the rules, not for a position.",
+    )
+    _write(path, contract)
+    original = path.read_bytes()
+
+    with pytest.raises(ValueError, match="adversarial_policy=required"):
+        opinion.prepare_adversarial(tmp_path)
+
+    assert path.read_bytes() == original
+    assert not (tmp_path / "adversarial").exists()
+    assert not (tmp_path / "adversarial_brief.json").exists()
+    assert not (tmp_path / "opinion_progress.json").exists()
+
+
+@pytest.mark.parametrize("generation_route", ["codex_direct", "deep_research_plugin"])
+def test_informational_answer_can_finish_ordinary_validation_without_opinion_package(
+    tmp_path: Path, examples: Any, generation_route: str
+) -> None:
+    # Synthetic, authored evidence tests packaging, not legal truth or intent inference.
+    source = tmp_path / "input"
+    _phase(source, examples, generation_route=generation_route)
+    contract_path = source / "answer_contract.json"
+    contract = json.loads(contract_path.read_text())
+    contract.update(
+        document_type="informational research note",
+        purpose="Explain the published response deadline",
+        adversarial_policy="not_required",
+        adversarial_rationale="The requested result is an explanation of the rule.",
+    )
+    _write(contract_path, contract)
+    _write(
+        source / "claims_review.json",
+        examples._claims_review(contract["document_type"]),
+    )
+    validator = examples._load_script(
+        f"scope_validator_{generation_route}",
+        ROOT / "plugins/deep-research-validator/scripts/package_validation.py",
+    )
+    output = tmp_path / "validation"
+
+    paths = validator.write_validation_package(
+        source / "document_inventory.json",
+        source / "source_inventory.json",
+        source / "claims_review.json",
+        output,
+        answer_contract_path=contract_path,
+    )
+
+    audit = json.loads(paths["validation_audit"].read_text())
+    assert audit["delivery_readiness"] == "reviewed_answer_ready"
+    assert json.loads(paths["answer_contract"].read_text()) == contract
+    assert (
+        paths["validated_document"].read_text().strip()
+        == examples._claims_review(contract["document_type"])["validated_document"]
+    )
+    assert not (output / "position").exists()
+    assert not (output / "adversarial").exists()
+    assert not (output / "opinion_delivery.json").exists()
+
+
 def test_original_validation_alone_cannot_complete_opinion_journey(
     tmp_path: Path, opinion: Any, examples: Any
 ) -> None:

@@ -11,8 +11,11 @@ Later host-specific instructions in this reference cannot override this rule.
 # Choose how to research the answer
 
 Use this handoff for Vera's `quesito-legale-fiscale` journey. It changes the
-second stage, research and answer generation. Validation and the adversarial
-opinion still follow both generation routes.
+second stage, research and answer generation. Validation follows both routes;
+the adversarial stage follows only when the separately recorded
+`adversarial_policy` is `required`. Apply
+`../../quesito-legale-fiscale/references/adversarial-scope.md` independently of
+the research-mode choice.
 
 ## One choice after preparation
 
@@ -64,8 +67,10 @@ and import the resulting answer into the same engagement's validation run.
 Record the selected route and model-visible research material in the run's
 model-data report. Without local tooling, retain the same context in chat and
 state which durable artifacts were not created. Once the answer is available,
-resume `deep-research-validator`, then `adversarial-opinion`; a research report
-alone is not completion of the Vera journey.
+resume `deep-research-validator`. An informational assignment with
+`adversarial_policy: not_required` finishes with that reviewed answer. Run
+`adversarial-opinion` only with `required`; choosing Deep Research does not
+activate it. An unvalidated research report is not completion of either path.
 
 ## Availability and the separate ChatGPT handoff
 

@@ -1,20 +1,24 @@
 ---
 name: adversarial-opinion
-description: Develop and review the strongest evidence-bound opposing case to a legal, tax, or compliance position in Vera's legal-opinion journey, independently of the original validation outcome, and compare both positions for the professional.
+description: Develop and review the strongest evidence-bound opposing case when Vera is asked for an opinion on a concrete legal, tax, or compliance position or explicitly for an opposing opinion. Do not activate for informational research alone; when selected, run independently of the original validation outcome and compare both positions.
 ---
 
 # Adversarial Opinion
 
 Run this distinct fourth stage after preparation, drafting, and validation in
-`vera:quesito-legale-fiscale`. It is routine even when the original opinion is
-well supported. Validation asks whether that opinion is supported; this stage
+`vera:quesito-legale-fiscale` only when its original answer contract records
+`adversarial_policy: required`. Read and follow
+`../quesito-legale-fiscale/references/adversarial-scope.md` before activating it.
+It is routine for an opinion on a concrete position, even when that opinion is
+well supported; informational research alone does not activate it. Validation asks whether that opinion is supported; this stage
 develops the strongest credible case for an incompatible conclusion. Use the
 current model and selected runtime. A different model, separate agent, special
 mode, or additional user confirmation is not a prerequisite.
 
 For a supplied position, first use the legal-question journey to establish its
-facts, scope and answer contract and review it. Keep `adversarial_policy` set to
-`required` in the original answer contract. Do not apply this stage to other
+facts, scope and answer contract and review it. Respect a user's explicit
+instruction to omit the stage; do not change `not_required` merely because
+research has produced conclusions. Do not apply this stage to other
 Vera workflows merely because their output mentions law or tax.
 
 ## Develop the opposing case
@@ -49,6 +53,13 @@ Vera workflows merely because their output mentions law or tax.
    qualifications, coverage and professional judgment. Correct supported
    defects. This is validation of the fourth-stage output, not a recursive
    request for another adversarial opinion. Preserve both review records.
+
+Match the working document's detail to the outcome. Develop a credible opposing
+case as far as its reasoning and sources require. When none is established,
+write a concise reasoned account of the scope, work performed and result; do
+not pad it into a full counter-opinion. When evidence is limiting, identify the
+decisive missing source or fact, the question it leaves unresolved and the next
+useful check. These shorter results still retain the search and review records.
 
 ## Compare and deliver
 
