@@ -10,7 +10,8 @@
     "assets"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "vendor/modules/reporting_table.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -22,7 +23,7 @@
       {
         "id": "management-control-mapping-inspection",
         "purpose": "Establish source roles, reporting perimeter, exact columns, accounting categories, signs, periods, controls, and the reviewed recipe before calculation",
-        "content": "User instructions; supplied export and sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete supplied CSV, Excel, or ZIP population is read locally to inventory the tables. Source roles, account meaning, customer identity, and signs are selected through model-led and professional review rather than filename rules. Vera performs no automatic anonymization or pseudonymization.",
+        "content": "User instructions; supplied export and sheet names; every source column name and observed type; table row counts; and at most the first 10 rows of each table, with cell text bounded to 200 characters. The complete supplied CSV, Excel, or ZIP population is read locally to inventory the tables. Source roles, account meaning, customer identity, and signs are selected through model-led and professional review rather than filename rules. Vera performs no automatic anonymization or pseudonymization. The reviewed recipe also declares the report audience and the source basis/assumptions for remaining-month forecast estimates.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -31,7 +32,7 @@
       {
         "id": "management-control-post-calculation-review",
         "purpose": "Interpret the exact management pack and identify observations, hypotheses, questions, missing evidence, and limitations",
-        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, calculated section rows capped at 60 per section (including monthly series and service profitability), top-party lists capped at 20, and customer rows additionally limited by the reviewed top-customer setting (1 to 50), source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default.",
+        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, calculated section rows capped at 60 per section (including monthly series and service profitability), top-party lists capped at 20, and customer rows additionally limited by the reviewed top-customer setting (1 to 50), source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default. Budget comparison rows are separately capped at 60, with the full row count disclosed. All calculation metric IDs remain available. Full report HTML contains all views; the cap applies to the default model projection only.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -48,7 +49,27 @@
       }
     ]
   },
-  "external_boundaries": [],
+  "external_boundaries": [
+    {
+      "id": "budget-sites-report",
+      "kind": "send_or_publish",
+      "destination": "OpenAI Sites through the selected host Sites connector",
+      "purpose": "Publish the reviewed budget and forecast report for the selected readers",
+      "content": "The host uploads the complete rendered HTML: entity, all compiled financial comparisons including hidden views, forecast basis, coverage and limitations, metric-linked commentary and optional customer, supplier and service labels. Raw export populations, original files, local paths and the full pack JSON are not copied into dist. The local preparation helper makes no network request. Sites manages hosting and visitor access; retention and deletion are not enforced by the plugin.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "An explicit Sites publication request selects this route; host-required action approvals still apply. Invitations need authorized recipients.",
+        "Source replay must equal the persisted pack. The audience must match the reviewed recipe. Blocked or unsupported budget reports cannot be prepared. A fresh output folder preserves prior versions.",
+        "All compiled HTML views remain delivered; selection controls do not redact hidden values. No automatic anonymization occurs.",
+        "Verify deployment and visitor access. Refresh requires new source review and explicit publication using the existing Site ID."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "client-engagement-path-isolation",
@@ -73,12 +94,16 @@
     {
       "id": "metric-reference-closure",
       "control": "Calculated observations and hypotheses in the final commentary must reference existing metric IDs. The finalizer rejects blocked packs and failed controls, then validates shape and reference closure while preserving draft_pending_professional_review and never assigning semantic correctness or approval."
+    },
+    {
+      "id": "sites-source-replay",
+      "control": "The preparation helper rebuilds the pack from the hashed inventory and reviewed recipe, requires exact equality with the supplied pack and matching audience, rejects blocked or unsupported reports and requires a new output directory. The HTML is rendered from those checked values. This checks declared audience equality, not the suitability of the audience for private content."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "93c0acb3c0d1fe3ec256ed68dbe2c3ae533743300473cb641e10882af1f85156"
+    "source_fingerprint": "213908af6c741eea0fa8a6c18a99bd1bb3e76b5e5f8736b8251ca315f8212afd"
   }
 }

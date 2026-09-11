@@ -1,6 +1,10 @@
 [run]
 include =
     */plugins/management-control-pack/scripts/management_control_core.py
+    */plugins/management-control-pack/scripts/budget_presentation.py
+    */plugins/management-control-pack/scripts/management_site.py
+    */plugins/management-control-pack/scripts/management_delivery.py
+    */plugins/clara/modules/reporting-engine/scripts/budget_report.py
     */plugins/passive-invoice-audit/scripts/audit_core.py
     */plugins/client-file-preparation/scripts/parse_fatturapa_xml.py
     */plugins/deep-research-validator/scripts/inspect_sources.py

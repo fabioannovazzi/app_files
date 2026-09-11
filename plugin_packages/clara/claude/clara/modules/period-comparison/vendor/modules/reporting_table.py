@@ -37,6 +37,8 @@ def _format_scaled_value(
     """Format table values with tabular, compact notation."""
 
     scaled = value / scale
+    if scaled == 0:
+        scaled = 0.0
     prefix = "+" if signed and scaled > 0 else ""
     text = f"{prefix}{scaled:,.0f}" if scale == 1.0 else f"{prefix}{scaled:,.1f}"
     return (
@@ -138,12 +140,21 @@ def render_reporting_table(
     fragment: bool = False,
     row_label_width: int | None = None,
     scale_rows: list[dict[str, Any]] | None = None,
+    value_scale: int | None = None,
+    value_width: int = 88,
 ) -> str:
     """Write a compact scenario and variance table artifact."""
 
     # An interactive group shares its unit and variance scales across views.
     scale_basis = rows if scale_rows is None else [*rows, *scale_rows]
     scale, scale_label = _table_value_scale(scale_basis)
+    if value_scale is not None:
+        if value_scale not in {1, 1000, 1000000}:
+            raise ValueError("value_scale must be 1, 1000 or 1000000")
+        scale, scale_label = (
+            float(value_scale),
+            {1: "units", 1000: "k", 1000000: "m"}[value_scale],
+        )
     measure_suffix = (
         ""
         if scale_label == "units"
@@ -168,7 +179,6 @@ def render_reporting_table(
     row_label_width = row_label_width or (
         92 if row_header in {"Period", "Periodo"} else 124
     )
-    value_width = 88
     variance_width = 172
     table_width = row_label_width + (value_width * 2) + (variance_width * 2)
     page_width = table_width + 56

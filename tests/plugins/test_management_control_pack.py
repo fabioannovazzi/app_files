@@ -36,6 +36,17 @@ from management_control_core import (  # noqa: E402
     write_excel,
 )
 
+_CORE_MODULE = sys.modules["management_control_core"]
+
+
+@pytest.fixture(autouse=True)
+def _restore_report_import_paths(monkeypatch):
+    monkeypatch.setitem(sys.modules, "management_control_core", _CORE_MODULE)
+    monkeypatch.delitem(sys.modules, "management_site", raising=False)
+    # Other CLI tests isolate plugin modules and sys.path between runs.
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+    monkeypatch.syspath_prepend(str(SHARED_MODULES))
+
 
 def _write_workbook(path: Path, *, full: bool = True) -> None:
     workbook = Workbook()
@@ -773,7 +784,7 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
         "non riceve di default le popolazioni complete",
         "Il pacchetto calcolato completo viene validato localmente",
         "The complete calculated pack is validated locally",
-        "non monitora i sistemi in background",
+        "non è un monitoraggio automatico",
         'data-model-data-workflow="management-control-pack"',
         'data-model-data-status="relevant"',
     ):
@@ -860,7 +871,7 @@ def test_readable_report_discloses_undefined_service_margin(
 
     assert "Undefined: service revenue is zero." in report
     assert "the supplied sales-detail rows total zero revenue" in report
-    assert "2400" in report
+    assert "2400" in report.replace(",", "")
     assert "-450" in report
     assert "-320" in report
     assert "None" not in report
@@ -960,3 +971,272 @@ def test_italian_html_formats_ratios_without_changing_exact_pack(
     assert "Quota (%)" in page
     assert "75.00%" in page
     assert pack == before
+
+
+def _budget_forecast_case(tmp_path):
+    source = tmp_path / "budget.xlsx"
+    _write_workbook(source)
+    workbook = load_workbook(source)
+    workbook["Budget"].append(("2025-03-31", "Revenue", 1500))
+    workbook["Budget"].append(("2025-03-31", "COGS", -500))
+    workbook["Budget"].append(("2025-03-31", "Opex", -400))
+    forecast = workbook.create_sheet("Forecast")
+    forecast.append(("Date", "Category", "Amount"))
+    forecast.append(("2025-02-28", "Revenue", 999999))
+    forecast.append(("2025-03-31", "Revenue", 1600))
+    forecast.append(("2025-03-31", "COGS", -600))
+    forecast.append(("2025-03-31", "Opex", -450))
+    workbook.save(source)
+    tables = load_source_tables([source])
+    inspection = build_inspection(tables)[0]
+    recipe = _reviewed_recipe(inspection)
+    recipe["reporting_period"]["end"] = "2025-03-31"
+    recipe["audience"] = "public_demo"
+    recipe["control_totals"]["budget"] = "1470"
+    recipe["control_totals"]["forecast"] = "550"
+    forecast_id = next(
+        item["table_id"]
+        for item in inspection["tables"]
+        if item["table_label"] == "Forecast"
+    )
+    recipe["tables"]["forecast"] = {
+        "table_id": forecast_id,
+        "columns": {"date": "Date", "category": "Category", "amount": "Amount"},
+    }
+    return source, tables, recipe
+
+
+def test_budget_forecast_combines_actuals_with_only_remaining_estimates(tmp_path):
+    _, tables, recipe = _budget_forecast_case(tmp_path)
+
+    pack = build_management_pack(tables, recipe)
+
+    assert pack["metrics"]["budget.total.ebitda_variance"]["value"] == "130"
+    assert pack["metrics"]["budget.forecast.ebitda_variance"]["value"] == "80"
+    assert pack["sections"]["budget_variance"]["rows"][-1]["period"] == "2025-02"
+    assert {
+        "role": "forecast",
+        "status": "passed",
+        "actual": "550",
+        "expected": "550",
+        "difference": "0",
+        "tolerance": "0.01",
+    } in pack["controls"]
+    assert pack["metrics"]["budget.total.revenue_variance"]["value"] == "200"
+
+
+def test_budget_missing_month_preserves_monthly_comparison_and_omits_cumulative(
+    tmp_path,
+):
+    source, _, recipe = _budget_forecast_case(tmp_path)
+    workbook = load_workbook(source)
+    workbook["Budget"].delete_rows(5, 3)
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe["inventory_sha256"] = build_inspection(tables)[0]["inventory_sha256"]
+    recipe["control_totals"] = {}
+
+    pack = build_management_pack(tables, recipe)
+
+    assert pack["sections"]["budget_variance"]["status"] == "partial"
+    assert len(pack["sections"]["budget_variance"]["rows"]) == 1
+    assert "budget.total.ebitda_variance" not in pack["metrics"]
+    assert "budget.forecast.ebitda_variance" not in pack["metrics"]
+    assert "2025-02" in pack["limitations"][0]
+
+
+@pytest.mark.parametrize("baseline", [0, -100])
+def test_budget_nonpositive_baseline_keeps_amount_and_marks_percentage_unavailable(
+    tmp_path, baseline
+):
+    source, _, recipe = _budget_forecast_case(tmp_path)
+    workbook = load_workbook(source)
+    workbook["Budget"]["C2"] = baseline
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe["inventory_sha256"] = build_inspection(tables)[0]["inventory_sha256"]
+    recipe["control_totals"] = {}
+
+    pack = build_management_pack(tables, recipe)
+
+    row = next(
+        r
+        for r in pack["sections"]["budget_variance"]["comparison_rows"]
+        if r["view"] == "2025-01" and r["metric"] == "revenue"
+    )
+    assert row["variance_pct"] is None
+    assert row["variance"] == str(1000 - baseline)
+
+
+def test_budget_cost_display_and_all_views_use_existing_variance_renderer(tmp_path):
+    _, tables, recipe = _budget_forecast_case(tmp_path)
+    pack = build_management_pack(tables, recipe)
+
+    page = render_html(pack)
+
+    assert 'class="detail-row lower" data-absolute-variance="70"' in page
+    assert 'data-budget-view="forecast"' in page
+    assert 'data-budget-view="total"' in page
+    assert "variance-pin-line" in page
+    assert "variance-bar" in page
+    assert "PL · Budget" in page
+    assert "FC · Forecast" in page
+    assert "fetch(" not in page
+
+
+def test_budget_comparison_context_is_capped_without_truncating_report(tmp_path):
+    _, tables, recipe = _budget_forecast_case(tmp_path)
+    pack = build_management_pack(tables, recipe)
+    row = pack["sections"]["budget_variance"]["comparison_rows"][0]
+    pack["sections"]["budget_variance"]["comparison_rows"] = [row] * 100
+
+    context = build_model_context(pack)
+
+    assert len(context["sections"]["budget_variance"]["comparison_rows"]) == 60
+    assert context["sections"]["budget_variance"]["comparison_row_count"] == 100
+    assert len(pack["sections"]["budget_variance"]["comparison_rows"]) == 100
+
+
+def test_budget_site_replays_sources_and_writes_only_rendered_report(tmp_path):
+    from management_site import prepare_site
+
+    source, tables, recipe = _budget_forecast_case(tmp_path)
+    pack = build_management_pack(tables, recipe)
+    output = tmp_path / "site"
+
+    receipt = prepare_site(
+        inputs=[source], recipe=recipe, pack=pack, output=output, audience="public_demo"
+    )
+
+    assert (output / "dist/index.html").read_text() == render_html(pack)
+    assert receipt["publication_status"] == "prepared_not_published"
+    assert (
+        receipt["report_sha256"]
+        == hashlib.sha256(render_html(pack).encode()).hexdigest()
+    )
+    assert sorted(p.name for p in (output / "dist").iterdir()) == ["index.html"]
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "changed_pack",
+        "changed_source",
+        "audience",
+        "existing_output",
+        "blocked",
+        "no_budget",
+    ],
+)
+def test_budget_site_rejects_unreviewed_or_unusable_candidate(tmp_path, failure):
+    from management_site import prepare_site
+
+    source, tables, recipe = _budget_forecast_case(tmp_path)
+    output = tmp_path / "site"
+    audience = "public_demo"
+    if failure == "blocked":
+        recipe["control_totals"]["general_ledger"] = "-1"
+    if failure == "no_budget":
+        del recipe["tables"]["budget"]
+    pack = build_management_pack(tables, recipe)
+    if failure == "changed_pack":
+        pack["metrics"]["pnl.total.revenue"]["value"] = "1"
+    if failure == "changed_source":
+        workbook = load_workbook(source)
+        workbook["GL"]["D2"] = 1
+        workbook.save(source)
+    if failure == "audience":
+        audience = "client"
+    if failure == "existing_output":
+        output.mkdir()
+
+    with pytest.raises(PackContractError):
+        prepare_site(
+            inputs=[source], recipe=recipe, pack=pack, output=output, audience=audience
+        )
+
+    assert not (output / "dist").exists()
+
+
+def test_budget_forecast_failed_control_blocks_report(tmp_path):
+    _, tables, recipe = _budget_forecast_case(tmp_path)
+    recipe["control_totals"]["forecast"] = "0"
+
+    pack = build_management_pack(tables, recipe)
+
+    assert pack["status"] == "blocked"
+
+
+@pytest.mark.parametrize("cutoff", ["2025-02-15", "2024-12-31"])
+def test_budget_partial_month_or_prior_cutoff_does_not_compare_whole_month_budget(
+    tmp_path, cutoff
+):
+    _, tables, recipe = _budget_forecast_case(tmp_path)
+    recipe["reporting_period"]["cutoff"] = cutoff
+    if cutoff == "2024-12-31":
+        with pytest.raises(PackContractError, match="Cutoff precedes"):
+            build_management_pack(tables, recipe)
+    else:
+        pack = build_management_pack(tables, recipe)
+        assert pack["sections"]["budget_variance"]["status"] == "unavailable"
+
+
+@pytest.mark.parametrize(
+    "action, filename",
+    [
+        ("inspect", "inspection.json"),
+        ("run", "management_control_pack.json"),
+        ("site", "dist/index.html"),
+    ],
+)
+def test_clara_budget_entrypoint_uses_shared_reviewed_core(tmp_path, action, filename):
+    source, tables, recipe = _budget_forecast_case(tmp_path)
+    recipe_path = tmp_path / "recipe.json"
+    recipe_path.write_text(json.dumps(recipe))
+    pack_path = tmp_path / "pack.json"
+    pack_path.write_text(json.dumps(build_management_pack(tables, recipe)))
+    script = ROOT / "plugins/clara/modules/reporting-engine/scripts/budget_report.py"
+    spec = importlib.util.spec_from_file_location(
+        "test_clara_budget_entrypoint", script
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output = tmp_path / "output"
+
+    result = module.main(
+        [
+            action,
+            "--input",
+            str(source),
+            "--recipe",
+            str(recipe_path),
+            "--pack",
+            str(pack_path),
+            "--audience",
+            "public_demo",
+            "--output-dir",
+            str(output),
+        ]
+    )
+
+    assert result == 0
+    assert (output / filename).is_file()
+
+
+def test_budget_full_currency_values_remain_readable_above_one_million(tmp_path):
+    source, _, recipe = _budget_forecast_case(tmp_path)
+    workbook = load_workbook(source)
+    for sheet in ("GL", "Budget", "Forecast"):
+        amount_column = 4 if sheet == "GL" else 3
+        for row in workbook[sheet].iter_rows(min_row=2):
+            row[amount_column - 1].value *= 1000
+    workbook.save(source)
+    tables = load_source_tables([source])
+    recipe["inventory_sha256"] = build_inspection(tables)[0]["inventory_sha256"]
+    recipe["control_totals"] = {}
+    pack = build_management_pack(tables, recipe)
+
+    page = render_html(pack)
+
+    assert ">+130,000<" in page
+    assert ">2,400,000<" in page

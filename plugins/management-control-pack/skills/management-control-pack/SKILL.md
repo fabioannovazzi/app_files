@@ -205,6 +205,40 @@ Visually inspect the final HTML. Open the generated XLSX in Excel when the
 current runtime can operate it and check sheet names, number formats, frozen
 headers, widths, totals, and visible review status.
 
+## Budget, forecast and Sites delivery
+
+For monthly budget monitoring, use this pack rather than routing the assignment
+into a business plan. Prepare Actual/Budget comparisons for each complete month
+and the cumulative window. The HTML uses the existing reporting-table renderer:
+Budget and Actual or Forecast values, amount-variance bars and percentage pins,
+with a common scale across period selections. Keep both deltas visible. Costs
+are displayed positive and lower costs are favorable. A zero or negative base
+has an unavailable percentage; retain its amount variance. Do not claim IBCS
+certification. Interactivity changes the visible compiled view, never the figures.
+
+For a full-period latest estimate, map a reviewed `forecast` table with the same
+explicit date, category/account and signed amount columns as Budget. Set the
+reporting end to the forecast horizon and cutoff to the last closed month.
+`forecast_basis` records the model/professional-authored assumptions and source
+basis. The engine combines Actuals to cutoff with only subsequent forecast
+months. It does not infer run rates, seasonality or future costs. Missing whole
+months prevent cumulative/full-period comparisons; a monthly view with both
+sources remains available. Do not fill missing exports with zeros. Forecast
+control totals cover only the remaining period. Review assumptions and material
+mapping changes before recalculating; retain earlier run folders.
+
+Set the reviewed recipe `audience` to `internal`, `client` or `public_demo`
+(default `internal`). Audience is an authored delivery decision, not an automatic
+confidentiality classifier. Only synthetic demonstration data may use
+`public_demo`. Review all report content for the intended readers, including
+customer/supplier names in optional tables. Professional review remains explicit.
+
+When the user requests a shareable HTML site, read
+`references/sites-delivery.md` and prepare the exact report with
+`scripts/prepare_report_site.py`. The Sites route uses the existing local report;
+never replace it with a generic dashboard or rewrite its numbers in the browser.
+An explicit publication request authorizes the chosen route; honor host approvals.
+
 ## Plugin Improvement Feedback
 
 After substantive use, read and follow the `Plugin Improvement Feedback`

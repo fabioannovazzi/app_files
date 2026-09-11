@@ -198,6 +198,7 @@
         "modules/management-control-pack/scripts/check_dependencies.py",
         "modules/management-control-pack/scripts/finalize_pack.py",
         "modules/management-control-pack/scripts/inspect_inputs.py",
+        "modules/management-control-pack/scripts/prepare_report_site.py",
         "modules/management-control-pack/scripts/run_pack.py"
       ]
     },

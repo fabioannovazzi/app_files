@@ -24,7 +24,11 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "repository/plugins/management-control-pack/scripts",
+    "repository/plugins/management-control-pack/assets/budget-report.css",
+    "repository/plugins/management-control-pack/assets/budget-report.js",
+    "repository/plugins/_shared/vendor/modules/reporting_table.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -38,6 +42,11 @@
         "id": "semantic-and-reporting-artifacts",
         "purpose": "Author reusable dataset semantics and choose a source-backed analysis",
         "content": "Dataset profiles, intake receipts, semantic layers, evidence, reviewed Sales/Discount/COGS mapping states, role bindings, snapshot attachments, analysis policies, chart plans, exact input and output byte hashes, effective recipe records, rendered charts, authoritative calculation and report validation results, model-authored interpretations, and calculation evidence receipts with stable claim identifiers, dependency edges, verification runs, and shared case-register bindings"
+      },
+      {
+        "id": "budget-report-context",
+        "purpose": "Prepare and interpret a reviewed Actual/Budget/Forecast report",
+        "content": "Source-role inspection includes filenames, columns/types and up to 10 preview rows per table. The model/professional authors mappings, audience and forecast assumptions. After local calculations, model_context.json includes all metric IDs and values, controls and coverage, source hashes, up to 60 calculated rows per section and 60 budget comparison rows with total counts. Raw export populations, original filenames and full pack JSON are excluded from this default post-calculation projection. Directly opening source files adds their read content to model context. The report contains all compiled views and optionally customer, supplier or service names. Clara reuses the management-control core through Reporting Engine with its ordinary project/output scope; it does not require Vera Studio Archive. No automatic redaction is applied."
       }
     ]
   },
@@ -105,6 +114,21 @@
         "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
         "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
       ]
+    },
+    {
+      "id": "budget-sites-report",
+      "kind": "send_or_publish",
+      "destination": "OpenAI Sites through the selected host Sites connector",
+      "purpose": "Publish the reviewed budget and forecast report for the selected readers",
+      "content": "The host uploads the complete rendered HTML: entity, all compiled financial comparisons including hidden views, forecast basis, coverage and limitations, metric-linked commentary and optional customer, supplier and service labels. Raw export populations, original files, local paths and the full pack JSON are not copied into dist. The local preparation helper makes no network request. Sites manages hosting and visitor access; retention and deletion are not enforced by the plugin.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "An explicit Sites publication request selects this route; host-required action approvals still apply. Invitations need authorized recipients.",
+        "Source replay must equal the persisted pack. The audience must match the reviewed recipe. Blocked or unsupported budget reports cannot be prepared. A fresh output folder preserves prior versions.",
+        "All compiled HTML views remain delivered; selection controls do not redact hidden values. No automatic anonymization occurs.",
+        "Verify deployment and visitor access. Refresh requires new source review and explicit publication using the existing Site ID."
+      ]
     }
   ],
   "security_controls": [],
@@ -112,6 +136,6 @@
     "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d136a90f50aa26bfd812abcc2872fc707e7fdffa5931626a5924790b0e401087"
+    "source_fingerprint": "f69dfb52d196b930715724b420577042faaaf18e388ae5e958943c8c241c588f"
   }
 }
