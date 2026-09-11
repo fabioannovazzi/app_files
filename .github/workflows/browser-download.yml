@@ -5,6 +5,8 @@ on:
     paths:
       - 'plugins/browser-automation/**'
       - 'tests/test_browser*.mjs'
+      - 'tests/fixtures/browser_agenzia_tab.mjs'
+      - 'tests/test_browser_automation*.py'
       - 'tests/test_browser_batch_review.py'
       - 'tests/test_browser_development_request.py'
       - 'tests/test_browser_teaching_checkpoint.py'
@@ -26,12 +28,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/test_browser_download_directory.mjs tests/test_browser_automation_runtime.mjs tests/test_browser_automation_discovery_runtime.mjs
+      - run: node --test tests/test_browser_download_directory.mjs tests/test_browser_automation_runtime.mjs tests/test_browser_automation_discovery_runtime.mjs tests/test_browser_session.mjs tests/test_browser_agenzia_download.mjs
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: python -m pip install pytest
-      - run: python -m pytest --noconftest -q tests/test_browser_batch_review.py tests/test_browser_development_request.py tests/test_browser_teaching_checkpoint.py -o addopts=""
+      - run: python -m pytest --noconftest -q tests/test_browser_batch_review.py tests/test_browser_development_request.py tests/test_browser_teaching_checkpoint.py tests/test_browser_automation_pipeline.py tests/test_browser_automation_capabilities.py tests/test_browser_automation_installation.py -o addopts=""
       - name: Check automatic ECONS review acquisition
         shell: bash
         run: ECONS_TEST_PYTHON="$(python -c 'import sys; print(sys.executable)')" node --test tests/test_browser_econs_review.mjs

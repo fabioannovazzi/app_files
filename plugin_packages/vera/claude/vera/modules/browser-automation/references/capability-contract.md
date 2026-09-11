@@ -224,6 +224,12 @@ itself. The JavaScript runtime does not call an API or claim to invoke an LLM
 inside the original execution.
 
 Only the runtime writes receipts. `finalize` requires two unique passed receipts
+in schema `browser-run-receipt/v3` with explicit `execution_mode:
+live_connected_chrome`. Omitted mode is `unverified`; `simulated` and unverified
+runs cannot finalize a capability. The environment label is a declaration by
+the executing host, not cryptographic browser attestation. Never set live mode
+for test doubles. A real-browser fixture run proves only its own origin and
+contract, not an unexecuted production workflow. These receipts are the ones
 whose execution hash, discovery hash, capability version, terminal, outputs,
 and environment match, with `locator_changes_during_run: false`. A recovered
 run may complete useful work but cannot count toward validation. Capability

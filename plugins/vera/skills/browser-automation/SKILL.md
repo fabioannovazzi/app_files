@@ -47,10 +47,22 @@ approved capability is the executable handoff.
 The live route uses Google Chrome managed under Settings → Computer Use →
 Google Chrome and the user's connected Chrome extension. Follow the current
 connection's browser API documentation and reuse its `tab.playwright` surface
-and existing Chrome profile. A separate Chrome plugin is not required. If the
-connection is unavailable, direct the operator to that settings page and stop
-the live run. Continue with useful process scoping or capability review, but
-never claim discovery, execution, or validation without browser evidence.
+and existing Chrome profile. A separate Chrome plugin is not required. Before
+yielding for login, operator input or unfinished work, preserve the actual task
+tab with the module's `preserveBrowserHandoff` helper and save the result. Repeat
+the handoff mark in each turn that must retain the live tab. After resuming or
+on an error, follow `references/browser-session.md` and its same-tab inspection.
+A missing tab or empty inventory does not establish an extension disconnection;
+do not repeatedly send the operator to Settings without diagnostic evidence.
+Continue useful checkpoint review and partial development exports while the
+browser is unavailable. Never claim execution or validation without evidence.
+
+For the individual Agenzia invoice downloader supplied with CR-43, follow the
+module's `references/agenzia-download.md` and use `scripts/agenzia_download.mjs`.
+Vera reads the authorized filters and expected population counts and reconciles
+the saved files. Preserve partial results on interruption. Every result remains
+a prototype until target-site validation. Simulated tests and earlier manual
+downloads do not validate this module; declare the actual execution mode.
 
 Local filesystem verification of browser downloads in the normal Downloads
 folder is part of the runtime, like writing receipts; it is not desktop control.

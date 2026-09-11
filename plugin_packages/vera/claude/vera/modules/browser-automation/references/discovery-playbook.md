@@ -67,6 +67,12 @@ only after the operator says authentication and account selection are complete.
 A connected Chrome binding is the visibility proof; do not add a neutral-page
 or repeated `visibile` ceremony.
 
+After login or a turn boundary, use `browser-session.md` and the shipped session
+inspection helper. Reacquire the same task tab before resuming; distinguish an
+empty inventory from a lost binding. Preserve the diagnostic report and learned
+checkpoint if Chrome remains unavailable. A working connection is not required
+to prepare a partial development handoff from already saved work.
+
 ## 3. Choose the teaching mode
 
 - `guided`: the operator demonstrates the path while

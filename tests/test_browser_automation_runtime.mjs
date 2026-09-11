@@ -527,6 +527,8 @@ test("executeCapability drives actions, extracts records, and emits hash-linked 
   });
 
   assert.equal(summary.result, "passed");
+  assert.equal(summary.execution_mode, "unverified");
+  assert.equal(summary.validation_eligible, false);
   assert.deepEqual(summary.completed_milestones, ["search", "collect"]);
   assert.deepEqual(summary.outputs.map((item) => item.record_count), [2]);
   assert.equal("records" in summary, false);
@@ -964,7 +966,7 @@ test("executeCapability records downloaded file bytes without returning the priv
   assert.equal(outputs.files[0].byte_length, 19);
   assert.equal(outputs.files[0].sha256.length, 64);
   const receipt = JSON.parse(await readFile(summary.receipt_path, "utf8"));
-  assert.equal(receipt.schema_version, "browser-run-receipt/v2");
+  assert.equal(receipt.schema_version, "browser-run-receipt/v3");
   assert.equal(receipt.action_results.at(-1).evidence_code, "download-bytes-verified");
   assert.equal(receipt.action_results.at(-1).mechanism_hint, "control-without-href");
 });
@@ -1741,6 +1743,33 @@ test("executeCapability never exposes raw browser failure text", async () => {
   assert.equal(caught.detailSha256.length, 64);
   const receiptText = await readFile(caught.runSummary.receipt_path, "utf8");
   assert.equal(receiptText.includes(privateDetail), false);
+});
+
+test("missing connected-tab API still writes a failed receipt without claiming Chrome", async () => {
+  const parent = await mkdtemp(join(tmpdir(), "browser-missing-api-"));
+  const runDirectory = join(parent, "run");
+  await assert.rejects(executeCapability({
+    tab: null, capability: syntheticCapability(),
+    inputs: { query: "synthetic", "max-results": 2 }, runDirectory, runId: "missing-api",
+  }));
+  const receipt = JSON.parse(await readFile(join(runDirectory, "run.receipt.json"), "utf8"));
+  assert.equal(receipt.result, "failed");
+  assert.equal(receipt.error.code, "native_gap");
+  assert.equal(receipt.environment.browser, "unverified");
+});
+
+test("lost tab is categorized and persists a sanitized failed receipt", async () => {
+  const parent = await mkdtemp(join(tmpdir(), "browser-lost-tab-"));
+  const runDirectory = join(parent, "run");
+  const fail = async () => { throw new Error("No tab with id: private-tab"); };
+  await assert.rejects(executeCapability({
+    tab: { playwright: {}, url: fail, goto: fail }, capability: syntheticCapability(),
+    inputs: { query: "synthetic", "max-results": 2 }, runDirectory, runId: "lost-tab",
+    environment: { execution_mode: "simulated" },
+  }));
+  const text = await readFile(join(runDirectory, "run.receipt.json"), "utf8");
+  assert.equal(JSON.parse(text).error.code, "browser_tab_unavailable");
+  assert.doesNotMatch(text, /private-tab/);
 });
 
 test("canonicalJson and execution hash are stable across key order and validation status", () => {
