@@ -170,6 +170,7 @@
       ],
       "python_entrypoints": [
         "modules/business-planning/scripts/check_dependencies.py",
+        "modules/business-planning/scripts/prepare_report_site.py",
         "modules/business-planning/scripts/run_business_plan.py",
         "modules/business-planning/scripts/run_strategic_plan.py"
       ]

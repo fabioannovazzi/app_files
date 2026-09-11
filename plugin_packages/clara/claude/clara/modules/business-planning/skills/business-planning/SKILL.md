@@ -261,6 +261,36 @@ not a case-specific renderer, HTML patch or monkey-patch. Set `language` explici
 for report labels, chart axes and number formatting. Keep one recommendation-led
 report; tables support the reasoning rather than replace it.
 
+For a monetary comparison, use the existing shared reporting table through
+`presentation.tables[].comparison`: show the two values, absolute variance in
+the reporting currency, and percentage variance together. The component reuses
+Period Comparison's variance bars and percentage pins; do not create a one-off
+Markdown substitute or a new renderer. Choose comparable periods and a meaningful
+baseline explicitly. Seven months of actuals versus twelve months of forecast
+are different coverage: present that distinction, not a like-for-like variance.
+
+Select the existing planning charts that explain the forecast and its assumptions,
+and place them with their interpretation in the same report. A substantive plan
+or forecast report must not end as a small chat table when the compiler and data
+can produce the normal report. Chat contains the short finding and report link.
+Respect an explicit request for a quick answer or a reduced output.
+
+Keep monetary values right-aligned, units and periods visible, totals emphasized,
+and both variance measures adjacent. Select favorable directions per row from
+the accounting meaning: higher revenue and higher expense are not the same.
+Leave unspecified directions neutral. Zero or negative baselines retain their
+amount variance and a labelled unavailable percentage. Do not manufacture monthly
+detail, a baseline or supporting evidence to make a chart possible. Preserve the
+source bindings and professional review in the report, including hosted versions.
+
+For useful period or scenario selection, define `presentation.comparison_groups`
+over those existing comparison tables. Every view has its own checked figures,
+period, baseline, scenario and caption. The browser selects a precompiled view;
+it does not recalculate the plan or rewrite the recommendation. Both variances
+stay visible, and each group shares unit and bar/pin scales across its views.
+Keep a static report when only one comparison is useful. Do not invent scenarios
+or recast different coverage as a like-for-like comparison to populate controls.
+
 For comparisons, bind numeric table cells to exact canonical calculation IDs or
 explicitly labelled source observations. Give every table a narrative caption
 explaining period, scope, exclusions and decision consequence. Observations are
@@ -278,6 +308,19 @@ URLs in the standalone PDF. Inspect every PDF page for legends, table overflow,
 stranded headings, draft labels and accessible sources. Do not insert a blanket
 claim that no sharing has ever occurred; communication history belongs to run
 records and must reflect actual events.
+
+### Deliver through Sites when requested
+
+For “share this report with my client as a site”, reuse the current compiled
+report and the host's Sites capability. Read
+[the report-to-Sites procedure](../../references/sites-delivery.md). Prepare and
+publish the complete report for the selected audience, then provide its live link.
+Do not stop at a chat table, an unhosted HTML file or instructions for the user to
+build a website. A Sites request authorizes this route; apply the host's actual
+publication and access rules without asking the user to repeat that choice.
+Never send client invitations or messages without the user's recipient authority.
+If Sites is unavailable in the selected host, deliver the validated local HTML
+and explain that hosting remains incomplete. Do not claim automatic refresh.
 
 ### Registered execution and output location
 

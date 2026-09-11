@@ -1,0 +1,31 @@
+ESEMPIO SINTETICO — nessun dato cliente reale
+{
+  "reported_observations": [
+    {
+      "id": "client-ebitda",
+      "scenario": "base",
+      "period": "2027-01",
+      "metric": "ebitda",
+      "value": "20000",
+      "unit": "EUR",
+      "source_ids": [
+        "client"
+      ],
+      "basis": "reported",
+      "material": true
+    },
+    {
+      "id": "adjusted-ebitda",
+      "scenario": "base",
+      "period": "2027-01",
+      "metric": "ebitda",
+      "value": "-10000",
+      "unit": "EUR",
+      "source_ids": [
+        "review"
+      ],
+      "basis": "adjusted",
+      "material": true
+    }
+  ]
+}

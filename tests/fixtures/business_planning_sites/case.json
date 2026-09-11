@@ -1,0 +1,2362 @@
+{
+  "schema_version": "mparanza.business_planning_case.v3",
+  "case_id": "officina-nord-sites-demo",
+  "entity_name": "Officina Nord · Esempio sintetico",
+  "company_stage": "Simulazione di una nuova linea di servizi",
+  "planning_objective": "Valutare la redditività del lancio e il fabbisogno di cassa. Dati interamente inventati per mostrare il report; versione dimostrativa del 11 settembre 2026.",
+  "audience": "client",
+  "reporting_currency": "EUR",
+  "periods": [
+    "2027-01",
+    "2027-02",
+    "2027-03"
+  ],
+  "review": {
+    "status": "reviewed",
+    "reviewer": "Synthetic professional",
+    "reviewed_at": "2026-09-05T12:00:00+02:00"
+  },
+  "sources": [
+    {
+      "id": "client",
+      "path": "sources/client-model.txt",
+      "sha256": "ef2e67e6ba48b8a36d2a806e54b4a179434be72d7abc75e96b6dab1ee31874d4",
+      "version": "demo-2026-09-11",
+      "role": "financial_model",
+      "review_status": "reviewed",
+      "intended_audience": [
+        "client"
+      ],
+      "confidentiality": {
+        "classification": "synthetic_demo",
+        "allowed_audiences": [
+          "client"
+        ]
+      }
+    },
+    {
+      "id": "review",
+      "path": "sources/professional-review.txt",
+      "sha256": "7387d8d7e6d8ec25ff90ffca5adb41fe8654f1e6bded6b23d1641dc775359b16",
+      "version": "demo-2026-09-11",
+      "role": "professional_review",
+      "review_status": "reviewed",
+      "intended_audience": [
+        "client"
+      ],
+      "confidentiality": {
+        "classification": "synthetic_demo",
+        "allowed_audiences": [
+          "client"
+        ]
+      }
+    },
+    {
+      "id": "assumptions",
+      "path": "sources/accepted-assumptions.txt",
+      "sha256": "c579a4793dffdcea690b1fda9cafd3c221b66b600fedfc7438618f8a50568896",
+      "version": "demo-2026-09-11",
+      "role": "model_hypothesis",
+      "review_status": "reviewed",
+      "intended_audience": [
+        "client"
+      ],
+      "confidentiality": {
+        "classification": "synthetic_demo",
+        "allowed_audiences": [
+          "client"
+        ]
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "client-fact",
+      "kind": "fact",
+      "description": "Valori inizialmente dichiarati nella simulazione, da confrontare con il costo completo.",
+      "source_ids": [
+        "client"
+      ],
+      "status": "reviewed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    },
+    {
+      "id": "adjustment",
+      "kind": "fact",
+      "description": "Costi completi e saldi iniziali definiti per questa simulazione.",
+      "source_ids": [
+        "review"
+      ],
+      "status": "reviewed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "cash-timing",
+      "kind": "hypothesis",
+      "description": "Ricavi mensili crescenti nella base; scenario avverso con ricavi ridotti e costi invariati; scenario di efficienza con minori costi ipotizzati. Apporto di capitale a febbraio.",
+      "source_ids": [
+        "assumptions"
+      ],
+      "rationale": "Ipotesi inventate per il solo esempio, non conferme commerciali.",
+      "effective_periods": [
+        "2027-01",
+        "2027-02",
+        "2027-03"
+      ],
+      "status": "confirmed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "accept-adjustment",
+      "kind": "conflict_resolution",
+      "rationale": "Nella simulazione il costo completo sostituisce il margine inizialmente dichiarato.",
+      "status": "reviewed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ],
+  "observations": [
+    {
+      "id": "client-ebitda",
+      "scenario": "base",
+      "period": "2027-01",
+      "metric": "ebitda",
+      "value": "20000",
+      "unit": "EUR",
+      "source_ids": [
+        "client"
+      ],
+      "basis": "reported",
+      "material": true
+    },
+    {
+      "id": "adjusted-ebitda",
+      "scenario": "base",
+      "period": "2027-01",
+      "metric": "ebitda",
+      "value": "-10000",
+      "unit": "EUR",
+      "source_ids": [
+        "review"
+      ],
+      "basis": "adjusted",
+      "material": true
+    }
+  ],
+  "resolutions": [
+    {
+      "calculation_id": "base/2027-01/ebitda",
+      "observation_id": "adjusted-ebitda",
+      "decision_id": "accept-adjustment"
+    }
+  ],
+  "financial": {
+    "opening_balance": {
+      "cash": "5000",
+      "accounts_receivable": "0",
+      "inventory": "0",
+      "other_current_assets": "0",
+      "net_fixed_assets": "0",
+      "other_non_current_assets": "0",
+      "accounts_payable": "0",
+      "debt": "30000",
+      "other_liabilities": "0",
+      "equity": "-25000"
+    },
+    "opening_refs": {
+      "cash": [
+        "adjustment"
+      ],
+      "accounts_receivable": [
+        "adjustment"
+      ],
+      "inventory": [
+        "adjustment"
+      ],
+      "other_current_assets": [
+        "adjustment"
+      ],
+      "net_fixed_assets": [
+        "adjustment"
+      ],
+      "other_non_current_assets": [
+        "adjustment"
+      ],
+      "accounts_payable": [
+        "adjustment"
+      ],
+      "debt": [
+        "adjustment"
+      ],
+      "other_liabilities": [
+        "adjustment"
+      ],
+      "equity": [
+        "adjustment"
+      ]
+    },
+    "scenarios": [
+      {
+        "id": "base",
+        "label": "Base",
+        "schedule": [
+          {
+            "period": "2027-01",
+            "revenue": "100000",
+            "cogs": "60000",
+            "operating_expenses": "50000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "60000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-02",
+            "revenue": "115000",
+            "cogs": "66000",
+            "operating_expenses": "50000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "5000",
+            "equity_contributions": "50000",
+            "dividends": "0",
+            "variable_cogs": "66000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-03",
+            "revenue": "135000",
+            "cogs": "72000",
+            "operating_expenses": "50000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "72000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "downside",
+        "label": "Avverso",
+        "schedule": [
+          {
+            "period": "2027-01",
+            "revenue": "80000",
+            "cogs": "60000",
+            "operating_expenses": "50000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "60000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-02",
+            "revenue": "92000",
+            "cogs": "66000",
+            "operating_expenses": "50000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "5000",
+            "equity_contributions": "50000",
+            "dividends": "0",
+            "variable_cogs": "66000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-03",
+            "revenue": "108000",
+            "cogs": "72000",
+            "operating_expenses": "50000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "72000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "efficiency",
+        "label": "Efficienza ipotizzata",
+        "schedule": [
+          {
+            "period": "2027-01",
+            "revenue": "100000",
+            "cogs": "45000",
+            "operating_expenses": "45000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "45000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-02",
+            "revenue": "115000",
+            "cogs": "49500",
+            "operating_expenses": "45000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "5000",
+            "equity_contributions": "50000",
+            "dividends": "0",
+            "variable_cogs": "49500",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          },
+          {
+            "period": "2027-03",
+            "revenue": "135000",
+            "cogs": "54000",
+            "operating_expenses": "45000",
+            "depreciation_amortization": "0",
+            "interest_expense": "1000",
+            "tax_expense": "0",
+            "capital_expenditure": "0",
+            "ending_accounts_receivable": "0",
+            "ending_inventory": "0",
+            "ending_other_current_assets": "0",
+            "ending_accounts_payable": "0",
+            "ending_other_liabilities": "0",
+            "debt_draws": "0",
+            "debt_repayments": "0",
+            "equity_contributions": "0",
+            "dividends": "0",
+            "variable_cogs": "54000",
+            "variable_operating_expenses": "0",
+            "input_refs": {
+              "revenue": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "depreciation_amortization": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "interest_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "tax_expense": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "capital_expenditure": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_receivable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_inventory": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_current_assets": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_accounts_payable": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "ending_other_liabilities": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_draws": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "debt_repayments": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "equity_contributions": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "dividends": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_cogs": [
+                "adjustment",
+                "cash-timing"
+              ],
+              "variable_operating_expenses": [
+                "adjustment",
+                "cash-timing"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "narrative": [
+    {
+      "id": "profit-risk",
+      "kind": "risk",
+      "text": "La base presenta un EBITDA iniziale di {{ebitda}}. Il confronto mantiene visibili ricavi, costi e risultato: scegli il periodo e lo scenario per vedere quanto cambia ciascuna voce.",
+      "claims": {
+        "ebitda": {
+          "calculation_id": "base/2027-01/ebitda",
+          "value": "-10000"
+        }
+      },
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "recommendation",
+      "kind": "finding",
+      "text": "Rivedere il lancio e anticipare la copertura della cassa. La crescita dei ricavi migliora il risultato nel corso del trimestre, ma la base parte in perdita. La riduzione dei costi è una possibilità da verificare con i fornitori prima di assumere impegni.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "depends",
+      "kind": "risk",
+      "text": "La conclusione dipende dalle ipotesi sui ricavi, dai costi completi e dalle date degli apporti finanziari. Lo scenario di efficienza presume risparmi ancora da dimostrare; non è una previsione approvata.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "change",
+      "kind": "initiative",
+      "text": "Riconsiderare il lancio quando ordini acquisiti e condizioni dei fornitori sostengono il margine atteso e la copertura finanziaria precede le scadenze di pagamento.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "business",
+      "kind": "finding",
+      "text": "In questo esempio Officina Nord valuta una nuova linea di manutenzione per imprese locali. Il piano mette a confronto il lancio con i costi iniziali e un servizio organizzato con minori costi. Impresa, documenti e valori sono interamente sintetici.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "market",
+      "kind": "limitation",
+      "text": "La crescita dei ricavi è un’ipotesi della simulazione. Per un caso reale servirebbero ordini, prezzi accettati, rinnovi e capacità commerciale: il prospetto non dimostra la domanda.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "operations",
+      "kind": "limitation",
+      "text": "Prima del lancio occorre verificare disponibilità dei tecnici, tempi di intervento e preventivi dei fornitori. I risparmi ipotizzati devono essere compatibili con la qualità e con il volume di lavoro previsto.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "cash-view",
+      "kind": "risk",
+      "text": "La cassa iniziale è limitata e l’apporto dei soci arriva a febbraio. Un saldo finale positivo può quindi convivere con un deficit precedente: la data di disponibilità dei fondi è parte della decisione.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "alternative",
+      "kind": "option",
+      "text": "Confrontare un avvio graduale con il lancio completo. Lo scenario di efficienza mantiene i ricavi della base e ipotizza minori costi: serve una verifica operativa prima di considerare il miglioramento conseguibile.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "actions",
+      "kind": "initiative",
+      "text": "Il responsabile commerciale dovrebbe verificare gli ordini; il responsabile operativo dovrebbe confermare prezzi e capacità dei fornitori. Il consulente può poi aggiornare margini e scadenze e discutere il piano con il cliente.",
+      "claims": {},
+      "basis_ids": [
+        "adjustment"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "profit-chart",
+      "kind": "risk",
+      "text": "Il margine inizialmente dichiarato omette parte dei costi. Il risultato operativo iniziale coerente con il costo completo è {{ebitda}}.",
+      "claims": {
+        "ebitda": {
+          "calculation_id": "base/2027-01/ebitda",
+          "value": "-10000"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "scenario-chart",
+      "kind": "risk",
+      "text": "Lo scenario avverso parte con EBITDA di {{ebitda}}. La crescita dei ricavi e il contenimento dei costi hanno effetti distinti: le linee mostrano le ipotesi lungo lo stesso trimestre.",
+      "claims": {
+        "ebitda": {
+          "calculation_id": "downside/2027-01/ebitda",
+          "value": "-30000"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "cash-chart",
+      "kind": "risk",
+      "text": "La cassa alla fine del trimestre è {{cash}}. Questo saldo non risolve il deficit che precede l’arrivo dell’apporto dei soci.",
+      "claims": {
+        "cash": {
+          "calculation_id": "base/2027-03/ending_cash",
+          "value": "49000"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    },
+    {
+      "id": "gap-chart",
+      "kind": "risk",
+      "text": "Il fabbisogno massimo prima dei nuovi fondi è {{gap}}; quello residuo dopo gli apporti programmati è {{residual}}. Occorre coordinare gli incassi con i pagamenti.",
+      "claims": {
+        "gap": {
+          "calculation_id": "base/2027-03/funding_requirement",
+          "value": "13000"
+        },
+        "residual": {
+          "calculation_id": "base/2027-03/residual_funding_gap",
+          "value": "6000"
+        }
+      },
+      "basis_ids": [
+        "adjustment",
+        "cash-timing"
+      ],
+      "rubric_id": null,
+      "review": {
+        "status": "reviewed",
+        "reviewer": "Synthetic professional",
+        "reviewed_at": "2026-09-05T12:00:00+02:00"
+      }
+    }
+  ],
+  "limitations": [
+    "Esempio interamente sintetico: nessun dato di Francesco o di un cliente. Le revisioni nel registro sono simulate per dimostrare il processo.",
+    "I risparmi e la crescita dei ricavi sono ipotesi da verificare, non risultati osservati.",
+    "Le viste cambiano il confronto mostrato; non modificano le ipotesi del piano. Un aggiornamento richiede una nuova elaborazione e pubblicazione."
+  ],
+  "required_sections": [
+    "financial",
+    "business_analysis"
+  ],
+  "financing": {
+    "purpose": "internal",
+    "assessments": []
+  },
+  "assessment": {
+    "decision": "redesign",
+    "recommendation": [
+      "recommendation"
+    ],
+    "depends_on": [
+      "depends"
+    ],
+    "would_change": [
+      "change"
+    ],
+    "sections": {
+      "business": [
+        "business"
+      ],
+      "market": [
+        "market"
+      ],
+      "operations": [
+        "operations"
+      ],
+      "economics": [
+        "profit-risk"
+      ],
+      "cash": [
+        "cash-view"
+      ],
+      "alternatives": [
+        "alternative"
+      ],
+      "next_actions": [
+        "actions"
+      ]
+    },
+    "charts": [
+      {
+        "chart_id": "reported-adjusted-base",
+        "section": "economics",
+        "caption_id": "profit-chart"
+      },
+      {
+        "chart_id": "ebitda-scenarios",
+        "section": "economics",
+        "caption_id": "scenario-chart"
+      },
+      {
+        "chart_id": "cash-base",
+        "section": "cash",
+        "caption_id": "cash-chart"
+      },
+      {
+        "chart_id": "funding-base",
+        "section": "cash",
+        "caption_id": "gap-chart"
+      }
+    ]
+  },
+  "cycle": {
+    "id": "initial",
+    "parent_source_id": null,
+    "question": "Is the proposed launch worth pursuing?",
+    "trigger_ids": [
+      "client-fact"
+    ],
+    "analysis_ids": [
+      "market"
+    ],
+    "decision_ids": [
+      "recommendation"
+    ],
+    "next_test_ids": [
+      "actions"
+    ],
+    "reopen_when_ids": [
+      "change"
+    ],
+    "reassessed_ids": []
+  },
+  "presentation": {
+    "language": "it",
+    "tables": [
+      {
+        "id": "view-2027-01-1-downside",
+        "title": "Gennaio 2027 · Avverso rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Avverso"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/revenue"
+              ],
+              "operation": "sum",
+              "value": "100000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/revenue"
+              ],
+              "operation": "sum",
+              "value": "80000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/cogs"
+              ],
+              "operation": "sum",
+              "value": "60000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/cogs"
+              ],
+              "operation": "sum",
+              "value": "60000"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-10000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-30000"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-01-1-efficiency",
+        "title": "Gennaio 2027 · Efficienza ipotizzata rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Efficienza ipotizzata"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/revenue"
+              ],
+              "operation": "sum",
+              "value": "100000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/revenue"
+              ],
+              "operation": "sum",
+              "value": "100000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/cogs"
+              ],
+              "operation": "sum",
+              "value": "60000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/cogs"
+              ],
+              "operation": "sum",
+              "value": "45000"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "45000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-10000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/ebitda"
+              ],
+              "operation": "sum",
+              "value": "10000"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-02-1-downside",
+        "title": "Febbraio 2027 · Avverso rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Avverso"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/revenue"
+              ],
+              "operation": "sum",
+              "value": "115000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-02/revenue"
+              ],
+              "operation": "sum",
+              "value": "92000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/cogs"
+              ],
+              "operation": "sum",
+              "value": "66000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-02/cogs"
+              ],
+              "operation": "sum",
+              "value": "66000"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-02/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-1000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-02/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-24000"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-02-1-efficiency",
+        "title": "Febbraio 2027 · Efficienza ipotizzata rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Efficienza ipotizzata"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/revenue"
+              ],
+              "operation": "sum",
+              "value": "115000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-02/revenue"
+              ],
+              "operation": "sum",
+              "value": "115000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/cogs"
+              ],
+              "operation": "sum",
+              "value": "66000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-02/cogs"
+              ],
+              "operation": "sum",
+              "value": "49500"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-02/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "45000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-02/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-1000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-02/ebitda"
+              ],
+              "operation": "sum",
+              "value": "20500"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-03-1-downside",
+        "title": "Marzo 2027 · Avverso rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Avverso"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "135000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "108000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "72000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "72000"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "13000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-14000"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-03-1-efficiency",
+        "title": "Marzo 2027 · Efficienza ipotizzata rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Efficienza ipotizzata"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "135000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "135000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "72000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "54000"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "50000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "45000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "13000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "36000"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-01-3-downside",
+        "title": "Primo trimestre 2027 · Avverso rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Avverso"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/revenue",
+                "base/2027-02/revenue",
+                "base/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "350000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/revenue",
+                "downside/2027-02/revenue",
+                "downside/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "280000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/cogs",
+                "base/2027-02/cogs",
+                "base/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "198000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/cogs",
+                "downside/2027-02/cogs",
+                "downside/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "198000"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/operating_expenses",
+                "base/2027-02/operating_expenses",
+                "base/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "150000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/operating_expenses",
+                "downside/2027-02/operating_expenses",
+                "downside/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "150000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/ebitda",
+                "base/2027-02/ebitda",
+                "base/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "2000"
+            },
+            {
+              "calculation_ids": [
+                "downside/2027-01/ebitda",
+                "downside/2027-02/ebitda",
+                "downside/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "-68000"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      },
+      {
+        "id": "view-2027-01-3-efficiency",
+        "title": "Primo trimestre 2027 · Efficienza ipotizzata rispetto alla base",
+        "section": "economics",
+        "headers": [
+          "Voce",
+          "Base",
+          "Efficienza ipotizzata"
+        ],
+        "rows": [
+          [
+            {
+              "text": "Ricavi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/revenue",
+                "base/2027-02/revenue",
+                "base/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "350000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/revenue",
+                "efficiency/2027-02/revenue",
+                "efficiency/2027-03/revenue"
+              ],
+              "operation": "sum",
+              "value": "350000"
+            }
+          ],
+          [
+            {
+              "text": "Costi diretti"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/cogs",
+                "base/2027-02/cogs",
+                "base/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "198000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/cogs",
+                "efficiency/2027-02/cogs",
+                "efficiency/2027-03/cogs"
+              ],
+              "operation": "sum",
+              "value": "148500"
+            }
+          ],
+          [
+            {
+              "text": "Costi operativi"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/operating_expenses",
+                "base/2027-02/operating_expenses",
+                "base/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "150000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/operating_expenses",
+                "efficiency/2027-02/operating_expenses",
+                "efficiency/2027-03/operating_expenses"
+              ],
+              "operation": "sum",
+              "value": "135000"
+            }
+          ],
+          [
+            {
+              "text": "EBITDA"
+            },
+            {
+              "calculation_ids": [
+                "base/2027-01/ebitda",
+                "base/2027-02/ebitda",
+                "base/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "2000"
+            },
+            {
+              "calculation_ids": [
+                "efficiency/2027-01/ebitda",
+                "efficiency/2027-02/ebitda",
+                "efficiency/2027-03/ebitda"
+              ],
+              "operation": "sum",
+              "value": "66500"
+            }
+          ]
+        ],
+        "comparison": {
+          "baseline_column": 1,
+          "comparison_column": 2,
+          "favorable_directions": [
+            "higher",
+            "lower",
+            "lower",
+            "higher"
+          ],
+          "row_types": [
+            "detail",
+            "detail",
+            "detail",
+            "total"
+          ]
+        },
+        "caption_id": "profit-risk"
+      }
+    ],
+    "comparison_groups": [
+      {
+        "id": "conto-economico",
+        "title": "Confronto del conto economico",
+        "views": [
+          {
+            "table_id": "view-2027-01-1-downside",
+            "period": "Gennaio 2027",
+            "scenario": "Avverso rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-01-1-efficiency",
+            "period": "Gennaio 2027",
+            "scenario": "Efficienza ipotizzata rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-02-1-downside",
+            "period": "Febbraio 2027",
+            "scenario": "Avverso rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-02-1-efficiency",
+            "period": "Febbraio 2027",
+            "scenario": "Efficienza ipotizzata rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-03-1-downside",
+            "period": "Marzo 2027",
+            "scenario": "Avverso rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-03-1-efficiency",
+            "period": "Marzo 2027",
+            "scenario": "Efficienza ipotizzata rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-01-3-downside",
+            "period": "Primo trimestre 2027",
+            "scenario": "Avverso rispetto alla base"
+          },
+          {
+            "table_id": "view-2027-01-3-efficiency",
+            "period": "Primo trimestre 2027",
+            "scenario": "Efficienza ipotizzata rispetto alla base"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "action_id": "actions",
+        "owner": "Ruoli proposti: commerciale, operativo e consulente",
+        "when": "Prima di impegnare i fondi",
+        "criterion_id": "change"
+      }
+    ],
+    "source_notes": [
+      {
+        "source_id": "review",
+        "claim": "Costi e saldi della simulazione",
+        "locator": "Prospetto finanziario mensile incluso nel documento"
+      },
+      {
+        "source_id": "assumptions",
+        "claim": "Scenari e tempistica del capitale",
+        "locator": "Ipotesi della simulazione"
+      }
+    ]
+  }
+}

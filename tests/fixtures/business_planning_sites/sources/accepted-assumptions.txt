@@ -1,0 +1,22 @@
+ESEMPIO SINTETICO — nessun dato cliente reale
+{
+  "assumptions": [
+    {
+      "id": "cash-timing",
+      "kind": "hypothesis",
+      "description": "Ricavi mensili crescenti nella base; scenario avverso con ricavi ridotti e costi invariati; scenario di efficienza con minori costi ipotizzati. Apporto di capitale a febbraio.",
+      "source_ids": [
+        "assumptions"
+      ],
+      "rationale": "Ipotesi inventate per il solo esempio, non conferme commerciali.",
+      "effective_periods": [
+        "2027-01",
+        "2027-02",
+        "2027-03"
+      ],
+      "status": "confirmed",
+      "reviewer": "Synthetic professional",
+      "reviewed_at": "2026-09-05T12:00:00+02:00"
+    }
+  ]
+}

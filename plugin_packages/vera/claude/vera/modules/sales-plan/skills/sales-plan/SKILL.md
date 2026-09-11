@@ -283,3 +283,16 @@ python scripts/model_use.py \
 - `plan_execution_receipt.json`.
 
 Every result remains `report_ready=false` until professional review.
+
+## Financial report presentation
+
+For comparable monetary results, show the baseline and comparison values together
+with both absolute variance in the reporting currency and percentage variance.
+Use the existing workflow's reporting charts and structured tables, with units,
+periods, aligned numbers, explicit totals and source-supported interpretation.
+Do not finish a substantive report with only a compact chat table when normal
+artifacts are supported. Use the existing generated report and chart artifacts;
+do not invent a custom renderer or manufacture a baseline or monthly breakdown.
+Keep zero/negative-base percentages explicitly unavailable where misleading,
+retain amount differences, and establish favorable/adverse meaning by account.
+A user-requested quick answer or reduced output remains valid.

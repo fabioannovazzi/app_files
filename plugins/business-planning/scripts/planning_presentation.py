@@ -19,11 +19,20 @@ __all__ = [
     "format_number",
     "validate_presentation",
     "render_tables",
+    "comparison_rows",
     "render_actions",
     "render_sources",
 ]
 
 ITALIAN = {
+    "Period": "Periodo",
+    "Comparison": "Confronto",
+    "Print current view": "Stampa la vista corrente",
+    "client": "Cliente",
+    "Report sections": "Sezioni del report",
+    "Income statement": "Conto economico",
+    "Cash": "Cassa",
+    "Sources": "Fonti",
     "Current planning question": "Domanda di questa iterazione",
     "What we learned": "Che cosa abbiamo appreso",
     "Decision in this round": "Decisione di questa iterazione",
@@ -180,7 +189,8 @@ def validate_presentation(plan: dict[str, Any]) -> None:
     p = plan["case"].get("presentation", {})
     require(
         isinstance(p, dict)
-        and set(p) <= {"language", "tables", "actions", "source_notes"},
+        and set(p)
+        <= {"language", "tables", "actions", "source_notes", "comparison_groups"},
         "Unexpected presentation fields",
     )
     require(language(plan["case"]) in {"en", "it"}, "Unsupported report language")
@@ -199,7 +209,16 @@ def validate_presentation(plan: dict[str, Any]) -> None:
     tables = indexed(p.get("tables", []), "presentation table")
     for table in tables.values():
         require(
-            set(table) <= {"id", "title", "section", "headers", "rows", "caption_id"},
+            set(table)
+            <= {
+                "id",
+                "title",
+                "section",
+                "headers",
+                "rows",
+                "caption_id",
+                "comparison",
+            },
             "Unexpected table fields",
         )
         require(
@@ -268,6 +287,11 @@ def validate_presentation(plan: dict[str, Any]) -> None:
                     cell.get("style") != "percent" or unit == "ratio",
                     "Percent formatting requires a ratio",
                 )
+        if "comparison" in table:
+            comparison_rows(table, plan)
+    from planning_interaction import validate_groups
+
+    validate_groups(p, tables)
     require(isinstance(p.get("actions", []), list), "Actions must be a list")
     for action in p.get("actions", []):
         require(isinstance(action, dict), "Action must be an object")
@@ -314,6 +338,85 @@ def validate_presentation(plan: dict[str, Any]) -> None:
             )
 
 
+def comparison_rows(
+    table: dict[str, Any], plan: dict[str, Any]
+) -> tuple[list[dict[str, Any]], str]:
+    """Compute both variances from explicitly selected, source-bound value columns.
+
+    Exact arithmetic and unit checks are mechanical. The author owns period
+    comparability, row meaning and whether an increase is favorable.
+    """
+    comparison = table["comparison"]
+    require(
+        isinstance(comparison, dict)
+        and set(comparison)
+        <= {
+            "baseline_column",
+            "comparison_column",
+            "favorable_directions",
+            "row_types",
+        },
+        "Unexpected comparison fields",
+    )
+    baseline_index = comparison.get("baseline_column")
+    current_index = comparison.get("comparison_column")
+    require(
+        type(baseline_index) is int
+        and type(current_index) is int
+        and {baseline_index, current_index} == {1, 2}
+        and len(table["headers"]) == 3,
+        "Comparison needs a row label and two value columns",
+    )
+    directions = comparison.get(
+        "favorable_directions", ["neutral"] * len(table["rows"])
+    )
+    row_types = comparison.get("row_types", ["detail"] * len(table["rows"]))
+    require(
+        isinstance(directions, list)
+        and len(directions) == len(table["rows"])
+        and all(d in {"higher", "lower", "neutral"} for d in directions),
+        "Invalid comparison favorable directions",
+    )
+    require(
+        isinstance(row_types, list)
+        and len(row_types) == len(table["rows"])
+        and all(t in {"detail", "subtotal", "total"} for t in row_types),
+        "Invalid comparison row types",
+    )
+    rows = []
+    units = set()
+    for row, direction, row_type in zip(table["rows"], directions, row_types):
+        require(
+            "text" in row[0]
+            and "text" not in row[baseline_index]
+            and "text" not in row[current_index],
+            "Comparison needs two available numeric values",
+        )
+        baseline, baseline_unit = _cell_value(row[baseline_index], plan)
+        current, current_unit = _cell_value(row[current_index], plan)
+        require(
+            baseline_unit == current_unit == plan["case"]["reporting_currency"],
+            "Financial comparison requires the same reporting currency",
+        )
+        units.add(baseline_unit)
+        delta = current - baseline
+        rows.append(
+            {
+                "row_label": row[0]["text"],
+                "baseline_value": str(baseline),
+                "comparison_value": str(current),
+                "absolute_variance": str(delta),
+                "relative_variance": (
+                    str(delta / baseline * 100) if baseline > 0 else None
+                ),
+                "favorable_direction": direction,
+                "row_type": row_type,
+            }
+        )
+    require(len(units) == 1, "Comparison rows must share one currency")
+    return rows, units.pop()
+
+
 def render_tables(
     plan: dict[str, Any], section: str, render_paragraph: Callable[[str], str]
 ) -> str:
@@ -321,10 +424,35 @@ def render_tables(
     from planning_report import _table
 
     lang = language(plan["case"])
-    output = []
-    for table in plan["case"].get("presentation", {}).get("tables", []):
-        if table["section"] != section:
-            continue
+
+    def render_table(
+        table: dict[str, Any], scale_rows: list[dict[str, Any]] | None = None
+    ) -> str:
+        if "comparison" in table:
+            from reporting_table import render_reporting_table
+
+            rows, unit = comparison_rows(table, plan)
+            comparison = table["comparison"]
+            note = (
+                "Scostamento = confronto − base. Percentuale sulla base; n/d con base zero o negativa. Colori secondo la convenzione della singola voce; grigio se non definita."
+                if lang == "it"
+                else "Variance = comparison − baseline. Percent uses the baseline; n/a for zero or negative baselines. Colors follow each row's convention; gray when unspecified."
+            )
+            component = render_reporting_table(
+                row_header=table["headers"][0],
+                rows=rows,
+                baseline_label=table["headers"][comparison["baseline_column"]],
+                comparison_label=table["headers"][comparison["comparison_column"]],
+                entity_label=plan["case"]["entity_name"],
+                comparison_caption=table["title"],
+                metric=unit,
+                source_label=note,
+                language=lang,
+                fragment=True,
+                row_label_width=220,
+                scale_rows=scale_rows,
+            )
+            return f'<div id="table-{html.escape(table["id"], quote=True)}">{component}{render_paragraph(table["caption_id"])}</div>'
         rows = []
         for row in table["rows"]:
             cells = []
@@ -342,9 +470,30 @@ def render_tables(
                         )
                     )
             rows.append(cells)
-        output.append(
-            f'<div class="decision-table" id="table-{html.escape(table["id"])}"><h3>{html.escape(table["title"])}</h3>{_table(table["headers"], rows)}{render_paragraph(table["caption_id"])}</div>'
-        )
+        return f'<div class="decision-table" id="table-{html.escape(table["id"])}"><h3>{html.escape(table["title"])}</h3>{_table(table["headers"], rows)}{render_paragraph(table["caption_id"])}</div>'
+
+    from planning_interaction import render_group
+
+    presentation = plan["case"].get("presentation", {})
+    tables = {t["id"]: t for t in presentation.get("tables", [])}
+    groups = presentation.get("comparison_groups", [])
+    grouped = {v["table_id"] for g in groups for v in g["views"]}
+    output = [
+        render_table(t)
+        for t in tables.values()
+        if t["section"] == section and t["id"] not in grouped
+    ]
+    for group in groups:
+        if tables[group["views"][0]["table_id"]]["section"] == section:
+            output.append(
+                render_group(
+                    group,
+                    tables,
+                    lang,
+                    render_table,
+                    lambda t: comparison_rows(t, plan)[0],
+                )
+            )
     return "".join(output)
 
 

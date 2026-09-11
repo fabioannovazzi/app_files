@@ -22,7 +22,14 @@
     "repository/plugins/business-planning/scripts/planning_financing.py",
     "repository/plugins/business-planning/scripts/planning_decision_report.py",
     "repository/plugins/business-planning/scripts/planning_presentation.py",
-    "repository/plugins/business-planning/references/financing-assessment.md"
+    "repository/plugins/business-planning/references/financing-assessment.md",
+    "repository/plugins/_shared/vendor/modules/reporting_table.py",
+    "repository/plugins/business-planning/scripts/planning_interaction.py",
+    "repository/plugins/business-planning/scripts/planning_site.py",
+    "repository/plugins/business-planning/scripts/prepare_report_site.py",
+    "repository/plugins/business-planning/assets/report-interaction.js",
+    "repository/plugins/business-planning/assets/report-interaction.css",
+    "repository/plugins/business-planning/references/sites-delivery.md"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -35,7 +42,7 @@
       {
         "id": "business-planning-analysis-and-report",
         "purpose": "Prepare one business analysis using the shared financial model and report compiler",
-        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. Missing inputs in one scenario do not suppress independently complete scenarios; unavailable scenario calculations and dependent claims remain explicit in the report. The model also authors the business recommendation, alternatives, next actions and chart selection. User idea snapshots, provisional interpretations, source-backed external numerical facts and optional commercial price/volume drivers can enter this same context. Pending professional review remains explicit and does not silently discard ordinary interpretation. Supporting workpapers are accessible in a collapsed report appendix; this does not remove them from the HTML file."
+        "content": "Both entry points consume one shared reviewed case and locally run the shared Decimal financial engine. Every selected file is hashed and registered with version, role, review status, audience and confidentiality restrictions. The shared report structure, HTML, JSON and CSV preserve selected file names/relative paths, evidence descriptions, confirmed assumptions and hypotheses, source-figure conflicts and professional decisions, complete calculated figures and IDs, chart lineage, limitations and unresolved matters. This full local audit package is not an automatically bounded model-context projection. The workflow instructs the model to use only the reviewed excerpts, assumptions and calculation records needed for the mandate and allowed for the audience; it does not automatically anonymize content or enforce which local artifacts Codex reads. The compiler itself calls no model or external service. Optional PDF uses a provisioned local Chromium renderer with network requests disabled and only validated HTML. Independent contribution files and legacy cases cannot finalize reports. Missing inputs in one scenario do not suppress independently complete scenarios; unavailable scenario calculations and dependent claims remain explicit in the report. The model also authors the business recommendation, alternatives, next actions and chart selection. User idea snapshots, provisional interpretations, source-backed external numerical facts and optional commercial price/volume drivers can enter this same context. Pending professional review remains explicit and does not silently discard ordinary interpretation. Supporting workpapers are accessible in a collapsed report appendix; this does not remove them from the HTML file. Authored comparison groups bind period and scenario labels to existing checked tables. Browser controls only select visibility; all figures and interpretations stay in the report. Shared scales remain fixed across group views. An explicitly requested Sites export retains the same complete HTML and embedded workpapers, and records its exact hash before host-managed publication."
       },
       {
         "id": "business-planning-iteration-and-financing",
@@ -78,6 +85,21 @@
         "Keep research read-only; do not contact customers, competitors, banks or investors or submit applications without explicit authority.",
         "Query selection and compliance with these instructions remain model-led; there is no automatic anonymization or query-content classifier."
       ]
+    },
+    {
+      "id": "planning-sites-report",
+      "kind": "send_or_publish",
+      "destination": "OpenAI Sites through the selected host Sites connector",
+      "purpose": "Publish the validated financial report for the user-selected audience",
+      "content": "On an explicit Sites route, the host uploads the complete validated report HTML and static Site source to OpenAI Sites, including company information, financial figures, all comparison views, assumptions, source names and relative paths, embedded case workpapers and review records. Hidden or collapsed material remains delivered. Original source files are not separately copied into the public output. Sites manages hosting and visitor access. The helper performs no upload and creates no invitation. Sharing and retention depend on the selected Sites account and service; Vera and Clara do not enforce retention or deletion.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "An explicit request to publish through Sites chooses this route; host action-time approval and access checks still apply.",
+        "The preparation helper requires a matching report audience, replays the source hashes and report, rejects blocked reports and refuses to overwrite earlier Site candidates.",
+        "Only the configured dist output is published. All embedded report data remains included; no automatic anonymization or redaction.",
+        "Verify deployment status and intended visitor access. Invitations and messages require authorized recipients; recurring updates require a separate user request."
+      ]
     }
   ],
   "security_controls": [
@@ -99,9 +121,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-09",
+    "reviewed_at": "2026-09-11",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c5613cf0f8b8eaaa3416854e33be2b90af63e646be33e30b1b4e425b50046b19"
+    "source_fingerprint": "101361389a9f25926f1d545b3452c8c0129c73e8635f91cafe3b13ba715459fb"
   }
 }
