@@ -3,6 +3,15 @@ name: check-entries
 description: Use when comparing qualified Journal Sampling entries with FatturaPA XML or supporting PDFs, running exact evidence checks, and producing lineage-bound review outputs.
 ---
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+Before substantive work in desktop Codex or local ChatGPT Work, follow the
+mandatory one-off local onboarding gate in `../vera/references/local-onboarding.md`.
+Load the same local professional profile on every session. A verified paired
+lesson worker follows only its active lesson handoff; never recursively onboard
+it. Tutorial runs and their feedback stay local. Current user requests take
+precedence over saved preferences. This gate does not apply to Claude Cowork.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 # Vouching
 
 Use the localized public name: **Vouching** (en), **Verifica documentale** (it),

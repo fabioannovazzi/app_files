@@ -51,6 +51,18 @@ continuing the useful in-chat work.
 
 ## Invocation and scope contract
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+Before normal routing, read `references/local-onboarding.md` and check the shared
+local profile. Mandatory onboarding is a supported Vera setup action even when
+no professional workflow has yet been selected. It applies once to new and
+existing users on desktop Codex, and shares its record with local ChatGPT Work.
+A completed profile informs routing but never overrides the current request.
+The verified paired working chat may execute only its active lesson. During
+onboarding, follow the local tutorial contract before normal feedback and
+server-receipt instructions below; never transmit onboarding data to Mparanza.
+Do not recommend switching to Codex when already in Codex or local desktop Work.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 An explicit host invocation of Vera, including `@vera`, always activates this
 router. Treat the host invocation as an exact routing signal; do not depend on
 keyword matching in the message text. Invocation selects Vera, but it does not

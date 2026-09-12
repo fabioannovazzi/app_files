@@ -65,6 +65,11 @@ ROOT_OMITTED_PATHS = frozenset(
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
         "scripts/change_requests.py",
         "scripts/check_for_update.py",
+        "scripts/local_onboarding.py",
+        "scripts/local_onboarding_case.py",
+        "scripts/onboarding_session_start.py",
+        "skills/vera/references/local-onboarding.md",
+        "skills/vera/references/tutorial-cases.md",
     }
 )
 COWORK_OMITTED_PATHS = frozenset(
@@ -1653,6 +1658,26 @@ def _project_cowork_runtime_text(
     return text.encode("utf-8")
 
 
+def _without_openai_onboarding(content: bytes) -> bytes:
+    """Keep the one-off OpenAI onboarding out of the unchanged Cowork runtime."""
+    text = content.decode("utf-8")
+    text = re.sub(
+        r"<!-- VERA_OPENAI_ONBOARDING_BEGIN -->\n.*?"
+        r"<!-- VERA_OPENAI_ONBOARDING_END -->\n\n",
+        "",
+        text,
+        flags=re.DOTALL,
+    )
+    text = re.sub(
+        r"^    # VERA_OPENAI_ONBOARDING_BEGIN\n.*?"
+        r"^    # VERA_OPENAI_ONBOARDING_END\n",
+        "",
+        text,
+        flags=re.DOTALL | re.MULTILINE,
+    )
+    return text.encode("utf-8")
+
+
 def project_cowork_skill(
     content: bytes,
     *,
@@ -1662,7 +1687,7 @@ def project_cowork_skill(
 ) -> bytes:
     """Project one source skill into Cowork without product promotion/call-home."""
 
-    text = content.decode("utf-8")
+    text = _without_openai_onboarding(content).decode("utf-8")
     if relative_path in {
         "skills/passive-invoice-audit/SKILL.md",
         "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md",
@@ -2741,6 +2766,8 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative.startswith("evals/"):
             continue
+        if relative.startswith("assets/onboarding/"):
+            continue
         if relative.startswith("privacy/services/") and relative not in {
             f"privacy/services/{service_id}.json"
             for service_id in COWORK_SHARED_SERVICES
@@ -2754,6 +2781,8 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative == ".codex-plugin/plugin.json":
             continue
+        if relative == "scripts/notarized_run_receipt.py":
+            content = _without_openai_onboarding(content)
         if relative == ".mcp.json":
             content = project_claude_mcp(content)
         elif relative.endswith("/SKILL.md"):

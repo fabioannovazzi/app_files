@@ -865,6 +865,20 @@ def stamp_model_data_report(
         raise NotarizedRunReceiptError("receipt output directory must already exist")
     report_path = report_path.expanduser().resolve()
     report = _validated_report(report_path)
+    # VERA_OPENAI_ONBOARDING_BEGIN
+    # A local tutorial scope suppresses transmission even on direct later retries.
+    # This is an explicit storage/privacy boundary, not a semantic classifier.
+    if any(
+        (parent / ".vera-onboarding-local-only").exists()
+        for parent in (
+            report_path.parent,
+            *report_path.parent.parents,
+            output,
+            *output.parents,
+        )
+    ):
+        return {"status": "not_requested", "reason": "local_onboarding"}
+    # VERA_OPENAI_ONBOARDING_END
     output = _receipt_output_directory(output, report_path, report)
     version = _plugin_version(plugin_root.expanduser().resolve())
     request_path = output / _REQUEST_FILE

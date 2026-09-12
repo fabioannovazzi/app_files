@@ -502,3 +502,54 @@ def test_router_requires_report_for_every_substantive_run() -> None:
     assert "after every substantive Vera run" in contract
     assert '"runtime_profile": "openai-chatgpt"' in contract
     assert "candidate_needs_validation" in contract
+
+
+def test_onboarding_reports_and_direct_stamp_retries_stay_local(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    report_module = _load_module()
+    monkeypatch.syspath_prepend(str(SCRIPT_PATH.parent))
+    spec = importlib.util.spec_from_file_location(
+        "notarized_run_receipt", SCRIPT_PATH.parent / "notarized_run_receipt.py"
+    )
+    assert spec and spec.loader
+    receipts = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(receipts)
+    monkeypatch.setitem(sys.modules, "notarized_run_receipt", receipts)
+
+    def reject_transport(*args, **kwargs):
+        pytest.fail("No onboarding receipt may reach a server")
+
+    monkeypatch.setattr(receipts, "_post_receipt_request", reject_transport)
+    (tmp_path / ".vera-onboarding-local-only").write_text("Local tutorial")
+    output = tmp_path / "lesson" / "outputs"
+    output.mkdir(parents=True)
+    (output / "mapping_payload.json").write_text('{"rows":10,"columns":8}')
+    request = output / "request.json"
+    request.write_text(json.dumps(_reduced_request()))
+    assert (
+        report_module.main(
+            ["build", "--input", str(request), "--output-dir", str(output)]
+        )
+        == 0
+    )
+    response = json.loads(capsys.readouterr().out)
+    assert response["server_receipt"] == {
+        "status": "not_requested",
+        "reason": "local_onboarding",
+    }
+    assert not (output / "model_data_receipt_request.json").exists()
+    assert (
+        receipts.main(
+            [
+                "stamp",
+                "--report",
+                str(output / "model_data_report.json"),
+                "--output-dir",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["reason"] == "local_onboarding"
+    assert not (output / "model_data_receipt.json").exists()
