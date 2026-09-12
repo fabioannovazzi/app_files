@@ -48,6 +48,13 @@ no onboarding scripts, assets, hook or instruction blocks.
   tests are skipped across Codex/Cowork packaging, update hooks, privacy,
   model-data reports, workflow registry, release alignment and the shared
   business-planning workflow.
+- Six focused file-integrity tests and 37 existing customer-ledger tests pass.
+  Windows CI exposed an existing archive bug: Python 3.12's path and descriptor
+  APIs give different meanings to `ctime`. The shared ledger now compares that
+  field within each API, retaining device/inode/size/mtime/link cross-checks and
+  exact binary hashing. Mutation tests cover both timestamp observations,
+  replaced files and bytes changed during reading. Vera and Lucia packages
+  include this shared portability correction; it adds no Cowork onboarding.
 - All three synthetic starters were exercised through the genuine managed
   contexts: XML inspection found one invoice (EUR 1,000 + 220 = 1,220);
   journal qualification/normalization accepted six rows and sampled two;

@@ -138,30 +138,33 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _same_file_stat(
+    left: os.stat_result, right: os.stat_result, *, check_ctime: bool = True
+) -> bool:
+    """Compare file identity and mutation metadata from comparable stat APIs."""
+
+    fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_nlink")
+    return all(getattr(left, key) == getattr(right, key) for key in fields) and (
+        not check_ctime or left.st_ctime_ns == right.st_ctime_ns
+    )
+
+
 def _stable_file_identity(path: Path, *, label: str) -> tuple[int, str]:
     """Hash one regular file while proving its path and bytes stayed stable."""
 
     before_path = _ordinary_file(path, label=label)
     descriptor = -1
     try:
-        descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
-        before = os.fstat(descriptor)
-        identity = (
-            before.st_dev,
-            before.st_ino,
-            before.st_size,
-            before.st_mtime_ns,
-            before.st_ctime_ns,
-            before.st_nlink,
+        descriptor = os.open(
+            path,
+            os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0),
         )
-        if identity != (
-            before_path.st_dev,
-            before_path.st_ino,
-            before_path.st_size,
-            before_path.st_mtime_ns,
-            before_path.st_ctime_ns,
-            before_path.st_nlink,
-        ):
+        before = os.fstat(descriptor)
+        # CPython 3.12 Windows lstat reports creation time as ctime, while
+        # fstat reports change time. Compare ctime within each API below;
+        # cross-API comparisons retain inode, device, size, mtime and links.
+        cross_api_ctime = os.name != "nt"
+        if not _same_file_stat(before, before_path, check_ctime=cross_api_ctime):
             raise LedgerError(f"{label} changed before it was opened.")
         digest = hashlib.sha256()
         while True:
@@ -171,21 +174,10 @@ def _stable_file_identity(path: Path, *, label: str) -> tuple[int, str]:
             digest.update(chunk)
         after = os.fstat(descriptor)
         final_path = _ordinary_file(path, label=label)
-        final_identity = (
-            after.st_dev,
-            after.st_ino,
-            after.st_size,
-            after.st_mtime_ns,
-            after.st_ctime_ns,
-            after.st_nlink,
-        )
-        if final_identity != identity or final_identity != (
-            final_path.st_dev,
-            final_path.st_ino,
-            final_path.st_size,
-            final_path.st_mtime_ns,
-            final_path.st_ctime_ns,
-            final_path.st_nlink,
+        if (
+            not _same_file_stat(before, after)
+            or not _same_file_stat(before_path, final_path)
+            or not _same_file_stat(after, final_path, check_ctime=cross_api_ctime)
         ):
             raise LedgerError(f"{label} changed while it was read.")
         return after.st_size, digest.hexdigest()
