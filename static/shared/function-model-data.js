@@ -193,7 +193,9 @@
     }
     if (document.querySelector("script[data-function-page-navigation]")) return;
     const script = document.createElement("script");
-    script.src = new URL("function-page-navigation.js", currentScript.src).href;
+    const navigationUrl = new URL("function-page-navigation.js", currentScript.src);
+    navigationUrl.search = new URL(currentScript.src).search;
+    script.src = navigationUrl.href;
     script.dataset.functionPageNavigation = "";
     document.head.append(script);
   };
