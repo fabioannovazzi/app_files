@@ -44,6 +44,8 @@ no onboarding scripts, assets, hook or instruction blocks.
   shared discovery, concurrency, recovery, path boundaries, scoped/revoked worker
   handoffs, evidence identity, startup behavior, packaged Codex/Work reuse and
   execution of the real managed XML workflow. New helper coverage: 85.61%.
+  The dedicated CI matrix passes on Windows, macOS and Linux, including the
+  actual managed XML run and portable file-integrity regressions.
 - 690 existing/extended regression tests pass and two environment-dependent
   tests are skipped across Codex/Cowork packaging, update hooks, privacy,
   model-data reports, workflow registry, release alignment and the shared
