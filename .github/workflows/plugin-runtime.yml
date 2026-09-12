@@ -25,6 +25,20 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Inspect native file identity metadata
+        if: runner.os == 'Windows'
+        shell: python
+        run: |
+          import json, os, pathlib, tempfile
+          fields = ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns', 'st_nlink')
+          with tempfile.TemporaryDirectory() as folder:
+              path = pathlib.Path(folder) / 'synthetic.txt'
+              path.write_bytes(b'onboarding synthetic input\r\n')
+              descriptor = os.open(path, os.O_RDONLY)
+              try:
+                  print(json.dumps({name: {field: getattr(value, field) for field in fields} for name, value in [('lstat', path.lstat()), ('fstat', os.fstat(descriptor))]}, indent=2))
+              finally:
+                  os.close(descriptor)
       - name: Verify local profiles, native lesson handoffs and transmission suppression
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
