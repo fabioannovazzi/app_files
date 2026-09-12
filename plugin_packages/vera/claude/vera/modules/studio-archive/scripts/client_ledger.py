@@ -830,24 +830,14 @@ def _stable_copy(source_path: Path, destination: Path) -> tuple[int, str]:
     if not source.is_absolute() or source.is_symlink():
         raise LedgerError("Imported document must be an absolute non-symlink file.")
     before_path = _ordinary_file(source, label="import source")
-    source_descriptor = os.open(source, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    source_descriptor = os.open(
+        source, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0)
+    )
     temporary: Path | None = None
     try:
         before = os.fstat(source_descriptor)
-        identity = (
-            before.st_dev,
-            before.st_ino,
-            before.st_size,
-            before.st_mtime_ns,
-            before.st_ctime_ns,
-        )
-        if identity != (
-            before_path.st_dev,
-            before_path.st_ino,
-            before_path.st_size,
-            before_path.st_mtime_ns,
-            before_path.st_ctime_ns,
-        ):
+        cross_api_ctime = os.name != "nt"
+        if not _same_file_stat(before, before_path, check_ctime=cross_api_ctime):
             raise LedgerError("Imported document changed before it was opened.")
         descriptor, temporary_name = tempfile.mkstemp(
             prefix=".vera-input-", suffix=".tmp", dir=destination.parent
@@ -866,20 +856,11 @@ def _stable_copy(source_path: Path, destination: Path) -> tuple[int, str]:
             target.flush()
             os.fsync(target.fileno())
         after = os.fstat(source_descriptor)
-        final_path = source.lstat()
-        final_identity = (
-            after.st_dev,
-            after.st_ino,
-            after.st_size,
-            after.st_mtime_ns,
-            after.st_ctime_ns,
-        )
-        if final_identity != identity or final_identity != (
-            final_path.st_dev,
-            final_path.st_ino,
-            final_path.st_size,
-            final_path.st_mtime_ns,
-            final_path.st_ctime_ns,
+        final_path = _ordinary_file(source, label="import source")
+        if (
+            not _same_file_stat(before, after)
+            or not _same_file_stat(before_path, final_path)
+            or not _same_file_stat(after, final_path, check_ctime=cross_api_ctime)
         ):
             raise LedgerError("Imported document changed during the copy.")
         os.replace(temporary, destination)

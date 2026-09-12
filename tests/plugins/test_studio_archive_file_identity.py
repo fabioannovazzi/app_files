@@ -29,23 +29,33 @@ def altered(observed, **changes):
     )
 
 
-def test_hashes_exact_binary_bytes_after_metadata_change(ledger, tmp_path):
+def perform(ledger, path, operation):
+    if operation == "copy":
+        return ledger._stable_copy(path, path.parent / "copied.bin")
+    return ledger._stable_file_identity(path, label="input")
+
+
+@pytest.mark.parametrize("operation", ["hash", "copy"])
+def test_hashes_exact_binary_bytes_after_metadata_change(ledger, tmp_path, operation):
     path = tmp_path / "input.bin"
     payload = b"first\r\nsecond\x1alast\r\n"
     path.write_bytes(payload)
     path.chmod(0o400)
     try:
-        assert ledger._stable_file_identity(path, label="input") == (
+        assert perform(ledger, path, operation) == (
             len(payload),
             hashlib.sha256(payload).hexdigest(),
         )
+        if operation == "copy":
+            assert (tmp_path / "copied.bin").read_bytes() == payload
     finally:
         path.chmod(0o600)
 
 
 @pytest.mark.parametrize("mutation", [None, "descriptor_ctime", "path_ctime", "inode"])
+@pytest.mark.parametrize("operation", ["hash", "copy"])
 def test_windows_ctime_difference_retains_mutation_detection(
-    ledger, tmp_path, monkeypatch, mutation
+    ledger, tmp_path, monkeypatch, mutation, operation
 ):
     path = tmp_path / "input.bin"
     path.write_bytes(b"unchanged bytes")
@@ -76,15 +86,17 @@ def test_windows_ctime_difference_retains_mutation_detection(
     monkeypatch.setattr(ledger, "_ordinary_file", lstat)
     if mutation is None:
         assert (
-            ledger._stable_file_identity(path, label="input")[1]
+            perform(ledger, path, operation)[1]
             == hashlib.sha256(path.read_bytes()).hexdigest()
         )
     else:
         with pytest.raises(ledger.LedgerError, match="changed"):
-            ledger._stable_file_identity(path, label="input")
+            perform(ledger, path, operation)
+        assert not (tmp_path / "copied.bin").exists()
 
 
-def test_rejects_bytes_changed_during_read(ledger, tmp_path, monkeypatch):
+@pytest.mark.parametrize("operation", ["hash", "copy"])
+def test_rejects_bytes_changed_during_read(ledger, tmp_path, monkeypatch, operation):
     path = tmp_path / "input.bin"
     path.write_bytes(b"original bytes")
     native_read = os.read
@@ -96,5 +108,6 @@ def test_rejects_bytes_changed_during_read(ledger, tmp_path, monkeypatch):
         return result
 
     monkeypatch.setattr(ledger, "os", SimpleNamespace(**(vars(os) | {"read": read})))
-    with pytest.raises(ledger.LedgerError, match="changed while"):
-        ledger._stable_file_identity(path, label="input")
+    with pytest.raises(ledger.LedgerError, match="changed"):
+        perform(ledger, path, operation)
+    assert not (tmp_path / "copied.bin").exists()
