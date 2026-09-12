@@ -19,7 +19,7 @@ will succeed. Keep this decision in the prompt-to-contract semantic review.
   authorities and uncertainties remain part of that research and review.
   Do not invent a client position, opponent or counter-opinion merely to add
   a fourth stage.
-- **Opinion on a concrete position — `required`:** the assignment asks Vera
+- **Opinion on a concrete position — `required`:** the assignment asks the assistant
   to formulate, assess, support or challenge a case-specific legal or fiscal
   conclusion, interpretation or argument. For example: "Con questi fatti,
   redigi un parere motivato sulla spettanza del credito a questo investimento."

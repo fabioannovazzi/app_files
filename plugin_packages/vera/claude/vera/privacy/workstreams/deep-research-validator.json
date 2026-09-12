@@ -12,11 +12,8 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "scripts/adversarial_opinion.py",
-    "skills/adversarial-opinion/SKILL.md",
-    "skills/adversarial-opinion/references/durable-opinion.md",
     "skills/quesito-legale-fiscale/SKILL.md",
-    "skills/quesito-legale-fiscale/references/adversarial-scope.md"
+    "skills/adversarial-opinion/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -113,6 +110,6 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9be28c9e2f67a4f6bb819f26df452f85a9badee39cd35ae79d8e9896a8d3a234"
+    "source_fingerprint": "bf6ac0c57bfa87a32c1fc80b6d732f220f1b6aff69260262d52e31dba8816e8a"
   }
 }

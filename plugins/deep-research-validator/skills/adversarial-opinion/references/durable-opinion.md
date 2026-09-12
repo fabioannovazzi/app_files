@@ -3,8 +3,8 @@
 Use the prepared, started `deep-research-validator` run and its unchanged
 `client_engagement_path`. `<run>` below is its exact output directory. Resolve
 the validator module as `modules/deep-research-validator` within the installed
-Vera root or `../deep-research-validator` in source. Run validator commands
-through Vera's managed launcher with `--module deep-research-validator`.
+invoking product root or `../deep-research-validator` in source. Run validator commands
+through the product's managed launcher with `--module deep-research-validator`.
 
 1. Package the reviewed original with the existing validator in `<run>/position`.
    Keep `document_inventory.json`, `source_inventory.json`, source captures,
@@ -14,11 +14,11 @@ through Vera's managed launcher with `--module deep-research-validator`.
    they never determine whether the opposing examination runs. A malformed
    review record must be repaired before binding it. The reviewed Markdown must
    be the same text as `claims_review.json`'s `validated_document`.
-2. From the Vera root, run the normal dependency check, then prepare:
+2. From the invoking product root, run the normal dependency check, then prepare:
 
 ```bash
 python scripts/check_dependencies.py --module deep-research-validator
-python scripts/managed_python_runtime.py run scripts/adversarial_opinion.py prepare --client-engagement <client_engagement_path> --output-dir <run>
+python scripts/managed_python_runtime.py --module deep-research-validator run scripts/adversarial_opinion.py prepare --client-engagement <client_engagement_path> --output-dir <run>
 ```
 
 This writes `adversarial_brief.json`, freezes the current original package's
@@ -70,15 +70,15 @@ effect is `unchanged`, `professional_review_required`, or `revision_required`.
 The comparison review is `reviewed` or `revision_required`. A negative outcome
 still needs a reviewed, reasoned document and search record.
 
-5. Package and verify from the Vera root:
+5. Package and verify from the invoking product root:
 
 ```bash
-python scripts/managed_python_runtime.py run scripts/adversarial_opinion.py package --client-engagement <client_engagement_path> --output-dir <run> --docx
-python scripts/managed_python_runtime.py run scripts/adversarial_opinion.py verify --client-engagement <client_engagement_path> --output-dir <run>
+python scripts/managed_python_runtime.py --module deep-research-validator run scripts/adversarial_opinion.py package --client-engagement <client_engagement_path> --output-dir <run> --docx
+python scripts/managed_python_runtime.py --module deep-research-validator run scripts/adversarial_opinion.py verify --client-engagement <client_engagement_path> --output-dir <run>
 ```
 
 Use `--docx` when DOCX tooling is available and visually inspect final DOCX
-files under Vera's normal delivery rules. Deliver `opinion_package.md`,
+files under the invoking product's normal delivery rules. Deliver `opinion_package.md`,
 `opinion_comparison.md` and its DOCX, both phase documents, and
 `opinion_delivery.json`. The phase folders retain sources and reviews. The
 helper recomputes both validation audits, retains their separate outcomes,

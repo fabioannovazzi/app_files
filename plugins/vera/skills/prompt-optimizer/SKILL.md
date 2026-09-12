@@ -14,12 +14,6 @@ precedence over saved preferences. This gate does not apply to Claude Cowork.
 
 # Plan The Answer
 
-For Vera's `quesito-legale-fiscale` journey, read and follow
-`references/research-choice.md`. Resolve that user choice after preparing the
-question and before finalizing the generation route and semantic review in the
-module below. An available Deep Research plugin is a user-selected second-stage
-route even when ordinary research could also meet the requested standard.
-
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/prompt-optimizer` from this skill directory when it
@@ -40,3 +34,11 @@ Vera cannot inspect or enforce them. No helper uploads the prompt or
 anonymizes it. Vera records this optional destination in the prompt-optimizer
 external-boundary manifest; its runtime profiles describe only the originating
 Codex and Cowork sessions. For direct drafting, continue in the selected runtime.
+
+For the complete `quesito-legale-fiscale` journey, resolve the shared validator
+module at `../../modules/deep-research-validator` from this skill directory, or
+`../../../deep-research-validator` in repository source. Read its
+`skills/deep-research-validator/references/research-choice.md` and follow it
+after preparing the question and before finalizing the generation route and
+semantic review. Reuse a choice already made for this answer. This does not
+turn a preparation-only request into a full research assignment.

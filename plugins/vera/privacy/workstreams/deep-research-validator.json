@@ -108,13 +108,10 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6f9ca8d792dffaf64cffad0949b50d153a4f7207ac12adb027e41406e2a2dc98"
+    "source_fingerprint": "13860fee8f042f9e0b87bcb4adcb4ee643d91ad7589c4a1c7d2e0b2465eed6ca"
   },
   "governed_repository_paths": [
-    "plugins/vera/scripts/adversarial_opinion.py",
-    "plugins/vera/skills/adversarial-opinion/SKILL.md",
-    "plugins/vera/skills/adversarial-opinion/references/durable-opinion.md",
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
-    "plugins/vera/skills/quesito-legale-fiscale/references/adversarial-scope.md"
+    "plugins/vera/skills/adversarial-opinion/SKILL.md"
   ]
 }

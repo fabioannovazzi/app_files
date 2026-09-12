@@ -62,8 +62,9 @@ funzione Lucia:
 
 | Esito | Percorso obbligatorio |
 | --- | --- |
-| Quesito da impostare, risposta da pianificare o ricerca da avviare | Leggi integralmente `../prompt-optimizer/SKILL.md` e seguilo. |
+| Sola preparazione del quesito o del piano, senza eseguire la ricerca | Leggi integralmente `../prompt-optimizer/SKILL.md` e seguilo. |
 | Quesito legale, fiscale o di compliance da portare dalla domanda a una risposta verificata | Leggi integralmente `../quesito-legale-fiscale/SKILL.md` e seguilo. |
+| Parere su una posizione concreta da sottoporre a esame contrapposto, o richiesta esplicita di contrapposto | Leggi integralmente `../adversarial-opinion/SKILL.md` e seguilo. La ricerca informativa termina dopo la validazione; rispetta una richiesta di escludere il contrapposto. |
 | Risposta, parere, memoria, lettera o report già prodotto da controllare | Leggi integralmente `../deep-research-validator/SKILL.md` e seguilo. |
 | Novità giuridica o professionale da valutare e trasformare in email, circolare, articolo, post, FAQ, alert o visuale | Leggi integralmente `../comunicazione-professionale/SKILL.md` e seguilo. Non duplicare i passaggi di answer contract e claim assurance già incorporati nel workflow. |
 | Sito informativo dello studio legale da creare, rinnovare, revisionare, preparare in preview o pubblicare dopo approvazione | Leggi integralmente `../presenza-digitale-studio/SKILL.md` e seguilo. |
@@ -93,7 +94,14 @@ modificare la logica del Prompt Optimizer o del Deep Research Validator dentro
 Lucia.
 
 `quesito-legale-fiscale` orchestra quelle due fasi e la generazione della
-risposta come un solo percorso per l'utente. Non crea un terzo workstream Studio
+risposta come un solo percorso per l'utente, leggendo il metodo canonico
+`answer-journey.md` nel modulo condiviso Deep Research Validator. Dopo la
+preparazione propone il plugin Deep Research disponibile oppure la ricerca
+ordinaria. La ricerca informativa termina dopo la validazione. Un parere su
+una posizione concreta o una richiesta esplicita include il contrapposto, salvo
+esclusione dell'utente. `adversarial-opinion` legge lo stesso metodo e usa lo
+stesso helper di Vera nel modulo condiviso: nessun fork del codice o del metodo.
+Non crea un terzo workstream Studio
 Archive, non duplica artefatti e non introduce una nuova destinazione dei dati.
 
 Comunicazione professionale e Presenza digitale dello studio riusano invece

@@ -69,9 +69,9 @@ def test_vera_router_distinguishes_open_items_from_bank_movements() -> None:
     router = _read_text(ROUTER_PATH)
     catalog = _read_text(CATALOG_PATH)
     normalized_catalog = " ".join(catalog.split())
-    fixtures = json.loads(
-        _read_text(VERA_ROOT / "evals" / "trigger_fixtures.json")
-    )["should_trigger"]
+    fixtures = json.loads(_read_text(VERA_ROOT / "evals" / "trigger_fixtures.json"))[
+        "should_trigger"
+    ]
     cases = {case["id"]: case for case in fixtures}
 
     assert cases["vera-open-item-reconciliation"]["required_signals"] == [
@@ -100,11 +100,16 @@ def test_vera_routes_generic_browser_process_discovery_to_browser_automation() -
     assert "operator can demonstrate a browser process" in catalog
     assert "connected Chrome extension" in wrapper
     assert "developer pack sanitizzato" in cards["browser-automation"]["instructions"]
-    assert "guided, autonomous oppure hybrid" in cards["browser-automation"]["instructions"]
+    assert (
+        "guided, autonomous oppure hybrid"
+        in cards["browser-automation"]["instructions"]
+    )
     assert exact_request in _read_text(
         ROOT / "plugins" / "browser-automation" / "evals" / "trigger_fixtures.json"
     )
-    assert "Never look for runtime scripts inside this wrapper directory" in " ".join(wrapper.split())
+    assert "Never look for runtime scripts inside this wrapper directory" in " ".join(
+        wrapper.split()
+    )
 
 
 def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() -> None:
@@ -122,7 +127,7 @@ def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() ->
     required_contracts = (
         "start one question-to-validated-answer journey",
         "select `quesito-legale-fiscale`",
-        "vera:quesito-legale-fiscale -> vera:prompt-optimizer",
+        "references/answer-journey.md",
         "operational filing, statutory return, tax declaration, or form",
         "stop under the no-matching-specialist-workflow outcome",
         "Use automatically before Vera answers",
@@ -188,7 +193,9 @@ def test_professional_question_is_an_orchestrator_not_a_third_data_workstream() 
     assert not (
         VERA_ROOT / "privacy" / "workstreams" / "quesito-legale-fiscale.json"
     ).exists()
-    assert "does not create a third client workstream" in workflow
-    assert "does not create a third Studio Archive workstream" in _read_text(
-        ROUTER_PATH
+    assert "references/answer-journey.md" in workflow
+    shared = _read_text(
+        ROOT
+        / "plugins/deep-research-validator/skills/deep-research-validator/references/answer-journey.md"
     )
+    assert "does not create a third Studio Archive workstream" in shared

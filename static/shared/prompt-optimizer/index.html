@@ -744,7 +744,10 @@
 
     function applyLanguage(lang) {
       const safeLang = translations[lang] ? lang : "it";
-      const data = translations[safeLang];
+      const product = new URLSearchParams(window.location.search).get("from") === "lucia" ? "Lucia" : "Vera";
+      const data = Object.fromEntries(Object.entries(translations[safeLang]).map(
+        ([key, value]) => [key, value.replace(/\bVera\b/g, product)],
+      ));
       const guide = guides[safeLang];
       document.documentElement.lang = safeLang;
       document.title = data.title;
@@ -754,8 +757,9 @@
       document.getElementById("og-image").setAttribute("content", `https://i.ytimg.com/vi/${guide.id}/hqdefault.jpg`);
       document.getElementById("og-locale").setAttribute("content", guide.locale);
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
-      document.getElementById("validator-link").href = `../deep-research-validator/index.html?lang=${safeLang}`;
-      document.getElementById("hero-validator-link").href = `../deep-research-validator/index.html?lang=${safeLang}`;
+      const validatorParams = new URLSearchParams({ lang: safeLang, from: product.toLowerCase(), area: "area-research" });
+      document.getElementById("validator-link").href = `../deep-research-validator/index.html?${validatorParams}`;
+      document.getElementById("hero-validator-link").href = `../deep-research-validator/index.html?${validatorParams}`;
       document.getElementById("primary-nav").setAttribute("aria-label", data["nav.aria"]);
       document.getElementById("language-switcher").setAttribute("aria-label", data["language.aria"]);
       document.getElementById("breadcrumb").setAttribute("aria-label", data["breadcrumb.aria"]);
@@ -784,6 +788,6 @@
 
     applyLanguage(getLang());
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20260912-lucia"></script>
 </body>
 </html>
