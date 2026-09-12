@@ -1,0 +1,7 @@
+date,entry_id,account,description,debit,credit
+2026-01-05,DEMO-001,600100,Consulenza demo,1000,0
+2026-01-05,DEMO-001,220100,Fornitore demo,0,1000
+2026-01-12,DEMO-002,600200,Servizio demo,500,0
+2026-01-12,DEMO-002,220100,Fornitore demo,0,500
+2026-01-20,DEMO-003,600300,Materiale demo,250,0
+2026-01-20,DEMO-003,220100,Fornitore demo,0,250

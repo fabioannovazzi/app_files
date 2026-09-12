@@ -35,7 +35,8 @@
     "managed-python-runtime",
     "plugin-update-check",
     "plugin-feedback",
-    "run-receipt-stamping"
+    "run-receipt-stamping",
+    "local-onboarding"
   ],
   "workflow_roles": {
     "new-client": {

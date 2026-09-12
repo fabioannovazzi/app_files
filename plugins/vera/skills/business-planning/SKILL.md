@@ -3,6 +3,15 @@ name: business-planning
 description: Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.
 ---
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+Before substantive work in desktop Codex or local ChatGPT Work, follow the
+mandatory one-off local onboarding gate in `../vera/references/local-onboarding.md`.
+Load the same local professional profile on every session. A verified paired
+lesson worker follows only its active lesson handoff; never recursively onboard
+it. Tutorial runs and their feedback stay local. Current user requests take
+precedence over saved preferences. This gate does not apply to Claude Cowork.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 # Business Planning
 
 Resolve `../../modules/business-planning` from this directory when it exists;

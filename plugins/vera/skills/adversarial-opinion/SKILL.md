@@ -3,6 +3,15 @@ name: adversarial-opinion
 description: Develop and review the strongest evidence-bound opposing case when Vera is asked for an opinion on a concrete legal, tax, or compliance position or explicitly for an opposing opinion. Do not activate for informational research alone; when selected, run independently of the original validation outcome and compare both positions.
 ---
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+Before substantive work in desktop Codex or local ChatGPT Work, follow the
+mandatory one-off local onboarding gate in `../vera/references/local-onboarding.md`.
+Load the same local professional profile on every session. A verified paired
+lesson worker follows only its active lesson handoff; never recursively onboard
+it. Tutorial runs and their feedback stay local. Current user requests take
+precedence over saved preferences. This gate does not apply to Claude Cowork.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 # Adversarial Opinion
 
 Run this distinct fourth stage after preparation, drafting, and validation in

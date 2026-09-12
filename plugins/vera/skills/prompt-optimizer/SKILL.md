@@ -3,6 +3,15 @@ name: prompt-optimizer
 description: Use automatically before Vera answers any accepted substantive legal, tax, or compliance question or prepares source-backed professional drafting that needs an answer contract and generation instructions for direct Codex work or a ChatGPT Deep Research handoff. The user never needs to request prompt optimization. Do not use this skill as a substitute for a missing operational return, declaration, filing, or form workflow.
 ---
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+Before substantive work in desktop Codex or local ChatGPT Work, follow the
+mandatory one-off local onboarding gate in `../vera/references/local-onboarding.md`.
+Load the same local professional profile on every session. A verified paired
+lesson worker follows only its active lesson handoff; never recursively onboard
+it. Tutorial runs and their feedback stay local. Current user requests take
+precedence over saved preferences. This gate does not apply to Claude Cowork.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 # Plan The Answer
 
 For Vera's `quesito-legale-fiscale` journey, read and follow

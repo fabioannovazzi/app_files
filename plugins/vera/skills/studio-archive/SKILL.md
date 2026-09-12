@@ -3,6 +3,15 @@ name: studio-archive
 description: Use when Vera must create or resume a durable client engagement, import a source, journal, or support file, search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
 ---
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+Before substantive work in desktop Codex or local ChatGPT Work, follow the
+mandatory one-off local onboarding gate in `../vera/references/local-onboarding.md`.
+Load the same local professional profile on every session. A verified paired
+lesson worker follows only its active lesson handoff; never recursively onboard
+it. Tutorial runs and their feedback stay local. Current user requests take
+precedence over saved preferences. This gate does not apply to Claude Cowork.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 ## Surface routing
 
 In ChatGPT, continue with connected Gmail when its read tools are callable and

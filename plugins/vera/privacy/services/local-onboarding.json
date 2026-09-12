@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "service_id": "local-onboarding",
+  "display_name": "Local professional onboarding in native OpenAI desktop sessions",
+  "governed_paths": [
+    "scripts/local_onboarding.py",
+    "scripts/local_onboarding_case.py",
+    "scripts/onboarding_session_start.py",
+    "hooks/hooks.json",
+    "skills/vera/references/local-onboarding.md",
+    "skills/vera/references/tutorial-cases.md",
+    "skills/vera/SKILL.md",
+    "scripts/notarized_run_receipt.py",
+    "assets/onboarding"
+  ],
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "local-state-only",
+      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files.",
+      "implemented_by": [
+        "scripts/local_onboarding.py",
+        "skills/vera/references/local-onboarding.md"
+      ],
+      "on_violation": "Permission errors, corrupt profiles and missing enrolled records require local recovery; no server fallback or automatic reset."
+    },
+    {
+      "id": "onboarding-transmission-suppression",
+      "control": "Pending onboarding suppresses the normal version request and CR polling. Tutorial artifacts below the local-only marker suppress receipt stamping, including direct retry calls. The teaching instructions prohibit hosted feedback, interview and change-request calls. Ordinary host model/voice processing is not offline and is not a separate Vera API.",
+      "implemented_by": [
+        "scripts/onboarding_session_start.py",
+        "scripts/notarized_run_receipt.py",
+        "skills/vera/references/local-onboarding.md"
+      ],
+      "on_violation": "A tutorial receipt returns not_requested/local_onboarding before request construction; missing state leaves onboarding pending."
+    },
+    {
+      "id": "resumable-evidence-and-concurrency",
+      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication.",
+      "implemented_by": [
+        "scripts/local_onboarding.py"
+      ],
+      "on_violation": "Stale writes, wrong lesson handoffs or changed evidence are rejected without marking completion."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-12",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "fa26667566fd1fa76b2f4a03f8fb30a3dd39e7a38989d86bf6217a76b888c1d7"
+  }
+}

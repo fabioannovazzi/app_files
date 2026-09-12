@@ -1,0 +1,9 @@
+period,scenario,account,amount
+2026-01,Budget,Ricavi,100000
+2026-01,Actual,Ricavi,112000
+2026-01,Budget,Costi,60000
+2026-01,Actual,Costi,69000
+2026-02,Budget,Ricavi,110000
+2026-02,Actual,Ricavi,104500
+2026-02,Budget,Costi,65000
+2026-02,Actual,Costi,67000

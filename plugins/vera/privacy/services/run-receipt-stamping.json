@@ -42,7 +42,8 @@
         "The server rejects additional request fields, assigns its own timestamp, signs the complete retained record with Ed25519, stores only the minimal proof fields, applies request-size and rate limits, and fails closed when signing or verification keys are unavailable.",
         "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance.",
         "Retries retain the original UUID and version. A retry after finalization verifies the retained report against the sealed artifact manifest and writes supplementary receipts outside the immutable output tree.",
-        "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization."
+        "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization.",
+        "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior."
       ]
     }
   ],
@@ -83,9 +84,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-27",
+    "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "d8e57c8dc0489b2282f59eccf34e43a2199d03dcb0086538410d35de1343a492"
+    "source_fingerprint": "0647f3f08c4110121e4f70b4a28871918e2969ad998c3367213ec458de75387e"
   }
 }

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$PLUGIN_ROOT/scripts/check_for_update.py\"",
+            "command": "python3 \"$PLUGIN_ROOT/scripts/onboarding_session_start.py\"",
             "timeout": 8
           }
         ]

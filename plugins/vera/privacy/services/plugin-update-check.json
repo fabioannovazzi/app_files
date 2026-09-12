@@ -5,7 +5,9 @@
   "governed_paths": [
     ".codex-plugin/plugin.json",
     "hooks/hooks.json",
-    "scripts/check_for_update.py"
+    "scripts/check_for_update.py",
+    "scripts/onboarding_session_start.py",
+    "scripts/local_onboarding.py"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -26,15 +28,16 @@
       ],
       "controls": [
         "The trusted SessionStart hook starts from one fixed HTTPS manifest URL and uses a three-second timeout; a 24-hour local cache is used only when Codex supplies a plugin-data directory.",
-        "The request has no query string or request body and is not built from case or conversation content."
+        "The request has no query string or request body and is not built from case or conversation content.",
+        "The local onboarding SessionStart wrapper invokes this checker only after a completed local profile. Pending, missing or inaccessible onboarding suppresses both the version request and CR polling. No interview/profile field is passed to this service."
       ]
     }
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-08-14",
+    "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "3e009a5c7cbeb5e8593fb5b4252a3dbc94b2eb56018ce37fa723e54ea4578b64"
+    "source_fingerprint": "e4656870985cec6fbd378a54ff0a7aa790c841b3b813d0c42da39a199525dc57"
   }
 }

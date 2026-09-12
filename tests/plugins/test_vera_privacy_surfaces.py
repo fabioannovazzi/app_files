@@ -131,6 +131,7 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
     manifests = {manifest["service_id"]: manifest for manifest in _service_manifests()}
 
     assert set(manifests) == {
+        "local-onboarding",
         "managed-python-runtime",
         "plugin-update-check",
         "plugin-feedback",
