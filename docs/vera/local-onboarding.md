@@ -1,6 +1,6 @@
 # Vera local onboarding: implementation and acceptance
 
-The Vera 0.1.243 candidate introduces a mandatory one-off desktop introduction at the next
+Vera 0.1.243 introduces a mandatory one-off desktop introduction at the next
 Vera invocation for both new and existing users. A short Italian-default native
 voice conversation creates a user-confirmed professional profile, then teaches
 three or four relevant workflows through demonstration and guided practice.
@@ -85,7 +85,22 @@ creation or queued panels. Native local ChatGPT Work has not been exercised in
 this run; its packaged helper was executed against the same local state in a
 separate process, and host access must still be checked in a live Work session.
 
-A release package is not an installed plugin or a Published Marketplace version.
-Keep the public published-version registry unchanged until publication is
-actually verified. The synthetic acceptance profiles are separate from the
-professional's default profile and do not complete onboarding for the user.
+The synthetic acceptance profiles are separate from the professional's default
+profile and do not complete onboarding for the user. Publication does not certify
+a particular user's installed version or the remaining native checks above.
+
+## Verified publication on 12 September 2026
+
+[PR #608](https://github.com/fabioannovazzi/app_files/pull/608) merged as
+`383dbcfece557fcb2365f36545b52c1066643881` after all 20 CI checks passed.
+Production was deployed from that commit through Git; its Vera page and public
+Vera and Lucia archives matched the repository bytes.
+
+The [OpenAI submission](https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa5365e12688191acab8896eb855917)
+passed all 36 skill scans. After the user explicitly authorized the four publisher
+declarations and publication, OpenAI Platform showed **0.1.243 Published**.
+The [public directory](https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d)
+independently displayed **Version 0.1.243**. The exact uploaded ChatGPT archive
+is 5,832,182 bytes with SHA-256
+`9d9c02368d6f8c5ec5a5961add217871e6c21519bcfd331eb99cfd6e2122688d`.
+The publication registry and update notice now record that observed version.

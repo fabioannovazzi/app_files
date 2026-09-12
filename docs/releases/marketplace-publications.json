@@ -12,16 +12,16 @@
       "review_fingerprint_submission": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa3dc29b32c8191944c86a0c8ab4c87",
       "review_fingerprint_package_sha256": "84c5ad647a287d9fcd2b315afc6a642ec6ae825ee5a0914aab7b4cb0a5102e16",
       "package_review_note": "The post-publication replacement archive changes only privacy/hosted-services/plugin-update-check.json to cover the published version notice. Executable files and the Cowork archive are unchanged.",
-      "repository_package_sha256": "d55c4c279cf6427ef7156fad97bef97fed868bf48b84d56cadd3fc1d9d9d678c",
-      "repository_package_review_note": "The repository archive was rebuilt after Vera 0.1.242 was confirmed Published. Only the shared update-check privacy fingerprint differs from the previous repository archive; executable files and the Cowork archive are unchanged. This hash records the repository artifact, not a new Clara marketplace submission."
+      "repository_package_sha256": "80981143c4b7530172818e2e256295a4d523fcc1eca51d1387f175cc78688eb2",
+      "repository_package_review_note": "The repository archive was rebuilt after Vera 0.1.243 was confirmed Published. Only the shared update-check privacy fingerprint differs from the previous repository archive; executable files and the Cowork archive are unchanged. This hash records the repository artifact, not a new Clara marketplace submission."
     },
     "vera": {
-      "version": "0.1.242",
+      "version": "0.1.243",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-11",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa4216a85348191bafe7f35c08fd8a9",
-      "basis": "OpenAI Platform directly showed Vera 0.1.242 Published after all 36 skill checks passed, the user authorized the terms and publisher declarations, and Publish Version completed on 2026-09-11. The public directory independently displayed Version 0.1.242.",
-      "package_sha256": "c0b2234bce4dccb4afe8afa9432db8f944873097c7bb82cbf1153a3df993b2e8"
+      "observed_at": "2026-09-12",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa5365e12688191acab8896eb855917",
+      "basis": "OpenAI Platform directly showed Vera 0.1.243 Published after all 36 skill checks passed, the user authorized the terms and publisher declarations, and Publish Version completed on 2026-09-12. The public directory independently displayed Version 0.1.243.",
+      "package_sha256": "9d9c02368d6f8c5ec5a5961add217871e6c21519bcfd331eb99cfd6e2122688d"
     }
   }
 }
