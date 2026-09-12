@@ -1,6 +1,6 @@
 # Vera local onboarding: implementation and acceptance
 
-Vera 0.1.243 introduces a mandatory one-off desktop introduction at the next
+The Vera 0.1.243 candidate introduces a mandatory one-off desktop introduction at the next
 Vera invocation for both new and existing users. A short Italian-default native
 voice conversation creates a user-confirmed professional profile, then teaches
 three or four relevant workflows through demonstration and guided practice.
@@ -40,13 +40,14 @@ no onboarding scripts, assets, hook or instruction blocks.
 
 ## Verified on 12 September 2026
 
-- 31 onboarding tests pass, covering lifecycle, interruption, profile edits,
+- 32 onboarding tests pass, covering lifecycle, interruption, profile edits,
   shared discovery, concurrency, recovery, path boundaries, scoped/revoked worker
   handoffs, evidence identity, startup behavior, packaged Codex/Work reuse and
   execution of the real managed XML workflow. New helper coverage: 85.61%.
-- 507 existing/extended regression tests pass and two environment-dependent
+- 690 existing/extended regression tests pass and two environment-dependent
   tests are skipped across Codex/Cowork packaging, update hooks, privacy,
-  model-data reports, workflow registry and release alignment.
+  model-data reports, workflow registry, release alignment and the shared
+  business-planning workflow.
 - All three synthetic starters were exercised through the genuine managed
   contexts: XML inspection found one invoice (EUR 1,000 + 220 = 1,220);
   journal qualification/normalization accepted six rows and sampled two;

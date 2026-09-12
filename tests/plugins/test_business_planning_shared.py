@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -73,10 +74,20 @@ def test_registered_business_workflow_and_marketplace_cards_are_identical() -> N
     vera_root = REPO_ROOT / "plugins/vera"
     clara_root = REPO_ROOT / "plugins/clara"
     skill = "skills/business-planning/SKILL.md"
-    # Product-specific feedback routing does not change the shared analysis.
+    # Product onboarding and feedback happen outside the shared analysis.
+    # Compare every other byte so Vera cannot acquire a different planning angle.
     feedback_heading = "## Plugin Improvement Feedback"
     vera_workflow = (vera_root / skill).read_text().split(feedback_heading, 1)[0]
     clara_workflow = (clara_root / skill).read_text().split(feedback_heading, 1)[0]
+    vera_workflow, onboarding_blocks = re.subn(
+        r"<!-- VERA_OPENAI_ONBOARDING_BEGIN -->\n.*?"
+        r"<!-- VERA_OPENAI_ONBOARDING_END -->\n\n",
+        "",
+        vera_workflow,
+        count=1,
+        flags=re.DOTALL,
+    )
+    assert onboarding_blocks == 1
     assert vera_workflow == clara_workflow
     vera_cards = json.loads(
         (vera_root / "marketplace_skill_instructions.json").read_text()

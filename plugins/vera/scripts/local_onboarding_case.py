@@ -96,7 +96,9 @@ def prepare_case(
         else workflow
     )
     manifest = json.loads(
-        (Path(__file__).parents[1] / ".codex-plugin/plugin.json").read_text()
+        (Path(__file__).parents[1] / ".codex-plugin/plugin.json").read_text(
+            encoding="utf-8"
+        )
     )
     run = ledger.prepare_run(
         case,
@@ -117,7 +119,7 @@ def prepare_case(
         **started,
     }
     (case / "tutorial_case.json").write_text(
-        json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+        json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     return result
 
@@ -141,7 +143,7 @@ def main(argv: list[str] | None = None) -> int:
             sources=args.source,
             phase=args.phase,
         )
-        sys.stdout.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+        sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
     except (ValueError, OSError) as exc:
         sys.stdout.write(json.dumps({"status": "blocked", "error": str(exc)}) + "\n")

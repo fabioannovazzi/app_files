@@ -321,7 +321,9 @@ class Store:
                 )
                 # Exact skill IDs are membership facts; relevance remains model-led.
                 eligible = set(
-                    re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(), re.M)
+                    re.findall(
+                        r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M
+                    )
                 ) - {
                     "prompt-optimizer",
                     "deep-research-validator",
@@ -555,7 +557,7 @@ def main(argv: list[str] | None = None) -> int:
                     "Mutations require --revision from status and --input JSON"
                 )
             result = store.change(args.command, args.revision, _read(args.input))
-        sys.stdout.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+        sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
     except (OnboardingError, OSError) as exc:
         sys.stdout.write(

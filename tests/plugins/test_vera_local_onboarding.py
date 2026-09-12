@@ -607,3 +607,36 @@ def test_tutorial_case_requires_the_local_marker_and_actual_source(
         adapter.prepare_case(
             **args, sources=[ROOT / "plugins/vera/assets/onboarding/invoice.xml"]
         )
+
+
+def test_cli_preserves_unicode_profile_on_a_non_unicode_console(module, store):
+    import io
+    from contextlib import redirect_stdout
+
+    started = store.begin()
+    multilingual = {**profile(), "language": "ja", "work": "会計と予算管理"}
+    request = store.root / "profile-input.json"
+    request.write_text(
+        json.dumps({"confirmed_by_user": True, "profile": multilingual}),
+        encoding="utf-8",
+    )
+    buffer = io.BytesIO()
+    console = io.TextIOWrapper(buffer, encoding="ascii")
+    with redirect_stdout(console):
+        assert (
+            module.main(
+                [
+                    "--state-root",
+                    str(store.root),
+                    "profile",
+                    "--revision",
+                    str(started["revision"]),
+                    "--input",
+                    str(request),
+                ]
+            )
+            == 0
+        )
+    console.flush()
+    assert json.loads(buffer.getvalue())["profile"] == multilingual
+    assert json.loads(store.path.read_text(encoding="utf-8"))["profile"] == multilingual
