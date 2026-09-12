@@ -166,7 +166,7 @@ only when the request is specifically limited to their bounded output.
   that contract, sources, reasoning, and professional-judgment boundary.
 
 - `adversarial-opinion`: in `quesito-legale-fiscale`, apply
-  `references/adversarial-scope.md` from that workflow. Informational research
+  the shared `adversarial-scope.md` resolved by that workflow. Informational research
   ends after validation. An opinion on a concrete position or an explicit
   request includes the opposing examination, subject to user instructions.
   When required, develop, review and compare the strongest evidence-bound

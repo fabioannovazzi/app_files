@@ -1,4 +1,4 @@
-"""Bind and package Vera's model-written position and opposing opinion.
+"""Bind and package a model-written position and opposing opinion.
 
 Fixed checks enforce file provenance and declared review states. They never
 select authorities, invent objections, or decide which legal position wins.
@@ -17,15 +17,12 @@ from typing import Any
 
 __all__ = ["prepare_adversarial", "package_opinion", "verify_opinion", "main"]
 
-VERA_ROOT = Path(__file__).resolve().parents[1]
-MODULE_ROOT = VERA_ROOT / "modules" / "deep-research-validator"
-if not MODULE_ROOT.is_dir():
-    MODULE_ROOT = VERA_ROOT.parent / "deep-research-validator"
+MODULE_ROOT = Path(__file__).resolve().parents[1]
 _SPEC = importlib.util.spec_from_file_location(
-    "vera_adversarial_validation", MODULE_ROOT / "scripts" / "package_validation.py"
+    "shared_adversarial_validation", MODULE_ROOT / "scripts" / "package_validation.py"
 )
 if _SPEC is None or _SPEC.loader is None:
-    raise RuntimeError("Vera answer validator could not be loaded")
+    raise RuntimeError("Shared answer validator could not be loaded")
 _VALIDATOR = importlib.util.module_from_spec(_SPEC)
 sys.modules[_SPEC.name] = _VALIDATOR
 _SPEC.loader.exec_module(_VALIDATOR)

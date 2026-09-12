@@ -146,6 +146,7 @@
     "previdenza-inps": [["vera", "area-matters"]],
     "prompt-optimizer": [["lucia", "area-research"], ["vera", "area-research"]],
     "quesito-legale-fiscale": [["lucia", "area-research"], ["vera", "area-research"]],
+    "adversarial-opinion": [["lucia", "area-research"], ["vera", "area-research"]],
     "registro-imprese-sari": [["vera", "area-matters"]],
     "report-builder": [["vera", "area-analysis"]],
     "report-enti-locali": [["vera", "area-analysis"]],

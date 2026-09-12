@@ -23,7 +23,7 @@
       {
         "id": "question-and-prompt",
         "purpose": "Understand the professional question, define the answer and validation contract, write route-specific generation instructions, and review their semantic conformance",
-        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions. The canonical review record references the full prompt audit instead of duplicating that audit in each failed check, and it does not include a question-text preview. In Vera’s legal-question journey the original answer contract records a model-led adversarial_policy (required or not_required) and rationale from the requested result and explicit user instructions. Informational research finishes after validation; an opinion on a concrete position or an explicit opposing-opinion request includes the opposing examination. Research mode does not determine this policy. The preparation also records the user choice between an available installed OpenAI Deep Research skill and ordinary Vera research. The installed skill receives the same full prepared brief, answer contract, selected case material and curated source list in the current host; its public queries and selected source text may enter that host model context. This is distinct from the separately chosen manual ChatGPT handoff and does not itself select another account, grant connected-source access or create a new model API route.",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions. The canonical review record references the full prompt audit instead of duplicating that audit in each failed check, and it does not include a question-text preview. In the shared Vera and Lucia legal-question journey the original answer contract records a model-led adversarial_policy (required or not_required) and rationale from the requested result and explicit user instructions. Informational research finishes after validation; an opinion on a concrete position or an explicit opposing-opinion request includes the opposing examination. Research mode does not determine this policy. The preparation also records the user choice between an available installed OpenAI Deep Research skill and ordinary research. The installed skill receives the same full prepared brief, answer contract, selected case material and curated source list in the current host; its public queries and selected source text may enter that host model context. This is distinct from the separately chosen manual ChatGPT handoff and does not itself select another account, grant connected-source access or create a new model API route.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -85,10 +85,10 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f115d982a2db607b8c06a7a53e867fa1381c55dc31423011fc258fa692113c01"
+    "source_fingerprint": "434a9dd38bd9d85ebf328c9a44b0c46b1cbbd8f7b088e83380a453e619a900f1"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/quesito-legale-fiscale/references/adversarial-scope.md",
-    "plugins/vera/skills/prompt-optimizer/references/research-choice.md"
+    "plugins/deep-research-validator/skills/deep-research-validator/references/adversarial-scope.md",
+    "plugins/deep-research-validator/skills/deep-research-validator/references/research-choice.md"
   ]
 }

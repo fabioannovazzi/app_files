@@ -24,6 +24,9 @@ attualmente pubbliche sono:
   in una ricerca con perimetro, fonti e verifiche definite.
 - **Validazione ricerca** — Controlla le affermazioni rispetto alle fonti
   citate e prepara il materiale consolidato.
+- **Parere contrapposto** — Sviluppa e verifica la posizione contraria a un
+  parere concreto, oppure un risultato negativo o limitato dalle evidenze,
+  e confronta le conclusioni per la revisione dell’avvocato.
 - **Comunicazione professionale** — Decide se una novità merita di essere
   comunicata e prepara email, circolari, articoli, post, FAQ, alert e visuali
   verificabili per la revisione dell’avvocato.
@@ -44,6 +47,13 @@ Risposta a quesiti legali e fiscali è una skill di orchestrazione: usa quei due
 componenti come fasi separate e prepara la risposta tra le due. Non crea un
 terzo workstream, non duplica gli artefatti e non cambia le destinazioni dei
 dati.
+
+Lo stesso componente Deep Research Validator contiene anche il metodo e il
+codice del parere contrapposto. La ricerca informativa termina dopo la
+validazione; un parere su una posizione concreta o una richiesta esplicita
+include il contrapposto, salvo istruzioni di esclusione. Dopo la preparazione,
+Lucia propone il plugin Deep Research quando è disponibile nella sessione
+oppure la ricerca ordinaria. Questa scelta non determina il contrapposto.
 
 Comunicazione professionale e Presenza digitale riusano la stessa macchina
 canonica di Vera per evidenze, review, rendering, preview, hash e packaging, ma

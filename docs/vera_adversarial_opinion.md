@@ -1,4 +1,4 @@
-# Vera adversarial opinion
+# Shared Vera and Lucia adversarial opinion
 
 ## Accepted behavior
 - Informational legal/tax/compliance research follows preparation, research and validation. It does not automatically generate a counter-opinion.
@@ -10,10 +10,10 @@
 - Keep a negative-result document concise. An evidence-limited result identifies the missing decisive evidence and the unresolved question; preserve its search and review records without manufacturing an opposing case.
 
 ## Implementation
-1. Add a dedicated Vera adversarial-opinion skill and a Vera-specific execution reference describing the full exercise, same-engagement file lifecycle, research, and model-led judgments.
+1. Use product wrappers for the shared adversarial-opinion skill and a shared execution reference describing the full exercise, same-engagement file lifecycle, research, and model-led judgments.
 2. Record `adversarial_policy` (`required` or `not_required`) and `adversarial_rationale` from model-led scope review. Only the required path keeps original validation pending for the opposing stage. The ordinary path can complete validation and deliver without a combined opinion package.
-3. Add an internal prepare/package/verify helper under Vera, reusing deep-research-validator. Bind the exact original package, counter-opinion review, and comparison; reuse current validation for both documents, enforce same-run paths and non-stale artifacts, and render a localized final delivery index. Code checks shape, exact hashes and declared statuses only.
-4. Update the Vera router, workflow catalog/registry, release projections, public process explanation in five languages, and function-specific data-path manifests.
+3. Keep one internal prepare/package/verify helper in deep-research-validator for both products. Bind the exact original package, counter-opinion review, and comparison; reuse current validation for both documents, enforce same-run paths and non-stale artifacts, and render a localized final delivery index. Code checks shape, exact hashes and declared statuses only.
+4. Update the Vera and Lucia routers, workflow catalogs, release projections, public process explanation in five languages, and function-specific data-path manifests.
 5. Verify synthetic complete, no-counterposition, limited-evidence, stale-input, invalid-source, missing-stage, and correction cases; exercise packaged CLIs as well as focused regressions and required release gates.
 6. Rebuild canonical affected products and downloadable packages, merge through green CI, deploy through Git, verify live pages and exact ZIP hashes, complete publication if authorized tools permit, and remove this task's branch/worktree. Preserve pre-existing unrelated work.
 
@@ -43,7 +43,7 @@ future usefulness, or performance on live client disputes.
 
 ## Scope regression cases
 
-`plugins/vera/evals/adversarial_scope_cases.json` records representative intent
+`plugins/deep-research-validator/evals/adversarial_scope_cases.json` records representative intent
 cases for model-led review, including informational tax-credit research,
 concrete opinions, explicit overrides, ambiguous wording and scope changes.
 It is not a runtime keyword classifier. Expected decisions are reviewed examples,
@@ -54,3 +54,20 @@ ordinary validation through both ordinary research and Deep Research, without
 phase folders or an opposing-delivery dependency; invoking opposing preparation
 with that policy is rejected without creating an adversarial run. Existing
 tests retain the required opposing stage independently of validation outcome.
+
+## Shared implementation in Vera and Lucia
+
+The single Python implementation is
+`plugins/deep-research-validator/scripts/adversarial_opinion.py`. Both products
+embed that existing component and invoke it through their managed launcher
+with `--module deep-research-validator`. There is no product-local copy of the
+helper. The component also owns the full opposing method, scope policy,
+research-mode choice and question-to-answer journey. Product wrappers preserve
+Vera onboarding and reporting and Lucia lawyer responsibilities and language.
+
+The existing shared legal-question, Prompt Optimizer and opposing-opinion pages
+explain both products. Lucia links those pages from its research directory;
+the origin parameter preserves Lucia navigation and planner wording. No second
+HTML implementation is created. The source privacy review covers the shared
+helper and both product adapters; public research and selected model-context
+boundaries remain explicit on the shared function pages.

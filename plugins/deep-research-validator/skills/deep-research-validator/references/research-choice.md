@@ -1,10 +1,10 @@
 # Choose how to research the answer
 
-Use this handoff for Vera's `quesito-legale-fiscale` journey. It changes the
+Use this handoff for the invoking product's `quesito-legale-fiscale` journey. It changes the
 second stage, research and answer generation. Validation follows both routes;
 the adversarial stage follows only when the separately recorded
 `adversarial_policy` is `required`. Apply
-`../../quesito-legale-fiscale/references/adversarial-scope.md` independently of
+`adversarial-scope.md` independently of
 the research-mode choice.
 
 ## One choice after preparation
@@ -19,14 +19,14 @@ When available, ask once in the conversation language, using an available and
 permitted native question tool or ordinary chat:
 
 > Ho preparato il quesito. Vuoi svolgere la ricerca e la stesura della risposta
-> con Deep Research, oppure proseguire con la ricerca ordinaria di Vera?
+> con Deep Research, oppure proseguire con la ricerca ordinaria?
 
-Options: **Deep Research** / **Ricerca ordinaria di Vera**. In English:
+Options: **Deep Research** / **Ricerca ordinaria**. In English:
 
 > The question is prepared. Would you like Deep Research to research and draft
-> the answer, or continue with Vera's usual research?
+> the answer, or continue with ordinary research?
 
-Options: **Deep Research** / **Vera's usual research**. Localize the same choice
+Options: **Deep Research** / **ordinary research**. Localize the same choice
 in French, German or Spanish. Do not promise greater accuracy, a particular
 model, a fixed duration or price. Explain the two routes only as needed.
 
@@ -43,12 +43,12 @@ Do not make the choice a permanent preference for unrelated future matters.
   the curated source list and the already selected case material into that
   research. Keep the confirmed jurisdiction, audience, language, scope and
   source restrictions. Ask only for material information still missing; do
-  not repeat Vera's intake. The user's contracted artifact and length take
+  not repeat the completed intake. The user's contracted artifact and length take
   precedence over the research skill's default report format and length.
   Use only available, authorized sources and tools. Do not create a new task,
   change models or settings, or transfer the case to another account merely
   because this skill is selected.
-- **Vera's usual research:** record `generation_route: codex_direct`, generate
+- **ordinary research:** record `generation_route: codex_direct`, generate
   from the same brief with available source tools, and continue the journey.
 
 Retain the actual generated answer and source record with the answer contract.
@@ -72,7 +72,7 @@ separate ChatGPT handoff. Do not silently relabel ordinary research as Deep
 Research or switch to another account.
 
 `chatgpt_deep_research` remains the separately chosen ChatGPT-window route
-described in `../SKILL.md`. Its manual handoff and destination-account choice
+described in the resolved Prompt Optimizer component skill. Its manual handoff and destination-account choice
 do not apply merely because the installed plugin runs in the current host.
 Do not claim a native ChatGPT Deep Research job was started, monitored or
 retrieved without a callable tool that actually performed that operation.

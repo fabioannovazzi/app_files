@@ -88,6 +88,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("deep-research-validator", "inspect_document.py"),
     ("deep-research-validator", "inspect_sources.py"),
     ("deep-research-validator", "package_validation.py"),
+    ("deep-research-validator", "adversarial_opinion.py"),
     ("previdenza-inps", "register_portal_export.py"),
     ("previdenza-inps", "capture_portal_snapshot.py"),
     ("previdenza-inps", "inventory_case.py"),

@@ -211,7 +211,7 @@
           <div class="function-model-data__body function-model-data__paragraphs">
             ${text.modelDataConclusion ? `<h3 class="function-model-data__conclusion">${text.modelDataConclusion}</h3>` : ""}
             ${modelDataParagraphs.map((paragraph) => `<p class="function-model-data__copy">${paragraph}</p>`).join("")}
-            ${page.product === "Vera" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="https://mparanza.com/data-handling?lang=${language}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
+            ${page.product === "Vera" && params.get("from") !== "lucia" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="https://mparanza.com/data-handling?lang=${language}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
           </div>
         </div>
       </section>

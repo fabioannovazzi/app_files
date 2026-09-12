@@ -705,6 +705,15 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     )
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "prompt-optimizer", component_root)
+    shared_references = Path(
+        "plugins/deep-research-validator/skills/deep-research-validator/references"
+    )
+    (tmp_path / shared_references).mkdir(parents=True)
+    for reference in ("adversarial-scope.md", "research-choice.md"):
+        shutil.copy2(
+            ROOT / shared_references / reference,
+            tmp_path / shared_references / reference,
+        )
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
         shared_assurance,

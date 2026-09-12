@@ -16,3 +16,11 @@ command. Do not paraphrase, shorten, fork, or replace the component workflow.
 Lucia's public experience and deliverables are in Italian. Preserve the
 component's rule that language and jurisdiction are separate, and let it inspect
 other-language sources whenever the legal framework requires them.
+
+For the complete `quesito-legale-fiscale` journey, resolve the shared validator
+module at `../../modules/deep-research-validator` from this skill directory, or
+`../../../deep-research-validator` in repository source. Read its
+`skills/deep-research-validator/references/research-choice.md` and follow it
+after preparing the question and before finalizing the generation route and
+semantic review. Reuse a choice already made for this answer. This does not
+turn a preparation-only request into a full research assignment.

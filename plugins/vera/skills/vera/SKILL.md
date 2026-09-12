@@ -465,113 +465,15 @@ stages for that contribution; do not run the client-bound modules again.
 Within `quesito-legale-fiscale`, adversarial examination applies to an opinion
 on a concrete position or an explicit request for an opposing opinion.
 Informational legal or fiscal research ends after validation. Follow
-`../quesito-legale-fiscale/references/adversarial-scope.md` for this model-led
+the shared `adversarial-scope.md` resolved by `../quesito-legale-fiscale/SKILL.md` for this model-led
 intent decision. This does not add a counter-opinion to studio communications
 or other registered workflows.
 
-1. Route the question internally through `prompt-optimizer`. Complete only the
-   material intake, jurisdiction confirmation, source curation, answer
-   contract, generation instructions, model-led prompt-to-question and prompt-
-   to-contract conformance review, and deterministic record/shape validation.
-   The inspection layer does not decide whether angle or jurisdiction
-   confirmation is needed; ask only when semantic review finds a consequential
-   ambiguity.
-2. Write `answer_contract.json` before generation. For `quesito-legale-fiscale`,
-   follow that scope reference and record `adversarial_policy` (`required` or
-   `not_required`) with `adversarial_rationale` in the original contract.
-   Respect explicit user instructions. Do not infer this policy from tax/legal
-   keywords, document labels, the research mode or the validation outcome.
-   Keep generation route separate from document type:
-   - `generation_route` is `codex_direct`, `deep_research_plugin`,
-     `chatgpt_deep_research`, or `external_document`;
-   - `document_type` is the requested answer artifact, such as a research
-     report, legal memo, one-page letter, response letter, checklist, or
-     counsel brief.
-   Infer the document type from the request. For `quesito-legale-fiscale`,
-   follow `../prompt-optimizer/references/research-choice.md`: after preparing
-   the question, offer the available OpenAI Deep Research plugin or ordinary
-   Vera research before finalizing the route. Reuse an explicit choice for
-   this answer; otherwise wait for it before generation.
-3. Use `deep_research_plugin` when the user selects the installed OpenAI
-   `deep-research` skill. Read and follow that skill in the current host with
-   the prepared brief, answer contract and selected sources, then resume
-   validation. Use `codex_direct` for the ordinary route. Both routes retain
-   the generated answer, source record and the same answer contract.
-4. Use `chatgpt_deep_research` for a separately chosen native ChatGPT Deep
-   Research handoff. This is distinct from the installed plugin route.
-   Present one concise handoff containing:
-   - the complete text of `optimized_prompt.md`, or a direct local link;
-   - the complete contents of `source_domains_comma.txt`;
-   - the `answer_contract.json` document type and output requirements;
-   - a model-led recommendation to restrict research to the listed sites or
-     prioritize them while allowing broader web research.
-5. Choose the site policy from the confirmed framework, objective, source
-   posture, and issue—not from keywords or a deterministic classifier. Ask the
-   user only when competing policies would materially change the professional
-   result and the confirmed posture does not resolve the choice.
-6. Keep the separate ChatGPT handoff explicit. Vera cannot claim to start,
-   monitor, interrupt, or retrieve a native run unless a callable host tool
-   expressly provides that capability. End with one instruction to return the
-   completed answer in the same conversation as Markdown, text, HTML, readable
-   PDF, or DOCX. Do not ask the user to restate confirmed context.
-7. When a generated or external answer is available, route it through
-   `deep-research-validator` with the same `answer_contract.json`. The validator
-   applies to short letters and other professional documents as well as
-   research reports. Only when `adversarial_policy` is `required`, package the
-   original in `position/` beneath the validation run and keep that run open for
-   the adversarial stage. Otherwise use the ordinary validator packaging and
-   finish the reviewed-answer journey without an adversarial package.
-8. Keep the validation dimensions explicit and separate:
-   - mechanical observations: document/source access, exact identifier
-     resolution, exact passage presence in the specifically cited source
-     snapshot, and record shape;
-   - model-led source identity and semantic support: whether the captured item
-     is the authority actually cited and whether it entails, narrows, qualifies,
-     or contradicts the claim;
-   - model-led reasoning: whether the conclusion follows from supported premises
-     and which intermediate premises are missing;
-   - professional judgment: legal applicability, materiality, competing
-     interpretations, strategy, and uncertain outcomes.
-   Mechanical observations must never decide semantic support. A structurally
-   passing audit does not certify legal correctness.
-9. Review answer-contract conformance and whether all material claims were
-   selected, independently from the individual claim assessments. Treat source,
-   support, qualification, time/modality, reasoning, and judgment issues with
-   their issue-specific actions rather than a single pass/fail label.
-10. Correct support or reasoning defects when the evidence permits. Mark
-   judgment-dependent conclusions for professional review rather than
-   presenting them as validated facts. Preserve the corrected document,
-   validation record and unresolved issues for the next stage. Recording a proposed fix is not correction: regenerate the
-   answer semantically and rerun packaging before it can be delivery-ready.
-   The packaging layer may reject mechanically contradictory review states—for
-   example a contradicted claim retained with no issue treatment, a rejected
-   claim marked ready, or a completed correction paired with a no-defect
-   outcome—but it must never assign the semantic support or reasoning status.
-
-11. For `quesito-legale-fiscale` with `adversarial_policy: required`, read and
-   follow `../adversarial-opinion/SKILL.md`
-   before delivery, independently of the original validation outcome. Use the
-   current model; model diversity is not required. Develop and review a
-   substantive opposing case, or a reasoned no-substantial-case/evidence-limited
-   result, and compare both positions for the professional. Keep this work
-   within the same validation run. Verify the combined `opinion_delivery.json`
-   with the documented helper before delivering the original, opposing result,
-   comparison and separate reviews. When local tooling is unavailable, perform
-   the substantive exercise in chat and state the missing durable evidence.
-   With `not_required`, deliver the reviewed answer, sources and limits and
-   complete the ordinary validation run; do not invoke the adversarial helper
-   or require `opinion_delivery.json`. Report only the stages actually run.
-
-If a selected Deep Research route is unavailable or fails, state the actual
-limitation and obtain the user's alternative route choice. Do not silently
-substitute ordinary research or move case material to another account. Follow
-the availability handling in `../prompt-optimizer/references/research-choice.md`.
-
-`quesito-legale-fiscale` does not create a third Studio Archive workstream or a
-new external data route. The preparation stage remains governed by the
-`prompt-optimizer` workstream record, and the answer-review stage remains
-governed by the `deep-research-validator` workstream record, including the
-adversarial research, opposing review and final comparison.
+Read `../quesito-legale-fiscale/SKILL.md` and follow its shared
+`answer-journey.md` completely. The canonical method covers preparation,
+research-mode choice, generation, original review and the conditional opposing
+examination. Report only stages actually performed. The preparation and answer
+review use separate Studio Archive runs; both opinions share the latter run.
 
 For a selected local workflow module that actually needs scripts, files, or MCP,
 resolve its root in this order:

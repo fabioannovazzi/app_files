@@ -9,11 +9,12 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+from zipfile import ZipFile
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / "plugins/vera/scripts/adversarial_opinion.py"
+SCRIPT = ROOT / "plugins/deep-research-validator/scripts/adversarial_opinion.py"
 
 
 def _load(name: str, path: Path) -> Any:
@@ -560,3 +561,76 @@ def test_cli_cannot_mutate_completed_run(
     assert result.returncode != 0
     assert "running state" in result.stderr
     assert (output / "opinion_progress.json").read_bytes() == before
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+@pytest.mark.parametrize(
+    "archive_suffix", ["plugin", "chatgpt-upload", "claude-plugin"]
+)
+def test_packaged_shared_opinion_reopens_completed_run(
+    tmp_path: Path, completed_case: tuple[Path, Path], product: str, archive_suffix: str
+) -> None:
+    """Each shipped host package must execute the same sealed-run verification."""
+    output, context = completed_case
+    extracted = tmp_path / f"{product}-{archive_suffix}"
+    archive_path = (
+        ROOT / "plugin_packages" / product / f"{product}-{archive_suffix}.zip"
+    )
+    with ZipFile(archive_path) as archive:
+        helper_names = [
+            name
+            for name in archive.namelist()
+            if name.endswith("scripts/adversarial_opinion.py")
+        ]
+        assert len(helper_names) == 1
+        assert helper_names[0].endswith(
+            "modules/deep-research-validator/scripts/adversarial_opinion.py"
+        )
+        archive.extractall(extracted)
+    before = (output / "opinion_delivery.json").read_bytes()
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(extracted / helper_names[0]),
+            "verify",
+            "--output-dir",
+            str(output),
+            "--client-engagement",
+            str(context),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (output / "opinion_delivery.json").read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "archive_suffix", ["plugin", "chatgpt-upload", "claude-plugin"]
+)
+def test_lucia_and_vera_package_the_identical_opinion_component(
+    archive_suffix: str,
+) -> None:
+    """Sharing means identical helper and method bytes, including Cowork projection."""
+
+    def component(product: str) -> dict[str, bytes]:
+        with ZipFile(
+            ROOT / "plugin_packages" / product / f"{product}-{archive_suffix}.zip"
+        ) as archive:
+            return {
+                name.split("modules/deep-research-validator/", 1)[1]: archive.read(name)
+                for name in archive.namelist()
+                if "modules/deep-research-validator/" in name
+            }
+
+    vera = component("vera")
+    lucia = component("lucia")
+
+    assert vera == lucia
+    assert "scripts/adversarial_opinion.py" in lucia
+    assert "skills/adversarial-opinion/SKILL.md" in lucia
+    assert "skills/deep-research-validator/references/answer-journey.md" in lucia
+    assert "skills/deep-research-validator/references/research-choice.md" in lucia

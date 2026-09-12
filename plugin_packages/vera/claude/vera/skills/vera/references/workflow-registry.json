@@ -338,9 +338,11 @@
     {
       "component_id": "deep-research-validator",
       "skills": [
+        "modules/deep-research-validator/skills/adversarial-opinion/SKILL.md",
         "modules/deep-research-validator/skills/deep-research-validator/SKILL.md"
       ],
       "python_entrypoints": [
+        "modules/deep-research-validator/scripts/adversarial_opinion.py",
         "modules/deep-research-validator/scripts/apply_review_edits.py",
         "modules/deep-research-validator/scripts/check_dependencies.py",
         "modules/deep-research-validator/scripts/inspect_document.py",

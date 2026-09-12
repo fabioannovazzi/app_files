@@ -1,5 +1,5 @@
 [run]
-include = plugins/vera/scripts/adversarial_opinion.py
+include = plugins/deep-research-validator/scripts/adversarial_opinion.py
 relative_files = True
 
 [report]

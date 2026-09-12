@@ -774,6 +774,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "## Required Questions" in full_workflow
     if plugin_name == "lucia":
         assert set(card_bodies) == {
+            "skills/adversarial-opinion/SKILL.md",
             "skills/studio-archive/SKILL.md",
             "skills/lucia/SKILL.md",
             "skills/quesito-legale-fiscale/SKILL.md",
@@ -2667,18 +2668,29 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if (
+                plugin_root.name == "deep-research-validator"
+                and skill_file.parent.name == "adversarial-opinion"
+            ):
+                assert "references/durable-opinion.md" in normalized_skill_text
+                assert "Compare and deliver" in normalized_skill_text
+                assert (
+                    "without local tools" in normalized_skill_text.lower()
+                    or "When local tools are unavailable" in skill_text
+                )
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name == "quesito-legale-fiscale"
             ):
                 assert "../prompt-optimizer/SKILL.md" in normalized_skill_text
                 assert "../deep-research-validator/SKILL.md" in normalized_skill_text
                 continue
-            if plugin_root.name == "vera" and (
+            if plugin_root.name in {"vera", "lucia"} and (
                 skill_file.parent.name == "adversarial-opinion"
             ):
-                assert "vera:quesito-legale-fiscale" in normalized_skill_text
-                assert "vera:deep-research-validator" in normalized_skill_text
-                assert "references/durable-opinion.md" in normalized_skill_text
+                assert "../quesito-legale-fiscale/SKILL.md" in normalized_skill_text
+                assert "../deep-research-validator/SKILL.md" in normalized_skill_text
+                assert "skills/adversarial-opinion/SKILL.md" in normalized_skill_text
                 assert "Plugin Improvement Feedback" in normalized_skill_text
                 continue
             if plugin_root.name in {"lucia", "vera"} and (

@@ -161,6 +161,7 @@
   };
 
   const appendReportNotes = () => {
+    if (params.get("from") === "lucia") return;
     document.querySelectorAll("[data-model-data-status]").forEach((section) => {
       if (section.querySelector("[data-model-data-report-note]")) return;
       const body = section.querySelector(".function-model-data__body");

@@ -27,7 +27,7 @@ LAWYER_PROFILED_WORKFLOWS = {
     "presenza-digitale-studio",
 }
 LUCIA_NATIVE_WORKFLOWS = {"apertura-pratica"}
-ORCHESTRATION_WORKFLOWS = {"quesito-legale-fiscale"}
+ORCHESTRATION_WORKFLOWS = {"quesito-legale-fiscale", "adversarial-opinion"}
 PUBLIC_WORKFLOWS = (
     SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 )
@@ -156,10 +156,15 @@ def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() 
     assert not (
         LUCIA_ROOT / "privacy" / "workstreams" / "quesito-legale-fiscale.json"
     ).exists()
-    assert "does not create a third client workstream" in workflow
+    assert "references/answer-journey.md" in workflow
+    shared = (
+        ROOT
+        / "plugins/deep-research-validator/skills/deep-research-validator/references/answer-journey.md"
+    ).read_text()
+    assert "does not create a third Studio Archive workstream" in shared
     assert "../prompt-optimizer/SKILL.md" in workflow
     assert "../deep-research-validator/SKILL.md" in workflow
-    assert "lucia:quesito-legale-fiscale -> lucia:prompt-optimizer" in workflow
+    assert "using the invoking" in shared and "product's namespace" in shared
 
 
 def test_lucia_native_matter_opening_uses_its_own_validator_contract() -> None:
@@ -619,6 +624,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
 
     canonical_labels = {
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
+        "adversarial-opinion": "Parere contrapposto",
         "prompt-optimizer": "Ottimizzazione prompt",
         "deep-research-validator": "Validazione ricerca",
         "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
@@ -638,6 +644,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     )
     website_keys = {
         "quesito-legale-fiscale": "module.question.title",
+        "adversarial-opinion": "module.adversarial.title",
         "prompt-optimizer": "module.prompt.title",
         "deep-research-validator": "module.research.title",
         "studio-archive": "module.archive.title",
@@ -654,6 +661,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     assert directory_labels == [
         canonical_labels["quesito-legale-fiscale"],
         canonical_labels["prompt-optimizer"],
+        canonical_labels["adversarial-opinion"],
         canonical_labels["deep-research-validator"],
         canonical_labels["studio-archive"],
         canonical_labels["apertura-pratica"],

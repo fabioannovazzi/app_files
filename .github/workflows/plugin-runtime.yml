@@ -64,10 +64,10 @@ jobs:
           --cov --cov-config=tests/plugin_adversarial.coveragerc
       - name: Check formatting, typing and security
         run: |
-          python -m black --check plugins/vera/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py
-          python -m isort --check-only plugins/vera/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/adversarial_opinion.py
-          python -m bandit -q plugins/vera/scripts/adversarial_opinion.py
+          python -m black --check plugins/deep-research-validator/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py
+          python -m isort --check-only plugins/deep-research-validator/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/deep-research-validator/scripts/adversarial_opinion.py
+          python -m bandit -q plugins/deep-research-validator/scripts/adversarial_opinion.py
           node --check static/shared/product-function-pages.js
 
   business-planning-decisions:

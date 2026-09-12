@@ -40,8 +40,9 @@ whole request semantically and select the narrowest registered workflow:
 
 | Outcome | Required route |
 | --- | --- |
-| A question to frame, an answer to plan, or research to start | Read `../prompt-optimizer/SKILL.md` completely and follow it. |
+| Preparation of the question or answer plan only, without executing research | Read `../prompt-optimizer/SKILL.md` completely and follow it. |
 | A legal, tax-law, or compliance question to take from the initial request to a reviewed answer | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
+| An opposing examination of a concrete position, or an explicit request for an opposing opinion | Read `../adversarial-opinion/SKILL.md` completely and follow the shared method. Informational research ends after validation; respect an instruction to omit the stage. |
 | An existing answer, opinion, memorandum, letter, or report to check | Read `../deep-research-validator/SKILL.md` completely and follow it. |
 | A legal or professional development to assess and turn into an email, circular, article, post, FAQ, alert, or visual | Read `../comunicazione-professionale/SKILL.md` completely and follow it. Do not duplicate its embedded answer-contract and claim-assurance stages. |
 | An informational law-firm website to create, refresh, review, preview, or publish after approval | Read `../presenza-digitale-studio/SKILL.md` completely and follow it. |
