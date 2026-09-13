@@ -18,7 +18,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 3
+POLICY_REVISION = 4
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
 # while readers are running. This is concurrency protection, not a sandbox.
@@ -114,16 +114,19 @@ def ready(selection: Any, path: Path, api: Any) -> bool:
     """Require the shared receipt, interpreter and all enabled recipe hashes."""
     try:
         receipt = _read(path / RECEIPT)
+        policy = _read(path.parent / POLICY)
         features = set(receipt.get("features", []))
         return bool(
             receipt
             and _features(selection) <= features
             and receipt["recipes"] == _recipes(selection.plugin_root, features)
-            and receipt["runtime_key"] == api.runtime_key()
             and api.runtime_python(path).is_file()
             and (path / "pyvenv.cfg").is_file()
+            and receipt["runtime_key"]
+            == policy.get("runtime_key")
+            == api.runtime_key(api.runtime_python(path))
         )
-    except (OSError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
         return False
 
 
@@ -225,10 +228,6 @@ def _install(
 
     previous = _read(path / RECEIPT)
     policy = _read(path.parent / POLICY)
-    if policy.get("runtime_key", api.runtime_key()) != api.runtime_key():
-        raise ValueError(
-            "Shared interpreter platform changed; explicit maintenance rebuild is required."
-        )
     if policy.get("revision", 0) > POLICY_REVISION:
         raise ValueError(
             "Update this plugin: the shared environment uses a newer runtime policy."
@@ -245,11 +244,22 @@ def _install(
         | set(previous.get("features", []))
     )
     recipes = _recipes(selection.plugin_root, features)
+    existing = (path / "pyvenv.cfg").is_file()
+    interpreter = (
+        str(api.runtime_python(path)) if existing else _base_python(path, api, run)
+    )
+    key = api.runtime_key(interpreter, runner=run)
+    if any(
+        record and record.get("runtime_key") != key for record in (policy, previous)
+    ):
+        raise ValueError(
+            "Shared interpreter platform changed; explicit maintenance rebuild is required."
+        )
     _write(
         path.parent / POLICY,
         {
             "features": sorted(features),
-            "runtime_key": api.runtime_key(),
+            "runtime_key": key,
             "revision": POLICY_REVISION,
             "recipes": recipes,
         },
@@ -257,23 +267,7 @@ def _install(
     # Invalidate before any package mutation. Failed setup remains explicitly
     # unavailable and is repaired by the next serialized install, never reused.
     (path / RECEIPT).unlink(missing_ok=True)
-    if not (path / "pyvenv.cfg").is_file():
-        try:
-            interpreter = api._python312_executable(run, allow_uv=False)
-        except ValueError as error:
-            if "require CPython 3.12" not in str(error):
-                raise
-            import importlib.util
-
-            bootstrap_path = Path(__file__).with_name("_python_bootstrap.py")
-            spec = importlib.util.spec_from_file_location(
-                "mparanza_python_bootstrap", bootstrap_path
-            )
-            if spec is None or spec.loader is None:
-                raise ValueError("Packaged Python bootstrap is unavailable")
-            bootstrap = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(bootstrap)
-            interpreter = bootstrap.provision(path.parent, run)
+    if not existing:
         result = run(
             [interpreter, "-m", "venv", "--without-pip", str(path)],
             capture_output=True,
@@ -283,6 +277,10 @@ def _install(
         )
         if result.returncode:
             return False, path, api._process_detail(result)
+        if api.runtime_key(api.runtime_python(path), runner=run) != key:
+            raise ValueError(
+                "Created shared interpreter does not match selected Python."
+            )
     pip, environment, detail = api._bootstrap_pip(path, runner=run)
     if pip is None:
         return False, path, detail
@@ -348,8 +346,28 @@ def _install(
             "schema_version": 1,
             "features": sorted(features),
             "recipes": recipes,
-            "runtime_key": api.runtime_key(),
+            "runtime_key": key,
             "installed_distributions": api._resolved_dependencies(path),
         },
     )
     return True, path, f"Shared Mparanza runtime installed at {path}"
+
+
+def _base_python(path: Path, api: Any, run: Any) -> str:
+    """Discover or provision the cold-start interpreter before recording identity."""
+    try:
+        return api._python312_executable(run, allow_uv=False)
+    except ValueError as error:
+        if "require CPython 3.12" not in str(error):
+            raise
+        import importlib.util
+
+        bootstrap_path = Path(__file__).with_name("_python_bootstrap.py")
+        spec = importlib.util.spec_from_file_location(
+            "mparanza_python_bootstrap", bootstrap_path
+        )
+        if spec is None or spec.loader is None:
+            raise ValueError("Packaged Python bootstrap is unavailable")
+        bootstrap = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(bootstrap)
+        return bootstrap.provision(path.parent, run)

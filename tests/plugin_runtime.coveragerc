@@ -1,5 +1,7 @@
 [run]
-include = */plugins/vera/scripts/_managed_python_runtime.py
+include =
+    */plugins/vera/scripts/_managed_python_runtime.py
+    */plugins/vera/scripts/_shared_python_runtime.py
 
 [report]
 show_missing = True

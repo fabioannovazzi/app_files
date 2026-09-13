@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 import sys
+import sysconfig
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -376,23 +377,56 @@ def _load_module_from_path(name: str, path: Path):
 
 @pytest.fixture(scope="module")
 def extracted_clara_plugin(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """Extract the configured Clara package once for installed-runtime tests."""
+    """Extract Clara with a temporary runtime using only test dependencies."""
 
     builder = load_builder()
     package = {item.plugin: item for item in builder.load_packages()}["clara"]
     extraction_root = tmp_path_factory.mktemp("extracted_clara_package")
     with ZipFile(package.output_zip) as archive:
         archive.extractall(extraction_root)
-    return extraction_root / package.package_root / "plugins" / "clara"
+    root = extraction_root / package.package_root / "plugins" / "clara"
+    runtime = _load_module_from_path(
+        "clara_package_test_runtime", root / "scripts/_managed_python_runtime.py"
+    )
+    shared = runtime._shared_runtime()
+    target = extraction_root / "runtime/venv"
+    subprocess.run(
+        [sys.executable, "-m", "venv", "--without-pip", str(target)], check=True
+    )
+    site = target / (
+        "Lib/site-packages" if os.name == "nt" else "lib/python3.12/site-packages"
+    )
+    # These package/import tests already use the suite's installed dependencies.
+    # Share that site directory, never repository source or the user's runtime.
+    # Real recipe installation is covered by the cold-start integration suite.
+    (site / "test_dependencies.pth").write_text(
+        sysconfig.get_path("purelib") + "\n", encoding="utf-8"
+    )
+    (target.parent / "runtime.lock").write_bytes(b"1")
+    (site / "_mparanza_runtime_guard.py").write_text(shared.GUARD, encoding="utf-8")
+    (site / "00_mparanza_runtime.pth").write_text(
+        "import _mparanza_runtime_guard\n", encoding="utf-8"
+    )
+    receipt = {
+        "features": ["core"],
+        "recipes": shared._recipes(root, {"core"}),
+        "revision": shared.POLICY_REVISION,
+        "runtime_key": runtime.runtime_key(runtime.runtime_python(target)),
+    }
+    (target / shared.RECEIPT).write_text(json.dumps(receipt), encoding="utf-8")
+    (target.parent / shared.POLICY).write_text(json.dumps(receipt), encoding="utf-8")
+    return root
 
 
-def isolated_plugin_env() -> dict[str, str]:
+def isolated_plugin_env(plugin_root: Path) -> dict[str, str]:
     """Return an environment that cannot borrow repository Python paths."""
 
     env = os.environ.copy()
     env.pop("PYTHONPATH", None)
     env.pop("PYTHONHOME", None)
     env["PYTHONNOUSERSITE"] = "1"
+    env["MPARANZA_RUNTIME_ROOT"] = str(plugin_root.parents[2] / "runtime")
+    env.pop("MPARANZA_RUNTIME_INSTALLING", None)
     return env
 
 
@@ -1765,7 +1799,7 @@ def test_extracted_clara_chart_components_import_without_repository_paths(
     result = subprocess.run(
         [sys.executable, str(runner_path), "--help"],
         cwd=tmp_path,
-        env=isolated_plugin_env(),
+        env=isolated_plugin_env(extracted_clara_plugin),
         capture_output=True,
         check=False,
         text=True,
@@ -1835,7 +1869,7 @@ def test_extracted_clara_dataset_intake_keeps_first_upload_unreviewed(
             str(output_dir),
         ],
         cwd=tmp_path,
-        env=isolated_plugin_env(),
+        env=isolated_plugin_env(extracted_clara_plugin),
         capture_output=True,
         check=False,
         text=True,
@@ -1883,7 +1917,7 @@ def test_extracted_clara_semantic_acceptance_cli(
             str(output_path),
         ],
         cwd=tmp_path,
-        env=isolated_plugin_env(),
+        env=isolated_plugin_env(extracted_clara_plugin),
         capture_output=True,
         check=False,
         text=True,
@@ -1946,7 +1980,7 @@ def test_extracted_clara_attaches_refresh_to_existing_semantic_version(
             str(output_path),
         ],
         cwd=tmp_path,
-        env=isolated_plugin_env(),
+        env=isolated_plugin_env(extracted_clara_plugin),
         capture_output=True,
         check=False,
         text=True,
@@ -2003,7 +2037,7 @@ def test_extracted_clara_renders_known_period_comparison(
             "data_and_render",
         ],
         cwd=tmp_path,
-        env=isolated_plugin_env(),
+        env=isolated_plugin_env(extracted_clara_plugin),
         capture_output=True,
         check=False,
         text=True,
@@ -2076,7 +2110,7 @@ def test_extracted_clara_renders_distribution_with_variant(
             "--include-variants",
         ],
         cwd=tmp_path,
-        env=isolated_plugin_env(),
+        env=isolated_plugin_env(extracted_clara_plugin),
         capture_output=True,
         check=False,
         text=True,

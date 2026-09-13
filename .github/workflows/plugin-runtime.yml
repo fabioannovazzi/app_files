@@ -185,6 +185,28 @@ jobs:
           --cov --cov-config=tests/plugin_sales_plan.coveragerc
           --cov-report=term-missing
 
+  shared-runtime-launchers:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest
+      - name: Verify shared interpreter identity and all product launchers
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_single_shared_runtime.py
+          tests/plugins/test_shared_runtime_launchers.py
+          tests/plugins/test_python_bootstrap.py
+
   managed-runtime-quality:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -199,7 +221,7 @@ jobs:
       - name: Verify generated Vera workflow metadata
         run: python scripts/build_vera_workflow_registry.py --check
       - name: Exercise installation, concurrency and failure recovery
-        run: python -m pytest --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py --cov --cov-config=tests/plugin_runtime.coveragerc --cov-report=term-missing
+        run: python -m pytest --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py tests/plugins/test_single_shared_runtime.py tests/plugins/test_shared_runtime_launchers.py tests/plugins/test_python_bootstrap.py --cov --cov-config=tests/plugin_runtime.coveragerc --cov-report=term-missing
       - name: Check changed plugin kernels without the application's error suppression
         run: python -m mypy --config-file=tests/plugin_runtime.mypy.ini
       - name: Reject medium and high severity findings in changed plugin kernels

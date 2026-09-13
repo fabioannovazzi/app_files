@@ -36,7 +36,7 @@
       "controls": [
         "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
         "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
-        "Readiness validates the common recipe, enabled features and supported Python runtime before use.",
+        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled, verifies CPython 3.12 and its platform against both receipt and policy, and validates common recipes and enabled features independently of the initial launcher.",
         "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
       ]
     },
@@ -84,9 +84,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "1cd4b0dfe9499d535609f04dfc4506801fda92c81805449bde073b456c1a0c24"
+    "source_fingerprint": "9e6ce6c1d451a37ea78b5e9b10afe4ac0af81f27344e4e3f0508ed56ff4fec64"
   }
 }

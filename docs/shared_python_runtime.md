@@ -45,3 +45,25 @@ platforms are macOS Intel/Apple Silicon, Windows x64/ARM64, and Linux x64/ARM64.
 Internet access and writable user storage are required; failures report the
 actual download, checksum or storage error and can be retried. Native workflow
 compatibility still requires acceptance testing on each supported platform.
+
+## Launcher-independent interpreter identity (policy revision 4)
+
+For an existing environment, readiness and setup probe that environment's Python
+executable. They verify CPython 3.12 and compare its platform with both the ready
+receipt and feature policy. They do not infer native compatibility from the
+Python used to launch the command. On cold start, discovery or automatic
+provisioning selects Python first; its verified identity is recorded in policy,
+and the created venv is checked against that identity before installing packages.
+
+The identity probe uses `-I -S`: it ignores caller Python configuration and does
+not load site hooks, including the managed reader lease. This prevents a probe
+from deadlocking while setup owns the writer lock. Actual workflow processes
+still take the normal reader lease. An unavailable interpreter, wrong Python
+implementation/minor version, or recorded platform mismatch fails before receipt
+or policy mutation. A real platform change still requires explicit maintenance.
+
+Revision 4 updates the backend hash, so the first upgrade from revision 3 follows
+the existing serialized recipe-update path after active workflows finish, keeps
+the same interpreter and enabled OCR, and validates before restoring readiness.
+Deploy the three product packages together; older policies cannot downgrade it.
+No shared runtime is rebuilt merely because the launcher's platform differs.
