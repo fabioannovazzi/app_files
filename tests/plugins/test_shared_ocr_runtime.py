@@ -31,16 +31,15 @@ def load_runtime(name: str, path: Path) -> ModuleType:
 def successful_runner(
     command: list[str], **kwargs: Any
 ) -> subprocess.CompletedProcess[str]:
+    if "-I" in command and "-S" in command:
+        return subprocess.run(command, **kwargs)
     if "venv" in command:
+        subprocess.run(command, **kwargs)
         target = Path(command[-1])
         site = (
             target
             / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages"
         )
-        site.mkdir(parents=True)
-        (target / "pyvenv.cfg").write_text("test")
-        (target / "bin").mkdir()
-        (target / "bin/python").write_text("test")
         for name in ("PIL", "cv2", "paddleocr", "paddle"):
             folder = site / name
             folder.mkdir()
@@ -95,8 +94,12 @@ def test_managed_install_failure_returns_friendly_retry_message(
         CLARA_ROOT / "scripts" / "managed_ocr_runtime.py",
     )
 
-    def failed_runner(command: list[str], **_: Any) -> subprocess.CompletedProcess[str]:
-        return subprocess.CompletedProcess(command, 1, "", "network unavailable")
+    def failed_runner(
+        command: list[str], **kwargs: Any
+    ) -> subprocess.CompletedProcess[str]:
+        if "install" in command:
+            return subprocess.CompletedProcess(command, 1, "", "network unavailable")
+        return successful_runner(command, **kwargs)
 
     result = runtime.install_ocr_runtime(
         CLARA_ROOT / "requirements-ocr.txt",

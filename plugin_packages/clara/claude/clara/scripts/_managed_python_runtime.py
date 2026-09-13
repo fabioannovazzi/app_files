@@ -183,8 +183,42 @@ def requirements_fingerprint(selection: RuntimeSelection) -> str:
     return digest.hexdigest()[:16]
 
 
-def runtime_key() -> str:
-    """Return the Python ABI and platform key for native wheel compatibility."""
+def runtime_key(
+    interpreter: str | Path | None = None, *, runner: Runner = subprocess.run
+) -> str:
+    """Probe the selected interpreter; retain caller keys for legacy targets."""
+
+    if interpreter is not None:
+        # ABI/platform are mechanically verifiable interpreter properties.
+        # -I ignores host Python configuration; -S avoids site hooks and the
+        # managed reader lease, including while the installer holds its writer.
+        result = runner(
+            [
+                str(interpreter),
+                "-I",
+                "-S",
+                "-c",
+                "import json, sys, sysconfig; "
+                "print(json.dumps([sys.implementation.name, "
+                "list(sys.version_info[:2]), sysconfig.get_platform()]))",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        if result.returncode:
+            raise ValueError("Cannot verify the shared Python interpreter.")
+        try:
+            implementation, version, platform = json.loads(result.stdout)
+        except (ValueError, TypeError) as error:
+            raise ValueError("Invalid shared Python interpreter identity.") from error
+        if implementation != "cpython" or version != list(SUPPORTED_PYTHON):
+            raise ValueError("Shared runtime requires CPython 3.12.")
+        if not isinstance(platform, str) or not platform.strip():
+            raise ValueError("Invalid shared Python interpreter platform.")
+        platform = platform.replace("/", "-").replace("\\", "-")
+        return f"cpython-312-{platform}"
 
     implementation = "cpython-312"
     platform = sysconfig.get_platform().replace("/", "-").replace("\\", "-")

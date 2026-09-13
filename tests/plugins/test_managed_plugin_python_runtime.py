@@ -1226,3 +1226,52 @@ def test_windows_short_generation_installs_and_is_reused(
         "analyticsdata.v1beta.json",
     )
     assert len(str(representative)) < 260
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        ["cpython", [3, 9], "macosx-10.9-universal2"],
+        ["pypy", [3, 12], "linux-x86_64"],
+        ["cpython", [3, 12], ""],
+        ["cpython", [3, 12], None],
+        None,
+        {},
+        [],
+        "invalid",
+    ],
+)
+def test_selected_interpreter_identity_rejects_wrong_or_malformed_response(payload):
+    runtime = load_runtime()
+
+    def runner(command, **kwargs):
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    with pytest.raises(ValueError):
+        runtime.runtime_key("selected-python", runner=runner)
+
+
+def test_selected_interpreter_identity_reports_process_failure():
+    runtime = load_runtime()
+
+    def runner(command, **kwargs):
+        return subprocess.CompletedProcess(command, 1, "", "failed")
+
+    with pytest.raises(ValueError, match="Cannot verify"):
+        runtime.runtime_key("selected-python", runner=runner)
+
+
+def test_selected_interpreter_identity_ignores_launcher_and_python_environment(
+    tmp_path, monkeypatch
+):
+    runtime = load_runtime()
+    expected = runtime.runtime_key()
+    monkeypatch.setattr(
+        runtime.sysconfig, "get_platform", lambda: "other-launcher-platform"
+    )
+    monkeypatch.setenv("PYTHONHOME", str(tmp_path / "invalid-python-home"))
+    monkeypatch.setenv("PYTHONPATH", str(tmp_path / "invalid-python-path"))
+
+    actual = runtime.runtime_key(sys.executable)
+
+    assert actual == expected

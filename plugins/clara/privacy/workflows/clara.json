@@ -165,7 +165,8 @@
         "Only published shared requirements are installed, never requirements derived from client material or prompts.",
         "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
         "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
-        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision.",
+        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled. CPython 3.12 and its platform must match receipt and policy independently of the initial launcher; this probe transmits no data."
       ]
     },
     {
@@ -180,7 +181,8 @@
         "Only published shared requirements are installed, never requirements derived from client material or prompts.",
         "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
         "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
-        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision.",
+        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled. CPython 3.12 and its platform must match receipt and policy independently of the initial launcher; this probe transmits no data."
       ]
     },
     {
@@ -223,9 +225,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-09-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7cc8e5675ca4699728f5c3c5541f201713201fbb2c50e6ee07a6a237a50e76d0"
+    "source_fingerprint": "ba3d202a6a6bbaf1e7323de8f97922764594d5dae5995cf43c3abdc476499509"
   }
 }

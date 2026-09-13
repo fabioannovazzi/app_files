@@ -33,7 +33,7 @@ def fixture_runtime(tmp_path):
     )
     api = SimpleNamespace(
         _python312_executable=lambda runner, **kwargs: sys.executable,
-        runtime_key=lambda: "test-runtime",
+        runtime_key=lambda *args, **kwargs: "test-runtime",
         runtime_python=lambda p: p
         / ("Scripts/python.exe" if os.name == "nt" else "bin/python"),
         _bootstrap_pip=lambda p, runner: ([str(p / "bin/python"), "-m", "pip"], {}, ""),
@@ -287,3 +287,150 @@ def test_shared_recipe_covers_every_declared_component_requirement(product, feat
     recipe = requirement_lines(root / f"requirements-shared-{feature}.txt")
 
     assert declared <= recipe, sorted(declared - recipe)
+
+
+@pytest.mark.parametrize(
+    "launcher_platform", ["macosx-10.9-universal2", "win-arm64", "linux-x86_64"]
+)
+def test_ready_runtime_reused_despite_different_launcher_platform(
+    tmp_path, launcher_platform
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    receipt = (path / module.RECEIPT).read_bytes()
+    policy = (path.parent / module.POLICY).read_bytes()
+    calls.clear()
+    api.runtime_key = lambda interpreter=None, **kwargs: (
+        "test-runtime" if interpreter else "cpython-312-" + launcher_platform
+    )
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert calls == []
+    assert (path / module.RECEIPT).read_bytes() == receipt
+    assert (path.parent / module.POLICY).read_bytes() == policy
+
+
+@pytest.mark.parametrize("metadata", ["receipt", "policy", "both"])
+def test_actual_interpreter_mismatch_rejected_before_mutation(tmp_path, metadata):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    for name, file in [
+        ("receipt", path / module.RECEIPT),
+        ("policy", path.parent / module.POLICY),
+    ]:
+        if metadata in (name, "both"):
+            payload = json.loads(file.read_text())
+            payload["runtime_key"] = "cpython-312-other-architecture"
+            file.write_text(json.dumps(payload))
+    receipt = (path / module.RECEIPT).read_bytes()
+    policy = (path.parent / module.POLICY).read_bytes()
+    calls.clear()
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert not ready
+    assert "Shared interpreter platform changed" in detail
+    assert calls == []
+    assert (path / module.RECEIPT).read_bytes() == receipt
+    assert (path.parent / module.POLICY).read_bytes() == policy
+
+
+def test_cold_start_records_selected_interpreter_not_launcher(tmp_path):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    api.runtime_key = lambda interpreter=None, **kwargs: (
+        "selected-python312" if interpreter else "launcher-python39"
+    )
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert (
+        json.loads((path / module.RECEIPT).read_text())["runtime_key"]
+        == "selected-python312"
+    )
+    assert (
+        json.loads((path.parent / module.POLICY).read_text())["runtime_key"]
+        == "selected-python312"
+    )
+
+
+def test_recipe_upgrade_from_different_launcher_preserves_ocr(tmp_path):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    selection.requirements_files = [selection.plugin_root / "requirements-ocr.txt"]
+    assert module.ensure(selection, path, api, runner)[0]
+    selection.requirements_files = [selection.plugin_root / "requirements.txt"]
+    module.POLICY_REVISION += 1
+    api.runtime_key = lambda interpreter=None, **kwargs: (
+        "test-runtime" if interpreter else "launcher-python39"
+    )
+    (selection.plugin_root / "requirements-shared-core.txt").write_text("# updated\n")
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert sum("venv" in command for command in calls) == 1
+    assert json.loads((path / module.RECEIPT).read_text())["features"] == [
+        "core",
+        "ocr",
+    ]
+
+
+def test_cold_start_bootstrap_identity_is_probed_before_policy_is_written(
+    tmp_path, monkeypatch
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    source = tmp_path / "backend.py"
+    source.write_bytes(Path(module.__file__).read_bytes())
+    monkeypatch.setattr(module, "__file__", str(source))
+    (tmp_path / "_python_bootstrap.py").write_text(
+        "import sys\ndef provision(path, runner):\n    return sys.executable\n"
+    )
+
+    def absent(*args, **kwargs):
+        raise ValueError("Vera, Clara and Lucia require CPython 3.12.")
+
+    api._python312_executable = absent
+    probed = []
+
+    def identity(interpreter=None, **kwargs):
+        probed.append(interpreter)
+        assert interpreter is not None
+        if not path.exists():
+            assert not (path.parent / module.POLICY).exists()
+        return "bootstrap-python312"
+
+    api.runtime_key = identity
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert probed[0] == sys.executable
+    assert (
+        json.loads((path / module.RECEIPT).read_text())["runtime_key"]
+        == "bootstrap-python312"
+    )
+
+
+def test_wrong_cold_start_interpreter_does_not_create_environment_or_policy(tmp_path):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+
+    def wrong(*args, **kwargs):
+        raise ValueError("Shared runtime requires CPython 3.12.")
+
+    api.runtime_key = wrong
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert not ready
+    assert "requires CPython 3.12" in detail
+    assert not path.exists()
+    assert not (path.parent / module.POLICY).exists()
+    assert calls == []
