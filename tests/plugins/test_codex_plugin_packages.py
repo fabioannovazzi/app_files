@@ -2669,6 +2669,15 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
             if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "learn-with-vera"
+            ):
+                assert "Read `../vera/references/workflow-catalog.md`" in skill_text
+                assert "selected specialist skill completely" in normalized_skill_text
+                assert "complete execution contract" in normalized_skill_text
+                assert "local_onboarding_case.py" in skill_text
+                continue
+            if (
                 plugin_root.name == "deep-research-validator"
                 and skill_file.parent.name == "adversarial-opinion"
             ):
@@ -3716,8 +3725,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 33
-    assert core.count('class="module-row"') == 33
+    assert core.count(" data-module-link") == 34
+    assert core.count('class="module-row"') == 34
     assert core.count('data-jurisdiction-item="it"') == 9
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core

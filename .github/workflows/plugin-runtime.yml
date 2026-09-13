@@ -28,18 +28,18 @@ jobs:
       - name: Verify local profiles, native lesson handoffs and transmission suppression
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_vera_local_onboarding.py
+          tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
           tests/plugins/test_studio_archive_file_identity.py
           tests/plugins/test_vera_model_data_report.py
           tests/plugins/test_plugin_update_notifications.py
-          --cov=local_onboarding --cov=local_onboarding_case
+          --cov=local_teaching --cov=local_onboarding --cov=local_onboarding_case
           --cov=onboarding_session_start --cov-fail-under=80
       - name: Check onboarding code quality
         run: |
-          python -m black --check plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py tests/plugins/test_vera_local_onboarding.py
-          python -m isort --check-only plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py tests/plugins/test_vera_local_onboarding.py
-          python -m mypy --follow-imports=skip plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py
-          python -m bandit -q plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py
+          python -m black --check plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
+          python -m isort --check-only plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
+          python -m mypy --follow-imports=skip plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py
+          python -m bandit -q plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py
 
   adversarial-opinion:
     runs-on: ubuntu-latest

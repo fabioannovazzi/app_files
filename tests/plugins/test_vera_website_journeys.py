@@ -778,6 +778,9 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
     assert set(re.findall(r'data-vera-workflow="([^"]+)"', core)) == (
         set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
         - _catalog_workflow_names(
+            catalog, "Learning and discovery", "Professional workflows"
+        )
+        - _catalog_workflow_names(
             catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
         )
         - _catalog_workflow_names(
@@ -805,7 +808,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 33
+    expected_module_count = 34
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -909,6 +912,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         if (match := re.search(r"<h4[^>]*>([^<]+)</h4>", row)) is not None
     ]
     expected_labels = [
+        "Impara con Vera",
         "Apertura del fascicolo cliente",
         "Verifica antiriciclaggio del cliente",
         "Archiviazione e ricerca nel fascicolo cliente",
@@ -944,6 +948,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Sito dello studio",
     ]
     expected_runtime_labels = {
+        "module.learn.title": "Impara con Vera",
         "module.newClient.title": "Apertura del fascicolo cliente",
         "module.newClient.includes.data": "Estrazione dati fiscali",
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
@@ -969,6 +974,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "learn-with-vera": "Impara con Vera",
         "adeguati-assetti": "Adeguati assetti",
         "archive-organization": "Riordino della cartella cliente",
         "open-item-reconciliation": "Riconciliazione partite aperte",
@@ -1008,7 +1014,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 33
+    assert len(labels) == 34
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1541,7 +1547,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 33
+    expected_module_link_count = 34
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

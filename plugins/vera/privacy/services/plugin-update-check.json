@@ -7,7 +7,8 @@
     "hooks/hooks.json",
     "scripts/check_for_update.py",
     "scripts/onboarding_session_start.py",
-    "scripts/local_onboarding.py"
+    "scripts/local_onboarding.py",
+    "scripts/local_teaching.py"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -35,9 +36,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "953a79c129d54f4cd3aff175093f7df686a59152320c40793a6ca16a7a171596"
+    "source_fingerprint": "f0933e3b83f9ac189b5d5d1af611fa399b4bb921c264d3eaf6b5577b5149a14f"
   }
 }

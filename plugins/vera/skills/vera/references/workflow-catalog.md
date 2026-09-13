@@ -5,6 +5,16 @@ task; Vera selects the workflow. Use semantic judgment, then read the selected
 skill completely. Do not select from keywords or use a cross-cutting assurance
 skill to imitate a missing operational workflow.
 
+<!-- VERA_OPENAI_ONBOARDING_BEGIN -->
+## Learning and discovery
+
+- `learn-with-vera`: teach, show a real example, try together, revisit a practiced request or
+find out what Vera can do use `../learn-with-vera/SKILL.md`. It selects the actual
+operational workflow below and never replaces its execution or review contract.
+This teaching route is not itself an operational lesson. First onboarding keeps
+3–4 workflows; later sessions are repeatable with the same local profile.
+<!-- VERA_OPENAI_ONBOARDING_END -->
+
 ## Professional workflows
 
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
