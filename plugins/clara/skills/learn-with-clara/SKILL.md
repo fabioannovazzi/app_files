@@ -54,13 +54,49 @@ classification or an automatic daily greeting that interrupts ordinary work.
 
 Read `../clara/references/workflow-catalog.md` and the selected specialist skill
 completely. That current skill is the teaching source of truth. Read its current
-input, execution, review and host requirements before promising a demo. Build or
-select a small fictional case that actually exercises that workflow; use
+input, execution, review and host requirements before promising a demo. Reuse the prepared course for the selected workflow, then use its fictional facts
+for any requested real practice; use
 `../clara/references/tutorial-cases.md` for the product-specific
 starters. Other workflows require their own real supported inputs and execution.
-Do not substitute a prewritten report, mocked capability or unrelated easy
-workflow for the requested one. An unavailable host capability stays pending;
+Do not present the prepared specimen as a newly executed workflow. A mocked
+capability or unrelated easy workflow cannot replace the requested execution. An unavailable host capability stays pending;
 explain what is needed and retain the goal.
+
+## Prepared courses · 5–8 minutes
+
+Before authoring a new example, read `references/prepared-courses.md`. Every
+currently teachable Clara workflow has an authored local course: a fictional
+case, source preview, worked specimen, professional check, answer and optional
+practice. Use `scripts/local_courses.py list` from this exact installed product
+root, then `show` for the selected workflow and supported language. Select by
+meaning with the native model, never by a keyword classifier. Do not translate
+an unavailable course silently or borrow another product's course.
+
+Materialize the course once in a fresh folder beneath the active lesson's local
+files. Read its `teacher.md` and open `course.html` and `example.html` in the paired
+working chat. Reuse the authored content; adapt spoken pacing and emphasis to the
+user without regenerating the class. Its six steps total 6½ minutes including
+observation and conversation. Voice setup, external processing and optional
+practice have separate time. First onboarding still requires all 3–4 selected
+lessons and their real practice; do not count merely opened course files as demo,
+practice, professional approval or confirmed understanding.
+
+A prepared specimen is explicitly an authored synthetic example. An attached
+actual workflow output retains its separate provenance. Never claim either was
+newly executed. Explain the specimen promptly, then use the current specialist's
+real execution contract for the requested demonstration or practice. The case
+preview is not automatically a valid engine input or a sealed upstream handoff;
+use supplied runnable fixtures where available, otherwise prepare the supported
+input from the stated fictional facts inside the bound tutorial case. Do not
+invent missing source facts, approvals, receipts or external actions.
+
+If source fingerprints differ, stop reuse of that course and explain that it
+needs refresh. Read the current own-product specialist; a stale course cannot
+authorize a retired or foreign workflow. Keep the lesson pending where a required
+capability is unavailable. For normally hosted workflows the core lesson can
+inspect its prepared local brief or specimen, but never send tutorial content
+to a server or manufacture a completed hosted demonstration. A real hosted
+assignment starts only through the existing user-selected professional handoff.
 
 ## Native voice and two parallel threads
 

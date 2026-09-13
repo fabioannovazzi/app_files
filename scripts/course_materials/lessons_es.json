@@ -1,0 +1,381 @@
+{
+  "vera/adeguati-assetti": {
+    "title": "¿El procedimiento escrito se utiliza realmente?",
+    "goal": "Evaluar la organización de una empresa a partir de pruebas de funcionamiento y preparar mejoras revisables.",
+    "scenario": "El taller ficticio Arco tiene 18 empleados. Su procedimiento exige un informe de tesorería cada viernes. El expediente contiene el procedimiento, un informe de junio y un acta de julio que pide mayor frecuencia. Podrían existir otros informes fuera de lo entregado.",
+    "request": "Vera, ayúdame a entender si se utiliza la información de tesorería y qué debemos preguntar a la empresa.",
+    "scope": "Un solo proceso informativo. Este caso no permite concluir sobre toda la organización empresarial.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Prueba",
+      "Límite"
+    ],
+    "input_rows": [
+      [
+        "P1 · procedimiento § 3",
+        "Informe cada viernes; responsable de administración",
+        "Proceso previsto"
+      ],
+      [
+        "R1 · informe del 26 de junio",
+        "Saldo y pagos de la semana siguiente",
+        "Un periodo observado"
+      ],
+      [
+        "V1 · acta del 10 de julio",
+        "La dirección pide mayor frecuencia",
+        "No es un registro completo de envíos"
+      ]
+    ],
+    "basis": "P1 describe el diseño; R1 demuestra un informe; V1 documenta una petición, sin probar que todos los demás informes falten.",
+    "method": [
+      "Separa procedimientos, declaraciones y pruebas de funcionamiento. Cita la ubicación exacta de cada observación.",
+      "Compara la producción irregular con la explicación alternativa de un expediente incompleto. Formula la pregunta que permita distinguirlas.",
+      "Prepara hallazgo, consecuencia, acción propuesta y prueba de implantación. Responsables y fechas siguen siendo propuestas hasta su revisión."
+    ],
+    "result_title": "Información de tesorería: continuidad por demostrar",
+    "conclusion": "El proceso está documentado y se ejecutó al menos una vez. Quedan por verificar su continuidad y utilización.",
+    "output_columns": [
+      "Observación",
+      "Acción propuesta",
+      "Prueba de implantación"
+    ],
+    "output_rows": [
+      [
+        "Frecuencia incierta · P1/R1",
+        "Recuperar registros de envío de junio y julio",
+        "Informes fechados y destinatarios"
+      ],
+      [
+        "Petición de la dirección · V1",
+        "Aclarar decisiones que necesitan información más rápida",
+        "Actas y uso posterior"
+      ]
+    ],
+    "check": "La ausencia documental limita la evaluación; no demuestra que el proceso nunca funcione. Un saldo positivo no acredita una organización adecuada.",
+    "question": "Llega un procedimiento recién firmado. ¿Podemos cerrar el hallazgo?",
+    "answer": "Actualiza el diseño. Para evaluar el funcionamiento siguen haciendo falta informes y pruebas de su utilización.",
+    "practice": "Añade dos informes y una decisión de la dirección. ¿Qué conclusiones quedan ahora respaldadas?",
+    "next": "Elige un proceso real, su procedimiento y pruebas de su aplicación."
+  },
+  "vera/aml-review": {
+    "title": "Entender el cambio antes de concluir",
+    "goal": "Reconstruir un cambio de propiedad y preparar una revisión de prevención del blanqueo con pruebas y preguntas concretas.",
+    "scenario": "La ficticia Luna Components entrega un extracto registral con una sociedad como nueva socia. El cliente mantiene que el titular real es la misma persona, pero falta la nueva cadena de propiedad. Explica un pago inusual como anticipo a un proveedor.",
+    "request": "Vera, revisa la información nueva a partir de la evaluación anterior del cliente.",
+    "scope": "Revisión documental interna del workflow italiano. No se simulan consultas externas, una valoración automática de sospecha ni decisiones profesionales.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Información",
+      "Estado"
+    ],
+    "input_rows": [
+      [
+        "A1 · evaluación anterior",
+        "Propiedad previa reconstruida",
+        "Histórico"
+      ],
+      [
+        "A2 · nuevo extracto",
+        "Nueva sociedad socia",
+        "Documentado"
+      ],
+      [
+        "A3 · declaración del cliente",
+        "Control sin cambios; anticipo a proveedor",
+        "Pendiente de corroboración"
+      ]
+    ],
+    "basis": "A1 y A2 acreditan el cambio de participación directa. A3 es una declaración, no prueba del control último ni del propósito económico del pago.",
+    "method": [
+      "Reutiliza la evaluación anterior e identifica los cambios precisos conservando su historial.",
+      "Reconstruye propiedad y control a partir de fuentes. Compara explicaciones de las discrepancias e identifica pruebas que las resolverían.",
+      "Prepara hechos, límites y preguntas. Registra decisiones profesionales solo después de revisar expresamente la propuesta concreta."
+    ],
+    "result_title": "Dos comprobaciones para actualizar la evaluación",
+    "conclusion": "El cambio societario está documentado. El control último y la explicación del pago necesitan más pruebas.",
+    "output_columns": [
+      "Cuestión",
+      "Petición interna propuesta",
+      "Conclusión respaldada"
+    ],
+    "output_rows": [
+      [
+        "Nueva socia · A2",
+        "Documentos de propiedad y cadena de control",
+        "Cambió la participación directa"
+      ],
+      [
+        "Anticipo · A3",
+        "Pedido, contrato y beneficiario",
+        "Finalidad declarada por el cliente"
+      ]
+    ],
+    "check": "Una anomalía o un documento ausente no equivalen a sospecha. Una consulta no realizada queda desconocida, no negativa.",
+    "question": "¿Podemos confirmar que el control no cambió porque lo dice el cliente?",
+    "answer": "Podemos reproducir la declaración con su fuente. La reconstrucción del control necesita documentos de propiedad que la corroboren.",
+    "practice": "Añade la cadena de propiedad. ¿Qué preguntas se cierran y cuáles siguen abiertas?",
+    "next": "Selecciona la evaluación anterior y las pruebas nuevas pertinentes dentro del mismo encargo."
+  },
+  "vera/archive-organization": {
+    "title": "Ordenar una carpeta conservando sus versiones",
+    "goal": "Convertir una carpeta desordenada en un plan de movimientos revisable antes de modificar archivos.",
+    "scenario": "Una carpeta ficticia contiene dos copias de factura con bytes idénticos y dos versiones distintas de un contrato con nombres poco claros. El ejemplo muestra un ensayo del plan; no se ha movido ningún archivo.",
+    "request": "Vera, propón cómo ordenar esta carpeta y muestra qué cambiaría.",
+    "scope": "Una carpeta seleccionada hasta la revisión del plan. Ejecutar los movimientos requiere una confirmación expresa independiente.",
+    "input_columns": [
+      "Archivo ficticio",
+      "Contenido",
+      "Identidad"
+    ],
+    "input_rows": [
+      [
+        "scan-a.pdf",
+        "Factura INV-07, 10 de junio",
+        "Mismos bytes que copy.pdf"
+      ],
+      [
+        "copy.pdf",
+        "Factura INV-07, 10 de junio",
+        "Mismos bytes que scan-a.pdf"
+      ],
+      [
+        "agreement.docx",
+        "Borrador de contrato",
+        "Distinto de la versión firmada"
+      ],
+      [
+        "agreement-signed.pdf",
+        "Contrato con firma visible",
+        "Versión independiente"
+      ]
+    ],
+    "basis": "Las huellas coincidentes acreditan archivos de factura idénticos. Los contratos necesitan lectura: nombres y tamaños parecidos no prueban duplicación.",
+    "method": [
+      "Captura el inventario de la carpeta y examina evidencia suficiente para clasificar cada archivo.",
+      "Propón destinos según la política del despacho y prepara un ensayo. Las copias exactas pueden proponerse para cuarentena; las versiones distintas se conservan separadas.",
+      "Guarda las decisiones de revisión. Muestra cantidades y destinos antes de la autorización de ejecución y conserva el registro para una posible reversión."
+    ],
+    "result_title": "Plan de organización · sin cambios ejecutados",
+    "conclusion": "Una copia puede proponerse para cuarentena. El borrador y el contrato firmado deben mantenerse como versiones distintas.",
+    "output_columns": [
+      "Origen",
+      "Propuesta",
+      "Revisión"
+    ],
+    "output_rows": [
+      [
+        "scan-a.pdf",
+        "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+        "Confirmar destino"
+      ],
+      [
+        "copy.pdf",
+        "Da_verificare/Duplicati_esatti/…",
+        "Cuarentena propuesta"
+      ],
+      [
+        "Ambas versiones del contrato",
+        "Conservar en Contratti/2026",
+        "Describir las versiones"
+      ]
+    ],
+    "check": "Aplicar decisiones compila el plan aprobado, pero no mueve archivos. Al ejecutarlo, las fuentes deben seguir coincidiendo con el inventario.",
+    "question": "El contrato firmado se llama casi igual que el borrador. ¿Podemos borrar uno?",
+    "answer": "No. Son versiones distintas, no duplicados exactos. Conserva ambas salvo que otra actuación revisada determine un destino diferente.",
+    "practice": "Cambia un destino propuesto y comprueba si entra en conflicto con un archivo existente.",
+    "next": "Practica con una carpeta ficticia pequeña. Para trabajo real, selecciona primero cliente registrado y política aplicable."
+  },
+  "vera/avviso-intake": {
+    "title": "Llega un escrito: ¿qué sabemos realmente?",
+    "goal": "Preparar una nota inicial separando referencias legibles, importes y pruebas pendientes.",
+    "scenario": "Arco recibe el ficticio notice.pdf con referencia, EUR 2.400 y una fecha de respuesta. Faltan el justificante de recepción y un anexo citado. Todavía no se ha establecido la naturaleza jurídica del escrito.",
+    "request": "Vera, resume este escrito e identifica los documentos necesarios para evaluarlo.",
+    "scope": "Primera lectura documental. Una fecha extraída no es un plazo jurídico validado ni una entrada en el calendario.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Texto disponible",
+      "Prueba pendiente"
+    ],
+    "input_rows": [
+      [
+        "N1 · página 1",
+        "DEMO-24; EUR 2.400",
+        "Clasificación y significado del importe"
+      ],
+      [
+        "N1 · página 2",
+        "Respuesta solicitada antes del 30 de septiembre de 2026",
+        "Justificante de recepción"
+      ],
+      [
+        "N1 · página 2",
+        "Referencia al anexo A",
+        "Anexo A"
+      ]
+    ],
+    "basis": "Todos los valores proceden del ficticio N1. El nombre del archivo no determina su naturaleza; significado y plazos siguen sin verificar.",
+    "method": [
+      "Lee clasificación y estado de extracción y examina la fuente antes de interpretar sus referencias.",
+      "Registra referencia, posibles fechas, importes y moneda con ubicaciones. Marca cada punto pendiente.",
+      "Entrega nota y tabla de fechas e importes, indicando documentos ausentes y la siguiente comprobación profesional."
+    ],
+    "result_title": "Primera lectura · DEMO-24",
+    "conclusion": "Referencia e importe son legibles. Para evaluar el escrito faltan el justificante de recepción y el anexo A.",
+    "output_columns": [
+      "Elemento",
+      "Valor leído",
+      "Estado"
+    ],
+    "output_rows": [
+      [
+        "Referencia · N1 p. 1",
+        "DEMO-24",
+        "Extraído"
+      ],
+      [
+        "Importe · N1 p. 1",
+        "EUR 2.400",
+        "Significado por verificar"
+      ],
+      [
+        "Fecha del texto · N1 p. 2",
+        "30 de septiembre de 2026",
+        "No validada como plazo jurídico"
+      ]
+    ],
+    "check": "No conviertas una fecha extraída en un plazo jurídico confirmado. Importan clasificación, recepción y fuentes aplicables.",
+    "question": "La copia es legible, pero falta un anexo. ¿Está completo el expediente?",
+    "answer": "No. Extrae las referencias legibles, mantén el expediente incompleto y solicita el anexo mencionado.",
+    "practice": "Añade el anexo ficticio e identifica qué entradas de la nota cambian.",
+    "next": "Selecciona escrito completo, anexos y justificante de recepción dentro del mismo encargo."
+  },
+  "vera/bandi-agevolazioni": {
+    "title": "Una oportunidad interesante no acredita la elegibilidad",
+    "goal": "Distinguir la búsqueda de ayudas de la preparación documentada para una empresa concreta.",
+    "scenario": "Una convocatoria totalmente ficticia financia maquinaria para fabricantes de una región. Arco propone invertir EUR 80.000. Faltan pruebas del establecimiento y de la fecha de inicio del gasto.",
+    "request": "Vera, muestra cómo una convocatoria encontrada se convierte en comprobaciones para esta empresa.",
+    "scope": "La convocatoria DEMO no existe y no admite solicitudes. Las oportunidades reales requieren fuentes oficiales actuales.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Condición o hecho",
+      "Prueba"
+    ],
+    "input_rows": [
+      [
+        "B1 · convocatoria DEMO § 2",
+        "Establecimiento en la región convocante",
+        "Ubicación sin documentar"
+      ],
+      [
+        "B1 · § 4",
+        "Gasto iniciado después de solicitar",
+        "Falta fecha del pedido"
+      ],
+      [
+        "C1 · proyecto Arco",
+        "Maquinaria: EUR 80.000",
+        "Presupuesto entregado"
+      ]
+    ],
+    "basis": "B1 define solo las condiciones del ejemplo. C1 acredita un proyecto, no el cumplimiento de todos los requisitos. No se inventa un porcentaje de ayuda.",
+    "method": [
+      "Define el objetivo de búsqueda y revisa fuentes pertinentes. Vincula cada oportunidad con fuente y versión exactas.",
+      "Compara cada requisito con las pruebas de la empresa seleccionada e identifica documentos pendientes.",
+      "Prepara ficha, lista de comprobación y dossier revisable. Distingue pertinencia, requisitos verificados y preparación documental; no presentes la solicitud."
+    ],
+    "result_title": "DEMO · preparación todavía abierta",
+    "conclusion": "El proyecto encaja con el objeto de la convocatoria. Dos condiciones decisivas siguen sin documentar.",
+    "output_columns": [
+      "Comprobación",
+      "Resultado del caso",
+      "Próxima prueba"
+    ],
+    "output_rows": [
+      [
+        "Encaje de inversión · B1/C1",
+        "Maquinaria descrita",
+        "Completar comparación técnica"
+      ],
+      [
+        "Ubicación · B1 § 2",
+        "No verificada",
+        "Documento del establecimiento"
+      ],
+      [
+        "Inicio del gasto · B1 § 4",
+        "No verificado",
+        "Pedido y cronología del gasto"
+      ]
+    ],
+    "check": "La pertinencia no demuestra elegibilidad. Una ficha no sustituye la convocatoria oficial y sus anexos.",
+    "question": "El presupuesto encaja perfectamente. ¿Podemos afirmar que Arco es elegible?",
+    "answer": "No. Ubicación, momento y demás condiciones de la fuente completa necesitan evaluación. Entrega las comprobaciones abiertas.",
+    "practice": "Añade un pedido ficticio anterior a la solicitud y reconsidera la condición temporal.",
+    "next": "Selecciona oportunidad y empresa reales y verifica la fuente oficial vigente antes de prometer una ayuda."
+  },
+  "vera/browser-automation": {
+    "title": "Enseñar un paso repetible en el navegador",
+    "goal": "Transformar un procedimiento observado en una capacidad verificable localmente y con condiciones de parada.",
+    "scenario": "Un portal local ficticio muestra un documento y un botón de descarga. La tarea consiste en repetir esa única descarga. La página didáctica no contiene credenciales, pagos ni documentos de clientes.",
+    "request": "Vera, aprende a descargar este documento del portal de prueba y muestra el archivo resultante.",
+    "scope": "Sitio local ficticio y operación de lectura y descarga. No se simula acceso a un sistema contable real.",
+    "input_columns": [
+      "Elemento ficticio",
+      "Prueba observable",
+      "Límite"
+    ],
+    "input_rows": [
+      [
+        "Lista de documentos",
+        "Un documento llamado DEMO-01",
+        "Contenido sintético"
+      ],
+      [
+        "Botón de descarga",
+        "synthetic-download.txt",
+        "Una operación prevista"
+      ],
+      [
+        "Archivo esperado",
+        "Texto identificativo del caso",
+        "Abrir y comprobar"
+      ]
+    ],
+    "basis": "El procedimiento se apoya en la página observada y en el contenido realmente descargado. La presencia de un botón no prueba una descarga correcta.",
+    "method": [
+      "Observa el sitio y define objetivo, alcance autorizado y condiciones de parada.",
+      "Prepara la capacidad con elementos realmente observados. Prueba en el sitio local y conserva evidencias de pasos y resultados.",
+      "Repite el paso autorizado, abre el archivo y compara su contenido. Revisa la capacidad si cambia la página o sus controles."
+    ],
+    "result_title": "Descarga DEMO-01 · comprobar el resultado",
+    "conclusion": "El resultado útil es el documento correcto y un procedimiento que reconoce cuándo no puede continuar.",
+    "output_columns": [
+      "Paso",
+      "Prueba necesaria",
+      "Si falta"
+    ],
+    "output_rows": [
+      [
+        "Seleccionar documento",
+        "Identidad DEMO-01 en la página",
+        "Parar e inspeccionar"
+      ],
+      [
+        "Descargar",
+        "Archivo presente en el destino",
+        "No afirmar éxito"
+      ],
+      [
+        "Comprobar contenido",
+        "Texto esperado en el archivo abierto",
+        "Informar del resultado inesperado"
+      ]
+    ],
+    "check": "Un clic correcto no prueba una descarga correcta. Una página modificada exige observación, no selectores inventados ni autorizaciones omitidas.",
+    "question": "El botón funciona, pero el archivo contiene una página de error. ¿Ha funcionado el paso?",
+    "answer": "No. La verificación se refiere al contenido final. Conserva la evidencia del error y detente sin afirmar que se obtuvo el documento.",
+    "practice": "Ejecuta la prueba local, cambia el documento disponible y comprueba que el resultado vuelve a verificarse.",
+    "next": "En un sitio real, empieza por una operación autorizada y un navegador y vía de acceso disponibles."
+  }
+}

@@ -81,7 +81,10 @@ def main(argv: list[str] | None = None) -> int:
     products = tuple(args.products) or PRODUCTS
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     suffix = ["--check"] if args.check else []
-    commands = [["scripts/build_codex_plugin_zip.py", *products, *suffix]]
+    commands = [
+        ["scripts/course_materials/build_catalog.py", "--check"],
+        ["scripts/build_codex_plugin_zip.py", *products, *suffix],
+    ]
     commands.extend(
         [
             "scripts/build_codex_plugin_zip.py",

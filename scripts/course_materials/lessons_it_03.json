@@ -1,0 +1,524 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Due file non sono sempre due fatture",
+    "goal": "Leggere il riepilogo FatturaPA e distinguere corpi fattura, anomalie formali e candidati duplicati.",
+    "scenario": "Il lotto fittizio contiene una fattura XML valida, una seconda copia della stessa fattura e un XML troncato. Il controllo riguarda il contenuto formale dei file, senza confrontarlo con la contabilità.",
+    "request": "Vera, controlla questo piccolo lotto XML e mostrami cosa devo rivedere.",
+    "scope": "Controlli formali FatturaPA. Non verifica registrazione contabile, deducibilità, pagamento o correttezza del trattamento IVA.",
+    "input_columns": [
+      "File fittizio",
+      "Contenuto",
+      "Condizione"
+    ],
+    "input_rows": [
+      [
+        "invoice.xml",
+        "INV-001 · 2026 · 1.220 EUR",
+        "Un corpo fattura leggibile"
+      ],
+      [
+        "invoice-copy.xml",
+        "Stessa fattura",
+        "Copia da verificare"
+      ],
+      [
+        "broken.xml",
+        "Documento troncato",
+        "XML non ben formato"
+      ]
+    ],
+    "basis": "Il conteggio dei file è distinto dal conteggio dei corpi fattura. Numero, data, fornitore e importo sostengono una candidatura duplicata, non una cancellazione automatica.",
+    "method": [
+      "Seleziona cliente, incarico, lotto e anno del controllo; importa i file nella copia gestita del caso.",
+      "Esegui il parser corrente e leggi tutte le anomalie e i gruppi duplicati del passaggio. Apri l'XML quando serve verificare il dato originale.",
+      "Presenta riepilogo per corpo fattura, candidati duplicati e memo delle anomalie. Mantieni espliciti i file che non è stato possibile leggere."
+    ],
+    "result_title": "Un lotto con due controlli da fare",
+    "conclusion": "Le due copie leggibili non rappresentano automaticamente due operazioni economiche. Il file troncato rimane fuori dai dati estratti affidabili.",
+    "output_columns": [
+      "Elemento",
+      "Esito illustrato",
+      "Azione"
+    ],
+    "output_rows": [
+      [
+        "invoice.xml + invoice-copy.xml",
+        "Candidato duplicato",
+        "Confrontare le fonti; conservare gli originali"
+      ],
+      [
+        "broken.xml",
+        "Errore formale",
+        "Recuperare l'XML completo"
+      ],
+      [
+        "Totale economico del lotto",
+        "Da rivedere",
+        "Non sommare alla cieca le copie"
+      ]
+    ],
+    "check": "Un'anomalia formale e un candidato duplicato non autorizzano a eliminare file o correggere scritture. Un XML può contenere più corpi fattura.",
+    "question": "Tre file ricevuti significano tre fatture valide?",
+    "answer": "No. Si contano separatamente file, corpi leggibili e anomalie. La copia e il file troncato richiedono trattamento esplicito.",
+    "practice": "Esegui il controllo sullo starter XML, poi su una copia modificata: confronta il memo effettivo.",
+    "next": "Per il tuo lotto indica anno e fonti selezionate; usa la riconciliazione contabile soltanto se quello è il lavoro richiesto."
+  },
+  "vera/financial-analysis": {
+    "title": "Leggere la concentrazione dei ricavi",
+    "goal": "Usare una ricetta finanziaria supportata e interpretare un indicatore senza trasformarlo in un giudizio automatico.",
+    "scenario": "Un export fittizio del periodo contiene ricavi per 100.000 EUR: cliente Alfa 60.000, Beta 25.000 e Gamma 15.000. Il professionista vuole capire la dipendenza commerciale, non stimare il valore dell'impresa.",
+    "request": "Vera, prepara l'analisi della concentrazione clienti e mostrami da dove viene il risultato.",
+    "scope": "Ricetta customer_concentration su dati storici riveduti. Non è una valutazione d'impresa, un rating o una verifica autonoma delle fonti contabili.",
+    "input_columns": [
+      "Cliente fittizio",
+      "Ricavi del periodo",
+      "Fonte"
+    ],
+    "input_rows": [
+      [
+        "Alfa",
+        "60.000 EUR",
+        "F1 · riga 1"
+      ],
+      [
+        "Beta",
+        "25.000 EUR",
+        "F1 · riga 2"
+      ],
+      [
+        "Gamma",
+        "15.000 EUR",
+        "F1 · riga 3"
+      ]
+    ],
+    "basis": "F1 è l'export del solo periodo e perimetro del caso. Il totale è 100.000 EUR; non abbiamo contratti, margini per cliente o dati prospettici.",
+    "method": [
+      "Scegli una delle ricette correnti supportate sulla base della domanda e qualifica fonti, periodo, segni e totale di controllo.",
+      "Esegui il pacchetto con il contratto riveduto e il contesto del medesimo incarico. Usa i calcoli previsti, senza sostituirli con uno script ad hoc.",
+      "Leggi indicatori e limiti del pacchetto. Collega il commento alle metriche e mantieni visibili eventuali verifiche delle fonti non eseguite."
+    ],
+    "result_title": "Alfa rappresenta il 60% dei ricavi",
+    "conclusion": "Il maggiore cliente pesa per il 60%; i primi due per l'85%. La dipendenza osservata richiede approfondimenti commerciali.",
+    "output_columns": [
+      "Indicatore",
+      "Calcolo",
+      "Valore"
+    ],
+    "output_rows": [
+      [
+        "Primo cliente",
+        "60.000 / 100.000",
+        "60%"
+      ],
+      [
+        "Primi due clienti",
+        "85.000 / 100.000",
+        "85%"
+      ],
+      [
+        "Numero clienti osservati",
+        "Alfa, Beta, Gamma",
+        "3"
+      ]
+    ],
+    "check": "La quota elevata descrive una concentrazione, ma non prova che il contratto sia fragile o che il cliente verrà perso. Controlla perimetro e riconciliazione del totale.",
+    "question": "Conosciamo il 60%: possiamo stimare il rischio di perdita dei ricavi?",
+    "answer": "Non da questa tabella. Servono contratti, rinnovi, dipendenze e altre evidenze; l'indicatore guida le domande, non assegna una probabilità.",
+    "practice": "Aggiungi un quarto cliente da 20.000 EUR e verifica come cambiano totale e quote.",
+    "next": "Scegli la domanda fra le ricette disponibili e prepara fonti contabili rivedute con il periodo e il totale di controllo."
+  },
+  "vera/journal-bank-reconciliation": {
+    "title": "Due pagamenti per una sola scrittura",
+    "goal": "Riconciliare banca e contabilità usando importi e riferimenti, rendendo visibili gruppi e differenze.",
+    "scenario": "Il giornale fittizio registra un incasso di 1.200 EUR con riferimento INV-401. L'estratto conto contiene due accrediti, 700 e 500 EUR, entrambi con INV-401, e una commissione di 12 EUR non presente nel giornale.",
+    "request": "Vera, riconcilia questi movimenti e fammi vedere cosa resta aperto.",
+    "scope": "Confronto fra estratto conto e giornale nello stesso periodo e valuta. Non verifica tutte le partite aperte né autorizza registrazioni automatiche.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Riferimento",
+      "Importo"
+    ],
+    "input_rows": [
+      [
+        "G1 · giornale",
+        "INV-401",
+        "+1.200 EUR"
+      ],
+      [
+        "B1 · banca riga 1",
+        "INV-401",
+        "+700 EUR"
+      ],
+      [
+        "B1 · banca riga 2",
+        "INV-401",
+        "+500 EUR"
+      ],
+      [
+        "B1 · banca riga 3",
+        "Commissione",
+        "−12 EUR"
+      ]
+    ],
+    "basis": "Il riferimento comune sostiene il gruppo 700 + 500 contro 1.200. La commissione ha una natura e una direzione diverse e rimane un elemento autonomo.",
+    "method": [
+      "Ispeziona i formati e rivedi colonne, segni, date, valuta e riferimenti usando le fonti del caso.",
+      "Esegui gli abbinamenti previsti, compresi i gruppi sostenuti da riferimenti. Conserva le righe componenti e non cercare combinazioni arbitrarie soltanto per far tornare il totale.",
+      "Leggi abbinati, gruppi e residui; spiega quale evidenza sostiene ciascun collegamento. Il professionista rivede le differenze e decide eventuali registrazioni."
+    ],
+    "result_title": "Incasso ricostruito, commissione da chiarire",
+    "conclusion": "700 + 500 = 1.200 EUR per INV-401. La commissione bancaria di 12 EUR non ha una contropartita nel giornale fornito.",
+    "output_columns": [
+      "Oggetto",
+      "Confronto",
+      "Esito illustrato"
+    ],
+    "output_rows": [
+      [
+        "INV-401",
+        "700 + 500 ↔ 1.200 EUR",
+        "Gruppo con riferimento comune"
+      ],
+      [
+        "Commissione",
+        "−12 EUR ↔ nessuna riga",
+        "Residuo da rivedere"
+      ]
+    ],
+    "check": "La somma coincidente non basta a giustificare qualsiasi gruppo. Segno, periodo, valuta e riferimenti devono restare coerenti.",
+    "question": "Se i due accrediti non hanno riferimenti, possiamo assegnarli comunque a INV-401?",
+    "answer": "La sola somma non sostiene automaticamente lo stesso gruppo. Va riveduta l'evidenza e mantenuta l'ambiguità quando manca un collegamento sufficiente.",
+    "practice": "Porta il secondo accredito a 480 EUR e osserva la differenza residua senza inventare un terzo pagamento.",
+    "next": "Seleziona giornale ed estratto conto dello stesso perimetro; chiarisci solo le mappature che i file non risolvono."
+  },
+  "vera/journal-sampling": {
+    "title": "Prima del campione, una popolazione affidabile",
+    "goal": "Capire perché la qualificazione del giornale precede la selezione delle scritture da verificare.",
+    "scenario": "Il giornale fittizio contiene movimenti con identificativi originali, conti e importi dare/avere. Una riga mostra '1.200,00': il formato deve essere interpretato correttamente. Una riga di totale non è un movimento da campionare.",
+    "request": "Vera, prepara questo giornale e mostrami il campione insieme ai controlli sulla popolazione.",
+    "scope": "Preparazione e campionamento secondo il contratto corrente. Una selezione non è di per sé un campione statisticamente rappresentativo né una verifica documentale.",
+    "input_columns": [
+      "Riga fittizia",
+      "Dato",
+      "Scelta da rivedere"
+    ],
+    "input_rows": [
+      [
+        "G1 · riga 2",
+        "Movimento M-101; dare 1.200,00",
+        "Formato numerico italiano"
+      ],
+      [
+        "G1 · riga 3",
+        "Movimento M-101; avere 1.200,00",
+        "Due righe dello stesso movimento"
+      ],
+      [
+        "G1 · riga 4",
+        "Totale 1.200,00 / 1.200,00",
+        "Riepilogo, non scrittura"
+      ]
+    ],
+    "basis": "Gli identificativi e i localizzatori provengono da G1. Il numero della riga non sostituisce il numero di movimento originale.",
+    "method": [
+      "Ispeziona la fonte e rivedi perimetro, mappature, formato monetario e righe di riepilogo, prima di normalizzare.",
+      "Qualifica la popolazione completa e verifica chiusura e controlli monetari. Applica il metodo di selezione riveduto conservando gli identificativi originali.",
+      "Consegna popolazione normalizzata, diagnostica, campione e allegati di assurance. Il successivo controllo documentale usa questo passaggio chiuso senza rifare le mappature."
+    ],
+    "result_title": "Una popolazione qualificata prima della selezione",
+    "conclusion": "Il caso distingue due righe contabili di un movimento da una riga di totale. Il formato 1.200,00 rappresenta 1.200 EUR.",
+    "output_columns": [
+      "Elemento",
+      "Trattamento illustrato",
+      "Perché"
+    ],
+    "output_rows": [
+      [
+        "Righe 2–3",
+        "Popolazione: movimento M-101",
+        "Identità originale e due lati"
+      ],
+      [
+        "Riga 4",
+        "Riepilogo escluso con base riveduta",
+        "Evita il doppio conteggio"
+      ],
+      [
+        "Campione successivo",
+        "Vincolato alla popolazione qualificata",
+        "Mantiene tracciabilità"
+      ]
+    ],
+    "check": "Un file normalizzato non è qualificato soltanto perché si apre. Una mappatura errata può produrre numeri formalmente validi ma sostanzialmente sbagliati.",
+    "question": "Possiamo chiamare 'M-2' il movimento perché è sulla seconda riga?",
+    "answer": "No. Si conserva M-101 dalla fonte. Il localizzatore della riga serve a ritrovare l'evidenza, non a inventare l'identità del movimento.",
+    "practice": "Aggiungi una riga non bilanciata e verifica che la qualificazione la renda visibile prima del campionamento.",
+    "next": "Prepara l'export completo e i totali di controllo; descrivi l'obiettivo della selezione senza scegliere a priori un metodo inadatto."
+  },
+  "vera/management-control-pack": {
+    "title": "Actual e Budget: leggere importi e percentuali",
+    "goal": "Interpretare un report di controllo di gestione a partire da periodo, segni e categorie rivedute.",
+    "scenario": "Arco confronta gennaio e febbraio. I ricavi Actual sono 150.000 EUR contro 140.000 a Budget; i costi inclusi sono 60.000 contro 59.000. Non sono forniti scadenzari o previsioni per i mesi successivi.",
+    "request": "Vera, mostrami dove il risultato si discosta dal Budget nei due mesi chiusi.",
+    "scope": "Confronto del margine sulle categorie fornite. Le sezioni senza fonti restano indisponibili; il caso non inventa scadenzari, forecast o mesi futuri.",
+    "input_columns": [
+      "Voce · gennaio–febbraio",
+      "Actual",
+      "Budget"
+    ],
+    "input_rows": [
+      [
+        "Ricavi",
+        "150.000 EUR",
+        "140.000 EUR"
+      ],
+      [
+        "Costi inclusi",
+        "60.000 EUR",
+        "59.000 EUR"
+      ],
+      [
+        "Margine sulle voci incluse",
+        "90.000 EUR",
+        "81.000 EUR"
+      ]
+    ],
+    "basis": "M1 e M2 rappresentano gli export sintetici dei medesimi due mesi completi. Le categorie e il segno dei costi sono riveduti prima del confronto.",
+    "method": [
+      "Ispeziona gli export e rivedi ruoli, colonne, categorie, segni, valuta, periodo e cutoff; conferma i totali di controllo.",
+      "Esegui il pacchetto locale e leggi metriche e limiti. Mostra scostamento assoluto e percentuale; una base nulla o negativa non genera una percentuale fuorviante.",
+      "Spiega i principali contributi distinguendo osservazioni e ipotesi. Le sezioni opzionali compaiono solo quando esistono dati sufficienti e il commento resta rivedibile."
+    ],
+    "result_title": "Margine superiore al Budget di 9.000 EUR",
+    "conclusion": "I ricavi aggiungono 10.000 EUR; i maggiori costi ne assorbono 1.000. Il margine sulle voci fornite cresce da 81.000 a 90.000 EUR, pari a +11,11%.",
+    "output_columns": [
+      "Voce",
+      "Δ EUR",
+      "Δ % sulla base Budget"
+    ],
+    "output_rows": [
+      [
+        "Ricavi",
+        "+10.000",
+        "+7,14%"
+      ],
+      [
+        "Costi",
+        "+1.000",
+        "+1,69% · sfavorevole"
+      ],
+      [
+        "Margine",
+        "+9.000",
+        "+11,11%"
+      ]
+    ],
+    "check": "Un aumento dei costi non diventa favorevole perché il segno è positivo. Prima di spiegare una causa commerciale, verifica che periodi e categorie siano confrontabili.",
+    "question": "Se il Budget di una voce è zero, quale informazione manteniamo?",
+    "answer": "Manteniamo lo scostamento in EUR e segnaliamo la percentuale come non disponibile. Non mostriamo infinito né una percentuale inventata.",
+    "practice": "Aggiungi un mese completo a entrambi gli export e riesegui il confronto con il nuovo cutoff.",
+    "next": "Seleziona contabilità e Budget coerenti. Aggiungi scadenzari o forecast solo quando fanno parte dell'incarico e sono disponibili."
+  },
+  "vera/new-client": {
+    "title": "Aprire un cliente senza trasformare i vuoti in conferme",
+    "goal": "Passare dai documenti ricevuti a un fascicolo e a una proposta di setup professionale con mancanze esplicite.",
+    "scenario": "Arco Srl invia visura, documento del rappresentante e una bozza di incarico. Il mandato non è firmato e la dichiarazione sulla titolarità effettiva manca. La fase di preparazione documentale precede il setup professionale italiano.",
+    "request": "Vera, organizza l'ingresso di questo nuovo cliente e mostrami cosa serve ancora.",
+    "scope": "Caso italiano fittizio. Il setup professionale corrente usa il country pack Italia; un intake in un'altra lingua non abilita automaticamente un altro paese.",
+    "input_columns": [
+      "Documento fittizio",
+      "Stato osservato",
+      "Significato"
+    ],
+    "input_rows": [
+      [
+        "N1 · visura",
+        "Leggibile",
+        "Identità societaria da rivedere"
+      ],
+      [
+        "N2 · documento rappresentante",
+        "Ricevuto",
+        "Collegamento e validità da verificare"
+      ],
+      [
+        "N3 · incarico",
+        "Bozza senza firma",
+        "Non prova accettazione"
+      ],
+      [
+        "Dichiarazione titolarità effettiva",
+        "Non ricevuta",
+        "Richiesta da rivedere"
+      ]
+    ],
+    "basis": "I file ricevuti sostengono la disponibilità documentale. La firma assente e la dichiarazione mancante restano distinti dalle proposte di attività professionale.",
+    "method": [
+      "Prepara e classifica i documenti ricevuti, mantenendo estrazioni e mancanze legate alle fonti.",
+      "Rivedi e applica le decisioni della fase documentale; promuovi soltanto un passaggio italiano coerente al setup professionale.",
+      "Prepara identità, incarico, privacy, AML e monitoraggio come proposte con prove e punti aperti. Il professionista salva le proprie decisioni nelle superfici di revisione."
+    ],
+    "result_title": "Documenti organizzati, accettazione ancora da completare",
+    "conclusion": "Visura e documento sono disponibili. Il mandato non è sottoscritto e la titolarità effettiva richiede documentazione; il fascicolo non viene dichiarato completo.",
+    "output_columns": [
+      "Area",
+      "Base",
+      "Passo successivo"
+    ],
+    "output_rows": [
+      [
+        "Identità",
+        "N1–N2",
+        "Rivedere i collegamenti"
+      ],
+      [
+        "Incarico",
+        "N3 senza firma",
+        "Completare il normale percorso di accettazione"
+      ],
+      [
+        "AML",
+        "Dichiarazione assente",
+        "Rivedere la richiesta e svolgere l'analisi pertinente"
+      ]
+    ],
+    "check": "Ricevere un documento non equivale ad accettarne il contenuto. Un workflow completato consegna il lavoro; non certifica automaticamente il cliente come accettato.",
+    "question": "La cartella si chiama 'cliente approvato': possiamo usare questo stato?",
+    "answer": "No. Lo stato deriva dalle evidenze e dalle decisioni persistite, non dal nome della cartella.",
+    "practice": "Aggiungi il mandato sottoscritto e aggiorna soltanto le proposte interessate, conservando i punti AML ancora aperti.",
+    "next": "Seleziona cliente e documenti effettivamente ricevuti; evita di ripetere tutto l'onboarding per una sola revisione AML successiva."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Un pagamento successivo spiega la partita, ma non cambia la data",
+    "goal": "Verificare le partite aperte a un cutoff e tenere separati saldo a quella data ed eventi successivi.",
+    "scenario": "Al 30 giugno il partitario fittizio mostra INV-701 per 1.000 EUR. Un pagamento di 600 EUR è documentato il 28 giugno e un altro di 400 EUR il 5 luglio. Il primo non risulta applicato nel report delle partite aperte.",
+    "request": "Vera, verifica questa partita al 30 giugno e spiegami come usare il pagamento di luglio.",
+    "scope": "Verifica di una popolazione dichiarata aperta a una data. Le fatture sole non ricostruiscono i saldi; pagamenti e contabilità devono sostenere la conclusione.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Data",
+      "Importo"
+    ],
+    "input_rows": [
+      [
+        "O1 · partita INV-701",
+        "30 giugno",
+        "1.000 EUR aperti riportati"
+      ],
+      [
+        "B1 · pagamento collegato",
+        "28 giugno",
+        "600 EUR"
+      ],
+      [
+        "B2 · pagamento successivo",
+        "5 luglio",
+        "400 EUR"
+      ]
+    ],
+    "basis": "O1 definisce la popolazione riportata al cutoff. B1 e B2 hanno date diverse: solo B1 precede il 30 giugno. Il collegamento alla partita è parte della verifica.",
+    "method": [
+      "Conferma cutoff, cliente, popolazione e totali; acquisisci partitario e riscontri del medesimo incarico.",
+      "Confronta importi e collegamenti con evidenze, mantenendo candidati e decisioni distinti. Mostra saldi, differenze e pagamenti successivi separatamente.",
+      "Presenta le schede di revisione e salva le decisioni effettive. Mantieni le questioni non risolte; non trasformare automaticamente l'analisi in scritture contabili."
+    ],
+    "result_title": "Saldo al cutoff da rivedere: 400 EUR",
+    "conclusion": "Se il collegamento di B1 è confermato, al 30 giugno restano 400 EUR. B2 documenta un successivo incasso, non un saldo nullo retroattivo.",
+    "output_columns": [
+      "Lettura",
+      "Importo",
+      "Motivo"
+    ],
+    "output_rows": [
+      [
+        "Aperto riportato",
+        "1.000 EUR",
+        "O1"
+      ],
+      [
+        "Pagamento prima del cutoff",
+        "−600 EUR",
+        "B1 · da applicare dopo revisione"
+      ],
+      [
+        "Residuo al cutoff",
+        "400 EUR",
+        "1.000 − 600"
+      ],
+      [
+        "Incasso successivo",
+        "400 EUR",
+        "B2 · 5 luglio"
+      ]
+    ],
+    "check": "La data del report resta il riferimento. Un incasso successivo può corroborare il recupero della partita, ma non riscrive il saldo storico.",
+    "question": "Poiché a luglio tutto è incassato, possiamo mostrare zero al 30 giugno?",
+    "answer": "No. Nel caso riveduto il residuo al cutoff è 400 EUR; il successivo incasso va esposto come evento successivo.",
+    "practice": "Sposta la data di B2 al 29 giugno e riesegui la verifica, controllando quale conclusione cambia.",
+    "next": "Fornisci il report delle partite aperte a una data precisa, i movimenti contabili e i riscontri bancari pertinenti."
+  },
+  "vera/purchase-invoice-review": {
+    "title": "Fatture passive: collegare ogni documento alla registrazione",
+    "goal": "Leggere la copertura di una popolazione di fatture passive e riconoscere i casi che richiedono revisione contabile.",
+    "scenario": "Il lotto fittizio contiene tre fatture passive: una collegata a una registrazione, una senza registrazione trovata e una con due candidati ambigui. Il periodo e la popolazione contabile sono esplicitamente delimitati.",
+    "request": "Vera, controlla come questo lotto di fatture passive si collega alla contabilità effettiva.",
+    "scope": "Revisione della popolazione passiva e delle registrazioni fornite. Un mancato collegamento nel perimetro non prova da solo che una fattura non sia mai stata contabilizzata.",
+    "input_columns": [
+      "Fattura fittizia",
+      "Supporto contabile disponibile",
+      "Questione"
+    ],
+    "input_rows": [
+      [
+        "PA-101 · 1.220 EUR",
+        "Una registrazione coerente",
+        "Controllare natura e trattamento"
+      ],
+      [
+        "PA-102 · 610 EUR",
+        "Nessun candidato nel periodo",
+        "Recuperare o chiarire"
+      ],
+      [
+        "PA-103 · 244 EUR",
+        "Due candidati",
+        "Identità da risolvere"
+      ]
+    ],
+    "basis": "P1 è il lotto XML e G1 l'export delle registrazioni del periodo. Le conclusioni restano legate a entrambi i perimetri; nessuna registrazione viene inventata.",
+    "method": [
+      "Importa la popolazione XML e le registrazioni effettive; qualifica periodo, conti, identità e totale del lotto.",
+      "Esegui il metodo corrente di abbinamento e revisione, comprese le capacità native richieste. Se una capacità manca, mantieni il passaggio pendente senza simularne l'esecuzione.",
+      "Leggi copertura, ambiguità e proposte di revisione. Il professionista valuta natura della spesa e trattamento; le proposte non diventano registrazioni o approvazioni automatiche."
+    ],
+    "result_title": "Tre fatture, tre stati distinti",
+    "conclusion": "Un collegamento è disponibile, uno manca nel perimetro e uno è ambiguo. La revisione deve preservare queste differenze.",
+    "output_columns": [
+      "Documento",
+      "Stato illustrato",
+      "Passo utile"
+    ],
+    "output_rows": [
+      [
+        "PA-101",
+        "Collegamento disponibile",
+        "Rivedere il trattamento sulla fonte"
+      ],
+      [
+        "PA-102",
+        "Non trovato nel perimetro",
+        "Controllare periodo ed export"
+      ],
+      [
+        "PA-103",
+        "Ambiguo",
+        "Risolvere i candidati con evidenza"
+      ]
+    ],
+    "check": "Copertura dell'abbinamento e correttezza contabile sono verifiche diverse. Un'esecuzione tecnica riuscita non approva deducibilità o IVA.",
+    "question": "PA-102 non compare: possiamo scrivere 'fattura non registrata' senza limiti?",
+    "answer": "La conclusione sostenuta è 'registrazione non trovata nel perimetro esaminato'. Prima di una conclusione più ampia occorre verificare completezza e periodo dell'export.",
+    "practice": "Aggiungi la registrazione di PA-102 e confronta la copertura della nuova esecuzione senza cancellare il risultato precedente.",
+    "next": "Seleziona lotto passivo e registrazioni effettive del periodo; verifica le capacità native richieste dal workflow installato."
+  }
+}

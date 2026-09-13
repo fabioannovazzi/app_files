@@ -1,0 +1,423 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "email-cliente",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
+      "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "repository_path": "plugins/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "087e935240b3fe78cf98a4499a0a295175abb3aa8c2e625d160496462c1fc9bc"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "repository_path": "plugins/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "repository_path": "plugins/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "repository_path": "plugins/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
+      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "repository_path": "plugins/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/email-cliente/SKILL.md",
+      "repository_path": "plugins/client-file-preparation/skills/email-cliente/SKILL.md",
+      "sha256": "45ad2b86a4533151830f68b940678bb70963bc7df2a76033d07fac3b1a176e1d"
+    },
+    {
+      "path": "skills/email-cliente/SKILL.md",
+      "repository_path": "plugins/vera/skills/email-cliente/SKILL.md",
+      "sha256": "9c75cbfaeecb5cd1e3310abc2c17ae6eb7b2e36fa2c52de218bac7ca37e1c0d2"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Chiedere soltanto i documenti davvero necessari",
+      "goal": "Preparare una richiesta breve al cliente a partire dalle sole mancanze già rivedute.",
+      "scenario": "La revisione del fascicolo CLIENT-001 conferma che mancano l'estratto conto di giugno e una spiegazione per un bonifico del 12 giugno. Un possibile contratto mancante è ancora una proposta non applicata nella revisione.",
+      "request": "Vera, prepara una richiesta chiara dei documenti mancanti per questo cliente.",
+      "scope": "Bozza locale. Solo le richieste rivedute e applicate entrano nel testo; nessuna email viene inviata.",
+      "input_columns": [
+        "Voce fittizia del passaggio",
+        "Stato",
+        "Da includere"
+      ],
+      "input_rows": [
+        [
+          "Estratto conto di giugno",
+          "Richiesta riveduta e applicata",
+          "Sì"
+        ],
+        [
+          "Causale del bonifico 12 giugno",
+          "Richiesta riveduta e applicata",
+          "Sì"
+        ],
+        [
+          "Possibile contratto mancante",
+          "Candidato ancora da rivedere",
+          "No"
+        ]
+      ],
+      "basis": "Il passaggio E1 contiene due voci email_request applicate e una candidatura separata. Il nome della cartella e una vecchia bozza non aggiungono richieste autorizzate.",
+      "method": [
+        "Leggi tutte le pagine del passaggio email e verifica che esistano richieste applicate. Se mancano, lascia la bozza in attesa della revisione.",
+        "Scrivi un messaggio operativo con i soli documenti e chiarimenti sostenuti dalle richieste rivedute.",
+        "Rileggi ogni frase contro il passaggio e consegna la bozza al professionista. L'eventuale invio segue una richiesta separata e il canale autorizzato."
+      ],
+      "result_title": "Documenti e chiarimento per completare il fascicolo",
+      "conclusion": "Buongiorno, per completare il fascicolo vi chiediamo l'estratto conto di giugno e un chiarimento sulla causale del bonifico del 12 giugno. Grazie per la collaborazione.",
+      "output_columns": [
+        "Frase della bozza",
+        "Base",
+        "Controllo"
+      ],
+      "output_rows": [
+        [
+          "Estratto conto di giugno",
+          "E1 · email_request 1",
+          "Periodo corretto"
+        ],
+        [
+          "Causale bonifico 12 giugno",
+          "E1 · email_request 2",
+          "Riferimento corretto"
+        ],
+        [
+          "Richiesta del contratto",
+          "Candidato non applicato",
+          "Esclusa"
+        ]
+      ],
+      "check": "Una proposta di mancanza non è ancora una richiesta approvata. Il cliente non deve ricevere ipotesi interne trasformate in richieste certe.",
+      "question": "La vecchia bozza chiedeva anche il contratto: dobbiamo conservarlo per prudenza?",
+      "answer": "No. La fonte corrente sono le richieste applicate. Il contratto entra soltanto dopo la sua revisione e l'aggiornamento coerente del passaggio.",
+      "practice": "Rendi il testo ancora più breve mantenendo entrambe le richieste e i riferimenti esatti.",
+      "next": "Completa prima la revisione delle mancanze nel fascicolo; poi chiedi la bozza e controlla destinatario e tono."
+    },
+    "en": {
+      "title": "Ask only for the documents actually needed",
+      "goal": "Prepare a concise client request from missing items that have already been reviewed.",
+      "scenario": "The fictional CLIENT-001 file review confirms a missing June bank statement and a question about a 12 June transfer. A possibly missing contract is still an unapplied review candidate.",
+      "request": "Vera, draft a clear request for this client's missing documents.",
+      "scope": "Local draft only. The text uses reviewed, applied requests; no email is sent.",
+      "input_columns": [
+        "Fictional handoff item",
+        "Status",
+        "Include"
+      ],
+      "input_rows": [
+        [
+          "June bank statement",
+          "Reviewed and applied request",
+          "Yes"
+        ],
+        [
+          "12 June transfer purpose",
+          "Reviewed and applied request",
+          "Yes"
+        ],
+        [
+          "Possibly missing contract",
+          "Candidate awaiting review",
+          "No"
+        ]
+      ],
+      "basis": "E1 contains two applied email_request items and a separate candidate. A folder name or old draft does not add authorized requests.",
+      "method": [
+        "Read every email handoff page and verify that applied requests exist. Otherwise leave the draft pending review.",
+        "Write an operational message using only documents and clarifications supported by those requests.",
+        "Check each sentence against the handoff and deliver the draft. Sending requires its own authorized request and channel."
+      ],
+      "result_title": "Documents and clarification to complete the file",
+      "conclusion": "Hello, to complete the file, please provide the June bank statement and clarify the purpose of the transfer dated 12 June. Thank you for your help.",
+      "output_columns": [
+        "Draft item",
+        "Basis",
+        "Check"
+      ],
+      "output_rows": [
+        [
+          "June bank statement",
+          "E1 · email_request 1",
+          "Correct period"
+        ],
+        [
+          "12 June transfer purpose",
+          "E1 · email_request 2",
+          "Correct reference"
+        ],
+        [
+          "Contract request",
+          "Unapplied candidate",
+          "Excluded"
+        ]
+      ],
+      "check": "A proposed missing item is not an approved request. Do not turn internal hypotheses into definite client demands.",
+      "question": "The old draft asked for the contract. Should we keep it just in case?",
+      "answer": "No. Use the current applied requests. Include the contract only after review and a coherent handoff update.",
+      "practice": "Shorten the draft while preserving both requests and their exact references.",
+      "next": "Complete the missing-item review first, then request the draft and review its recipient and tone."
+    },
+    "fr": {
+      "title": "Demander seulement les pièces réellement nécessaires",
+      "goal": "Préparer une demande brève à partir des seules pièces manquantes déjà revues.",
+      "scenario": "La revue fictive de CLIENT-001 confirme l'absence du relevé bancaire de juin et une question sur le virement du 12 juin. Un contrat potentiellement manquant reste une proposition non appliquée.",
+      "request": "Vera, prépare une demande claire des documents manquants pour ce client.",
+      "scope": "Brouillon local fondé sur les demandes revues et appliquées. Aucun courriel n'est envoyé.",
+      "input_columns": [
+        "Élément fictif du passage",
+        "Statut",
+        "Inclure"
+      ],
+      "input_rows": [
+        [
+          "Relevé bancaire de juin",
+          "Demande revue et appliquée",
+          "Oui"
+        ],
+        [
+          "Objet du virement du 12 juin",
+          "Demande revue et appliquée",
+          "Oui"
+        ],
+        [
+          "Contrat potentiellement manquant",
+          "Candidat à revoir",
+          "Non"
+        ]
+      ],
+      "basis": "E1 contient deux email_request appliquées et un candidat séparé. Une ancienne ébauche ou un nom de dossier n'ajoute pas de demande autorisée.",
+      "method": [
+        "Lis toutes les pages du passage destiné au courriel et vérifie que des demandes appliquées existent. Sinon, laisse le brouillon en attente.",
+        "Rédige un message opérationnel limité aux documents et précisions étayés par ces demandes.",
+        "Compare chaque phrase au passage et présente le brouillon. L'envoi suit une demande distincte et un canal autorisé."
+      ],
+      "result_title": "Documents et précision pour compléter le dossier",
+      "conclusion": "Bonjour, pour compléter le dossier, merci de nous fournir le relevé bancaire de juin et de préciser l'objet du virement du 12 juin. Merci de votre collaboration.",
+      "output_columns": [
+        "Demande du brouillon",
+        "Base",
+        "Contrôle"
+      ],
+      "output_rows": [
+        [
+          "Relevé de juin",
+          "E1 · email_request 1",
+          "Période exacte"
+        ],
+        [
+          "Objet du virement",
+          "E1 · email_request 2",
+          "Référence exacte"
+        ],
+        [
+          "Contrat",
+          "Candidat non appliqué",
+          "Exclu"
+        ]
+      ],
+      "check": "Une pièce supposée manquante n'est pas encore une demande approuvée. Ne transforme pas une hypothèse interne en exigence certaine pour le client.",
+      "question": "L'ancien brouillon demandait le contrat. Faut-il le garder par prudence ?",
+      "answer": "Non. La source actuelle est la liste des demandes appliquées. Le contrat n'entre qu'après revue et actualisation cohérente du passage.",
+      "practice": "Raccourcis le texte tout en conservant les deux demandes et leurs références exactes.",
+      "next": "Termine d'abord la revue des pièces manquantes, puis demande le brouillon et vérifie destinataire et ton."
+    },
+    "de": {
+      "title": "Nur tatsächlich benötigte Unterlagen anfordern",
+      "goal": "Aus bereits geprüften Fehlunterlagen eine kurze Mandantenanfrage formulieren.",
+      "scenario": "Für das fiktive CLIENT-001 sind der fehlende Juni-Kontoauszug und eine Rückfrage zur Überweisung vom 12. Juni bestätigt. Ein möglicherweise fehlender Vertrag ist noch ein ungeprüfter Vorschlag.",
+      "request": "Vera, entwirf eine verständliche Anfrage zu den fehlenden Mandantenunterlagen.",
+      "scope": "Nur lokaler Entwurf aus geprüften und übernommenen Anforderungen. Es wird keine E-Mail versendet.",
+      "input_columns": [
+        "Fiktiver Übergabeeintrag",
+        "Status",
+        "Aufnehmen"
+      ],
+      "input_rows": [
+        [
+          "Juni-Kontoauszug",
+          "Geprüfte und übernommene Anforderung",
+          "Ja"
+        ],
+        [
+          "Zweck der Überweisung vom 12. Juni",
+          "Geprüfte und übernommene Anforderung",
+          "Ja"
+        ],
+        [
+          "Möglicherweise fehlender Vertrag",
+          "Vorschlag vor Prüfung",
+          "Nein"
+        ]
+      ],
+      "basis": "E1 enthält zwei übernommene email_request-Einträge und einen getrennten Vorschlag. Ordnernamen und alte Entwürfe schaffen keine zusätzlichen freigegebenen Anforderungen.",
+      "method": [
+        "Lies alle Seiten der E-Mail-Übergabe und prüfe, ob übernommene Anforderungen existieren. Andernfalls bleibt der Entwurf bis zur Prüfung offen.",
+        "Formuliere eine praktische Mitteilung ausschließlich zu den belegten Unterlagen und Klärungen.",
+        "Prüfe jeden Satz gegen die Übergabe und liefere den Entwurf. Versand benötigt eine eigene autorisierte Anweisung und einen verfügbaren Kanal."
+      ],
+      "result_title": "Unterlagen und Rückfrage zur Vervollständigung",
+      "conclusion": "Guten Tag, bitte reichen Sie zur Vervollständigung der Akte den Juni-Kontoauszug ein und erläutern Sie den Zweck der Überweisung vom 12. Juni. Vielen Dank für Ihre Unterstützung.",
+      "output_columns": [
+        "Entwurfsbestandteil",
+        "Grundlage",
+        "Prüfung"
+      ],
+      "output_rows": [
+        [
+          "Juni-Kontoauszug",
+          "E1 · email_request 1",
+          "Richtiger Zeitraum"
+        ],
+        [
+          "Überweisungszweck vom 12. Juni",
+          "E1 · email_request 2",
+          "Richtige Referenz"
+        ],
+        [
+          "Vertragsanforderung",
+          "Nicht übernommener Vorschlag",
+          "Ausgeschlossen"
+        ]
+      ],
+      "check": "Eine vermutete Fehlunterlage ist keine freigegebene Anforderung. Interne Hypothesen dürfen nicht zu sicheren Forderungen an den Mandanten werden.",
+      "question": "Der alte Entwurf verlangte den Vertrag. Sollen wir das vorsorglich beibehalten?",
+      "answer": "Nein. Maßgeblich sind die aktuell übernommenen Anforderungen. Der Vertrag kommt erst nach Prüfung und konsistenter Aktualisierung der Übergabe hinzu.",
+      "practice": "Kürze den Entwurf und erhalte beide Anforderungen mit ihren genauen Referenzen.",
+      "next": "Schließe zuerst die Fehlunterlagenprüfung ab; prüfe anschließend Empfänger und Ton des angeforderten Entwurfs."
+    },
+    "es": {
+      "title": "Pedir solo los documentos realmente necesarios",
+      "goal": "Preparar una solicitud breve a partir de carencias documentales ya revisadas.",
+      "scenario": "La revisión ficticia de CLIENT-001 confirma que falta el extracto bancario de junio y que debe aclararse una transferencia del 12 de junio. Un contrato posiblemente ausente sigue siendo una propuesta sin aplicar.",
+      "request": "Vera, redacta una solicitud clara de los documentos pendientes de este cliente.",
+      "scope": "Solo borrador local con solicitudes revisadas y aplicadas. No se envía ningún correo.",
+      "input_columns": [
+        "Elemento ficticio de la entrega",
+        "Estado",
+        "Incluir"
+      ],
+      "input_rows": [
+        [
+          "Extracto bancario de junio",
+          "Solicitud revisada y aplicada",
+          "Sí"
+        ],
+        [
+          "Finalidad de transferencia del 12 de junio",
+          "Solicitud revisada y aplicada",
+          "Sí"
+        ],
+        [
+          "Contrato posiblemente ausente",
+          "Candidato pendiente de revisión",
+          "No"
+        ]
+      ],
+      "basis": "E1 contiene dos elementos email_request aplicados y un candidato independiente. Un nombre de carpeta o un borrador antiguo no añade solicitudes autorizadas.",
+      "method": [
+        "Lee todas las páginas de la entrega de correo y verifica que existen solicitudes aplicadas. En caso contrario, deja el borrador pendiente de revisión.",
+        "Redacta un mensaje operativo solo con documentos y aclaraciones respaldados por esas solicitudes.",
+        "Comprueba cada frase contra la entrega y presenta el borrador. Enviar requiere su propia instrucción autorizada y canal."
+      ],
+      "result_title": "Documentos y aclaración para completar el expediente",
+      "conclusion": "Buenos días: para completar el expediente, facilite el extracto bancario de junio y aclare la finalidad de la transferencia del 12 de junio. Gracias por su colaboración.",
+      "output_columns": [
+        "Elemento del borrador",
+        "Base",
+        "Comprobación"
+      ],
+      "output_rows": [
+        [
+          "Extracto bancario de junio",
+          "E1 · email_request 1",
+          "Periodo correcto"
+        ],
+        [
+          "Finalidad de transferencia del 12 de junio",
+          "E1 · email_request 2",
+          "Referencia correcta"
+        ],
+        [
+          "Solicitud del contrato",
+          "Candidato sin aplicar",
+          "Excluida"
+        ]
+      ],
+      "check": "Una carencia propuesta no es una solicitud aprobada. No conviertas hipótesis internas en exigencias categóricas al cliente.",
+      "question": "El borrador anterior pedía el contrato. ¿Lo conservamos por si acaso?",
+      "answer": "No. Utiliza las solicitudes aplicadas actuales. Incluye el contrato solo después de revisión y actualización coherente de la entrega.",
+      "practice": "Acorta el borrador manteniendo ambas solicitudes y sus referencias exactas.",
+      "next": "Completa primero la revisión de carencias, solicita después el borrador y revisa destinatario y tono."
+    }
+  }
+}

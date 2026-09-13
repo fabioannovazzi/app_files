@@ -1,0 +1,418 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "variance-analysis",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/variance-analysis/references/legacy_inventory.json",
+      "repository_path": "plugins/variance-analysis/references/legacy_inventory.json",
+      "sha256": "40245a5dabf9448d8221662f3e20710bda51925b263b7f365e0faaa680a8d2f1"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/accounting_controls.py",
+      "repository_path": "plugins/variance-analysis/scripts/accounting_controls.py",
+      "sha256": "f7c21784fd9e554fc6aebc1aacf025c9aafde8f57af44d3a7e0b5e9c8538c716"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/check_dependencies.py",
+      "repository_path": "plugins/variance-analysis/scripts/check_dependencies.py",
+      "sha256": "25f791ee0aef388b8bd33ca01a2733943cd62c2e1d19824b987ef1ea5b81970f"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/exploded_variance_bridge_chart.py",
+      "repository_path": "plugins/variance-analysis/scripts/exploded_variance_bridge_chart.py",
+      "sha256": "7ad7de5390349fc32e120412450b3b7b3ae0337459db24df592f07b0a6c87c86"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/ibcs_titles.py",
+      "repository_path": "plugins/variance-analysis/scripts/ibcs_titles.py",
+      "sha256": "5cae9824ac3d8d5453507a3fcf6ab36c66565e9a284d59dd79599e48074413e8"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/inspect_column_values.py",
+      "repository_path": "plugins/variance-analysis/scripts/inspect_column_values.py",
+      "sha256": "f13f8b2d466c0c43bee7c3cbb04c4795079aca0288132daff3b4d22ecaa78749"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/inspect_inputs.py",
+      "repository_path": "plugins/variance-analysis/scripts/inspect_inputs.py",
+      "sha256": "cee589bc42936eb9224de1c900dca8c60c0bd6873100d7a4b8c2c1e695bba724"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/legacy_adapter.py",
+      "repository_path": "plugins/variance-analysis/scripts/legacy_adapter.py",
+      "sha256": "31cc0d6cea29c65309438bdb7aaa302d9561134afa0332d785874757b68a6905"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/legacy_plotting.py",
+      "repository_path": "plugins/variance-analysis/scripts/legacy_plotting.py",
+      "sha256": "11e497c3c2c14e8a5505a7d87962311be16b2add77a0f0d7df3661a1669b1cb0"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/model_use.py",
+      "repository_path": "plugins/variance-analysis/scripts/model_use.py",
+      "sha256": "7a80f663ca259c02cb87de06faee36484627216ef6153c43ae9d56e4c6db3ba6"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/review_preflight.py",
+      "repository_path": "plugins/variance-analysis/scripts/review_preflight.py",
+      "sha256": "84ce5aeeb28ec3cdbe865d37a340e43bfbb7bdf59eceeaeee16be031249f0f0c"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/review_session.py",
+      "repository_path": "plugins/variance-analysis/scripts/review_session.py",
+      "sha256": "97a261e32cffa669a39f2294c38d6482b203a1f6e841db9910dbaa5c934b9cf8"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/root_cause_bridge_chart.py",
+      "repository_path": "plugins/variance-analysis/scripts/root_cause_bridge_chart.py",
+      "sha256": "f9d04fec0fba95406d85ab30d49ee5f04d64c59e17a33c8cf4490d0b8638b5d4"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/root_cause_client_report.py",
+      "repository_path": "plugins/variance-analysis/scripts/root_cause_client_report.py",
+      "sha256": "e2d18653caf0bd0418ee09ad1b93716e8538215946c25b9df39af6777bd98aee"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/run_variance.py",
+      "repository_path": "plugins/variance-analysis/scripts/run_variance.py",
+      "sha256": "633e4175e2abf9509eacf607eff69ed1dc48f5d34db046402a7ae746bf94109b"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/total_by_dimension_bridge_chart.py",
+      "repository_path": "plugins/variance-analysis/scripts/total_by_dimension_bridge_chart.py",
+      "sha256": "d507f19b5710d9d7e9d4f19f980b5ae44b66c90dc6a1775e7b6dd3982432dfa2"
+    },
+    {
+      "path": "modules/variance-analysis/scripts/variance_core.py",
+      "repository_path": "plugins/variance-analysis/scripts/variance_core.py",
+      "sha256": "5d1b08ea130a2dd1f3e44580a9ad4e96dab3cf7ad6409b255007210e9f6b827b"
+    },
+    {
+      "path": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
+      "repository_path": "plugins/variance-analysis/skills/variance-analysis/SKILL.md",
+      "sha256": "8da92b27d7f3d83c96d5a80c200af14c0ede3b708d12dc56f52a8a79a78a50d1"
+    },
+    {
+      "path": "skills/variance-analysis/SKILL.md",
+      "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
+      "sha256": "fcbbd189b9f4eb8fa0d40e003f822a38e2fa4604d5ecb1836cf90bbe83684392"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Spiegare uno scostamento senza inventarne la causa",
+      "goal": "Seguire un ponte tra due periodi e verificare che i contributi spieghino la differenza osservata.",
+      "scenario": "Nel caso fittizio il prodotto A passa da 100 unità a 10 EUR a 120 unità a 11 EUR. Il ricavo cresce da 1.000 a 1.320 EUR. Per illustrare il ponte usiamo prima l'effetto quantità al prezzo iniziale, poi il prezzo sulle quantità finali.",
+      "request": "Vera, spiegami il passaggio da 1.000 a 1.320 EUR e fammi vedere i contributi.",
+      "scope": "Ponte elementare di un prodotto. Il workflow reale esegue le alternative e i drilldown previsti; l'ordine di decomposizione deve rimanere quello calcolato e documentato.",
+      "input_columns": [
+        "Periodo fittizio",
+        "Quantità",
+        "Prezzo · ricavo"
+      ],
+      "input_rows": [
+        [
+          "Base",
+          "100",
+          "10 EUR · 1.000 EUR"
+        ],
+        [
+          "Confronto",
+          "120",
+          "11 EUR · 1.320 EUR"
+        ]
+      ],
+      "basis": "V1 contiene quantità e ricavi nei due periodi. Il ponte illustrato esplicita l'ordine: quantità al prezzo base, poi prezzo sulle quantità di confronto.",
+      "method": [
+        "Ispeziona dati e confronto, rivedendo periodi, importi, unità, dimensioni e granularità dalle fonti.",
+        "Esegui analisi delle cause, alternative e drilldown standard. Leggi i contributi e la riconciliazione senza cambiare la sequenza dei risultati calcolati.",
+        "Mostra waterfall, tabelle e bozza di commento. Distingui decomposizione numerica, interpretazione commerciale e ipotesi che richiedono altre prove."
+      ],
+      "result_title": "+320 EUR, riconciliati in due contributi",
+      "conclusion": "Nell'ordine illustrato, +20 unità a 10 EUR producono +200 EUR; +1 EUR su 120 unità produce +120 EUR. I contributi sommano allo scostamento di +320 EUR.",
+      "output_columns": [
+        "Passaggio",
+        "Contributo",
+        "Ricavo dopo il passaggio"
+      ],
+      "output_rows": [
+        [
+          "Base",
+          "—",
+          "1.000 EUR"
+        ],
+        [
+          "Quantità",
+          "+200 EUR",
+          "1.200 EUR"
+        ],
+        [
+          "Prezzo",
+          "+120 EUR",
+          "1.320 EUR"
+        ]
+      ],
+      "check": "Un altro ordine può distribuire diversamente l'interazione. Il ponte prova la scomposizione aritmetica, non che una campagna abbia causato l'aumento delle unità.",
+      "question": "Possiamo dire che il marketing ha generato i 200 EUR di volume?",
+      "answer": "Non da V1. Il contributo quantità è calcolato; la causa commerciale richiede evidenze ulteriori. Il commento deve distinguerli.",
+      "practice": "Porta il prezzo di confronto a 9 EUR e verifica come il ponte combina volume favorevole e prezzo sfavorevole.",
+      "next": "Seleziona due periodi confrontabili e i dati granulari disponibili; lascia che il workflow mostri le alternative sostenute dalle fonti."
+    },
+    "en": {
+      "title": "Follow the bridge from one period to the next",
+      "goal": "Explain a measured difference through contributions that reconcile to the observed change.",
+      "scenario": "Fictional product A moves from 100 units at EUR 10 to 120 units at EUR 11. Revenue rises from EUR 1,000 to EUR 1,320. This bridge applies volume at the initial price first, then price at final volume.",
+      "request": "Vera, explain the move from EUR 1,000 to EUR 1,320 and show the contributions.",
+      "scope": "A one-product bridge. The real workflow runs its supported alternatives and drilldowns; retain the calculated, documented decomposition order.",
+      "input_columns": [
+        "Fictional period",
+        "Units",
+        "Price · revenue"
+      ],
+      "input_rows": [
+        [
+          "Base",
+          "100",
+          "EUR 10 · EUR 1,000"
+        ],
+        [
+          "Comparison",
+          "120",
+          "EUR 11 · EUR 1,320"
+        ]
+      ],
+      "basis": "V1 supplies volume and revenue for both periods. The illustrated order is volume at base price, then price at comparison volume.",
+      "method": [
+        "Inspect and review periods, amounts, units, dimensions and calculation grain against the sources.",
+        "Run standard root-cause analysis, alternatives and drilldowns. Read contributions and reconciliation without changing the calculated sequence.",
+        "Show the waterfall, tables and commentary draft. Separate numeric decomposition from commercial interpretation and hypotheses needing evidence."
+      ],
+      "result_title": "+EUR 320 explained by two contributions",
+      "conclusion": "In this order, 20 extra units at EUR 10 add EUR 200; EUR 1 on 120 units adds EUR 120. Together they reconcile to EUR 320.",
+      "output_columns": [
+        "Step",
+        "Contribution",
+        "Revenue after step"
+      ],
+      "output_rows": [
+        [
+          "Base",
+          "—",
+          "EUR 1,000"
+        ],
+        [
+          "Volume",
+          "+EUR 200",
+          "EUR 1,200"
+        ],
+        [
+          "Price",
+          "+EUR 120",
+          "EUR 1,320"
+        ]
+      ],
+      "check": "Another order can allocate the interaction differently. The bridge establishes arithmetic, not that a campaign caused the volume increase.",
+      "question": "Can we attribute the EUR 200 volume contribution to marketing?",
+      "answer": "Not from V1. The volume contribution is calculated; its commercial cause requires separate evidence and should be described accordingly.",
+      "practice": "Reduce the comparison price to EUR 9 and inspect favorable volume against unfavorable price.",
+      "next": "Select comparable periods and available granular data; let the workflow expose the alternatives supported by the sources."
+    },
+    "fr": {
+      "title": "Suivre le pont entre deux périodes",
+      "goal": "Expliquer un écart par des contributions qui se réconcilient au changement observé.",
+      "scenario": "Le produit fictif A passe de 100 unités à 10 EUR à 120 unités à 11 EUR. Les ventes montent de 1 000 à 1 320 EUR. Le pont applique d'abord le volume au prix initial, puis le prix au volume final.",
+      "request": "Vera, explique le passage de 1 000 à 1 320 EUR et montre les contributions.",
+      "scope": "Pont élémentaire d'un produit. Le workflow réel exécute ses alternatives et approfondissements ; conserve l'ordre de décomposition calculé et documenté.",
+      "input_columns": [
+        "Période fictive",
+        "Unités",
+        "Prix · ventes"
+      ],
+      "input_rows": [
+        [
+          "Base",
+          "100",
+          "10 EUR · 1 000 EUR"
+        ],
+        [
+          "Comparaison",
+          "120",
+          "11 EUR · 1 320 EUR"
+        ]
+      ],
+      "basis": "V1 fournit unités et ventes des deux périodes. L'ordre illustré est volume au prix de base, puis prix au volume comparé.",
+      "method": [
+        "Examine périodes, montants, unités, dimensions et granularité contre les sources.",
+        "Exécute l'analyse standard, ses alternatives et approfondissements. Lis contributions et rapprochement sans changer la séquence calculée.",
+        "Présente waterfall, tableaux et commentaire. Sépare décomposition numérique, interprétation commerciale et hypothèses nécessitant d'autres preuves."
+      ],
+      "result_title": "+320 EUR expliqués par deux contributions",
+      "conclusion": "Dans cet ordre, 20 unités à 10 EUR ajoutent 200 EUR, puis 1 EUR sur 120 unités ajoute 120 EUR. La somme explique les 320 EUR.",
+      "output_columns": [
+        "Étape",
+        "Contribution",
+        "Ventes après étape"
+      ],
+      "output_rows": [
+        [
+          "Base",
+          "—",
+          "1 000 EUR"
+        ],
+        [
+          "Volume",
+          "+200 EUR",
+          "1 200 EUR"
+        ],
+        [
+          "Prix",
+          "+120 EUR",
+          "1 320 EUR"
+        ]
+      ],
+      "check": "Un autre ordre peut répartir différemment l'interaction. Le pont établit une décomposition, pas l'effet causal d'une campagne.",
+      "question": "Peut-on attribuer les 200 EUR de volume au marketing ?",
+      "answer": "Pas à partir de V1. La contribution volume est calculée ; sa cause commerciale demande des preuves distinctes.",
+      "practice": "Ramène le prix comparé à 9 EUR et examine volume favorable et prix défavorable.",
+      "next": "Sélectionne des périodes comparables et les données granulaires disponibles ; laisse le workflow montrer les alternatives étayées."
+    },
+    "de": {
+      "title": "Die Brücke zwischen zwei Perioden nachvollziehen",
+      "goal": "Eine gemessene Differenz durch Beiträge erklären, die zur Gesamtveränderung passen.",
+      "scenario": "Das fiktive Produkt A steigt von 100 Einheiten zu EUR 10 auf 120 Einheiten zu EUR 11. Umsatz: EUR 1.000 auf EUR 1.320. Die Brücke berechnet zuerst Menge zum Ausgangspreis, danach Preis bei Endmenge.",
+      "request": "Vera, erkläre den Weg von EUR 1.000 auf EUR 1.320 und zeige die Beiträge.",
+      "scope": "Brücke für ein Produkt. Der reale Workflow berechnet unterstützte Alternativen und Vertiefungen; behalte seine dokumentierte Zerlegungsreihenfolge bei.",
+      "input_columns": [
+        "Fiktive Periode",
+        "Einheiten",
+        "Preis · Umsatz"
+      ],
+      "input_rows": [
+        [
+          "Basis",
+          "100",
+          "EUR 10 · EUR 1.000"
+        ],
+        [
+          "Vergleich",
+          "120",
+          "EUR 11 · EUR 1.320"
+        ]
+      ],
+      "basis": "V1 liefert Menge und Umsatz beider Perioden. Gezeigt wird Menge zum Basispreis, dann Preis bei Vergleichsmenge.",
+      "method": [
+        "Prüfe Perioden, Beträge, Einheiten, Dimensionen und Berechnungsebene anhand der Quellen.",
+        "Führe reguläre Ursachenanalyse, Alternativen und Vertiefungen aus. Lies Beiträge und Abstimmung ohne Änderung der berechneten Reihenfolge.",
+        "Zeige Wasserfalldiagramm, Tabellen und Kommentarentwurf. Trenne rechnerische Zerlegung von geschäftlicher Interpretation und belegbedürftigen Hypothesen."
+      ],
+      "result_title": "+EUR 320 durch zwei Beiträge erklärt",
+      "conclusion": "In dieser Reihenfolge bringen 20 zusätzliche Einheiten zu EUR 10 genau EUR 200; EUR 1 auf 120 Einheiten bringt EUR 120. Zusammen ergeben sie EUR 320.",
+      "output_columns": [
+        "Schritt",
+        "Beitrag",
+        "Umsatz nach Schritt"
+      ],
+      "output_rows": [
+        [
+          "Basis",
+          "—",
+          "EUR 1.000"
+        ],
+        [
+          "Menge",
+          "+EUR 200",
+          "EUR 1.200"
+        ],
+        [
+          "Preis",
+          "+EUR 120",
+          "EUR 1.320"
+        ]
+      ],
+      "check": "Eine andere Reihenfolge kann den Interaktionseffekt anders verteilen. Die Brücke belegt Rechenwege, nicht dass eine Kampagne das Mengenwachstum verursachte.",
+      "question": "Können wir den Mengenbeitrag von EUR 200 dem Marketing zuschreiben?",
+      "answer": "Nicht aus V1. Der Mengenbeitrag ist berechnet; seine geschäftliche Ursache benötigt separate Belege und ist entsprechend zu kennzeichnen.",
+      "practice": "Senke den Vergleichspreis auf EUR 9 und prüfe günstigen Mengen- gegen ungünstigen Preiseffekt.",
+      "next": "Wähle vergleichbare Perioden und verfügbare Detaildaten; der Workflow zeigt die durch Quellen gestützten Alternativen."
+    },
+    "es": {
+      "title": "Seguir el puente entre dos periodos",
+      "goal": "Explicar una diferencia medida mediante contribuciones que concilian con la variación observada.",
+      "scenario": "El producto ficticio A pasa de 100 unidades a EUR 10 a 120 unidades a EUR 11. Los ingresos suben de EUR 1.000 a EUR 1.320. El puente aplica primero volumen al precio inicial y después precio al volumen final.",
+      "request": "Vera, explica el paso de EUR 1.000 a EUR 1.320 y muestra las contribuciones.",
+      "scope": "Puente de un producto. El workflow real ejecuta alternativas y desgloses compatibles; conserva el orden de descomposición calculado y documentado.",
+      "input_columns": [
+        "Periodo ficticio",
+        "Unidades",
+        "Precio · ingresos"
+      ],
+      "input_rows": [
+        [
+          "Base",
+          "100",
+          "EUR 10 · EUR 1.000"
+        ],
+        [
+          "Comparación",
+          "120",
+          "EUR 11 · EUR 1.320"
+        ]
+      ],
+      "basis": "V1 aporta volumen e ingresos de ambos periodos. El orden ilustrado es volumen a precio base y luego precio a volumen comparativo.",
+      "method": [
+        "Inspecciona y revisa periodos, importes, unidades, dimensiones y nivel de cálculo contra las fuentes.",
+        "Ejecuta análisis habitual de causas, alternativas y desgloses. Lee contribuciones y conciliación sin cambiar la secuencia calculada.",
+        "Muestra cascada, tablas y comentario preliminar. Separa descomposición numérica de interpretación comercial e hipótesis que requieren pruebas."
+      ],
+      "result_title": "+EUR 320 explicados por dos contribuciones",
+      "conclusion": "En este orden, 20 unidades adicionales a EUR 10 aportan EUR 200; EUR 1 sobre 120 unidades aporta EUR 120. Juntas concilian EUR 320.",
+      "output_columns": [
+        "Paso",
+        "Contribución",
+        "Ingresos tras el paso"
+      ],
+      "output_rows": [
+        [
+          "Base",
+          "—",
+          "EUR 1.000"
+        ],
+        [
+          "Volumen",
+          "+EUR 200",
+          "EUR 1.200"
+        ],
+        [
+          "Precio",
+          "+EUR 120",
+          "EUR 1.320"
+        ]
+      ],
+      "check": "Otro orden puede repartir la interacción de otra forma. El puente demuestra aritmética, no que una campaña causara el volumen adicional.",
+      "question": "¿Podemos atribuir a marketing los EUR 200 de volumen?",
+      "answer": "No a partir de V1. La contribución está calculada; su causa comercial necesita evidencia independiente y debe describirse como tal.",
+      "practice": "Reduce el precio comparativo a EUR 9 y examina volumen favorable frente a precio desfavorable.",
+      "next": "Selecciona periodos comparables y datos detallados disponibles; el workflow expone las alternativas respaldadas por las fuentes."
+    }
+  }
+}

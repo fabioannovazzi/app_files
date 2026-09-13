@@ -1,0 +1,440 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "lucia",
+  "workflow": "apertura-pratica",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/apertura-pratica/references/source-registry.json",
+      "repository_path": "plugins/apertura-pratica/references/source-registry.json",
+      "sha256": "09548934c2ea5bb7cc275615ca74396857b9851386a22475ad642b95ef7fb4ad"
+    },
+    {
+      "path": "modules/apertura-pratica/schemas/matter_intake.schema.json",
+      "repository_path": "plugins/apertura-pratica/schemas/matter_intake.schema.json",
+      "sha256": "de8495ebbc8800d91fb8b5e88572f68d71f57b3920d31f0987f7712de6998ee9"
+    },
+    {
+      "path": "modules/apertura-pratica/schemas/ui_decisions.schema.json",
+      "repository_path": "plugins/apertura-pratica/schemas/ui_decisions.schema.json",
+      "sha256": "b4c66a89d71d2c0628eeaea05f90796ddd36490d9779998dde2deec6cf093181"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/add_evidence.py",
+      "repository_path": "plugins/apertura-pratica/scripts/add_evidence.py",
+      "sha256": "e15edcdd4704b389aaf9995b9e66f7210b780b83845193c3f312430ae6a1d2b0"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
+      "repository_path": "plugins/apertura-pratica/scripts/apertura_pratica_core.py",
+      "sha256": "f2d3ad887330e8fa59d6350672d933cef35c8df0df6c8e024df15caa03b9e2a2"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/apply_review.py",
+      "repository_path": "plugins/apertura-pratica/scripts/apply_review.py",
+      "sha256": "c04f6aecc0ed3abdd7b9a808049182af7a08a2482278acbef314f9c3710b221b"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/check_dependencies.py",
+      "repository_path": "plugins/apertura-pratica/scripts/check_dependencies.py",
+      "sha256": "a10da17901307f832bd7f6e910664c25ecccea11980a3eb96cfd7a94513700be"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/initialize_workspace.py",
+      "repository_path": "plugins/apertura-pratica/scripts/initialize_workspace.py",
+      "sha256": "4f1b0ee25a77b158a54b75374132d5cadf6219b52c271b88d99d416db15023e1"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/prepare_review.py",
+      "repository_path": "plugins/apertura-pratica/scripts/prepare_review.py",
+      "sha256": "6010c6e679e9b979bcb90db57cdee86271e9c38731f6fee2e7714051f7895f02"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/review_server.py",
+      "repository_path": "plugins/apertura-pratica/scripts/review_server.py",
+      "sha256": "d52faa8763957f8612430fe4ba9fdce7187f6a8c6e214d2748cb06ee97b0b5c7"
+    },
+    {
+      "path": "modules/apertura-pratica/scripts/validate_run.py",
+      "repository_path": "plugins/apertura-pratica/scripts/validate_run.py",
+      "sha256": "a2c83e96dae0250eab3297a647d673bf5930d4ada52b48efa919b52cd6844729"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/SKILL.md",
+      "repository_path": "plugins/apertura-pratica/skills/apertura-pratica/SKILL.md",
+      "sha256": "8e7e39faa96543a66b6cc3fb39550486dd6648446af8a4d095dbdd2159a10383"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/references/italian-professional-boundaries.md",
+      "repository_path": "plugins/apertura-pratica/skills/apertura-pratica/references/italian-professional-boundaries.md",
+      "sha256": "66591469f13c0e262391a09c32c645ea03ba538f050276a921ded8bb98fc83ab"
+    },
+    {
+      "path": "modules/apertura-pratica/skills/apertura-pratica/references/workflow-method.md",
+      "repository_path": "plugins/apertura-pratica/skills/apertura-pratica/references/workflow-method.md",
+      "sha256": "8cdc87341ab9d39c59446bb4a02994a24f4cdf024dfb9c284c80b7e540d15c4c"
+    },
+    {
+      "path": "skills/apertura-pratica/SKILL.md",
+      "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
+      "sha256": "5aa4ec589857fecec2963e3cb8b6c4e5a95024164fb57d11ddd5a100e036316c"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [
+    {
+      "path": "files/executed-starter/matter-brief.md",
+      "sha256": "9110c8991a10957d6c7f4227131ad33da42cdb83da81e029b3bb6416a2c6e932"
+    },
+    {
+      "path": "files/executed-starter/matter_opening_memo.md",
+      "sha256": "320fa60753c85554a17ba48c0d8a8c599cef3756933ca84711d5032810048497"
+    },
+    {
+      "path": "files/executed-starter/provenance.json",
+      "sha256": "c558766405e526df603ba3a5345ecb445bfa670aee44e72e1cc3d995494e5d49"
+    },
+    {
+      "path": "files/executed-starter/validation_report.json",
+      "sha256": "4fc898a82f0e4fd07fdfb60f6c5ba4108d2034d34e31935f2e0538792b66d2f8"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Aprire il dossier non significa accettare l'incarico",
+      "goal": "Preparare una pratica legale con parti, documenti mancanti e decisioni professionali chiaramente separate.",
+      "scenario": "Beta Laboratorio chiede assistenza per una consegna incompleta. Il brief nomina il fornitore Delta e cita contratto e corrispondenza che non sono ancora stati consegnati. Il registro dei conflitti non è disponibile nel caso.",
+      "request": "Lucia, prepara il dossier iniziale e mostrami cosa devo verificare prima di aprire la pratica.",
+      "scope": "Intake legale fittizio. Nessuna ricerca conflitti viene dichiarata eseguita, nessun termine vincolante viene calcolato e l'incarico non viene accettato automaticamente.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Informazione",
+        "Stato"
+      ],
+      "input_rows": [
+        [
+          "L1 · brief cliente",
+          "Beta contro fornitore Delta",
+          "Parti riferite dal cliente"
+        ],
+        [
+          "L1 · documenti citati",
+          "Contratto e corrispondenza",
+          "Non ancora forniti"
+        ],
+        [
+          "Registro conflitti",
+          "Non disponibile",
+          "Controllo non eseguito"
+        ]
+      ],
+      "basis": "L1 sostiene la richiesta del cliente e i nomi riferiti. Non sostituisce contratto, corrispondenza o verifica del registro dei conflitti.",
+      "method": [
+        "Seleziona nuovo cliente o nuova pratica e conserva le fonti esatte. Identifica obiettivo, parti, giurisdizione e urgenza dalle evidenze.",
+        "Prepara memo, mappa delle parti, richieste mancanti e piano della cartella. Mantieni parziali i punti che non hanno prove.",
+        "Presenta le quattro revisioni: conflitti, incarico, termini e apertura. Salva soltanto decisioni effettive e rivedi lo stato se cambia l'intake."
+      ],
+      "result_title": "Dossier iniziale parziale",
+      "conclusion": "La richiesta e le parti sono descritte. Mancano i documenti sostanziali e il controllo conflitti; il dossier non è pronto per l'apertura.",
+      "output_columns": [
+        "Area",
+        "Situazione",
+        "Passo successivo"
+      ],
+      "output_rows": [
+        [
+          "Documenti",
+          "Contratto e corrispondenza mancanti",
+          "Richiesta da rivedere"
+        ],
+        [
+          "Conflitti",
+          "Registro non consultato",
+          "Controllo professionale sul perimetro esatto"
+        ],
+        [
+          "Incarico e apertura",
+          "Non approvati",
+          "Revisione dell'avvocato"
+        ]
+      ],
+      "check": "Un elenco di nomi non è un controllo conflitti e un piano di cartelle non sposta gli originali. Ogni decisione resta legata all'intake corrente.",
+      "question": "Nessun conflitto compare nel brief: possiamo segnare il controllo come superato?",
+      "answer": "No. Il brief non è il registro. Il controllo non eseguito resta tale; non diventa un esito negativo per assenza di segnalazioni.",
+      "practice": "Aggiungi il contratto fittizio e verifica quali parti e questioni cambiano, senza simulare l'accettazione dell'incarico.",
+      "next": "Seleziona brief, documenti, parti note e il registro disponibile; segnala subito l'urgenza concreta."
+    },
+    "en": {
+      "title": "Preparing a matter file does not accept the engagement",
+      "goal": "Build legal intake with parties, missing documents and professional decisions kept separate.",
+      "scenario": "Fictional Beta Laboratory seeks help with an incomplete delivery from Delta. Its brief mentions a contract and correspondence not yet supplied. No conflicts register is available in the teaching case.",
+      "request": "Lucia, prepare the initial dossier and show what I must verify before opening the matter.",
+      "scope": "Fictional legal intake. No conflicts search is claimed, no binding deadline is calculated and no engagement is automatically accepted.",
+      "input_columns": [
+        "Fictional source",
+        "Information",
+        "Status"
+      ],
+      "input_rows": [
+        [
+          "L1 · client brief",
+          "Beta versus supplier Delta",
+          "Client-reported parties"
+        ],
+        [
+          "L1 · cited documents",
+          "Contract and correspondence",
+          "Not yet supplied"
+        ],
+        [
+          "Conflicts register",
+          "Unavailable",
+          "Search not performed"
+        ]
+      ],
+      "basis": "L1 supports the client's request and reported parties. It does not replace the contract, correspondence or conflicts-register search.",
+      "method": [
+        "Select a new client or matter and preserve exact sources. Establish objective, parties, jurisdiction and urgency from evidence.",
+        "Prepare the memo, party map, missing-information request and folder plan. Keep unsupported points partial.",
+        "Present four review scopes: conflict, engagement, deadlines and opening. Persist only actual decisions and refresh review when intake changes."
+      ],
+      "result_title": "Initial dossier remains partial",
+      "conclusion": "The request and parties are described. Substantive documents and conflict review are missing, so the dossier is not ready to open.",
+      "output_columns": [
+        "Area",
+        "Situation",
+        "Next step"
+      ],
+      "output_rows": [
+        [
+          "Documents",
+          "Contract and correspondence missing",
+          "Review the request"
+        ],
+        [
+          "Conflicts",
+          "Register not consulted",
+          "Professional check of exact scope"
+        ],
+        [
+          "Engagement and opening",
+          "Not approved",
+          "Lawyer review"
+        ]
+      ],
+      "check": "A list of names is not a conflicts search, and a folder plan does not move originals. Decisions remain bound to the current intake.",
+      "question": "No conflict is mentioned in the brief. Can we mark the check as passed?",
+      "answer": "No. The brief is not the register. An unperformed check remains unperformed rather than becoming a negative result.",
+      "practice": "Add the fictional contract and review changed parties or questions without simulating engagement acceptance.",
+      "next": "Select the brief, documents, known parties and available register, and surface concrete urgency promptly."
+    },
+    "fr": {
+      "title": "Préparer le dossier n'accepte pas la mission",
+      "goal": "Organiser l'intake juridique en séparant parties, pièces manquantes et décisions professionnelles.",
+      "scenario": "Le laboratoire fictif Beta demande une assistance pour une livraison incomplète de Delta. Son brief cite contrat et correspondance non encore fournis. Aucun registre de conflits n'est disponible dans ce cas.",
+      "request": "Lucia, prépare le dossier initial et montre les vérifications avant l'ouverture.",
+      "scope": "Intake fictif. Aucune recherche de conflits annoncée, aucun délai contraignant calculé et aucune mission acceptée automatiquement.",
+      "input_columns": [
+        "Source fictive",
+        "Information",
+        "Statut"
+      ],
+      "input_rows": [
+        [
+          "L1 · brief client",
+          "Beta contre fournisseur Delta",
+          "Parties déclarées"
+        ],
+        [
+          "L1 · pièces citées",
+          "Contrat et correspondance",
+          "Non fournis"
+        ],
+        [
+          "Registre de conflits",
+          "Indisponible",
+          "Contrôle non effectué"
+        ]
+      ],
+      "basis": "L1 soutient demande et parties rapportées. Il ne remplace ni pièces substantielles ni consultation du registre.",
+      "method": [
+        "Choisis nouveau client ou nouvelle affaire et conserve les sources exactes. Établis objectif, parties, juridiction et urgence à partir des preuves.",
+        "Prépare mémo, carte des parties, demandes manquantes et plan de dossier. Les points non étayés restent partiels.",
+        "Présente quatre revues : conflits, mission, délais et ouverture. Enregistre uniquement les décisions réelles et réactualise la revue si l'intake change."
+      ],
+      "result_title": "Le dossier initial reste partiel",
+      "conclusion": "Demande et parties sont décrites. Les documents essentiels et la revue des conflits manquent ; le dossier n'est pas prêt à ouvrir.",
+      "output_columns": [
+        "Domaine",
+        "Situation",
+        "Suite"
+      ],
+      "output_rows": [
+        [
+          "Documents",
+          "Contrat et correspondance absents",
+          "Demande à revoir"
+        ],
+        [
+          "Conflits",
+          "Registre non consulté",
+          "Contrôle professionnel du périmètre exact"
+        ],
+        [
+          "Mission et ouverture",
+          "Non approuvées",
+          "Revue de l'avocat"
+        ]
+      ],
+      "check": "Une liste de noms n'est pas une recherche de conflits. Un plan de dossier ne déplace pas les originaux ; les décisions restent liées à l'intake actuel.",
+      "question": "Le brief ne cite aucun conflit. Peut-on valider le contrôle ?",
+      "answer": "Non. Le brief n'est pas le registre. Un contrôle non effectué reste non effectué, sans devenir un résultat négatif.",
+      "practice": "Ajoute le contrat fictif et revois parties et questions modifiées sans simuler l'acceptation de la mission.",
+      "next": "Sélectionne brief, pièces, parties connues et registre disponible ; signale immédiatement l'urgence concrète."
+    },
+    "de": {
+      "title": "Eine vorbereitete Akte ist noch keine Mandatsannahme",
+      "goal": "Juristische Aufnahme mit getrennten Parteien, Fehlunterlagen und fachlichen Entscheidungen erstellen.",
+      "scenario": "Das fiktive Beta Laboratory sucht Hilfe wegen einer unvollständigen Lieferung von Delta. Der Kurzbericht nennt einen noch nicht gelieferten Vertrag und Schriftverkehr. Im Lehrfall steht kein Konfliktregister zur Verfügung.",
+      "request": "Lucia, erstelle das erste Dossier und zeige die vor Aktenöffnung erforderlichen Prüfungen.",
+      "scope": "Fiktive juristische Aufnahme. Keine behauptete Konfliktsuche, keine verbindliche Fristberechnung und keine automatische Mandatsannahme.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Information",
+        "Status"
+      ],
+      "input_rows": [
+        [
+          "L1 · Mandantenbericht",
+          "Beta gegen Lieferant Delta",
+          "Vom Mandanten genannte Parteien"
+        ],
+        [
+          "L1 · erwähnte Unterlagen",
+          "Vertrag und Schriftverkehr",
+          "Noch nicht geliefert"
+        ],
+        [
+          "Konfliktregister",
+          "Nicht verfügbar",
+          "Suche nicht durchgeführt"
+        ]
+      ],
+      "basis": "L1 belegt Anfrage und genannte Parteien. Es ersetzt weder Vertrag und Schriftverkehr noch eine Suche im Konfliktregister.",
+      "method": [
+        "Wähle neuen Mandanten oder neue Sache und erhalte genaue Quellen. Bestimme Ziel, Parteien, Zuständigkeit und Dringlichkeit aus Belegen.",
+        "Erstelle Vermerk, Parteienübersicht, Fehlunterlagenanfrage und Ordnerplan. Nicht belegte Punkte bleiben unvollständig.",
+        "Lege vier Prüfbereiche vor: Konflikt, Mandat, Fristen und Eröffnung. Speichere nur tatsächliche Entscheidungen und erneuere die Prüfung bei geänderter Aufnahme."
+      ],
+      "result_title": "Erstes Dossier bleibt unvollständig",
+      "conclusion": "Anfrage und Parteien sind beschrieben. Sachunterlagen und Konfliktprüfung fehlen; das Dossier ist noch nicht bereit zur Eröffnung.",
+      "output_columns": [
+        "Bereich",
+        "Stand",
+        "Nächster Schritt"
+      ],
+      "output_rows": [
+        [
+          "Unterlagen",
+          "Vertrag und Schriftverkehr fehlen",
+          "Anforderung prüfen"
+        ],
+        [
+          "Konflikte",
+          "Register nicht konsultiert",
+          "Fachliche Prüfung des genauen Umfangs"
+        ],
+        [
+          "Mandat und Eröffnung",
+          "Nicht freigegeben",
+          "Anwaltliche Prüfung"
+        ]
+      ],
+      "check": "Eine Namensliste ist keine Konfliktsuche; ein Ordnerplan verschiebt keine Originale. Entscheidungen bleiben an die aktuelle Aufnahme gebunden.",
+      "question": "Der Bericht erwähnt keinen Konflikt. Können wir die Prüfung als bestanden markieren?",
+      "answer": "Nein. Der Bericht ist nicht das Register. Eine nicht durchgeführte Prüfung bleibt unausgeführt statt zu einem negativen Befund zu werden.",
+      "practice": "Ergänze den fiktiven Vertrag und prüfe geänderte Parteien oder Fragen, ohne eine Mandatsannahme zu simulieren.",
+      "next": "Wähle Bericht, Dokumente, bekannte Parteien und verfügbares Register und zeige konkrete Dringlichkeit frühzeitig."
+    },
+    "es": {
+      "title": "Preparar el expediente no equivale a aceptar el encargo",
+      "goal": "Preparar la recepción jurídica separando partes, documentos ausentes y decisiones profesionales.",
+      "scenario": "El ficticio Beta Laboratory pide ayuda por una entrega incompleta de Delta. Su escrito menciona contrato y correspondencia todavía no aportados. El caso didáctico no dispone de registro de conflictos.",
+      "request": "Lucia, prepara el dossier inicial y muestra qué debo verificar antes de abrir el asunto.",
+      "scope": "Recepción jurídica ficticia. No se afirma una búsqueda de conflictos, no se calcula un plazo vinculante ni se acepta automáticamente el encargo.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Información",
+        "Estado"
+      ],
+      "input_rows": [
+        [
+          "L1 · escrito del cliente",
+          "Beta frente al proveedor Delta",
+          "Partes declaradas por el cliente"
+        ],
+        [
+          "L1 · documentos citados",
+          "Contrato y correspondencia",
+          "Todavía no aportados"
+        ],
+        [
+          "Registro de conflictos",
+          "No disponible",
+          "Búsqueda no realizada"
+        ]
+      ],
+      "basis": "L1 respalda solicitud y partes mencionadas. No sustituye contrato, correspondencia ni búsqueda en el registro de conflictos.",
+      "method": [
+        "Selecciona nuevo cliente o asunto y conserva fuentes exactas. Establece objetivo, partes, jurisdicción y urgencia a partir de evidencia.",
+        "Prepara nota, mapa de partes, solicitud de información pendiente y plan de carpetas. Los puntos no respaldados quedan parciales.",
+        "Presenta cuatro ámbitos de revisión: conflicto, encargo, plazos y apertura. Guarda solo decisiones reales y actualiza revisión cuando cambie la recepción."
+      ],
+      "result_title": "El dossier inicial sigue siendo parcial",
+      "conclusion": "Solicitud y partes están descritas. Faltan documentos sustantivos y revisión de conflictos; el dossier no está listo para abrirse.",
+      "output_columns": [
+        "Área",
+        "Situación",
+        "Siguiente paso"
+      ],
+      "output_rows": [
+        [
+          "Documentos",
+          "Faltan contrato y correspondencia",
+          "Revisar la solicitud"
+        ],
+        [
+          "Conflictos",
+          "Registro no consultado",
+          "Comprobación profesional del alcance exacto"
+        ],
+        [
+          "Encargo y apertura",
+          "No aprobados",
+          "Revisión del abogado"
+        ]
+      ],
+      "check": "Una lista de nombres no es una búsqueda de conflictos y un plan de carpetas no mueve originales. Las decisiones siguen vinculadas a la recepción actual.",
+      "question": "El escrito no menciona conflictos. ¿Podemos marcar el control como superado?",
+      "answer": "No. El escrito no es el registro. Un control no realizado sigue sin realizarse, en vez de convertirse en resultado negativo.",
+      "practice": "Añade el contrato ficticio y revisa partes o preguntas modificadas sin simular aceptación del encargo.",
+      "next": "Selecciona escrito, documentos, partes conocidas y registro disponible y destaca pronto cualquier urgencia concreta."
+    }
+  }
+}

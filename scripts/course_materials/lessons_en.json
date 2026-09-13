@@ -1,0 +1,450 @@
+{
+  "vera/adeguati-assetti": {
+    "title": "Does the written procedure actually operate?",
+    "goal": "Assess an enterprise's arrangements through operating evidence and prepare a reviewable improvement plan.",
+    "scenario": "Fictional Arco Workshop has 18 employees. Its procedure requires a weekly cash report. The file contains that procedure, one June report and July minutes in which the director asks for more frequent reporting. Other reports may exist outside the supplied file.",
+    "request": "Vera, help me understand whether cash reporting is used and what to ask the company.",
+    "scope": "One cash-information process. This case does not support an overall conclusion on the company's arrangements.",
+    "input_columns": [
+      "Fictional source",
+      "Evidence",
+      "Limit"
+    ],
+    "input_rows": [
+      [
+        "P1 · procedure § 3",
+        "Report every Friday; administration manager responsible",
+        "Intended process"
+      ],
+      [
+        "R1 · 26 June report",
+        "Cash balance and next week's payments",
+        "One observed period"
+      ],
+      [
+        "V1 · 10 July minutes",
+        "Director requests greater frequency",
+        "Not a complete dispatch record"
+      ]
+    ],
+    "basis": "P1 describes the design. R1 demonstrates one report. V1 documents a request, without proving that every other report was absent.",
+    "method": [
+      "Separate documented procedure, assertions and operating evidence. Cite each observation precisely.",
+      "Compare irregular production with the alternative explanation of an incomplete file. Ask the question that distinguishes them.",
+      "Prepare the finding, consequence, proposed action and implementation evidence. Owners and dates remain proposals until reviewed."
+    ],
+    "result_title": "Cash reporting: continuity still to establish",
+    "conclusion": "The process is documented and was performed at least once. Its continuity and use remain to be verified.",
+    "output_columns": [
+      "Observation",
+      "Proposed action",
+      "Implementation evidence"
+    ],
+    "output_rows": [
+      [
+        "Frequency unclear · P1/R1",
+        "Recover June and July dispatch records",
+        "Dated reports and recipients"
+      ],
+      [
+        "Director's request · V1",
+        "Clarify which decisions need faster reporting",
+        "Minutes and subsequent use"
+      ]
+    ],
+    "check": "Missing documents limit the assessment; they do not prove that a process never operates. A positive cash balance does not establish adequate arrangements.",
+    "question": "A newly signed procedure arrives. Can we close the finding?",
+    "answer": "It updates the process design. Evidence of reporting and use is still needed to assess operation.",
+    "practice": "Add two reports and a director's decision: which conclusions can we now support?",
+    "next": "Choose one real process, its procedure and evidence of its actual use."
+  },
+  "vera/aml-review": {
+    "title": "Understand the change before drawing a conclusion",
+    "goal": "Reconstruct an ownership change and prepare an AML review with evidence and targeted questions.",
+    "scenario": "Fictional Luna Components supplies a new company extract showing a corporate shareholder. The client names the same individual as beneficial owner, but the new ownership chain is missing. An unusual payment is described as a supplier advance.",
+    "request": "Vera, review the new information without repeating the entire client intake.",
+    "scope": "Internal documentary review under the Italian workflow. No external screening, automatic suspicion judgment or professional decision is implied.",
+    "input_columns": [
+      "Fictional source",
+      "Information",
+      "Status"
+    ],
+    "input_rows": [
+      [
+        "A1 · prior assessment",
+        "Previous ownership reconstructed",
+        "Historical"
+      ],
+      [
+        "A2 · new extract",
+        "New corporate shareholder",
+        "Documented"
+      ],
+      [
+        "A3 · client statement",
+        "Unchanged control; supplier advance",
+        "Needs corroboration"
+      ]
+    ],
+    "basis": "A1–A2 establish a direct-shareholding change. A3 is a statement, not proof of ultimate control or the payment's economic purpose.",
+    "method": [
+      "Reuse the prior assessment and identify the precise changes while retaining its history.",
+      "Reconstruct ownership and control from sources. For discrepancies, compare explanations and identify evidence that would resolve them.",
+      "Prepare facts, limitations and questions. Record professional decisions only after explicit review of the exact proposal."
+    ],
+    "result_title": "Two focused checks in the AML update",
+    "conclusion": "The shareholding change is documented. Ultimate control and the payment explanation need further evidence.",
+    "output_columns": [
+      "Issue",
+      "Proposed internal request",
+      "Supported conclusion"
+    ],
+    "output_rows": [
+      [
+        "New shareholder · A2",
+        "Ownership and control-chain documents",
+        "Direct participation changed"
+      ],
+      [
+        "Advance · A3",
+        "Order, contract and beneficiary evidence",
+        "Client-reported purpose"
+      ]
+    ],
+    "check": "An unusual feature or missing document does not equal suspicion. Screening that was not performed remains unknown, not negative.",
+    "question": "Can we confirm unchanged control because the client says so?",
+    "answer": "We can report the statement and its source. The control reconstruction still needs corroborating ownership documents.",
+    "practice": "Add the ownership chain: which questions can close and which remain?",
+    "next": "Select the prior assessment and relevant new evidence in the same engagement."
+  },
+  "vera/archive-organization": {
+    "title": "Organize a folder while preserving versions",
+    "goal": "Turn a disordered folder into a reviewable movement plan before changing files.",
+    "scenario": "A fictional folder contains two byte-identical invoice copies and two different contract versions. Their names are unclear. This example shows a dry-run plan; no file has been moved.",
+    "request": "Vera, propose how to organize this client folder and show what would change.",
+    "scope": "One selected client folder. The lesson reaches plan review; applying file movements requires its separate explicit confirmation.",
+    "input_columns": [
+      "Fictional file",
+      "Content",
+      "Identity"
+    ],
+    "input_rows": [
+      [
+        "scan-a.pdf",
+        "Invoice INV-07, 10 June",
+        "Same bytes as copy.pdf"
+      ],
+      [
+        "copy.pdf",
+        "Invoice INV-07, 10 June",
+        "Same bytes as scan-a.pdf"
+      ],
+      [
+        "agreement.docx",
+        "Draft contract",
+        "Different bytes from signed version"
+      ],
+      [
+        "agreement-signed.pdf",
+        "Contract with visible signature",
+        "Distinct version"
+      ]
+    ],
+    "basis": "Matching hashes establish identical invoice bytes. The contracts require reading: similar names and sizes do not establish duplication.",
+    "method": [
+      "Snapshot the selected folder and inspect enough evidence to classify every inventory row.",
+      "Prepare destinations under the firm's policy and a dry run. Exact copies become quarantine candidates; distinct versions remain separate.",
+      "Persist reviewer decisions. Show counts and destinations before the separate execution approval, and retain the journal for possible rollback."
+    ],
+    "result_title": "Organization plan · no changes applied",
+    "conclusion": "One copy can be proposed for quarantine. The draft and signed contract should remain distinct versions.",
+    "output_columns": [
+      "Source",
+      "Proposal",
+      "Review"
+    ],
+    "output_rows": [
+      [
+        "scan-a.pdf",
+        "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+        "Confirm destination"
+      ],
+      [
+        "copy.pdf",
+        "Da_verificare/Duplicati_esatti/…",
+        "Proposed quarantine"
+      ],
+      [
+        "Both contract versions",
+        "Retain in Contratti/2026",
+        "Describe the versions"
+      ]
+    ],
+    "check": "Applying review decisions compiles the approved plan; it does not move files. Sources must still match the snapshot at execution.",
+    "question": "The signed contract has almost the same name as the draft. Can we delete one?",
+    "answer": "No. They are different versions, not exact duplicates. Keep both unless a separately reviewed action establishes another destination.",
+    "practice": "Change a proposed destination and check whether it conflicts with an existing file.",
+    "next": "Practice on a small fictional folder. For real work, first select the registered client and applicable policy."
+  },
+  "vera/avviso-intake": {
+    "title": "A notice arrives: what do we actually know?",
+    "goal": "Prepare an initial memo separating readable references, amounts and evidence still to recover.",
+    "scenario": "Fictional Arco receives notice.pdf. It states a reference, EUR 2,400 and a response date. The supplied copy has no receipt evidence and refers to a missing attachment. The document's legal classification has not been established.",
+    "request": "Vera, summarize this notice and identify the documents needed to assess it.",
+    "scope": "Initial documentary intake. A date read from the notice is not a verified legal deadline or a calendar entry.",
+    "input_columns": [
+      "Fictional source",
+      "Available text",
+      "Missing evidence"
+    ],
+    "input_rows": [
+      [
+        "N1 · page 1",
+        "DEMO-24; EUR 2,400",
+        "Classification and amount assessment"
+      ],
+      [
+        "N1 · page 2",
+        "Response requested by 30 September 2026",
+        "Receipt evidence"
+      ],
+      [
+        "N1 · page 2",
+        "Attachment A referenced",
+        "Attachment A"
+      ]
+    ],
+    "basis": "All figures come from fictional N1. The filename does not establish the nature of the instrument; meaning and deadlines remain unverified.",
+    "method": [
+      "Read classification and extraction status, then inspect the source before interpreting its references.",
+      "Record reference, possible dates, amounts and currency with source locators. Mark every unresolved item.",
+      "Deliver the memo and dates-and-amounts table, identifying missing documents and the next professional check."
+    ],
+    "result_title": "Initial intake · DEMO-24",
+    "conclusion": "Reference and amount are readable. Assessing the notice requires receipt evidence and attachment A.",
+    "output_columns": [
+      "Item",
+      "Read value",
+      "Status"
+    ],
+    "output_rows": [
+      [
+        "Reference · N1 p. 1",
+        "DEMO-24",
+        "Extracted"
+      ],
+      [
+        "Amount · N1 p. 1",
+        "EUR 2,400",
+        "Meaning to verify"
+      ],
+      [
+        "Date in text · N1 p. 2",
+        "30 September 2026",
+        "Not validated as a legal deadline"
+      ]
+    ],
+    "check": "Do not promote an extracted date into a legal deadline. Classification, receipt and applicable sources matter.",
+    "question": "The copy is readable but an attachment is missing. Is the file complete?",
+    "answer": "No. Extract the readable references while keeping the file incomplete and requesting the cited attachment.",
+    "practice": "Add the fictional attachment and identify which memo entries change.",
+    "next": "For real intake, select the complete notice, attachments and receipt evidence in the same engagement."
+  },
+  "vera/bandi-agevolazioni": {
+    "title": "An interesting opportunity is not yet an eligible application",
+    "goal": "Separate grant discovery from evidence-based preparation for a specific enterprise.",
+    "scenario": "A wholly fictional call funds machinery for manufacturing businesses in one region. Arco proposes an EUR 80,000 investment. Evidence of the operating location and the date the expenditure started is missing.",
+    "request": "Vera, show how a discovered call becomes a set of checks for this business.",
+    "scope": "The DEMO call does not exist and cannot receive applications. Real opportunities require current official sources.",
+    "input_columns": [
+      "Fictional source",
+      "Condition or fact",
+      "Evidence"
+    ],
+    "input_rows": [
+      [
+        "B1 · DEMO call § 2",
+        "Operating unit in the call's region",
+        "Location not documented"
+      ],
+      [
+        "B1 · § 4",
+        "Expenditure starts after application",
+        "Order date missing"
+      ],
+      [
+        "C1 · Arco project",
+        "Machinery: EUR 80,000",
+        "Quotation supplied"
+      ]
+    ],
+    "basis": "B1 defines only the example's conditions. C1 establishes a project, not satisfaction of every requirement. No grant percentage is invented.",
+    "method": [
+      "Define the discovery objective and review relevant sources. Bind each opportunity to its exact source and version.",
+      "For the selected business, compare every requirement with company evidence and identify missing documents.",
+      "Prepare the opportunity sheet, checklist and reviewable dossier. Distinguish relevance, verified requirements and documentary readiness; do not submit the application."
+    ],
+    "result_title": "DEMO · preparation remains open",
+    "conclusion": "The project is relevant to the call's subject. Two decisive conditions remain undocumented.",
+    "output_columns": [
+      "Check",
+      "Case finding",
+      "Next evidence"
+    ],
+    "output_rows": [
+      [
+        "Investment fit · B1/C1",
+        "Machinery described",
+        "Complete technical comparison"
+      ],
+      [
+        "Location · B1 § 2",
+        "Not verified",
+        "Operating-unit document"
+      ],
+      [
+        "Expenditure start · B1 § 4",
+        "Not verified",
+        "Order and expenditure chronology"
+      ]
+    ],
+    "check": "Relevance does not establish eligibility. A summary sheet does not replace the official call and attachments.",
+    "question": "The quotation is an ideal match. Can we state that Arco is eligible?",
+    "answer": "No. Location, timing and the other conditions in the complete source still require assessment. Deliver the open preparation checks.",
+    "practice": "Add a fictional order dated before the application and reconsider the timing condition.",
+    "next": "Select a real opportunity and enterprise; verify the current official source before promising a benefit."
+  },
+  "vera/bilancio-oic": {
+    "title": "From accounting balances to a draft financial statement",
+    "goal": "Understand how source reading, mapping and checks support a reviewable OIC statement and XBRL output.",
+    "scenario": "Fictional Arco supplies assets of EUR 250,000, liabilities of EUR 180,000 and equity of EUR 70,000. Other receivables include EUR 8,000 without detail. The totals balance, but that classification remains unresolved.",
+    "request": "Vera, show the mapping and questions to resolve before preparing the draft statement.",
+    "scope": "A small reading and mapping case, not a filing-ready statement. Taxonomy, statement form, comparatives and notes need the complete normal workflow.",
+    "input_columns": [
+      "Fictional statement item",
+      "EUR",
+      "Reference"
+    ],
+    "input_rows": [
+      [
+        "Total assets",
+        "250,000",
+        "S1 · row 10"
+      ],
+      [
+        "Liabilities",
+        "180,000",
+        "S1 · row 20"
+      ],
+      [
+        "Equity",
+        "70,000",
+        "S1 · row 30"
+      ],
+      [
+        "Other receivables within assets",
+        "8,000",
+        "S1 · row 7; no breakdown"
+      ]
+    ],
+    "basis": "S1 supports the balances and arithmetic. It does not explain the receivables or provide comparatives and disclosures.",
+    "method": [
+      "Confirm year, statement form, principles and language. Inspect sources and preserve each balance's locator.",
+      "Propose a reasoned mapping and resolve ambiguous items. Keep decisions awaiting review visible.",
+      "Use the current contract and taxonomy for checks and generation. Deliver drafts and diagnostics with their review status, without claiming filing."
+    ],
+    "result_title": "Balanced totals, unresolved classification",
+    "conclusion": "250,000 − 180,000 − 70,000 = EUR 0. Balance does not resolve the nature of other receivables.",
+    "output_columns": [
+      "Check",
+      "Result",
+      "Consequence"
+    ],
+    "output_rows": [
+      [
+        "Balance-sheet equation",
+        "EUR 0 difference",
+        "Arithmetic closes"
+      ],
+      [
+        "Other receivables · EUR 8,000",
+        "Nature undocumented",
+        "Obtain detail before final mapping"
+      ],
+      [
+        "Comparatives and notes",
+        "Not supplied in this small case",
+        "Incomplete scope"
+      ]
+    ],
+    "check": "Balanced totals do not certify classification, completeness or compliance. Drafts retain their limitations and professional-review requirement.",
+    "question": "Can we assign all other receivables to one category just to finish mapping?",
+    "answer": "No. The nature of the balance needs supporting detail. Keep the point open and submit the proposal for professional review.",
+    "practice": "Add the EUR 8,000 breakdown and reconsider mapping without changing the totals.",
+    "next": "Prepare complete balances, comparatives and supporting documents; identify the year and statement form."
+  },
+  "vera/browser-automation": {
+    "title": "Teach a repeatable browser step",
+    "goal": "Turn an observed procedure into a locally verifiable capability with explicit stopping conditions.",
+    "scenario": "A fictional local portal lists one document with a download button. The task is to repeat that single download. There are no credentials, payments or client records in the teaching site.",
+    "request": "Vera, learn to download this document from the test portal and show the resulting file.",
+    "scope": "Local fictional website and read/download operation only. No access to a real accounting system is simulated.",
+    "input_columns": [
+      "Fictional website element",
+      "Observable evidence",
+      "Limit"
+    ],
+    "input_rows": [
+      [
+        "Document list",
+        "One document named DEMO-01",
+        "Synthetic content"
+      ],
+      [
+        "Download button",
+        "synthetic-download.txt",
+        "One intended operation"
+      ],
+      [
+        "Expected file",
+        "Identifying text for the case",
+        "Must be opened and checked"
+      ]
+    ],
+    "basis": "The procedure rests on the observed page and actual downloaded content. A button's presence does not prove a successful download.",
+    "method": [
+      "Observe the site and define the objective, authorized scope and conditions that must stop the procedure.",
+      "Prepare the capability from actual observed elements. Test on the local site and preserve evidence of steps and results.",
+      "Rerun the authorized step, open the downloaded file and compare it with the expected content. Review the capability if the page or controls change."
+    ],
+    "result_title": "DEMO-01 download · verify the result",
+    "conclusion": "The useful outcome is the correct document and a procedure that recognizes when it cannot proceed.",
+    "output_columns": [
+      "Step",
+      "Required evidence",
+      "If missing"
+    ],
+    "output_rows": [
+      [
+        "Select document",
+        "DEMO-01 identity on the page",
+        "Stop and inspect"
+      ],
+      [
+        "Download",
+        "File exists at the destination",
+        "Do not claim success"
+      ],
+      [
+        "Check content",
+        "Expected text in the opened file",
+        "Report the unexpected result"
+      ]
+    ],
+    "check": "A successful click does not establish the correct download. A changed page requires observation, not invented selectors or skipped authorization.",
+    "question": "The button works but the downloaded file is an error page. Did the step succeed?",
+    "answer": "No. Verification concerns the final content. Preserve the error evidence and stop without claiming document acquisition.",
+    "practice": "Run the test site, then change the available document and verify that the result is checked again.",
+    "next": "On a real site, begin with one authorized operation and an actually available browser and access route."
+  }
+}

@@ -1,0 +1,445 @@
+{
+  "vera/vouching": {
+    "title": "De l'écriture échantillonnée à la bonne pièce",
+    "goal": "Vérifier une écriture sans confondre montant identique et identité documentaire.",
+    "scenario": "L'échantillon fictif qualifié contient MOV-104 pour INV-104, soit 1 220 EUR. Le lot justificatif comporte deux factures de ce montant : INV-104 et INV-205. Seule l'écriture sélectionnée est contrôlée.",
+    "request": "Vera, vérifie la pièce justificative de cette écriture de l'échantillon.",
+    "scope": "Le workflow utilise le passage clôturé de Journal Sampling et ses pièces de qualification. Une table brute ou cet aperçu ne le remplace pas.",
+    "input_columns": [
+      "Source fictive",
+      "Identité",
+      "Montant"
+    ],
+    "input_rows": [
+      [
+        "Échantillon S1 · ligne 4",
+        "MOV-104 / INV-104",
+        "1 220 EUR"
+      ],
+      [
+        "XML X1",
+        "INV-104 ; contrepartie cohérente",
+        "1 220 EUR"
+      ],
+      [
+        "XML X2",
+        "INV-205 ; autre facture",
+        "1 220 EUR"
+      ]
+    ],
+    "basis": "S1 définit la sélection. X1 porte la référence distinctive INV-104 ; le montant identique de X2 n'établit pas son identité.",
+    "method": [
+      "Reprends l'échantillon qualifié du même dossier, sélectionne le lot justificatif et vérifie la clôture des sources.",
+      "Contrôle identité, contrepartie, devise, sens, montant et date selon la recette revue. Ne corrige pas la préparation du journal dans Vouching.",
+      "Lis couverture, écarts et lignes à revoir manuellement. Livre le lien écriture-pièce ; le professionnel apprécie la suffisance de la preuve."
+    ],
+    "result_title": "INV-104 est la pièce pertinente",
+    "conclusion": "L'identité distingue les deux factures de même montant. La seule coïncidence numérique ne justifierait pas le rapprochement.",
+    "output_columns": [
+      "Candidat",
+      "Preuve d'identité",
+      "Lecture pédagogique"
+    ],
+    "output_rows": [
+      [
+        "X1 · INV-104",
+        "Référence distinctive cohérente",
+        "Vérifier les autres conditions"
+      ],
+      [
+        "X2 · INV-205",
+        "Référence différente",
+        "Montant identique insuffisant"
+      ]
+    ],
+    "check": "Un contrôle mécanique favorable ne certifie ni traitement comptable ni suffisance des justificatifs. Ne généralise pas aux écritures hors échantillon.",
+    "question": "Sans référence facture dans l'écriture, peut-on choisir X1 parce qu'il est le premier fichier ?",
+    "answer": "Non. L'identité reste indéterminée et nécessite la preuve ou le lien revu prévu au contrat. L'ordre des fichiers ne prouve rien.",
+    "practice": "Ramène X1 à 1 200 EUR et examine l'écart sans changer de document rapproché.",
+    "next": "Sélectionne l'échantillon finalisé et le lot XML ou PDF pertinent ; Vera résout les références techniques du passage."
+  },
+  "vera/comunicazione-professionale": {
+    "title": "Un message professionnel qui peut justifier ses affirmations",
+    "goal": "Transformer des informations vérifiées en communication utile, avec une source pour chaque affirmation importante.",
+    "scenario": "Le cabinet fictif Arco recevra les documents dans un dossier convenu à partir du 1er octobre. Une note interne approuvée décrit le canal et l'assistance. Aucune source ne mesure un gain de temps.",
+    "request": "Vera, prépare un bref avis aux clients sur cette nouvelle remise des documents.",
+    "scope": "Communication d'organisation fictive, sans conseil fiscal ni promesse commerciale. Le brouillon reste local et n'est pas envoyé.",
+    "input_columns": [
+      "Source fictive",
+      "Fait disponible",
+      "Utilisable"
+    ],
+    "input_rows": [
+      [
+        "C1 · note § 1",
+        "Nouveau canal au 1er octobre 2026",
+        "Oui"
+      ],
+      [
+        "C1 · § 2",
+        "Assistance du contact habituel",
+        "Oui"
+      ],
+      [
+        "Aucune source",
+        "50 % de temps gagné",
+        "Non"
+      ]
+    ],
+    "basis": "C1 étaye date, canal et assistance. Le gain de temps illustre une affirmation sans fondement à retirer.",
+    "method": [
+      "Détermine l'utilité de l'information pour les destinataires et précise objectif, canal et sources.",
+      "Rédige le message en reliant les affirmations aux preuves. Revois ton et limites, puis retire les promesses non étayées.",
+      "Prépare les livrables habituels du canal et les vérifications. Présente le brouillon avant le parcours normal d'envoi ou de publication."
+    ],
+    "result_title": "Une remise des documents plus claire",
+    "conclusion": "À partir du 1er octobre 2026, merci d'utiliser le dossier convenu avec le cabinet pour transmettre vos documents. Pour l'accès et les premières indications, contactez votre interlocuteur habituel.",
+    "output_columns": [
+      "Affirmation",
+      "Base",
+      "Revue"
+    ],
+    "output_rows": [
+      [
+        "Nouveau canal au 1er octobre",
+        "C1 § 1",
+        "Vérifier date et modalités"
+      ],
+      [
+        "Contacter l'interlocuteur",
+        "C1 § 2",
+        "Confirmer l'assistance disponible"
+      ],
+      [
+        "Gain de 50 %",
+        "Aucune",
+        "Exclu"
+      ]
+    ],
+    "check": "Une communication soignée n'ajoute pas de résultat, d'obligation ou de promesse absent des sources.",
+    "question": "Peut-on ajouter qu'aucun document ne sera plus jamais perdu ?",
+    "answer": "Non. La note décrit un canal de remise, pas une garantie absolue contre les pertes. La preuve manque.",
+    "practice": "Adapte l'information à une courte publication en conservant date, canal et limites.",
+    "next": "Pour une actualité professionnelle, sélectionne les sources courantes ; pour une annonce du cabinet, fournis les faits organisationnels vérifiés."
+  },
+  "vera/concordato-plan-review": {
+    "title": "Des totaux cohérents peuvent cacher un besoin de trésorerie",
+    "goal": "Relier proposition, créanciers et calendrier des flux au-delà de la seule quadrature.",
+    "scenario": "Un plan fictif prévoit 100 000 EUR d'une cession en décembre et 90 000 EUR de paiements aux créanciers en septembre. La trésorerie initiale est de 10 000 EUR ; aucun financement relais n'est documenté.",
+    "request": "Vera, montre le point du plan qui appelle une question précise au professionnel.",
+    "scope": "Microcas sur le calendrier des flux. La revue complète couvre aussi procédure, proposition, créanciers, liquidation alternative, attestation et questions fiscales.",
+    "input_columns": [
+      "Source fictive",
+      "Date",
+      "Flux"
+    ],
+    "input_rows": [
+      [
+        "P1 · trésorerie initiale",
+        "1er septembre",
+        "+10 000 EUR"
+      ],
+      [
+        "P2 · proposition aux créanciers",
+        "30 septembre",
+        "−90 000 EUR"
+      ],
+      [
+        "P3 · plan de cession",
+        "15 décembre",
+        "+100 000 EUR"
+      ]
+    ],
+    "basis": "P1–P3 fixent montants et dates du cas. Un solde final positif ne fournit pas de fonds avant la vente et ne prouve aucun engagement de financement.",
+    "method": [
+      "Examine les documents sans attribuer automatiquement un rôle aux noms de fichiers ou aux montants extraits.",
+      "Construis le modèle du cas : périmètre, créanciers, ressources, emplois, liquidité et questions. Relie observations et déductions aux preuves exactes.",
+      "Présente modèle et points ouverts au professionnel. Seul le modèle confirmé alimente le dossier formel et son éventuelle annexe numérique."
+    ],
+    "result_title": "Excédent final, financement intermédiaire ouvert",
+    "conclusion": "Le solde final théorique est de +20 000 EUR, mais septembre présente un besoin de 80 000 EUR non couvert par les sources fournies.",
+    "output_columns": [
+      "Moment",
+      "Solde théorique",
+      "Question"
+    ],
+    "output_rows": [
+      [
+        "Avant paiements",
+        "+10 000 EUR",
+        "Trésorerie initiale"
+      ],
+      [
+        "Après paiements de septembre",
+        "−80 000 EUR",
+        "Comment financer le besoin ?"
+      ],
+      [
+        "Après cession de décembre",
+        "+20 000 EUR",
+        "Encaissement postérieur aux paiements"
+      ]
+    ],
+    "check": "Le solde négatif révèle un problème de calendrier, pas une conclusion juridique d'irrecevabilité ni un avis global de faisabilité.",
+    "question": "La cession prévue suffit-elle à dire que les paiements sont couverts ?",
+    "answer": "Pas aux dates indiquées. Il faut une ressource antérieure ou un autre calendrier étayé et soumis à la revue professionnelle.",
+    "practice": "Ajoute un engagement de financement fictif avec date et conditions ; distingue ce qu'il résout des questions restantes.",
+    "next": "Sélectionne le dossier réel et sa date de référence, sans remplacer les faits par une liste abstraite."
+  },
+  "vera/dati-fiscali-strutturati": {
+    "title": "Un montant extrait doit garder sa source",
+    "goal": "Lire les champs fiscaux avec valeurs, références et états d'extraction sans remplir les blancs par hypothèse.",
+    "scenario": "Le dossier fictif contient un F24 italien lisible et un scan peu lisible. Le premier montre code 1001, année 2025 et débit de 1 250 EUR. Le second ne permet pas de lire des montants fiables.",
+    "request": "Vera, montre les données fiscales utilisables et celles à vérifier sur l'original.",
+    "scope": "Extraction et revue de champs. Les valeurs lues ne prouvent pas la conformité de la déclaration, du traitement ou du paiement.",
+    "input_columns": [
+      "Source fictive",
+      "Contenu lisible",
+      "Disposition"
+    ],
+    "input_rows": [
+      [
+        "F1 · F24 ligne 1",
+        "1001 · 2025 · débit 1 250 EUR",
+        "Champs extractibles"
+      ],
+      [
+        "F2 · scan",
+        "Montants illisibles",
+        "À récupérer ou vérifier visuellement"
+      ]
+    ],
+    "basis": "F1 étaye trois valeurs localisées. F2 ne fournit aucun montant fiable ; l'absence de champs extraits ne signifie pas absence de données fiscales.",
+    "method": [
+      "Reprends l'extraction du même dossier et lis tous les champs et toutes les dispositions documentaires attendues.",
+      "Vérifie nature du document et correspondance au texte. Conserve incertitudes de mise en page et sources illisibles ; une reclassification revue nécessite une régénération cohérente.",
+      "Livre tableau, synthèse et citations en séparant documents non pris en charge, illisibles, non évalués et reconnus sans champs."
+    ],
+    "result_title": "Trois champs utilisables, une source à clarifier",
+    "conclusion": "La synthèse conserve les trois champs de F1 et signale F2 comme illisible. Les montants manquants ne deviennent pas zéro.",
+    "output_columns": [
+      "Champ",
+      "Valeur extraite",
+      "Source"
+    ],
+    "output_rows": [
+      [
+        "Code fiscal du versement",
+        "1001",
+        "F1 · ligne 1"
+      ],
+      [
+        "Année de référence",
+        "2025",
+        "F1 · ligne 1"
+      ],
+      [
+        "Montant au débit",
+        "1 250 EUR",
+        "F1 · ligne 1"
+      ],
+      [
+        "Montants de F2",
+        "Indisponibles",
+        "F2 · original à vérifier"
+      ]
+    ],
+    "check": "L'extraction ne prouve ni paiement ni bonne saisie. Conserve devise et année de la source, sans les déduire du nom du dossier.",
+    "question": "Peut-on inclure F2 pour zéro puisqu'aucun champ n'a été extrait ?",
+    "answer": "Non. La source est illisible, pas nulle. Tout total doit préciser que cette pièce n'est pas quantifiée.",
+    "practice": "Remplace F2 par une copie lisible et régénère en contrôlant les nouveaux champs inclus.",
+    "next": "Sélectionne les documents lisibles et le bon périmètre territorial ; conserve les originaux pour les contrôles de mise en page."
+  },
+  "vera/email-cliente": {
+    "title": "Demander seulement les pièces réellement nécessaires",
+    "goal": "Préparer une demande brève à partir des seules pièces manquantes déjà revues.",
+    "scenario": "La revue fictive de CLIENT-001 confirme l'absence du relevé bancaire de juin et une question sur le virement du 12 juin. Un contrat potentiellement manquant reste une proposition non appliquée.",
+    "request": "Vera, prépare une demande claire des documents manquants pour ce client.",
+    "scope": "Brouillon local fondé sur les demandes revues et appliquées. Aucun courriel n'est envoyé.",
+    "input_columns": [
+      "Élément fictif du passage",
+      "Statut",
+      "Inclure"
+    ],
+    "input_rows": [
+      [
+        "Relevé bancaire de juin",
+        "Demande revue et appliquée",
+        "Oui"
+      ],
+      [
+        "Objet du virement du 12 juin",
+        "Demande revue et appliquée",
+        "Oui"
+      ],
+      [
+        "Contrat potentiellement manquant",
+        "Candidat à revoir",
+        "Non"
+      ]
+    ],
+    "basis": "E1 contient deux email_request appliquées et un candidat séparé. Une ancienne ébauche ou un nom de dossier n'ajoute pas de demande autorisée.",
+    "method": [
+      "Lis toutes les pages du passage destiné au courriel et vérifie que des demandes appliquées existent. Sinon, laisse le brouillon en attente.",
+      "Rédige un message opérationnel limité aux documents et précisions étayés par ces demandes.",
+      "Compare chaque phrase au passage et présente le brouillon. L'envoi suit une demande distincte et un canal autorisé."
+    ],
+    "result_title": "Documents et précision pour compléter le dossier",
+    "conclusion": "Bonjour, pour compléter le dossier, merci de nous fournir le relevé bancaire de juin et de préciser l'objet du virement du 12 juin. Merci de votre collaboration.",
+    "output_columns": [
+      "Demande du brouillon",
+      "Base",
+      "Contrôle"
+    ],
+    "output_rows": [
+      [
+        "Relevé de juin",
+        "E1 · email_request 1",
+        "Période exacte"
+      ],
+      [
+        "Objet du virement",
+        "E1 · email_request 2",
+        "Référence exacte"
+      ],
+      [
+        "Contrat",
+        "Candidat non appliqué",
+        "Exclu"
+      ]
+    ],
+    "check": "Une pièce supposée manquante n'est pas encore une demande approuvée. Ne transforme pas une hypothèse interne en exigence certaine pour le client.",
+    "question": "L'ancien brouillon demandait le contrat. Faut-il le garder par prudence ?",
+    "answer": "Non. La source actuelle est la liste des demandes appliquées. Le contrat n'entre qu'après revue et actualisation cohérente du passage.",
+    "practice": "Raccourcis le texte tout en conservant les deux demandes et leurs références exactes.",
+    "next": "Termine d'abord la revue des pièces manquantes, puis demande le brouillon et vérifie destinataire et ton."
+  },
+  "vera/fatture-xml-check": {
+    "title": "Deux fichiers ne font pas toujours deux factures",
+    "goal": "Lire la synthèse FatturaPA en distinguant corps de facture, anomalies formelles et doublons possibles.",
+    "scenario": "Le lot fictif contient un XML valide, une copie de la même facture et un XML tronqué. Le contrôle porte sur le contenu formel des fichiers, sans le comparer aux écritures comptables.",
+    "request": "Vera, contrôle ce petit lot XML et montre ce qui doit être revu.",
+    "scope": "Contrôles formels FatturaPA, sans validation d'enregistrement, de déductibilité, de paiement ou de traitement TVA.",
+    "input_columns": [
+      "Fichier fictif",
+      "Contenu",
+      "État"
+    ],
+    "input_rows": [
+      [
+        "invoice.xml",
+        "INV-001 · 2026 · 1 220 EUR",
+        "Un corps lisible"
+      ],
+      [
+        "invoice-copy.xml",
+        "Même facture",
+        "Copie à vérifier"
+      ],
+      [
+        "broken.xml",
+        "Document tronqué",
+        "XML mal formé"
+      ]
+    ],
+    "basis": "Le nombre de fichiers diffère du nombre de corps de facture. Fournisseur, numéro, date et montant soutiennent un doublon possible, pas une suppression automatique.",
+    "method": [
+      "Sélectionne client, dossier, lot et année, puis importe les sources dans le cas pédagogique géré.",
+      "Exécute le parseur courant et examine toutes les anomalies et tous les groupes de doublons. Ouvre le XML exact lorsqu'un fait doit être vérifié.",
+      "Présente synthèse par corps, doublons possibles et mémo des anomalies. Garde visibles les fichiers illisibles."
+    ],
+    "result_title": "Deux points à revoir dans le lot",
+    "conclusion": "Deux copies lisibles ne représentent pas automatiquement deux opérations économiques. Le fichier tronqué ne fournit pas de données fiables.",
+    "output_columns": [
+      "Élément",
+      "Résultat illustré",
+      "Action"
+    ],
+    "output_rows": [
+      [
+        "invoice.xml + invoice-copy.xml",
+        "Doublon possible",
+        "Comparer et conserver les originaux"
+      ],
+      [
+        "broken.xml",
+        "Erreur formelle",
+        "Récupérer le XML complet"
+      ],
+      [
+        "Total économique",
+        "À revoir",
+        "Ne pas additionner aveuglément les copies"
+      ]
+    ],
+    "check": "Une anomalie ou un doublon possible n'autorise ni suppression ni correction comptable. Un XML peut contenir plusieurs corps de facture.",
+    "question": "Trois fichiers reçus signifient-ils trois factures valides ?",
+    "answer": "Non. Compte séparément fichiers, corps lisibles et anomalies. La copie et le fichier tronqué nécessitent un traitement explicite.",
+    "practice": "Exécute le contrôle du starter XML puis d'une copie modifiée, et compare les mémos réels.",
+    "next": "Indique année et lot sélectionné. La réconciliation comptable est un autre travail lorsqu'elle est demandée."
+  },
+  "vera/financial-analysis": {
+    "title": "Lire la concentration du chiffre d'affaires",
+    "goal": "Interpréter un indicateur financier supporté sans le transformer en jugement automatique de risque.",
+    "scenario": "L'export fictif de la période totalise 100 000 EUR : Alpha 60 000, Beta 25 000 et Gamma 15 000. Le professionnel veut comprendre la dépendance commerciale, pas valoriser l'entreprise.",
+    "request": "Vera, analyse la concentration clients et montre l'origine du résultat.",
+    "scope": "Recette customer_concentration sur données historiques revues. Ce n'est ni une valorisation, ni une notation, ni un audit autonome des sources comptables.",
+    "input_columns": [
+      "Client fictif",
+      "Chiffre d'affaires",
+      "Source"
+    ],
+    "input_rows": [
+      [
+        "Alpha",
+        "60 000 EUR",
+        "F1 · ligne 1"
+      ],
+      [
+        "Beta",
+        "25 000 EUR",
+        "F1 · ligne 2"
+      ],
+      [
+        "Gamma",
+        "15 000 EUR",
+        "F1 · ligne 3"
+      ]
+    ],
+    "basis": "F1 délimite période et périmètre. Le total est de 100 000 EUR ; contrats, marges par client et éléments prospectifs ne sont pas fournis.",
+    "method": [
+      "Choisis la recette supportée répondant à la question et qualifie sources, période, signes et total de contrôle.",
+      "Exécute le paquet selon son contrat revu dans le même dossier, sans remplacer les calculs par un script improvisé.",
+      "Lis indicateurs et limites. Relie le commentaire aux métriques et conserve comme non effectuées les vérifications qui ne l'ont pas été."
+    ],
+    "result_title": "Alpha représente 60 % du chiffre d'affaires",
+    "conclusion": "Le premier client pèse 60 %, les deux premiers 85 %. Ces constats orientent les questions commerciales à approfondir.",
+    "output_columns": [
+      "Indicateur",
+      "Calcul",
+      "Valeur"
+    ],
+    "output_rows": [
+      [
+        "Premier client",
+        "60 000 / 100 000",
+        "60 %"
+      ],
+      [
+        "Deux premiers",
+        "85 000 / 100 000",
+        "85 %"
+      ],
+      [
+        "Clients observés",
+        "Alpha, Beta, Gamma",
+        "3"
+      ]
+    ],
+    "check": "Une forte part décrit une concentration, pas la fragilité du contrat ni une perte future. Vérifie périmètre et rapprochement du total.",
+    "question": "La part de 60 % donne-t-elle une probabilité de perte du chiffre d'affaires ?",
+    "answer": "Non. Contrats, renouvellements et dépendances nécessitent d'autres preuves. L'indicateur guide les questions sans fournir de probabilité.",
+    "practice": "Ajoute un quatrième client de 20 000 EUR et contrôle le nouveau total et les nouvelles parts.",
+    "next": "Choisis une recette supportée et prépare les sources comptables revues avec période et totaux de contrôle."
+  }
+}

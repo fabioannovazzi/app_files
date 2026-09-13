@@ -159,3 +159,8 @@ is ready. Never erase enrollment or manufacture a completed flag. A stale empty
 If the whole directory was deleted or the OS account changed, the helper cannot
 infer historical completion; ask about and reconnect any existing local copy
 before beginning again. There is no server recovery or automatic cross-device sync.
+
+For each selected workflow, first reuse the prepared 5–8 minute course described
+in `../../learn-with-vera/references/prepared-courses.md`. Read the current
+specialist and check the course source fingerprints. Prepared pages do not count
+as an executed demonstration, user practice or confirmed understanding.

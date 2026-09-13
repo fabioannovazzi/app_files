@@ -1,0 +1,378 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "hosted-interview",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "skills/hosted-interview/SKILL.md",
+      "repository_path": "plugins/clara/skills/hosted-interview/SKILL.md",
+      "sha256": "8535aa16bda1e9bbe199ccd93ed2f83b2f80bf1d044af910e69db35dd3b672ca"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un'intervista che approfondisce senza suggerire le risposte",
+      "goal": "Preparare un brief per un partecipante esterno e capire il percorso dal link al materiale riveduto.",
+      "scenario": "Vogliamo capire come un responsabile operativo gestisce i ritardi nelle consegne. Il brief fittizio propone due temi: l'ultimo episodio concreto e la decisione presa. Non contiene dati di clienti né una risposta attesa.",
+      "request": "Clara, mostrami come prepareresti un'intervista esterna su questo processo.",
+      "scope": "La lezione prepara e rivede il brief in locale. Non crea link, non contatta partecipanti e non invia materiali al servizio hosted. Una vera intervista è un incarico successivo autorizzato.",
+      "input_columns": [
+        "Parte del brief fittizio",
+        "Contenuto",
+        "Scopo"
+      ],
+      "input_rows": [
+        [
+          "Obiettivo",
+          "Capire la gestione dei ritardi",
+          "Decisione di processo"
+        ],
+        [
+          "Domanda iniziale",
+          "Raccontami l'ultimo ritardo concreto",
+          "Episodio osservabile"
+        ],
+        [
+          "Approfondimento",
+          "Chi ha deciso cosa fare e con quali informazioni?",
+          "Ruoli ed evidenze"
+        ],
+        [
+          "Limite",
+          "Non chiedere nomi o dati dei clienti",
+          "Perimetro del colloquio"
+        ]
+      ],
+      "basis": "H1 è il brief di esempio, non una campagna registrata né la trascrizione di un partecipante reale.",
+      "method": [
+        "Scegli una campagna esatta e versionata oppure prepara un brief circoscritto, distinguendo approfondimento di un caso e ricerca comparabile.",
+        "Nel lavoro reale autorizzato, crea un link individuale con scadenza tramite il servizio disponibile. La conversazione si adatta alle risposte e non è un questionario letto meccanicamente.",
+        "Controlla lo stato e recupera bundle e revisione prima della scadenza. Tratta le risposte come evidenze dichiarative e l'eventuale inserimento nel caso come azione richiesta separatamente."
+      ],
+      "result_title": "Brief pronto per la revisione",
+      "conclusion": "Il brief parte da un episodio e approfondisce decisioni ed evidenze. Non presume che il processo sia inefficiente e non suggerisce una risposta.",
+      "output_columns": [
+        "Domanda",
+        "Cosa può far emergere",
+        "Da evitare"
+      ],
+      "output_rows": [
+        [
+          "Ultimo ritardo concreto",
+          "Cronologia dell'episodio",
+          "Giudizio già incluso nella domanda"
+        ],
+        [
+          "Chi ha deciso e su quali dati?",
+          "Ruoli e informazioni usate",
+          "Attribuire nomi non forniti"
+        ],
+        [
+          "Cosa è successo dopo?",
+          "Esito e seguito",
+          "Confondere opinione con prova"
+        ]
+      ],
+      "check": "L'intervista hosted è distinta dalla voce standard usata per questa lezione. Un brief non prova che un link sia stato creato; un colloquio completato non rende vere tutte le affermazioni.",
+      "question": "'Perché il vostro processo è così lento?' è una buona prima domanda?",
+      "answer": "Presuppone il giudizio. Chiedere un episodio concreto permette di capire tempi, cause possibili e decisioni senza suggerire la conclusione.",
+      "practice": "Rivedi una domanda del brief e indica quale evidenza speri di ottenere, senza creare un link.",
+      "next": "Quando vorrai una vera intervista, seleziona partecipante, obiettivo, lingua e scadenza; il normale percorso hosted dichiara i propri flussi di dati."
+    },
+    "en": {
+      "title": "Ask deeper questions without suggesting the answer",
+      "goal": "Prepare an external-participant brief and understand the route from link to reviewed evidence.",
+      "scenario": "A fictional brief explores how an operations lead manages delivery delays. It focuses on the last concrete episode and the decision taken, without client details or an expected answer.",
+      "request": "Clara, show how you would prepare an external interview about this process.",
+      "scope": "Local brief preparation and review only. No participant link, outreach or hosted transmission occurs. A real interview is a subsequent authorized assignment.",
+      "input_columns": [
+        "Fictional brief element",
+        "Content",
+        "Purpose"
+      ],
+      "input_rows": [
+        [
+          "Objective",
+          "Understand delay handling",
+          "Process decision"
+        ],
+        [
+          "Opening question",
+          "Describe the last concrete delay",
+          "Observable episode"
+        ],
+        [
+          "Follow-up",
+          "Who decided what to do, using which information?",
+          "Roles and evidence"
+        ],
+        [
+          "Boundary",
+          "Do not ask for client names or details",
+          "Interview scope"
+        ]
+      ],
+      "basis": "H1 is an example brief, not a registered campaign or a real participant transcript.",
+      "method": [
+        "Select an exact versioned campaign or draft a bounded custom brief, distinguishing deep case understanding from comparable research.",
+        "In authorized real work, create an individual expiring link through the available service. The conversation adapts rather than mechanically reading a questionnaire.",
+        "Check status and retrieve the bundle and quality review before expiry. Treat responses as statements; adding them to a case requires its separate requested action."
+      ],
+      "result_title": "A brief ready for review",
+      "conclusion": "The brief starts with an episode and explores decisions and evidence without presuming inefficiency or suggesting a conclusion.",
+      "output_columns": [
+        "Question",
+        "What it may reveal",
+        "Avoid"
+      ],
+      "output_rows": [
+        [
+          "Last concrete delay",
+          "Episode chronology",
+          "Judgment embedded in the question"
+        ],
+        [
+          "Who decided, with which data?",
+          "Roles and information",
+          "Invented names"
+        ],
+        [
+          "What happened next?",
+          "Outcome and follow-up",
+          "Opinion treated as proof"
+        ]
+      ],
+      "check": "Hosted Interview differs from the standard voice teaching this lesson. A brief does not prove link creation, and completion does not make every statement true.",
+      "question": "Is 'Why is your process so slow?' a good opening question?",
+      "answer": "It presupposes a judgment. A concrete episode helps uncover timing, possible causes and decisions without suggesting the conclusion.",
+      "practice": "Revise a brief question and state the evidence you hope to obtain, without creating a link.",
+      "next": "For a real interview, select participant, objective, language and expiry. Its normal hosted workflow explains the applicable data flows."
+    },
+    "fr": {
+      "title": "Approfondir sans suggérer la réponse",
+      "goal": "Préparer le brief d'un entretien externe et comprendre le parcours du lien aux preuves revues.",
+      "scenario": "Un brief fictif explore la gestion des retards de livraison par un responsable opérationnel. Il vise le dernier épisode concret et la décision prise, sans données clients ni réponse attendue.",
+      "request": "Clara, montre comment préparer un entretien externe sur ce processus.",
+      "scope": "Préparation et revue locales du brief. Aucun lien, contact externe ou envoi hosted. Un vrai entretien est une mission ultérieure autorisée.",
+      "input_columns": [
+        "Élément fictif du brief",
+        "Contenu",
+        "But"
+      ],
+      "input_rows": [
+        [
+          "Objectif",
+          "Comprendre la gestion des retards",
+          "Décision de processus"
+        ],
+        [
+          "Question initiale",
+          "Racontez le dernier retard concret",
+          "Épisode observable"
+        ],
+        [
+          "Approfondissement",
+          "Qui a décidé, avec quelles informations ?",
+          "Rôles et preuves"
+        ],
+        [
+          "Limite",
+          "Ne pas demander de noms ou données clients",
+          "Périmètre de l'entretien"
+        ]
+      ],
+      "basis": "H1 est un exemple de brief, pas une campagne enregistrée ni la transcription d'une personne réelle.",
+      "method": [
+        "Sélectionne une campagne exacte et versionnée ou prépare un brief limité, en distinguant étude de cas approfondie et recherche comparable.",
+        "Dans une mission réelle autorisée, crée le lien individuel à durée limitée via le service disponible. La conversation s'adapte aux réponses.",
+        "Vérifie le statut et récupère le bundle et sa revue avant expiration. Les réponses restent déclaratives ; leur ajout à un dossier demande une action distincte."
+      ],
+      "result_title": "Un brief prêt à être revu",
+      "conclusion": "Le brief part d'un épisode et explore décisions et preuves sans supposer une inefficacité ni suggérer la conclusion.",
+      "output_columns": [
+        "Question",
+        "Ce qu'elle peut révéler",
+        "À éviter"
+      ],
+      "output_rows": [
+        [
+          "Dernier retard concret",
+          "Chronologie",
+          "Jugement inclus dans la question"
+        ],
+        [
+          "Qui décide avec quelles données ?",
+          "Rôles et informations",
+          "Noms inventés"
+        ],
+        [
+          "Que s'est-il passé ensuite ?",
+          "Résultat et suivi",
+          "Opinion confondue avec preuve"
+        ]
+      ],
+      "check": "Hosted Interview est distinct de la voix standard de cette leçon. Un brief ne prouve pas la création d'un lien ; un entretien terminé ne rend pas toutes les déclarations vraies.",
+      "question": "'Pourquoi votre processus est-il si lent ?' est-il un bon début ?",
+      "answer": "La question présuppose un jugement. Demander un épisode concret permet d'explorer temps, causes possibles et décisions sans orienter la conclusion.",
+      "practice": "Revois une question et précise la preuve recherchée, sans créer de lien.",
+      "next": "Pour un vrai entretien, choisis participant, objectif, langue et expiration ; le workflow hosted expose ses flux de données."
+    },
+    "de": {
+      "title": "Vertiefend fragen, ohne Antworten vorzugeben",
+      "goal": "Ein Gesprächsbriefing für externe Teilnehmende vorbereiten und den Weg vom Link zur geprüften Evidenz verstehen.",
+      "scenario": "Ein fiktives Briefing untersucht, wie eine Betriebsleitung Lieferverzögerungen bearbeitet. Im Mittelpunkt stehen der letzte konkrete Vorfall und die Entscheidung, ohne Mandantendetails oder erwartete Antwort.",
+      "request": "Clara, zeige, wie du ein externes Interview zu diesem Prozess vorbereitest.",
+      "scope": "Nur lokale Briefingvorbereitung und Prüfung. Kein Teilnehmerlink, keine Kontaktaufnahme oder gehostete Übertragung. Ein echtes Interview ist ein späterer autorisierter Auftrag.",
+      "input_columns": [
+        "Fiktives Briefingelement",
+        "Inhalt",
+        "Zweck"
+      ],
+      "input_rows": [
+        [
+          "Ziel",
+          "Umgang mit Verzögerungen verstehen",
+          "Prozessentscheidung"
+        ],
+        [
+          "Einstiegsfrage",
+          "Beschreiben Sie die letzte konkrete Verzögerung",
+          "Beobachtbarer Vorfall"
+        ],
+        [
+          "Vertiefung",
+          "Wer entschied anhand welcher Informationen?",
+          "Rollen und Belege"
+        ],
+        [
+          "Grenze",
+          "Keine Mandantennamen oder -details erfragen",
+          "Gesprächsumfang"
+        ]
+      ],
+      "basis": "H1 ist ein Beispielbriefing, keine registrierte Kampagne und kein echtes Teilnehmertranskript.",
+      "method": [
+        "Wähle eine genaue versionierte Kampagne oder entwirf ein begrenztes individuelles Briefing. Unterscheide tiefes Fallverständnis von vergleichbarer Forschung.",
+        "Erzeuge in autorisierter echter Arbeit einen individuellen befristeten Link über den verfügbaren Dienst. Das Gespräch passt sich an, statt einen Fragebogen mechanisch vorzulesen.",
+        "Prüfe Status und hole Paket und Qualitätsprüfung vor Ablauf ab. Antworten bleiben Aussagen; Aufnahme in einen Fall benötigt eine eigene angeforderte Handlung."
+      ],
+      "result_title": "Ein Briefing zur Prüfung",
+      "conclusion": "Das Briefing beginnt mit einem Vorfall und untersucht Entscheidungen und Belege, ohne Ineffizienz oder eine Schlussfolgerung vorwegzunehmen.",
+      "output_columns": [
+        "Frage",
+        "Möglicher Erkenntnisgewinn",
+        "Vermeiden"
+      ],
+      "output_rows": [
+        [
+          "Letzte konkrete Verzögerung",
+          "Chronologie des Vorfalls",
+          "Urteil in der Frage"
+        ],
+        [
+          "Wer entschied mit welchen Daten?",
+          "Rollen und Informationen",
+          "Erfundene Namen"
+        ],
+        [
+          "Was geschah danach?",
+          "Ergebnis und Folgeschritte",
+          "Meinung als Beweis"
+        ]
+      ],
+      "check": "Hosted Interview unterscheidet sich von der Standardstimme dieser Lektion. Ein Briefing beweist keine Linkerstellung; ein abgeschlossenes Gespräch macht Aussagen nicht wahr.",
+      "question": "Ist 'Warum ist Ihr Prozess so langsam?' ein guter Einstieg?",
+      "answer": "Die Frage setzt ein Urteil voraus. Ein konkreter Vorfall erschließt Zeiten, mögliche Ursachen und Entscheidungen ohne vorgegebene Schlussfolgerung.",
+      "practice": "Überarbeite eine Briefingfrage und benenne die erhoffte Evidenz, ohne einen Link zu erzeugen.",
+      "next": "Wähle für ein echtes Interview Teilnehmende, Ziel, Sprache und Ablaufzeit. Der reguläre gehostete Workflow erklärt seine Datenflüsse."
+    },
+    "es": {
+      "title": "Profundizar sin sugerir la respuesta",
+      "goal": "Preparar una guía para participantes externos y entender el recorrido desde el enlace hasta la evidencia revisada.",
+      "scenario": "Una guía ficticia investiga cómo un responsable operativo gestiona retrasos de entrega. Se centra en el último episodio concreto y la decisión tomada, sin datos de clientes ni respuesta esperada.",
+      "request": "Clara, muestra cómo prepararías una entrevista externa sobre este proceso.",
+      "scope": "Solo preparación y revisión local de la guía. Sin enlace de participante, contacto externo ni transmisión alojada. La entrevista real es un encargo posterior autorizado.",
+      "input_columns": [
+        "Elemento ficticio",
+        "Contenido",
+        "Propósito"
+      ],
+      "input_rows": [
+        [
+          "Objetivo",
+          "Entender la gestión de retrasos",
+          "Decisión de proceso"
+        ],
+        [
+          "Pregunta inicial",
+          "Describa el último retraso concreto",
+          "Episodio observable"
+        ],
+        [
+          "Profundización",
+          "¿Quién decidió y con qué información?",
+          "Funciones y pruebas"
+        ],
+        [
+          "Límite",
+          "No pedir nombres ni datos de clientes",
+          "Alcance de entrevista"
+        ]
+      ],
+      "basis": "H1 es una guía de ejemplo, no una campaña registrada ni un transcript real de participante.",
+      "method": [
+        "Selecciona una campaña exacta versionada o redacta una guía personalizada acotada, distinguiendo comprensión profunda y investigación comparable.",
+        "En trabajo real autorizado, crea un enlace individual con caducidad mediante el servicio disponible. La conversación se adapta sin leer mecánicamente un cuestionario.",
+        "Comprueba estado y recupera paquete y revisión de calidad antes de caducar. Las respuestas son declaraciones; incorporarlas a un caso requiere su propia acción solicitada."
+      ],
+      "result_title": "Una guía lista para revisión",
+      "conclusion": "La guía parte de un episodio y explora decisiones y pruebas sin presuponer ineficiencia ni sugerir una conclusión.",
+      "output_columns": [
+        "Pregunta",
+        "Qué puede revelar",
+        "Evitar"
+      ],
+      "output_rows": [
+        [
+          "Último retraso concreto",
+          "Cronología del episodio",
+          "Juicio incluido en la pregunta"
+        ],
+        [
+          "¿Quién decidió con qué datos?",
+          "Funciones e información",
+          "Nombres inventados"
+        ],
+        [
+          "¿Qué ocurrió después?",
+          "Resultado y seguimiento",
+          "Opinión tratada como prueba"
+        ]
+      ],
+      "check": "Hosted Interview es distinto de la voz estándar que enseña esta lección. Una guía no demuestra creación de enlace y finalizar no convierte todas las declaraciones en verdad.",
+      "question": "¿Es buena apertura 'por qué es tan lento su proceso'?",
+      "answer": "Presupone un juicio. Un episodio concreto permite descubrir tiempos, posibles causas y decisiones sin sugerir la conclusión.",
+      "practice": "Revisa una pregunta e indica la evidencia que esperas obtener sin crear un enlace.",
+      "next": "Para una entrevista real, selecciona participante, objetivo, lengua y caducidad. El workflow alojado habitual explica los flujos de datos aplicables."
+    }
+  }
+}

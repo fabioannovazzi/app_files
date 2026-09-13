@@ -1,0 +1,353 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "deck-correction",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "skills/deck-correction/SKILL.md",
+      "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
+      "sha256": "cc674f45a013113ae6d4e31de69f626e9f99a945835a472cf73392ade3c08e9a"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Dal commento alla slide corretta",
+      "goal": "Trasformare un feedback in modifiche verificabili mantenendo intatti i contenuti non interessati.",
+      "scenario": "Una presentazione fittizia di tre slide contiene un confronto 2025–2026. Il feedback dice: 'Nella seconda slide mostra prima il risultato; non cambiare i numeri né la terza slide'. Il risultato da mettere in evidenza è +12%, già presente nella fonte.",
+      "request": "Clara, applica questo feedback alla presentazione e mostrami esattamente cosa è cambiato.",
+      "scope": "Correzione di una copia della presentazione esistente. La lezione usa note scritte fittizie; non avvia acquisizione vocale hosted né inventa una registrazione.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Contenuto",
+        "Autorità"
+      ],
+      "input_rows": [
+        [
+          "D1 · deck originale",
+          "Tre slide, stile e numeri esistenti",
+          "Base visiva"
+        ],
+        [
+          "D2 · feedback",
+          "Risultato prima nella slide 2",
+          "Richiesta di modifica"
+        ],
+        [
+          "D3 · dato",
+          "+12% nel confronto",
+          "Base dell'affermazione"
+        ]
+      ],
+      "basis": "D2 autorizza la modifica dell'ordine del messaggio, non nuovi calcoli. D1 conserva lo stile e la terza slide; D3 sostiene il numero.",
+      "method": [
+        "Identifica deck e feedback esatti; interpreta ogni richiesta, distinguendo scopo, ambiguità e parti da preservare.",
+        "Prepara il registro delle modifiche e il risultato atteso; per PPTX segui il passaggio di comprensione e approvazione previsto prima di applicare alla copia.",
+        "Renderizza e ispeziona la versione finale, confrontando prima e dopo. Verifica numeri, leggibilità e contenuti non interessati; conserva il collegamento alle fonti."
+      ],
+      "result_title": "Slide 2 · il risultato apre il messaggio",
+      "conclusion": "Il titolo può diventare 'Il risultato cresce del 12%'. La spiegazione segue; i valori e la terza slide rimangono come nell'originale.",
+      "output_columns": [
+        "Richiesta",
+        "Modifica prevista",
+        "Prova di riuscita"
+      ],
+      "output_rows": [
+        [
+          "Risultato prima",
+          "Titolo della slide 2",
+          "Il +12% è visibile in apertura"
+        ],
+        [
+          "Non cambiare i numeri",
+          "Nessuna modifica ai dati",
+          "Confronto con D1/D3"
+        ],
+        [
+          "Preservare slide 3",
+          "Nessuna modifica",
+          "Confronto prima/dopo"
+        ]
+      ],
+      "check": "Una slide individuata dal numero è solo una localizzazione: bisogna capire il significato del feedback. Non ricostruire l'intero deck quando sono richieste modifiche limitate.",
+      "question": "Possiamo cambiare il +12% in 'forte crescita' per rendere il titolo più brillante?",
+      "answer": "Il feedback chiede di anticipare il risultato, non di sostituirlo con un giudizio. Mantieni la misura verificata e rivedi qualsiasi interpretazione aggiuntiva.",
+      "practice": "Aggiungi una seconda richiesta di modifica e definisci il criterio concreto con cui verificherai il risultato.",
+      "next": "Seleziona la presentazione esatta e il feedback; se il feedback è audio, usa prima il percorso di trascrizione autorizzato fuori dalla lezione."
+    },
+    "en": {
+      "title": "From feedback to a verified slide change",
+      "goal": "Turn a comment into an inspectable revision while preserving unaffected content.",
+      "scenario": "A fictional three-slide deck compares 2025 and 2026. Feedback asks to lead with the result on slide two without changing the numbers or slide three. The +12% result already appears in the source.",
+      "request": "Clara, apply this feedback and show exactly what changed.",
+      "scope": "Revise a copy of an existing deck. The lesson uses fictional written notes; it does not start hosted voice capture or invent a recording.",
+      "input_columns": [
+        "Fictional source",
+        "Content",
+        "Authority"
+      ],
+      "input_rows": [
+        [
+          "D1 · original deck",
+          "Three slides, existing style and figures",
+          "Visual baseline"
+        ],
+        [
+          "D2 · feedback",
+          "Result first on slide 2",
+          "Requested change"
+        ],
+        [
+          "D3 · data",
+          "+12% comparison",
+          "Claim basis"
+        ]
+      ],
+      "basis": "D2 requests a different message order, not new calculations. D1 defines preserved content and D3 supports the figure.",
+      "method": [
+        "Identify the exact deck and feedback. Interpret every request, its scope, uncertainty and preserved parts.",
+        "Prepare the change ledger and success criteria. For PPTX, follow the required understanding and approval checkpoint before editing the copy.",
+        "Render and inspect the final deck against the original. Check numbers, readability and unaffected slides while retaining evidence lineage."
+      ],
+      "result_title": "Slide 2 · the result leads",
+      "conclusion": "The title can become 'The result increases by 12%'. Explanation follows; figures and slide three remain unchanged.",
+      "output_columns": [
+        "Request",
+        "Intended change",
+        "Success evidence"
+      ],
+      "output_rows": [
+        [
+          "Result first",
+          "Slide 2 title",
+          "+12% visible at the start"
+        ],
+        [
+          "Keep figures",
+          "No data changes",
+          "Comparison with D1/D3"
+        ],
+        [
+          "Preserve slide 3",
+          "No change",
+          "Before/after comparison"
+        ]
+      ],
+      "check": "A slide number locates content but does not interpret the request. Avoid rebuilding the whole deck for a bounded correction.",
+      "question": "Can we replace +12% with 'strong growth' to make the title more exciting?",
+      "answer": "The request is to foreground the result, not replace it with a judgment. Keep the supported measure and review any added interpretation.",
+      "practice": "Add another change request and define the concrete evidence that will show it succeeded.",
+      "next": "Select the exact deck and feedback. Real audio follows the authorized transcription route outside this lesson."
+    },
+    "fr": {
+      "title": "Du commentaire à une diapositive corrigée et vérifiée",
+      "goal": "Transformer un retour en modification contrôlable tout en préservant le reste du deck.",
+      "scenario": "Un deck fictif de trois slides compare 2025 et 2026. Le retour demande d'ouvrir la slide 2 par le résultat sans changer les chiffres ni la slide 3. Le +12 % figure déjà dans la source.",
+      "request": "Clara, applique ce retour et montre exactement ce qui a changé.",
+      "scope": "Correction d'une copie existante à partir de notes fictives. Aucun enregistrement ni capture vocale hosted n'est créé.",
+      "input_columns": [
+        "Source fictive",
+        "Contenu",
+        "Autorité"
+      ],
+      "input_rows": [
+        [
+          "D1 · deck original",
+          "Trois slides, style et chiffres",
+          "Base visuelle"
+        ],
+        [
+          "D2 · retour",
+          "Résultat d'abord sur la slide 2",
+          "Modification demandée"
+        ],
+        [
+          "D3 · données",
+          "+12 % dans le comparatif",
+          "Base de l'affirmation"
+        ]
+      ],
+      "basis": "D2 autorise un nouvel ordre du message, pas de nouveaux calculs. D1 fixe le contenu préservé et D3 soutient le chiffre.",
+      "method": [
+        "Identifie deck et retour exacts ; interprète chaque demande, son périmètre, ses ambiguïtés et les éléments à préserver.",
+        "Prépare registre des changements et critères de réussite. Pour PPTX, suis le point de compréhension et d'approbation avant de modifier la copie.",
+        "Rends et examine la version finale face à l'original : chiffres, lisibilité et slides inchangées, avec leurs liens aux preuves."
+      ],
+      "result_title": "Slide 2 · le résultat ouvre le message",
+      "conclusion": "Le titre peut devenir 'Le résultat augmente de 12 %'. L'explication suit ; chiffres et slide 3 sont conservés.",
+      "output_columns": [
+        "Demande",
+        "Modification prévue",
+        "Preuve de réussite"
+      ],
+      "output_rows": [
+        [
+          "Résultat d'abord",
+          "Titre de la slide 2",
+          "+12 % visible dès l'ouverture"
+        ],
+        [
+          "Conserver les chiffres",
+          "Aucune donnée changée",
+          "Comparaison avec D1/D3"
+        ],
+        [
+          "Préserver la slide 3",
+          "Aucun changement",
+          "Comparaison avant/après"
+        ]
+      ],
+      "check": "Le numéro d'une slide localise le contenu sans interpréter la demande. Une correction limitée ne justifie pas de reconstruire tout le deck.",
+      "question": "Peut-on remplacer +12 % par 'forte croissance' pour un titre plus séduisant ?",
+      "answer": "La demande est de mettre le résultat en avant, pas de le remplacer par un jugement. Conserve la mesure étayée et revois toute interprétation ajoutée.",
+      "practice": "Ajoute une autre demande et définis la preuve concrète qui permettra de la vérifier.",
+      "next": "Sélectionne deck et retour exacts. Un véritable audio suit la transcription autorisée en dehors de cette leçon."
+    },
+    "de": {
+      "title": "Aus Feedback eine überprüfbare Folienänderung machen",
+      "goal": "Einen Kommentar in eine sichtbare Überarbeitung umsetzen und unbetroffene Inhalte erhalten.",
+      "scenario": "Eine fiktive Präsentation mit drei Folien vergleicht 2025 und 2026. Auf Folie zwei soll das Ergebnis zuerst stehen; Zahlen und Folie drei sollen bleiben. Das Ergebnis +12 % ist bereits belegt.",
+      "request": "Clara, setze dieses Feedback um und zeige genau die Änderungen.",
+      "scope": "Überarbeitung einer Kopie. Die Lektion nutzt fiktive schriftliche Notizen, startet keine gehostete Sprachaufnahme und erfindet keine Aufnahme.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Inhalt",
+        "Rolle"
+      ],
+      "input_rows": [
+        [
+          "D1 · Originalpräsentation",
+          "Drei Folien, vorhandener Stil und Zahlen",
+          "Visuelle Grundlage"
+        ],
+        [
+          "D2 · Feedback",
+          "Ergebnis zuerst auf Folie 2",
+          "Gewünschte Änderung"
+        ],
+        [
+          "D3 · Daten",
+          "+12 % im Vergleich",
+          "Aussagegrundlage"
+        ]
+      ],
+      "basis": "D2 verlangt eine andere Reihenfolge, keine neue Berechnung. D1 bestimmt zu erhaltende Inhalte, D3 belegt die Zahl.",
+      "method": [
+        "Bestimme genaue Präsentation und Feedback. Interpretiere jede Anforderung mit Umfang, Unsicherheit und unveränderten Teilen.",
+        "Erstelle Änderungsregister und Erfolgskriterien. Bei PPTX kommt der vorgeschriebene Verständnis- und Freigabepunkt vor Bearbeitung der Kopie.",
+        "Rendere und prüfe die Endfassung gegen das Original. Kontrolliere Zahlen, Lesbarkeit und unbetroffene Folien unter Erhalt der Belegverbindungen."
+      ],
+      "result_title": "Folie 2 · das Ergebnis steht zuerst",
+      "conclusion": "Der Titel kann 'Das Ergebnis steigt um 12 %' lauten. Die Erklärung folgt; Zahlen und Folie drei bleiben unverändert.",
+      "output_columns": [
+        "Anforderung",
+        "Geplante Änderung",
+        "Erfolgsbeleg"
+      ],
+      "output_rows": [
+        [
+          "Ergebnis zuerst",
+          "Titel von Folie 2",
+          "+12 % am Anfang sichtbar"
+        ],
+        [
+          "Zahlen erhalten",
+          "Keine Datenänderung",
+          "Vergleich mit D1/D3"
+        ],
+        [
+          "Folie 3 erhalten",
+          "Keine Änderung",
+          "Vorher-Nachher-Vergleich"
+        ]
+      ],
+      "check": "Eine Foliennummer lokalisiert Inhalt, interpretiert aber keine Anweisung. Eine begrenzte Korrektur verlangt keinen kompletten Neuaufbau.",
+      "question": "Dürfen wir +12 % durch 'starkes Wachstum' ersetzen, um den Titel spannender zu machen?",
+      "answer": "Gewünscht ist, das Ergebnis hervorzuheben, nicht durch ein Urteil zu ersetzen. Erhalte die belegte Kennzahl und prüfe zusätzliche Interpretation.",
+      "practice": "Ergänze eine weitere Änderung und definiere den konkreten Beleg für ihre erfolgreiche Umsetzung.",
+      "next": "Wähle genaue Präsentation und Feedback. Echte Audiodaten folgen außerhalb dieser Lektion dem autorisierten Transkriptionsweg."
+    },
+    "es": {
+      "title": "Del comentario a una modificación de diapositiva verificada",
+      "goal": "Convertir una observación en una revisión visible conservando el contenido no afectado.",
+      "scenario": "Una presentación ficticia de tres diapositivas compara 2025 y 2026. Se pide destacar primero el resultado en la segunda, sin cambiar cifras ni la tercera. El +12 % ya está en la fuente.",
+      "request": "Clara, aplica este comentario y muestra exactamente lo que cambió.",
+      "scope": "Revisión de una copia existente. Se usan notas ficticias escritas, sin iniciar captura de voz alojada ni inventar grabación.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Contenido",
+        "Función"
+      ],
+      "input_rows": [
+        [
+          "D1 · presentación original",
+          "Tres diapositivas, estilo y cifras existentes",
+          "Base visual"
+        ],
+        [
+          "D2 · comentario",
+          "Resultado primero en diapositiva 2",
+          "Cambio solicitado"
+        ],
+        [
+          "D3 · datos",
+          "+12 % comparativo",
+          "Base de la afirmación"
+        ]
+      ],
+      "basis": "D2 pide otro orden del mensaje, no nuevos cálculos. D1 define contenido conservado y D3 respalda la cifra.",
+      "method": [
+        "Identifica presentación y comentarios exactos. Interpreta cada petición, alcance, incertidumbre y partes que deben conservarse.",
+        "Prepara registro de cambios y criterios de éxito. Para PPTX, respeta el punto obligatorio de comprensión y aprobación antes de editar la copia.",
+        "Renderiza e inspecciona la versión final contra el original. Comprueba cifras, legibilidad y diapositivas no afectadas y conserva trazabilidad."
+      ],
+      "result_title": "Diapositiva 2 · el resultado abre el mensaje",
+      "conclusion": "El título puede ser 'El resultado aumenta un 12 %'. La explicación sigue; las cifras y la tercera diapositiva se mantienen.",
+      "output_columns": [
+        "Petición",
+        "Cambio previsto",
+        "Prueba de éxito"
+      ],
+      "output_rows": [
+        [
+          "Resultado primero",
+          "Título de diapositiva 2",
+          "+12 % visible al inicio"
+        ],
+        [
+          "Conservar cifras",
+          "Sin cambios de datos",
+          "Comparación con D1/D3"
+        ],
+        [
+          "Conservar diapositiva 3",
+          "Sin cambios",
+          "Comparación antes/después"
+        ]
+      ],
+      "check": "El número de diapositiva localiza contenido, pero no interpreta la petición. Evita reconstruir toda la presentación por una corrección acotada.",
+      "question": "¿Podemos sustituir +12 % por 'fuerte crecimiento' para animar el título?",
+      "answer": "Se pide destacar el resultado, no sustituirlo por un juicio. Conserva la medida respaldada y revisa cualquier interpretación adicional.",
+      "practice": "Añade otra petición de cambio y define la evidencia concreta de que se aplicó correctamente.",
+      "next": "Selecciona presentación y comentarios exactos. El audio real sigue su vía autorizada de transcripción fuera de esta lección."
+    }
+  }
+}

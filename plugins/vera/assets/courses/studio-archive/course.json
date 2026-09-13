@@ -1,0 +1,423 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "studio-archive",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/studio-archive/scripts/archive_core.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+      "sha256": "ac91f4e73ba4994ac44328e1924c888aec6cd59fd1f39808d66596315be763e0"
+    },
+    {
+      "path": "modules/studio-archive/scripts/build_model_data_report.py",
+      "repository_path": "plugins/studio-archive/scripts/build_model_data_report.py",
+      "sha256": "57eebdae3bb98531ee030dda2fca05de45ce84331ac4f8fdede6a3c3b06ea409"
+    },
+    {
+      "path": "modules/studio-archive/scripts/check_dependencies.py",
+      "repository_path": "plugins/studio-archive/scripts/check_dependencies.py",
+      "sha256": "9af5b8c81cdd7c1811d2a2d39c0d8db19c51d098cde5f4bb808df1af6ee18ea4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/client_ledger.py",
+      "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
+      "sha256": "96a8bc37a6632edb3d345cd78d86b6d3a78c615f741ead702d489ae5a4e040f4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/google_drive.py",
+      "repository_path": "plugins/studio-archive/scripts/google_drive.py",
+      "sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5"
+    },
+    {
+      "path": "modules/studio-archive/scripts/studio_archive.py",
+      "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
+      "sha256": "5b6b94827523c276528f712bb87ecb1bc79d0b99ef93a96c57d6c8458b01f9d2"
+    },
+    {
+      "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+      "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
+      "sha256": "205383bd830bcb0418a2629e74d9388c27e2e76381cc6ae169ae02105051582f"
+    },
+    {
+      "path": "skills/studio-archive/SKILL.md",
+      "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
+      "sha256": "3a75ff7bdb875bfc7e37a60aa8bbf33a7b96f1dddbba5d8c074b87a74a7009db"
+    },
+    {
+      "path": "skills/studio-archive/references/marketplace-gmail.md",
+      "repository_path": "plugins/vera/skills/studio-archive/references/marketplace-gmail.md",
+      "sha256": "71d087b6554ee73a088a14be0a6de32d5a8b7e79b683741792bb3477831369d4"
+    },
+    {
+      "path": "skills/studio-archive/references/whatsapp-desktop.md",
+      "repository_path": "plugins/vera/skills/studio-archive/references/whatsapp-desktop.md",
+      "sha256": "4d91c200a6af11294d90b004fcadb1eb38adbf999f1f026bcaf064976904e704"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Riprendere un incarico senza dipendere dalla vecchia chat",
+      "goal": "Ritrovare cliente, fonti e risultati attraverso il registro portabile dell'incarico.",
+      "scenario": "Lo studio ha due clienti fittizi con una fattura dallo stesso nome. Per Arco esiste un incarico di giugno con una fonte importata e un report finalizzato. La vecchia conversazione non è disponibile.",
+      "request": "Vera, riprendi l'incarico di giugno di Arco e apri il report con le sue fonti.",
+      "scope": "Selezione, ricerca e ripresa del lavoro registrato. La ricerca nell'archivio non riordina né sposta i file; quello è un workflow distinto.",
+      "input_columns": [
+        "Elemento fittizio",
+        "Identità",
+        "Contenuto"
+      ],
+      "input_rows": [
+        [
+          "Cliente Arco",
+          "C-ARCO",
+          "Incarico giugno E-06"
+        ],
+        [
+          "Cliente Luna",
+          "C-LUNA",
+          "Altro fascicolo"
+        ],
+        [
+          "Fonte fattura.pdf",
+          "Input I-01 di C-ARCO/E-06",
+          "Copia registrata"
+        ],
+        [
+          "Report",
+          "Artefatto A-01 del run R-01",
+          "Finalizzato per la revisione"
+        ]
+      ],
+      "basis": "Il registro del cliente e dell'incarico definisce la provenienza. Il nome fattura.pdf, presente in due cartelle, non stabilisce l'identità del cliente.",
+      "method": [
+        "Seleziona il cliente registrato e l'incarico pertinente usando i riferimenti persistenti; chiedi solo quando la selezione rimane ambigua.",
+        "Apri fonti e artefatti attraverso il registro, verificando identità, stato del run e integrità degli output.",
+        "Per nuovo lavoro prepara un nuovo run nel medesimo incarico, dichiara gli output e conserva la cronologia. Non riscrivere i risultati precedenti per aggiornarli."
+      ],
+      "result_title": "Arco · incarico giugno ritrovato",
+      "conclusion": "Il report A-01 e la fonte I-01 appartengono all'incarico E-06. La loro provenienza è nel registro, anche senza la vecchia chat.",
+      "output_columns": [
+        "Cosa aprire",
+        "Percorso logico",
+        "Controllo"
+      ],
+      "output_rows": [
+        [
+          "Report finalizzato",
+          "C-ARCO → E-06 → R-01 → A-01",
+          "Stato e identità dell'artefatto"
+        ],
+        [
+          "Fonte",
+          "C-ARCO → E-06 → I-01",
+          "Copia registrata del documento"
+        ],
+        [
+          "Nuova analisi",
+          "Nuovo run nello stesso incarico",
+          "Cronologia conservata"
+        ]
+      ],
+      "check": "Un file con lo stesso nome in un'altra cartella non è una fonte equivalente. Un run in corso non deve essere presentato come finalizzato.",
+      "question": "Spostiamo una cartella cliente: dobbiamo ricreare tutti i risultati?",
+      "answer": "Il registro portabile consente di riprendere l'incarico e risolvere i percorsi nella cartella attuale. Occorre verificare accesso e integrità, non rigenerare il lavoro per supposizione.",
+      "practice": "Riprendi l'incarico didattico dalla seconda chat e apri esattamente lo stesso artefatto verificato.",
+      "next": "Scegli il cliente e l'incarico effettivi prima di leggere documenti; usa il registro per ritrovare il lavoro, non i ricordi della conversazione."
+    },
+    "en": {
+      "title": "Resume an engagement without its old chat",
+      "goal": "Recover client, source and output identity through the portable engagement record.",
+      "scenario": "Two fictional clients have a file named invoice.pdf. Arco has a June engagement with one imported source and a finalized report. The original conversation is unavailable, so the saved ledger is the route back to the work.",
+      "request": "Vera, resume Arco's June engagement and open the report with its sources.",
+      "scope": "Selection, search and resumption of registered work. Archive search does not reorganize or move source files.",
+      "input_columns": [
+        "Fictional item",
+        "Identity",
+        "Content"
+      ],
+      "input_rows": [
+        [
+          "Arco client",
+          "C-ARCO",
+          "June engagement E-06"
+        ],
+        [
+          "Luna client",
+          "C-LUNA",
+          "Different file"
+        ],
+        [
+          "invoice.pdf source",
+          "I-01 in C-ARCO/E-06",
+          "Registered copy"
+        ],
+        [
+          "Report",
+          "A-01 from run R-01",
+          "Finalized for review"
+        ]
+      ],
+      "basis": "Client and engagement records establish provenance. The shared filename cannot identify the client.",
+      "method": [
+        "Select the registered client and relevant engagement through persistent references, clarifying only genuinely ambiguous selection.",
+        "Open sources and artifacts through the ledger and verify identity, run status and output integrity.",
+        "Create a new run for new work in the same engagement, declare outputs and retain history. Do not rewrite earlier results to update them."
+      ],
+      "result_title": "Arco · June engagement recovered",
+      "conclusion": "Report A-01 and source I-01 belong to E-06. Their provenance remains available in the ledger without the old conversation.",
+      "output_columns": [
+        "Open",
+        "Logical route",
+        "Check"
+      ],
+      "output_rows": [
+        [
+          "Finalized report",
+          "C-ARCO → E-06 → R-01 → A-01",
+          "Artifact status and identity"
+        ],
+        [
+          "Source",
+          "C-ARCO → E-06 → I-01",
+          "Registered document copy"
+        ],
+        [
+          "New analysis",
+          "New run in the same engagement",
+          "History preserved"
+        ]
+      ],
+      "check": "The same filename in another folder is not equivalent evidence. An active run must not be presented as finalized.",
+      "question": "If the client folder moves, must every result be recreated?",
+      "answer": "The portable ledger resolves paths in the current folder. Verify access and integrity rather than assuming regeneration is necessary.",
+      "practice": "Resume the tutorial engagement from the second chat and open the same verified artifact.",
+      "next": "Select the actual client and engagement before reading documents, then use the ledger to recover the work."
+    },
+    "fr": {
+      "title": "Reprendre un dossier sans son ancienne conversation",
+      "goal": "Retrouver identité du client, sources et résultats grâce au registre portable de la mission.",
+      "scenario": "Deux clients fictifs possèdent un fichier facture.pdf. Arco a une mission de juin avec une source importée et un rapport finalisé. L'ancienne conversation est indisponible ; le registre permet de retrouver le travail.",
+      "request": "Vera, reprends la mission de juin d'Arco et ouvre le rapport avec ses sources.",
+      "scope": "Sélection, recherche et reprise du travail enregistré. La recherche d'archives ne range ni ne déplace les fichiers.",
+      "input_columns": [
+        "Élément fictif",
+        "Identité",
+        "Contenu"
+      ],
+      "input_rows": [
+        [
+          "Client Arco",
+          "C-ARCO",
+          "Mission juin E-06"
+        ],
+        [
+          "Client Luna",
+          "C-LUNA",
+          "Autre dossier"
+        ],
+        [
+          "Source facture.pdf",
+          "I-01 de C-ARCO/E-06",
+          "Copie enregistrée"
+        ],
+        [
+          "Rapport",
+          "A-01 du run R-01",
+          "Finalisé pour revue"
+        ]
+      ],
+      "basis": "Client et mission établissent la provenance. Un nom de fichier partagé ne permet pas de choisir le client.",
+      "method": [
+        "Sélectionne client enregistré et mission pertinente par leurs références persistantes, en clarifiant seulement les ambiguïtés réelles.",
+        "Ouvre sources et livrables via le registre ; vérifie identité, état d'exécution et intégrité.",
+        "Pour un nouveau travail, crée un nouveau run dans la même mission, déclare les résultats et conserve l'historique. Ne réécris pas les anciens résultats pour les actualiser."
+      ],
+      "result_title": "Arco · mission de juin retrouvée",
+      "conclusion": "Rapport A-01 et source I-01 appartiennent à E-06. Leur provenance reste accessible sans la conversation d'origine.",
+      "output_columns": [
+        "À ouvrir",
+        "Chemin logique",
+        "Vérification"
+      ],
+      "output_rows": [
+        [
+          "Rapport finalisé",
+          "C-ARCO → E-06 → R-01 → A-01",
+          "État et identité"
+        ],
+        [
+          "Source",
+          "C-ARCO → E-06 → I-01",
+          "Copie enregistrée"
+        ],
+        [
+          "Nouvelle analyse",
+          "Nouveau run dans la mission",
+          "Historique conservé"
+        ]
+      ],
+      "check": "Le même nom ailleurs n'est pas une preuve équivalente. Une exécution en cours ne doit pas être présentée comme finalisée.",
+      "question": "Si le dossier client change de place, faut-il recréer tous les résultats ?",
+      "answer": "Le registre portable résout les chemins dans le dossier actuel. Vérifie accès et intégrité au lieu de supposer une régénération nécessaire.",
+      "practice": "Reprends la mission pédagogique depuis la seconde conversation et ouvre le même résultat vérifié.",
+      "next": "Choisis client et mission réels avant de lire des documents ; utilise le registre pour retrouver le travail."
+    },
+    "de": {
+      "title": "Ein Mandat ohne den alten Chat fortsetzen",
+      "goal": "Mandant, Quellen und Ergebnisse über das portable Auftragsregister wiederfinden.",
+      "scenario": "Zwei fiktive Mandanten haben eine Datei namens invoice.pdf. Arco besitzt einen Juni-Auftrag mit importierter Quelle und abgeschlossenem Bericht. Der ursprüngliche Chat ist nicht verfügbar; das gespeicherte Register führt zurück zur Arbeit.",
+      "request": "Vera, setze Arcos Juni-Auftrag fort und öffne Bericht und Quellen.",
+      "scope": "Auswahl, Suche und Fortsetzung registrierter Arbeit. Die Archivsuche ordnet oder verschiebt keine Quelldateien.",
+      "input_columns": [
+        "Fiktives Element",
+        "Identität",
+        "Inhalt"
+      ],
+      "input_rows": [
+        [
+          "Mandant Arco",
+          "C-ARCO",
+          "Juni-Auftrag E-06"
+        ],
+        [
+          "Mandant Luna",
+          "C-LUNA",
+          "Andere Datei"
+        ],
+        [
+          "Quelle invoice.pdf",
+          "I-01 in C-ARCO/E-06",
+          "Registrierte Kopie"
+        ],
+        [
+          "Bericht",
+          "A-01 aus Lauf R-01",
+          "Zur Prüfung abgeschlossen"
+        ]
+      ],
+      "basis": "Mandanten- und Auftragsregister belegen die Herkunft. Der gemeinsame Dateiname identifiziert keinen Mandanten.",
+      "method": [
+        "Wähle registrierten Mandanten und Auftrag über beständige Verweise. Kläre nur tatsächlich mehrdeutige Auswahlfragen.",
+        "Öffne Quellen und Ergebnisse über das Register und prüfe Identität, Laufstatus und Dateiintegrität.",
+        "Erstelle für neue Arbeit einen neuen Lauf im selben Auftrag, registriere Ergebnisse und erhalte die Historie. Überschreibe frühere Ergebnisse nicht zur Aktualisierung."
+      ],
+      "result_title": "Arco · Juni-Auftrag wiedergefunden",
+      "conclusion": "Bericht A-01 und Quelle I-01 gehören zu E-06. Ihre Herkunft bleibt im Register auch ohne alten Chat verfügbar.",
+      "output_columns": [
+        "Öffnen",
+        "Logischer Weg",
+        "Prüfung"
+      ],
+      "output_rows": [
+        [
+          "Abgeschlossener Bericht",
+          "C-ARCO → E-06 → R-01 → A-01",
+          "Status und Identität des Ergebnisses"
+        ],
+        [
+          "Quelle",
+          "C-ARCO → E-06 → I-01",
+          "Registrierte Dokumentenkopie"
+        ],
+        [
+          "Neue Analyse",
+          "Neuer Lauf im selben Auftrag",
+          "Historie erhalten"
+        ]
+      ],
+      "check": "Derselbe Dateiname in einem anderen Ordner ist kein gleichwertiger Beleg. Ein aktiver Lauf darf nicht als abgeschlossen erscheinen.",
+      "question": "Müssen nach Verschieben des Mandantenordners alle Ergebnisse neu entstehen?",
+      "answer": "Das portable Register löst Pfade im aktuellen Ordner auf. Prüfe Zugriff und Integrität, statt notwendige Neuerstellung anzunehmen.",
+      "practice": "Setze den Übungsauftrag im zweiten Chat fort und öffne dasselbe geprüfte Ergebnis.",
+      "next": "Wähle Mandant und Auftrag vor der Dokumentenlektüre und nutze das Register zur Wiederaufnahme."
+    },
+    "es": {
+      "title": "Retomar un encargo sin su conversación anterior",
+      "goal": "Recuperar identidad de cliente, fuente y resultado mediante el registro portátil del encargo.",
+      "scenario": "Dos clientes ficticios tienen un archivo invoice.pdf. Arco tiene un encargo de junio con una fuente importada y un informe finalizado. El chat original no está disponible; el registro guardado permite volver al trabajo.",
+      "request": "Vera, retoma el encargo de junio de Arco y abre el informe con sus fuentes.",
+      "scope": "Selección, búsqueda y reanudación de trabajo registrado. Buscar en el archivo no reorganiza ni mueve documentos originales.",
+      "input_columns": [
+        "Elemento ficticio",
+        "Identidad",
+        "Contenido"
+      ],
+      "input_rows": [
+        [
+          "Cliente Arco",
+          "C-ARCO",
+          "Encargo de junio E-06"
+        ],
+        [
+          "Cliente Luna",
+          "C-LUNA",
+          "Archivo distinto"
+        ],
+        [
+          "Fuente invoice.pdf",
+          "I-01 en C-ARCO/E-06",
+          "Copia registrada"
+        ],
+        [
+          "Informe",
+          "A-01 de ejecución R-01",
+          "Finalizado para revisión"
+        ]
+      ],
+      "basis": "Los registros de cliente y encargo acreditan procedencia. El nombre compartido del archivo no identifica al cliente.",
+      "method": [
+        "Selecciona cliente registrado y encargo mediante referencias persistentes y aclara solo selecciones realmente ambiguas.",
+        "Abre fuentes y resultados mediante el registro y verifica identidad, estado de ejecución e integridad.",
+        "Crea una nueva ejecución para trabajo nuevo en el mismo encargo, declara salidas y conserva historial. No reescribas resultados anteriores para actualizarlos."
+      ],
+      "result_title": "Arco · encargo de junio recuperado",
+      "conclusion": "Informe A-01 y fuente I-01 pertenecen a E-06. Su procedencia sigue disponible en el registro sin la conversación anterior.",
+      "output_columns": [
+        "Abrir",
+        "Ruta lógica",
+        "Comprobación"
+      ],
+      "output_rows": [
+        [
+          "Informe finalizado",
+          "C-ARCO → E-06 → R-01 → A-01",
+          "Estado e identidad del resultado"
+        ],
+        [
+          "Fuente",
+          "C-ARCO → E-06 → I-01",
+          "Copia documental registrada"
+        ],
+        [
+          "Nuevo análisis",
+          "Nueva ejecución en el mismo encargo",
+          "Historial conservado"
+        ]
+      ],
+      "check": "El mismo nombre en otra carpeta no es evidencia equivalente. Una ejecución activa no debe presentarse como finalizada.",
+      "question": "Si cambia de ubicación la carpeta del cliente, ¿hay que recrear todos los resultados?",
+      "answer": "El registro portátil resuelve rutas en la carpeta actual. Verifica acceso e integridad en lugar de suponer necesaria la regeneración.",
+      "practice": "Retoma el encargo didáctico desde el segundo chat y abre el mismo resultado verificado.",
+      "next": "Selecciona cliente y encargo antes de leer documentos y utiliza el registro para recuperar el trabajo."
+    }
+  }
+}

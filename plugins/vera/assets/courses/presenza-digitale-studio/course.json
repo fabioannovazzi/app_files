@@ -1,0 +1,493 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "presenza-digitale-studio",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/presenza-digitale-studio/schemas/quality_assessment.schema.json",
+      "repository_path": "plugins/presenza-digitale-studio/schemas/quality_assessment.schema.json",
+      "sha256": "6b65695211ae5e2c3c0e86450d4752514f2561ccd5a1e1f41657a901c1f44aa2"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/site_brief.schema.json",
+      "repository_path": "plugins/presenza-digitale-studio/schemas/site_brief.schema.json",
+      "sha256": "908dcdffe437380f3167920c56ed09d864578f267faafab2b80a273ba020a40a"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/sites_delivery.schema.json",
+      "repository_path": "plugins/presenza-digitale-studio/schemas/sites_delivery.schema.json",
+      "sha256": "fd9c7b0f3a746b2ad70db68d0b8b4937104a673ae4f34d0564c96fda4e6758a2"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/schemas/website_intake.schema.json",
+      "repository_path": "plugins/presenza-digitale-studio/schemas/website_intake.schema.json",
+      "sha256": "e7b925fd9a18c5b9010dd61738cefa6e5563a09ef509ab8dc2866c85a7526b8c"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/check_dependencies.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/check_dependencies.py",
+      "sha256": "55000b29aeb8c3b9f479264699eeb24aba2adb3538de7f143c854e0cd296e0de"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/initialize_workspace.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/initialize_workspace.py",
+      "sha256": "ba2870b9095f57bf01bcd8654dabee06a262cd42824e171b29dad5170188e135"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/package_website.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/package_website.py",
+      "sha256": "f9d02dd3e457f40623267796989b27b5bd7d446146c93d2bd5d26a7a65df80c9"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/prepare_run.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/prepare_run.py",
+      "sha256": "63d72e850933f98a1b9805a748d41f583bb48ee4d5a45f9562226d069c83d6b2"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/prepare_sites_binding.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/prepare_sites_binding.py",
+      "sha256": "939c5c9b4f25c33ca3dade569f82820c0b2ee79386e8723f6aedc7c47ea953ef"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_external_delivery.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/record_external_delivery.py",
+      "sha256": "d15afd03d048e3e9b8f557b6c7769486317c375e9d94fe2718d39f647a5dfbcc"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_quality_assessment.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/record_quality_assessment.py",
+      "sha256": "dd866b32a646fefcb8212a2da37223d975ddadcfa1dc4f40946f493e995cdc51"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_review.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/record_review.py",
+      "sha256": "4ca219146eb360b9b07fcc1c53258b8345ebc0cac4e59203b7c95788470d73e3"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_site_brief.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/record_site_brief.py",
+      "sha256": "642b3cbda1dee795d17944262603d3378e2848f5375c30a06a07a327e02c02ae"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/record_sites_delivery.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/record_sites_delivery.py",
+      "sha256": "5f789b57536d29e4f793316ea448805676b06dd6649b66d25d3dc031bcc7b51b"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/validate_run.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/validate_run.py",
+      "sha256": "1442d4b1fb4dd84d25d33cb5cc78cf6cb493a48c4657ad3eb5ab8bc56707b5d0"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/validate_site.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/validate_site.py",
+      "sha256": "bdd0f5cbe0d66e3df26092d16b05ea52a458eb78705b017b7d5800bc6c4db019"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/scripts/workflow_core.py",
+      "repository_path": "plugins/presenza-digitale-studio/scripts/workflow_core.py",
+      "sha256": "a7b379c5c302d829183d49131466cc0719af03ec60df98096fd9399fec2bd962"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
+      "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
+      "sha256": "c845d01f486d355420ae1f7d24c9ef564563cc977b02da00a01c5d85457c3ad5"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/product-thesis.md",
+      "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/product-thesis.md",
+      "sha256": "76c84fe42162f5ff48e7d4b644f33f17b4451a1dac56bcb468c35440eb4dc1f3"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/sites-handoff.md",
+      "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/sites-handoff.md",
+      "sha256": "02e5c05538e76ec00340553d19d8a4f41468a86ed8fcde4557c4ad1b0afac8da"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/skill-orchestration.md",
+      "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/skill-orchestration.md",
+      "sha256": "a419602acf0535736e1d757656cd7ecf06d5a2e3fb042f10b0cdb14a401d0ee7"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
+      "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
+      "sha256": "b9acf80662e3f00ebcd984e81143c3955cf90293150223bf09883578c960cb0c"
+    },
+    {
+      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/workflow-method.md",
+      "repository_path": "plugins/presenza-digitale-studio/skills/presenza-digitale-studio/references/workflow-method.md",
+      "sha256": "b97e7079360685cf6226f5cadfba42850ad3f4ae456739da6196acc495e7325a"
+    },
+    {
+      "path": "skills/presenza-digitale-studio/SKILL.md",
+      "repository_path": "plugins/vera/skills/presenza-digitale-studio/SKILL.md",
+      "sha256": "739fb696590ba6e6e59f3925917e554fa229fdc817e37e90b4b0ff8ae3c75e0d"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un sito di studio che parte dai fatti",
+      "goal": "Passare da informazioni verificate a una pagina chiara, rivedibile su desktop e mobile.",
+      "scenario": "Lo studio fittizio Arco fornisce nome, servizi effettivi, orari e un recapito dimostrativo. Non fornisce testimonianze, premi o percentuali di successo. Vuole una prima pagina informativa con un invito a contattare lo studio.",
+      "request": "Vera, prepara una prima pagina per lo studio usando soltanto queste informazioni.",
+      "scope": "Anteprima locale di un sito informativo. Recapiti e persone sono fittizi; nessun dominio viene collegato e nessuna pagina viene pubblicata durante la lezione.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Fatto",
+        "Uso"
+      ],
+      "input_rows": [
+        [
+          "S1 · scheda studio",
+          "Studio Arco · consulenza contabile",
+          "Titolo e descrizione"
+        ],
+        [
+          "S1 · servizi",
+          "Contabilità e controllo di gestione",
+          "Sezione attività"
+        ],
+        [
+          "S1 · contatti",
+          "Lunedì–venerdì, 9–18 · contatto dimostrativo",
+          "Invito al contatto"
+        ],
+        [
+          "Premi e testimonianze",
+          "Non forniti",
+          "Non inventare"
+        ]
+      ],
+      "basis": "La scheda S1 è l'unica base del caso. Una proposta di stile non aggiunge credenziali, risultati professionali o consensi all'uso di nominativi.",
+      "method": [
+        "Raccogli i fatti verificati e l'obiettivo della pagina; se esiste un sito, esamina la versione attuale e le modifiche desiderate.",
+        "Prepara struttura, testo e implementazione responsive. Collega affermazioni e recapiti alle fonti, rendendo le proposte di contenuto riconoscibili.",
+        "Apri la versione esatta su desktop e mobile, verifica leggibilità e collegamenti, poi consegna l'anteprima. Pubblicazione e destinazione seguono il normale passaggio di approvazione."
+      ],
+      "result_title": "Studio Arco · informazioni essenziali",
+      "conclusion": "Contabilità e controllo di gestione per organizzare il lavoro dello studio. Per conoscere le attività disponibili, contatta il referente negli orari indicati.",
+      "output_columns": [
+        "Sezione della pagina",
+        "Contenuto preparato",
+        "Controllo"
+      ],
+      "output_rows": [
+        [
+          "Apertura",
+          "Nome e attività dello studio",
+          "Coerenza con S1"
+        ],
+        [
+          "Servizi",
+          "Due attività effettive",
+          "Nessuna specializzazione inventata"
+        ],
+        [
+          "Contatti",
+          "Orari e recapito dimostrativo",
+          "Verificare il recapito reale prima di pubblicare"
+        ]
+      ],
+      "check": "L'anteprima deve essere controllata nella versione esatta che si intende pubblicare. Una bella pagina non autorizza testimonianze o promesse non documentate.",
+      "question": "Possiamo aggiungere 'il migliore studio della regione' per migliorare il titolo?",
+      "answer": "No. S1 non sostiene quel confronto. Il titolo può essere chiaro e specifico senza introdurre un primato inventato.",
+      "practice": "Cambia l'ordine dei servizi e verifica la leggibilità della nuova anteprima su uno schermo stretto.",
+      "next": "Prepara scheda studio, servizi, recapiti, identità visiva e il sito attuale, se disponibile."
+    },
+    "en": {
+      "title": "A firm's website starts with verified facts",
+      "goal": "Turn verified firm information into a clear page that can be reviewed on desktop and mobile.",
+      "scenario": "Fictional Arco firm supplies its name, actual services, opening hours and a demonstration contact. It supplies no awards, testimonials or success rates. The task is a first informational page inviting readers to contact the firm.",
+      "request": "Vera, prepare a first firm page using only this information.",
+      "scope": "Local informational preview with fictional people and contacts. No domain is connected and nothing is published during the lesson.",
+      "input_columns": [
+        "Fictional source",
+        "Fact",
+        "Use"
+      ],
+      "input_rows": [
+        [
+          "S1 · firm profile",
+          "Arco · accounting advisory",
+          "Title and description"
+        ],
+        [
+          "S1 · services",
+          "Accounting and management control",
+          "Activities section"
+        ],
+        [
+          "S1 · contact",
+          "Monday–Friday, 9–18; demonstration contact",
+          "Contact invitation"
+        ],
+        [
+          "Awards and testimonials",
+          "Not supplied",
+          "Do not invent"
+        ]
+      ],
+      "basis": "S1 is the case's only factual basis. A design proposal does not add credentials, outcomes or consent to use names.",
+      "method": [
+        "Collect verified facts and the page objective. For an existing site, inspect its current version and requested changes.",
+        "Prepare structure, copy and responsive implementation, connecting claims and contacts to sources and distinguishing proposed content.",
+        "Review the exact desktop and mobile preview, including readability and links. Publication and destination follow the normal approval step."
+      ],
+      "result_title": "Arco · essential firm information",
+      "conclusion": "Accounting and management control to support the firm's work. Contact the firm representative during the stated hours to learn about available services.",
+      "output_columns": [
+        "Page section",
+        "Prepared content",
+        "Check"
+      ],
+      "output_rows": [
+        [
+          "Opening",
+          "Firm name and activities",
+          "Consistent with S1"
+        ],
+        [
+          "Services",
+          "Two actual activities",
+          "No invented specialization"
+        ],
+        [
+          "Contact",
+          "Hours and demonstration contact",
+          "Verify real contact before publication"
+        ]
+      ],
+      "check": "Review the exact version intended for publication. Good design does not authorize undocumented testimonials or promises.",
+      "question": "Can we add 'the best firm in the region' to improve the headline?",
+      "answer": "No. S1 does not support that comparison. A clear, specific headline needs no invented claim of superiority.",
+      "practice": "Change the services' order and inspect the updated preview on a narrow screen.",
+      "next": "Prepare firm facts, services, contacts, visual identity and the existing site when available."
+    },
+    "fr": {
+      "title": "Le site du cabinet commence par des faits vérifiés",
+      "goal": "Créer une page claire à partir d'informations vérifiées, puis la revoir sur ordinateur et mobile.",
+      "scenario": "Le cabinet fictif Arco fournit nom, services effectifs, horaires et contact de démonstration. Il n'apporte ni témoignages, ni prix, ni taux de réussite. Il souhaite une première page informative invitant à le contacter.",
+      "request": "Vera, prépare une première page du cabinet à partir de ces seules informations.",
+      "scope": "Aperçu informatif local avec personnes et contacts fictifs. Aucun domaine n'est relié et rien n'est publié pendant la leçon.",
+      "input_columns": [
+        "Source fictive",
+        "Fait",
+        "Usage"
+      ],
+      "input_rows": [
+        [
+          "S1 · fiche cabinet",
+          "Arco · conseil comptable",
+          "Titre et description"
+        ],
+        [
+          "S1 · services",
+          "Comptabilité et contrôle de gestion",
+          "Activités"
+        ],
+        [
+          "S1 · contact",
+          "Lundi–vendredi, 9–18 ; contact de démonstration",
+          "Invitation au contact"
+        ],
+        [
+          "Prix et témoignages",
+          "Non fournis",
+          "Ne pas inventer"
+        ]
+      ],
+      "basis": "S1 est la seule base factuelle. Une proposition visuelle n'ajoute ni qualification, ni résultat, ni consentement à citer une personne.",
+      "method": [
+        "Rassemble les faits vérifiés et l'objectif. Si un site existe, examine la version actuelle et les changements souhaités.",
+        "Prépare structure, texte et réalisation responsive, en reliant affirmations et contacts aux sources et en distinguant les propositions.",
+        "Contrôle l'aperçu exact sur ordinateur et mobile, avec lisibilité et liens. Publication et destination suivent l'approbation normale."
+      ],
+      "result_title": "Arco · informations essentielles du cabinet",
+      "conclusion": "Comptabilité et contrôle de gestion pour accompagner le travail du cabinet. Contactez l'interlocuteur aux horaires indiqués pour connaître les services disponibles.",
+      "output_columns": [
+        "Section",
+        "Contenu préparé",
+        "Contrôle"
+      ],
+      "output_rows": [
+        [
+          "Ouverture",
+          "Nom et activités",
+          "Cohérence avec S1"
+        ],
+        [
+          "Services",
+          "Deux activités effectives",
+          "Aucune spécialisation inventée"
+        ],
+        [
+          "Contact",
+          "Horaires et coordonnées de démonstration",
+          "Vérifier les coordonnées réelles avant publication"
+        ]
+      ],
+      "check": "Il faut revoir la version exacte destinée à être publiée. Une belle page n'autorise pas de témoignages ou promesses sans preuve.",
+      "question": "Peut-on ajouter 'le meilleur cabinet de la région' au titre ?",
+      "answer": "Non. S1 ne soutient pas cette comparaison. Un titre clair et précis n'a pas besoin d'un primat inventé.",
+      "practice": "Change l'ordre des services et contrôle la nouvelle page sur un écran étroit.",
+      "next": "Prépare fiche du cabinet, services, contacts, identité visuelle et site existant, le cas échéant."
+    },
+    "de": {
+      "title": "Eine Kanzleiwebsite beginnt mit geprüften Fakten",
+      "goal": "Verlässliche Kanzleiangaben in eine klare, auf Desktop und Mobilgerät prüfbare Seite umsetzen.",
+      "scenario": "Die fiktive Kanzlei Arco liefert Name, tatsächliche Leistungen, Öffnungszeiten und einen Demonstrationskontakt. Auszeichnungen, Kundenstimmen und Erfolgsquoten fehlen. Gewünscht ist eine erste Informationsseite mit Kontaktmöglichkeit.",
+      "request": "Vera, erstelle eine erste Kanzleiseite ausschließlich aus diesen Angaben.",
+      "scope": "Lokale Informationsvorschau mit fiktiven Personen und Kontakten. Während der Lektion wird keine Domain verbunden und nichts veröffentlicht.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Fakt",
+        "Verwendung"
+      ],
+      "input_rows": [
+        [
+          "S1 · Kanzleiprofil",
+          "Arco · Buchhaltungsberatung",
+          "Titel und Beschreibung"
+        ],
+        [
+          "S1 · Leistungen",
+          "Buchhaltung und Controlling",
+          "Leistungsabschnitt"
+        ],
+        [
+          "S1 · Kontakt",
+          "Montag–Freitag, 9–18 Uhr; Demonstrationskontakt",
+          "Kontaktaufforderung"
+        ],
+        [
+          "Auszeichnungen und Kundenstimmen",
+          "Nicht geliefert",
+          "Nicht erfinden"
+        ]
+      ],
+      "basis": "S1 ist die einzige Faktengrundlage. Ein Gestaltungsvorschlag ergänzt weder Qualifikationen noch Ergebnisse oder eine Einwilligung zur Namensnutzung.",
+      "method": [
+        "Sammle geprüfte Fakten und das Seitenziel. Prüfe bei bestehenden Websites den aktuellen Stand und gewünschte Änderungen.",
+        "Erstelle Struktur, Texte und responsive Umsetzung. Verknüpfe Aussagen und Kontakte mit Quellen und kennzeichne vorgeschlagene Inhalte.",
+        "Prüfe die genaue Desktop- und Mobilvorschau einschließlich Lesbarkeit und Links. Veröffentlichung und Ziel folgen dem regulären Freigabeschritt."
+      ],
+      "result_title": "Arco · wesentliche Kanzleiinformationen",
+      "conclusion": "Buchhaltung und Controlling für die Arbeit der Kanzlei. Erfragen Sie die verfügbaren Leistungen während der angegebenen Zeiten bei Ihrer Ansprechperson.",
+      "output_columns": [
+        "Seitenbereich",
+        "Vorbereiteter Inhalt",
+        "Prüfung"
+      ],
+      "output_rows": [
+        [
+          "Einstieg",
+          "Kanzleiname und Tätigkeiten",
+          "Entspricht S1"
+        ],
+        [
+          "Leistungen",
+          "Zwei tatsächliche Tätigkeiten",
+          "Keine erfundene Spezialisierung"
+        ],
+        [
+          "Kontakt",
+          "Zeiten und Demonstrationskontakt",
+          "Echten Kontakt vor Veröffentlichung prüfen"
+        ]
+      ],
+      "check": "Prüfe genau die zu veröffentlichende Version. Gute Gestaltung erlaubt keine unbelegten Kundenstimmen oder Versprechen.",
+      "question": "Können wir die Überschrift um 'beste Kanzlei der Region' ergänzen?",
+      "answer": "Nein. S1 trägt diesen Vergleich nicht. Eine klare konkrete Überschrift braucht keine erfundene Überlegenheit.",
+      "practice": "Ändere die Reihenfolge der Leistungen und prüfe die neue Vorschau auf einem schmalen Bildschirm.",
+      "next": "Bereite Kanzleifakten, Leistungen, Kontakte, Gestaltungsvorgaben und gegebenenfalls die bestehende Website vor."
+    },
+    "es": {
+      "title": "La web del despacho empieza por hechos verificados",
+      "goal": "Convertir información comprobada en una página clara revisable en ordenador y móvil.",
+      "scenario": "El despacho ficticio Arco entrega nombre, servicios reales, horario y contacto de demostración. No aporta premios, testimonios ni tasas de éxito. Se pide una primera página informativa que invite a contactar.",
+      "request": "Vera, prepara una primera página del despacho usando solo esta información.",
+      "scope": "Vista previa local con personas y contactos ficticios. Durante la lección no se conecta ningún dominio ni se publica nada.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Hecho",
+        "Uso"
+      ],
+      "input_rows": [
+        [
+          "S1 · perfil",
+          "Arco · asesoramiento contable",
+          "Título y descripción"
+        ],
+        [
+          "S1 · servicios",
+          "Contabilidad y control de gestión",
+          "Sección de actividades"
+        ],
+        [
+          "S1 · contacto",
+          "Lunes–viernes, 9–18; contacto de demostración",
+          "Invitación a contactar"
+        ],
+        [
+          "Premios y testimonios",
+          "No entregados",
+          "No inventar"
+        ]
+      ],
+      "basis": "S1 es la única base factual del caso. Una propuesta de diseño no añade credenciales, resultados ni consentimiento para utilizar nombres.",
+      "method": [
+        "Recoge hechos verificados y objetivo. Si existe una web, inspecciona la versión actual y los cambios solicitados.",
+        "Prepara estructura, textos y diseño adaptable, vinculando afirmaciones y contactos con fuentes y distinguiendo propuestas.",
+        "Revisa la versión exacta en ordenador y móvil, incluidos legibilidad y enlaces. Publicación y destino siguen el paso habitual de aprobación."
+      ],
+      "result_title": "Arco · información esencial del despacho",
+      "conclusion": "Contabilidad y control de gestión para apoyar el trabajo del despacho. Contacte con su interlocutor durante el horario indicado para conocer los servicios disponibles.",
+      "output_columns": [
+        "Sección",
+        "Contenido preparado",
+        "Comprobación"
+      ],
+      "output_rows": [
+        [
+          "Inicio",
+          "Nombre y actividades",
+          "Coherente con S1"
+        ],
+        [
+          "Servicios",
+          "Dos actividades reales",
+          "Sin especialización inventada"
+        ],
+        [
+          "Contacto",
+          "Horario y contacto de demostración",
+          "Verificar contacto real antes de publicar"
+        ]
+      ],
+      "check": "Revisa la versión exacta destinada a publicación. Un buen diseño no autoriza testimonios ni promesas sin documentación.",
+      "question": "¿Podemos añadir 'el mejor despacho de la región' para mejorar el titular?",
+      "answer": "No. S1 no respalda esa comparación. Un titular claro y concreto no necesita superioridad inventada.",
+      "practice": "Cambia el orden de servicios e inspecciona la nueva vista previa en una pantalla estrecha.",
+      "next": "Prepara hechos del despacho, servicios, contactos, identidad visual y web existente cuando la haya."
+    }
+  }
+}

@@ -1,0 +1,381 @@
+{
+  "vera/business-planning": {
+    "title": "One investment, two assumptions to test",
+    "goal": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes.",
+    "scenario": "Fictional Arco considers a subscription service with 100 average paying customers at EUR 50 per month and EUR 42,000 annual costs. The price is a team proposal; demand evidence consists of five exploratory interviews, not orders.",
+    "request": "Vera, help me understand which assumptions make this service sustainable.",
+    "scope": "A basic economic scenario. Revenue less these costs does not establish cash flow, tax or investment needs.",
+    "input_columns": [
+      "Fictional assumption",
+      "Value",
+      "Source"
+    ],
+    "input_rows": [
+      [
+        "Average paying customers",
+        "100",
+        "P1 · team assumption"
+      ],
+      [
+        "Monthly price",
+        "EUR 50",
+        "P1 · proposal"
+      ],
+      [
+        "Annual costs",
+        "EUR 42,000",
+        "P2 · operating estimate"
+      ],
+      [
+        "Exploratory interviews",
+        "5",
+        "P3 · notes; no orders"
+      ]
+    ],
+    "basis": "P1 and P2 are explicit assumptions. P3 explores needs without proving that 100 customers will subscribe.",
+    "method": [
+      "Define the decision and separate evidence, accepted assumptions and information still needed.",
+      "Build the current plan with coherent customers, prices, costs and timing. Link assumptions to sources and distinguish economic results from cash.",
+      "Compare useful scenarios and present the decision, sensitivities and evidence-gathering actions for professional review."
+    ],
+    "result_title": "Customer volume is the decisive assumption",
+    "conclusion": "The base scenario produces EUR 60,000 annual revenue and EUR 18,000 above the stated costs. At 70 customers, that difference is zero.",
+    "output_columns": [
+      "Scenario",
+      "Annual revenue",
+      "Revenue less stated costs"
+    ],
+    "output_rows": [
+      [
+        "100 average customers",
+        "EUR 60,000",
+        "EUR 18,000"
+      ],
+      [
+        "70 average customers",
+        "EUR 42,000",
+        "EUR 0"
+      ]
+    ],
+    "check": "These are conditional results, not net profit or cash. Interviews are not orders.",
+    "question": "The arithmetic is correct. Can we confirm project viability?",
+    "answer": "We can confirm the case arithmetic. Demand evidence and a complete cost, investment and collection-timing plan are still needed.",
+    "practice": "Reduce the price to EUR 45 and compare scenarios with the changed assumption visible.",
+    "next": "Choose a concrete investment and collect quotations, commercial evidence and assumptions to discuss."
+  },
+  "vera/vouching": {
+    "title": "From a sampled entry to the right document",
+    "goal": "Verify a sampled posting without mistaking a matching amount for document identity.",
+    "scenario": "The fictional qualified sample contains MOV-104 for invoice INV-104, EUR 1,220. The evidence batch has two invoices for that amount: INV-104 and INV-205. Only the selected sampled entry is in scope.",
+    "request": "Vera, verify the supporting document for this sampled entry.",
+    "scope": "Vouching starts from the closed Journal Sampling handoff, including qualification companions. A raw table or this teaching preview is not that handoff.",
+    "input_columns": [
+      "Fictional source",
+      "Identity",
+      "Amount"
+    ],
+    "input_rows": [
+      [
+        "Sample S1 · row 4",
+        "MOV-104 / INV-104",
+        "EUR 1,220"
+      ],
+      [
+        "XML X1",
+        "INV-104; consistent party",
+        "EUR 1,220"
+      ],
+      [
+        "XML X2",
+        "INV-205; another invoice",
+        "EUR 1,220"
+      ]
+    ],
+    "basis": "S1 defines the selection. X1 has the distinctive INV-104 reference; X2's equal amount does not establish identity.",
+    "method": [
+      "Resume the qualified sample in the same client engagement, bind an explicit support batch and verify the source closure.",
+      "Check identity, party, currency, sign, amount and date under the reviewed recipe. Do not repair journal preparation inside Vouching.",
+      "Read coverage, mismatches and manual-review rows. Deliver entry-to-document lineage and leave evidence sufficiency to professional judgment."
+    ],
+    "result_title": "INV-104 is the relevant support",
+    "conclusion": "Identity distinguishes documents with the same amount. Numeric coincidence alone would not justify a match.",
+    "output_columns": [
+      "Candidate",
+      "Identity evidence",
+      "Teaching interpretation"
+    ],
+    "output_rows": [
+      [
+        "X1 · INV-104",
+        "Consistent distinctive reference",
+        "Check the remaining requirements"
+      ],
+      [
+        "X2 · INV-205",
+        "Different reference",
+        "Equal amount is insufficient"
+      ]
+    ],
+    "check": "A mechanical pass does not certify accounting treatment or evidence sufficiency. Do not extend the result to unsampled entries.",
+    "question": "If the posting has no invoice reference, can we choose X1 because it is the first file?",
+    "answer": "No. Identity remains unresolved and needs the evidence or reviewed relationship required by the contract. File order proves nothing.",
+    "practice": "Change X1 to EUR 1,200 and inspect the difference without switching the matched document.",
+    "next": "Select the finalized sample and the relevant XML or PDF batch; Vera resolves the technical handoff references."
+  },
+  "vera/comunicazione-professionale": {
+    "title": "A professional message that can support its claims",
+    "goal": "Turn verified information into a useful message with a source for every material assertion.",
+    "scenario": "Fictional Arco firm will receive documents through an agreed folder from 1 October. An approved internal note describes the channel and support contact. No source establishes a measured time saving.",
+    "request": "Vera, draft a short client notice about the new document-delivery method.",
+    "scope": "Fictional operational communication, without tax advice or commercial promises. The draft stays local and is not sent.",
+    "input_columns": [
+      "Fictional source",
+      "Available fact",
+      "Use in the message"
+    ],
+    "input_rows": [
+      [
+        "C1 · internal note § 1",
+        "New channel from 1 October 2026",
+        "Supported"
+      ],
+      [
+        "C1 · § 2",
+        "Help from the firm's contact person",
+        "Supported"
+      ],
+      [
+        "No source",
+        "50% time saving",
+        "Unsupported"
+      ]
+    ],
+    "basis": "C1 supports the date, channel and assistance. The saving percentage is an example of a claim to remove.",
+    "method": [
+      "Establish whether the information is useful for the audience and define purpose, channel and sources.",
+      "Draft the message and connect claims to evidence. Review tone and limitations, removing unsupported promises.",
+      "Prepare the channel's normal output package with source checks. Present the draft before the ordinary sending or publication process."
+    ],
+    "result_title": "A clearer way to deliver documents",
+    "conclusion": "From 1 October 2026, please use the folder agreed with the firm to deliver documents. For access and initial guidance, contact your usual firm representative.",
+    "output_columns": [
+      "Statement",
+      "Basis",
+      "Review"
+    ],
+    "output_rows": [
+      [
+        "New channel from 1 October",
+        "C1 § 1",
+        "Check date and method"
+      ],
+      [
+        "Contact the representative",
+        "C1 § 2",
+        "Confirm assistance is available"
+      ],
+      [
+        "50% saving",
+        "None",
+        "Excluded"
+      ]
+    ],
+    "check": "Attractive communication must not add outcomes, obligations or promises that the sources do not support.",
+    "question": "Can we add 'no document will ever be lost again'?",
+    "answer": "No. The note describes a delivery channel, not a guarantee against loss. The absolute promise has no supporting evidence.",
+    "practice": "Adapt the information into a short post while retaining its date, channel and limits.",
+    "next": "For professional news, select current sources; for firm announcements, supply verified operational facts."
+  },
+  "vera/concordato-plan-review": {
+    "title": "Balanced totals can still conceal a funding gap",
+    "goal": "Connect a restructuring proposal, creditors and cash timing without reducing the review to arithmetic.",
+    "scenario": "A fictional plan expects EUR 100,000 from an asset sale in December but promises EUR 90,000 of creditor payments in September. Opening cash is EUR 10,000 and no bridge funding is documented.",
+    "request": "Vera, show the plan issue that needs a focused question for the professional.",
+    "scope": "A small cash-timing case. Full review also covers procedure, proposal, creditor treatment, liquidation alternative, attestation and tax matters.",
+    "input_columns": [
+      "Fictional source",
+      "Date",
+      "Cash flow"
+    ],
+    "input_rows": [
+      [
+        "P1 · opening cash",
+        "1 September",
+        "+EUR 10,000"
+      ],
+      [
+        "P2 · creditor proposal",
+        "30 September",
+        "−EUR 90,000"
+      ],
+      [
+        "P3 · disposal plan",
+        "15 December",
+        "+EUR 100,000"
+      ]
+    ],
+    "basis": "P1–P3 define the case amounts and dates. A positive closing balance does not provide cash before the disposal or prove a funding commitment.",
+    "method": [
+      "Inspect documents without treating filenames or extracted amounts as reviewed semantic roles.",
+      "Build the case model with perimeter, creditors, sources and uses, liquidity and questions. Link observations and inferences to exact evidence.",
+      "Present the model and open points to the accountable professional. Only a confirmed model supports the formal package and any numerical appendix."
+    ],
+    "result_title": "Closing surplus, unresolved interim funding",
+    "conclusion": "The theoretical closing balance is +EUR 20,000, but September has an EUR 80,000 funding gap unsupported by the supplied sources.",
+    "output_columns": [
+      "Point in time",
+      "Theoretical balance",
+      "Question"
+    ],
+    "output_rows": [
+      [
+        "Before payments",
+        "+EUR 10,000",
+        "Opening cash"
+      ],
+      [
+        "After September payments",
+        "−EUR 80,000",
+        "How is the gap funded?"
+      ],
+      [
+        "After December sale",
+        "+EUR 20,000",
+        "Receipt follows payments"
+      ]
+    ],
+    "check": "The negative balance identifies a timing issue in this case, not a legal admissibility ruling or complete feasibility opinion.",
+    "question": "Does the planned disposal alone establish that payments are covered?",
+    "answer": "Not on these dates. Earlier funding or a different evidenced payment schedule must be considered and professionally reviewed.",
+    "practice": "Add a fictional funding commitment with its date and conditions; identify what it resolves and what remains.",
+    "next": "Select the actual case file and reference date rather than replacing its facts with an abstract checklist."
+  },
+  "vera/dati-fiscali-strutturati": {
+    "title": "An extracted number must keep its source",
+    "goal": "Read tax fields with values, document references and extraction status, without filling gaps by assumption.",
+    "scenario": "The fictional file contains a readable Italian F24 statement and a poorly readable scan. The first shows tax code 1001, reference year 2025 and EUR 1,250 debit. The second does not provide reliable amounts.",
+    "request": "Vera, show which tax data we can use and which require the original layout.",
+    "scope": "Field extraction and review. Values in a source do not verify the correct filing, treatment or payment.",
+    "input_columns": [
+      "Fictional source",
+      "Readable content",
+      "Disposition"
+    ],
+    "input_rows": [
+      [
+        "F1 · F24 row 1",
+        "1001 · 2025 · EUR 1,250 debit",
+        "Extractable fields"
+      ],
+      [
+        "F2 · scan",
+        "Unreadable amounts",
+        "Recover or inspect visually"
+      ]
+    ],
+    "basis": "F1 supports three located values. F2 supplies no reliable amount; an empty extraction does not establish absence of tax data.",
+    "method": [
+      "Resume the same engagement's extraction and read every required field and document disposition in the handoff.",
+      "Check document meaning and text correspondence. Preserve layout uncertainty and unreadable sources; reviewed reclassification requires coherent regeneration.",
+      "Deliver the field table, summary and citations. Distinguish unsupported, unreadable, unevaluated and recognized-without-fields documents."
+    ],
+    "result_title": "Three usable fields, one unresolved source",
+    "conclusion": "The summary preserves F1's three fields and flags F2 as unreadable. Missing amounts are not assigned zero.",
+    "output_columns": [
+      "Field",
+      "Extracted value",
+      "Source"
+    ],
+    "output_rows": [
+      [
+        "Tax code",
+        "1001",
+        "F1 · row 1"
+      ],
+      [
+        "Reference year",
+        "2025",
+        "F1 · row 1"
+      ],
+      [
+        "Debit amount",
+        "EUR 1,250",
+        "F1 · row 1"
+      ],
+      [
+        "F2 amounts",
+        "Unavailable",
+        "F2 · original to inspect"
+      ]
+    ],
+    "check": "Extraction does not prove payment or correct completion. Retain source currency and year rather than inferring them from a folder name.",
+    "question": "Can we include F2 as zero because it has no extracted fields?",
+    "answer": "No. It is unreadable, not a zero-value document. Any total must disclose that this source remains unquantified.",
+    "practice": "Replace F2 with a readable copy and regenerate, checking the newly included fields.",
+    "next": "Select readable documents and the correct territorial scope; retain originals for layout-sensitive checks."
+  },
+  "vera/email-cliente": {
+    "title": "Ask only for the documents actually needed",
+    "goal": "Prepare a concise client request from missing items that have already been reviewed.",
+    "scenario": "The fictional CLIENT-001 file review confirms a missing June bank statement and a question about a 12 June transfer. A possibly missing contract is still an unapplied review candidate.",
+    "request": "Vera, draft a clear request for this client's missing documents.",
+    "scope": "Local draft only. The text uses reviewed, applied requests; no email is sent.",
+    "input_columns": [
+      "Fictional handoff item",
+      "Status",
+      "Include"
+    ],
+    "input_rows": [
+      [
+        "June bank statement",
+        "Reviewed and applied request",
+        "Yes"
+      ],
+      [
+        "12 June transfer purpose",
+        "Reviewed and applied request",
+        "Yes"
+      ],
+      [
+        "Possibly missing contract",
+        "Candidate awaiting review",
+        "No"
+      ]
+    ],
+    "basis": "E1 contains two applied email_request items and a separate candidate. A folder name or old draft does not add authorized requests.",
+    "method": [
+      "Read every email handoff page and verify that applied requests exist. Otherwise leave the draft pending review.",
+      "Write an operational message using only documents and clarifications supported by those requests.",
+      "Check each sentence against the handoff and deliver the draft. Sending requires its own authorized request and channel."
+    ],
+    "result_title": "Documents and clarification to complete the file",
+    "conclusion": "Hello, to complete the file, please provide the June bank statement and clarify the purpose of the transfer dated 12 June. Thank you for your help.",
+    "output_columns": [
+      "Draft item",
+      "Basis",
+      "Check"
+    ],
+    "output_rows": [
+      [
+        "June bank statement",
+        "E1 · email_request 1",
+        "Correct period"
+      ],
+      [
+        "12 June transfer purpose",
+        "E1 · email_request 2",
+        "Correct reference"
+      ],
+      [
+        "Contract request",
+        "Unapplied candidate",
+        "Excluded"
+      ]
+    ],
+    "check": "A proposed missing item is not an approved request. Do not turn internal hypotheses into definite client demands.",
+    "question": "The old draft asked for the contract. Should we keep it just in case?",
+    "answer": "No. Use the current applied requests. Include the contract only after review and a coherent handoff update.",
+    "practice": "Shorten the draft while preserving both requests and their exact references.",
+    "next": "Complete the missing-item review first, then request the draft and review its recipient and tone."
+  }
+}

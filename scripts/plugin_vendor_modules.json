@@ -53,7 +53,8 @@
         "vera_assurance",
         "vera_financial_analysis",
         "vera_ocr",
-        "reporting_table.py"
+        "reporting_table.py",
+        "courseware"
       ]
     },
     "open-item-reconciliation": {
@@ -196,12 +197,14 @@
     },
     "clara": {
       "module_roots": [
-        "desktop_teaching"
+        "desktop_teaching",
+        "courseware"
       ]
     },
     "lucia": {
       "module_roots": [
-        "desktop_teaching"
+        "desktop_teaching",
+        "courseware"
       ]
     }
   }

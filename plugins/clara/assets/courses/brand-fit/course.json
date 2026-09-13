@@ -1,0 +1,463 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "brand-fit",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/attribute-reporting/scripts/apply_validated_mappings.py",
+      "repository_path": "plugins/attribute-reporting/scripts/apply_validated_mappings.py",
+      "sha256": "1dcc9ab6bf2e622dcfa78d4dc3fa178f32fa6d87f696f4f12a65b1b3914098fe"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
+      "repository_path": "plugins/attribute-reporting/scripts/attribute_reporting.py",
+      "sha256": "e722c1bd91d0f802b02851d24b6b98083a8592cc8512110db97646e635a2eef1"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",
+      "repository_path": "plugins/attribute-reporting/scripts/bind_mapping_images.py",
+      "sha256": "e984adecac352d2281f34b741570be03b6727c1598a0cccc14655f37abbc3f82"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/brand_fit.py",
+      "repository_path": "plugins/attribute-reporting/scripts/brand_fit.py",
+      "sha256": "c81792ff92a0f5b6e9e2db435acb5a6a234d013f3cff25e4d9006d1c4a8698a4"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/browser_qa.py",
+      "repository_path": "plugins/attribute-reporting/scripts/browser_qa.py",
+      "sha256": "4d57596687f210359858e3a48c5205df63512f18de7a09c60400593d194a9a3b"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_brand_fit_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/check_brand_fit_report.py",
+      "sha256": "5cfc4465060ceeed8053c5248856c11399fc278266fc982d9d9475c71554abbb"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_dependencies.py",
+      "repository_path": "plugins/attribute-reporting/scripts/check_dependencies.py",
+      "sha256": "f1ae4013ca0e4c709dd412bf3a71d490b67d9a22610d27a571ea8fe9c4a3b762"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/check_report.py",
+      "sha256": "a1faa5ddbf2ae31d97eb143dabd1c7483a56d2e8476953ebc529fc16b83782b6"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/create_mapping_tasks.py",
+      "repository_path": "plugins/attribute-reporting/scripts/create_mapping_tasks.py",
+      "sha256": "3b244f3f99b704ed361b6586d881c329c6c8f293dafe92cdac244656660d63f8"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/hydrate_images.py",
+      "repository_path": "plugins/attribute-reporting/scripts/hydrate_images.py",
+      "sha256": "b88fa51362b4f7f686e735c7ff869618cadd93f5c8d5fc349a5481932f6fb874"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/mapping_shards.py",
+      "repository_path": "plugins/attribute-reporting/scripts/mapping_shards.py",
+      "sha256": "c7ea065fa5d28c08e2eb23b08bc80218fe4fd2df216d54544e133acd46eac453"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_brand_fit_run.py",
+      "repository_path": "plugins/attribute-reporting/scripts/prepare_brand_fit_run.py",
+      "sha256": "1b2d148c9e6ecdc102da0fbf2ebbcc6cbd5c2ed73591660aef48c2040f9b7d85"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_mapping_review.py",
+      "repository_path": "plugins/attribute-reporting/scripts/prepare_mapping_review.py",
+      "sha256": "cc2b8084b757a51124e2172c9b2427c6ded15ff2b95747264f46d4fe00ae1bcf"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_run.py",
+      "repository_path": "plugins/attribute-reporting/scripts/prepare_run.py",
+      "sha256": "e39a6d64b15886f90542b534419849ba4353e966344763868e4e24a5dade37e9"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/project_pipeline.py",
+      "repository_path": "plugins/attribute-reporting/scripts/project_pipeline.py",
+      "sha256": "c5ad8e78591e2304371ff7ade9dbb8a302305bfea956a4ec2e5e50730459f023"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/render_brand_fit_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/render_brand_fit_report.py",
+      "sha256": "9de5c11b392e33094ae4af8ac702d6dbe3d43c2be33ac33cd7fcc5bf207f3c0c"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/render_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/render_report.py",
+      "sha256": "51e198ac847156d978815a2e34dd3307caba827fb0b5bb5a4c89b214fbc27b9e"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/run_state.py",
+      "repository_path": "plugins/attribute-reporting/scripts/run_state.py",
+      "sha256": "1ce28986e52c0efa18560afc01024fdce03ad6b6ef49ac25b7d4eaabac7d5308"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/server_bridge_client.py",
+      "repository_path": "plugins/attribute-reporting/scripts/server_bridge_client.py",
+      "sha256": "d9ca2aa1ff6ecf7679eb835e40c1f0c56bdc72f1618b82d0cf2671704c5ae1f5"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/validate_mapping_decisions.py",
+      "repository_path": "plugins/attribute-reporting/scripts/validate_mapping_decisions.py",
+      "sha256": "8a90b8ac2b42cb273c11a3b86bf0a0c661c45740936105cc9bec114b0ea6e2d1"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/validate_mapping_review.py",
+      "repository_path": "plugins/attribute-reporting/scripts/validate_mapping_review.py",
+      "sha256": "0457715ca2895eab228a854aa58374ec81d3db27872a0b4fbd534f35a93f32d0"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/brand-fit/SKILL.md",
+      "repository_path": "plugins/attribute-reporting/skills/brand-fit/SKILL.md",
+      "sha256": "692acf92c23bf51e3d7e86b9fd69ff3dbd0b32a5f39947247273a51a4e803e0b"
+    },
+    {
+      "path": "skills/brand-fit/SKILL.md",
+      "repository_path": "plugins/clara/skills/brand-fit/SKILL.md",
+      "sha256": "f7be41c7333cdc0c27fe715f8174d5f55532712cb41b64cddc6cbf30a26ecab7"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un vuoto sul retailer non è un vuoto nel catalogo",
+      "goal": "Confrontare un segnale del retailer con presenza attuale della marca e catalogo proprietario, tenendoli distinti.",
+      "scenario": "Il report Retailer Signals fittizio evidenzia la ricarica tra i nuovi prodotti. La marca Lume ha due prodotti nel retailer Nord, nessuno con ricarica. Il catalogo proprietario contiene Lume R, ricaricabile, ma non abbiamo evidenze su prezzo e disponibilità per quel retailer.",
+      "request": "Clara, mostrami se il catalogo Lume contiene un candidato coerente con questo segnale.",
+      "scope": "Confronto didattico di tre insiemi locali. Un candidato da valutare non è una raccomandazione automatica di lancio; lo snapshot non è una verifica in tempo reale dello scaffale.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Informazione",
+        "Perimetro"
+      ],
+      "input_rows": [
+        [
+          "B1 · Retailer Signals completato",
+          "Ricarica più presente nei nuovi",
+          "Retailer Nord"
+        ],
+        [
+          "B2 · presenza Lume",
+          "Due prodotti, nessuno ricaricabile",
+          "Snapshot del retailer"
+        ],
+        [
+          "B3 · catalogo Lume",
+          "Lume R ricaricabile",
+          "Catalogo proprietario"
+        ]
+      ],
+      "basis": "B1 è il segnale a monte; B2 descrive la presenza osservata e B3 il catalogo della marca. Sono fonti diverse e non devono essere fuse.",
+      "method": [
+        "Parti dal report Retailer Signals già completato e controllato. Identifica il suo perimetro e la data delle evidenze.",
+        "Confronta il segnale con la presenza della marca presso quel retailer e con il catalogo proprietario. Valuta i candidati in base al quadro completo, non a un attributo solo.",
+        "Prepara il report Brand Fit locale con basi, alternative e limiti; svolgi revisione indipendente e controllo visivo. Mantieni eventuali proposte commerciali come valutazioni rivedibili."
+      ],
+      "result_title": "Lume R è un candidato da approfondire",
+      "conclusion": "Il catalogo contiene una ricarica assente nella presenza osservata di Lume presso Nord. Prezzo, posizionamento e disponibilità restano da verificare.",
+      "output_columns": [
+        "Domanda",
+        "Risposta sostenuta",
+        "Limite"
+      ],
+      "output_rows": [
+        [
+          "Presente nel retailer?",
+          "Non nello snapshot B2",
+          "Non è un controllo live"
+        ],
+        [
+          "Presente nel catalogo?",
+          "Sì, Lume R in B3",
+          "Non prova disponibilità commerciale"
+        ],
+        [
+          "Adatto al retailer?",
+          "Candidato coerente con un attributo",
+          "Valutazione completa ancora necessaria"
+        ]
+      ],
+      "check": "Una presenza mancante può essere un vuoto distributivo, non un prodotto mancante nel catalogo. Non ridurre il fit alla corrispondenza della ricarica.",
+      "question": "Possiamo raccomandare il lancio di Lume R con queste sole informazioni?",
+      "answer": "Possiamo proporlo come candidato da approfondire. Mancano almeno prezzo, posizionamento, disponibilità e una valutazione del quadro complessivo.",
+      "practice": "Aggiungi prezzo e posizionamento di Lume R e rivedi il giudizio, mantenendo separate le tre fonti.",
+      "next": "Parti dal Retailer Signals controllato e seleziona la marca; non caricare il report privato sul server per ricreare il confronto."
+    },
+    "en": {
+      "title": "A retailer gap is not necessarily a catalog gap",
+      "goal": "Compare a retailer signal with brand presence and the owned catalog as separate evidence scopes.",
+      "scenario": "A fictional Retailer Signals report highlights refillability among new products. Lume has two products at North, neither refillable. Its owned catalog includes refillable Lume R, but price and retailer availability are not documented.",
+      "request": "Clara, show whether Lume's catalog has a candidate relevant to this signal.",
+      "scope": "Three local fictional evidence sets. A candidate is not an automatic launch recommendation, and a snapshot is not a live shelf check.",
+      "input_columns": [
+        "Fictional source",
+        "Information",
+        "Scope"
+      ],
+      "input_rows": [
+        [
+          "B1 · completed Retailer Signals",
+          "Refillability more prevalent among new products",
+          "North retailer"
+        ],
+        [
+          "B2 · Lume presence",
+          "Two products, neither refillable",
+          "Retailer snapshot"
+        ],
+        [
+          "B3 · Lume catalog",
+          "Refillable Lume R",
+          "Owned catalog"
+        ]
+      ],
+      "basis": "B1 supplies the upstream signal; B2 describes observed presence and B3 the brand catalog. Do not merge their meanings.",
+      "method": [
+        "Start from a completed, checked Retailer Signals report and identify its scope and evidence date.",
+        "Compare the signal with retailer presence and the owned catalog. Evaluate candidates in context rather than on one attribute alone.",
+        "Prepare the private Brand Fit report with bases, alternatives and limitations. Complete independent and visual review, retaining proposals as reviewable judgments."
+      ],
+      "result_title": "Lume R merits further assessment",
+      "conclusion": "The catalog has a refill absent from Lume's observed North presence. Price, positioning and availability still require investigation.",
+      "output_columns": [
+        "Question",
+        "Supported answer",
+        "Limit"
+      ],
+      "output_rows": [
+        [
+          "Present at the retailer?",
+          "Not in snapshot B2",
+          "Not a live check"
+        ],
+        [
+          "Present in the catalog?",
+          "Lume R in B3",
+          "Does not prove commercial availability"
+        ],
+        [
+          "Suitable for the retailer?",
+          "Candidate matching one attribute",
+          "Full assessment remains"
+        ]
+      ],
+      "check": "Missing retailer presence can be a distribution gap rather than a catalog gap. Refillability alone does not establish fit.",
+      "question": "Can we recommend launching Lume R from these facts alone?",
+      "answer": "We can identify a candidate to investigate. Price, positioning, availability and the broader context still need evaluation.",
+      "practice": "Add price and positioning evidence and reconsider the judgment while keeping all three scopes distinct.",
+      "next": "Start from the checked Retailer Signals report and selected brand. Do not upload the private report to recreate the comparison."
+    },
+    "fr": {
+      "title": "Une absence chez le distributeur n'est pas une absence du catalogue",
+      "goal": "Comparer signal, présence de marque et catalogue propriétaire sans confondre leurs périmètres.",
+      "scenario": "Le Retailer Signals fictif relève la recharge parmi les nouveautés. Lume a deux produits chez Nord, aucun rechargeable. Son catalogue comprend Lume R rechargeable, mais prix et disponibilité pour ce distributeur ne sont pas documentés.",
+      "request": "Clara, montre si le catalogue Lume contient un candidat pertinent pour ce signal.",
+      "scope": "Trois ensembles fictifs locaux. Un candidat n'est pas une recommandation automatique de lancement ; un relevé n'est pas une vérification en rayon en temps réel.",
+      "input_columns": [
+        "Source fictive",
+        "Information",
+        "Périmètre"
+      ],
+      "input_rows": [
+        [
+          "B1 · Retailer Signals terminé",
+          "Recharge plus fréquente dans les nouveautés",
+          "Distributeur Nord"
+        ],
+        [
+          "B2 · présence Lume",
+          "Deux produits sans recharge",
+          "Relevé distributeur"
+        ],
+        [
+          "B3 · catalogue Lume",
+          "Lume R rechargeable",
+          "Catalogue propriétaire"
+        ]
+      ],
+      "basis": "B1 est le signal amont ; B2 décrit la présence observée et B3 le catalogue. Leurs significations restent distinctes.",
+      "method": [
+        "Pars du Retailer Signals terminé et contrôlé, puis identifie son périmètre et la date des preuves.",
+        "Compare le signal à la présence chez le distributeur et au catalogue de marque. Évalue les candidats dans leur contexte complet.",
+        "Prépare le rapport privé avec bases, alternatives et limites. Termine revue indépendante et contrôle visuel en gardant les propositions ouvertes à la revue."
+      ],
+      "result_title": "Lume R mérite un approfondissement",
+      "conclusion": "Le catalogue propose une recharge absente de la présence observée de Lume chez Nord. Prix, positionnement et disponibilité restent à examiner.",
+      "output_columns": [
+        "Question",
+        "Réponse étayée",
+        "Limite"
+      ],
+      "output_rows": [
+        [
+          "Chez le distributeur ?",
+          "Pas dans B2",
+          "Pas un contrôle en direct"
+        ],
+        [
+          "Dans le catalogue ?",
+          "Lume R dans B3",
+          "Disponibilité commerciale non prouvée"
+        ],
+        [
+          "Adapté au distributeur ?",
+          "Candidat sur un attribut",
+          "Évaluation complète nécessaire"
+        ]
+      ],
+      "check": "L'absence peut être un écart de distribution plutôt qu'un manque du catalogue. La recharge seule ne suffit pas à établir l'adéquation.",
+      "question": "Peut-on recommander le lancement de Lume R sur ces seules informations ?",
+      "answer": "On peut proposer un candidat à examiner. Prix, positionnement, disponibilité et contexte plus large demandent encore une évaluation.",
+      "practice": "Ajoute prix et positionnement puis revois le jugement en gardant les trois sources séparées.",
+      "next": "Pars du Retailer Signals contrôlé et de la marque sélectionnée, sans envoyer le rapport privé au serveur."
+    },
+    "de": {
+      "title": "Eine Händlerlücke ist nicht immer eine Kataloglücke",
+      "goal": "Händlersignal, Markenpräsenz und eigenen Katalog als getrennte Belegumfänge vergleichen.",
+      "scenario": "Ein fiktiver Retailer-Signals-Bericht zeigt häufigere Nachfüllbarkeit unter neuen Produkten. Lume hat bei North zwei nicht nachfüllbare Produkte. Der eigene Katalog enthält Lume R zum Nachfüllen; Preis und Händlerverfügbarkeit sind nicht dokumentiert.",
+      "request": "Clara, zeige, ob Lumes Katalog einen zum Signal passenden Kandidaten enthält.",
+      "scope": "Drei lokale fiktive Belegbestände. Ein Kandidat ist keine automatische Einführungsempfehlung; eine Momentaufnahme ist keine aktuelle Regalprüfung.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Information",
+        "Umfang"
+      ],
+      "input_rows": [
+        [
+          "B1 · abgeschlossene Retailer Signals",
+          "Nachfüllbarkeit bei neuen Produkten häufiger",
+          "Händler North"
+        ],
+        [
+          "B2 · Lume-Präsenz",
+          "Zwei Produkte, keines nachfüllbar",
+          "Händlermomentaufnahme"
+        ],
+        [
+          "B3 · Lume-Katalog",
+          "Nachfüllbares Lume R",
+          "Eigener Katalog"
+        ]
+      ],
+      "basis": "B1 liefert das vorgelagerte Signal, B2 beobachtete Präsenz und B3 den Markenkatalog. Ihre Bedeutungen dürfen nicht verschmelzen.",
+      "method": [
+        "Beginne mit einem abgeschlossenen geprüften Retailer-Signals-Bericht und bestimme Umfang und Belegdatum.",
+        "Vergleiche das Signal mit Händlerpräsenz und eigenem Katalog. Beurteile Kandidaten im Kontext statt anhand eines einzigen Merkmals.",
+        "Erstelle den privaten Brand-Fit-Bericht mit Grundlagen, Alternativen und Grenzen. Schließe unabhängige und visuelle Prüfung ab; Vorschläge bleiben prüfbare Urteile."
+      ],
+      "result_title": "Lume R verdient weitere Prüfung",
+      "conclusion": "Der Katalog enthält eine Nachfülloption, die in Lumes beobachteter North-Präsenz fehlt. Preis, Positionierung und Verfügbarkeit sind weiter zu untersuchen.",
+      "output_columns": [
+        "Frage",
+        "Belegte Antwort",
+        "Grenze"
+      ],
+      "output_rows": [
+        [
+          "Beim Händler vorhanden?",
+          "Nicht in B2",
+          "Keine aktuelle Abfrage"
+        ],
+        [
+          "Im Katalog vorhanden?",
+          "Lume R in B3",
+          "Keine belegte Lieferbarkeit"
+        ],
+        [
+          "Für den Händler geeignet?",
+          "Kandidat mit einem passenden Merkmal",
+          "Gesamtbeurteilung offen"
+        ]
+      ],
+      "check": "Fehlende Händlerpräsenz kann eine Vertriebslücke statt einer Kataloglücke sein. Nachfüllbarkeit allein belegt keine Eignung.",
+      "question": "Können wir allein daraus die Einführung von Lume R empfehlen?",
+      "answer": "Wir können einen zu untersuchenden Kandidaten benennen. Preis, Positionierung, Verfügbarkeit und Gesamtzusammenhang bleiben zu beurteilen.",
+      "practice": "Ergänze Preis- und Positionierungsbelege und überprüfe das Urteil bei weiterhin getrennten Belegumfängen.",
+      "next": "Beginne mit dem geprüften Retailer-Signals-Bericht und der gewählten Marke. Lade den privaten Bericht nicht hoch, um den Vergleich neu zu erzeugen."
+    },
+    "es": {
+      "title": "Una carencia en el distribuidor no siempre falta en el catálogo",
+      "goal": "Comparar señal comercial, presencia de marca y catálogo propio como alcances distintos de evidencia.",
+      "scenario": "Un informe ficticio Retailer Signals destaca recarga entre productos nuevos. Lume tiene dos productos en North, ninguno recargable. Su catálogo incluye Lume R recargable, sin precio ni disponibilidad en el distribuidor documentados.",
+      "request": "Clara, muestra si el catálogo de Lume contiene un candidato pertinente para esta señal.",
+      "scope": "Tres conjuntos locales de pruebas ficticias. Un candidato no es una recomendación automática de lanzamiento y una instantánea no es una comprobación en vivo.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Información",
+        "Alcance"
+      ],
+      "input_rows": [
+        [
+          "B1 · Retailer Signals terminado",
+          "Recarga más frecuente entre nuevos",
+          "Distribuidor North"
+        ],
+        [
+          "B2 · presencia Lume",
+          "Dos productos, ninguno recargable",
+          "Instantánea del distribuidor"
+        ],
+        [
+          "B3 · catálogo Lume",
+          "Lume R recargable",
+          "Catálogo propio"
+        ]
+      ],
+      "basis": "B1 aporta la señal previa, B2 presencia observada y B3 catálogo de marca. No mezcles sus significados.",
+      "method": [
+        "Parte de un informe Retailer Signals terminado y comprobado e identifica alcance y fecha de evidencia.",
+        "Compara la señal con presencia comercial y catálogo propio. Evalúa candidatos en contexto, no solo por un atributo.",
+        "Prepara el informe privado Brand Fit con bases, alternativas y límites. Completa revisión independiente y visual y conserva las propuestas como juicios revisables."
+      ],
+      "result_title": "Lume R merece una evaluación adicional",
+      "conclusion": "El catálogo tiene una recarga ausente de la presencia observada de Lume en North. Precio, posicionamiento y disponibilidad siguen por investigar.",
+      "output_columns": [
+        "Pregunta",
+        "Respuesta respaldada",
+        "Límite"
+      ],
+      "output_rows": [
+        [
+          "¿Está en el distribuidor?",
+          "No en B2",
+          "No es consulta en vivo"
+        ],
+        [
+          "¿Está en el catálogo?",
+          "Lume R en B3",
+          "No prueba disponibilidad comercial"
+        ],
+        [
+          "¿Encaja en el distribuidor?",
+          "Candidato con un atributo pertinente",
+          "Falta evaluación completa"
+        ]
+      ],
+      "check": "La ausencia comercial puede ser una carencia de distribución y no de catálogo. La recarga sola no demuestra encaje.",
+      "question": "¿Podemos recomendar lanzar Lume R solo con estos hechos?",
+      "answer": "Podemos identificar un candidato por investigar. Precio, posicionamiento, disponibilidad y contexto general necesitan evaluación.",
+      "practice": "Añade pruebas de precio y posicionamiento y reconsidera el juicio manteniendo separados los tres alcances.",
+      "next": "Parte del informe Retailer Signals comprobado y de la marca seleccionada. No subas el informe privado para recrear la comparación."
+    }
+  }
+}

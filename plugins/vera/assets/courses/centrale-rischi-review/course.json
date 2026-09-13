@@ -1,0 +1,133 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "centrale-rischi-review",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "sources": [
+    {
+      "path": "modules/centrale-rischi-review/scripts/centrale_rischi_core.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/centrale_rischi_core.py",
+      "sha256": "fa0ea8c8f27defbc12c8075bb55d8ae250c60f663937409a16a2f33072b15af2"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/centrale_rischi_pdf.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/centrale_rischi_pdf.py",
+      "sha256": "3f8fef26a92cfba9f2d3431ca48c04bef4641e3b91f5b1d2a686436f8cf21061"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/check_dependencies.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/check_dependencies.py",
+      "sha256": "c27a8044cca383f8d431575eeb6e1ca877dc6a3543c524f2e7320be2cff557b1"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/evaluate_pdf_corpus.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/evaluate_pdf_corpus.py",
+      "sha256": "1eb22ca456a932324474a5a57a2ef796ea55e0caae9d9febe44823af619929a2"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/finalize_analysis.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/finalize_analysis.py",
+      "sha256": "0e431dd0f42e3aa006b55b0e2c759363fa4c22439ef16b051306987d4c5a5505"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/inspect_inputs.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/inspect_inputs.py",
+      "sha256": "6c9352d76d77ec84ede4a67c1766a473a38dc8431f1f2ed3198dadc179c1a220"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/run_analysis.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/run_analysis.py",
+      "sha256": "b25a8f5a815094c5b9e874842213d1ef20ee145d15a079efa21f347aa717242a"
+    },
+    {
+      "path": "modules/centrale-rischi-review/scripts/run_gold_benchmark.py",
+      "repository_path": "plugins/centrale-rischi-review/scripts/run_gold_benchmark.py",
+      "sha256": "b422819dff3827e74e902559ee02be0ef09ff027e0c67b8286e81de04b79e092"
+    },
+    {
+      "path": "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",
+      "repository_path": "plugins/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",
+      "sha256": "7084b3ddec6f46f04ad998b3dd0386a0bf213211fffa5374ba9d1144b60cdc44"
+    },
+    {
+      "path": "skills/centrale-rischi-review/SKILL.md",
+      "repository_path": "plugins/vera/skills/centrale-rischi-review/SKILL.md",
+      "sha256": "9fef635270c3a1d279c90ea5ceafab4898d4a5971e35d1586f829ea5693ca7fb"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Lo spazio disponibile non cancella uno sconfinamento",
+      "goal": "Leggere utilizzi e accordati per singolo rapporto, evitando compensazioni che nascondono le anomalie.",
+      "scenario": "Un export normalizzato fittizio di Centrale Rischi contiene due rapporti dello stesso mese. Alfa ha accordato operativo di 100.000 EUR e utilizzo di 110.000 EUR. Beta ha accordato di 80.000 EUR e utilizzo di 40.000 EUR.",
+      "request": "Vera, mostrami disponibilità e sconfinamenti senza confondere i rapporti.",
+      "scope": "Due righe normalizzate a fini didattici. L'analisi reale richiede PDF ufficiale digitale o export riveduto, classificazioni e perimetro coerenti; nessun rating bancario viene dedotto.",
+      "input_columns": [
+        "Rapporto fittizio · mese",
+        "Accordato operativo",
+        "Utilizzato"
+      ],
+      "input_rows": [
+        [
+          "Alfa · 2026-06",
+          "100.000 EUR",
+          "110.000 EUR"
+        ],
+        [
+          "Beta · 2026-06",
+          "80.000 EUR",
+          "40.000 EUR"
+        ]
+      ],
+      "basis": "CR1 contiene i due rapporti del medesimo mese e perimetro. Gli sconfinamenti si calcolano per riga prima di aggregare; le altre popolazioni CR restano separate.",
+      "method": [
+        "Ispeziona il PDF o l'export e rivedi normalizzazione, categorie, mese e controlli. Non mescolare facsimili diversi come fossero un solo cliente.",
+        "Calcola gli indicatori previsti sul perimetro riveduto. Distingui durata originaria e residua e conserva separati rischi, garanzie e informazioni aggiuntive.",
+        "Leggi report, workbook e contesto dei risultati. Collega il commento a metriche e righe, separando fatto, ipotesi e domanda al cliente."
+      ],
+      "result_title": "10.000 EUR di sconfinamento da spiegare",
+      "conclusion": "Il totale degli utilizzi è inferiore all'accordato complessivo, ma Alfa presenta uno sconfinamento di 10.000 EUR.",
+      "output_columns": [
+        "Rapporto",
+        "Sconfinamento",
+        "Margine inutilizzato"
+      ],
+      "output_rows": [
+        [
+          "Alfa",
+          "10.000 EUR",
+          "0 EUR"
+        ],
+        [
+          "Beta",
+          "0 EUR",
+          "40.000 EUR"
+        ],
+        [
+          "Totale delle righe",
+          "10.000 EUR",
+          "40.000 EUR"
+        ]
+      ],
+      "check": "Calcolare soltanto max(150.000 − 180.000, 0) nasconderebbe lo sconfinamento di Alfa. Disponibilità su Beta e sconfinamento su Alfa hanno significati distinti.",
+      "question": "Il cliente ha 30.000 EUR di margine complessivo: possiamo dire che non sconfina?",
+      "answer": "No. Lo sconfinamento di Alfa rimane 10.000 EUR. La compensazione fra rapporti non è il calcolo richiesto.",
+      "practice": "Riduci l'utilizzo di Alfa a 95.000 EUR e riesegui: verifica come cambiano entrambe le colonne.",
+      "next": "Nel caso reale seleziona una fonte completa, il mese e il perimetro, poi rivedi le classificazioni prima del commento."
+    }
+  }
+}

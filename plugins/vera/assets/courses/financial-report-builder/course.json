@@ -1,0 +1,423 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "financial-report-builder",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/report-builder/references/workflow-reference.md",
+      "repository_path": "plugins/report-builder/references/workflow-reference.md",
+      "sha256": "c419fcefc3184b225bb595b3eb8942fc73c752c9f89e989374e7da474bbbe4d2"
+    },
+    {
+      "path": "modules/report-builder/scripts/apply_review_edits.py",
+      "repository_path": "plugins/report-builder/scripts/apply_review_edits.py",
+      "sha256": "e9e79122615933562cac86296ccd1fcd4cd8d7e175b0a757def613ea8cac78fc"
+    },
+    {
+      "path": "modules/report-builder/scripts/build_report.py",
+      "repository_path": "plugins/report-builder/scripts/build_report.py",
+      "sha256": "b8c910b0188572a441ed74a36e13d125edbb7c510fe8559b81059fb465f930b6"
+    },
+    {
+      "path": "modules/report-builder/scripts/check_dependencies.py",
+      "repository_path": "plugins/report-builder/scripts/check_dependencies.py",
+      "sha256": "cd1c5938abfb36c0bb268a1d355ed20f2682032c7c7b43c5e92ae600482d16c5"
+    },
+    {
+      "path": "modules/report-builder/scripts/expand_model_context.py",
+      "repository_path": "plugins/report-builder/scripts/expand_model_context.py",
+      "sha256": "572d61a889e14fec059ae37f55fb3686698c9429b65deb43b0a90223719df255"
+    },
+    {
+      "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+      "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+      "sha256": "656879eb05f496535cb23209391d74e0b286ceb15a09c28473451b7d43f88b5d"
+    },
+    {
+      "path": "modules/report-builder/scripts/implementation_contract.py",
+      "repository_path": "plugins/report-builder/scripts/implementation_contract.py",
+      "sha256": "1a95fad1881e8d3133e10292bbc80f67a39b6f77e298778f0f026226b7291a98"
+    },
+    {
+      "path": "modules/report-builder/scripts/inspect_inputs.py",
+      "repository_path": "plugins/report-builder/scripts/inspect_inputs.py",
+      "sha256": "d5d13d4d50b895a4c875a0d10521a1722b77bcc25b152bbb9c2a4ffca7427cba"
+    },
+    {
+      "path": "modules/report-builder/scripts/physical_output_set.py",
+      "repository_path": "plugins/report-builder/scripts/physical_output_set.py",
+      "sha256": "bbf37f759e396ff7290902cf3bb7831bd9c0eeeed7f02351df9f7ff19989328e"
+    },
+    {
+      "path": "modules/report-builder/scripts/prepared_contract.py",
+      "repository_path": "plugins/report-builder/scripts/prepared_contract.py",
+      "sha256": "a5ff13aecd9a1b708424e378c2177459829607440656f24f25c3b061c51283f1"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_builder_core.py",
+      "repository_path": "plugins/report-builder/scripts/report_builder_core.py",
+      "sha256": "6b9bd5875799fc915141451a303d797a49d2bc8db961c61bca2bbd8cbdb40587"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_builder_integrity.py",
+      "repository_path": "plugins/report-builder/scripts/report_builder_integrity.py",
+      "sha256": "70c995d30984ec59d16052d83ce563462585cbc3414428d75ddc727ac4139eea"
+    },
+    {
+      "path": "modules/report-builder/scripts/report_gates.py",
+      "repository_path": "plugins/report-builder/scripts/report_gates.py",
+      "sha256": "e6cba14b00486bffb60af393d0c769fac01f50bbfcb8e9bad758b2ab4a4f8d0b"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_numeric_measures.py",
+      "repository_path": "plugins/report-builder/scripts/review_numeric_measures.py",
+      "sha256": "8b30b5925b125a210c25ebf63814e611fce85b3e83da3d52bc54457cc72e77ad"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_session.py",
+      "repository_path": "plugins/report-builder/scripts/review_session.py",
+      "sha256": "b3d7b0cac2b5e9cf1599c68dd639dfba5a6c4bcd9b0eb3267997ddb5c4684b9b"
+    },
+    {
+      "path": "modules/report-builder/scripts/review_successor.py",
+      "repository_path": "plugins/report-builder/scripts/review_successor.py",
+      "sha256": "97617a6f695429d86c0163bf63bd426b8f786662eca74858458aee0605308135"
+    },
+    {
+      "path": "modules/report-builder/scripts/seal_review_integrity.py",
+      "repository_path": "plugins/report-builder/scripts/seal_review_integrity.py",
+      "sha256": "1fc828a48a267ed81c940c6adc6dd86720b84fad06eddaf63dd39abfe70886ad"
+    },
+    {
+      "path": "modules/report-builder/scripts/validate_review_integrity.py",
+      "repository_path": "plugins/report-builder/scripts/validate_review_integrity.py",
+      "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
+    },
+    {
+      "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+      "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
+      "sha256": "fc263c61b3f5fe3ee90ea6e7122b2ae4498f8627337ec7c9e70ce44e36eeb679"
+    },
+    {
+      "path": "skills/financial-report-builder/SKILL.md",
+      "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
+      "sha256": "9a6a4eb9a74a75810c41bc1bcd64c870c34a5b2bcb92162053f37aae652e8f13"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un report finanziario che torna alle tabelle",
+      "goal": "Trasformare fonti finanziarie leggibili in un documento con sezioni, numeri e narrativa coerenti.",
+      "scenario": "Arco fornisce un prospetto con ricavi per 120.000 EUR e costi per 95.000 EUR. Un commento del responsabile attribuisce il risultato a nuovi clienti, ma non esiste un dettaglio clienti nel fascicolo.",
+      "request": "Vera, prepara un report breve da queste tabelle, distinguendo i numeri dalle spiegazioni da verificare.",
+      "scope": "Costruzione di report da Excel, CSV o PDF testuale secondo le opzioni supportate. Non è Clara Reporting Engine né un generatore di analisi estranee al contratto.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Contenuto",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "F1 · prospetto",
+          "Ricavi 120.000 EUR; costi 95.000 EUR",
+          "Solo periodo corrente"
+        ],
+        [
+          "F2 · nota responsabile",
+          "Crescita attribuita a nuovi clienti",
+          "Nessun dettaglio comparativo"
+        ]
+      ],
+      "basis": "F1 sostiene il margine di 25.000 EUR sulle voci incluse. F2 sostiene soltanto l'attribuzione riferita dal responsabile; non è una prova autonoma della causa.",
+      "method": [
+        "Ispeziona file e tabelle, definendo tipo di report, periodo, lingua e perimetro dalle fonti.",
+        "Rivedi la mappatura delle tabelle alle sezioni e completa la narrativa sulla base delle evidenze, lasciando visibili le spiegazioni non corroborate.",
+        "Genera documento, tabelle e audit previsti; controlla che ogni numero e commento rimandi alla fonte e che la bozza mantenga il proprio stato di revisione."
+      ],
+      "result_title": "Arco · risultato del periodo",
+      "conclusion": "Sulle voci fornite, i ricavi superano i costi di 25.000 EUR. L'attribuzione ai nuovi clienti resta una spiegazione del responsabile da corroborare.",
+      "output_columns": [
+        "Sezione",
+        "Contenuto",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Sintesi economica",
+          "120.000 − 95.000 = 25.000 EUR",
+          "F1"
+        ],
+        [
+          "Commento",
+          "Nuovi clienti indicati dal responsabile",
+          "F2 · dichiarazione"
+        ],
+        [
+          "Approfondimento",
+          "Dettaglio clienti e confronto temporale",
+          "Non disponibili"
+        ]
+      ],
+      "check": "Il report non deve promuovere una spiegazione riferita a causa dimostrata. Un PDF leggibile può comunque contenere tabelle che richiedono mappatura riveduta.",
+      "question": "Possiamo scrivere 'i nuovi clienti hanno generato il margine'?",
+      "answer": "Non con queste fonti. Possiamo citare la spiegazione del responsabile e indicare quali dati servono per verificarla.",
+      "practice": "Aggiungi il dettaglio clienti e aggiorna la sezione narrativa, conservando la versione precedente.",
+      "next": "Seleziona tabelle e documenti finanziari e indica a chi serve il report; Vera prepara i formati naturali del workflow."
+    },
+    "en": {
+      "title": "A financial report that leads back to its tables",
+      "goal": "Turn readable financial sources into coherent document sections, figures and narrative.",
+      "scenario": "Fictional Arco supplies revenue of EUR 120,000 and costs of EUR 95,000. A manager attributes the result to new customers, but the file has no customer detail or comparative period.",
+      "request": "Vera, prepare a short report from these tables and distinguish figures from explanations to verify.",
+      "scope": "Report construction from supported Excel, CSV or text-PDF sources. This is not Clara Reporting Engine or an unrelated analysis workflow.",
+      "input_columns": [
+        "Fictional source",
+        "Content",
+        "Limit"
+      ],
+      "input_rows": [
+        [
+          "F1 · statement",
+          "Revenue EUR 120,000; costs EUR 95,000",
+          "Current period only"
+        ],
+        [
+          "F2 · manager note",
+          "Growth attributed to new customers",
+          "No comparative detail"
+        ]
+      ],
+      "basis": "F1 supports EUR 25,000 above included costs. F2 supports the manager's attribution, not independent proof of the cause.",
+      "method": [
+        "Inspect files and tables and establish report type, period, language and source perimeter.",
+        "Review table-to-section mappings and complete evidence-based narrative, keeping uncorroborated explanations visible.",
+        "Generate the normal documents, tables and audit. Check each figure and comment against its source and preserve draft review status."
+      ],
+      "result_title": "Arco · period result",
+      "conclusion": "On the supplied items, revenue exceeds costs by EUR 25,000. The new-customer explanation remains a manager statement to corroborate.",
+      "output_columns": [
+        "Section",
+        "Content",
+        "Basis"
+      ],
+      "output_rows": [
+        [
+          "Economic summary",
+          "120,000 − 95,000 = EUR 25,000",
+          "F1"
+        ],
+        [
+          "Commentary",
+          "New customers cited by the manager",
+          "F2 · statement"
+        ],
+        [
+          "Further work",
+          "Customer detail and period comparison",
+          "Unavailable"
+        ]
+      ],
+      "check": "Do not promote a reported explanation into a proven cause. Readable PDFs may still require reviewed table mapping.",
+      "question": "Can we state that new customers generated the margin?",
+      "answer": "Not from these sources. Cite the manager's explanation and identify the data needed to verify it.",
+      "practice": "Add customer detail and update the narrative while preserving the earlier version.",
+      "next": "Select financial tables and documents and explain the report's audience; Vera prepares the normal output formats."
+    },
+    "fr": {
+      "title": "Un rapport financier relié à ses tableaux",
+      "goal": "Transformer des sources lisibles en sections, chiffres et commentaires cohérents.",
+      "scenario": "Arco fournit fictivement 120 000 EUR de recettes et 95 000 EUR de coûts. Le responsable attribue le résultat aux nouveaux clients, mais le dossier ne contient ni détail clients ni période comparative.",
+      "request": "Vera, prépare un court rapport en distinguant chiffres et explications à vérifier.",
+      "scope": "Construction de rapport à partir d'Excel, CSV ou PDF textuel supportés. Ce n'est pas Clara Reporting Engine ni un workflow d'analyse étranger.",
+      "input_columns": [
+        "Source fictive",
+        "Contenu",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "F1 · état",
+          "Recettes 120 000 EUR ; coûts 95 000 EUR",
+          "Période courante seule"
+        ],
+        [
+          "F2 · note du responsable",
+          "Résultat attribué aux nouveaux clients",
+          "Aucun détail comparatif"
+        ]
+      ],
+      "basis": "F1 étaye 25 000 EUR au-delà des coûts inclus. F2 étaye l'explication du responsable, pas sa démonstration indépendante.",
+      "method": [
+        "Examine fichiers et tableaux, puis précise type de rapport, période, langue et périmètre.",
+        "Revois l'affectation des tableaux aux sections et rédige une narration fondée sur les preuves, en gardant visibles les explications non corroborées.",
+        "Génère documents, tableaux et audit prévus. Contrôle chaque chiffre et commentaire contre sa source et conserve le statut de projet à revoir."
+      ],
+      "result_title": "Arco · résultat de la période",
+      "conclusion": "Sur les postes fournis, les recettes dépassent les coûts de 25 000 EUR. L'explication par les nouveaux clients reste une déclaration à corroborer.",
+      "output_columns": [
+        "Section",
+        "Contenu",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Synthèse économique",
+          "120 000 − 95 000 = 25 000 EUR",
+          "F1"
+        ],
+        [
+          "Commentaire",
+          "Nouveaux clients cités par le responsable",
+          "F2 · déclaration"
+        ],
+        [
+          "Approfondissement",
+          "Détail clients et comparaison temporelle",
+          "Indisponibles"
+        ]
+      ],
+      "check": "Une explication rapportée ne devient pas une cause prouvée. Un PDF lisible peut encore nécessiter un mapping de tableaux revu.",
+      "question": "Peut-on écrire que les nouveaux clients ont généré la marge ?",
+      "answer": "Pas avec ces sources. Cite l'explication du responsable et indique les données nécessaires pour la vérifier.",
+      "practice": "Ajoute le détail clients et actualise le commentaire en conservant la version précédente.",
+      "next": "Sélectionne tableaux et documents financiers et précise le public du rapport ; Vera prépare les formats habituels."
+    },
+    "de": {
+      "title": "Ein Finanzbericht mit Rückweg zu seinen Tabellen",
+      "goal": "Lesbare Finanzquellen in zusammenhängende Abschnitte, Zahlen und Erläuterungen überführen.",
+      "scenario": "Die fiktive Arco liefert EUR 120.000 Umsatz und EUR 95.000 Kosten. Eine Führungskraft erklärt das Ergebnis mit Neukunden; Kundendetails und Vergleichsperiode fehlen.",
+      "request": "Vera, erstelle einen kurzen Bericht aus diesen Tabellen und trenne Zahlen von noch zu prüfenden Erklärungen.",
+      "scope": "Berichtserstellung aus unterstützten Excel-, CSV- oder Text-PDF-Quellen. Dies ist nicht Claras Reporting Engine oder ein fremder Analyseworkflow.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Inhalt",
+        "Grenze"
+      ],
+      "input_rows": [
+        [
+          "F1 · Aufstellung",
+          "Umsatz EUR 120.000; Kosten EUR 95.000",
+          "Nur aktuelle Periode"
+        ],
+        [
+          "F2 · Managementnotiz",
+          "Wachstum Neukunden zugeschrieben",
+          "Keine Vergleichsdetails"
+        ]
+      ],
+      "basis": "F1 trägt EUR 25.000 Überschuss über die einbezogenen Kosten. F2 belegt die Aussage der Führungskraft, nicht unabhängig die Ursache.",
+      "method": [
+        "Prüfe Dateien und Tabellen und bestimme Berichtsart, Periode, Sprache und Quellenumfang.",
+        "Prüfe Tabellenzuordnungen zu Abschnitten und vervollständige die beleggestützte Erläuterung. Unbestätigte Erklärungen bleiben erkennbar.",
+        "Erzeuge die regulären Dokumente, Tabellen und Prüfspur. Kontrolliere jede Zahl und Aussage gegen ihre Quelle und erhalte den Entwurfsstatus."
+      ],
+      "result_title": "Arco · Periodenergebnis",
+      "conclusion": "Bei den gelieferten Positionen übersteigt der Umsatz die Kosten um EUR 25.000. Die Neukundenerklärung bleibt eine zu belegende Managementaussage.",
+      "output_columns": [
+        "Abschnitt",
+        "Inhalt",
+        "Grundlage"
+      ],
+      "output_rows": [
+        [
+          "Wirtschaftliche Übersicht",
+          "120.000 − 95.000 = EUR 25.000",
+          "F1"
+        ],
+        [
+          "Erläuterung",
+          "Management nennt Neukunden",
+          "F2 · Aussage"
+        ],
+        [
+          "Weitere Arbeit",
+          "Kundendetails und Periodenvergleich",
+          "Nicht vorhanden"
+        ]
+      ],
+      "check": "Eine berichtete Erklärung darf nicht zur bewiesenen Ursache werden. Auch lesbare PDFs können eine geprüfte Tabellenzuordnung benötigen.",
+      "question": "Können wir behaupten, Neukunden hätten die Marge erzeugt?",
+      "answer": "Nicht aus diesen Quellen. Gib die Managementerklärung mit Quelle wieder und benenne benötigte Prüfdaten.",
+      "practice": "Ergänze Kundendetails und aktualisiere die Erläuterung unter Erhalt der früheren Version.",
+      "next": "Wähle Finanztabellen und Unterlagen und beschreibe die Zielgruppe; Vera bereitet die regulären Ausgabeformate vor."
+    },
+    "es": {
+      "title": "Un informe financiero que vuelve a sus tablas",
+      "goal": "Transformar fuentes financieras legibles en secciones, cifras y comentarios coherentes.",
+      "scenario": "La ficticia Arco entrega ingresos de EUR 120.000 y costes de EUR 95.000. Un directivo atribuye el resultado a clientes nuevos, pero faltan detalle por cliente y periodo comparativo.",
+      "request": "Vera, prepara un informe breve desde estas tablas y distingue cifras de explicaciones por verificar.",
+      "scope": "Construcción de informes desde Excel, CSV o PDF de texto compatibles. No es Reporting Engine de Clara ni un análisis ajeno.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Contenido",
+        "Límite"
+      ],
+      "input_rows": [
+        [
+          "F1 · estado",
+          "Ingresos EUR 120.000; costes EUR 95.000",
+          "Solo periodo actual"
+        ],
+        [
+          "F2 · nota directiva",
+          "Crecimiento atribuido a clientes nuevos",
+          "Sin detalle comparativo"
+        ]
+      ],
+      "basis": "F1 respalda EUR 25.000 sobre los costes incluidos. F2 acredita la atribución del directivo, no una prueba independiente de la causa.",
+      "method": [
+        "Inspecciona archivos y tablas y establece tipo de informe, periodo, lengua y alcance de fuentes.",
+        "Revisa correspondencias entre tablas y secciones y completa comentarios basados en evidencia, manteniendo visibles las explicaciones sin corroborar.",
+        "Genera documentos, tablas y auditoría habituales. Comprueba cifras y comentarios contra sus fuentes y conserva el estado de borrador revisable."
+      ],
+      "result_title": "Arco · resultado del periodo",
+      "conclusion": "En las partidas entregadas, los ingresos superan los costes en EUR 25.000. La explicación sobre nuevos clientes sigue siendo una declaración directiva por corroborar.",
+      "output_columns": [
+        "Sección",
+        "Contenido",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Resumen económico",
+          "120.000 − 95.000 = EUR 25.000",
+          "F1"
+        ],
+        [
+          "Comentario",
+          "El directivo menciona nuevos clientes",
+          "F2 · declaración"
+        ],
+        [
+          "Trabajo adicional",
+          "Detalle por cliente y comparación temporal",
+          "No disponible"
+        ]
+      ],
+      "check": "No conviertas una explicación declarada en causa probada. Un PDF legible también puede necesitar un mapeo de tablas revisado.",
+      "question": "¿Podemos afirmar que los nuevos clientes generaron el margen?",
+      "answer": "No con estas fuentes. Cita la explicación del directivo e identifica los datos necesarios para verificarla.",
+      "practice": "Añade detalle por cliente y actualiza el comentario conservando la versión anterior.",
+      "next": "Selecciona tablas y documentos financieros y explica la audiencia; Vera prepara los formatos habituales de salida."
+    }
+  }
+}

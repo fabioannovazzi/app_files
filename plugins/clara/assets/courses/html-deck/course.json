@@ -1,0 +1,443 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "html-deck",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "skills/html-deck/SKILL.md",
+      "repository_path": "plugins/clara/skills/html-deck/SKILL.md",
+      "sha256": "c9400e5f22ef351d2e0ebac2dc976d292b4a89e1dd71bb220d6595972dbbdfa3"
+    },
+    {
+      "path": "skills/html-deck/references/evidence-bindings.md",
+      "repository_path": "plugins/clara/skills/html-deck/references/evidence-bindings.md",
+      "sha256": "d8f83b25430898ff126ee98d67fff63c49b19b965d775e8d8e86d09345c86827"
+    },
+    {
+      "path": "skills/html-deck/references/quality-bar.md",
+      "repository_path": "plugins/clara/skills/html-deck/references/quality-bar.md",
+      "sha256": "77424a8af1eb619d3b50f2ee31673c340822dc57b0bccfdcf68abc5f5b281604"
+    },
+    {
+      "path": "skills/html-deck/references/revision-workflow.md",
+      "repository_path": "plugins/clara/skills/html-deck/references/revision-workflow.md",
+      "sha256": "f7bef902a6d909b4991f4c536e5a740d08770a9bdd9f16d0aa6c32b3cc2ee6e3"
+    },
+    {
+      "path": "skills/html-deck/references/static-compatibility.md",
+      "repository_path": "plugins/clara/skills/html-deck/references/static-compatibility.md",
+      "sha256": "678e5e7ba40b572c72b80c1a37cea8b0e3ef9d9c9f231e01372c39fdf1ecb3c2"
+    },
+    {
+      "path": "skills/html-deck/references/structured-authoring.md",
+      "repository_path": "plugins/clara/skills/html-deck/references/structured-authoring.md",
+      "sha256": "536273cfba96d4b11639208eec5843eb61ee5673d10beb2b354c27b873b570a7"
+    },
+    {
+      "path": "skills/html-deck/scripts/browser_qa_html_deck.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/browser_qa_html_deck.py",
+      "sha256": "91be95f050c8b245c4dedc4c045cee5a69d706808cb31a377acc540f0cf1d5ce"
+    },
+    {
+      "path": "skills/html-deck/scripts/build_html_deck.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/build_html_deck.py",
+      "sha256": "4f8277943aeb3261d3ea199cded967edf3d58741d671fc5b5e195d4529e402e6"
+    },
+    {
+      "path": "skills/html-deck/scripts/build_layout_gallery.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/build_layout_gallery.py",
+      "sha256": "30f99ae7546d5d5ffbdadbd31094210224d4f032b9c0ff03d569eb9594aa79e5"
+    },
+    {
+      "path": "skills/html-deck/scripts/compare_html_deck_revision.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/compare_html_deck_revision.py",
+      "sha256": "190549f12c819fc860b0e96eb5408ec59855e15a80c57d714054670ca109db9c"
+    },
+    {
+      "path": "skills/html-deck/scripts/compose_html_deck.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/compose_html_deck.py",
+      "sha256": "7d2d6ea4926e8ec6532236bc35c757936cf11b983332e0488839b911daff28fe"
+    },
+    {
+      "path": "skills/html-deck/scripts/content_ledger.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/content_ledger.py",
+      "sha256": "b5037e72556596b3a201cc310fa724aa80552d663ade1da258d7415c9d8a3b38"
+    },
+    {
+      "path": "skills/html-deck/scripts/data_visuals.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/data_visuals.py",
+      "sha256": "68a195e3ea68be169994b16a79ee5dcf76573e2def869071884176394b62c9b5"
+    },
+    {
+      "path": "skills/html-deck/scripts/evidence_bindings.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/evidence_bindings.py",
+      "sha256": "c4c08750d2dd79cbf6b4961a8647664491299f336e91480fb8fbba15685d7266"
+    },
+    {
+      "path": "skills/html-deck/scripts/html_deck_revision.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/html_deck_revision.py",
+      "sha256": "ace7f2144b416258d4ca00d14ebb333133674529ca7f0e1f0305595435f9e7bf"
+    },
+    {
+      "path": "skills/html-deck/scripts/init_html_deck.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/init_html_deck.py",
+      "sha256": "5c47bd53b7aac2f64844f377aac475179109392b672a4c934707c7a74865e94c"
+    },
+    {
+      "path": "skills/html-deck/scripts/inspect_html_deck.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/inspect_html_deck.py",
+      "sha256": "52759a5789f5b063620610970461992521353c2fda61de53908b31c3d5a732cd"
+    },
+    {
+      "path": "skills/html-deck/scripts/validate_html_deck.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/validate_html_deck.py",
+      "sha256": "225c3bb0f0f1ba5a4c59ecf73222f9a78c9bc5cac371e633f655c0c9bdced335"
+    },
+    {
+      "path": "skills/html-deck/scripts/validate_revision_map.py",
+      "repository_path": "plugins/clara/skills/html-deck/scripts/validate_revision_map.py",
+      "sha256": "321e8228f54bb51902d6f20c3cfc085c2974bc38e0abddb99d9b84dcb4ec097c"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Tre slide che accompagnano una decisione",
+      "goal": "Costruire una presentazione HTML leggibile e fedele alle fonti, con prove per numeri e affermazioni.",
+      "scenario": "Un brief fittizio descrive una prova commerciale: 40 clienti invitati, 10 partecipanti, 6 interessati a un seguito. Il team deve decidere se ampliare il test. Non sono disponibili ordini o ricavi.",
+      "request": "Clara, trasforma questo brief in tre slide per decidere il prossimo test.",
+      "scope": "Deck da fonte fornita, senza ricerca o dati inventati. L'interesse dichiarato non è conversione in vendita.",
+      "input_columns": [
+        "Fonte fittizia B1",
+        "Dato",
+        "Significato"
+      ],
+      "input_rows": [
+        [
+          "Invitati",
+          "40",
+          "Popolazione contattata nel caso"
+        ],
+        [
+          "Partecipanti",
+          "10",
+          "25% degli invitati"
+        ],
+        [
+          "Interessati a un seguito",
+          "6",
+          "60% dei partecipanti; nessun ordine"
+        ]
+      ],
+      "basis": "Tutti i valori vengono da B1. Le due percentuali hanno denominatori diversi, da mostrare vicino al dato.",
+      "method": [
+        "Definisci pubblico e decisione; leggi la fonte e prepara la sequenza delle affermazioni con il loro supporto.",
+        "Costruisci il deck con il contratto HTML corrente, i contenuti e le evidenze legati fra loro. Usa la gerarchia visiva per rendere leggibile il messaggio.",
+        "Controlla ogni slide nel browser e nei rendering, verificando numeri, fonti, overflow e navigazione. Consegna la versione esatta riveduta."
+      ],
+      "result_title": "Dal test al prossimo esperimento",
+      "conclusion": "La prova ha raccolto 10 partecipanti su 40 inviti. Sei chiedono un seguito: una base per disegnare il prossimo test, non per dichiarare vendite.",
+      "output_columns": [
+        "Slide",
+        "Messaggio",
+        "Evidenza da vedere"
+      ],
+      "output_rows": [
+        [
+          "1 · Risultato",
+          "10 partecipanti su 40 invitati",
+          "B1 · 25%"
+        ],
+        [
+          "2 · Interesse",
+          "6 dei 10 chiedono un seguito",
+          "B1 · denominatore 10"
+        ],
+        [
+          "3 · Decisione",
+          "Definire il prossimo test commerciale",
+          "Ordini e ricavi ancora assenti"
+        ]
+      ],
+      "check": "Un grafico o un titolo non deve cancellare il denominatore. Un'affermazione più forte della fonte resta errata anche in una slide elegante.",
+      "question": "Possiamo intitolare la seconda slide 'Conversione del 60%'?",
+      "answer": "Sarebbe ambiguo e potrebbe sembrare vendita. La fonte misura interesse a un seguito fra i partecipanti; il titolo deve dirlo.",
+      "practice": "Riscrivi il titolo della seconda slide mantenendo numero, denominatore e significato, poi controllalo nel deck.",
+      "next": "Seleziona documenti e decisione del pubblico. Chiedi un deck completo con le fonti, non una sequenza di slogan."
+    },
+    "en": {
+      "title": "Three slides that support a decision",
+      "goal": "Build a readable, source-faithful HTML presentation with evidence for its claims.",
+      "scenario": "A fictional brief describes a commercial test: 40 customers invited, 10 participants and 6 interested in a follow-up. The team must decide whether to expand the test. There are no orders or revenue figures.",
+      "request": "Clara, turn this brief into three slides for deciding the next test.",
+      "scope": "A source-based deck, without invented research or data. Stated interest is not sales conversion.",
+      "input_columns": [
+        "Fictional source B1",
+        "Value",
+        "Meaning"
+      ],
+      "input_rows": [
+        [
+          "Invited",
+          "40",
+          "Contacted population"
+        ],
+        [
+          "Participants",
+          "10",
+          "25% of invitees"
+        ],
+        [
+          "Interested in follow-up",
+          "6",
+          "60% of participants; no orders"
+        ]
+      ],
+      "basis": "All values come from B1. The percentages have different denominators, which belong beside the figures.",
+      "method": [
+        "Define audience and decision, then read the source and plan claims with their supporting evidence.",
+        "Build under the current HTML deck contract, linking content and evidence. Use visual hierarchy to make the message readable.",
+        "Inspect every slide in the browser and renders for numbers, sources, overflow and navigation. Deliver the exact reviewed version."
+      ],
+      "result_title": "From test results to the next experiment",
+      "conclusion": "Ten of 40 invitees participated. Six want a follow-up: evidence for designing another test, not for claiming sales.",
+      "output_columns": [
+        "Slide",
+        "Message",
+        "Visible evidence"
+      ],
+      "output_rows": [
+        [
+          "1 · Result",
+          "10 participants from 40 invitations",
+          "B1 · 25%"
+        ],
+        [
+          "2 · Interest",
+          "6 of 10 request a follow-up",
+          "B1 · denominator 10"
+        ],
+        [
+          "3 · Decision",
+          "Define the next commercial test",
+          "Orders and revenue unavailable"
+        ]
+      ],
+      "check": "Headlines and charts must preserve denominators. A stronger-than-source claim remains wrong even on an elegant slide.",
+      "question": "Can slide two be titled '60% conversion'?",
+      "answer": "That could imply sales. The source measures follow-up interest among participants, so the title must state that meaning.",
+      "practice": "Rewrite slide two's title with its number, denominator and meaning, then inspect it in the deck.",
+      "next": "Select the documents and audience decision. Ask for a complete sourced deck rather than unsupported slogans."
+    },
+    "fr": {
+      "title": "Trois slides pour accompagner une décision",
+      "goal": "Créer un deck HTML lisible et fidèle aux sources, avec des preuves pour ses affirmations.",
+      "scenario": "Le brief fictif décrit un test commercial : 40 clients invités, 10 participants et 6 intéressés par une suite. L'équipe doit décider d'élargir le test. Aucune commande ni recette n'est documentée.",
+      "request": "Clara, transforme ce brief en trois slides pour décider du prochain test.",
+      "scope": "Présentation issue des sources fournies, sans données inventées. L'intérêt déclaré n'est pas une conversion en vente.",
+      "input_columns": [
+        "Source fictive B1",
+        "Valeur",
+        "Signification"
+      ],
+      "input_rows": [
+        [
+          "Invités",
+          "40",
+          "Population contactée"
+        ],
+        [
+          "Participants",
+          "10",
+          "25 % des invités"
+        ],
+        [
+          "Intéressés par une suite",
+          "6",
+          "60 % des participants ; aucune commande"
+        ]
+      ],
+      "basis": "Les valeurs viennent de B1. Les pourcentages ont des dénominateurs différents à montrer près des chiffres.",
+      "method": [
+        "Définis public et décision, puis lis les sources et organise les affirmations avec leurs bases.",
+        "Construis le deck selon le contrat HTML courant en reliant contenu et preuves. La hiérarchie visuelle sert la lisibilité.",
+        "Examine chaque slide dans le navigateur et les rendus : chiffres, sources, débordements et navigation. Livre la version exacte revue."
+      ],
+      "result_title": "Du test au prochain essai commercial",
+      "conclusion": "Dix des 40 invités participent. Six souhaitent une suite : une base pour le prochain test, pas pour annoncer des ventes.",
+      "output_columns": [
+        "Slide",
+        "Message",
+        "Preuve visible"
+      ],
+      "output_rows": [
+        [
+          "1 · Résultat",
+          "10 participants sur 40 invités",
+          "B1 · 25 %"
+        ],
+        [
+          "2 · Intérêt",
+          "6 sur 10 demandent une suite",
+          "B1 · dénominateur 10"
+        ],
+        [
+          "3 · Décision",
+          "Définir le prochain test",
+          "Commandes et recettes absentes"
+        ]
+      ],
+      "check": "Titres et graphiques conservent les dénominateurs. Une affirmation plus forte que la source reste fausse, même élégamment présentée.",
+      "question": "Peut-on titrer la slide 2 'Conversion de 60 %' ?",
+      "answer": "Cela pourrait évoquer des ventes. La source mesure un intérêt pour une suite parmi les participants ; le titre doit l'indiquer.",
+      "practice": "Réécris le titre avec chiffre, dénominateur et sens, puis vérifie-le dans le deck.",
+      "next": "Sélectionne documents et décision du public ; demande un deck complet avec ses sources."
+    },
+    "de": {
+      "title": "Drei Folien für eine Entscheidung",
+      "goal": "Eine lesbare quellengerechte HTML-Präsentation mit belegten Aussagen erstellen.",
+      "scenario": "Ein fiktiver Kurzbericht beschreibt einen Geschäftstest: 40 Kunden eingeladen, 10 Teilnehmende, 6 an einem Folgegespräch interessiert. Das Team entscheidet über einen erweiterten Test. Bestellungen und Umsatzdaten fehlen.",
+      "request": "Clara, mache aus diesem Bericht drei Folien für die Entscheidung über den nächsten Test.",
+      "scope": "Quellenbasierte Präsentation ohne erfundene Recherche oder Daten. Geäußertes Interesse ist keine Verkaufskonversion.",
+      "input_columns": [
+        "Fiktive Quelle B1",
+        "Wert",
+        "Bedeutung"
+      ],
+      "input_rows": [
+        [
+          "Eingeladen",
+          "40",
+          "Kontaktierte Grundgesamtheit"
+        ],
+        [
+          "Teilnehmende",
+          "10",
+          "25 % der Eingeladenen"
+        ],
+        [
+          "Interesse am Folgegespräch",
+          "6",
+          "60 % der Teilnehmenden; keine Bestellungen"
+        ]
+      ],
+      "basis": "Alle Werte stammen aus B1. Die Prozentwerte haben unterschiedliche Nenner, die neben die Zahlen gehören.",
+      "method": [
+        "Bestimme Zielgruppe und Entscheidung, lies die Quelle und plane Aussagen samt Belegen.",
+        "Erstelle die Präsentation nach aktuellem HTML-Vertrag und verknüpfe Inhalte mit Evidenz. Eine klare visuelle Hierarchie macht die Botschaft lesbar.",
+        "Prüfe jede Folie in Browser und Renderings auf Zahlen, Quellen, Überläufe und Navigation. Liefere genau die geprüfte Version."
+      ],
+      "result_title": "Vom Testergebnis zum nächsten Versuch",
+      "conclusion": "Zehn von 40 Eingeladenen nahmen teil. Sechs wünschen ein Folgegespräch: Grundlage für einen weiteren Test, kein Verkaufsnachweis.",
+      "output_columns": [
+        "Folie",
+        "Botschaft",
+        "Sichtbarer Beleg"
+      ],
+      "output_rows": [
+        [
+          "1 · Ergebnis",
+          "10 Teilnehmende aus 40 Einladungen",
+          "B1 · 25 %"
+        ],
+        [
+          "2 · Interesse",
+          "6 von 10 wünschen ein Folgegespräch",
+          "B1 · Nenner 10"
+        ],
+        [
+          "3 · Entscheidung",
+          "Nächsten Geschäftstest bestimmen",
+          "Bestellungen und Umsatz fehlen"
+        ]
+      ],
+      "check": "Überschriften und Grafiken müssen Nenner erhalten. Auch auf einer eleganten Folie bleibt eine über die Quelle hinausgehende Aussage falsch.",
+      "question": "Darf Folie zwei '60 % Konversion' heißen?",
+      "answer": "Das könnte Verkäufe suggerieren. Die Quelle misst Folgegesprächsinteresse unter Teilnehmenden; der Titel muss diese Bedeutung nennen.",
+      "practice": "Formuliere den zweiten Titel mit Zahl, Nenner und Bedeutung und prüfe ihn in der Präsentation.",
+      "next": "Wähle Dokumente und Entscheidungsbedarf der Zielgruppe. Verlange eine vollständige belegte Präsentation."
+    },
+    "es": {
+      "title": "Tres diapositivas para una decisión",
+      "goal": "Crear una presentación HTML legible y fiel a sus fuentes con pruebas de sus afirmaciones.",
+      "scenario": "Un informe ficticio describe una prueba comercial: 40 clientes invitados, 10 participantes y 6 interesados en seguimiento. El equipo debe decidir si amplía la prueba. No hay pedidos ni ingresos.",
+      "request": "Clara, convierte este informe en tres diapositivas para decidir la próxima prueba.",
+      "scope": "Presentación basada en fuentes sin investigación ni datos inventados. El interés declarado no es conversión en ventas.",
+      "input_columns": [
+        "Fuente ficticia B1",
+        "Valor",
+        "Significado"
+      ],
+      "input_rows": [
+        [
+          "Invitados",
+          "40",
+          "Población contactada"
+        ],
+        [
+          "Participantes",
+          "10",
+          "25 % de invitados"
+        ],
+        [
+          "Interés en seguimiento",
+          "6",
+          "60 % de participantes; sin pedidos"
+        ]
+      ],
+      "basis": "Todos los valores proceden de B1. Los porcentajes tienen denominadores distintos, que deben acompañar a las cifras.",
+      "method": [
+        "Define audiencia y decisión, lee la fuente y planifica afirmaciones con pruebas.",
+        "Construye conforme al contrato HTML actual vinculando contenido y evidencia. Usa jerarquía visual para hacer legible el mensaje.",
+        "Inspecciona cada diapositiva en navegador y renderizados: cifras, fuentes, desbordamientos y navegación. Entrega la versión exacta revisada."
+      ],
+      "result_title": "Del resultado de la prueba al próximo experimento",
+      "conclusion": "Participaron diez de 40 invitados. Seis desean seguimiento: evidencia para diseñar otra prueba, no para afirmar ventas.",
+      "output_columns": [
+        "Diapositiva",
+        "Mensaje",
+        "Prueba visible"
+      ],
+      "output_rows": [
+        [
+          "1 · Resultado",
+          "10 participantes de 40 invitaciones",
+          "B1 · 25 %"
+        ],
+        [
+          "2 · Interés",
+          "6 de 10 solicitan seguimiento",
+          "B1 · denominador 10"
+        ],
+        [
+          "3 · Decisión",
+          "Definir la próxima prueba comercial",
+          "Pedidos e ingresos no disponibles"
+        ]
+      ],
+      "check": "Titulares y gráficos deben conservar denominadores. Una afirmación superior a la fuente sigue siendo incorrecta en una diapositiva elegante.",
+      "question": "¿Puede titularse la segunda diapositiva '60 % de conversión'?",
+      "answer": "Podría sugerir ventas. La fuente mide interés en seguimiento entre participantes; el título debe decirlo.",
+      "practice": "Reescribe el segundo título con cifra, denominador y significado y revísalo en la presentación.",
+      "next": "Selecciona documentos y decisión de la audiencia y pide una presentación completa con fuentes."
+    }
+  }
+}

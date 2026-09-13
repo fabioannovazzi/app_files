@@ -1,0 +1,143 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "treasury-forecast",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "sources": [
+    {
+      "path": "modules/treasury-forecast/references/input-contract.md",
+      "repository_path": "plugins/treasury-forecast/references/input-contract.md",
+      "sha256": "c2ebd94e8e9f61bdef8d2c2c5d441f25865b91f694220a939b26ae516284a3fa"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/check_dependencies.py",
+      "repository_path": "plugins/treasury-forecast/scripts/check_dependencies.py",
+      "sha256": "12063034a2093ebbd78c2ad1a64b27b139b81b6bc38a097f2b33fdabf88e3d98"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/run_treasury.py",
+      "repository_path": "plugins/treasury-forecast/scripts/run_treasury.py",
+      "sha256": "178797a5e0ff17fad59bc8089cef1ecc130c40aa6c7ca07bf0b350a6cce62b75"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/treasury_core.py",
+      "repository_path": "plugins/treasury-forecast/scripts/treasury_core.py",
+      "sha256": "8a44c0f6c03afdbf3571578f79b861fdd9c1392e8e82bd4c868030ef345ec4f3"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/treasury_inputs.py",
+      "repository_path": "plugins/treasury-forecast/scripts/treasury_inputs.py",
+      "sha256": "9f9ff0c2856d6ca6377d16f6feeb325a8822553db0bb4bbd90016b028a4dde33"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/treasury_report.py",
+      "repository_path": "plugins/treasury-forecast/scripts/treasury_report.py",
+      "sha256": "03c4232c87cef71b7885495e5e204e4a8f695d0d0273a1bcf3b21d17e65ce442"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/treasury_server.py",
+      "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
+      "sha256": "7d4e77d0d90be820b8d013f1c8325e41fec566b375d79c9b4e5c31d98d0c8dd0"
+    },
+    {
+      "path": "modules/treasury-forecast/scripts/treasury_session.py",
+      "repository_path": "plugins/treasury-forecast/scripts/treasury_session.py",
+      "sha256": "ed97f1d6690e997c5ba62ee3e447031621c14842c62b4f0a3c07fd8e51d45957"
+    },
+    {
+      "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
+      "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
+      "sha256": "dbf0ec6c863137f5e85ce2c14296757b48b2a666ef2a8a71300a850467d9cbb6"
+    },
+    {
+      "path": "skills/treasury-forecast/SKILL.md",
+      "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
+      "sha256": "0364c242853f0343c790f6866f4b332288719721f66b4e8306353306ad654125"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "La cassa dipende anche dal giorno dell'incasso",
+      "goal": "Leggere una previsione di tesoreria e l'effetto di un incasso posticipato, senza dedurre saldi aperti dalle fatture.",
+      "scenario": "Al 10 settembre Arco ha 20.000 EUR disponibili. Deve pagare 15.000 EUR il 15 settembre e prevede un incasso residuo di 12.000 EUR il 18. Un ulteriore pagamento pianificato di 10.000 EUR cade il 20 settembre.",
+      "request": "Vera, mostrami il punto di cassa più basso e cosa succede se l'incasso slitta.",
+      "scope": "Una società, EUR e un orizzonte definito. Il caso usa saldi residui e date fornite; non prevede automaticamente il comportamento dei clienti.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Data",
+        "Flusso EUR"
+      ],
+      "input_rows": [
+        [
+          "T1 · saldo disponibile",
+          "10 settembre",
+          "+20.000 iniziali"
+        ],
+        [
+          "T2 · debito residuo",
+          "15 settembre",
+          "−15.000"
+        ],
+        [
+          "T3 · credito residuo",
+          "18 settembre",
+          "+12.000 attesi"
+        ],
+        [
+          "T4 · flusso pianificato",
+          "20 settembre",
+          "−10.000"
+        ]
+      ],
+      "basis": "T1 è il saldo al cutoff; T2 e T3 sono residui dichiarati, non importi originali delle fatture. T4 ha una base di pianificazione separata.",
+      "method": [
+        "Prepara le sei tabelle del contratto: conti, movimenti, partite, flussi pianificati, allocazioni e rettifiche. Anche le tabelle vuote conservano le intestazioni.",
+        "Rivedi perimetro, saldi residui e date attese; esegui la previsione corrente e confronta ogni variazione con le fonti.",
+        "Leggi il report e il workbook; negli aggiornamenti riconcilia saldi e regolamenti, senza duplicare una fattura che sostituisce un flusso pianificato."
+      ],
+      "result_title": "5.000 EUR al minimo, se l'incasso arriva il 18",
+      "conclusion": "La cassa scende a 5.000 EUR il 15, risale a 17.000 il 18 e chiude a 7.000 il 20. Se l'incasso arriva il 25, il 20 settembre si presenta un fabbisogno di 5.000 EUR.",
+      "output_columns": [
+        "Data",
+        "Scenario base",
+        "Incasso il 25"
+      ],
+      "output_rows": [
+        [
+          "15 settembre",
+          "5.000 EUR",
+          "5.000 EUR"
+        ],
+        [
+          "18 settembre",
+          "17.000 EUR",
+          "5.000 EUR"
+        ],
+        [
+          "20 settembre",
+          "7.000 EUR",
+          "−5.000 EUR"
+        ]
+      ],
+      "check": "La previsione descrive le assunzioni rivedute, non garantisce l'incasso. Una nota di credito riduce un residuo ma non genera automaticamente un movimento di banca.",
+      "question": "La fattura vale 20.000 EUR ma il residuo è 12.000: quale importo entra?",
+      "answer": "Il residuo di cassa documentato di 12.000 EUR. L'importo originale non sostituisce l'evidenza di quanto resta da incassare.",
+      "practice": "Sposta l'incasso al 25 e riesegui: individua la data del fabbisogno e la fonte dell'ipotesi modificata.",
+      "next": "Prepara saldi al cutoff, scadenzari residui e flussi futuri con basi e date attese; negli aggiornamenti conserva gli identificativi."
+    }
+  }
+}

@@ -1,0 +1,440 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "fatture-xml-check",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
+      "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "repository_path": "plugins/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "087e935240b3fe78cf98a4499a0a295175abb3aa8c2e625d160496462c1fc9bc"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "repository_path": "plugins/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "repository_path": "plugins/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "repository_path": "plugins/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
+      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "repository_path": "plugins/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
+      "repository_path": "plugins/client-file-preparation/skills/fatture-xml-check/SKILL.md",
+      "sha256": "e9fc4b93018f9c21f7ae15ece7cb1218923c8f29f91810bae95e752d3722e208"
+    },
+    {
+      "path": "skills/fatture-xml-check/SKILL.md",
+      "repository_path": "plugins/vera/skills/fatture-xml-check/SKILL.md",
+      "sha256": "3cdf84642d701fb68cf39218ec13abf89dddfd099ac16219d9abd1e0137306d0"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [
+    {
+      "path": "files/executed-starter/fatture_summary.csv",
+      "sha256": "add1fc99e8854a0e18cdb64a4a65fa04a757c87e42ddf6872a02c14575ab6e47"
+    },
+    {
+      "path": "files/executed-starter/formal_anomalies.md",
+      "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+    },
+    {
+      "path": "files/executed-starter/invoice.xml",
+      "sha256": "b3b63d6b0a996fd3d292522bddeb74eb3bc113ab70d932c1cb7c5af7d9994799"
+    },
+    {
+      "path": "files/executed-starter/provenance.json",
+      "sha256": "0a5c39dca339daefc24a2663642fe77c04d5918bcf313729eea5b0bdf4cbc0b5"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Due file non sono sempre due fatture",
+      "goal": "Leggere il riepilogo FatturaPA e distinguere corpi fattura, anomalie formali e candidati duplicati.",
+      "scenario": "Il lotto fittizio contiene una fattura XML valida, una seconda copia della stessa fattura e un XML troncato. Il controllo riguarda il contenuto formale dei file, senza confrontarlo con la contabilità.",
+      "request": "Vera, controlla questo piccolo lotto XML e mostrami cosa devo rivedere.",
+      "scope": "Controlli formali FatturaPA. Non verifica registrazione contabile, deducibilità, pagamento o correttezza del trattamento IVA.",
+      "input_columns": [
+        "File fittizio",
+        "Contenuto",
+        "Condizione"
+      ],
+      "input_rows": [
+        [
+          "invoice.xml",
+          "INV-001 · 2026 · 1.220 EUR",
+          "Un corpo fattura leggibile"
+        ],
+        [
+          "invoice-copy.xml",
+          "Stessa fattura",
+          "Copia da verificare"
+        ],
+        [
+          "broken.xml",
+          "Documento troncato",
+          "XML non ben formato"
+        ]
+      ],
+      "basis": "Il conteggio dei file è distinto dal conteggio dei corpi fattura. Numero, data, fornitore e importo sostengono una candidatura duplicata, non una cancellazione automatica.",
+      "method": [
+        "Seleziona cliente, incarico, lotto e anno del controllo; importa i file nella copia gestita del caso.",
+        "Esegui il parser corrente e leggi tutte le anomalie e i gruppi duplicati del passaggio. Apri l'XML quando serve verificare il dato originale.",
+        "Presenta riepilogo per corpo fattura, candidati duplicati e memo delle anomalie. Mantieni espliciti i file che non è stato possibile leggere."
+      ],
+      "result_title": "Un lotto con due controlli da fare",
+      "conclusion": "Le due copie leggibili non rappresentano automaticamente due operazioni economiche. Il file troncato rimane fuori dai dati estratti affidabili.",
+      "output_columns": [
+        "Elemento",
+        "Esito illustrato",
+        "Azione"
+      ],
+      "output_rows": [
+        [
+          "invoice.xml + invoice-copy.xml",
+          "Candidato duplicato",
+          "Confrontare le fonti; conservare gli originali"
+        ],
+        [
+          "broken.xml",
+          "Errore formale",
+          "Recuperare l'XML completo"
+        ],
+        [
+          "Totale economico del lotto",
+          "Da rivedere",
+          "Non sommare alla cieca le copie"
+        ]
+      ],
+      "check": "Un'anomalia formale e un candidato duplicato non autorizzano a eliminare file o correggere scritture. Un XML può contenere più corpi fattura.",
+      "question": "Tre file ricevuti significano tre fatture valide?",
+      "answer": "No. Si contano separatamente file, corpi leggibili e anomalie. La copia e il file troncato richiedono trattamento esplicito.",
+      "practice": "Esegui il controllo sullo starter XML, poi su una copia modificata: confronta il memo effettivo.",
+      "next": "Per il tuo lotto indica anno e fonti selezionate; usa la riconciliazione contabile soltanto se quello è il lavoro richiesto."
+    },
+    "en": {
+      "title": "Two files do not always mean two invoices",
+      "goal": "Read a FatturaPA summary and distinguish invoice bodies, formal anomalies and duplicate candidates.",
+      "scenario": "The fictional batch contains one valid invoice XML, another copy of that invoice and a truncated XML. The check concerns formal file content; it does not compare invoices with accounting entries.",
+      "request": "Vera, check this small XML batch and show what needs review.",
+      "scope": "Formal FatturaPA checks only, without confirming booking, deductibility, payment or VAT treatment.",
+      "input_columns": [
+        "Fictional file",
+        "Content",
+        "Condition"
+      ],
+      "input_rows": [
+        [
+          "invoice.xml",
+          "INV-001 · 2026 · EUR 1,220",
+          "One readable invoice body"
+        ],
+        [
+          "invoice-copy.xml",
+          "Same invoice",
+          "Copy to review"
+        ],
+        [
+          "broken.xml",
+          "Truncated document",
+          "Malformed XML"
+        ]
+      ],
+      "basis": "File count differs from invoice-body count. Supplier, number, date and amount support a duplicate candidate, not automatic deletion.",
+      "method": [
+        "Select client, engagement, batch and year, then import the sources into the managed tutorial case.",
+        "Run the current parser and inspect all anomaly and duplicate-group handoff items. Open exact XML when a source fact needs checking.",
+        "Present the per-body summary, duplicate candidates and anomaly memo. Keep unreadable files explicitly visible."
+      ],
+      "result_title": "A batch with two issues to review",
+      "conclusion": "Two readable copies do not automatically represent two economic transactions. The truncated file supplies no reliable extracted invoice record.",
+      "output_columns": [
+        "Item",
+        "Illustrated result",
+        "Action"
+      ],
+      "output_rows": [
+        [
+          "invoice.xml + invoice-copy.xml",
+          "Duplicate candidate",
+          "Compare sources; preserve originals"
+        ],
+        [
+          "broken.xml",
+          "Formal error",
+          "Recover complete XML"
+        ],
+        [
+          "Economic batch total",
+          "Needs review",
+          "Do not blindly add copies"
+        ]
+      ],
+      "check": "An anomaly or duplicate candidate does not authorize file deletion or accounting changes. One XML may contain several invoice bodies.",
+      "question": "Do three received files mean three valid invoices?",
+      "answer": "No. Count files, readable bodies and anomalies separately. The copy and truncated file need explicit treatment.",
+      "practice": "Run the packaged XML starter, then a changed copy, and compare the actual anomaly memos.",
+      "next": "Specify the year and selected batch. Use accounting reconciliation only when that is the requested task."
+    },
+    "fr": {
+      "title": "Deux fichiers ne font pas toujours deux factures",
+      "goal": "Lire la synthèse FatturaPA en distinguant corps de facture, anomalies formelles et doublons possibles.",
+      "scenario": "Le lot fictif contient un XML valide, une copie de la même facture et un XML tronqué. Le contrôle porte sur le contenu formel des fichiers, sans le comparer aux écritures comptables.",
+      "request": "Vera, contrôle ce petit lot XML et montre ce qui doit être revu.",
+      "scope": "Contrôles formels FatturaPA, sans validation d'enregistrement, de déductibilité, de paiement ou de traitement TVA.",
+      "input_columns": [
+        "Fichier fictif",
+        "Contenu",
+        "État"
+      ],
+      "input_rows": [
+        [
+          "invoice.xml",
+          "INV-001 · 2026 · 1 220 EUR",
+          "Un corps lisible"
+        ],
+        [
+          "invoice-copy.xml",
+          "Même facture",
+          "Copie à vérifier"
+        ],
+        [
+          "broken.xml",
+          "Document tronqué",
+          "XML mal formé"
+        ]
+      ],
+      "basis": "Le nombre de fichiers diffère du nombre de corps de facture. Fournisseur, numéro, date et montant soutiennent un doublon possible, pas une suppression automatique.",
+      "method": [
+        "Sélectionne client, dossier, lot et année, puis importe les sources dans le cas pédagogique géré.",
+        "Exécute le parseur courant et examine toutes les anomalies et tous les groupes de doublons. Ouvre le XML exact lorsqu'un fait doit être vérifié.",
+        "Présente synthèse par corps, doublons possibles et mémo des anomalies. Garde visibles les fichiers illisibles."
+      ],
+      "result_title": "Deux points à revoir dans le lot",
+      "conclusion": "Deux copies lisibles ne représentent pas automatiquement deux opérations économiques. Le fichier tronqué ne fournit pas de données fiables.",
+      "output_columns": [
+        "Élément",
+        "Résultat illustré",
+        "Action"
+      ],
+      "output_rows": [
+        [
+          "invoice.xml + invoice-copy.xml",
+          "Doublon possible",
+          "Comparer et conserver les originaux"
+        ],
+        [
+          "broken.xml",
+          "Erreur formelle",
+          "Récupérer le XML complet"
+        ],
+        [
+          "Total économique",
+          "À revoir",
+          "Ne pas additionner aveuglément les copies"
+        ]
+      ],
+      "check": "Une anomalie ou un doublon possible n'autorise ni suppression ni correction comptable. Un XML peut contenir plusieurs corps de facture.",
+      "question": "Trois fichiers reçus signifient-ils trois factures valides ?",
+      "answer": "Non. Compte séparément fichiers, corps lisibles et anomalies. La copie et le fichier tronqué nécessitent un traitement explicite.",
+      "practice": "Exécute le contrôle du starter XML puis d'une copie modifiée, et compare les mémos réels.",
+      "next": "Indique année et lot sélectionné. La réconciliation comptable est un autre travail lorsqu'elle est demandée."
+    },
+    "de": {
+      "title": "Zwei Dateien sind nicht immer zwei Rechnungen",
+      "goal": "Eine FatturaPA-Übersicht lesen und Rechnungsinhalte, formale Fehler und Dublettenkandidaten unterscheiden.",
+      "scenario": "Der fiktive Bestand enthält eine gültige XML-Rechnung, eine weitere Kopie derselben Rechnung und eine abgeschnittene XML-Datei. Geprüft wird der formale Dateiinhalt, nicht die Übereinstimmung mit Buchungen.",
+      "request": "Vera, prüfe diesen kleinen XML-Bestand und zeige den Prüfbedarf.",
+      "scope": "Formale FatturaPA-Prüfungen ohne Bestätigung von Buchung, Abzugsfähigkeit, Zahlung oder Umsatzsteuerbehandlung.",
+      "input_columns": [
+        "Fiktive Datei",
+        "Inhalt",
+        "Zustand"
+      ],
+      "input_rows": [
+        [
+          "invoice.xml",
+          "INV-001 · 2026 · EUR 1.220",
+          "Ein lesbarer Rechnungskörper"
+        ],
+        [
+          "invoice-copy.xml",
+          "Dieselbe Rechnung",
+          "Kopie zu prüfen"
+        ],
+        [
+          "broken.xml",
+          "Abgeschnittenes Dokument",
+          "Fehlerhaftes XML"
+        ]
+      ],
+      "basis": "Dateianzahl und Anzahl der Rechnungskörper unterscheiden sich. Lieferant, Nummer, Datum und Betrag stützen einen Dublettenkandidaten, keine automatische Löschung.",
+      "method": [
+        "Wähle Mandant, Auftrag, Bestand und Jahr und importiere die Quellen in den verwalteten Übungsfall.",
+        "Führe den aktuellen Parser aus und prüfe sämtliche Fehler- und Dublettengruppen der Übergabe. Öffne bei Bedarf das genaue XML.",
+        "Zeige die Übersicht je Rechnungskörper, Dublettenkandidaten und Fehlervermerk. Unlesbare Dateien bleiben ausdrücklich sichtbar."
+      ],
+      "result_title": "Ein Bestand mit zwei offenen Prüfungen",
+      "conclusion": "Zwei lesbare Kopien stehen nicht automatisch für zwei Geschäftsvorfälle. Die abgeschnittene Datei liefert keinen verlässlich extrahierten Rechnungsdatensatz.",
+      "output_columns": [
+        "Element",
+        "Beispielergebnis",
+        "Maßnahme"
+      ],
+      "output_rows": [
+        [
+          "invoice.xml + invoice-copy.xml",
+          "Dublettenkandidat",
+          "Quellen vergleichen; Originale erhalten"
+        ],
+        [
+          "broken.xml",
+          "Formaler Fehler",
+          "Vollständiges XML beschaffen"
+        ],
+        [
+          "Wirtschaftliche Gesamtsumme",
+          "Prüfbedürftig",
+          "Kopien nicht blind addieren"
+        ]
+      ],
+      "check": "Ein Fehler oder Dublettenkandidat erlaubt weder Dateilöschung noch Buchungsänderung. Ein XML kann mehrere Rechnungskörper enthalten.",
+      "question": "Bedeuten drei empfangene Dateien drei gültige Rechnungen?",
+      "answer": "Nein. Zähle Dateien, lesbare Rechnungskörper und Fehler getrennt. Kopie und abgeschnittene Datei brauchen eine ausdrückliche Behandlung.",
+      "practice": "Führe das beigefügte XML-Beispiel und danach eine veränderte Kopie aus. Vergleiche die tatsächlich erzeugten Fehlervermerke.",
+      "next": "Bestimme Jahr und Bestand. Verwende einen Buchhaltungsabgleich nur, wenn dieser beauftragt ist."
+    },
+    "es": {
+      "title": "Dos archivos no siempre son dos facturas",
+      "goal": "Leer un resumen FatturaPA distinguiendo cuerpos de factura, anomalías formales y candidatos a duplicado.",
+      "scenario": "El lote ficticio contiene una factura XML válida, otra copia de la misma y un XML truncado. El control se refiere al contenido formal de los archivos, sin compararlos con asientos contables.",
+      "request": "Vera, comprueba este lote XML y muestra qué requiere revisión.",
+      "scope": "Controles formales FatturaPA sin confirmar contabilización, deducibilidad, pago o tratamiento del IVA.",
+      "input_columns": [
+        "Archivo ficticio",
+        "Contenido",
+        "Estado"
+      ],
+      "input_rows": [
+        [
+          "invoice.xml",
+          "INV-001 · 2026 · EUR 1.220",
+          "Un cuerpo de factura legible"
+        ],
+        [
+          "invoice-copy.xml",
+          "La misma factura",
+          "Copia por revisar"
+        ],
+        [
+          "broken.xml",
+          "Documento truncado",
+          "XML mal formado"
+        ]
+      ],
+      "basis": "La cantidad de archivos difiere de la de cuerpos de factura. Proveedor, número, fecha e importe respaldan un candidato a duplicado, no su eliminación automática.",
+      "method": [
+        "Selecciona cliente, encargo, lote y ejercicio e importa las fuentes al caso didáctico gestionado.",
+        "Ejecuta el analizador actual y examina todas las anomalías y grupos de duplicados de la entrega. Abre el XML exacto para comprobar hechos de origen.",
+        "Presenta resumen por cuerpo, candidatos a duplicado y nota de anomalías. Mantén los archivos ilegibles expresamente visibles."
+      ],
+      "result_title": "Un lote con dos cuestiones por revisar",
+      "conclusion": "Dos copias legibles no representan automáticamente dos operaciones económicas. El archivo truncado no aporta un registro de factura fiable.",
+      "output_columns": [
+        "Elemento",
+        "Resultado ilustrado",
+        "Acción"
+      ],
+      "output_rows": [
+        [
+          "invoice.xml + invoice-copy.xml",
+          "Candidato a duplicado",
+          "Comparar fuentes y conservar originales"
+        ],
+        [
+          "broken.xml",
+          "Error formal",
+          "Recuperar XML completo"
+        ],
+        [
+          "Total económico del lote",
+          "Necesita revisión",
+          "No sumar copias sin comprobar"
+        ]
+      ],
+      "check": "Una anomalía o posible duplicación no autoriza borrar archivos ni modificar la contabilidad. Un XML puede contener varios cuerpos de factura.",
+      "question": "¿Tres archivos recibidos significan tres facturas válidas?",
+      "answer": "No. Cuenta por separado archivos, cuerpos legibles y anomalías. La copia y el archivo truncado necesitan tratamiento explícito.",
+      "practice": "Ejecuta el ejemplo XML incluido y una copia modificada y compara las notas de anomalías realmente generadas.",
+      "next": "Indica ejercicio y lote seleccionado. Usa conciliación contable solo cuando sea la tarea solicitada."
+    }
+  }
+}

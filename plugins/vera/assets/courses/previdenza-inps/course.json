@@ -1,0 +1,408 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "previdenza-inps",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/previdenza-inps/references/inps-access-channels.md",
+      "repository_path": "plugins/previdenza-inps/references/inps-access-channels.md",
+      "sha256": "b6b9e13104a44127d2ab4fc8db41624c0f3d58e1380643f1bd6410d1d8562c38"
+    },
+    {
+      "path": "modules/previdenza-inps/references/workflow-reference.md",
+      "repository_path": "plugins/previdenza-inps/references/workflow-reference.md",
+      "sha256": "c0066d34620bba05f2b59c410d0062e81d1ebea8ce5aef2af3dee12ed2fbfd1c"
+    },
+    {
+      "path": "modules/previdenza-inps/schemas/arithmetic_recipes.schema.json",
+      "repository_path": "plugins/previdenza-inps/schemas/arithmetic_recipes.schema.json",
+      "sha256": "1a742f7413b054a9e21f4b1191a97e8939b37f6aefddccb96129b2521415c308"
+    },
+    {
+      "path": "modules/previdenza-inps/schemas/case_records.schema.json",
+      "repository_path": "plugins/previdenza-inps/schemas/case_records.schema.json",
+      "sha256": "bcb172275b979e1450ab9678421b2dd59a61a531e97cd6f40ea881596d9a8d3a"
+    },
+    {
+      "path": "modules/previdenza-inps/schemas/claims_review.schema.json",
+      "repository_path": "plugins/previdenza-inps/schemas/claims_review.schema.json",
+      "sha256": "f7b924dffdc290bae7ff5028508162af3f4ba26a4357ceff68ae90f16f1867bf"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/acquisition_binding.py",
+      "repository_path": "plugins/previdenza-inps/scripts/acquisition_binding.py",
+      "sha256": "611026b10ed5f1e9cab014df506cb7b992e376478ad4974d5dddc49f553f6482"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
+      "repository_path": "plugins/previdenza-inps/scripts/capture_portal_snapshot.py",
+      "sha256": "7e3b0be205b56b4983a97e8d2b1cf4236530faebc4ebbd0e3b43b7db42fa0bbe"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/case_core.py",
+      "repository_path": "plugins/previdenza-inps/scripts/case_core.py",
+      "sha256": "e16764129720a6ee6e13fe4816eabcd11343c53a2b33be56fcfa41bad2ad82d0"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/check_dependencies.py",
+      "repository_path": "plugins/previdenza-inps/scripts/check_dependencies.py",
+      "sha256": "96c954067a70a98190fc8307c9dd2405f227773fa9eeac22eca871e4da06f8bd"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/inventory_case.py",
+      "repository_path": "plugins/previdenza-inps/scripts/inventory_case.py",
+      "sha256": "0b3c6310ac57bc79880e0955eb15c6f13960ad9f77d9cba3346c72f79a227dbe"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/package_case.py",
+      "repository_path": "plugins/previdenza-inps/scripts/package_case.py",
+      "sha256": "a3caa114f8971ac339af8609e215fe98b46724e3cde1afe8aa7cddd3bb05940f"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/privacy_guard.py",
+      "repository_path": "plugins/previdenza-inps/scripts/privacy_guard.py",
+      "sha256": "3c548c44cb9c9d30cc60d92cc2082f1224dd6f48b97a54de0b04c7f728cc8bf6"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/reconcile_contributions.py",
+      "repository_path": "plugins/previdenza-inps/scripts/reconcile_contributions.py",
+      "sha256": "d65dcc717f36788ac14ee590188c7a07cc4d9b226dc7a72876f3578772931276"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/register_portal_export.py",
+      "repository_path": "plugins/previdenza-inps/scripts/register_portal_export.py",
+      "sha256": "1a8bf588278fc35f6820c57065c0c717f29076c6f1f0741df73615a526fd7b34"
+    },
+    {
+      "path": "modules/previdenza-inps/scripts/validate_case_records.py",
+      "repository_path": "plugins/previdenza-inps/scripts/validate_case_records.py",
+      "sha256": "556de80f2deac4cd14848052a201fa869de190d08ea2dc23ced5a2724920f6fa"
+    },
+    {
+      "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+      "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
+      "sha256": "d537ffee9d7b0363c734e298831393ac5504482157dfcc29ebe3969fc5bfdfec"
+    },
+    {
+      "path": "skills/previdenza-inps/SKILL.md",
+      "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
+      "sha256": "9317fdd623f111e22cd8eb968cb0e348f0b654c3327847348cf6f6ff555bb372"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Una posizione contributiva, una cronologia verificabile",
+      "goal": "Organizzare documenti e periodi senza dedurre il regime contributivo da un'etichetta ambigua.",
+      "scenario": "Un export fittizio riporta i periodi gennaio–marzo e maggio–giugno. Una lettera cita un 'gruppo 3' senza definirlo. Il cliente fornisce anche una ricevuta di pagamento di aprile, ma non sappiamo a quale periodo sia imputata.",
+      "request": "Vera, aiutami a ricostruire cosa sappiamo della posizione e cosa manca per rispondere.",
+      "scope": "Ricostruzione documentale INPS. Il caso non applica aliquote, non calcola termini e non stabilisce un inquadramento; non accede al portale.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Dato",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "I1 · export",
+          "Gennaio–marzo; maggio–giugno",
+          "Aprile non visibile nel perimetro"
+        ],
+        [
+          "I2 · lettera",
+          "Etichetta 'gruppo 3'",
+          "Significato non definito"
+        ],
+        [
+          "I3 · ricevuta",
+          "Pagamento in aprile",
+          "Periodo di imputazione non dimostrato"
+        ]
+      ],
+      "basis": "I1 documenta i periodi mostrati. La data di I3 non basta a stabilire il periodo contributivo; I2 richiede il contesto che definisce l'etichetta.",
+      "method": [
+        "Acquisisci i documenti selezionati e registra fatti con localizzatori e cronologia, mantenendo distinta la provenienza dichiarata dalla verifica dei byte.",
+        "Chiarisci etichette, periodi e quesito; ricerca le fonti ufficiali pertinenti solo sul quadro confermato. Mantieni esplorative le alternative non risolte.",
+        "Prepara il dossier e le questioni per il professionista. Esegui eventuale aritmetica soltanto su formula e parametri riveduti; consegna una bozza con limiti espliciti."
+      ],
+      "result_title": "Aprile e classificazione: due questioni diverse",
+      "conclusion": "La posizione fornita non mostra aprile. La ricevuta prova un pagamento, ma non ne risolve da sola l'imputazione; il significato di 'gruppo 3' rimane aperto.",
+      "output_columns": [
+        "Questione",
+        "Evidenza disponibile",
+        "Da recuperare"
+      ],
+      "output_rows": [
+        [
+          "Periodo aprile",
+          "Assente in I1; pagamento I3",
+          "Dettaglio dell'imputazione"
+        ],
+        [
+          "Gruppo 3",
+          "Etichetta in I2",
+          "Documento che la definisce nel periodo"
+        ]
+      ],
+      "check": "Non trasformare una lacuna nell'export in una certezza di omissione contributiva. Non scegliere aliquote o regimi dal solo nome di un gruppo.",
+      "question": "La ricevuta è datata aprile: possiamo riempire aprile nella posizione?",
+      "answer": "No. Occorre il collegamento fra pagamento e periodo. Il dossier mantiene la ricevuta e formula la verifica mirata.",
+      "practice": "Aggiungi il dettaglio di imputazione e aggiorna la cronologia, lasciando separata la questione del gruppo.",
+      "next": "Seleziona export ufficiali già disponibili, lettere e ricevute. Specifica il quesito e i periodi prima di discutere un calcolo."
+    },
+    "en": {
+      "title": "Build a verifiable contribution chronology",
+      "goal": "Organize contribution evidence without choosing a regime from an ambiguous label.",
+      "scenario": "A fictional extract shows January–March and May–June. A letter mentions 'group 3' without defining it. The client also supplies an April payment receipt, but its allocated contribution period is unknown.",
+      "request": "Vera, reconstruct what we know about this position and what is missing.",
+      "scope": "Italian INPS documentary reconstruction. No rates, legal deadlines or contribution classification are applied, and no portal is accessed.",
+      "input_columns": [
+        "Fictional source",
+        "Fact",
+        "Limit"
+      ],
+      "input_rows": [
+        [
+          "I1 · extract",
+          "January–March; May–June",
+          "April not visible in scope"
+        ],
+        [
+          "I2 · letter",
+          "'Group 3' label",
+          "Meaning undefined"
+        ],
+        [
+          "I3 · receipt",
+          "Payment in April",
+          "Allocation period unproven"
+        ]
+      ],
+      "basis": "I1 establishes the displayed periods. I3's payment date does not establish allocation, and I2 needs the context defining its label.",
+      "method": [
+        "Acquire selected documents and record facts with locators and chronology, separating declared provenance from byte verification.",
+        "Clarify labels, periods and the question. Research official sources for the confirmed framework; unresolved alternatives remain exploratory.",
+        "Prepare the dossier and professional questions. Perform arithmetic only with reviewed formulas and parameters, and deliver explicit limitations."
+      ],
+      "result_title": "April and classification are separate questions",
+      "conclusion": "The supplied position does not show April. The receipt establishes payment without resolving allocation; 'group 3' remains undefined.",
+      "output_columns": [
+        "Question",
+        "Available evidence",
+        "Needed next"
+      ],
+      "output_rows": [
+        [
+          "April period",
+          "Absent in I1; payment I3",
+          "Allocation detail"
+        ],
+        [
+          "Group 3",
+          "Label in I2",
+          "Its definition for that period"
+        ]
+      ],
+      "check": "An extract gap does not prove omitted contributions. A label alone cannot select rates or regimes.",
+      "question": "Can the April-dated receipt fill April in the position?",
+      "answer": "No. The payment-to-period link is still needed. Preserve the receipt and make that targeted verification explicit.",
+      "practice": "Add allocation detail and update the chronology while keeping the classification question separate.",
+      "next": "Select available official exports, letters and receipts; specify the question and periods before discussing calculations."
+    },
+    "fr": {
+      "title": "Construire une chronologie contributive vérifiable",
+      "goal": "Organiser les périodes et pièces sans choisir un régime à partir d'une étiquette ambiguë.",
+      "scenario": "L'extrait fictif montre janvier–mars et mai–juin. Une lettre mentionne un 'groupe 3' sans le définir. Le client fournit un reçu de paiement d'avril, dont la période d'imputation est inconnue.",
+      "request": "Vera, reconstitue ce que nous savons de cette position et les éléments manquants.",
+      "scope": "Reconstruction documentaire INPS italienne. Aucun taux, délai juridique ou classement contributif n'est appliqué et aucun portail n'est ouvert.",
+      "input_columns": [
+        "Source fictive",
+        "Fait",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "I1 · extrait",
+          "Janvier–mars ; mai–juin",
+          "Avril absent du périmètre visible"
+        ],
+        [
+          "I2 · lettre",
+          "Étiquette 'groupe 3'",
+          "Sens non défini"
+        ],
+        [
+          "I3 · reçu",
+          "Paiement en avril",
+          "Imputation non établie"
+        ]
+      ],
+      "basis": "I1 documente les périodes affichées. La date de I3 ne prouve pas son imputation ; I2 nécessite le contexte définissant le groupe.",
+      "method": [
+        "Acquiers les pièces sélectionnées et consigne faits, localisateurs et chronologie, en distinguant provenance déclarée et vérification des octets.",
+        "Clarifie étiquettes, périodes et question. Recherche les sources officielles sur le cadre confirmé ; les alternatives non résolues restent exploratoires.",
+        "Prépare dossier et questions professionnelles. N'effectue des calculs qu'avec formules et paramètres revus, en livrant les limites explicites."
+      ],
+      "result_title": "Avril et classification : deux questions séparées",
+      "conclusion": "La position fournie ne montre pas avril. Le reçu prouve un paiement sans en résoudre l'imputation ; le 'groupe 3' reste indéfini.",
+      "output_columns": [
+        "Question",
+        "Preuve disponible",
+        "Pièce nécessaire"
+      ],
+      "output_rows": [
+        [
+          "Période avril",
+          "Absente de I1 ; paiement I3",
+          "Détail d'imputation"
+        ],
+        [
+          "Groupe 3",
+          "Étiquette dans I2",
+          "Définition pour la période"
+        ]
+      ],
+      "check": "Une lacune de l'extrait ne prouve pas une omission de cotisations. Une étiquette seule ne choisit ni taux ni régime.",
+      "question": "Le reçu daté d'avril peut-il remplir avril dans la position ?",
+      "answer": "Non. Le lien entre paiement et période reste nécessaire. Conserve le reçu et formule cette vérification ciblée.",
+      "practice": "Ajoute le détail d'imputation et actualise la chronologie en gardant la classification distincte.",
+      "next": "Sélectionne exports officiels disponibles, lettres et reçus ; précise question et périodes avant de discuter un calcul."
+    },
+    "de": {
+      "title": "Eine belegbare Beitragschronologie erstellen",
+      "goal": "Beitragsbelege ordnen, ohne aus einer mehrdeutigen Bezeichnung eine Regelung abzuleiten.",
+      "scenario": "Ein fiktiver Auszug zeigt Januar–März und Mai–Juni. Ein Schreiben nennt 'Gruppe 3', ohne sie zu definieren. Der Mandant liefert außerdem eine Zahlungsquittung aus April; der zugeordnete Beitragszeitraum ist unbekannt.",
+      "request": "Vera, rekonstruiere den bekannten Stand und die fehlenden Informationen.",
+      "scope": "Dokumentarische Rekonstruktion eines italienischen INPS-Falls. Keine Beitragssätze, Rechtsfristen oder Einordnungen werden angewendet; kein Portal wird aufgerufen.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Fakt",
+        "Grenze"
+      ],
+      "input_rows": [
+        [
+          "I1 · Auszug",
+          "Januar–März; Mai–Juni",
+          "April im Umfang nicht sichtbar"
+        ],
+        [
+          "I2 · Schreiben",
+          "Bezeichnung 'Gruppe 3'",
+          "Bedeutung undefiniert"
+        ],
+        [
+          "I3 · Quittung",
+          "Zahlung im April",
+          "Beitragszeitraum nicht belegt"
+        ]
+      ],
+      "basis": "I1 belegt die angezeigten Zeiträume. Das Zahlungsdatum von I3 belegt keine Zuordnung; I2 braucht den Kontext der Gruppenbezeichnung.",
+      "method": [
+        "Erfasse ausgewählte Dokumente, Fundstellen und Chronologie. Trenne erklärte Herkunft von tatsächlicher Dateiverifikation.",
+        "Kläre Bezeichnungen, Zeiträume und Frage. Recherchiere amtliche Quellen für den bestätigten Rahmen; offene Alternativen bleiben vorläufig.",
+        "Erstelle Dossier und fachliche Rückfragen. Berechne nur mit geprüften Formeln und Parametern und benenne die Grenzen."
+      ],
+      "result_title": "April und Einordnung sind getrennte Fragen",
+      "conclusion": "Der vorliegende Stand zeigt April nicht. Die Quittung belegt eine Zahlung ohne ihre Zuordnung; 'Gruppe 3' bleibt undefiniert.",
+      "output_columns": [
+        "Frage",
+        "Vorhandene Evidenz",
+        "Als Nächstes benötigt"
+      ],
+      "output_rows": [
+        [
+          "Zeitraum April",
+          "Fehlt in I1; Zahlung I3",
+          "Zuordnungsdetails"
+        ],
+        [
+          "Gruppe 3",
+          "Bezeichnung in I2",
+          "Definition für diese Periode"
+        ]
+      ],
+      "check": "Eine Lücke im Auszug beweist keine unterlassene Beitragszahlung. Eine Bezeichnung allein bestimmt weder Sätze noch Regelung.",
+      "question": "Kann die Aprilquittung den April im Beitragsstand auffüllen?",
+      "answer": "Nein. Die Verbindung zwischen Zahlung und Zeitraum fehlt. Erhalte die Quittung und benenne diese gezielte Prüfung.",
+      "practice": "Ergänze Zuordnungsdetails und aktualisiere die Chronologie; halte die Einordnungsfrage getrennt.",
+      "next": "Wähle vorhandene amtliche Exporte, Schreiben und Quittungen und bestimme Frage und Zeiträume vor Berechnungen."
+    },
+    "es": {
+      "title": "Construir una cronología verificable de cotizaciones",
+      "goal": "Organizar pruebas de cotización sin elegir un régimen a partir de una etiqueta ambigua.",
+      "scenario": "Un extracto ficticio muestra enero–marzo y mayo–junio. Una carta menciona 'grupo 3' sin definirlo. El cliente aporta un recibo de pago de abril, pero se desconoce el periodo de cotización al que se imputa.",
+      "request": "Vera, reconstruye lo que sabemos de esta situación y lo que falta.",
+      "scope": "Reconstrucción documental de INPS italiano. No se aplican tipos, plazos jurídicos ni clasificaciones y no se accede al portal.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Hecho",
+        "Límite"
+      ],
+      "input_rows": [
+        [
+          "I1 · extracto",
+          "Enero–marzo; mayo–junio",
+          "Abril no visible en el alcance"
+        ],
+        [
+          "I2 · carta",
+          "Etiqueta 'grupo 3'",
+          "Significado indefinido"
+        ],
+        [
+          "I3 · recibo",
+          "Pago en abril",
+          "Periodo imputado no acreditado"
+        ]
+      ],
+      "basis": "I1 acredita periodos visibles. La fecha de pago de I3 no prueba imputación e I2 necesita el contexto que define su etiqueta.",
+      "method": [
+        "Incorpora documentos seleccionados y registra hechos con ubicaciones y cronología, separando procedencia declarada de verificación de archivos.",
+        "Aclara etiquetas, periodos y pregunta. Investiga fuentes oficiales del marco confirmado; las alternativas pendientes siguen siendo exploratorias.",
+        "Prepara dossier y preguntas profesionales. Calcula solo con fórmulas y parámetros revisados y explicita las limitaciones."
+      ],
+      "result_title": "Abril y clasificación son preguntas distintas",
+      "conclusion": "La situación entregada no muestra abril. El recibo acredita pago sin resolver su imputación; 'grupo 3' sigue indefinido.",
+      "output_columns": [
+        "Pregunta",
+        "Prueba disponible",
+        "Necesidad siguiente"
+      ],
+      "output_rows": [
+        [
+          "Periodo abril",
+          "Ausente en I1; pago I3",
+          "Detalle de imputación"
+        ],
+        [
+          "Grupo 3",
+          "Etiqueta en I2",
+          "Definición para ese periodo"
+        ]
+      ],
+      "check": "Un vacío en el extracto no demuestra cotizaciones omitidas. Una etiqueta sola no determina tipos o regímenes.",
+      "question": "¿Puede el recibo fechado en abril completar abril en la situación?",
+      "answer": "No. Sigue faltando la relación pago-periodo. Conserva el recibo y explicita esa comprobación concreta.",
+      "practice": "Añade el detalle de imputación y actualiza la cronología manteniendo separada la clasificación.",
+      "next": "Selecciona exports oficiales, cartas y recibos disponibles y fija pregunta y periodos antes de calcular."
+    }
+  }
+}

@@ -15,7 +15,9 @@
     "scripts/local_teaching.py",
     "skills/learn-with-vera",
     "skills/vera/references/workflow-catalog.md",
-    "marketplace_skill_instructions.json"
+    "marketplace_skill_instructions.json",
+    "scripts/local_courses.py",
+    "assets/courses"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -52,16 +54,27 @@
         "scripts/local_onboarding_case.py"
       ],
       "on_violation": "Stale writes, wrong lesson handoffs or changed evidence are rejected without marking completion."
+    },
+    {
+      "id": "prepared-course-integrity",
+      "control": "The local stdlib course loader verifies exact own-product workflow identity, supported authored language, source fingerprints and attachment hashes before reuse. It renders escaped local HTML into a fresh ordinary directory, with no network or model client, external assets or executable script. Rendering does not change profiles, record understanding or create execution receipts. Authored specimens and actual supplementary starter outputs have distinct provenance. The native OpenAI host may read the selected course for conversation; this is not offline inference.",
+      "implemented_by": [
+        "scripts/local_courses.py",
+        "skills/learn-with-vera/references/prepared-courses.md"
+      ],
+      "on_violation": "Reject stale, foreign, altered or unavailable course material without fallback or lesson completion."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "2c9cfb622347b1f79c26430fe187a7a2b81b5b78f184ebbf86cfc2c7393a6b0a"
+    "source_fingerprint": "f85241a6862de58c9b03f204631fe1b98476b6ee067cf8430439f6ce93395886"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",
-    "static/shared/product-function-pages.js"
+    "static/shared/product-function-pages.js",
+    "plugins/_shared/vendor/modules/courseware",
+    "scripts/course_materials"
   ]
 }

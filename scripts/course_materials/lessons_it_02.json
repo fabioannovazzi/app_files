@@ -1,0 +1,440 @@
+{
+  "vera/business-planning": {
+    "title": "Un investimento, due ipotesi da verificare",
+    "goal": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
+    "scenario": "Arco valuta un nuovo servizio in abbonamento. Il caso assume 100 clienti medi a 50 EUR al mese e 42.000 EUR di costi annui. Il prezzo è proposto dal team; la domanda è sostenuta soltanto da cinque colloqui esplorativi.",
+    "request": "Vera, aiutami a capire quali ipotesi rendono sostenibile questo nuovo servizio.",
+    "scope": "Esempio di piano economico elementare. Ricavi e costi non bastano a stimare cassa, imposte o fabbisogno di investimento.",
+    "input_columns": [
+      "Ipotesi fittizia",
+      "Valore",
+      "Fonte"
+    ],
+    "input_rows": [
+      [
+        "Clienti medi paganti",
+        "100",
+        "P1 · ipotesi del team"
+      ],
+      [
+        "Prezzo mensile",
+        "50 EUR",
+        "P1 · proposta commerciale"
+      ],
+      [
+        "Costi annui",
+        "42.000 EUR",
+        "P2 · stima operativa"
+      ],
+      [
+        "Interviste esplorative",
+        "5",
+        "P3 · note; nessun ordine"
+      ]
+    ],
+    "basis": "P1 e P2 sono assunzioni esplicite del caso; P3 esplora bisogni, ma non dimostra 100 clienti acquisiti.",
+    "method": [
+      "Definisci la decisione e separa evidenze, assunzioni accettate e informazioni ancora da raccogliere.",
+      "Costruisci il piano corrente con clienti, prezzi, costi e tempi coerenti. Collega ogni ipotesi alla fonte e mantieni separate le dimensioni economiche e finanziarie.",
+      "Confronta scenari utili e presenta la decisione, le sensibilità e le azioni per ridurre l'incertezza. Il professionista rivede il piano e le ipotesi."
+    ],
+    "result_title": "Il volume di clienti è l'ipotesi decisiva",
+    "conclusion": "Nello scenario base i ricavi annui sono 60.000 EUR e il margine sui costi indicati è 18.000 EUR. Con 70 clienti quel margine si azzera.",
+    "output_columns": [
+      "Scenario",
+      "Ricavi annui",
+      "Ricavi meno costi indicati"
+    ],
+    "output_rows": [
+      [
+        "100 clienti medi",
+        "60.000 EUR",
+        "18.000 EUR"
+      ],
+      [
+        "70 clienti medi",
+        "42.000 EUR",
+        "0 EUR"
+      ]
+    ],
+    "check": "Il risultato è condizionato alle ipotesi. Il margine mostrato non è utile netto né cassa; i colloqui non equivalgono a ordini.",
+    "question": "Il calcolo è esatto: possiamo confermare la sostenibilità del progetto?",
+    "answer": "Possiamo confermare l'aritmetica del caso. Servono evidenze sulla domanda e il piano completo di costi, investimenti e tempi di incasso prima della decisione.",
+    "practice": "Portiamo il prezzo a 45 EUR: confrontiamo gli scenari senza nascondere quali ipotesi sono cambiate.",
+    "next": "Seleziona un investimento o un'iniziativa concreta e raccogli preventivi, evidenze commerciali e assunzioni che sei pronto a discutere."
+  },
+  "vera/centrale-rischi-review": {
+    "title": "Lo spazio disponibile non cancella uno sconfinamento",
+    "goal": "Leggere utilizzi e accordati per singolo rapporto, evitando compensazioni che nascondono le anomalie.",
+    "scenario": "Un export normalizzato fittizio di Centrale Rischi contiene due rapporti dello stesso mese. Alfa ha accordato operativo di 100.000 EUR e utilizzo di 110.000 EUR. Beta ha accordato di 80.000 EUR e utilizzo di 40.000 EUR.",
+    "request": "Vera, mostrami disponibilità e sconfinamenti senza confondere i rapporti.",
+    "scope": "Due righe normalizzate a fini didattici. L'analisi reale richiede PDF ufficiale digitale o export riveduto, classificazioni e perimetro coerenti; nessun rating bancario viene dedotto.",
+    "input_columns": [
+      "Rapporto fittizio · mese",
+      "Accordato operativo",
+      "Utilizzato"
+    ],
+    "input_rows": [
+      [
+        "Alfa · 2026-06",
+        "100.000 EUR",
+        "110.000 EUR"
+      ],
+      [
+        "Beta · 2026-06",
+        "80.000 EUR",
+        "40.000 EUR"
+      ]
+    ],
+    "basis": "CR1 contiene i due rapporti del medesimo mese e perimetro. Gli sconfinamenti si calcolano per riga prima di aggregare; le altre popolazioni CR restano separate.",
+    "method": [
+      "Ispeziona il PDF o l'export e rivedi normalizzazione, categorie, mese e controlli. Non mescolare facsimili diversi come fossero un solo cliente.",
+      "Calcola gli indicatori previsti sul perimetro riveduto. Distingui durata originaria e residua e conserva separati rischi, garanzie e informazioni aggiuntive.",
+      "Leggi report, workbook e contesto dei risultati. Collega il commento a metriche e righe, separando fatto, ipotesi e domanda al cliente."
+    ],
+    "result_title": "10.000 EUR di sconfinamento da spiegare",
+    "conclusion": "Il totale degli utilizzi è inferiore all'accordato complessivo, ma Alfa presenta uno sconfinamento di 10.000 EUR.",
+    "output_columns": [
+      "Rapporto",
+      "Sconfinamento",
+      "Margine inutilizzato"
+    ],
+    "output_rows": [
+      [
+        "Alfa",
+        "10.000 EUR",
+        "0 EUR"
+      ],
+      [
+        "Beta",
+        "0 EUR",
+        "40.000 EUR"
+      ],
+      [
+        "Totale delle righe",
+        "10.000 EUR",
+        "40.000 EUR"
+      ]
+    ],
+    "check": "Calcolare soltanto max(150.000 − 180.000, 0) nasconderebbe lo sconfinamento di Alfa. Disponibilità su Beta e sconfinamento su Alfa hanno significati distinti.",
+    "question": "Il cliente ha 30.000 EUR di margine complessivo: possiamo dire che non sconfina?",
+    "answer": "No. Lo sconfinamento di Alfa rimane 10.000 EUR. La compensazione fra rapporti non è il calcolo richiesto.",
+    "practice": "Riduci l'utilizzo di Alfa a 95.000 EUR e riesegui: verifica come cambiano entrambe le colonne.",
+    "next": "Nel caso reale seleziona una fonte completa, il mese e il perimetro, poi rivedi le classificazioni prima del commento."
+  },
+  "vera/vouching": {
+    "title": "Dal campione al documento giusto",
+    "goal": "Verificare una scrittura campionata senza confondere la coincidenza di un importo con l'identità del documento.",
+    "scenario": "Il campione qualificato contiene la scrittura MOV-104, relativa a INV-104 per 1.220 EUR. Nel lotto di supporto ci sono due fatture da 1.220 EUR: INV-104 e INV-205. Il caso confronta solo la riga campionata.",
+    "request": "Vera, verifica il documento di supporto di questa scrittura del campione.",
+    "scope": "Il workflow parte dal passaggio chiuso di Journal Sampling, inclusi gli allegati di qualificazione. Una tabella grezza o questo caso didattico non sostituiscono quel passaggio.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Identità",
+      "Importo"
+    ],
+    "input_rows": [
+      [
+        "Campione S1 · riga 4",
+        "MOV-104 / INV-104",
+        "1.220 EUR"
+      ],
+      [
+        "XML X1",
+        "INV-104; controparte coerente",
+        "1.220 EUR"
+      ],
+      [
+        "XML X2",
+        "INV-205; altra fattura",
+        "1.220 EUR"
+      ]
+    ],
+    "basis": "S1 definisce la selezione da controllare. X1 contiene il riferimento distintivo INV-104; l'importo di X2 coincide, ma non ne stabilisce l'identità.",
+    "method": [
+      "Riprendi il campione qualificato dello stesso cliente e incarico; acquisisci un lotto esplicito di supporti e verifica la chiusura delle fonti.",
+      "Controlla identità, controparte, valuta, segno, importo e data secondo la ricetta riveduta. Non correggere la preparazione del giornale dentro la verifica documentale.",
+      "Leggi esiti, copertura, differenze e righe manuali. Consegna la traccia fra riga campionata e documento, lasciando il giudizio di sufficienza al professionista."
+    ],
+    "result_title": "INV-104 è il supporto pertinente",
+    "conclusion": "L'identità distingue i due documenti con lo stesso importo. La coincidenza numerica da sola non consentirebbe un abbinamento.",
+    "output_columns": [
+      "Candidato",
+      "Evidenza d'identità",
+      "Interpretazione didattica"
+    ],
+    "output_rows": [
+      [
+        "X1 · INV-104",
+        "Riferimento distintivo coerente",
+        "Controllare gli altri requisiti"
+      ],
+      [
+        "X2 · INV-205",
+        "Riferimento diverso",
+        "Non usare la sola coincidenza di importo"
+      ]
+    ],
+    "check": "Un esito meccanico favorevole non certifica la natura contabile o la sufficienza della prova. Non si estende la conclusione alle righe non campionate.",
+    "question": "Se togliamo il riferimento fattura dalla scrittura, possiamo scegliere X1 perché è il primo file?",
+    "answer": "No. L'identità diventa irrisolta e richiede la prova o il collegamento riveduto previsto dal contratto; l'ordine dei file non è un criterio.",
+    "practice": "Modifica l'importo di X1 a 1.200 EUR e osserva la differenza senza cambiare il documento abbinato.",
+    "next": "Seleziona il campione già finalizzato e il lotto di XML o PDF pertinente; Vera risolve i riferimenti tecnici del passaggio."
+  },
+  "vera/comunicazione-professionale": {
+    "title": "Una comunicazione che può dimostrare ciò che dice",
+    "goal": "Trasformare informazioni verificate in un messaggio utile, conservando il legame tra ogni affermazione e la sua fonte.",
+    "scenario": "Lo studio Arco vuole informare i clienti che dal 1° ottobre riceverà i documenti tramite una cartella concordata. Una nota interna approvata descrive il nuovo canale e il contatto di assistenza. Nessuna fonte promette risparmi di tempo misurati.",
+    "request": "Vera, prepara un breve avviso ai clienti sul nuovo modo di consegnare i documenti.",
+    "scope": "Comunicazione organizzativa fittizia, senza consigli fiscali o promesse commerciali. Il testo rimane una bozza locale da rivedere e non viene inviato.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Fatto disponibile",
+      "Utilizzabile nel messaggio"
+    ],
+    "input_rows": [
+      [
+        "C1 · nota interna, § 1",
+        "Nuovo canale dal 1° ottobre 2026",
+        "Sì"
+      ],
+      [
+        "C1 · § 2",
+        "Assistenza tramite il referente dello studio",
+        "Sì"
+      ],
+      [
+        "Nessuna fonte",
+        "50% di tempo risparmiato",
+        "No"
+      ]
+    ],
+    "basis": "C1 sostiene data, canale e assistenza. La percentuale di risparmio è un esempio di affermazione priva di base da eliminare.",
+    "method": [
+      "Decidi se c'è un'informazione utile per i destinatari e definisci scopo, canale e fonti.",
+      "Prepara il messaggio e collega le affermazioni alle evidenze. Rivedi contenuto, tono e limiti; elimina le promesse non sostenute.",
+      "Produci il pacchetto naturale del canale con fonti e controlli. Mostra la bozza al professionista prima del normale percorso di invio o pubblicazione."
+    ],
+    "result_title": "Una consegna documenti più chiara",
+    "conclusion": "Dal 1° ottobre 2026 vi chiediamo di utilizzare la cartella concordata con lo studio per consegnare i documenti. Per l'accesso e le prime indicazioni, contattate il vostro referente.",
+    "output_columns": [
+      "Affermazione",
+      "Base",
+      "Revisione"
+    ],
+    "output_rows": [
+      [
+        "Nuovo canale dal 1° ottobre",
+        "C1 § 1",
+        "Confrontare data e modalità"
+      ],
+      [
+        "Contattare il referente",
+        "C1 § 2",
+        "Verificare che l'assistenza sia disponibile"
+      ],
+      [
+        "Risparmio del 50%",
+        "Assente",
+        "Escluso dalla bozza"
+      ]
+    ],
+    "check": "Una comunicazione attraente non deve aggiungere risultati, obblighi o promesse che le fonti non sostengono.",
+    "question": "Possiamo aggiungere 'nessun documento andrà più perso'?",
+    "answer": "No. La nota descrive un canale di consegna, non garantisce l'assenza di perdite. Una promessa assoluta richiederebbe una base che qui manca.",
+    "practice": "Adatta la stessa informazione a un breve post, mantenendo data, canale e limiti della fonte.",
+    "next": "Per una novità professionale reale seleziona le fonti correnti; per una comunicazione dello studio fornisci i fatti organizzativi verificati."
+  },
+  "vera/concordato-plan-review": {
+    "title": "Un piano coerente nei totali può mancare di liquidità",
+    "goal": "Collegare proposta, piano, creditori e tempi dei flussi senza ridurre la revisione a una quadratura.",
+    "scenario": "Un piano fittizio prevede 100.000 EUR di incassi dalla vendita di un bene a dicembre e 90.000 EUR di pagamenti ai creditori a settembre. La cassa iniziale è 10.000 EUR; non è documentato un finanziamento ponte.",
+    "request": "Vera, mostrami il punto del piano che richiede una domanda al professionista.",
+    "scope": "Microcaso sulla tempistica dei flussi. La revisione completa comprende anche procedura, proposta, trattamento dei creditori, alternativa liquidatoria, attestazione e questioni fiscali.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Data",
+      "Flusso"
+    ],
+    "input_rows": [
+      [
+        "P1 · cassa iniziale",
+        "1 settembre",
+        "+10.000 EUR"
+      ],
+      [
+        "P2 · proposta ai creditori",
+        "30 settembre",
+        "−90.000 EUR"
+      ],
+      [
+        "P3 · piano di dismissione",
+        "15 dicembre",
+        "+100.000 EUR"
+      ]
+    ],
+    "basis": "P1–P3 descrivono importi e tempi del solo caso. Il saldo finale positivo non fornisce fondi prima della vendita né dimostra l'esistenza di un impegno del finanziatore.",
+    "method": [
+      "Ispeziona i documenti senza promuovere automaticamente nomi file o importi estratti a significati riveduti.",
+      "Costruisci il modello semantico con perimetro, creditori, fonti e impieghi, liquidità e questioni. Collega osservazioni e inferenze ai documenti esatti.",
+      "Presenta modello e punti aperti al professionista prima della conferma. Solo il modello riveduto alimenta il pacchetto formale e l'eventuale appendice numerica."
+    ],
+    "result_title": "Copertura finale, fabbisogno intermedio aperto",
+    "conclusion": "Il saldo finale teorico è +20.000 EUR, ma a settembre il caso presenta un fabbisogno di 80.000 EUR non coperto dalle fonti fornite.",
+    "output_columns": [
+      "Momento",
+      "Saldo teorico",
+      "Questione"
+    ],
+    "output_rows": [
+      [
+        "Prima dei pagamenti",
+        "+10.000 EUR",
+        "Cassa iniziale"
+      ],
+      [
+        "Dopo i pagamenti di settembre",
+        "−80.000 EUR",
+        "Come finanziare il fabbisogno?"
+      ],
+      [
+        "Dopo la vendita di dicembre",
+        "+20.000 EUR",
+        "Incasso successivo ai pagamenti"
+      ]
+    ],
+    "check": "Un saldo teorico negativo segnala un problema temporale nel caso, non è una dichiarazione giuridica di inammissibilità o un giudizio di fattibilità complessiva.",
+    "question": "Basta il ricavo previsto dalla vendita per dire che i pagamenti sono coperti?",
+    "answer": "Non alle date indicate. Occorre una fonte disponibile prima di settembre oppure una diversa tempistica sostenuta da evidenze e sottoposta a revisione.",
+    "practice": "Aggiungi un impegno di finanziamento fittizio con data e condizioni: verifica cosa risolve e cosa resta da accertare.",
+    "next": "Nel tuo caso seleziona il fascicolo effettivo e la data di riferimento, senza costruire una checklist astratta al posto dei documenti."
+  },
+  "vera/dati-fiscali-strutturati": {
+    "title": "Un numero estratto deve mantenere la sua fonte",
+    "goal": "Leggere i campi fiscali con valore, documento e stato di estrazione, senza completare i vuoti per supposizione.",
+    "scenario": "Il fascicolo fittizio contiene un prospetto F24 leggibile e un secondo documento scansionato poco leggibile. Nel primo sono visibili codice tributo 1001, anno 2025 e debito di 1.250 EUR. Il secondo non permette di leggere importi affidabili.",
+    "request": "Vera, mostrami quali dati fiscali possiamo usare e quali richiedono verifica sull'originale.",
+    "scope": "Estrazione e revisione di campi. Il codice e l'anno sono dati riportati nella fonte, non una verifica del corretto adempimento o del pagamento.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Contenuto leggibile",
+      "Disposizione"
+    ],
+    "input_rows": [
+      [
+        "F1 · prospetto F24, riga 1",
+        "1001 · 2025 · debito 1.250 EUR",
+        "Campi estraibili"
+      ],
+      [
+        "F2 · scansione",
+        "Importi non leggibili",
+        "Da recuperare o verificare visivamente"
+      ]
+    ],
+    "basis": "F1 fornisce tre valori localizzati. F2 non fornisce valori affidabili; una lista vuota non significa assenza di dati fiscali.",
+    "method": [
+      "Riprendi l'estrazione del medesimo incarico e leggi tutti i campi e tutte le disposizioni documentali previste dal passaggio.",
+      "Verifica tipo di documento e corrispondenza col testo. Mantieni le ambiguità di layout e i casi illeggibili; una riclassificazione riveduta richiede una nuova generazione coerente.",
+      "Consegna tabella, riepilogo e citazioni. Distingui documenti non supportati, illeggibili, non valutati e riconosciuti senza campi."
+    ],
+    "result_title": "Tre campi utilizzabili, una fonte da chiarire",
+    "conclusion": "Il riepilogo conserva i tre dati di F1 e segnala F2 come fonte non leggibile. Non assegna zero agli importi mancanti.",
+    "output_columns": [
+      "Campo",
+      "Valore estratto",
+      "Fonte"
+    ],
+    "output_rows": [
+      [
+        "Codice tributo",
+        "1001",
+        "F1 · riga 1"
+      ],
+      [
+        "Anno di riferimento",
+        "2025",
+        "F1 · riga 1"
+      ],
+      [
+        "Importo a debito",
+        "1.250 EUR",
+        "F1 · riga 1"
+      ],
+      [
+        "Importi di F2",
+        "Non disponibili",
+        "F2 · originale da verificare"
+      ]
+    ],
+    "check": "L'estrazione non prova il pagamento né la corretta compilazione. Mantieni valuta e anno della fonte, senza inferirli dal nome della cartella.",
+    "question": "F2 non ha campi estratti: possiamo sommarlo come zero?",
+    "answer": "No. È una fonte illeggibile, non un documento con importo nullo. Il totale deve dichiarare che quella fonte non è quantificata.",
+    "practice": "Sostituisci F2 con una copia leggibile e rigenera il passaggio, controllando quali campi entrano nel riepilogo.",
+    "next": "Seleziona documenti leggibili e il corretto perimetro territoriale; conserva gli originali per verificare le righe dipendenti dal layout."
+  },
+  "vera/email-cliente": {
+    "title": "Chiedere soltanto i documenti davvero necessari",
+    "goal": "Preparare una richiesta breve al cliente a partire dalle sole mancanze già rivedute.",
+    "scenario": "La revisione del fascicolo CLIENT-001 conferma che mancano l'estratto conto di giugno e una spiegazione per un bonifico del 12 giugno. Un possibile contratto mancante è ancora una proposta non applicata nella revisione.",
+    "request": "Vera, prepara una richiesta chiara dei documenti mancanti per questo cliente.",
+    "scope": "Bozza locale. Solo le richieste rivedute e applicate entrano nel testo; nessuna email viene inviata.",
+    "input_columns": [
+      "Voce fittizia del passaggio",
+      "Stato",
+      "Da includere"
+    ],
+    "input_rows": [
+      [
+        "Estratto conto di giugno",
+        "Richiesta riveduta e applicata",
+        "Sì"
+      ],
+      [
+        "Causale del bonifico 12 giugno",
+        "Richiesta riveduta e applicata",
+        "Sì"
+      ],
+      [
+        "Possibile contratto mancante",
+        "Candidato ancora da rivedere",
+        "No"
+      ]
+    ],
+    "basis": "Il passaggio E1 contiene due voci email_request applicate e una candidatura separata. Il nome della cartella e una vecchia bozza non aggiungono richieste autorizzate.",
+    "method": [
+      "Leggi tutte le pagine del passaggio email e verifica che esistano richieste applicate. Se mancano, lascia la bozza in attesa della revisione.",
+      "Scrivi un messaggio operativo con i soli documenti e chiarimenti sostenuti dalle richieste rivedute.",
+      "Rileggi ogni frase contro il passaggio e consegna la bozza al professionista. L'eventuale invio segue una richiesta separata e il canale autorizzato."
+    ],
+    "result_title": "Documenti e chiarimento per completare il fascicolo",
+    "conclusion": "Buongiorno, per completare il fascicolo vi chiediamo l'estratto conto di giugno e un chiarimento sulla causale del bonifico del 12 giugno. Grazie per la collaborazione.",
+    "output_columns": [
+      "Frase della bozza",
+      "Base",
+      "Controllo"
+    ],
+    "output_rows": [
+      [
+        "Estratto conto di giugno",
+        "E1 · email_request 1",
+        "Periodo corretto"
+      ],
+      [
+        "Causale bonifico 12 giugno",
+        "E1 · email_request 2",
+        "Riferimento corretto"
+      ],
+      [
+        "Richiesta del contratto",
+        "Candidato non applicato",
+        "Esclusa"
+      ]
+    ],
+    "check": "Una proposta di mancanza non è ancora una richiesta approvata. Il cliente non deve ricevere ipotesi interne trasformate in richieste certe.",
+    "question": "La vecchia bozza chiedeva anche il contratto: dobbiamo conservarlo per prudenza?",
+    "answer": "No. La fonte corrente sono le richieste applicate. Il contratto entra soltanto dopo la sua revisione e l'aggiornamento coerente del passaggio.",
+    "practice": "Rendi il testo ancora più breve mantenendo entrambe le richieste e i riferimenti esatti.",
+    "next": "Completa prima la revisione delle mancanze nel fascicolo; poi chiedi la bozza e controlla destinatario e tono."
+  }
+}

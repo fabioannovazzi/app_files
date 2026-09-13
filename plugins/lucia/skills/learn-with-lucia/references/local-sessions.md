@@ -83,3 +83,9 @@ For explicit recovery, first preserve the damaged checkpoint, inspect a matching
 valid copy, then use `recover --session <id> --input <copy>`. Recovery leaves the
 session paused and invalidates old worker tokens. Never delete the enrollment,
 mark lessons complete without participation or remove the local-only marker.
+
+## Prepared course material
+
+Before creating lesson materials, follow `prepared-courses.md` and reuse the
+source-checked local library. Its renderer does not record demonstration,
+practice or understanding; retain the actual session evidence requirements.

@@ -1,0 +1,450 @@
+{
+  "vera/adeguati-assetti": {
+    "title": "Una procedura scritta funziona davvero?",
+    "goal": "Leggere gli assetti di un'impresa attraverso le prove del loro funzionamento e costruire un piano di miglioramento rivedibile.",
+    "scenario": "Officina Arco ha 18 addetti. La procedura richiede un report di cassa settimanale. Il fascicolo contiene la procedura, un solo report di giugno e un verbale di luglio: il direttore chiede di riceverlo più spesso. Non sappiamo se altri report esistano.",
+    "request": "Vera, aiutami a capire se il controllo di cassa viene usato e cosa chiedere all'azienda.",
+    "scope": "Valutazione limitata al processo di informazione sulla cassa. Il caso non permette un giudizio complessivo sugli assetti aziendali.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Evidenza",
+      "Limite"
+    ],
+    "input_rows": [
+      [
+        "P1 · procedura, § 3",
+        "Report ogni venerdì; responsabile amministrativo",
+        "Descrive il processo previsto"
+      ],
+      [
+        "R1 · report 26 giugno",
+        "Saldo e scadenze della settimana successiva",
+        "Un solo periodo disponibile"
+      ],
+      [
+        "V1 · verbale 10 luglio",
+        "Il direttore richiede maggiore frequenza",
+        "Non documenta tutti gli invii"
+      ]
+    ],
+    "basis": "P1 documenta il disegno del processo. R1 prova una singola produzione. V1 documenta una richiesta di miglioramento, senza dimostrare l'assenza di tutti gli altri report.",
+    "method": [
+      "Separa procedura prevista, dichiarazioni e prove operative. Cita ogni documento con il punto esatto.",
+      "Confronta una possibile irregolarità degli invii con l'alternativa di un fascicolo incompleto. Formula la domanda che distingue le due ipotesi.",
+      "Prepara osservazione, conseguenza, azione proposta e prova da raccogliere. Mantieni responsabile e scadenza come proposte fino alla revisione."
+    ],
+    "result_title": "Controllo di cassa: funzionamento da documentare",
+    "conclusion": "Il processo è previsto e risulta eseguito almeno una volta. La continuità e l'uso delle informazioni restano da verificare.",
+    "output_columns": [
+      "Osservazione",
+      "Azione proposta",
+      "Prova di attuazione"
+    ],
+    "output_rows": [
+      [
+        "Frequenza non ricostruibile · P1/R1",
+        "Recuperare il registro degli invii di giugno e luglio",
+        "Report datati e destinatari"
+      ],
+      [
+        "Richiesta del direttore · V1",
+        "Chiarire quali decisioni richiedono maggiore frequenza",
+        "Verbale e successivo utilizzo del report"
+      ]
+    ],
+    "check": "Un documento mancante limita la verifica: non prova che il processo non esista. Un saldo positivo non dimostra l'adeguatezza degli assetti.",
+    "question": "Arriva una nuova procedura firmata. Possiamo chiudere il rilievo?",
+    "answer": "La firma aggiorna il disegno del processo. Servono ancora prove degli invii e dell'uso del report per valutarne il funzionamento.",
+    "practice": "Aggiungiamo due report e una decisione del direttore: quali conclusioni possiamo ora sostenere?",
+    "next": "Nel tuo incarico seleziona un processo concreto, i documenti che lo descrivono e almeno un esempio del suo utilizzo."
+  },
+  "vera/aml-review": {
+    "title": "Un cambiamento da capire, prima di giudicare",
+    "goal": "Ricostruire un cambiamento societario, distinguere fatti e spiegazioni e preparare una revisione AML con domande mirate.",
+    "scenario": "Luna Componenti consegna una visura aggiornata che mostra un nuovo socio società. Il cliente indica la stessa persona fisica come titolare effettivo, ma non fornisce ancora la catena di controllo della nuova società. Un pagamento insolito è descritto come anticipo a un fornitore.",
+    "request": "Vera, rivedi le nuove informazioni senza rifare tutta l'apertura cliente.",
+    "scope": "Revisione documentale interna. Nessuno screening esterno o giudizio automatico di sospetto; le decisioni restano al professionista.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Informazione",
+      "Stato"
+    ],
+    "input_rows": [
+      [
+        "A1 · precedente valutazione",
+        "Assetto precedente ricostruito",
+        "Storico"
+      ],
+      [
+        "A2 · nuova visura",
+        "Nuovo socio società",
+        "Documentato"
+      ],
+      [
+        "A3 · dichiarazione cliente",
+        "Controllo invariato; pagamento come anticipo",
+        "Da corroborare"
+      ]
+    ],
+    "basis": "Il confronto A1–A2 dimostra una modifica della partecipazione diretta. A3 è una dichiarazione, non la prova della catena di controllo né della causale economica del pagamento.",
+    "method": [
+      "Riprendi la valutazione precedente e identifica esattamente cosa è cambiato, conservando la cronologia.",
+      "Ricostruisci proprietà e controllo dalle fonti; per ogni incoerenza considera spiegazioni alternative e documenti risolutivi.",
+      "Prepara un memo con fatti, limiti e domande. Registra una decisione professionale solo dopo la revisione esplicita della proposta."
+    ],
+    "result_title": "Aggiornamento AML · due verifiche mirate",
+    "conclusion": "La modifica societaria è documentata. Il controllo finale e la spiegazione del pagamento richiedono evidenze ulteriori.",
+    "output_columns": [
+      "Questione",
+      "Richiesta interna proposta",
+      "Conclusione disponibile"
+    ],
+    "output_rows": [
+      [
+        "Nuovo socio · A2",
+        "Documenti sulla catena di controllo",
+        "Partecipazione diretta modificata"
+      ],
+      [
+        "Anticipo · A3",
+        "Ordine, contratto e riscontro del beneficiario",
+        "Causale riferita dal cliente"
+      ]
+    ],
+    "check": "Un elemento insolito o un documento mancante non equivale a sospetto. Uno screening non eseguito resta sconosciuto, non negativo.",
+    "question": "Possiamo dichiarare il controllo invariato perché il cliente lo conferma?",
+    "answer": "Possiamo riportare la dichiarazione e la sua fonte. La ricostruzione del controllo rimane da corroborare con i documenti della nuova partecipazione.",
+    "practice": "Aggiungiamo la catena di controllo: quali domande possiamo chiudere e quali restano aperte?",
+    "next": "Seleziona la precedente valutazione e le sole nuove evidenze pertinenti; conserva la revisione nel medesimo incarico."
+  },
+  "vera/archive-organization": {
+    "title": "Riordinare senza perdere le versioni",
+    "goal": "Passare da una cartella disordinata a un piano di spostamenti verificabile, prima di cambiare i file.",
+    "scenario": "Una cartella contiene due copie identiche di una fattura e due versioni diverse di un contratto. I nomi sono poco chiari. Il caso mostra il piano a secco: nessun file è stato spostato.",
+    "request": "Vera, proponimi come riordinare questa cartella cliente e fammi vedere cosa cambierebbe.",
+    "scope": "Un solo cliente e una cartella selezionata. La lezione arriva al piano di revisione; l'applicazione richiede la conferma specifica degli spostamenti.",
+    "input_columns": [
+      "File fittizio",
+      "Contenuto",
+      "Identità"
+    ],
+    "input_rows": [
+      [
+        "scan-a.pdf",
+        "Fattura INV-07 del 10 giugno",
+        "Stessi byte di copia.pdf"
+      ],
+      [
+        "copia.pdf",
+        "Fattura INV-07 del 10 giugno",
+        "Stessi byte di scan-a.pdf"
+      ],
+      [
+        "accordo.docx",
+        "Bozza di contratto",
+        "Byte diversi dal firmato"
+      ],
+      [
+        "accordo-firmato.pdf",
+        "Contratto con firma visibile",
+        "Versione distinta"
+      ]
+    ],
+    "basis": "Il confronto degli hash prova soltanto l'identità delle due fatture. Il contenuto dei contratti richiede lettura: nomi simili e dimensioni simili non ne provano la duplicazione.",
+    "method": [
+      "Crea uno snapshot della cartella selezionata e leggi le evidenze necessarie per classificare ogni riga.",
+      "Prepara destinazioni secondo la policy dello studio e un piano a secco. Le copie identiche diventano candidate alla quarantena; le versioni diverse restano distinte.",
+      "Salva le decisioni del revisore. Mostra conteggio e destinazioni prima dell'approvazione separata all'applicazione; conserva il giornale per l'eventuale ripristino."
+    ],
+    "result_title": "Piano di riordino · nessuna modifica applicata",
+    "conclusion": "Una copia può essere proposta per la quarantena. Bozza e contratto firmato vanno conservati come versioni diverse.",
+    "output_columns": [
+      "Origine",
+      "Proposta",
+      "Revisione"
+    ],
+    "output_rows": [
+      [
+        "scan-a.pdf",
+        "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+        "Da confermare"
+      ],
+      [
+        "copia.pdf",
+        "Da_verificare/Duplicati_esatti/…",
+        "Quarantena proposta"
+      ],
+      [
+        "accordo.docx + accordo-firmato.pdf",
+        "Conservare entrambi in Contratti/2026",
+        "Versioni da descrivere"
+      ]
+    ],
+    "check": "Applicare le decisioni nella scheda di revisione prepara il piano approvato; non esegue gli spostamenti. I file devono essere ancora identici allo snapshot al momento dell'esecuzione.",
+    "question": "Il firmato ha quasi lo stesso nome della bozza: possiamo eliminarne uno?",
+    "answer": "No. Sono versioni diverse, non duplicati esatti. Il piano conserva entrambi; una destinazione diversa richiede una decisione motivata.",
+    "practice": "Cambia la destinazione di una proposta e verifica se entra in conflitto con un file esistente.",
+    "next": "Per la prova usa una piccola cartella fittizia. Sul tuo archivio seleziona prima il cliente registrato e la policy applicabile."
+  },
+  "vera/avviso-intake": {
+    "title": "Una lettera arriva: cosa sappiamo davvero?",
+    "goal": "Preparare un primo memo che separa riferimenti leggibili, importi e informazioni da recuperare.",
+    "scenario": "Studio Arco riceve una lettera fittizia denominata avviso.pdf. Il testo riporta un protocollo, un importo di 2.400 EUR e una richiesta di risposta entro la data indicata nella lettera. La copia non contiene la prova di ricezione né un allegato citato.",
+    "request": "Vera, fammi un primo riepilogo e dimmi quali documenti mancano per valutarla.",
+    "scope": "Primo intake documentale. La data presente nel testo non è un termine legale calcolato o verificato e non viene creata alcuna scadenza in calendario.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Testo disponibile",
+      "Manca"
+    ],
+    "input_rows": [
+      [
+        "N1 · avviso.pdf, p. 1",
+        "Protocollo DEMO-24; importo 2.400 EUR",
+        "Qualificazione e conteggio da verificare"
+      ],
+      [
+        "N1 · p. 2",
+        "Risposta richiesta entro il 30 settembre 2026",
+        "Prova di ricezione"
+      ],
+      [
+        "N1 · p. 2",
+        "Richiamo all'allegato A",
+        "Allegato A"
+      ]
+    ],
+    "basis": "Ogni dato deriva dal testo della lettera fittizia N1. Il nome del file non stabilisce la natura dell'atto; l'intake conserva le incertezze sul significato e sui termini.",
+    "method": [
+      "Leggi la classificazione e la disposizione di estrazione; apri il documento prima di interpretarne i riferimenti.",
+      "Riporta protocollo, possibili date, importi e valuta con localizzatori della fonte. Segnala ogni elemento da verificare.",
+      "Consegna il memo e la tabella di date e importi, indicando i documenti da recuperare e la successiva verifica professionale."
+    ],
+    "result_title": "Primo intake · DEMO-24",
+    "conclusion": "Sono leggibili protocollo e importo. La valutazione dell'atto richiede prova di ricezione e allegato A.",
+    "output_columns": [
+      "Elemento",
+      "Valore letto",
+      "Stato"
+    ],
+    "output_rows": [
+      [
+        "Protocollo · N1 p. 1",
+        "DEMO-24",
+        "Estratto"
+      ],
+      [
+        "Importo · N1 p. 1",
+        "2.400 EUR",
+        "Da verificare nella qualificazione"
+      ],
+      [
+        "Data nel testo · N1 p. 2",
+        "30 settembre 2026",
+        "Non validata come termine legale"
+      ]
+    ],
+    "check": "Non trasformare una data estratta in una scadenza giuridica. Servono natura dell'atto, ricezione e fonti applicabili prima della valutazione.",
+    "question": "La copia è leggibile ma manca un allegato: il fascicolo è completo?",
+    "answer": "No. Si possono estrarre i riferimenti leggibili, mantenendo il fascicolo incompleto e chiedendo l'allegato citato.",
+    "practice": "Aggiungi l'allegato fittizio e verifica quali righe del memo cambiano.",
+    "next": "Nel caso reale seleziona lettera completa, allegati e prova di ricezione nello stesso incarico."
+  },
+  "vera/bandi-agevolazioni": {
+    "title": "Un'opportunità interessante è già candidabile?",
+    "goal": "Separare la scoperta di un bando dall'istruttoria documentale per un'impresa concreta.",
+    "scenario": "Un avviso interamente fittizio finanzia macchinari per imprese manifatturiere di una regione. Arco produce componenti e propone un investimento di 80.000 EUR. Mancano le prove sulla sede dell'unità produttiva e sulla data di avvio della spesa.",
+    "request": "Vera, mostrami come passiamo da un bando trovato alla lista delle verifiche per l'impresa.",
+    "scope": "Il bando DEMO non esiste e non è candidabile. Il caso insegna a leggere una fonte e preparare l'istruttoria; i bandi reali richiedono fonti ufficiali correnti.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Condizione o dato",
+      "Evidenza"
+    ],
+    "input_rows": [
+      [
+        "B1 · avviso DEMO, § 2",
+        "Unità produttiva nella regione del bando",
+        "Sede operativa non documentata"
+      ],
+      [
+        "B1 · § 4",
+        "Spese avviate dopo la domanda",
+        "Data ordine non fornita"
+      ],
+      [
+        "C1 · progetto Arco",
+        "Macchinario: 80.000 EUR",
+        "Preventivo disponibile"
+      ]
+    ],
+    "basis": "Le condizioni del solo esempio sono riportate in B1. C1 documenta un progetto, non il possesso di tutti i requisiti. Nessuna percentuale di contributo viene inventata.",
+    "method": [
+      "Nella fase di scoperta definisci l'obiettivo e rivedi le fonti pertinenti. Ogni opportunità resta legata alla fonte e alla sua versione.",
+      "Per l'impresa selezionata apri l'istruttoria: confronta ogni requisito con evidenze aziendali e individua i documenti mancanti.",
+      "Prepara scheda, checklist e dossier rivedibile. Mantieni separati opportunità pertinente, requisito verificato e domanda pronta; non inviare la candidatura."
+    ],
+    "result_title": "DEMO · istruttoria ancora aperta",
+    "conclusion": "Il progetto appare pertinente al tema dell'avviso. Due requisiti decisivi non sono ancora documentati.",
+    "output_columns": [
+      "Verifica",
+      "Esito nel caso",
+      "Prossima evidenza"
+    ],
+    "output_rows": [
+      [
+        "Investimento coerente · B1/C1",
+        "Macchinario descritto",
+        "Confronto tecnico completo"
+      ],
+      [
+        "Localizzazione · B1 § 2",
+        "Non verificata",
+        "Documento dell'unità produttiva"
+      ],
+      [
+        "Avvio spesa · B1 § 4",
+        "Non verificato",
+        "Ordine e cronologia delle spese"
+      ]
+    ],
+    "check": "La pertinenza di un bando non dimostra l'ammissibilità dell'impresa. Una scheda sintetica non sostituisce gli allegati e la versione ufficiale dell'avviso.",
+    "question": "Il preventivo è perfetto: possiamo scrivere che Arco è ammissibile?",
+    "answer": "No. Restano da verificare sede operativa, cronologia e gli altri requisiti della fonte completa. Il risultato corretto è un'istruttoria con punti aperti.",
+    "practice": "Aggiungi un ordine precedente alla domanda nell'esempio: come cambia la verifica del requisito temporale?",
+    "next": "Per un incarico reale scegli l'opportunità e l'impresa; controlla la fonte ufficiale aggiornata prima di promettere un beneficio."
+  },
+  "vera/bilancio-oic": {
+    "title": "Dal prospetto contabile alla bozza di bilancio",
+    "goal": "Capire come lettura dei saldi, mappatura e controlli accompagnano la preparazione di un bilancio OIC/XBRL da rivedere.",
+    "scenario": "Arco consegna un prospetto con attività di 250.000 EUR, passività di 180.000 EUR e patrimonio netto di 70.000 EUR. La voce 'crediti diversi' comprende 8.000 EUR senza dettaglio. I numeri quadrano, ma la classificazione di quel saldo rimane da chiarire.",
+    "request": "Vera, mostrami la mappatura e i punti da chiarire prima di produrre la bozza di bilancio.",
+    "scope": "Microcaso di lettura e mappatura; non è un bilancio depositabile. Tassonomia, forma del bilancio, comparativi e note richiedono il normale percorso completo.",
+    "input_columns": [
+      "Voce del prospetto fittizio",
+      "EUR",
+      "Riferimento"
+    ],
+    "input_rows": [
+      [
+        "Attività totali",
+        "250.000",
+        "S1 · riga 10"
+      ],
+      [
+        "Passività",
+        "180.000",
+        "S1 · riga 20"
+      ],
+      [
+        "Patrimonio netto",
+        "70.000",
+        "S1 · riga 30"
+      ],
+      [
+        "Crediti diversi, inclusi nelle attività",
+        "8.000",
+        "S1 · riga 7; dettaglio assente"
+      ]
+    ],
+    "basis": "Il prospetto S1 supporta soltanto saldi e quadratura. Non spiega la natura degli 8.000 EUR, né fornisce comparativi o informazioni integrative.",
+    "method": [
+      "Conferma esercizio, forma del bilancio, principi e lingua; ispeziona le fonti e conserva i localizzatori di ogni saldo.",
+      "Proponi la mappatura motivata. Raccogli chiarimenti sulle voci ambigue e lascia visibili le decisioni da rivedere.",
+      "Esegui controlli e generazione solo con il contratto e la tassonomia correnti. Presenta bozze e diagnostica con lo stato di revisione, senza dichiarare un deposito."
+    ],
+    "result_title": "Quadratura presente, classificazione aperta",
+    "conclusion": "250.000 − 180.000 − 70.000 = 0 EUR. La quadratura non risolve la natura dei crediti diversi.",
+    "output_columns": [
+      "Controllo",
+      "Risultato",
+      "Conseguenza"
+    ],
+    "output_rows": [
+      [
+        "Equilibrio patrimoniale",
+        "0 EUR di differenza",
+        "Controllo aritmetico soddisfatto"
+      ],
+      [
+        "Crediti diversi · 8.000 EUR",
+        "Natura non documentata",
+        "Richiedere dettaglio prima della mappatura definitiva"
+      ],
+      [
+        "Comparativi e note",
+        "Non forniti nel microcaso",
+        "Perimetro incompleto"
+      ]
+    ],
+    "check": "Una quadratura numerica non certifica classificazione, completezza o conformità. L'istanza e le bozze conservano i propri limiti e la revisione professionale.",
+    "question": "Possiamo assegnare tutti i crediti diversi a una voce solo per chiudere la mappatura?",
+    "answer": "No. La natura del credito deve essere sostenuta dal dettaglio. Il punto resta aperto e il professionista rivede la proposta.",
+    "practice": "Aggiungi il dettaglio degli 8.000 EUR e rivedi la mappatura senza cambiare i totali.",
+    "next": "Nel tuo fascicolo prepara prospetti completi, comparativi e documenti integrativi; indica esercizio e forma del bilancio."
+  },
+  "vera/browser-automation": {
+    "title": "Insegnare un passaggio ripetibile nel browser",
+    "goal": "Comprendere come una procedura osservata diventa una capacità locale verificabile, con limiti e arresti espliciti.",
+    "scenario": "Un portale didattico locale ha una pagina con un elenco di documenti e un pulsante per scaricare un file di prova. Vogliamo ripetere soltanto quel download. Non ci sono credenziali, pagamenti o dati di clienti.",
+    "request": "Vera, impara a scaricare questo documento dal portale di prova e mostrarmi il file ottenuto.",
+    "scope": "Sito fittizio locale, operazione di sola lettura e download. Non viene simulato l'accesso a un gestionale né resa disponibile una capacità per un sito reale.",
+    "input_columns": [
+      "Elemento del sito fittizio",
+      "Evidenza osservabile",
+      "Limite"
+    ],
+    "input_rows": [
+      [
+        "Pagina elenco",
+        "Un documento denominato DEMO-01",
+        "Contenuto sintetico"
+      ],
+      [
+        "Pulsante Scarica",
+        "Download di synthetic-download.txt",
+        "Una sola operazione prevista"
+      ],
+      [
+        "File atteso",
+        "Testo identificativo del caso",
+        "Va letto e verificato dopo il download"
+      ]
+    ],
+    "basis": "La procedura deriva dalla pagina di prova e dal file effettivamente scaricato. La presenza di un pulsante non dimostra che il download sia riuscito.",
+    "method": [
+      "Osserva il sito e definisci l'obiettivo, il perimetro autorizzato e le condizioni che devono fermare la procedura.",
+      "Prepara la capacità usando gli elementi realmente osservati. Verifica la procedura sul sito locale e conserva evidenze di passaggi e risultato.",
+      "Riesegui il passo autorizzato, apri il file ottenuto e confrontalo con l'atteso. Se pagina o controlli cambiano, rivedi la capacità prima di proseguire."
+    ],
+    "result_title": "Download DEMO-01 · cosa verificare",
+    "conclusion": "Il risultato utile è il documento corretto, con una procedura che riconosce quando non può più procedere.",
+    "output_columns": [
+      "Passaggio",
+      "Prova richiesta",
+      "Se manca"
+    ],
+    "output_rows": [
+      [
+        "Selezione documento",
+        "Identità DEMO-01 nella pagina",
+        "Fermarsi e rileggere la pagina"
+      ],
+      [
+        "Download",
+        "File presente nella destinazione",
+        "Non dichiarare successo"
+      ],
+      [
+        "Verifica contenuto",
+        "Testo atteso nel file aperto",
+        "Segnalare il risultato inatteso"
+      ]
+    ],
+    "check": "Un clic riuscito non prova il download corretto. Una schermata diversa richiede nuova osservazione; non si devono inventare selettori o saltare richieste di autorizzazione.",
+    "question": "Il pulsante esiste ma il file scaricato è una pagina di errore: il passo è riuscito?",
+    "answer": "No. La verifica riguarda il contenuto finale. La procedura deve conservare l'evidenza dell'errore e fermarsi senza dichiarare il documento acquisito.",
+    "practice": "Prova sul sito didattico, poi cambia il documento disponibile e verifica che il risultato venga ricontrollato.",
+    "next": "Sul sito reale parti da una singola operazione autorizzata, con il browser e l'accesso effettivamente disponibili."
+  }
+}

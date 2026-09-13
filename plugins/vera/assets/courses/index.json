@@ -1,0 +1,561 @@
+{
+  "schema": "mparanza.course_catalog.v1",
+  "product": "vera",
+  "courses": {
+    "adeguati-assetti": {
+      "path": "adeguati-assetti/course.json",
+      "sha256": "0ebd5a1d8e52e5a89ba61815ff46dd0c24c595ab910bfc79fe7209e3da352132",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Una procedura scritta funziona davvero?",
+        "en": "Does the written procedure actually operate?",
+        "fr": "La procédure écrite fonctionne-t-elle réellement ?",
+        "de": "Wird die dokumentierte Regel tatsächlich angewendet?",
+        "es": "¿El procedimiento escrito se utiliza realmente?"
+      }
+    },
+    "aml-review": {
+      "path": "aml-review/course.json",
+      "sha256": "107966908c24e281ca1667261d3b2933d763b978aa638f96e84cb8bcbef10418",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un cambiamento da capire, prima di giudicare",
+        "en": "Understand the change before drawing a conclusion",
+        "fr": "Comprendre le changement avant de conclure",
+        "de": "Eine Veränderung erst verstehen, dann beurteilen",
+        "es": "Entender el cambio antes de concluir"
+      }
+    },
+    "archive-organization": {
+      "path": "archive-organization/course.json",
+      "sha256": "af88880768830a8beea7ddd25dc45985308217fdabf72191ca4a0216237c8934",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Riordinare senza perdere le versioni",
+        "en": "Organize a folder while preserving versions",
+        "fr": "Ranger le dossier en conservant les versions",
+        "de": "Einen Ordner ordnen und Versionen erhalten",
+        "es": "Ordenar una carpeta conservando sus versiones"
+      }
+    },
+    "avviso-intake": {
+      "path": "avviso-intake/course.json",
+      "sha256": "7d1b8db7a2570dbe6cf072e6e3e9dd740a6979c24790ead8a520cd8a620c23f5",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Una lettera arriva: cosa sappiamo davvero?",
+        "en": "A notice arrives: what do we actually know?",
+        "fr": "Une notification arrive : que savons-nous ?",
+        "de": "Ein Schreiben trifft ein: Was wissen wir wirklich?",
+        "es": "Llega un escrito: ¿qué sabemos realmente?"
+      }
+    },
+    "bandi-agevolazioni": {
+      "path": "bandi-agevolazioni/course.json",
+      "sha256": "66d9cbf4fc37e3dfe1eb2a92c0c00ecfb39f99c4c12365d025b81a58cf6c3174",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un'opportunità interessante è già candidabile?",
+        "en": "An interesting opportunity is not yet an eligible application",
+        "fr": "Une opportunité pertinente est-elle déjà recevable ?",
+        "de": "Eine passende Förderung ist noch kein belegter Anspruch",
+        "es": "Una oportunidad interesante no acredita la elegibilidad"
+      }
+    },
+    "bilancio-oic": {
+      "path": "bilancio-oic/course.json",
+      "sha256": "a3193f300cc55a38a00dbba791da8ee6574e464a82f0af6c7d26d5988f51c31b",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Dal prospetto contabile alla bozza di bilancio",
+        "en": "From accounting balances to a draft financial statement"
+      }
+    },
+    "browser-automation": {
+      "path": "browser-automation/course.json",
+      "sha256": "042f02ab56badedd1feace567deb6a36e2048755e13dd9783e86d56d67c88512",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Insegnare un passaggio ripetibile nel browser",
+        "en": "Teach a repeatable browser step",
+        "fr": "Apprendre un geste répétable dans le navigateur",
+        "de": "Einen wiederholbaren Browserschritt beibringen",
+        "es": "Enseñar un paso repetible en el navegador"
+      }
+    },
+    "business-planning": {
+      "path": "business-planning/course.json",
+      "sha256": "14cb754c16c22f9198f86c4083145e3c7e39e5a54ce8277b1f8d31bf61eab917",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un investimento, due ipotesi da verificare",
+        "en": "One investment, two assumptions to test"
+      }
+    },
+    "centrale-rischi-review": {
+      "path": "centrale-rischi-review/course.json",
+      "sha256": "a885bb4e873d4f09205ff25dc1b2b42eccb67c6856e4ed44062b2cc330e548f5",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Lo spazio disponibile non cancella uno sconfinamento"
+      }
+    },
+    "comunicazione-professionale": {
+      "path": "comunicazione-professionale/course.json",
+      "sha256": "9ebdd4c531b7ce9d30c2f61f7111e54f36d561d8b5bb06499fd53f316f289c40",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Una comunicazione che può dimostrare ciò che dice",
+        "en": "A professional message that can support its claims",
+        "fr": "Un message professionnel qui peut justifier ses affirmations",
+        "de": "Eine Kanzleimitteilung mit belegbaren Aussagen",
+        "es": "Un mensaje profesional que respalda sus afirmaciones"
+      }
+    },
+    "concordato-plan-review": {
+      "path": "concordato-plan-review/course.json",
+      "sha256": "6c689b2bb7f4644f443eec7a074d1dcb3f152a89cda4f875c567bbc9ceb7fa88",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un piano coerente nei totali può mancare di liquidità",
+        "en": "Balanced totals can still conceal a funding gap",
+        "fr": "Des totaux cohérents peuvent cacher un besoin de trésorerie",
+        "de": "Ein positiver Endsaldo kann eine Finanzierungslücke verdecken",
+        "es": "Un saldo final positivo puede ocultar falta de financiación"
+      }
+    },
+    "dati-fiscali-strutturati": {
+      "path": "dati-fiscali-strutturati/course.json",
+      "sha256": "7760b7b96d95fc8ddff6ec186e38f998f01890ca59d2e717e587b8c762572b39",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un numero estratto deve mantenere la sua fonte",
+        "en": "An extracted number must keep its source",
+        "fr": "Un montant extrait doit garder sa source",
+        "de": "Eine extrahierte Zahl behält ihre Quelle",
+        "es": "Una cifra extraída debe conservar su fuente"
+      }
+    },
+    "email-cliente": {
+      "path": "email-cliente/course.json",
+      "sha256": "c810f5cd37d8411ba6cff89e445cef6224693e643f1fc7730ed343018feec09c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Chiedere soltanto i documenti davvero necessari",
+        "en": "Ask only for the documents actually needed",
+        "fr": "Demander seulement les pièces réellement nécessaires",
+        "de": "Nur tatsächlich benötigte Unterlagen anfordern",
+        "es": "Pedir solo los documentos realmente necesarios"
+      }
+    },
+    "fatture-xml-check": {
+      "path": "fatture-xml-check/course.json",
+      "sha256": "95957c71df4a0b956028f89efdabc37ce8ab270742238545ddb9e24aaf83ca9e",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Due file non sono sempre due fatture",
+        "en": "Two files do not always mean two invoices",
+        "fr": "Deux fichiers ne font pas toujours deux factures",
+        "de": "Zwei Dateien sind nicht immer zwei Rechnungen",
+        "es": "Dos archivos no siempre son dos facturas"
+      }
+    },
+    "financial-analysis": {
+      "path": "financial-analysis/course.json",
+      "sha256": "4ffe9745615c6767c6cb75ab2d609936752b23b68d5ec9ffa74409a135e0c7b0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Leggere la concentrazione dei ricavi",
+        "en": "Understand revenue concentration",
+        "fr": "Lire la concentration du chiffre d'affaires",
+        "de": "Umsatzkonzentration verstehen",
+        "es": "Comprender la concentración de ingresos"
+      }
+    },
+    "financial-report-builder": {
+      "path": "financial-report-builder/course.json",
+      "sha256": "adc3fa5f67a3436c1b6076198044f861bc23e38072d2a195557b9bfcf9d36d51",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un report finanziario che torna alle tabelle",
+        "en": "A financial report that leads back to its tables",
+        "fr": "Un rapport financier relié à ses tableaux",
+        "de": "Ein Finanzbericht mit Rückweg zu seinen Tabellen",
+        "es": "Un informe financiero que vuelve a sus tablas"
+      }
+    },
+    "journal-bank-reconciliation": {
+      "path": "journal-bank-reconciliation/course.json",
+      "sha256": "7caf0ce43065bd92b6f48a2825cb4f9daa70ffd51358852741ed541053142d9d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Due pagamenti per una sola scrittura",
+        "en": "Two payments for one posting",
+        "fr": "Deux règlements pour une seule écriture",
+        "de": "Zwei Zahlungen zu einer Buchung",
+        "es": "Dos cobros para un asiento"
+      }
+    },
+    "journal-sampling": {
+      "path": "journal-sampling/course.json",
+      "sha256": "8283e7680847799dda817004bafac52ec5f88e1eb6c652c469feaae3a6f6e3f2",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Prima del campione, una popolazione affidabile",
+        "en": "A reliable population before the sample",
+        "fr": "Une population fiable avant l'échantillon",
+        "de": "Eine verlässliche Grundgesamtheit vor der Stichprobe",
+        "es": "Una población fiable antes de la muestra"
+      }
+    },
+    "management-control-pack": {
+      "path": "management-control-pack/course.json",
+      "sha256": "204e5295b2dfb0ca90a6b533896d6bc48bb707fa448b653a2fd997bbbdb9b994",
+      "languages": [
+        "it",
+        "en"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Actual e Budget: leggere importi e percentuali",
+        "en": "Actual versus Budget: read amounts and percentages"
+      }
+    },
+    "new-client": {
+      "path": "new-client/course.json",
+      "sha256": "8a4504286a51b1cf3fe21fdb21b6768a36ec55b3e95ca9143037e64aba07ac48",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Aprire un cliente senza trasformare i vuoti in conferme",
+        "en": "Start a client file without turning gaps into confirmations",
+        "fr": "Commencer le dossier sans transformer les manques en confirmations",
+        "de": "Ein Mandat beginnen, ohne Lücken als bestätigt auszugeben",
+        "es": "Iniciar un expediente sin convertir vacíos en confirmaciones"
+      }
+    },
+    "open-item-reconciliation": {
+      "path": "open-item-reconciliation/course.json",
+      "sha256": "370478befc1ec2592deb563f0ce9b579fec77c3e8b9e660c3e359cbaf582cfaf",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un pagamento successivo spiega la partita, ma non cambia la data",
+        "en": "A later payment explains the item, not the earlier balance",
+        "fr": "Un règlement ultérieur n'efface pas le solde historique",
+        "de": "Eine spätere Zahlung ändert nicht den früheren Saldo",
+        "es": "Un cobro posterior no cambia el saldo anterior"
+      }
+    },
+    "presenza-digitale-studio": {
+      "path": "presenza-digitale-studio/course.json",
+      "sha256": "5d9634ca94ddca2a2326c4fc3231595b0052836e90479a7fd6a98be74c6d4ae6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un sito di studio che parte dai fatti",
+        "en": "A firm's website starts with verified facts",
+        "fr": "Le site du cabinet commence par des faits vérifiés",
+        "de": "Eine Kanzleiwebsite beginnt mit geprüften Fakten",
+        "es": "La web del despacho empieza por hechos verificados"
+      }
+    },
+    "previdenza-inps": {
+      "path": "previdenza-inps/course.json",
+      "sha256": "d059f30472a1ef76b1a9e8d54edb956d9fcce69d30c59163477b09f9e720bc86",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Una posizione contributiva, una cronologia verificabile",
+        "en": "Build a verifiable contribution chronology",
+        "fr": "Construire une chronologie contributive vérifiable",
+        "de": "Eine belegbare Beitragschronologie erstellen",
+        "es": "Construir una cronología verificable de cotizaciones"
+      }
+    },
+    "purchase-invoice-review": {
+      "path": "purchase-invoice-review/course.json",
+      "sha256": "7e3e60ab3d5936474466f21b1859712a69f50b4ee18fd1c93fd4ea13166b549d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Fatture passive: collegare ogni documento alla registrazione",
+        "en": "Connect each purchase invoice to the actual posting",
+        "fr": "Relier chaque facture fournisseur à l'écriture réelle",
+        "de": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
+        "es": "Vincular cada factura de compra con el asiento real"
+      }
+    },
+    "quesito-legale-fiscale": {
+      "path": "quesito-legale-fiscale/course.json",
+      "sha256": "74c3e0d9e3b4537e8e38a823d9dac5fdf716aafb508d2ccae5170db9712687b8",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Da una domanda generica a una risposta che si può verificare",
+        "en": "From a broad question to a verifiable answer",
+        "fr": "D'une question générale à une réponse vérifiable",
+        "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
+        "es": "De una pregunta general a una respuesta verificable"
+      }
+    },
+    "registro-imprese-sari": {
+      "path": "registro-imprese-sari/course.json",
+      "sha256": "10658ebcb045c214cdb0bfb6794be3a75385358b6862cc3a7a2d6d9bc548c0f6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Preparare la pratica prima di entrare nel portale",
+        "en": "Prepare the practice before opening the portal",
+        "fr": "Préparer la formalité avant d'ouvrir le portail",
+        "de": "Den Vorgang vorbereiten, bevor das Portal geöffnet wird",
+        "es": "Preparar el trámite antes de abrir el portal"
+      }
+    },
+    "sales-plan": {
+      "path": "sales-plan/course.json",
+      "sha256": "85a8bff19774e6c9df8d16286627ff3a7d3514b2bb5f1722bf487ba394fca05c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Vendite in crescita: quantità, prezzo o cambio?",
+        "en": "Sales growth: volume, price or exchange rate?",
+        "fr": "Croissance des ventes : volumes, prix ou change ?",
+        "de": "Umsatzwachstum: Menge, Preis oder Wechselkurs?",
+        "es": "Crecimiento de ventas: ¿volumen, precio o divisa?"
+      }
+    },
+    "studio-archive": {
+      "path": "studio-archive/course.json",
+      "sha256": "88e667fc429f31bfdf8c6cdbde97bc48380ac4e0db76b731fcf0297f646554ac",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Riprendere un incarico senza dipendere dalla vecchia chat",
+        "en": "Resume an engagement without its old chat",
+        "fr": "Reprendre un dossier sans son ancienne conversation",
+        "de": "Ein Mandat ohne den alten Chat fortsetzen",
+        "es": "Retomar un encargo sin su conversación anterior"
+      }
+    },
+    "treasury-forecast": {
+      "path": "treasury-forecast/course.json",
+      "sha256": "c8876739352abf4c3c253af53aa8aa753d336a9dc14f63a8901d86efc879722f",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "La cassa dipende anche dal giorno dell'incasso"
+      }
+    },
+    "variance-analysis": {
+      "path": "variance-analysis/course.json",
+      "sha256": "e839bfd14af3e32637d5e480b69c4e6915a899373445c1a796c96890f3144544",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Spiegare uno scostamento senza inventarne la causa",
+        "en": "Follow the bridge from one period to the next",
+        "fr": "Suivre le pont entre deux périodes",
+        "de": "Die Brücke zwischen zwei Perioden nachvollziehen",
+        "es": "Seguir el puente entre dos periodos"
+      }
+    },
+    "vouching": {
+      "path": "vouching/course.json",
+      "sha256": "e646f6ce653eb12c06b976787692fb83b290080692ab8613483e775713f4787a",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Dal campione al documento giusto",
+        "en": "From a sampled entry to the right document",
+        "fr": "De l'écriture échantillonnée à la bonne pièce",
+        "de": "Von der Stichprobenbuchung zum richtigen Beleg",
+        "es": "Del asiento seleccionado al justificante correcto"
+      }
+    }
+  }
+}

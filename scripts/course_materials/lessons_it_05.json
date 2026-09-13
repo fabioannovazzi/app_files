@@ -1,0 +1,573 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Un segnale di assortimento non è una quota di mercato",
+    "goal": "Leggere un confronto Retailer Signals mantenendo coorti, denominatori e limiti del campione.",
+    "scenario": "Un pacchetto fittizio del retailer Nord contiene 20 prodotti nuovi, di cui 12 con ricarica, e 80 prodotti nel resto dell'assortimento, di cui 24 con ricarica. Il pacchetto è uno snapshot: non riporta vendite né quote di mercato.",
+    "request": "Clara, mostrami se la ricarica è più presente tra i prodotti nuovi e come leggere il segnale.",
+    "scope": "Confronto new-versus-rest su un pacchetto didattico locale. Nessuna acquisizione dal server o nuova scansione del retailer durante la lezione.",
+    "input_columns": [
+      "Coorte fittizia",
+      "Prodotti con ricarica",
+      "Totale prodotti"
+    ],
+    "input_rows": [
+      [
+        "Nuovi",
+        "12",
+        "20"
+      ],
+      [
+        "Resto",
+        "24",
+        "80"
+      ]
+    ],
+    "basis": "A1 definisce le due coorti e l'attributo del caso. I denominatori sono diversi: confrontare 12 con 24 senza normalizzare sarebbe fuorviante.",
+    "method": [
+      "Parti da un pacchetto coerente e controllato; rivedi gli attributi contro i prodotti e conserva i confronti e le soglie del contratto.",
+      "Interpreta le tabelle senza promuovere una corrispondenza di attributo a giudizio automatico. Collega evidenze e immagini ai prodotti del pacchetto.",
+      "Autora il report locale e completa la revisione semantica indipendente, la verifica browser e i controlli correnti. Dichiara il verdetto e i limiti effettivi."
+    ],
+    "result_title": "Ricarica: 60% nei nuovi, 30% nel resto",
+    "conclusion": "La presenza dell'attributo è doppia nella coorte dei nuovi prodotti. È un segnale dell'assortimento osservato, non una misura di domanda o vendite.",
+    "output_columns": [
+      "Coorte",
+      "Calcolo",
+      "Presenza attributo"
+    ],
+    "output_rows": [
+      [
+        "Nuovi",
+        "12 / 20",
+        "60%"
+      ],
+      [
+        "Resto",
+        "24 / 80",
+        "30%"
+      ],
+      [
+        "Confronto illustrato",
+        "60% / 30%",
+        "2×"
+      ]
+    ],
+    "check": "Mantieni denominatori e data dello snapshot. I nomi dei prodotti e un singolo attributo non provano opportunità commerciale o successo sul mercato.",
+    "question": "Il 60% significa che i prodotti con ricarica fanno il 60% delle vendite?",
+    "answer": "No. È la percentuale di prodotti nuovi con quell'attributo nel pacchetto. Non abbiamo dati sulle vendite.",
+    "practice": "Aggiungi due nuovi prodotti senza ricarica e ricalcola la quota usando il nuovo denominatore.",
+    "next": "Per il lavoro reale seleziona retailer, categoria e confronto supportato; verifica se la fonte è uno snapshot o una nuova acquisizione."
+  },
+  "clara/brand-fit": {
+    "title": "Un vuoto sul retailer non è un vuoto nel catalogo",
+    "goal": "Confrontare un segnale del retailer con presenza attuale della marca e catalogo proprietario, tenendoli distinti.",
+    "scenario": "Il report Retailer Signals fittizio evidenzia la ricarica tra i nuovi prodotti. La marca Lume ha due prodotti nel retailer Nord, nessuno con ricarica. Il catalogo proprietario contiene Lume R, ricaricabile, ma non abbiamo evidenze su prezzo e disponibilità per quel retailer.",
+    "request": "Clara, mostrami se il catalogo Lume contiene un candidato coerente con questo segnale.",
+    "scope": "Confronto didattico di tre insiemi locali. Un candidato da valutare non è una raccomandazione automatica di lancio; lo snapshot non è una verifica in tempo reale dello scaffale.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Informazione",
+      "Perimetro"
+    ],
+    "input_rows": [
+      [
+        "B1 · Retailer Signals completato",
+        "Ricarica più presente nei nuovi",
+        "Retailer Nord"
+      ],
+      [
+        "B2 · presenza Lume",
+        "Due prodotti, nessuno ricaricabile",
+        "Snapshot del retailer"
+      ],
+      [
+        "B3 · catalogo Lume",
+        "Lume R ricaricabile",
+        "Catalogo proprietario"
+      ]
+    ],
+    "basis": "B1 è il segnale a monte; B2 descrive la presenza osservata e B3 il catalogo della marca. Sono fonti diverse e non devono essere fuse.",
+    "method": [
+      "Parti dal report Retailer Signals già completato e controllato. Identifica il suo perimetro e la data delle evidenze.",
+      "Confronta il segnale con la presenza della marca presso quel retailer e con il catalogo proprietario. Valuta i candidati in base al quadro completo, non a un attributo solo.",
+      "Prepara il report Brand Fit locale con basi, alternative e limiti; svolgi revisione indipendente e controllo visivo. Mantieni eventuali proposte commerciali come valutazioni rivedibili."
+    ],
+    "result_title": "Lume R è un candidato da approfondire",
+    "conclusion": "Il catalogo contiene una ricarica assente nella presenza osservata di Lume presso Nord. Prezzo, posizionamento e disponibilità restano da verificare.",
+    "output_columns": [
+      "Domanda",
+      "Risposta sostenuta",
+      "Limite"
+    ],
+    "output_rows": [
+      [
+        "Presente nel retailer?",
+        "Non nello snapshot B2",
+        "Non è un controllo live"
+      ],
+      [
+        "Presente nel catalogo?",
+        "Sì, Lume R in B3",
+        "Non prova disponibilità commerciale"
+      ],
+      [
+        "Adatto al retailer?",
+        "Candidato coerente con un attributo",
+        "Valutazione completa ancora necessaria"
+      ]
+    ],
+    "check": "Una presenza mancante può essere un vuoto distributivo, non un prodotto mancante nel catalogo. Non ridurre il fit alla corrispondenza della ricarica.",
+    "question": "Possiamo raccomandare il lancio di Lume R con queste sole informazioni?",
+    "answer": "Possiamo proporlo come candidato da approfondire. Mancano almeno prezzo, posizionamento, disponibilità e una valutazione del quadro complessivo.",
+    "practice": "Aggiungi prezzo e posizionamento di Lume R e rivedi il giudizio, mantenendo separate le tre fonti.",
+    "next": "Parti dal Retailer Signals controllato e seleziona la marca; non caricare il report privato sul server per ricreare il confronto."
+  },
+  "clara/deck-correction": {
+    "title": "Dal commento alla slide corretta",
+    "goal": "Trasformare un feedback in modifiche verificabili mantenendo intatti i contenuti non interessati.",
+    "scenario": "Una presentazione fittizia di tre slide contiene un confronto 2025–2026. Il feedback dice: 'Nella seconda slide mostra prima il risultato; non cambiare i numeri né la terza slide'. Il risultato da mettere in evidenza è +12%, già presente nella fonte.",
+    "request": "Clara, applica questo feedback alla presentazione e mostrami esattamente cosa è cambiato.",
+    "scope": "Correzione di una copia della presentazione esistente. La lezione usa note scritte fittizie; non avvia acquisizione vocale hosted né inventa una registrazione.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Contenuto",
+      "Autorità"
+    ],
+    "input_rows": [
+      [
+        "D1 · deck originale",
+        "Tre slide, stile e numeri esistenti",
+        "Base visiva"
+      ],
+      [
+        "D2 · feedback",
+        "Risultato prima nella slide 2",
+        "Richiesta di modifica"
+      ],
+      [
+        "D3 · dato",
+        "+12% nel confronto",
+        "Base dell'affermazione"
+      ]
+    ],
+    "basis": "D2 autorizza la modifica dell'ordine del messaggio, non nuovi calcoli. D1 conserva lo stile e la terza slide; D3 sostiene il numero.",
+    "method": [
+      "Identifica deck e feedback esatti; interpreta ogni richiesta, distinguendo scopo, ambiguità e parti da preservare.",
+      "Prepara il registro delle modifiche e il risultato atteso; per PPTX segui il passaggio di comprensione e approvazione previsto prima di applicare alla copia.",
+      "Renderizza e ispeziona la versione finale, confrontando prima e dopo. Verifica numeri, leggibilità e contenuti non interessati; conserva il collegamento alle fonti."
+    ],
+    "result_title": "Slide 2 · il risultato apre il messaggio",
+    "conclusion": "Il titolo può diventare 'Il risultato cresce del 12%'. La spiegazione segue; i valori e la terza slide rimangono come nell'originale.",
+    "output_columns": [
+      "Richiesta",
+      "Modifica prevista",
+      "Prova di riuscita"
+    ],
+    "output_rows": [
+      [
+        "Risultato prima",
+        "Titolo della slide 2",
+        "Il +12% è visibile in apertura"
+      ],
+      [
+        "Non cambiare i numeri",
+        "Nessuna modifica ai dati",
+        "Confronto con D1/D3"
+      ],
+      [
+        "Preservare slide 3",
+        "Nessuna modifica",
+        "Confronto prima/dopo"
+      ]
+    ],
+    "check": "Una slide individuata dal numero è solo una localizzazione: bisogna capire il significato del feedback. Non ricostruire l'intero deck quando sono richieste modifiche limitate.",
+    "question": "Possiamo cambiare il +12% in 'forte crescita' per rendere il titolo più brillante?",
+    "answer": "Il feedback chiede di anticipare il risultato, non di sostituirlo con un giudizio. Mantieni la misura verificata e rivedi qualsiasi interpretazione aggiuntiva.",
+    "practice": "Aggiungi una seconda richiesta di modifica e definisci il criterio concreto con cui verificherai il risultato.",
+    "next": "Seleziona la presentazione esatta e il feedback; se il feedback è audio, usa prima il percorso di trascrizione autorizzato fuori dalla lezione."
+  },
+  "clara/html-deck": {
+    "title": "Tre slide che accompagnano una decisione",
+    "goal": "Costruire una presentazione HTML leggibile e fedele alle fonti, con prove per numeri e affermazioni.",
+    "scenario": "Un brief fittizio descrive una prova commerciale: 40 clienti invitati, 10 partecipanti, 6 interessati a un seguito. Il team deve decidere se ampliare il test. Non sono disponibili ordini o ricavi.",
+    "request": "Clara, trasforma questo brief in tre slide per decidere il prossimo test.",
+    "scope": "Deck da fonte fornita, senza ricerca o dati inventati. L'interesse dichiarato non è conversione in vendita.",
+    "input_columns": [
+      "Fonte fittizia B1",
+      "Dato",
+      "Significato"
+    ],
+    "input_rows": [
+      [
+        "Invitati",
+        "40",
+        "Popolazione contattata nel caso"
+      ],
+      [
+        "Partecipanti",
+        "10",
+        "25% degli invitati"
+      ],
+      [
+        "Interessati a un seguito",
+        "6",
+        "60% dei partecipanti; nessun ordine"
+      ]
+    ],
+    "basis": "Tutti i valori vengono da B1. Le due percentuali hanno denominatori diversi, da mostrare vicino al dato.",
+    "method": [
+      "Definisci pubblico e decisione; leggi la fonte e prepara la sequenza delle affermazioni con il loro supporto.",
+      "Costruisci il deck con il contratto HTML corrente, i contenuti e le evidenze legati fra loro. Usa la gerarchia visiva per rendere leggibile il messaggio.",
+      "Controlla ogni slide nel browser e nei rendering, verificando numeri, fonti, overflow e navigazione. Consegna la versione esatta riveduta."
+    ],
+    "result_title": "Dal test al prossimo esperimento",
+    "conclusion": "La prova ha raccolto 10 partecipanti su 40 inviti. Sei chiedono un seguito: una base per disegnare il prossimo test, non per dichiarare vendite.",
+    "output_columns": [
+      "Slide",
+      "Messaggio",
+      "Evidenza da vedere"
+    ],
+    "output_rows": [
+      [
+        "1 · Risultato",
+        "10 partecipanti su 40 invitati",
+        "B1 · 25%"
+      ],
+      [
+        "2 · Interesse",
+        "6 dei 10 chiedono un seguito",
+        "B1 · denominatore 10"
+      ],
+      [
+        "3 · Decisione",
+        "Definire il prossimo test commerciale",
+        "Ordini e ricavi ancora assenti"
+      ]
+    ],
+    "check": "Un grafico o un titolo non deve cancellare il denominatore. Un'affermazione più forte della fonte resta errata anche in una slide elegante.",
+    "question": "Possiamo intitolare la seconda slide 'Conversione del 60%'?",
+    "answer": "Sarebbe ambiguo e potrebbe sembrare vendita. La fonte misura interesse a un seguito fra i partecipanti; il titolo deve dirlo.",
+    "practice": "Riscrivi il titolo della seconda slide mantenendo numero, denominatore e significato, poi controllalo nel deck.",
+    "next": "Seleziona documenti e decisione del pubblico. Chiedi un deck completo con le fonti, non una sequenza di slogan."
+  },
+  "clara/hosted-interview": {
+    "title": "Un'intervista che approfondisce senza suggerire le risposte",
+    "goal": "Preparare un brief per un partecipante esterno e capire il percorso dal link al materiale riveduto.",
+    "scenario": "Vogliamo capire come un responsabile operativo gestisce i ritardi nelle consegne. Il brief fittizio propone due temi: l'ultimo episodio concreto e la decisione presa. Non contiene dati di clienti né una risposta attesa.",
+    "request": "Clara, mostrami come prepareresti un'intervista esterna su questo processo.",
+    "scope": "La lezione prepara e rivede il brief in locale. Non crea link, non contatta partecipanti e non invia materiali al servizio hosted. Una vera intervista è un incarico successivo autorizzato.",
+    "input_columns": [
+      "Parte del brief fittizio",
+      "Contenuto",
+      "Scopo"
+    ],
+    "input_rows": [
+      [
+        "Obiettivo",
+        "Capire la gestione dei ritardi",
+        "Decisione di processo"
+      ],
+      [
+        "Domanda iniziale",
+        "Raccontami l'ultimo ritardo concreto",
+        "Episodio osservabile"
+      ],
+      [
+        "Approfondimento",
+        "Chi ha deciso cosa fare e con quali informazioni?",
+        "Ruoli ed evidenze"
+      ],
+      [
+        "Limite",
+        "Non chiedere nomi o dati dei clienti",
+        "Perimetro del colloquio"
+      ]
+    ],
+    "basis": "H1 è il brief di esempio, non una campagna registrata né la trascrizione di un partecipante reale.",
+    "method": [
+      "Scegli una campagna esatta e versionata oppure prepara un brief circoscritto, distinguendo approfondimento di un caso e ricerca comparabile.",
+      "Nel lavoro reale autorizzato, crea un link individuale con scadenza tramite il servizio disponibile. La conversazione si adatta alle risposte e non è un questionario letto meccanicamente.",
+      "Controlla lo stato e recupera bundle e revisione prima della scadenza. Tratta le risposte come evidenze dichiarative e l'eventuale inserimento nel caso come azione richiesta separatamente."
+    ],
+    "result_title": "Brief pronto per la revisione",
+    "conclusion": "Il brief parte da un episodio e approfondisce decisioni ed evidenze. Non presume che il processo sia inefficiente e non suggerisce una risposta.",
+    "output_columns": [
+      "Domanda",
+      "Cosa può far emergere",
+      "Da evitare"
+    ],
+    "output_rows": [
+      [
+        "Ultimo ritardo concreto",
+        "Cronologia dell'episodio",
+        "Giudizio già incluso nella domanda"
+      ],
+      [
+        "Chi ha deciso e su quali dati?",
+        "Ruoli e informazioni usate",
+        "Attribuire nomi non forniti"
+      ],
+      [
+        "Cosa è successo dopo?",
+        "Esito e seguito",
+        "Confondere opinione con prova"
+      ]
+    ],
+    "check": "L'intervista hosted è distinta dalla voce standard usata per questa lezione. Un brief non prova che un link sia stato creato; un colloquio completato non rende vere tutte le affermazioni.",
+    "question": "'Perché il vostro processo è così lento?' è una buona prima domanda?",
+    "answer": "Presuppone il giudizio. Chiedere un episodio concreto permette di capire tempi, cause possibili e decisioni senza suggerire la conclusione.",
+    "practice": "Rivedi una domanda del brief e indica quale evidenza speri di ottenere, senza creare un link.",
+    "next": "Quando vorrai una vera intervista, seleziona partecipante, obiettivo, lingua e scadenza; il normale percorso hosted dichiara i propri flussi di dati."
+  },
+  "clara/reporting-engine": {
+    "title": "Prima del grafico, il significato dei dati",
+    "goal": "Passare da un dataset a un confronto leggibile usando ruoli e metriche riveduti.",
+    "scenario": "Il dataset fittizio riporta vendite nette: gennaio 40.000 EUR e febbraio 50.000 EUR. Un campo 'Discount' non è presente. Le note della fonte confermano che Sales è già al netto degli sconti, quindi sottrarli ancora sarebbe errato.",
+    "request": "Clara, mostrami l'andamento delle vendite e spiegami quali dati stai usando.",
+    "scope": "Intake, significato delle metriche e confronto temporale. La lezione non trasforma l'assenza di una misura in zero né attribuisce capacità di Clara a Vera.",
+    "input_columns": [
+      "Periodo fittizio",
+      "Sales",
+      "Nota della fonte"
+    ],
+    "input_rows": [
+      [
+        "2026-01",
+        "40.000 EUR",
+        "Vendite nette"
+      ],
+      [
+        "2026-02",
+        "50.000 EUR",
+        "Vendite nette"
+      ],
+      [
+        "Discount separato",
+        "Assente",
+        "Già incorporato in Sales"
+      ]
+    ],
+    "basis": "R1 contiene due mesi; R2 definisce Sales come vendite nette. Il ruolo Discount è assente come misura separata in questo dataset, non un importo pari a zero.",
+    "method": [
+      "Esegui l'intake e leggi dati, profilo e note. Rivedi significato, aggregazione e ruoli Sales, Discount e COGS; un'intestazione non basta.",
+      "Seleziona una capacità compatibile con le metriche rivedute e genera il grafico attraverso l'adapter di Clara. Conserva richiesta e prove dell'output.",
+      "Apri il risultato, verifica valori, unità, periodi e conclusione. Per upload successivi riusa il contratto semantico stabile quando compatibile, senza reinventarlo a ogni file."
+    ],
+    "result_title": "Vendite nette: +10.000 EUR tra gennaio e febbraio",
+    "conclusion": "Le vendite nette passano da 40.000 a 50.000 EUR: +10.000 EUR, pari a +25%. Non disponiamo di una misura separata degli sconti o dei costi.",
+    "output_columns": [
+      "Indicatore",
+      "Valore",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "Gennaio",
+        "40.000 EUR",
+        "R1 · vendite nette"
+      ],
+      [
+        "Febbraio",
+        "50.000 EUR",
+        "R1 · vendite nette"
+      ],
+      [
+        "Variazione",
+        "+10.000 EUR · +25%",
+        "Base gennaio 40.000 EUR"
+      ]
+    ],
+    "check": "Compatibilità tecnica e corretto significato della metrica sono controlli diversi. Un dataset può avere colonne valide e una mappatura semanticamente sbagliata.",
+    "question": "Non c'è Discount: possiamo dire che non sono stati concessi sconti?",
+    "answer": "No. La fonte dice che Sales è netto; non fornisce una misura separata. L'assenza della colonna non dimostra assenza di sconti.",
+    "practice": "Aggiungi marzo con la stessa definizione di Sales e verifica il riuso del contratto e l'aggiornamento del grafico.",
+    "next": "Seleziona CSV, Excel o Parquet e le note che spiegano le metriche. Per Actual/Budget Clara usa la propria route di budget nello stesso workflow."
+  },
+  "clara/research-video": {
+    "title": "Una scena, una fonte, una frase",
+    "goal": "Preparare un breve video di ricerca mantenendo allineati immagini, narrazione e affermazioni.",
+    "scenario": "Tre scene fittizie mostrano un processo: richiesta ricevuta, documento controllato e risultato riveduto. Il brief chiede un video di 30 secondi. Le immagini non contengono dati quantitativi, quindi la narrazione non può promettere un risparmio misurato.",
+    "request": "Clara, mostrami come prepari scene e narrazione prima di generare il video.",
+    "scope": "Preparazione locale del piano scene e del copione. La lezione non sintetizza audio, non chiama il servizio hosted e non dichiara un MP4 generato. Il video effettivo richiede il normale percorso autorizzato.",
+    "input_columns": [
+      "Scena fittizia",
+      "Fonte visiva",
+      "Messaggio sostenuto"
+    ],
+    "input_rows": [
+      [
+        "1 · Richiesta",
+        "V1 · brief selezionato",
+        "Si parte da un obiettivo"
+      ],
+      [
+        "2 · Controllo",
+        "V2 · documento con riferimenti",
+        "Le affermazioni hanno fonti"
+      ],
+      [
+        "3 · Revisione",
+        "V3 · risultato con punti aperti",
+        "Il professionista rivede il risultato"
+      ]
+    ],
+    "basis": "V1–V3 sostengono tre passaggi qualitativi. Nessuna scena prova tempi di lavoro, efficacia o risultati commerciali.",
+    "method": [
+      "Seleziona immagini ordinate e fonti approvate, pubblico, lingua e durata. Non inventare scene informative per coprire lacune delle fonti.",
+      "Scrivi la narrazione per scena e controlla ogni affermazione contro la sua immagine e base. Rivedi insieme ordine, testo e durata prima della sintesi.",
+      "Nel lavoro reale autorizzato, usa la voce hosted prevista e il rendering locale; verifica MP4, audio, sottotitoli e sincronizzazione. Non sostituire ricevute o approvazioni mancanti."
+    ],
+    "result_title": "Copione di 30 secondi da rivedere",
+    "conclusion": "La sequenza spiega il processo con tre messaggi sostenuti dalle immagini. Il copione è pronto per essere discusso, non prova una produzione video.",
+    "output_columns": [
+      "Tempo previsto",
+      "Narrazione proposta",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "0–10 s",
+        "Ogni lavoro parte da una domanda e dai documenti selezionati.",
+        "V1"
+      ],
+      [
+        "10–20 s",
+        "Il risultato mantiene i riferimenti che permettono di verificarlo.",
+        "V2"
+      ],
+      [
+        "20–30 s",
+        "I punti aperti restano visibili fino alla revisione professionale.",
+        "V3"
+      ]
+    ],
+    "check": "La durata finale dipende dall'audio effettivo e va verificata dopo la sintesi. Il piano temporale non è una misura di un file multimediale esistente.",
+    "question": "Possiamo aggiungere 'risparmia metà del tempo' alla seconda scena?",
+    "answer": "No. Nessuna fonte del caso misura il risparmio. La narrazione può descrivere la tracciabilità, che è visibile, senza inventare una percentuale.",
+    "practice": "Accorcia la seconda frase mantenendo la stessa affermazione e la stessa fonte; rivedi il piano locale.",
+    "next": "Per produrre un video vero prepara scene approvate e fonti. La sintesi hosted segue il suo flusso di dati e l'approvazione dei materiali."
+  },
+  "clara/transcribe": {
+    "title": "Chi lo ha detto non prova ancora che sia vero",
+    "goal": "Conservare una trascrizione e attribuire le parole senza trasformare una dichiarazione in un fatto verificato.",
+    "scenario": "Il testo fittizio di un debrief contiene due turni. Speaker 1 dice: 'Abbiamo ridotto i ritardi'. Speaker 2 chiede: 'Hai il confronto mensile?'. Le note non identificano i nomi e non includono il confronto. Non esiste una registrazione reale del caso.",
+    "request": "Clara, mostrami come rivedi una trascrizione prima di usarla in un report.",
+    "scope": "Revisione locale di un estratto scritto per la lezione. Non viene eseguita o simulata una trascrizione hosted; una vera registrazione segue il percorso dedicato autorizzato.",
+    "input_columns": [
+      "Turno fittizio",
+      "Testo",
+      "Metadati"
+    ],
+    "input_rows": [
+      [
+        "Speaker 1 · 00:10",
+        "Abbiamo ridotto i ritardi",
+        "Nome non confermato"
+      ],
+      [
+        "Speaker 2 · 00:15",
+        "Hai il confronto mensile?",
+        "Nome non confermato"
+      ]
+    ],
+    "basis": "T1 è un dialogo didattico scritto. Nell'uso reale il transcript riveduto può sostenere le parole attribuite, ma non dimostra automaticamente la verità dell'affermazione sottostante.",
+    "method": [
+      "Scegli acquisizione, audio esistente o importazione di un bundle effettivamente disponibile. Conserva l'originale e usa il percorso cartella o caso adatto alla richiesta.",
+      "Rivedi turni e attribuzioni dalle evidenze: assegna nomi solo se sostenuti, altrimenti conserva etichette stabili. Non cambiare il significato durante la pulizia.",
+      "Finalizza il transcript riveduto quando il contratto lo consente. Per usarne una dichiarazione come fatto nel lavoro successivo, aggiungi una base distinta e conserva il collegamento al turno."
+    ],
+    "result_title": "Trascrizione rivedibile, fatto da corroborare",
+    "conclusion": "Il testo attribuisce a Speaker 1 una dichiarazione sulla riduzione dei ritardi. Non identifica il parlante né documenta la riduzione.",
+    "output_columns": [
+      "Elemento",
+      "Cosa sostiene",
+      "Cosa non sostiene"
+    ],
+    "output_rows": [
+      [
+        "Turno 00:10",
+        "Parole attribuite a Speaker 1",
+        "Nome e risultato operativo"
+      ],
+      [
+        "Turno 00:15",
+        "Richiesta del confronto",
+        "Disponibilità del confronto"
+      ],
+      [
+        "Uso nel report",
+        "Citazione con stato dichiarativo",
+        "Conclusione quantitativa non provata"
+      ]
+    ],
+    "check": "Correggere una trascrizione non significa riassumerla o migliorarne il contenuto. L'attribuzione del parlante e la verità del fatto richiedono evidenze diverse.",
+    "question": "Possiamo sostituire Speaker 1 con il nome del direttore perché sembra parlare come lui?",
+    "answer": "No. Occorre una base nei metadati o nelle evidenze. In sua assenza si conserva Speaker 1 e si segnala l'incertezza.",
+    "practice": "Aggiungi metadati che identificano un parlante e aggiorna l'attribuzione, lasciando il testo originale conservato.",
+    "next": "Seleziona audio o bundle reale e destinazione. Una cartella ordinaria basta per conservare un transcript; non serve creare un caso senza motivo."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Aprire il dossier non significa accettare l'incarico",
+    "goal": "Preparare una pratica legale con parti, documenti mancanti e decisioni professionali chiaramente separate.",
+    "scenario": "Beta Laboratorio chiede assistenza per una consegna incompleta. Il brief nomina il fornitore Delta e cita contratto e corrispondenza che non sono ancora stati consegnati. Il registro dei conflitti non è disponibile nel caso.",
+    "request": "Lucia, prepara il dossier iniziale e mostrami cosa devo verificare prima di aprire la pratica.",
+    "scope": "Intake legale fittizio. Nessuna ricerca conflitti viene dichiarata eseguita, nessun termine vincolante viene calcolato e l'incarico non viene accettato automaticamente.",
+    "input_columns": [
+      "Fonte fittizia",
+      "Informazione",
+      "Stato"
+    ],
+    "input_rows": [
+      [
+        "L1 · brief cliente",
+        "Beta contro fornitore Delta",
+        "Parti riferite dal cliente"
+      ],
+      [
+        "L1 · documenti citati",
+        "Contratto e corrispondenza",
+        "Non ancora forniti"
+      ],
+      [
+        "Registro conflitti",
+        "Non disponibile",
+        "Controllo non eseguito"
+      ]
+    ],
+    "basis": "L1 sostiene la richiesta del cliente e i nomi riferiti. Non sostituisce contratto, corrispondenza o verifica del registro dei conflitti.",
+    "method": [
+      "Seleziona nuovo cliente o nuova pratica e conserva le fonti esatte. Identifica obiettivo, parti, giurisdizione e urgenza dalle evidenze.",
+      "Prepara memo, mappa delle parti, richieste mancanti e piano della cartella. Mantieni parziali i punti che non hanno prove.",
+      "Presenta le quattro revisioni: conflitti, incarico, termini e apertura. Salva soltanto decisioni effettive e rivedi lo stato se cambia l'intake."
+    ],
+    "result_title": "Dossier iniziale parziale",
+    "conclusion": "La richiesta e le parti sono descritte. Mancano i documenti sostanziali e il controllo conflitti; il dossier non è pronto per l'apertura.",
+    "output_columns": [
+      "Area",
+      "Situazione",
+      "Passo successivo"
+    ],
+    "output_rows": [
+      [
+        "Documenti",
+        "Contratto e corrispondenza mancanti",
+        "Richiesta da rivedere"
+      ],
+      [
+        "Conflitti",
+        "Registro non consultato",
+        "Controllo professionale sul perimetro esatto"
+      ],
+      [
+        "Incarico e apertura",
+        "Non approvati",
+        "Revisione dell'avvocato"
+      ]
+    ],
+    "check": "Un elenco di nomi non è un controllo conflitti e un piano di cartelle non sposta gli originali. Ogni decisione resta legata all'intake corrente.",
+    "question": "Nessun conflitto compare nel brief: possiamo segnare il controllo come superato?",
+    "answer": "No. Il brief non è il registro. Il controllo non eseguito resta tale; non diventa un esito negativo per assenza di segnalazioni.",
+    "practice": "Aggiungi il contratto fittizio e verifica quali parti e questioni cambiano, senza simulare l'accettazione dell'incarico.",
+    "next": "Seleziona brief, documenti, parti note e il registro disponibile; segnala subito l'urgenza concreta."
+  }
+}

@@ -1,0 +1,408 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "archive-organization",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/archive-organization/references/default-archive-policy.json",
+      "repository_path": "plugins/archive-organization/references/default-archive-policy.json",
+      "sha256": "48997809fd9a2d8639638d92f0f4b146a0189f42936367fc539ea419d86f3dc1"
+    },
+    {
+      "path": "modules/archive-organization/references/model-inventory-contract.md",
+      "repository_path": "plugins/archive-organization/references/model-inventory-contract.md",
+      "sha256": "1c6a83002e2088968f441dd82774040702c04e529b24aaa13f3a32caa5afeba1"
+    },
+    {
+      "path": "modules/archive-organization/references/proposal-contract.md",
+      "repository_path": "plugins/archive-organization/references/proposal-contract.md",
+      "sha256": "ce1d2bf3eb180f619e866b909b11b47d6ebd410c49e1bcba41f36010e7a5a30e"
+    },
+    {
+      "path": "modules/archive-organization/scripts/archive_organization.py",
+      "repository_path": "plugins/archive-organization/scripts/archive_organization.py",
+      "sha256": "068700d5f80701e39ca12dae346ae3d6c0983755e12626683a0e83e9819615d0"
+    },
+    {
+      "path": "modules/archive-organization/scripts/check_dependencies.py",
+      "repository_path": "plugins/archive-organization/scripts/check_dependencies.py",
+      "sha256": "0b2213807528cda8f6ab9979b75a69debb00cdb7c15f69972237982c3aca622d"
+    },
+    {
+      "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
+      "repository_path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
+      "sha256": "0f0662cfa7da30fe0c2b77726c836c4652ff82f2cb18c664078f9ff96e0edf46"
+    },
+    {
+      "path": "skills/archive-organization/SKILL.md",
+      "repository_path": "plugins/vera/skills/archive-organization/SKILL.md",
+      "sha256": "e4fe96bd4e855da5dc0fca8ec5180186bb474d1b43b95557e297e64c7859f65d"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Riordinare senza perdere le versioni",
+      "goal": "Passare da una cartella disordinata a un piano di spostamenti verificabile, prima di cambiare i file.",
+      "scenario": "Una cartella contiene due copie identiche di una fattura e due versioni diverse di un contratto. I nomi sono poco chiari. Il caso mostra il piano a secco: nessun file è stato spostato.",
+      "request": "Vera, proponimi come riordinare questa cartella cliente e fammi vedere cosa cambierebbe.",
+      "scope": "Un solo cliente e una cartella selezionata. La lezione arriva al piano di revisione; l'applicazione richiede la conferma specifica degli spostamenti.",
+      "input_columns": [
+        "File fittizio",
+        "Contenuto",
+        "Identità"
+      ],
+      "input_rows": [
+        [
+          "scan-a.pdf",
+          "Fattura INV-07 del 10 giugno",
+          "Stessi byte di copia.pdf"
+        ],
+        [
+          "copia.pdf",
+          "Fattura INV-07 del 10 giugno",
+          "Stessi byte di scan-a.pdf"
+        ],
+        [
+          "accordo.docx",
+          "Bozza di contratto",
+          "Byte diversi dal firmato"
+        ],
+        [
+          "accordo-firmato.pdf",
+          "Contratto con firma visibile",
+          "Versione distinta"
+        ]
+      ],
+      "basis": "Il confronto degli hash prova soltanto l'identità delle due fatture. Il contenuto dei contratti richiede lettura: nomi simili e dimensioni simili non ne provano la duplicazione.",
+      "method": [
+        "Crea uno snapshot della cartella selezionata e leggi le evidenze necessarie per classificare ogni riga.",
+        "Prepara destinazioni secondo la policy dello studio e un piano a secco. Le copie identiche diventano candidate alla quarantena; le versioni diverse restano distinte.",
+        "Salva le decisioni del revisore. Mostra conteggio e destinazioni prima dell'approvazione separata all'applicazione; conserva il giornale per l'eventuale ripristino."
+      ],
+      "result_title": "Piano di riordino · nessuna modifica applicata",
+      "conclusion": "Una copia può essere proposta per la quarantena. Bozza e contratto firmato vanno conservati come versioni diverse.",
+      "output_columns": [
+        "Origine",
+        "Proposta",
+        "Revisione"
+      ],
+      "output_rows": [
+        [
+          "scan-a.pdf",
+          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+          "Da confermare"
+        ],
+        [
+          "copia.pdf",
+          "Da_verificare/Duplicati_esatti/…",
+          "Quarantena proposta"
+        ],
+        [
+          "accordo.docx + accordo-firmato.pdf",
+          "Conservare entrambi in Contratti/2026",
+          "Versioni da descrivere"
+        ]
+      ],
+      "check": "Applicare le decisioni nella scheda di revisione prepara il piano approvato; non esegue gli spostamenti. I file devono essere ancora identici allo snapshot al momento dell'esecuzione.",
+      "question": "Il firmato ha quasi lo stesso nome della bozza: possiamo eliminarne uno?",
+      "answer": "No. Sono versioni diverse, non duplicati esatti. Il piano conserva entrambi; una destinazione diversa richiede una decisione motivata.",
+      "practice": "Cambia la destinazione di una proposta e verifica se entra in conflitto con un file esistente.",
+      "next": "Per la prova usa una piccola cartella fittizia. Sul tuo archivio seleziona prima il cliente registrato e la policy applicabile."
+    },
+    "en": {
+      "title": "Organize a folder while preserving versions",
+      "goal": "Turn a disordered folder into a reviewable movement plan before changing files.",
+      "scenario": "A fictional folder contains two byte-identical invoice copies and two different contract versions. Their names are unclear. This example shows a dry-run plan; no file has been moved.",
+      "request": "Vera, propose how to organize this client folder and show what would change.",
+      "scope": "One selected client folder. The lesson reaches plan review; applying file movements requires its separate explicit confirmation.",
+      "input_columns": [
+        "Fictional file",
+        "Content",
+        "Identity"
+      ],
+      "input_rows": [
+        [
+          "scan-a.pdf",
+          "Invoice INV-07, 10 June",
+          "Same bytes as copy.pdf"
+        ],
+        [
+          "copy.pdf",
+          "Invoice INV-07, 10 June",
+          "Same bytes as scan-a.pdf"
+        ],
+        [
+          "agreement.docx",
+          "Draft contract",
+          "Different bytes from signed version"
+        ],
+        [
+          "agreement-signed.pdf",
+          "Contract with visible signature",
+          "Distinct version"
+        ]
+      ],
+      "basis": "Matching hashes establish identical invoice bytes. The contracts require reading: similar names and sizes do not establish duplication.",
+      "method": [
+        "Snapshot the selected folder and inspect enough evidence to classify every inventory row.",
+        "Prepare destinations under the firm's policy and a dry run. Exact copies become quarantine candidates; distinct versions remain separate.",
+        "Persist reviewer decisions. Show counts and destinations before the separate execution approval, and retain the journal for possible rollback."
+      ],
+      "result_title": "Organization plan · no changes applied",
+      "conclusion": "One copy can be proposed for quarantine. The draft and signed contract should remain distinct versions.",
+      "output_columns": [
+        "Source",
+        "Proposal",
+        "Review"
+      ],
+      "output_rows": [
+        [
+          "scan-a.pdf",
+          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+          "Confirm destination"
+        ],
+        [
+          "copy.pdf",
+          "Da_verificare/Duplicati_esatti/…",
+          "Proposed quarantine"
+        ],
+        [
+          "Both contract versions",
+          "Retain in Contratti/2026",
+          "Describe the versions"
+        ]
+      ],
+      "check": "Applying review decisions compiles the approved plan; it does not move files. Sources must still match the snapshot at execution.",
+      "question": "The signed contract has almost the same name as the draft. Can we delete one?",
+      "answer": "No. They are different versions, not exact duplicates. Keep both unless a separately reviewed action establishes another destination.",
+      "practice": "Change a proposed destination and check whether it conflicts with an existing file.",
+      "next": "Practice on a small fictional folder. For real work, first select the registered client and applicable policy."
+    },
+    "fr": {
+      "title": "Ranger le dossier en conservant les versions",
+      "goal": "Préparer un plan de déplacement vérifiable avant de modifier les fichiers.",
+      "scenario": "Un dossier fictif contient deux copies identiques d'une facture et deux versions différentes d'un contrat. Leurs noms sont peu clairs. L'exemple présente un plan à blanc ; aucun fichier n'a été déplacé.",
+      "request": "Vera, propose un rangement pour ce dossier client et montre ce qui changerait.",
+      "scope": "Un client et un dossier sélectionnés. La leçon s'arrête à la revue du plan ; son exécution demande une confirmation explicite distincte.",
+      "input_columns": [
+        "Fichier fictif",
+        "Contenu",
+        "Identité"
+      ],
+      "input_rows": [
+        [
+          "scan-a.pdf",
+          "Facture INV-07 du 10 juin",
+          "Octets identiques à copie.pdf"
+        ],
+        [
+          "copie.pdf",
+          "Facture INV-07 du 10 juin",
+          "Octets identiques à scan-a.pdf"
+        ],
+        [
+          "accord.docx",
+          "Projet de contrat",
+          "Différent de la version signée"
+        ],
+        [
+          "accord-signe.pdf",
+          "Contrat avec signature visible",
+          "Version distincte"
+        ]
+      ],
+      "basis": "Les empreintes identiques prouvent l'identité des copies de facture. Les contrats doivent être lus : noms et tailles similaires ne prouvent pas un doublon.",
+      "method": [
+        "Crée l'inventaire figé du dossier et lis les éléments nécessaires pour classer chaque ligne.",
+        "Propose des destinations conformes à la politique du cabinet. Les copies exactes deviennent candidates à la quarantaine ; les versions distinctes restent séparées.",
+        "Enregistre les décisions du réviseur. Présente nombres et destinations avant l'approbation d'exécution et conserve le journal pour un éventuel retour arrière."
+      ],
+      "result_title": "Plan de rangement · aucune modification appliquée",
+      "conclusion": "Une copie peut être proposée pour la quarantaine. Projet et contrat signé restent deux versions à conserver.",
+      "output_columns": [
+        "Origine",
+        "Proposition",
+        "Revue"
+      ],
+      "output_rows": [
+        [
+          "scan-a.pdf",
+          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+          "Destination à confirmer"
+        ],
+        [
+          "copie.pdf",
+          "Da_verificare/Duplicati_esatti/…",
+          "Quarantaine proposée"
+        ],
+        [
+          "Deux versions du contrat",
+          "Conserver dans Contratti/2026",
+          "Décrire les versions"
+        ]
+      ],
+      "check": "Appliquer les décisions de revue prépare le plan approuvé sans déplacer les fichiers. Les sources doivent encore correspondre à l'inventaire lors de l'exécution.",
+      "question": "Le contrat signé porte presque le même nom que le projet. Peut-on en supprimer un ?",
+      "answer": "Non. Ce sont des versions différentes. Le plan conserve les deux ; une autre destination demande une décision motivée.",
+      "practice": "Change une destination proposée et vérifie si elle entre en conflit avec un fichier existant.",
+      "next": "Utilise un petit dossier fictif pour essayer. Pour le vrai travail, sélectionne le client enregistré et la politique applicable."
+    },
+    "de": {
+      "title": "Einen Ordner ordnen und Versionen erhalten",
+      "goal": "Einen prüfbaren Verschiebeplan erstellen, bevor Dateien verändert werden.",
+      "scenario": "Ein fiktiver Ordner enthält zwei bytegleiche Rechnungskopien und zwei unterschiedliche Vertragsversionen mit unklaren Namen. Das Beispiel zeigt einen Probelauf; keine Datei wurde verschoben.",
+      "request": "Vera, schlage eine Ordnung für diesen Mandantenordner vor und zeige die geplanten Änderungen.",
+      "scope": "Ein ausgewählter Ordner bis zur Planprüfung. Die tatsächliche Ausführung erfordert eine separate ausdrückliche Bestätigung.",
+      "input_columns": [
+        "Fiktive Datei",
+        "Inhalt",
+        "Identität"
+      ],
+      "input_rows": [
+        [
+          "scan-a.pdf",
+          "Rechnung INV-07, 10. Juni",
+          "Bytegleich mit copy.pdf"
+        ],
+        [
+          "copy.pdf",
+          "Rechnung INV-07, 10. Juni",
+          "Bytegleich mit scan-a.pdf"
+        ],
+        [
+          "agreement.docx",
+          "Vertragsentwurf",
+          "Andere Bytes als unterschriebene Fassung"
+        ],
+        [
+          "agreement-signed.pdf",
+          "Vertrag mit sichtbarer Unterschrift",
+          "Eigenständige Version"
+        ]
+      ],
+      "basis": "Übereinstimmende Prüfsummen belegen identische Rechnungsdateien. Die Verträge müssen gelesen werden; ähnliche Namen und Größen belegen keine Dublette.",
+      "method": [
+        "Erstelle eine Bestandsaufnahme und prüfe genug Inhalt, um jede Datei einzuordnen.",
+        "Plane Ziele gemäß Kanzleiregeln und führe einen Probelauf aus. Identische Kopien können zur Quarantäne vorgeschlagen werden; unterschiedliche Versionen bleiben erhalten.",
+        "Speichere Prüfentscheidungen. Zeige Anzahl und Ziele vor der separaten Ausführungsfreigabe und bewahre das Änderungsjournal für eine mögliche Rücknahme auf."
+      ],
+      "result_title": "Ordnungsplan · noch nichts ausgeführt",
+      "conclusion": "Eine Rechnungskopie kann für die Quarantäne vorgeschlagen werden. Vertragsentwurf und unterschriebene Fassung bleiben getrennte Versionen.",
+      "output_columns": [
+        "Quelle",
+        "Vorschlag",
+        "Prüfung"
+      ],
+      "output_rows": [
+        [
+          "scan-a.pdf",
+          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+          "Ziel bestätigen"
+        ],
+        [
+          "copy.pdf",
+          "Da_verificare/Duplicati_esatti/…",
+          "Quarantäne vorgeschlagen"
+        ],
+        [
+          "Beide Vertragsversionen",
+          "In Contratti/2026 erhalten",
+          "Versionen beschreiben"
+        ]
+      ],
+      "check": "Gespeicherte Prüfentscheidungen erstellen den freigegebenen Plan; sie verschieben noch keine Dateien. Bei Ausführung müssen die Quellen weiterhin zur Bestandsaufnahme passen.",
+      "question": "Der unterschriebene Vertrag heißt fast wie der Entwurf. Können wir einen löschen?",
+      "answer": "Nein. Es sind verschiedene Versionen, keine exakten Dubletten. Beide bleiben erhalten, sofern keine gesondert geprüfte Maßnahme etwas anderes vorsieht.",
+      "practice": "Ändere ein vorgeschlagenes Ziel und prüfe einen möglichen Konflikt mit vorhandenen Dateien.",
+      "next": "Übe mit einem kleinen fiktiven Ordner. Wähle für echte Arbeit zuerst den registrierten Mandanten und die geltenden Regeln."
+    },
+    "es": {
+      "title": "Ordenar una carpeta conservando sus versiones",
+      "goal": "Convertir una carpeta desordenada en un plan de movimientos revisable antes de modificar archivos.",
+      "scenario": "Una carpeta ficticia contiene dos copias de factura con bytes idénticos y dos versiones distintas de un contrato con nombres poco claros. El ejemplo muestra un ensayo del plan; no se ha movido ningún archivo.",
+      "request": "Vera, propón cómo ordenar esta carpeta y muestra qué cambiaría.",
+      "scope": "Una carpeta seleccionada hasta la revisión del plan. Ejecutar los movimientos requiere una confirmación expresa independiente.",
+      "input_columns": [
+        "Archivo ficticio",
+        "Contenido",
+        "Identidad"
+      ],
+      "input_rows": [
+        [
+          "scan-a.pdf",
+          "Factura INV-07, 10 de junio",
+          "Mismos bytes que copy.pdf"
+        ],
+        [
+          "copy.pdf",
+          "Factura INV-07, 10 de junio",
+          "Mismos bytes que scan-a.pdf"
+        ],
+        [
+          "agreement.docx",
+          "Borrador de contrato",
+          "Distinto de la versión firmada"
+        ],
+        [
+          "agreement-signed.pdf",
+          "Contrato con firma visible",
+          "Versión independiente"
+        ]
+      ],
+      "basis": "Las huellas coincidentes acreditan archivos de factura idénticos. Los contratos necesitan lectura: nombres y tamaños parecidos no prueban duplicación.",
+      "method": [
+        "Captura el inventario de la carpeta y examina evidencia suficiente para clasificar cada archivo.",
+        "Propón destinos según la política del despacho y prepara un ensayo. Las copias exactas pueden proponerse para cuarentena; las versiones distintas se conservan separadas.",
+        "Guarda las decisiones de revisión. Muestra cantidades y destinos antes de la autorización de ejecución y conserva el registro para una posible reversión."
+      ],
+      "result_title": "Plan de organización · sin cambios ejecutados",
+      "conclusion": "Una copia puede proponerse para cuarentena. El borrador y el contrato firmado deben mantenerse como versiones distintas.",
+      "output_columns": [
+        "Origen",
+        "Propuesta",
+        "Revisión"
+      ],
+      "output_rows": [
+        [
+          "scan-a.pdf",
+          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+          "Confirmar destino"
+        ],
+        [
+          "copy.pdf",
+          "Da_verificare/Duplicati_esatti/…",
+          "Cuarentena propuesta"
+        ],
+        [
+          "Ambas versiones del contrato",
+          "Conservar en Contratti/2026",
+          "Describir las versiones"
+        ]
+      ],
+      "check": "Aplicar decisiones compila el plan aprobado, pero no mueve archivos. Al ejecutarlo, las fuentes deben seguir coincidiendo con el inventario.",
+      "question": "El contrato firmado se llama casi igual que el borrador. ¿Podemos borrar uno?",
+      "answer": "No. Son versiones distintas, no duplicados exactos. Conserva ambas salvo que otra actuación revisada determine un destino diferente.",
+      "practice": "Cambia un destino propuesto y comprueba si entra en conflicto con un archivo existente.",
+      "next": "Practica con una carpeta ficticia pequeña. Para trabajo real, selecciona primero cliente registrado y política aplicable."
+    }
+  }
+}

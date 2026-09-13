@@ -1,0 +1,548 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "comunicazione-professionale",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/comunicazione-professionale/schemas/answer_contract.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/answer_contract.schema.json",
+      "sha256": "1167a143aea147883d9c1961f8eaebfa652ea1c1e7b381907d14869ab45774d5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/claim_assurance.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/claim_assurance.schema.json",
+      "sha256": "6f560e9c2264349ce6e1333024b54241ed6352f2f5c771550e0889506b7bc728"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/communication_intake.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/communication_intake.schema.json",
+      "sha256": "a53683440b910d297838b87d7d2cb1b9ce9a1035f52f54da6f44207913412fe6"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_decision.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/creative_direction_decision.schema.json",
+      "sha256": "7c08d51b1bb5f50e67c7493237f68b42fb77bfb147e05a8697e38312e0dc70e5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_handoff.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/creative_direction_handoff.schema.json",
+      "sha256": "8a58f5037fed81655a1e3477a8e310e9a56e8344de5f7fb69bc3a2eefe010483"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/creative_direction_selection_input.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/creative_direction_selection_input.schema.json",
+      "sha256": "59ddeb76e13171a8a793881c7b7bbd2713d5b67c01d70f8abee3dba201ae34e2"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/editorial_assessment.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/editorial_assessment.schema.json",
+      "sha256": "601cfc6f56620b71fc4dff91245a1df6980ab5ba1ee4f0f397bcaa9adb151b91"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/editorial_benchmark_results.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/editorial_benchmark_results.schema.json",
+      "sha256": "ea70db0707f9e498c00d36593968045aba59b2497662232a2cd9441bd6bbe830"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/history_privacy_assessment.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/history_privacy_assessment.schema.json",
+      "sha256": "d2326990b65e8105d2bffaa7f38e0f5b841134fc5818325edce8841fdb908584"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/history_pseudonymization.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/history_pseudonymization.schema.json",
+      "sha256": "f8f6825ac060568be8b629c4e0473d2cd08d08d60d9f01e561fbc5ec960e1c18"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/model_contribution.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/model_contribution.schema.json",
+      "sha256": "468d2884b8542964a1470b88a6b3dac1799e3a2cfc20b758085e43bdc329dd86"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/review_bundle.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/review_bundle.schema.json",
+      "sha256": "a8352cd640680073c383181f3aeeeb136fe2ec132477b94e0f04e0107bd10462"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/visual_assessment.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/visual_assessment.schema.json",
+      "sha256": "10c887b04f047b4cff4866717ca7908263e2a3d153693151d415139dc961101d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/schemas/workspace.schema.json",
+      "repository_path": "plugins/comunicazione-professionale/schemas/workspace.schema.json",
+      "sha256": "7b73a414fa43f7b098142c3c8feb987366d14a0d371c4a88092a3c2004680a79"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/check_dependencies.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/check_dependencies.py",
+      "sha256": "580ea4e20a04f097f3b21bd4fb8279b594b5dccda2880344aee66bbb1a1c071d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/history_privacy.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/history_privacy.py",
+      "sha256": "1b22ced235b168743888a1bc397d30b0ce6edff93a151c3e700e9ff5300f75ee"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/initialize_workspace.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/initialize_workspace.py",
+      "sha256": "4beedaf22e478a26174c8a09c23e99e4be54f3c7b02516b395299205b91d97db"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/package_communications.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/package_communications.py",
+      "sha256": "ca6e6eb5454d61babb1b47262ebb7ece9dd8bc7e4e61de4b04934253a42485f2"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
+      "sha256": "b612df7130f0fa2a4e7ff7a960b79886059f69387e91b1b978df0b3840bc7468"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/prepare_model_phase.py",
+      "sha256": "72bbc6bd7349e51017a7c10b2bb234fda9307c29420313f96b638e86354d0043"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/prepare_run.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/prepare_run.py",
+      "sha256": "061bb7a7161111371556938b018a9b55d69046223778307468f9e39671db25df"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/promote_studio_profile.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/promote_studio_profile.py",
+      "sha256": "11443b542e3174ca1faf7ef293e675854a78322cf0b0c078c369250d524856cc"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
+      "sha256": "2a587789eca2e2b970c9f388048d7ea14bd009c1499055c3d9bd3167ce18bef3"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_contribution.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_contribution.py",
+      "sha256": "c90888296819d48bbefbd6a4b8dbcc08e8433aafca6e4931d7de417f16a3e629"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_creative_direction_decision.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_creative_direction_decision.py",
+      "sha256": "4bffbd20a0700c483987652cb350ebd13eb214ba02a3aeaeec82029d7c5697ba"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_external_delivery.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_external_delivery.py",
+      "sha256": "3cef3f7267012d1cac0bad8f1949e3e927f851ed2d4b9db23c9a37d78dd01d43"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_history_privacy_assessment.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_history_privacy_assessment.py",
+      "sha256": "2986ccb7ab027420a1d9e5ddfec09eec4c9b540d9d0900ea694ca132157f658b"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_history_pseudonymization.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_history_pseudonymization.py",
+      "sha256": "248a5f5baad2b95639d0a336365a6337ae9bd4fe7b1181ca33d221b0bb7871cc"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_review.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_review.py",
+      "sha256": "6b40e370d916be6ec21a93614cdf2a498dbffaadb78b2190dcabc7a6de7d13ee"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/record_visual_assessment.py",
+      "sha256": "d86621b311eb8bedce1414000e99289cfefbbf1123598e3a4eca1701e51e7642"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/render_visuals.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/render_visuals.py",
+      "sha256": "c07ac4376bd254bcbd249e9e3a8432e1948999cf1678c5dd5cd9233ac03a033c"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/validate_run.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/validate_run.py",
+      "sha256": "93410dfa2c1c87a8d950b5421bbb00960933341ae4fa8fb88e76ff75ff5004f5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/workflow_core.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/workflow_core.py",
+      "sha256": "3c49f44bcd2fcdf88062a1052542e9763eeab29a3bae5622127cda70b1b13548"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
+      "sha256": "d2a78b6e80bc9d5882903a68b7bb551741476ca1d76288e72e032e1f7efab4ed"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/model-contribution-contract.md",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/references/model-contribution-contract.md",
+      "sha256": "6350861b40fdb948925927ddbb5fb81117c5328cbc811bde74a74737f5c27a0d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/product-thesis.md",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/references/product-thesis.md",
+      "sha256": "dbe7bea1cbf2c0b31fa64b2c6ba6552eb262ba69c352bc23e4c777f1246bc707"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/professional-circular-pattern.md",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/references/professional-circular-pattern.md",
+      "sha256": "d6ed4303cd3c3fe9e033b1b1c757b4a612e7c75514067383ba01b0ed77050575"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/visual-system.md",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/references/visual-system.md",
+      "sha256": "76012170c23e5e9daad806438e7172beaba85395940af21e0ad6a04f5884c04c"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/workflow-method.md",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/references/workflow-method.md",
+      "sha256": "c0f33df2119711d70928d86c6dfa5e50f34fad5c46a3ff48252c62850f4a61c3"
+    },
+    {
+      "path": "skills/comunicazione-professionale/SKILL.md",
+      "repository_path": "plugins/vera/skills/comunicazione-professionale/SKILL.md",
+      "sha256": "c65620416bbf1d6644c46b896cee8ee75406ac432098191d35e5a2eb9bce0d84"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Una comunicazione che può dimostrare ciò che dice",
+      "goal": "Trasformare informazioni verificate in un messaggio utile, conservando il legame tra ogni affermazione e la sua fonte.",
+      "scenario": "Lo studio Arco vuole informare i clienti che dal 1° ottobre riceverà i documenti tramite una cartella concordata. Una nota interna approvata descrive il nuovo canale e il contatto di assistenza. Nessuna fonte promette risparmi di tempo misurati.",
+      "request": "Vera, prepara un breve avviso ai clienti sul nuovo modo di consegnare i documenti.",
+      "scope": "Comunicazione organizzativa fittizia, senza consigli fiscali o promesse commerciali. Il testo rimane una bozza locale da rivedere e non viene inviato.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Fatto disponibile",
+        "Utilizzabile nel messaggio"
+      ],
+      "input_rows": [
+        [
+          "C1 · nota interna, § 1",
+          "Nuovo canale dal 1° ottobre 2026",
+          "Sì"
+        ],
+        [
+          "C1 · § 2",
+          "Assistenza tramite il referente dello studio",
+          "Sì"
+        ],
+        [
+          "Nessuna fonte",
+          "50% di tempo risparmiato",
+          "No"
+        ]
+      ],
+      "basis": "C1 sostiene data, canale e assistenza. La percentuale di risparmio è un esempio di affermazione priva di base da eliminare.",
+      "method": [
+        "Decidi se c'è un'informazione utile per i destinatari e definisci scopo, canale e fonti.",
+        "Prepara il messaggio e collega le affermazioni alle evidenze. Rivedi contenuto, tono e limiti; elimina le promesse non sostenute.",
+        "Produci il pacchetto naturale del canale con fonti e controlli. Mostra la bozza al professionista prima del normale percorso di invio o pubblicazione."
+      ],
+      "result_title": "Una consegna documenti più chiara",
+      "conclusion": "Dal 1° ottobre 2026 vi chiediamo di utilizzare la cartella concordata con lo studio per consegnare i documenti. Per l'accesso e le prime indicazioni, contattate il vostro referente.",
+      "output_columns": [
+        "Affermazione",
+        "Base",
+        "Revisione"
+      ],
+      "output_rows": [
+        [
+          "Nuovo canale dal 1° ottobre",
+          "C1 § 1",
+          "Confrontare data e modalità"
+        ],
+        [
+          "Contattare il referente",
+          "C1 § 2",
+          "Verificare che l'assistenza sia disponibile"
+        ],
+        [
+          "Risparmio del 50%",
+          "Assente",
+          "Escluso dalla bozza"
+        ]
+      ],
+      "check": "Una comunicazione attraente non deve aggiungere risultati, obblighi o promesse che le fonti non sostengono.",
+      "question": "Possiamo aggiungere 'nessun documento andrà più perso'?",
+      "answer": "No. La nota descrive un canale di consegna, non garantisce l'assenza di perdite. Una promessa assoluta richiederebbe una base che qui manca.",
+      "practice": "Adatta la stessa informazione a un breve post, mantenendo data, canale e limiti della fonte.",
+      "next": "Per una novità professionale reale seleziona le fonti correnti; per una comunicazione dello studio fornisci i fatti organizzativi verificati."
+    },
+    "en": {
+      "title": "A professional message that can support its claims",
+      "goal": "Turn verified information into a useful message with a source for every material assertion.",
+      "scenario": "Fictional Arco firm will receive documents through an agreed folder from 1 October. An approved internal note describes the channel and support contact. No source establishes a measured time saving.",
+      "request": "Vera, draft a short client notice about the new document-delivery method.",
+      "scope": "Fictional operational communication, without tax advice or commercial promises. The draft stays local and is not sent.",
+      "input_columns": [
+        "Fictional source",
+        "Available fact",
+        "Use in the message"
+      ],
+      "input_rows": [
+        [
+          "C1 · internal note § 1",
+          "New channel from 1 October 2026",
+          "Supported"
+        ],
+        [
+          "C1 · § 2",
+          "Help from the firm's contact person",
+          "Supported"
+        ],
+        [
+          "No source",
+          "50% time saving",
+          "Unsupported"
+        ]
+      ],
+      "basis": "C1 supports the date, channel and assistance. The saving percentage is an example of a claim to remove.",
+      "method": [
+        "Establish whether the information is useful for the audience and define purpose, channel and sources.",
+        "Draft the message and connect claims to evidence. Review tone and limitations, removing unsupported promises.",
+        "Prepare the channel's normal output package with source checks. Present the draft before the ordinary sending or publication process."
+      ],
+      "result_title": "A clearer way to deliver documents",
+      "conclusion": "From 1 October 2026, please use the folder agreed with the firm to deliver documents. For access and initial guidance, contact your usual firm representative.",
+      "output_columns": [
+        "Statement",
+        "Basis",
+        "Review"
+      ],
+      "output_rows": [
+        [
+          "New channel from 1 October",
+          "C1 § 1",
+          "Check date and method"
+        ],
+        [
+          "Contact the representative",
+          "C1 § 2",
+          "Confirm assistance is available"
+        ],
+        [
+          "50% saving",
+          "None",
+          "Excluded"
+        ]
+      ],
+      "check": "Attractive communication must not add outcomes, obligations or promises that the sources do not support.",
+      "question": "Can we add 'no document will ever be lost again'?",
+      "answer": "No. The note describes a delivery channel, not a guarantee against loss. The absolute promise has no supporting evidence.",
+      "practice": "Adapt the information into a short post while retaining its date, channel and limits.",
+      "next": "For professional news, select current sources; for firm announcements, supply verified operational facts."
+    },
+    "fr": {
+      "title": "Un message professionnel qui peut justifier ses affirmations",
+      "goal": "Transformer des informations vérifiées en communication utile, avec une source pour chaque affirmation importante.",
+      "scenario": "Le cabinet fictif Arco recevra les documents dans un dossier convenu à partir du 1er octobre. Une note interne approuvée décrit le canal et l'assistance. Aucune source ne mesure un gain de temps.",
+      "request": "Vera, prépare un bref avis aux clients sur cette nouvelle remise des documents.",
+      "scope": "Communication d'organisation fictive, sans conseil fiscal ni promesse commerciale. Le brouillon reste local et n'est pas envoyé.",
+      "input_columns": [
+        "Source fictive",
+        "Fait disponible",
+        "Utilisable"
+      ],
+      "input_rows": [
+        [
+          "C1 · note § 1",
+          "Nouveau canal au 1er octobre 2026",
+          "Oui"
+        ],
+        [
+          "C1 · § 2",
+          "Assistance du contact habituel",
+          "Oui"
+        ],
+        [
+          "Aucune source",
+          "50 % de temps gagné",
+          "Non"
+        ]
+      ],
+      "basis": "C1 étaye date, canal et assistance. Le gain de temps illustre une affirmation sans fondement à retirer.",
+      "method": [
+        "Détermine l'utilité de l'information pour les destinataires et précise objectif, canal et sources.",
+        "Rédige le message en reliant les affirmations aux preuves. Revois ton et limites, puis retire les promesses non étayées.",
+        "Prépare les livrables habituels du canal et les vérifications. Présente le brouillon avant le parcours normal d'envoi ou de publication."
+      ],
+      "result_title": "Une remise des documents plus claire",
+      "conclusion": "À partir du 1er octobre 2026, merci d'utiliser le dossier convenu avec le cabinet pour transmettre vos documents. Pour l'accès et les premières indications, contactez votre interlocuteur habituel.",
+      "output_columns": [
+        "Affirmation",
+        "Base",
+        "Revue"
+      ],
+      "output_rows": [
+        [
+          "Nouveau canal au 1er octobre",
+          "C1 § 1",
+          "Vérifier date et modalités"
+        ],
+        [
+          "Contacter l'interlocuteur",
+          "C1 § 2",
+          "Confirmer l'assistance disponible"
+        ],
+        [
+          "Gain de 50 %",
+          "Aucune",
+          "Exclu"
+        ]
+      ],
+      "check": "Une communication soignée n'ajoute pas de résultat, d'obligation ou de promesse absent des sources.",
+      "question": "Peut-on ajouter qu'aucun document ne sera plus jamais perdu ?",
+      "answer": "Non. La note décrit un canal de remise, pas une garantie absolue contre les pertes. La preuve manque.",
+      "practice": "Adapte l'information à une courte publication en conservant date, canal et limites.",
+      "next": "Pour une actualité professionnelle, sélectionne les sources courantes ; pour une annonce du cabinet, fournis les faits organisationnels vérifiés."
+    },
+    "de": {
+      "title": "Eine Kanzleimitteilung mit belegbaren Aussagen",
+      "goal": "Geprüfte Informationen in eine nützliche Mitteilung mit Quellen für wesentliche Aussagen umsetzen.",
+      "scenario": "Die fiktive Kanzlei Arco nimmt ab 1. Oktober Dokumente über einen vereinbarten Ordner entgegen. Eine freigegebene interne Notiz beschreibt den Kanal und die Ansprechperson. Eine gemessene Zeitersparnis ist nicht belegt.",
+      "request": "Vera, entwirf eine kurze Mandantenmitteilung zum neuen Weg der Dokumentenübergabe.",
+      "scope": "Fiktive organisatorische Mitteilung ohne steuerliche Beratung oder Leistungsversprechen. Der Entwurf bleibt lokal und wird nicht versendet.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Vorhandener Fakt",
+        "Verwendung"
+      ],
+      "input_rows": [
+        [
+          "C1 · interne Notiz § 1",
+          "Neuer Kanal ab 1. Oktober 2026",
+          "Belegt"
+        ],
+        [
+          "C1 · § 2",
+          "Unterstützung durch die Ansprechperson",
+          "Belegt"
+        ],
+        [
+          "Keine Quelle",
+          "50 % Zeitersparnis",
+          "Unbelegt"
+        ]
+      ],
+      "basis": "C1 belegt Datum, Kanal und Unterstützung. Die Prozentangabe ist ein Beispiel für eine zu streichende Behauptung.",
+      "method": [
+        "Bestimme Nutzen für die Zielgruppe, Zweck, Kanal und Quellen.",
+        "Entwirf die Mitteilung und verknüpfe Aussagen mit Belegen. Prüfe Ton und Grenzen und streiche unbelegte Versprechen.",
+        "Bereite das reguläre Ausgabepaket des Kanals mit Quellenprüfung vor. Zeige den Entwurf vor dem normalen Versand- oder Veröffentlichungsprozess."
+      ],
+      "result_title": "Dokumente künftig einfacher übergeben",
+      "conclusion": "Bitte nutzen Sie ab 1. Oktober 2026 den mit unserer Kanzlei vereinbarten Ordner zur Dokumentenübergabe. Bei Fragen zum Zugang und zu den ersten Schritten hilft Ihnen Ihre gewohnte Ansprechperson.",
+      "output_columns": [
+        "Aussage",
+        "Grundlage",
+        "Prüfung"
+      ],
+      "output_rows": [
+        [
+          "Neuer Kanal ab 1. Oktober",
+          "C1 § 1",
+          "Datum und Vorgehen prüfen"
+        ],
+        [
+          "Ansprechperson kontaktieren",
+          "C1 § 2",
+          "Unterstützung bestätigen"
+        ],
+        [
+          "50 % Ersparnis",
+          "Keine",
+          "Ausgeschlossen"
+        ]
+      ],
+      "check": "Ansprechende Kommunikation darf keine Ergebnisse, Pflichten oder Versprechen ergänzen, die ihre Quellen nicht tragen.",
+      "question": "Dürfen wir ergänzen: 'Nie wieder geht ein Dokument verloren'?",
+      "answer": "Nein. Die Notiz beschreibt einen Übergabekanal, keine Verlustgarantie. Für das absolute Versprechen fehlt ein Beleg.",
+      "practice": "Formuliere daraus einen kurzen Beitrag und erhalte Datum, Kanal und Grenzen.",
+      "next": "Nutze aktuelle Quellen für Fachnachrichten und geprüfte organisatorische Fakten für Kanzleimitteilungen."
+    },
+    "es": {
+      "title": "Un mensaje profesional que respalda sus afirmaciones",
+      "goal": "Transformar información verificada en una comunicación útil con fuente para cada afirmación relevante.",
+      "scenario": "El despacho ficticio Arco recibirá documentos mediante una carpeta acordada desde el 1 de octubre. Una nota interna aprobada describe el canal y el contacto de ayuda. No existe evidencia de ahorro de tiempo medido.",
+      "request": "Vera, redacta un aviso breve a clientes sobre el nuevo sistema de entrega documental.",
+      "scope": "Comunicación operativa ficticia sin asesoramiento fiscal ni promesas comerciales. El borrador permanece local y no se envía.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Hecho disponible",
+        "Uso en el mensaje"
+      ],
+      "input_rows": [
+        [
+          "C1 · nota interna § 1",
+          "Nuevo canal desde el 1 de octubre de 2026",
+          "Respaldado"
+        ],
+        [
+          "C1 · § 2",
+          "Ayuda de la persona de contacto",
+          "Respaldado"
+        ],
+        [
+          "Ninguna fuente",
+          "50 % de ahorro de tiempo",
+          "Sin respaldo"
+        ]
+      ],
+      "basis": "C1 respalda fecha, canal y asistencia. El porcentaje de ahorro ejemplifica una afirmación que debe eliminarse.",
+      "method": [
+        "Determina la utilidad para la audiencia y define propósito, canal y fuentes.",
+        "Redacta y vincula afirmaciones con pruebas. Revisa tono y límites y elimina promesas sin respaldo.",
+        "Prepara el paquete habitual del canal con sus comprobaciones de fuentes. Presenta el borrador antes del proceso ordinario de envío o publicación."
+      ],
+      "result_title": "Una forma más clara de entregar documentos",
+      "conclusion": "Desde el 1 de octubre de 2026, utilice la carpeta acordada con el despacho para entregar documentos. Para acceder y recibir orientación inicial, contacte con su interlocutor habitual.",
+      "output_columns": [
+        "Afirmación",
+        "Base",
+        "Revisión"
+      ],
+      "output_rows": [
+        [
+          "Nuevo canal desde el 1 de octubre",
+          "C1 § 1",
+          "Comprobar fecha y método"
+        ],
+        [
+          "Contactar con el interlocutor",
+          "C1 § 2",
+          "Confirmar asistencia disponible"
+        ],
+        [
+          "50 % de ahorro",
+          "Ninguna",
+          "Excluido"
+        ]
+      ],
+      "check": "Una comunicación atractiva no debe añadir resultados, obligaciones o promesas que las fuentes no acreditan.",
+      "question": "¿Podemos añadir 'nunca volverá a perderse un documento'?",
+      "answer": "No. La nota describe un canal, no una garantía contra pérdidas. La promesa absoluta carece de prueba.",
+      "practice": "Adapta la información a una publicación breve conservando fecha, canal y límites.",
+      "next": "Selecciona fuentes actuales para novedades profesionales y hechos operativos verificados para anuncios del despacho."
+    }
+  }
+}

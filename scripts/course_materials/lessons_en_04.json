@@ -1,0 +1,509 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "A firm's website starts with verified facts",
+    "goal": "Turn verified firm information into a clear page that can be reviewed on desktop and mobile.",
+    "scenario": "Fictional Arco firm supplies its name, actual services, opening hours and a demonstration contact. It supplies no awards, testimonials or success rates. The task is a first informational page inviting readers to contact the firm.",
+    "request": "Vera, prepare a first firm page using only this information.",
+    "scope": "Local informational preview with fictional people and contacts. No domain is connected and nothing is published during the lesson.",
+    "input_columns": [
+      "Fictional source",
+      "Fact",
+      "Use"
+    ],
+    "input_rows": [
+      [
+        "S1 · firm profile",
+        "Arco · accounting advisory",
+        "Title and description"
+      ],
+      [
+        "S1 · services",
+        "Accounting and management control",
+        "Activities section"
+      ],
+      [
+        "S1 · contact",
+        "Monday–Friday, 9–18; demonstration contact",
+        "Contact invitation"
+      ],
+      [
+        "Awards and testimonials",
+        "Not supplied",
+        "Do not invent"
+      ]
+    ],
+    "basis": "S1 is the case's only factual basis. A design proposal does not add credentials, outcomes or consent to use names.",
+    "method": [
+      "Collect verified facts and the page objective. For an existing site, inspect its current version and requested changes.",
+      "Prepare structure, copy and responsive implementation, connecting claims and contacts to sources and distinguishing proposed content.",
+      "Review the exact desktop and mobile preview, including readability and links. Publication and destination follow the normal approval step."
+    ],
+    "result_title": "Arco · essential firm information",
+    "conclusion": "Accounting and management control to support the firm's work. Contact the firm representative during the stated hours to learn about available services.",
+    "output_columns": [
+      "Page section",
+      "Prepared content",
+      "Check"
+    ],
+    "output_rows": [
+      [
+        "Opening",
+        "Firm name and activities",
+        "Consistent with S1"
+      ],
+      [
+        "Services",
+        "Two actual activities",
+        "No invented specialization"
+      ],
+      [
+        "Contact",
+        "Hours and demonstration contact",
+        "Verify real contact before publication"
+      ]
+    ],
+    "check": "Review the exact version intended for publication. Good design does not authorize undocumented testimonials or promises.",
+    "question": "Can we add 'the best firm in the region' to improve the headline?",
+    "answer": "No. S1 does not support that comparison. A clear, specific headline needs no invented claim of superiority.",
+    "practice": "Change the services' order and inspect the updated preview on a narrow screen.",
+    "next": "Prepare firm facts, services, contacts, visual identity and the existing site when available."
+  },
+  "vera/previdenza-inps": {
+    "title": "Build a verifiable contribution chronology",
+    "goal": "Organize contribution evidence without choosing a regime from an ambiguous label.",
+    "scenario": "A fictional extract shows January–March and May–June. A letter mentions 'group 3' without defining it. The client also supplies an April payment receipt, but its allocated contribution period is unknown.",
+    "request": "Vera, reconstruct what we know about this position and what is missing.",
+    "scope": "Italian INPS documentary reconstruction. No rates, legal deadlines or contribution classification are applied, and no portal is accessed.",
+    "input_columns": [
+      "Fictional source",
+      "Fact",
+      "Limit"
+    ],
+    "input_rows": [
+      [
+        "I1 · extract",
+        "January–March; May–June",
+        "April not visible in scope"
+      ],
+      [
+        "I2 · letter",
+        "'Group 3' label",
+        "Meaning undefined"
+      ],
+      [
+        "I3 · receipt",
+        "Payment in April",
+        "Allocation period unproven"
+      ]
+    ],
+    "basis": "I1 establishes the displayed periods. I3's payment date does not establish allocation, and I2 needs the context defining its label.",
+    "method": [
+      "Acquire selected documents and record facts with locators and chronology, separating declared provenance from byte verification.",
+      "Clarify labels, periods and the question. Research official sources for the confirmed framework; unresolved alternatives remain exploratory.",
+      "Prepare the dossier and professional questions. Perform arithmetic only with reviewed formulas and parameters, and deliver explicit limitations."
+    ],
+    "result_title": "April and classification are separate questions",
+    "conclusion": "The supplied position does not show April. The receipt establishes payment without resolving allocation; 'group 3' remains undefined.",
+    "output_columns": [
+      "Question",
+      "Available evidence",
+      "Needed next"
+    ],
+    "output_rows": [
+      [
+        "April period",
+        "Absent in I1; payment I3",
+        "Allocation detail"
+      ],
+      [
+        "Group 3",
+        "Label in I2",
+        "Its definition for that period"
+      ]
+    ],
+    "check": "An extract gap does not prove omitted contributions. A label alone cannot select rates or regimes.",
+    "question": "Can the April-dated receipt fill April in the position?",
+    "answer": "No. The payment-to-period link is still needed. Preserve the receipt and make that targeted verification explicit.",
+    "practice": "Add allocation detail and update the chronology while keeping the classification question separate.",
+    "next": "Select available official exports, letters and receipts; specify the question and periods before discussing calculations."
+  },
+  "vera/quesito-legale-fiscale": {
+    "title": "From a broad question to a verifiable answer",
+    "goal": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
+    "scenario": "A fictional client asks whether a cost is deductible. An invoice describes a service, but entity, period, regime and actual use are unknown. This lesson frames the question and answer scope without giving a tax opinion.",
+    "request": "Vera, show how you turn this question into a source-supported answer.",
+    "scope": "A lesson on research and review method, not a substantive tax rule. A real case requires current applicable primary sources.",
+    "input_columns": [
+      "Fictional element",
+      "Available",
+      "To clarify"
+    ],
+    "input_rows": [
+      [
+        "Invoice Q1",
+        "Service description and amount",
+        "Actual use"
+      ],
+      [
+        "Client question",
+        "Interest in deduction",
+        "Entity, regime and period"
+      ],
+      [
+        "Legal sources",
+        "Not selected in this small case",
+        "Applicable framework after clarification"
+      ]
+    ],
+    "basis": "Q1 supports a documentary description, not the tax conditions. Missing facts can change both research and conclusion.",
+    "method": [
+      "Frame the question, decision and material facts. Ask only what the supplied evidence cannot resolve.",
+      "Follow the current planning, research and answer journey. Check source authority, version and applicability while separating facts and citations.",
+      "Review claims, address relevant alternatives and perform opposing examination when the method requires it. Deliver the answer, bases and residual questions for professional review."
+    ],
+    "result_title": "A question ready for relevant research",
+    "conclusion": "The question must identify entity, period, regime and use of the service. Without them, a categorical yes or no would be premature.",
+    "output_columns": [
+      "Stage",
+      "Useful output",
+      "Check"
+    ],
+    "output_rows": [
+      [
+        "Framing",
+        "Question and confirmed facts",
+        "A source for each fact"
+      ],
+      [
+        "Research",
+        "Applicable sources",
+        "Version, authority and locator"
+      ],
+      [
+        "Reviewed answer",
+        "Conclusion with conditions and alternatives",
+        "No invented citations"
+      ]
+    ],
+    "check": "A genuine citation can still be inapplicable. Verify both the source text and its relationship to the case facts.",
+    "question": "Is a page discussing deductibility enough to answer?",
+    "answer": "No. Authority, period, facts and conditions must be assessed. A common topic alone does not establish applicability.",
+    "practice": "Add entity, period and service use, then formulate the precise research question.",
+    "next": "State the decision you need and select relevant documents. Vera manages the internal stages without requiring separate skill selection."
+  },
+  "vera/registro-imprese-sari": {
+    "title": "Prepare the practice before opening the portal",
+    "goal": "Distinguish case facts, official guidance and manual actions while keeping recipients separate.",
+    "scenario": "A fictional enterprise asks to 'open the position' for a new activity. The file describes a location and planned date, but the competent chamber and any additional positions are unclear. The client's wording does not decide the recipients.",
+    "request": "Vera, prepare a practice plan and identify facts to clarify before completion.",
+    "scope": "A draft practice plan for review. No login, form completion, signature, payment or filing; no invented DIRE form or deadline.",
+    "input_columns": [
+      "Fictional source",
+      "Fact",
+      "Question"
+    ],
+    "input_rows": [
+      [
+        "R1 · activity description",
+        "Client's proposed new activity",
+        "Classification to verify"
+      ],
+      [
+        "R2 · location",
+        "Address described",
+        "Territorial competence"
+      ],
+      [
+        "R3 · chronology",
+        "Planned start",
+        "Actual date and implications"
+      ]
+    ],
+    "basis": "R1–R3 guide research without automatically establishing Registro Imprese, REA or other positions. Real instructions require current official guidance.",
+    "method": [
+      "Clarify entity, activity, territory, dates and decision. Consider recipients cued by the facts without automatic classification.",
+      "Read applicable official guidance and its version. Public research uses generic topics without client identifiers.",
+      "Prepare facts, sources, manual steps and required documents as a reviewable draft. Keep the plan distinct from filing readiness."
+    ],
+    "result_title": "Preliminary plan · recipients to confirm",
+    "conclusion": "Activity, competence and dates need confirmation before choosing forms and steps. The useful result is a reasoned list of necessary decisions.",
+    "output_columns": [
+      "Decision",
+      "Basis",
+      "Status"
+    ],
+    "output_rows": [
+      [
+        "Competent chamber",
+        "R2 and applicable official guidance",
+        "To confirm"
+      ],
+      [
+        "Recipients",
+        "Actual activity R1",
+        "Assess separately"
+      ],
+      [
+        "DIRE forms and steps",
+        "Current source after framing",
+        "Not selected yet"
+      ]
+    ],
+    "check": "Language does not change jurisdiction. SARI guidance and DIRE completion are separate stages; a plan authorizes no portal actions.",
+    "question": "The client says 'open INPS'. Can we infer the entire practice?",
+    "answer": "No. Clarify the intended outcome and positions relevant to the facts. The phrase alone cannot select recipients or forms.",
+    "practice": "Complete activity and chamber facts, then identify questions remaining before consulting the relevant guide.",
+    "next": "Prepare actual activity, legal form, location, dates and available documents."
+  },
+  "vera/financial-report-builder": {
+    "title": "A financial report that leads back to its tables",
+    "goal": "Turn readable financial sources into coherent document sections, figures and narrative.",
+    "scenario": "Fictional Arco supplies revenue of EUR 120,000 and costs of EUR 95,000. A manager attributes the result to new customers, but the file has no customer detail or comparative period.",
+    "request": "Vera, prepare a short report from these tables and distinguish figures from explanations to verify.",
+    "scope": "Report construction from supported Excel, CSV or text-PDF sources. This is not Clara Reporting Engine or an unrelated analysis workflow.",
+    "input_columns": [
+      "Fictional source",
+      "Content",
+      "Limit"
+    ],
+    "input_rows": [
+      [
+        "F1 · statement",
+        "Revenue EUR 120,000; costs EUR 95,000",
+        "Current period only"
+      ],
+      [
+        "F2 · manager note",
+        "Growth attributed to new customers",
+        "No comparative detail"
+      ]
+    ],
+    "basis": "F1 supports EUR 25,000 above included costs. F2 supports the manager's attribution, not independent proof of the cause.",
+    "method": [
+      "Inspect files and tables and establish report type, period, language and source perimeter.",
+      "Review table-to-section mappings and complete evidence-based narrative, keeping uncorroborated explanations visible.",
+      "Generate the normal documents, tables and audit. Check each figure and comment against its source and preserve draft review status."
+    ],
+    "result_title": "Arco · period result",
+    "conclusion": "On the supplied items, revenue exceeds costs by EUR 25,000. The new-customer explanation remains a manager statement to corroborate.",
+    "output_columns": [
+      "Section",
+      "Content",
+      "Basis"
+    ],
+    "output_rows": [
+      [
+        "Economic summary",
+        "120,000 − 95,000 = EUR 25,000",
+        "F1"
+      ],
+      [
+        "Commentary",
+        "New customers cited by the manager",
+        "F2 · statement"
+      ],
+      [
+        "Further work",
+        "Customer detail and period comparison",
+        "Unavailable"
+      ]
+    ],
+    "check": "Do not promote a reported explanation into a proven cause. Readable PDFs may still require reviewed table mapping.",
+    "question": "Can we state that new customers generated the margin?",
+    "answer": "Not from these sources. Cite the manager's explanation and identify the data needed to verify it.",
+    "practice": "Add customer detail and update the narrative while preserving the earlier version.",
+    "next": "Select financial tables and documents and explain the report's audience; Vera prepares the normal output formats."
+  },
+  "vera/sales-plan": {
+    "title": "Sales growth: volume, price or exchange rate?",
+    "goal": "Translate a commercial request into precise planning assumptions before calculating.",
+    "scenario": "A fictional Actual row sells 100 units at USD 20 with EUR 0.90 per USD. The professional proposes 10% more units and a dollar 5% weaker against EUR. The USD unit price remains unchanged.",
+    "request": "Vera, prepare the Plan with higher volume and a weaker dollar, then read back the assumptions.",
+    "scope": "Sales planning from reviewed Actuals and confirmed percentage changes. Missing costs, margins and months are not invented.",
+    "input_columns": [
+      "Fictional fact or assumption",
+      "Value",
+      "Meaning"
+    ],
+    "input_rows": [
+      [
+        "Actual · S1",
+        "100 × USD 20 × 0.90",
+        "EUR 1,800"
+      ],
+      [
+        "A1 · units",
+        "+10%",
+        "110 units"
+      ],
+      [
+        "A2 · EUR per USD",
+        "−5%",
+        "EUR 0.855 per USD"
+      ]
+    ],
+    "basis": "S1 is the Actual row. A1 and A2 are explicit case assumptions. The rate means reporting-currency units per transaction-currency unit.",
+    "method": [
+      "Inspect actual columns and members. Read back drivers, exact scope, periods, priority and exchange-rate direction.",
+      "Resolve overlapping assumptions and confirm discount or cost bases when supplied. Execute the current recipe on reviewed Actuals.",
+      "Read Plan, assumption ledger, reconciliation and limitations. Keep measures dependent on missing inputs unavailable."
+    ],
+    "result_title": "More units, a less favorable exchange rate",
+    "conclusion": "Plan revenue is 110 × 20 × 0.855 = EUR 1,881, up EUR 81. A 10% unit increase becomes 4.5% growth in reporting currency.",
+    "output_columns": [
+      "Scenario",
+      "Volume and rate",
+      "Revenue EUR"
+    ],
+    "output_rows": [
+      [
+        "Actual",
+        "100 units · 0.90 EUR/USD",
+        "1,800"
+      ],
+      [
+        "Plan",
+        "110 units · 0.855 EUR/USD",
+        "1,881"
+      ],
+      [
+        "Difference",
+        "A1 + A2",
+        "+81 · +4.5%"
+      ]
+    ],
+    "check": "'Sales increase 10%' is ambiguous until it means units, price or gross sales. Reversing the rate changes the result.",
+    "question": "For a weaker dollar, should 0.90 increase to 0.945?",
+    "answer": "No. With EUR per USD, a 5% weaker dollar reduces the rate to 0.855. Confirm the direction before calculating.",
+    "practice": "Keep the rate constant and compare Plan results to isolate the unit effect.",
+    "next": "Select monthly Actuals, describe desired changes and confirm Vera's structured assumption read-back."
+  },
+  "vera/studio-archive": {
+    "title": "Resume an engagement without its old chat",
+    "goal": "Recover client, source and output identity through the portable engagement record.",
+    "scenario": "Two fictional clients have a file named invoice.pdf. Arco has a June engagement with one imported source and a finalized report. The original conversation is unavailable, so the saved ledger is the route back to the work.",
+    "request": "Vera, resume Arco's June engagement and open the report with its sources.",
+    "scope": "Selection, search and resumption of registered work. Archive search does not reorganize or move source files.",
+    "input_columns": [
+      "Fictional item",
+      "Identity",
+      "Content"
+    ],
+    "input_rows": [
+      [
+        "Arco client",
+        "C-ARCO",
+        "June engagement E-06"
+      ],
+      [
+        "Luna client",
+        "C-LUNA",
+        "Different file"
+      ],
+      [
+        "invoice.pdf source",
+        "I-01 in C-ARCO/E-06",
+        "Registered copy"
+      ],
+      [
+        "Report",
+        "A-01 from run R-01",
+        "Finalized for review"
+      ]
+    ],
+    "basis": "Client and engagement records establish provenance. The shared filename cannot identify the client.",
+    "method": [
+      "Select the registered client and relevant engagement through persistent references, clarifying only genuinely ambiguous selection.",
+      "Open sources and artifacts through the ledger and verify identity, run status and output integrity.",
+      "Create a new run for new work in the same engagement, declare outputs and retain history. Do not rewrite earlier results to update them."
+    ],
+    "result_title": "Arco · June engagement recovered",
+    "conclusion": "Report A-01 and source I-01 belong to E-06. Their provenance remains available in the ledger without the old conversation.",
+    "output_columns": [
+      "Open",
+      "Logical route",
+      "Check"
+    ],
+    "output_rows": [
+      [
+        "Finalized report",
+        "C-ARCO → E-06 → R-01 → A-01",
+        "Artifact status and identity"
+      ],
+      [
+        "Source",
+        "C-ARCO → E-06 → I-01",
+        "Registered document copy"
+      ],
+      [
+        "New analysis",
+        "New run in the same engagement",
+        "History preserved"
+      ]
+    ],
+    "check": "The same filename in another folder is not equivalent evidence. An active run must not be presented as finalized.",
+    "question": "If the client folder moves, must every result be recreated?",
+    "answer": "The portable ledger resolves paths in the current folder. Verify access and integrity rather than assuming regeneration is necessary.",
+    "practice": "Resume the tutorial engagement from the second chat and open the same verified artifact.",
+    "next": "Select the actual client and engagement before reading documents, then use the ledger to recover the work."
+  },
+  "vera/variance-analysis": {
+    "title": "Follow the bridge from one period to the next",
+    "goal": "Explain a measured difference through contributions that reconcile to the observed change.",
+    "scenario": "Fictional product A moves from 100 units at EUR 10 to 120 units at EUR 11. Revenue rises from EUR 1,000 to EUR 1,320. This bridge applies volume at the initial price first, then price at final volume.",
+    "request": "Vera, explain the move from EUR 1,000 to EUR 1,320 and show the contributions.",
+    "scope": "A one-product bridge. The real workflow runs its supported alternatives and drilldowns; retain the calculated, documented decomposition order.",
+    "input_columns": [
+      "Fictional period",
+      "Units",
+      "Price · revenue"
+    ],
+    "input_rows": [
+      [
+        "Base",
+        "100",
+        "EUR 10 · EUR 1,000"
+      ],
+      [
+        "Comparison",
+        "120",
+        "EUR 11 · EUR 1,320"
+      ]
+    ],
+    "basis": "V1 supplies volume and revenue for both periods. The illustrated order is volume at base price, then price at comparison volume.",
+    "method": [
+      "Inspect and review periods, amounts, units, dimensions and calculation grain against the sources.",
+      "Run standard root-cause analysis, alternatives and drilldowns. Read contributions and reconciliation without changing the calculated sequence.",
+      "Show the waterfall, tables and commentary draft. Separate numeric decomposition from commercial interpretation and hypotheses needing evidence."
+    ],
+    "result_title": "+EUR 320 explained by two contributions",
+    "conclusion": "In this order, 20 extra units at EUR 10 add EUR 200; EUR 1 on 120 units adds EUR 120. Together they reconcile to EUR 320.",
+    "output_columns": [
+      "Step",
+      "Contribution",
+      "Revenue after step"
+    ],
+    "output_rows": [
+      [
+        "Base",
+        "—",
+        "EUR 1,000"
+      ],
+      [
+        "Volume",
+        "+EUR 200",
+        "EUR 1,200"
+      ],
+      [
+        "Price",
+        "+EUR 120",
+        "EUR 1,320"
+      ]
+    ],
+    "check": "Another order can allocate the interaction differently. The bridge establishes arithmetic, not that a campaign caused the volume increase.",
+    "question": "Can we attribute the EUR 200 volume contribution to marketing?",
+    "answer": "Not from V1. The volume contribution is calculated; its commercial cause requires separate evidence and should be described accordingly.",
+    "practice": "Reduce the comparison price to EUR 9 and inspect favorable volume against unfavorable price.",
+    "next": "Select comparable periods and available granular data; let the workflow expose the alternatives supported by the sources."
+  }
+}

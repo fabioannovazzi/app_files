@@ -1,0 +1,573 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Un signal d'assortiment n'est pas une part de marché",
+    "goal": "Lire Retailer Signals en conservant cohortes, dénominateurs et limites du relevé.",
+    "scenario": "Le paquet fictif du distributeur Nord contient 20 nouveautés, dont 12 rechargeables, et 80 produits dans le reste de l'assortiment, dont 24 rechargeables. Ce relevé ne mesure ni ventes ni parts de marché.",
+    "request": "Clara, montre si la recharge est plus fréquente parmi les nouveautés et comment lire le signal.",
+    "scope": "Comparaison new-versus-rest sur un paquet pédagogique local, sans acquisition serveur ni nouvelle collecte du site.",
+    "input_columns": [
+      "Cohorte fictive",
+      "Produits rechargeables",
+      "Total"
+    ],
+    "input_rows": [
+      [
+        "Nouveautés",
+        "12",
+        "20"
+      ],
+      [
+        "Reste",
+        "24",
+        "80"
+      ]
+    ],
+    "basis": "A1 définit cohortes et attribut. Comparer 12 à 24 sans tenir compte des dénominateurs serait trompeur.",
+    "method": [
+      "Pars d'un paquet cohérent et vérifié ; revois les attributs sur les produits et préserve comparaisons et seuils du contrat.",
+      "Interprète les tableaux sans transformer une correspondance d'attribut en jugement automatique. Relie preuves et images aux produits exacts.",
+      "Rédige le rapport local et termine revue sémantique indépendante, contrôle navigateur et vérifications courantes. Donne le verdict réel et les limites."
+    ],
+    "result_title": "Recharge : 60 % des nouveautés, 30 % du reste",
+    "conclusion": "L'attribut est deux fois plus fréquent parmi les nouveautés. Cela décrit l'assortiment observé, pas la demande ou les ventes.",
+    "output_columns": [
+      "Cohorte",
+      "Calcul",
+      "Présence de l'attribut"
+    ],
+    "output_rows": [
+      [
+        "Nouveautés",
+        "12 / 20",
+        "60 %"
+      ],
+      [
+        "Reste",
+        "24 / 80",
+        "30 %"
+      ],
+      [
+        "Comparaison illustrée",
+        "60 % / 30 %",
+        "2×"
+      ]
+    ],
+    "check": "Conserve dénominateurs et date du relevé. Nom d'un produit et attribut isolé ne démontrent pas sa réussite commerciale.",
+    "question": "Les 60 % représentent-ils la part des ventes des produits rechargeables ?",
+    "answer": "Non. C'est la proportion de nouveautés portant l'attribut dans le paquet. Aucune donnée de vente n'est fournie.",
+    "practice": "Ajoute deux nouveautés non rechargeables et recalcule avec le nouveau dénominateur.",
+    "next": "Sélectionne distributeur, catégorie et comparaison supportée ; distingue relevé existant et nouvelle acquisition."
+  },
+  "clara/brand-fit": {
+    "title": "Une absence chez le distributeur n'est pas une absence du catalogue",
+    "goal": "Comparer signal, présence de marque et catalogue propriétaire sans confondre leurs périmètres.",
+    "scenario": "Le Retailer Signals fictif relève la recharge parmi les nouveautés. Lume a deux produits chez Nord, aucun rechargeable. Son catalogue comprend Lume R rechargeable, mais prix et disponibilité pour ce distributeur ne sont pas documentés.",
+    "request": "Clara, montre si le catalogue Lume contient un candidat pertinent pour ce signal.",
+    "scope": "Trois ensembles fictifs locaux. Un candidat n'est pas une recommandation automatique de lancement ; un relevé n'est pas une vérification en rayon en temps réel.",
+    "input_columns": [
+      "Source fictive",
+      "Information",
+      "Périmètre"
+    ],
+    "input_rows": [
+      [
+        "B1 · Retailer Signals terminé",
+        "Recharge plus fréquente dans les nouveautés",
+        "Distributeur Nord"
+      ],
+      [
+        "B2 · présence Lume",
+        "Deux produits sans recharge",
+        "Relevé distributeur"
+      ],
+      [
+        "B3 · catalogue Lume",
+        "Lume R rechargeable",
+        "Catalogue propriétaire"
+      ]
+    ],
+    "basis": "B1 est le signal amont ; B2 décrit la présence observée et B3 le catalogue. Leurs significations restent distinctes.",
+    "method": [
+      "Pars du Retailer Signals terminé et contrôlé, puis identifie son périmètre et la date des preuves.",
+      "Compare le signal à la présence chez le distributeur et au catalogue de marque. Évalue les candidats dans leur contexte complet.",
+      "Prépare le rapport privé avec bases, alternatives et limites. Termine revue indépendante et contrôle visuel en gardant les propositions ouvertes à la revue."
+    ],
+    "result_title": "Lume R mérite un approfondissement",
+    "conclusion": "Le catalogue propose une recharge absente de la présence observée de Lume chez Nord. Prix, positionnement et disponibilité restent à examiner.",
+    "output_columns": [
+      "Question",
+      "Réponse étayée",
+      "Limite"
+    ],
+    "output_rows": [
+      [
+        "Chez le distributeur ?",
+        "Pas dans B2",
+        "Pas un contrôle en direct"
+      ],
+      [
+        "Dans le catalogue ?",
+        "Lume R dans B3",
+        "Disponibilité commerciale non prouvée"
+      ],
+      [
+        "Adapté au distributeur ?",
+        "Candidat sur un attribut",
+        "Évaluation complète nécessaire"
+      ]
+    ],
+    "check": "L'absence peut être un écart de distribution plutôt qu'un manque du catalogue. La recharge seule ne suffit pas à établir l'adéquation.",
+    "question": "Peut-on recommander le lancement de Lume R sur ces seules informations ?",
+    "answer": "On peut proposer un candidat à examiner. Prix, positionnement, disponibilité et contexte plus large demandent encore une évaluation.",
+    "practice": "Ajoute prix et positionnement puis revois le jugement en gardant les trois sources séparées.",
+    "next": "Pars du Retailer Signals contrôlé et de la marque sélectionnée, sans envoyer le rapport privé au serveur."
+  },
+  "clara/deck-correction": {
+    "title": "Du commentaire à une diapositive corrigée et vérifiée",
+    "goal": "Transformer un retour en modification contrôlable tout en préservant le reste du deck.",
+    "scenario": "Un deck fictif de trois slides compare 2025 et 2026. Le retour demande d'ouvrir la slide 2 par le résultat sans changer les chiffres ni la slide 3. Le +12 % figure déjà dans la source.",
+    "request": "Clara, applique ce retour et montre exactement ce qui a changé.",
+    "scope": "Correction d'une copie existante à partir de notes fictives. Aucun enregistrement ni capture vocale hosted n'est créé.",
+    "input_columns": [
+      "Source fictive",
+      "Contenu",
+      "Autorité"
+    ],
+    "input_rows": [
+      [
+        "D1 · deck original",
+        "Trois slides, style et chiffres",
+        "Base visuelle"
+      ],
+      [
+        "D2 · retour",
+        "Résultat d'abord sur la slide 2",
+        "Modification demandée"
+      ],
+      [
+        "D3 · données",
+        "+12 % dans le comparatif",
+        "Base de l'affirmation"
+      ]
+    ],
+    "basis": "D2 autorise un nouvel ordre du message, pas de nouveaux calculs. D1 fixe le contenu préservé et D3 soutient le chiffre.",
+    "method": [
+      "Identifie deck et retour exacts ; interprète chaque demande, son périmètre, ses ambiguïtés et les éléments à préserver.",
+      "Prépare registre des changements et critères de réussite. Pour PPTX, suis le point de compréhension et d'approbation avant de modifier la copie.",
+      "Rends et examine la version finale face à l'original : chiffres, lisibilité et slides inchangées, avec leurs liens aux preuves."
+    ],
+    "result_title": "Slide 2 · le résultat ouvre le message",
+    "conclusion": "Le titre peut devenir 'Le résultat augmente de 12 %'. L'explication suit ; chiffres et slide 3 sont conservés.",
+    "output_columns": [
+      "Demande",
+      "Modification prévue",
+      "Preuve de réussite"
+    ],
+    "output_rows": [
+      [
+        "Résultat d'abord",
+        "Titre de la slide 2",
+        "+12 % visible dès l'ouverture"
+      ],
+      [
+        "Conserver les chiffres",
+        "Aucune donnée changée",
+        "Comparaison avec D1/D3"
+      ],
+      [
+        "Préserver la slide 3",
+        "Aucun changement",
+        "Comparaison avant/après"
+      ]
+    ],
+    "check": "Le numéro d'une slide localise le contenu sans interpréter la demande. Une correction limitée ne justifie pas de reconstruire tout le deck.",
+    "question": "Peut-on remplacer +12 % par 'forte croissance' pour un titre plus séduisant ?",
+    "answer": "La demande est de mettre le résultat en avant, pas de le remplacer par un jugement. Conserve la mesure étayée et revois toute interprétation ajoutée.",
+    "practice": "Ajoute une autre demande et définis la preuve concrète qui permettra de la vérifier.",
+    "next": "Sélectionne deck et retour exacts. Un véritable audio suit la transcription autorisée en dehors de cette leçon."
+  },
+  "clara/html-deck": {
+    "title": "Trois slides pour accompagner une décision",
+    "goal": "Créer un deck HTML lisible et fidèle aux sources, avec des preuves pour ses affirmations.",
+    "scenario": "Le brief fictif décrit un test commercial : 40 clients invités, 10 participants et 6 intéressés par une suite. L'équipe doit décider d'élargir le test. Aucune commande ni recette n'est documentée.",
+    "request": "Clara, transforme ce brief en trois slides pour décider du prochain test.",
+    "scope": "Présentation issue des sources fournies, sans données inventées. L'intérêt déclaré n'est pas une conversion en vente.",
+    "input_columns": [
+      "Source fictive B1",
+      "Valeur",
+      "Signification"
+    ],
+    "input_rows": [
+      [
+        "Invités",
+        "40",
+        "Population contactée"
+      ],
+      [
+        "Participants",
+        "10",
+        "25 % des invités"
+      ],
+      [
+        "Intéressés par une suite",
+        "6",
+        "60 % des participants ; aucune commande"
+      ]
+    ],
+    "basis": "Les valeurs viennent de B1. Les pourcentages ont des dénominateurs différents à montrer près des chiffres.",
+    "method": [
+      "Définis public et décision, puis lis les sources et organise les affirmations avec leurs bases.",
+      "Construis le deck selon le contrat HTML courant en reliant contenu et preuves. La hiérarchie visuelle sert la lisibilité.",
+      "Examine chaque slide dans le navigateur et les rendus : chiffres, sources, débordements et navigation. Livre la version exacte revue."
+    ],
+    "result_title": "Du test au prochain essai commercial",
+    "conclusion": "Dix des 40 invités participent. Six souhaitent une suite : une base pour le prochain test, pas pour annoncer des ventes.",
+    "output_columns": [
+      "Slide",
+      "Message",
+      "Preuve visible"
+    ],
+    "output_rows": [
+      [
+        "1 · Résultat",
+        "10 participants sur 40 invités",
+        "B1 · 25 %"
+      ],
+      [
+        "2 · Intérêt",
+        "6 sur 10 demandent une suite",
+        "B1 · dénominateur 10"
+      ],
+      [
+        "3 · Décision",
+        "Définir le prochain test",
+        "Commandes et recettes absentes"
+      ]
+    ],
+    "check": "Titres et graphiques conservent les dénominateurs. Une affirmation plus forte que la source reste fausse, même élégamment présentée.",
+    "question": "Peut-on titrer la slide 2 'Conversion de 60 %' ?",
+    "answer": "Cela pourrait évoquer des ventes. La source mesure un intérêt pour une suite parmi les participants ; le titre doit l'indiquer.",
+    "practice": "Réécris le titre avec chiffre, dénominateur et sens, puis vérifie-le dans le deck.",
+    "next": "Sélectionne documents et décision du public ; demande un deck complet avec ses sources."
+  },
+  "clara/hosted-interview": {
+    "title": "Approfondir sans suggérer la réponse",
+    "goal": "Préparer le brief d'un entretien externe et comprendre le parcours du lien aux preuves revues.",
+    "scenario": "Un brief fictif explore la gestion des retards de livraison par un responsable opérationnel. Il vise le dernier épisode concret et la décision prise, sans données clients ni réponse attendue.",
+    "request": "Clara, montre comment préparer un entretien externe sur ce processus.",
+    "scope": "Préparation et revue locales du brief. Aucun lien, contact externe ou envoi hosted. Un vrai entretien est une mission ultérieure autorisée.",
+    "input_columns": [
+      "Élément fictif du brief",
+      "Contenu",
+      "But"
+    ],
+    "input_rows": [
+      [
+        "Objectif",
+        "Comprendre la gestion des retards",
+        "Décision de processus"
+      ],
+      [
+        "Question initiale",
+        "Racontez le dernier retard concret",
+        "Épisode observable"
+      ],
+      [
+        "Approfondissement",
+        "Qui a décidé, avec quelles informations ?",
+        "Rôles et preuves"
+      ],
+      [
+        "Limite",
+        "Ne pas demander de noms ou données clients",
+        "Périmètre de l'entretien"
+      ]
+    ],
+    "basis": "H1 est un exemple de brief, pas une campagne enregistrée ni la transcription d'une personne réelle.",
+    "method": [
+      "Sélectionne une campagne exacte et versionnée ou prépare un brief limité, en distinguant étude de cas approfondie et recherche comparable.",
+      "Dans une mission réelle autorisée, crée le lien individuel à durée limitée via le service disponible. La conversation s'adapte aux réponses.",
+      "Vérifie le statut et récupère le bundle et sa revue avant expiration. Les réponses restent déclaratives ; leur ajout à un dossier demande une action distincte."
+    ],
+    "result_title": "Un brief prêt à être revu",
+    "conclusion": "Le brief part d'un épisode et explore décisions et preuves sans supposer une inefficacité ni suggérer la conclusion.",
+    "output_columns": [
+      "Question",
+      "Ce qu'elle peut révéler",
+      "À éviter"
+    ],
+    "output_rows": [
+      [
+        "Dernier retard concret",
+        "Chronologie",
+        "Jugement inclus dans la question"
+      ],
+      [
+        "Qui décide avec quelles données ?",
+        "Rôles et informations",
+        "Noms inventés"
+      ],
+      [
+        "Que s'est-il passé ensuite ?",
+        "Résultat et suivi",
+        "Opinion confondue avec preuve"
+      ]
+    ],
+    "check": "Hosted Interview est distinct de la voix standard de cette leçon. Un brief ne prouve pas la création d'un lien ; un entretien terminé ne rend pas toutes les déclarations vraies.",
+    "question": "'Pourquoi votre processus est-il si lent ?' est-il un bon début ?",
+    "answer": "La question présuppose un jugement. Demander un épisode concret permet d'explorer temps, causes possibles et décisions sans orienter la conclusion.",
+    "practice": "Revois une question et précise la preuve recherchée, sans créer de lien.",
+    "next": "Pour un vrai entretien, choisis participant, objectif, langue et expiration ; le workflow hosted expose ses flux de données."
+  },
+  "clara/reporting-engine": {
+    "title": "Avant le graphique, le sens des données",
+    "goal": "Passer d'un dataset à un comparatif lisible avec des rôles et métriques revus.",
+    "scenario": "Le dataset fictif indique 40 000 EUR de ventes nettes en janvier et 50 000 en février. Il n'a pas de champ Discount séparé. Les notes confirment que Sales comprend déjà les remises : les retrancher encore serait erroné.",
+    "request": "Clara, montre l'évolution des ventes et explique les données utilisées.",
+    "scope": "Intake, sens des métriques et comparaison temporelle. Une mesure absente n'est pas zéro ; cette capacité de Clara n'est pas présentée comme celle de Vera.",
+    "input_columns": [
+      "Période fictive",
+      "Sales",
+      "Note source"
+    ],
+    "input_rows": [
+      [
+        "2026-01",
+        "40 000 EUR",
+        "Ventes nettes"
+      ],
+      [
+        "2026-02",
+        "50 000 EUR",
+        "Ventes nettes"
+      ],
+      [
+        "Discount séparé",
+        "Absent",
+        "Déjà compris dans Sales"
+      ]
+    ],
+    "basis": "R1 contient deux mois et R2 définit les ventes nettes. Discount est absent comme mesure séparée, pas égal à zéro.",
+    "method": [
+      "Exécute l'intake et lis données, profil et notes. Revois sens, agrégation et rôles Sales, Discount et COGS ; les en-têtes ne suffisent pas.",
+      "Choisis une capacité compatible et produis le graphique via l'adapter Clara en conservant demande effective et preuve du résultat.",
+      "Ouvre et vérifie valeurs, unités, périodes et conclusion. Réutilise un contrat sémantique stable compatible lors des imports suivants."
+    ],
+    "result_title": "Les ventes nettes progressent de 10 000 EUR",
+    "conclusion": "Les ventes nettes passent de 40 000 à 50 000 EUR : +10 000 EUR, soit +25 %. Remises séparées et coûts ne sont pas disponibles.",
+    "output_columns": [
+      "Indicateur",
+      "Valeur",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "Janvier",
+        "40 000 EUR",
+        "R1 · ventes nettes"
+      ],
+      [
+        "Février",
+        "50 000 EUR",
+        "R1 · ventes nettes"
+      ],
+      [
+        "Écart",
+        "+10 000 EUR · +25 %",
+        "Base janvier 40 000 EUR"
+      ]
+    ],
+    "check": "Compatibilité technique et exactitude du sens sont différentes. Des colonnes valides peuvent avoir un mauvais mapping métier.",
+    "question": "L'absence de Discount permet-elle d'affirmer qu'aucune remise n'a été accordée ?",
+    "answer": "Non. Sales est net et aucune mesure distincte n'est fournie. L'absence de colonne ne prouve pas l'absence de remises.",
+    "practice": "Ajoute mars avec la même définition et vérifie réutilisation du contrat et actualisation du graphique.",
+    "next": "Sélectionne CSV, Excel ou Parquet et les notes des métriques. Actual/Budget utilise la route budgétaire propre à Clara dans ce workflow."
+  },
+  "clara/research-video": {
+    "title": "Une scène, une source, une phrase",
+    "goal": "Aligner images, narration et affirmations d'une courte vidéo de recherche.",
+    "scenario": "Trois scènes fictives montrent demande, document contrôlé et résultat revu. Le brief prévoit 30 secondes. Les images n'apportent aucun résultat quantitatif ; la narration ne peut donc promettre un gain de temps mesuré.",
+    "request": "Clara, montre comment préparer scènes et narration avant de générer la vidéo.",
+    "scope": "Préparation locale du plan et du script, sans appel audio hosted ni MP4 annoncé comme produit. La production réelle suit son parcours autorisé.",
+    "input_columns": [
+      "Scène fictive",
+      "Source visuelle",
+      "Message étayé"
+    ],
+    "input_rows": [
+      [
+        "1 · Demande",
+        "V1 · brief sélectionné",
+        "Partir d'un objectif"
+      ],
+      [
+        "2 · Contrôle",
+        "V2 · document référencé",
+        "Conserver les sources"
+      ],
+      [
+        "3 · Revue",
+        "V3 · résultat avec points ouverts",
+        "Revue professionnelle"
+      ]
+    ],
+    "basis": "V1–V3 étayent trois étapes qualitatives, pas des économies de temps, une efficacité ou des résultats commerciaux mesurés.",
+    "method": [
+      "Choisis images ordonnées approuvées, sources, public, langue et durée, sans inventer de scènes informatives pour combler les lacunes.",
+      "Rédige la narration par scène et compare chaque affirmation à son image et sa base. Revois ordre, texte et durée avant synthèse.",
+      "En production réelle autorisée, utilise la voix hosted prévue et le rendu local ; vérifie MP4, audio, sous-titres et synchronisation sans inventer de reçus ou d'approbations."
+    ],
+    "result_title": "Un script de 30 secondes à revoir",
+    "conclusion": "Trois messages sourcés expliquent le processus. Le script est prêt à être discuté ; il ne prouve pas une production vidéo.",
+    "output_columns": [
+      "Temps prévu",
+      "Narration proposée",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "0–10 s",
+        "Chaque mission commence par une question et des documents sélectionnés.",
+        "V1"
+      ],
+      [
+        "10–20 s",
+        "Le résultat conserve les références qui permettent de le vérifier.",
+        "V2"
+      ],
+      [
+        "20–30 s",
+        "Les points ouverts restent visibles jusqu'à la revue professionnelle.",
+        "V3"
+      ]
+    ],
+    "check": "La durée finale dépend de l'audio réel et doit être contrôlée. Le minutage prévu n'est pas la mesure d'un fichier existant.",
+    "question": "La deuxième scène peut-elle promettre de gagner la moitié du temps ?",
+    "answer": "Aucune source ne mesure ce gain. Décris la traçabilité visible sans inventer de pourcentage ni de résultat.",
+    "practice": "Raccourcis la deuxième phrase en conservant sens et source, puis revois le plan local.",
+    "next": "Pour la vidéo réelle, prépare scènes et sources approuvées. La synthèse hosted suit ses propres approbations et flux de données."
+  },
+  "clara/transcribe": {
+    "title": "Savoir qui parle ne prouve pas que l'affirmation est vraie",
+    "goal": "Conserver et attribuer une transcription sans transformer les déclarations en faits vérifiés.",
+    "scenario": "Le débrief écrit fictif comporte deux tours. Speaker 1 dit que les retards ont diminué ; Speaker 2 demande le comparatif mensuel. Les notes ne donnent ni noms ni comparaison. Aucun enregistrement réel n'existe pour ce cas.",
+    "request": "Clara, montre comment revoir une transcription avant de l'utiliser dans un rapport.",
+    "scope": "Revue locale d'un extrait écrit pour la leçon. Aucune transcription hosted n'est exécutée ou simulée.",
+    "input_columns": [
+      "Tour fictif",
+      "Texte",
+      "Métadonnées"
+    ],
+    "input_rows": [
+      [
+        "Speaker 1 · 00:10",
+        "Nous avons réduit les retards",
+        "Nom non confirmé"
+      ],
+      [
+        "Speaker 2 · 00:15",
+        "As-tu le comparatif mensuel ?",
+        "Nom non confirmé"
+      ]
+    ],
+    "basis": "T1 est un dialogue pédagogique rédigé. Une transcription réelle revue peut soutenir des paroles attribuées sans prouver la véracité du fait affirmé.",
+    "method": [
+      "Choisis capture, audio existant ou bundle effectivement disponible. Conserve l'original et sélectionne le parcours dossier ordinaire ou cas approprié.",
+      "Revois tours et attribution à partir des preuves. Nomme les personnes uniquement avec une base ; sinon conserve des étiquettes stables sans changer le sens du texte.",
+      "Finalise la transcription revue lorsque le contrat le permet. Une affirmation utilisée comme fait ultérieur nécessite une base distincte et un lien au tour original."
+    ],
+    "result_title": "Paroles attribuables, affirmation à corroborer",
+    "conclusion": "L'extrait attribue la baisse des retards à Speaker 1. Il n'identifie pas cette personne et ne documente pas la baisse.",
+    "output_columns": [
+      "Élément",
+      "Soutient",
+      "Ne soutient pas"
+    ],
+    "output_rows": [
+      [
+        "Tour 00:10",
+        "Paroles de Speaker 1",
+        "Nom ou résultat opérationnel"
+      ],
+      [
+        "Tour 00:15",
+        "Demande de comparaison",
+        "Disponibilité de cette comparaison"
+      ],
+      [
+        "Usage dans un rapport",
+        "Déclaration citée comme telle",
+        "Conclusion quantitative non prouvée"
+      ]
+    ],
+    "check": "Nettoyer la transcription n'est pas la résumer ni en améliorer le sens. Identité du locuteur et vérité du fait nécessitent des preuves différentes.",
+    "question": "Peut-on nommer Speaker 1 comme le directeur parce que son expression paraît familière ?",
+    "answer": "Non. Il faut des métadonnées ou d'autres preuves. Sinon conserve Speaker 1 et précise l'incertitude.",
+    "practice": "Ajoute des métadonnées identifiant un locuteur, actualise l'attribution et conserve le texte original.",
+    "next": "Sélectionne audio ou bundle réel et destination. Un dossier ordinaire suffit pour conserver une transcription sans créer un cas inutile."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Préparer le dossier n'accepte pas la mission",
+    "goal": "Organiser l'intake juridique en séparant parties, pièces manquantes et décisions professionnelles.",
+    "scenario": "Le laboratoire fictif Beta demande une assistance pour une livraison incomplète de Delta. Son brief cite contrat et correspondance non encore fournis. Aucun registre de conflits n'est disponible dans ce cas.",
+    "request": "Lucia, prépare le dossier initial et montre les vérifications avant l'ouverture.",
+    "scope": "Intake fictif. Aucune recherche de conflits annoncée, aucun délai contraignant calculé et aucune mission acceptée automatiquement.",
+    "input_columns": [
+      "Source fictive",
+      "Information",
+      "Statut"
+    ],
+    "input_rows": [
+      [
+        "L1 · brief client",
+        "Beta contre fournisseur Delta",
+        "Parties déclarées"
+      ],
+      [
+        "L1 · pièces citées",
+        "Contrat et correspondance",
+        "Non fournis"
+      ],
+      [
+        "Registre de conflits",
+        "Indisponible",
+        "Contrôle non effectué"
+      ]
+    ],
+    "basis": "L1 soutient demande et parties rapportées. Il ne remplace ni pièces substantielles ni consultation du registre.",
+    "method": [
+      "Choisis nouveau client ou nouvelle affaire et conserve les sources exactes. Établis objectif, parties, juridiction et urgence à partir des preuves.",
+      "Prépare mémo, carte des parties, demandes manquantes et plan de dossier. Les points non étayés restent partiels.",
+      "Présente quatre revues : conflits, mission, délais et ouverture. Enregistre uniquement les décisions réelles et réactualise la revue si l'intake change."
+    ],
+    "result_title": "Le dossier initial reste partiel",
+    "conclusion": "Demande et parties sont décrites. Les documents essentiels et la revue des conflits manquent ; le dossier n'est pas prêt à ouvrir.",
+    "output_columns": [
+      "Domaine",
+      "Situation",
+      "Suite"
+    ],
+    "output_rows": [
+      [
+        "Documents",
+        "Contrat et correspondance absents",
+        "Demande à revoir"
+      ],
+      [
+        "Conflits",
+        "Registre non consulté",
+        "Contrôle professionnel du périmètre exact"
+      ],
+      [
+        "Mission et ouverture",
+        "Non approuvées",
+        "Revue de l'avocat"
+      ]
+    ],
+    "check": "Une liste de noms n'est pas une recherche de conflits. Un plan de dossier ne déplace pas les originaux ; les décisions restent liées à l'intake actuel.",
+    "question": "Le brief ne cite aucun conflit. Peut-on valider le contrôle ?",
+    "answer": "Non. Le brief n'est pas le registre. Un contrôle non effectué reste non effectué, sans devenir un résultat négatif.",
+    "practice": "Ajoute le contrat fictif et revois parties et questions modifiées sans simuler l'acceptation de la mission.",
+    "next": "Sélectionne brief, pièces, parties connues et registre disponible ; signale immédiatement l'urgence concrète."
+  }
+}

@@ -1,0 +1,509 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "La web del despacho empieza por hechos verificados",
+    "goal": "Convertir información comprobada en una página clara revisable en ordenador y móvil.",
+    "scenario": "El despacho ficticio Arco entrega nombre, servicios reales, horario y contacto de demostración. No aporta premios, testimonios ni tasas de éxito. Se pide una primera página informativa que invite a contactar.",
+    "request": "Vera, prepara una primera página del despacho usando solo esta información.",
+    "scope": "Vista previa local con personas y contactos ficticios. Durante la lección no se conecta ningún dominio ni se publica nada.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Hecho",
+      "Uso"
+    ],
+    "input_rows": [
+      [
+        "S1 · perfil",
+        "Arco · asesoramiento contable",
+        "Título y descripción"
+      ],
+      [
+        "S1 · servicios",
+        "Contabilidad y control de gestión",
+        "Sección de actividades"
+      ],
+      [
+        "S1 · contacto",
+        "Lunes–viernes, 9–18; contacto de demostración",
+        "Invitación a contactar"
+      ],
+      [
+        "Premios y testimonios",
+        "No entregados",
+        "No inventar"
+      ]
+    ],
+    "basis": "S1 es la única base factual del caso. Una propuesta de diseño no añade credenciales, resultados ni consentimiento para utilizar nombres.",
+    "method": [
+      "Recoge hechos verificados y objetivo. Si existe una web, inspecciona la versión actual y los cambios solicitados.",
+      "Prepara estructura, textos y diseño adaptable, vinculando afirmaciones y contactos con fuentes y distinguiendo propuestas.",
+      "Revisa la versión exacta en ordenador y móvil, incluidos legibilidad y enlaces. Publicación y destino siguen el paso habitual de aprobación."
+    ],
+    "result_title": "Arco · información esencial del despacho",
+    "conclusion": "Contabilidad y control de gestión para apoyar el trabajo del despacho. Contacte con su interlocutor durante el horario indicado para conocer los servicios disponibles.",
+    "output_columns": [
+      "Sección",
+      "Contenido preparado",
+      "Comprobación"
+    ],
+    "output_rows": [
+      [
+        "Inicio",
+        "Nombre y actividades",
+        "Coherente con S1"
+      ],
+      [
+        "Servicios",
+        "Dos actividades reales",
+        "Sin especialización inventada"
+      ],
+      [
+        "Contacto",
+        "Horario y contacto de demostración",
+        "Verificar contacto real antes de publicar"
+      ]
+    ],
+    "check": "Revisa la versión exacta destinada a publicación. Un buen diseño no autoriza testimonios ni promesas sin documentación.",
+    "question": "¿Podemos añadir 'el mejor despacho de la región' para mejorar el titular?",
+    "answer": "No. S1 no respalda esa comparación. Un titular claro y concreto no necesita superioridad inventada.",
+    "practice": "Cambia el orden de servicios e inspecciona la nueva vista previa en una pantalla estrecha.",
+    "next": "Prepara hechos del despacho, servicios, contactos, identidad visual y web existente cuando la haya."
+  },
+  "vera/previdenza-inps": {
+    "title": "Construir una cronología verificable de cotizaciones",
+    "goal": "Organizar pruebas de cotización sin elegir un régimen a partir de una etiqueta ambigua.",
+    "scenario": "Un extracto ficticio muestra enero–marzo y mayo–junio. Una carta menciona 'grupo 3' sin definirlo. El cliente aporta un recibo de pago de abril, pero se desconoce el periodo de cotización al que se imputa.",
+    "request": "Vera, reconstruye lo que sabemos de esta situación y lo que falta.",
+    "scope": "Reconstrucción documental de INPS italiano. No se aplican tipos, plazos jurídicos ni clasificaciones y no se accede al portal.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Hecho",
+      "Límite"
+    ],
+    "input_rows": [
+      [
+        "I1 · extracto",
+        "Enero–marzo; mayo–junio",
+        "Abril no visible en el alcance"
+      ],
+      [
+        "I2 · carta",
+        "Etiqueta 'grupo 3'",
+        "Significado indefinido"
+      ],
+      [
+        "I3 · recibo",
+        "Pago en abril",
+        "Periodo imputado no acreditado"
+      ]
+    ],
+    "basis": "I1 acredita periodos visibles. La fecha de pago de I3 no prueba imputación e I2 necesita el contexto que define su etiqueta.",
+    "method": [
+      "Incorpora documentos seleccionados y registra hechos con ubicaciones y cronología, separando procedencia declarada de verificación de archivos.",
+      "Aclara etiquetas, periodos y pregunta. Investiga fuentes oficiales del marco confirmado; las alternativas pendientes siguen siendo exploratorias.",
+      "Prepara dossier y preguntas profesionales. Calcula solo con fórmulas y parámetros revisados y explicita las limitaciones."
+    ],
+    "result_title": "Abril y clasificación son preguntas distintas",
+    "conclusion": "La situación entregada no muestra abril. El recibo acredita pago sin resolver su imputación; 'grupo 3' sigue indefinido.",
+    "output_columns": [
+      "Pregunta",
+      "Prueba disponible",
+      "Necesidad siguiente"
+    ],
+    "output_rows": [
+      [
+        "Periodo abril",
+        "Ausente en I1; pago I3",
+        "Detalle de imputación"
+      ],
+      [
+        "Grupo 3",
+        "Etiqueta en I2",
+        "Definición para ese periodo"
+      ]
+    ],
+    "check": "Un vacío en el extracto no demuestra cotizaciones omitidas. Una etiqueta sola no determina tipos o regímenes.",
+    "question": "¿Puede el recibo fechado en abril completar abril en la situación?",
+    "answer": "No. Sigue faltando la relación pago-periodo. Conserva el recibo y explicita esa comprobación concreta.",
+    "practice": "Añade el detalle de imputación y actualiza la cronología manteniendo separada la clasificación.",
+    "next": "Selecciona exports oficiales, cartas y recibos disponibles y fija pregunta y periodos antes de calcular."
+  },
+  "vera/quesito-legale-fiscale": {
+    "title": "De una pregunta general a una respuesta verificable",
+    "goal": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional.",
+    "scenario": "Un cliente ficticio pregunta si un coste es deducible. La factura describe un servicio, pero se desconocen entidad, periodo, régimen y uso efectivo. La lección delimita la pregunta sin emitir un dictamen fiscal.",
+    "request": "Vera, muestra cómo conviertes esta pregunta en una respuesta respaldada por fuentes.",
+    "scope": "Lección sobre investigación y revisión, no sobre una regla fiscal sustantiva. Un caso real requiere fuentes primarias actuales y aplicables.",
+    "input_columns": [
+      "Elemento ficticio",
+      "Disponible",
+      "Por aclarar"
+    ],
+    "input_rows": [
+      [
+        "Factura Q1",
+        "Descripción del servicio e importe",
+        "Uso efectivo"
+      ],
+      [
+        "Pregunta del cliente",
+        "Interés en deducir",
+        "Entidad, régimen y periodo"
+      ],
+      [
+        "Fuentes jurídicas",
+        "No seleccionadas en este ejemplo reducido",
+        "Marco aplicable después de aclarar"
+      ]
+    ],
+    "basis": "Q1 respalda una descripción documental, no los requisitos fiscales. Los hechos ausentes pueden cambiar investigación y conclusión.",
+    "method": [
+      "Delimita pregunta, decisión y hechos relevantes. Pregunta solo lo que las pruebas disponibles no resuelvan.",
+      "Sigue el recorrido actual de planificación, investigación y respuesta. Comprueba autoridad, versión y aplicabilidad y separa hechos y citas.",
+      "Revisa afirmaciones y alternativas pertinentes y realiza el examen contrario cuando lo exija el método. Entrega respuesta, bases y preguntas residuales para revisión profesional."
+    ],
+    "result_title": "Una pregunta preparada para investigar",
+    "conclusion": "La pregunta debe identificar entidad, periodo, régimen y uso del servicio. Sin ello, un sí o no categórico sería prematuro.",
+    "output_columns": [
+      "Etapa",
+      "Resultado útil",
+      "Control"
+    ],
+    "output_rows": [
+      [
+        "Delimitación",
+        "Pregunta y hechos confirmados",
+        "Fuente para cada hecho"
+      ],
+      [
+        "Investigación",
+        "Fuentes aplicables",
+        "Versión, autoridad y ubicación"
+      ],
+      [
+        "Respuesta revisada",
+        "Conclusión con condiciones y alternativas",
+        "Sin citas inventadas"
+      ]
+    ],
+    "check": "Una cita auténtica puede no ser aplicable. Verifica el texto y su relación con los hechos del caso.",
+    "question": "¿Basta una página sobre deducibilidad para responder?",
+    "answer": "No. Hay que evaluar autoridad, periodo, hechos y condiciones. Compartir tema no demuestra aplicabilidad.",
+    "practice": "Añade entidad, periodo y uso del servicio y formula la pregunta precisa de investigación.",
+    "next": "Indica la decisión que necesitas y selecciona documentos pertinentes. Vera gestiona las etapas internas sin exigir elegir cada skill."
+  },
+  "vera/registro-imprese-sari": {
+    "title": "Preparar el trámite antes de abrir el portal",
+    "goal": "Distinguir hechos, instrucciones oficiales y acciones manuales manteniendo separados los destinatarios.",
+    "scenario": "Una empresa ficticia pide 'abrir la posición' para una actividad nueva. Describe ubicación y fecha prevista, pero no está clara la cámara competente ni otras posiciones necesarias. Las palabras del cliente no eligen destinatarios.",
+    "request": "Vera, prepara un plan de trámite e identifica los hechos pendientes antes de cumplimentar.",
+    "scope": "Borrador revisable sin acceso, formularios, firma, pago ni presentación. No se inventan formularios DIRE ni plazos.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Hecho",
+      "Pregunta"
+    ],
+    "input_rows": [
+      [
+        "R1 · descripción de actividad",
+        "Nueva actividad propuesta",
+        "Clasificación por verificar"
+      ],
+      [
+        "R2 · ubicación",
+        "Dirección descrita",
+        "Competencia territorial"
+      ],
+      [
+        "R3 · cronología",
+        "Inicio previsto",
+        "Fecha real e implicaciones"
+      ]
+    ],
+    "basis": "R1–R3 orientan la investigación sin determinar automáticamente Registro Imprese, REA u otras posiciones. Las instrucciones reales necesitan guías oficiales actuales.",
+    "method": [
+      "Aclara entidad, actividad, territorio, fechas y decisión. Considera destinatarios sugeridos por los hechos sin clasificación automática.",
+      "Lee las instrucciones oficiales aplicables y su versión. La búsqueda pública utiliza temas genéricos sin identificadores de clientes.",
+      "Prepara hechos, fuentes, pasos manuales y documentos requeridos como borrador revisable. Mantén el plan separado de estar listo para presentar."
+    ],
+    "result_title": "Plan preliminar · destinatarios por confirmar",
+    "conclusion": "Hay que confirmar actividad, competencia y fechas antes de elegir formularios y pasos. El resultado útil es una lista razonada de decisiones necesarias.",
+    "output_columns": [
+      "Decisión",
+      "Base",
+      "Estado"
+    ],
+    "output_rows": [
+      [
+        "Cámara competente",
+        "R2 y guía oficial aplicable",
+        "Por confirmar"
+      ],
+      [
+        "Destinatarios",
+        "Actividad efectiva R1",
+        "Evaluar por separado"
+      ],
+      [
+        "Formularios y pasos DIRE",
+        "Fuente actual tras delimitar",
+        "Todavía no seleccionados"
+      ]
+    ],
+    "check": "La lengua no cambia la jurisdicción. Orientación SARI y cumplimentación DIRE son etapas distintas; el plan no autoriza acciones de portal.",
+    "question": "El cliente dice 'abrir INPS'. ¿Podemos inferir todo el trámite?",
+    "answer": "No. Aclara resultado deseado y posiciones pertinentes según los hechos. La frase sola no elige destinatarios ni formularios.",
+    "practice": "Completa actividad y cámara e identifica preguntas pendientes antes de consultar la guía pertinente.",
+    "next": "Prepara actividad real, forma jurídica, ubicación, fechas y documentos disponibles."
+  },
+  "vera/financial-report-builder": {
+    "title": "Un informe financiero que vuelve a sus tablas",
+    "goal": "Transformar fuentes financieras legibles en secciones, cifras y comentarios coherentes.",
+    "scenario": "La ficticia Arco entrega ingresos de EUR 120.000 y costes de EUR 95.000. Un directivo atribuye el resultado a clientes nuevos, pero faltan detalle por cliente y periodo comparativo.",
+    "request": "Vera, prepara un informe breve desde estas tablas y distingue cifras de explicaciones por verificar.",
+    "scope": "Construcción de informes desde Excel, CSV o PDF de texto compatibles. No es Reporting Engine de Clara ni un análisis ajeno.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Contenido",
+      "Límite"
+    ],
+    "input_rows": [
+      [
+        "F1 · estado",
+        "Ingresos EUR 120.000; costes EUR 95.000",
+        "Solo periodo actual"
+      ],
+      [
+        "F2 · nota directiva",
+        "Crecimiento atribuido a clientes nuevos",
+        "Sin detalle comparativo"
+      ]
+    ],
+    "basis": "F1 respalda EUR 25.000 sobre los costes incluidos. F2 acredita la atribución del directivo, no una prueba independiente de la causa.",
+    "method": [
+      "Inspecciona archivos y tablas y establece tipo de informe, periodo, lengua y alcance de fuentes.",
+      "Revisa correspondencias entre tablas y secciones y completa comentarios basados en evidencia, manteniendo visibles las explicaciones sin corroborar.",
+      "Genera documentos, tablas y auditoría habituales. Comprueba cifras y comentarios contra sus fuentes y conserva el estado de borrador revisable."
+    ],
+    "result_title": "Arco · resultado del periodo",
+    "conclusion": "En las partidas entregadas, los ingresos superan los costes en EUR 25.000. La explicación sobre nuevos clientes sigue siendo una declaración directiva por corroborar.",
+    "output_columns": [
+      "Sección",
+      "Contenido",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "Resumen económico",
+        "120.000 − 95.000 = EUR 25.000",
+        "F1"
+      ],
+      [
+        "Comentario",
+        "El directivo menciona nuevos clientes",
+        "F2 · declaración"
+      ],
+      [
+        "Trabajo adicional",
+        "Detalle por cliente y comparación temporal",
+        "No disponible"
+      ]
+    ],
+    "check": "No conviertas una explicación declarada en causa probada. Un PDF legible también puede necesitar un mapeo de tablas revisado.",
+    "question": "¿Podemos afirmar que los nuevos clientes generaron el margen?",
+    "answer": "No con estas fuentes. Cita la explicación del directivo e identifica los datos necesarios para verificarla.",
+    "practice": "Añade detalle por cliente y actualiza el comentario conservando la versión anterior.",
+    "next": "Selecciona tablas y documentos financieros y explica la audiencia; Vera prepara los formatos habituales de salida."
+  },
+  "vera/sales-plan": {
+    "title": "Crecimiento de ventas: ¿volumen, precio o divisa?",
+    "goal": "Traducir una petición comercial en supuestos precisos antes de calcular.",
+    "scenario": "Una fila ficticia de Real vende 100 unidades a USD 20 con EUR 0,90 por USD. Se proponen un 10 % más de unidades y un dólar un 5 % más débil frente al euro. El precio unitario en USD permanece igual.",
+    "request": "Vera, prepara el Plan con más volumen y un dólar más débil y vuelve a leer los supuestos.",
+    "scope": "Planificación comercial desde datos reales revisados y cambios porcentuales confirmados. No se inventan costes, márgenes o meses ausentes.",
+    "input_columns": [
+      "Hecho o supuesto ficticio",
+      "Valor",
+      "Significado"
+    ],
+    "input_rows": [
+      [
+        "Real · S1",
+        "100 × USD 20 × 0,90",
+        "EUR 1.800"
+      ],
+      [
+        "A1 · unidades",
+        "+10 %",
+        "110 unidades"
+      ],
+      [
+        "A2 · EUR por USD",
+        "−5 %",
+        "EUR 0,855 por USD"
+      ]
+    ],
+    "basis": "S1 es la fila Real. A1 y A2 son supuestos explícitos. El tipo significa unidades de moneda de informe por unidad de moneda de transacción.",
+    "method": [
+      "Inspecciona columnas y miembros efectivos. Confirma impulsores, alcance exacto, periodos, prioridad y dirección del cambio.",
+      "Resuelve solapamientos de supuestos y confirma bases de descuentos o costes si existen. Ejecuta la configuración actual sobre el Real revisado.",
+      "Lee Plan, registro de supuestos, conciliación y límites. Mantén no disponibles las métricas dependientes de datos ausentes."
+    ],
+    "result_title": "Más unidades, tipo de cambio menos favorable",
+    "conclusion": "Ingresos del Plan: 110 × 20 × 0,855 = EUR 1.881, EUR 81 más. Un aumento del 10 % en unidades se convierte en un 4,5 % en moneda de informe.",
+    "output_columns": [
+      "Escenario",
+      "Volumen y cambio",
+      "Ingresos EUR"
+    ],
+    "output_rows": [
+      [
+        "Real",
+        "100 unidades · 0,90 EUR/USD",
+        "1.800"
+      ],
+      [
+        "Plan",
+        "110 unidades · 0,855 EUR/USD",
+        "1.881"
+      ],
+      [
+        "Diferencia",
+        "A1 + A2",
+        "+81 · +4,5 %"
+      ]
+    ],
+    "check": "'Las ventas crecen un 10 %' es ambiguo hasta precisar unidades, precio o ventas brutas. Invertir el tipo cambia el resultado.",
+    "question": "Con un dólar más débil, ¿debe subir 0,90 a 0,945?",
+    "answer": "No. Expresado en EUR por USD, un dólar un 5 % más débil reduce el tipo a 0,855. Confirma la dirección antes de calcular.",
+    "practice": "Mantén constante el tipo y compara los planes para aislar el efecto de unidades.",
+    "next": "Selecciona Real mensual, describe cambios deseados y confirma la lectura estructurada de supuestos de Vera."
+  },
+  "vera/studio-archive": {
+    "title": "Retomar un encargo sin su conversación anterior",
+    "goal": "Recuperar identidad de cliente, fuente y resultado mediante el registro portátil del encargo.",
+    "scenario": "Dos clientes ficticios tienen un archivo invoice.pdf. Arco tiene un encargo de junio con una fuente importada y un informe finalizado. El chat original no está disponible; el registro guardado permite volver al trabajo.",
+    "request": "Vera, retoma el encargo de junio de Arco y abre el informe con sus fuentes.",
+    "scope": "Selección, búsqueda y reanudación de trabajo registrado. Buscar en el archivo no reorganiza ni mueve documentos originales.",
+    "input_columns": [
+      "Elemento ficticio",
+      "Identidad",
+      "Contenido"
+    ],
+    "input_rows": [
+      [
+        "Cliente Arco",
+        "C-ARCO",
+        "Encargo de junio E-06"
+      ],
+      [
+        "Cliente Luna",
+        "C-LUNA",
+        "Archivo distinto"
+      ],
+      [
+        "Fuente invoice.pdf",
+        "I-01 en C-ARCO/E-06",
+        "Copia registrada"
+      ],
+      [
+        "Informe",
+        "A-01 de ejecución R-01",
+        "Finalizado para revisión"
+      ]
+    ],
+    "basis": "Los registros de cliente y encargo acreditan procedencia. El nombre compartido del archivo no identifica al cliente.",
+    "method": [
+      "Selecciona cliente registrado y encargo mediante referencias persistentes y aclara solo selecciones realmente ambiguas.",
+      "Abre fuentes y resultados mediante el registro y verifica identidad, estado de ejecución e integridad.",
+      "Crea una nueva ejecución para trabajo nuevo en el mismo encargo, declara salidas y conserva historial. No reescribas resultados anteriores para actualizarlos."
+    ],
+    "result_title": "Arco · encargo de junio recuperado",
+    "conclusion": "Informe A-01 y fuente I-01 pertenecen a E-06. Su procedencia sigue disponible en el registro sin la conversación anterior.",
+    "output_columns": [
+      "Abrir",
+      "Ruta lógica",
+      "Comprobación"
+    ],
+    "output_rows": [
+      [
+        "Informe finalizado",
+        "C-ARCO → E-06 → R-01 → A-01",
+        "Estado e identidad del resultado"
+      ],
+      [
+        "Fuente",
+        "C-ARCO → E-06 → I-01",
+        "Copia documental registrada"
+      ],
+      [
+        "Nuevo análisis",
+        "Nueva ejecución en el mismo encargo",
+        "Historial conservado"
+      ]
+    ],
+    "check": "El mismo nombre en otra carpeta no es evidencia equivalente. Una ejecución activa no debe presentarse como finalizada.",
+    "question": "Si cambia de ubicación la carpeta del cliente, ¿hay que recrear todos los resultados?",
+    "answer": "El registro portátil resuelve rutas en la carpeta actual. Verifica acceso e integridad en lugar de suponer necesaria la regeneración.",
+    "practice": "Retoma el encargo didáctico desde el segundo chat y abre el mismo resultado verificado.",
+    "next": "Selecciona cliente y encargo antes de leer documentos y utiliza el registro para recuperar el trabajo."
+  },
+  "vera/variance-analysis": {
+    "title": "Seguir el puente entre dos periodos",
+    "goal": "Explicar una diferencia medida mediante contribuciones que concilian con la variación observada.",
+    "scenario": "El producto ficticio A pasa de 100 unidades a EUR 10 a 120 unidades a EUR 11. Los ingresos suben de EUR 1.000 a EUR 1.320. El puente aplica primero volumen al precio inicial y después precio al volumen final.",
+    "request": "Vera, explica el paso de EUR 1.000 a EUR 1.320 y muestra las contribuciones.",
+    "scope": "Puente de un producto. El workflow real ejecuta alternativas y desgloses compatibles; conserva el orden de descomposición calculado y documentado.",
+    "input_columns": [
+      "Periodo ficticio",
+      "Unidades",
+      "Precio · ingresos"
+    ],
+    "input_rows": [
+      [
+        "Base",
+        "100",
+        "EUR 10 · EUR 1.000"
+      ],
+      [
+        "Comparación",
+        "120",
+        "EUR 11 · EUR 1.320"
+      ]
+    ],
+    "basis": "V1 aporta volumen e ingresos de ambos periodos. El orden ilustrado es volumen a precio base y luego precio a volumen comparativo.",
+    "method": [
+      "Inspecciona y revisa periodos, importes, unidades, dimensiones y nivel de cálculo contra las fuentes.",
+      "Ejecuta análisis habitual de causas, alternativas y desgloses. Lee contribuciones y conciliación sin cambiar la secuencia calculada.",
+      "Muestra cascada, tablas y comentario preliminar. Separa descomposición numérica de interpretación comercial e hipótesis que requieren pruebas."
+    ],
+    "result_title": "+EUR 320 explicados por dos contribuciones",
+    "conclusion": "En este orden, 20 unidades adicionales a EUR 10 aportan EUR 200; EUR 1 sobre 120 unidades aporta EUR 120. Juntas concilian EUR 320.",
+    "output_columns": [
+      "Paso",
+      "Contribución",
+      "Ingresos tras el paso"
+    ],
+    "output_rows": [
+      [
+        "Base",
+        "—",
+        "EUR 1.000"
+      ],
+      [
+        "Volumen",
+        "+EUR 200",
+        "EUR 1.200"
+      ],
+      [
+        "Precio",
+        "+EUR 120",
+        "EUR 1.320"
+      ]
+    ],
+    "check": "Otro orden puede repartir la interacción de otra forma. El puente demuestra aritmética, no que una campaña causara el volumen adicional.",
+    "question": "¿Podemos atribuir a marketing los EUR 200 de volumen?",
+    "answer": "No a partir de V1. La contribución está calculada; su causa comercial necesita evidencia independiente y debe describirse como tal.",
+    "practice": "Reduce el precio comparativo a EUR 9 y examina volumen favorable frente a precio desfavorable.",
+    "next": "Selecciona periodos comparables y datos detallados disponibles; el workflow expone las alternativas respaldadas por las fuentes."
+  }
+}

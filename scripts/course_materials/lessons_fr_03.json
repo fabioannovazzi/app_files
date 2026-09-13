@@ -1,0 +1,460 @@
+{
+  "vera/journal-bank-reconciliation": {
+    "title": "Deux règlements pour une seule écriture",
+    "goal": "Rapprocher banque et journal en conservant références, groupes et écarts ouverts.",
+    "scenario": "Le journal fictif comptabilise un encaissement de 1 200 EUR pour INV-401. La banque montre deux crédits de 700 et 500 EUR avec cette référence, ainsi qu'une commission de 12 EUR absente du journal fourni.",
+    "request": "Vera, rapproche ces mouvements et montre ce qui reste ouvert.",
+    "scope": "Comparaison banque-journal sur une période et une devise. Elle ne vérifie pas toutes les créances ouvertes et n'autorise pas de comptabilisation automatique.",
+    "input_columns": [
+      "Source fictive",
+      "Référence",
+      "Montant"
+    ],
+    "input_rows": [
+      [
+        "G1 · journal",
+        "INV-401",
+        "+1 200 EUR"
+      ],
+      [
+        "B1 · banque ligne 1",
+        "INV-401",
+        "+700 EUR"
+      ],
+      [
+        "B1 · banque ligne 2",
+        "INV-401",
+        "+500 EUR"
+      ],
+      [
+        "B1 · banque ligne 3",
+        "Commission",
+        "−12 EUR"
+      ]
+    ],
+    "basis": "La référence commune étaye 700 + 500 face à 1 200. La commission a une nature et un sens différents ; elle reste distincte.",
+    "method": [
+      "Examine les formats et revois colonnes, signes, dates, devise et références contre les sources.",
+      "Exécute les rapprochements supportés, y compris les groupes étayés par des références. Conserve leurs lignes ; ne cherche pas des combinaisons arbitraires pour solder un total.",
+      "Lis rapprochements, groupes et résidus. Explique chaque lien et laisse au professionnel la revue des différences et d'éventuelles écritures."
+    ],
+    "result_title": "Encaissement reconstitué, commission à clarifier",
+    "conclusion": "700 + 500 = 1 200 EUR pour INV-401. La commission bancaire de 12 EUR n'a pas de contrepartie dans le journal fourni.",
+    "output_columns": [
+      "Objet",
+      "Comparaison",
+      "Résultat illustré"
+    ],
+    "output_rows": [
+      [
+        "INV-401",
+        "700 + 500 ↔ 1 200 EUR",
+        "Groupe avec référence commune"
+      ],
+      [
+        "Commission",
+        "−12 EUR ↔ aucune écriture",
+        "Résidu à revoir"
+      ]
+    ],
+    "check": "Une somme identique ne justifie pas n'importe quel groupe. Sens, période, devise et références doivent rester cohérents.",
+    "question": "Sans références, peut-on attribuer automatiquement les deux crédits à INV-401 ?",
+    "answer": "La somme seule n'étaye pas le même groupe automatique. Il faut revoir les preuves et conserver l'ambiguïté si le lien reste insuffisant.",
+    "practice": "Ramène le second crédit à 480 EUR et examine le résidu sans inventer de troisième règlement.",
+    "next": "Sélectionne journal et relevé du même périmètre ; clarifie uniquement les mappings que les fichiers ne résolvent pas."
+  },
+  "vera/journal-sampling": {
+    "title": "Une population fiable avant l'échantillon",
+    "goal": "Comprendre pourquoi la qualification du journal précède la sélection des écritures.",
+    "scenario": "Le journal fictif conserve numéros de mouvement, comptes et montants débit-crédit. Une valeur est écrite '1.200,00' et demande la bonne lecture numérique. Une ligne de total est un récapitulatif, pas une écriture supplémentaire.",
+    "request": "Vera, prépare ce journal et montre l'échantillon avec les contrôles de population.",
+    "scope": "Préparation et échantillonnage selon le contrat courant. Une sélection n'est pas automatiquement représentative statistiquement ni contrôlée sur pièces.",
+    "input_columns": [
+      "Ligne fictive",
+      "Donnée",
+      "Choix à revoir"
+    ],
+    "input_rows": [
+      [
+        "G1 · ligne 2",
+        "M-101 ; débit 1.200,00",
+        "Format numérique italien"
+      ],
+      [
+        "G1 · ligne 3",
+        "M-101 ; crédit 1.200,00",
+        "Deuxième ligne du même mouvement"
+      ],
+      [
+        "G1 · ligne 4",
+        "Total 1.200,00 / 1.200,00",
+        "Récapitulatif"
+      ]
+    ],
+    "basis": "Identifiants et localisateurs viennent de G1. Le numéro de ligne physique ne remplace pas l'identifiant original du mouvement.",
+    "method": [
+      "Examine et revois périmètre, mappings, format monétaire et lignes de total avant normalisation.",
+      "Qualifie la population complète et vérifie clôture et contrôles monétaires. Applique la sélection revue en gardant les identifiants d'origine.",
+      "Livre population normalisée, diagnostic, échantillon et pièces d'assurance. Vouching utilise ensuite ce passage clos sans refaire la préparation."
+    ],
+    "result_title": "La qualification précède la sélection",
+    "conclusion": "Le cas distingue deux lignes comptables d'un mouvement et une ligne de total. Le format revu donne 1 200 EUR pour '1.200,00'.",
+    "output_columns": [
+      "Élément",
+      "Traitement illustré",
+      "Raison"
+    ],
+    "output_rows": [
+      [
+        "Lignes 2–3",
+        "Population : M-101",
+        "Identité originale et deux côtés"
+      ],
+      [
+        "Ligne 4",
+        "Total exclu sur base revue",
+        "Éviter le double comptage"
+      ],
+      [
+        "Échantillon ultérieur",
+        "Lié à la population qualifiée",
+        "Traçabilité"
+      ]
+    ],
+    "check": "Un fichier normalisé n'est pas qualifié parce qu'il s'ouvre. Un mauvais mapping peut produire des nombres plausibles mais faux.",
+    "question": "Peut-on nommer le mouvement M-2 parce qu'il est sur la deuxième ligne ?",
+    "answer": "Non. Il faut conserver M-101. Le localisateur permet de retrouver la preuve, pas de créer une identité de mouvement.",
+    "practice": "Ajoute une ligne déséquilibrée et vérifie que la qualification la rend visible avant l'échantillonnage.",
+    "next": "Prépare l'export complet et les totaux de contrôle, puis explique l'objectif de la sélection."
+  },
+  "vera/new-client": {
+    "title": "Commencer le dossier sans transformer les manques en confirmations",
+    "goal": "Passer des pièces reçues à une proposition de mise en place professionnelle avec preuves manquantes explicites.",
+    "scenario": "La société fictive Arco Srl fournit extrait du registre, identité du représentant et projet de lettre de mission. La lettre n'est pas signée et la déclaration de bénéficiaire effectif manque. La préparation documentaire précède la mise en place professionnelle italienne.",
+    "request": "Vera, organise l'entrée de ce client et montre ce qu'il faut encore obtenir.",
+    "scope": "Cas italien fictif. Changer la langue de travail n'active pas un autre module professionnel national.",
+    "input_columns": [
+      "Document fictif",
+      "État observé",
+      "Signification"
+    ],
+    "input_rows": [
+      [
+        "N1 · extrait",
+        "Lisible",
+        "Identité à revoir"
+      ],
+      [
+        "N2 · identité du représentant",
+        "Reçue",
+        "Lien et validité à contrôler"
+      ],
+      [
+        "N3 · lettre de mission",
+        "Projet non signé",
+        "Ne prouve pas l'acceptation"
+      ],
+      [
+        "Déclaration bénéficiaire effectif",
+        "Non reçue",
+        "Demande à revoir"
+      ]
+    ],
+    "basis": "Les fichiers attestent la disponibilité de pièces. Signature et déclaration manquantes restent distinctes des actions professionnelles proposées.",
+    "method": [
+      "Prépare et classe les pièces reçues en reliant extractions et manques aux sources.",
+      "Revois et applique les décisions documentaires ; seul un passage italien cohérent peut être promu vers la mise en place professionnelle.",
+      "Prépare identité, mission, confidentialité, AML et suivi avec preuves et points ouverts. Le professionnel enregistre ses décisions réelles dans les surfaces de revue."
+    ],
+    "result_title": "Pièces organisées, acceptation à compléter",
+    "conclusion": "Extrait et pièce d'identité sont disponibles. Lettre non signée et déclaration manquante empêchent de présenter le dossier comme complet.",
+    "output_columns": [
+      "Domaine",
+      "Base",
+      "Étape suivante"
+    ],
+    "output_rows": [
+      [
+        "Identité",
+        "N1–N2",
+        "Revoir les liens"
+      ],
+      [
+        "Mission",
+        "N3 non signée",
+        "Parcours normal d'acceptation"
+      ],
+      [
+        "AML",
+        "Déclaration absente",
+        "Revoir la demande et l'analyse pertinente"
+      ]
+    ],
+    "check": "Recevoir une pièce n'est pas en accepter le contenu. Achever le workflow signifie livrer le travail, pas accepter automatiquement le client.",
+    "question": "Le dossier s'appelle 'client approuvé'. Peut-on reprendre ce statut ?",
+    "answer": "Non. Le statut découle des preuves et décisions persistées, pas du nom donné au dossier.",
+    "practice": "Ajoute la lettre signée et actualise les propositions concernées en gardant ouverts les points AML non résolus.",
+    "next": "Sélectionne client et pièces réellement reçues. Une revue AML ultérieure ciblée ne demande pas de refaire toute l'entrée."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Un règlement ultérieur n'efface pas le solde historique",
+    "goal": "Vérifier les postes ouverts à une date et distinguer les événements postérieurs.",
+    "scenario": "Au 30 juin, l'état fictif indique INV-701 ouverte pour 1 000 EUR. Les règlements liés sont de 600 EUR le 28 juin et 400 EUR le 5 juillet. Le premier n'est pas imputé dans l'état fourni.",
+    "request": "Vera, vérifie ce poste au 30 juin et explique comment utiliser le règlement de juillet.",
+    "scope": "Vérification d'une population déclarée ouverte à une date. Les factures seules ne reconstruisent pas les soldes résiduels.",
+    "input_columns": [
+      "Source fictive",
+      "Date",
+      "Montant"
+    ],
+    "input_rows": [
+      [
+        "O1 · état INV-701",
+        "30 juin",
+        "1 000 EUR ouverts déclarés"
+      ],
+      [
+        "B1 · règlement lié",
+        "28 juin",
+        "600 EUR"
+      ],
+      [
+        "B2 · règlement ultérieur",
+        "5 juillet",
+        "400 EUR"
+      ]
+    ],
+    "basis": "O1 définit la population. Seul B1 précède l'arrêté ; les liens entre règlements et poste doivent être vérifiés.",
+    "method": [
+      "Confirme date d'arrêté, client, population et totaux ; collecte comptabilité et justificatifs du même dossier.",
+      "Compare montants et liens en séparant candidats et décisions revues. Présente distinctement soldes historiques, écarts et règlements ultérieurs.",
+      "Présente les fiches de revue et enregistre les décisions effectives. Conserve les questions ouvertes sans créer automatiquement d'écritures."
+    ],
+    "result_title": "Solde à l'arrêté revu : 400 EUR",
+    "conclusion": "Si le lien de B1 est confirmé, 400 EUR restent au 30 juin. B2 documente un recouvrement ultérieur, pas un solde nul rétroactif.",
+    "output_columns": [
+      "Lecture",
+      "Montant",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "Ouvert déclaré",
+        "1 000 EUR",
+        "O1"
+      ],
+      [
+        "Règlement avant arrêté",
+        "−600 EUR",
+        "B1 · après revue"
+      ],
+      [
+        "Résiduel à l'arrêté",
+        "400 EUR",
+        "1 000 − 600"
+      ],
+      [
+        "Encaissement ultérieur",
+        "400 EUR",
+        "B2 · 5 juillet"
+      ]
+    ],
+    "check": "La date de l'état reste déterminante. Le règlement ultérieur peut étayer le recouvrement sans réécrire le passé.",
+    "question": "Tout est encaissé en juillet. Peut-on afficher zéro au 30 juin ?",
+    "answer": "Non. Le cas revu conserve 400 EUR à l'arrêté. Le règlement de juillet est présenté comme événement postérieur.",
+    "practice": "Déplace B2 au 29 juin et relance la vérification en repérant la conclusion modifiée.",
+    "next": "Fournis l'état des postes ouverts à une date précise, les mouvements comptables et les preuves bancaires pertinentes."
+  },
+  "vera/purchase-invoice-review": {
+    "title": "Relier chaque facture fournisseur à l'écriture réelle",
+    "goal": "Lire la couverture d'une population de factures et repérer les cas nécessitant une revue comptable.",
+    "scenario": "Le lot fictif contient trois factures : une avec écriture cohérente, une sans écriture trouvée et une avec deux candidats ambigus. Période et population comptable sont explicitement délimitées.",
+    "request": "Vera, vérifie le lien entre ce lot fournisseur et les écritures réellement fournies.",
+    "scope": "Revue du lot et de la comptabilité sélectionnés. Un lien manquant dans ce périmètre ne prouve pas qu'une facture n'a jamais été enregistrée.",
+    "input_columns": [
+      "Facture fictive",
+      "Support comptable disponible",
+      "Question"
+    ],
+    "input_rows": [
+      [
+        "PA-101 · 1 220 EUR",
+        "Une écriture cohérente",
+        "Nature et traitement à revoir"
+      ],
+      [
+        "PA-102 · 610 EUR",
+        "Aucun candidat dans la période",
+        "À récupérer ou clarifier"
+      ],
+      [
+        "PA-103 · 244 EUR",
+        "Deux candidats",
+        "Identité à résoudre"
+      ]
+    ],
+    "basis": "P1 est le lot XML et G1 l'export de la période. Les constats restent liés aux deux périmètres ; aucune écriture absente n'est inventée.",
+    "method": [
+      "Importe factures et écritures effectives ; qualifie période, comptes, identités et totaux du lot.",
+      "Exécute la méthode actuelle et ses capacités natives requises. Une étape indisponible reste en attente au lieu d'être simulée.",
+      "Lis couverture, ambiguïtés et propositions. Le professionnel apprécie nature et traitement ; les propositions ne deviennent ni écritures ni approbations automatiques."
+    ],
+    "result_title": "Trois factures, trois états distincts",
+    "conclusion": "Un lien existe, un manque dans le périmètre et un reste ambigu. La revue doit préserver ces différences.",
+    "output_columns": [
+      "Document",
+      "État illustré",
+      "Suite utile"
+    ],
+    "output_rows": [
+      [
+        "PA-101",
+        "Lien disponible",
+        "Revoir le traitement sur pièce"
+      ],
+      [
+        "PA-102",
+        "Non trouvé dans le périmètre",
+        "Vérifier période et export"
+      ],
+      [
+        "PA-103",
+        "Ambigu",
+        "Départager les candidats par les preuves"
+      ]
+    ],
+    "check": "Couverture du rapprochement et exactitude comptable sont distinctes. Une réussite technique n'approuve pas déductibilité ou TVA.",
+    "question": "Peut-on écrire sans réserve 'facture non enregistrée' pour PA-102 ?",
+    "answer": "Le constat étayé est 'écriture non trouvée dans le périmètre examiné'. Vérifie période et exhaustivité avant de conclure plus largement.",
+    "practice": "Ajoute l'écriture de PA-102 et compare une nouvelle exécution sans supprimer l'ancien résultat.",
+    "next": "Sélectionne factures et écritures de la période et vérifie les capacités natives requises par le workflow installé."
+  },
+  "vera/presenza-digitale-studio": {
+    "title": "Le site du cabinet commence par des faits vérifiés",
+    "goal": "Créer une page claire à partir d'informations vérifiées, puis la revoir sur ordinateur et mobile.",
+    "scenario": "Le cabinet fictif Arco fournit nom, services effectifs, horaires et contact de démonstration. Il n'apporte ni témoignages, ni prix, ni taux de réussite. Il souhaite une première page informative invitant à le contacter.",
+    "request": "Vera, prépare une première page du cabinet à partir de ces seules informations.",
+    "scope": "Aperçu informatif local avec personnes et contacts fictifs. Aucun domaine n'est relié et rien n'est publié pendant la leçon.",
+    "input_columns": [
+      "Source fictive",
+      "Fait",
+      "Usage"
+    ],
+    "input_rows": [
+      [
+        "S1 · fiche cabinet",
+        "Arco · conseil comptable",
+        "Titre et description"
+      ],
+      [
+        "S1 · services",
+        "Comptabilité et contrôle de gestion",
+        "Activités"
+      ],
+      [
+        "S1 · contact",
+        "Lundi–vendredi, 9–18 ; contact de démonstration",
+        "Invitation au contact"
+      ],
+      [
+        "Prix et témoignages",
+        "Non fournis",
+        "Ne pas inventer"
+      ]
+    ],
+    "basis": "S1 est la seule base factuelle. Une proposition visuelle n'ajoute ni qualification, ni résultat, ni consentement à citer une personne.",
+    "method": [
+      "Rassemble les faits vérifiés et l'objectif. Si un site existe, examine la version actuelle et les changements souhaités.",
+      "Prépare structure, texte et réalisation responsive, en reliant affirmations et contacts aux sources et en distinguant les propositions.",
+      "Contrôle l'aperçu exact sur ordinateur et mobile, avec lisibilité et liens. Publication et destination suivent l'approbation normale."
+    ],
+    "result_title": "Arco · informations essentielles du cabinet",
+    "conclusion": "Comptabilité et contrôle de gestion pour accompagner le travail du cabinet. Contactez l'interlocuteur aux horaires indiqués pour connaître les services disponibles.",
+    "output_columns": [
+      "Section",
+      "Contenu préparé",
+      "Contrôle"
+    ],
+    "output_rows": [
+      [
+        "Ouverture",
+        "Nom et activités",
+        "Cohérence avec S1"
+      ],
+      [
+        "Services",
+        "Deux activités effectives",
+        "Aucune spécialisation inventée"
+      ],
+      [
+        "Contact",
+        "Horaires et coordonnées de démonstration",
+        "Vérifier les coordonnées réelles avant publication"
+      ]
+    ],
+    "check": "Il faut revoir la version exacte destinée à être publiée. Une belle page n'autorise pas de témoignages ou promesses sans preuve.",
+    "question": "Peut-on ajouter 'le meilleur cabinet de la région' au titre ?",
+    "answer": "Non. S1 ne soutient pas cette comparaison. Un titre clair et précis n'a pas besoin d'un primat inventé.",
+    "practice": "Change l'ordre des services et contrôle la nouvelle page sur un écran étroit.",
+    "next": "Prépare fiche du cabinet, services, contacts, identité visuelle et site existant, le cas échéant."
+  },
+  "vera/previdenza-inps": {
+    "title": "Construire une chronologie contributive vérifiable",
+    "goal": "Organiser les périodes et pièces sans choisir un régime à partir d'une étiquette ambiguë.",
+    "scenario": "L'extrait fictif montre janvier–mars et mai–juin. Une lettre mentionne un 'groupe 3' sans le définir. Le client fournit un reçu de paiement d'avril, dont la période d'imputation est inconnue.",
+    "request": "Vera, reconstitue ce que nous savons de cette position et les éléments manquants.",
+    "scope": "Reconstruction documentaire INPS italienne. Aucun taux, délai juridique ou classement contributif n'est appliqué et aucun portail n'est ouvert.",
+    "input_columns": [
+      "Source fictive",
+      "Fait",
+      "Limite"
+    ],
+    "input_rows": [
+      [
+        "I1 · extrait",
+        "Janvier–mars ; mai–juin",
+        "Avril absent du périmètre visible"
+      ],
+      [
+        "I2 · lettre",
+        "Étiquette 'groupe 3'",
+        "Sens non défini"
+      ],
+      [
+        "I3 · reçu",
+        "Paiement en avril",
+        "Imputation non établie"
+      ]
+    ],
+    "basis": "I1 documente les périodes affichées. La date de I3 ne prouve pas son imputation ; I2 nécessite le contexte définissant le groupe.",
+    "method": [
+      "Acquiers les pièces sélectionnées et consigne faits, localisateurs et chronologie, en distinguant provenance déclarée et vérification des octets.",
+      "Clarifie étiquettes, périodes et question. Recherche les sources officielles sur le cadre confirmé ; les alternatives non résolues restent exploratoires.",
+      "Prépare dossier et questions professionnelles. N'effectue des calculs qu'avec formules et paramètres revus, en livrant les limites explicites."
+    ],
+    "result_title": "Avril et classification : deux questions séparées",
+    "conclusion": "La position fournie ne montre pas avril. Le reçu prouve un paiement sans en résoudre l'imputation ; le 'groupe 3' reste indéfini.",
+    "output_columns": [
+      "Question",
+      "Preuve disponible",
+      "Pièce nécessaire"
+    ],
+    "output_rows": [
+      [
+        "Période avril",
+        "Absente de I1 ; paiement I3",
+        "Détail d'imputation"
+      ],
+      [
+        "Groupe 3",
+        "Étiquette dans I2",
+        "Définition pour la période"
+      ]
+    ],
+    "check": "Une lacune de l'extrait ne prouve pas une omission de cotisations. Une étiquette seule ne choisit ni taux ni régime.",
+    "question": "Le reçu daté d'avril peut-il remplir avril dans la position ?",
+    "answer": "Non. Le lien entre paiement et période reste nécessaire. Conserve le reçu et formule cette vérification ciblée.",
+    "practice": "Ajoute le détail d'imputation et actualise la chronologie en gardant la classification distincte.",
+    "next": "Sélectionne exports officiels disponibles, lettres et reçus ; précise question et périodes avant de discuter un calcul."
+  }
+}

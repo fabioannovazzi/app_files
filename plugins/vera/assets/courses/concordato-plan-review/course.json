@@ -1,0 +1,428 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "concordato-plan-review",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/concordato-plan-review/references/review-methodology.md",
+      "repository_path": "plugins/concordato-plan-review/references/review-methodology.md",
+      "sha256": "649297d2c7056a78788a2580c3c86201002f5dd24fbda69d3fc2d093f6504afa"
+    },
+    {
+      "path": "modules/concordato-plan-review/references/workflow-reference.md",
+      "repository_path": "plugins/concordato-plan-review/references/workflow-reference.md",
+      "sha256": "86f7f00462f5f7c6bbf4d84aa8eddd6c599ec6bc4a2604355f38cc63673dffbf"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/apply_review_edits.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/apply_review_edits.py",
+      "sha256": "27cca0773f5685d664ce7a8a29f54b5e2a1a2450e7b812415c395b95e3264475"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/check_dependencies.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/check_dependencies.py",
+      "sha256": "e1a49ea965ebfe768bc9fb908170c76787051786e962f558657640d5d25be6b4"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/concordato_plan_core.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/concordato_plan_core.py",
+      "sha256": "06956ee48803161d100230712a5a75eb4056344bb6703727808937439c30b9b4"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/concordato_semantic.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/concordato_semantic.py",
+      "sha256": "c4fdad399e3804c61c2a40f74296e073bbe5ddcb969b7ebdef75d465e5708523"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/finalize_output_closure.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/finalize_output_closure.py",
+      "sha256": "39390d5985ecab770767e9e4f217c8197d328debe60637308ac2b2d8f240a3d5"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+      "sha256": "c64bde6195e9d56d2b8659e6984dda4ead1cf075779b1cea27448e4711cf5aa3"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/output_closure.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/output_closure.py",
+      "sha256": "25857c7c622e3c6b766dc22344fd2f6b5c77d97263e7068636240b183b04d92a"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/replay_assurance.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/replay_assurance.py",
+      "sha256": "9fa65b180fd467ab7453adb2cbf94581bcdda04a7dee6d775dda05d9aa9d7e64"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/review_case_model.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/review_case_model.py",
+      "sha256": "dd65b8da66bdf17df3b3bdfec51682a683709a4be86656500d4412b5a1bc45c5"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/review_session.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/review_session.py",
+      "sha256": "38449dfd94d8f1f900b1ee27477b1e0c5bdb726ba13a66ddf4029ca5c17b835f"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/review_source_roles.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/review_source_roles.py",
+      "sha256": "e2d25e8d0f4f0137dbd7e206952e78b20c0819f49ca79269645814d50b6ee1b6"
+    },
+    {
+      "path": "modules/concordato-plan-review/scripts/run_concordato_review.py",
+      "repository_path": "plugins/concordato-plan-review/scripts/run_concordato_review.py",
+      "sha256": "ae50995543e1e6687d1a46c46eb05af70721945bfd104477f0313d087a86d618"
+    },
+    {
+      "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+      "repository_path": "plugins/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+      "sha256": "803fd414c949d58ac52edf3846e0be3a9e9dea3ccd2c8390c1b0e3ce4b7599c0"
+    },
+    {
+      "path": "skills/concordato-plan-review/SKILL.md",
+      "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
+      "sha256": "50372b0dc6a1408111c4a47b48d103948f6d90f22eba9ece2bc6f3f3fd04ba8f"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un piano coerente nei totali può mancare di liquidità",
+      "goal": "Collegare proposta, piano, creditori e tempi dei flussi senza ridurre la revisione a una quadratura.",
+      "scenario": "Un piano fittizio prevede 100.000 EUR di incassi dalla vendita di un bene a dicembre e 90.000 EUR di pagamenti ai creditori a settembre. La cassa iniziale è 10.000 EUR; non è documentato un finanziamento ponte.",
+      "request": "Vera, mostrami il punto del piano che richiede una domanda al professionista.",
+      "scope": "Microcaso sulla tempistica dei flussi. La revisione completa comprende anche procedura, proposta, trattamento dei creditori, alternativa liquidatoria, attestazione e questioni fiscali.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Data",
+        "Flusso"
+      ],
+      "input_rows": [
+        [
+          "P1 · cassa iniziale",
+          "1 settembre",
+          "+10.000 EUR"
+        ],
+        [
+          "P2 · proposta ai creditori",
+          "30 settembre",
+          "−90.000 EUR"
+        ],
+        [
+          "P3 · piano di dismissione",
+          "15 dicembre",
+          "+100.000 EUR"
+        ]
+      ],
+      "basis": "P1–P3 descrivono importi e tempi del solo caso. Il saldo finale positivo non fornisce fondi prima della vendita né dimostra l'esistenza di un impegno del finanziatore.",
+      "method": [
+        "Ispeziona i documenti senza promuovere automaticamente nomi file o importi estratti a significati riveduti.",
+        "Costruisci il modello semantico con perimetro, creditori, fonti e impieghi, liquidità e questioni. Collega osservazioni e inferenze ai documenti esatti.",
+        "Presenta modello e punti aperti al professionista prima della conferma. Solo il modello riveduto alimenta il pacchetto formale e l'eventuale appendice numerica."
+      ],
+      "result_title": "Copertura finale, fabbisogno intermedio aperto",
+      "conclusion": "Il saldo finale teorico è +20.000 EUR, ma a settembre il caso presenta un fabbisogno di 80.000 EUR non coperto dalle fonti fornite.",
+      "output_columns": [
+        "Momento",
+        "Saldo teorico",
+        "Questione"
+      ],
+      "output_rows": [
+        [
+          "Prima dei pagamenti",
+          "+10.000 EUR",
+          "Cassa iniziale"
+        ],
+        [
+          "Dopo i pagamenti di settembre",
+          "−80.000 EUR",
+          "Come finanziare il fabbisogno?"
+        ],
+        [
+          "Dopo la vendita di dicembre",
+          "+20.000 EUR",
+          "Incasso successivo ai pagamenti"
+        ]
+      ],
+      "check": "Un saldo teorico negativo segnala un problema temporale nel caso, non è una dichiarazione giuridica di inammissibilità o un giudizio di fattibilità complessiva.",
+      "question": "Basta il ricavo previsto dalla vendita per dire che i pagamenti sono coperti?",
+      "answer": "Non alle date indicate. Occorre una fonte disponibile prima di settembre oppure una diversa tempistica sostenuta da evidenze e sottoposta a revisione.",
+      "practice": "Aggiungi un impegno di finanziamento fittizio con data e condizioni: verifica cosa risolve e cosa resta da accertare.",
+      "next": "Nel tuo caso seleziona il fascicolo effettivo e la data di riferimento, senza costruire una checklist astratta al posto dei documenti."
+    },
+    "en": {
+      "title": "Balanced totals can still conceal a funding gap",
+      "goal": "Connect a restructuring proposal, creditors and cash timing without reducing the review to arithmetic.",
+      "scenario": "A fictional plan expects EUR 100,000 from an asset sale in December but promises EUR 90,000 of creditor payments in September. Opening cash is EUR 10,000 and no bridge funding is documented.",
+      "request": "Vera, show the plan issue that needs a focused question for the professional.",
+      "scope": "A small cash-timing case. Full review also covers procedure, proposal, creditor treatment, liquidation alternative, attestation and tax matters.",
+      "input_columns": [
+        "Fictional source",
+        "Date",
+        "Cash flow"
+      ],
+      "input_rows": [
+        [
+          "P1 · opening cash",
+          "1 September",
+          "+EUR 10,000"
+        ],
+        [
+          "P2 · creditor proposal",
+          "30 September",
+          "−EUR 90,000"
+        ],
+        [
+          "P3 · disposal plan",
+          "15 December",
+          "+EUR 100,000"
+        ]
+      ],
+      "basis": "P1–P3 define the case amounts and dates. A positive closing balance does not provide cash before the disposal or prove a funding commitment.",
+      "method": [
+        "Inspect documents without treating filenames or extracted amounts as reviewed semantic roles.",
+        "Build the case model with perimeter, creditors, sources and uses, liquidity and questions. Link observations and inferences to exact evidence.",
+        "Present the model and open points to the accountable professional. Only a confirmed model supports the formal package and any numerical appendix."
+      ],
+      "result_title": "Closing surplus, unresolved interim funding",
+      "conclusion": "The theoretical closing balance is +EUR 20,000, but September has an EUR 80,000 funding gap unsupported by the supplied sources.",
+      "output_columns": [
+        "Point in time",
+        "Theoretical balance",
+        "Question"
+      ],
+      "output_rows": [
+        [
+          "Before payments",
+          "+EUR 10,000",
+          "Opening cash"
+        ],
+        [
+          "After September payments",
+          "−EUR 80,000",
+          "How is the gap funded?"
+        ],
+        [
+          "After December sale",
+          "+EUR 20,000",
+          "Receipt follows payments"
+        ]
+      ],
+      "check": "The negative balance identifies a timing issue in this case, not a legal admissibility ruling or complete feasibility opinion.",
+      "question": "Does the planned disposal alone establish that payments are covered?",
+      "answer": "Not on these dates. Earlier funding or a different evidenced payment schedule must be considered and professionally reviewed.",
+      "practice": "Add a fictional funding commitment with its date and conditions; identify what it resolves and what remains.",
+      "next": "Select the actual case file and reference date rather than replacing its facts with an abstract checklist."
+    },
+    "fr": {
+      "title": "Des totaux cohérents peuvent cacher un besoin de trésorerie",
+      "goal": "Relier proposition, créanciers et calendrier des flux au-delà de la seule quadrature.",
+      "scenario": "Un plan fictif prévoit 100 000 EUR d'une cession en décembre et 90 000 EUR de paiements aux créanciers en septembre. La trésorerie initiale est de 10 000 EUR ; aucun financement relais n'est documenté.",
+      "request": "Vera, montre le point du plan qui appelle une question précise au professionnel.",
+      "scope": "Microcas sur le calendrier des flux. La revue complète couvre aussi procédure, proposition, créanciers, liquidation alternative, attestation et questions fiscales.",
+      "input_columns": [
+        "Source fictive",
+        "Date",
+        "Flux"
+      ],
+      "input_rows": [
+        [
+          "P1 · trésorerie initiale",
+          "1er septembre",
+          "+10 000 EUR"
+        ],
+        [
+          "P2 · proposition aux créanciers",
+          "30 septembre",
+          "−90 000 EUR"
+        ],
+        [
+          "P3 · plan de cession",
+          "15 décembre",
+          "+100 000 EUR"
+        ]
+      ],
+      "basis": "P1–P3 fixent montants et dates du cas. Un solde final positif ne fournit pas de fonds avant la vente et ne prouve aucun engagement de financement.",
+      "method": [
+        "Examine les documents sans attribuer automatiquement un rôle aux noms de fichiers ou aux montants extraits.",
+        "Construis le modèle du cas : périmètre, créanciers, ressources, emplois, liquidité et questions. Relie observations et déductions aux preuves exactes.",
+        "Présente modèle et points ouverts au professionnel. Seul le modèle confirmé alimente le dossier formel et son éventuelle annexe numérique."
+      ],
+      "result_title": "Excédent final, financement intermédiaire ouvert",
+      "conclusion": "Le solde final théorique est de +20 000 EUR, mais septembre présente un besoin de 80 000 EUR non couvert par les sources fournies.",
+      "output_columns": [
+        "Moment",
+        "Solde théorique",
+        "Question"
+      ],
+      "output_rows": [
+        [
+          "Avant paiements",
+          "+10 000 EUR",
+          "Trésorerie initiale"
+        ],
+        [
+          "Après paiements de septembre",
+          "−80 000 EUR",
+          "Comment financer le besoin ?"
+        ],
+        [
+          "Après cession de décembre",
+          "+20 000 EUR",
+          "Encaissement postérieur aux paiements"
+        ]
+      ],
+      "check": "Le solde négatif révèle un problème de calendrier, pas une conclusion juridique d'irrecevabilité ni un avis global de faisabilité.",
+      "question": "La cession prévue suffit-elle à dire que les paiements sont couverts ?",
+      "answer": "Pas aux dates indiquées. Il faut une ressource antérieure ou un autre calendrier étayé et soumis à la revue professionnelle.",
+      "practice": "Ajoute un engagement de financement fictif avec date et conditions ; distingue ce qu'il résout des questions restantes.",
+      "next": "Sélectionne le dossier réel et sa date de référence, sans remplacer les faits par une liste abstraite."
+    },
+    "de": {
+      "title": "Ein positiver Endsaldo kann eine Finanzierungslücke verdecken",
+      "goal": "Restrukturierungsplan, Gläubiger und Zahlungszeitpunkte gemeinsam betrachten, statt nur Summen zu prüfen.",
+      "scenario": "Ein fiktiver Plan erwartet im Dezember EUR 100.000 aus einem Verkauf, verspricht aber bereits im September EUR 90.000 Gläubigerzahlungen. Anfangsliquidität: EUR 10.000. Eine Zwischenfinanzierung ist nicht dokumentiert.",
+      "request": "Vera, zeige den Punkt im Plan, zu dem die verantwortliche Fachperson eine gezielte Frage klären muss.",
+      "scope": "Ein kleiner Liquiditätsfall. Die vollständige Prüfung umfasst auch Verfahren, Vorschlag, Gläubigerbehandlung, Liquidationsalternative, Bestätigung und Steuern.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Datum",
+        "Zahlungsstrom"
+      ],
+      "input_rows": [
+        [
+          "P1 · Anfangsliquidität",
+          "1. September",
+          "+EUR 10.000"
+        ],
+        [
+          "P2 · Gläubigervorschlag",
+          "30. September",
+          "−EUR 90.000"
+        ],
+        [
+          "P3 · Verkaufsplan",
+          "15. Dezember",
+          "+EUR 100.000"
+        ]
+      ],
+      "basis": "P1–P3 liefern Beträge und Daten. Ein positiver Endsaldo stellt vor dem Verkauf weder Zahlungsmittel noch eine Finanzierungszusage bereit.",
+      "method": [
+        "Prüfe die Dokumente; Dateinamen oder extrahierte Beträge sind noch keine fachlich geprüften Rollen.",
+        "Erstelle das Fallmodell mit Umfang, Gläubigern, Mittelherkunft, Mittelverwendung, Liquidität und Fragen. Belege Beobachtungen und Schlussfolgerungen genau.",
+        "Lege Modell und offene Punkte der verantwortlichen Fachperson vor. Erst ein bestätigtes Modell trägt das formelle Paket und einen Zahlenanhang."
+      ],
+      "result_title": "Endüberschuss, ungeklärte Zwischenfinanzierung",
+      "conclusion": "Der rechnerische Endsaldo beträgt +EUR 20.000. Im September entsteht jedoch eine durch die Quellen nicht gedeckte Finanzierungslücke von EUR 80.000.",
+      "output_columns": [
+        "Zeitpunkt",
+        "Rechnerischer Saldo",
+        "Frage"
+      ],
+      "output_rows": [
+        [
+          "Vor Zahlungen",
+          "+EUR 10.000",
+          "Anfangsliquidität"
+        ],
+        [
+          "Nach Septemberzahlungen",
+          "−EUR 80.000",
+          "Wie wird die Lücke finanziert?"
+        ],
+        [
+          "Nach Dezemberverkauf",
+          "+EUR 20.000",
+          "Zufluss erfolgt nach Zahlungen"
+        ]
+      ],
+      "check": "Der negative Saldo zeigt ein zeitliches Problem des Beispiels, kein Urteil über rechtliche Zulässigkeit oder vollständige Durchführbarkeit.",
+      "question": "Belegt der geplante Verkauf allein die Deckung der Zahlungen?",
+      "answer": "Nicht bei diesen Terminen. Frühere Finanzierung oder ein anders belegter Zahlungsplan müssen betrachtet und fachlich geprüft werden.",
+      "practice": "Ergänze eine fiktive Finanzierungszusage mit Datum und Bedingungen. Was löst sie, was bleibt offen?",
+      "next": "Wähle die tatsächliche Fallakte und den Stichtag; ersetze ihre Fakten nicht durch eine abstrakte Prüfliste."
+    },
+    "es": {
+      "title": "Un saldo final positivo puede ocultar falta de financiación",
+      "goal": "Relacionar propuesta de reestructuración, acreedores y calendario de caja sin reducir la revisión a sumas.",
+      "scenario": "Un plan ficticio prevé EUR 100.000 de una venta en diciembre, pero promete pagar EUR 90.000 a acreedores en septiembre. La caja inicial es EUR 10.000 y no hay financiación puente documentada.",
+      "request": "Vera, muestra qué problema del plan exige una pregunta concreta al profesional.",
+      "scope": "Caso reducido de calendario de caja. La revisión completa abarca también procedimiento, propuesta, acreedores, alternativa de liquidación, certificación y fiscalidad.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Fecha",
+        "Flujo de caja"
+      ],
+      "input_rows": [
+        [
+          "P1 · caja inicial",
+          "1 de septiembre",
+          "+EUR 10.000"
+        ],
+        [
+          "P2 · propuesta a acreedores",
+          "30 de septiembre",
+          "−EUR 90.000"
+        ],
+        [
+          "P3 · plan de venta",
+          "15 de diciembre",
+          "+EUR 100.000"
+        ]
+      ],
+      "basis": "P1–P3 fijan importes y fechas. Un saldo final positivo no aporta efectivo antes de la venta ni demuestra una financiación comprometida.",
+      "method": [
+        "Examina los documentos sin tratar nombres de archivo o importes extraídos como funciones ya revisadas.",
+        "Construye el modelo con alcance, acreedores, fuentes y usos, liquidez y preguntas. Vincula observaciones e inferencias con pruebas exactas.",
+        "Presenta modelo y cuestiones abiertas al profesional responsable. Solo un modelo confirmado sustenta el paquete formal y su anexo numérico."
+      ],
+      "result_title": "Superávit final, financiación intermedia pendiente",
+      "conclusion": "El saldo final teórico es +EUR 20.000, pero septiembre presenta una necesidad de financiación de EUR 80.000 sin cobertura acreditada.",
+      "output_columns": [
+        "Momento",
+        "Saldo teórico",
+        "Pregunta"
+      ],
+      "output_rows": [
+        [
+          "Antes de pagar",
+          "+EUR 10.000",
+          "Caja inicial"
+        ],
+        [
+          "Después de pagos de septiembre",
+          "−EUR 80.000",
+          "¿Cómo se financia la falta de caja?"
+        ],
+        [
+          "Después de venta de diciembre",
+          "+EUR 20.000",
+          "El cobro llega después de pagar"
+        ]
+      ],
+      "check": "El saldo negativo identifica un problema temporal del caso, no un juicio de admisibilidad jurídica ni un dictamen completo de viabilidad.",
+      "question": "¿La venta prevista demuestra por sí sola que los pagos están cubiertos?",
+      "answer": "No con estas fechas. Hay que considerar financiación anterior o un calendario de pagos distinto, documentado y revisado profesionalmente.",
+      "practice": "Añade un compromiso ficticio de financiación con fecha y condiciones e identifica qué resuelve y qué queda pendiente.",
+      "next": "Selecciona el expediente real y la fecha de referencia; no sustituyas sus hechos por una lista abstracta."
+    }
+  }
+}

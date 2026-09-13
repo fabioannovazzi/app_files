@@ -66,6 +66,7 @@ ROOT_OMITTED_PATHS = frozenset(
         "scripts/change_requests.py",
         "scripts/check_for_update.py",
         "scripts/_desktop_teaching.py",
+        "scripts/local_courses.py",
         "skills/clara/references/local-onboarding.md",
         "skills/clara/references/tutorial-cases.md",
         "skills/lucia/references/local-onboarding.md",
@@ -2278,6 +2279,7 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
     parts = Path(relative_path).parts
     if relative_path in {
         "scripts/_desktop_teaching.py",
+        "scripts/local_courses.py",
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",
         "scripts/local_onboarding_case.py",
@@ -2288,7 +2290,9 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
         (
             "skills/learn-with-clara/",
             "assets/onboarding/",
+            "assets/courses/",
             "vendor/modules/desktop_teaching/",
+            "vendor/modules/courseware/",
         )
     ):
         return True
@@ -2814,10 +2818,11 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
                 "skills/learn-with-clara/",
                 "skills/learn-with-lucia/",
                 "vendor/modules/desktop_teaching/",
+                "vendor/modules/courseware/",
             )
         ):
             continue
-        if relative.startswith("assets/onboarding/"):
+        if relative.startswith(("assets/onboarding/", "assets/courses/")):
             continue
         if relative.startswith("privacy/services/") and relative not in {
             f"privacy/services/{service_id}.json"
