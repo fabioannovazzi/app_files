@@ -608,14 +608,14 @@
       "check-entries": ["Vouching", "Close entry-to-support relationships only when the confirmed evidence contract supports them."],
       "journal-bank-reconciliation": ["Bank reconciliation", "Use confirmed mappings and exact relationship controls to separate matches, candidates and open rows."],
       "riconciliazione-partite": ["Open-item reconciliation", "Keep relationships, residuals and supporting evidence visible in the workpaper."],
-      "report-builder": ["Report Builder", "Carry confirmed tables and every material number into traceable Word and Markdown outputs."],
+      "report-builder": ["Financial Report Builder", "Carry confirmed tables and every material number into traceable Word and Markdown outputs."],
       "concordato-plan-review": ["Concordato Preventivo", "Review procedure, authoritative documents, creditor treatment, liquidation alternative, liquidity and open issues; numerical tie-out remains optional."],
       "previdenza-inps": ["INPS case review", "Organize contributory evidence into a readable case file."],
       "registro-imprese-sari": ["Business Register and SARI", "Prepare the practice from case facts and Chamber sources."],
       "dati-fiscali-strutturati": ["Extract tax data from documents", "Reads supported tax documents and records each extracted value with its source and required checks."],
       "avviso-intake": ["Notice intake", "Turn a tax notice into an organized first-pass case file."],
       "email-cliente": ["Client email", "Turn an intake finding into a clear, evidence-linked client request."],
-      "prompt-optimizer": ["Prompt Optimizer", "Turn a professional question into controllable research instructions."],
+      "prompt-optimizer": ["Legal/Tax Answer Planner", "Turn a professional question into controllable research instructions."],
       "deep-research-validator": ["Research Validator", "Test material claims against the sources cited for them."]
     },
     it: {
