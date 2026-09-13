@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import io
 import json
 import sys
 from pathlib import Path
@@ -35,7 +36,7 @@ LOCALIZED = [
 
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, ensure_ascii=False))
+    path.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
 
 
 def digest(path):
@@ -47,10 +48,10 @@ def isolated(tmp_path):
     """An installed product with one authored course and a local method source."""
     root = tmp_path / "vera"
     original = ROOT / "plugins/vera/assets/courses/variance-analysis/course.json"
-    course = json.loads(original.read_text())
+    course = json.loads(original.read_text(encoding="utf-8"))
     skill = root / "skills/variance-analysis/SKILL.md"
     skill.parent.mkdir(parents=True)
-    skill.write_text("# Own installed variance method\n")
+    skill.write_text("# Own installed variance method\n", encoding="utf-8")
     course["sources"] = [
         {"path": "skills/variance-analysis/SKILL.md", "sha256": digest(skill)}
     ]
@@ -74,11 +75,11 @@ def isolated(tmp_path):
 
 def alter_course(isolated, change):
     root, path, _ = isolated
-    course = json.loads(path.read_text())
+    course = json.loads(path.read_text(encoding="utf-8"))
     change(course)
     write_json(path, course)
     index_path = root / "assets/courses/index.json"
-    index = json.loads(index_path.read_text())
+    index = json.loads(index_path.read_text(encoding="utf-8"))
     index["courses"]["variance-analysis"]["sha256"] = digest(path)
     write_json(index_path, index)
 
@@ -150,7 +151,7 @@ def test_unsupported_language_is_not_silently_translated(isolated):
 
 def test_source_change_requires_editorial_refresh(isolated):
     root, _, skill = isolated
-    skill.write_text("# Changed method\n")
+    skill.write_text("# Changed method\n", encoding="utf-8")
     with pytest.raises(CourseError, match="editorial refresh"):
         CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
 
@@ -174,7 +175,7 @@ def test_foreign_symlink_source_is_rejected(isolated, tmp_path):
 
 def test_altered_material_is_detected_before_rendering(isolated, tmp_path):
     root, manifest, _ = isolated
-    manifest.write_text(manifest.read_text() + " ")
+    manifest.write_text(manifest.read_text(encoding="utf-8") + " ", encoding="utf-8")
     destination = tmp_path / "untouched"
     with pytest.raises(CourseError, match="content changed"):
         CourseLibrary(root, {"variance-analysis"}).render(
@@ -213,14 +214,14 @@ def test_course_file_paths_cannot_escape_their_root(isolated, path):
 def test_changed_attached_example_is_rejected(isolated):
     root, manifest, _ = isolated
     attachment = manifest.parent / "fixture.csv"
-    attachment.write_text("amount\n10\n")
+    attachment.write_text("amount\n10\n", encoding="utf-8")
     alter_course(
         isolated,
         lambda course: course.update(
             files=[{"path": "fixture.csv", "sha256": digest(attachment)}]
         ),
     )
-    attachment.write_text("amount\n11\n")
+    attachment.write_text("amount\n11\n", encoding="utf-8")
     with pytest.raises(CourseError, match="Prepared example changed"):
         CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
 
@@ -245,9 +246,9 @@ def test_render_delivers_case_example_voice_guide_and_actual_starter_without_com
     assert receipt["execution_receipt"] is False
     assert receipt["understanding_confirmed"] is False
     assert (output / "files/executed-starter/provenance.json").is_file()
-    assert (output / "source.md").read_text().startswith("# ")
+    assert (output / "source.md").read_text(encoding="utf-8").startswith("# ")
     assert (output / "input.csv").is_file()
-    page = (output / "course.html").read_text()
+    page = (output / "course.html").read_text(encoding="utf-8")
     assert "Due chat, una lezione" in page
     assert "<details>" in page
     assert "<html lang='it'>" in page
@@ -262,12 +263,12 @@ def test_render_preserves_existing_files(isolated, tmp_path):
     output = tmp_path / "lesson"
     output.mkdir()
     sentinel = output / "notes.md"
-    sentinel.write_text("My notes")
+    sentinel.write_text("My notes", encoding="utf-8")
     with pytest.raises(CourseError, match="preserve existing"):
         CourseLibrary(root, {"variance-analysis"}).render(
             "variance-analysis", "it", output
         )
-    assert sentinel.read_text() == "My notes"
+    assert sentinel.read_text(encoding="utf-8") == "My notes"
 
 
 def test_render_refuses_symlink_destination(isolated, tmp_path):
@@ -292,7 +293,7 @@ def test_html_escapes_case_text_and_keeps_it_as_evidence(isolated, tmp_path):
     )
     output = tmp_path / "escaped"
     CourseLibrary(root, {"variance-analysis"}).render("variance-analysis", "it", output)
-    page = (output / "course.html").read_text()
+    page = (output / "course.html").read_text(encoding="utf-8")
     assert "<script>" not in page
     assert "&lt;script&gt;" in page
 
@@ -321,7 +322,37 @@ def test_cli_shows_prepared_source_checked_content(isolated, capsys):
     assert result["content"]["question"]
 
 
-def test_complete_compiled_catalog_matches_authoring_and_current_sources():
+def test_cli_preserves_localized_symbols_on_legacy_windows_console(monkeypatch):
+    buffer = io.BytesIO()
+    console = io.TextIOWrapper(buffer, encoding="cp1252")
+    monkeypatch.setattr(sys, "stdout", console)
+
+    assert (
+        main(
+            ROOT / "plugins/vera",
+            builder._eligible("vera"),
+            ["show", "--workflow", "management-control-pack", "--language", "en"],
+        )
+        == 0
+    )
+
+    console.flush()
+    result = json.loads(buffer.getvalue().decode("cp1252"))
+    assert "Δ" in json.dumps(result["content"], ensure_ascii=False)
+
+
+@pytest.mark.parametrize("default_encoding", ["utf-8", "cp1252"])
+def test_complete_compiled_catalog_matches_authoring_and_current_sources(
+    monkeypatch, default_encoding
+):
+    original_read_text = Path.read_text
+
+    def read_with_host_default(path, encoding=None, errors=None):
+        return original_read_text(
+            path, encoding=encoding or default_encoding, errors=errors
+        )
+
+    monkeypatch.setattr(Path, "read_text", read_with_host_default)
     assert builder.build(check=True) == {
         "workflows": 44,
         "localized_courses": 200,
@@ -396,7 +427,7 @@ def test_lucia_website_case_has_legal_services_in_each_language(language):
 def test_chart_uses_authored_case_values_and_localized_labels(tmp_path):
     library = CourseLibrary(ROOT / "plugins/clara", builder._eligible("clara"))
     library.render("attribute-reporting", "es", tmp_path / "chart")
-    page = (tmp_path / "chart/example.html").read_text()
+    page = (tmp_path / "chart/example.html").read_text(encoding="utf-8")
     assert "width='600.000'" in page
     assert "width='300.000'" in page
     assert "Nuevos" in page and "60 %" in page and "30 %" in page

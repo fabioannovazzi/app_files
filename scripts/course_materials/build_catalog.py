@@ -82,7 +82,12 @@ def _eligible(product: str) -> set[str]:
     catalog = (
         ROOT / f"plugins/{product}/skills/{product}/references/workflow-catalog.md"
     )
-    ids = set(re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(), re.M)) - EXCLUDED
+    ids = (
+        set(
+            re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
+        )
+        - EXCLUDED
+    )
     if product != "vera":
         ids.discard("studio-archive")
     return {
@@ -100,7 +105,7 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
         path for path in skill.parent.rglob("*.md") if path.name != "cowork-runtime.md"
     )
     paths.update(skill.parent.rglob("*.py"))
-    text = skill.read_text()
+    text = skill.read_text(encoding="utf-8")
     for module in set(re.findall(r"\.\./\.\./modules/([a-z0-9-]+)", text)):
         module_root = root / "modules" / module
         if not module_root.is_dir():

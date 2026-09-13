@@ -369,7 +369,8 @@ def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -
                     "content": course["locales"][args.language],
                     "files": [asset["path"] for asset in course.get("files", [])],
                 }
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        # JSON escapes preserve all localized text on legacy Windows consoles.
+        print(json.dumps(result, ensure_ascii=True, indent=2))
     except (CourseError, OSError, KeyError, json.JSONDecodeError) as exc:
         parser.exit(2, f"Course unavailable: {exc}\n")
     return 0

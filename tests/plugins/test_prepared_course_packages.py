@@ -31,7 +31,7 @@ from pathlib import Path
 root = Path(sys.argv[1])
 sys.path.insert(0, str(root / 'vendor/modules'))
 from courseware.library import CourseLibrary
-index = json.loads((root / 'assets/courses/index.json').read_text())
+index = json.loads((root / 'assets/courses/index.json').read_text(encoding="utf-8"))
 library = CourseLibrary(root, set(index['courses']))
 count = 0
 for workflow, entry in index['courses'].items():
