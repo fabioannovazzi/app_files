@@ -16,4 +16,7 @@ completely. These exact identifiers register capabilities; they are not keyword 
 ## Learning
 
 - `learn-with-lucia`: teach current workflows by native voice with a parallel visible working chat, first-use interview, 3–4 tailored lessons and reusable local examples.
+Only Lucia's own installed operational skills are eligible. Explain requests
+for another plugin's skills and offer relevant Lucia workflows without teaching
+or silently substituting the other plugin.
 <!-- LUCIA_OPENAI_ONBOARDING_END -->

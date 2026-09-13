@@ -60,7 +60,11 @@ A completed profile informs routing but never overrides the current request.
 For requests to learn, see a demonstration, work through an example, revisit a
 lesson, or discover what Vera could do today, read `../learn-with-vera/SKILL.md`
 before professional routing. It is a supported teaching/setup route that selects
-a real specialist, not a general-answer fallback. With a completed profile use
+a Vera specialist from this installation. Vera must never teach another plugin's
+skills, including in the parallel working chat. For an outside request, explain
+that it is outside Vera and offer actual Vera workflows; wait for the user's
+choice before preparing an alternative lesson. Never switch to another plugin,
+relabel its workflow or bypass the teaching helpers. With a completed profile use
 `scripts/local_teaching.py` for fresh sessions. Validate a repeated worker's
 session and exact token with that helper; onboarding workers use the original
 helper. Ordinary concrete work still routes directly to its specialist.

@@ -38,11 +38,12 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_desktop_teaching.py tests/plugins/test_desktop_teaching_packages.py
+          tests/plugins/test_teaching_product_scope.py
           --cov=desktop_teaching --cov-fail-under=80
       - name: Check shared teaching code quality
         run: |
-          python -m black --check plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py
-          python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py
+          python -m black --check plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py
+          python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py
           python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py
           python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching
       - name: Check onboarding code quality

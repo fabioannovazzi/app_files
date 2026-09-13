@@ -5,7 +5,10 @@ actual local ChatGPT Work on the same OS user. The shared stdlib desktop_teachin
 runtime stores a Lucia-specific professional summary, lessons, examples, progress
 and optional feedback locally. Exact product identity, enrollment, revisions,
 paths, hashes and native chat tokens are mechanical checks; legal reasoning and
-understanding remain with the native model and professional.
+understanding remain with the native model and professional. Lesson planning and
+dispatch require a Lucia catalog workflow with a skill inside the same installed
+Lucia root. Worker responses bind that product, root and skill path; native
+teacher/worker instructions prohibit cross-product teaching.
 
 Native OpenAI processes spoken conversation, the loaded profile and selected
 material. Local storage is not offline inference. No custom model/voice API,
