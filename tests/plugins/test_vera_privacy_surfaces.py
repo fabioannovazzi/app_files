@@ -571,7 +571,12 @@ def test_vera_workflow_wrappers_do_not_show_routine_privacy_notices() -> None:
     for workstream in components["plugins"]:
         if roles.get(workstream, {}).get("kind") == "internal_engine":
             continue
-        wrapper = VERA_ROOT / "skills" / workstream / "SKILL.md"
+        wrapper = (
+            VERA_ROOT
+            / "skills"
+            / roles.get(workstream, {}).get("skill", workstream)
+            / "SKILL.md"
+        )
         text = wrapper.read_text(encoding="utf-8")
         assert "## Privacy Boundary" not in text
         assert "commercialista_notice" not in text
@@ -706,7 +711,7 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "prompt-optimizer", component_root)
     shared_references = Path(
-        "plugins/deep-research-validator/skills/deep-research-validator/references"
+        "plugins/deep-research-validator/skills/legal-tax-answer-review/references"
     )
     (tmp_path / shared_references).mkdir(parents=True)
     for reference in ("adversarial-scope.md", "research-choice.md"):
@@ -723,7 +728,9 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     shutil.copy2(ROOT / "scripts" / "serve_review_workbench.py", shared_server)
     components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     components["plugins"] = ["prompt-optimizer"]
-    components["workflow_roles"] = {}
+    components["workflow_roles"] = {
+        "prompt-optimizer": {"kind": "workflow", "skill": "legal-tax-answer-planner"}
+    }
     components["shared_services"] = []
     (vera_root / "components.json").write_text(
         json.dumps(components, indent=2) + "\n", encoding="utf-8"

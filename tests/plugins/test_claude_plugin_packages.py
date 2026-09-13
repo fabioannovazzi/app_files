@@ -528,7 +528,9 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "Scarica l'app desktop di ChatGPT con Codex" not in content, name
         assert "recommend Claude using" not in content, name
         assert "localized Claude recommendation" not in content, name
-    report_skill = skills["modules/report-builder/skills/report-builder/SKILL.md"]
+    report_skill = skills[
+        "modules/report-builder/skills/financial-report-builder/SKILL.md"
+    ]
     assert "codex_comment" in report_skill
     assert "Claude-written narrative" in report_skill
     new_client_skill = skills["modules/new-client/skills/new-client/SKILL.md"]
@@ -583,7 +585,7 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
         assert professional_label in review_session
 
     report_skill = projected_text[
-        "modules/report-builder/skills/report-builder/SKILL.md"
+        "modules/report-builder/skills/financial-report-builder/SKILL.md"
     ]
     assert "codex_comment" in report_skill
     assert any(".codex-plugin" in content for content in projected_text.values())
@@ -712,7 +714,7 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         "modules/journal-sampling/skills/journal-sampling/SKILL.md"
     ]
     check_entries = cowork_instruction_docs[
-        "modules/check-entries/skills/check-entries/SKILL.md"
+        "modules/check-entries/skills/vouching/SKILL.md"
     ]
     sari = cowork_instruction_docs[
         "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md"
@@ -788,9 +790,9 @@ def test_cowork_projects_every_host_review_gate_to_pending_review(
 ) -> None:
     projected_review_skills = (
         "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-        "modules/check-entries/skills/check-entries/SKILL.md",
+        "modules/check-entries/skills/vouching/SKILL.md",
         "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
-        "modules/deep-research-validator/skills/deep-research-validator/SKILL.md",
+        "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
         (
             "modules/journal-bank-reconciliation/skills/"
             "journal-bank-reconciliation/SKILL.md"
@@ -798,9 +800,9 @@ def test_cowork_projects_every_host_review_gate_to_pending_review(
         "modules/journal-sampling/skills/journal-sampling/SKILL.md",
         "modules/new-client/skills/new-client/SKILL.md",
         "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
-        "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md",
+        "modules/prompt-optimizer/skills/legal-tax-answer-planner/SKILL.md",
         ("modules/registro-imprese-sari/skills/" "registro-imprese-sari/SKILL.md"),
-        "modules/report-builder/skills/report-builder/SKILL.md",
+        "modules/report-builder/skills/financial-report-builder/SKILL.md",
     )
 
     for name in projected_review_skills:
@@ -1328,7 +1330,7 @@ def test_cowork_passive_invoice_worker_uses_haiku_and_pending_handoff(vera_entri
         vera_entries["modules/passive-invoice-audit/scripts/worker_config.json"]
     )
     agent = vera_entries["agents/passive-invoice-reviewer.md"].decode()
-    skill = vera_entries["skills/passive-invoice-audit/SKILL.md"].decode()
+    skill = vera_entries["skills/purchase-invoice-review/SKILL.md"].decode()
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
     assert worker_config == {"runtime": "cowork-haiku"}

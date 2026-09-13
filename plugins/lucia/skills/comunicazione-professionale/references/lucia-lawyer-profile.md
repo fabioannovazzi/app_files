@@ -69,7 +69,7 @@ Distinguish general information from matter-specific advice. A call to action
 may invite a review of the reader's facts; it must not imply that a checklist or
 public post determines legal position or outcome.
 
-For legal or regulatory claims, use Prompt Optimizer's answer-contract posture
+For legal or regulatory claims, use Legal/Tax Answer Planner's answer-contract posture
 and the shared claim-assurance stage already embedded in this workflow. Do not
 run a second duplicate assurance cycle merely because the Lucia router also
 contains the two standalone assurance workflows.

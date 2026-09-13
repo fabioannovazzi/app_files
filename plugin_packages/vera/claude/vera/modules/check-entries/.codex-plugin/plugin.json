@@ -1,6 +1,6 @@
 {
   "name": "check-entries",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Vouching of sampled journal entries against FatturaPA XML and PDF supporting documents, guided by Claude.",
   "author": {
     "name": "Mparanza",

@@ -55,7 +55,7 @@ CLARA_DISCOVERY_TERMS = (
             "clara-advisory-case-director",
         ),
         ("claim-basis-map", "Verify presentation claims", "clara-claim-basis-map"),
-        ("interview", "Prepare and conduct interviews", "clara-interview"),
+        ("hosted-interview", "Prepare and conduct interviews", "clara-interview"),
         (
             "transcribe",
             "Transcribe recordings and voice notes",
@@ -98,7 +98,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "claim-basis-map": "Verify presentation claims",
         "deck-correction": "Revise presentations from feedback",
         "html-deck": "Create HTML presentations",
-        "interview": "Prepare and conduct interviews",
+        "hosted-interview": "Prepare and conduct interviews",
         "privacy-surface-review": "Review workflow data handling",
         "reporting-engine": "Analyze business data",
         "research-video": "Create narrated research videos",
@@ -125,7 +125,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "advisory-brief-planner",
         "attribute-reporting",
         "brand-fit",
-        "interview",
+        "hosted-interview",
         "reporting-engine",
         "research-video",
         "transcribe",
@@ -143,7 +143,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "functions.advisoryDeliverableValidator": expected[
             "advisory-deliverable-validator"
         ],
-        "functions.interviews": expected["interview"],
+        "functions.interviews": expected["hosted-interview"],
         "functions.transcription": expected["transcribe"],
         "functions.retailerSignals": expected["attribute-reporting"],
         "functions.brandFit": expected["brand-fit"],
@@ -1066,7 +1066,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         for item in fixture["should_trigger"]
         if item["id"] in fixture_ids
     }
-    assert expected_routes["hosted-participant-interview"] == "clara:interview"
+    assert expected_routes["hosted-participant-interview"] == "clara:hosted-interview"
     assert expected_routes["voice-note-transcription-import"] == "clara:transcribe"
     assert expected_routes["voice-led-pptx-correction"] == "clara:deck-correction"
     assert expected_routes["one-command-deck-feedback-capture"] == (

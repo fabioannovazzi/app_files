@@ -81,11 +81,6 @@ def prepare_case(
         case, client_id, f"Vera tutorial: {workflow} ({phase})"
     )
     engagement_id = engagement["engagement_id"]
-    role = "journal" if workflow in {"journal-sampling", "check-entries"} else "source"
-    inputs = [
-        ledger.import_document(case, client_id, engagement_id, source, role)
-        for source in source_paths
-    ]
     # These wrappers delegate to the same published intake component; exact IDs,
     # not a classifier of the user's professional request.
     ledger_workflow = (
@@ -99,6 +94,24 @@ def prepare_case(
         }
         else workflow
     )
+    components = json.loads(
+        (Path(__file__).parents[1] / "components.json").read_text(encoding="utf-8")
+    )
+    skill_components = {
+        metadata["skill"]: component
+        for component, metadata in components["workflow_roles"].items()
+        if "skill" in metadata
+    }
+    ledger_workflow = skill_components.get(workflow, ledger_workflow)
+    role = (
+        "journal"
+        if ledger_workflow in {"journal-sampling", "check-entries"}
+        else "source"
+    )
+    inputs = [
+        ledger.import_document(case, client_id, engagement_id, source, role)
+        for source in source_paths
+    ]
     manifest = json.loads(
         (Path(__file__).parents[1] / ".codex-plugin/plugin.json").read_text(
             encoding="utf-8"

@@ -46,7 +46,7 @@ Clara keeps its specialist workflows separate:
   generation-time evidence and claim dependencies when available, or by
   explicitly labelled matched support for an external document, against
   `advisory_contract.json` and the applicable existing Clara format checks;
-- `interview` prepares an expiring browser link for an adaptive external
+- `hosted-interview` prepares an expiring browser link for an adaptive external
   participant interview, then retrieves the completed bundle and quality review;
 - `transcribe` records or uploads advisor voice notes, meetings, and calls,
   preserves the local bundle, and completes transcript attribution and review;

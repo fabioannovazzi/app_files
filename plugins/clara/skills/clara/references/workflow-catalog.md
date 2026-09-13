@@ -43,7 +43,7 @@ their bounded purpose matches the requested contribution.
   an existing PPTX or Clara HTML deck while preserving untouched content.
 - `html-deck`: build or revise a source-faithful, standalone HTML presentation
   with fixed-stage rendering, motion, navigation, and browser QA.
-- `interview`: prepare and operate an adaptive hosted external interview,
+- `hosted-interview`: prepare and operate an adaptive hosted external interview,
   including brief selection, participant link, retrieval, and quality review.
 - `research-video`: turn an approved ordered set of research scene images into
   a source-faithful 16:9 narrated MP4 with restrained motion, synchronized

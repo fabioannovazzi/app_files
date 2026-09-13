@@ -1981,7 +1981,7 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
     page = (
         ROOT / "static" / "shared" / "deep-research-validator" / "index.html"
     ).read_text(encoding="utf-8")
-    skill = (PLUGIN_ROOT / "skills" / "deep-research-validator" / "SKILL.md").read_text(
+    skill = (PLUGIN_ROOT / "skills" / "legal-tax-answer-review" / "SKILL.md").read_text(
         encoding="utf-8"
     )
 

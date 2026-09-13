@@ -10,10 +10,12 @@
   ],
   "workflow_roles": {
     "prompt-optimizer": {
-      "kind": "public_workflow"
+      "kind": "public_workflow",
+      "skill": "legal-tax-answer-planner"
     },
     "deep-research-validator": {
-      "kind": "public_workflow"
+      "kind": "public_workflow",
+      "skill": "legal-tax-answer-review"
     },
     "comunicazione-professionale": {
       "kind": "public_workflow",

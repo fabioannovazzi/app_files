@@ -409,6 +409,52 @@ def test_tutorial_prepares_real_isolated_studio_ledger_with_bound_source(
     assert not (tmp_path / "studio-archive").exists()
 
 
+@pytest.mark.parametrize(
+    ("skill", "component", "role"),
+    [
+        ("vouching", "check-entries", "journal"),
+        ("bilancio-oic", "bilancio-xbrl-it", "source"),
+        ("purchase-invoice-review", "passive-invoice-audit", "source"),
+        ("financial-report-builder", "report-builder", "source"),
+    ],
+)
+def test_renamed_lesson_starts_existing_ledger_workflow(
+    store, module, skill, component, role
+):
+    store.begin()
+    change(store, "profile", confirmed_by_user=True, profile=profile())
+    change(
+        store,
+        "plan",
+        lessons=[
+            {"workflow_id": workflow, "reason": "User request", "goal": "Learn it"}
+            for workflow in (skill, "journal-sampling", "variance-analysis")
+        ],
+    )
+    change(
+        store,
+        "pair",
+        teacher_thread_id="native-teacher",
+        worker_thread_id="native-worker",
+    )
+    state = change(store, "start", workflow_id=skill)
+    adapter = load("local_onboarding_case")
+
+    result = adapter.prepare_case(
+        store,
+        thread_id="native-worker",
+        workflow=skill,
+        token=state["lessons"][0]["worker_token"],
+        sources=[ROOT / "plugins/vera/assets/onboarding/invoice.xml"],
+        phase="demo",
+    )
+
+    assert result["workflow_id"] == skill
+    assert result["run"]["workflow_id"] == component
+    assert result["run"]["status"] == "running"
+    assert result["context"]["input_bindings"][0]["role"] == role
+
+
 def test_built_codex_and_local_work_load_the_same_profile_and_cowork_omits_feature(
     store, tmp_path
 ):

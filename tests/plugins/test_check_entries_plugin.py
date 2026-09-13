@@ -3206,7 +3206,7 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     )
     assert artifact_item["title"] == "Libro de resultados de la comprobación"
     assert review_handoff.startswith(
-        "# Entrega para revisión: Comprobación de asientos\n"
+        "# Entrega para revisión: Verificación documental\n"
     )
     assert "## Revisión en Codex" in review_handoff
     assert handoff_output["required_text"][0] == "Entrega para revisión"
@@ -5431,7 +5431,7 @@ def test_xlsx_and_assurance_are_equal_across_repeated_runs(
 
 def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     skill_text = (
-        ROOT / "plugins" / "check-entries" / "skills" / "check-entries" / "SKILL.md"
+        ROOT / "plugins" / "check-entries" / "skills" / "vouching" / "SKILL.md"
     ).read_text(encoding="utf-8")
     script_text = "\n".join(
         path.read_text(encoding="utf-8") for path in SCRIPT_DIR.glob("*.py")
@@ -6976,8 +6976,7 @@ def test_mcp_apply_python_failure_rolls_back_exact_output_tree(
 
     assert response["isError"] is True
     assert (
-        response["structuredContent"]["error"]
-        == "Vouching assurance preflight failed."
+        response["structuredContent"]["error"] == "Vouching assurance preflight failed."
     )
     assert _tree_snapshot(output_dir) == prior
 

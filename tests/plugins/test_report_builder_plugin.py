@@ -5431,7 +5431,12 @@ def test_rebuild_resets_prior_applied_state_and_revision_tree(tmp_path: Path) ->
 
 def test_skill_and_scripts_keep_codex_as_the_narrative_layer() -> None:
     skill_text = (
-        ROOT / "plugins" / "report-builder" / "skills" / "report-builder" / "SKILL.md"
+        ROOT
+        / "plugins"
+        / "report-builder"
+        / "skills"
+        / "financial-report-builder"
+        / "SKILL.md"
     ).read_text(encoding="utf-8")
     script_text = "\n".join(
         path.read_text(encoding="utf-8") for path in SCRIPT_DIR.glob("*.py")

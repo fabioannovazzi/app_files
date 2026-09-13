@@ -165,7 +165,7 @@ MODULES_REQUIRING_HOST_DESCRIPTORS = frozenset(
     }
 )
 COWORK_REVIEW_SECTIONS = {
-    "modules/check-entries/skills/check-entries/SKILL.md": (
+    "modules/check-entries/skills/vouching/SKILL.md": (
         "## MCP Review Handoff",
         "## Cowork review handoff",
     ),
@@ -173,7 +173,7 @@ COWORK_REVIEW_SECTIONS = {
         "### 8. Use the review surface",
         "### 8. Cowork review handoff",
     ),
-    "modules/deep-research-validator/skills/deep-research-validator/SKILL.md": (
+    "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md": (
         "## MCP Review UI",
         "## Cowork review handoff",
     ),
@@ -193,7 +193,7 @@ COWORK_REVIEW_SECTIONS = {
         "## MCP review handoff",
         "## Cowork review handoff",
     ),
-    "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md": (
+    "modules/prompt-optimizer/skills/legal-tax-answer-planner/SKILL.md": (
         "## MCP Review UI",
         "## Cowork review handoff",
     ),
@@ -201,7 +201,7 @@ COWORK_REVIEW_SECTIONS = {
         "## 7. Professional review",
         "## 7. Cowork review handoff",
     ),
-    "modules/report-builder/skills/report-builder/SKILL.md": (
+    "modules/report-builder/skills/financial-report-builder/SKILL.md": (
         "## MCP Report Review UI",
         "## Cowork review handoff",
     ),
@@ -394,7 +394,7 @@ review.
 Review actions cannot waive a failed deterministic check. Keep failed checks,
 missing evidence, unresolved decisions, and applicable blockers visible in the
 artifact card and final response.""",
-    "modules/check-entries/skills/check-entries/SKILL.md": """The normal Cowork completion point is delivery
+    "modules/check-entries/skills/vouching/SKILL.md": """The normal Cowork completion point is delivery
 of the reviewable draft, artifact card, and source/review files in the connected
 folder. When the Vouching review MCP is callable, pass the local
 `review_payload.json` path to validation so the server loads the private file
@@ -441,7 +441,7 @@ CLARA_COWORK_INCLUDED_SKILLS = frozenset(
 CLARA_COWORK_OMITTED_SKILLS = frozenset(
     {
         "deck-correction",
-        "interview",
+        "hosted-interview",
         "privacy-surface-review",
         "transcribe",
     }
@@ -542,7 +542,11 @@ LUCIA_COWORK_COMPONENTS = (
 LUCIA_ORCHESTRATION_COWORK_SKILLS = frozenset(
     {"quesito-legale-fiscale", "adversarial-opinion"}
 )
-LUCIA_COWORK_SKILLS = LUCIA_COWORK_COMPONENTS | LUCIA_ORCHESTRATION_COWORK_SKILLS
+LUCIA_COWORK_SKILLS = (
+    (LUCIA_COWORK_COMPONENTS - {"prompt-optimizer", "deep-research-validator"})
+    | {"legal-tax-answer-planner", "legal-tax-answer-review"}
+    | LUCIA_ORCHESTRATION_COWORK_SKILLS
+)
 LUCIA_COWORK_README = """# Lucia for Claude Cowork
 
 Lucia helps lawyers frame and validate legal work, prepare a new client matter
@@ -1704,8 +1708,8 @@ def project_cowork_skill(
 
     text = _without_openai_onboarding(content).decode("utf-8")
     if relative_path in {
-        "skills/passive-invoice-audit/SKILL.md",
-        "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md",
+        "skills/purchase-invoice-review/SKILL.md",
+        "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
     }:
         text = (ROOT / "plugins/vera/references/passive-invoice-cowork.md").read_text(
             encoding="utf-8"
@@ -2082,7 +2086,10 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
                 payload["governed_shared_paths"] = projected_shared_paths
                 payload.pop("governed_repository_paths", None)
             wrapper = (
-                projected_root / "skills" / workstream / "SKILL.md"
+                projected_root
+                / "skills"
+                / roles.get(workstream, {}).get("skill", workstream)
+                / "SKILL.md"
                 if role != "internal_engine"
                 else None
             )

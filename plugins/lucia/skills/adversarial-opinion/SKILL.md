@@ -25,5 +25,5 @@ Do not fork the method or add an opposing examination to informational research.
 
 For a supplied position without a reviewed original and answer contract, first
 follow `../quesito-legale-fiscale/SKILL.md`. Review the opposing result with
-`../deep-research-validator/SKILL.md`; do not recursively request an opposing
+`../legal-tax-answer-review/SKILL.md`; do not recursively request an opposing
 opinion about the opposing opinion. Final choices remain with the professional.

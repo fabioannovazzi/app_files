@@ -19,7 +19,7 @@
       "prompt": "Use Clara to plan an advisory assignment for a board decision. Preserve the facts, define the evidence and analysis plan, and hand the contract to the right Clara workflow before drafting.",
       "required_signals": ["advisory assignment", "board decision", "facts", "evidence", "analysis plan", "handoff"],
       "expected_skill": "clara:advisory-brief-planner",
-      "must_not_route_to": ["clara:advisory-case-director", "clara:reporting-engine", "clara:html-deck", "clara:interview", "clara:privacy-surface-review"]
+      "must_not_route_to": ["clara:advisory-case-director", "clara:reporting-engine", "clara:html-deck", "clara:hosted-interview", "clara:privacy-surface-review"]
     },
     {
       "id": "advisory-case-current-answer-and-next-work",
@@ -66,7 +66,7 @@
       "id": "hosted-participant-interview",
       "prompt": "Prepare a 15-minute hosted research interview link in French for an external stakeholder, then retrieve its bundle and quality review when complete.",
       "required_signals": ["hosted research interview", "external stakeholder", "bundle", "quality review"],
-      "expected_skill": "clara:interview",
+      "expected_skill": "clara:hosted-interview",
       "must_not_route_to": ["clara:transcribe", "clara:deck-correction"]
     },
     {
@@ -74,91 +74,91 @@
       "prompt": "Transcribe this meeting recording, complete local speaker attribution, and import the reviewed transcript into the existing case.",
       "required_signals": ["meeting recording", "speaker attribution", "reviewed transcript", "existing case"],
       "expected_skill": "clara:transcribe",
-      "must_not_route_to": ["clara:interview", "clara:deck-correction"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:deck-correction"]
     },
     {
       "id": "voice-led-pptx-correction",
       "prompt": "Revise this existing PPTX from the attached call transcript, preserve untouched slides, show me the interpreted changes for approval, then render and verify the corrected copy.",
       "required_signals": ["existing PPTX", "call transcript", "approval", "render", "verify"],
       "expected_skill": "clara:deck-correction",
-      "must_not_route_to": ["clara:interview", "clara:transcribe"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe"]
     },
     {
       "id": "narrated-research-video",
       "prompt": "Use Clara to turn these approved ordered research scene images into one 16:9 video with restrained motion, synchronized Italian narration generated through authenticated Mparanza access, a visible AI-voice disclosure, captions, and a reviewable narration script. Do not require a user API key. Preserve every figure and do not invent claims or visuals.",
       "required_signals": ["approved ordered research scene images", "16:9 video", "authenticated Mparanza narration", "no user API key", "AI-voice disclosure", "narration script", "do not invent"],
       "expected_skill": "clara:research-video",
-      "must_not_route_to": ["clara:html-deck", "clara:transcribe", "clara:deck-correction", "clara:interview"]
+      "must_not_route_to": ["clara:html-deck", "clara:transcribe", "clara:deck-correction", "clara:hosted-interview"]
     },
     {
       "id": "one-command-deck-feedback-capture",
       "prompt": "Clara, record feedback on this deck, open the capture for me, and import it when I finish.",
       "required_signals": ["record feedback", "this deck", "open the capture", "import"],
       "expected_skill": "clara:deck-correction",
-      "must_not_route_to": ["clara:interview", "clara:transcribe"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe"]
     },
     {
       "id": "retail-attribute-report-from-current-data",
       "prompt": "Use Clara to map product attributes for this retailer and category from the current database snapshot, compare the retailer-defined new products with the rest of the assortment, create the private local HTML report, and tell me whether it is correct.",
       "required_signals": ["product attributes", "current database snapshot", "new products", "local HTML report", "correct"],
       "expected_skill": "clara:attribute-reporting",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:brand-fit"]
     },
     {
       "id": "retail-attribute-report-fresh-scrape",
       "prompt": "Use Clara to scrape this retailer and category locally, map the products to the central taxonomy, compare best sellers with the other products, and produce a checked HTML attribute report.",
       "required_signals": ["scrape", "central taxonomy", "best sellers", "checked HTML attribute report"],
       "expected_skill": "clara:attribute-reporting",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:brand-fit"]
     },
     {
       "id": "brand-fit-current-presence-and-owned-catalogue",
       "prompt": "Use Clara Brand Fit with this completed Retailer Signals analysis. Compare those retailer signals with KIKO's current presence at Ulta and KIKO's owned catalogue, create a private local HTML report, and tell me whether it is correct.",
       "required_signals": ["Brand Fit", "completed Retailer Signals", "current presence at Ulta", "owned catalogue", "private local HTML report", "correct"],
       "expected_skill": "clara:brand-fit",
-      "must_not_route_to": ["clara:attribute-reporting", "clara:reporting-engine", "clara:interview", "clara:transcribe", "clara:deck-correction"]
+      "must_not_route_to": ["clara:attribute-reporting", "clara:reporting-engine", "clara:hosted-interview", "clara:transcribe", "clara:deck-correction"]
     },
     {
       "id": "brand-fit-stored-snapshot-boundary",
       "prompt": "Compare the checked retailer signals with this brand's current retailer presence and owned catalogue from the stored database snapshot. Keep images and the Brand Fit report local and do not claim this is a live shelf check.",
       "required_signals": ["checked retailer signals", "current retailer presence", "owned catalogue", "stored database snapshot", "images", "report local", "not live"],
       "expected_skill": "clara:brand-fit",
-      "must_not_route_to": ["clara:attribute-reporting", "clara:reporting-engine", "clara:interview", "clara:transcribe", "clara:deck-correction"]
+      "must_not_route_to": ["clara:attribute-reporting", "clara:reporting-engine", "clara:hosted-interview", "clara:transcribe", "clara:deck-correction"]
     },
     {
       "id": "reporting-engine-direct-chart-analysis",
       "prompt": "Use Clara to analyze this spreadsheet, choose the most useful chart from the business question and actual fields, render it, and explain the result.",
       "required_signals": ["Clara", "analyze this spreadsheet", "most useful chart", "actual fields", "render", "explain"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "reporting-engine-chart-contract",
       "prompt": "Use Clara to inspect the chart-selection manifest, profile this dataset into chart roles, and tell me which chart capabilities are mechanically compatible before semantic selection.",
       "required_signals": ["chart-selection manifest", "profile this dataset", "chart roles", "mechanically compatible", "semantic selection"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "reporting-engine-semantic-layer",
       "prompt": "Use Clara to create and validate a source-backed semantic layer for this dataset before any chart is selected.",
       "required_signals": ["Clara", "source-backed semantic layer", "this dataset", "before any chart is selected"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "reporting-engine-business-metric-intake",
       "prompt": "I uploaded a Parquet sales table. Use Clara to identify which metric, if any, represents Sales, Discount, and COGS before charting, and keep the reviewed mapping for refreshed files.",
       "required_signals": ["Parquet", "Sales", "Discount", "COGS", "before charting", "reviewed mapping", "refreshed files"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "reporting-engine-recurring-snapshot",
       "prompt": "Use Clara to attach today's refreshed sales file to the existing dataset semantic contract and reuse its reviewed definitions.",
       "required_signals": ["Clara", "refreshed sales file", "existing dataset semantic contract", "reuse"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+      "must_not_route_to": ["clara:hosted-interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "deck-claim-basis-map",

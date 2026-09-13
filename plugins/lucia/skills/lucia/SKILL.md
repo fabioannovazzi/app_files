@@ -1,6 +1,6 @@
 ---
 name: lucia
-description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Prompt Optimizer and Deep Research Validator assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
+description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Legal/Tax Answer Planner and Legal/Tax Answer Review assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
 ---
 
 <!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
@@ -71,10 +71,10 @@ funzione Lucia:
 
 | Esito | Percorso obbligatorio |
 | --- | --- |
-| Sola preparazione del quesito o del piano, senza eseguire la ricerca | Leggi integralmente `../prompt-optimizer/SKILL.md` e seguilo. |
+| Sola preparazione del quesito o del piano, senza eseguire la ricerca | Leggi integralmente `../legal-tax-answer-planner/SKILL.md` e seguilo. |
 | Quesito legale, fiscale o di compliance da portare dalla domanda a una risposta verificata | Leggi integralmente `../quesito-legale-fiscale/SKILL.md` e seguilo. |
 | Parere su una posizione concreta da sottoporre a esame contrapposto, o richiesta esplicita di contrapposto | Leggi integralmente `../adversarial-opinion/SKILL.md` e seguilo. La ricerca informativa termina dopo la validazione; rispetta una richiesta di escludere il contrapposto. |
-| Risposta, parere, memoria, lettera o report già prodotto da controllare | Leggi integralmente `../deep-research-validator/SKILL.md` e seguilo. |
+| Risposta, parere, memoria, lettera o report già prodotto da controllare | Leggi integralmente `../legal-tax-answer-review/SKILL.md` e seguilo. |
 | Novità giuridica o professionale da valutare e trasformare in email, circolare, articolo, post, FAQ, alert o visuale | Leggi integralmente `../comunicazione-professionale/SKILL.md` e seguilo. Non duplicare i passaggi di answer contract e claim assurance già incorporati nel workflow. |
 | Sito informativo dello studio legale da creare, rinnovare, revisionare, preparare in preview o pubblicare dopo approvazione | Leggi integralmente `../presenza-digitale-studio/SKILL.md` e seguilo. |
 | Nuova pratica per un nuovo cliente o per un cliente esistente da raccogliere e preparare all'apertura | Leggi integralmente `../apertura-pratica/SKILL.md` e seguilo. Usa il suo validatore specifico e il contratto di revisione dell'avvocato. |
@@ -96,15 +96,15 @@ unless the facts cue them.
 
 ## Componenti condivisi senza fork
 
-Prompt Optimizer e Deep Research Validator sono le implementazioni canoniche
+Legal/Tax Answer Planner e Legal/Tax Answer Review sono le implementazioni canoniche
 condivise con Vera. Le wrapper skill non ne riassumono né ne sostituiscono le istruzioni: risolvono
 il modulo incorporato, leggono il suo `SKILL.md` completo e lo seguono. Non
-modificare la logica del Prompt Optimizer o del Deep Research Validator dentro
+modificare la logica del Legal/Tax Answer Planner o del Legal/Tax Answer Review dentro
 Lucia.
 
 `quesito-legale-fiscale` orchestra quelle due fasi e la generazione della
 risposta come un solo percorso per l'utente, leggendo il metodo canonico
-`answer-journey.md` nel modulo condiviso Deep Research Validator. Dopo la
+`answer-journey.md` nel modulo condiviso Legal/Tax Answer Review. Dopo la
 preparazione propone il plugin Deep Research disponibile oppure la ricerca
 ordinaria. La ricerca informativa termina dopo la validazione. Un parere su
 una posizione concreta o una richiesta esplicita include il contrapposto, salvo
@@ -123,7 +123,7 @@ non può indebolire evidenze, review, rendering, hash, preview o packaging.
 Fascicolo nuova pratica è nativa di Lucia. Riusa Studio Archive soltanto per il ciclo
 privato di cliente, incarico, evidenze e run; schema legale, confini
 professionali, validatore e ricevute di revisione restano specifici di Lucia e
-non sono sostituiti dal Deep Research Validator.
+non sono sostituiti dal Legal/Tax Answer Review.
 
 Per preparare o riprendere cliente e incarico, leggi integralmente
 `../studio-archive/SKILL.md` e segui il modulo condiviso tramite

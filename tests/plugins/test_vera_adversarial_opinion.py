@@ -632,5 +632,5 @@ def test_lucia_and_vera_package_the_identical_opinion_component(
     assert vera == lucia
     assert "scripts/adversarial_opinion.py" in lucia
     assert "skills/adversarial-opinion/SKILL.md" in lucia
-    assert "skills/deep-research-validator/references/answer-journey.md" in lucia
-    assert "skills/deep-research-validator/references/research-choice.md" in lucia
+    assert "skills/legal-tax-answer-review/references/answer-journey.md" in lucia
+    assert "skills/legal-tax-answer-review/references/research-choice.md" in lucia

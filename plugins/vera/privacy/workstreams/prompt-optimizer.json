@@ -85,10 +85,10 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "434a9dd38bd9d85ebf328c9a44b0c46b1cbbd8f7b088e83380a453e619a900f1"
+    "source_fingerprint": "fe183940c8a0b51ef8748d4354082bea22532952e47aacb4aa8ce036e3a72b12"
   },
   "governed_repository_paths": [
-    "plugins/deep-research-validator/skills/deep-research-validator/references/adversarial-scope.md",
-    "plugins/deep-research-validator/skills/deep-research-validator/references/research-choice.md"
+    "plugins/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
+    "plugins/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md"
   ]
 }

@@ -26,7 +26,7 @@ ordinary folder, or adjacent project/output folder.
 Use this skill for transcription-first evidence capture. The hosted service is
 the authorized audio/transcription layer. Durable source and output files remain
 local after import; Codex performs speaker review and advisory interpretation
-through the user's existing ChatGPT plan. This is separate from `interview`,
+through the user's existing ChatGPT plan. This is separate from `hosted-interview`,
 which conducts an adaptive conversation with an external participant.
 
 ## Choose the Path

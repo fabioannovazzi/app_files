@@ -118,10 +118,10 @@ def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() ->
         VERA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md"
     )
     prompt_optimizer = _read_text(
-        VERA_ROOT / "skills" / "prompt-optimizer" / "SKILL.md"
+        VERA_ROOT / "skills" / "legal-tax-answer-planner" / "SKILL.md"
     )
     validator = _read_text(
-        VERA_ROOT / "skills" / "deep-research-validator" / "SKILL.md"
+        VERA_ROOT / "skills" / "legal-tax-answer-review" / "SKILL.md"
     )
 
     required_contracts = (
@@ -196,6 +196,6 @@ def test_professional_question_is_an_orchestrator_not_a_third_data_workstream() 
     assert "references/answer-journey.md" in workflow
     shared = _read_text(
         ROOT
-        / "plugins/deep-research-validator/skills/deep-research-validator/references/answer-journey.md"
+        / "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
     )
     assert "does not create a third Studio Archive workstream" in shared
