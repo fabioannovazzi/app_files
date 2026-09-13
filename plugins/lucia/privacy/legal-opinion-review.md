@@ -5,7 +5,7 @@ resolved to their sibling source components in the repository. The canonical
 source-bound data records are maintained in Vera's `privacy/workstreams/`
 register for those two shared implementations. Lucia's adapters are
 `skills/quesito-legale-fiscale/SKILL.md`, `skills/adversarial-opinion/SKILL.md`
-and `skills/prompt-optimizer/SKILL.md`; they add no helper implementation or
+and `skills/legal-tax-answer-planner/SKILL.md`; they add no helper implementation or
 external transfer. They retain the lawyer's governing-law, source and final
 professional decisions and the existing Lucia runtime boundary.
 

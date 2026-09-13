@@ -32,7 +32,7 @@ def test_vera_declares_bilancio_xbrl_skill_and_mcp_route() -> None:
 
     assert "bilancio-xbrl-it" in components["plugins"]
     assert "bilancio-xbrl-it" in routed_modules
-    assert (VERA_ROOT / "skills" / "bilancio-xbrl-it" / "SKILL.md").is_file()
+    assert (VERA_ROOT / "skills" / "bilancio-oic" / "SKILL.md").is_file()
 
 
 @pytest.mark.parametrize(
@@ -89,7 +89,7 @@ def test_vera_zip_expected_entries_embed_bilancio_xbrl_component() -> None:
     entries = builder.expected_zip_entries(bundle)
 
     prefix = "vera-codex-plugin/plugins/vera/modules/bilancio-xbrl-it/"
-    assert prefix + "skills/bilancio-xbrl-it/SKILL.md" in entries
+    assert prefix + "skills/bilancio-oic/SKILL.md" in entries
     assert prefix + "scripts/xbrl_case.py" in entries
     assert prefix + "mcp/server.cjs" in entries
 
@@ -100,15 +100,15 @@ def test_vera_chatgpt_bilancio_skill_routes_to_complete_module_workflow() -> Non
 
     entries = builder.chatgpt_upload_entries(bundle)
     router = entries["skills/vera/SKILL.md"].decode("utf-8")
-    wrapper = entries["skills/bilancio-xbrl-it/SKILL.md"].decode("utf-8")
-    skill = entries["modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md"].decode(
+    wrapper = entries["skills/bilancio-oic/SKILL.md"].decode("utf-8")
+    skill = entries["modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md"].decode(
         "utf-8"
     )
 
     assert "../<skill-name>/SKILL.md" in router
     assert "../../modules/bilancio-xbrl-it" in wrapper
-    assert "skills/bilancio-xbrl-it/WORKFLOW.md" not in entries
-    assert "skills/bilancio-xbrl-it/SKILL.md" in entries
+    assert "skills/bilancio-oic/WORKFLOW.md" not in entries
+    assert "skills/bilancio-oic/SKILL.md" in entries
     assert "# Bilancio intelligente" in skill
     assert "scripts/check_dependencies.py" in skill
 

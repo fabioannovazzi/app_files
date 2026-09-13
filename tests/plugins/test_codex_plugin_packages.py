@@ -813,8 +813,8 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             "skills/lucia/SKILL.md",
             "skills/learn-with-lucia/SKILL.md",
             "skills/quesito-legale-fiscale/SKILL.md",
-            "skills/prompt-optimizer/SKILL.md",
-            "skills/deep-research-validator/SKILL.md",
+            "skills/legal-tax-answer-planner/SKILL.md",
+            "skills/legal-tax-answer-review/SKILL.md",
             "skills/comunicazione-professionale/SKILL.md",
             "skills/presenza-digitale-studio/SKILL.md",
             "skills/apertura-pratica/SKILL.md",
@@ -829,11 +829,11 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "esattamente due" not in normalized_router
         assert (
             "../../modules/prompt-optimizer"
-            in card_bodies["skills/prompt-optimizer/SKILL.md"]
+            in card_bodies["skills/legal-tax-answer-planner/SKILL.md"]
         )
         assert (
             "../../modules/deep-research-validator"
-            in card_bodies["skills/deep-research-validator/SKILL.md"]
+            in card_bodies["skills/legal-tax-answer-review/SKILL.md"]
         )
         assert (
             "../../modules/comunicazione-professionale"
@@ -1025,10 +1025,10 @@ def test_chatgpt_card_config_rejects_duplicate_visible_copy() -> None:
                     "default_prompt": "Use $deck-correction to correct this deck.",
                     "instructions": "Clara applies the requested deck corrections.",
                 },
-                "interview": {
+                "hosted-interview": {
                     "display_name": "Interview",
                     "short_description": "Review professional evidence",
-                    "default_prompt": "Use $interview to prepare this interview.",
+                    "default_prompt": "Use $hosted-interview to prepare this interview.",
                     "instructions": "Clara prepares and reviews the interview evidence.",
                 },
             },
@@ -1037,12 +1037,12 @@ def test_chatgpt_card_config_rejects_duplicate_visible_copy() -> None:
 
     with pytest.raises(
         ValueError,
-        match="interview short_description duplicates deck-correction",
+        match="hosted-interview short_description duplicates deck-correction",
     ):
         builder.load_chatgpt_skill_cards(
             config,
             plugin_name="clara",
-            expected_skills={"deck-correction", "interview"},
+            expected_skills={"deck-correction", "hosted-interview"},
         )
 
 
@@ -1541,7 +1541,20 @@ def test_vera_routes_every_commercialista_module() -> None:
         "passive-invoice-audit",
         "presenza-digitale-studio",
     }
-    assert COMMERCIALISTA_MODULE_NAMES - {"client-file-preparation"} <= skill_names
+    renamed_skills = {
+        "prompt-optimizer": "legal-tax-answer-planner",
+        "deep-research-validator": "legal-tax-answer-review",
+        "check-entries": "vouching",
+        "bilancio-xbrl-it": "bilancio-oic",
+        "passive-invoice-audit": "purchase-invoice-review",
+        "report-builder": "financial-report-builder",
+    }
+    assert (
+        COMMERCIALISTA_MODULE_NAMES
+        - {"client-file-preparation"}
+        - renamed_skills.keys()
+    ) | set(renamed_skills.values()) <= skill_names
+    assert skill_names.isdisjoint(renamed_skills)
     assert "client-file-preparation" not in skill_names
     assert components["workflow_roles"] == {
         "new-client": {
@@ -1551,6 +1564,10 @@ def test_vera_routes_every_commercialista_module() -> None:
         "client-file-preparation": {
             "kind": "internal_engine",
             "parent_workflow": "new-client",
+        },
+        **{
+            component: {"kind": "workflow", "skill": skill}
+            for component, skill in renamed_skills.items()
         },
     }
 
@@ -2729,14 +2746,14 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name == "quesito-legale-fiscale"
             ):
-                assert "../prompt-optimizer/SKILL.md" in normalized_skill_text
-                assert "../deep-research-validator/SKILL.md" in normalized_skill_text
+                assert "../legal-tax-answer-planner/SKILL.md" in normalized_skill_text
+                assert "../legal-tax-answer-review/SKILL.md" in normalized_skill_text
                 continue
             if plugin_root.name in {"vera", "lucia"} and (
                 skill_file.parent.name == "adversarial-opinion"
             ):
                 assert "../quesito-legale-fiscale/SKILL.md" in normalized_skill_text
-                assert "../deep-research-validator/SKILL.md" in normalized_skill_text
+                assert "../legal-tax-answer-review/SKILL.md" in normalized_skill_text
                 assert "skills/adversarial-opinion/SKILL.md" in normalized_skill_text
                 assert "Plugin Improvement Feedback" in normalized_skill_text
                 continue

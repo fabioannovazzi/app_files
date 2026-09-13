@@ -13,5 +13,5 @@ reference, script and review asset.
 
 This is Lucia's native legal-matter-opening contract. It reuses Studio Archive
 only for private client, engagement, input and run lifecycle. It does not use
-Deep Research Validator as its completion gate and does not inherit Vera's
+Legal/Tax Answer Review as its completion gate and does not inherit Vera's
 accounting intake semantics.

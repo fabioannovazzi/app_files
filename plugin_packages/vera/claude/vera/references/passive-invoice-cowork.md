@@ -1,5 +1,5 @@
 ---
-name: passive-invoice-audit
+name: purchase-invoice-review
 description: Screen passive FatturaPA XML against booked ledger entries using local checks and a native Cowork Haiku subagent, then deliver an exception workpaper with traceable evidence.
 ---
 

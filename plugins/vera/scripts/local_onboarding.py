@@ -147,8 +147,8 @@ def eligible_workflows() -> set[str]:
     registered = set(
         re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
     ) - {
-        "prompt-optimizer",
-        "deep-research-validator",
+        "legal-tax-answer-planner",
+        "legal-tax-answer-review",
         "adversarial-opinion",
         "privacy-surface-review",
         "learn-with-vera",

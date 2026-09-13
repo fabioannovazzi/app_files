@@ -22,6 +22,10 @@ LUCIA_PUBLIC_COWORK_ZIP = (
 )
 VERA_CLAUDE_ZIP = ROOT / "plugin_packages" / "vera" / "vera-claude-plugin.zip"
 SHARED_ASSURANCE_WORKFLOWS = {"prompt-optimizer", "deep-research-validator"}
+ASSURANCE_SKILLS = {
+    "prompt-optimizer": "legal-tax-answer-planner",
+    "deep-research-validator": "legal-tax-answer-review",
+}
 LAWYER_PROFILED_WORKFLOWS = {
     "comunicazione-professionale",
     "presenza-digitale-studio",
@@ -31,8 +35,15 @@ ORCHESTRATION_WORKFLOWS = {"quesito-legale-fiscale", "adversarial-opinion"}
 PUBLIC_WORKFLOWS = (
     SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 )
-PUBLIC_SKILLS = PUBLIC_WORKFLOWS | ORCHESTRATION_WORKFLOWS | {"learn-with-lucia"}
-WEBSITE_SKILLS = PUBLIC_SKILLS | {"studio-archive"}
+PUBLIC_SKILLS = (
+    (PUBLIC_WORKFLOWS - SHARED_ASSURANCE_WORKFLOWS)
+    | set(ASSURANCE_SKILLS.values())
+    | ORCHESTRATION_WORKFLOWS
+    | {"learn-with-lucia"}
+)
+WEBSITE_SKILLS = (
+    PUBLIC_WORKFLOWS | ORCHESTRATION_WORKFLOWS | {"learn-with-lucia", "studio-archive"}
+)
 PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
 
@@ -159,11 +170,11 @@ def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() 
     assert "references/answer-journey.md" in workflow
     shared = (
         ROOT
-        / "plugins/deep-research-validator/skills/deep-research-validator/references/answer-journey.md"
+        / "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
     ).read_text()
     assert "does not create a third Studio Archive workstream" in shared
-    assert "../prompt-optimizer/SKILL.md" in workflow
-    assert "../deep-research-validator/SKILL.md" in workflow
+    assert "../legal-tax-answer-planner/SKILL.md" in workflow
+    assert "../legal-tax-answer-review/SKILL.md" in workflow
     assert "using the invoking" in shared and "product's namespace" in shared
 
 
@@ -174,7 +185,7 @@ def test_lucia_native_matter_opening_uses_its_own_validator_contract() -> None:
     component = ROOT / "plugins" / "apertura-pratica"
 
     assert "Lucia's native legal-matter-opening contract" in wrapper
-    assert "does not use\nDeep Research Validator" in wrapper
+    assert "does not use\nLegal/Tax Answer Review" in wrapper
     assert (component / "schemas" / "matter_intake.schema.json").is_file()
     assert (component / "scripts" / "apertura_pratica_core.py").is_file()
     assert (component / "assets" / "apertura-pratica-review.html").is_file()
@@ -242,14 +253,13 @@ def test_lucia_professional_communication_privacy_boundary_is_current() -> None:
 
 @pytest.mark.parametrize("workflow", sorted(SHARED_ASSURANCE_WORKFLOWS))
 def test_lucia_wrappers_resolve_canonical_shared_component(workflow: str) -> None:
-    wrapper = (LUCIA_ROOT / "skills" / workflow / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
+    skill = ASSURANCE_SKILLS[workflow]
+    wrapper = (LUCIA_ROOT / "skills" / skill / "SKILL.md").read_text(encoding="utf-8")
     normalized_wrapper = " ".join(wrapper.split())
 
     assert f"../../modules/{workflow}" in wrapper
     assert f"../../../{workflow}" in wrapper
-    assert f"`skills/{workflow}/SKILL.md`" in wrapper
+    assert f"`skills/{skill}/SKILL.md`" in wrapper
     assert "Do not paraphrase, shorten, fork, or replace" in normalized_wrapper
     assert "deliverables are in Italian" in wrapper
 
@@ -431,7 +441,7 @@ def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
         ROOT / "plugins" / "vera" / "marketplace_skill_instructions.json"
     )["skills"]
 
-    for workflow in SHARED_ASSURANCE_WORKFLOWS:
+    for workflow in ASSURANCE_SKILLS.values():
         for field in ("display_name", "short_description", "default_prompt"):
             assert lucia_cards[workflow][field] == vera_cards[workflow][field]
         assert lucia_cards[workflow]["instructions"] == vera_cards[workflow][
@@ -625,8 +635,8 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     canonical_labels = {
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "adversarial-opinion": "Parere contrapposto",
-        "prompt-optimizer": "Ottimizzazione prompt",
-        "deep-research-validator": "Validazione ricerca",
+        "legal-tax-answer-planner": "Ottimizzazione prompt",
+        "legal-tax-answer-review": "Validazione ricerca",
         "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
         "comunicazione-professionale": "Comunicazione professionale",
         "apertura-pratica": "Fascicolo nuova pratica",
@@ -645,8 +655,8 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     website_keys = {
         "quesito-legale-fiscale": "module.question.title",
         "adversarial-opinion": "module.adversarial.title",
-        "prompt-optimizer": "module.prompt.title",
-        "deep-research-validator": "module.research.title",
+        "legal-tax-answer-planner": "module.prompt.title",
+        "legal-tax-answer-review": "module.research.title",
         "studio-archive": "module.archive.title",
         "comunicazione-professionale": "module.communication.title",
         "apertura-pratica": "module.matter.title",
@@ -656,13 +666,13 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     assert {
         workflow: cards[workflow]["display_name"] for workflow in canonical_labels
     } == canonical_labels
-    for workflow in SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS:
+    for workflow in set(ASSURANCE_SKILLS.values()) | LAWYER_PROFILED_WORKFLOWS:
         assert cards[workflow]["display_name"] == vera_cards[workflow]["display_name"]
     assert directory_labels == [
         canonical_labels["quesito-legale-fiscale"],
-        canonical_labels["prompt-optimizer"],
+        canonical_labels["legal-tax-answer-planner"],
         canonical_labels["adversarial-opinion"],
-        canonical_labels["deep-research-validator"],
+        canonical_labels["legal-tax-answer-review"],
         canonical_labels["studio-archive"],
         canonical_labels["apertura-pratica"],
         canonical_labels["comunicazione-professionale"],

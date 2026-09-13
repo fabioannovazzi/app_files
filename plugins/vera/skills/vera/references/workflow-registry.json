@@ -116,7 +116,7 @@
     {
       "component_id": "check-entries",
       "skills": [
-        "modules/check-entries/skills/check-entries/SKILL.md"
+        "modules/check-entries/skills/vouching/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/check-entries/scripts/apply_review_edits.py",
@@ -143,7 +143,7 @@
     {
       "component_id": "passive-invoice-audit",
       "skills": [
-        "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md"
+        "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/passive-invoice-audit/scripts/check_dependencies.py",
@@ -245,7 +245,7 @@
     {
       "component_id": "report-builder",
       "skills": [
-        "modules/report-builder/skills/report-builder/SKILL.md"
+        "modules/report-builder/skills/financial-report-builder/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/report-builder/scripts/apply_review_edits.py",
@@ -324,7 +324,7 @@
     {
       "component_id": "prompt-optimizer",
       "skills": [
-        "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md"
+        "modules/prompt-optimizer/skills/legal-tax-answer-planner/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/prompt-optimizer/scripts/apply_review_edits.py",
@@ -339,7 +339,7 @@
       "component_id": "deep-research-validator",
       "skills": [
         "modules/deep-research-validator/skills/adversarial-opinion/SKILL.md",
-        "modules/deep-research-validator/skills/deep-research-validator/SKILL.md"
+        "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/deep-research-validator/scripts/adversarial_opinion.py",
@@ -401,7 +401,7 @@
     {
       "component_id": "bilancio-xbrl-it",
       "skills": [
-        "modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md"
+        "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/bilancio-xbrl-it/scripts/audit_schedule_taxonomy.py",
@@ -455,36 +455,36 @@
     "skills/archive-organization/SKILL.md",
     "skills/avviso-intake/SKILL.md",
     "skills/bandi-agevolazioni/SKILL.md",
-    "skills/bilancio-xbrl-it/SKILL.md",
+    "skills/bilancio-oic/SKILL.md",
     "skills/browser-automation/SKILL.md",
     "skills/business-planning/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
-    "skills/check-entries/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",
-    "skills/deep-research-validator/SKILL.md",
     "skills/email-cliente/SKILL.md",
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
+    "skills/financial-report-builder/SKILL.md",
     "skills/journal-bank-reconciliation/SKILL.md",
     "skills/journal-sampling/SKILL.md",
     "skills/learn-with-vera/SKILL.md",
+    "skills/legal-tax-answer-planner/SKILL.md",
+    "skills/legal-tax-answer-review/SKILL.md",
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",
-    "skills/passive-invoice-audit/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",
     "skills/privacy-surface-review/SKILL.md",
-    "skills/prompt-optimizer/SKILL.md",
+    "skills/purchase-invoice-review/SKILL.md",
     "skills/quesito-legale-fiscale/SKILL.md",
     "skills/registro-imprese-sari/SKILL.md",
-    "skills/report-builder/SKILL.md",
     "skills/sales-plan/SKILL.md",
     "skills/studio-archive/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
-    "skills/vera/SKILL.md"
+    "skills/vera/SKILL.md",
+    "skills/vouching/SKILL.md"
   ]
 }

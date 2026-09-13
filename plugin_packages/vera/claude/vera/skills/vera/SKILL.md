@@ -456,7 +456,7 @@ operational filing, statutory return, tax declaration, or form whose correctness
 depends on complete client data, field mapping, reconciliation, filing schema,
 or submission controls. Use a dedicated workflow for that artifact. If none is
 available, stop under the no-matching-specialist-workflow outcome instead of
-treating Prompt Optimizer and Deep Research Validator as a substitute.
+treating Legal/Tax Answer Planner and Legal/Tax Answer Review as a substitute.
 
 The registered studio-wide `comunicazione-professionale` workflow implements
 the same journey inside its own workstream. Its exact answer-contract and claim-

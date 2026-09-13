@@ -38,7 +38,7 @@ attualmente pubbliche sono:
   incarico, possibili scadenze, antiriciclaggio condizionale e piano del
   fascicolo restano espliciti e soggetti alla revisione dell’avvocato.
 
-Prompt Optimizer e Deep Research Validator sono le stesse implementazioni
+Legal/Tax Answer Planner e Legal/Tax Answer Review sono le stesse implementazioni
 canoniche incorporate in Vera. Lucia non ne mantiene copie divergenti: il
 builder include gli stessi file sorgente e i test verificano l’uguaglianza dei
 byte nei pacchetti generati.
@@ -48,7 +48,7 @@ componenti come fasi separate e prepara la risposta tra le due. Non crea un
 terzo workstream, non duplica gli artefatti e non cambia le destinazioni dei
 dati.
 
-Lo stesso componente Deep Research Validator contiene anche il metodo e il
+Lo stesso componente Legal/Tax Answer Review contiene anche il metodo e il
 codice del parere contrapposto. La ricerca informativa termina dopo la
 validazione; un parere su una posizione concreta o una richiesta esplicita
 include il contrapposto, salvo istruzioni di esclusione. Dopo la preparazione,
@@ -71,7 +71,7 @@ validatore e ricevute di revisione specifici per l’apertura della pratica.
    specialistico registrato appropriato.
 2. Per una risposta completa, Risposta a quesiti legali e fiscali coordina
    contratto della risposta, ricerca o generazione e verifica finale.
-3. Prompt Optimizer e Deep Research Validator restano invocabili separatamente
+3. Legal/Tax Answer Planner e Legal/Tax Answer Review restano invocabili separatamente
    quando serve soltanto preparare il quesito o controllare una risposta già
    prodotta.
 4. Il risultato resta una bozza rivedibile. Lucia non firma pareri, deposita

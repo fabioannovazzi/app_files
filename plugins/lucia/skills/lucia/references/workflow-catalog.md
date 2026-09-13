@@ -7,8 +7,8 @@ completely. These exact identifiers register capabilities; they are not keyword 
 - `quesito-legale-fiscale`: research and answer a substantive legal or tax question with current authoritative sources and independent validation.
 - `comunicazione-professionale`: prepare a source-bound professional communication for review.
 - `presenza-digitale-studio`: build or revise the firm's informational website from verified facts.
-- `prompt-optimizer`: internal legal assignment and source-plan framing.
-- `deep-research-validator`: internal source and reasoning validation.
+- `legal-tax-answer-planner`: internal legal assignment and source-plan framing.
+- `legal-tax-answer-review`: internal source and reasoning validation.
 - `adversarial-opinion`: internal independent opposing legal inquiry.
 - `studio-archive`: private client, matter, input and run lifecycle only.
 

@@ -1,6 +1,6 @@
 ---
 name: lucia
-description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Prompt Optimizer and Deep Research Validator assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
+description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Legal/Tax Answer Planner and Legal/Tax Answer Review assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
 ---
 
 ## Cowork execution contract
@@ -40,10 +40,10 @@ whole request semantically and select the narrowest registered workflow:
 
 | Outcome | Required route |
 | --- | --- |
-| Preparation of the question or answer plan only, without executing research | Read `../prompt-optimizer/SKILL.md` completely and follow it. |
+| Preparation of the question or answer plan only, without executing research | Read `../legal-tax-answer-planner/SKILL.md` completely and follow it. |
 | A legal, tax-law, or compliance question to take from the initial request to a reviewed answer | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
 | An opposing examination of a concrete position, or an explicit request for an opposing opinion | Read `../adversarial-opinion/SKILL.md` completely and follow the shared method. Informational research ends after validation; respect an instruction to omit the stage. |
-| An existing answer, opinion, memorandum, letter, or report to check | Read `../deep-research-validator/SKILL.md` completely and follow it. |
+| An existing answer, opinion, memorandum, letter, or report to check | Read `../legal-tax-answer-review/SKILL.md` completely and follow it. |
 | A legal or professional development to assess and turn into an email, circular, article, post, FAQ, alert, or visual | Read `../comunicazione-professionale/SKILL.md` completely and follow it. Do not duplicate its embedded answer-contract and claim-assurance stages. |
 | An informational law-firm website to create, refresh, review, preview, or publish after approval | Read `../presenza-digitale-studio/SKILL.md` completely and follow it. |
 | A new client matter or a new matter for an existing client to intake and prepare for opening | Read `../apertura-pratica/SKILL.md` completely and follow it. Use its dedicated matter-opening validator and lawyer review contract. |
@@ -60,7 +60,7 @@ inferred safely; proceed on the others with explicit assumptions and caveats.
 
 ## Shared components without forks
 
-Prompt Optimizer and Deep Research Validator are the canonical implementations
+Legal/Tax Answer Planner and Legal/Tax Answer Review are the canonical implementations
 shared with Vera. Their Lucia wrappers resolve the embedded modules, read each
 module's complete `SKILL.md`, and follow it without summarizing, replacing, or
 forking the workflow.

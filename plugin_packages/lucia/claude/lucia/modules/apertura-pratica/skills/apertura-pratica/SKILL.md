@@ -88,7 +88,7 @@ facts produce explicit `partial` or `blocked` states.
 
    This produces the intake memo, missing-information request, folder plan,
    validation report, review payload and artifact manifest. It does not invoke
-   Deep Research Validator. When the package includes a separate substantive
+   Legal/Tax Answer Review. When the package includes a separate substantive
    legal analysis, validate that analysis independently before attaching it.
 
 5. For a multi-item review, use the local workbench:

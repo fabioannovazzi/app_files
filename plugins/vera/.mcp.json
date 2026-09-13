@@ -98,7 +98,7 @@
     },
     "promptOptimizerWidgets": {
       "title": "Plan Answer",
-      "description": "Validate and render Prompt Optimizer review-session payloads.",
+      "description": "Validate and render Legal/Tax Answer Planner review-session payloads.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",

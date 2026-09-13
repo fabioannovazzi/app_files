@@ -45,6 +45,30 @@
     "client-file-preparation": {
       "kind": "internal_engine",
       "parent_workflow": "new-client"
+    },
+    "prompt-optimizer": {
+      "kind": "workflow",
+      "skill": "legal-tax-answer-planner"
+    },
+    "deep-research-validator": {
+      "kind": "workflow",
+      "skill": "legal-tax-answer-review"
+    },
+    "check-entries": {
+      "kind": "workflow",
+      "skill": "vouching"
+    },
+    "bilancio-xbrl-it": {
+      "kind": "workflow",
+      "skill": "bilancio-oic"
+    },
+    "passive-invoice-audit": {
+      "kind": "workflow",
+      "skill": "purchase-invoice-review"
+    },
+    "report-builder": {
+      "kind": "workflow",
+      "skill": "financial-report-builder"
     }
   }
 }

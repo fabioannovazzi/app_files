@@ -1236,9 +1236,9 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
     page = (ROOT / "static" / "shared" / "prompt-optimizer" / "index.html").read_text(
         encoding="utf-8"
     )
-    skill = (PLUGIN_ROOT / "skills" / "prompt-optimizer" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
+    skill = (
+        PLUGIN_ROOT / "skills" / "legal-tax-answer-planner" / "SKILL.md"
+    ).read_text(encoding="utf-8")
 
     for snippet in (
         "Optimize Prompt",

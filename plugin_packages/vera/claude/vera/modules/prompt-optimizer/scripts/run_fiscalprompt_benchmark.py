@@ -1039,7 +1039,7 @@ def main() -> int:
         type=Path,
         default=Path(__file__).resolve().parents[1]
         / "skills"
-        / "prompt-optimizer"
+        / "legal-tax-answer-planner"
         / "SKILL.md",
     )
     parser.add_argument("--execute", action="store_true")

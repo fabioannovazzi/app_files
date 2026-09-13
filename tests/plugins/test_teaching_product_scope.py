@@ -217,6 +217,16 @@ def test_matching_installed_name_outside_catalog_is_not_teachable(scoped_store):
         plan(store, [foreign, *OWN_WORKFLOWS[product][1:]])
 
 
+@pytest.mark.parametrize(
+    "skill", ["legal-tax-answer-planner", "legal-tax-answer-review"]
+)
+def test_assurance_stage_is_not_an_operational_lesson(scoped_store, skill):
+    product, _, store, _ = scoped_store
+
+    with pytest.raises(ValueError, match="supported operational"):
+        plan(store, [skill, *OWN_WORKFLOWS[product][1:]])
+
+
 def test_shared_skill_name_uses_this_products_own_contract(scoped_store):
     product, installed, store, _ = scoped_store
     shared = "quesito-legale-fiscale" if product == "lucia" else "business-planning"

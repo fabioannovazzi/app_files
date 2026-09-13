@@ -345,7 +345,7 @@ def test_treatment_isolation_audit_rejects_optimizer_reading_baseline(
         "source_receipt": {"pdf_path": str(tmp_path / "source.pdf")},
         "candidate_identity": {
             "skill_path": str(
-                tmp_path / "plugin" / "skills" / "prompt-optimizer" / "SKILL.md"
+                tmp_path / "plugin" / "skills" / "legal-tax-answer-planner" / "SKILL.md"
             )
         },
     }
@@ -382,7 +382,7 @@ def test_treatment_isolation_audit_rejects_installed_optimizer_skill_in_baseline
         / "cache"
         / "vera"
         / "skills"
-        / "prompt-optimizer"
+        / "legal-tax-answer-planner"
         / "SKILL.md"
     )
     plan = {
@@ -393,7 +393,7 @@ def test_treatment_isolation_audit_rejects_installed_optimizer_skill_in_baseline
                 / "plugins"
                 / "prompt-optimizer"
                 / "skills"
-                / "prompt-optimizer"
+                / "legal-tax-answer-planner"
                 / "SKILL.md"
             )
         },
@@ -434,7 +434,7 @@ def test_treatment_isolation_audit_allows_optimizer_own_output_root_name(
                 / "plugins"
                 / "prompt-optimizer"
                 / "skills"
-                / "prompt-optimizer"
+                / "legal-tax-answer-planner"
                 / "SKILL.md"
             )
         },
@@ -472,7 +472,7 @@ def test_treatment_isolation_audit_allows_optimizer_checking_own_output_labels(
                 / "plugins"
                 / "prompt-optimizer"
                 / "skills"
-                / "prompt-optimizer"
+                / "legal-tax-answer-planner"
                 / "SKILL.md"
             )
         },

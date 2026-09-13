@@ -78,7 +78,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
     }
     for case in attribute_cases.values():
         assert set(case["must_not_route_to"]) == {
-            "clara:interview",
+            "clara:hosted-interview",
             "clara:transcribe",
             "clara:deck-correction",
             "clara:brand-fit",

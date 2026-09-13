@@ -2,7 +2,7 @@
   "mcpServers": {
     "luciaPromptOptimizer": {
       "title": "Lucia · Imposta la risposta",
-      "description": "Convalida e rende revisionabile il piano prodotto dal Prompt Optimizer condiviso con Vera.",
+      "description": "Convalida e rende revisionabile il piano prodotto dal Legal/Tax Answer Planner condiviso con Vera.",
       "icons": [
         {
           "src": "./assets/icon.svg",
@@ -21,7 +21,7 @@
     },
     "luciaDeepResearchValidator": {
       "title": "Lucia · Valida la risposta",
-      "description": "Convalida e rende revisionabile il controllo prodotto dal Deep Research Validator condiviso con Vera.",
+      "description": "Convalida e rende revisionabile il controllo prodotto dal Legal/Tax Answer Review condiviso con Vera.",
       "icons": [
         {
           "src": "./assets/icon.svg",

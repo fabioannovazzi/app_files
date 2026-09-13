@@ -23,10 +23,10 @@ requested complete answer; the user need not choose internal stages.
 Resolve `../../modules/deep-research-validator` from this skill directory when
 it exists; otherwise resolve `../../../deep-research-validator` in repository
 source. Read that module's
-`skills/deep-research-validator/references/answer-journey.md` completely and
+`skills/legal-tax-answer-review/references/answer-journey.md` completely and
 follow it. The invoking product root is two levels above this skill directory.
-Use this product's `../prompt-optimizer/SKILL.md`,
-`../deep-research-validator/SKILL.md` and, only when required,
+Use this product's `../legal-tax-answer-planner/SKILL.md`,
+`../legal-tax-answer-review/SKILL.md` and, only when required,
 `../adversarial-opinion/SKILL.md`. Do not fork or summarize the shared method.
 
 Informational research completes after validation. A concrete opinion or an

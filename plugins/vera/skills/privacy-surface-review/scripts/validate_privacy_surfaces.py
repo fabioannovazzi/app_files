@@ -765,7 +765,10 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
         try:
             component_root = _component_root(root, workstream)
             wrapper = (
-                root / "skills" / workstream / "SKILL.md"
+                root
+                / "skills"
+                / roles.get(workstream, {}).get("skill", workstream)
+                / "SKILL.md"
                 if role != "internal_engine"
                 else None
             )
@@ -835,7 +838,7 @@ def _refresh(workstream: str, vera_root: Path) -> None:
         _, roles = _components(vera_root)
         role = _expected_role(name, roles)
         wrapper = (
-            vera_root / "skills" / name / "SKILL.md"
+            vera_root / "skills" / roles.get(name, {}).get("skill", name) / "SKILL.md"
             if role != "internal_engine"
             else None
         )

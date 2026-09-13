@@ -7,10 +7,10 @@
     "OpenAI realtime, transcription, and review services configured by Mparanza"
   ],
   "workflows": [
-    "interview"
+    "hosted-interview"
   ],
   "governed_paths": [
-    "skills/interview/SKILL.md",
+    "skills/hosted-interview/SKILL.md",
     "scripts/manage_hosted_interview.py",
     "repository/modules/hosted_services/api.py",
     "repository/modules/hosted_interviews/api.py",
@@ -82,6 +82,6 @@
     "reviewed_at": "2026-08-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "3383e59bc580375cd754caaca89dcc76f54ff9ad2772de71154126f604f50938"
+    "source_fingerprint": "c7e673eaf2630c635a144a4bd93356c3e938768f29fc2aa6d220125ec605359a"
   }
 }

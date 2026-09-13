@@ -88,7 +88,7 @@ def test_clara_routes_brand_fit_separately_from_retailer_signals_and_charts() ->
         assert set(case["must_not_route_to"]) == {
             "clara:attribute-reporting",
             "clara:reporting-engine",
-            "clara:interview",
+            "clara:hosted-interview",
             "clara:transcribe",
             "clara:deck-correction",
         }

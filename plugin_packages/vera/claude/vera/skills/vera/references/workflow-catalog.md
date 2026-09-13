@@ -50,7 +50,7 @@ skill to imitate a missing operational workflow.
   selection, without contacting clients, authenticating, signing, or filing.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
-- `bilancio-xbrl-it`: understand accounting evidence and prepare, update,
+- `bilancio-oic`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
 - `browser-automation`: run a generic capability factory on an authorized
@@ -59,7 +59,7 @@ skill to imitate a missing operational workflow.
   separately reviewed sanitized developer pack for a developer who cannot
   access the system, then author, replay, validate, and hand off one site- and
   process-specific capability without transferring authentication state.
-- `check-entries`: compare a qualified Journal Sampling population with
+- `vouching`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
   procedure, proposal, plan, attestation, creditors, treatment, liquidity,
@@ -103,7 +103,7 @@ skill to imitate a missing operational workflow.
   matching evidence. The presence of a bank statement does not by itself make
   an open-item request a bank-reconciliation request; route by the population
   being tested.
-- `passive-invoice-audit`: screen passive FatturaPA XML populations against
+- `purchase-invoice-review`: screen passive FatturaPA XML populations against
   actual booked ledger movements, apply deterministic arithmetic and matching
   checks, then use native Claude GPT-5.6 Luna on compact matched-invoice packets
   to produce an exception-focused professional workpaper.
@@ -128,7 +128,7 @@ skill to imitate a missing operational workflow.
   not substitute for an operational return, declaration, filing, or form.
 - `registro-imprese-sari`: prepare Registro Imprese, REA, Comunicazione Unica,
   or DIRE work from official guidance without filing or signing.
-- `report-builder`: map financial Excel, CSV, or text-PDF evidence into
+- `financial-report-builder`: map financial Excel, CSV, or text-PDF evidence into
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
@@ -160,9 +160,9 @@ only when the request is specifically limited to their bounded output.
 
 ## Cross-cutting answer assurance
 
-- `prompt-optimizer`: create the answer contract, current-source posture, and
+- `legal-tax-answer-planner`: create the answer contract, current-source posture, and
   generation instructions for an accepted legal, tax, or compliance question.
-- `deep-research-validator`: validate the generated or supplied answer against
+- `legal-tax-answer-review`: validate the generated or supplied answer against
   that contract, sources, reasoning, and professional-judgment boundary.
 
 - `adversarial-opinion`: in `quesito-legale-fiscale`, apply
