@@ -51,13 +51,13 @@
   "security_controls": [
     {
       "id": "local-teaching-state",
-      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; optional startup checks are suppressed while pending or active."
+      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; optional startup checks are suppressed while pending or active. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ff2f5ec2d449fc7700c8868dbbfcd406357ca46f500d1a9f07979265d1628f71"
+    "source_fingerprint": "1bf6ae7beefab34b7696b0b2390fe1a9a621259d61a2eff6c6b037aaca84d05c"
   }
 }

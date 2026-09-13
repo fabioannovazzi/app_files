@@ -12,7 +12,11 @@ repeated-session handoff must validate its actual native thread ID, session,
 workflow and token with `local_teaching.py worker` before execution. The original
 onboarding handoff uses `local_onboarding.py worker`. Neither is inferred from
 client files or a claimed worker role. A verified worker performs only the bounded
-assignment and returns evidence; it does not restart the interview.
+assignment and returns evidence; it does not restart the interview. Both chats
+teach only Vera's own installed workflows. Read the exact Vera skill returned in
+`workflow_contract.skill_path`; never substitute another installed plugin or
+continue without a valid handoff. An outside request returns to the teacher for
+an explanation of Vera's scope and selection of a supported Vera lesson.
 
 ## Entry and local profile
 

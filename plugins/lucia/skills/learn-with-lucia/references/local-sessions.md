@@ -50,6 +50,11 @@ python3 <lucia-root>/scripts/local_teaching.py worker --session <id> --thread-id
 ```
 
 Use the returned `lesson.directory`, latest shared profile and assignment scope.
+The returned `workflow_contract` binds `plugin_id: lucia`, the workflow ID, the
+absolute Lucia `plugin_root` and its `skill_path`. Read that exact skill and keep
+the step within its Lucia contract. Never resolve a matching name from another
+installed plugin. If the skill is absent or the handoff is invalid, stop the
+step and return to the teacher; do not generate substitute teaching materials.
 A `tutorial` assignment can call the genuine case adapter below. A `professional`
 assignment must follow the selected specialist's normal real-client intake and
 output contract in `real_work.destination`; it may not use the tutorial adapter.

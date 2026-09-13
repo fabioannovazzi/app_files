@@ -13,6 +13,9 @@ find out what Vera can do use `../learn-with-vera/SKILL.md`. It selects the actu
 operational workflow below and never replaces its execution or review contract.
 This teaching route is not itself an operational lesson. First onboarding keeps
 3–4 workflows; later sessions are repeatable with the same local profile.
+Only Vera's own installed operational skills are eligible. A request for another
+plugin's skill stays outside this teaching route; explain the scope and offer
+relevant Vera workflows without silently substituting or teaching the other plugin.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
 ## Professional workflows

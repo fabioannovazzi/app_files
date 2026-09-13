@@ -141,9 +141,10 @@ def _validate(state: dict[str, Any]) -> None:
 
 
 def eligible_workflows() -> set[str]:
-    """Read exact registered operational IDs; the native model selects relevance."""
-    catalog = Path(__file__).parents[1] / "skills/vera/references/workflow-catalog.md"
-    return set(
+    """Check Vera catalog membership and local skill presence, not task relevance."""
+    root = Path(__file__).resolve().parents[1]
+    catalog = root / "skills/vera/references/workflow-catalog.md"
+    registered = set(
         re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
     ) - {
         "prompt-optimizer",
@@ -151,6 +152,29 @@ def eligible_workflows() -> set[str]:
         "adversarial-opinion",
         "privacy-surface-review",
         "learn-with-vera",
+    }
+    return {
+        workflow
+        for workflow in registered
+        if (skill := root / "skills" / workflow / "SKILL.md").is_file()
+        and skill.resolve().is_relative_to(root)
+    }
+
+
+def teaching_contract(workflow: str) -> dict[str, str]:
+    """Bind each dispatch to Vera's installed skill, even after a resumed lesson.
+
+    Product membership and file identity are mechanical checks. The native model
+    still decides whether this workflow fits the request and follows its method.
+    """
+    if workflow not in eligible_workflows():
+        raise OnboardingError("Teaching supports only installed Vera workflows")
+    root = Path(__file__).resolve().parents[1]
+    return {
+        "plugin_id": "vera",
+        "workflow_id": workflow,
+        "plugin_root": str(root),
+        "skill_path": str(root / "skills" / workflow / "SKILL.md"),
     }
 
 
@@ -369,6 +393,7 @@ class Store:
                 workflow = _text(data.get("workflow_id"), "workflow_id")
                 lesson = self._lesson(state, workflow)
                 if action == "start":
+                    teaching_contract(workflow)
                     if not state["pair"]:
                         raise OnboardingError(
                             "Create and bind the two native chats first"
@@ -491,6 +516,7 @@ class Store:
             )
         return {
             "onboarding_id": state["onboarding_id"],
+            "workflow_contract": teaching_contract(workflow),
             "profile": state["profile"],
             "lesson": lesson,
             "teacher_thread_id": state["pair"]["teacher_thread_id"],

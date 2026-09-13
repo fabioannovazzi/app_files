@@ -12,7 +12,11 @@ repeated-session handoff must validate its actual native thread ID, session,
 workflow and token with `local_teaching.py worker` before execution. The original
 onboarding handoff uses `local_onboarding.py worker`. Neither is inferred from
 client files or a claimed worker role. A verified worker performs only the bounded
-assignment and returns evidence; it does not restart the interview.
+assignment and returns evidence; it does not restart the interview. Both chats
+teach only Lucia's own installed workflows. Read the exact Lucia skill returned
+in `workflow_contract.skill_path`; never substitute another plugin or continue
+without a valid handoff. Return outside requests to the teacher for selection
+of a supported Lucia lesson.
 
 ## Entry and local profile
 

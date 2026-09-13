@@ -45,7 +45,7 @@
     },
     {
       "id": "resumable-evidence-and-concurrency",
-      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication. Repeated demonstrations and guided attempts have separate evidence, stale-result checks and exact native thread tokens. A user-selected real-work handoff binds source hashes and a separate destination, rotates the token and refuses use of the tutorial adapter. Real professional execution retains its selected specialist data boundaries and approvals.",
+      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication. Repeated demonstrations and guided attempts have separate evidence, stale-result checks and exact native thread tokens. A user-selected real-work handoff binds source hashes and a separate destination, rotates the token and refuses use of the tutorial adapter. Real professional execution retains its selected specialist data boundaries and approvals. Before lesson creation and worker dispatch, exact workflow IDs must belong to Vera's catalog and resolve to a skill inside the same installed Vera root. Worker responses identify that product, root and exact skill path; native teacher/worker instructions prohibit cross-product teaching.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",
@@ -58,7 +58,7 @@
     "reviewed_at": "2026-09-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "00c71aa710bab9c609fd6f712759a3f364190a8b7b66867c4fc7c7eb4dc3bb89"
+    "source_fingerprint": "ca19e8afbd950a1ded847150a71361a2df400586796bec33d2ec47e3e3620e98"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

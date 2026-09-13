@@ -1,6 +1,6 @@
 ---
 name: learn-with-vera
-description: Teach a supported Vera workflow through a native voice conversation and a parallel working chat that runs real examples. Use for first onboarding, demonstrations, guided practice, discovering what Vera can do, revisiting an example, or applying it to user-selected files. Starts in desktop Codex; Claude Cowork is outside this feature.
+description: Teach only this installation's supported Vera workflows through a native voice conversation and a parallel working chat that runs real examples. Use for first onboarding, demonstrations, guided practice, discovering what Vera can do, revisiting an example, or applying it to user-selected files. Starts in desktop Codex; Claude Cowork is outside this feature.
 ---
 
 # Impara con Vera
@@ -10,6 +10,29 @@ work naturally. Use native voice first, a teaching chat and a parallel working
 chat. Preserve mandatory first onboarding with **3–4 distinct tailored workflows**;
 afterward this skill can teach one workflow or a user-chosen sequence anytime.
 Do not require the user to know skill names or how to write technical prompts.
+
+## Vera workflows only
+
+Teach only operational workflows listed in Vera's current
+`../vera/references/workflow-catalog.md` whose `../<workflow-id>/SKILL.md` exists
+inside this same Vera installation. Read that Vera skill and follow its declared
+components. Another installed plugin, a similarly named skill, a shared Python
+environment or a saved example does not extend Vera's teaching scope. This rule
+applies to the teacher, the working chat, first onboarding, repeated lessons and
+practice on the user's files.
+
+If the requested skill is outside Vera, say that Vera cannot teach it. Offer
+relevant workflows from Vera's own catalog, explain their actual scope, and let
+the user choose before preparing materials or dispatching work. Never teach,
+invoke or hand off to Clara, Lucia or a standalone plugin as a Vera lesson, even
+when that plugin is installed. Do not relabel another workflow with a valid Vera
+ID or recreate its method in an improvised script or lesson.
+
+For example, a request for Clara's `reporting-engine` is outside Vera. Vera's
+`report-builder`, `variance-analysis` and `management-control-pack` may be relevant
+alternatives depending on the goal; none is an alias for Reporting Engine. A
+general request to learn reporting can use one of these Vera workflows when its
+actual input/output contract fits. Read that contract before making the choice.
 
 ## Start from the user's goal
 
@@ -72,6 +95,12 @@ the same visible pair remains in use.
 Send the worker **one bounded step at a time**: exact session/lesson identity,
 workflow, teacher ID, current token, files and intended output. The worker reads
 its actual native thread ID and validates `worker` before each new step. Keep
+the Vera-only scope in every handoff. Both chats must use the returned
+`workflow_contract.plugin_root` and `workflow_contract.skill_path`; the worker
+reads that exact Vera skill before preparing inputs or executing its method.
+If validation fails, return to the teacher without generating an example or
+using another plugin. Revalidate resumed steps; a remembered lesson is not
+permission to execute a skill missing from the current Vera installation. Keep
 technical IDs and tokens in tool handoffs, not in spoken instructions to the user.
 The worker returns real task status, artifact paths, relevant sections and the
 review state. Read these and inspect the result before explaining it. Coordinate

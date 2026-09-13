@@ -143,10 +143,11 @@ def _validate(state: dict[str, Any]) -> None:
 
 
 def eligible_workflows(plugin_root: Path) -> set[str]:
-    """Read exact registered operational IDs; the native model selects relevance."""
+    """Check own catalog membership and local skill presence, not task relevance."""
+    plugin_root = plugin_root.resolve()
     product = _read(plugin_root / ".codex-plugin/plugin.json")["name"]
     catalog = plugin_root / f"skills/{product}/references/workflow-catalog.md"
-    return set(
+    registered = set(
         re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
     ) - {
         "prompt-optimizer",
@@ -160,6 +161,31 @@ def eligible_workflows(plugin_root: Path) -> set[str]:
         "advisory-deliverable-validator",
         "claim-basis-map",
         "studio-archive",
+    }
+    return {
+        workflow
+        for workflow in registered
+        if (skill := plugin_root / "skills" / workflow / "SKILL.md").is_file()
+        and skill.resolve().is_relative_to(plugin_root)
+    }
+
+
+def teaching_contract(plugin_root: Path, workflow: str) -> dict[str, str]:
+    """Bind dispatch to this product's skill; membership and paths are mechanical.
+
+    The native model still decides task relevance and follows the chosen method.
+    """
+    plugin_root = plugin_root.resolve()
+    product = _read(plugin_root / ".codex-plugin/plugin.json")["name"]
+    if workflow not in eligible_workflows(plugin_root):
+        raise OnboardingError(
+            f"Teaching supports only installed {product.title()} workflows"
+        )
+    return {
+        "plugin_id": product,
+        "workflow_id": workflow,
+        "plugin_root": str(plugin_root),
+        "skill_path": str(plugin_root / "skills" / workflow / "SKILL.md"),
     }
 
 
@@ -397,6 +423,7 @@ class Store:
                 workflow = _text(data.get("workflow_id"), "workflow_id")
                 lesson = self._lesson(state, workflow)
                 if action == "start":
+                    teaching_contract(self.plugin_root, workflow)
                     if not state["pair"]:
                         raise OnboardingError(
                             "Create and bind the two native chats first"
@@ -519,6 +546,7 @@ class Store:
             )
         return {
             "onboarding_id": state["onboarding_id"],
+            "workflow_contract": teaching_contract(self.plugin_root, workflow),
             "profile": state["profile"],
             "lesson": lesson,
             "teacher_thread_id": state["pair"]["teacher_thread_id"],

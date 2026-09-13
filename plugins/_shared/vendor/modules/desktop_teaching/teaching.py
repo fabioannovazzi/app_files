@@ -26,6 +26,7 @@ from .onboarding import (
     _text,
     _write,
     eligible_workflows,
+    teaching_contract,
 )
 
 __all__ = ["TeachingStore", "main"]
@@ -468,6 +469,7 @@ class TeachingStore(Store):
                     )
         return {
             "session_id": state["session_id"],
+            "workflow_contract": teaching_contract(self.plugin_root, workflow),
             "profile": self._profile()["profile"],
             "lesson": state,
             "teacher_thread_id": state["pair"]["teacher_thread_id"],

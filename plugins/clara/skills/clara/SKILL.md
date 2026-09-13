@@ -1510,7 +1510,11 @@ Use CPython 3.12 for all Python workflows. Run the bundle managed dependency set
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
 For learning, demonstrations, guided practice, revisiting a local example or
 “What would you like to do today?”, read `../learn-with-clara/SKILL.md` before
-ordinary professional routing. First use requires 3–4 tailored workflow lessons,
+ordinary professional routing. Both chats teach only Clara's own installed
+operational workflows. Never teach or hand off to another plugin, relabel its
+workflow or bypass the teaching helpers. Explain outside requests and offer
+actual Clara workflows; wait for the user's choice before preparing an alternative.
+First use requires 3–4 tailored workflow lessons,
 also for established users. Later teaching never resets this completed interview.
 Current user intent takes precedence over saved preferences. The teaching chat
 explains by native voice while a second visible native working chat executes.

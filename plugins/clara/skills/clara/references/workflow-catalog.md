@@ -78,4 +78,7 @@ replace a missing presentation, research, analysis, or advisory workflow.
 ## Learning
 
 - `learn-with-clara`: teach current workflows by native voice with a parallel visible working chat, first-use interview, 3–4 tailored lessons and reusable local examples.
+Only Clara's own installed operational skills are eligible. Explain requests
+for another plugin's skills and offer relevant Clara workflows without teaching
+or silently substituting the other plugin.
 <!-- CLARA_OPENAI_ONBOARDING_END -->

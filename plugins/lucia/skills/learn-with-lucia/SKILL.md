@@ -1,6 +1,6 @@
 ---
 name: learn-with-lucia
-description: Teach a supported Lucia workflow through a native voice conversation and a parallel working chat that runs real examples. Use for first onboarding, demonstrations, guided practice, discovering what Lucia can do, revisiting an example, or applying it to user-selected files. Starts in desktop Codex; Claude Cowork is outside this feature.
+description: Teach only this installation's supported Lucia workflows through a native voice conversation and a parallel working chat that runs real examples. Use for first onboarding, demonstrations, guided practice, discovering what Lucia can do, revisiting an example, or applying it to user-selected files. Starts in desktop Codex; Claude Cowork is outside this feature.
 ---
 
 # Impara con Lucia
@@ -10,6 +10,27 @@ work naturally. Use native voice first, a teaching chat and a parallel working
 chat. Preserve mandatory first onboarding with **3–4 distinct tailored workflows**;
 afterward this skill can teach one workflow or a user-chosen sequence anytime.
 Do not require the user to know skill names or how to write technical prompts.
+
+## Lucia workflows only
+
+Teach only operational workflows listed in Lucia's current
+`../lucia/references/workflow-catalog.md` whose `../<workflow-id>/SKILL.md` exists
+inside this same Lucia installation. Read that Lucia skill and follow its declared
+components. Another installed plugin, a similarly named skill, a shared Python
+environment or a saved example does not extend Lucia's teaching scope. This rule
+applies to the teacher, the working chat, first onboarding, repeated lessons and
+practice on the user's files.
+
+If the requested skill is outside Lucia, say that Lucia cannot teach it. Offer
+relevant workflows from Lucia's own catalog, explain their actual scope, and let
+the user choose before preparing materials or dispatching work. Never teach,
+invoke or hand off to Vera, Clara or a standalone plugin as a Lucia lesson, even
+when that plugin is installed. Do not relabel another workflow with a valid Lucia
+ID or recreate its method in an improvised script or lesson.
+
+For example, Clara's `reporting-engine` and Vera's `fatture-xml-check`
+are outside Lucia. A workflow shared by name, such as
+`comunicazione-professionale`, must use Lucia's own installed skill.
 
 ## Start from the user's goal
 
@@ -72,6 +93,12 @@ the same visible pair remains in use.
 Send the worker **one bounded step at a time**: exact session/lesson identity,
 workflow, teacher ID, current token, files and intended output. The worker reads
 its actual native thread ID and validates `worker` before each new step. Keep
+the Lucia-only scope in every handoff. Both chats must use the returned
+`workflow_contract.plugin_root` and `workflow_contract.skill_path`; the worker
+reads that exact Lucia skill before preparing inputs or executing its method.
+If validation fails, return to the teacher without generating an example or
+using another plugin. Revalidate resumed steps; a remembered lesson is not
+permission to execute a skill missing from the current Lucia installation. Keep
 technical IDs and tokens in tool handoffs, not in spoken instructions to the user.
 The worker returns real task status, artifact paths, relevant sections and the
 review state. Read these and inspect the result before explaining it. Coordinate
