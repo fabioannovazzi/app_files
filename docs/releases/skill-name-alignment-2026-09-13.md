@@ -32,8 +32,34 @@ A 27-case artifact regression verifies these host-specific identities, including
 the intentional omission, and runs in the product-release CI workflow.
 
 The source rename covers 15 skill folders when canonical component copies are
-included. Each passes the skill frontmatter validator. Final release versions,
-validation results, merge and deployment evidence are recorded when completed.
+included. Each passes the skill frontmatter validator. The canonical versions
+are Vera 0.1.248, Clara 0.1.197 and Lucia 0.1.45, each aligned across Codex,
+ChatGPT upload and Cowork. The release incorporates the teaching-scope changes
+merged in PR #620. Renamed operational lessons resolve to existing ledger
+component IDs, while answer-planning and review stages retain their lesson
+exclusions.
+
+Validation on the combined release:
+
+- Package, privacy, icon and update-notification regressions: 511 passed, 2 skipped.
+- Local teaching, product scope and packaged lesson regressions: 158 passed;
+  87.69% coverage. This includes 10 rename-specific lesson cases.
+- Workflow regressions: 545 passed; the remaining Spanish Vouching expectation
+  was updated to its existing public label and passed on targeted rerun.
+- Website journey and name-contract regressions: 180 passed, 1 skipped.
+- Package builder/privacy coverage: 80.20%; source-drift checks passed.
+- Black, Isort, Mypy on six affected source files, and Bandit passed.
+
+An exploratory broader Clara suite also encountered three pre-existing
+assertion/contract failures outside these renames: the cache-busted function-page
+script URL, optional OCR package identity and management-control dependency
+catalog membership. The relevant functions and production sources were unchanged
+from the starting commit; this release does not repair those separate issues.
+
+PR #621 contains the reviewable change. Marketplace publication and update
+notifications remain separate from built artifacts and production deployment;
+these candidate versions must not be advertised as OpenAI Published until that
+state is directly observed.
 
 These are workflow-name changes. No model substitution or claim of measured
 improvement in Astra's skill selection is included.

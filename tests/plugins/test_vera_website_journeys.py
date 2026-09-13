@@ -772,10 +772,17 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         VERA_PLUGIN_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
     ).read_text(encoding="utf-8")
     core = _section_markup(page, "core")
+    roles = json.loads((VERA_PLUGIN_ROOT / "components.json").read_text())[
+        "workflow_roles"
+    ]
+    directory_skills = {
+        roles.get(component, {}).get("skill", component)
+        for component in re.findall(r'data-vera-workflow="([^"]+)"', core)
+    }
 
     # Exact identity closure is mechanically verifiable and prevents public
-    # inventory drift without classifying workflow meaning or user intent.
-    assert set(re.findall(r'data-vera-workflow="([^"]+)"', core)) == (
+    # inventory drift. Page component IDs resolve to the current skill names.
+    assert directory_skills == (
         set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
         - _catalog_workflow_names(
             catalog, "Learning and discovery", "Professional workflows"
@@ -980,12 +987,12 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "open-item-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
-        "bilancio-xbrl-it": "Bilancio OIC e XBRL",
-        "check-entries": "Verifica documentale",
+        "bilancio-oic": "Bilancio OIC e XBRL",
+        "vouching": "Verifica documentale",
         "concordato-plan-review": "Revisione concordato preventivo",
         "comunicazione-professionale": "Comunicazione professionale",
         "dati-fiscali-strutturati": "Estrazione dati fiscali",
-        "deep-research-validator": "Validazione ricerca",
+        "legal-tax-answer-review": "Validazione ricerca",
         "email-cliente": "Richiesta documenti e chiarimenti",
         "fatture-xml-check": "Controllo FatturaPA XML",
         "financial-analysis": "Analisi finanziaria e due diligence",
@@ -997,11 +1004,11 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "new-client": "Apertura del fascicolo cliente",
         "previdenza-inps": "Revisione pratica INPS",
         "presenza-digitale-studio": "Sito dello studio",
-        "prompt-optimizer": "Ottimizzazione prompt",
+        "legal-tax-answer-planner": "Ottimizzazione prompt",
         "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "adversarial-opinion": "Parere contrapposto",
         "registro-imprese-sari": "Pratiche Registro Imprese",
-        "report-builder": "Preparazione report finanziario",
+        "financial-report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
         "variance-analysis": "Analisi scostamenti",
         "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
