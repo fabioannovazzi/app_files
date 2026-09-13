@@ -207,7 +207,11 @@ def test_course_file_paths_cannot_escape_their_root(isolated, path):
         isolated,
         lambda course: course.update(files=[{"path": path, "sha256": "0" * 64}]),
     )
-    with pytest.raises(CourseError, match="relative and contained"):
+    # Windows resolves a POSIX root path against the current drive; both hosts
+    # must reject it, whether at syntax or resolved-containment checks.
+    with pytest.raises(
+        CourseError, match="relative and contained|Missing or foreign course file"
+    ):
         CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
 
 
