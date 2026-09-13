@@ -47,6 +47,10 @@ def prepare_case(
 ) -> dict[str, Any]:
     """Return a real started run, keeping every tutorial beneath its local marker."""
     handoff = store.worker(thread_id, workflow, token)
+    if not handoff["local_only"]:
+        raise OnboardingError(
+            "Use the specialist normal real-work intake, not the tutorial adapter"
+        )
     if phase not in {"demo", "practice"} or not sources:
         raise OnboardingError(
             "A tutorial case needs demo/practice and selected source files"
@@ -128,6 +132,9 @@ def main(argv: list[str] | None = None) -> int:
     """Prepare selected local files for the active paired lesson."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--state-root", type=Path)
+    parser.add_argument(
+        "--session", help="Repeated teaching session; omit for onboarding"
+    )
     parser.add_argument("--thread-id", required=True)
     parser.add_argument("--workflow", required=True)
     parser.add_argument("--token", required=True)
@@ -135,8 +142,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source", type=Path, action="append", required=True)
     args = parser.parse_args(argv)
     try:
+        store = Store(args.state_root)
+        if args.session:
+            from local_teaching import TeachingStore
+
+            store = TeachingStore(args.state_root, args.session)
         result = prepare_case(
-            Store(args.state_root),
+            store,
             thread_id=args.thread_id,
             workflow=args.workflow,
             token=args.token,

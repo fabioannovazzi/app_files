@@ -2,6 +2,44 @@
   "plugin": "vera",
   "version": 1,
   "should_trigger": [
+      {
+        "id": "vera-learn-discovery",
+        "prompt": "Vera, non so cosa chiederti. Che cosa potremmo fare oggi per il mio studio?",
+        "required_signals": [
+          "vera:learn-with-vera",
+          "profilo locale",
+          "risultati concreti"
+        ]
+      },
+      {
+        "id": "vera-learn-repeat",
+        "prompt": "Vera, fammi rivedere a voce come controlli le fatture, eseguendo un esempio nella seconda chat. Ho già fatto il primo onboarding.",
+        "required_signals": [
+          "vera:learn-with-vera",
+          "due chat",
+          "nessuna nuova intervista",
+          "esempio eseguito"
+        ]
+      },
+      {
+        "id": "vera-learn-own-files",
+        "prompt": "Ora facciamolo con questi miei documenti, mantenendo la spiegazione a voce e la chat che lavora.",
+        "required_signals": [
+          "vera:learn-with-vera",
+          "file selezionati",
+          "incarico professionale",
+          "stessa coppia di chat"
+        ]
+      },
+      {
+        "id": "vera-learn-pause",
+        "prompt": "Fermati un momento, non ho capito da dove viene quel numero.",
+        "required_signals": [
+          "checkpoint",
+          "fonte effettiva",
+          "nessun nuovo passo prima della ripresa"
+        ]
+      },
     {
       "id": "vera-adeguati-assetti",
       "prompt": "Vera, valuta gli assetti organizzativi amministrativi e contabili di questa impresa: confronta procedure, report effettivi e decisioni e proponi miglioramenti proporzionati.",

@@ -21,7 +21,9 @@ def main() -> int:
     message = (
         f"Vera local onboarding: {phase}. When Vera is invoked, read "
         "skills/vera/references/local-onboarding.md before routing professional work. "
-        "Load the shared local profile explicitly. Do not run onboarding for other plugins. "
+        "Load the shared local profile explicitly. For teaching requests use "
+        "skills/learn-with-vera/SKILL.md and local_teaching.py status. "
+        "Do not run onboarding for other plugins. "
         "Do not transmit onboarding/profile/lesson feedback to Mparanza."
     )
     sys.stdout.write(
@@ -36,6 +38,16 @@ def main() -> int:
         + "\n"
     )
     if phase == "complete":
+        from local_teaching import TeachingStore
+
+        try:
+            teaching = TeachingStore().status()
+        except (OnboardingError, OSError):
+            return (
+                0  # Preserve an inaccessible local teaching record, with no call-home.
+            )
+        if teaching["active_session"]:
+            return 0  # No optional update/CR request while a tutorial is active.
         from check_for_update import main as check_updates
 
         return check_updates()

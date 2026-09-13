@@ -90,6 +90,87 @@
 };
 
   window.MPARANZA_FUNCTION_PAGES = {
+    "learn-with-vera": {
+  "product": "Vera",
+  "defaultLanguage": "it",
+  "copy": {
+    "it": {
+      "name": "Impara con Vera",
+      "summary": "Descrivi a voce che cosa vuoi fare. Vera spiega in una chat ed esegue un esempio reale nella seconda, poi ti accompagna nella prova.",
+      "useWhen": "Al primo utilizzo e ogni volta che vuoi capire una funzione, riprendere un esempio o lavorare insieme sui tuoi documenti. Si parte da Codex desktop.",
+      "input": "Il tuo obiettivo e le preferenze di lavoro. Gli esempi iniziali usano dati fittizi; scegli tu i file e la destinazione per passare a un incarico reale.",
+      "work": "Il primo onboarding obbligatorio comprende una breve conversazione e 3–4 percorsi scelti con te. In seguito puoi chiedere una dimostrazione quando vuoi. La chat vocale spiega il risultato mostrato nella chat di lavoro, risponde alle interruzioni e conserva il punto da cui riprendere.",
+      "output": "Esempi eseguiti, risultati rivedibili, richieste che puoi riutilizzare e una raccolta locale delle prove. Puoi ripetere un esempio con dati nuovi o proseguire su un incarico reale selezionato.",
+      "responsibilityIntro": "Voce, microfono e apertura delle finestre dipendono dai controlli disponibili nel tuo account e nell’app. Vera ti guida nelle azioni native; il testo resta disponibile su tua scelta. Claude Cowork è escluso da questa funzione.",
+      "productRole": "Legge la procedura corrente, esegue il workflow effettivo e collega la spiegazione ai risultati verificati. Il profilo e i progressi sono salvati sul computer.",
+      "professionalRole": "Scegli obiettivo e file, rivedi le fonti, prova il passaggio proposto e controlla i risultati. Firma, invio e giudizio professionale richiedono il normale percorso di revisione.",
+      "prompt": "Mostrami a voce come controllare delle fatture XML: esegui l’esempio nella seconda chat, spiegami che cosa verificare e poi proviamolo insieme.",
+      "modelDataConclusion": "Il modello OpenAI può leggere la conversazione, il profilo locale, i file scelti e i risultati che spiega.",
+      "modelData": "La voce usa il normale servizio OpenAI del tuo account: il salvataggio locale non significa elaborazione offline né anonimizzazione automatica. Profilo, avanzamento, esempi e feedback del tutorial sono conservati sul computer; Vera non introduce API vocali separate e non li trasmette a Mparanza. Non registra file audio o trascrizioni del colloquio. Per un incarico reale valgono le regole sui dati e le autorizzazioni del workflow scelto; selezionare i file non autorizza invii o pubblicazioni.",
+      "modelDataStatus": "relevant"
+    },
+    "en": {
+      "name": "Learn with Vera",
+      "summary": "Describe what you want to do by voice. Vera explains in one chat and runs a real example in the second, then guides your attempt.",
+      "useWhen": "At first use and whenever you want to understand a function, revisit an example or work together on your documents. Start in desktop Codex.",
+      "input": "Your goal and work preferences. Initial examples use fictional data; you select the files and destination when moving into a real assignment.",
+      "work": "Mandatory first onboarding includes a short conversation and 3–4 workflows chosen with you. Later you can request a demonstration anytime. The voice chat explains the result shown in the working chat, answers interruptions and saves where to resume.",
+      "output": "Executed examples, reviewable results, reusable requests and a local collection of your attempts. Repeat an example with new data or continue into a selected real assignment.",
+      "responsibilityIntro": "Voice, microphone access and separate windows depend on controls available in your account and app. Vera guides native actions; text remains available by your choice. Claude Cowork is outside this feature.",
+      "productRole": "Reads the current procedure, executes the actual workflow and links explanations to verified results. Saves the profile and progress on your computer.",
+      "professionalRole": "Select the goal and files, review sources, try the next step and check results. Signing, sending and professional judgment follow the normal review process.",
+      "prompt": "Show me by voice how to check XML invoices: run the example in the second chat, explain what to verify and then let us try together.",
+      "modelDataConclusion": "The OpenAI model may read the conversation, local profile, selected files and results it explains.",
+      "modelData": "Voice uses your normal OpenAI account service: local storage is not offline processing or automatic anonymization. Profile, progress, examples and tutorial feedback are stored on your computer; Vera adds no separate voice API and does not send them to Mparanza. It records no audio or interview transcript files. A real assignment follows the selected workflow’s data boundaries and permissions; selecting files does not authorize sending or publication.",
+      "modelDataStatus": "relevant"
+    },
+    "fr": {
+      "name": "Apprendre avec Vera",
+      "summary": "Décris à voix haute ce que tu veux faire. Vera explique dans une conversation et exécute un exemple réel dans la seconde, puis accompagne ton essai.",
+      "useWhen": "Au premier usage et lorsque tu veux comprendre une fonction, reprendre un exemple ou travailler ensemble sur tes documents. Commence dans Codex sur ordinateur.",
+      "input": "Ton objectif et tes préférences de travail. Les premiers exemples utilisent des données fictives ; tu choisis les fichiers et la destination pour passer à un mandat réel.",
+      "work": "La première introduction obligatoire comprend une courte conversation et 3–4 parcours choisis avec toi. Ensuite, tu peux demander une démonstration à tout moment. La conversation vocale explique le résultat affiché dans la conversation de travail, répond aux interruptions et conserve le point de reprise.",
+      "output": "Des exemples exécutés, des résultats vérifiables, des demandes réutilisables et une collection locale des essais. Recommence avec de nouvelles données ou poursuis un mandat réel sélectionné.",
+      "responsibilityIntro": "La voix, le microphone et les fenêtres séparées dépendent des commandes disponibles dans ton compte et l’application. Vera guide les actions natives ; le texte reste disponible à ton choix. Claude Cowork est exclu de cette fonction.",
+      "productRole": "Lit la procédure actuelle, exécute le véritable processus et relie les explications aux résultats vérifiés. Enregistre le profil et la progression sur ton ordinateur.",
+      "professionalRole": "Choisis l’objectif et les fichiers, examine les sources, essaie l’étape suivante et vérifie les résultats. La signature, l’envoi et le jugement professionnel suivent la procédure habituelle.",
+      "prompt": "Montre-moi à voix haute comment contrôler des factures XML : exécute l’exemple dans la seconde conversation, explique les vérifications et essayons ensemble.",
+      "modelDataConclusion": "Le modèle OpenAI peut lire la conversation, le profil local, les fichiers choisis et les résultats expliqués.",
+      "modelData": "La voix utilise le service habituel de ton compte OpenAI : le stockage local ne signifie ni traitement hors ligne ni anonymisation automatique. Profil, progression, exemples et commentaires du tutoriel restent enregistrés sur l’ordinateur ; Vera n’ajoute aucune API vocale distincte et ne les transmet pas à Mparanza. Aucun fichier audio ou transcription d’entretien n’est enregistré. Un mandat réel suit les règles de données et autorisations de son processus ; choisir des fichiers n’autorise ni envoi ni publication.",
+      "modelDataStatus": "relevant"
+    },
+    "de": {
+      "name": "Mit Vera lernen",
+      "summary": "Beschreibe per Sprache, was du tun möchtest. Vera erklärt in einem Chat und führt im zweiten ein echtes Beispiel aus. Danach begleitet sie deinen Versuch.",
+      "useWhen": "Beim ersten Einsatz und wenn du eine Funktion verstehen, ein Beispiel wiederholen oder mit eigenen Unterlagen arbeiten möchtest. Der Einstieg erfolgt in Codex auf dem Desktop.",
+      "input": "Dein Ziel und deine Arbeitspräferenzen. Erste Beispiele verwenden fiktive Daten; für einen echten Auftrag wählst du Dateien und Zielordner selbst.",
+      "work": "Die verpflichtende Ersteinführung umfasst ein kurzes Gespräch und 3–4 gemeinsam gewählte Abläufe. Später kannst du jederzeit eine Demonstration anfordern. Der Sprachchat erklärt das im Arbeitschat angezeigte Ergebnis, beantwortet Zwischenfragen und speichert den nächsten Schritt.",
+      "output": "Ausgeführte Beispiele, prüfbare Ergebnisse, wiederverwendbare Anfragen und eine lokale Sammlung der Versuche. Wiederhole ein Beispiel mit neuen Daten oder beginne einen ausgewählten echten Auftrag.",
+      "responsibilityIntro": "Sprache, Mikrofonzugriff und getrennte Fenster hängen von den verfügbaren Funktionen deines Kontos und der App ab. Vera führt durch die nativen Schritte; Text bleibt auf Wunsch möglich. Claude Cowork ist ausgeschlossen.",
+      "productRole": "Liest den aktuellen Ablauf, führt ihn tatsächlich aus und verknüpft Erklärungen mit geprüften Ergebnissen. Profil und Fortschritt werden auf deinem Computer gespeichert.",
+      "professionalRole": "Wähle Ziel und Dateien, prüfe Quellen, probiere den nächsten Schritt und kontrolliere die Ergebnisse. Unterschrift, Versand und fachliches Urteil folgen der üblichen Prüfung.",
+      "prompt": "Zeige mir per Sprache, wie ich XML-Rechnungen prüfe: Führe das Beispiel im zweiten Chat aus, erkläre die Kontrollen und lass es uns gemeinsam versuchen.",
+      "modelDataConclusion": "Das OpenAI-Modell kann das Gespräch, das lokale Profil, ausgewählte Dateien und die erklärten Ergebnisse lesen.",
+      "modelData": "Die Sprachfunktion nutzt den normalen Dienst deines OpenAI-Kontos. Lokale Speicherung bedeutet weder Offline-Verarbeitung noch automatische Anonymisierung. Profil, Fortschritt, Beispiele und Rückmeldungen zum Tutorial werden lokal gespeichert. Vera ergänzt keine separate Sprach-API und übermittelt diese Daten nicht an Mparanza. Sie speichert keine Audio- oder Interviewtranskriptdateien. Für echte Aufträge gelten die Datenregeln und Berechtigungen des gewählten Ablaufs; eine Dateiauswahl erlaubt keinen Versand und keine Veröffentlichung.",
+      "modelDataStatus": "relevant"
+    },
+    "es": {
+      "name": "Aprende con Vera",
+      "summary": "Describe por voz qué quieres hacer. Vera explica en una conversación y ejecuta un ejemplo real en la segunda; después acompaña tu intento.",
+      "useWhen": "En el primer uso y cuando quieras entender una función, repetir un ejemplo o trabajar con tus documentos. Empieza en Codex de escritorio.",
+      "input": "Tu objetivo y tus preferencias de trabajo. Los primeros ejemplos usan datos ficticios; tú eliges los archivos y el destino para pasar a un encargo real.",
+      "work": "La introducción inicial obligatoria incluye una breve conversación y 3–4 procesos elegidos contigo. Después puedes pedir una demostración cuando quieras. La conversación de voz explica el resultado mostrado en la conversación de trabajo, responde a interrupciones y guarda dónde continuar.",
+      "output": "Ejemplos ejecutados, resultados revisables, peticiones reutilizables y una colección local de los intentos. Repite con datos nuevos o continúa con un encargo real seleccionado.",
+      "responsibilityIntro": "La voz, el micrófono y las ventanas separadas dependen de los controles disponibles en tu cuenta y aplicación. Vera guía las acciones nativas; puedes elegir texto. Claude Cowork queda fuera de esta función.",
+      "productRole": "Lee el procedimiento actual, ejecuta el proceso real y vincula las explicaciones con resultados verificados. Guarda el perfil y el progreso en tu ordenador.",
+      "professionalRole": "Elige el objetivo y los archivos, revisa las fuentes, prueba el siguiente paso y comprueba los resultados. Firma, envío y juicio profesional siguen la revisión habitual.",
+      "prompt": "Muéstrame por voz cómo comprobar facturas XML: ejecuta el ejemplo en la segunda conversación, explica qué debo verificar y después probemos juntos.",
+      "modelDataConclusion": "El modelo OpenAI puede leer la conversación, el perfil local, los archivos elegidos y los resultados que explica.",
+      "modelData": "La voz utiliza el servicio habitual de tu cuenta OpenAI: el almacenamiento local no implica procesamiento sin conexión ni anonimización automática. Perfil, progreso, ejemplos y comentarios del tutorial se guardan en el ordenador; Vera no añade una API de voz separada ni los transmite a Mparanza. No guarda archivos de audio ni transcripciones de la entrevista. Un encargo real sigue los límites de datos y permisos de su proceso; elegir archivos no autoriza envíos ni publicaciones.",
+      "modelDataStatus": "relevant"
+    }
+  }
+},
     "business-planning": {
       product: "Vera",
       defaultLanguage: "it",

@@ -66,6 +66,7 @@ ROOT_OMITTED_PATHS = frozenset(
         "scripts/change_requests.py",
         "scripts/check_for_update.py",
         "scripts/local_onboarding.py",
+        "scripts/local_teaching.py",
         "scripts/local_onboarding_case.py",
         "scripts/onboarding_session_start.py",
         "skills/vera/references/local-onboarding.md",
@@ -2768,6 +2769,8 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative.startswith("evals/"):
             continue
+        if relative.startswith("skills/learn-with-vera/"):
+            continue
         if relative.startswith("assets/onboarding/"):
             continue
         if relative.startswith("privacy/services/") and relative not in {
@@ -2795,6 +2798,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
                 studio_archive_reference=studio_archive_reference,
             )
         elif "/references/" in relative and relative.endswith(".md"):
+            content = _without_openai_onboarding(content)
             content = _project_cowork_reference(
                 content,
                 relative_path=relative,
@@ -2807,6 +2811,14 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             content = _json_bytes({"runtime": "cowork-haiku"})
         elif relative == "components.json":
             content = _project_vera_components(content)
+        elif relative == "skills/vera/references/workflow-registry.json":
+            registry = json.loads(content)
+            registry["vera_wrapper_skills"] = [
+                skill
+                for skill in registry["vera_wrapper_skills"]
+                if skill != "skills/learn-with-vera/SKILL.md"
+            ]
+            content = _json_bytes(registry)
         if (
             relative.startswith("modules/")
             and Path(relative).suffix.lower() in RUNTIME_TEXT_SUFFIXES

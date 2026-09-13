@@ -57,6 +57,13 @@ local profile. Mandatory onboarding is a supported Vera setup action even when
 no professional workflow has yet been selected. It applies once to new and
 existing users on desktop Codex, and shares its record with local ChatGPT Work.
 A completed profile informs routing but never overrides the current request.
+For requests to learn, see a demonstration, work through an example, revisit a
+lesson, or discover what Vera could do today, read `../learn-with-vera/SKILL.md`
+before professional routing. It is a supported teaching/setup route that selects
+a real specialist, not a general-answer fallback. With a completed profile use
+`scripts/local_teaching.py` for fresh sessions. Validate a repeated worker's
+session and exact token with that helper; onboarding workers use the original
+helper. Ordinary concrete work still routes directly to its specialist.
 The verified paired working chat may execute only its active lesson. During
 onboarding, follow the local tutorial contract before normal feedback and
 server-receipt instructions below; never transmit onboarding data to Mparanza.

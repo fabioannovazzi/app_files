@@ -6,6 +6,13 @@
   const assistantNames = { vera: "Vera", lucia: "Lucia", clara: "Clara" };
   const areaLabels = {
     vera: {
+      core: {
+        it: "Funzioni disponibili",
+        en: "Available functions",
+        fr: "Fonctions disponibles",
+        de: "Verfügbare Funktionen",
+        es: "Funciones disponibles",
+      },
       "area-clients": {
         it: "Clienti, incarichi e documenti",
         en: "Clients, engagements, and documents",
@@ -105,6 +112,7 @@
   };
 
   const pageContexts = {
+    "learn-with-vera": [["vera", "core"]],
     "aml-review": [["vera", "area-clients"]],
     "adeguati-assetti": [["vera", "area-analysis"]],
     "apertura-pratica": [["lucia", "area-matters"]],

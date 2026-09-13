@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "service_id": "local-onboarding",
-  "display_name": "Local professional onboarding in native OpenAI desktop sessions",
+  "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions",
   "governed_paths": [
     "scripts/local_onboarding.py",
     "scripts/local_onboarding_case.py",
@@ -11,7 +11,11 @@
     "skills/vera/references/tutorial-cases.md",
     "skills/vera/SKILL.md",
     "scripts/notarized_run_receipt.py",
-    "assets/onboarding"
+    "assets/onboarding",
+    "scripts/local_teaching.py",
+    "skills/learn-with-vera",
+    "skills/vera/references/workflow-catalog.md",
+    "marketplace_skill_instructions.json"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -20,16 +24,18 @@
   "security_controls": [
     {
       "id": "local-state-only",
-      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files.",
+      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service.",
       "implemented_by": [
         "scripts/local_onboarding.py",
-        "skills/vera/references/local-onboarding.md"
+        "skills/vera/references/local-onboarding.md",
+        "scripts/local_teaching.py",
+        "skills/learn-with-vera/SKILL.md"
       ],
       "on_violation": "Permission errors, corrupt profiles and missing enrolled records require local recovery; no server fallback or automatic reset."
     },
     {
       "id": "onboarding-transmission-suppression",
-      "control": "Pending onboarding suppresses the normal version request and CR polling. Tutorial artifacts below the local-only marker suppress receipt stamping, including direct retry calls. The teaching instructions prohibit hosted feedback, interview and change-request calls. Ordinary host model/voice processing is not offline and is not a separate Vera API.",
+      "control": "Pending onboarding suppresses the normal version request and CR polling. Tutorial artifacts below the local-only marker suppress receipt stamping, including direct retry calls. The teaching instructions prohibit hosted feedback, interview and change-request calls. Ordinary host model/voice processing is not offline and is not a separate Vera API. Active repeated teaching also suppresses the optional startup version/CR check; pause/rebind/resume revoke worker tokens for future bounded steps, without claiming to cancel a running host command.",
       "implemented_by": [
         "scripts/onboarding_session_start.py",
         "scripts/notarized_run_receipt.py",
@@ -39,17 +45,23 @@
     },
     {
       "id": "resumable-evidence-and-concurrency",
-      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication.",
+      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication. Repeated demonstrations and guided attempts have separate evidence, stale-result checks and exact native thread tokens. A user-selected real-work handoff binds source hashes and a separate destination, rotates the token and refuses use of the tutorial adapter. Real professional execution retains its selected specialist data boundaries and approvals.",
       "implemented_by": [
-        "scripts/local_onboarding.py"
+        "scripts/local_onboarding.py",
+        "scripts/local_teaching.py",
+        "scripts/local_onboarding_case.py"
       ],
       "on_violation": "Stale writes, wrong lesson handoffs or changed evidence are rejected without marking completion."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "6f2bcc9d7218be12766d6baf7a71741b446795504d6f81de4546a7f01bb8773c"
-  }
+    "source_fingerprint": "17a9b8a13f0250c3e0298f6255b885ea85701d2f75ca948b446fe1369b5f59c7"
+  },
+  "governed_repository_paths": [
+    "static/shared/learn-with-vera/index.html",
+    "static/shared/product-function-pages.js"
+  ]
 }

@@ -140,6 +140,20 @@ def _validate(state: dict[str, Any]) -> None:
         )
 
 
+def eligible_workflows() -> set[str]:
+    """Read exact registered operational IDs; the native model selects relevance."""
+    catalog = Path(__file__).parents[1] / "skills/vera/references/workflow-catalog.md"
+    return set(
+        re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
+    ) - {
+        "prompt-optimizer",
+        "deep-research-validator",
+        "adversarial-opinion",
+        "privacy-surface-review",
+        "learn-with-vera",
+    }
+
+
 class Store:
     """A local profile shared explicitly by Codex and local ChatGPT Work."""
 
@@ -232,11 +246,15 @@ class Store:
                 return lesson
         raise OnboardingError("Workflow is not in this confirmed lesson plan")
 
+    def lesson_root(self, lesson: dict[str, Any]) -> Path:
+        """Keep artifact paths bound to the enrollment's actual lesson directory."""
+        return self.root / "lessons" / lesson["workflow_id"]
+
     def _evidence(self, lesson: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
         paths = data.get("artifacts")
         if not isinstance(paths, list) or not paths or len(paths) > 30:
             raise OnboardingError("Provide 1 to 30 real lesson artifact paths")
-        root = (self.root / "lessons" / lesson["workflow_id"]).resolve()
+        root = self.lesson_root(lesson).resolve()
         records = []
         for value in paths:
             path = Path(_text(value, "artifact"))
@@ -312,24 +330,7 @@ class Store:
                     raise OnboardingError(
                         "Select three or four distinct relevant workflows"
                     )
-                catalog = (
-                    Path(__file__).parents[1]
-                    / "skills"
-                    / "vera"
-                    / "references"
-                    / "workflow-catalog.md"
-                )
-                # Exact skill IDs are membership facts; relevance remains model-led.
-                eligible = set(
-                    re.findall(
-                        r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M
-                    )
-                ) - {
-                    "prompt-optimizer",
-                    "deep-research-validator",
-                    "adversarial-opinion",
-                    "privacy-surface-review",
-                }
+                eligible = eligible_workflows()
                 selected = []
                 for lesson in lessons:
                     if (
@@ -390,6 +391,19 @@ class Store:
                     lesson_dir = self.root / "lessons" / workflow
                     lesson_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
                     lesson["directory"] = str(lesson_dir)
+                elif action in {"pause", "resume", "checkpoint"}:
+                    if lesson["status"] != "active":
+                        raise OnboardingError(
+                            "Start the lesson before saving a checkpoint"
+                        )
+                    lesson["checkpoint"] = _text(
+                        data.get("next_step"), "next bounded step"
+                    )
+                    if action != "checkpoint":
+                        lesson["paused"] = action == "pause"
+                        lesson["worker_token"] = secrets.token_hex(24)
+                elif lesson.get("paused"):
+                    raise OnboardingError("Resume the paused onboarding lesson first")
                 elif action in {"demo", "practice"}:
                     if lesson["status"] != "active":
                         raise OnboardingError(
@@ -469,6 +483,7 @@ class Store:
             or not state["pair"]
             or state["pair"]["worker_thread_id"] != thread_id
             or lesson["status"] != "active"
+            or lesson.get("paused", False)
             or not secrets.compare_digest(lesson.get("worker_token", ""), token)
         ):
             raise OnboardingError(
@@ -523,6 +538,9 @@ def main(argv: list[str] | None = None) -> int:
             "practice",
             "finish",
             "feedback",
+            "pause",
+            "resume",
+            "checkpoint",
             "worker",
             "recover",
         ],

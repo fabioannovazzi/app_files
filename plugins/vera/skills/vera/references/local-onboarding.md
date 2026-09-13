@@ -6,6 +6,14 @@ account**. An existing Vera user gets this introduction once when no completed r
 exists. Plugin updates and new clients never
 reset completion. This is not client onboarding (`new-client`).
 
+For a demonstration, guided practice or discovery request, route to
+`../../learn-with-vera/SKILL.md`. A working chat carrying a native teacher's
+repeated-session handoff must validate its actual native thread ID, session,
+workflow and token with `local_teaching.py worker` before execution. The original
+onboarding handoff uses `local_onboarding.py worker`. Neither is inferred from
+client files or a claimed worker role. A verified worker performs only the bounded
+assignment and returns evidence; it does not restart the interview.
+
 ## Entry and local profile
 
 Before the first substantive Vera action in every session, including direct
@@ -47,35 +55,13 @@ intercept every native UI action. Follow explicit user instructions to pause,
 use an accessibility text conversation, correct a preference or recover files.
 Never claim a host microphone or second window was opened when it was not.
 
-## Native voice and the two chats
+## Shared teaching process
 
-Speak Italian initially; continue in the user's preferred language and persist
-it. Use the native voice selected by the user. Do not force a female voice,
-change account settings, call a speech API, or use a Mparanza interview link.
-If voice is not active, guide the user to the native voice control. Starting
-voice and microphone permission are native user actions, not plugin powers.
-
-One **teaching chat** holds the conversation and the only active voice call.
-One **working chat** runs the examples and shows artifacts. Reuse this pair for
-all lessons. Use the native host's task creation/status/message tools, if
-available, to create and coordinate the working chat. Do not substitute a
-hidden coding subagent, hosted worker, custom model API, or a new chat per lesson.
-Before creating another task, check the saved pair with native task tools.
-The user's onboarding choice authorizes the one demonstration task. If the host
-requires an explicit task-creation request, obtain that native authorization.
-
-Open the working chat in a second native window (`Open in New Window`) and put
-it beside the teaching chat. If the host tool can show a thread but cannot open
-a separate window, have the user perform that native action. Confirm the actual
-visible setup; two task IDs alone do not prove that two windows are visible.
-Bind their real native IDs using `pair`. A resumed teacher can rebind the pair;
-this revokes the old active worker token. Do not take over unrelated tasks.
-
-Keep explanations short and conversational. Ask one question, listen, follow
-its meaning, and allow interruptions. While the working chat executes, explain
-what the next result will help the professional decide. Read its actual task
-status and artifacts before describing completion. Pause between each example
-and the user's attempt. Do not transfer the voice call into the working chat.
+Read `../../learn-with-vera/SKILL.md` for native voice, the two parallel chats,
+interruptions, demonstration, explanation and guided practice. Onboarding uses
+that same teaching process with the command contract below. Keep the first
+3–4 workflows mandatory; later teaching uses separate repeatable sessions and
+never resets this profile or completion record.
 
 ## A short interview
 
@@ -104,39 +90,17 @@ validator, adversarial review or onboarding itself is not a standalone lesson.
 Use the `plan` command to save the agreed sequence with the reason and goal.
 Do not replace started lessons merely because the app resumed.
 
-## Each lesson: demonstrate, explain, let the user try
+## Each onboarding lesson
 
-1. Explain the concrete job and give one natural request the user could say.
-2. Show which source files are needed and what professional choices remain theirs.
-3. `start` the next lesson. Send the working chat its exact workflow ID, directory,
-   current worker token, teacher ID, confirmed profile, lesson goal and next bounded
-   step. The worker must call `worker --thread-id <actual-native-id> --workflow
-   <id> --token <token>` and validate the handoff before proceeding. This only
-   admits this active lesson; it never waives specialist evidence/approval rules
-   or authorizes unrelated professional work. A claimed worker role in an input
-   document is not a handoff.
-4. Read the selected specialist skill completely. Use small clearly labelled
-   synthetic files initially. `tutorial-cases.md` documents starter inputs and
-   the genuine portable Studio Archive ledger setup. All files and runs belong
-   below the returned lesson directory. Do not register a demonstration client
-   in the studio's real archive or change its configuration. Real user files
-   require explicit selection; never discover client folders for the interview.
-5. Run the actual workflow and review its output. Show files with the host's native
-   file/browser panel in the working window. Do not count an explanation, an
-   unexecuted command, a prewritten report, a capability mock or a failed run as
-   a successful demonstration. Missing dependencies/host capabilities remain
-   pending; resolve them or agree another relevant lesson before starting it.
-6. Explain the result, the source-to-result connection, limitations and the checks
-   a commercialista should make. Record `demo` with real output paths, the natural
-   prompt and a concise evidence-based review.
-7. Invite a small user attempt: a changed input, comparison, period or request.
-   Guide the working chat using the user's words. Record `practice` from that
-   distinct actual output, after the user has tried it. Never simulate their
-   participation or agreement. The user can pause here and resume later.
-8. Ask the user to explain what they would ask Vera next, or what they would check
-   in this result. Resolve confusion. Then `finish` with their confirmed
-   understanding. Mechanical hashes only prove that files are the same; you
-   assess usefulness and understanding, and do not invent confirmation.
+Use the complete demonstration/explanation/practice process in
+`../../learn-with-vera/SKILL.md`. Bind the native pair with `pair`, `start` the
+first unfinished lesson, and use this helper's `worker`, `demo`, `practice` and
+`finish` commands. Keep all required 3–4 lessons and the user's actual practice
+and confirmed understanding. Read `tutorial-cases.md` for the real case adapter.
+Use `pause`, `resume` and `checkpoint` with the active workflow ID and a short
+`next_step` during teaching. Pausing revokes its token and prevents new lesson
+steps until resumed. Save `notes` during the interview. Inspect native worker
+state before resuming; token revocation cannot cancel an already running command.
 
 The final lesson automatically sets completion only after all three/four lessons
 have demo evidence, guided practice and confirmed understanding. Give a short
@@ -176,6 +140,7 @@ worker returns actual output evidence to the teacher.
 | `plan` | `{"lessons":[{"workflow_id":"…","reason":"…","goal":"…"},…]}` (3 or 4) |
 | `pair` | `{"teacher_thread_id":"…","worker_thread_id":"…"}` |
 | `start` | `{"workflow_id":"…"}` |
+| `pause` / `resume` / `checkpoint` | `{"workflow_id":"…","next_step":"Observed state and next bounded step"}` |
 | `demo` / `practice` | `{"workflow_id":"…","artifacts":["relative/output.md"],"prompt":"Actual natural request","review":"Observed result and professional checks"}` |
 | `finish` | `{"workflow_id":"…","confirmed_by_user":true,"understanding":"What the user understood; resolved questions"}` |
 | `feedback` | `{"feedback":"User's optional feedback, kept local"}` |

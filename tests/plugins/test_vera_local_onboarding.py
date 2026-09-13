@@ -24,6 +24,7 @@ def load(name: str):
 
 @pytest.fixture
 def module(monkeypatch):
+    monkeypatch.syspath_prepend(str(SCRIPTS))
     module = load("local_onboarding")
     monkeypatch.setitem(sys.modules, "local_onboarding", module)
     return module
