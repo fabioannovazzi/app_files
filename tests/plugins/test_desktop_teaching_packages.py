@@ -43,11 +43,11 @@ def test_installable_archive_runs_without_repository_fallback(
         ROOT / "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py"
     ).read_bytes()
     skill = root / f"skills/learn-with-{product}/SKILL.md"
-    assert "one bounded step at a time" in skill.read_text()
+    assert "one bounded step at a time" in skill.read_text(encoding="utf-8")
     assert (root / f"skills/{product}/references/local-onboarding.md").exists()
     # The current specialist contract must survive Marketplace projection.
     specialist = "reporting-engine" if product == "clara" else "apertura-pratica"
-    text = (root / f"skills/{specialist}/SKILL.md").read_text()
+    text = (root / f"skills/{specialist}/SKILL.md").read_text(encoding="utf-8")
     assert "local-onboarding.md" in text
     if product == "clara":
         assert "budget_report.py" in text
@@ -77,7 +77,9 @@ def test_cowork_has_no_teaching_code_gate_assets_or_skill(product):
 
 @pytest.mark.parametrize("product", ["clara", "lucia"])
 def test_five_language_page_explains_visible_pair_and_natural_lesson(product):
-    text = (ROOT / "static/shared/product-function-pages.js").read_text()
+    text = (ROOT / "static/shared/product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
     offset = text.index(f'"learn-with-{product}": ') + len(f'"learn-with-{product}": ')
     entry, _ = json.JSONDecoder().raw_decode(text[offset:])
     assert set(entry["copy"]) == {"it", "en", "fr", "de", "es"}
@@ -86,7 +88,6 @@ def test_five_language_page_explains_visible_pair_and_natural_lesson(product):
     assert "due chat" in entry["copy"]["it"]["useWhen"]
     assert entry["copy"]["it"]["professionalRoleTitle"] == "Tu chiedi e provi"
     assert "Mparanza" in entry["copy"]["it"]["modelData"]
-    assert (
-        f"../learn-with-{product}/index.html"
-        in (ROOT / f"static/shared/{product}/index.html").read_text()
-    )
+    assert f"../learn-with-{product}/index.html" in (
+        ROOT / f"static/shared/{product}/index.html"
+    ).read_text(encoding="utf-8")

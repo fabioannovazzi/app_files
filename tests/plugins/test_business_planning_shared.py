@@ -79,15 +79,19 @@ def test_registered_business_workflow_and_marketplace_cards_are_identical() -> N
     feedback_heading = "## Plugin Improvement Feedback"
     vera_workflow = (vera_root / skill).read_text().split(feedback_heading, 1)[0]
     clara_workflow = (clara_root / skill).read_text().split(feedback_heading, 1)[0]
-    vera_workflow, onboarding_blocks = re.subn(
-        r"<!-- VERA_OPENAI_ONBOARDING_BEGIN -->\n.*?"
-        r"<!-- VERA_OPENAI_ONBOARDING_END -->\n\n",
-        "",
-        vera_workflow,
-        count=1,
-        flags=re.DOTALL,
-    )
-    assert onboarding_blocks == 1
+    workflows = []
+    for product, workflow in (("VERA", vera_workflow), ("CLARA", clara_workflow)):
+        normalized, onboarding_blocks = re.subn(
+            rf"<!-- {product}_OPENAI_ONBOARDING_BEGIN -->\n.*?"
+            rf"<!-- {product}_OPENAI_ONBOARDING_END -->\n\n",
+            "",
+            workflow,
+            count=1,
+            flags=re.DOTALL,
+        )
+        assert onboarding_blocks == 1
+        workflows.append(normalized)
+    vera_workflow, clara_workflow = workflows
     assert vera_workflow == clara_workflow
     vera_cards = json.loads(
         (vera_root / "marketplace_skill_instructions.json").read_text()

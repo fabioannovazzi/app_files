@@ -148,6 +148,7 @@ jobs:
         run: >-
           python -m pip install pytest pytest-cov python-docx "reportlab>=4.2.0"
           -r plugins/client-file-preparation/requirements.txt
+          -r plugins/apertura-pratica/requirements.txt
           -r plugins/journal-bank-reconciliation/requirements.txt
           -r plugins/passive-invoice-audit/requirements.txt
           -r plugins/management-control-pack/requirements.txt

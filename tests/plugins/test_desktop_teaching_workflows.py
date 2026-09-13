@@ -52,7 +52,9 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             )
             == 0
         )
-        inspection = json.loads((inspection_dir / "inspection.json").read_text())
+        inspection = json.loads(
+            (inspection_dir / "inspection.json").read_text(encoding="utf-8")
+        )
         ids = {t["table_label"]: t["table_id"] for t in inspection["tables"]}
         # The fixture explicitly supplies monthly EUR revenue and negative COGS.
         # Review binds those meanings and the visible source totals, not keywords.
@@ -103,7 +105,7 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             "audience": "public_demo",
         }
         path = output / "reviewed_recipe.json"
-        path.write_text(json.dumps(recipe))
+        path.write_text(json.dumps(recipe), encoding="utf-8")
         report = output / "report"
         assert (
             module.main(
@@ -119,7 +121,9 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             )
             == 0
         )
-        pack = json.loads((report / "management_control_pack.json").read_text())
+        pack = json.loads(
+            (report / "management_control_pack.json").read_text(encoding="utf-8")
+        )
         assert pack["metrics"]["budget.total.ebitda_variance"]["value"] == "9000"
         assert (report / "model_context.json").is_file()
         artifacts = [
@@ -142,7 +146,7 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
         )
         # Managed initialization imports the actual ledger-bound selected input.
         intake_path = output / "matter_intake.json"
-        intake = json.loads(intake_path.read_text())
+        intake = json.loads(intake_path.read_text(encoding="utf-8"))
         intake["client"]["display_name"] = "Beta Laboratorio Srl (fittizio)"
         intake["matter"].update(
             title="Consegna incompleta — esempio",
@@ -150,12 +154,12 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             requested_work="Assistenza richiesta nella controversia di fornitura",
             summary="Il cliente menziona contratto e corrispondenza non ancora forniti.",
         )
-        intake_path.write_text(json.dumps(intake, ensure_ascii=False))
+        intake_path.write_text(json.dumps(intake, ensure_ascii=False), encoding="utf-8")
         core.prepare_review(output)
         validation = core.validate_run(output)
         assert validation["status"] != "ready_to_open"
         memo = output / "matter_opening_memo.md"
-        assert "Beta Laboratorio" in memo.read_text()
+        assert "Beta Laboratorio" in memo.read_text(encoding="utf-8")
         assert (output / "review_payload.json").is_file()
         artifacts = [memo, output / "validation_report.json"]
     change(
