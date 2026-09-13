@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "workflow": "learn-with-clara",
+  "display_name": "Impara con Clara",
+  "governed_paths": [
+    "skills/learn-with-clara",
+    "skills/clara/references/local-onboarding.md",
+    "skills/clara/references/tutorial-cases.md",
+    "scripts/local_onboarding.py",
+    "scripts/local_teaching.py",
+    "scripts/local_onboarding_case.py",
+    "scripts/_desktop_teaching.py",
+    "scripts/onboarding_session_start.py",
+    "hooks/hooks.json",
+    "assets/onboarding",
+    "repository/plugins/_shared/vendor/modules/desktop_teaching",
+    "repository/static/shared/learn-with-clara",
+    "repository/static/shared/product-function-pages.js"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "native-teaching-context",
+        "purpose": "Understand professional interests and explain actual selected workflow results",
+        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts."
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [],
+  "security_controls": [
+    {
+      "id": "local-teaching-state",
+      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; optional startup checks are suppressed while pending or active."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-13",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "ff2f5ec2d449fc7700c8868dbbfcd406357ca46f500d1a9f07979265d1628f71"
+  }
+}

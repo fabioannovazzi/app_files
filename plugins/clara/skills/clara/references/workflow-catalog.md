@@ -73,3 +73,9 @@ replace a missing presentation, research, analysis, or advisory workflow.
 - `privacy-surface-review`: review and register model-context and external-data
   boundaries when a Clara workflow or shared service changes. This is not a
   customer-case workflow.
+
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+## Learning
+
+- `learn-with-clara`: teach current workflows by native voice with a parallel visible working chat, first-use interview, 3–4 tailored lessons and reusable local examples.
+<!-- CLARA_OPENAI_ONBOARDING_END -->

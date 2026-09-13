@@ -3,6 +3,15 @@ name: claim-basis-map
 description: "Use when Clara or Codex generates, revises, or audits a clean PPTX/deck and needs a fully automatic readable sidecar that maps each slide claim to its basis and checks whether current deck text has drifted from the generation-time claim snapshot. Use for AI-generated decks where visible citations, claim IDs, reviewer attestations, hashes, thumbnails, and HTML are explicitly not wanted."
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 # Claim Basis Map
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.

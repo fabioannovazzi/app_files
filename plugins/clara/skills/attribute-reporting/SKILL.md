@@ -3,6 +3,15 @@ name: attribute-reporting
 description: Use when a user wants Clara to map retail product attributes, preserve the existing new-versus-rest or best-seller-versus-other analysis, create a private local HTML report, or answer whether that report is correct.
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 # Attribute Reporting
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.

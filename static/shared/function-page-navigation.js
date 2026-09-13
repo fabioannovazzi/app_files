@@ -57,6 +57,7 @@
       },
     },
     lucia: {
+      core: {it: "Funzioni disponibili", en: "Available functions", fr: "Fonctions disponibles", de: "Verfügbare Funktionen", es: "Funciones disponibles"},
       "area-research": {
         it: "Ricerca legale",
         en: "Legal research",
@@ -80,6 +81,7 @@
       },
     },
     clara: {
+      functions: {it: "Funzioni disponibili", en: "Available functions", fr: "Fonctions disponibles", de: "Verfügbare Funktionen", es: "Funciones disponibles"},
       "area-deliverables": {
         it: "Presentazioni, video e documenti",
         en: "Presentations, videos, and documents",
@@ -113,6 +115,8 @@
 
   const pageContexts = {
     "learn-with-vera": [["vera", "core"]],
+    "learn-with-clara": [["clara", "functions"]],
+    "learn-with-lucia": [["lucia", "core"]],
     "aml-review": [["vera", "area-clients"]],
     "adeguati-assetti": [["vera", "area-analysis"]],
     "apertura-pratica": [["lucia", "area-matters"]],

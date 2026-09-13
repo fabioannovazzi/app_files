@@ -218,7 +218,7 @@ def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) ->
             "type": "command",
             "command": (
                 'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"'
-                if plugin_root == VERA_ROOT
+                if plugin_root.name in {"vera", "clara"}
                 else 'python3 "$PLUGIN_ROOT/scripts/check_for_update.py"'
             ),
             "timeout": 8,

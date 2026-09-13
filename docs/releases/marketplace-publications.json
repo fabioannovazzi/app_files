@@ -22,8 +22,8 @@
       "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa63e84306881918588b7b197e89873",
       "basis": "OpenAI Platform directly showed Vera 0.1.245 Published after all 37 skill checks passed, the user expressly accepted the four terms and publisher declarations, and Publish Version completed on 2026-09-13. The public directory independently displayed Version 0.1.245.",
       "package_sha256": "d42403c951d2fae01bdaa04dd973159e143e6f0d58df071930932968d016a586",
-      "repository_package_sha256": "052f84403cf3e4b566fffd9612f15606bd5120284fbcaebca1d31ad599149c81",
-      "repository_package_review_note": "Only privacy/services/local-onboarding.json differs from the exact published archive, reflecting the subsequent teaching webpage copy review. Executable files and the tutorial instructions are identical. The published archive is identified separately by package_sha256."
+      "repository_package_sha256": "b4c6f9883262691866aa5723129a0c940eb86e9fc3ae9b4716169152b696d291",
+      "repository_package_review_note": "Only privacy/services/local-onboarding.json differs from the exact published archive, reflecting review of the shared teaching page copy when adding Clara and Lucia. Vera executable files and tutorial instructions are unchanged. The published archive remains identified separately by package_sha256."
     },
     "lucia": {
       "version": "0.1.41",

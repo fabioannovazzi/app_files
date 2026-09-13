@@ -1,6 +1,6 @@
 {
   "name": "lucia",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Lucia affianca avvocati indipendenti e studi legali nell'ottimizzare richieste professionali e verificare risposte, memorie, pareri e lettere rispetto a fonti, ragionamento e giudizio professionale.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -64,5 +64,6 @@
     "composerIcon": "./assets/icon.svg",
     "logo": "./assets/icon.svg",
     "screenshots": []
-  }
+  },
+  "hooks": "./hooks/hooks.json"
 }

@@ -3,6 +3,15 @@ name: advisory-case-director
 description: "Use when Clara must direct a durable advisory case after initial assignment framing: state the answer first, keep a living analytical spine, choose and coordinate the next analysis or research branch, integrate new evidence and partner judgement, revise the position when warranted, and decide when the working deliverable should change. This is the case-direction workflow, not a fixed analytical schema, generic prompt optimizer, data-analysis engine, deck builder, or final validator."
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 ## ChatGPT and Codex Runtime
 
 In ChatGPT, perform the reasoning in conversation and show the current answer,

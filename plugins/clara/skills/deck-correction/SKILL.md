@@ -3,6 +3,15 @@ name: deck-correction
 description: "Correct, revise, or rebuild an existing PPTX or Clara HTML deck from spoken feedback, a call transcript, screen recording, review notes, or partner comments. Use when the user says record feedback on this deck or when the requested outcome is a changed deck rather than only a transcript: open Clara Voice Capture when needed, interpret every requested change, preserve untouched content, require a reviewable understanding and approval checkpoint for PPTX work, apply changes to a copy, render, verify, and inspect the final audience-facing deck. Do not use for transcription alone or for creating a new deck without revision feedback."
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 # Deck Correction
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.

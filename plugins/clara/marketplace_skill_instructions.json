@@ -17,7 +17,7 @@
       "display_name": "Clara",
       "short_description": "Turn evidence into reviewable advisory work",
       "default_prompt": "Use $clara to organize these materials, identify gaps, and prepare a reviewable analysis or deliverable.",
-      "instructions": "Provide the case materials and describe the decision or deliverable you need. Clara organizes the evidence, selects the appropriate specialist workflow, and returns a reviewable analysis, report, or presentation with sources, assumptions, and unresolved questions kept visible."
+      "instructions": "Provide the case materials and describe the decision or deliverable you need. Clara organizes the evidence, selects the appropriate specialist workflow, and returns a reviewable analysis, report, or presentation with sources, assumptions, and unresolved questions kept visible. Before substantive work, follow skills/clara/references/local-onboarding.md. For learning and demonstrations read skills/learn-with-clara/SKILL.md completely; native voice and a second visible working chat explain actual outputs. Tutorial state and feedback stay local."
     },
     "advisory-deliverable-validator": {
       "display_name": "Validate an advisory deliverable",
@@ -90,6 +90,12 @@
       "short_description": "Turn a recording into reviewed evidence",
       "default_prompt": "Use $transcribe to transcribe this recording, identify the speakers where possible, and prepare a reviewed evidence package.",
       "instructions": "Provide the recording, identify the target case or folder, and name any known speakers. Clara produces the transcript, supports speaker attribution, and returns a reviewed evidence package with uncertain passages kept separate from advice."
+    },
+    "learn-with-clara": {
+      "display_name": "Impara con Clara",
+      "short_description": "Learn by native voice while a second chat shows the work",
+      "default_prompt": "Use $learn-with-clara to show me a useful workflow in a second chat and explain it by voice.",
+      "instructions": "Describe what you do and what you would like to try. Clara starts the one-off desktop introduction with 3–4 relevant workflows, then teaches any supported workflow again on request. Read skills/learn-with-clara/SKILL.md completely. Use native OpenAI voice and two visible native chats, actual examples and user practice. Keep the profile, progress and feedback on this computer. Do not use custom voice APIs, Mparanza tutorial transport or Claude Cowork."
     }
   }
 }

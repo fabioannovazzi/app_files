@@ -3,6 +3,15 @@ name: reporting-engine
 description: Use when Clara needs budgeting/forecast reports with both variances and Sites delivery, CSV/XLSX/Parquet dataset intake, Sales/Discount/COGS identification, chart capability evidence, dataset profiling, a source-backed dataset semantic layer, mechanical compatibility checks, or reporting contract inspection before chart/report selection.
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 ## Budget monitoring and forecast reports
 
 For Actual/Budget monitoring, use `../../modules/reporting-engine/scripts/budget_report.py`
