@@ -12,8 +12,8 @@
       "review_fingerprint_submission": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa3dc29b32c8191944c86a0c8ab4c87",
       "review_fingerprint_package_sha256": "84c5ad647a287d9fcd2b315afc6a642ec6ae825ee5a0914aab7b4cb0a5102e16",
       "package_review_note": "The post-publication replacement archive changes only privacy/hosted-services/plugin-update-check.json to cover the published version notice. Executable files and the Cowork archive are unchanged.",
-      "repository_package_sha256": "b1429b200cb9111762ba3e3a6dc4cda5b6326e7b7956450c888bbece076c7a1a",
-      "repository_package_review_note": "The repository archive was rebuilt after Vera 0.1.244 was confirmed Published. Only the shared update-check privacy fingerprint differs from the previous repository archive; executable files and the Cowork archive are unchanged. This hash records the repository artifact, not a new Clara marketplace submission."
+      "repository_package_sha256": "5477f245fc4dc266c5c2d8f93420017f83ef685b4fd4e116d3030cc4f00f20ec",
+      "repository_package_review_note": "The repository archive was rebuilt for the Vera teaching release because the shared function-page copy is governed by Clara research-video-voice. Only that privacy review fingerprint/date differs from the previous repository archive; executable files and the Cowork archive are unchanged. This records the repository artifact, not a new Clara marketplace submission."
     },
     "vera": {
       "version": "0.1.244",
