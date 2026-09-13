@@ -1,0 +1,460 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Dos archivos no siempre son dos facturas",
+    "goal": "Leer un resumen FatturaPA distinguiendo cuerpos de factura, anomalías formales y candidatos a duplicado.",
+    "scenario": "El lote ficticio contiene una factura XML válida, otra copia de la misma y un XML truncado. El control se refiere al contenido formal de los archivos, sin compararlos con asientos contables.",
+    "request": "Vera, comprueba este lote XML y muestra qué requiere revisión.",
+    "scope": "Controles formales FatturaPA sin confirmar contabilización, deducibilidad, pago o tratamiento del IVA.",
+    "input_columns": [
+      "Archivo ficticio",
+      "Contenido",
+      "Estado"
+    ],
+    "input_rows": [
+      [
+        "invoice.xml",
+        "INV-001 · 2026 · EUR 1.220",
+        "Un cuerpo de factura legible"
+      ],
+      [
+        "invoice-copy.xml",
+        "La misma factura",
+        "Copia por revisar"
+      ],
+      [
+        "broken.xml",
+        "Documento truncado",
+        "XML mal formado"
+      ]
+    ],
+    "basis": "La cantidad de archivos difiere de la de cuerpos de factura. Proveedor, número, fecha e importe respaldan un candidato a duplicado, no su eliminación automática.",
+    "method": [
+      "Selecciona cliente, encargo, lote y ejercicio e importa las fuentes al caso didáctico gestionado.",
+      "Ejecuta el analizador actual y examina todas las anomalías y grupos de duplicados de la entrega. Abre el XML exacto para comprobar hechos de origen.",
+      "Presenta resumen por cuerpo, candidatos a duplicado y nota de anomalías. Mantén los archivos ilegibles expresamente visibles."
+    ],
+    "result_title": "Un lote con dos cuestiones por revisar",
+    "conclusion": "Dos copias legibles no representan automáticamente dos operaciones económicas. El archivo truncado no aporta un registro de factura fiable.",
+    "output_columns": [
+      "Elemento",
+      "Resultado ilustrado",
+      "Acción"
+    ],
+    "output_rows": [
+      [
+        "invoice.xml + invoice-copy.xml",
+        "Candidato a duplicado",
+        "Comparar fuentes y conservar originales"
+      ],
+      [
+        "broken.xml",
+        "Error formal",
+        "Recuperar XML completo"
+      ],
+      [
+        "Total económico del lote",
+        "Necesita revisión",
+        "No sumar copias sin comprobar"
+      ]
+    ],
+    "check": "Una anomalía o posible duplicación no autoriza borrar archivos ni modificar la contabilidad. Un XML puede contener varios cuerpos de factura.",
+    "question": "¿Tres archivos recibidos significan tres facturas válidas?",
+    "answer": "No. Cuenta por separado archivos, cuerpos legibles y anomalías. La copia y el archivo truncado necesitan tratamiento explícito.",
+    "practice": "Ejecuta el ejemplo XML incluido y una copia modificada y compara las notas de anomalías realmente generadas.",
+    "next": "Indica ejercicio y lote seleccionado. Usa conciliación contable solo cuando sea la tarea solicitada."
+  },
+  "vera/financial-analysis": {
+    "title": "Comprender la concentración de ingresos",
+    "goal": "Usar un análisis financiero compatible e interpretar su indicador sin un juicio automático de riesgo.",
+    "scenario": "Un export ficticio contiene EUR 100.000 de ingresos: Alpha 60.000, Beta 25.000 y Gamma 15.000. El profesional quiere entender la dependencia de clientes, no valorar la empresa.",
+    "request": "Vera, analiza la concentración de clientes y muestra la base del resultado.",
+    "scope": "Análisis customer_concentration sobre datos históricos revisados. No es valoración, calificación ni auditoría independiente de las fuentes contables.",
+    "input_columns": [
+      "Cliente ficticio",
+      "Ingresos del periodo",
+      "Fuente"
+    ],
+    "input_rows": [
+      [
+        "Alpha",
+        "EUR 60.000",
+        "F1 · fila 1"
+      ],
+      [
+        "Beta",
+        "EUR 25.000",
+        "F1 · fila 2"
+      ],
+      [
+        "Gamma",
+        "EUR 15.000",
+        "F1 · fila 3"
+      ]
+    ],
+    "basis": "F1 define periodo y alcance y suma EUR 100.000. No aporta contratos, márgenes por cliente ni pruebas prospectivas.",
+    "method": [
+      "Selecciona el análisis compatible que responde a la pregunta y cualifica fuentes, periodo, signos y total de control.",
+      "Ejecuta el paquete conforme al contrato revisado en el mismo encargo. Utiliza sus cálculos admitidos, sin sustituirlos por otro análisis improvisado.",
+      "Lee indicadores y límites. Vincula comentarios a métricas y conserva como no realizadas las comprobaciones de fuentes pendientes."
+    ],
+    "result_title": "Alpha representa el 60 % de los ingresos",
+    "conclusion": "El mayor cliente aporta el 60 % y los dos primeros el 85 %. Las observaciones orientan preguntas comerciales por investigar.",
+    "output_columns": [
+      "Indicador",
+      "Cálculo",
+      "Valor"
+    ],
+    "output_rows": [
+      [
+        "Mayor cliente",
+        "60.000 / 100.000",
+        "60 %"
+      ],
+      [
+        "Dos primeros clientes",
+        "85.000 / 100.000",
+        "85 %"
+      ],
+      [
+        "Clientes observados",
+        "Alpha, Beta, Gamma",
+        "3"
+      ]
+    ],
+    "check": "Una cuota alta acredita concentración, no fragilidad contractual o pérdida futura de clientes. Comprueba alcance y conciliación del total.",
+    "question": "¿La cuota del 60 % revela la probabilidad de perder ingresos?",
+    "answer": "No. Contratos, renovaciones y dependencias requieren pruebas propias. El indicador orienta preguntas, pero no proporciona una probabilidad de pérdida.",
+    "practice": "Añade un cuarto cliente con EUR 20.000 y comprueba el nuevo total y las cuotas.",
+    "next": "Elige un análisis compatible y prepara fuentes contables revisadas con periodo y totales de control."
+  },
+  "vera/journal-bank-reconciliation": {
+    "title": "Dos cobros para un asiento",
+    "goal": "Conciliar banco y diario conservando referencias, grupos y diferencias pendientes.",
+    "scenario": "El diario ficticio registra EUR 1.200 cobrados por INV-401. El banco muestra abonos de EUR 700 y EUR 500 con esa referencia y una comisión de EUR 12 ausente del diario entregado.",
+    "request": "Vera, concilia estos movimientos y muestra qué queda abierto.",
+    "scope": "Comparación banco-diario para un periodo y moneda. No verifica todas las partidas abiertas ni autoriza asientos automáticos.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Referencia",
+      "Importe"
+    ],
+    "input_rows": [
+      [
+        "G1 · diario",
+        "INV-401",
+        "+EUR 1.200"
+      ],
+      [
+        "B1 · fila bancaria 1",
+        "INV-401",
+        "+EUR 700"
+      ],
+      [
+        "B1 · fila bancaria 2",
+        "INV-401",
+        "+EUR 500"
+      ],
+      [
+        "B1 · fila bancaria 3",
+        "Comisión",
+        "−EUR 12"
+      ]
+    ],
+    "basis": "La referencia compartida respalda 700 + 500 frente a 1.200. La comisión tiene otra finalidad y signo y permanece separada.",
+    "method": [
+      "Inspecciona formatos y revisa columnas, signos, fechas, moneda y referencias sobre las fuentes reales.",
+      "Ejecuta asociaciones compatibles, incluidos grupos respaldados por referencias. Conserva sus filas y no busques combinaciones arbitrarias solo para cuadrar sumas.",
+      "Lee asociaciones, grupos y residuos. Explica las pruebas de cada vínculo y deja diferencias y posibles asientos para revisión profesional."
+    ],
+    "result_title": "Cobro reconstruido, comisión pendiente",
+    "conclusion": "700 + 500 = EUR 1.200 para INV-401. La comisión bancaria de EUR 12 no tiene contrapartida en el diario suministrado.",
+    "output_columns": [
+      "Elemento",
+      "Comparación",
+      "Resultado ilustrado"
+    ],
+    "output_rows": [
+      [
+        "INV-401",
+        "700 + 500 ↔ EUR 1.200",
+        "Grupo por referencia común"
+      ],
+      [
+        "Comisión",
+        "−EUR 12 ↔ sin asiento",
+        "Residuo por revisar"
+      ]
+    ],
+    "check": "Una suma igual no justifica cualquier grupo. Signo, periodo, moneda y referencias deben ser coherentes.",
+    "question": "Sin referencias, ¿podemos asignar automáticamente ambos abonos a INV-401?",
+    "answer": "La suma por sí sola no respalda ese grupo automático. Revisa pruebas y conserva la ambigüedad cuando falte una conexión suficiente.",
+    "practice": "Cambia el segundo abono a EUR 480 y examina el residuo sin inventar otro pago.",
+    "next": "Selecciona diario y extracto del mismo alcance y aclara solo las correspondencias que los archivos no resuelvan."
+  },
+  "vera/journal-sampling": {
+    "title": "Una población fiable antes de la muestra",
+    "goal": "Entender por qué la cualificación del diario precede a seleccionar asientos para revisión.",
+    "scenario": "El diario ficticio conserva identificadores originales, cuentas e importes de debe y haber. '1.200,00' exige interpretar correctamente el formato numérico. Una fila de total es un resumen, no otro asiento que seleccionar.",
+    "request": "Vera, prepara este diario y muestra la muestra junto a los controles de población.",
+    "scope": "Preparación y muestreo conforme al contrato actual. Una selección no es automáticamente representativa estadísticamente ni verificada contra documentos.",
+    "input_columns": [
+      "Fila ficticia",
+      "Datos",
+      "Decisión de revisión"
+    ],
+    "input_rows": [
+      [
+        "G1 · fila 2",
+        "M-101; debe 1.200,00",
+        "Formato numérico italiano"
+      ],
+      [
+        "G1 · fila 3",
+        "M-101; haber 1.200,00",
+        "Mismo movimiento, segunda línea"
+      ],
+      [
+        "G1 · fila 4",
+        "Total 1.200,00 / 1.200,00",
+        "Resumen, no asiento"
+      ]
+    ],
+    "basis": "Identificadores y ubicaciones proceden de G1. Un número de fila no sustituye el identificador original del movimiento.",
+    "method": [
+      "Inspecciona y revisa alcance, correspondencias, formato numérico y filas resumen antes de normalizar.",
+      "Cualifica toda la población y verifica cierre y controles monetarios. Aplica el método de selección revisado conservando identificadores originales.",
+      "Entrega población normalizada, diagnósticos, muestra y documentos de cualificación. Vouching utiliza esta entrega cerrada sin volver a mapear la fuente."
+    ],
+    "result_title": "Población cualificada antes de seleccionar",
+    "conclusion": "El caso separa dos líneas contables de un movimiento de una fila de total. Con el formato revisado, 1.200,00 significa EUR 1.200.",
+    "output_columns": [
+      "Elemento",
+      "Tratamiento ilustrado",
+      "Motivo"
+    ],
+    "output_rows": [
+      [
+        "Filas 2–3",
+        "Población: movimiento M-101",
+        "Identidad original y ambos lados"
+      ],
+      [
+        "Fila 4",
+        "Resumen excluido con base revisada",
+        "Evitar doble conteo"
+      ],
+      [
+        "Muestra posterior",
+        "Vinculada a población cualificada",
+        "Conservar trazabilidad"
+      ]
+    ],
+    "check": "Que un archivo normalizado se abra no acredita su cualificación. Un mapeo equivocado puede producir cifras plausibles e incorrectas.",
+    "question": "¿Podemos llamar M-2 al movimiento porque está en la fila dos?",
+    "answer": "No. Conserva M-101 de la fuente. La ubicación ayuda a recuperar evidencia, pero no crea identidad del movimiento.",
+    "practice": "Añade una línea descuadrada y verifica que la cualificación la expone antes del muestreo.",
+    "next": "Prepara export completo y totales de control y explica el propósito de selección."
+  },
+  "vera/new-client": {
+    "title": "Iniciar un expediente sin convertir vacíos en confirmaciones",
+    "goal": "Pasar de documentos recibidos a una propuesta profesional de alta con pruebas pendientes explícitas.",
+    "scenario": "La ficticia Arco Srl entrega extracto registral, documento del representante y borrador de carta de encargo. La carta no está firmada y falta la declaración de titularidad real. La preparación documental precede al alta profesional italiana.",
+    "request": "Vera, organiza la incorporación de este cliente y muestra qué falta.",
+    "scope": "Caso italiano ficticio. Cambiar la lengua de trabajo no habilita un paquete profesional de otro país.",
+    "input_columns": [
+      "Documento ficticio",
+      "Estado observado",
+      "Significado"
+    ],
+    "input_rows": [
+      [
+        "N1 · extracto registral",
+        "Legible",
+        "Identidad por revisar"
+      ],
+      [
+        "N2 · documento del representante",
+        "Recibido",
+        "Relación y validez por comprobar"
+      ],
+      [
+        "N3 · carta de encargo",
+        "Borrador sin firma",
+        "No acredita aceptación"
+      ],
+      [
+        "Declaración de titularidad",
+        "No recibida",
+        "Solicitud por revisar"
+      ]
+    ],
+    "basis": "Los archivos recibidos acreditan disponibilidad documental. Firma y declaración ausentes permanecen separadas de las acciones profesionales propuestas.",
+    "method": [
+      "Prepara y clasifica documentos, vinculando extracción y carencias con sus fuentes.",
+      "Revisa y aplica decisiones documentales. Solo una entrega italiana coherente pasa a la fase de alta profesional.",
+      "Prepara propuestas de identidad, encargo, privacidad, prevención del blanqueo y seguimiento con pruebas y cuestiones abiertas. El profesional registra sus decisiones reales en las superficies de revisión."
+    ],
+    "result_title": "Documentos organizados, aceptación incompleta",
+    "conclusion": "Extracto y documento de identidad están disponibles. El encargo sigue sin firma y falta titularidad real; no se declara completo el expediente.",
+    "output_columns": [
+      "Área",
+      "Base",
+      "Siguiente paso"
+    ],
+    "output_rows": [
+      [
+        "Identidad",
+        "N1–N2",
+        "Revisar relaciones"
+      ],
+      [
+        "Encargo",
+        "N3 sin firmar",
+        "Completar aceptación ordinaria"
+      ],
+      [
+        "Prevención del blanqueo",
+        "Declaración ausente",
+        "Revisar solicitud y análisis pertinente"
+      ]
+    ],
+    "check": "Recibir un documento no equivale a aceptar su contenido. Completar el workflow registra la entrega, no la aceptación automática del cliente.",
+    "question": "La carpeta se llama 'cliente aprobado'. ¿Podemos usar ese estado?",
+    "answer": "No. El estado deriva de pruebas y decisiones guardadas, no del nombre de carpeta.",
+    "practice": "Añade la carta firmada y actualiza las propuestas afectadas conservando las cuestiones abiertas sobre blanqueo.",
+    "next": "Selecciona cliente real y documentos recibidos. Una revisión posterior específica de blanqueo no exige repetir toda el alta."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Un cobro posterior no cambia el saldo anterior",
+    "goal": "Verificar partidas abiertas a una fecha de corte distinguiendo hechos posteriores.",
+    "scenario": "A 30 de junio, la lista ficticia muestra INV-701 abierta por EUR 1.000. Los cobros vinculados son EUR 600 el 28 de junio y EUR 400 el 5 de julio. El primero no se aplicó en la lista entregada.",
+    "request": "Vera, verifica esta partida al 30 de junio y explica cómo tratar el cobro de julio.",
+    "scope": "Verificación de una población abierta declarada a una fecha. Las facturas por sí solas no reconstruyen saldos pendientes.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Fecha",
+      "Importe"
+    ],
+    "input_rows": [
+      [
+        "O1 · lista INV-701",
+        "30 de junio",
+        "EUR 1.000 declarado abierto"
+      ],
+      [
+        "B1 · cobro vinculado",
+        "28 de junio",
+        "EUR 600"
+      ],
+      [
+        "B2 · cobro posterior",
+        "5 de julio",
+        "EUR 400"
+      ]
+    ],
+    "basis": "O1 define la población declarada. Solo B1 precede al corte; los vínculos entre cobros y partida deben verificarse.",
+    "method": [
+      "Confirma corte, cliente, población y totales. Obtén mayor y justificantes del mismo encargo.",
+      "Compara importes y relaciones separando candidatos y decisiones revisadas. Muestra saldos al corte, diferencias y cobros posteriores por separado.",
+      "Presenta elementos de revisión y guarda decisiones reales. Mantén visibles las cuestiones pendientes sin crear asientos automáticamente."
+    ],
+    "result_title": "Saldo revisado al corte: EUR 400",
+    "conclusion": "Si se confirma el vínculo de B1, quedan EUR 400 a 30 de junio. B2 documenta cobro posterior, no un saldo cero retroactivo.",
+    "output_columns": [
+      "Vista",
+      "Importe",
+      "Base"
+    ],
+    "output_rows": [
+      [
+        "Abierto declarado",
+        "EUR 1.000",
+        "O1"
+      ],
+      [
+        "Cobro anterior al corte",
+        "−EUR 600",
+        "B1 · sujeto a revisión"
+      ],
+      [
+        "Residual al corte",
+        "EUR 400",
+        "1.000 − 600"
+      ],
+      [
+        "Cobro posterior",
+        "EUR 400",
+        "B2 · 5 de julio"
+      ]
+    ],
+    "check": "La fecha del informe sigue siendo la referencia. Un cobro posterior puede apoyar la recuperación, pero no reescribe la historia.",
+    "question": "En julio está todo cobrado. ¿Podemos mostrar cero a 30 de junio?",
+    "answer": "No. En el caso revisado quedan EUR 400 al corte. Muestra el cobro de julio como hecho posterior.",
+    "practice": "Mueve B2 al 29 de junio, vuelve a ejecutar y comprueba qué conclusión cambia.",
+    "next": "Entrega la lista abierta a fecha exacta, movimientos contables y pruebas bancarias pertinentes."
+  },
+  "vera/purchase-invoice-review": {
+    "title": "Vincular cada factura de compra con el asiento real",
+    "goal": "Leer la cobertura de una población e identificar facturas que requieren revisión contable.",
+    "scenario": "El lote ficticio tiene tres facturas: una con asiento coherente, otra sin asiento encontrado y otra con dos candidatos ambiguos. Periodo y población contable están delimitados expresamente.",
+    "request": "Vera, comprueba la relación entre este lote de facturas de compra y los asientos reales.",
+    "scope": "Revisión de facturas y asientos entregados. Un vínculo ausente en este alcance no demuestra que la factura nunca se contabilizara.",
+    "input_columns": [
+      "Factura ficticia",
+      "Soporte contable disponible",
+      "Pregunta"
+    ],
+    "input_rows": [
+      [
+        "PA-101 · EUR 1.220",
+        "Un asiento coherente",
+        "Revisar naturaleza y tratamiento"
+      ],
+      [
+        "PA-102 · EUR 610",
+        "Ningún candidato en el periodo",
+        "Recuperar o aclarar"
+      ],
+      [
+        "PA-103 · EUR 244",
+        "Dos candidatos",
+        "Resolver identidad"
+      ]
+    ],
+    "basis": "P1 es el lote XML y G1 el export contable del periodo. Los hallazgos quedan vinculados a ambos alcances; no se inventa ningún asiento ausente.",
+    "method": [
+      "Importa facturas y asientos reales y cualifica periodo, cuentas, identidades y totales de lote.",
+      "Ejecuta el método actual de asociación y revisión con sus capacidades nativas requeridas. Deja pendientes las etapas no disponibles en lugar de simularlas.",
+      "Lee cobertura, ambigüedades y propuestas. El profesional evalúa naturaleza y tratamiento del gasto; las propuestas no se convierten en asientos o aprobaciones automáticas."
+    ],
+    "result_title": "Tres facturas, tres estados distintos",
+    "conclusion": "Hay un vínculo disponible, otro no encontrado dentro del alcance y otro ambiguo. Conserva esas diferencias durante la revisión.",
+    "output_columns": [
+      "Documento",
+      "Estado ilustrado",
+      "Próximo paso útil"
+    ],
+    "output_rows": [
+      [
+        "PA-101",
+        "Vínculo disponible",
+        "Revisar tratamiento contra pruebas"
+      ],
+      [
+        "PA-102",
+        "No encontrado dentro del alcance",
+        "Comprobar periodo y export"
+      ],
+      [
+        "PA-103",
+        "Ambiguo",
+        "Resolver candidatos con evidencia"
+      ]
+    ],
+    "check": "Cobertura de asociaciones no equivale a corrección contable. Una ejecución técnica satisfactoria no aprueba deducibilidad ni IVA.",
+    "question": "¿Podemos afirmar sin matices 'factura no contabilizada' para PA-102?",
+    "answer": "Lo respaldado es 'asiento no encontrado en el alcance examinado'. Comprueba integridad y periodo del export antes de concluir más ampliamente.",
+    "practice": "Añade el asiento de PA-102 y compara una nueva ejecución sin borrar el resultado anterior.",
+    "next": "Selecciona lote y asientos reales del periodo y comprueba las capacidades nativas requeridas por el workflow instalado."
+  }
+}

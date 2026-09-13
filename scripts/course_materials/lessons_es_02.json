@@ -1,0 +1,317 @@
+{
+  "vera/vouching": {
+    "title": "Del asiento seleccionado al justificante correcto",
+    "goal": "Verificar un asiento de la muestra sin confundir igualdad de importe con identidad documental.",
+    "scenario": "La muestra ficticia cualificada contiene MOV-104, correspondiente a INV-104 por EUR 1.220. El lote incluye dos facturas por ese importe: INV-104 e INV-205. Solo el asiento seleccionado está dentro del alcance.",
+    "request": "Vera, verifica el justificante de este asiento de la muestra.",
+    "scope": "Vouching parte de la entrega cerrada de Journal Sampling con sus documentos de cualificación. Una tabla en bruto o esta vista didáctica no la sustituyen.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Identidad",
+      "Importe"
+    ],
+    "input_rows": [
+      [
+        "Muestra S1 · fila 4",
+        "MOV-104 / INV-104",
+        "EUR 1.220"
+      ],
+      [
+        "XML X1",
+        "INV-104; contraparte coherente",
+        "EUR 1.220"
+      ],
+      [
+        "XML X2",
+        "INV-205; otra factura",
+        "EUR 1.220"
+      ]
+    ],
+    "basis": "S1 define la selección. X1 contiene la referencia distintiva INV-104; el importe igual de X2 no acredita identidad.",
+    "method": [
+      "Retoma la muestra cualificada en el mismo encargo, vincula un lote de justificantes explícito y verifica el cierre de fuentes.",
+      "Comprueba identidad, contraparte, moneda, signo, importe y fecha conforme a la configuración revisada. No repares la preparación del diario dentro de Vouching.",
+      "Lee cobertura, diferencias y filas de revisión manual. Entrega la trazabilidad asiento-documento y deja la suficiencia probatoria al juicio profesional."
+    ],
+    "result_title": "INV-104 es el justificante pertinente",
+    "conclusion": "La identidad distingue documentos con el mismo importe. La coincidencia numérica por sí sola no justificaría una asociación.",
+    "output_columns": [
+      "Candidato",
+      "Prueba de identidad",
+      "Interpretación didáctica"
+    ],
+    "output_rows": [
+      [
+        "X1 · INV-104",
+        "Referencia distintiva coherente",
+        "Comprobar los demás requisitos"
+      ],
+      [
+        "X2 · INV-205",
+        "Referencia diferente",
+        "El importe igual no basta"
+      ]
+    ],
+    "check": "Superar un control mecánico no certifica el tratamiento contable ni la suficiencia del justificante. No extiendas el resultado a asientos fuera de la muestra.",
+    "question": "Si el asiento no incluye referencia de factura, ¿podemos elegir X1 por ser el primer archivo?",
+    "answer": "No. La identidad queda pendiente y necesita las pruebas o la relación revisada que exige el contrato. El orden de archivos no demuestra nada.",
+    "practice": "Cambia X1 a EUR 1.200 y examina la diferencia sin sustituir el documento asociado.",
+    "next": "Selecciona la muestra finalizada y el lote XML o PDF pertinente; Vera resuelve las referencias técnicas de la entrega."
+  },
+  "vera/comunicazione-professionale": {
+    "title": "Un mensaje profesional que respalda sus afirmaciones",
+    "goal": "Transformar información verificada en una comunicación útil con fuente para cada afirmación relevante.",
+    "scenario": "El despacho ficticio Arco recibirá documentos mediante una carpeta acordada desde el 1 de octubre. Una nota interna aprobada describe el canal y el contacto de ayuda. No existe evidencia de ahorro de tiempo medido.",
+    "request": "Vera, redacta un aviso breve a clientes sobre el nuevo sistema de entrega documental.",
+    "scope": "Comunicación operativa ficticia sin asesoramiento fiscal ni promesas comerciales. El borrador permanece local y no se envía.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Hecho disponible",
+      "Uso en el mensaje"
+    ],
+    "input_rows": [
+      [
+        "C1 · nota interna § 1",
+        "Nuevo canal desde el 1 de octubre de 2026",
+        "Respaldado"
+      ],
+      [
+        "C1 · § 2",
+        "Ayuda de la persona de contacto",
+        "Respaldado"
+      ],
+      [
+        "Ninguna fuente",
+        "50 % de ahorro de tiempo",
+        "Sin respaldo"
+      ]
+    ],
+    "basis": "C1 respalda fecha, canal y asistencia. El porcentaje de ahorro ejemplifica una afirmación que debe eliminarse.",
+    "method": [
+      "Determina la utilidad para la audiencia y define propósito, canal y fuentes.",
+      "Redacta y vincula afirmaciones con pruebas. Revisa tono y límites y elimina promesas sin respaldo.",
+      "Prepara el paquete habitual del canal con sus comprobaciones de fuentes. Presenta el borrador antes del proceso ordinario de envío o publicación."
+    ],
+    "result_title": "Una forma más clara de entregar documentos",
+    "conclusion": "Desde el 1 de octubre de 2026, utilice la carpeta acordada con el despacho para entregar documentos. Para acceder y recibir orientación inicial, contacte con su interlocutor habitual.",
+    "output_columns": [
+      "Afirmación",
+      "Base",
+      "Revisión"
+    ],
+    "output_rows": [
+      [
+        "Nuevo canal desde el 1 de octubre",
+        "C1 § 1",
+        "Comprobar fecha y método"
+      ],
+      [
+        "Contactar con el interlocutor",
+        "C1 § 2",
+        "Confirmar asistencia disponible"
+      ],
+      [
+        "50 % de ahorro",
+        "Ninguna",
+        "Excluido"
+      ]
+    ],
+    "check": "Una comunicación atractiva no debe añadir resultados, obligaciones o promesas que las fuentes no acreditan.",
+    "question": "¿Podemos añadir 'nunca volverá a perderse un documento'?",
+    "answer": "No. La nota describe un canal, no una garantía contra pérdidas. La promesa absoluta carece de prueba.",
+    "practice": "Adapta la información a una publicación breve conservando fecha, canal y límites.",
+    "next": "Selecciona fuentes actuales para novedades profesionales y hechos operativos verificados para anuncios del despacho."
+  },
+  "vera/concordato-plan-review": {
+    "title": "Un saldo final positivo puede ocultar falta de financiación",
+    "goal": "Relacionar propuesta de reestructuración, acreedores y calendario de caja sin reducir la revisión a sumas.",
+    "scenario": "Un plan ficticio prevé EUR 100.000 de una venta en diciembre, pero promete pagar EUR 90.000 a acreedores en septiembre. La caja inicial es EUR 10.000 y no hay financiación puente documentada.",
+    "request": "Vera, muestra qué problema del plan exige una pregunta concreta al profesional.",
+    "scope": "Caso reducido de calendario de caja. La revisión completa abarca también procedimiento, propuesta, acreedores, alternativa de liquidación, certificación y fiscalidad.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Fecha",
+      "Flujo de caja"
+    ],
+    "input_rows": [
+      [
+        "P1 · caja inicial",
+        "1 de septiembre",
+        "+EUR 10.000"
+      ],
+      [
+        "P2 · propuesta a acreedores",
+        "30 de septiembre",
+        "−EUR 90.000"
+      ],
+      [
+        "P3 · plan de venta",
+        "15 de diciembre",
+        "+EUR 100.000"
+      ]
+    ],
+    "basis": "P1–P3 fijan importes y fechas. Un saldo final positivo no aporta efectivo antes de la venta ni demuestra una financiación comprometida.",
+    "method": [
+      "Examina los documentos sin tratar nombres de archivo o importes extraídos como funciones ya revisadas.",
+      "Construye el modelo con alcance, acreedores, fuentes y usos, liquidez y preguntas. Vincula observaciones e inferencias con pruebas exactas.",
+      "Presenta modelo y cuestiones abiertas al profesional responsable. Solo un modelo confirmado sustenta el paquete formal y su anexo numérico."
+    ],
+    "result_title": "Superávit final, financiación intermedia pendiente",
+    "conclusion": "El saldo final teórico es +EUR 20.000, pero septiembre presenta una necesidad de financiación de EUR 80.000 sin cobertura acreditada.",
+    "output_columns": [
+      "Momento",
+      "Saldo teórico",
+      "Pregunta"
+    ],
+    "output_rows": [
+      [
+        "Antes de pagar",
+        "+EUR 10.000",
+        "Caja inicial"
+      ],
+      [
+        "Después de pagos de septiembre",
+        "−EUR 80.000",
+        "¿Cómo se financia la falta de caja?"
+      ],
+      [
+        "Después de venta de diciembre",
+        "+EUR 20.000",
+        "El cobro llega después de pagar"
+      ]
+    ],
+    "check": "El saldo negativo identifica un problema temporal del caso, no un juicio de admisibilidad jurídica ni un dictamen completo de viabilidad.",
+    "question": "¿La venta prevista demuestra por sí sola que los pagos están cubiertos?",
+    "answer": "No con estas fechas. Hay que considerar financiación anterior o un calendario de pagos distinto, documentado y revisado profesionalmente.",
+    "practice": "Añade un compromiso ficticio de financiación con fecha y condiciones e identifica qué resuelve y qué queda pendiente.",
+    "next": "Selecciona el expediente real y la fecha de referencia; no sustituyas sus hechos por una lista abstracta."
+  },
+  "vera/dati-fiscali-strutturati": {
+    "title": "Una cifra extraída debe conservar su fuente",
+    "goal": "Leer campos fiscales con valores, referencias y estado de extracción sin rellenar vacíos por suposición.",
+    "scenario": "El expediente ficticio contiene un F24 italiano legible y un escaneo poco legible. El primero muestra código tributario 1001, ejercicio 2025 y EUR 1.250 a débito. El segundo no ofrece importes fiables.",
+    "request": "Vera, muestra qué datos fiscales podemos utilizar y cuáles necesitan el original.",
+    "scope": "Extracción y revisión de campos. Un valor en la fuente no verifica declaración, tratamiento o pago correctos.",
+    "input_columns": [
+      "Fuente ficticia",
+      "Contenido legible",
+      "Tratamiento"
+    ],
+    "input_rows": [
+      [
+        "F1 · F24 fila 1",
+        "1001 · 2025 · EUR 1.250 a débito",
+        "Campos extraíbles"
+      ],
+      [
+        "F2 · escaneo",
+        "Importes ilegibles",
+        "Recuperar o inspeccionar visualmente"
+      ]
+    ],
+    "basis": "F1 respalda tres valores localizados. F2 no aporta un importe fiable; una extracción vacía no demuestra ausencia de datos fiscales.",
+    "method": [
+      "Retoma la extracción del mismo encargo y lee todos los campos requeridos y estados documentales de la entrega.",
+      "Comprueba significado y correspondencia textual. Conserva incertidumbre de formato y fuentes ilegibles; reclasificar tras revisión exige una regeneración coherente.",
+      "Entrega tabla, resumen y citas. Distingue documentos no compatibles, ilegibles, no evaluados y reconocidos sin campos."
+    ],
+    "result_title": "Tres campos utilizables y una fuente pendiente",
+    "conclusion": "El resumen conserva los tres campos de F1 y marca F2 como ilegible. Los importes ausentes no se convierten en cero.",
+    "output_columns": [
+      "Campo",
+      "Valor extraído",
+      "Fuente"
+    ],
+    "output_rows": [
+      [
+        "Código tributario",
+        "1001",
+        "F1 · fila 1"
+      ],
+      [
+        "Ejercicio de referencia",
+        "2025",
+        "F1 · fila 1"
+      ],
+      [
+        "Importe a débito",
+        "EUR 1.250",
+        "F1 · fila 1"
+      ],
+      [
+        "Importes de F2",
+        "No disponibles",
+        "F2 · revisar original"
+      ]
+    ],
+    "check": "Extraer no prueba pago ni cumplimentación correcta. Conserva moneda y ejercicio de la fuente en lugar de inferirlos del nombre de carpeta.",
+    "question": "¿Podemos incluir F2 como cero porque no tiene campos extraídos?",
+    "answer": "No. Es ilegible, no un documento de valor cero. Cualquier suma debe revelar que esta fuente sigue sin cuantificar.",
+    "practice": "Sustituye F2 por una copia legible, regenera y comprueba los campos incorporados.",
+    "next": "Selecciona documentos legibles y el ámbito territorial correcto; conserva originales para comprobaciones que dependan del formato."
+  },
+  "vera/email-cliente": {
+    "title": "Pedir solo los documentos realmente necesarios",
+    "goal": "Preparar una solicitud breve a partir de carencias documentales ya revisadas.",
+    "scenario": "La revisión ficticia de CLIENT-001 confirma que falta el extracto bancario de junio y que debe aclararse una transferencia del 12 de junio. Un contrato posiblemente ausente sigue siendo una propuesta sin aplicar.",
+    "request": "Vera, redacta una solicitud clara de los documentos pendientes de este cliente.",
+    "scope": "Solo borrador local con solicitudes revisadas y aplicadas. No se envía ningún correo.",
+    "input_columns": [
+      "Elemento ficticio de la entrega",
+      "Estado",
+      "Incluir"
+    ],
+    "input_rows": [
+      [
+        "Extracto bancario de junio",
+        "Solicitud revisada y aplicada",
+        "Sí"
+      ],
+      [
+        "Finalidad de transferencia del 12 de junio",
+        "Solicitud revisada y aplicada",
+        "Sí"
+      ],
+      [
+        "Contrato posiblemente ausente",
+        "Candidato pendiente de revisión",
+        "No"
+      ]
+    ],
+    "basis": "E1 contiene dos elementos email_request aplicados y un candidato independiente. Un nombre de carpeta o un borrador antiguo no añade solicitudes autorizadas.",
+    "method": [
+      "Lee todas las páginas de la entrega de correo y verifica que existen solicitudes aplicadas. En caso contrario, deja el borrador pendiente de revisión.",
+      "Redacta un mensaje operativo solo con documentos y aclaraciones respaldados por esas solicitudes.",
+      "Comprueba cada frase contra la entrega y presenta el borrador. Enviar requiere su propia instrucción autorizada y canal."
+    ],
+    "result_title": "Documentos y aclaración para completar el expediente",
+    "conclusion": "Buenos días: para completar el expediente, facilite el extracto bancario de junio y aclare la finalidad de la transferencia del 12 de junio. Gracias por su colaboración.",
+    "output_columns": [
+      "Elemento del borrador",
+      "Base",
+      "Comprobación"
+    ],
+    "output_rows": [
+      [
+        "Extracto bancario de junio",
+        "E1 · email_request 1",
+        "Periodo correcto"
+      ],
+      [
+        "Finalidad de transferencia del 12 de junio",
+        "E1 · email_request 2",
+        "Referencia correcta"
+      ],
+      [
+        "Solicitud del contrato",
+        "Candidato sin aplicar",
+        "Excluida"
+      ]
+    ],
+    "check": "Una carencia propuesta no es una solicitud aprobada. No conviertas hipótesis internas en exigencias categóricas al cliente.",
+    "question": "El borrador anterior pedía el contrato. ¿Lo conservamos por si acaso?",
+    "answer": "No. Utiliza las solicitudes aplicadas actuales. Incluye el contrato solo después de revisión y actualización coherente de la entrega.",
+    "practice": "Acorta el borrador manteniendo ambas solicitudes y sus referencias exactas.",
+    "next": "Completa primero la revisión de carencias, solicita después el borrador y revisa destinatario y tono."
+  }
+}

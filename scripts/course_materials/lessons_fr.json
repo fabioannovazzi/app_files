@@ -1,0 +1,381 @@
+{
+  "vera/adeguati-assetti": {
+    "title": "La procédure écrite fonctionne-t-elle réellement ?",
+    "goal": "Évaluer l'organisation d'une entreprise à partir de preuves de fonctionnement et préparer des améliorations à revoir.",
+    "scenario": "L'atelier fictif Arco emploie 18 personnes. Sa procédure prévoit un rapport de trésorerie hebdomadaire. Le dossier contient cette procédure, un seul rapport de juin et un procès-verbal de juillet demandant une fréquence accrue. D'autres rapports peuvent exister ailleurs.",
+    "request": "Vera, aide-moi à comprendre comment le suivi de trésorerie est utilisé et quelles questions poser.",
+    "scope": "Un seul processus d'information sur la trésorerie. Le cas ne permet pas un avis global sur l'organisation de l'entreprise.",
+    "input_columns": [
+      "Source fictive",
+      "Élément constaté",
+      "Limite"
+    ],
+    "input_rows": [
+      [
+        "P1 · procédure § 3",
+        "Rapport chaque vendredi ; responsable administratif",
+        "Processus prévu"
+      ],
+      [
+        "R1 · rapport du 26 juin",
+        "Solde et échéances de la semaine suivante",
+        "Une seule période"
+      ],
+      [
+        "V1 · procès-verbal du 10 juillet",
+        "Demande de fréquence accrue",
+        "Ne recense pas tous les envois"
+      ]
+    ],
+    "basis": "P1 décrit la conception du processus. R1 prouve une production. V1 documente une demande, sans établir l'absence de tous les autres rapports.",
+    "method": [
+      "Sépare procédure prévue, déclarations et preuves opérationnelles. Cite précisément chaque observation.",
+      "Compare une production irrégulière avec l'hypothèse d'un dossier incomplet. Pose la question permettant de les départager.",
+      "Prépare constat, conséquence, action proposée et preuve d'application. Responsables et dates restent des propositions jusqu'à leur revue."
+    ],
+    "result_title": "Suivi de trésorerie : continuité à documenter",
+    "conclusion": "Le processus est prévu et a été exécuté au moins une fois. Sa continuité et son utilisation restent à vérifier.",
+    "output_columns": [
+      "Observation",
+      "Action proposée",
+      "Preuve attendue"
+    ],
+    "output_rows": [
+      [
+        "Fréquence incertaine · P1/R1",
+        "Récupérer les envois de juin et juillet",
+        "Rapports datés et destinataires"
+      ],
+      [
+        "Demande du directeur · V1",
+        "Préciser les décisions nécessitant plus de fréquence",
+        "Procès-verbal et utilisation ultérieure"
+      ]
+    ],
+    "check": "Un document manquant limite la vérification ; il ne prouve pas l'absence du processus. Un solde positif ne démontre pas l'adéquation de l'organisation.",
+    "question": "Une nouvelle procédure signée arrive. Peut-on clore le constat ?",
+    "answer": "Elle actualise la conception du processus. Des preuves de production, d'envoi et d'utilisation restent nécessaires pour apprécier son fonctionnement.",
+    "practice": "Ajoutons deux rapports et une décision du directeur : quelles conclusions deviennent étayées ?",
+    "next": "Choisis un processus concret, sa procédure et des preuves de son utilisation effective."
+  },
+  "vera/aml-review": {
+    "title": "Comprendre le changement avant de conclure",
+    "goal": "Reconstituer une évolution de l'actionnariat et préparer une revue AML avec des questions ciblées.",
+    "scenario": "L'entreprise fictive Luna fournit un nouvel extrait montrant un associé personne morale. Le client désigne le même bénéficiaire effectif, mais ne fournit pas la nouvelle chaîne de contrôle. Un paiement inhabituel est présenté comme une avance fournisseur.",
+    "request": "Vera, revois ces nouvelles informations sans refaire toute l'entrée en relation.",
+    "scope": "Revue documentaire interne selon le workflow italien. Aucun filtrage externe, jugement automatique de soupçon ou décision professionnelle n'est implicite.",
+    "input_columns": [
+      "Source fictive",
+      "Information",
+      "Statut"
+    ],
+    "input_rows": [
+      [
+        "A1 · ancienne évaluation",
+        "Ancien actionnariat reconstitué",
+        "Historique"
+      ],
+      [
+        "A2 · nouvel extrait",
+        "Nouvel associé personne morale",
+        "Documenté"
+      ],
+      [
+        "A3 · déclaration client",
+        "Contrôle inchangé ; avance fournisseur",
+        "À corroborer"
+      ]
+    ],
+    "basis": "A1–A2 établissent le changement de participation directe. A3 est une déclaration, pas la preuve du contrôle final ni de la finalité économique du paiement.",
+    "method": [
+      "Reprends l'évaluation antérieure et identifie précisément les changements en conservant l'historique.",
+      "Reconstitue propriété et contrôle à partir des sources. Compare les explications des incohérences et les documents susceptibles de les résoudre.",
+      "Prépare faits, limites et questions. Ne consigne une décision professionnelle qu'après revue explicite de la proposition exacte."
+    ],
+    "result_title": "Deux vérifications ciblées dans la revue AML",
+    "conclusion": "Le changement d'actionnariat est documenté. Le contrôle final et l'explication du paiement nécessitent d'autres preuves.",
+    "output_columns": [
+      "Question",
+      "Demande interne proposée",
+      "Conclusion étayée"
+    ],
+    "output_rows": [
+      [
+        "Nouvel associé · A2",
+        "Documents de la chaîne de contrôle",
+        "Participation directe modifiée"
+      ],
+      [
+        "Avance · A3",
+        "Commande, contrat et bénéficiaire",
+        "Finalité déclarée par le client"
+      ]
+    ],
+    "check": "Un fait inhabituel ou un document manquant n'équivaut pas à un soupçon. Un contrôle non effectué reste inconnu, et non négatif.",
+    "question": "Peut-on confirmer le contrôle inchangé sur la seule déclaration du client ?",
+    "answer": "On peut rapporter la déclaration et sa source. La reconstitution du contrôle nécessite encore les documents qui la corroborent.",
+    "practice": "Ajoute la chaîne de contrôle : quelles questions peuvent être closes et lesquelles restent ouvertes ?",
+    "next": "Sélectionne l'évaluation précédente et les nouvelles preuves pertinentes dans le même dossier."
+  },
+  "vera/archive-organization": {
+    "title": "Ranger le dossier en conservant les versions",
+    "goal": "Préparer un plan de déplacement vérifiable avant de modifier les fichiers.",
+    "scenario": "Un dossier fictif contient deux copies identiques d'une facture et deux versions différentes d'un contrat. Leurs noms sont peu clairs. L'exemple présente un plan à blanc ; aucun fichier n'a été déplacé.",
+    "request": "Vera, propose un rangement pour ce dossier client et montre ce qui changerait.",
+    "scope": "Un client et un dossier sélectionnés. La leçon s'arrête à la revue du plan ; son exécution demande une confirmation explicite distincte.",
+    "input_columns": [
+      "Fichier fictif",
+      "Contenu",
+      "Identité"
+    ],
+    "input_rows": [
+      [
+        "scan-a.pdf",
+        "Facture INV-07 du 10 juin",
+        "Octets identiques à copie.pdf"
+      ],
+      [
+        "copie.pdf",
+        "Facture INV-07 du 10 juin",
+        "Octets identiques à scan-a.pdf"
+      ],
+      [
+        "accord.docx",
+        "Projet de contrat",
+        "Différent de la version signée"
+      ],
+      [
+        "accord-signe.pdf",
+        "Contrat avec signature visible",
+        "Version distincte"
+      ]
+    ],
+    "basis": "Les empreintes identiques prouvent l'identité des copies de facture. Les contrats doivent être lus : noms et tailles similaires ne prouvent pas un doublon.",
+    "method": [
+      "Crée l'inventaire figé du dossier et lis les éléments nécessaires pour classer chaque ligne.",
+      "Propose des destinations conformes à la politique du cabinet. Les copies exactes deviennent candidates à la quarantaine ; les versions distinctes restent séparées.",
+      "Enregistre les décisions du réviseur. Présente nombres et destinations avant l'approbation d'exécution et conserve le journal pour un éventuel retour arrière."
+    ],
+    "result_title": "Plan de rangement · aucune modification appliquée",
+    "conclusion": "Une copie peut être proposée pour la quarantaine. Projet et contrat signé restent deux versions à conserver.",
+    "output_columns": [
+      "Origine",
+      "Proposition",
+      "Revue"
+    ],
+    "output_rows": [
+      [
+        "scan-a.pdf",
+        "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+        "Destination à confirmer"
+      ],
+      [
+        "copie.pdf",
+        "Da_verificare/Duplicati_esatti/…",
+        "Quarantaine proposée"
+      ],
+      [
+        "Deux versions du contrat",
+        "Conserver dans Contratti/2026",
+        "Décrire les versions"
+      ]
+    ],
+    "check": "Appliquer les décisions de revue prépare le plan approuvé sans déplacer les fichiers. Les sources doivent encore correspondre à l'inventaire lors de l'exécution.",
+    "question": "Le contrat signé porte presque le même nom que le projet. Peut-on en supprimer un ?",
+    "answer": "Non. Ce sont des versions différentes. Le plan conserve les deux ; une autre destination demande une décision motivée.",
+    "practice": "Change une destination proposée et vérifie si elle entre en conflit avec un fichier existant.",
+    "next": "Utilise un petit dossier fictif pour essayer. Pour le vrai travail, sélectionne le client enregistré et la politique applicable."
+  },
+  "vera/avviso-intake": {
+    "title": "Une notification arrive : que savons-nous ?",
+    "goal": "Préparer un premier mémo distinguant références lisibles, montants et pièces à récupérer.",
+    "scenario": "Le cabinet fictif Arco reçoit une lettre indiquant une référence, 2 400 EUR et une date de réponse. La copie ne contient pas de preuve de réception et cite une annexe absente. La nature juridique du document reste à établir.",
+    "request": "Vera, résume cette lettre et indique les pièces nécessaires pour l'évaluer.",
+    "scope": "Premier examen documentaire. Une date lue dans la lettre n'est pas un délai juridique vérifié ni une échéance enregistrée au calendrier.",
+    "input_columns": [
+      "Source fictive",
+      "Texte disponible",
+      "Élément manquant"
+    ],
+    "input_rows": [
+      [
+        "N1 · page 1",
+        "DEMO-24 ; 2 400 EUR",
+        "Qualification et vérification du montant"
+      ],
+      [
+        "N1 · page 2",
+        "Réponse demandée avant le 30 septembre 2026",
+        "Preuve de réception"
+      ],
+      [
+        "N1 · page 2",
+        "Annexe A citée",
+        "Annexe A"
+      ]
+    ],
+    "basis": "Les données proviennent de N1, entièrement fictive. Le nom du fichier ne détermine pas la nature de l'acte ; sens et délais restent à vérifier.",
+    "method": [
+      "Lis classification et état d'extraction, puis examine l'original avant d'interpréter les références.",
+      "Relève référence, dates possibles, montants et devise avec leurs localisateurs. Signale chaque point incertain.",
+      "Livre mémo et tableau des dates et montants, avec les pièces à récupérer et la prochaine vérification professionnelle."
+    ],
+    "result_title": "Premier examen · DEMO-24",
+    "conclusion": "Référence et montant sont lisibles. L'évaluation nécessite la preuve de réception et l'annexe A.",
+    "output_columns": [
+      "Élément",
+      "Valeur lue",
+      "Statut"
+    ],
+    "output_rows": [
+      [
+        "Référence · N1 p. 1",
+        "DEMO-24",
+        "Extraite"
+      ],
+      [
+        "Montant · N1 p. 1",
+        "2 400 EUR",
+        "Signification à vérifier"
+      ],
+      [
+        "Date du texte · N1 p. 2",
+        "30 septembre 2026",
+        "Non validée comme délai juridique"
+      ]
+    ],
+    "check": "Ne transforme pas une date extraite en délai juridique. Nature de l'acte, réception et sources applicables sont déterminantes.",
+    "question": "La copie est lisible mais une annexe manque. Le dossier est-il complet ?",
+    "answer": "Non. Les références lisibles peuvent être relevées tout en conservant l'état incomplet et en demandant l'annexe citée.",
+    "practice": "Ajoute l'annexe fictive et repère les lignes du mémo qui changent.",
+    "next": "Pour le cas réel, sélectionne lettre complète, annexes et preuve de réception dans le même dossier."
+  },
+  "vera/bandi-agevolazioni": {
+    "title": "Une opportunité pertinente est-elle déjà recevable ?",
+    "goal": "Distinguer découverte d'une aide et préparation documentée pour une entreprise précise.",
+    "scenario": "Un appel entièrement fictif finance des machines pour les industriels d'une région. Arco propose 80 000 EUR d'investissement. L'implantation de l'unité et la date de début des dépenses ne sont pas documentées.",
+    "request": "Vera, montre comment passer d'un appel repéré aux vérifications pour cette entreprise.",
+    "scope": "L'appel DEMO n'existe pas et ne reçoit aucune candidature. Les opportunités réelles nécessitent des sources officielles à jour.",
+    "input_columns": [
+      "Source fictive",
+      "Condition ou donnée",
+      "Preuve"
+    ],
+    "input_rows": [
+      [
+        "B1 · appel DEMO § 2",
+        "Unité dans la région concernée",
+        "Implantation non documentée"
+      ],
+      [
+        "B1 · § 4",
+        "Dépenses engagées après la demande",
+        "Date de commande absente"
+      ],
+      [
+        "C1 · projet Arco",
+        "Machine : 80 000 EUR",
+        "Devis fourni"
+      ]
+    ],
+    "basis": "B1 définit les conditions du seul exemple. C1 prouve un projet, pas tous ses critères d'éligibilité. Aucun taux d'aide n'est inventé.",
+    "method": [
+      "Définis l'objectif de recherche et revois les sources pertinentes. Relie chaque opportunité à sa version exacte.",
+      "Pour l'entreprise sélectionnée, confronte les exigences aux pièces et identifie ce qui manque.",
+      "Prépare fiche, vérifications et dossier à revoir. Sépare pertinence, critères vérifiés et préparation documentaire ; ne soumets pas la candidature."
+    ],
+    "result_title": "DEMO · préparation encore ouverte",
+    "conclusion": "Le projet correspond au thème de l'appel. Deux conditions déterminantes restent sans preuve.",
+    "output_columns": [
+      "Vérification",
+      "Constat du cas",
+      "Pièce suivante"
+    ],
+    "output_rows": [
+      [
+        "Investissement · B1/C1",
+        "Machine décrite",
+        "Comparaison technique complète"
+      ],
+      [
+        "Localisation · B1 § 2",
+        "Non vérifiée",
+        "Document de l'unité productive"
+      ],
+      [
+        "Début des dépenses · B1 § 4",
+        "Non vérifié",
+        "Commande et chronologie"
+      ]
+    ],
+    "check": "Pertinence ne signifie pas éligibilité. La fiche ne remplace pas l'appel officiel et ses annexes.",
+    "question": "Le devis correspond parfaitement. Peut-on déclarer Arco éligible ?",
+    "answer": "Non. Implantation, chronologie et autres critères de la source complète restent à vérifier. Le résultat est un dossier avec points ouverts.",
+    "practice": "Ajoute une commande fictive antérieure à la demande et revois le critère temporel.",
+    "next": "Sélectionne l'opportunité et l'entreprise réelles ; vérifie la source officielle actuelle avant de promettre un avantage."
+  },
+  "vera/browser-automation": {
+    "title": "Apprendre un geste répétable dans le navigateur",
+    "goal": "Transformer une procédure observée en capacité locale vérifiable, avec des conditions d'arrêt explicites.",
+    "scenario": "Un portail fictif local présente un document et un bouton de téléchargement. Nous voulons répéter uniquement ce téléchargement. Le site pédagogique ne contient ni identifiants, ni paiements, ni données de clients.",
+    "request": "Vera, apprends à télécharger ce document de test et montre le fichier obtenu.",
+    "scope": "Site local fictif, lecture et téléchargement. Aucun accès à un logiciel comptable réel n'est simulé.",
+    "input_columns": [
+      "Élément fictif",
+      "Preuve observable",
+      "Limite"
+    ],
+    "input_rows": [
+      [
+        "Liste de documents",
+        "Un document DEMO-01",
+        "Contenu synthétique"
+      ],
+      [
+        "Bouton Télécharger",
+        "synthetic-download.txt",
+        "Une opération prévue"
+      ],
+      [
+        "Fichier attendu",
+        "Texte identifiant le cas",
+        "À ouvrir et vérifier"
+      ]
+    ],
+    "basis": "La procédure repose sur la page observée et le contenu réellement obtenu. La présence du bouton ne prouve pas la réussite du téléchargement.",
+    "method": [
+      "Observe le site et définis objectif, périmètre autorisé et conditions imposant l'arrêt.",
+      "Prépare la capacité à partir des éléments observés, teste-la sur le site local et conserve les preuves des étapes et résultats.",
+      "Répète le geste autorisé, ouvre le fichier et compare son contenu. Si la page ou ses contrôles changent, revois la capacité avant de continuer."
+    ],
+    "result_title": "Téléchargement DEMO-01 · vérifier le contenu",
+    "conclusion": "Le résultat utile est le bon document et une procédure capable de reconnaître qu'elle ne peut plus poursuivre.",
+    "output_columns": [
+      "Étape",
+      "Preuve requise",
+      "Si elle manque"
+    ],
+    "output_rows": [
+      [
+        "Sélection",
+        "Identité DEMO-01 sur la page",
+        "S'arrêter et observer"
+      ],
+      [
+        "Téléchargement",
+        "Fichier présent à destination",
+        "Ne pas annoncer de réussite"
+      ],
+      [
+        "Contenu",
+        "Texte attendu dans le fichier ouvert",
+        "Signaler le résultat inattendu"
+      ]
+    ],
+    "check": "Un clic réussi ne prouve pas le bon téléchargement. Une page modifiée nécessite une nouvelle observation, sans sélecteurs inventés ni autorisation contournée.",
+    "question": "Le bouton fonctionne, mais le fichier est une page d'erreur. L'étape a-t-elle réussi ?",
+    "answer": "Non. La vérification porte sur le contenu final. Conserve l'erreur et arrête la procédure sans annoncer le document acquis.",
+    "practice": "Essaie le site didactique, puis change le document disponible et vérifie que le résultat est de nouveau contrôlé.",
+    "next": "Sur un site réel, commence par une seule opération autorisée avec le navigateur et l'accès effectivement disponibles."
+  }
+}

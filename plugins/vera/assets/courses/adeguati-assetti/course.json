@@ -1,0 +1,358 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "adeguati-assetti",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
+      "repository_path": "plugins/adeguati-assetti/references/intelligent-assessment.md",
+      "sha256": "418549fc5dda33a92a3a3e3ef925bc094efec5e9b174b6ea4a759ec14dcbbdae"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/professional-method.md",
+      "repository_path": "plugins/adeguati-assetti/references/professional-method.md",
+      "sha256": "faf1595c0c84afb65d9f6d622ccbf84e5aa24509c9c000df49d4910b9cc089bc"
+    },
+    {
+      "path": "modules/adeguati-assetti/references/record-contract.md",
+      "repository_path": "plugins/adeguati-assetti/references/record-contract.md",
+      "sha256": "398c0dee2f402f5fd1e0aaec75db77ab03f04f8986d02ded403e7af0d5336591"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/assetti_review.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/assetti_review.py",
+      "sha256": "5e8db11a19d9f3a5e238768ccc06822423ef97f59a18fd32968f0a1efe5ba246"
+    },
+    {
+      "path": "modules/adeguati-assetti/scripts/check_dependencies.py",
+      "repository_path": "plugins/adeguati-assetti/scripts/check_dependencies.py",
+      "sha256": "0d196d5928e53e302ccb750a58def7ee90797b67ed1f0fa5c421d52e3ab75f00"
+    },
+    {
+      "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+      "repository_path": "plugins/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+      "sha256": "e899b5b5352a63249a6ad86ed92978f0710b030655f96c1e929ca3c91921e3e9"
+    },
+    {
+      "path": "skills/adeguati-assetti/SKILL.md",
+      "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
+      "sha256": "295332691d871c1b4b99419fedaf8a4873039f235fcdf0025fec58ea43a4a698"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Una procedura scritta funziona davvero?",
+      "goal": "Leggere gli assetti di un'impresa attraverso le prove del loro funzionamento e costruire un piano di miglioramento rivedibile.",
+      "scenario": "Officina Arco ha 18 addetti. La procedura richiede un report di cassa settimanale. Il fascicolo contiene la procedura, un solo report di giugno e un verbale di luglio: il direttore chiede di riceverlo più spesso. Non sappiamo se altri report esistano.",
+      "request": "Vera, aiutami a capire se il controllo di cassa viene usato e cosa chiedere all'azienda.",
+      "scope": "Valutazione limitata al processo di informazione sulla cassa. Il caso non permette un giudizio complessivo sugli assetti aziendali.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Evidenza",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "P1 · procedura, § 3",
+          "Report ogni venerdì; responsabile amministrativo",
+          "Descrive il processo previsto"
+        ],
+        [
+          "R1 · report 26 giugno",
+          "Saldo e scadenze della settimana successiva",
+          "Un solo periodo disponibile"
+        ],
+        [
+          "V1 · verbale 10 luglio",
+          "Il direttore richiede maggiore frequenza",
+          "Non documenta tutti gli invii"
+        ]
+      ],
+      "basis": "P1 documenta il disegno del processo. R1 prova una singola produzione. V1 documenta una richiesta di miglioramento, senza dimostrare l'assenza di tutti gli altri report.",
+      "method": [
+        "Separa procedura prevista, dichiarazioni e prove operative. Cita ogni documento con il punto esatto.",
+        "Confronta una possibile irregolarità degli invii con l'alternativa di un fascicolo incompleto. Formula la domanda che distingue le due ipotesi.",
+        "Prepara osservazione, conseguenza, azione proposta e prova da raccogliere. Mantieni responsabile e scadenza come proposte fino alla revisione."
+      ],
+      "result_title": "Controllo di cassa: funzionamento da documentare",
+      "conclusion": "Il processo è previsto e risulta eseguito almeno una volta. La continuità e l'uso delle informazioni restano da verificare.",
+      "output_columns": [
+        "Osservazione",
+        "Azione proposta",
+        "Prova di attuazione"
+      ],
+      "output_rows": [
+        [
+          "Frequenza non ricostruibile · P1/R1",
+          "Recuperare il registro degli invii di giugno e luglio",
+          "Report datati e destinatari"
+        ],
+        [
+          "Richiesta del direttore · V1",
+          "Chiarire quali decisioni richiedono maggiore frequenza",
+          "Verbale e successivo utilizzo del report"
+        ]
+      ],
+      "check": "Un documento mancante limita la verifica: non prova che il processo non esista. Un saldo positivo non dimostra l'adeguatezza degli assetti.",
+      "question": "Arriva una nuova procedura firmata. Possiamo chiudere il rilievo?",
+      "answer": "La firma aggiorna il disegno del processo. Servono ancora prove degli invii e dell'uso del report per valutarne il funzionamento.",
+      "practice": "Aggiungiamo due report e una decisione del direttore: quali conclusioni possiamo ora sostenere?",
+      "next": "Nel tuo incarico seleziona un processo concreto, i documenti che lo descrivono e almeno un esempio del suo utilizzo."
+    },
+    "en": {
+      "title": "Does the written procedure actually operate?",
+      "goal": "Assess an enterprise's arrangements through operating evidence and prepare a reviewable improvement plan.",
+      "scenario": "Fictional Arco Workshop has 18 employees. Its procedure requires a weekly cash report. The file contains that procedure, one June report and July minutes in which the director asks for more frequent reporting. Other reports may exist outside the supplied file.",
+      "request": "Vera, help me understand whether cash reporting is used and what to ask the company.",
+      "scope": "One cash-information process. This case does not support an overall conclusion on the company's arrangements.",
+      "input_columns": [
+        "Fictional source",
+        "Evidence",
+        "Limit"
+      ],
+      "input_rows": [
+        [
+          "P1 · procedure § 3",
+          "Report every Friday; administration manager responsible",
+          "Intended process"
+        ],
+        [
+          "R1 · 26 June report",
+          "Cash balance and next week's payments",
+          "One observed period"
+        ],
+        [
+          "V1 · 10 July minutes",
+          "Director requests greater frequency",
+          "Not a complete dispatch record"
+        ]
+      ],
+      "basis": "P1 describes the design. R1 demonstrates one report. V1 documents a request, without proving that every other report was absent.",
+      "method": [
+        "Separate documented procedure, assertions and operating evidence. Cite each observation precisely.",
+        "Compare irregular production with the alternative explanation of an incomplete file. Ask the question that distinguishes them.",
+        "Prepare the finding, consequence, proposed action and implementation evidence. Owners and dates remain proposals until reviewed."
+      ],
+      "result_title": "Cash reporting: continuity still to establish",
+      "conclusion": "The process is documented and was performed at least once. Its continuity and use remain to be verified.",
+      "output_columns": [
+        "Observation",
+        "Proposed action",
+        "Implementation evidence"
+      ],
+      "output_rows": [
+        [
+          "Frequency unclear · P1/R1",
+          "Recover June and July dispatch records",
+          "Dated reports and recipients"
+        ],
+        [
+          "Director's request · V1",
+          "Clarify which decisions need faster reporting",
+          "Minutes and subsequent use"
+        ]
+      ],
+      "check": "Missing documents limit the assessment; they do not prove that a process never operates. A positive cash balance does not establish adequate arrangements.",
+      "question": "A newly signed procedure arrives. Can we close the finding?",
+      "answer": "It updates the process design. Evidence of reporting and use is still needed to assess operation.",
+      "practice": "Add two reports and a director's decision: which conclusions can we now support?",
+      "next": "Choose one real process, its procedure and evidence of its actual use."
+    },
+    "fr": {
+      "title": "La procédure écrite fonctionne-t-elle réellement ?",
+      "goal": "Évaluer l'organisation d'une entreprise à partir de preuves de fonctionnement et préparer des améliorations à revoir.",
+      "scenario": "L'atelier fictif Arco emploie 18 personnes. Sa procédure prévoit un rapport de trésorerie hebdomadaire. Le dossier contient cette procédure, un seul rapport de juin et un procès-verbal de juillet demandant une fréquence accrue. D'autres rapports peuvent exister ailleurs.",
+      "request": "Vera, aide-moi à comprendre comment le suivi de trésorerie est utilisé et quelles questions poser.",
+      "scope": "Un seul processus d'information sur la trésorerie. Le cas ne permet pas un avis global sur l'organisation de l'entreprise.",
+      "input_columns": [
+        "Source fictive",
+        "Élément constaté",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "P1 · procédure § 3",
+          "Rapport chaque vendredi ; responsable administratif",
+          "Processus prévu"
+        ],
+        [
+          "R1 · rapport du 26 juin",
+          "Solde et échéances de la semaine suivante",
+          "Une seule période"
+        ],
+        [
+          "V1 · procès-verbal du 10 juillet",
+          "Demande de fréquence accrue",
+          "Ne recense pas tous les envois"
+        ]
+      ],
+      "basis": "P1 décrit la conception du processus. R1 prouve une production. V1 documente une demande, sans établir l'absence de tous les autres rapports.",
+      "method": [
+        "Sépare procédure prévue, déclarations et preuves opérationnelles. Cite précisément chaque observation.",
+        "Compare une production irrégulière avec l'hypothèse d'un dossier incomplet. Pose la question permettant de les départager.",
+        "Prépare constat, conséquence, action proposée et preuve d'application. Responsables et dates restent des propositions jusqu'à leur revue."
+      ],
+      "result_title": "Suivi de trésorerie : continuité à documenter",
+      "conclusion": "Le processus est prévu et a été exécuté au moins une fois. Sa continuité et son utilisation restent à vérifier.",
+      "output_columns": [
+        "Observation",
+        "Action proposée",
+        "Preuve attendue"
+      ],
+      "output_rows": [
+        [
+          "Fréquence incertaine · P1/R1",
+          "Récupérer les envois de juin et juillet",
+          "Rapports datés et destinataires"
+        ],
+        [
+          "Demande du directeur · V1",
+          "Préciser les décisions nécessitant plus de fréquence",
+          "Procès-verbal et utilisation ultérieure"
+        ]
+      ],
+      "check": "Un document manquant limite la vérification ; il ne prouve pas l'absence du processus. Un solde positif ne démontre pas l'adéquation de l'organisation.",
+      "question": "Une nouvelle procédure signée arrive. Peut-on clore le constat ?",
+      "answer": "Elle actualise la conception du processus. Des preuves de production, d'envoi et d'utilisation restent nécessaires pour apprécier son fonctionnement.",
+      "practice": "Ajoutons deux rapports et une décision du directeur : quelles conclusions deviennent étayées ?",
+      "next": "Choisis un processus concret, sa procédure et des preuves de son utilisation effective."
+    },
+    "de": {
+      "title": "Wird die dokumentierte Regel tatsächlich angewendet?",
+      "goal": "Betriebliche Strukturen anhand ihrer tatsächlichen Anwendung beurteilen und nachvollziehbare Verbesserungen vorschlagen.",
+      "scenario": "Die fiktive Werkstatt Arco beschäftigt 18 Personen. Laut Verfahrensanweisung ist jeden Freitag ein Liquiditätsbericht erforderlich. Vorhanden sind die Anweisung, ein Juni-Bericht und ein Juli-Protokoll, in dem die Geschäftsleitung häufigere Berichte verlangt. Weitere Berichte könnten außerhalb der übergebenen Akte liegen.",
+      "request": "Vera, zeige mir, ob die Liquiditätsberichterstattung genutzt wird und was wir das Unternehmen fragen sollten.",
+      "scope": "Ein einzelner Informationsprozess. Der Fall erlaubt kein Gesamturteil über die Unternehmensorganisation.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Beleg",
+        "Grenze"
+      ],
+      "input_rows": [
+        [
+          "P1 · Anweisung § 3",
+          "Bericht jeden Freitag; verantwortlich: Verwaltung",
+          "Vorgesehener Ablauf"
+        ],
+        [
+          "R1 · Bericht vom 26. Juni",
+          "Liquidität und Zahlungen der Folgewoche",
+          "Eine beobachtete Periode"
+        ],
+        [
+          "V1 · Protokoll vom 10. Juli",
+          "Geschäftsleitung verlangt häufigere Berichte",
+          "Kein vollständiger Versandnachweis"
+        ]
+      ],
+      "basis": "P1 beschreibt die Konzeption, R1 belegt einen Bericht und V1 eine Anforderung. Daraus folgt nicht, dass alle anderen Berichte fehlen.",
+      "method": [
+        "Trenne dokumentierte Regeln, Aussagen und Belege der tatsächlichen Anwendung. Verweise auf die genaue Fundstelle.",
+        "Vergleiche unregelmäßige Berichterstattung mit der möglichen Erklärung einer unvollständigen Akte. Formuliere eine klärende Frage.",
+        "Bereite Feststellung, Auswirkung, Maßnahme und Umsetzungsnachweis vor. Verantwortliche und Termine bleiben bis zur Prüfung Vorschläge."
+      ],
+      "result_title": "Liquiditätsberichte: Kontinuität noch zu belegen",
+      "conclusion": "Der Prozess ist dokumentiert und wurde mindestens einmal ausgeführt. Regelmäßigkeit und tatsächliche Nutzung sind noch zu prüfen.",
+      "output_columns": [
+        "Beobachtung",
+        "Vorgeschlagene Maßnahme",
+        "Umsetzungsnachweis"
+      ],
+      "output_rows": [
+        [
+          "Häufigkeit unklar · P1/R1",
+          "Versandnachweise für Juni und Juli beschaffen",
+          "Datierte Berichte und Empfänger"
+        ],
+        [
+          "Anforderung der Geschäftsleitung · V1",
+          "Entscheidungen mit schnellerem Informationsbedarf klären",
+          "Protokolle und anschließende Nutzung"
+        ]
+      ],
+      "check": "Fehlende Unterlagen begrenzen die Beurteilung; sie beweisen nicht, dass der Prozess nie stattfindet. Ein positiver Kassenbestand belegt keine angemessene Organisation.",
+      "question": "Eine neu unterschriebene Verfahrensanweisung trifft ein. Können wir die Feststellung schließen?",
+      "answer": "Sie aktualisiert die Konzeption. Für die tatsächliche Anwendung brauchen wir weiterhin Berichte und Belege ihrer Nutzung.",
+      "practice": "Ergänze zwei Berichte und eine Entscheidung der Geschäftsleitung. Welche Schlussfolgerungen sind jetzt belegt?",
+      "next": "Wähle einen realen Prozess, seine Anweisung und Belege seiner Anwendung."
+    },
+    "es": {
+      "title": "¿El procedimiento escrito se utiliza realmente?",
+      "goal": "Evaluar la organización de una empresa a partir de pruebas de funcionamiento y preparar mejoras revisables.",
+      "scenario": "El taller ficticio Arco tiene 18 empleados. Su procedimiento exige un informe de tesorería cada viernes. El expediente contiene el procedimiento, un informe de junio y un acta de julio que pide mayor frecuencia. Podrían existir otros informes fuera de lo entregado.",
+      "request": "Vera, ayúdame a entender si se utiliza la información de tesorería y qué debemos preguntar a la empresa.",
+      "scope": "Un solo proceso informativo. Este caso no permite concluir sobre toda la organización empresarial.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Prueba",
+        "Límite"
+      ],
+      "input_rows": [
+        [
+          "P1 · procedimiento § 3",
+          "Informe cada viernes; responsable de administración",
+          "Proceso previsto"
+        ],
+        [
+          "R1 · informe del 26 de junio",
+          "Saldo y pagos de la semana siguiente",
+          "Un periodo observado"
+        ],
+        [
+          "V1 · acta del 10 de julio",
+          "La dirección pide mayor frecuencia",
+          "No es un registro completo de envíos"
+        ]
+      ],
+      "basis": "P1 describe el diseño; R1 demuestra un informe; V1 documenta una petición, sin probar que todos los demás informes falten.",
+      "method": [
+        "Separa procedimientos, declaraciones y pruebas de funcionamiento. Cita la ubicación exacta de cada observación.",
+        "Compara la producción irregular con la explicación alternativa de un expediente incompleto. Formula la pregunta que permita distinguirlas.",
+        "Prepara hallazgo, consecuencia, acción propuesta y prueba de implantación. Responsables y fechas siguen siendo propuestas hasta su revisión."
+      ],
+      "result_title": "Información de tesorería: continuidad por demostrar",
+      "conclusion": "El proceso está documentado y se ejecutó al menos una vez. Quedan por verificar su continuidad y utilización.",
+      "output_columns": [
+        "Observación",
+        "Acción propuesta",
+        "Prueba de implantación"
+      ],
+      "output_rows": [
+        [
+          "Frecuencia incierta · P1/R1",
+          "Recuperar registros de envío de junio y julio",
+          "Informes fechados y destinatarios"
+        ],
+        [
+          "Petición de la dirección · V1",
+          "Aclarar decisiones que necesitan información más rápida",
+          "Actas y uso posterior"
+        ]
+      ],
+      "check": "La ausencia documental limita la evaluación; no demuestra que el proceso nunca funcione. Un saldo positivo no acredita una organización adecuada.",
+      "question": "Llega un procedimiento recién firmado. ¿Podemos cerrar el hallazgo?",
+      "answer": "Actualiza el diseño. Para evaluar el funcionamiento siguen haciendo falta informes y pruebas de su utilización.",
+      "practice": "Añade dos informes y una decisión de la dirección. ¿Qué conclusiones quedan ahora respaldadas?",
+      "next": "Elige un proceso real, su procedimiento y pruebas de su aplicación."
+    }
+  }
+}

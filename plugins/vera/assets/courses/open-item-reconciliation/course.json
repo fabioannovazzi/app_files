@@ -1,0 +1,448 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "open-item-reconciliation",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/open-item-reconciliation/references/evidence-and-checks.md",
+      "repository_path": "plugins/open-item-reconciliation/references/evidence-and-checks.md",
+      "sha256": "548dd655e68a13e80966ed1f04c659fddd1dd4d37e338ddf58d8e95605c7e339"
+    },
+    {
+      "path": "modules/open-item-reconciliation/references/locales-and-wording.md",
+      "repository_path": "plugins/open-item-reconciliation/references/locales-and-wording.md",
+      "sha256": "49f2014c6379616a72272277be197fba2da697047e9a884123c598bdf3bc2701"
+    },
+    {
+      "path": "modules/open-item-reconciliation/references/review-and-outputs.md",
+      "repository_path": "plugins/open-item-reconciliation/references/review-and-outputs.md",
+      "sha256": "2258a5c2f4542a3e2250c1349fa7955e51f7e6fee42bdca5dfd5703216e1ee07"
+    },
+    {
+      "path": "modules/open-item-reconciliation/references/starter-prompts.md",
+      "repository_path": "plugins/open-item-reconciliation/references/starter-prompts.md",
+      "sha256": "3453d2e00672be7c3e4988df4f47894bfd38930ce0c95fe3d8e3d708598fbc62"
+    },
+    {
+      "path": "modules/open-item-reconciliation/references/workflow-reference.md",
+      "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
+      "sha256": "7307ea131612bf3d4afbf308640f9488418e6b624cc71a6897240c7d94b269f5"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
+      "sha256": "59db55247a166264a72bbd65d324e4944b3e571fe14f41dcc8a0a4438f0acbc7"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
+      "sha256": "a7a8bb44aca8d25c6d4ad4d1b447db9d205fc2c6873e990a7f4b8d1e65aa49ec"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/build_review_sample.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/build_review_sample.py",
+      "sha256": "9f4fe255a875e535c3ba56a59f47a03711861f0cc5b610c8fe4c1d8abd8a8ff9"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/check_dependencies.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/check_dependencies.py",
+      "sha256": "d2a0a01231ddb580a795413bb877cb816e3d12cb2dd33ed6bfaf6e7463efc1d2"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+      "sha256": "4327849aca244cf4f47bc1abcfadbbd048eb4eab2c619ea6203860a521a47445"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
+      "sha256": "a24c352e97bb67d08936fd5150596899ae0d618e6de2c6c901fdb5eedd1f2b0e"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/reconciliation_workflow.py",
+      "sha256": "99e8c9486ed88a3fbd2e02d5da4ac6d77265058e7d357b0be7bca23992c2adcc"
+    },
+    {
+      "path": "modules/open-item-reconciliation/scripts/review_server.py",
+      "repository_path": "plugins/open-item-reconciliation/scripts/review_server.py",
+      "sha256": "14ea67029ff1e18e31e515b4d27db4a23e269314126e4809d4657fbba8dd81a6"
+    },
+    {
+      "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+      "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+      "sha256": "934d1f006a941bcbc951c63d39f7f4356fb90fcef609010c3df399ed53e806b2"
+    },
+    {
+      "path": "skills/open-item-reconciliation/SKILL.md",
+      "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+      "sha256": "f06bf381da336ab5c5ce014c7ebabb150f4492afe1ec5386a0902f8caaf674e7"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un pagamento successivo spiega la partita, ma non cambia la data",
+      "goal": "Verificare le partite aperte a un cutoff e tenere separati saldo a quella data ed eventi successivi.",
+      "scenario": "Al 30 giugno il partitario fittizio mostra INV-701 per 1.000 EUR. Un pagamento di 600 EUR è documentato il 28 giugno e un altro di 400 EUR il 5 luglio. Il primo non risulta applicato nel report delle partite aperte.",
+      "request": "Vera, verifica questa partita al 30 giugno e spiegami come usare il pagamento di luglio.",
+      "scope": "Verifica di una popolazione dichiarata aperta a una data. Le fatture sole non ricostruiscono i saldi; pagamenti e contabilità devono sostenere la conclusione.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Data",
+        "Importo"
+      ],
+      "input_rows": [
+        [
+          "O1 · partita INV-701",
+          "30 giugno",
+          "1.000 EUR aperti riportati"
+        ],
+        [
+          "B1 · pagamento collegato",
+          "28 giugno",
+          "600 EUR"
+        ],
+        [
+          "B2 · pagamento successivo",
+          "5 luglio",
+          "400 EUR"
+        ]
+      ],
+      "basis": "O1 definisce la popolazione riportata al cutoff. B1 e B2 hanno date diverse: solo B1 precede il 30 giugno. Il collegamento alla partita è parte della verifica.",
+      "method": [
+        "Conferma cutoff, cliente, popolazione e totali; acquisisci partitario e riscontri del medesimo incarico.",
+        "Confronta importi e collegamenti con evidenze, mantenendo candidati e decisioni distinti. Mostra saldi, differenze e pagamenti successivi separatamente.",
+        "Presenta le schede di revisione e salva le decisioni effettive. Mantieni le questioni non risolte; non trasformare automaticamente l'analisi in scritture contabili."
+      ],
+      "result_title": "Saldo al cutoff da rivedere: 400 EUR",
+      "conclusion": "Se il collegamento di B1 è confermato, al 30 giugno restano 400 EUR. B2 documenta un successivo incasso, non un saldo nullo retroattivo.",
+      "output_columns": [
+        "Lettura",
+        "Importo",
+        "Motivo"
+      ],
+      "output_rows": [
+        [
+          "Aperto riportato",
+          "1.000 EUR",
+          "O1"
+        ],
+        [
+          "Pagamento prima del cutoff",
+          "−600 EUR",
+          "B1 · da applicare dopo revisione"
+        ],
+        [
+          "Residuo al cutoff",
+          "400 EUR",
+          "1.000 − 600"
+        ],
+        [
+          "Incasso successivo",
+          "400 EUR",
+          "B2 · 5 luglio"
+        ]
+      ],
+      "check": "La data del report resta il riferimento. Un incasso successivo può corroborare il recupero della partita, ma non riscrive il saldo storico.",
+      "question": "Poiché a luglio tutto è incassato, possiamo mostrare zero al 30 giugno?",
+      "answer": "No. Nel caso riveduto il residuo al cutoff è 400 EUR; il successivo incasso va esposto come evento successivo.",
+      "practice": "Sposta la data di B2 al 29 giugno e riesegui la verifica, controllando quale conclusione cambia.",
+      "next": "Fornisci il report delle partite aperte a una data precisa, i movimenti contabili e i riscontri bancari pertinenti."
+    },
+    "en": {
+      "title": "A later payment explains the item, not the earlier balance",
+      "goal": "Verify open items at a cutoff while distinguishing subsequent events.",
+      "scenario": "At 30 June, the fictional schedule reports INV-701 open for EUR 1,000. Linked payments are EUR 600 on 28 June and EUR 400 on 5 July. The earlier payment has not been applied in the supplied open-item report.",
+      "request": "Vera, verify this item at 30 June and explain how to use the July payment.",
+      "scope": "Verification of a reported open population at a date. Invoices alone do not reconstruct outstanding balances.",
+      "input_columns": [
+        "Fictional source",
+        "Date",
+        "Amount"
+      ],
+      "input_rows": [
+        [
+          "O1 · INV-701 schedule",
+          "30 June",
+          "EUR 1,000 reported open"
+        ],
+        [
+          "B1 · linked payment",
+          "28 June",
+          "EUR 600"
+        ],
+        [
+          "B2 · later payment",
+          "5 July",
+          "EUR 400"
+        ]
+      ],
+      "basis": "O1 defines the reported population. Only B1 precedes the cutoff; the links from payments to the item require verification.",
+      "method": [
+        "Confirm cutoff, client, population and totals. Obtain ledger and supporting evidence for the same engagement.",
+        "Compare amounts and relationships while separating candidates and reviewed decisions. Show cutoff balances, differences and later payments distinctly.",
+        "Present review items and persist actual decisions. Keep unresolved questions visible without automatically creating accounting entries."
+      ],
+      "result_title": "Reviewed cutoff balance: EUR 400",
+      "conclusion": "If B1's relationship is confirmed, EUR 400 remains at 30 June. B2 documents later collection, not a retrospectively zero balance.",
+      "output_columns": [
+        "View",
+        "Amount",
+        "Basis"
+      ],
+      "output_rows": [
+        [
+          "Reported open",
+          "EUR 1,000",
+          "O1"
+        ],
+        [
+          "Pre-cutoff payment",
+          "−EUR 600",
+          "B1 · subject to review"
+        ],
+        [
+          "Cutoff residual",
+          "EUR 400",
+          "1,000 − 600"
+        ],
+        [
+          "Subsequent collection",
+          "EUR 400",
+          "B2 · 5 July"
+        ]
+      ],
+      "check": "The report date remains authoritative. A later receipt may corroborate recovery but does not rewrite history.",
+      "question": "Everything was collected by July. Can we show zero at 30 June?",
+      "answer": "No. The reviewed case has EUR 400 remaining at the cutoff. Show the July receipt as a subsequent event.",
+      "practice": "Move B2 to 29 June and rerun, checking which conclusion changes.",
+      "next": "Supply the open-item report at a precise date, accounting movements and relevant bank evidence."
+    },
+    "fr": {
+      "title": "Un règlement ultérieur n'efface pas le solde historique",
+      "goal": "Vérifier les postes ouverts à une date et distinguer les événements postérieurs.",
+      "scenario": "Au 30 juin, l'état fictif indique INV-701 ouverte pour 1 000 EUR. Les règlements liés sont de 600 EUR le 28 juin et 400 EUR le 5 juillet. Le premier n'est pas imputé dans l'état fourni.",
+      "request": "Vera, vérifie ce poste au 30 juin et explique comment utiliser le règlement de juillet.",
+      "scope": "Vérification d'une population déclarée ouverte à une date. Les factures seules ne reconstruisent pas les soldes résiduels.",
+      "input_columns": [
+        "Source fictive",
+        "Date",
+        "Montant"
+      ],
+      "input_rows": [
+        [
+          "O1 · état INV-701",
+          "30 juin",
+          "1 000 EUR ouverts déclarés"
+        ],
+        [
+          "B1 · règlement lié",
+          "28 juin",
+          "600 EUR"
+        ],
+        [
+          "B2 · règlement ultérieur",
+          "5 juillet",
+          "400 EUR"
+        ]
+      ],
+      "basis": "O1 définit la population. Seul B1 précède l'arrêté ; les liens entre règlements et poste doivent être vérifiés.",
+      "method": [
+        "Confirme date d'arrêté, client, population et totaux ; collecte comptabilité et justificatifs du même dossier.",
+        "Compare montants et liens en séparant candidats et décisions revues. Présente distinctement soldes historiques, écarts et règlements ultérieurs.",
+        "Présente les fiches de revue et enregistre les décisions effectives. Conserve les questions ouvertes sans créer automatiquement d'écritures."
+      ],
+      "result_title": "Solde à l'arrêté revu : 400 EUR",
+      "conclusion": "Si le lien de B1 est confirmé, 400 EUR restent au 30 juin. B2 documente un recouvrement ultérieur, pas un solde nul rétroactif.",
+      "output_columns": [
+        "Lecture",
+        "Montant",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Ouvert déclaré",
+          "1 000 EUR",
+          "O1"
+        ],
+        [
+          "Règlement avant arrêté",
+          "−600 EUR",
+          "B1 · après revue"
+        ],
+        [
+          "Résiduel à l'arrêté",
+          "400 EUR",
+          "1 000 − 600"
+        ],
+        [
+          "Encaissement ultérieur",
+          "400 EUR",
+          "B2 · 5 juillet"
+        ]
+      ],
+      "check": "La date de l'état reste déterminante. Le règlement ultérieur peut étayer le recouvrement sans réécrire le passé.",
+      "question": "Tout est encaissé en juillet. Peut-on afficher zéro au 30 juin ?",
+      "answer": "Non. Le cas revu conserve 400 EUR à l'arrêté. Le règlement de juillet est présenté comme événement postérieur.",
+      "practice": "Déplace B2 au 29 juin et relance la vérification en repérant la conclusion modifiée.",
+      "next": "Fournis l'état des postes ouverts à une date précise, les mouvements comptables et les preuves bancaires pertinentes."
+    },
+    "de": {
+      "title": "Eine spätere Zahlung ändert nicht den früheren Saldo",
+      "goal": "Offene Posten zum Stichtag prüfen und spätere Ereignisse getrennt zeigen.",
+      "scenario": "Zum 30. Juni weist die fiktive OP-Liste INV-701 mit EUR 1.000 offen aus. Zugehörige Zahlungen: EUR 600 am 28. Juni und EUR 400 am 5. Juli. Die frühere Zahlung wurde in der gelieferten Liste nicht berücksichtigt.",
+      "request": "Vera, prüfe diesen Posten zum 30. Juni und erkläre die Bedeutung der Julizahlung.",
+      "scope": "Prüfung einer gemeldeten offenen Grundgesamtheit zu einem Datum. Rechnungen allein rekonstruieren keine Restforderungen.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Datum",
+        "Betrag"
+      ],
+      "input_rows": [
+        [
+          "O1 · OP-Liste INV-701",
+          "30. Juni",
+          "EUR 1.000 offen gemeldet"
+        ],
+        [
+          "B1 · zugehörige Zahlung",
+          "28. Juni",
+          "EUR 600"
+        ],
+        [
+          "B2 · spätere Zahlung",
+          "5. Juli",
+          "EUR 400"
+        ]
+      ],
+      "basis": "O1 definiert die gemeldete Grundgesamtheit. Nur B1 liegt vor dem Stichtag; die Zuordnung der Zahlungen zum Posten ist zu prüfen.",
+      "method": [
+        "Bestätige Stichtag, Mandant, Grundgesamtheit und Summen. Beschaffe Konten und Belege desselben Mandats.",
+        "Vergleiche Beträge und Beziehungen; trenne Kandidaten von geprüften Entscheidungen. Zeige Stichtagssalden, Differenzen und spätere Zahlungen getrennt.",
+        "Lege Prüfposten vor und speichere tatsächliche Entscheidungen. Offene Fragen bleiben sichtbar; Buchungen entstehen nicht automatisch."
+      ],
+      "result_title": "Geprüfter Stichtagssaldo: EUR 400",
+      "conclusion": "Bei bestätigter Zuordnung von B1 bleiben zum 30. Juni EUR 400 offen. B2 belegt einen späteren Zahlungseingang, keinen rückwirkenden Nullsaldo.",
+      "output_columns": [
+        "Sicht",
+        "Betrag",
+        "Grundlage"
+      ],
+      "output_rows": [
+        [
+          "Offen gemeldet",
+          "EUR 1.000",
+          "O1"
+        ],
+        [
+          "Zahlung vor Stichtag",
+          "−EUR 600",
+          "B1 · vorbehaltlich Prüfung"
+        ],
+        [
+          "Stichtagsrest",
+          "EUR 400",
+          "1.000 − 600"
+        ],
+        [
+          "Späterer Eingang",
+          "EUR 400",
+          "B2 · 5. Juli"
+        ]
+      ],
+      "check": "Das Berichtsdatum bleibt maßgeblich. Ein späterer Eingang kann Einbringlichkeit stützen, schreibt aber die Vergangenheit nicht um.",
+      "question": "Im Juli ist alles bezahlt. Können wir zum 30. Juni null zeigen?",
+      "answer": "Nein. Im geprüften Beispiel bleiben am Stichtag EUR 400. Zeige den Julizufluss als späteres Ereignis.",
+      "practice": "Verlege B2 auf den 29. Juni und führe die Prüfung erneut aus. Welche Schlussfolgerung ändert sich?",
+      "next": "Liefere die OP-Liste zu einem genauen Datum, Kontenbewegungen und passende Bankbelege."
+    },
+    "es": {
+      "title": "Un cobro posterior no cambia el saldo anterior",
+      "goal": "Verificar partidas abiertas a una fecha de corte distinguiendo hechos posteriores.",
+      "scenario": "A 30 de junio, la lista ficticia muestra INV-701 abierta por EUR 1.000. Los cobros vinculados son EUR 600 el 28 de junio y EUR 400 el 5 de julio. El primero no se aplicó en la lista entregada.",
+      "request": "Vera, verifica esta partida al 30 de junio y explica cómo tratar el cobro de julio.",
+      "scope": "Verificación de una población abierta declarada a una fecha. Las facturas por sí solas no reconstruyen saldos pendientes.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Fecha",
+        "Importe"
+      ],
+      "input_rows": [
+        [
+          "O1 · lista INV-701",
+          "30 de junio",
+          "EUR 1.000 declarado abierto"
+        ],
+        [
+          "B1 · cobro vinculado",
+          "28 de junio",
+          "EUR 600"
+        ],
+        [
+          "B2 · cobro posterior",
+          "5 de julio",
+          "EUR 400"
+        ]
+      ],
+      "basis": "O1 define la población declarada. Solo B1 precede al corte; los vínculos entre cobros y partida deben verificarse.",
+      "method": [
+        "Confirma corte, cliente, población y totales. Obtén mayor y justificantes del mismo encargo.",
+        "Compara importes y relaciones separando candidatos y decisiones revisadas. Muestra saldos al corte, diferencias y cobros posteriores por separado.",
+        "Presenta elementos de revisión y guarda decisiones reales. Mantén visibles las cuestiones pendientes sin crear asientos automáticamente."
+      ],
+      "result_title": "Saldo revisado al corte: EUR 400",
+      "conclusion": "Si se confirma el vínculo de B1, quedan EUR 400 a 30 de junio. B2 documenta cobro posterior, no un saldo cero retroactivo.",
+      "output_columns": [
+        "Vista",
+        "Importe",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Abierto declarado",
+          "EUR 1.000",
+          "O1"
+        ],
+        [
+          "Cobro anterior al corte",
+          "−EUR 600",
+          "B1 · sujeto a revisión"
+        ],
+        [
+          "Residual al corte",
+          "EUR 400",
+          "1.000 − 600"
+        ],
+        [
+          "Cobro posterior",
+          "EUR 400",
+          "B2 · 5 de julio"
+        ]
+      ],
+      "check": "La fecha del informe sigue siendo la referencia. Un cobro posterior puede apoyar la recuperación, pero no reescribe la historia.",
+      "question": "En julio está todo cobrado. ¿Podemos mostrar cero a 30 de junio?",
+      "answer": "No. En el caso revisado quedan EUR 400 al corte. Muestra el cobro de julio como hecho posterior.",
+      "practice": "Mueve B2 al 29 de junio, vuelve a ejecutar y comprueba qué conclusión cambia.",
+      "next": "Entrega la lista abierta a fecha exacta, movimientos contables y pruebas bancarias pertinentes."
+    }
+  }
+}

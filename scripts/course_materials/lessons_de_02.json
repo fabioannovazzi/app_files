@@ -1,0 +1,317 @@
+{
+  "vera/vouching": {
+    "title": "Von der Stichprobenbuchung zum richtigen Beleg",
+    "goal": "Eine ausgewählte Buchung prüfen, ohne einen gleichen Betrag mit Belegidentität zu verwechseln.",
+    "scenario": "Die fiktive qualifizierte Stichprobe enthält MOV-104 zur Rechnung INV-104 über EUR 1.220. Zwei XML-Rechnungen haben diesen Betrag: INV-104 und INV-205. Nur die ausgewählte Buchung gehört zum Prüfungsumfang.",
+    "request": "Vera, prüfe den Beleg zu dieser Stichprobenbuchung.",
+    "scope": "Vouching setzt die abgeschlossene Übergabe aus Journal Sampling einschließlich Qualifizierungsunterlagen voraus. Eine Rohdatentabelle oder diese Lehrvorschau ersetzt sie nicht.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Identität",
+      "Betrag"
+    ],
+    "input_rows": [
+      [
+        "Stichprobe S1 · Zeile 4",
+        "MOV-104 / INV-104",
+        "EUR 1.220"
+      ],
+      [
+        "XML X1",
+        "INV-104; passende Gegenpartei",
+        "EUR 1.220"
+      ],
+      [
+        "XML X2",
+        "INV-205; andere Rechnung",
+        "EUR 1.220"
+      ]
+    ],
+    "basis": "S1 definiert die Auswahl. X1 trägt die unterscheidende Referenz INV-104; der gleiche Betrag von X2 beweist keine Identität.",
+    "method": [
+      "Übernimm die qualifizierte Stichprobe im selben Mandat, binde einen bestimmten Belegbestand und prüfe die abgeschlossene Quellenbasis.",
+      "Prüfe Identität, Gegenpartei, Währung, Vorzeichen, Betrag und Datum anhand der geprüften Konfiguration. Repariere die Journalaufbereitung nicht innerhalb von Vouching.",
+      "Lies Abdeckung, Abweichungen und manuell zu prüfende Zeilen. Liefere den Weg von Buchung zu Beleg; die Belegausreichendheit bleibt fachliches Urteil."
+    ],
+    "result_title": "INV-104 ist der einschlägige Beleg",
+    "conclusion": "Die Identität unterscheidet Belege mit gleichem Betrag. Eine bloße Zahlengleichheit rechtfertigt keine Zuordnung.",
+    "output_columns": [
+      "Kandidat",
+      "Identitätsbeleg",
+      "Einordnung im Beispiel"
+    ],
+    "output_rows": [
+      [
+        "X1 · INV-104",
+        "Passende eindeutige Referenz",
+        "Weitere Anforderungen prüfen"
+      ],
+      [
+        "X2 · INV-205",
+        "Andere Referenz",
+        "Gleicher Betrag reicht nicht"
+      ]
+    ],
+    "check": "Ein mechanisch bestandener Check bestätigt weder die Bilanzierung noch die Belegausreichendheit. Übertrage das Ergebnis nicht auf ungeprüfte Buchungen.",
+    "question": "Die Buchung enthält keine Rechnungsreferenz. Können wir X1 nehmen, weil die Datei zuerst kommt?",
+    "answer": "Nein. Die Identität bleibt offen und braucht die vertraglich geforderte Evidenz oder geprüfte Beziehung. Die Dateireihenfolge beweist nichts.",
+    "practice": "Ändere X1 auf EUR 1.200 und prüfe die Differenz, ohne den zugeordneten Beleg zu wechseln.",
+    "next": "Wähle die abgeschlossene Stichprobe und den passenden XML- oder PDF-Bestand; Vera löst die technischen Übergabeverweise auf."
+  },
+  "vera/comunicazione-professionale": {
+    "title": "Eine Kanzleimitteilung mit belegbaren Aussagen",
+    "goal": "Geprüfte Informationen in eine nützliche Mitteilung mit Quellen für wesentliche Aussagen umsetzen.",
+    "scenario": "Die fiktive Kanzlei Arco nimmt ab 1. Oktober Dokumente über einen vereinbarten Ordner entgegen. Eine freigegebene interne Notiz beschreibt den Kanal und die Ansprechperson. Eine gemessene Zeitersparnis ist nicht belegt.",
+    "request": "Vera, entwirf eine kurze Mandantenmitteilung zum neuen Weg der Dokumentenübergabe.",
+    "scope": "Fiktive organisatorische Mitteilung ohne steuerliche Beratung oder Leistungsversprechen. Der Entwurf bleibt lokal und wird nicht versendet.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Vorhandener Fakt",
+      "Verwendung"
+    ],
+    "input_rows": [
+      [
+        "C1 · interne Notiz § 1",
+        "Neuer Kanal ab 1. Oktober 2026",
+        "Belegt"
+      ],
+      [
+        "C1 · § 2",
+        "Unterstützung durch die Ansprechperson",
+        "Belegt"
+      ],
+      [
+        "Keine Quelle",
+        "50 % Zeitersparnis",
+        "Unbelegt"
+      ]
+    ],
+    "basis": "C1 belegt Datum, Kanal und Unterstützung. Die Prozentangabe ist ein Beispiel für eine zu streichende Behauptung.",
+    "method": [
+      "Bestimme Nutzen für die Zielgruppe, Zweck, Kanal und Quellen.",
+      "Entwirf die Mitteilung und verknüpfe Aussagen mit Belegen. Prüfe Ton und Grenzen und streiche unbelegte Versprechen.",
+      "Bereite das reguläre Ausgabepaket des Kanals mit Quellenprüfung vor. Zeige den Entwurf vor dem normalen Versand- oder Veröffentlichungsprozess."
+    ],
+    "result_title": "Dokumente künftig einfacher übergeben",
+    "conclusion": "Bitte nutzen Sie ab 1. Oktober 2026 den mit unserer Kanzlei vereinbarten Ordner zur Dokumentenübergabe. Bei Fragen zum Zugang und zu den ersten Schritten hilft Ihnen Ihre gewohnte Ansprechperson.",
+    "output_columns": [
+      "Aussage",
+      "Grundlage",
+      "Prüfung"
+    ],
+    "output_rows": [
+      [
+        "Neuer Kanal ab 1. Oktober",
+        "C1 § 1",
+        "Datum und Vorgehen prüfen"
+      ],
+      [
+        "Ansprechperson kontaktieren",
+        "C1 § 2",
+        "Unterstützung bestätigen"
+      ],
+      [
+        "50 % Ersparnis",
+        "Keine",
+        "Ausgeschlossen"
+      ]
+    ],
+    "check": "Ansprechende Kommunikation darf keine Ergebnisse, Pflichten oder Versprechen ergänzen, die ihre Quellen nicht tragen.",
+    "question": "Dürfen wir ergänzen: 'Nie wieder geht ein Dokument verloren'?",
+    "answer": "Nein. Die Notiz beschreibt einen Übergabekanal, keine Verlustgarantie. Für das absolute Versprechen fehlt ein Beleg.",
+    "practice": "Formuliere daraus einen kurzen Beitrag und erhalte Datum, Kanal und Grenzen.",
+    "next": "Nutze aktuelle Quellen für Fachnachrichten und geprüfte organisatorische Fakten für Kanzleimitteilungen."
+  },
+  "vera/concordato-plan-review": {
+    "title": "Ein positiver Endsaldo kann eine Finanzierungslücke verdecken",
+    "goal": "Restrukturierungsplan, Gläubiger und Zahlungszeitpunkte gemeinsam betrachten, statt nur Summen zu prüfen.",
+    "scenario": "Ein fiktiver Plan erwartet im Dezember EUR 100.000 aus einem Verkauf, verspricht aber bereits im September EUR 90.000 Gläubigerzahlungen. Anfangsliquidität: EUR 10.000. Eine Zwischenfinanzierung ist nicht dokumentiert.",
+    "request": "Vera, zeige den Punkt im Plan, zu dem die verantwortliche Fachperson eine gezielte Frage klären muss.",
+    "scope": "Ein kleiner Liquiditätsfall. Die vollständige Prüfung umfasst auch Verfahren, Vorschlag, Gläubigerbehandlung, Liquidationsalternative, Bestätigung und Steuern.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Datum",
+      "Zahlungsstrom"
+    ],
+    "input_rows": [
+      [
+        "P1 · Anfangsliquidität",
+        "1. September",
+        "+EUR 10.000"
+      ],
+      [
+        "P2 · Gläubigervorschlag",
+        "30. September",
+        "−EUR 90.000"
+      ],
+      [
+        "P3 · Verkaufsplan",
+        "15. Dezember",
+        "+EUR 100.000"
+      ]
+    ],
+    "basis": "P1–P3 liefern Beträge und Daten. Ein positiver Endsaldo stellt vor dem Verkauf weder Zahlungsmittel noch eine Finanzierungszusage bereit.",
+    "method": [
+      "Prüfe die Dokumente; Dateinamen oder extrahierte Beträge sind noch keine fachlich geprüften Rollen.",
+      "Erstelle das Fallmodell mit Umfang, Gläubigern, Mittelherkunft, Mittelverwendung, Liquidität und Fragen. Belege Beobachtungen und Schlussfolgerungen genau.",
+      "Lege Modell und offene Punkte der verantwortlichen Fachperson vor. Erst ein bestätigtes Modell trägt das formelle Paket und einen Zahlenanhang."
+    ],
+    "result_title": "Endüberschuss, ungeklärte Zwischenfinanzierung",
+    "conclusion": "Der rechnerische Endsaldo beträgt +EUR 20.000. Im September entsteht jedoch eine durch die Quellen nicht gedeckte Finanzierungslücke von EUR 80.000.",
+    "output_columns": [
+      "Zeitpunkt",
+      "Rechnerischer Saldo",
+      "Frage"
+    ],
+    "output_rows": [
+      [
+        "Vor Zahlungen",
+        "+EUR 10.000",
+        "Anfangsliquidität"
+      ],
+      [
+        "Nach Septemberzahlungen",
+        "−EUR 80.000",
+        "Wie wird die Lücke finanziert?"
+      ],
+      [
+        "Nach Dezemberverkauf",
+        "+EUR 20.000",
+        "Zufluss erfolgt nach Zahlungen"
+      ]
+    ],
+    "check": "Der negative Saldo zeigt ein zeitliches Problem des Beispiels, kein Urteil über rechtliche Zulässigkeit oder vollständige Durchführbarkeit.",
+    "question": "Belegt der geplante Verkauf allein die Deckung der Zahlungen?",
+    "answer": "Nicht bei diesen Terminen. Frühere Finanzierung oder ein anders belegter Zahlungsplan müssen betrachtet und fachlich geprüft werden.",
+    "practice": "Ergänze eine fiktive Finanzierungszusage mit Datum und Bedingungen. Was löst sie, was bleibt offen?",
+    "next": "Wähle die tatsächliche Fallakte und den Stichtag; ersetze ihre Fakten nicht durch eine abstrakte Prüfliste."
+  },
+  "vera/dati-fiscali-strutturati": {
+    "title": "Eine extrahierte Zahl behält ihre Quelle",
+    "goal": "Steuerfelder mit Werten, Fundstellen und Extraktionsstatus lesen, ohne Lücken durch Annahmen zu füllen.",
+    "scenario": "Die fiktive Akte enthält ein lesbares italienisches F24-Dokument und einen schlecht lesbaren Scan. Das erste zeigt Steuercode 1001, Bezugsjahr 2025 und EUR 1.250 Belastung. Der Scan liefert keine verlässlichen Beträge.",
+    "request": "Vera, zeige, welche Steuerdaten nutzbar sind und welche das Original benötigen.",
+    "scope": "Feldextraktion und Prüfung. Ein Wert im Dokument bestätigt weder richtige Erklärung noch Behandlung oder Zahlung.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Lesbarer Inhalt",
+      "Bearbeitungsstatus"
+    ],
+    "input_rows": [
+      [
+        "F1 · F24 Zeile 1",
+        "1001 · 2025 · EUR 1.250 Belastung",
+        "Extrahierbare Felder"
+      ],
+      [
+        "F2 · Scan",
+        "Unlesbare Beträge",
+        "Wiederbeschaffen oder visuell prüfen"
+      ]
+    ],
+    "basis": "F1 belegt drei lokalisierte Werte. F2 liefert keinen verlässlichen Betrag; eine leere Extraktion beweist nicht das Fehlen steuerlicher Daten.",
+    "method": [
+      "Setze die Extraktion desselben Mandats fort und lies alle erforderlichen Felder und Dokumentenstatus der Übergabe.",
+      "Prüfe Dokumentbedeutung und Textbezug. Erhalte Layoutunsicherheit und unlesbare Quellen; eine geprüfte Neueinordnung erfordert eine konsistente Neuerstellung.",
+      "Liefere Feldtabelle, Zusammenfassung und Fundstellen. Unterscheide nicht unterstützte, unlesbare, ungeprüfte und erkannte Dokumente ohne Felder."
+    ],
+    "result_title": "Drei nutzbare Felder, eine offene Quelle",
+    "conclusion": "Die Zusammenfassung erhält die drei F1-Felder und kennzeichnet F2 als unlesbar. Fehlende Beträge werden nicht auf null gesetzt.",
+    "output_columns": [
+      "Feld",
+      "Extrahierter Wert",
+      "Quelle"
+    ],
+    "output_rows": [
+      [
+        "Steuercode",
+        "1001",
+        "F1 · Zeile 1"
+      ],
+      [
+        "Bezugsjahr",
+        "2025",
+        "F1 · Zeile 1"
+      ],
+      [
+        "Belastungsbetrag",
+        "EUR 1.250",
+        "F1 · Zeile 1"
+      ],
+      [
+        "Beträge aus F2",
+        "Nicht verfügbar",
+        "F2 · Original prüfen"
+      ]
+    ],
+    "check": "Extraktion belegt weder Zahlung noch korrekte Ausfüllung. Übernimm Währung und Jahr aus der Quelle, nicht aus dem Ordnernamen.",
+    "question": "Können wir F2 mit null einbeziehen, weil keine Felder extrahiert wurden?",
+    "answer": "Nein. Das Dokument ist unlesbar, nicht wertlos. Jede Summe muss offenlegen, dass diese Quelle unbeziffert bleibt.",
+    "practice": "Ersetze F2 durch eine lesbare Kopie und erstelle die Auswertung neu. Prüfe die hinzugekommenen Felder.",
+    "next": "Wähle lesbare Dokumente und den richtigen räumlichen Geltungsbereich; bewahre Originale für layoutabhängige Prüfungen auf."
+  },
+  "vera/email-cliente": {
+    "title": "Nur tatsächlich benötigte Unterlagen anfordern",
+    "goal": "Aus bereits geprüften Fehlunterlagen eine kurze Mandantenanfrage formulieren.",
+    "scenario": "Für das fiktive CLIENT-001 sind der fehlende Juni-Kontoauszug und eine Rückfrage zur Überweisung vom 12. Juni bestätigt. Ein möglicherweise fehlender Vertrag ist noch ein ungeprüfter Vorschlag.",
+    "request": "Vera, entwirf eine verständliche Anfrage zu den fehlenden Mandantenunterlagen.",
+    "scope": "Nur lokaler Entwurf aus geprüften und übernommenen Anforderungen. Es wird keine E-Mail versendet.",
+    "input_columns": [
+      "Fiktiver Übergabeeintrag",
+      "Status",
+      "Aufnehmen"
+    ],
+    "input_rows": [
+      [
+        "Juni-Kontoauszug",
+        "Geprüfte und übernommene Anforderung",
+        "Ja"
+      ],
+      [
+        "Zweck der Überweisung vom 12. Juni",
+        "Geprüfte und übernommene Anforderung",
+        "Ja"
+      ],
+      [
+        "Möglicherweise fehlender Vertrag",
+        "Vorschlag vor Prüfung",
+        "Nein"
+      ]
+    ],
+    "basis": "E1 enthält zwei übernommene email_request-Einträge und einen getrennten Vorschlag. Ordnernamen und alte Entwürfe schaffen keine zusätzlichen freigegebenen Anforderungen.",
+    "method": [
+      "Lies alle Seiten der E-Mail-Übergabe und prüfe, ob übernommene Anforderungen existieren. Andernfalls bleibt der Entwurf bis zur Prüfung offen.",
+      "Formuliere eine praktische Mitteilung ausschließlich zu den belegten Unterlagen und Klärungen.",
+      "Prüfe jeden Satz gegen die Übergabe und liefere den Entwurf. Versand benötigt eine eigene autorisierte Anweisung und einen verfügbaren Kanal."
+    ],
+    "result_title": "Unterlagen und Rückfrage zur Vervollständigung",
+    "conclusion": "Guten Tag, bitte reichen Sie zur Vervollständigung der Akte den Juni-Kontoauszug ein und erläutern Sie den Zweck der Überweisung vom 12. Juni. Vielen Dank für Ihre Unterstützung.",
+    "output_columns": [
+      "Entwurfsbestandteil",
+      "Grundlage",
+      "Prüfung"
+    ],
+    "output_rows": [
+      [
+        "Juni-Kontoauszug",
+        "E1 · email_request 1",
+        "Richtiger Zeitraum"
+      ],
+      [
+        "Überweisungszweck vom 12. Juni",
+        "E1 · email_request 2",
+        "Richtige Referenz"
+      ],
+      [
+        "Vertragsanforderung",
+        "Nicht übernommener Vorschlag",
+        "Ausgeschlossen"
+      ]
+    ],
+    "check": "Eine vermutete Fehlunterlage ist keine freigegebene Anforderung. Interne Hypothesen dürfen nicht zu sicheren Forderungen an den Mandanten werden.",
+    "question": "Der alte Entwurf verlangte den Vertrag. Sollen wir das vorsorglich beibehalten?",
+    "answer": "Nein. Maßgeblich sind die aktuell übernommenen Anforderungen. Der Vertrag kommt erst nach Prüfung und konsistenter Aktualisierung der Übergabe hinzu.",
+    "practice": "Kürze den Entwurf und erhalte beide Anforderungen mit ihren genauen Referenzen.",
+    "next": "Schließe zuerst die Fehlunterlagenprüfung ab; prüfe anschließend Empfänger und Ton des angeforderten Entwurfs."
+  }
+}

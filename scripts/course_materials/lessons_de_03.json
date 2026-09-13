@@ -1,0 +1,460 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Zwei Dateien sind nicht immer zwei Rechnungen",
+    "goal": "Eine FatturaPA-Übersicht lesen und Rechnungsinhalte, formale Fehler und Dublettenkandidaten unterscheiden.",
+    "scenario": "Der fiktive Bestand enthält eine gültige XML-Rechnung, eine weitere Kopie derselben Rechnung und eine abgeschnittene XML-Datei. Geprüft wird der formale Dateiinhalt, nicht die Übereinstimmung mit Buchungen.",
+    "request": "Vera, prüfe diesen kleinen XML-Bestand und zeige den Prüfbedarf.",
+    "scope": "Formale FatturaPA-Prüfungen ohne Bestätigung von Buchung, Abzugsfähigkeit, Zahlung oder Umsatzsteuerbehandlung.",
+    "input_columns": [
+      "Fiktive Datei",
+      "Inhalt",
+      "Zustand"
+    ],
+    "input_rows": [
+      [
+        "invoice.xml",
+        "INV-001 · 2026 · EUR 1.220",
+        "Ein lesbarer Rechnungskörper"
+      ],
+      [
+        "invoice-copy.xml",
+        "Dieselbe Rechnung",
+        "Kopie zu prüfen"
+      ],
+      [
+        "broken.xml",
+        "Abgeschnittenes Dokument",
+        "Fehlerhaftes XML"
+      ]
+    ],
+    "basis": "Dateianzahl und Anzahl der Rechnungskörper unterscheiden sich. Lieferant, Nummer, Datum und Betrag stützen einen Dublettenkandidaten, keine automatische Löschung.",
+    "method": [
+      "Wähle Mandant, Auftrag, Bestand und Jahr und importiere die Quellen in den verwalteten Übungsfall.",
+      "Führe den aktuellen Parser aus und prüfe sämtliche Fehler- und Dublettengruppen der Übergabe. Öffne bei Bedarf das genaue XML.",
+      "Zeige die Übersicht je Rechnungskörper, Dublettenkandidaten und Fehlervermerk. Unlesbare Dateien bleiben ausdrücklich sichtbar."
+    ],
+    "result_title": "Ein Bestand mit zwei offenen Prüfungen",
+    "conclusion": "Zwei lesbare Kopien stehen nicht automatisch für zwei Geschäftsvorfälle. Die abgeschnittene Datei liefert keinen verlässlich extrahierten Rechnungsdatensatz.",
+    "output_columns": [
+      "Element",
+      "Beispielergebnis",
+      "Maßnahme"
+    ],
+    "output_rows": [
+      [
+        "invoice.xml + invoice-copy.xml",
+        "Dublettenkandidat",
+        "Quellen vergleichen; Originale erhalten"
+      ],
+      [
+        "broken.xml",
+        "Formaler Fehler",
+        "Vollständiges XML beschaffen"
+      ],
+      [
+        "Wirtschaftliche Gesamtsumme",
+        "Prüfbedürftig",
+        "Kopien nicht blind addieren"
+      ]
+    ],
+    "check": "Ein Fehler oder Dublettenkandidat erlaubt weder Dateilöschung noch Buchungsänderung. Ein XML kann mehrere Rechnungskörper enthalten.",
+    "question": "Bedeuten drei empfangene Dateien drei gültige Rechnungen?",
+    "answer": "Nein. Zähle Dateien, lesbare Rechnungskörper und Fehler getrennt. Kopie und abgeschnittene Datei brauchen eine ausdrückliche Behandlung.",
+    "practice": "Führe das beigefügte XML-Beispiel und danach eine veränderte Kopie aus. Vergleiche die tatsächlich erzeugten Fehlervermerke.",
+    "next": "Bestimme Jahr und Bestand. Verwende einen Buchhaltungsabgleich nur, wenn dieser beauftragt ist."
+  },
+  "vera/financial-analysis": {
+    "title": "Umsatzkonzentration verstehen",
+    "goal": "Eine unterstützte Finanzanalyse verwenden und ihre Kennzahl ohne automatische Risikobewertung interpretieren.",
+    "scenario": "Ein fiktiver Periodenexport enthält EUR 100.000 Umsatz: Alpha 60.000, Beta 25.000, Gamma 15.000. Gesucht ist eine Einschätzung der Kundenabhängigkeit, keine Unternehmensbewertung.",
+    "request": "Vera, analysiere die Kundenkonzentration und zeige die Grundlage des Ergebnisses.",
+    "scope": "Die Analyse customer_concentration auf geprüften historischen Daten. Keine Bewertung, kein Rating und keine unabhängige Prüfung der Buchhaltungsquellen.",
+    "input_columns": [
+      "Fiktiver Kunde",
+      "Periodenumsatz",
+      "Quelle"
+    ],
+    "input_rows": [
+      [
+        "Alpha",
+        "EUR 60.000",
+        "F1 · Zeile 1"
+      ],
+      [
+        "Beta",
+        "EUR 25.000",
+        "F1 · Zeile 2"
+      ],
+      [
+        "Gamma",
+        "EUR 15.000",
+        "F1 · Zeile 3"
+      ]
+    ],
+    "basis": "F1 definiert Periode und Umfang mit insgesamt EUR 100.000. Verträge, Kundenmargen und Zukunftsbelege fehlen.",
+    "method": [
+      "Wähle die zur Frage passende unterstützte Analyse und qualifiziere Quellen, Periode, Vorzeichen und Kontrollsumme.",
+      "Führe das Paket mit geprüftem Vertrag im selben Mandat aus. Verwende die vorgesehenen Berechnungen statt eines improvisierten Ersatzes.",
+      "Lies Kennzahlen und Grenzen. Verknüpfe Erläuterungen mit Messwerten und kennzeichne nicht durchgeführte Quellenprüfungen."
+    ],
+    "result_title": "Alpha trägt 60 % des Umsatzes",
+    "conclusion": "Der größte Kunde liefert 60 %, die ersten beiden zusammen 85 %. Diese Beobachtungen zeigen, welche geschäftlichen Fragen zu untersuchen sind.",
+    "output_columns": [
+      "Kennzahl",
+      "Berechnung",
+      "Wert"
+    ],
+    "output_rows": [
+      [
+        "Größter Kunde",
+        "60.000 / 100.000",
+        "60 %"
+      ],
+      [
+        "Erste zwei Kunden",
+        "85.000 / 100.000",
+        "85 %"
+      ],
+      [
+        "Beobachtete Kunden",
+        "Alpha, Beta, Gamma",
+        "3"
+      ]
+    ],
+    "check": "Ein hoher Anteil belegt Konzentration, aber keine Vertragsunsicherheit oder künftigen Kundenverlust. Prüfe Umfang und Summenabgleich.",
+    "question": "Verrät der Anteil von 60 % die Wahrscheinlichkeit eines Umsatzverlusts?",
+    "answer": "Nein. Verträge, Verlängerungen und Abhängigkeiten benötigen eigene Belege. Die Kennzahl lenkt Fragen, liefert aber keine Verlustwahrscheinlichkeit.",
+    "practice": "Ergänze einen vierten Kunden mit EUR 20.000 und prüfe die neue Summe und die Anteile.",
+    "next": "Wähle eine unterstützte Analyse und geprüfte Buchhaltungsquellen mit Periode und Kontrollsummen."
+  },
+  "vera/journal-bank-reconciliation": {
+    "title": "Zwei Zahlungen zu einer Buchung",
+    "goal": "Bank und Journal unter Erhalt von Referenzen, Gruppen und offenen Differenzen abstimmen.",
+    "scenario": "Das fiktive Journal enthält EUR 1.200 Zahlungseingang zu INV-401. Der Kontoauszug zeigt EUR 700 und EUR 500 mit dieser Referenz sowie EUR 12 Gebühr ohne Gegenbuchung im gelieferten Journal.",
+    "request": "Vera, stimme diese Bewegungen ab und zeige die offenen Positionen.",
+    "scope": "Bank-Journal-Abgleich für eine Periode und Währung. Keine vollständige OP-Prüfung und keine Freigabe automatischer Buchungen.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Referenz",
+      "Betrag"
+    ],
+    "input_rows": [
+      [
+        "G1 · Journal",
+        "INV-401",
+        "+EUR 1.200"
+      ],
+      [
+        "B1 · Bankzeile 1",
+        "INV-401",
+        "+EUR 700"
+      ],
+      [
+        "B1 · Bankzeile 2",
+        "INV-401",
+        "+EUR 500"
+      ],
+      [
+        "B1 · Bankzeile 3",
+        "Gebühr",
+        "−EUR 12"
+      ]
+    ],
+    "basis": "Die gemeinsame Referenz stützt 700 + 500 gegen 1.200. Zweck und Richtung der Gebühr sind anders; sie bleibt getrennt.",
+    "method": [
+      "Prüfe Formate und bestätige Spalten, Vorzeichen, Daten, Währung und Referenzen anhand der tatsächlichen Quellen.",
+      "Führe unterstützte Zuordnungen einschließlich referenzgestützter Gruppen aus. Erhalte Einzelzeilen und suche keine beliebigen Kombinationen nur zum Summenausgleich.",
+      "Lies Zuordnungen, Gruppen und Restposten. Erkläre jeden Zusammenhang anhand seiner Belege; Differenzen und Buchungen bleiben fachlich zu prüfen."
+    ],
+    "result_title": "Zahlungseingang rekonstruiert, Gebühr offen",
+    "conclusion": "700 + 500 = EUR 1.200 zu INV-401. Die Bankgebühr von EUR 12 hat im vorliegenden Journal keine Gegenbuchung.",
+    "output_columns": [
+      "Position",
+      "Vergleich",
+      "Beispielergebnis"
+    ],
+    "output_rows": [
+      [
+        "INV-401",
+        "700 + 500 ↔ EUR 1.200",
+        "Gruppe mit gemeinsamer Referenz"
+      ],
+      [
+        "Gebühr",
+        "−EUR 12 ↔ keine Buchung",
+        "Offener Prüfposten"
+      ]
+    ],
+    "check": "Summengleichheit rechtfertigt nicht jede Gruppe. Vorzeichen, Periode, Währung und Referenzen müssen zusammenpassen.",
+    "question": "Können wir ohne Referenzen beide Eingänge automatisch INV-401 zuordnen?",
+    "answer": "Die Summe allein trägt diese automatische Gruppe nicht. Prüfe die Belege und erhalte die Mehrdeutigkeit, wenn der Zusammenhang nicht ausreichend belegt ist.",
+    "practice": "Ändere den zweiten Eingang auf EUR 480 und prüfe die Differenz, ohne eine weitere Zahlung zu erfinden.",
+    "next": "Wähle Journal und Kontoauszug desselben Umfangs; kläre nur Zuordnungen, die aus den Dateien nicht hervorgehen."
+  },
+  "vera/journal-sampling": {
+    "title": "Eine verlässliche Grundgesamtheit vor der Stichprobe",
+    "goal": "Verstehen, warum die Journalqualifizierung vor der Auswahl zu prüfender Buchungen kommt.",
+    "scenario": "Das fiktive Journal enthält ursprüngliche Bewegungskennungen, Konten und Soll-/Habenbeträge. Der Wert '1.200,00' verlangt die passende Zahleninterpretation. Eine Summenzeile ist keine zusätzliche Buchung für die Stichprobe.",
+    "request": "Vera, bereite dieses Journal vor und zeige Stichprobe und Prüfungen der Grundgesamtheit.",
+    "scope": "Aufbereitung und Auswahl nach aktuellem Vertrag. Die Auswahl ist nicht automatisch statistisch repräsentativ oder beleggeprüft.",
+    "input_columns": [
+      "Fiktive Zeile",
+      "Daten",
+      "Prüfentscheidung"
+    ],
+    "input_rows": [
+      [
+        "G1 · Zeile 2",
+        "M-101; Soll 1.200,00",
+        "Italienisches Zahlenformat"
+      ],
+      [
+        "G1 · Zeile 3",
+        "M-101; Haben 1.200,00",
+        "Gleiche Bewegung, zweite Zeile"
+      ],
+      [
+        "G1 · Zeile 4",
+        "Summe 1.200,00 / 1.200,00",
+        "Zusammenfassung, keine Buchung"
+      ]
+    ],
+    "basis": "Kennungen und Fundstellen stammen aus G1. Eine physische Zeilennummer ersetzt keine ursprüngliche Bewegungskennung.",
+    "method": [
+      "Prüfe Umfang, Zuordnungen, Zahlenformat und Summenzeilen vor der Normalisierung.",
+      "Qualifiziere die vollständige Grundgesamtheit und prüfe Abschluss sowie Betragskontrollen. Wende die geprüfte Auswahlmethode unter Erhalt der ursprünglichen Kennungen an.",
+      "Liefere normalisierte Grundgesamtheit, Diagnosen, Stichprobe und Qualifizierungsnachweise. Nachgelagertes Vouching verwendet diese abgeschlossene Übergabe ohne neue Quellenzuordnung."
+    ],
+    "result_title": "Qualifizierte Grundgesamtheit vor der Auswahl",
+    "conclusion": "Der Fall trennt zwei Buchungszeilen einer Bewegung von einer Summenzeile. Im geprüften Format bedeutet 1.200,00 genau EUR 1.200.",
+    "output_columns": [
+      "Element",
+      "Beispielbehandlung",
+      "Grund"
+    ],
+    "output_rows": [
+      [
+        "Zeilen 2–3",
+        "Grundgesamtheit: Bewegung M-101",
+        "Originalkennung und beide Seiten"
+      ],
+      [
+        "Zeile 4",
+        "Summenzeile begründet ausgeschlossen",
+        "Doppelzählung vermeiden"
+      ],
+      [
+        "Spätere Stichprobe",
+        "An qualifizierte Grundgesamtheit gebunden",
+        "Nachvollziehbarkeit erhalten"
+      ]
+    ],
+    "check": "Eine Datei ist nicht qualifiziert, nur weil sie geöffnet werden kann. Falsche Zuordnungen können plausible falsche Zahlen erzeugen.",
+    "question": "Dürfen wir die Bewegung M-2 nennen, weil sie in Zeile zwei steht?",
+    "answer": "Nein. Erhalte M-101 aus der Quelle. Die Zeilenfundstelle hilft beim Nachschlagen, schafft aber keine Bewegungsidentität.",
+    "practice": "Ergänze eine unausgeglichene Zeile und prüfe, ob die Qualifizierung sie vor der Auswahl aufzeigt.",
+    "next": "Bereite den vollständigen Export mit Kontrollsummen vor und erläutere den Zweck der Auswahl."
+  },
+  "vera/new-client": {
+    "title": "Ein Mandat beginnen, ohne Lücken als bestätigt auszugeben",
+    "goal": "Von eingegangenen Unterlagen zu einem prüfbaren Einrichtungsvorschlag mit sichtbaren Fehlbelegen gelangen.",
+    "scenario": "Die fiktive Arco Srl liefert Registerauszug, Ausweis des Vertreters und einen Mandatsvertragsentwurf. Der Vertrag ist nicht unterschrieben; die Erklärung zum wirtschaftlich Berechtigten fehlt. Die Dokumentenaufbereitung kommt vor der italienischen Mandatseinrichtung.",
+    "request": "Vera, ordne die Aufnahme dieses Mandanten und zeige, was noch fehlt.",
+    "scope": "Fiktiver italienischer Fall. Eine andere Arbeitssprache aktiviert kein fachliches Länderpaket für ein anderes Land.",
+    "input_columns": [
+      "Fiktives Dokument",
+      "Beobachteter Stand",
+      "Bedeutung"
+    ],
+    "input_rows": [
+      [
+        "N1 · Registerauszug",
+        "Lesbar",
+        "Identität zu prüfen"
+      ],
+      [
+        "N2 · Vertreterausweis",
+        "Eingegangen",
+        "Beziehung und Gültigkeit prüfen"
+      ],
+      [
+        "N3 · Mandatsvertrag",
+        "Unterschriebene Fassung fehlt",
+        "Keine Annahme belegt"
+      ],
+      [
+        "Eigentümererklärung",
+        "Nicht eingegangen",
+        "Anforderung zu prüfen"
+      ]
+    ],
+    "basis": "Vorhandene Dateien belegen Dokumentenverfügbarkeit. Fehlende Unterschrift und Erklärung bleiben von vorgeschlagenen fachlichen Maßnahmen getrennt.",
+    "method": [
+      "Bereite die Dokumente auf und klassifiziere sie; verknüpfe extrahierte Daten und Fehlunterlagen mit ihren Quellen.",
+      "Prüfe und übernimm Dokumentenentscheidungen. Nur eine konsistente italienische Übergabe führt in die fachliche Einrichtungsphase.",
+      "Bereite Vorschläge zu Identität, Mandat, Datenschutz, Geldwäsche und Überwachung vor. Die Fachperson speichert tatsächliche Entscheidungen über die vorgesehenen Prüfflächen."
+    ],
+    "result_title": "Unterlagen geordnet, Mandatsannahme noch offen",
+    "conclusion": "Registerauszug und Ausweis liegen vor. Der Mandatsvertrag ist nicht unterschrieben, Eigentümerunterlagen fehlen; die Akte wird nicht als vollständig bezeichnet.",
+    "output_columns": [
+      "Bereich",
+      "Grundlage",
+      "Nächster Schritt"
+    ],
+    "output_rows": [
+      [
+        "Identität",
+        "N1–N2",
+        "Beziehungen prüfen"
+      ],
+      [
+        "Mandat",
+        "N3 ohne Unterschrift",
+        "Reguläre Annahme abschließen"
+      ],
+      [
+        "Geldwäsche",
+        "Erklärung fehlt",
+        "Anforderung und Analyse prüfen"
+      ]
+    ],
+    "check": "Dokumenteneingang bedeutet keine inhaltliche Annahme. Workflow-Abschluss dokumentiert die Lieferung, nicht automatische Mandatsannahme.",
+    "question": "Der Ordner heißt 'freigegebener Mandant'. Dürfen wir diesen Status übernehmen?",
+    "answer": "Nein. Der Status folgt aus Belegen und gespeicherten Entscheidungen, nicht aus dem Ordnernamen.",
+    "practice": "Ergänze den unterschriebenen Vertrag und aktualisiere betroffene Vorschläge; offene Geldwäschefragen bleiben bestehen.",
+    "next": "Wähle Mandant und erhaltene Dokumente. Eine spätere gezielte Geldwäscheprüfung muss nicht die gesamte Aufnahme wiederholen."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Eine spätere Zahlung ändert nicht den früheren Saldo",
+    "goal": "Offene Posten zum Stichtag prüfen und spätere Ereignisse getrennt zeigen.",
+    "scenario": "Zum 30. Juni weist die fiktive OP-Liste INV-701 mit EUR 1.000 offen aus. Zugehörige Zahlungen: EUR 600 am 28. Juni und EUR 400 am 5. Juli. Die frühere Zahlung wurde in der gelieferten Liste nicht berücksichtigt.",
+    "request": "Vera, prüfe diesen Posten zum 30. Juni und erkläre die Bedeutung der Julizahlung.",
+    "scope": "Prüfung einer gemeldeten offenen Grundgesamtheit zu einem Datum. Rechnungen allein rekonstruieren keine Restforderungen.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Datum",
+      "Betrag"
+    ],
+    "input_rows": [
+      [
+        "O1 · OP-Liste INV-701",
+        "30. Juni",
+        "EUR 1.000 offen gemeldet"
+      ],
+      [
+        "B1 · zugehörige Zahlung",
+        "28. Juni",
+        "EUR 600"
+      ],
+      [
+        "B2 · spätere Zahlung",
+        "5. Juli",
+        "EUR 400"
+      ]
+    ],
+    "basis": "O1 definiert die gemeldete Grundgesamtheit. Nur B1 liegt vor dem Stichtag; die Zuordnung der Zahlungen zum Posten ist zu prüfen.",
+    "method": [
+      "Bestätige Stichtag, Mandant, Grundgesamtheit und Summen. Beschaffe Konten und Belege desselben Mandats.",
+      "Vergleiche Beträge und Beziehungen; trenne Kandidaten von geprüften Entscheidungen. Zeige Stichtagssalden, Differenzen und spätere Zahlungen getrennt.",
+      "Lege Prüfposten vor und speichere tatsächliche Entscheidungen. Offene Fragen bleiben sichtbar; Buchungen entstehen nicht automatisch."
+    ],
+    "result_title": "Geprüfter Stichtagssaldo: EUR 400",
+    "conclusion": "Bei bestätigter Zuordnung von B1 bleiben zum 30. Juni EUR 400 offen. B2 belegt einen späteren Zahlungseingang, keinen rückwirkenden Nullsaldo.",
+    "output_columns": [
+      "Sicht",
+      "Betrag",
+      "Grundlage"
+    ],
+    "output_rows": [
+      [
+        "Offen gemeldet",
+        "EUR 1.000",
+        "O1"
+      ],
+      [
+        "Zahlung vor Stichtag",
+        "−EUR 600",
+        "B1 · vorbehaltlich Prüfung"
+      ],
+      [
+        "Stichtagsrest",
+        "EUR 400",
+        "1.000 − 600"
+      ],
+      [
+        "Späterer Eingang",
+        "EUR 400",
+        "B2 · 5. Juli"
+      ]
+    ],
+    "check": "Das Berichtsdatum bleibt maßgeblich. Ein späterer Eingang kann Einbringlichkeit stützen, schreibt aber die Vergangenheit nicht um.",
+    "question": "Im Juli ist alles bezahlt. Können wir zum 30. Juni null zeigen?",
+    "answer": "Nein. Im geprüften Beispiel bleiben am Stichtag EUR 400. Zeige den Julizufluss als späteres Ereignis.",
+    "practice": "Verlege B2 auf den 29. Juni und führe die Prüfung erneut aus. Welche Schlussfolgerung ändert sich?",
+    "next": "Liefere die OP-Liste zu einem genauen Datum, Kontenbewegungen und passende Bankbelege."
+  },
+  "vera/purchase-invoice-review": {
+    "title": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
+    "goal": "Die Abdeckung eines Rechnungsbestands lesen und buchhalterischen Prüfbedarf erkennen.",
+    "scenario": "Der fiktive Bestand enthält drei Eingangsrechnungen: eine mit passender Buchung, eine ohne gefundene Buchung und eine mit zwei mehrdeutigen Kandidaten. Periode und Buchungsbestand sind ausdrücklich abgegrenzt.",
+    "request": "Vera, prüfe die Verknüpfung dieser Eingangsrechnungen mit den tatsächlichen Buchungen.",
+    "scope": "Prüfung der gelieferten Rechnungen und Buchungen. Eine fehlende Verbindung in diesem Umfang beweist nicht, dass eine Rechnung nie gebucht wurde.",
+    "input_columns": [
+      "Fiktive Rechnung",
+      "Vorhandene Buchungsbelege",
+      "Frage"
+    ],
+    "input_rows": [
+      [
+        "PA-101 · EUR 1.220",
+        "Eine passende Buchung",
+        "Art und Behandlung prüfen"
+      ],
+      [
+        "PA-102 · EUR 610",
+        "Kein Kandidat in der Periode",
+        "Nachbeschaffen oder klären"
+      ],
+      [
+        "PA-103 · EUR 244",
+        "Zwei Kandidaten",
+        "Identität klären"
+      ]
+    ],
+    "basis": "P1 ist der XML-Bestand, G1 der Buchungsexport der Periode. Feststellungen bleiben an beide Umfänge gebunden; fehlende Buchungen werden nicht erfunden.",
+    "method": [
+      "Importiere Rechnungsbestand und tatsächliche Buchungen. Qualifiziere Periode, Konten, Identitäten und Kontrollsummen.",
+      "Führe die aktuelle Zuordnungs- und Prüfmethode mit den benötigten nativen Fähigkeiten aus. Nicht verfügbare Stufen bleiben offen statt simuliert.",
+      "Lies Abdeckung, Mehrdeutigkeiten und Vorschläge. Die Fachperson beurteilt Aufwandsart und Behandlung; Vorschläge sind keine automatischen Buchungen oder Freigaben."
+    ],
+    "result_title": "Drei Rechnungen, drei verschiedene Zustände",
+    "conclusion": "Eine Verbindung ist vorhanden, eine im geprüften Umfang nicht gefunden und eine mehrdeutig. Diese Zustände bleiben während der Prüfung getrennt.",
+    "output_columns": [
+      "Dokument",
+      "Beispielstatus",
+      "Nützlicher nächster Schritt"
+    ],
+    "output_rows": [
+      [
+        "PA-101",
+        "Verbindung vorhanden",
+        "Behandlung anhand der Belege prüfen"
+      ],
+      [
+        "PA-102",
+        "Im Umfang nicht gefunden",
+        "Periode und Export prüfen"
+      ],
+      [
+        "PA-103",
+        "Mehrdeutig",
+        "Kandidaten mit Belegen klären"
+      ]
+    ],
+    "check": "Zuordnungsabdeckung ist nicht Buchhaltungsrichtigkeit. Ein erfolgreicher technischer Lauf bestätigt weder Abzugsfähigkeit noch Umsatzsteuerbehandlung.",
+    "question": "Dürfen wir PA-102 ohne Einschränkung als 'nicht gebucht' bezeichnen?",
+    "answer": "Belegt ist: 'Buchung im untersuchten Umfang nicht gefunden'. Prüfe Vollständigkeit und Periode des Exports vor einer weitergehenden Aussage.",
+    "practice": "Ergänze die Buchung zu PA-102 und vergleiche einen neuen Lauf, ohne das vorherige Ergebnis zu löschen.",
+    "next": "Wähle Rechnungsbestand und tatsächliche Periodenbuchungen und prüfe die benötigten nativen Fähigkeiten des installierten Workflows."
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "transcribe",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "skills/transcribe/SKILL.md",
+      "repository_path": "plugins/clara/skills/transcribe/SKILL.md",
+      "sha256": "40ccdc5e3303c9b011dc1641aa0cc888e22388b43029234fa8101b2b9e8a5b50"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Chi lo ha detto non prova ancora che sia vero",
+      "goal": "Conservare una trascrizione e attribuire le parole senza trasformare una dichiarazione in un fatto verificato.",
+      "scenario": "Il testo fittizio di un debrief contiene due turni. Speaker 1 dice: 'Abbiamo ridotto i ritardi'. Speaker 2 chiede: 'Hai il confronto mensile?'. Le note non identificano i nomi e non includono il confronto. Non esiste una registrazione reale del caso.",
+      "request": "Clara, mostrami come rivedi una trascrizione prima di usarla in un report.",
+      "scope": "Revisione locale di un estratto scritto per la lezione. Non viene eseguita o simulata una trascrizione hosted; una vera registrazione segue il percorso dedicato autorizzato.",
+      "input_columns": [
+        "Turno fittizio",
+        "Testo",
+        "Metadati"
+      ],
+      "input_rows": [
+        [
+          "Speaker 1 · 00:10",
+          "Abbiamo ridotto i ritardi",
+          "Nome non confermato"
+        ],
+        [
+          "Speaker 2 · 00:15",
+          "Hai il confronto mensile?",
+          "Nome non confermato"
+        ]
+      ],
+      "basis": "T1 è un dialogo didattico scritto. Nell'uso reale il transcript riveduto può sostenere le parole attribuite, ma non dimostra automaticamente la verità dell'affermazione sottostante.",
+      "method": [
+        "Scegli acquisizione, audio esistente o importazione di un bundle effettivamente disponibile. Conserva l'originale e usa il percorso cartella o caso adatto alla richiesta.",
+        "Rivedi turni e attribuzioni dalle evidenze: assegna nomi solo se sostenuti, altrimenti conserva etichette stabili. Non cambiare il significato durante la pulizia.",
+        "Finalizza il transcript riveduto quando il contratto lo consente. Per usarne una dichiarazione come fatto nel lavoro successivo, aggiungi una base distinta e conserva il collegamento al turno."
+      ],
+      "result_title": "Trascrizione rivedibile, fatto da corroborare",
+      "conclusion": "Il testo attribuisce a Speaker 1 una dichiarazione sulla riduzione dei ritardi. Non identifica il parlante né documenta la riduzione.",
+      "output_columns": [
+        "Elemento",
+        "Cosa sostiene",
+        "Cosa non sostiene"
+      ],
+      "output_rows": [
+        [
+          "Turno 00:10",
+          "Parole attribuite a Speaker 1",
+          "Nome e risultato operativo"
+        ],
+        [
+          "Turno 00:15",
+          "Richiesta del confronto",
+          "Disponibilità del confronto"
+        ],
+        [
+          "Uso nel report",
+          "Citazione con stato dichiarativo",
+          "Conclusione quantitativa non provata"
+        ]
+      ],
+      "check": "Correggere una trascrizione non significa riassumerla o migliorarne il contenuto. L'attribuzione del parlante e la verità del fatto richiedono evidenze diverse.",
+      "question": "Possiamo sostituire Speaker 1 con il nome del direttore perché sembra parlare come lui?",
+      "answer": "No. Occorre una base nei metadati o nelle evidenze. In sua assenza si conserva Speaker 1 e si segnala l'incertezza.",
+      "practice": "Aggiungi metadati che identificano un parlante e aggiorna l'attribuzione, lasciando il testo originale conservato.",
+      "next": "Seleziona audio o bundle reale e destinazione. Una cartella ordinaria basta per conservare un transcript; non serve creare un caso senza motivo."
+    },
+    "en": {
+      "title": "Who said it does not prove it is true",
+      "goal": "Preserve and attribute a transcript without promoting statements into verified facts.",
+      "scenario": "A fictional written debrief has two turns. Speaker 1 says delays have fallen. Speaker 2 asks for the monthly comparison. The notes identify neither speaker and contain no comparison; no real recording exists for this case.",
+      "request": "Clara, show how you review a transcript before using it in a report.",
+      "scope": "Local review of a written teaching excerpt. No hosted transcription is performed or simulated; actual recordings use the authorized workflow.",
+      "input_columns": [
+        "Fictional turn",
+        "Text",
+        "Metadata"
+      ],
+      "input_rows": [
+        [
+          "Speaker 1 · 00:10",
+          "We have reduced delays",
+          "Name unconfirmed"
+        ],
+        [
+          "Speaker 2 · 00:15",
+          "Do you have the monthly comparison?",
+          "Name unconfirmed"
+        ]
+      ],
+      "basis": "T1 is an authored teaching dialogue. In real work, a reviewed transcript can support attributed words without establishing the underlying assertion's truth.",
+      "method": [
+        "Choose capture, existing audio or an actually available bundle. Preserve the original and select the appropriate ordinary-folder or case route.",
+        "Review turns and attribution against evidence. Use real names only when supported; otherwise retain stable speaker labels. Do not change meaning during cleanup.",
+        "Finalize the reviewed transcript when the contract permits. Using a statement as a downstream fact requires a separate basis and a link to its original turn."
+      ],
+      "result_title": "Reviewable wording, uncorroborated assertion",
+      "conclusion": "The excerpt attributes a delay-reduction statement to Speaker 1. It does not identify the person or document that reduction.",
+      "output_columns": [
+        "Item",
+        "Supports",
+        "Does not support"
+      ],
+      "output_rows": [
+        [
+          "Turn 00:10",
+          "Words attributed to Speaker 1",
+          "Name or operating result"
+        ],
+        [
+          "Turn 00:15",
+          "Request for a comparison",
+          "Availability of that comparison"
+        ],
+        [
+          "Report use",
+          "Statement cited as such",
+          "Unproven quantitative conclusion"
+        ]
+      ],
+      "check": "Transcript cleanup is not summarization or improvement of meaning. Speaker identity and factual truth need different evidence.",
+      "question": "Can we name Speaker 1 as the director because the wording sounds familiar?",
+      "answer": "No. Attribution requires metadata or other evidence. Otherwise preserve Speaker 1 and state the uncertainty.",
+      "practice": "Add metadata identifying one speaker, update attribution and preserve the original text.",
+      "next": "Select a real recording or bundle and destination. An ordinary folder is enough for durable transcription without an unnecessary case."
+    },
+    "fr": {
+      "title": "Savoir qui parle ne prouve pas que l'affirmation est vraie",
+      "goal": "Conserver et attribuer une transcription sans transformer les déclarations en faits vérifiés.",
+      "scenario": "Le débrief écrit fictif comporte deux tours. Speaker 1 dit que les retards ont diminué ; Speaker 2 demande le comparatif mensuel. Les notes ne donnent ni noms ni comparaison. Aucun enregistrement réel n'existe pour ce cas.",
+      "request": "Clara, montre comment revoir une transcription avant de l'utiliser dans un rapport.",
+      "scope": "Revue locale d'un extrait écrit pour la leçon. Aucune transcription hosted n'est exécutée ou simulée.",
+      "input_columns": [
+        "Tour fictif",
+        "Texte",
+        "Métadonnées"
+      ],
+      "input_rows": [
+        [
+          "Speaker 1 · 00:10",
+          "Nous avons réduit les retards",
+          "Nom non confirmé"
+        ],
+        [
+          "Speaker 2 · 00:15",
+          "As-tu le comparatif mensuel ?",
+          "Nom non confirmé"
+        ]
+      ],
+      "basis": "T1 est un dialogue pédagogique rédigé. Une transcription réelle revue peut soutenir des paroles attribuées sans prouver la véracité du fait affirmé.",
+      "method": [
+        "Choisis capture, audio existant ou bundle effectivement disponible. Conserve l'original et sélectionne le parcours dossier ordinaire ou cas approprié.",
+        "Revois tours et attribution à partir des preuves. Nomme les personnes uniquement avec une base ; sinon conserve des étiquettes stables sans changer le sens du texte.",
+        "Finalise la transcription revue lorsque le contrat le permet. Une affirmation utilisée comme fait ultérieur nécessite une base distincte et un lien au tour original."
+      ],
+      "result_title": "Paroles attribuables, affirmation à corroborer",
+      "conclusion": "L'extrait attribue la baisse des retards à Speaker 1. Il n'identifie pas cette personne et ne documente pas la baisse.",
+      "output_columns": [
+        "Élément",
+        "Soutient",
+        "Ne soutient pas"
+      ],
+      "output_rows": [
+        [
+          "Tour 00:10",
+          "Paroles de Speaker 1",
+          "Nom ou résultat opérationnel"
+        ],
+        [
+          "Tour 00:15",
+          "Demande de comparaison",
+          "Disponibilité de cette comparaison"
+        ],
+        [
+          "Usage dans un rapport",
+          "Déclaration citée comme telle",
+          "Conclusion quantitative non prouvée"
+        ]
+      ],
+      "check": "Nettoyer la transcription n'est pas la résumer ni en améliorer le sens. Identité du locuteur et vérité du fait nécessitent des preuves différentes.",
+      "question": "Peut-on nommer Speaker 1 comme le directeur parce que son expression paraît familière ?",
+      "answer": "Non. Il faut des métadonnées ou d'autres preuves. Sinon conserve Speaker 1 et précise l'incertitude.",
+      "practice": "Ajoute des métadonnées identifiant un locuteur, actualise l'attribution et conserve le texte original.",
+      "next": "Sélectionne audio ou bundle réel et destination. Un dossier ordinaire suffit pour conserver une transcription sans créer un cas inutile."
+    },
+    "de": {
+      "title": "Wer etwas sagt, beweist noch nicht seine Richtigkeit",
+      "goal": "Ein Transkript erhalten und zuordnen, ohne Aussagen als geprüfte Fakten auszugeben.",
+      "scenario": "Eine fiktive schriftliche Nachbesprechung enthält zwei Beiträge. Sprecher 1 sagt, Verzögerungen seien gesunken. Sprecher 2 fragt nach dem Monatsvergleich. Namen und Vergleich fehlen; für diesen Fall existiert keine echte Aufnahme.",
+      "request": "Clara, zeige die Transkriptprüfung vor der Verwendung in einem Bericht.",
+      "scope": "Lokale Prüfung eines schriftlichen Lehrauszugs. Keine gehostete Transkription wird ausgeführt oder simuliert; echte Aufnahmen nutzen den autorisierten Workflow.",
+      "input_columns": [
+        "Fiktiver Beitrag",
+        "Text",
+        "Metadaten"
+      ],
+      "input_rows": [
+        [
+          "Sprecher 1 · 00:10",
+          "Wir haben Verzögerungen reduziert",
+          "Name unbestätigt"
+        ],
+        [
+          "Sprecher 2 · 00:15",
+          "Haben Sie den Monatsvergleich?",
+          "Name unbestätigt"
+        ]
+      ],
+      "basis": "T1 ist ein verfasster Lehrdialog. Ein geprüftes echtes Transkript kann zugeordnete Worte belegen, ohne die Wahrheit ihrer Aussage zu bestätigen.",
+      "method": [
+        "Wähle Aufnahme, vorhandenes Audio oder tatsächlich verfügbares Paket. Erhalte das Original und wähle normalen Ordner oder Fall als passenden Weg.",
+        "Prüfe Beiträge und Zuordnung anhand von Belegen. Verwende echte Namen nur bei gesicherter Grundlage, sonst beständige Sprecherkennungen. Bereinigung darf Bedeutung nicht verändern.",
+        "Schließe das geprüfte Transkript ab, sobald der Vertrag es erlaubt. Die spätere Nutzung als Fakt braucht eine eigene Grundlage und den Verweis auf den ursprünglichen Beitrag."
+      ],
+      "result_title": "Prüfbarer Wortlaut, unbestätigte Aussage",
+      "conclusion": "Der Auszug ordnet Sprecher 1 eine Aussage über reduzierte Verzögerungen zu. Er identifiziert die Person nicht und belegt keine Reduktion.",
+      "output_columns": [
+        "Element",
+        "Belegt",
+        "Belegt nicht"
+      ],
+      "output_rows": [
+        [
+          "Beitrag 00:10",
+          "Sprecher 1 zugeordnete Worte",
+          "Name oder Betriebsergebnis"
+        ],
+        [
+          "Beitrag 00:15",
+          "Anforderung eines Vergleichs",
+          "Verfügbarkeit des Vergleichs"
+        ],
+        [
+          "Berichtsnutzung",
+          "Als solche zitierte Aussage",
+          "Unbewiesene quantitative Schlussfolgerung"
+        ]
+      ],
+      "check": "Transkriptbereinigung ist keine Zusammenfassung oder inhaltliche Verbesserung. Sprecheridentität und Faktentreue benötigen unterschiedliche Belege.",
+      "question": "Dürfen wir Sprecher 1 als Geschäftsführer benennen, weil die Wortwahl vertraut klingt?",
+      "answer": "Nein. Die Zuordnung braucht Metadaten oder andere Belege. Sonst bleibt Sprecher 1 mit sichtbarer Unsicherheit erhalten.",
+      "practice": "Ergänze Metadaten zu einer Person und aktualisiere die Zuordnung bei unverändertem Originaltext.",
+      "next": "Wähle echte Aufnahme oder Paket und Ziel. Ein normaler Ordner reicht für dauerhafte Transkription ohne unnötigen Fall."
+    },
+    "es": {
+      "title": "Quién lo dijo no demuestra que sea cierto",
+      "goal": "Conservar y atribuir una transcripción sin convertir declaraciones en hechos verificados.",
+      "scenario": "Una recapitulación escrita ficticia contiene dos intervenciones. El hablante 1 dice que se redujeron los retrasos; el 2 pide la comparación mensual. No se identifican las personas ni se aporta la comparación. No existe grabación real del caso.",
+      "request": "Clara, muestra cómo revisas una transcripción antes de utilizarla en un informe.",
+      "scope": "Revisión local de un fragmento didáctico escrito. No se realiza ni simula transcripción alojada; las grabaciones reales usan el workflow autorizado.",
+      "input_columns": [
+        "Intervención ficticia",
+        "Texto",
+        "Metadatos"
+      ],
+      "input_rows": [
+        [
+          "Hablante 1 · 00:10",
+          "Hemos reducido los retrasos",
+          "Nombre sin confirmar"
+        ],
+        [
+          "Hablante 2 · 00:15",
+          "¿Tiene la comparación mensual?",
+          "Nombre sin confirmar"
+        ]
+      ],
+      "basis": "T1 es un diálogo didáctico escrito. Una transcripción real revisada puede respaldar palabras atribuidas sin demostrar la verdad de su afirmación.",
+      "method": [
+        "Elige captura, audio existente o paquete realmente disponible. Conserva el original y selecciona carpeta ordinaria o caso según corresponda.",
+        "Revisa intervenciones y atribución contra pruebas. Usa nombres reales solo con respaldo; en otro caso conserva etiquetas estables. La limpieza no cambia significados.",
+        "Finaliza la transcripción revisada cuando el contrato lo permita. Usar una declaración como hecho posterior requiere base independiente y vínculo con la intervención original."
+      ],
+      "result_title": "Texto revisable, afirmación sin corroborar",
+      "conclusion": "El fragmento atribuye al hablante 1 una reducción de retrasos. No identifica a la persona ni documenta esa reducción.",
+      "output_columns": [
+        "Elemento",
+        "Respalda",
+        "No respalda"
+      ],
+      "output_rows": [
+        [
+          "Intervención 00:10",
+          "Palabras atribuidas al hablante 1",
+          "Nombre o resultado operativo"
+        ],
+        [
+          "Intervención 00:15",
+          "Petición de comparación",
+          "Disponibilidad de la comparación"
+        ],
+        [
+          "Uso en informe",
+          "Declaración citada como tal",
+          "Conclusión cuantitativa sin prueba"
+        ]
+      ],
+      "check": "Limpiar una transcripción no es resumirla ni mejorar su significado. Identidad y veracidad necesitan pruebas diferentes.",
+      "question": "¿Podemos identificar al hablante 1 como director porque su expresión resulta familiar?",
+      "answer": "No. La atribución exige metadatos u otras pruebas. Si faltan, conserva Hablante 1 y expresa la incertidumbre.",
+      "practice": "Añade metadatos que identifiquen a una persona y actualiza atribución conservando el texto original.",
+      "next": "Selecciona grabación o paquete real y destino. Una carpeta ordinaria basta para transcripción duradera sin un caso innecesario."
+    }
+  }
+}

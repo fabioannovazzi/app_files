@@ -1,0 +1,524 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Two files do not always mean two invoices",
+    "goal": "Read a FatturaPA summary and distinguish invoice bodies, formal anomalies and duplicate candidates.",
+    "scenario": "The fictional batch contains one valid invoice XML, another copy of that invoice and a truncated XML. The check concerns formal file content; it does not compare invoices with accounting entries.",
+    "request": "Vera, check this small XML batch and show what needs review.",
+    "scope": "Formal FatturaPA checks only, without confirming booking, deductibility, payment or VAT treatment.",
+    "input_columns": [
+      "Fictional file",
+      "Content",
+      "Condition"
+    ],
+    "input_rows": [
+      [
+        "invoice.xml",
+        "INV-001 · 2026 · EUR 1,220",
+        "One readable invoice body"
+      ],
+      [
+        "invoice-copy.xml",
+        "Same invoice",
+        "Copy to review"
+      ],
+      [
+        "broken.xml",
+        "Truncated document",
+        "Malformed XML"
+      ]
+    ],
+    "basis": "File count differs from invoice-body count. Supplier, number, date and amount support a duplicate candidate, not automatic deletion.",
+    "method": [
+      "Select client, engagement, batch and year, then import the sources into the managed tutorial case.",
+      "Run the current parser and inspect all anomaly and duplicate-group handoff items. Open exact XML when a source fact needs checking.",
+      "Present the per-body summary, duplicate candidates and anomaly memo. Keep unreadable files explicitly visible."
+    ],
+    "result_title": "A batch with two issues to review",
+    "conclusion": "Two readable copies do not automatically represent two economic transactions. The truncated file supplies no reliable extracted invoice record.",
+    "output_columns": [
+      "Item",
+      "Illustrated result",
+      "Action"
+    ],
+    "output_rows": [
+      [
+        "invoice.xml + invoice-copy.xml",
+        "Duplicate candidate",
+        "Compare sources; preserve originals"
+      ],
+      [
+        "broken.xml",
+        "Formal error",
+        "Recover complete XML"
+      ],
+      [
+        "Economic batch total",
+        "Needs review",
+        "Do not blindly add copies"
+      ]
+    ],
+    "check": "An anomaly or duplicate candidate does not authorize file deletion or accounting changes. One XML may contain several invoice bodies.",
+    "question": "Do three received files mean three valid invoices?",
+    "answer": "No. Count files, readable bodies and anomalies separately. The copy and truncated file need explicit treatment.",
+    "practice": "Run the packaged XML starter, then a changed copy, and compare the actual anomaly memos.",
+    "next": "Specify the year and selected batch. Use accounting reconciliation only when that is the requested task."
+  },
+  "vera/financial-analysis": {
+    "title": "Understand revenue concentration",
+    "goal": "Use a supported financial recipe and interpret its indicator without an automatic risk judgment.",
+    "scenario": "A fictional period export contains EUR 100,000 revenue: Alpha 60,000, Beta 25,000 and Gamma 15,000. The professional wants to understand customer dependence, not value the business.",
+    "request": "Vera, analyze customer concentration and show the basis of the result.",
+    "scope": "The customer_concentration recipe on reviewed historical data. This is not valuation, a rating or an independent accounting-source audit.",
+    "input_columns": [
+      "Fictional customer",
+      "Period revenue",
+      "Source"
+    ],
+    "input_rows": [
+      [
+        "Alpha",
+        "EUR 60,000",
+        "F1 · row 1"
+      ],
+      [
+        "Beta",
+        "EUR 25,000",
+        "F1 · row 2"
+      ],
+      [
+        "Gamma",
+        "EUR 15,000",
+        "F1 · row 3"
+      ]
+    ],
+    "basis": "F1 defines this period and scope. It totals EUR 100,000 but supplies no contracts, customer margins or forward-looking evidence.",
+    "method": [
+      "Select the supported recipe that answers the question and qualify sources, period, signs and control total.",
+      "Run the package under its reviewed contract and the same engagement context. Use the supported calculations rather than an improvised substitute.",
+      "Read indicators and limitations. Connect commentary to metrics and retain any unperformed source checks as such."
+    ],
+    "result_title": "Alpha accounts for 60% of revenue",
+    "conclusion": "The largest customer contributes 60%; the first two contribute 85%. These observations identify commercial questions to investigate.",
+    "output_columns": [
+      "Indicator",
+      "Calculation",
+      "Value"
+    ],
+    "output_rows": [
+      [
+        "Largest customer",
+        "60,000 / 100,000",
+        "60%"
+      ],
+      [
+        "First two customers",
+        "85,000 / 100,000",
+        "85%"
+      ],
+      [
+        "Observed customers",
+        "Alpha, Beta, Gamma",
+        "3"
+      ]
+    ],
+    "check": "A large share establishes concentration, not contract fragility or future customer loss. Check scope and total reconciliation.",
+    "question": "Does the 60% share tell us the probability of losing revenue?",
+    "answer": "No. Contracts, renewals and dependencies need separate evidence. The indicator directs questions but supplies no loss probability.",
+    "practice": "Add a fourth customer with EUR 20,000 and check the updated total and shares.",
+    "next": "Choose a supported recipe and prepare reviewed accounting sources with period and control totals."
+  },
+  "vera/journal-bank-reconciliation": {
+    "title": "Two payments for one posting",
+    "goal": "Reconcile bank and journal data while preserving references, groups and unresolved differences.",
+    "scenario": "The fictional journal records EUR 1,200 received for INV-401. The bank statement shows EUR 700 and EUR 500 credits with that reference, plus an EUR 12 fee absent from the supplied journal.",
+    "request": "Vera, reconcile these movements and show what remains open.",
+    "scope": "Bank-to-journal comparison for one period and currency. It does not verify all open items or authorize automatic postings.",
+    "input_columns": [
+      "Fictional source",
+      "Reference",
+      "Amount"
+    ],
+    "input_rows": [
+      [
+        "G1 · journal",
+        "INV-401",
+        "+EUR 1,200"
+      ],
+      [
+        "B1 · bank row 1",
+        "INV-401",
+        "+EUR 700"
+      ],
+      [
+        "B1 · bank row 2",
+        "INV-401",
+        "+EUR 500"
+      ],
+      [
+        "B1 · bank row 3",
+        "Fee",
+        "−EUR 12"
+      ]
+    ],
+    "basis": "The common reference supports 700 + 500 against 1,200. The fee has a different purpose and direction and remains separate.",
+    "method": [
+      "Inspect formats and review columns, signs, dates, currency and references using the actual sources.",
+      "Run supported matches, including reference-supported groups. Preserve component rows; do not search arbitrary combinations merely to make totals close.",
+      "Read matched entries, groups and residuals. Explain the evidence for each link and leave differences and any postings to professional review."
+    ],
+    "result_title": "Receipt reconstructed, fee still open",
+    "conclusion": "700 + 500 = EUR 1,200 for INV-401. The EUR 12 bank fee has no counterpart in the supplied journal.",
+    "output_columns": [
+      "Item",
+      "Comparison",
+      "Illustrated result"
+    ],
+    "output_rows": [
+      [
+        "INV-401",
+        "700 + 500 ↔ EUR 1,200",
+        "Common-reference group"
+      ],
+      [
+        "Fee",
+        "−EUR 12 ↔ no posting",
+        "Residual for review"
+      ]
+    ],
+    "check": "An equal sum does not justify every group. Sign, period, currency and references must remain coherent.",
+    "question": "Without references, can we still automatically assign both credits to INV-401?",
+    "answer": "The sum alone does not support the same automatic group. Review the evidence and preserve ambiguity when a sufficient connection is missing.",
+    "practice": "Change the second credit to EUR 480 and inspect the residual without inventing another payment.",
+    "next": "Select journal and statement for the same scope; clarify only mappings that the files cannot resolve."
+  },
+  "vera/journal-sampling": {
+    "title": "A reliable population before the sample",
+    "goal": "Understand why journal qualification precedes the selection of entries for review.",
+    "scenario": "The fictional journal retains original movement IDs, accounts and debit/credit amounts. A value reads '1.200,00', requiring the correct numeric interpretation. A total row is a summary, not another posting to sample.",
+    "request": "Vera, prepare this journal and show the sample alongside the population checks.",
+    "scope": "Preparation and sampling under the current contract. A selection is not automatically statistically representative or document-vouched.",
+    "input_columns": [
+      "Fictional row",
+      "Data",
+      "Review choice"
+    ],
+    "input_rows": [
+      [
+        "G1 · row 2",
+        "M-101; debit 1.200,00",
+        "Italian number format"
+      ],
+      [
+        "G1 · row 3",
+        "M-101; credit 1.200,00",
+        "Same movement, second line"
+      ],
+      [
+        "G1 · row 4",
+        "Total 1.200,00 / 1.200,00",
+        "Summary, not a posting"
+      ]
+    ],
+    "basis": "IDs and locators come from G1. A physical row number does not replace the original movement identifier.",
+    "method": [
+      "Inspect and review scope, mappings, number format and summary rows before normalization.",
+      "Qualify the complete population and verify closure and monetary controls. Apply the reviewed selection method while preserving original identifiers.",
+      "Deliver normalized population, diagnostics, sample and assurance companions. Downstream Vouching uses this closed handoff without remapping the source."
+    ],
+    "result_title": "Qualified population before selection",
+    "conclusion": "The case separates two accounting lines of one movement from a total row. Under the reviewed format, 1.200,00 means EUR 1,200.",
+    "output_columns": [
+      "Item",
+      "Illustrated treatment",
+      "Reason"
+    ],
+    "output_rows": [
+      [
+        "Rows 2–3",
+        "Population: movement M-101",
+        "Original identity and both sides"
+      ],
+      [
+        "Row 4",
+        "Summary excluded with reviewed basis",
+        "Avoid double counting"
+      ],
+      [
+        "Later sample",
+        "Bound to qualified population",
+        "Preserve traceability"
+      ]
+    ],
+    "check": "A normalized file is not qualified merely because it opens. Wrong mappings can yield plausible but incorrect numbers.",
+    "question": "Can we call the movement M-2 because it is on row two?",
+    "answer": "No. Preserve M-101 from the source. The row locator helps recover evidence; it does not create movement identity.",
+    "practice": "Add an unbalanced line and verify that qualification exposes it before sampling.",
+    "next": "Prepare the full export and control totals, then explain the purpose of selection."
+  },
+  "vera/management-control-pack": {
+    "title": "Actual versus Budget: read amounts and percentages",
+    "goal": "Interpret a management report using reviewed periods, signs and categories.",
+    "scenario": "Fictional Arco compares January and February. Actual revenue is EUR 150,000 versus Budget 140,000; included costs are 60,000 versus 59,000. No open-item schedules or later-month forecasts are supplied.",
+    "request": "Vera, show where the result differs from Budget in the two closed months.",
+    "scope": "A margin comparison on supplied categories. Unsupported sections remain unavailable; no forecast, aging schedule or future months are invented.",
+    "input_columns": [
+      "January–February item",
+      "Actual",
+      "Budget"
+    ],
+    "input_rows": [
+      [
+        "Revenue",
+        "EUR 150,000",
+        "EUR 140,000"
+      ],
+      [
+        "Included costs",
+        "EUR 60,000",
+        "EUR 59,000"
+      ],
+      [
+        "Margin on included items",
+        "EUR 90,000",
+        "EUR 81,000"
+      ]
+    ],
+    "basis": "M1 and M2 describe the same two complete months. Category meaning and cost signs are reviewed before comparison.",
+    "method": [
+      "Inspect exports and review roles, columns, categories, signs, currency, period and cutoff. Confirm control totals.",
+      "Run the local pack and read metrics and limitations. Show absolute and percentage changes, withholding misleading percentages on zero or negative bases.",
+      "Explain the main contributions while separating observations from hypotheses. Optional sections require adequate inputs and commentary remains reviewable."
+    ],
+    "result_title": "Margin exceeds Budget by EUR 9,000",
+    "conclusion": "Extra revenue adds EUR 10,000 and higher costs absorb EUR 1,000. Margin rises from EUR 81,000 to EUR 90,000: +11.11%.",
+    "output_columns": [
+      "Item",
+      "Δ EUR",
+      "Δ % on Budget"
+    ],
+    "output_rows": [
+      [
+        "Revenue",
+        "+10,000",
+        "+7.14%"
+      ],
+      [
+        "Costs",
+        "+1,000",
+        "+1.69% · unfavorable"
+      ],
+      [
+        "Margin",
+        "+9,000",
+        "+11.11%"
+      ]
+    ],
+    "check": "A positive cost change is not favorable. Check comparable periods and categories before explaining a commercial cause.",
+    "question": "What do we retain when an item's Budget is zero?",
+    "answer": "Retain the EUR difference and mark the percentage unavailable. Do not display infinity or an invented percentage.",
+    "practice": "Add a complete month to both exports and rerun with the new cutoff.",
+    "next": "Select coherent accounting and Budget exports. Add aging or forecast inputs when they belong to the assignment and are available."
+  },
+  "vera/new-client": {
+    "title": "Start a client file without turning gaps into confirmations",
+    "goal": "Move from received documents to a professional setup proposal with explicit missing evidence.",
+    "scenario": "Fictional Arco Srl supplies a company extract, the representative's ID and a draft engagement letter. The letter is unsigned and the beneficial-ownership declaration is missing. Document preparation precedes Italian professional setup.",
+    "request": "Vera, organize this new client's intake and show what is still needed.",
+    "scope": "Fictional Italian case. Another working language does not enable a different professional country pack.",
+    "input_columns": [
+      "Fictional document",
+      "Observed state",
+      "Meaning"
+    ],
+    "input_rows": [
+      [
+        "N1 · company extract",
+        "Readable",
+        "Identity for review"
+      ],
+      [
+        "N2 · representative ID",
+        "Received",
+        "Relationship and validity to check"
+      ],
+      [
+        "N3 · engagement letter",
+        "Unsigned draft",
+        "Does not prove acceptance"
+      ],
+      [
+        "Ownership declaration",
+        "Not received",
+        "Request for review"
+      ]
+    ],
+    "basis": "Received files establish documentary availability. Missing signature and declaration remain separate from proposed professional actions.",
+    "method": [
+      "Prepare and classify the received documents, linking extraction and missing items to their sources.",
+      "Review and apply documentary decisions; promote only a coherent Italian handoff into the professional setup phase.",
+      "Prepare identity, engagement, privacy, AML and monitoring proposals with evidence and open points. The professional persists actual decisions through the review surfaces."
+    ],
+    "result_title": "Documents organized, acceptance still incomplete",
+    "conclusion": "The extract and ID are available. Engagement is unsigned and ownership documentation is missing; the file is not declared complete.",
+    "output_columns": [
+      "Area",
+      "Basis",
+      "Next step"
+    ],
+    "output_rows": [
+      [
+        "Identity",
+        "N1–N2",
+        "Review relationships"
+      ],
+      [
+        "Engagement",
+        "Unsigned N3",
+        "Complete ordinary acceptance"
+      ],
+      [
+        "AML",
+        "Missing declaration",
+        "Review request and relevant analysis"
+      ]
+    ],
+    "check": "Receiving a document does not mean accepting its content. Workflow completion records delivery, not automatic client acceptance.",
+    "question": "The folder is named 'approved client'. Can we use that status?",
+    "answer": "No. Status comes from evidence and persisted decisions, not the folder name or its implied meaning.",
+    "practice": "Add the signed engagement letter and update affected proposals while retaining open AML issues.",
+    "next": "Select the actual client and received documents. A later focused AML review need not repeat all intake."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "A later payment explains the item, not the earlier balance",
+    "goal": "Verify open items at a cutoff while distinguishing subsequent events.",
+    "scenario": "At 30 June, the fictional schedule reports INV-701 open for EUR 1,000. Linked payments are EUR 600 on 28 June and EUR 400 on 5 July. The earlier payment has not been applied in the supplied open-item report.",
+    "request": "Vera, verify this item at 30 June and explain how to use the July payment.",
+    "scope": "Verification of a reported open population at a date. Invoices alone do not reconstruct outstanding balances.",
+    "input_columns": [
+      "Fictional source",
+      "Date",
+      "Amount"
+    ],
+    "input_rows": [
+      [
+        "O1 · INV-701 schedule",
+        "30 June",
+        "EUR 1,000 reported open"
+      ],
+      [
+        "B1 · linked payment",
+        "28 June",
+        "EUR 600"
+      ],
+      [
+        "B2 · later payment",
+        "5 July",
+        "EUR 400"
+      ]
+    ],
+    "basis": "O1 defines the reported population. Only B1 precedes the cutoff; the links from payments to the item require verification.",
+    "method": [
+      "Confirm cutoff, client, population and totals. Obtain ledger and supporting evidence for the same engagement.",
+      "Compare amounts and relationships while separating candidates and reviewed decisions. Show cutoff balances, differences and later payments distinctly.",
+      "Present review items and persist actual decisions. Keep unresolved questions visible without automatically creating accounting entries."
+    ],
+    "result_title": "Reviewed cutoff balance: EUR 400",
+    "conclusion": "If B1's relationship is confirmed, EUR 400 remains at 30 June. B2 documents later collection, not a retrospectively zero balance.",
+    "output_columns": [
+      "View",
+      "Amount",
+      "Basis"
+    ],
+    "output_rows": [
+      [
+        "Reported open",
+        "EUR 1,000",
+        "O1"
+      ],
+      [
+        "Pre-cutoff payment",
+        "−EUR 600",
+        "B1 · subject to review"
+      ],
+      [
+        "Cutoff residual",
+        "EUR 400",
+        "1,000 − 600"
+      ],
+      [
+        "Subsequent collection",
+        "EUR 400",
+        "B2 · 5 July"
+      ]
+    ],
+    "check": "The report date remains authoritative. A later receipt may corroborate recovery but does not rewrite history.",
+    "question": "Everything was collected by July. Can we show zero at 30 June?",
+    "answer": "No. The reviewed case has EUR 400 remaining at the cutoff. Show the July receipt as a subsequent event.",
+    "practice": "Move B2 to 29 June and rerun, checking which conclusion changes.",
+    "next": "Supply the open-item report at a precise date, accounting movements and relevant bank evidence."
+  },
+  "vera/purchase-invoice-review": {
+    "title": "Connect each purchase invoice to the actual posting",
+    "goal": "Read population coverage and identify invoices needing accounting review.",
+    "scenario": "The fictional purchase batch has three invoices: one with a consistent posting, one with no posting found and one with two ambiguous candidates. Both the period and accounting population are explicitly bounded.",
+    "request": "Vera, check how this purchase-invoice batch connects to the actual accounting entries.",
+    "scope": "Review of supplied purchase invoices and postings. A missing link in this perimeter does not prove an invoice was never booked.",
+    "input_columns": [
+      "Fictional invoice",
+      "Available accounting support",
+      "Question"
+    ],
+    "input_rows": [
+      [
+        "PA-101 · EUR 1,220",
+        "One consistent entry",
+        "Review nature and treatment"
+      ],
+      [
+        "PA-102 · EUR 610",
+        "No candidate in the period",
+        "Recover or clarify"
+      ],
+      [
+        "PA-103 · EUR 244",
+        "Two candidates",
+        "Resolve identity"
+      ]
+    ],
+    "basis": "P1 is the XML batch and G1 the period's posting export. Findings stay bound to both perimeters; no missing posting is invented.",
+    "method": [
+      "Import the invoice population and actual postings; qualify period, accounts, identities and batch totals.",
+      "Run the current matching and review method, including its required native capabilities. Leave unavailable stages pending instead of simulating them.",
+      "Read coverage, ambiguities and review proposals. The professional assesses expense nature and treatment; proposals do not become automatic postings or approvals."
+    ],
+    "result_title": "Three invoices, three distinct states",
+    "conclusion": "One link is available, one is absent within scope and one is ambiguous. Preserve those distinctions through review.",
+    "output_columns": [
+      "Document",
+      "Illustrated state",
+      "Useful next step"
+    ],
+    "output_rows": [
+      [
+        "PA-101",
+        "Link available",
+        "Review treatment against evidence"
+      ],
+      [
+        "PA-102",
+        "Not found within scope",
+        "Check period and export"
+      ],
+      [
+        "PA-103",
+        "Ambiguous",
+        "Resolve candidates with evidence"
+      ]
+    ],
+    "check": "Matching coverage differs from accounting correctness. A successful technical run does not approve deductibility or VAT treatment.",
+    "question": "Can we state 'invoice not booked' without qualification for PA-102?",
+    "answer": "The supported finding is 'posting not found in the examined perimeter'. Check export completeness and period before a broader conclusion.",
+    "practice": "Add PA-102's posting and compare a fresh run without deleting the previous result.",
+    "next": "Select the purchase batch and actual period postings, and verify the installed workflow's required native capabilities."
+  }
+}

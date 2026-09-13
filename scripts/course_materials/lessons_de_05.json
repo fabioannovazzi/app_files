@@ -1,0 +1,573 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Ein Sortimentssignal ist kein Marktanteil",
+    "goal": "Retailer Signals mit klaren Gruppen, Bezugsgrößen und Grenzen der Momentaufnahme lesen.",
+    "scenario": "Das fiktive Händlerpaket North enthält 20 neue Produkte, davon 12 nachfüllbar, sowie 80 übrige Produkte, davon 24 nachfüllbar. Verkaufs- oder Marktanteilsdaten fehlen.",
+    "request": "Clara, zeige, ob Nachfüllbarkeit bei neuen Produkten häufiger ist und was das bedeutet.",
+    "scope": "Vergleich neuer und übriger Produkte in einem lokalen Lehrpaket. Während der Lektion erfolgen keine Serverbeschaffung und keine neue Händlerabfrage.",
+    "input_columns": [
+      "Fiktive Gruppe",
+      "Nachfüllbare Produkte",
+      "Produkte insgesamt"
+    ],
+    "input_rows": [
+      [
+        "Neu",
+        "12",
+        "20"
+      ],
+      [
+        "Übrige",
+        "24",
+        "80"
+      ]
+    ],
+    "basis": "A1 definiert Gruppen und Merkmal. Ein Vergleich von 12 mit 24 ohne ihre unterschiedlichen Bezugsgrößen wäre irreführend.",
+    "method": [
+      "Beginne mit einem konsistenten geprüften Paket, prüfe Merkmale anhand der Produkte und erhalte vorgeschriebene Vergleiche und Schwellen.",
+      "Interpretiere Tabellen ohne automatische Wertung aus einem Merkmaltreffer. Verknüpfe Produktbelege und Bilder mit dem Paket.",
+      "Erstelle den lokalen Bericht und führe unabhängige inhaltliche Prüfung, Browserkontrolle und aktuelle Richtigkeitsprüfungen aus. Nenne tatsächliches Urteil und Grenzen."
+    ],
+    "result_title": "Nachfüllbar: 60 % der neuen, 30 % der übrigen Produkte",
+    "conclusion": "Das Merkmal ist in der neuen Gruppe doppelt so häufig. Das beschreibt das beobachtete Sortiment, nicht Nachfrage oder Verkäufe.",
+    "output_columns": [
+      "Gruppe",
+      "Berechnung",
+      "Merkmalsanteil"
+    ],
+    "output_rows": [
+      [
+        "Neu",
+        "12 / 20",
+        "60 %"
+      ],
+      [
+        "Übrige",
+        "24 / 80",
+        "30 %"
+      ],
+      [
+        "Beispielvergleich",
+        "60 % / 30 %",
+        "2×"
+      ]
+    ],
+    "check": "Erhalte Bezugsgrößen und Datum der Momentaufnahme. Produktname oder einzelnes Merkmal belegen keinen Markterfolg.",
+    "question": "Bedeutet 60 %, dass nachfüllbare Produkte 60 % des Umsatzes erzeugen?",
+    "answer": "Nein. Es ist der Anteil neuer Produkte mit diesem Merkmal im Paket. Umsatzdaten liegen nicht vor.",
+    "practice": "Ergänze zwei neue nicht nachfüllbare Produkte und berechne den Anteil mit verändertem Nenner.",
+    "next": "Wähle Händler, Kategorie und unterstützten Vergleich; kläre, ob die Evidenz eine Momentaufnahme oder neue Beschaffung ist."
+  },
+  "clara/brand-fit": {
+    "title": "Eine Händlerlücke ist nicht immer eine Kataloglücke",
+    "goal": "Händlersignal, Markenpräsenz und eigenen Katalog als getrennte Belegumfänge vergleichen.",
+    "scenario": "Ein fiktiver Retailer-Signals-Bericht zeigt häufigere Nachfüllbarkeit unter neuen Produkten. Lume hat bei North zwei nicht nachfüllbare Produkte. Der eigene Katalog enthält Lume R zum Nachfüllen; Preis und Händlerverfügbarkeit sind nicht dokumentiert.",
+    "request": "Clara, zeige, ob Lumes Katalog einen zum Signal passenden Kandidaten enthält.",
+    "scope": "Drei lokale fiktive Belegbestände. Ein Kandidat ist keine automatische Einführungsempfehlung; eine Momentaufnahme ist keine aktuelle Regalprüfung.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Information",
+      "Umfang"
+    ],
+    "input_rows": [
+      [
+        "B1 · abgeschlossene Retailer Signals",
+        "Nachfüllbarkeit bei neuen Produkten häufiger",
+        "Händler North"
+      ],
+      [
+        "B2 · Lume-Präsenz",
+        "Zwei Produkte, keines nachfüllbar",
+        "Händlermomentaufnahme"
+      ],
+      [
+        "B3 · Lume-Katalog",
+        "Nachfüllbares Lume R",
+        "Eigener Katalog"
+      ]
+    ],
+    "basis": "B1 liefert das vorgelagerte Signal, B2 beobachtete Präsenz und B3 den Markenkatalog. Ihre Bedeutungen dürfen nicht verschmelzen.",
+    "method": [
+      "Beginne mit einem abgeschlossenen geprüften Retailer-Signals-Bericht und bestimme Umfang und Belegdatum.",
+      "Vergleiche das Signal mit Händlerpräsenz und eigenem Katalog. Beurteile Kandidaten im Kontext statt anhand eines einzigen Merkmals.",
+      "Erstelle den privaten Brand-Fit-Bericht mit Grundlagen, Alternativen und Grenzen. Schließe unabhängige und visuelle Prüfung ab; Vorschläge bleiben prüfbare Urteile."
+    ],
+    "result_title": "Lume R verdient weitere Prüfung",
+    "conclusion": "Der Katalog enthält eine Nachfülloption, die in Lumes beobachteter North-Präsenz fehlt. Preis, Positionierung und Verfügbarkeit sind weiter zu untersuchen.",
+    "output_columns": [
+      "Frage",
+      "Belegte Antwort",
+      "Grenze"
+    ],
+    "output_rows": [
+      [
+        "Beim Händler vorhanden?",
+        "Nicht in B2",
+        "Keine aktuelle Abfrage"
+      ],
+      [
+        "Im Katalog vorhanden?",
+        "Lume R in B3",
+        "Keine belegte Lieferbarkeit"
+      ],
+      [
+        "Für den Händler geeignet?",
+        "Kandidat mit einem passenden Merkmal",
+        "Gesamtbeurteilung offen"
+      ]
+    ],
+    "check": "Fehlende Händlerpräsenz kann eine Vertriebslücke statt einer Kataloglücke sein. Nachfüllbarkeit allein belegt keine Eignung.",
+    "question": "Können wir allein daraus die Einführung von Lume R empfehlen?",
+    "answer": "Wir können einen zu untersuchenden Kandidaten benennen. Preis, Positionierung, Verfügbarkeit und Gesamtzusammenhang bleiben zu beurteilen.",
+    "practice": "Ergänze Preis- und Positionierungsbelege und überprüfe das Urteil bei weiterhin getrennten Belegumfängen.",
+    "next": "Beginne mit dem geprüften Retailer-Signals-Bericht und der gewählten Marke. Lade den privaten Bericht nicht hoch, um den Vergleich neu zu erzeugen."
+  },
+  "clara/deck-correction": {
+    "title": "Aus Feedback eine überprüfbare Folienänderung machen",
+    "goal": "Einen Kommentar in eine sichtbare Überarbeitung umsetzen und unbetroffene Inhalte erhalten.",
+    "scenario": "Eine fiktive Präsentation mit drei Folien vergleicht 2025 und 2026. Auf Folie zwei soll das Ergebnis zuerst stehen; Zahlen und Folie drei sollen bleiben. Das Ergebnis +12 % ist bereits belegt.",
+    "request": "Clara, setze dieses Feedback um und zeige genau die Änderungen.",
+    "scope": "Überarbeitung einer Kopie. Die Lektion nutzt fiktive schriftliche Notizen, startet keine gehostete Sprachaufnahme und erfindet keine Aufnahme.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Inhalt",
+      "Rolle"
+    ],
+    "input_rows": [
+      [
+        "D1 · Originalpräsentation",
+        "Drei Folien, vorhandener Stil und Zahlen",
+        "Visuelle Grundlage"
+      ],
+      [
+        "D2 · Feedback",
+        "Ergebnis zuerst auf Folie 2",
+        "Gewünschte Änderung"
+      ],
+      [
+        "D3 · Daten",
+        "+12 % im Vergleich",
+        "Aussagegrundlage"
+      ]
+    ],
+    "basis": "D2 verlangt eine andere Reihenfolge, keine neue Berechnung. D1 bestimmt zu erhaltende Inhalte, D3 belegt die Zahl.",
+    "method": [
+      "Bestimme genaue Präsentation und Feedback. Interpretiere jede Anforderung mit Umfang, Unsicherheit und unveränderten Teilen.",
+      "Erstelle Änderungsregister und Erfolgskriterien. Bei PPTX kommt der vorgeschriebene Verständnis- und Freigabepunkt vor Bearbeitung der Kopie.",
+      "Rendere und prüfe die Endfassung gegen das Original. Kontrolliere Zahlen, Lesbarkeit und unbetroffene Folien unter Erhalt der Belegverbindungen."
+    ],
+    "result_title": "Folie 2 · das Ergebnis steht zuerst",
+    "conclusion": "Der Titel kann 'Das Ergebnis steigt um 12 %' lauten. Die Erklärung folgt; Zahlen und Folie drei bleiben unverändert.",
+    "output_columns": [
+      "Anforderung",
+      "Geplante Änderung",
+      "Erfolgsbeleg"
+    ],
+    "output_rows": [
+      [
+        "Ergebnis zuerst",
+        "Titel von Folie 2",
+        "+12 % am Anfang sichtbar"
+      ],
+      [
+        "Zahlen erhalten",
+        "Keine Datenänderung",
+        "Vergleich mit D1/D3"
+      ],
+      [
+        "Folie 3 erhalten",
+        "Keine Änderung",
+        "Vorher-Nachher-Vergleich"
+      ]
+    ],
+    "check": "Eine Foliennummer lokalisiert Inhalt, interpretiert aber keine Anweisung. Eine begrenzte Korrektur verlangt keinen kompletten Neuaufbau.",
+    "question": "Dürfen wir +12 % durch 'starkes Wachstum' ersetzen, um den Titel spannender zu machen?",
+    "answer": "Gewünscht ist, das Ergebnis hervorzuheben, nicht durch ein Urteil zu ersetzen. Erhalte die belegte Kennzahl und prüfe zusätzliche Interpretation.",
+    "practice": "Ergänze eine weitere Änderung und definiere den konkreten Beleg für ihre erfolgreiche Umsetzung.",
+    "next": "Wähle genaue Präsentation und Feedback. Echte Audiodaten folgen außerhalb dieser Lektion dem autorisierten Transkriptionsweg."
+  },
+  "clara/html-deck": {
+    "title": "Drei Folien für eine Entscheidung",
+    "goal": "Eine lesbare quellengerechte HTML-Präsentation mit belegten Aussagen erstellen.",
+    "scenario": "Ein fiktiver Kurzbericht beschreibt einen Geschäftstest: 40 Kunden eingeladen, 10 Teilnehmende, 6 an einem Folgegespräch interessiert. Das Team entscheidet über einen erweiterten Test. Bestellungen und Umsatzdaten fehlen.",
+    "request": "Clara, mache aus diesem Bericht drei Folien für die Entscheidung über den nächsten Test.",
+    "scope": "Quellenbasierte Präsentation ohne erfundene Recherche oder Daten. Geäußertes Interesse ist keine Verkaufskonversion.",
+    "input_columns": [
+      "Fiktive Quelle B1",
+      "Wert",
+      "Bedeutung"
+    ],
+    "input_rows": [
+      [
+        "Eingeladen",
+        "40",
+        "Kontaktierte Grundgesamtheit"
+      ],
+      [
+        "Teilnehmende",
+        "10",
+        "25 % der Eingeladenen"
+      ],
+      [
+        "Interesse am Folgegespräch",
+        "6",
+        "60 % der Teilnehmenden; keine Bestellungen"
+      ]
+    ],
+    "basis": "Alle Werte stammen aus B1. Die Prozentwerte haben unterschiedliche Nenner, die neben die Zahlen gehören.",
+    "method": [
+      "Bestimme Zielgruppe und Entscheidung, lies die Quelle und plane Aussagen samt Belegen.",
+      "Erstelle die Präsentation nach aktuellem HTML-Vertrag und verknüpfe Inhalte mit Evidenz. Eine klare visuelle Hierarchie macht die Botschaft lesbar.",
+      "Prüfe jede Folie in Browser und Renderings auf Zahlen, Quellen, Überläufe und Navigation. Liefere genau die geprüfte Version."
+    ],
+    "result_title": "Vom Testergebnis zum nächsten Versuch",
+    "conclusion": "Zehn von 40 Eingeladenen nahmen teil. Sechs wünschen ein Folgegespräch: Grundlage für einen weiteren Test, kein Verkaufsnachweis.",
+    "output_columns": [
+      "Folie",
+      "Botschaft",
+      "Sichtbarer Beleg"
+    ],
+    "output_rows": [
+      [
+        "1 · Ergebnis",
+        "10 Teilnehmende aus 40 Einladungen",
+        "B1 · 25 %"
+      ],
+      [
+        "2 · Interesse",
+        "6 von 10 wünschen ein Folgegespräch",
+        "B1 · Nenner 10"
+      ],
+      [
+        "3 · Entscheidung",
+        "Nächsten Geschäftstest bestimmen",
+        "Bestellungen und Umsatz fehlen"
+      ]
+    ],
+    "check": "Überschriften und Grafiken müssen Nenner erhalten. Auch auf einer eleganten Folie bleibt eine über die Quelle hinausgehende Aussage falsch.",
+    "question": "Darf Folie zwei '60 % Konversion' heißen?",
+    "answer": "Das könnte Verkäufe suggerieren. Die Quelle misst Folgegesprächsinteresse unter Teilnehmenden; der Titel muss diese Bedeutung nennen.",
+    "practice": "Formuliere den zweiten Titel mit Zahl, Nenner und Bedeutung und prüfe ihn in der Präsentation.",
+    "next": "Wähle Dokumente und Entscheidungsbedarf der Zielgruppe. Verlange eine vollständige belegte Präsentation."
+  },
+  "clara/hosted-interview": {
+    "title": "Vertiefend fragen, ohne Antworten vorzugeben",
+    "goal": "Ein Gesprächsbriefing für externe Teilnehmende vorbereiten und den Weg vom Link zur geprüften Evidenz verstehen.",
+    "scenario": "Ein fiktives Briefing untersucht, wie eine Betriebsleitung Lieferverzögerungen bearbeitet. Im Mittelpunkt stehen der letzte konkrete Vorfall und die Entscheidung, ohne Mandantendetails oder erwartete Antwort.",
+    "request": "Clara, zeige, wie du ein externes Interview zu diesem Prozess vorbereitest.",
+    "scope": "Nur lokale Briefingvorbereitung und Prüfung. Kein Teilnehmerlink, keine Kontaktaufnahme oder gehostete Übertragung. Ein echtes Interview ist ein späterer autorisierter Auftrag.",
+    "input_columns": [
+      "Fiktives Briefingelement",
+      "Inhalt",
+      "Zweck"
+    ],
+    "input_rows": [
+      [
+        "Ziel",
+        "Umgang mit Verzögerungen verstehen",
+        "Prozessentscheidung"
+      ],
+      [
+        "Einstiegsfrage",
+        "Beschreiben Sie die letzte konkrete Verzögerung",
+        "Beobachtbarer Vorfall"
+      ],
+      [
+        "Vertiefung",
+        "Wer entschied anhand welcher Informationen?",
+        "Rollen und Belege"
+      ],
+      [
+        "Grenze",
+        "Keine Mandantennamen oder -details erfragen",
+        "Gesprächsumfang"
+      ]
+    ],
+    "basis": "H1 ist ein Beispielbriefing, keine registrierte Kampagne und kein echtes Teilnehmertranskript.",
+    "method": [
+      "Wähle eine genaue versionierte Kampagne oder entwirf ein begrenztes individuelles Briefing. Unterscheide tiefes Fallverständnis von vergleichbarer Forschung.",
+      "Erzeuge in autorisierter echter Arbeit einen individuellen befristeten Link über den verfügbaren Dienst. Das Gespräch passt sich an, statt einen Fragebogen mechanisch vorzulesen.",
+      "Prüfe Status und hole Paket und Qualitätsprüfung vor Ablauf ab. Antworten bleiben Aussagen; Aufnahme in einen Fall benötigt eine eigene angeforderte Handlung."
+    ],
+    "result_title": "Ein Briefing zur Prüfung",
+    "conclusion": "Das Briefing beginnt mit einem Vorfall und untersucht Entscheidungen und Belege, ohne Ineffizienz oder eine Schlussfolgerung vorwegzunehmen.",
+    "output_columns": [
+      "Frage",
+      "Möglicher Erkenntnisgewinn",
+      "Vermeiden"
+    ],
+    "output_rows": [
+      [
+        "Letzte konkrete Verzögerung",
+        "Chronologie des Vorfalls",
+        "Urteil in der Frage"
+      ],
+      [
+        "Wer entschied mit welchen Daten?",
+        "Rollen und Informationen",
+        "Erfundene Namen"
+      ],
+      [
+        "Was geschah danach?",
+        "Ergebnis und Folgeschritte",
+        "Meinung als Beweis"
+      ]
+    ],
+    "check": "Hosted Interview unterscheidet sich von der Standardstimme dieser Lektion. Ein Briefing beweist keine Linkerstellung; ein abgeschlossenes Gespräch macht Aussagen nicht wahr.",
+    "question": "Ist 'Warum ist Ihr Prozess so langsam?' ein guter Einstieg?",
+    "answer": "Die Frage setzt ein Urteil voraus. Ein konkreter Vorfall erschließt Zeiten, mögliche Ursachen und Entscheidungen ohne vorgegebene Schlussfolgerung.",
+    "practice": "Überarbeite eine Briefingfrage und benenne die erhoffte Evidenz, ohne einen Link zu erzeugen.",
+    "next": "Wähle für ein echtes Interview Teilnehmende, Ziel, Sprache und Ablaufzeit. Der reguläre gehostete Workflow erklärt seine Datenflüsse."
+  },
+  "clara/reporting-engine": {
+    "title": "Vor der Grafik klären, was die Daten bedeuten",
+    "goal": "Aus einem Datensatz einen lesbaren Vergleich mit geprüften Rollen und Kennzahlen erstellen.",
+    "scenario": "Der fiktive Datensatz zeigt Nettoumsatz von EUR 40.000 im Januar und EUR 50.000 im Februar. Ein separates Discount-Feld fehlt. Quellennotizen bestätigen, dass Sales Rabatte bereits berücksichtigt; ein erneuter Abzug wäre falsch.",
+    "request": "Clara, zeige den Umsatzverlauf und erkläre die verwendeten Daten.",
+    "scope": "Datenaufnahme, Kennzahlenbedeutung und Zeitvergleich. Fehlende Größen sind nicht null; Claras Fähigkeit wird nicht als Veras ausgegeben.",
+    "input_columns": [
+      "Fiktive Periode",
+      "Sales",
+      "Quellennotiz"
+    ],
+    "input_rows": [
+      [
+        "2026-01",
+        "EUR 40.000",
+        "Nettoumsatz"
+      ],
+      [
+        "2026-02",
+        "EUR 50.000",
+        "Nettoumsatz"
+      ],
+      [
+        "Separates Discount",
+        "Fehlt",
+        "Bereits in Sales berücksichtigt"
+      ]
+    ],
+    "basis": "R1 enthält zwei Monate; R2 definiert Sales als netto. Discount fehlt als eigene Kennzahl und ist kein erfasster Nullwert.",
+    "method": [
+      "Führe die Datenaufnahme aus und prüfe Daten, Profil und Notizen. Prüfe Bedeutung, Aggregation sowie Sales-, Discount- und COGS-Rollen; Spaltennamen allein reichen nicht.",
+      "Wähle eine kompatible Fähigkeit und rendere über Claras Adapter unter Erhalt des tatsächlichen Auftrags und Ausgabenachweises.",
+      "Öffne das Ergebnis und prüfe Werte, Einheiten, Perioden und Schlussfolgerung. Verwende bei späteren Uploads einen passenden stabilen Bedeutungsvertrag erneut."
+    ],
+    "result_title": "Nettoumsatz steigt um EUR 10.000",
+    "conclusion": "Nettoumsatz steigt von EUR 40.000 auf EUR 50.000: EUR 10.000 oder 25 % mehr. Separate Rabatte und Kosten sind nicht verfügbar.",
+    "output_columns": [
+      "Kennzahl",
+      "Wert",
+      "Grundlage"
+    ],
+    "output_rows": [
+      [
+        "Januar",
+        "EUR 40.000",
+        "R1 · Nettoumsatz"
+      ],
+      [
+        "Februar",
+        "EUR 50.000",
+        "R1 · Nettoumsatz"
+      ],
+      [
+        "Veränderung",
+        "+EUR 10.000 · +25 %",
+        "Januarbasis EUR 40.000"
+      ]
+    ],
+    "check": "Technische Kompatibilität und inhaltliche Richtigkeit sind verschiedene Prüfungen. Gültige Spalten können geschäftlich falsch zugeordnet sein.",
+    "question": "Dürfen wir ohne Discount-Spalte sagen, es seien keine Rabatte gewährt worden?",
+    "answer": "Nein. Sales ist netto, ein eigener Rabattwert fehlt. Eine fehlende Spalte beweist nicht das Fehlen von Rabatten.",
+    "practice": "Ergänze März mit derselben Sales-Definition und prüfe Wiederverwendung des Vertrags und aktualisierte Grafik.",
+    "next": "Wähle CSV, Excel oder Parquet mit Kennzahlennotizen. Ist-/Budget-Berichte nutzen Claras eigenen Budgetweg innerhalb dieses Workflows."
+  },
+  "clara/research-video": {
+    "title": "Eine Szene, eine Quelle, ein Satz",
+    "goal": "Szenenbilder, Sprechertext und Aussagen in einem kurzen Recherchevideo aufeinander abstimmen.",
+    "scenario": "Drei fiktive Szenen zeigen einen Auftrag, ein geprüftes Dokument und ein Ergebnis mit offenen Punkten. Geplant sind 30 Sekunden. Die Bilder enthalten keine quantitativen Ergebnisse; der Sprechertext kann keine gemessene Zeitersparnis versprechen.",
+    "request": "Clara, zeige die Vorbereitung von Szenen und Sprechertext vor der Videoerzeugung.",
+    "scope": "Lokaler Szenenplan und Textentwurf. Kein gehosteter Audioaufruf und keine behauptete MP4-Erzeugung. Echte Produktion folgt dem normalen autorisierten Weg.",
+    "input_columns": [
+      "Fiktive Szene",
+      "Bildquelle",
+      "Belegte Botschaft"
+    ],
+    "input_rows": [
+      [
+        "1 · Auftrag",
+        "V1 · gewähltes Briefing",
+        "Mit einem Ziel beginnen"
+      ],
+      [
+        "2 · Prüfung",
+        "V2 · Dokument mit Verweisen",
+        "Aussagen behalten Quellen"
+      ],
+      [
+        "3 · Durchsicht",
+        "V3 · Ergebnis mit offenen Punkten",
+        "Fachliche Prüfung bleibt"
+      ]
+    ],
+    "basis": "V1–V3 tragen drei qualitative Schritte, keine gemessene Ersparnis, Wirksamkeit oder Geschäftsergebnisse.",
+    "method": [
+      "Wähle freigegebene geordnete Bilder und Quellen, Zielgruppe, Sprache und Dauer. Erfinde keine informativen Szenen zum Füllen von Beleglücken.",
+      "Schreibe Text je Szene und prüfe jede Aussage gegen Bild und Grundlage. Prüfe Reihenfolge, Wortlaut und Timing vor Synthese.",
+      "Nutze bei autorisierter echter Produktion die erforderliche gehostete Stimme und lokales Rendering. Prüfe MP4, Ton, Untertitel und Synchronisierung ohne erfundene Nachweise oder Freigaben."
+    ],
+    "result_title": "Ein 30-Sekunden-Text zur Prüfung",
+    "conclusion": "Drei belegte Botschaften erklären den Prozess. Der Text ist bereit zur Besprechung, kein Nachweis einer Videoproduktion.",
+    "output_columns": [
+      "Geplante Zeit",
+      "Vorgeschlagener Sprechertext",
+      "Grundlage"
+    ],
+    "output_rows": [
+      [
+        "0–10 s",
+        "Jeder Auftrag beginnt mit einer Frage und ausgewählten Dokumenten.",
+        "V1"
+      ],
+      [
+        "10–20 s",
+        "Das Ergebnis bewahrt Verweise, mit denen Leser es überprüfen können.",
+        "V2"
+      ],
+      [
+        "20–30 s",
+        "Offene Fragen bleiben bis zur fachlichen Prüfung sichtbar.",
+        "V3"
+      ]
+    ],
+    "check": "Die Enddauer hängt vom tatsächlich erzeugten Ton ab und muss geprüft werden. Ein Zeitplan ist keine Messung einer vorhandenen Mediendatei.",
+    "question": "Darf Szene zwei 'Sparen Sie die Hälfte Ihrer Zeit' versprechen?",
+    "answer": "Keine Quelle misst diese Ersparnis. Beschreibe sichtbare Nachvollziehbarkeit ohne erfundene Prozentzahl oder Wirkung.",
+    "practice": "Kürze Satz zwei unter Erhalt von Aussage und Quelle und prüfe den lokalen Plan.",
+    "next": "Bereite für ein echtes Video freigegebene Szenen und Quellen vor. Gehostete Synthese folgt eigener Materialfreigabe und eigenem Datenfluss."
+  },
+  "clara/transcribe": {
+    "title": "Wer etwas sagt, beweist noch nicht seine Richtigkeit",
+    "goal": "Ein Transkript erhalten und zuordnen, ohne Aussagen als geprüfte Fakten auszugeben.",
+    "scenario": "Eine fiktive schriftliche Nachbesprechung enthält zwei Beiträge. Sprecher 1 sagt, Verzögerungen seien gesunken. Sprecher 2 fragt nach dem Monatsvergleich. Namen und Vergleich fehlen; für diesen Fall existiert keine echte Aufnahme.",
+    "request": "Clara, zeige die Transkriptprüfung vor der Verwendung in einem Bericht.",
+    "scope": "Lokale Prüfung eines schriftlichen Lehrauszugs. Keine gehostete Transkription wird ausgeführt oder simuliert; echte Aufnahmen nutzen den autorisierten Workflow.",
+    "input_columns": [
+      "Fiktiver Beitrag",
+      "Text",
+      "Metadaten"
+    ],
+    "input_rows": [
+      [
+        "Sprecher 1 · 00:10",
+        "Wir haben Verzögerungen reduziert",
+        "Name unbestätigt"
+      ],
+      [
+        "Sprecher 2 · 00:15",
+        "Haben Sie den Monatsvergleich?",
+        "Name unbestätigt"
+      ]
+    ],
+    "basis": "T1 ist ein verfasster Lehrdialog. Ein geprüftes echtes Transkript kann zugeordnete Worte belegen, ohne die Wahrheit ihrer Aussage zu bestätigen.",
+    "method": [
+      "Wähle Aufnahme, vorhandenes Audio oder tatsächlich verfügbares Paket. Erhalte das Original und wähle normalen Ordner oder Fall als passenden Weg.",
+      "Prüfe Beiträge und Zuordnung anhand von Belegen. Verwende echte Namen nur bei gesicherter Grundlage, sonst beständige Sprecherkennungen. Bereinigung darf Bedeutung nicht verändern.",
+      "Schließe das geprüfte Transkript ab, sobald der Vertrag es erlaubt. Die spätere Nutzung als Fakt braucht eine eigene Grundlage und den Verweis auf den ursprünglichen Beitrag."
+    ],
+    "result_title": "Prüfbarer Wortlaut, unbestätigte Aussage",
+    "conclusion": "Der Auszug ordnet Sprecher 1 eine Aussage über reduzierte Verzögerungen zu. Er identifiziert die Person nicht und belegt keine Reduktion.",
+    "output_columns": [
+      "Element",
+      "Belegt",
+      "Belegt nicht"
+    ],
+    "output_rows": [
+      [
+        "Beitrag 00:10",
+        "Sprecher 1 zugeordnete Worte",
+        "Name oder Betriebsergebnis"
+      ],
+      [
+        "Beitrag 00:15",
+        "Anforderung eines Vergleichs",
+        "Verfügbarkeit des Vergleichs"
+      ],
+      [
+        "Berichtsnutzung",
+        "Als solche zitierte Aussage",
+        "Unbewiesene quantitative Schlussfolgerung"
+      ]
+    ],
+    "check": "Transkriptbereinigung ist keine Zusammenfassung oder inhaltliche Verbesserung. Sprecheridentität und Faktentreue benötigen unterschiedliche Belege.",
+    "question": "Dürfen wir Sprecher 1 als Geschäftsführer benennen, weil die Wortwahl vertraut klingt?",
+    "answer": "Nein. Die Zuordnung braucht Metadaten oder andere Belege. Sonst bleibt Sprecher 1 mit sichtbarer Unsicherheit erhalten.",
+    "practice": "Ergänze Metadaten zu einer Person und aktualisiere die Zuordnung bei unverändertem Originaltext.",
+    "next": "Wähle echte Aufnahme oder Paket und Ziel. Ein normaler Ordner reicht für dauerhafte Transkription ohne unnötigen Fall."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Eine vorbereitete Akte ist noch keine Mandatsannahme",
+    "goal": "Juristische Aufnahme mit getrennten Parteien, Fehlunterlagen und fachlichen Entscheidungen erstellen.",
+    "scenario": "Das fiktive Beta Laboratory sucht Hilfe wegen einer unvollständigen Lieferung von Delta. Der Kurzbericht nennt einen noch nicht gelieferten Vertrag und Schriftverkehr. Im Lehrfall steht kein Konfliktregister zur Verfügung.",
+    "request": "Lucia, erstelle das erste Dossier und zeige die vor Aktenöffnung erforderlichen Prüfungen.",
+    "scope": "Fiktive juristische Aufnahme. Keine behauptete Konfliktsuche, keine verbindliche Fristberechnung und keine automatische Mandatsannahme.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Information",
+      "Status"
+    ],
+    "input_rows": [
+      [
+        "L1 · Mandantenbericht",
+        "Beta gegen Lieferant Delta",
+        "Vom Mandanten genannte Parteien"
+      ],
+      [
+        "L1 · erwähnte Unterlagen",
+        "Vertrag und Schriftverkehr",
+        "Noch nicht geliefert"
+      ],
+      [
+        "Konfliktregister",
+        "Nicht verfügbar",
+        "Suche nicht durchgeführt"
+      ]
+    ],
+    "basis": "L1 belegt Anfrage und genannte Parteien. Es ersetzt weder Vertrag und Schriftverkehr noch eine Suche im Konfliktregister.",
+    "method": [
+      "Wähle neuen Mandanten oder neue Sache und erhalte genaue Quellen. Bestimme Ziel, Parteien, Zuständigkeit und Dringlichkeit aus Belegen.",
+      "Erstelle Vermerk, Parteienübersicht, Fehlunterlagenanfrage und Ordnerplan. Nicht belegte Punkte bleiben unvollständig.",
+      "Lege vier Prüfbereiche vor: Konflikt, Mandat, Fristen und Eröffnung. Speichere nur tatsächliche Entscheidungen und erneuere die Prüfung bei geänderter Aufnahme."
+    ],
+    "result_title": "Erstes Dossier bleibt unvollständig",
+    "conclusion": "Anfrage und Parteien sind beschrieben. Sachunterlagen und Konfliktprüfung fehlen; das Dossier ist noch nicht bereit zur Eröffnung.",
+    "output_columns": [
+      "Bereich",
+      "Stand",
+      "Nächster Schritt"
+    ],
+    "output_rows": [
+      [
+        "Unterlagen",
+        "Vertrag und Schriftverkehr fehlen",
+        "Anforderung prüfen"
+      ],
+      [
+        "Konflikte",
+        "Register nicht konsultiert",
+        "Fachliche Prüfung des genauen Umfangs"
+      ],
+      [
+        "Mandat und Eröffnung",
+        "Nicht freigegeben",
+        "Anwaltliche Prüfung"
+      ]
+    ],
+    "check": "Eine Namensliste ist keine Konfliktsuche; ein Ordnerplan verschiebt keine Originale. Entscheidungen bleiben an die aktuelle Aufnahme gebunden.",
+    "question": "Der Bericht erwähnt keinen Konflikt. Können wir die Prüfung als bestanden markieren?",
+    "answer": "Nein. Der Bericht ist nicht das Register. Eine nicht durchgeführte Prüfung bleibt unausgeführt statt zu einem negativen Befund zu werden.",
+    "practice": "Ergänze den fiktiven Vertrag und prüfe geänderte Parteien oder Fragen, ohne eine Mandatsannahme zu simulieren.",
+    "next": "Wähle Bericht, Dokumente, bekannte Parteien und verfügbares Register und zeige konkrete Dringlichkeit frühzeitig."
+  }
+}

@@ -1,0 +1,413 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "quesito-legale-fiscale",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/deep-research-validator/references/workflow-reference.md",
+      "repository_path": "plugins/deep-research-validator/references/workflow-reference.md",
+      "sha256": "489c85351069fabd69cfc859989e48749bde0440c00cec02397c69d260d68873"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/adversarial_opinion.py",
+      "repository_path": "plugins/deep-research-validator/scripts/adversarial_opinion.py",
+      "sha256": "46e221dc04957f658a4369f1f52a2b02a3203b90fa767579401aa5ab8c5e931a"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/apply_review_edits.py",
+      "repository_path": "plugins/deep-research-validator/scripts/apply_review_edits.py",
+      "sha256": "fda83187337bd3f38f236ee750fad8e300d7e3395e93e97204df74e4c70ee46f"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/check_dependencies.py",
+      "repository_path": "plugins/deep-research-validator/scripts/check_dependencies.py",
+      "sha256": "3bff292963b959762c57785c9b7f9a796a0454eb7438880ef672bed13c1ae5d5"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/inspect_document.py",
+      "repository_path": "plugins/deep-research-validator/scripts/inspect_document.py",
+      "sha256": "15a35595a1886f0b4e7b99e6a1873d6bfe1f83350d9e5f09fe5fd1721088c2a8"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/inspect_sources.py",
+      "repository_path": "plugins/deep-research-validator/scripts/inspect_sources.py",
+      "sha256": "e257e2ce924c6b9b74d724bcb1b584301d6ab02f98a2a6c1986135a3c8f1ba7f"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/package_validation.py",
+      "repository_path": "plugins/deep-research-validator/scripts/package_validation.py",
+      "sha256": "a58a0000f9f3d3a7121bfcbef56fb95a8bd0b318935a333a715ffb1c8a9af468"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/review_session.py",
+      "repository_path": "plugins/deep-research-validator/scripts/review_session.py",
+      "sha256": "f13e38eb17dd1ca4ded3846379928a6c03987eb7e1a482b22ea3b5fb7af06573"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
+      "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
+      "sha256": "a1934f4312f4a3ebe66c090209ced6da2fc77d35182990b866529c7e1ade3187"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
+      "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
+      "sha256": "3f7bf013e32d807fbe23a41183999ca0b406ae07734fe58828663dd1da2dc6bf"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+      "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+      "sha256": "4e537f0257677a3a1b7d039f29dd8087caf6e2640b7e992692856f6aa00d95c7"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
+      "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
+      "sha256": "d22235ace63f0239f4f5d425ba467aa8a6b7353a171b9f9d1fd9bbdcc98c853c"
+    },
+    {
+      "path": "skills/quesito-legale-fiscale/SKILL.md",
+      "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
+      "sha256": "0c027f20d70a1af67784a191d685745d993f04e01538334f00e29b51c436c94c"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Da una domanda generica a una risposta che si può verificare",
+      "goal": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
+      "scenario": "Il cliente chiede: 'Questo costo si può dedurre?'. Abbiamo una fattura fittizia che descrive un servizio, ma non conosciamo soggetto, periodo, regime e utilizzo. La lezione lavora sulla formulazione del quesito e sul perimetro della risposta, senza dare un parere fiscale sul caso.",
+      "request": "Vera, mostrami come trasformi questa domanda in una risposta fondata sulle fonti.",
+      "scope": "Lezione sul metodo di ricerca e revisione. Non contiene una regola fiscale sostanziale da applicare; il caso reale richiede fonti primarie correnti e pertinenti.",
+      "input_columns": [
+        "Elemento fittizio",
+        "Disponibile",
+        "Da chiarire"
+      ],
+      "input_rows": [
+        [
+          "Fattura Q1",
+          "Descrizione e importo del servizio",
+          "Utilizzo effettivo"
+        ],
+        [
+          "Domanda del cliente",
+          "Interesse alla deduzione",
+          "Soggetto, regime e periodo"
+        ],
+        [
+          "Fonti normative",
+          "Non selezionate nel microcaso",
+          "Quadro applicabile dopo il chiarimento"
+        ]
+      ],
+      "basis": "Q1 dimostra l'esistenza di una descrizione documentale. Non stabilisce da sola le condizioni fiscali. Le informazioni mancanti cambiano la ricerca e la conclusione.",
+      "method": [
+        "Formula la domanda, la decisione da sostenere e i fatti materiali. Chiedi soltanto ciò che non è risolvibile dalle evidenze disponibili.",
+        "Segui il percorso corrente di pianificazione, ricerca e risposta; verifica autorità, versione e applicabilità delle fonti. Mantieni citazioni e fatti distinguibili.",
+        "Rivedi le affermazioni, affronta le alternative rilevanti e svolgi l'esame opposto quando richiesto dal metodo. Consegna risposta, basi e questioni residue al professionista."
+      ],
+      "result_title": "Quesito pronto per una ricerca pertinente",
+      "conclusion": "La domanda va riferita a uno specifico soggetto, periodo, regime e uso del servizio. Finché questi elementi mancano, un sì o un no sarebbe prematuro.",
+      "output_columns": [
+        "Passaggio",
+        "Prodotto utile",
+        "Verifica"
+      ],
+      "output_rows": [
+        [
+          "Inquadramento",
+          "Domanda e fatti confermati",
+          "Ogni fatto ha una fonte"
+        ],
+        [
+          "Ricerca",
+          "Fonti applicabili al caso",
+          "Versione, autorità e localizzatore"
+        ],
+        [
+          "Risposta riveduta",
+          "Conclusione con condizioni e alternative",
+          "Nessuna citazione inventata"
+        ]
+      ],
+      "check": "Una citazione vera può essere inapplicabile. La verifica deve riguardare sia il testo della fonte sia il suo rapporto con i fatti del quesito.",
+      "question": "Una pagina parla di deduzione: è sufficiente a rispondere?",
+      "answer": "No. Occorre verificarne autorità, periodo, fattispecie e condizioni. Il semplice tema comune non dimostra l'applicabilità.",
+      "practice": "Aggiungi soggetto, periodo e uso del servizio al caso: formula la domanda precisa da portare alla ricerca.",
+      "next": "Nel tuo quesito indica la decisione da prendere e seleziona i documenti pertinenti. Vera gestisce gli stadi interni senza chiederti di scegliere i singoli skill."
+    },
+    "en": {
+      "title": "From a broad question to a verifiable answer",
+      "goal": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
+      "scenario": "A fictional client asks whether a cost is deductible. An invoice describes a service, but entity, period, regime and actual use are unknown. This lesson frames the question and answer scope without giving a tax opinion.",
+      "request": "Vera, show how you turn this question into a source-supported answer.",
+      "scope": "A lesson on research and review method, not a substantive tax rule. A real case requires current applicable primary sources.",
+      "input_columns": [
+        "Fictional element",
+        "Available",
+        "To clarify"
+      ],
+      "input_rows": [
+        [
+          "Invoice Q1",
+          "Service description and amount",
+          "Actual use"
+        ],
+        [
+          "Client question",
+          "Interest in deduction",
+          "Entity, regime and period"
+        ],
+        [
+          "Legal sources",
+          "Not selected in this small case",
+          "Applicable framework after clarification"
+        ]
+      ],
+      "basis": "Q1 supports a documentary description, not the tax conditions. Missing facts can change both research and conclusion.",
+      "method": [
+        "Frame the question, decision and material facts. Ask only what the supplied evidence cannot resolve.",
+        "Follow the current planning, research and answer journey. Check source authority, version and applicability while separating facts and citations.",
+        "Review claims, address relevant alternatives and perform opposing examination when the method requires it. Deliver the answer, bases and residual questions for professional review."
+      ],
+      "result_title": "A question ready for relevant research",
+      "conclusion": "The question must identify entity, period, regime and use of the service. Without them, a categorical yes or no would be premature.",
+      "output_columns": [
+        "Stage",
+        "Useful output",
+        "Check"
+      ],
+      "output_rows": [
+        [
+          "Framing",
+          "Question and confirmed facts",
+          "A source for each fact"
+        ],
+        [
+          "Research",
+          "Applicable sources",
+          "Version, authority and locator"
+        ],
+        [
+          "Reviewed answer",
+          "Conclusion with conditions and alternatives",
+          "No invented citations"
+        ]
+      ],
+      "check": "A genuine citation can still be inapplicable. Verify both the source text and its relationship to the case facts.",
+      "question": "Is a page discussing deductibility enough to answer?",
+      "answer": "No. Authority, period, facts and conditions must be assessed. A common topic alone does not establish applicability.",
+      "practice": "Add entity, period and service use, then formulate the precise research question.",
+      "next": "State the decision you need and select relevant documents. Vera manages the internal stages without requiring separate skill selection."
+    },
+    "fr": {
+      "title": "D'une question générale à une réponse vérifiable",
+      "goal": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
+      "scenario": "Un client fictif demande si une dépense est déductible. La facture décrit un service, mais sujet, période, régime et utilisation réelle sont inconnus. La leçon précise la question sans donner d'avis fiscal sur le cas.",
+      "request": "Vera, montre comment transformer cette question en réponse fondée sur les sources.",
+      "scope": "Leçon de méthode, sans règle fiscale substantielle à appliquer. Le cas réel nécessite des sources primaires actuelles et pertinentes.",
+      "input_columns": [
+        "Élément fictif",
+        "Disponible",
+        "À clarifier"
+      ],
+      "input_rows": [
+        [
+          "Facture Q1",
+          "Description et montant du service",
+          "Utilisation réelle"
+        ],
+        [
+          "Question client",
+          "Intérêt pour la déduction",
+          "Sujet, régime et période"
+        ],
+        [
+          "Sources juridiques",
+          "Non sélectionnées dans le microcas",
+          "Cadre applicable après clarification"
+        ]
+      ],
+      "basis": "Q1 soutient une description documentaire, pas les conditions fiscales. Les faits manquants peuvent changer recherche et conclusion.",
+      "method": [
+        "Formule question, décision et faits matériels. Demande seulement ce que les preuves disponibles ne permettent pas de résoudre.",
+        "Suis le parcours courant de planification, recherche et réponse. Vérifie autorité, version et applicabilité des sources en séparant faits et citations.",
+        "Revois les affirmations, traite les alternatives pertinentes et l'examen contradictoire lorsque la méthode le prévoit. Livre réponse, bases et questions résiduelles à la revue professionnelle."
+      ],
+      "result_title": "Une question prête pour une recherche pertinente",
+      "conclusion": "La question doit préciser sujet, période, régime et utilisation du service. Un oui ou non catégorique serait prématuré sans ces éléments.",
+      "output_columns": [
+        "Étape",
+        "Résultat utile",
+        "Vérification"
+      ],
+      "output_rows": [
+        [
+          "Cadrage",
+          "Question et faits confirmés",
+          "Une source par fait"
+        ],
+        [
+          "Recherche",
+          "Sources applicables",
+          "Version, autorité et localisateur"
+        ],
+        [
+          "Réponse revue",
+          "Conclusion, conditions et alternatives",
+          "Aucune citation inventée"
+        ]
+      ],
+      "check": "Une citation authentique peut être inapplicable. Vérifie le texte et son rapport aux faits du cas.",
+      "question": "Une page sur la déduction suffit-elle à répondre ?",
+      "answer": "Non. Autorité, période, situation et conditions doivent être examinées. Un thème commun ne suffit pas à établir l'applicabilité.",
+      "practice": "Ajoute sujet, période et utilisation, puis formule la question précise à rechercher.",
+      "next": "Indique la décision attendue et les documents pertinents. Vera gère les étapes internes sans imposer le choix de plusieurs skills."
+    },
+    "de": {
+      "title": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
+      "goal": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
+      "scenario": "Ein fiktiver Mandant fragt nach der Abzugsfähigkeit eines Aufwands. Eine Rechnung beschreibt eine Leistung; Rechtsträger, Periode, steuerliche Regelung und tatsächliche Nutzung fehlen. Die Lektion grenzt die Frage ein, ohne ein Steuergutachten zu liefern.",
+      "request": "Vera, zeige, wie du diese Frage in eine quellengestützte Antwort überführst.",
+      "scope": "Lehre zur Recherche- und Prüfmethode, keine materielle Steuerregel. Ein echter Fall benötigt aktuelle einschlägige Primärquellen.",
+      "input_columns": [
+        "Fiktives Element",
+        "Vorhanden",
+        "Zu klären"
+      ],
+      "input_rows": [
+        [
+          "Rechnung Q1",
+          "Leistungsbeschreibung und Betrag",
+          "Tatsächliche Nutzung"
+        ],
+        [
+          "Mandantenfrage",
+          "Interesse am Abzug",
+          "Rechtsträger, Regelung und Periode"
+        ],
+        [
+          "Rechtsquellen",
+          "Im kleinen Beispiel noch nicht ausgewählt",
+          "Einschlägiger Rahmen nach Klärung"
+        ]
+      ],
+      "basis": "Q1 belegt eine Dokumentenbeschreibung, nicht die steuerlichen Voraussetzungen. Fehlende Fakten können Recherche und Schlussfolgerung ändern.",
+      "method": [
+        "Bestimme Frage, Entscheidung und wesentliche Fakten. Frage nur nach Informationen, die vorhandene Belege nicht klären.",
+        "Folge dem aktuellen Planungs-, Recherche- und Antwortweg. Prüfe Autorität, Version und Anwendbarkeit der Quellen und trenne Fakten von Zitaten.",
+        "Prüfe Aussagen und relevante Alternativen und führe die vorgeschriebene Gegenprüfung aus. Liefere Antwort, Grundlagen und Restfragen zur fachlichen Prüfung."
+      ],
+      "result_title": "Eine Frage für gezielte Recherche",
+      "conclusion": "Die Frage muss Rechtsträger, Periode, Regelung und Leistungsnutzung bestimmen. Ohne diese Angaben wäre ein kategorisches Ja oder Nein verfrüht.",
+      "output_columns": [
+        "Stufe",
+        "Nützliches Ergebnis",
+        "Prüfung"
+      ],
+      "output_rows": [
+        [
+          "Eingrenzung",
+          "Frage und bestätigte Fakten",
+          "Quelle für jeden Fakt"
+        ],
+        [
+          "Recherche",
+          "Einschlägige Quellen",
+          "Version, Autorität und Fundstelle"
+        ],
+        [
+          "Geprüfte Antwort",
+          "Schlussfolgerung mit Bedingungen und Alternativen",
+          "Keine erfundenen Zitate"
+        ]
+      ],
+      "check": "Ein echtes Zitat kann trotzdem unzutreffend sein. Prüfe Quellentext und Bezug zu den Fallfakten.",
+      "question": "Reicht eine Seite zum Thema Abzugsfähigkeit für die Antwort?",
+      "answer": "Nein. Autorität, Zeitraum, Fakten und Voraussetzungen sind zu prüfen. Ein gemeinsames Thema belegt keine Anwendbarkeit.",
+      "practice": "Ergänze Rechtsträger, Periode und Nutzung und formuliere die genaue Recherchefrage.",
+      "next": "Benenne die benötigte Entscheidung und wähle relevante Unterlagen. Vera führt die internen Stufen ohne einzelne Skill-Auswahl."
+    },
+    "es": {
+      "title": "De una pregunta general a una respuesta verificable",
+      "goal": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional.",
+      "scenario": "Un cliente ficticio pregunta si un coste es deducible. La factura describe un servicio, pero se desconocen entidad, periodo, régimen y uso efectivo. La lección delimita la pregunta sin emitir un dictamen fiscal.",
+      "request": "Vera, muestra cómo conviertes esta pregunta en una respuesta respaldada por fuentes.",
+      "scope": "Lección sobre investigación y revisión, no sobre una regla fiscal sustantiva. Un caso real requiere fuentes primarias actuales y aplicables.",
+      "input_columns": [
+        "Elemento ficticio",
+        "Disponible",
+        "Por aclarar"
+      ],
+      "input_rows": [
+        [
+          "Factura Q1",
+          "Descripción del servicio e importe",
+          "Uso efectivo"
+        ],
+        [
+          "Pregunta del cliente",
+          "Interés en deducir",
+          "Entidad, régimen y periodo"
+        ],
+        [
+          "Fuentes jurídicas",
+          "No seleccionadas en este ejemplo reducido",
+          "Marco aplicable después de aclarar"
+        ]
+      ],
+      "basis": "Q1 respalda una descripción documental, no los requisitos fiscales. Los hechos ausentes pueden cambiar investigación y conclusión.",
+      "method": [
+        "Delimita pregunta, decisión y hechos relevantes. Pregunta solo lo que las pruebas disponibles no resuelvan.",
+        "Sigue el recorrido actual de planificación, investigación y respuesta. Comprueba autoridad, versión y aplicabilidad y separa hechos y citas.",
+        "Revisa afirmaciones y alternativas pertinentes y realiza el examen contrario cuando lo exija el método. Entrega respuesta, bases y preguntas residuales para revisión profesional."
+      ],
+      "result_title": "Una pregunta preparada para investigar",
+      "conclusion": "La pregunta debe identificar entidad, periodo, régimen y uso del servicio. Sin ello, un sí o no categórico sería prematuro.",
+      "output_columns": [
+        "Etapa",
+        "Resultado útil",
+        "Control"
+      ],
+      "output_rows": [
+        [
+          "Delimitación",
+          "Pregunta y hechos confirmados",
+          "Fuente para cada hecho"
+        ],
+        [
+          "Investigación",
+          "Fuentes aplicables",
+          "Versión, autoridad y ubicación"
+        ],
+        [
+          "Respuesta revisada",
+          "Conclusión con condiciones y alternativas",
+          "Sin citas inventadas"
+        ]
+      ],
+      "check": "Una cita auténtica puede no ser aplicable. Verifica el texto y su relación con los hechos del caso.",
+      "question": "¿Basta una página sobre deducibilidad para responder?",
+      "answer": "No. Hay que evaluar autoridad, periodo, hechos y condiciones. Compartir tema no demuestra aplicabilidad.",
+      "practice": "Añade entidad, periodo y uso del servicio y formula la pregunta precisa de investigación.",
+      "next": "Indica la decisión que necesitas y selecciona documentos pertinentes. Vera gestiona las etapas internas sin exigir elegir cada skill."
+    }
+  }
+}

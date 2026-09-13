@@ -1,0 +1,423 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "dati-fiscali-strutturati",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
+      "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "repository_path": "plugins/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "087e935240b3fe78cf98a4499a0a295175abb3aa8c2e625d160496462c1fc9bc"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "repository_path": "plugins/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "repository_path": "plugins/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "repository_path": "plugins/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
+      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "repository_path": "plugins/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
+      "repository_path": "plugins/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
+      "sha256": "6afe808bd2c5aeb44adcd56285cdda4d7cb4e6b2b04a6f8fbde97fab8c1584ea"
+    },
+    {
+      "path": "skills/dati-fiscali-strutturati/SKILL.md",
+      "repository_path": "plugins/vera/skills/dati-fiscali-strutturati/SKILL.md",
+      "sha256": "bc2fc8b6409c0bcd57288098ca06cc380bd20a8b97743f2b8b96d8600ef95a3b"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un numero estratto deve mantenere la sua fonte",
+      "goal": "Leggere i campi fiscali con valore, documento e stato di estrazione, senza completare i vuoti per supposizione.",
+      "scenario": "Il fascicolo fittizio contiene un prospetto F24 leggibile e un secondo documento scansionato poco leggibile. Nel primo sono visibili codice tributo 1001, anno 2025 e debito di 1.250 EUR. Il secondo non permette di leggere importi affidabili.",
+      "request": "Vera, mostrami quali dati fiscali possiamo usare e quali richiedono verifica sull'originale.",
+      "scope": "Estrazione e revisione di campi. Il codice e l'anno sono dati riportati nella fonte, non una verifica del corretto adempimento o del pagamento.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Contenuto leggibile",
+        "Disposizione"
+      ],
+      "input_rows": [
+        [
+          "F1 · prospetto F24, riga 1",
+          "1001 · 2025 · debito 1.250 EUR",
+          "Campi estraibili"
+        ],
+        [
+          "F2 · scansione",
+          "Importi non leggibili",
+          "Da recuperare o verificare visivamente"
+        ]
+      ],
+      "basis": "F1 fornisce tre valori localizzati. F2 non fornisce valori affidabili; una lista vuota non significa assenza di dati fiscali.",
+      "method": [
+        "Riprendi l'estrazione del medesimo incarico e leggi tutti i campi e tutte le disposizioni documentali previste dal passaggio.",
+        "Verifica tipo di documento e corrispondenza col testo. Mantieni le ambiguità di layout e i casi illeggibili; una riclassificazione riveduta richiede una nuova generazione coerente.",
+        "Consegna tabella, riepilogo e citazioni. Distingui documenti non supportati, illeggibili, non valutati e riconosciuti senza campi."
+      ],
+      "result_title": "Tre campi utilizzabili, una fonte da chiarire",
+      "conclusion": "Il riepilogo conserva i tre dati di F1 e segnala F2 come fonte non leggibile. Non assegna zero agli importi mancanti.",
+      "output_columns": [
+        "Campo",
+        "Valore estratto",
+        "Fonte"
+      ],
+      "output_rows": [
+        [
+          "Codice tributo",
+          "1001",
+          "F1 · riga 1"
+        ],
+        [
+          "Anno di riferimento",
+          "2025",
+          "F1 · riga 1"
+        ],
+        [
+          "Importo a debito",
+          "1.250 EUR",
+          "F1 · riga 1"
+        ],
+        [
+          "Importi di F2",
+          "Non disponibili",
+          "F2 · originale da verificare"
+        ]
+      ],
+      "check": "L'estrazione non prova il pagamento né la corretta compilazione. Mantieni valuta e anno della fonte, senza inferirli dal nome della cartella.",
+      "question": "F2 non ha campi estratti: possiamo sommarlo come zero?",
+      "answer": "No. È una fonte illeggibile, non un documento con importo nullo. Il totale deve dichiarare che quella fonte non è quantificata.",
+      "practice": "Sostituisci F2 con una copia leggibile e rigenera il passaggio, controllando quali campi entrano nel riepilogo.",
+      "next": "Seleziona documenti leggibili e il corretto perimetro territoriale; conserva gli originali per verificare le righe dipendenti dal layout."
+    },
+    "en": {
+      "title": "An extracted number must keep its source",
+      "goal": "Read tax fields with values, document references and extraction status, without filling gaps by assumption.",
+      "scenario": "The fictional file contains a readable Italian F24 statement and a poorly readable scan. The first shows tax code 1001, reference year 2025 and EUR 1,250 debit. The second does not provide reliable amounts.",
+      "request": "Vera, show which tax data we can use and which require the original layout.",
+      "scope": "Field extraction and review. Values in a source do not verify the correct filing, treatment or payment.",
+      "input_columns": [
+        "Fictional source",
+        "Readable content",
+        "Disposition"
+      ],
+      "input_rows": [
+        [
+          "F1 · F24 row 1",
+          "1001 · 2025 · EUR 1,250 debit",
+          "Extractable fields"
+        ],
+        [
+          "F2 · scan",
+          "Unreadable amounts",
+          "Recover or inspect visually"
+        ]
+      ],
+      "basis": "F1 supports three located values. F2 supplies no reliable amount; an empty extraction does not establish absence of tax data.",
+      "method": [
+        "Resume the same engagement's extraction and read every required field and document disposition in the handoff.",
+        "Check document meaning and text correspondence. Preserve layout uncertainty and unreadable sources; reviewed reclassification requires coherent regeneration.",
+        "Deliver the field table, summary and citations. Distinguish unsupported, unreadable, unevaluated and recognized-without-fields documents."
+      ],
+      "result_title": "Three usable fields, one unresolved source",
+      "conclusion": "The summary preserves F1's three fields and flags F2 as unreadable. Missing amounts are not assigned zero.",
+      "output_columns": [
+        "Field",
+        "Extracted value",
+        "Source"
+      ],
+      "output_rows": [
+        [
+          "Tax code",
+          "1001",
+          "F1 · row 1"
+        ],
+        [
+          "Reference year",
+          "2025",
+          "F1 · row 1"
+        ],
+        [
+          "Debit amount",
+          "EUR 1,250",
+          "F1 · row 1"
+        ],
+        [
+          "F2 amounts",
+          "Unavailable",
+          "F2 · original to inspect"
+        ]
+      ],
+      "check": "Extraction does not prove payment or correct completion. Retain source currency and year rather than inferring them from a folder name.",
+      "question": "Can we include F2 as zero because it has no extracted fields?",
+      "answer": "No. It is unreadable, not a zero-value document. Any total must disclose that this source remains unquantified.",
+      "practice": "Replace F2 with a readable copy and regenerate, checking the newly included fields.",
+      "next": "Select readable documents and the correct territorial scope; retain originals for layout-sensitive checks."
+    },
+    "fr": {
+      "title": "Un montant extrait doit garder sa source",
+      "goal": "Lire les champs fiscaux avec valeurs, références et états d'extraction sans remplir les blancs par hypothèse.",
+      "scenario": "Le dossier fictif contient un F24 italien lisible et un scan peu lisible. Le premier montre code 1001, année 2025 et débit de 1 250 EUR. Le second ne permet pas de lire des montants fiables.",
+      "request": "Vera, montre les données fiscales utilisables et celles à vérifier sur l'original.",
+      "scope": "Extraction et revue de champs. Les valeurs lues ne prouvent pas la conformité de la déclaration, du traitement ou du paiement.",
+      "input_columns": [
+        "Source fictive",
+        "Contenu lisible",
+        "Disposition"
+      ],
+      "input_rows": [
+        [
+          "F1 · F24 ligne 1",
+          "1001 · 2025 · débit 1 250 EUR",
+          "Champs extractibles"
+        ],
+        [
+          "F2 · scan",
+          "Montants illisibles",
+          "À récupérer ou vérifier visuellement"
+        ]
+      ],
+      "basis": "F1 étaye trois valeurs localisées. F2 ne fournit aucun montant fiable ; l'absence de champs extraits ne signifie pas absence de données fiscales.",
+      "method": [
+        "Reprends l'extraction du même dossier et lis tous les champs et toutes les dispositions documentaires attendues.",
+        "Vérifie nature du document et correspondance au texte. Conserve incertitudes de mise en page et sources illisibles ; une reclassification revue nécessite une régénération cohérente.",
+        "Livre tableau, synthèse et citations en séparant documents non pris en charge, illisibles, non évalués et reconnus sans champs."
+      ],
+      "result_title": "Trois champs utilisables, une source à clarifier",
+      "conclusion": "La synthèse conserve les trois champs de F1 et signale F2 comme illisible. Les montants manquants ne deviennent pas zéro.",
+      "output_columns": [
+        "Champ",
+        "Valeur extraite",
+        "Source"
+      ],
+      "output_rows": [
+        [
+          "Code fiscal du versement",
+          "1001",
+          "F1 · ligne 1"
+        ],
+        [
+          "Année de référence",
+          "2025",
+          "F1 · ligne 1"
+        ],
+        [
+          "Montant au débit",
+          "1 250 EUR",
+          "F1 · ligne 1"
+        ],
+        [
+          "Montants de F2",
+          "Indisponibles",
+          "F2 · original à vérifier"
+        ]
+      ],
+      "check": "L'extraction ne prouve ni paiement ni bonne saisie. Conserve devise et année de la source, sans les déduire du nom du dossier.",
+      "question": "Peut-on inclure F2 pour zéro puisqu'aucun champ n'a été extrait ?",
+      "answer": "Non. La source est illisible, pas nulle. Tout total doit préciser que cette pièce n'est pas quantifiée.",
+      "practice": "Remplace F2 par une copie lisible et régénère en contrôlant les nouveaux champs inclus.",
+      "next": "Sélectionne les documents lisibles et le bon périmètre territorial ; conserve les originaux pour les contrôles de mise en page."
+    },
+    "de": {
+      "title": "Eine extrahierte Zahl behält ihre Quelle",
+      "goal": "Steuerfelder mit Werten, Fundstellen und Extraktionsstatus lesen, ohne Lücken durch Annahmen zu füllen.",
+      "scenario": "Die fiktive Akte enthält ein lesbares italienisches F24-Dokument und einen schlecht lesbaren Scan. Das erste zeigt Steuercode 1001, Bezugsjahr 2025 und EUR 1.250 Belastung. Der Scan liefert keine verlässlichen Beträge.",
+      "request": "Vera, zeige, welche Steuerdaten nutzbar sind und welche das Original benötigen.",
+      "scope": "Feldextraktion und Prüfung. Ein Wert im Dokument bestätigt weder richtige Erklärung noch Behandlung oder Zahlung.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Lesbarer Inhalt",
+        "Bearbeitungsstatus"
+      ],
+      "input_rows": [
+        [
+          "F1 · F24 Zeile 1",
+          "1001 · 2025 · EUR 1.250 Belastung",
+          "Extrahierbare Felder"
+        ],
+        [
+          "F2 · Scan",
+          "Unlesbare Beträge",
+          "Wiederbeschaffen oder visuell prüfen"
+        ]
+      ],
+      "basis": "F1 belegt drei lokalisierte Werte. F2 liefert keinen verlässlichen Betrag; eine leere Extraktion beweist nicht das Fehlen steuerlicher Daten.",
+      "method": [
+        "Setze die Extraktion desselben Mandats fort und lies alle erforderlichen Felder und Dokumentenstatus der Übergabe.",
+        "Prüfe Dokumentbedeutung und Textbezug. Erhalte Layoutunsicherheit und unlesbare Quellen; eine geprüfte Neueinordnung erfordert eine konsistente Neuerstellung.",
+        "Liefere Feldtabelle, Zusammenfassung und Fundstellen. Unterscheide nicht unterstützte, unlesbare, ungeprüfte und erkannte Dokumente ohne Felder."
+      ],
+      "result_title": "Drei nutzbare Felder, eine offene Quelle",
+      "conclusion": "Die Zusammenfassung erhält die drei F1-Felder und kennzeichnet F2 als unlesbar. Fehlende Beträge werden nicht auf null gesetzt.",
+      "output_columns": [
+        "Feld",
+        "Extrahierter Wert",
+        "Quelle"
+      ],
+      "output_rows": [
+        [
+          "Steuercode",
+          "1001",
+          "F1 · Zeile 1"
+        ],
+        [
+          "Bezugsjahr",
+          "2025",
+          "F1 · Zeile 1"
+        ],
+        [
+          "Belastungsbetrag",
+          "EUR 1.250",
+          "F1 · Zeile 1"
+        ],
+        [
+          "Beträge aus F2",
+          "Nicht verfügbar",
+          "F2 · Original prüfen"
+        ]
+      ],
+      "check": "Extraktion belegt weder Zahlung noch korrekte Ausfüllung. Übernimm Währung und Jahr aus der Quelle, nicht aus dem Ordnernamen.",
+      "question": "Können wir F2 mit null einbeziehen, weil keine Felder extrahiert wurden?",
+      "answer": "Nein. Das Dokument ist unlesbar, nicht wertlos. Jede Summe muss offenlegen, dass diese Quelle unbeziffert bleibt.",
+      "practice": "Ersetze F2 durch eine lesbare Kopie und erstelle die Auswertung neu. Prüfe die hinzugekommenen Felder.",
+      "next": "Wähle lesbare Dokumente und den richtigen räumlichen Geltungsbereich; bewahre Originale für layoutabhängige Prüfungen auf."
+    },
+    "es": {
+      "title": "Una cifra extraída debe conservar su fuente",
+      "goal": "Leer campos fiscales con valores, referencias y estado de extracción sin rellenar vacíos por suposición.",
+      "scenario": "El expediente ficticio contiene un F24 italiano legible y un escaneo poco legible. El primero muestra código tributario 1001, ejercicio 2025 y EUR 1.250 a débito. El segundo no ofrece importes fiables.",
+      "request": "Vera, muestra qué datos fiscales podemos utilizar y cuáles necesitan el original.",
+      "scope": "Extracción y revisión de campos. Un valor en la fuente no verifica declaración, tratamiento o pago correctos.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Contenido legible",
+        "Tratamiento"
+      ],
+      "input_rows": [
+        [
+          "F1 · F24 fila 1",
+          "1001 · 2025 · EUR 1.250 a débito",
+          "Campos extraíbles"
+        ],
+        [
+          "F2 · escaneo",
+          "Importes ilegibles",
+          "Recuperar o inspeccionar visualmente"
+        ]
+      ],
+      "basis": "F1 respalda tres valores localizados. F2 no aporta un importe fiable; una extracción vacía no demuestra ausencia de datos fiscales.",
+      "method": [
+        "Retoma la extracción del mismo encargo y lee todos los campos requeridos y estados documentales de la entrega.",
+        "Comprueba significado y correspondencia textual. Conserva incertidumbre de formato y fuentes ilegibles; reclasificar tras revisión exige una regeneración coherente.",
+        "Entrega tabla, resumen y citas. Distingue documentos no compatibles, ilegibles, no evaluados y reconocidos sin campos."
+      ],
+      "result_title": "Tres campos utilizables y una fuente pendiente",
+      "conclusion": "El resumen conserva los tres campos de F1 y marca F2 como ilegible. Los importes ausentes no se convierten en cero.",
+      "output_columns": [
+        "Campo",
+        "Valor extraído",
+        "Fuente"
+      ],
+      "output_rows": [
+        [
+          "Código tributario",
+          "1001",
+          "F1 · fila 1"
+        ],
+        [
+          "Ejercicio de referencia",
+          "2025",
+          "F1 · fila 1"
+        ],
+        [
+          "Importe a débito",
+          "EUR 1.250",
+          "F1 · fila 1"
+        ],
+        [
+          "Importes de F2",
+          "No disponibles",
+          "F2 · revisar original"
+        ]
+      ],
+      "check": "Extraer no prueba pago ni cumplimentación correcta. Conserva moneda y ejercicio de la fuente en lugar de inferirlos del nombre de carpeta.",
+      "question": "¿Podemos incluir F2 como cero porque no tiene campos extraídos?",
+      "answer": "No. Es ilegible, no un documento de valor cero. Cualquier suma debe revelar que esta fuente sigue sin cuantificar.",
+      "practice": "Sustituye F2 por una copia legible, regenera y comprueba los campos incorporados.",
+      "next": "Selecciona documentos legibles y el ámbito territorial correcto; conserva originales para comprobaciones que dependan del formato."
+    }
+  }
+}

@@ -1,0 +1,508 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "new-client",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
+      "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "repository_path": "plugins/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "087e935240b3fe78cf98a4499a0a295175abb3aa8c2e625d160496462c1fc9bc"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "repository_path": "plugins/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "repository_path": "plugins/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "repository_path": "plugins/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
+      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "repository_path": "plugins/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/client-file-preparation/SKILL.md",
+      "repository_path": "plugins/client-file-preparation/skills/client-file-preparation/SKILL.md",
+      "sha256": "00b69742577995070896e7262df2d9a02bfc555842ef8422a39b90f989a51bed"
+    },
+    {
+      "path": "modules/new-client/references/research-provenance.json",
+      "repository_path": "plugins/new-client/references/research-provenance.json",
+      "sha256": "84f5a6ba412c72de20d04f8dd051538ce99f08807b55ce69def7a5724eb6f4c7"
+    },
+    {
+      "path": "modules/new-client/references/source-policy.md",
+      "repository_path": "plugins/new-client/references/source-policy.md",
+      "sha256": "05027ea03718df06a4420e71968839ca9d926188490066ed9ddfca75b6cfa741"
+    },
+    {
+      "path": "modules/new-client/references/source-registry.json",
+      "repository_path": "plugins/new-client/references/source-registry.json",
+      "sha256": "687015058b00562d16236afc237f044e6548c045dac493e420fcd9791561e1ce"
+    },
+    {
+      "path": "modules/new-client/references/workflow-reference.md",
+      "repository_path": "plugins/new-client/references/workflow-reference.md",
+      "sha256": "afe34b1fd6f8dc4384651eca80b099a5ef17c7d771885a066d9c2c60c9e62e22"
+    },
+    {
+      "path": "modules/new-client/schemas/new_client_input.schema.json",
+      "repository_path": "plugins/new-client/schemas/new_client_input.schema.json",
+      "sha256": "5c628701d5cfb1b765cd7e63d6b5d5187f3e904c6c7e36cf94cd9ea718844a70"
+    },
+    {
+      "path": "modules/new-client/scripts/check_dependencies.py",
+      "repository_path": "plugins/new-client/scripts/check_dependencies.py",
+      "sha256": "03ee5181ba86da23ce39b72a36a0c72e75155e670574c5157292e2f7b2a6cac7"
+    },
+    {
+      "path": "modules/new-client/scripts/delivery_manifest.py",
+      "repository_path": "plugins/new-client/scripts/delivery_manifest.py",
+      "sha256": "09002cc2283baac2831ee000cc3020901d6d1787aef53f50d79b9fec086713b5"
+    },
+    {
+      "path": "modules/new-client/scripts/initialize_case.py",
+      "repository_path": "plugins/new-client/scripts/initialize_case.py",
+      "sha256": "792df65068ecd8a35fb27d9412cb843d935ec8f7df4d7b240dbfeaf52ba7923b"
+    },
+    {
+      "path": "modules/new-client/scripts/new_client_core.py",
+      "repository_path": "plugins/new-client/scripts/new_client_core.py",
+      "sha256": "037811b80c9c07d395d19340fb598e9f5ff589f30421edd8b3d2ff8e3a70fa45"
+    },
+    {
+      "path": "modules/new-client/scripts/package_new_client.py",
+      "repository_path": "plugins/new-client/scripts/package_new_client.py",
+      "sha256": "3f21713d2049a5367fd5b12894e8e423e5d663903f445e08cc297569780fd768"
+    },
+    {
+      "path": "modules/new-client/scripts/promote_client_file_preparation.py",
+      "repository_path": "plugins/new-client/scripts/promote_client_file_preparation.py",
+      "sha256": "666082d5278bc5ed9cc849183589fe93e55ffe3cdfcbb00535b6bf4718e28402"
+    },
+    {
+      "path": "modules/new-client/skills/new-client/SKILL.md",
+      "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
+      "sha256": "f9822215291d21d110c70ae68ada2ac9d6405c5c2503d8e93e7acc824862a826"
+    },
+    {
+      "path": "skills/new-client/SKILL.md",
+      "repository_path": "plugins/vera/skills/new-client/SKILL.md",
+      "sha256": "eae0bd9f696be94cf1d19943a5a64f6b8e37d159bd9dbb2cf617c32bc463a19f"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Aprire un cliente senza trasformare i vuoti in conferme",
+      "goal": "Passare dai documenti ricevuti a un fascicolo e a una proposta di setup professionale con mancanze esplicite.",
+      "scenario": "Arco Srl invia visura, documento del rappresentante e una bozza di incarico. Il mandato non è firmato e la dichiarazione sulla titolarità effettiva manca. La fase di preparazione documentale precede il setup professionale italiano.",
+      "request": "Vera, organizza l'ingresso di questo nuovo cliente e mostrami cosa serve ancora.",
+      "scope": "Caso italiano fittizio. Il setup professionale corrente usa il country pack Italia; un intake in un'altra lingua non abilita automaticamente un altro paese.",
+      "input_columns": [
+        "Documento fittizio",
+        "Stato osservato",
+        "Significato"
+      ],
+      "input_rows": [
+        [
+          "N1 · visura",
+          "Leggibile",
+          "Identità societaria da rivedere"
+        ],
+        [
+          "N2 · documento rappresentante",
+          "Ricevuto",
+          "Collegamento e validità da verificare"
+        ],
+        [
+          "N3 · incarico",
+          "Bozza senza firma",
+          "Non prova accettazione"
+        ],
+        [
+          "Dichiarazione titolarità effettiva",
+          "Non ricevuta",
+          "Richiesta da rivedere"
+        ]
+      ],
+      "basis": "I file ricevuti sostengono la disponibilità documentale. La firma assente e la dichiarazione mancante restano distinti dalle proposte di attività professionale.",
+      "method": [
+        "Prepara e classifica i documenti ricevuti, mantenendo estrazioni e mancanze legate alle fonti.",
+        "Rivedi e applica le decisioni della fase documentale; promuovi soltanto un passaggio italiano coerente al setup professionale.",
+        "Prepara identità, incarico, privacy, AML e monitoraggio come proposte con prove e punti aperti. Il professionista salva le proprie decisioni nelle superfici di revisione."
+      ],
+      "result_title": "Documenti organizzati, accettazione ancora da completare",
+      "conclusion": "Visura e documento sono disponibili. Il mandato non è sottoscritto e la titolarità effettiva richiede documentazione; il fascicolo non viene dichiarato completo.",
+      "output_columns": [
+        "Area",
+        "Base",
+        "Passo successivo"
+      ],
+      "output_rows": [
+        [
+          "Identità",
+          "N1–N2",
+          "Rivedere i collegamenti"
+        ],
+        [
+          "Incarico",
+          "N3 senza firma",
+          "Completare il normale percorso di accettazione"
+        ],
+        [
+          "AML",
+          "Dichiarazione assente",
+          "Rivedere la richiesta e svolgere l'analisi pertinente"
+        ]
+      ],
+      "check": "Ricevere un documento non equivale ad accettarne il contenuto. Un workflow completato consegna il lavoro; non certifica automaticamente il cliente come accettato.",
+      "question": "La cartella si chiama 'cliente approvato': possiamo usare questo stato?",
+      "answer": "No. Lo stato deriva dalle evidenze e dalle decisioni persistite, non dal nome della cartella.",
+      "practice": "Aggiungi il mandato sottoscritto e aggiorna soltanto le proposte interessate, conservando i punti AML ancora aperti.",
+      "next": "Seleziona cliente e documenti effettivamente ricevuti; evita di ripetere tutto l'onboarding per una sola revisione AML successiva."
+    },
+    "en": {
+      "title": "Start a client file without turning gaps into confirmations",
+      "goal": "Move from received documents to a professional setup proposal with explicit missing evidence.",
+      "scenario": "Fictional Arco Srl supplies a company extract, the representative's ID and a draft engagement letter. The letter is unsigned and the beneficial-ownership declaration is missing. Document preparation precedes Italian professional setup.",
+      "request": "Vera, organize this new client's intake and show what is still needed.",
+      "scope": "Fictional Italian case. Another working language does not enable a different professional country pack.",
+      "input_columns": [
+        "Fictional document",
+        "Observed state",
+        "Meaning"
+      ],
+      "input_rows": [
+        [
+          "N1 · company extract",
+          "Readable",
+          "Identity for review"
+        ],
+        [
+          "N2 · representative ID",
+          "Received",
+          "Relationship and validity to check"
+        ],
+        [
+          "N3 · engagement letter",
+          "Unsigned draft",
+          "Does not prove acceptance"
+        ],
+        [
+          "Ownership declaration",
+          "Not received",
+          "Request for review"
+        ]
+      ],
+      "basis": "Received files establish documentary availability. Missing signature and declaration remain separate from proposed professional actions.",
+      "method": [
+        "Prepare and classify the received documents, linking extraction and missing items to their sources.",
+        "Review and apply documentary decisions; promote only a coherent Italian handoff into the professional setup phase.",
+        "Prepare identity, engagement, privacy, AML and monitoring proposals with evidence and open points. The professional persists actual decisions through the review surfaces."
+      ],
+      "result_title": "Documents organized, acceptance still incomplete",
+      "conclusion": "The extract and ID are available. Engagement is unsigned and ownership documentation is missing; the file is not declared complete.",
+      "output_columns": [
+        "Area",
+        "Basis",
+        "Next step"
+      ],
+      "output_rows": [
+        [
+          "Identity",
+          "N1–N2",
+          "Review relationships"
+        ],
+        [
+          "Engagement",
+          "Unsigned N3",
+          "Complete ordinary acceptance"
+        ],
+        [
+          "AML",
+          "Missing declaration",
+          "Review request and relevant analysis"
+        ]
+      ],
+      "check": "Receiving a document does not mean accepting its content. Workflow completion records delivery, not automatic client acceptance.",
+      "question": "The folder is named 'approved client'. Can we use that status?",
+      "answer": "No. Status comes from evidence and persisted decisions, not the folder name or its implied meaning.",
+      "practice": "Add the signed engagement letter and update affected proposals while retaining open AML issues.",
+      "next": "Select the actual client and received documents. A later focused AML review need not repeat all intake."
+    },
+    "fr": {
+      "title": "Commencer le dossier sans transformer les manques en confirmations",
+      "goal": "Passer des pièces reçues à une proposition de mise en place professionnelle avec preuves manquantes explicites.",
+      "scenario": "La société fictive Arco Srl fournit extrait du registre, identité du représentant et projet de lettre de mission. La lettre n'est pas signée et la déclaration de bénéficiaire effectif manque. La préparation documentaire précède la mise en place professionnelle italienne.",
+      "request": "Vera, organise l'entrée de ce client et montre ce qu'il faut encore obtenir.",
+      "scope": "Cas italien fictif. Changer la langue de travail n'active pas un autre module professionnel national.",
+      "input_columns": [
+        "Document fictif",
+        "État observé",
+        "Signification"
+      ],
+      "input_rows": [
+        [
+          "N1 · extrait",
+          "Lisible",
+          "Identité à revoir"
+        ],
+        [
+          "N2 · identité du représentant",
+          "Reçue",
+          "Lien et validité à contrôler"
+        ],
+        [
+          "N3 · lettre de mission",
+          "Projet non signé",
+          "Ne prouve pas l'acceptation"
+        ],
+        [
+          "Déclaration bénéficiaire effectif",
+          "Non reçue",
+          "Demande à revoir"
+        ]
+      ],
+      "basis": "Les fichiers attestent la disponibilité de pièces. Signature et déclaration manquantes restent distinctes des actions professionnelles proposées.",
+      "method": [
+        "Prépare et classe les pièces reçues en reliant extractions et manques aux sources.",
+        "Revois et applique les décisions documentaires ; seul un passage italien cohérent peut être promu vers la mise en place professionnelle.",
+        "Prépare identité, mission, confidentialité, AML et suivi avec preuves et points ouverts. Le professionnel enregistre ses décisions réelles dans les surfaces de revue."
+      ],
+      "result_title": "Pièces organisées, acceptation à compléter",
+      "conclusion": "Extrait et pièce d'identité sont disponibles. Lettre non signée et déclaration manquante empêchent de présenter le dossier comme complet.",
+      "output_columns": [
+        "Domaine",
+        "Base",
+        "Étape suivante"
+      ],
+      "output_rows": [
+        [
+          "Identité",
+          "N1–N2",
+          "Revoir les liens"
+        ],
+        [
+          "Mission",
+          "N3 non signée",
+          "Parcours normal d'acceptation"
+        ],
+        [
+          "AML",
+          "Déclaration absente",
+          "Revoir la demande et l'analyse pertinente"
+        ]
+      ],
+      "check": "Recevoir une pièce n'est pas en accepter le contenu. Achever le workflow signifie livrer le travail, pas accepter automatiquement le client.",
+      "question": "Le dossier s'appelle 'client approuvé'. Peut-on reprendre ce statut ?",
+      "answer": "Non. Le statut découle des preuves et décisions persistées, pas du nom donné au dossier.",
+      "practice": "Ajoute la lettre signée et actualise les propositions concernées en gardant ouverts les points AML non résolus.",
+      "next": "Sélectionne client et pièces réellement reçues. Une revue AML ultérieure ciblée ne demande pas de refaire toute l'entrée."
+    },
+    "de": {
+      "title": "Ein Mandat beginnen, ohne Lücken als bestätigt auszugeben",
+      "goal": "Von eingegangenen Unterlagen zu einem prüfbaren Einrichtungsvorschlag mit sichtbaren Fehlbelegen gelangen.",
+      "scenario": "Die fiktive Arco Srl liefert Registerauszug, Ausweis des Vertreters und einen Mandatsvertragsentwurf. Der Vertrag ist nicht unterschrieben; die Erklärung zum wirtschaftlich Berechtigten fehlt. Die Dokumentenaufbereitung kommt vor der italienischen Mandatseinrichtung.",
+      "request": "Vera, ordne die Aufnahme dieses Mandanten und zeige, was noch fehlt.",
+      "scope": "Fiktiver italienischer Fall. Eine andere Arbeitssprache aktiviert kein fachliches Länderpaket für ein anderes Land.",
+      "input_columns": [
+        "Fiktives Dokument",
+        "Beobachteter Stand",
+        "Bedeutung"
+      ],
+      "input_rows": [
+        [
+          "N1 · Registerauszug",
+          "Lesbar",
+          "Identität zu prüfen"
+        ],
+        [
+          "N2 · Vertreterausweis",
+          "Eingegangen",
+          "Beziehung und Gültigkeit prüfen"
+        ],
+        [
+          "N3 · Mandatsvertrag",
+          "Unterschriebene Fassung fehlt",
+          "Keine Annahme belegt"
+        ],
+        [
+          "Eigentümererklärung",
+          "Nicht eingegangen",
+          "Anforderung zu prüfen"
+        ]
+      ],
+      "basis": "Vorhandene Dateien belegen Dokumentenverfügbarkeit. Fehlende Unterschrift und Erklärung bleiben von vorgeschlagenen fachlichen Maßnahmen getrennt.",
+      "method": [
+        "Bereite die Dokumente auf und klassifiziere sie; verknüpfe extrahierte Daten und Fehlunterlagen mit ihren Quellen.",
+        "Prüfe und übernimm Dokumentenentscheidungen. Nur eine konsistente italienische Übergabe führt in die fachliche Einrichtungsphase.",
+        "Bereite Vorschläge zu Identität, Mandat, Datenschutz, Geldwäsche und Überwachung vor. Die Fachperson speichert tatsächliche Entscheidungen über die vorgesehenen Prüfflächen."
+      ],
+      "result_title": "Unterlagen geordnet, Mandatsannahme noch offen",
+      "conclusion": "Registerauszug und Ausweis liegen vor. Der Mandatsvertrag ist nicht unterschrieben, Eigentümerunterlagen fehlen; die Akte wird nicht als vollständig bezeichnet.",
+      "output_columns": [
+        "Bereich",
+        "Grundlage",
+        "Nächster Schritt"
+      ],
+      "output_rows": [
+        [
+          "Identität",
+          "N1–N2",
+          "Beziehungen prüfen"
+        ],
+        [
+          "Mandat",
+          "N3 ohne Unterschrift",
+          "Reguläre Annahme abschließen"
+        ],
+        [
+          "Geldwäsche",
+          "Erklärung fehlt",
+          "Anforderung und Analyse prüfen"
+        ]
+      ],
+      "check": "Dokumenteneingang bedeutet keine inhaltliche Annahme. Workflow-Abschluss dokumentiert die Lieferung, nicht automatische Mandatsannahme.",
+      "question": "Der Ordner heißt 'freigegebener Mandant'. Dürfen wir diesen Status übernehmen?",
+      "answer": "Nein. Der Status folgt aus Belegen und gespeicherten Entscheidungen, nicht aus dem Ordnernamen.",
+      "practice": "Ergänze den unterschriebenen Vertrag und aktualisiere betroffene Vorschläge; offene Geldwäschefragen bleiben bestehen.",
+      "next": "Wähle Mandant und erhaltene Dokumente. Eine spätere gezielte Geldwäscheprüfung muss nicht die gesamte Aufnahme wiederholen."
+    },
+    "es": {
+      "title": "Iniciar un expediente sin convertir vacíos en confirmaciones",
+      "goal": "Pasar de documentos recibidos a una propuesta profesional de alta con pruebas pendientes explícitas.",
+      "scenario": "La ficticia Arco Srl entrega extracto registral, documento del representante y borrador de carta de encargo. La carta no está firmada y falta la declaración de titularidad real. La preparación documental precede al alta profesional italiana.",
+      "request": "Vera, organiza la incorporación de este cliente y muestra qué falta.",
+      "scope": "Caso italiano ficticio. Cambiar la lengua de trabajo no habilita un paquete profesional de otro país.",
+      "input_columns": [
+        "Documento ficticio",
+        "Estado observado",
+        "Significado"
+      ],
+      "input_rows": [
+        [
+          "N1 · extracto registral",
+          "Legible",
+          "Identidad por revisar"
+        ],
+        [
+          "N2 · documento del representante",
+          "Recibido",
+          "Relación y validez por comprobar"
+        ],
+        [
+          "N3 · carta de encargo",
+          "Borrador sin firma",
+          "No acredita aceptación"
+        ],
+        [
+          "Declaración de titularidad",
+          "No recibida",
+          "Solicitud por revisar"
+        ]
+      ],
+      "basis": "Los archivos recibidos acreditan disponibilidad documental. Firma y declaración ausentes permanecen separadas de las acciones profesionales propuestas.",
+      "method": [
+        "Prepara y clasifica documentos, vinculando extracción y carencias con sus fuentes.",
+        "Revisa y aplica decisiones documentales. Solo una entrega italiana coherente pasa a la fase de alta profesional.",
+        "Prepara propuestas de identidad, encargo, privacidad, prevención del blanqueo y seguimiento con pruebas y cuestiones abiertas. El profesional registra sus decisiones reales en las superficies de revisión."
+      ],
+      "result_title": "Documentos organizados, aceptación incompleta",
+      "conclusion": "Extracto y documento de identidad están disponibles. El encargo sigue sin firma y falta titularidad real; no se declara completo el expediente.",
+      "output_columns": [
+        "Área",
+        "Base",
+        "Siguiente paso"
+      ],
+      "output_rows": [
+        [
+          "Identidad",
+          "N1–N2",
+          "Revisar relaciones"
+        ],
+        [
+          "Encargo",
+          "N3 sin firmar",
+          "Completar aceptación ordinaria"
+        ],
+        [
+          "Prevención del blanqueo",
+          "Declaración ausente",
+          "Revisar solicitud y análisis pertinente"
+        ]
+      ],
+      "check": "Recibir un documento no equivale a aceptar su contenido. Completar el workflow registra la entrega, no la aceptación automática del cliente.",
+      "question": "La carpeta se llama 'cliente aprobado'. ¿Podemos usar ese estado?",
+      "answer": "No. El estado deriva de pruebas y decisiones guardadas, no del nombre de carpeta.",
+      "practice": "Añade la carta firmada y actualiza las propuestas afectadas conservando las cuestiones abiertas sobre blanqueo.",
+      "next": "Selecciona cliente real y documentos recibidos. Una revisión posterior específica de blanqueo no exige repetir toda el alta."
+    }
+  }
+}

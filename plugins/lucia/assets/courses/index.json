@@ -1,0 +1,82 @@
+{
+  "schema": "mparanza.course_catalog.v1",
+  "product": "lucia",
+  "courses": {
+    "apertura-pratica": {
+      "path": "apertura-pratica/course.json",
+      "sha256": "20fb4cc66611ff2579420d64a0d14f9d30ea634b02ed09a6f9cfdf0dbf2c683c",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Aprire il dossier non significa accettare l'incarico",
+        "en": "Preparing a matter file does not accept the engagement",
+        "fr": "Préparer le dossier n'accepte pas la mission",
+        "de": "Eine vorbereitete Akte ist noch keine Mandatsannahme",
+        "es": "Preparar el expediente no equivale a aceptar el encargo"
+      }
+    },
+    "comunicazione-professionale": {
+      "path": "comunicazione-professionale/course.json",
+      "sha256": "646beeec6b2925fc994908701270310445a98f81643cb11b1517d5eea16705f3",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Una comunicazione che può dimostrare ciò che dice",
+        "en": "A professional message that can support its claims",
+        "fr": "Un message professionnel qui peut justifier ses affirmations",
+        "de": "Eine Kanzleimitteilung mit belegbaren Aussagen",
+        "es": "Un mensaje profesional que respalda sus afirmaciones"
+      }
+    },
+    "presenza-digitale-studio": {
+      "path": "presenza-digitale-studio/course.json",
+      "sha256": "19f35264eae3c41415f6e053e7ec64224f8d03695461e1496a436b7a64353ee6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Un sito di studio che parte dai fatti",
+        "en": "A firm's website starts with verified facts",
+        "fr": "Le site du cabinet commence par des faits vérifiés",
+        "de": "Eine Kanzleiwebsite beginnt mit geprüften Fakten",
+        "es": "La web del despacho empieza por hechos verificados"
+      }
+    },
+    "quesito-legale-fiscale": {
+      "path": "quesito-legale-fiscale/course.json",
+      "sha256": "decb2db47e26d8ea6f404db8555b514da365fe42d4408aa67bff1f6dc5ce6567",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Da una domanda generica a una risposta che si può verificare",
+        "en": "From a broad question to a verifiable answer",
+        "fr": "D'une question générale à une réponse vérifiable",
+        "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
+        "es": "De una pregunta general a una respuesta verificable"
+      }
+    }
+  }
+}

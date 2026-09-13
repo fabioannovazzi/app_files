@@ -1,0 +1,358 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "research-video",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "skills/research-video/SKILL.md",
+      "repository_path": "plugins/clara/skills/research-video/SKILL.md",
+      "sha256": "8cba891baa046a13ae47cf60f4e9dba06bb91128349260cceb6cbde39f69cc88"
+    },
+    {
+      "path": "skills/research-video/scripts/research_video.py",
+      "repository_path": "plugins/clara/skills/research-video/scripts/research_video.py",
+      "sha256": "7e76005502796684c00e2743e6c935badd12cdec0a28c1396a7d119c3e098164"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Una scena, una fonte, una frase",
+      "goal": "Preparare un breve video di ricerca mantenendo allineati immagini, narrazione e affermazioni.",
+      "scenario": "Tre scene fittizie mostrano un processo: richiesta ricevuta, documento controllato e risultato riveduto. Il brief chiede un video di 30 secondi. Le immagini non contengono dati quantitativi, quindi la narrazione non può promettere un risparmio misurato.",
+      "request": "Clara, mostrami come prepari scene e narrazione prima di generare il video.",
+      "scope": "Preparazione locale del piano scene e del copione. La lezione non sintetizza audio, non chiama il servizio hosted e non dichiara un MP4 generato. Il video effettivo richiede il normale percorso autorizzato.",
+      "input_columns": [
+        "Scena fittizia",
+        "Fonte visiva",
+        "Messaggio sostenuto"
+      ],
+      "input_rows": [
+        [
+          "1 · Richiesta",
+          "V1 · brief selezionato",
+          "Si parte da un obiettivo"
+        ],
+        [
+          "2 · Controllo",
+          "V2 · documento con riferimenti",
+          "Le affermazioni hanno fonti"
+        ],
+        [
+          "3 · Revisione",
+          "V3 · risultato con punti aperti",
+          "Il professionista rivede il risultato"
+        ]
+      ],
+      "basis": "V1–V3 sostengono tre passaggi qualitativi. Nessuna scena prova tempi di lavoro, efficacia o risultati commerciali.",
+      "method": [
+        "Seleziona immagini ordinate e fonti approvate, pubblico, lingua e durata. Non inventare scene informative per coprire lacune delle fonti.",
+        "Scrivi la narrazione per scena e controlla ogni affermazione contro la sua immagine e base. Rivedi insieme ordine, testo e durata prima della sintesi.",
+        "Nel lavoro reale autorizzato, usa la voce hosted prevista e il rendering locale; verifica MP4, audio, sottotitoli e sincronizzazione. Non sostituire ricevute o approvazioni mancanti."
+      ],
+      "result_title": "Copione di 30 secondi da rivedere",
+      "conclusion": "La sequenza spiega il processo con tre messaggi sostenuti dalle immagini. Il copione è pronto per essere discusso, non prova una produzione video.",
+      "output_columns": [
+        "Tempo previsto",
+        "Narrazione proposta",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "0–10 s",
+          "Ogni lavoro parte da una domanda e dai documenti selezionati.",
+          "V1"
+        ],
+        [
+          "10–20 s",
+          "Il risultato mantiene i riferimenti che permettono di verificarlo.",
+          "V2"
+        ],
+        [
+          "20–30 s",
+          "I punti aperti restano visibili fino alla revisione professionale.",
+          "V3"
+        ]
+      ],
+      "check": "La durata finale dipende dall'audio effettivo e va verificata dopo la sintesi. Il piano temporale non è una misura di un file multimediale esistente.",
+      "question": "Possiamo aggiungere 'risparmia metà del tempo' alla seconda scena?",
+      "answer": "No. Nessuna fonte del caso misura il risparmio. La narrazione può descrivere la tracciabilità, che è visibile, senza inventare una percentuale.",
+      "practice": "Accorcia la seconda frase mantenendo la stessa affermazione e la stessa fonte; rivedi il piano locale.",
+      "next": "Per produrre un video vero prepara scene approvate e fonti. La sintesi hosted segue il suo flusso di dati e l'approvazione dei materiali."
+    },
+    "en": {
+      "title": "One scene, one source, one sentence",
+      "goal": "Keep scene images, narration and claims aligned in a short research video.",
+      "scenario": "Three fictional scenes show a request, a checked document and a reviewed result. The brief calls for 30 seconds. The images contain no quantitative outcomes, so narration cannot promise a measured time saving.",
+      "request": "Clara, show how you prepare scenes and narration before generating the video.",
+      "scope": "Local scene-plan and script preparation. No hosted audio call or claimed MP4 generation occurs. Actual production follows its normal authorized route.",
+      "input_columns": [
+        "Fictional scene",
+        "Visual source",
+        "Supported message"
+      ],
+      "input_rows": [
+        [
+          "1 · Request",
+          "V1 · selected brief",
+          "Start from an objective"
+        ],
+        [
+          "2 · Check",
+          "V2 · document with references",
+          "Claims retain sources"
+        ],
+        [
+          "3 · Review",
+          "V3 · result with open points",
+          "Professional review remains"
+        ]
+      ],
+      "basis": "V1–V3 support three qualitative steps, not measured time savings, effectiveness or commercial outcomes.",
+      "method": [
+        "Select approved ordered images and sources, audience, language and duration. Do not invent informative scenes to fill source gaps.",
+        "Write narration by scene and check every claim against its image and basis. Review sequence, wording and timing before synthesis.",
+        "In authorized real production, use the required hosted voice and local rendering. Verify MP4, audio, captions and synchronization without inventing receipts or approvals."
+      ],
+      "result_title": "A 30-second script for review",
+      "conclusion": "Three source-supported messages explain the process. The script is ready for discussion, not proof of video production.",
+      "output_columns": [
+        "Planned time",
+        "Proposed narration",
+        "Basis"
+      ],
+      "output_rows": [
+        [
+          "0–10 s",
+          "Each assignment begins with a question and selected documents.",
+          "V1"
+        ],
+        [
+          "10–20 s",
+          "The result retains references that allow the reader to verify it.",
+          "V2"
+        ],
+        [
+          "20–30 s",
+          "Open questions remain visible until professional review.",
+          "V3"
+        ]
+      ],
+      "check": "Final duration depends on actual synthesized audio and must be checked. A timing plan is not a measurement of an existing media file.",
+      "question": "Can scene two promise 'save half your time'?",
+      "answer": "No source measures that saving. Describe visible traceability without inventing a percentage or outcome.",
+      "practice": "Shorten the second sentence while preserving its claim and source, then review the local plan.",
+      "next": "For a real video, prepare approved scenes and sources. Hosted synthesis follows its own material approval and data flow."
+    },
+    "fr": {
+      "title": "Une scène, une source, une phrase",
+      "goal": "Aligner images, narration et affirmations d'une courte vidéo de recherche.",
+      "scenario": "Trois scènes fictives montrent demande, document contrôlé et résultat revu. Le brief prévoit 30 secondes. Les images n'apportent aucun résultat quantitatif ; la narration ne peut donc promettre un gain de temps mesuré.",
+      "request": "Clara, montre comment préparer scènes et narration avant de générer la vidéo.",
+      "scope": "Préparation locale du plan et du script, sans appel audio hosted ni MP4 annoncé comme produit. La production réelle suit son parcours autorisé.",
+      "input_columns": [
+        "Scène fictive",
+        "Source visuelle",
+        "Message étayé"
+      ],
+      "input_rows": [
+        [
+          "1 · Demande",
+          "V1 · brief sélectionné",
+          "Partir d'un objectif"
+        ],
+        [
+          "2 · Contrôle",
+          "V2 · document référencé",
+          "Conserver les sources"
+        ],
+        [
+          "3 · Revue",
+          "V3 · résultat avec points ouverts",
+          "Revue professionnelle"
+        ]
+      ],
+      "basis": "V1–V3 étayent trois étapes qualitatives, pas des économies de temps, une efficacité ou des résultats commerciaux mesurés.",
+      "method": [
+        "Choisis images ordonnées approuvées, sources, public, langue et durée, sans inventer de scènes informatives pour combler les lacunes.",
+        "Rédige la narration par scène et compare chaque affirmation à son image et sa base. Revois ordre, texte et durée avant synthèse.",
+        "En production réelle autorisée, utilise la voix hosted prévue et le rendu local ; vérifie MP4, audio, sous-titres et synchronisation sans inventer de reçus ou d'approbations."
+      ],
+      "result_title": "Un script de 30 secondes à revoir",
+      "conclusion": "Trois messages sourcés expliquent le processus. Le script est prêt à être discuté ; il ne prouve pas une production vidéo.",
+      "output_columns": [
+        "Temps prévu",
+        "Narration proposée",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "0–10 s",
+          "Chaque mission commence par une question et des documents sélectionnés.",
+          "V1"
+        ],
+        [
+          "10–20 s",
+          "Le résultat conserve les références qui permettent de le vérifier.",
+          "V2"
+        ],
+        [
+          "20–30 s",
+          "Les points ouverts restent visibles jusqu'à la revue professionnelle.",
+          "V3"
+        ]
+      ],
+      "check": "La durée finale dépend de l'audio réel et doit être contrôlée. Le minutage prévu n'est pas la mesure d'un fichier existant.",
+      "question": "La deuxième scène peut-elle promettre de gagner la moitié du temps ?",
+      "answer": "Aucune source ne mesure ce gain. Décris la traçabilité visible sans inventer de pourcentage ni de résultat.",
+      "practice": "Raccourcis la deuxième phrase en conservant sens et source, puis revois le plan local.",
+      "next": "Pour la vidéo réelle, prépare scènes et sources approuvées. La synthèse hosted suit ses propres approbations et flux de données."
+    },
+    "de": {
+      "title": "Eine Szene, eine Quelle, ein Satz",
+      "goal": "Szenenbilder, Sprechertext und Aussagen in einem kurzen Recherchevideo aufeinander abstimmen.",
+      "scenario": "Drei fiktive Szenen zeigen einen Auftrag, ein geprüftes Dokument und ein Ergebnis mit offenen Punkten. Geplant sind 30 Sekunden. Die Bilder enthalten keine quantitativen Ergebnisse; der Sprechertext kann keine gemessene Zeitersparnis versprechen.",
+      "request": "Clara, zeige die Vorbereitung von Szenen und Sprechertext vor der Videoerzeugung.",
+      "scope": "Lokaler Szenenplan und Textentwurf. Kein gehosteter Audioaufruf und keine behauptete MP4-Erzeugung. Echte Produktion folgt dem normalen autorisierten Weg.",
+      "input_columns": [
+        "Fiktive Szene",
+        "Bildquelle",
+        "Belegte Botschaft"
+      ],
+      "input_rows": [
+        [
+          "1 · Auftrag",
+          "V1 · gewähltes Briefing",
+          "Mit einem Ziel beginnen"
+        ],
+        [
+          "2 · Prüfung",
+          "V2 · Dokument mit Verweisen",
+          "Aussagen behalten Quellen"
+        ],
+        [
+          "3 · Durchsicht",
+          "V3 · Ergebnis mit offenen Punkten",
+          "Fachliche Prüfung bleibt"
+        ]
+      ],
+      "basis": "V1–V3 tragen drei qualitative Schritte, keine gemessene Ersparnis, Wirksamkeit oder Geschäftsergebnisse.",
+      "method": [
+        "Wähle freigegebene geordnete Bilder und Quellen, Zielgruppe, Sprache und Dauer. Erfinde keine informativen Szenen zum Füllen von Beleglücken.",
+        "Schreibe Text je Szene und prüfe jede Aussage gegen Bild und Grundlage. Prüfe Reihenfolge, Wortlaut und Timing vor Synthese.",
+        "Nutze bei autorisierter echter Produktion die erforderliche gehostete Stimme und lokales Rendering. Prüfe MP4, Ton, Untertitel und Synchronisierung ohne erfundene Nachweise oder Freigaben."
+      ],
+      "result_title": "Ein 30-Sekunden-Text zur Prüfung",
+      "conclusion": "Drei belegte Botschaften erklären den Prozess. Der Text ist bereit zur Besprechung, kein Nachweis einer Videoproduktion.",
+      "output_columns": [
+        "Geplante Zeit",
+        "Vorgeschlagener Sprechertext",
+        "Grundlage"
+      ],
+      "output_rows": [
+        [
+          "0–10 s",
+          "Jeder Auftrag beginnt mit einer Frage und ausgewählten Dokumenten.",
+          "V1"
+        ],
+        [
+          "10–20 s",
+          "Das Ergebnis bewahrt Verweise, mit denen Leser es überprüfen können.",
+          "V2"
+        ],
+        [
+          "20–30 s",
+          "Offene Fragen bleiben bis zur fachlichen Prüfung sichtbar.",
+          "V3"
+        ]
+      ],
+      "check": "Die Enddauer hängt vom tatsächlich erzeugten Ton ab und muss geprüft werden. Ein Zeitplan ist keine Messung einer vorhandenen Mediendatei.",
+      "question": "Darf Szene zwei 'Sparen Sie die Hälfte Ihrer Zeit' versprechen?",
+      "answer": "Keine Quelle misst diese Ersparnis. Beschreibe sichtbare Nachvollziehbarkeit ohne erfundene Prozentzahl oder Wirkung.",
+      "practice": "Kürze Satz zwei unter Erhalt von Aussage und Quelle und prüfe den lokalen Plan.",
+      "next": "Bereite für ein echtes Video freigegebene Szenen und Quellen vor. Gehostete Synthese folgt eigener Materialfreigabe und eigenem Datenfluss."
+    },
+    "es": {
+      "title": "Una escena, una fuente, una frase",
+      "goal": "Alinear imágenes, narración y afirmaciones en un vídeo breve de investigación.",
+      "scenario": "Tres escenas ficticias muestran una petición, un documento comprobado y un resultado con cuestiones abiertas. Se prevén 30 segundos. Las imágenes no contienen resultados cuantitativos, por lo que la narración no puede prometer ahorro medido.",
+      "request": "Clara, muestra cómo preparas escenas y narración antes de generar el vídeo.",
+      "scope": "Preparación local de plan de escenas y guion. Sin llamada de audio alojada ni afirmación de MP4 generado. La producción real sigue su vía autorizada normal.",
+      "input_columns": [
+        "Escena ficticia",
+        "Fuente visual",
+        "Mensaje respaldado"
+      ],
+      "input_rows": [
+        [
+          "1 · Petición",
+          "V1 · guía seleccionada",
+          "Partir de un objetivo"
+        ],
+        [
+          "2 · Comprobación",
+          "V2 · documento con referencias",
+          "Las afirmaciones conservan fuentes"
+        ],
+        [
+          "3 · Revisión",
+          "V3 · resultado con puntos abiertos",
+          "La revisión profesional permanece"
+        ]
+      ],
+      "basis": "V1–V3 respaldan tres pasos cualitativos, no ahorro medido, eficacia ni resultados comerciales.",
+      "method": [
+        "Selecciona imágenes aprobadas y ordenadas, fuentes, audiencia, lengua y duración. No inventes escenas informativas para cubrir vacíos de evidencia.",
+        "Escribe narración por escena y comprueba cada afirmación contra imagen y base. Revisa secuencia, texto y tiempos antes de sintetizar.",
+        "En producción real autorizada, usa la voz alojada requerida y renderizado local. Verifica MP4, audio, subtítulos y sincronización sin inventar recibos ni aprobaciones."
+      ],
+      "result_title": "Guion de 30 segundos para revisión",
+      "conclusion": "Tres mensajes respaldados explican el proceso. El guion está listo para discutir, no prueba que se haya producido un vídeo.",
+      "output_columns": [
+        "Tiempo previsto",
+        "Narración propuesta",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "0–10 s",
+          "Cada encargo empieza con una pregunta y documentos seleccionados.",
+          "V1"
+        ],
+        [
+          "10–20 s",
+          "El resultado conserva referencias que permiten comprobarlo.",
+          "V2"
+        ],
+        [
+          "20–30 s",
+          "Las preguntas abiertas siguen visibles hasta la revisión profesional.",
+          "V3"
+        ]
+      ],
+      "check": "La duración final depende del audio realmente sintetizado y debe comprobarse. Un plan temporal no mide un archivo multimedia existente.",
+      "question": "¿Puede la segunda escena prometer 'ahorre la mitad de su tiempo'?",
+      "answer": "Ninguna fuente mide ese ahorro. Describe la trazabilidad visible sin inventar porcentajes o resultados.",
+      "practice": "Acorta la segunda frase conservando afirmación y fuente y revisa el plan local.",
+      "next": "Para un vídeo real, prepara escenas y fuentes aprobadas. La síntesis alojada sigue su propia aprobación de material y flujo de datos."
+    }
+  }
+}

@@ -1,0 +1,509 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "Eine Kanzleiwebsite beginnt mit geprüften Fakten",
+    "goal": "Verlässliche Kanzleiangaben in eine klare, auf Desktop und Mobilgerät prüfbare Seite umsetzen.",
+    "scenario": "Die fiktive Kanzlei Arco liefert Name, tatsächliche Leistungen, Öffnungszeiten und einen Demonstrationskontakt. Auszeichnungen, Kundenstimmen und Erfolgsquoten fehlen. Gewünscht ist eine erste Informationsseite mit Kontaktmöglichkeit.",
+    "request": "Vera, erstelle eine erste Kanzleiseite ausschließlich aus diesen Angaben.",
+    "scope": "Lokale Informationsvorschau mit fiktiven Personen und Kontakten. Während der Lektion wird keine Domain verbunden und nichts veröffentlicht.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Fakt",
+      "Verwendung"
+    ],
+    "input_rows": [
+      [
+        "S1 · Kanzleiprofil",
+        "Arco · Buchhaltungsberatung",
+        "Titel und Beschreibung"
+      ],
+      [
+        "S1 · Leistungen",
+        "Buchhaltung und Controlling",
+        "Leistungsabschnitt"
+      ],
+      [
+        "S1 · Kontakt",
+        "Montag–Freitag, 9–18 Uhr; Demonstrationskontakt",
+        "Kontaktaufforderung"
+      ],
+      [
+        "Auszeichnungen und Kundenstimmen",
+        "Nicht geliefert",
+        "Nicht erfinden"
+      ]
+    ],
+    "basis": "S1 ist die einzige Faktengrundlage. Ein Gestaltungsvorschlag ergänzt weder Qualifikationen noch Ergebnisse oder eine Einwilligung zur Namensnutzung.",
+    "method": [
+      "Sammle geprüfte Fakten und das Seitenziel. Prüfe bei bestehenden Websites den aktuellen Stand und gewünschte Änderungen.",
+      "Erstelle Struktur, Texte und responsive Umsetzung. Verknüpfe Aussagen und Kontakte mit Quellen und kennzeichne vorgeschlagene Inhalte.",
+      "Prüfe die genaue Desktop- und Mobilvorschau einschließlich Lesbarkeit und Links. Veröffentlichung und Ziel folgen dem regulären Freigabeschritt."
+    ],
+    "result_title": "Arco · wesentliche Kanzleiinformationen",
+    "conclusion": "Buchhaltung und Controlling für die Arbeit der Kanzlei. Erfragen Sie die verfügbaren Leistungen während der angegebenen Zeiten bei Ihrer Ansprechperson.",
+    "output_columns": [
+      "Seitenbereich",
+      "Vorbereiteter Inhalt",
+      "Prüfung"
+    ],
+    "output_rows": [
+      [
+        "Einstieg",
+        "Kanzleiname und Tätigkeiten",
+        "Entspricht S1"
+      ],
+      [
+        "Leistungen",
+        "Zwei tatsächliche Tätigkeiten",
+        "Keine erfundene Spezialisierung"
+      ],
+      [
+        "Kontakt",
+        "Zeiten und Demonstrationskontakt",
+        "Echten Kontakt vor Veröffentlichung prüfen"
+      ]
+    ],
+    "check": "Prüfe genau die zu veröffentlichende Version. Gute Gestaltung erlaubt keine unbelegten Kundenstimmen oder Versprechen.",
+    "question": "Können wir die Überschrift um 'beste Kanzlei der Region' ergänzen?",
+    "answer": "Nein. S1 trägt diesen Vergleich nicht. Eine klare konkrete Überschrift braucht keine erfundene Überlegenheit.",
+    "practice": "Ändere die Reihenfolge der Leistungen und prüfe die neue Vorschau auf einem schmalen Bildschirm.",
+    "next": "Bereite Kanzleifakten, Leistungen, Kontakte, Gestaltungsvorgaben und gegebenenfalls die bestehende Website vor."
+  },
+  "vera/previdenza-inps": {
+    "title": "Eine belegbare Beitragschronologie erstellen",
+    "goal": "Beitragsbelege ordnen, ohne aus einer mehrdeutigen Bezeichnung eine Regelung abzuleiten.",
+    "scenario": "Ein fiktiver Auszug zeigt Januar–März und Mai–Juni. Ein Schreiben nennt 'Gruppe 3', ohne sie zu definieren. Der Mandant liefert außerdem eine Zahlungsquittung aus April; der zugeordnete Beitragszeitraum ist unbekannt.",
+    "request": "Vera, rekonstruiere den bekannten Stand und die fehlenden Informationen.",
+    "scope": "Dokumentarische Rekonstruktion eines italienischen INPS-Falls. Keine Beitragssätze, Rechtsfristen oder Einordnungen werden angewendet; kein Portal wird aufgerufen.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Fakt",
+      "Grenze"
+    ],
+    "input_rows": [
+      [
+        "I1 · Auszug",
+        "Januar–März; Mai–Juni",
+        "April im Umfang nicht sichtbar"
+      ],
+      [
+        "I2 · Schreiben",
+        "Bezeichnung 'Gruppe 3'",
+        "Bedeutung undefiniert"
+      ],
+      [
+        "I3 · Quittung",
+        "Zahlung im April",
+        "Beitragszeitraum nicht belegt"
+      ]
+    ],
+    "basis": "I1 belegt die angezeigten Zeiträume. Das Zahlungsdatum von I3 belegt keine Zuordnung; I2 braucht den Kontext der Gruppenbezeichnung.",
+    "method": [
+      "Erfasse ausgewählte Dokumente, Fundstellen und Chronologie. Trenne erklärte Herkunft von tatsächlicher Dateiverifikation.",
+      "Kläre Bezeichnungen, Zeiträume und Frage. Recherchiere amtliche Quellen für den bestätigten Rahmen; offene Alternativen bleiben vorläufig.",
+      "Erstelle Dossier und fachliche Rückfragen. Berechne nur mit geprüften Formeln und Parametern und benenne die Grenzen."
+    ],
+    "result_title": "April und Einordnung sind getrennte Fragen",
+    "conclusion": "Der vorliegende Stand zeigt April nicht. Die Quittung belegt eine Zahlung ohne ihre Zuordnung; 'Gruppe 3' bleibt undefiniert.",
+    "output_columns": [
+      "Frage",
+      "Vorhandene Evidenz",
+      "Als Nächstes benötigt"
+    ],
+    "output_rows": [
+      [
+        "Zeitraum April",
+        "Fehlt in I1; Zahlung I3",
+        "Zuordnungsdetails"
+      ],
+      [
+        "Gruppe 3",
+        "Bezeichnung in I2",
+        "Definition für diese Periode"
+      ]
+    ],
+    "check": "Eine Lücke im Auszug beweist keine unterlassene Beitragszahlung. Eine Bezeichnung allein bestimmt weder Sätze noch Regelung.",
+    "question": "Kann die Aprilquittung den April im Beitragsstand auffüllen?",
+    "answer": "Nein. Die Verbindung zwischen Zahlung und Zeitraum fehlt. Erhalte die Quittung und benenne diese gezielte Prüfung.",
+    "practice": "Ergänze Zuordnungsdetails und aktualisiere die Chronologie; halte die Einordnungsfrage getrennt.",
+    "next": "Wähle vorhandene amtliche Exporte, Schreiben und Quittungen und bestimme Frage und Zeiträume vor Berechnungen."
+  },
+  "vera/quesito-legale-fiscale": {
+    "title": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
+    "goal": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
+    "scenario": "Ein fiktiver Mandant fragt nach der Abzugsfähigkeit eines Aufwands. Eine Rechnung beschreibt eine Leistung; Rechtsträger, Periode, steuerliche Regelung und tatsächliche Nutzung fehlen. Die Lektion grenzt die Frage ein, ohne ein Steuergutachten zu liefern.",
+    "request": "Vera, zeige, wie du diese Frage in eine quellengestützte Antwort überführst.",
+    "scope": "Lehre zur Recherche- und Prüfmethode, keine materielle Steuerregel. Ein echter Fall benötigt aktuelle einschlägige Primärquellen.",
+    "input_columns": [
+      "Fiktives Element",
+      "Vorhanden",
+      "Zu klären"
+    ],
+    "input_rows": [
+      [
+        "Rechnung Q1",
+        "Leistungsbeschreibung und Betrag",
+        "Tatsächliche Nutzung"
+      ],
+      [
+        "Mandantenfrage",
+        "Interesse am Abzug",
+        "Rechtsträger, Regelung und Periode"
+      ],
+      [
+        "Rechtsquellen",
+        "Im kleinen Beispiel noch nicht ausgewählt",
+        "Einschlägiger Rahmen nach Klärung"
+      ]
+    ],
+    "basis": "Q1 belegt eine Dokumentenbeschreibung, nicht die steuerlichen Voraussetzungen. Fehlende Fakten können Recherche und Schlussfolgerung ändern.",
+    "method": [
+      "Bestimme Frage, Entscheidung und wesentliche Fakten. Frage nur nach Informationen, die vorhandene Belege nicht klären.",
+      "Folge dem aktuellen Planungs-, Recherche- und Antwortweg. Prüfe Autorität, Version und Anwendbarkeit der Quellen und trenne Fakten von Zitaten.",
+      "Prüfe Aussagen und relevante Alternativen und führe die vorgeschriebene Gegenprüfung aus. Liefere Antwort, Grundlagen und Restfragen zur fachlichen Prüfung."
+    ],
+    "result_title": "Eine Frage für gezielte Recherche",
+    "conclusion": "Die Frage muss Rechtsträger, Periode, Regelung und Leistungsnutzung bestimmen. Ohne diese Angaben wäre ein kategorisches Ja oder Nein verfrüht.",
+    "output_columns": [
+      "Stufe",
+      "Nützliches Ergebnis",
+      "Prüfung"
+    ],
+    "output_rows": [
+      [
+        "Eingrenzung",
+        "Frage und bestätigte Fakten",
+        "Quelle für jeden Fakt"
+      ],
+      [
+        "Recherche",
+        "Einschlägige Quellen",
+        "Version, Autorität und Fundstelle"
+      ],
+      [
+        "Geprüfte Antwort",
+        "Schlussfolgerung mit Bedingungen und Alternativen",
+        "Keine erfundenen Zitate"
+      ]
+    ],
+    "check": "Ein echtes Zitat kann trotzdem unzutreffend sein. Prüfe Quellentext und Bezug zu den Fallfakten.",
+    "question": "Reicht eine Seite zum Thema Abzugsfähigkeit für die Antwort?",
+    "answer": "Nein. Autorität, Zeitraum, Fakten und Voraussetzungen sind zu prüfen. Ein gemeinsames Thema belegt keine Anwendbarkeit.",
+    "practice": "Ergänze Rechtsträger, Periode und Nutzung und formuliere die genaue Recherchefrage.",
+    "next": "Benenne die benötigte Entscheidung und wähle relevante Unterlagen. Vera führt die internen Stufen ohne einzelne Skill-Auswahl."
+  },
+  "vera/registro-imprese-sari": {
+    "title": "Den Vorgang vorbereiten, bevor das Portal geöffnet wird",
+    "goal": "Fallfakten, amtliche Hinweise und manuelle Schritte unterscheiden und Empfänger getrennt beurteilen.",
+    "scenario": "Ein fiktives Unternehmen möchte für eine neue Tätigkeit 'die Position eröffnen'. Ort und geplantes Datum sind beschrieben; zuständige Kammer und weitere Positionen sind unklar. Die Formulierung des Mandanten bestimmt nicht die Empfänger.",
+    "request": "Vera, erstelle einen Verfahrensplan und benenne die vor der Bearbeitung zu klärenden Fakten.",
+    "scope": "Prüfbarer Planentwurf ohne Anmeldung, Formulareingabe, Unterschrift, Zahlung oder Einreichung. DIRE-Formulare und Fristen werden nicht erfunden.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Fakt",
+      "Frage"
+    ],
+    "input_rows": [
+      [
+        "R1 · Tätigkeitsbeschreibung",
+        "Geplante neue Tätigkeit",
+        "Einordnung prüfen"
+      ],
+      [
+        "R2 · Standort",
+        "Adresse beschrieben",
+        "Örtliche Zuständigkeit"
+      ],
+      [
+        "R3 · Chronologie",
+        "Geplanter Beginn",
+        "Tatsächliches Datum und Folgen"
+      ]
+    ],
+    "basis": "R1–R3 lenken die Recherche, bestimmen aber nicht automatisch Registro Imprese, REA oder andere Positionen. Echte Anweisungen benötigen aktuelle amtliche Hinweise.",
+    "method": [
+      "Kläre Rechtsträger, Tätigkeit, Gebiet, Daten und Entscheidung. Betrachte mögliche Empfänger anhand der Fakten ohne automatische Einordnung.",
+      "Lies einschlägige amtliche Hinweise samt Version. Öffentliche Recherche verwendet allgemeine Themen ohne Mandantenkennungen.",
+      "Erstelle Fakten, Quellen, manuelle Schritte und Unterlagenbedarf als prüfbaren Entwurf. Trenne den Plan von Einreichungsbereitschaft."
+    ],
+    "result_title": "Vorläufiger Plan · Empfänger noch zu bestätigen",
+    "conclusion": "Tätigkeit, Zuständigkeit und Daten sind vor Formular- und Schrittauswahl zu bestätigen. Das Ergebnis ist eine begründete Liste erforderlicher Entscheidungen.",
+    "output_columns": [
+      "Entscheidung",
+      "Grundlage",
+      "Status"
+    ],
+    "output_rows": [
+      [
+        "Zuständige Kammer",
+        "R2 und einschlägige amtliche Hinweise",
+        "Zu bestätigen"
+      ],
+      [
+        "Empfänger",
+        "Tatsächliche Tätigkeit R1",
+        "Getrennt beurteilen"
+      ],
+      [
+        "DIRE-Formulare und Schritte",
+        "Aktuelle Quelle nach Eingrenzung",
+        "Noch nicht ausgewählt"
+      ]
+    ],
+    "check": "Sprache ändert keine Zuständigkeit. SARI-Hinweise und DIRE-Bearbeitung sind getrennte Stufen; ein Plan autorisiert keine Portalaktionen.",
+    "question": "Der Mandant sagt 'INPS eröffnen'. Können wir daraus den gesamten Vorgang ableiten?",
+    "answer": "Nein. Kläre gewünschtes Ergebnis und sachlich relevante Positionen. Der Ausdruck allein bestimmt weder Empfänger noch Formulare.",
+    "practice": "Vervollständige Tätigkeit und Kammerangaben und benenne verbleibende Fragen vor der passenden Anleitung.",
+    "next": "Bereite tatsächliche Tätigkeit, Rechtsform, Standort, Daten und vorhandene Unterlagen vor."
+  },
+  "vera/financial-report-builder": {
+    "title": "Ein Finanzbericht mit Rückweg zu seinen Tabellen",
+    "goal": "Lesbare Finanzquellen in zusammenhängende Abschnitte, Zahlen und Erläuterungen überführen.",
+    "scenario": "Die fiktive Arco liefert EUR 120.000 Umsatz und EUR 95.000 Kosten. Eine Führungskraft erklärt das Ergebnis mit Neukunden; Kundendetails und Vergleichsperiode fehlen.",
+    "request": "Vera, erstelle einen kurzen Bericht aus diesen Tabellen und trenne Zahlen von noch zu prüfenden Erklärungen.",
+    "scope": "Berichtserstellung aus unterstützten Excel-, CSV- oder Text-PDF-Quellen. Dies ist nicht Claras Reporting Engine oder ein fremder Analyseworkflow.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Inhalt",
+      "Grenze"
+    ],
+    "input_rows": [
+      [
+        "F1 · Aufstellung",
+        "Umsatz EUR 120.000; Kosten EUR 95.000",
+        "Nur aktuelle Periode"
+      ],
+      [
+        "F2 · Managementnotiz",
+        "Wachstum Neukunden zugeschrieben",
+        "Keine Vergleichsdetails"
+      ]
+    ],
+    "basis": "F1 trägt EUR 25.000 Überschuss über die einbezogenen Kosten. F2 belegt die Aussage der Führungskraft, nicht unabhängig die Ursache.",
+    "method": [
+      "Prüfe Dateien und Tabellen und bestimme Berichtsart, Periode, Sprache und Quellenumfang.",
+      "Prüfe Tabellenzuordnungen zu Abschnitten und vervollständige die beleggestützte Erläuterung. Unbestätigte Erklärungen bleiben erkennbar.",
+      "Erzeuge die regulären Dokumente, Tabellen und Prüfspur. Kontrolliere jede Zahl und Aussage gegen ihre Quelle und erhalte den Entwurfsstatus."
+    ],
+    "result_title": "Arco · Periodenergebnis",
+    "conclusion": "Bei den gelieferten Positionen übersteigt der Umsatz die Kosten um EUR 25.000. Die Neukundenerklärung bleibt eine zu belegende Managementaussage.",
+    "output_columns": [
+      "Abschnitt",
+      "Inhalt",
+      "Grundlage"
+    ],
+    "output_rows": [
+      [
+        "Wirtschaftliche Übersicht",
+        "120.000 − 95.000 = EUR 25.000",
+        "F1"
+      ],
+      [
+        "Erläuterung",
+        "Management nennt Neukunden",
+        "F2 · Aussage"
+      ],
+      [
+        "Weitere Arbeit",
+        "Kundendetails und Periodenvergleich",
+        "Nicht vorhanden"
+      ]
+    ],
+    "check": "Eine berichtete Erklärung darf nicht zur bewiesenen Ursache werden. Auch lesbare PDFs können eine geprüfte Tabellenzuordnung benötigen.",
+    "question": "Können wir behaupten, Neukunden hätten die Marge erzeugt?",
+    "answer": "Nicht aus diesen Quellen. Gib die Managementerklärung mit Quelle wieder und benenne benötigte Prüfdaten.",
+    "practice": "Ergänze Kundendetails und aktualisiere die Erläuterung unter Erhalt der früheren Version.",
+    "next": "Wähle Finanztabellen und Unterlagen und beschreibe die Zielgruppe; Vera bereitet die regulären Ausgabeformate vor."
+  },
+  "vera/sales-plan": {
+    "title": "Umsatzwachstum: Menge, Preis oder Wechselkurs?",
+    "goal": "Einen kommerziellen Wunsch vor der Berechnung in genaue Planannahmen übersetzen.",
+    "scenario": "Eine fiktive Ist-Zeile verkauft 100 Einheiten zu USD 20 bei EUR 0,90 je USD. Vorgeschlagen sind 10 % mehr Einheiten und ein gegenüber EUR um 5 % schwächerer Dollar. Der USD-Stückpreis bleibt gleich.",
+    "request": "Vera, erstelle den Plan mit höherer Menge und schwächerem Dollar und lies die Annahmen zurück.",
+    "scope": "Umsatzplanung aus geprüftem Ist und bestätigten prozentualen Änderungen. Fehlende Kosten, Margen und Monate werden nicht erfunden.",
+    "input_columns": [
+      "Fiktiver Fakt oder Annahme",
+      "Wert",
+      "Bedeutung"
+    ],
+    "input_rows": [
+      [
+        "Ist · S1",
+        "100 × USD 20 × 0,90",
+        "EUR 1.800"
+      ],
+      [
+        "A1 · Einheiten",
+        "+10 %",
+        "110 Einheiten"
+      ],
+      [
+        "A2 · EUR je USD",
+        "−5 %",
+        "EUR 0,855 je USD"
+      ]
+    ],
+    "basis": "S1 ist die Ist-Zeile. A1 und A2 sind ausdrückliche Fallannahmen. Der Kurs bezeichnet Einheiten der Berichtswährung je Einheit der Transaktionswährung.",
+    "method": [
+      "Prüfe tatsächliche Spalten und Ausprägungen. Lies Treiber, genauen Umfang, Perioden, Priorität und Kursrichtung zurück.",
+      "Kläre überlappende Annahmen und bestätige gegebenenfalls Rabatt- oder Kostenbasis. Führe die aktuelle Berechnung auf geprüftem Ist aus.",
+      "Lies Plan, Annahmenregister, Abstimmung und Grenzen. Kennzahlen mit fehlenden Eingangsdaten bleiben nicht verfügbar."
+    ],
+    "result_title": "Mehr Einheiten, ungünstigerer Wechselkurs",
+    "conclusion": "Planumsatz: 110 × 20 × 0,855 = EUR 1.881, also EUR 81 mehr. Aus 10 % Mengenwachstum werden 4,5 % Wachstum in Berichtswährung.",
+    "output_columns": [
+      "Szenario",
+      "Menge und Kurs",
+      "Umsatz EUR"
+    ],
+    "output_rows": [
+      [
+        "Ist",
+        "100 Einheiten · 0,90 EUR/USD",
+        "1.800"
+      ],
+      [
+        "Plan",
+        "110 Einheiten · 0,855 EUR/USD",
+        "1.881"
+      ],
+      [
+        "Differenz",
+        "A1 + A2",
+        "+81 · +4,5 %"
+      ]
+    ],
+    "check": "'10 % mehr Umsatz' ist mehrdeutig, bis Menge, Preis oder Bruttoumsatz feststehen. Eine umgekehrte Kursrichtung verändert das Ergebnis.",
+    "question": "Soll 0,90 bei schwächerem Dollar auf 0,945 steigen?",
+    "answer": "Nein. Bei EUR je USD senkt ein 5 % schwächerer Dollar den Kurs auf 0,855. Bestätige die Richtung vor der Berechnung.",
+    "practice": "Halte den Kurs konstant und vergleiche die Pläne, um den Mengeneffekt zu isolieren.",
+    "next": "Wähle monatliche Ist-Daten, beschreibe gewünschte Änderungen und bestätige Veras strukturierte Wiedergabe der Annahmen."
+  },
+  "vera/studio-archive": {
+    "title": "Ein Mandat ohne den alten Chat fortsetzen",
+    "goal": "Mandant, Quellen und Ergebnisse über das portable Auftragsregister wiederfinden.",
+    "scenario": "Zwei fiktive Mandanten haben eine Datei namens invoice.pdf. Arco besitzt einen Juni-Auftrag mit importierter Quelle und abgeschlossenem Bericht. Der ursprüngliche Chat ist nicht verfügbar; das gespeicherte Register führt zurück zur Arbeit.",
+    "request": "Vera, setze Arcos Juni-Auftrag fort und öffne Bericht und Quellen.",
+    "scope": "Auswahl, Suche und Fortsetzung registrierter Arbeit. Die Archivsuche ordnet oder verschiebt keine Quelldateien.",
+    "input_columns": [
+      "Fiktives Element",
+      "Identität",
+      "Inhalt"
+    ],
+    "input_rows": [
+      [
+        "Mandant Arco",
+        "C-ARCO",
+        "Juni-Auftrag E-06"
+      ],
+      [
+        "Mandant Luna",
+        "C-LUNA",
+        "Andere Datei"
+      ],
+      [
+        "Quelle invoice.pdf",
+        "I-01 in C-ARCO/E-06",
+        "Registrierte Kopie"
+      ],
+      [
+        "Bericht",
+        "A-01 aus Lauf R-01",
+        "Zur Prüfung abgeschlossen"
+      ]
+    ],
+    "basis": "Mandanten- und Auftragsregister belegen die Herkunft. Der gemeinsame Dateiname identifiziert keinen Mandanten.",
+    "method": [
+      "Wähle registrierten Mandanten und Auftrag über beständige Verweise. Kläre nur tatsächlich mehrdeutige Auswahlfragen.",
+      "Öffne Quellen und Ergebnisse über das Register und prüfe Identität, Laufstatus und Dateiintegrität.",
+      "Erstelle für neue Arbeit einen neuen Lauf im selben Auftrag, registriere Ergebnisse und erhalte die Historie. Überschreibe frühere Ergebnisse nicht zur Aktualisierung."
+    ],
+    "result_title": "Arco · Juni-Auftrag wiedergefunden",
+    "conclusion": "Bericht A-01 und Quelle I-01 gehören zu E-06. Ihre Herkunft bleibt im Register auch ohne alten Chat verfügbar.",
+    "output_columns": [
+      "Öffnen",
+      "Logischer Weg",
+      "Prüfung"
+    ],
+    "output_rows": [
+      [
+        "Abgeschlossener Bericht",
+        "C-ARCO → E-06 → R-01 → A-01",
+        "Status und Identität des Ergebnisses"
+      ],
+      [
+        "Quelle",
+        "C-ARCO → E-06 → I-01",
+        "Registrierte Dokumentenkopie"
+      ],
+      [
+        "Neue Analyse",
+        "Neuer Lauf im selben Auftrag",
+        "Historie erhalten"
+      ]
+    ],
+    "check": "Derselbe Dateiname in einem anderen Ordner ist kein gleichwertiger Beleg. Ein aktiver Lauf darf nicht als abgeschlossen erscheinen.",
+    "question": "Müssen nach Verschieben des Mandantenordners alle Ergebnisse neu entstehen?",
+    "answer": "Das portable Register löst Pfade im aktuellen Ordner auf. Prüfe Zugriff und Integrität, statt notwendige Neuerstellung anzunehmen.",
+    "practice": "Setze den Übungsauftrag im zweiten Chat fort und öffne dasselbe geprüfte Ergebnis.",
+    "next": "Wähle Mandant und Auftrag vor der Dokumentenlektüre und nutze das Register zur Wiederaufnahme."
+  },
+  "vera/variance-analysis": {
+    "title": "Die Brücke zwischen zwei Perioden nachvollziehen",
+    "goal": "Eine gemessene Differenz durch Beiträge erklären, die zur Gesamtveränderung passen.",
+    "scenario": "Das fiktive Produkt A steigt von 100 Einheiten zu EUR 10 auf 120 Einheiten zu EUR 11. Umsatz: EUR 1.000 auf EUR 1.320. Die Brücke berechnet zuerst Menge zum Ausgangspreis, danach Preis bei Endmenge.",
+    "request": "Vera, erkläre den Weg von EUR 1.000 auf EUR 1.320 und zeige die Beiträge.",
+    "scope": "Brücke für ein Produkt. Der reale Workflow berechnet unterstützte Alternativen und Vertiefungen; behalte seine dokumentierte Zerlegungsreihenfolge bei.",
+    "input_columns": [
+      "Fiktive Periode",
+      "Einheiten",
+      "Preis · Umsatz"
+    ],
+    "input_rows": [
+      [
+        "Basis",
+        "100",
+        "EUR 10 · EUR 1.000"
+      ],
+      [
+        "Vergleich",
+        "120",
+        "EUR 11 · EUR 1.320"
+      ]
+    ],
+    "basis": "V1 liefert Menge und Umsatz beider Perioden. Gezeigt wird Menge zum Basispreis, dann Preis bei Vergleichsmenge.",
+    "method": [
+      "Prüfe Perioden, Beträge, Einheiten, Dimensionen und Berechnungsebene anhand der Quellen.",
+      "Führe reguläre Ursachenanalyse, Alternativen und Vertiefungen aus. Lies Beiträge und Abstimmung ohne Änderung der berechneten Reihenfolge.",
+      "Zeige Wasserfalldiagramm, Tabellen und Kommentarentwurf. Trenne rechnerische Zerlegung von geschäftlicher Interpretation und belegbedürftigen Hypothesen."
+    ],
+    "result_title": "+EUR 320 durch zwei Beiträge erklärt",
+    "conclusion": "In dieser Reihenfolge bringen 20 zusätzliche Einheiten zu EUR 10 genau EUR 200; EUR 1 auf 120 Einheiten bringt EUR 120. Zusammen ergeben sie EUR 320.",
+    "output_columns": [
+      "Schritt",
+      "Beitrag",
+      "Umsatz nach Schritt"
+    ],
+    "output_rows": [
+      [
+        "Basis",
+        "—",
+        "EUR 1.000"
+      ],
+      [
+        "Menge",
+        "+EUR 200",
+        "EUR 1.200"
+      ],
+      [
+        "Preis",
+        "+EUR 120",
+        "EUR 1.320"
+      ]
+    ],
+    "check": "Eine andere Reihenfolge kann den Interaktionseffekt anders verteilen. Die Brücke belegt Rechenwege, nicht dass eine Kampagne das Mengenwachstum verursachte.",
+    "question": "Können wir den Mengenbeitrag von EUR 200 dem Marketing zuschreiben?",
+    "answer": "Nicht aus V1. Der Mengenbeitrag ist berechnet; seine geschäftliche Ursache benötigt separate Belege und ist entsprechend zu kennzeichnen.",
+    "practice": "Senke den Vergleichspreis auf EUR 9 und prüfe günstigen Mengen- gegen ungünstigen Preiseffekt.",
+    "next": "Wähle vergleichbare Perioden und verfügbare Detaildaten; der Workflow zeigt die durch Quellen gestützten Alternativen."
+  }
+}

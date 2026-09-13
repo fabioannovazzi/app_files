@@ -1,0 +1,408 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "journal-sampling",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/journal-sampling/references/workflow-reference.md",
+      "repository_path": "plugins/journal-sampling/references/workflow-reference.md",
+      "sha256": "ab7e0505c4a68383b9cbd196994d0452ffbf1ff84e2d641fa1fb9091701cc69e"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/check_dependencies.py",
+      "repository_path": "plugins/journal-sampling/scripts/check_dependencies.py",
+      "sha256": "9ada77e0ab4b2dd2adbc39c34bdeebd90bd85e496cdefb74df82359175ead6ee"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
+      "repository_path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
+      "sha256": "073441c88612966aeda552fdd45972163cb9c3f255e56f778b4153405bcbcbb7"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/inspect_journal.py",
+      "repository_path": "plugins/journal-sampling/scripts/inspect_journal.py",
+      "sha256": "8ce168626aa70697f6b609d77875b8516f4f07a138ef1b05e4b8692e941a5089"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
+      "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
+      "sha256": "647cecda86d52826d00e35e8e2cdbbacfd2d08a0242a3cc1a017a85905cd1def"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/normalize_journal.py",
+      "repository_path": "plugins/journal-sampling/scripts/normalize_journal.py",
+      "sha256": "3b6f3d80c1a28a43c2916302816f21482906aaf10c5f83a4d68adc379df34b7c"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/replay_normalization.py",
+      "repository_path": "plugins/journal-sampling/scripts/replay_normalization.py",
+      "sha256": "7f37baf7b6fd4f5b47c2424005210c3de34dcb144175e326fd422fbdce4afedd"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/review_session.py",
+      "repository_path": "plugins/journal-sampling/scripts/review_session.py",
+      "sha256": "84a06ce0bca36844ebb2953464c578f5b1ca29e622a7d426d3827bd55c0a3a74"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/review_successor.py",
+      "repository_path": "plugins/journal-sampling/scripts/review_successor.py",
+      "sha256": "f753ddf73cd26639c593a01eed15e5d6188e1f492a05977fcedfd850710bc57a"
+    },
+    {
+      "path": "modules/journal-sampling/scripts/run_sample.py",
+      "repository_path": "plugins/journal-sampling/scripts/run_sample.py",
+      "sha256": "97659943d2e52bde9c6df65bd09c4dfa508fb2a99b11b92865b8bb9fec8d2a23"
+    },
+    {
+      "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+      "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
+      "sha256": "3b52f91367bda51748c817010c8202c8c079e148ff6ca4d9fbdb8355159b81b6"
+    },
+    {
+      "path": "skills/journal-sampling/SKILL.md",
+      "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+      "sha256": "f2cf8fc43a6de0fbafbcd110431fd4ad405a0c271d526268cd9ad77fd45124a7"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Prima del campione, una popolazione affidabile",
+      "goal": "Capire perché la qualificazione del giornale precede la selezione delle scritture da verificare.",
+      "scenario": "Il giornale fittizio contiene movimenti con identificativi originali, conti e importi dare/avere. Una riga mostra '1.200,00': il formato deve essere interpretato correttamente. Una riga di totale non è un movimento da campionare.",
+      "request": "Vera, prepara questo giornale e mostrami il campione insieme ai controlli sulla popolazione.",
+      "scope": "Preparazione e campionamento secondo il contratto corrente. Una selezione non è di per sé un campione statisticamente rappresentativo né una verifica documentale.",
+      "input_columns": [
+        "Riga fittizia",
+        "Dato",
+        "Scelta da rivedere"
+      ],
+      "input_rows": [
+        [
+          "G1 · riga 2",
+          "Movimento M-101; dare 1.200,00",
+          "Formato numerico italiano"
+        ],
+        [
+          "G1 · riga 3",
+          "Movimento M-101; avere 1.200,00",
+          "Due righe dello stesso movimento"
+        ],
+        [
+          "G1 · riga 4",
+          "Totale 1.200,00 / 1.200,00",
+          "Riepilogo, non scrittura"
+        ]
+      ],
+      "basis": "Gli identificativi e i localizzatori provengono da G1. Il numero della riga non sostituisce il numero di movimento originale.",
+      "method": [
+        "Ispeziona la fonte e rivedi perimetro, mappature, formato monetario e righe di riepilogo, prima di normalizzare.",
+        "Qualifica la popolazione completa e verifica chiusura e controlli monetari. Applica il metodo di selezione riveduto conservando gli identificativi originali.",
+        "Consegna popolazione normalizzata, diagnostica, campione e allegati di assurance. Il successivo controllo documentale usa questo passaggio chiuso senza rifare le mappature."
+      ],
+      "result_title": "Una popolazione qualificata prima della selezione",
+      "conclusion": "Il caso distingue due righe contabili di un movimento da una riga di totale. Il formato 1.200,00 rappresenta 1.200 EUR.",
+      "output_columns": [
+        "Elemento",
+        "Trattamento illustrato",
+        "Perché"
+      ],
+      "output_rows": [
+        [
+          "Righe 2–3",
+          "Popolazione: movimento M-101",
+          "Identità originale e due lati"
+        ],
+        [
+          "Riga 4",
+          "Riepilogo escluso con base riveduta",
+          "Evita il doppio conteggio"
+        ],
+        [
+          "Campione successivo",
+          "Vincolato alla popolazione qualificata",
+          "Mantiene tracciabilità"
+        ]
+      ],
+      "check": "Un file normalizzato non è qualificato soltanto perché si apre. Una mappatura errata può produrre numeri formalmente validi ma sostanzialmente sbagliati.",
+      "question": "Possiamo chiamare 'M-2' il movimento perché è sulla seconda riga?",
+      "answer": "No. Si conserva M-101 dalla fonte. Il localizzatore della riga serve a ritrovare l'evidenza, non a inventare l'identità del movimento.",
+      "practice": "Aggiungi una riga non bilanciata e verifica che la qualificazione la renda visibile prima del campionamento.",
+      "next": "Prepara l'export completo e i totali di controllo; descrivi l'obiettivo della selezione senza scegliere a priori un metodo inadatto."
+    },
+    "en": {
+      "title": "A reliable population before the sample",
+      "goal": "Understand why journal qualification precedes the selection of entries for review.",
+      "scenario": "The fictional journal retains original movement IDs, accounts and debit/credit amounts. A value reads '1.200,00', requiring the correct numeric interpretation. A total row is a summary, not another posting to sample.",
+      "request": "Vera, prepare this journal and show the sample alongside the population checks.",
+      "scope": "Preparation and sampling under the current contract. A selection is not automatically statistically representative or document-vouched.",
+      "input_columns": [
+        "Fictional row",
+        "Data",
+        "Review choice"
+      ],
+      "input_rows": [
+        [
+          "G1 · row 2",
+          "M-101; debit 1.200,00",
+          "Italian number format"
+        ],
+        [
+          "G1 · row 3",
+          "M-101; credit 1.200,00",
+          "Same movement, second line"
+        ],
+        [
+          "G1 · row 4",
+          "Total 1.200,00 / 1.200,00",
+          "Summary, not a posting"
+        ]
+      ],
+      "basis": "IDs and locators come from G1. A physical row number does not replace the original movement identifier.",
+      "method": [
+        "Inspect and review scope, mappings, number format and summary rows before normalization.",
+        "Qualify the complete population and verify closure and monetary controls. Apply the reviewed selection method while preserving original identifiers.",
+        "Deliver normalized population, diagnostics, sample and assurance companions. Downstream Vouching uses this closed handoff without remapping the source."
+      ],
+      "result_title": "Qualified population before selection",
+      "conclusion": "The case separates two accounting lines of one movement from a total row. Under the reviewed format, 1.200,00 means EUR 1,200.",
+      "output_columns": [
+        "Item",
+        "Illustrated treatment",
+        "Reason"
+      ],
+      "output_rows": [
+        [
+          "Rows 2–3",
+          "Population: movement M-101",
+          "Original identity and both sides"
+        ],
+        [
+          "Row 4",
+          "Summary excluded with reviewed basis",
+          "Avoid double counting"
+        ],
+        [
+          "Later sample",
+          "Bound to qualified population",
+          "Preserve traceability"
+        ]
+      ],
+      "check": "A normalized file is not qualified merely because it opens. Wrong mappings can yield plausible but incorrect numbers.",
+      "question": "Can we call the movement M-2 because it is on row two?",
+      "answer": "No. Preserve M-101 from the source. The row locator helps recover evidence; it does not create movement identity.",
+      "practice": "Add an unbalanced line and verify that qualification exposes it before sampling.",
+      "next": "Prepare the full export and control totals, then explain the purpose of selection."
+    },
+    "fr": {
+      "title": "Une population fiable avant l'échantillon",
+      "goal": "Comprendre pourquoi la qualification du journal précède la sélection des écritures.",
+      "scenario": "Le journal fictif conserve numéros de mouvement, comptes et montants débit-crédit. Une valeur est écrite '1.200,00' et demande la bonne lecture numérique. Une ligne de total est un récapitulatif, pas une écriture supplémentaire.",
+      "request": "Vera, prépare ce journal et montre l'échantillon avec les contrôles de population.",
+      "scope": "Préparation et échantillonnage selon le contrat courant. Une sélection n'est pas automatiquement représentative statistiquement ni contrôlée sur pièces.",
+      "input_columns": [
+        "Ligne fictive",
+        "Donnée",
+        "Choix à revoir"
+      ],
+      "input_rows": [
+        [
+          "G1 · ligne 2",
+          "M-101 ; débit 1.200,00",
+          "Format numérique italien"
+        ],
+        [
+          "G1 · ligne 3",
+          "M-101 ; crédit 1.200,00",
+          "Deuxième ligne du même mouvement"
+        ],
+        [
+          "G1 · ligne 4",
+          "Total 1.200,00 / 1.200,00",
+          "Récapitulatif"
+        ]
+      ],
+      "basis": "Identifiants et localisateurs viennent de G1. Le numéro de ligne physique ne remplace pas l'identifiant original du mouvement.",
+      "method": [
+        "Examine et revois périmètre, mappings, format monétaire et lignes de total avant normalisation.",
+        "Qualifie la population complète et vérifie clôture et contrôles monétaires. Applique la sélection revue en gardant les identifiants d'origine.",
+        "Livre population normalisée, diagnostic, échantillon et pièces d'assurance. Vouching utilise ensuite ce passage clos sans refaire la préparation."
+      ],
+      "result_title": "La qualification précède la sélection",
+      "conclusion": "Le cas distingue deux lignes comptables d'un mouvement et une ligne de total. Le format revu donne 1 200 EUR pour '1.200,00'.",
+      "output_columns": [
+        "Élément",
+        "Traitement illustré",
+        "Raison"
+      ],
+      "output_rows": [
+        [
+          "Lignes 2–3",
+          "Population : M-101",
+          "Identité originale et deux côtés"
+        ],
+        [
+          "Ligne 4",
+          "Total exclu sur base revue",
+          "Éviter le double comptage"
+        ],
+        [
+          "Échantillon ultérieur",
+          "Lié à la population qualifiée",
+          "Traçabilité"
+        ]
+      ],
+      "check": "Un fichier normalisé n'est pas qualifié parce qu'il s'ouvre. Un mauvais mapping peut produire des nombres plausibles mais faux.",
+      "question": "Peut-on nommer le mouvement M-2 parce qu'il est sur la deuxième ligne ?",
+      "answer": "Non. Il faut conserver M-101. Le localisateur permet de retrouver la preuve, pas de créer une identité de mouvement.",
+      "practice": "Ajoute une ligne déséquilibrée et vérifie que la qualification la rend visible avant l'échantillonnage.",
+      "next": "Prépare l'export complet et les totaux de contrôle, puis explique l'objectif de la sélection."
+    },
+    "de": {
+      "title": "Eine verlässliche Grundgesamtheit vor der Stichprobe",
+      "goal": "Verstehen, warum die Journalqualifizierung vor der Auswahl zu prüfender Buchungen kommt.",
+      "scenario": "Das fiktive Journal enthält ursprüngliche Bewegungskennungen, Konten und Soll-/Habenbeträge. Der Wert '1.200,00' verlangt die passende Zahleninterpretation. Eine Summenzeile ist keine zusätzliche Buchung für die Stichprobe.",
+      "request": "Vera, bereite dieses Journal vor und zeige Stichprobe und Prüfungen der Grundgesamtheit.",
+      "scope": "Aufbereitung und Auswahl nach aktuellem Vertrag. Die Auswahl ist nicht automatisch statistisch repräsentativ oder beleggeprüft.",
+      "input_columns": [
+        "Fiktive Zeile",
+        "Daten",
+        "Prüfentscheidung"
+      ],
+      "input_rows": [
+        [
+          "G1 · Zeile 2",
+          "M-101; Soll 1.200,00",
+          "Italienisches Zahlenformat"
+        ],
+        [
+          "G1 · Zeile 3",
+          "M-101; Haben 1.200,00",
+          "Gleiche Bewegung, zweite Zeile"
+        ],
+        [
+          "G1 · Zeile 4",
+          "Summe 1.200,00 / 1.200,00",
+          "Zusammenfassung, keine Buchung"
+        ]
+      ],
+      "basis": "Kennungen und Fundstellen stammen aus G1. Eine physische Zeilennummer ersetzt keine ursprüngliche Bewegungskennung.",
+      "method": [
+        "Prüfe Umfang, Zuordnungen, Zahlenformat und Summenzeilen vor der Normalisierung.",
+        "Qualifiziere die vollständige Grundgesamtheit und prüfe Abschluss sowie Betragskontrollen. Wende die geprüfte Auswahlmethode unter Erhalt der ursprünglichen Kennungen an.",
+        "Liefere normalisierte Grundgesamtheit, Diagnosen, Stichprobe und Qualifizierungsnachweise. Nachgelagertes Vouching verwendet diese abgeschlossene Übergabe ohne neue Quellenzuordnung."
+      ],
+      "result_title": "Qualifizierte Grundgesamtheit vor der Auswahl",
+      "conclusion": "Der Fall trennt zwei Buchungszeilen einer Bewegung von einer Summenzeile. Im geprüften Format bedeutet 1.200,00 genau EUR 1.200.",
+      "output_columns": [
+        "Element",
+        "Beispielbehandlung",
+        "Grund"
+      ],
+      "output_rows": [
+        [
+          "Zeilen 2–3",
+          "Grundgesamtheit: Bewegung M-101",
+          "Originalkennung und beide Seiten"
+        ],
+        [
+          "Zeile 4",
+          "Summenzeile begründet ausgeschlossen",
+          "Doppelzählung vermeiden"
+        ],
+        [
+          "Spätere Stichprobe",
+          "An qualifizierte Grundgesamtheit gebunden",
+          "Nachvollziehbarkeit erhalten"
+        ]
+      ],
+      "check": "Eine Datei ist nicht qualifiziert, nur weil sie geöffnet werden kann. Falsche Zuordnungen können plausible falsche Zahlen erzeugen.",
+      "question": "Dürfen wir die Bewegung M-2 nennen, weil sie in Zeile zwei steht?",
+      "answer": "Nein. Erhalte M-101 aus der Quelle. Die Zeilenfundstelle hilft beim Nachschlagen, schafft aber keine Bewegungsidentität.",
+      "practice": "Ergänze eine unausgeglichene Zeile und prüfe, ob die Qualifizierung sie vor der Auswahl aufzeigt.",
+      "next": "Bereite den vollständigen Export mit Kontrollsummen vor und erläutere den Zweck der Auswahl."
+    },
+    "es": {
+      "title": "Una población fiable antes de la muestra",
+      "goal": "Entender por qué la cualificación del diario precede a seleccionar asientos para revisión.",
+      "scenario": "El diario ficticio conserva identificadores originales, cuentas e importes de debe y haber. '1.200,00' exige interpretar correctamente el formato numérico. Una fila de total es un resumen, no otro asiento que seleccionar.",
+      "request": "Vera, prepara este diario y muestra la muestra junto a los controles de población.",
+      "scope": "Preparación y muestreo conforme al contrato actual. Una selección no es automáticamente representativa estadísticamente ni verificada contra documentos.",
+      "input_columns": [
+        "Fila ficticia",
+        "Datos",
+        "Decisión de revisión"
+      ],
+      "input_rows": [
+        [
+          "G1 · fila 2",
+          "M-101; debe 1.200,00",
+          "Formato numérico italiano"
+        ],
+        [
+          "G1 · fila 3",
+          "M-101; haber 1.200,00",
+          "Mismo movimiento, segunda línea"
+        ],
+        [
+          "G1 · fila 4",
+          "Total 1.200,00 / 1.200,00",
+          "Resumen, no asiento"
+        ]
+      ],
+      "basis": "Identificadores y ubicaciones proceden de G1. Un número de fila no sustituye el identificador original del movimiento.",
+      "method": [
+        "Inspecciona y revisa alcance, correspondencias, formato numérico y filas resumen antes de normalizar.",
+        "Cualifica toda la población y verifica cierre y controles monetarios. Aplica el método de selección revisado conservando identificadores originales.",
+        "Entrega población normalizada, diagnósticos, muestra y documentos de cualificación. Vouching utiliza esta entrega cerrada sin volver a mapear la fuente."
+      ],
+      "result_title": "Población cualificada antes de seleccionar",
+      "conclusion": "El caso separa dos líneas contables de un movimiento de una fila de total. Con el formato revisado, 1.200,00 significa EUR 1.200.",
+      "output_columns": [
+        "Elemento",
+        "Tratamiento ilustrado",
+        "Motivo"
+      ],
+      "output_rows": [
+        [
+          "Filas 2–3",
+          "Población: movimiento M-101",
+          "Identidad original y ambos lados"
+        ],
+        [
+          "Fila 4",
+          "Resumen excluido con base revisada",
+          "Evitar doble conteo"
+        ],
+        [
+          "Muestra posterior",
+          "Vinculada a población cualificada",
+          "Conservar trazabilidad"
+        ]
+      ],
+      "check": "Que un archivo normalizado se abra no acredita su cualificación. Un mapeo equivocado puede producir cifras plausibles e incorrectas.",
+      "question": "¿Podemos llamar M-2 al movimiento porque está en la fila dos?",
+      "answer": "No. Conserva M-101 de la fuente. La ubicación ayuda a recuperar evidencia, pero no crea identidad del movimiento.",
+      "practice": "Añade una línea descuadrada y verifica que la cualificación la expone antes del muestreo.",
+      "next": "Prepara export completo y totales de control y explica el propósito de selección."
+    }
+  }
+}

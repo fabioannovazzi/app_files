@@ -1,0 +1,422 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "financial-analysis",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/financial-analysis/scripts/check_dependencies.py",
+      "repository_path": "plugins/financial-analysis/scripts/check_dependencies.py",
+      "sha256": "249a5ae4cd2f1df11779655795fdf11a66e843f6addbd78b4ced78d293c0f3e3"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/managed_case_inputs.py",
+      "repository_path": "plugins/financial-analysis/scripts/managed_case_inputs.py",
+      "sha256": "7a948bfa5a8d4aa645e88b2826322330ccf425794b5cddf35a3f2d8fde30e3a3"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/model_use.py",
+      "repository_path": "plugins/financial-analysis/scripts/model_use.py",
+      "sha256": "d223af560909535843180a9fa631681896d59cf78633a50358095995b2d19ee4"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/preparation_contract_kernel.py",
+      "repository_path": "plugins/financial-analysis/scripts/preparation_contract_kernel.py",
+      "sha256": "2518145f44eb5b1d1bf814fa16065768de5e8e81cf33a2614cace607b33a535c"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
+      "repository_path": "plugins/financial-analysis/scripts/prepare_customer_concentration_case.py",
+      "sha256": "88200f94e649794f4d7751813ce2eb06a375907b718795663ec22f9a57c4915d"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_fdd_case.py",
+      "repository_path": "plugins/financial-analysis/scripts/prepare_fdd_case.py",
+      "sha256": "9f21ab922174b11dc5e0d72a7611dc6b11c6a3ffa2f2295855a584ba648f9bea"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_monthly_pnl_case.py",
+      "repository_path": "plugins/financial-analysis/scripts/prepare_monthly_pnl_case.py",
+      "sha256": "10ddf9204a2e6914d3cbf94ffa3409a195243ce0d00e6a4153befd696c42c4d9"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/prepare_working_capital_case.py",
+      "repository_path": "plugins/financial-analysis/scripts/prepare_working_capital_case.py",
+      "sha256": "938fce98d40f0b797a305802af422c5f3980fe53254d3f87bef787bb94f29c43"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/run_pack.py",
+      "repository_path": "plugins/financial-analysis/scripts/run_pack.py",
+      "sha256": "9e328729f528e0ef8af93cc27d1234c24eef0c7abc5e754d63ee780903e57612"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/validate_case_contracts.py",
+      "repository_path": "plugins/financial-analysis/scripts/validate_case_contracts.py",
+      "sha256": "93b67dad98b701c09cfd2f856d6505a9319a9f1f280ea0921bec6aba110a6c32"
+    },
+    {
+      "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
+      "repository_path": "plugins/financial-analysis/skills/financial-analysis/SKILL.md",
+      "sha256": "0c66329f22f90b04c01e1ca57428a598a4085fa8770102716feae2128eb3045e"
+    },
+    {
+      "path": "skills/financial-analysis/SKILL.md",
+      "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
+      "sha256": "da9554bb2becc7ea67eda8be5b234eb44aea2c3d48da2fb0c622e51335f1df65"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Leggere la concentrazione dei ricavi",
+      "goal": "Usare una ricetta finanziaria supportata e interpretare un indicatore senza trasformarlo in un giudizio automatico.",
+      "scenario": "Un export fittizio del periodo contiene ricavi per 100.000 EUR: cliente Alfa 60.000, Beta 25.000 e Gamma 15.000. Il professionista vuole capire la dipendenza commerciale, non stimare il valore dell'impresa.",
+      "request": "Vera, prepara l'analisi della concentrazione clienti e mostrami da dove viene il risultato.",
+      "scope": "Ricetta customer_concentration su dati storici riveduti. Non è una valutazione d'impresa, un rating o una verifica autonoma delle fonti contabili.",
+      "input_columns": [
+        "Cliente fittizio",
+        "Ricavi del periodo",
+        "Fonte"
+      ],
+      "input_rows": [
+        [
+          "Alfa",
+          "60.000 EUR",
+          "F1 · riga 1"
+        ],
+        [
+          "Beta",
+          "25.000 EUR",
+          "F1 · riga 2"
+        ],
+        [
+          "Gamma",
+          "15.000 EUR",
+          "F1 · riga 3"
+        ]
+      ],
+      "basis": "F1 è l'export del solo periodo e perimetro del caso. Il totale è 100.000 EUR; non abbiamo contratti, margini per cliente o dati prospettici.",
+      "method": [
+        "Scegli una delle ricette correnti supportate sulla base della domanda e qualifica fonti, periodo, segni e totale di controllo.",
+        "Esegui il pacchetto con il contratto riveduto e il contesto del medesimo incarico. Usa i calcoli previsti, senza sostituirli con uno script ad hoc.",
+        "Leggi indicatori e limiti del pacchetto. Collega il commento alle metriche e mantieni visibili eventuali verifiche delle fonti non eseguite."
+      ],
+      "result_title": "Alfa rappresenta il 60% dei ricavi",
+      "conclusion": "Il maggiore cliente pesa per il 60%; i primi due per l'85%. La dipendenza osservata richiede approfondimenti commerciali.",
+      "output_columns": [
+        "Indicatore",
+        "Calcolo",
+        "Valore"
+      ],
+      "output_rows": [
+        [
+          "Primo cliente",
+          "60.000 / 100.000",
+          "60%"
+        ],
+        [
+          "Primi due clienti",
+          "85.000 / 100.000",
+          "85%"
+        ],
+        [
+          "Numero clienti osservati",
+          "Alfa, Beta, Gamma",
+          "3"
+        ]
+      ],
+      "check": "La quota elevata descrive una concentrazione, ma non prova che il contratto sia fragile o che il cliente verrà perso. Controlla perimetro e riconciliazione del totale.",
+      "question": "Conosciamo il 60%: possiamo stimare il rischio di perdita dei ricavi?",
+      "answer": "Non da questa tabella. Servono contratti, rinnovi, dipendenze e altre evidenze; l'indicatore guida le domande, non assegna una probabilità.",
+      "practice": "Aggiungi un quarto cliente da 20.000 EUR e verifica come cambiano totale e quote.",
+      "next": "Scegli la domanda fra le ricette disponibili e prepara fonti contabili rivedute con il periodo e il totale di controllo."
+    },
+    "en": {
+      "title": "Understand revenue concentration",
+      "goal": "Use a supported financial recipe and interpret its indicator without an automatic risk judgment.",
+      "scenario": "A fictional period export contains EUR 100,000 revenue: Alpha 60,000, Beta 25,000 and Gamma 15,000. The professional wants to understand customer dependence, not value the business.",
+      "request": "Vera, analyze customer concentration and show the basis of the result.",
+      "scope": "The customer_concentration recipe on reviewed historical data. This is not valuation, a rating or an independent accounting-source audit.",
+      "input_columns": [
+        "Fictional customer",
+        "Period revenue",
+        "Source"
+      ],
+      "input_rows": [
+        [
+          "Alpha",
+          "EUR 60,000",
+          "F1 · row 1"
+        ],
+        [
+          "Beta",
+          "EUR 25,000",
+          "F1 · row 2"
+        ],
+        [
+          "Gamma",
+          "EUR 15,000",
+          "F1 · row 3"
+        ]
+      ],
+      "basis": "F1 defines this period and scope. It totals EUR 100,000 but supplies no contracts, customer margins or forward-looking evidence.",
+      "method": [
+        "Select the supported recipe that answers the question and qualify sources, period, signs and control total.",
+        "Run the package under its reviewed contract and the same engagement context. Use the supported calculations rather than an improvised substitute.",
+        "Read indicators and limitations. Connect commentary to metrics and retain any unperformed source checks as such."
+      ],
+      "result_title": "Alpha accounts for 60% of revenue",
+      "conclusion": "The largest customer contributes 60%; the first two contribute 85%. These observations identify commercial questions to investigate.",
+      "output_columns": [
+        "Indicator",
+        "Calculation",
+        "Value"
+      ],
+      "output_rows": [
+        [
+          "Largest customer",
+          "60,000 / 100,000",
+          "60%"
+        ],
+        [
+          "First two customers",
+          "85,000 / 100,000",
+          "85%"
+        ],
+        [
+          "Observed customers",
+          "Alpha, Beta, Gamma",
+          "3"
+        ]
+      ],
+      "check": "A large share establishes concentration, not contract fragility or future customer loss. Check scope and total reconciliation.",
+      "question": "Does the 60% share tell us the probability of losing revenue?",
+      "answer": "No. Contracts, renewals and dependencies need separate evidence. The indicator directs questions but supplies no loss probability.",
+      "practice": "Add a fourth customer with EUR 20,000 and check the updated total and shares.",
+      "next": "Choose a supported recipe and prepare reviewed accounting sources with period and control totals."
+    },
+    "fr": {
+      "title": "Lire la concentration du chiffre d'affaires",
+      "goal": "Interpréter un indicateur financier supporté sans le transformer en jugement automatique de risque.",
+      "scenario": "L'export fictif de la période totalise 100 000 EUR : Alpha 60 000, Beta 25 000 et Gamma 15 000. Le professionnel veut comprendre la dépendance commerciale, pas valoriser l'entreprise.",
+      "request": "Vera, analyse la concentration clients et montre l'origine du résultat.",
+      "scope": "Recette customer_concentration sur données historiques revues. Ce n'est ni une valorisation, ni une notation, ni un audit autonome des sources comptables.",
+      "input_columns": [
+        "Client fictif",
+        "Chiffre d'affaires",
+        "Source"
+      ],
+      "input_rows": [
+        [
+          "Alpha",
+          "60 000 EUR",
+          "F1 · ligne 1"
+        ],
+        [
+          "Beta",
+          "25 000 EUR",
+          "F1 · ligne 2"
+        ],
+        [
+          "Gamma",
+          "15 000 EUR",
+          "F1 · ligne 3"
+        ]
+      ],
+      "basis": "F1 délimite période et périmètre. Le total est de 100 000 EUR ; contrats, marges par client et éléments prospectifs ne sont pas fournis.",
+      "method": [
+        "Choisis la recette supportée répondant à la question et qualifie sources, période, signes et total de contrôle.",
+        "Exécute le paquet selon son contrat revu dans le même dossier, sans remplacer les calculs par un script improvisé.",
+        "Lis indicateurs et limites. Relie le commentaire aux métriques et conserve comme non effectuées les vérifications qui ne l'ont pas été."
+      ],
+      "result_title": "Alpha représente 60 % du chiffre d'affaires",
+      "conclusion": "Le premier client pèse 60 %, les deux premiers 85 %. Ces constats orientent les questions commerciales à approfondir.",
+      "output_columns": [
+        "Indicateur",
+        "Calcul",
+        "Valeur"
+      ],
+      "output_rows": [
+        [
+          "Premier client",
+          "60 000 / 100 000",
+          "60 %"
+        ],
+        [
+          "Deux premiers",
+          "85 000 / 100 000",
+          "85 %"
+        ],
+        [
+          "Clients observés",
+          "Alpha, Beta, Gamma",
+          "3"
+        ]
+      ],
+      "check": "Une forte part décrit une concentration, pas la fragilité du contrat ni une perte future. Vérifie périmètre et rapprochement du total.",
+      "question": "La part de 60 % donne-t-elle une probabilité de perte du chiffre d'affaires ?",
+      "answer": "Non. Contrats, renouvellements et dépendances nécessitent d'autres preuves. L'indicateur guide les questions sans fournir de probabilité.",
+      "practice": "Ajoute un quatrième client de 20 000 EUR et contrôle le nouveau total et les nouvelles parts.",
+      "next": "Choisis une recette supportée et prépare les sources comptables revues avec période et totaux de contrôle."
+    },
+    "de": {
+      "title": "Umsatzkonzentration verstehen",
+      "goal": "Eine unterstützte Finanzanalyse verwenden und ihre Kennzahl ohne automatische Risikobewertung interpretieren.",
+      "scenario": "Ein fiktiver Periodenexport enthält EUR 100.000 Umsatz: Alpha 60.000, Beta 25.000, Gamma 15.000. Gesucht ist eine Einschätzung der Kundenabhängigkeit, keine Unternehmensbewertung.",
+      "request": "Vera, analysiere die Kundenkonzentration und zeige die Grundlage des Ergebnisses.",
+      "scope": "Die Analyse customer_concentration auf geprüften historischen Daten. Keine Bewertung, kein Rating und keine unabhängige Prüfung der Buchhaltungsquellen.",
+      "input_columns": [
+        "Fiktiver Kunde",
+        "Periodenumsatz",
+        "Quelle"
+      ],
+      "input_rows": [
+        [
+          "Alpha",
+          "EUR 60.000",
+          "F1 · Zeile 1"
+        ],
+        [
+          "Beta",
+          "EUR 25.000",
+          "F1 · Zeile 2"
+        ],
+        [
+          "Gamma",
+          "EUR 15.000",
+          "F1 · Zeile 3"
+        ]
+      ],
+      "basis": "F1 definiert Periode und Umfang mit insgesamt EUR 100.000. Verträge, Kundenmargen und Zukunftsbelege fehlen.",
+      "method": [
+        "Wähle die zur Frage passende unterstützte Analyse und qualifiziere Quellen, Periode, Vorzeichen und Kontrollsumme.",
+        "Führe das Paket mit geprüftem Vertrag im selben Mandat aus. Verwende die vorgesehenen Berechnungen statt eines improvisierten Ersatzes.",
+        "Lies Kennzahlen und Grenzen. Verknüpfe Erläuterungen mit Messwerten und kennzeichne nicht durchgeführte Quellenprüfungen."
+      ],
+      "result_title": "Alpha trägt 60 % des Umsatzes",
+      "conclusion": "Der größte Kunde liefert 60 %, die ersten beiden zusammen 85 %. Diese Beobachtungen zeigen, welche geschäftlichen Fragen zu untersuchen sind.",
+      "output_columns": [
+        "Kennzahl",
+        "Berechnung",
+        "Wert"
+      ],
+      "output_rows": [
+        [
+          "Größter Kunde",
+          "60.000 / 100.000",
+          "60 %"
+        ],
+        [
+          "Erste zwei Kunden",
+          "85.000 / 100.000",
+          "85 %"
+        ],
+        [
+          "Beobachtete Kunden",
+          "Alpha, Beta, Gamma",
+          "3"
+        ]
+      ],
+      "check": "Ein hoher Anteil belegt Konzentration, aber keine Vertragsunsicherheit oder künftigen Kundenverlust. Prüfe Umfang und Summenabgleich.",
+      "question": "Verrät der Anteil von 60 % die Wahrscheinlichkeit eines Umsatzverlusts?",
+      "answer": "Nein. Verträge, Verlängerungen und Abhängigkeiten benötigen eigene Belege. Die Kennzahl lenkt Fragen, liefert aber keine Verlustwahrscheinlichkeit.",
+      "practice": "Ergänze einen vierten Kunden mit EUR 20.000 und prüfe die neue Summe und die Anteile.",
+      "next": "Wähle eine unterstützte Analyse und geprüfte Buchhaltungsquellen mit Periode und Kontrollsummen."
+    },
+    "es": {
+      "title": "Comprender la concentración de ingresos",
+      "goal": "Usar un análisis financiero compatible e interpretar su indicador sin un juicio automático de riesgo.",
+      "scenario": "Un export ficticio contiene EUR 100.000 de ingresos: Alpha 60.000, Beta 25.000 y Gamma 15.000. El profesional quiere entender la dependencia de clientes, no valorar la empresa.",
+      "request": "Vera, analiza la concentración de clientes y muestra la base del resultado.",
+      "scope": "Análisis customer_concentration sobre datos históricos revisados. No es valoración, calificación ni auditoría independiente de las fuentes contables.",
+      "input_columns": [
+        "Cliente ficticio",
+        "Ingresos del periodo",
+        "Fuente"
+      ],
+      "input_rows": [
+        [
+          "Alpha",
+          "EUR 60.000",
+          "F1 · fila 1"
+        ],
+        [
+          "Beta",
+          "EUR 25.000",
+          "F1 · fila 2"
+        ],
+        [
+          "Gamma",
+          "EUR 15.000",
+          "F1 · fila 3"
+        ]
+      ],
+      "basis": "F1 define periodo y alcance y suma EUR 100.000. No aporta contratos, márgenes por cliente ni pruebas prospectivas.",
+      "method": [
+        "Selecciona el análisis compatible que responde a la pregunta y cualifica fuentes, periodo, signos y total de control.",
+        "Ejecuta el paquete conforme al contrato revisado en el mismo encargo. Utiliza sus cálculos admitidos, sin sustituirlos por otro análisis improvisado.",
+        "Lee indicadores y límites. Vincula comentarios a métricas y conserva como no realizadas las comprobaciones de fuentes pendientes."
+      ],
+      "result_title": "Alpha representa el 60 % de los ingresos",
+      "conclusion": "El mayor cliente aporta el 60 % y los dos primeros el 85 %. Las observaciones orientan preguntas comerciales por investigar.",
+      "output_columns": [
+        "Indicador",
+        "Cálculo",
+        "Valor"
+      ],
+      "output_rows": [
+        [
+          "Mayor cliente",
+          "60.000 / 100.000",
+          "60 %"
+        ],
+        [
+          "Dos primeros clientes",
+          "85.000 / 100.000",
+          "85 %"
+        ],
+        [
+          "Clientes observados",
+          "Alpha, Beta, Gamma",
+          "3"
+        ]
+      ],
+      "check": "Una cuota alta acredita concentración, no fragilidad contractual o pérdida futura de clientes. Comprueba alcance y conciliación del total.",
+      "question": "¿La cuota del 60 % revela la probabilidad de perder ingresos?",
+      "answer": "No. Contratos, renovaciones y dependencias requieren pruebas propias. El indicador orienta preguntas, pero no proporciona una probabilidad de pérdida.",
+      "practice": "Añade un cuarto cliente con EUR 20.000 y comprueba el nuevo total y las cuotas.",
+      "next": "Elige un análisis compatible y prepara fuentes contables revisadas con periodo y totales de control."
+    }
+  },
+  "visual": {
+    "column": 2,
+    "maximum": 100,
+    "bars": [
+      [
+        0,
+        60
+      ],
+      [
+        1,
+        85
+      ]
+    ]
+  }
+}

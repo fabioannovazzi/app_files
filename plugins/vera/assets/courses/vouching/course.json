@@ -1,0 +1,393 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "vouching",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/check-entries/references/workflow-reference.md",
+      "repository_path": "plugins/check-entries/references/workflow-reference.md",
+      "sha256": "5ea38167f0c0cbf3daa6f9a81fb36dea600eebef04c473b30381bfc1637cb228"
+    },
+    {
+      "path": "modules/check-entries/scripts/apply_review_edits.py",
+      "repository_path": "plugins/check-entries/scripts/apply_review_edits.py",
+      "sha256": "83e5e3955336e68b3d803be86a8ff235e769b72cf1a7dc7ef371ef4890ec2187"
+    },
+    {
+      "path": "modules/check-entries/scripts/check_dependencies.py",
+      "repository_path": "plugins/check-entries/scripts/check_dependencies.py",
+      "sha256": "f09811af1b143aa055c7fa131aaf2e82a3aa4ebcdb8783ad9599e4c711c69acd"
+    },
+    {
+      "path": "modules/check-entries/scripts/check_entries_core.py",
+      "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
+      "sha256": "309fa8456ff74fa16a368126bd4928c1a8aeea1fa8e7514764ba7f208ed0fbc9"
+    },
+    {
+      "path": "modules/check-entries/scripts/implementation_bootstrap.py",
+      "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
+      "sha256": "4ac2e3a16f09af539d54f3d0c418f4245b5c5e134066043bae5e16ba743da837"
+    },
+    {
+      "path": "modules/check-entries/scripts/implementation_contract.py",
+      "repository_path": "plugins/check-entries/scripts/implementation_contract.py",
+      "sha256": "e7fadc4a7854dd7a3a8f762160251ebaefae137979566c27868c5470b2a57bf0"
+    },
+    {
+      "path": "modules/check-entries/scripts/inspect_entries.py",
+      "repository_path": "plugins/check-entries/scripts/inspect_entries.py",
+      "sha256": "bf47b59b303955aeebea6f05b5af94370646d6052adc99c2c04fcf1e734d4810"
+    },
+    {
+      "path": "modules/check-entries/scripts/invoice_support.py",
+      "repository_path": "plugins/check-entries/scripts/invoice_support.py",
+      "sha256": "7ccefa3cbca3f21642782e3ce7263f7d1b1e99345cfa5ebe23cb7bc13f97a026"
+    },
+    {
+      "path": "modules/check-entries/scripts/physical_output_set.py",
+      "repository_path": "plugins/check-entries/scripts/physical_output_set.py",
+      "sha256": "db7476ac9b3ac97101f4f8f27478b74735698403201af73535b5c54e4f07a745"
+    },
+    {
+      "path": "modules/check-entries/scripts/review_session.py",
+      "repository_path": "plugins/check-entries/scripts/review_session.py",
+      "sha256": "c72368bbda7be5f90c58b76689538bc7d8441f8f2560d8d40b7f78d5daf51f7d"
+    },
+    {
+      "path": "modules/check-entries/scripts/run_checks.py",
+      "repository_path": "plugins/check-entries/scripts/run_checks.py",
+      "sha256": "829d99a3b5ef67ac4ddacc76c1e73d7e21d62b0bc307bf179a67fa5b4c90e419"
+    },
+    {
+      "path": "modules/check-entries/scripts/stable_ooxml.py",
+      "repository_path": "plugins/check-entries/scripts/stable_ooxml.py",
+      "sha256": "461e2a558b67a1563aed5bba936739656bae23ac0a5627111805cf56da3585f0"
+    },
+    {
+      "path": "modules/check-entries/skills/vouching/SKILL.md",
+      "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
+      "sha256": "c3697473608f24f0c7ed171b29c9bb05c3d5820b36122ea608f64a9f436768f1"
+    },
+    {
+      "path": "skills/vouching/SKILL.md",
+      "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+      "sha256": "548deff72f83d7db825a68bc0526a3301c1d9f19f666aa2be7eec878b3f95515"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Dal campione al documento giusto",
+      "goal": "Verificare una scrittura campionata senza confondere la coincidenza di un importo con l'identità del documento.",
+      "scenario": "Il campione qualificato contiene la scrittura MOV-104, relativa a INV-104 per 1.220 EUR. Nel lotto di supporto ci sono due fatture da 1.220 EUR: INV-104 e INV-205. Il caso confronta solo la riga campionata.",
+      "request": "Vera, verifica il documento di supporto di questa scrittura del campione.",
+      "scope": "Il workflow parte dal passaggio chiuso di Journal Sampling, inclusi gli allegati di qualificazione. Una tabella grezza o questo caso didattico non sostituiscono quel passaggio.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Identità",
+        "Importo"
+      ],
+      "input_rows": [
+        [
+          "Campione S1 · riga 4",
+          "MOV-104 / INV-104",
+          "1.220 EUR"
+        ],
+        [
+          "XML X1",
+          "INV-104; controparte coerente",
+          "1.220 EUR"
+        ],
+        [
+          "XML X2",
+          "INV-205; altra fattura",
+          "1.220 EUR"
+        ]
+      ],
+      "basis": "S1 definisce la selezione da controllare. X1 contiene il riferimento distintivo INV-104; l'importo di X2 coincide, ma non ne stabilisce l'identità.",
+      "method": [
+        "Riprendi il campione qualificato dello stesso cliente e incarico; acquisisci un lotto esplicito di supporti e verifica la chiusura delle fonti.",
+        "Controlla identità, controparte, valuta, segno, importo e data secondo la ricetta riveduta. Non correggere la preparazione del giornale dentro la verifica documentale.",
+        "Leggi esiti, copertura, differenze e righe manuali. Consegna la traccia fra riga campionata e documento, lasciando il giudizio di sufficienza al professionista."
+      ],
+      "result_title": "INV-104 è il supporto pertinente",
+      "conclusion": "L'identità distingue i due documenti con lo stesso importo. La coincidenza numerica da sola non consentirebbe un abbinamento.",
+      "output_columns": [
+        "Candidato",
+        "Evidenza d'identità",
+        "Interpretazione didattica"
+      ],
+      "output_rows": [
+        [
+          "X1 · INV-104",
+          "Riferimento distintivo coerente",
+          "Controllare gli altri requisiti"
+        ],
+        [
+          "X2 · INV-205",
+          "Riferimento diverso",
+          "Non usare la sola coincidenza di importo"
+        ]
+      ],
+      "check": "Un esito meccanico favorevole non certifica la natura contabile o la sufficienza della prova. Non si estende la conclusione alle righe non campionate.",
+      "question": "Se togliamo il riferimento fattura dalla scrittura, possiamo scegliere X1 perché è il primo file?",
+      "answer": "No. L'identità diventa irrisolta e richiede la prova o il collegamento riveduto previsto dal contratto; l'ordine dei file non è un criterio.",
+      "practice": "Modifica l'importo di X1 a 1.200 EUR e osserva la differenza senza cambiare il documento abbinato.",
+      "next": "Seleziona il campione già finalizzato e il lotto di XML o PDF pertinente; Vera risolve i riferimenti tecnici del passaggio."
+    },
+    "en": {
+      "title": "From a sampled entry to the right document",
+      "goal": "Verify a sampled posting without mistaking a matching amount for document identity.",
+      "scenario": "The fictional qualified sample contains MOV-104 for invoice INV-104, EUR 1,220. The evidence batch has two invoices for that amount: INV-104 and INV-205. Only the selected sampled entry is in scope.",
+      "request": "Vera, verify the supporting document for this sampled entry.",
+      "scope": "Vouching starts from the closed Journal Sampling handoff, including qualification companions. A raw table or this teaching preview is not that handoff.",
+      "input_columns": [
+        "Fictional source",
+        "Identity",
+        "Amount"
+      ],
+      "input_rows": [
+        [
+          "Sample S1 · row 4",
+          "MOV-104 / INV-104",
+          "EUR 1,220"
+        ],
+        [
+          "XML X1",
+          "INV-104; consistent party",
+          "EUR 1,220"
+        ],
+        [
+          "XML X2",
+          "INV-205; another invoice",
+          "EUR 1,220"
+        ]
+      ],
+      "basis": "S1 defines the selection. X1 has the distinctive INV-104 reference; X2's equal amount does not establish identity.",
+      "method": [
+        "Resume the qualified sample in the same client engagement, bind an explicit support batch and verify the source closure.",
+        "Check identity, party, currency, sign, amount and date under the reviewed recipe. Do not repair journal preparation inside Vouching.",
+        "Read coverage, mismatches and manual-review rows. Deliver entry-to-document lineage and leave evidence sufficiency to professional judgment."
+      ],
+      "result_title": "INV-104 is the relevant support",
+      "conclusion": "Identity distinguishes documents with the same amount. Numeric coincidence alone would not justify a match.",
+      "output_columns": [
+        "Candidate",
+        "Identity evidence",
+        "Teaching interpretation"
+      ],
+      "output_rows": [
+        [
+          "X1 · INV-104",
+          "Consistent distinctive reference",
+          "Check the remaining requirements"
+        ],
+        [
+          "X2 · INV-205",
+          "Different reference",
+          "Equal amount is insufficient"
+        ]
+      ],
+      "check": "A mechanical pass does not certify accounting treatment or evidence sufficiency. Do not extend the result to unsampled entries.",
+      "question": "If the posting has no invoice reference, can we choose X1 because it is the first file?",
+      "answer": "No. Identity remains unresolved and needs the evidence or reviewed relationship required by the contract. File order proves nothing.",
+      "practice": "Change X1 to EUR 1,200 and inspect the difference without switching the matched document.",
+      "next": "Select the finalized sample and the relevant XML or PDF batch; Vera resolves the technical handoff references."
+    },
+    "fr": {
+      "title": "De l'écriture échantillonnée à la bonne pièce",
+      "goal": "Vérifier une écriture sans confondre montant identique et identité documentaire.",
+      "scenario": "L'échantillon fictif qualifié contient MOV-104 pour INV-104, soit 1 220 EUR. Le lot justificatif comporte deux factures de ce montant : INV-104 et INV-205. Seule l'écriture sélectionnée est contrôlée.",
+      "request": "Vera, vérifie la pièce justificative de cette écriture de l'échantillon.",
+      "scope": "Le workflow utilise le passage clôturé de Journal Sampling et ses pièces de qualification. Une table brute ou cet aperçu ne le remplace pas.",
+      "input_columns": [
+        "Source fictive",
+        "Identité",
+        "Montant"
+      ],
+      "input_rows": [
+        [
+          "Échantillon S1 · ligne 4",
+          "MOV-104 / INV-104",
+          "1 220 EUR"
+        ],
+        [
+          "XML X1",
+          "INV-104 ; contrepartie cohérente",
+          "1 220 EUR"
+        ],
+        [
+          "XML X2",
+          "INV-205 ; autre facture",
+          "1 220 EUR"
+        ]
+      ],
+      "basis": "S1 définit la sélection. X1 porte la référence distinctive INV-104 ; le montant identique de X2 n'établit pas son identité.",
+      "method": [
+        "Reprends l'échantillon qualifié du même dossier, sélectionne le lot justificatif et vérifie la clôture des sources.",
+        "Contrôle identité, contrepartie, devise, sens, montant et date selon la recette revue. Ne corrige pas la préparation du journal dans Vouching.",
+        "Lis couverture, écarts et lignes à revoir manuellement. Livre le lien écriture-pièce ; le professionnel apprécie la suffisance de la preuve."
+      ],
+      "result_title": "INV-104 est la pièce pertinente",
+      "conclusion": "L'identité distingue les deux factures de même montant. La seule coïncidence numérique ne justifierait pas le rapprochement.",
+      "output_columns": [
+        "Candidat",
+        "Preuve d'identité",
+        "Lecture pédagogique"
+      ],
+      "output_rows": [
+        [
+          "X1 · INV-104",
+          "Référence distinctive cohérente",
+          "Vérifier les autres conditions"
+        ],
+        [
+          "X2 · INV-205",
+          "Référence différente",
+          "Montant identique insuffisant"
+        ]
+      ],
+      "check": "Un contrôle mécanique favorable ne certifie ni traitement comptable ni suffisance des justificatifs. Ne généralise pas aux écritures hors échantillon.",
+      "question": "Sans référence facture dans l'écriture, peut-on choisir X1 parce qu'il est le premier fichier ?",
+      "answer": "Non. L'identité reste indéterminée et nécessite la preuve ou le lien revu prévu au contrat. L'ordre des fichiers ne prouve rien.",
+      "practice": "Ramène X1 à 1 200 EUR et examine l'écart sans changer de document rapproché.",
+      "next": "Sélectionne l'échantillon finalisé et le lot XML ou PDF pertinent ; Vera résout les références techniques du passage."
+    },
+    "de": {
+      "title": "Von der Stichprobenbuchung zum richtigen Beleg",
+      "goal": "Eine ausgewählte Buchung prüfen, ohne einen gleichen Betrag mit Belegidentität zu verwechseln.",
+      "scenario": "Die fiktive qualifizierte Stichprobe enthält MOV-104 zur Rechnung INV-104 über EUR 1.220. Zwei XML-Rechnungen haben diesen Betrag: INV-104 und INV-205. Nur die ausgewählte Buchung gehört zum Prüfungsumfang.",
+      "request": "Vera, prüfe den Beleg zu dieser Stichprobenbuchung.",
+      "scope": "Vouching setzt die abgeschlossene Übergabe aus Journal Sampling einschließlich Qualifizierungsunterlagen voraus. Eine Rohdatentabelle oder diese Lehrvorschau ersetzt sie nicht.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Identität",
+        "Betrag"
+      ],
+      "input_rows": [
+        [
+          "Stichprobe S1 · Zeile 4",
+          "MOV-104 / INV-104",
+          "EUR 1.220"
+        ],
+        [
+          "XML X1",
+          "INV-104; passende Gegenpartei",
+          "EUR 1.220"
+        ],
+        [
+          "XML X2",
+          "INV-205; andere Rechnung",
+          "EUR 1.220"
+        ]
+      ],
+      "basis": "S1 definiert die Auswahl. X1 trägt die unterscheidende Referenz INV-104; der gleiche Betrag von X2 beweist keine Identität.",
+      "method": [
+        "Übernimm die qualifizierte Stichprobe im selben Mandat, binde einen bestimmten Belegbestand und prüfe die abgeschlossene Quellenbasis.",
+        "Prüfe Identität, Gegenpartei, Währung, Vorzeichen, Betrag und Datum anhand der geprüften Konfiguration. Repariere die Journalaufbereitung nicht innerhalb von Vouching.",
+        "Lies Abdeckung, Abweichungen und manuell zu prüfende Zeilen. Liefere den Weg von Buchung zu Beleg; die Belegausreichendheit bleibt fachliches Urteil."
+      ],
+      "result_title": "INV-104 ist der einschlägige Beleg",
+      "conclusion": "Die Identität unterscheidet Belege mit gleichem Betrag. Eine bloße Zahlengleichheit rechtfertigt keine Zuordnung.",
+      "output_columns": [
+        "Kandidat",
+        "Identitätsbeleg",
+        "Einordnung im Beispiel"
+      ],
+      "output_rows": [
+        [
+          "X1 · INV-104",
+          "Passende eindeutige Referenz",
+          "Weitere Anforderungen prüfen"
+        ],
+        [
+          "X2 · INV-205",
+          "Andere Referenz",
+          "Gleicher Betrag reicht nicht"
+        ]
+      ],
+      "check": "Ein mechanisch bestandener Check bestätigt weder die Bilanzierung noch die Belegausreichendheit. Übertrage das Ergebnis nicht auf ungeprüfte Buchungen.",
+      "question": "Die Buchung enthält keine Rechnungsreferenz. Können wir X1 nehmen, weil die Datei zuerst kommt?",
+      "answer": "Nein. Die Identität bleibt offen und braucht die vertraglich geforderte Evidenz oder geprüfte Beziehung. Die Dateireihenfolge beweist nichts.",
+      "practice": "Ändere X1 auf EUR 1.200 und prüfe die Differenz, ohne den zugeordneten Beleg zu wechseln.",
+      "next": "Wähle die abgeschlossene Stichprobe und den passenden XML- oder PDF-Bestand; Vera löst die technischen Übergabeverweise auf."
+    },
+    "es": {
+      "title": "Del asiento seleccionado al justificante correcto",
+      "goal": "Verificar un asiento de la muestra sin confundir igualdad de importe con identidad documental.",
+      "scenario": "La muestra ficticia cualificada contiene MOV-104, correspondiente a INV-104 por EUR 1.220. El lote incluye dos facturas por ese importe: INV-104 e INV-205. Solo el asiento seleccionado está dentro del alcance.",
+      "request": "Vera, verifica el justificante de este asiento de la muestra.",
+      "scope": "Vouching parte de la entrega cerrada de Journal Sampling con sus documentos de cualificación. Una tabla en bruto o esta vista didáctica no la sustituyen.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Identidad",
+        "Importe"
+      ],
+      "input_rows": [
+        [
+          "Muestra S1 · fila 4",
+          "MOV-104 / INV-104",
+          "EUR 1.220"
+        ],
+        [
+          "XML X1",
+          "INV-104; contraparte coherente",
+          "EUR 1.220"
+        ],
+        [
+          "XML X2",
+          "INV-205; otra factura",
+          "EUR 1.220"
+        ]
+      ],
+      "basis": "S1 define la selección. X1 contiene la referencia distintiva INV-104; el importe igual de X2 no acredita identidad.",
+      "method": [
+        "Retoma la muestra cualificada en el mismo encargo, vincula un lote de justificantes explícito y verifica el cierre de fuentes.",
+        "Comprueba identidad, contraparte, moneda, signo, importe y fecha conforme a la configuración revisada. No repares la preparación del diario dentro de Vouching.",
+        "Lee cobertura, diferencias y filas de revisión manual. Entrega la trazabilidad asiento-documento y deja la suficiencia probatoria al juicio profesional."
+      ],
+      "result_title": "INV-104 es el justificante pertinente",
+      "conclusion": "La identidad distingue documentos con el mismo importe. La coincidencia numérica por sí sola no justificaría una asociación.",
+      "output_columns": [
+        "Candidato",
+        "Prueba de identidad",
+        "Interpretación didáctica"
+      ],
+      "output_rows": [
+        [
+          "X1 · INV-104",
+          "Referencia distintiva coherente",
+          "Comprobar los demás requisitos"
+        ],
+        [
+          "X2 · INV-205",
+          "Referencia diferente",
+          "El importe igual no basta"
+        ]
+      ],
+      "check": "Superar un control mecánico no certifica el tratamiento contable ni la suficiencia del justificante. No extiendas el resultado a asientos fuera de la muestra.",
+      "question": "Si el asiento no incluye referencia de factura, ¿podemos elegir X1 por ser el primer archivo?",
+      "answer": "No. La identidad queda pendiente y necesita las pruebas o la relación revisada que exige el contrato. El orden de archivos no demuestra nada.",
+      "practice": "Cambia X1 a EUR 1.200 y examina la diferencia sin sustituir el documento asociado.",
+      "next": "Selecciona la muestra finalizada y el lote XML o PDF pertinente; Vera resuelve las referencias técnicas de la entrega."
+    }
+  }
+}

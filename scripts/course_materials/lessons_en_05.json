@@ -1,0 +1,573 @@
+{
+  "clara/attribute-reporting": {
+    "title": "An assortment signal is not market share",
+    "goal": "Read Retailer Signals while preserving cohorts, denominators and snapshot limitations.",
+    "scenario": "A fictional North retailer package contains 20 new products, 12 refillable, and 80 products in the rest cohort, 24 refillable. The snapshot has no sales or market-share measures.",
+    "request": "Clara, show whether refillability is more common among new products and how to interpret it.",
+    "scope": "New-versus-rest comparison on a local teaching package. No server acquisition or fresh retailer scrape occurs during the lesson.",
+    "input_columns": [
+      "Fictional cohort",
+      "Refillable products",
+      "Total products"
+    ],
+    "input_rows": [
+      [
+        "New",
+        "12",
+        "20"
+      ],
+      [
+        "Rest",
+        "24",
+        "80"
+      ]
+    ],
+    "basis": "A1 defines cohorts and the case attribute. Comparing 12 with 24 without their different denominators would mislead.",
+    "method": [
+      "Start from a coherent checked package, review attributes against products and preserve the contracted comparisons and thresholds.",
+      "Interpret tables without promoting an attribute match to automatic judgment. Link product evidence and images to the package.",
+      "Author the local report and complete independent semantic review, browser QA and current correctness checks. State the actual verdict and limitations."
+    ],
+    "result_title": "Refillability: 60% of new products, 30% of the rest",
+    "conclusion": "The attribute is twice as prevalent in the new cohort. This describes the observed assortment, not demand or sales.",
+    "output_columns": [
+      "Cohort",
+      "Calculation",
+      "Attribute prevalence"
+    ],
+    "output_rows": [
+      [
+        "New",
+        "12 / 20",
+        "60%"
+      ],
+      [
+        "Rest",
+        "24 / 80",
+        "30%"
+      ],
+      [
+        "Illustrated comparison",
+        "60% / 30%",
+        "2×"
+      ]
+    ],
+    "check": "Retain denominators and snapshot date. A product name or single attribute does not establish market success.",
+    "question": "Does 60% mean refillable products generate 60% of sales?",
+    "answer": "No. It is the share of new products with that attribute in the package. No sales measure is supplied.",
+    "practice": "Add two non-refillable new products and recalculate with the changed denominator.",
+    "next": "Select the retailer, category and supported comparison; verify whether the evidence is a snapshot or a new acquisition."
+  },
+  "clara/brand-fit": {
+    "title": "A retailer gap is not necessarily a catalog gap",
+    "goal": "Compare a retailer signal with brand presence and the owned catalog as separate evidence scopes.",
+    "scenario": "A fictional Retailer Signals report highlights refillability among new products. Lume has two products at North, neither refillable. Its owned catalog includes refillable Lume R, but price and retailer availability are not documented.",
+    "request": "Clara, show whether Lume's catalog has a candidate relevant to this signal.",
+    "scope": "Three local fictional evidence sets. A candidate is not an automatic launch recommendation, and a snapshot is not a live shelf check.",
+    "input_columns": [
+      "Fictional source",
+      "Information",
+      "Scope"
+    ],
+    "input_rows": [
+      [
+        "B1 · completed Retailer Signals",
+        "Refillability more prevalent among new products",
+        "North retailer"
+      ],
+      [
+        "B2 · Lume presence",
+        "Two products, neither refillable",
+        "Retailer snapshot"
+      ],
+      [
+        "B3 · Lume catalog",
+        "Refillable Lume R",
+        "Owned catalog"
+      ]
+    ],
+    "basis": "B1 supplies the upstream signal; B2 describes observed presence and B3 the brand catalog. Do not merge their meanings.",
+    "method": [
+      "Start from a completed, checked Retailer Signals report and identify its scope and evidence date.",
+      "Compare the signal with retailer presence and the owned catalog. Evaluate candidates in context rather than on one attribute alone.",
+      "Prepare the private Brand Fit report with bases, alternatives and limitations. Complete independent and visual review, retaining proposals as reviewable judgments."
+    ],
+    "result_title": "Lume R merits further assessment",
+    "conclusion": "The catalog has a refill absent from Lume's observed North presence. Price, positioning and availability still require investigation.",
+    "output_columns": [
+      "Question",
+      "Supported answer",
+      "Limit"
+    ],
+    "output_rows": [
+      [
+        "Present at the retailer?",
+        "Not in snapshot B2",
+        "Not a live check"
+      ],
+      [
+        "Present in the catalog?",
+        "Lume R in B3",
+        "Does not prove commercial availability"
+      ],
+      [
+        "Suitable for the retailer?",
+        "Candidate matching one attribute",
+        "Full assessment remains"
+      ]
+    ],
+    "check": "Missing retailer presence can be a distribution gap rather than a catalog gap. Refillability alone does not establish fit.",
+    "question": "Can we recommend launching Lume R from these facts alone?",
+    "answer": "We can identify a candidate to investigate. Price, positioning, availability and the broader context still need evaluation.",
+    "practice": "Add price and positioning evidence and reconsider the judgment while keeping all three scopes distinct.",
+    "next": "Start from the checked Retailer Signals report and selected brand. Do not upload the private report to recreate the comparison."
+  },
+  "clara/deck-correction": {
+    "title": "From feedback to a verified slide change",
+    "goal": "Turn a comment into an inspectable revision while preserving unaffected content.",
+    "scenario": "A fictional three-slide deck compares 2025 and 2026. Feedback asks to lead with the result on slide two without changing the numbers or slide three. The +12% result already appears in the source.",
+    "request": "Clara, apply this feedback and show exactly what changed.",
+    "scope": "Revise a copy of an existing deck. The lesson uses fictional written notes; it does not start hosted voice capture or invent a recording.",
+    "input_columns": [
+      "Fictional source",
+      "Content",
+      "Authority"
+    ],
+    "input_rows": [
+      [
+        "D1 · original deck",
+        "Three slides, existing style and figures",
+        "Visual baseline"
+      ],
+      [
+        "D2 · feedback",
+        "Result first on slide 2",
+        "Requested change"
+      ],
+      [
+        "D3 · data",
+        "+12% comparison",
+        "Claim basis"
+      ]
+    ],
+    "basis": "D2 requests a different message order, not new calculations. D1 defines preserved content and D3 supports the figure.",
+    "method": [
+      "Identify the exact deck and feedback. Interpret every request, its scope, uncertainty and preserved parts.",
+      "Prepare the change ledger and success criteria. For PPTX, follow the required understanding and approval checkpoint before editing the copy.",
+      "Render and inspect the final deck against the original. Check numbers, readability and unaffected slides while retaining evidence lineage."
+    ],
+    "result_title": "Slide 2 · the result leads",
+    "conclusion": "The title can become 'The result increases by 12%'. Explanation follows; figures and slide three remain unchanged.",
+    "output_columns": [
+      "Request",
+      "Intended change",
+      "Success evidence"
+    ],
+    "output_rows": [
+      [
+        "Result first",
+        "Slide 2 title",
+        "+12% visible at the start"
+      ],
+      [
+        "Keep figures",
+        "No data changes",
+        "Comparison with D1/D3"
+      ],
+      [
+        "Preserve slide 3",
+        "No change",
+        "Before/after comparison"
+      ]
+    ],
+    "check": "A slide number locates content but does not interpret the request. Avoid rebuilding the whole deck for a bounded correction.",
+    "question": "Can we replace +12% with 'strong growth' to make the title more exciting?",
+    "answer": "The request is to foreground the result, not replace it with a judgment. Keep the supported measure and review any added interpretation.",
+    "practice": "Add another change request and define the concrete evidence that will show it succeeded.",
+    "next": "Select the exact deck and feedback. Real audio follows the authorized transcription route outside this lesson."
+  },
+  "clara/html-deck": {
+    "title": "Three slides that support a decision",
+    "goal": "Build a readable, source-faithful HTML presentation with evidence for its claims.",
+    "scenario": "A fictional brief describes a commercial test: 40 customers invited, 10 participants and 6 interested in a follow-up. The team must decide whether to expand the test. There are no orders or revenue figures.",
+    "request": "Clara, turn this brief into three slides for deciding the next test.",
+    "scope": "A source-based deck, without invented research or data. Stated interest is not sales conversion.",
+    "input_columns": [
+      "Fictional source B1",
+      "Value",
+      "Meaning"
+    ],
+    "input_rows": [
+      [
+        "Invited",
+        "40",
+        "Contacted population"
+      ],
+      [
+        "Participants",
+        "10",
+        "25% of invitees"
+      ],
+      [
+        "Interested in follow-up",
+        "6",
+        "60% of participants; no orders"
+      ]
+    ],
+    "basis": "All values come from B1. The percentages have different denominators, which belong beside the figures.",
+    "method": [
+      "Define audience and decision, then read the source and plan claims with their supporting evidence.",
+      "Build under the current HTML deck contract, linking content and evidence. Use visual hierarchy to make the message readable.",
+      "Inspect every slide in the browser and renders for numbers, sources, overflow and navigation. Deliver the exact reviewed version."
+    ],
+    "result_title": "From test results to the next experiment",
+    "conclusion": "Ten of 40 invitees participated. Six want a follow-up: evidence for designing another test, not for claiming sales.",
+    "output_columns": [
+      "Slide",
+      "Message",
+      "Visible evidence"
+    ],
+    "output_rows": [
+      [
+        "1 · Result",
+        "10 participants from 40 invitations",
+        "B1 · 25%"
+      ],
+      [
+        "2 · Interest",
+        "6 of 10 request a follow-up",
+        "B1 · denominator 10"
+      ],
+      [
+        "3 · Decision",
+        "Define the next commercial test",
+        "Orders and revenue unavailable"
+      ]
+    ],
+    "check": "Headlines and charts must preserve denominators. A stronger-than-source claim remains wrong even on an elegant slide.",
+    "question": "Can slide two be titled '60% conversion'?",
+    "answer": "That could imply sales. The source measures follow-up interest among participants, so the title must state that meaning.",
+    "practice": "Rewrite slide two's title with its number, denominator and meaning, then inspect it in the deck.",
+    "next": "Select the documents and audience decision. Ask for a complete sourced deck rather than unsupported slogans."
+  },
+  "clara/hosted-interview": {
+    "title": "Ask deeper questions without suggesting the answer",
+    "goal": "Prepare an external-participant brief and understand the route from link to reviewed evidence.",
+    "scenario": "A fictional brief explores how an operations lead manages delivery delays. It focuses on the last concrete episode and the decision taken, without client details or an expected answer.",
+    "request": "Clara, show how you would prepare an external interview about this process.",
+    "scope": "Local brief preparation and review only. No participant link, outreach or hosted transmission occurs. A real interview is a subsequent authorized assignment.",
+    "input_columns": [
+      "Fictional brief element",
+      "Content",
+      "Purpose"
+    ],
+    "input_rows": [
+      [
+        "Objective",
+        "Understand delay handling",
+        "Process decision"
+      ],
+      [
+        "Opening question",
+        "Describe the last concrete delay",
+        "Observable episode"
+      ],
+      [
+        "Follow-up",
+        "Who decided what to do, using which information?",
+        "Roles and evidence"
+      ],
+      [
+        "Boundary",
+        "Do not ask for client names or details",
+        "Interview scope"
+      ]
+    ],
+    "basis": "H1 is an example brief, not a registered campaign or a real participant transcript.",
+    "method": [
+      "Select an exact versioned campaign or draft a bounded custom brief, distinguishing deep case understanding from comparable research.",
+      "In authorized real work, create an individual expiring link through the available service. The conversation adapts rather than mechanically reading a questionnaire.",
+      "Check status and retrieve the bundle and quality review before expiry. Treat responses as statements; adding them to a case requires its separate requested action."
+    ],
+    "result_title": "A brief ready for review",
+    "conclusion": "The brief starts with an episode and explores decisions and evidence without presuming inefficiency or suggesting a conclusion.",
+    "output_columns": [
+      "Question",
+      "What it may reveal",
+      "Avoid"
+    ],
+    "output_rows": [
+      [
+        "Last concrete delay",
+        "Episode chronology",
+        "Judgment embedded in the question"
+      ],
+      [
+        "Who decided, with which data?",
+        "Roles and information",
+        "Invented names"
+      ],
+      [
+        "What happened next?",
+        "Outcome and follow-up",
+        "Opinion treated as proof"
+      ]
+    ],
+    "check": "Hosted Interview differs from the standard voice teaching this lesson. A brief does not prove link creation, and completion does not make every statement true.",
+    "question": "Is 'Why is your process so slow?' a good opening question?",
+    "answer": "It presupposes a judgment. A concrete episode helps uncover timing, possible causes and decisions without suggesting the conclusion.",
+    "practice": "Revise a brief question and state the evidence you hope to obtain, without creating a link.",
+    "next": "For a real interview, select participant, objective, language and expiry. Its normal hosted workflow explains the applicable data flows."
+  },
+  "clara/reporting-engine": {
+    "title": "Before the chart, establish what the data means",
+    "goal": "Move from a dataset to a readable comparison using reviewed roles and metrics.",
+    "scenario": "The fictional dataset reports net sales of EUR 40,000 in January and EUR 50,000 in February. There is no separate Discount field. Source notes confirm that Sales already includes discounts, so subtracting them again would be wrong.",
+    "request": "Clara, show the sales trend and explain which data you are using.",
+    "scope": "Intake, metric meaning and a time comparison. Missing measures are not zero, and Clara's capability is not presented as Vera's.",
+    "input_columns": [
+      "Fictional period",
+      "Sales",
+      "Source note"
+    ],
+    "input_rows": [
+      [
+        "2026-01",
+        "EUR 40,000",
+        "Net sales"
+      ],
+      [
+        "2026-02",
+        "EUR 50,000",
+        "Net sales"
+      ],
+      [
+        "Separate Discount",
+        "Absent",
+        "Already reflected in Sales"
+      ]
+    ],
+    "basis": "R1 has two months; R2 defines Sales as net. Discount is absent as a separate measure, not a recorded zero.",
+    "method": [
+      "Run dataset intake and inspect data, profile and notes. Review metric meaning, aggregation and Sales, Discount and COGS roles; headers alone are insufficient.",
+      "Select a compatible capability and render through Clara's adapter, preserving the effective request and output proof.",
+      "Open the result and verify values, units, periods and conclusion. Reuse a compatible stable semantic contract on subsequent uploads rather than recreating meaning every time."
+    ],
+    "result_title": "Net sales rise by EUR 10,000",
+    "conclusion": "Net sales move from EUR 40,000 to EUR 50,000, a EUR 10,000 or 25% increase. Separate discounts and costs are unavailable.",
+    "output_columns": [
+      "Indicator",
+      "Value",
+      "Basis"
+    ],
+    "output_rows": [
+      [
+        "January",
+        "EUR 40,000",
+        "R1 · net sales"
+      ],
+      [
+        "February",
+        "EUR 50,000",
+        "R1 · net sales"
+      ],
+      [
+        "Change",
+        "+EUR 10,000 · +25%",
+        "January base EUR 40,000"
+      ]
+    ],
+    "check": "Technical compatibility and semantic correctness are different checks. Valid columns can still have a wrong business mapping.",
+    "question": "With no Discount column, can we state that no discounts were granted?",
+    "answer": "No. Sales is net and no separate discount measure is supplied. Column absence does not establish absence of discounts.",
+    "practice": "Add March under the same Sales definition, then verify contract reuse and the refreshed chart.",
+    "next": "Select CSV, Excel or Parquet with metric notes. Actual/Budget reports use Clara's own budget route within this workflow."
+  },
+  "clara/research-video": {
+    "title": "One scene, one source, one sentence",
+    "goal": "Keep scene images, narration and claims aligned in a short research video.",
+    "scenario": "Three fictional scenes show a request, a checked document and a reviewed result. The brief calls for 30 seconds. The images contain no quantitative outcomes, so narration cannot promise a measured time saving.",
+    "request": "Clara, show how you prepare scenes and narration before generating the video.",
+    "scope": "Local scene-plan and script preparation. No hosted audio call or claimed MP4 generation occurs. Actual production follows its normal authorized route.",
+    "input_columns": [
+      "Fictional scene",
+      "Visual source",
+      "Supported message"
+    ],
+    "input_rows": [
+      [
+        "1 · Request",
+        "V1 · selected brief",
+        "Start from an objective"
+      ],
+      [
+        "2 · Check",
+        "V2 · document with references",
+        "Claims retain sources"
+      ],
+      [
+        "3 · Review",
+        "V3 · result with open points",
+        "Professional review remains"
+      ]
+    ],
+    "basis": "V1–V3 support three qualitative steps, not measured time savings, effectiveness or commercial outcomes.",
+    "method": [
+      "Select approved ordered images and sources, audience, language and duration. Do not invent informative scenes to fill source gaps.",
+      "Write narration by scene and check every claim against its image and basis. Review sequence, wording and timing before synthesis.",
+      "In authorized real production, use the required hosted voice and local rendering. Verify MP4, audio, captions and synchronization without inventing receipts or approvals."
+    ],
+    "result_title": "A 30-second script for review",
+    "conclusion": "Three source-supported messages explain the process. The script is ready for discussion, not proof of video production.",
+    "output_columns": [
+      "Planned time",
+      "Proposed narration",
+      "Basis"
+    ],
+    "output_rows": [
+      [
+        "0–10 s",
+        "Each assignment begins with a question and selected documents.",
+        "V1"
+      ],
+      [
+        "10–20 s",
+        "The result retains references that allow the reader to verify it.",
+        "V2"
+      ],
+      [
+        "20–30 s",
+        "Open questions remain visible until professional review.",
+        "V3"
+      ]
+    ],
+    "check": "Final duration depends on actual synthesized audio and must be checked. A timing plan is not a measurement of an existing media file.",
+    "question": "Can scene two promise 'save half your time'?",
+    "answer": "No source measures that saving. Describe visible traceability without inventing a percentage or outcome.",
+    "practice": "Shorten the second sentence while preserving its claim and source, then review the local plan.",
+    "next": "For a real video, prepare approved scenes and sources. Hosted synthesis follows its own material approval and data flow."
+  },
+  "clara/transcribe": {
+    "title": "Who said it does not prove it is true",
+    "goal": "Preserve and attribute a transcript without promoting statements into verified facts.",
+    "scenario": "A fictional written debrief has two turns. Speaker 1 says delays have fallen. Speaker 2 asks for the monthly comparison. The notes identify neither speaker and contain no comparison; no real recording exists for this case.",
+    "request": "Clara, show how you review a transcript before using it in a report.",
+    "scope": "Local review of a written teaching excerpt. No hosted transcription is performed or simulated; actual recordings use the authorized workflow.",
+    "input_columns": [
+      "Fictional turn",
+      "Text",
+      "Metadata"
+    ],
+    "input_rows": [
+      [
+        "Speaker 1 · 00:10",
+        "We have reduced delays",
+        "Name unconfirmed"
+      ],
+      [
+        "Speaker 2 · 00:15",
+        "Do you have the monthly comparison?",
+        "Name unconfirmed"
+      ]
+    ],
+    "basis": "T1 is an authored teaching dialogue. In real work, a reviewed transcript can support attributed words without establishing the underlying assertion's truth.",
+    "method": [
+      "Choose capture, existing audio or an actually available bundle. Preserve the original and select the appropriate ordinary-folder or case route.",
+      "Review turns and attribution against evidence. Use real names only when supported; otherwise retain stable speaker labels. Do not change meaning during cleanup.",
+      "Finalize the reviewed transcript when the contract permits. Using a statement as a downstream fact requires a separate basis and a link to its original turn."
+    ],
+    "result_title": "Reviewable wording, uncorroborated assertion",
+    "conclusion": "The excerpt attributes a delay-reduction statement to Speaker 1. It does not identify the person or document that reduction.",
+    "output_columns": [
+      "Item",
+      "Supports",
+      "Does not support"
+    ],
+    "output_rows": [
+      [
+        "Turn 00:10",
+        "Words attributed to Speaker 1",
+        "Name or operating result"
+      ],
+      [
+        "Turn 00:15",
+        "Request for a comparison",
+        "Availability of that comparison"
+      ],
+      [
+        "Report use",
+        "Statement cited as such",
+        "Unproven quantitative conclusion"
+      ]
+    ],
+    "check": "Transcript cleanup is not summarization or improvement of meaning. Speaker identity and factual truth need different evidence.",
+    "question": "Can we name Speaker 1 as the director because the wording sounds familiar?",
+    "answer": "No. Attribution requires metadata or other evidence. Otherwise preserve Speaker 1 and state the uncertainty.",
+    "practice": "Add metadata identifying one speaker, update attribution and preserve the original text.",
+    "next": "Select a real recording or bundle and destination. An ordinary folder is enough for durable transcription without an unnecessary case."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Preparing a matter file does not accept the engagement",
+    "goal": "Build legal intake with parties, missing documents and professional decisions kept separate.",
+    "scenario": "Fictional Beta Laboratory seeks help with an incomplete delivery from Delta. Its brief mentions a contract and correspondence not yet supplied. No conflicts register is available in the teaching case.",
+    "request": "Lucia, prepare the initial dossier and show what I must verify before opening the matter.",
+    "scope": "Fictional legal intake. No conflicts search is claimed, no binding deadline is calculated and no engagement is automatically accepted.",
+    "input_columns": [
+      "Fictional source",
+      "Information",
+      "Status"
+    ],
+    "input_rows": [
+      [
+        "L1 · client brief",
+        "Beta versus supplier Delta",
+        "Client-reported parties"
+      ],
+      [
+        "L1 · cited documents",
+        "Contract and correspondence",
+        "Not yet supplied"
+      ],
+      [
+        "Conflicts register",
+        "Unavailable",
+        "Search not performed"
+      ]
+    ],
+    "basis": "L1 supports the client's request and reported parties. It does not replace the contract, correspondence or conflicts-register search.",
+    "method": [
+      "Select a new client or matter and preserve exact sources. Establish objective, parties, jurisdiction and urgency from evidence.",
+      "Prepare the memo, party map, missing-information request and folder plan. Keep unsupported points partial.",
+      "Present four review scopes: conflict, engagement, deadlines and opening. Persist only actual decisions and refresh review when intake changes."
+    ],
+    "result_title": "Initial dossier remains partial",
+    "conclusion": "The request and parties are described. Substantive documents and conflict review are missing, so the dossier is not ready to open.",
+    "output_columns": [
+      "Area",
+      "Situation",
+      "Next step"
+    ],
+    "output_rows": [
+      [
+        "Documents",
+        "Contract and correspondence missing",
+        "Review the request"
+      ],
+      [
+        "Conflicts",
+        "Register not consulted",
+        "Professional check of exact scope"
+      ],
+      [
+        "Engagement and opening",
+        "Not approved",
+        "Lawyer review"
+      ]
+    ],
+    "check": "A list of names is not a conflicts search, and a folder plan does not move originals. Decisions remain bound to the current intake.",
+    "question": "No conflict is mentioned in the brief. Can we mark the check as passed?",
+    "answer": "No. The brief is not the register. An unperformed check remains unperformed rather than becoming a negative result.",
+    "practice": "Add the fictional contract and review changed parties or questions without simulating engagement acceptance.",
+    "next": "Select the brief, documents, known parties and available register, and surface concrete urgency promptly."
+  }
+}

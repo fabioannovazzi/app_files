@@ -1,0 +1,423 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "avviso-intake",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/client-file-preparation/references/workflow-reference.md",
+      "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
+      "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
+      "repository_path": "plugins/client-file-preparation/schemas/model_handoff.schema.json",
+      "sha256": "38d7e5593d9a0ba12cbab23d7f1e8a03f239ceb230605f780b2bce4064e1d40d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
+      "sha256": "087e935240b3fe78cf98a4499a0a295175abb3aa8c2e625d160496462c1fc9bc"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_dependencies.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_dependencies.py",
+      "sha256": "48d98b528325d883fbeb8d3921cb8c8883d7087c87cc8950dd77b4be711ee9c4"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/check_environment.py",
+      "repository_path": "plugins/client-file-preparation/scripts/check_environment.py",
+      "sha256": "70f67540c705fe174163390ac2aea0582ef30235a52f2dd60f08717efd096400"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/detect_duplicates.py",
+      "repository_path": "plugins/client-file-preparation/scripts/detect_duplicates.py",
+      "sha256": "6d65563443e8be6eb08a97a89638e5e5fc035c27c34fbc0bbf793fe0e0d2ee81"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/extract_documents.py",
+      "repository_path": "plugins/client-file-preparation/scripts/extract_documents.py",
+      "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/client-file-preparation/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/model_handoff.py",
+      "repository_path": "plugins/client-file-preparation/scripts/model_handoff.py",
+      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
+      "sha256": "27c6dc9104e04cea7bcff287dec4315951fe3bf9ef07526a89845fd5b7eb255d"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "repository_path": "plugins/client-file-preparation/scripts/parse_fiscal_forms.py",
+      "sha256": "a18d78910d8015c4e41b2e0355724bc8df25dd5330b26b07b2785a2c24c384fe"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/review_session.py",
+      "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
+      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+    },
+    {
+      "path": "modules/client-file-preparation/scripts/scan_folder.py",
+      "repository_path": "plugins/client-file-preparation/scripts/scan_folder.py",
+      "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
+    },
+    {
+      "path": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
+      "repository_path": "plugins/client-file-preparation/skills/avviso-intake/SKILL.md",
+      "sha256": "252d339aab9e5ac2bf333dde9a881ae754f692a2016c67cb0014fb49336f2d5a"
+    },
+    {
+      "path": "skills/avviso-intake/SKILL.md",
+      "repository_path": "plugins/vera/skills/avviso-intake/SKILL.md",
+      "sha256": "f6745c2aaff399980554464aa0f54d5e4f92ad5bde66766f8dbbdb527ffd4fc6"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Una lettera arriva: cosa sappiamo davvero?",
+      "goal": "Preparare un primo memo che separa riferimenti leggibili, importi e informazioni da recuperare.",
+      "scenario": "Studio Arco riceve una lettera fittizia denominata avviso.pdf. Il testo riporta un protocollo, un importo di 2.400 EUR e una richiesta di risposta entro la data indicata nella lettera. La copia non contiene la prova di ricezione né un allegato citato.",
+      "request": "Vera, fammi un primo riepilogo e dimmi quali documenti mancano per valutarla.",
+      "scope": "Primo intake documentale. La data presente nel testo non è un termine legale calcolato o verificato e non viene creata alcuna scadenza in calendario.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Testo disponibile",
+        "Manca"
+      ],
+      "input_rows": [
+        [
+          "N1 · avviso.pdf, p. 1",
+          "Protocollo DEMO-24; importo 2.400 EUR",
+          "Qualificazione e conteggio da verificare"
+        ],
+        [
+          "N1 · p. 2",
+          "Risposta richiesta entro il 30 settembre 2026",
+          "Prova di ricezione"
+        ],
+        [
+          "N1 · p. 2",
+          "Richiamo all'allegato A",
+          "Allegato A"
+        ]
+      ],
+      "basis": "Ogni dato deriva dal testo della lettera fittizia N1. Il nome del file non stabilisce la natura dell'atto; l'intake conserva le incertezze sul significato e sui termini.",
+      "method": [
+        "Leggi la classificazione e la disposizione di estrazione; apri il documento prima di interpretarne i riferimenti.",
+        "Riporta protocollo, possibili date, importi e valuta con localizzatori della fonte. Segnala ogni elemento da verificare.",
+        "Consegna il memo e la tabella di date e importi, indicando i documenti da recuperare e la successiva verifica professionale."
+      ],
+      "result_title": "Primo intake · DEMO-24",
+      "conclusion": "Sono leggibili protocollo e importo. La valutazione dell'atto richiede prova di ricezione e allegato A.",
+      "output_columns": [
+        "Elemento",
+        "Valore letto",
+        "Stato"
+      ],
+      "output_rows": [
+        [
+          "Protocollo · N1 p. 1",
+          "DEMO-24",
+          "Estratto"
+        ],
+        [
+          "Importo · N1 p. 1",
+          "2.400 EUR",
+          "Da verificare nella qualificazione"
+        ],
+        [
+          "Data nel testo · N1 p. 2",
+          "30 settembre 2026",
+          "Non validata come termine legale"
+        ]
+      ],
+      "check": "Non trasformare una data estratta in una scadenza giuridica. Servono natura dell'atto, ricezione e fonti applicabili prima della valutazione.",
+      "question": "La copia è leggibile ma manca un allegato: il fascicolo è completo?",
+      "answer": "No. Si possono estrarre i riferimenti leggibili, mantenendo il fascicolo incompleto e chiedendo l'allegato citato.",
+      "practice": "Aggiungi l'allegato fittizio e verifica quali righe del memo cambiano.",
+      "next": "Nel caso reale seleziona lettera completa, allegati e prova di ricezione nello stesso incarico."
+    },
+    "en": {
+      "title": "A notice arrives: what do we actually know?",
+      "goal": "Prepare an initial memo separating readable references, amounts and evidence still to recover.",
+      "scenario": "Fictional Arco receives notice.pdf. It states a reference, EUR 2,400 and a response date. The supplied copy has no receipt evidence and refers to a missing attachment. The document's legal classification has not been established.",
+      "request": "Vera, summarize this notice and identify the documents needed to assess it.",
+      "scope": "Initial documentary intake. A date read from the notice is not a verified legal deadline or a calendar entry.",
+      "input_columns": [
+        "Fictional source",
+        "Available text",
+        "Missing evidence"
+      ],
+      "input_rows": [
+        [
+          "N1 · page 1",
+          "DEMO-24; EUR 2,400",
+          "Classification and amount assessment"
+        ],
+        [
+          "N1 · page 2",
+          "Response requested by 30 September 2026",
+          "Receipt evidence"
+        ],
+        [
+          "N1 · page 2",
+          "Attachment A referenced",
+          "Attachment A"
+        ]
+      ],
+      "basis": "All figures come from fictional N1. The filename does not establish the nature of the instrument; meaning and deadlines remain unverified.",
+      "method": [
+        "Read classification and extraction status, then inspect the source before interpreting its references.",
+        "Record reference, possible dates, amounts and currency with source locators. Mark every unresolved item.",
+        "Deliver the memo and dates-and-amounts table, identifying missing documents and the next professional check."
+      ],
+      "result_title": "Initial intake · DEMO-24",
+      "conclusion": "Reference and amount are readable. Assessing the notice requires receipt evidence and attachment A.",
+      "output_columns": [
+        "Item",
+        "Read value",
+        "Status"
+      ],
+      "output_rows": [
+        [
+          "Reference · N1 p. 1",
+          "DEMO-24",
+          "Extracted"
+        ],
+        [
+          "Amount · N1 p. 1",
+          "EUR 2,400",
+          "Meaning to verify"
+        ],
+        [
+          "Date in text · N1 p. 2",
+          "30 September 2026",
+          "Not validated as a legal deadline"
+        ]
+      ],
+      "check": "Do not promote an extracted date into a legal deadline. Classification, receipt and applicable sources matter.",
+      "question": "The copy is readable but an attachment is missing. Is the file complete?",
+      "answer": "No. Extract the readable references while keeping the file incomplete and requesting the cited attachment.",
+      "practice": "Add the fictional attachment and identify which memo entries change.",
+      "next": "For real intake, select the complete notice, attachments and receipt evidence in the same engagement."
+    },
+    "fr": {
+      "title": "Une notification arrive : que savons-nous ?",
+      "goal": "Préparer un premier mémo distinguant références lisibles, montants et pièces à récupérer.",
+      "scenario": "Le cabinet fictif Arco reçoit une lettre indiquant une référence, 2 400 EUR et une date de réponse. La copie ne contient pas de preuve de réception et cite une annexe absente. La nature juridique du document reste à établir.",
+      "request": "Vera, résume cette lettre et indique les pièces nécessaires pour l'évaluer.",
+      "scope": "Premier examen documentaire. Une date lue dans la lettre n'est pas un délai juridique vérifié ni une échéance enregistrée au calendrier.",
+      "input_columns": [
+        "Source fictive",
+        "Texte disponible",
+        "Élément manquant"
+      ],
+      "input_rows": [
+        [
+          "N1 · page 1",
+          "DEMO-24 ; 2 400 EUR",
+          "Qualification et vérification du montant"
+        ],
+        [
+          "N1 · page 2",
+          "Réponse demandée avant le 30 septembre 2026",
+          "Preuve de réception"
+        ],
+        [
+          "N1 · page 2",
+          "Annexe A citée",
+          "Annexe A"
+        ]
+      ],
+      "basis": "Les données proviennent de N1, entièrement fictive. Le nom du fichier ne détermine pas la nature de l'acte ; sens et délais restent à vérifier.",
+      "method": [
+        "Lis classification et état d'extraction, puis examine l'original avant d'interpréter les références.",
+        "Relève référence, dates possibles, montants et devise avec leurs localisateurs. Signale chaque point incertain.",
+        "Livre mémo et tableau des dates et montants, avec les pièces à récupérer et la prochaine vérification professionnelle."
+      ],
+      "result_title": "Premier examen · DEMO-24",
+      "conclusion": "Référence et montant sont lisibles. L'évaluation nécessite la preuve de réception et l'annexe A.",
+      "output_columns": [
+        "Élément",
+        "Valeur lue",
+        "Statut"
+      ],
+      "output_rows": [
+        [
+          "Référence · N1 p. 1",
+          "DEMO-24",
+          "Extraite"
+        ],
+        [
+          "Montant · N1 p. 1",
+          "2 400 EUR",
+          "Signification à vérifier"
+        ],
+        [
+          "Date du texte · N1 p. 2",
+          "30 septembre 2026",
+          "Non validée comme délai juridique"
+        ]
+      ],
+      "check": "Ne transforme pas une date extraite en délai juridique. Nature de l'acte, réception et sources applicables sont déterminantes.",
+      "question": "La copie est lisible mais une annexe manque. Le dossier est-il complet ?",
+      "answer": "Non. Les références lisibles peuvent être relevées tout en conservant l'état incomplet et en demandant l'annexe citée.",
+      "practice": "Ajoute l'annexe fictive et repère les lignes du mémo qui changent.",
+      "next": "Pour le cas réel, sélectionne lettre complète, annexes et preuve de réception dans le même dossier."
+    },
+    "de": {
+      "title": "Ein Schreiben trifft ein: Was wissen wir wirklich?",
+      "goal": "Einen Erstvermerk mit lesbaren Angaben, Beträgen und noch fehlenden Belegen erstellen.",
+      "scenario": "Arco erhält das fiktive notice.pdf mit Referenz, EUR 2.400 und einem Antwortdatum. Der Zustellnachweis und eine erwähnte Anlage fehlen. Die rechtliche Einordnung des Schreibens ist noch offen.",
+      "request": "Vera, fasse dieses Schreiben zusammen und benenne die für seine Beurteilung fehlenden Unterlagen.",
+      "scope": "Erste Dokumentensichtung. Ein ausgelesenes Datum ist keine geprüfte Rechtsfrist und kein Kalendereintrag.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Lesbarer Inhalt",
+        "Offener Punkt"
+      ],
+      "input_rows": [
+        [
+          "N1 · Seite 1",
+          "DEMO-24; EUR 2.400",
+          "Einordnung und Bedeutung des Betrags"
+        ],
+        [
+          "N1 · Seite 2",
+          "Antwort bis 30. September 2026 erbeten",
+          "Zustellnachweis"
+        ],
+        [
+          "N1 · Seite 2",
+          "Verweis auf Anlage A",
+          "Anlage A fehlt"
+        ]
+      ],
+      "basis": "Alle Werte stammen aus dem fiktiven N1. Der Dateiname bestimmt nicht die Rechtsnatur; Bedeutung und Fristen bleiben ungeprüft.",
+      "method": [
+        "Lies Einordnung und Extraktionsstatus und prüfe das Original vor der Interpretation.",
+        "Erfasse Referenz, mögliche Daten, Beträge und Währung mit Fundstellen. Kennzeichne offene Punkte.",
+        "Liefere Erstvermerk und Datums-/Betragstabelle mit fehlenden Unterlagen und nächstem fachlichem Prüfschritt."
+      ],
+      "result_title": "Erstsichtung · DEMO-24",
+      "conclusion": "Referenz und Betrag sind lesbar. Zur Beurteilung fehlen Zustellnachweis und Anlage A.",
+      "output_columns": [
+        "Angabe",
+        "Gelesener Wert",
+        "Status"
+      ],
+      "output_rows": [
+        [
+          "Referenz · N1 S. 1",
+          "DEMO-24",
+          "Extrahiert"
+        ],
+        [
+          "Betrag · N1 S. 1",
+          "EUR 2.400",
+          "Bedeutung zu prüfen"
+        ],
+        [
+          "Datum im Text · N1 S. 2",
+          "30. September 2026",
+          "Keine bestätigte Rechtsfrist"
+        ]
+      ],
+      "check": "Aus einem extrahierten Datum darf keine bestätigte Rechtsfrist werden. Einordnung, Zustellung und einschlägige Quellen sind entscheidend.",
+      "question": "Die Kopie ist lesbar, aber eine Anlage fehlt. Ist die Akte vollständig?",
+      "answer": "Nein. Übernimm die lesbaren Angaben, halte die Akte als unvollständig fest und fordere die genannte Anlage an.",
+      "practice": "Ergänze die fiktive Anlage. Welche Einträge des Vermerks ändern sich?",
+      "next": "Wähle für echte Arbeit das vollständige Schreiben, seine Anlagen und den Zustellnachweis im selben Mandat."
+    },
+    "es": {
+      "title": "Llega un escrito: ¿qué sabemos realmente?",
+      "goal": "Preparar una nota inicial separando referencias legibles, importes y pruebas pendientes.",
+      "scenario": "Arco recibe el ficticio notice.pdf con referencia, EUR 2.400 y una fecha de respuesta. Faltan el justificante de recepción y un anexo citado. Todavía no se ha establecido la naturaleza jurídica del escrito.",
+      "request": "Vera, resume este escrito e identifica los documentos necesarios para evaluarlo.",
+      "scope": "Primera lectura documental. Una fecha extraída no es un plazo jurídico validado ni una entrada en el calendario.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Texto disponible",
+        "Prueba pendiente"
+      ],
+      "input_rows": [
+        [
+          "N1 · página 1",
+          "DEMO-24; EUR 2.400",
+          "Clasificación y significado del importe"
+        ],
+        [
+          "N1 · página 2",
+          "Respuesta solicitada antes del 30 de septiembre de 2026",
+          "Justificante de recepción"
+        ],
+        [
+          "N1 · página 2",
+          "Referencia al anexo A",
+          "Anexo A"
+        ]
+      ],
+      "basis": "Todos los valores proceden del ficticio N1. El nombre del archivo no determina su naturaleza; significado y plazos siguen sin verificar.",
+      "method": [
+        "Lee clasificación y estado de extracción y examina la fuente antes de interpretar sus referencias.",
+        "Registra referencia, posibles fechas, importes y moneda con ubicaciones. Marca cada punto pendiente.",
+        "Entrega nota y tabla de fechas e importes, indicando documentos ausentes y la siguiente comprobación profesional."
+      ],
+      "result_title": "Primera lectura · DEMO-24",
+      "conclusion": "Referencia e importe son legibles. Para evaluar el escrito faltan el justificante de recepción y el anexo A.",
+      "output_columns": [
+        "Elemento",
+        "Valor leído",
+        "Estado"
+      ],
+      "output_rows": [
+        [
+          "Referencia · N1 p. 1",
+          "DEMO-24",
+          "Extraído"
+        ],
+        [
+          "Importe · N1 p. 1",
+          "EUR 2.400",
+          "Significado por verificar"
+        ],
+        [
+          "Fecha del texto · N1 p. 2",
+          "30 de septiembre de 2026",
+          "No validada como plazo jurídico"
+        ]
+      ],
+      "check": "No conviertas una fecha extraída en un plazo jurídico confirmado. Importan clasificación, recepción y fuentes aplicables.",
+      "question": "La copia es legible, pero falta un anexo. ¿Está completo el expediente?",
+      "answer": "No. Extrae las referencias legibles, mantén el expediente incompleto y solicita el anexo mencionado.",
+      "practice": "Añade el anexo ficticio e identifica qué entradas de la nota cambian.",
+      "next": "Selecciona escrito completo, anexos y justificante de recepción dentro del mismo encargo."
+    }
+  }
+}

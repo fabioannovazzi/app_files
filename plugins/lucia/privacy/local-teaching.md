@@ -18,6 +18,15 @@ the compatibility local-only marker, including the actual private portable ledge
 A selected real assignment follows its specialist's data and review contract;
 teaching state remains local even after completion. No Claude Cowork teaching.
 
-Reviewed 2026-09-13 against scripts/local_onboarding.py, local_teaching.py,
+Reviewed 2026-09-14 against scripts/local_onboarding.py, local_teaching.py,
 local_onboarding_case.py, onboarding_session_start.py, the bundled shared runtime,
 the learn-with-lucia skill and its local onboarding/session references.
+
+The prepared course library uses local stdlib code, authored case material and
+current-source hashes. It renders escaped HTML in a fresh directory without a
+network/model call, external assets, profile changes or completion records.
+Course sources remain bound to Lucia’s own catalog. The native host may read the
+selected course for conversation. An authored specimen is not a newly executed
+workflow; supplementary actual starter outputs preserve separate provenance.
+Reviewed also against scripts/local_courses.py, assets/courses and the shared
+courseware module. No additional recipient or transport is introduced.

@@ -1,0 +1,447 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "reporting-engine",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/reporting-engine/references/semantic_layer.md",
+      "repository_path": "plugins/clara/modules/reporting-engine/references/semantic_layer.md",
+      "sha256": "c103dc12178030c525ba03157cc7f1780e7b2bca289f94f2e78f1a108106791d"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/budget_report.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/budget_report.py",
+      "sha256": "41fdfb0830e3e25fab15abc2cccbc9e2ec9d94a36a30953d89e358dcee3c875a"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/check_compatibility.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/check_compatibility.py",
+      "sha256": "edae39a15858bedfb260ca3b0c6f4cbadb0e9aa1f3bc660cb9a3c066dd0490cf"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/check_dependencies.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/check_dependencies.py",
+      "sha256": "e35544e87537ac9afeb033745946471505477ad99c705ca679fa1e924c3c3078"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/dataset_intake.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/dataset_intake.py",
+      "sha256": "5eadc9503f9663b719078cb2a26a898ddcc47105f1c635546031f395142157d5"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/mechanical_acceptance.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/mechanical_acceptance.py",
+      "sha256": "e64d8153a877b4799ccd26715276d2c5f44bee527980030ebfa2add6d50333a0"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/profile_dataset.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/profile_dataset.py",
+      "sha256": "e13f877e22eb7426e8b2dfaf8b3fa86e47ea41e2ffe4675eb084fa6ffddd00fc"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/render_capability.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/render_capability.py",
+      "sha256": "334f4dc73f38f0f42733947e2383c01c0eb17f7ef0fab7efc2559fb3c9ae7faa"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/render_contract_registry.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/render_contract_registry.py",
+      "sha256": "e20ca3ed1f29e57ce70f0c7014aea0425e147caa8664d9de24bd5d539fde2803"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/reporting_adapters.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/reporting_adapters.py",
+      "sha256": "d33dfa1f4bd029e2033c8444d4c5c09444d082bd54a9f67e279cf11e49013104"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/reporting_contract.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/reporting_contract.py",
+      "sha256": "00aa88c9c4b531deab0db7d4312d6c8657982a468c48d090f3819ec7825a323d"
+    },
+    {
+      "path": "modules/reporting-engine/scripts/semantic_layer.py",
+      "repository_path": "plugins/clara/modules/reporting-engine/scripts/semantic_layer.py",
+      "sha256": "6c0c3da6518c55ead30e9b23ee152bb1f5904ca2bb16990a6ee549b242ae4e1c"
+    },
+    {
+      "path": "skills/reporting-engine/SKILL.md",
+      "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
+      "sha256": "99dd75ddf0ccc90b0f9aae5e0ca987765f6fdb86108ac9896a00959d300ec3af"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [
+    {
+      "path": "files/executed-starter/actual-budget.xlsx",
+      "sha256": "8d6512c94dc0157476844eed608082feac49d89156d832c127525f82b19a839a"
+    },
+    {
+      "path": "files/executed-starter/management_control_dashboard.html",
+      "sha256": "d2a4b71ba9a789eb70e250c8ff13608f01b16892a88330d81a3e73e2bd25cbb3"
+    },
+    {
+      "path": "files/executed-starter/management_control_pack.json",
+      "sha256": "c569d486044ab3697ddf90045ba55e57810b2f3a59348eeae143a334028d3c26"
+    },
+    {
+      "path": "files/executed-starter/management_control_pack.xlsx",
+      "sha256": "e1fea33a4c014685350c7f200b31f51b38b1c73a8f410d4dcdd4200a64c37e71"
+    },
+    {
+      "path": "files/executed-starter/provenance.json",
+      "sha256": "3601699418996c2b1cbdf2fa2afdf0e2fb6d9dee17d70f68d228666873df98b7"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Prima del grafico, il significato dei dati",
+      "goal": "Passare da un dataset a un confronto leggibile usando ruoli e metriche riveduti.",
+      "scenario": "Il dataset fittizio riporta vendite nette: gennaio 40.000 EUR e febbraio 50.000 EUR. Un campo 'Discount' non è presente. Le note della fonte confermano che Sales è già al netto degli sconti, quindi sottrarli ancora sarebbe errato.",
+      "request": "Clara, mostrami l'andamento delle vendite e spiegami quali dati stai usando.",
+      "scope": "Intake, significato delle metriche e confronto temporale. La lezione non trasforma l'assenza di una misura in zero né attribuisce capacità di Clara a Vera.",
+      "input_columns": [
+        "Periodo fittizio",
+        "Sales",
+        "Nota della fonte"
+      ],
+      "input_rows": [
+        [
+          "2026-01",
+          "40.000 EUR",
+          "Vendite nette"
+        ],
+        [
+          "2026-02",
+          "50.000 EUR",
+          "Vendite nette"
+        ],
+        [
+          "Discount separato",
+          "Assente",
+          "Già incorporato in Sales"
+        ]
+      ],
+      "basis": "R1 contiene due mesi; R2 definisce Sales come vendite nette. Il ruolo Discount è assente come misura separata in questo dataset, non un importo pari a zero.",
+      "method": [
+        "Esegui l'intake e leggi dati, profilo e note. Rivedi significato, aggregazione e ruoli Sales, Discount e COGS; un'intestazione non basta.",
+        "Seleziona una capacità compatibile con le metriche rivedute e genera il grafico attraverso l'adapter di Clara. Conserva richiesta e prove dell'output.",
+        "Apri il risultato, verifica valori, unità, periodi e conclusione. Per upload successivi riusa il contratto semantico stabile quando compatibile, senza reinventarlo a ogni file."
+      ],
+      "result_title": "Vendite nette: +10.000 EUR tra gennaio e febbraio",
+      "conclusion": "Le vendite nette passano da 40.000 a 50.000 EUR: +10.000 EUR, pari a +25%. Non disponiamo di una misura separata degli sconti o dei costi.",
+      "output_columns": [
+        "Indicatore",
+        "Valore",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Gennaio",
+          "40.000 EUR",
+          "R1 · vendite nette"
+        ],
+        [
+          "Febbraio",
+          "50.000 EUR",
+          "R1 · vendite nette"
+        ],
+        [
+          "Variazione",
+          "+10.000 EUR · +25%",
+          "Base gennaio 40.000 EUR"
+        ]
+      ],
+      "check": "Compatibilità tecnica e corretto significato della metrica sono controlli diversi. Un dataset può avere colonne valide e una mappatura semanticamente sbagliata.",
+      "question": "Non c'è Discount: possiamo dire che non sono stati concessi sconti?",
+      "answer": "No. La fonte dice che Sales è netto; non fornisce una misura separata. L'assenza della colonna non dimostra assenza di sconti.",
+      "practice": "Aggiungi marzo con la stessa definizione di Sales e verifica il riuso del contratto e l'aggiornamento del grafico.",
+      "next": "Seleziona CSV, Excel o Parquet e le note che spiegano le metriche. Per Actual/Budget Clara usa la propria route di budget nello stesso workflow."
+    },
+    "en": {
+      "title": "Before the chart, establish what the data means",
+      "goal": "Move from a dataset to a readable comparison using reviewed roles and metrics.",
+      "scenario": "The fictional dataset reports net sales of EUR 40,000 in January and EUR 50,000 in February. There is no separate Discount field. Source notes confirm that Sales already includes discounts, so subtracting them again would be wrong.",
+      "request": "Clara, show the sales trend and explain which data you are using.",
+      "scope": "Intake, metric meaning and a time comparison. Missing measures are not zero, and Clara's capability is not presented as Vera's.",
+      "input_columns": [
+        "Fictional period",
+        "Sales",
+        "Source note"
+      ],
+      "input_rows": [
+        [
+          "2026-01",
+          "EUR 40,000",
+          "Net sales"
+        ],
+        [
+          "2026-02",
+          "EUR 50,000",
+          "Net sales"
+        ],
+        [
+          "Separate Discount",
+          "Absent",
+          "Already reflected in Sales"
+        ]
+      ],
+      "basis": "R1 has two months; R2 defines Sales as net. Discount is absent as a separate measure, not a recorded zero.",
+      "method": [
+        "Run dataset intake and inspect data, profile and notes. Review metric meaning, aggregation and Sales, Discount and COGS roles; headers alone are insufficient.",
+        "Select a compatible capability and render through Clara's adapter, preserving the effective request and output proof.",
+        "Open the result and verify values, units, periods and conclusion. Reuse a compatible stable semantic contract on subsequent uploads rather than recreating meaning every time."
+      ],
+      "result_title": "Net sales rise by EUR 10,000",
+      "conclusion": "Net sales move from EUR 40,000 to EUR 50,000, a EUR 10,000 or 25% increase. Separate discounts and costs are unavailable.",
+      "output_columns": [
+        "Indicator",
+        "Value",
+        "Basis"
+      ],
+      "output_rows": [
+        [
+          "January",
+          "EUR 40,000",
+          "R1 · net sales"
+        ],
+        [
+          "February",
+          "EUR 50,000",
+          "R1 · net sales"
+        ],
+        [
+          "Change",
+          "+EUR 10,000 · +25%",
+          "January base EUR 40,000"
+        ]
+      ],
+      "check": "Technical compatibility and semantic correctness are different checks. Valid columns can still have a wrong business mapping.",
+      "question": "With no Discount column, can we state that no discounts were granted?",
+      "answer": "No. Sales is net and no separate discount measure is supplied. Column absence does not establish absence of discounts.",
+      "practice": "Add March under the same Sales definition, then verify contract reuse and the refreshed chart.",
+      "next": "Select CSV, Excel or Parquet with metric notes. Actual/Budget reports use Clara's own budget route within this workflow."
+    },
+    "fr": {
+      "title": "Avant le graphique, le sens des données",
+      "goal": "Passer d'un dataset à un comparatif lisible avec des rôles et métriques revus.",
+      "scenario": "Le dataset fictif indique 40 000 EUR de ventes nettes en janvier et 50 000 en février. Il n'a pas de champ Discount séparé. Les notes confirment que Sales comprend déjà les remises : les retrancher encore serait erroné.",
+      "request": "Clara, montre l'évolution des ventes et explique les données utilisées.",
+      "scope": "Intake, sens des métriques et comparaison temporelle. Une mesure absente n'est pas zéro ; cette capacité de Clara n'est pas présentée comme celle de Vera.",
+      "input_columns": [
+        "Période fictive",
+        "Sales",
+        "Note source"
+      ],
+      "input_rows": [
+        [
+          "2026-01",
+          "40 000 EUR",
+          "Ventes nettes"
+        ],
+        [
+          "2026-02",
+          "50 000 EUR",
+          "Ventes nettes"
+        ],
+        [
+          "Discount séparé",
+          "Absent",
+          "Déjà compris dans Sales"
+        ]
+      ],
+      "basis": "R1 contient deux mois et R2 définit les ventes nettes. Discount est absent comme mesure séparée, pas égal à zéro.",
+      "method": [
+        "Exécute l'intake et lis données, profil et notes. Revois sens, agrégation et rôles Sales, Discount et COGS ; les en-têtes ne suffisent pas.",
+        "Choisis une capacité compatible et produis le graphique via l'adapter Clara en conservant demande effective et preuve du résultat.",
+        "Ouvre et vérifie valeurs, unités, périodes et conclusion. Réutilise un contrat sémantique stable compatible lors des imports suivants."
+      ],
+      "result_title": "Les ventes nettes progressent de 10 000 EUR",
+      "conclusion": "Les ventes nettes passent de 40 000 à 50 000 EUR : +10 000 EUR, soit +25 %. Remises séparées et coûts ne sont pas disponibles.",
+      "output_columns": [
+        "Indicateur",
+        "Valeur",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Janvier",
+          "40 000 EUR",
+          "R1 · ventes nettes"
+        ],
+        [
+          "Février",
+          "50 000 EUR",
+          "R1 · ventes nettes"
+        ],
+        [
+          "Écart",
+          "+10 000 EUR · +25 %",
+          "Base janvier 40 000 EUR"
+        ]
+      ],
+      "check": "Compatibilité technique et exactitude du sens sont différentes. Des colonnes valides peuvent avoir un mauvais mapping métier.",
+      "question": "L'absence de Discount permet-elle d'affirmer qu'aucune remise n'a été accordée ?",
+      "answer": "Non. Sales est net et aucune mesure distincte n'est fournie. L'absence de colonne ne prouve pas l'absence de remises.",
+      "practice": "Ajoute mars avec la même définition et vérifie réutilisation du contrat et actualisation du graphique.",
+      "next": "Sélectionne CSV, Excel ou Parquet et les notes des métriques. Actual/Budget utilise la route budgétaire propre à Clara dans ce workflow."
+    },
+    "de": {
+      "title": "Vor der Grafik klären, was die Daten bedeuten",
+      "goal": "Aus einem Datensatz einen lesbaren Vergleich mit geprüften Rollen und Kennzahlen erstellen.",
+      "scenario": "Der fiktive Datensatz zeigt Nettoumsatz von EUR 40.000 im Januar und EUR 50.000 im Februar. Ein separates Discount-Feld fehlt. Quellennotizen bestätigen, dass Sales Rabatte bereits berücksichtigt; ein erneuter Abzug wäre falsch.",
+      "request": "Clara, zeige den Umsatzverlauf und erkläre die verwendeten Daten.",
+      "scope": "Datenaufnahme, Kennzahlenbedeutung und Zeitvergleich. Fehlende Größen sind nicht null; Claras Fähigkeit wird nicht als Veras ausgegeben.",
+      "input_columns": [
+        "Fiktive Periode",
+        "Sales",
+        "Quellennotiz"
+      ],
+      "input_rows": [
+        [
+          "2026-01",
+          "EUR 40.000",
+          "Nettoumsatz"
+        ],
+        [
+          "2026-02",
+          "EUR 50.000",
+          "Nettoumsatz"
+        ],
+        [
+          "Separates Discount",
+          "Fehlt",
+          "Bereits in Sales berücksichtigt"
+        ]
+      ],
+      "basis": "R1 enthält zwei Monate; R2 definiert Sales als netto. Discount fehlt als eigene Kennzahl und ist kein erfasster Nullwert.",
+      "method": [
+        "Führe die Datenaufnahme aus und prüfe Daten, Profil und Notizen. Prüfe Bedeutung, Aggregation sowie Sales-, Discount- und COGS-Rollen; Spaltennamen allein reichen nicht.",
+        "Wähle eine kompatible Fähigkeit und rendere über Claras Adapter unter Erhalt des tatsächlichen Auftrags und Ausgabenachweises.",
+        "Öffne das Ergebnis und prüfe Werte, Einheiten, Perioden und Schlussfolgerung. Verwende bei späteren Uploads einen passenden stabilen Bedeutungsvertrag erneut."
+      ],
+      "result_title": "Nettoumsatz steigt um EUR 10.000",
+      "conclusion": "Nettoumsatz steigt von EUR 40.000 auf EUR 50.000: EUR 10.000 oder 25 % mehr. Separate Rabatte und Kosten sind nicht verfügbar.",
+      "output_columns": [
+        "Kennzahl",
+        "Wert",
+        "Grundlage"
+      ],
+      "output_rows": [
+        [
+          "Januar",
+          "EUR 40.000",
+          "R1 · Nettoumsatz"
+        ],
+        [
+          "Februar",
+          "EUR 50.000",
+          "R1 · Nettoumsatz"
+        ],
+        [
+          "Veränderung",
+          "+EUR 10.000 · +25 %",
+          "Januarbasis EUR 40.000"
+        ]
+      ],
+      "check": "Technische Kompatibilität und inhaltliche Richtigkeit sind verschiedene Prüfungen. Gültige Spalten können geschäftlich falsch zugeordnet sein.",
+      "question": "Dürfen wir ohne Discount-Spalte sagen, es seien keine Rabatte gewährt worden?",
+      "answer": "Nein. Sales ist netto, ein eigener Rabattwert fehlt. Eine fehlende Spalte beweist nicht das Fehlen von Rabatten.",
+      "practice": "Ergänze März mit derselben Sales-Definition und prüfe Wiederverwendung des Vertrags und aktualisierte Grafik.",
+      "next": "Wähle CSV, Excel oder Parquet mit Kennzahlennotizen. Ist-/Budget-Berichte nutzen Claras eigenen Budgetweg innerhalb dieses Workflows."
+    },
+    "es": {
+      "title": "Antes del gráfico, establecer qué significan los datos",
+      "goal": "Pasar de un conjunto de datos a una comparación legible con funciones y métricas revisadas.",
+      "scenario": "El conjunto ficticio informa ventas netas de EUR 40.000 en enero y EUR 50.000 en febrero. Falta Discount separado. Las notas confirman que Sales ya incluye descuentos; restarlos otra vez sería incorrecto.",
+      "request": "Clara, muestra la evolución de ventas y explica qué datos utilizas.",
+      "scope": "Recepción, significado de métricas y comparación temporal. Las medidas ausentes no son cero y la capacidad de Clara no se presenta como de Vera.",
+      "input_columns": [
+        "Periodo ficticio",
+        "Sales",
+        "Nota de fuente"
+      ],
+      "input_rows": [
+        [
+          "2026-01",
+          "EUR 40.000",
+          "Ventas netas"
+        ],
+        [
+          "2026-02",
+          "EUR 50.000",
+          "Ventas netas"
+        ],
+        [
+          "Discount separado",
+          "Ausente",
+          "Ya reflejado en Sales"
+        ]
+      ],
+      "basis": "R1 contiene dos meses; R2 define Sales como neto. Discount falta como medida separada, no consta como cero.",
+      "method": [
+        "Ejecuta la recepción del conjunto e inspecciona datos, perfil y notas. Revisa significado, agregación y funciones Sales, Discount y COGS; las cabeceras solas no bastan.",
+        "Selecciona una capacidad compatible y renderiza mediante el adaptador de Clara conservando petición efectiva y prueba de salida.",
+        "Abre el resultado y verifica valores, unidades, periodos y conclusión. Reutiliza un contrato semántico estable compatible en futuras cargas en vez de reconstruir significados cada vez."
+      ],
+      "result_title": "Las ventas netas suben EUR 10.000",
+      "conclusion": "Pasan de EUR 40.000 a EUR 50.000: EUR 10.000 o 25 % más. No están disponibles descuentos separados ni costes.",
+      "output_columns": [
+        "Indicador",
+        "Valor",
+        "Base"
+      ],
+      "output_rows": [
+        [
+          "Enero",
+          "EUR 40.000",
+          "R1 · ventas netas"
+        ],
+        [
+          "Febrero",
+          "EUR 50.000",
+          "R1 · ventas netas"
+        ],
+        [
+          "Variación",
+          "+EUR 10.000 · +25 %",
+          "Base enero EUR 40.000"
+        ]
+      ],
+      "check": "Compatibilidad técnica y corrección semántica son controles distintos. Columnas válidas pueden tener una correspondencia comercial equivocada.",
+      "question": "Sin columna Discount, ¿podemos afirmar que no se concedieron descuentos?",
+      "answer": "No. Sales es neto y no se aporta la medida separada. La ausencia de columna no demuestra ausencia de descuentos.",
+      "practice": "Añade marzo con la misma definición de Sales y verifica reutilización del contrato y gráfico actualizado.",
+      "next": "Selecciona CSV, Excel o Parquet con notas de métricas. Los informes Real/Presupuesto usan la vía presupuestaria propia de Clara dentro de este workflow."
+    }
+  },
+  "visual": {
+    "column": 1,
+    "bars": [
+      [
+        0,
+        40000
+      ],
+      [
+        1,
+        50000
+      ]
+    ]
+  }
+}

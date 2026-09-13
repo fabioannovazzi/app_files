@@ -15,7 +15,12 @@
     "assets/onboarding",
     "repository/plugins/_shared/vendor/modules/desktop_teaching",
     "repository/static/shared/learn-with-clara",
-    "repository/static/shared/product-function-pages.js"
+    "repository/static/shared/product-function-pages.js",
+    "scripts/local_courses.py",
+    "assets/courses",
+    "marketplace_skill_instructions.json",
+    "repository/plugins/_shared/vendor/modules/courseware",
+    "repository/scripts/course_materials"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -23,7 +28,7 @@
       {
         "id": "native-teaching-context",
         "purpose": "Understand professional interests and explain actual selected workflow results",
-        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts."
+        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts. The selected prepared synthetic course, worked specimen and attached starter output may also be read to support the lesson."
       }
     ]
   },
@@ -52,12 +57,16 @@
     {
       "id": "local-teaching-state",
       "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; optional startup checks are suppressed while pending or active. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract."
+    },
+    {
+      "id": "prepared-course-integrity",
+      "control": "The local stdlib course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. It has no network or model client and performs no profile or completion write. Prepared specimens and actual supplementary outputs remain distinct; no tutorial hosted call or execution receipt is created."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-13",
+    "reviewed_at": "2026-09-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ff7c5a632d4f78addbe5262a7c0efc431ce46b7379d014f534b5be4ee6ce438d"
+    "source_fingerprint": "961449eb7a34de0e713370467b8ca7dfcefd0c11fc276aacecc0a2ddce596ed6"
   }
 }

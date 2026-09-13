@@ -1,0 +1,353 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "aml-review",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/aml-review/references/professional-method.md",
+      "repository_path": "plugins/aml-review/references/professional-method.md",
+      "sha256": "f22de477ed8503adc21dd9824139c69fbc69f0525e93d6e32e8dd09f33aa266e"
+    },
+    {
+      "path": "modules/aml-review/references/record-contract.md",
+      "repository_path": "plugins/aml-review/references/record-contract.md",
+      "sha256": "1951c123cce3fabce7c33650f4992c3298a8d348907080604f7f4d0e5d8c149d"
+    },
+    {
+      "path": "modules/aml-review/scripts/aml_review.py",
+      "repository_path": "plugins/aml-review/scripts/aml_review.py",
+      "sha256": "53119fdc589085b3ce951372e88af444f8801ce02728785945c2d4664eea10c1"
+    },
+    {
+      "path": "modules/aml-review/scripts/check_dependencies.py",
+      "repository_path": "plugins/aml-review/scripts/check_dependencies.py",
+      "sha256": "15d8f34c69f08edbd769e737202cfa1100a1830eaa7a3f3ffd9fc771fb818e0c"
+    },
+    {
+      "path": "modules/aml-review/skills/aml-review/SKILL.md",
+      "repository_path": "plugins/aml-review/skills/aml-review/SKILL.md",
+      "sha256": "852cd17187b2dd3dfe4ec4f61f169ec0ad842a9535cdbed378ad6eb9c66147df"
+    },
+    {
+      "path": "skills/aml-review/SKILL.md",
+      "repository_path": "plugins/vera/skills/aml-review/SKILL.md",
+      "sha256": "d0950dac3b19af6dc845d3866bb75d066262c71036d6ba6c9a7f70e7c35efc26"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un cambiamento da capire, prima di giudicare",
+      "goal": "Ricostruire un cambiamento societario, distinguere fatti e spiegazioni e preparare una revisione AML con domande mirate.",
+      "scenario": "Luna Componenti consegna una visura aggiornata che mostra un nuovo socio società. Il cliente indica la stessa persona fisica come titolare effettivo, ma non fornisce ancora la catena di controllo della nuova società. Un pagamento insolito è descritto come anticipo a un fornitore.",
+      "request": "Vera, rivedi le nuove informazioni senza rifare tutta l'apertura cliente.",
+      "scope": "Revisione documentale interna. Nessuno screening esterno o giudizio automatico di sospetto; le decisioni restano al professionista.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Informazione",
+        "Stato"
+      ],
+      "input_rows": [
+        [
+          "A1 · precedente valutazione",
+          "Assetto precedente ricostruito",
+          "Storico"
+        ],
+        [
+          "A2 · nuova visura",
+          "Nuovo socio società",
+          "Documentato"
+        ],
+        [
+          "A3 · dichiarazione cliente",
+          "Controllo invariato; pagamento come anticipo",
+          "Da corroborare"
+        ]
+      ],
+      "basis": "Il confronto A1–A2 dimostra una modifica della partecipazione diretta. A3 è una dichiarazione, non la prova della catena di controllo né della causale economica del pagamento.",
+      "method": [
+        "Riprendi la valutazione precedente e identifica esattamente cosa è cambiato, conservando la cronologia.",
+        "Ricostruisci proprietà e controllo dalle fonti; per ogni incoerenza considera spiegazioni alternative e documenti risolutivi.",
+        "Prepara un memo con fatti, limiti e domande. Registra una decisione professionale solo dopo la revisione esplicita della proposta."
+      ],
+      "result_title": "Aggiornamento AML · due verifiche mirate",
+      "conclusion": "La modifica societaria è documentata. Il controllo finale e la spiegazione del pagamento richiedono evidenze ulteriori.",
+      "output_columns": [
+        "Questione",
+        "Richiesta interna proposta",
+        "Conclusione disponibile"
+      ],
+      "output_rows": [
+        [
+          "Nuovo socio · A2",
+          "Documenti sulla catena di controllo",
+          "Partecipazione diretta modificata"
+        ],
+        [
+          "Anticipo · A3",
+          "Ordine, contratto e riscontro del beneficiario",
+          "Causale riferita dal cliente"
+        ]
+      ],
+      "check": "Un elemento insolito o un documento mancante non equivale a sospetto. Uno screening non eseguito resta sconosciuto, non negativo.",
+      "question": "Possiamo dichiarare il controllo invariato perché il cliente lo conferma?",
+      "answer": "Possiamo riportare la dichiarazione e la sua fonte. La ricostruzione del controllo rimane da corroborare con i documenti della nuova partecipazione.",
+      "practice": "Aggiungiamo la catena di controllo: quali domande possiamo chiudere e quali restano aperte?",
+      "next": "Seleziona la precedente valutazione e le sole nuove evidenze pertinenti; conserva la revisione nel medesimo incarico."
+    },
+    "en": {
+      "title": "Understand the change before drawing a conclusion",
+      "goal": "Reconstruct an ownership change and prepare an AML review with evidence and targeted questions.",
+      "scenario": "Fictional Luna Components supplies a new company extract showing a corporate shareholder. The client names the same individual as beneficial owner, but the new ownership chain is missing. An unusual payment is described as a supplier advance.",
+      "request": "Vera, review the new information without repeating the entire client intake.",
+      "scope": "Internal documentary review under the Italian workflow. No external screening, automatic suspicion judgment or professional decision is implied.",
+      "input_columns": [
+        "Fictional source",
+        "Information",
+        "Status"
+      ],
+      "input_rows": [
+        [
+          "A1 · prior assessment",
+          "Previous ownership reconstructed",
+          "Historical"
+        ],
+        [
+          "A2 · new extract",
+          "New corporate shareholder",
+          "Documented"
+        ],
+        [
+          "A3 · client statement",
+          "Unchanged control; supplier advance",
+          "Needs corroboration"
+        ]
+      ],
+      "basis": "A1–A2 establish a direct-shareholding change. A3 is a statement, not proof of ultimate control or the payment's economic purpose.",
+      "method": [
+        "Reuse the prior assessment and identify the precise changes while retaining its history.",
+        "Reconstruct ownership and control from sources. For discrepancies, compare explanations and identify evidence that would resolve them.",
+        "Prepare facts, limitations and questions. Record professional decisions only after explicit review of the exact proposal."
+      ],
+      "result_title": "Two focused checks in the AML update",
+      "conclusion": "The shareholding change is documented. Ultimate control and the payment explanation need further evidence.",
+      "output_columns": [
+        "Issue",
+        "Proposed internal request",
+        "Supported conclusion"
+      ],
+      "output_rows": [
+        [
+          "New shareholder · A2",
+          "Ownership and control-chain documents",
+          "Direct participation changed"
+        ],
+        [
+          "Advance · A3",
+          "Order, contract and beneficiary evidence",
+          "Client-reported purpose"
+        ]
+      ],
+      "check": "An unusual feature or missing document does not equal suspicion. Screening that was not performed remains unknown, not negative.",
+      "question": "Can we confirm unchanged control because the client says so?",
+      "answer": "We can report the statement and its source. The control reconstruction still needs corroborating ownership documents.",
+      "practice": "Add the ownership chain: which questions can close and which remain?",
+      "next": "Select the prior assessment and relevant new evidence in the same engagement."
+    },
+    "fr": {
+      "title": "Comprendre le changement avant de conclure",
+      "goal": "Reconstituer une évolution de l'actionnariat et préparer une revue AML avec des questions ciblées.",
+      "scenario": "L'entreprise fictive Luna fournit un nouvel extrait montrant un associé personne morale. Le client désigne le même bénéficiaire effectif, mais ne fournit pas la nouvelle chaîne de contrôle. Un paiement inhabituel est présenté comme une avance fournisseur.",
+      "request": "Vera, revois ces nouvelles informations sans refaire toute l'entrée en relation.",
+      "scope": "Revue documentaire interne selon le workflow italien. Aucun filtrage externe, jugement automatique de soupçon ou décision professionnelle n'est implicite.",
+      "input_columns": [
+        "Source fictive",
+        "Information",
+        "Statut"
+      ],
+      "input_rows": [
+        [
+          "A1 · ancienne évaluation",
+          "Ancien actionnariat reconstitué",
+          "Historique"
+        ],
+        [
+          "A2 · nouvel extrait",
+          "Nouvel associé personne morale",
+          "Documenté"
+        ],
+        [
+          "A3 · déclaration client",
+          "Contrôle inchangé ; avance fournisseur",
+          "À corroborer"
+        ]
+      ],
+      "basis": "A1–A2 établissent le changement de participation directe. A3 est une déclaration, pas la preuve du contrôle final ni de la finalité économique du paiement.",
+      "method": [
+        "Reprends l'évaluation antérieure et identifie précisément les changements en conservant l'historique.",
+        "Reconstitue propriété et contrôle à partir des sources. Compare les explications des incohérences et les documents susceptibles de les résoudre.",
+        "Prépare faits, limites et questions. Ne consigne une décision professionnelle qu'après revue explicite de la proposition exacte."
+      ],
+      "result_title": "Deux vérifications ciblées dans la revue AML",
+      "conclusion": "Le changement d'actionnariat est documenté. Le contrôle final et l'explication du paiement nécessitent d'autres preuves.",
+      "output_columns": [
+        "Question",
+        "Demande interne proposée",
+        "Conclusion étayée"
+      ],
+      "output_rows": [
+        [
+          "Nouvel associé · A2",
+          "Documents de la chaîne de contrôle",
+          "Participation directe modifiée"
+        ],
+        [
+          "Avance · A3",
+          "Commande, contrat et bénéficiaire",
+          "Finalité déclarée par le client"
+        ]
+      ],
+      "check": "Un fait inhabituel ou un document manquant n'équivaut pas à un soupçon. Un contrôle non effectué reste inconnu, et non négatif.",
+      "question": "Peut-on confirmer le contrôle inchangé sur la seule déclaration du client ?",
+      "answer": "On peut rapporter la déclaration et sa source. La reconstitution du contrôle nécessite encore les documents qui la corroborent.",
+      "practice": "Ajoute la chaîne de contrôle : quelles questions peuvent être closes et lesquelles restent ouvertes ?",
+      "next": "Sélectionne l'évaluation précédente et les nouvelles preuves pertinentes dans le même dossier."
+    },
+    "de": {
+      "title": "Eine Veränderung erst verstehen, dann beurteilen",
+      "goal": "Eine Eigentumsänderung rekonstruieren und eine Geldwäscheprüfung mit Belegen und gezielten Fragen vorbereiten.",
+      "scenario": "Die fiktive Luna Components legt einen neuen Registerauszug mit einer Gesellschaft als neuer Gesellschafterin vor. Der Mandant nennt weiterhin dieselbe natürliche Person als wirtschaftlich Berechtigten; die neue Beteiligungskette fehlt. Eine ungewöhnliche Zahlung wird als Lieferantenvorauszahlung erklärt.",
+      "request": "Vera, prüfe die neuen Informationen auf Grundlage der bisherigen Mandantenprüfung.",
+      "scope": "Interne Dokumentenprüfung im italienischen Workflow. Externe Abfragen, eine automatische Verdachtsbewertung oder eine fachliche Entscheidung werden nicht vorgetäuscht.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Information",
+        "Status"
+      ],
+      "input_rows": [
+        [
+          "A1 · bisherige Beurteilung",
+          "Frühere Eigentumsstruktur rekonstruiert",
+          "Historisch"
+        ],
+        [
+          "A2 · neuer Registerauszug",
+          "Neue Gesellschaft als Gesellschafterin",
+          "Dokumentiert"
+        ],
+        [
+          "A3 · Mandantenerklärung",
+          "Unveränderte Kontrolle; Lieferantenvorauszahlung",
+          "Zu belegen"
+        ]
+      ],
+      "basis": "A1 und A2 belegen eine Änderung der direkten Beteiligung. A3 ist eine Erklärung, kein Nachweis der letztlichen Kontrolle oder des wirtschaftlichen Zahlungsgrunds.",
+      "method": [
+        "Verwende die frühere Beurteilung und bestimme die konkreten Änderungen, ohne ihre Historie zu überschreiben.",
+        "Rekonstruiere Eigentum und Kontrolle aus den Quellen. Vergleiche bei Abweichungen mögliche Erklärungen und benötigte Belege.",
+        "Bereite Fakten, Grenzen und Rückfragen vor. Erfasse fachliche Entscheidungen erst nach ausdrücklicher Prüfung des konkreten Vorschlags."
+      ],
+      "result_title": "Zwei gezielte Prüfungen für die Aktualisierung",
+      "conclusion": "Die Beteiligungsänderung ist dokumentiert. Die letztliche Kontrolle und die Zahlungserklärung benötigen weitere Belege.",
+      "output_columns": [
+        "Thema",
+        "Vorgeschlagene interne Rückfrage",
+        "Belegte Aussage"
+      ],
+      "output_rows": [
+        [
+          "Neue Gesellschafterin · A2",
+          "Unterlagen zur Eigentums- und Kontrollkette",
+          "Direkte Beteiligung geändert"
+        ],
+        [
+          "Vorauszahlung · A3",
+          "Bestellung, Vertrag und Zahlungsempfänger belegen",
+          "Vom Mandanten erklärter Zweck"
+        ]
+      ],
+      "check": "Eine Auffälligkeit oder fehlende Unterlage ist nicht automatisch ein Verdacht. Eine nicht durchgeführte Abfrage bleibt unbekannt, nicht negativ.",
+      "question": "Können wir unveränderte Kontrolle allein aufgrund der Mandantenaussage bestätigen?",
+      "answer": "Wir können die Aussage mit ihrer Quelle wiedergeben. Die Kontrollstruktur braucht weiterhin bestätigende Eigentumsunterlagen.",
+      "practice": "Ergänze die Beteiligungskette. Welche Fragen sind geklärt, welche bleiben offen?",
+      "next": "Wähle die bisherige Beurteilung und die neuen Belege desselben Mandats."
+    },
+    "es": {
+      "title": "Entender el cambio antes de concluir",
+      "goal": "Reconstruir un cambio de propiedad y preparar una revisión de prevención del blanqueo con pruebas y preguntas concretas.",
+      "scenario": "La ficticia Luna Components entrega un extracto registral con una sociedad como nueva socia. El cliente mantiene que el titular real es la misma persona, pero falta la nueva cadena de propiedad. Explica un pago inusual como anticipo a un proveedor.",
+      "request": "Vera, revisa la información nueva a partir de la evaluación anterior del cliente.",
+      "scope": "Revisión documental interna del workflow italiano. No se simulan consultas externas, una valoración automática de sospecha ni decisiones profesionales.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Información",
+        "Estado"
+      ],
+      "input_rows": [
+        [
+          "A1 · evaluación anterior",
+          "Propiedad previa reconstruida",
+          "Histórico"
+        ],
+        [
+          "A2 · nuevo extracto",
+          "Nueva sociedad socia",
+          "Documentado"
+        ],
+        [
+          "A3 · declaración del cliente",
+          "Control sin cambios; anticipo a proveedor",
+          "Pendiente de corroboración"
+        ]
+      ],
+      "basis": "A1 y A2 acreditan el cambio de participación directa. A3 es una declaración, no prueba del control último ni del propósito económico del pago.",
+      "method": [
+        "Reutiliza la evaluación anterior e identifica los cambios precisos conservando su historial.",
+        "Reconstruye propiedad y control a partir de fuentes. Compara explicaciones de las discrepancias e identifica pruebas que las resolverían.",
+        "Prepara hechos, límites y preguntas. Registra decisiones profesionales solo después de revisar expresamente la propuesta concreta."
+      ],
+      "result_title": "Dos comprobaciones para actualizar la evaluación",
+      "conclusion": "El cambio societario está documentado. El control último y la explicación del pago necesitan más pruebas.",
+      "output_columns": [
+        "Cuestión",
+        "Petición interna propuesta",
+        "Conclusión respaldada"
+      ],
+      "output_rows": [
+        [
+          "Nueva socia · A2",
+          "Documentos de propiedad y cadena de control",
+          "Cambió la participación directa"
+        ],
+        [
+          "Anticipo · A3",
+          "Pedido, contrato y beneficiario",
+          "Finalidad declarada por el cliente"
+        ]
+      ],
+      "check": "Una anomalía o un documento ausente no equivalen a sospecha. Una consulta no realizada queda desconocida, no negativa.",
+      "question": "¿Podemos confirmar que el control no cambió porque lo dice el cliente?",
+      "answer": "Podemos reproducir la declaración con su fuente. La reconstrucción del control necesita documentos de propiedad que la corroboren.",
+      "practice": "Añade la cadena de propiedad. ¿Qué preguntas se cierran y cuáles siguen abiertas?",
+      "next": "Selecciona la evaluación anterior y las pruebas nuevas pertinentes dentro del mismo encargo."
+    }
+  }
+}

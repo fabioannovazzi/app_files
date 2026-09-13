@@ -1,0 +1,381 @@
+{
+  "vera/adeguati-assetti": {
+    "title": "Wird die dokumentierte Regel tatsächlich angewendet?",
+    "goal": "Betriebliche Strukturen anhand ihrer tatsächlichen Anwendung beurteilen und nachvollziehbare Verbesserungen vorschlagen.",
+    "scenario": "Die fiktive Werkstatt Arco beschäftigt 18 Personen. Laut Verfahrensanweisung ist jeden Freitag ein Liquiditätsbericht erforderlich. Vorhanden sind die Anweisung, ein Juni-Bericht und ein Juli-Protokoll, in dem die Geschäftsleitung häufigere Berichte verlangt. Weitere Berichte könnten außerhalb der übergebenen Akte liegen.",
+    "request": "Vera, zeige mir, ob die Liquiditätsberichterstattung genutzt wird und was wir das Unternehmen fragen sollten.",
+    "scope": "Ein einzelner Informationsprozess. Der Fall erlaubt kein Gesamturteil über die Unternehmensorganisation.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Beleg",
+      "Grenze"
+    ],
+    "input_rows": [
+      [
+        "P1 · Anweisung § 3",
+        "Bericht jeden Freitag; verantwortlich: Verwaltung",
+        "Vorgesehener Ablauf"
+      ],
+      [
+        "R1 · Bericht vom 26. Juni",
+        "Liquidität und Zahlungen der Folgewoche",
+        "Eine beobachtete Periode"
+      ],
+      [
+        "V1 · Protokoll vom 10. Juli",
+        "Geschäftsleitung verlangt häufigere Berichte",
+        "Kein vollständiger Versandnachweis"
+      ]
+    ],
+    "basis": "P1 beschreibt die Konzeption, R1 belegt einen Bericht und V1 eine Anforderung. Daraus folgt nicht, dass alle anderen Berichte fehlen.",
+    "method": [
+      "Trenne dokumentierte Regeln, Aussagen und Belege der tatsächlichen Anwendung. Verweise auf die genaue Fundstelle.",
+      "Vergleiche unregelmäßige Berichterstattung mit der möglichen Erklärung einer unvollständigen Akte. Formuliere eine klärende Frage.",
+      "Bereite Feststellung, Auswirkung, Maßnahme und Umsetzungsnachweis vor. Verantwortliche und Termine bleiben bis zur Prüfung Vorschläge."
+    ],
+    "result_title": "Liquiditätsberichte: Kontinuität noch zu belegen",
+    "conclusion": "Der Prozess ist dokumentiert und wurde mindestens einmal ausgeführt. Regelmäßigkeit und tatsächliche Nutzung sind noch zu prüfen.",
+    "output_columns": [
+      "Beobachtung",
+      "Vorgeschlagene Maßnahme",
+      "Umsetzungsnachweis"
+    ],
+    "output_rows": [
+      [
+        "Häufigkeit unklar · P1/R1",
+        "Versandnachweise für Juni und Juli beschaffen",
+        "Datierte Berichte und Empfänger"
+      ],
+      [
+        "Anforderung der Geschäftsleitung · V1",
+        "Entscheidungen mit schnellerem Informationsbedarf klären",
+        "Protokolle und anschließende Nutzung"
+      ]
+    ],
+    "check": "Fehlende Unterlagen begrenzen die Beurteilung; sie beweisen nicht, dass der Prozess nie stattfindet. Ein positiver Kassenbestand belegt keine angemessene Organisation.",
+    "question": "Eine neu unterschriebene Verfahrensanweisung trifft ein. Können wir die Feststellung schließen?",
+    "answer": "Sie aktualisiert die Konzeption. Für die tatsächliche Anwendung brauchen wir weiterhin Berichte und Belege ihrer Nutzung.",
+    "practice": "Ergänze zwei Berichte und eine Entscheidung der Geschäftsleitung. Welche Schlussfolgerungen sind jetzt belegt?",
+    "next": "Wähle einen realen Prozess, seine Anweisung und Belege seiner Anwendung."
+  },
+  "vera/aml-review": {
+    "title": "Eine Veränderung erst verstehen, dann beurteilen",
+    "goal": "Eine Eigentumsänderung rekonstruieren und eine Geldwäscheprüfung mit Belegen und gezielten Fragen vorbereiten.",
+    "scenario": "Die fiktive Luna Components legt einen neuen Registerauszug mit einer Gesellschaft als neuer Gesellschafterin vor. Der Mandant nennt weiterhin dieselbe natürliche Person als wirtschaftlich Berechtigten; die neue Beteiligungskette fehlt. Eine ungewöhnliche Zahlung wird als Lieferantenvorauszahlung erklärt.",
+    "request": "Vera, prüfe die neuen Informationen auf Grundlage der bisherigen Mandantenprüfung.",
+    "scope": "Interne Dokumentenprüfung im italienischen Workflow. Externe Abfragen, eine automatische Verdachtsbewertung oder eine fachliche Entscheidung werden nicht vorgetäuscht.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Information",
+      "Status"
+    ],
+    "input_rows": [
+      [
+        "A1 · bisherige Beurteilung",
+        "Frühere Eigentumsstruktur rekonstruiert",
+        "Historisch"
+      ],
+      [
+        "A2 · neuer Registerauszug",
+        "Neue Gesellschaft als Gesellschafterin",
+        "Dokumentiert"
+      ],
+      [
+        "A3 · Mandantenerklärung",
+        "Unveränderte Kontrolle; Lieferantenvorauszahlung",
+        "Zu belegen"
+      ]
+    ],
+    "basis": "A1 und A2 belegen eine Änderung der direkten Beteiligung. A3 ist eine Erklärung, kein Nachweis der letztlichen Kontrolle oder des wirtschaftlichen Zahlungsgrunds.",
+    "method": [
+      "Verwende die frühere Beurteilung und bestimme die konkreten Änderungen, ohne ihre Historie zu überschreiben.",
+      "Rekonstruiere Eigentum und Kontrolle aus den Quellen. Vergleiche bei Abweichungen mögliche Erklärungen und benötigte Belege.",
+      "Bereite Fakten, Grenzen und Rückfragen vor. Erfasse fachliche Entscheidungen erst nach ausdrücklicher Prüfung des konkreten Vorschlags."
+    ],
+    "result_title": "Zwei gezielte Prüfungen für die Aktualisierung",
+    "conclusion": "Die Beteiligungsänderung ist dokumentiert. Die letztliche Kontrolle und die Zahlungserklärung benötigen weitere Belege.",
+    "output_columns": [
+      "Thema",
+      "Vorgeschlagene interne Rückfrage",
+      "Belegte Aussage"
+    ],
+    "output_rows": [
+      [
+        "Neue Gesellschafterin · A2",
+        "Unterlagen zur Eigentums- und Kontrollkette",
+        "Direkte Beteiligung geändert"
+      ],
+      [
+        "Vorauszahlung · A3",
+        "Bestellung, Vertrag und Zahlungsempfänger belegen",
+        "Vom Mandanten erklärter Zweck"
+      ]
+    ],
+    "check": "Eine Auffälligkeit oder fehlende Unterlage ist nicht automatisch ein Verdacht. Eine nicht durchgeführte Abfrage bleibt unbekannt, nicht negativ.",
+    "question": "Können wir unveränderte Kontrolle allein aufgrund der Mandantenaussage bestätigen?",
+    "answer": "Wir können die Aussage mit ihrer Quelle wiedergeben. Die Kontrollstruktur braucht weiterhin bestätigende Eigentumsunterlagen.",
+    "practice": "Ergänze die Beteiligungskette. Welche Fragen sind geklärt, welche bleiben offen?",
+    "next": "Wähle die bisherige Beurteilung und die neuen Belege desselben Mandats."
+  },
+  "vera/archive-organization": {
+    "title": "Einen Ordner ordnen und Versionen erhalten",
+    "goal": "Einen prüfbaren Verschiebeplan erstellen, bevor Dateien verändert werden.",
+    "scenario": "Ein fiktiver Ordner enthält zwei bytegleiche Rechnungskopien und zwei unterschiedliche Vertragsversionen mit unklaren Namen. Das Beispiel zeigt einen Probelauf; keine Datei wurde verschoben.",
+    "request": "Vera, schlage eine Ordnung für diesen Mandantenordner vor und zeige die geplanten Änderungen.",
+    "scope": "Ein ausgewählter Ordner bis zur Planprüfung. Die tatsächliche Ausführung erfordert eine separate ausdrückliche Bestätigung.",
+    "input_columns": [
+      "Fiktive Datei",
+      "Inhalt",
+      "Identität"
+    ],
+    "input_rows": [
+      [
+        "scan-a.pdf",
+        "Rechnung INV-07, 10. Juni",
+        "Bytegleich mit copy.pdf"
+      ],
+      [
+        "copy.pdf",
+        "Rechnung INV-07, 10. Juni",
+        "Bytegleich mit scan-a.pdf"
+      ],
+      [
+        "agreement.docx",
+        "Vertragsentwurf",
+        "Andere Bytes als unterschriebene Fassung"
+      ],
+      [
+        "agreement-signed.pdf",
+        "Vertrag mit sichtbarer Unterschrift",
+        "Eigenständige Version"
+      ]
+    ],
+    "basis": "Übereinstimmende Prüfsummen belegen identische Rechnungsdateien. Die Verträge müssen gelesen werden; ähnliche Namen und Größen belegen keine Dublette.",
+    "method": [
+      "Erstelle eine Bestandsaufnahme und prüfe genug Inhalt, um jede Datei einzuordnen.",
+      "Plane Ziele gemäß Kanzleiregeln und führe einen Probelauf aus. Identische Kopien können zur Quarantäne vorgeschlagen werden; unterschiedliche Versionen bleiben erhalten.",
+      "Speichere Prüfentscheidungen. Zeige Anzahl und Ziele vor der separaten Ausführungsfreigabe und bewahre das Änderungsjournal für eine mögliche Rücknahme auf."
+    ],
+    "result_title": "Ordnungsplan · noch nichts ausgeführt",
+    "conclusion": "Eine Rechnungskopie kann für die Quarantäne vorgeschlagen werden. Vertragsentwurf und unterschriebene Fassung bleiben getrennte Versionen.",
+    "output_columns": [
+      "Quelle",
+      "Vorschlag",
+      "Prüfung"
+    ],
+    "output_rows": [
+      [
+        "scan-a.pdf",
+        "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
+        "Ziel bestätigen"
+      ],
+      [
+        "copy.pdf",
+        "Da_verificare/Duplicati_esatti/…",
+        "Quarantäne vorgeschlagen"
+      ],
+      [
+        "Beide Vertragsversionen",
+        "In Contratti/2026 erhalten",
+        "Versionen beschreiben"
+      ]
+    ],
+    "check": "Gespeicherte Prüfentscheidungen erstellen den freigegebenen Plan; sie verschieben noch keine Dateien. Bei Ausführung müssen die Quellen weiterhin zur Bestandsaufnahme passen.",
+    "question": "Der unterschriebene Vertrag heißt fast wie der Entwurf. Können wir einen löschen?",
+    "answer": "Nein. Es sind verschiedene Versionen, keine exakten Dubletten. Beide bleiben erhalten, sofern keine gesondert geprüfte Maßnahme etwas anderes vorsieht.",
+    "practice": "Ändere ein vorgeschlagenes Ziel und prüfe einen möglichen Konflikt mit vorhandenen Dateien.",
+    "next": "Übe mit einem kleinen fiktiven Ordner. Wähle für echte Arbeit zuerst den registrierten Mandanten und die geltenden Regeln."
+  },
+  "vera/avviso-intake": {
+    "title": "Ein Schreiben trifft ein: Was wissen wir wirklich?",
+    "goal": "Einen Erstvermerk mit lesbaren Angaben, Beträgen und noch fehlenden Belegen erstellen.",
+    "scenario": "Arco erhält das fiktive notice.pdf mit Referenz, EUR 2.400 und einem Antwortdatum. Der Zustellnachweis und eine erwähnte Anlage fehlen. Die rechtliche Einordnung des Schreibens ist noch offen.",
+    "request": "Vera, fasse dieses Schreiben zusammen und benenne die für seine Beurteilung fehlenden Unterlagen.",
+    "scope": "Erste Dokumentensichtung. Ein ausgelesenes Datum ist keine geprüfte Rechtsfrist und kein Kalendereintrag.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Lesbarer Inhalt",
+      "Offener Punkt"
+    ],
+    "input_rows": [
+      [
+        "N1 · Seite 1",
+        "DEMO-24; EUR 2.400",
+        "Einordnung und Bedeutung des Betrags"
+      ],
+      [
+        "N1 · Seite 2",
+        "Antwort bis 30. September 2026 erbeten",
+        "Zustellnachweis"
+      ],
+      [
+        "N1 · Seite 2",
+        "Verweis auf Anlage A",
+        "Anlage A fehlt"
+      ]
+    ],
+    "basis": "Alle Werte stammen aus dem fiktiven N1. Der Dateiname bestimmt nicht die Rechtsnatur; Bedeutung und Fristen bleiben ungeprüft.",
+    "method": [
+      "Lies Einordnung und Extraktionsstatus und prüfe das Original vor der Interpretation.",
+      "Erfasse Referenz, mögliche Daten, Beträge und Währung mit Fundstellen. Kennzeichne offene Punkte.",
+      "Liefere Erstvermerk und Datums-/Betragstabelle mit fehlenden Unterlagen und nächstem fachlichem Prüfschritt."
+    ],
+    "result_title": "Erstsichtung · DEMO-24",
+    "conclusion": "Referenz und Betrag sind lesbar. Zur Beurteilung fehlen Zustellnachweis und Anlage A.",
+    "output_columns": [
+      "Angabe",
+      "Gelesener Wert",
+      "Status"
+    ],
+    "output_rows": [
+      [
+        "Referenz · N1 S. 1",
+        "DEMO-24",
+        "Extrahiert"
+      ],
+      [
+        "Betrag · N1 S. 1",
+        "EUR 2.400",
+        "Bedeutung zu prüfen"
+      ],
+      [
+        "Datum im Text · N1 S. 2",
+        "30. September 2026",
+        "Keine bestätigte Rechtsfrist"
+      ]
+    ],
+    "check": "Aus einem extrahierten Datum darf keine bestätigte Rechtsfrist werden. Einordnung, Zustellung und einschlägige Quellen sind entscheidend.",
+    "question": "Die Kopie ist lesbar, aber eine Anlage fehlt. Ist die Akte vollständig?",
+    "answer": "Nein. Übernimm die lesbaren Angaben, halte die Akte als unvollständig fest und fordere die genannte Anlage an.",
+    "practice": "Ergänze die fiktive Anlage. Welche Einträge des Vermerks ändern sich?",
+    "next": "Wähle für echte Arbeit das vollständige Schreiben, seine Anlagen und den Zustellnachweis im selben Mandat."
+  },
+  "vera/bandi-agevolazioni": {
+    "title": "Eine passende Förderung ist noch kein belegter Anspruch",
+    "goal": "Fördersuche und beleggestützte Vorbereitung für ein bestimmtes Unternehmen unterscheiden.",
+    "scenario": "Ein vollständig fiktiver Aufruf fördert Maschinen produzierender Unternehmen in einer bestimmten Region. Arco plant EUR 80.000 Investition. Nachweise zum Betriebsstandort und Beginn der Ausgaben fehlen.",
+    "request": "Vera, zeige, wie aus einem gefundenen Förderaufruf konkrete Prüfungen für dieses Unternehmen werden.",
+    "scope": "Der DEMO-Aufruf existiert nicht und nimmt keine Anträge an. Echte Förderungen benötigen aktuelle amtliche Quellen.",
+    "input_columns": [
+      "Fiktive Quelle",
+      "Bedingung oder Fakt",
+      "Beleg"
+    ],
+    "input_rows": [
+      [
+        "B1 · DEMO-Aufruf § 2",
+        "Betriebsstätte in der Förderregion",
+        "Standort nicht dokumentiert"
+      ],
+      [
+        "B1 · § 4",
+        "Ausgabenbeginn nach Antragstellung",
+        "Bestelldatum fehlt"
+      ],
+      [
+        "C1 · Arco-Projekt",
+        "Maschinen: EUR 80.000",
+        "Angebot vorhanden"
+      ]
+    ],
+    "basis": "B1 definiert nur die Bedingungen des Beispiels. C1 belegt ein Vorhaben, nicht die Erfüllung aller Voraussetzungen. Eine Förderquote wird nicht erfunden.",
+    "method": [
+      "Bestimme das Suchziel und prüfe relevante Quellen. Verknüpfe jede Gelegenheit mit ihrer genauen Quelle und Version.",
+      "Vergleiche jede Voraussetzung mit den Unternehmensbelegen und benenne fehlende Unterlagen.",
+      "Erstelle Förderübersicht, Prüfliste und prüfbares Dossier. Unterscheide Relevanz, belegte Voraussetzungen und Dokumentenstand; stelle keinen Antrag."
+    ],
+    "result_title": "DEMO · Vorbereitung noch offen",
+    "conclusion": "Das Vorhaben passt zum Gegenstand des Aufrufs. Zwei entscheidende Bedingungen sind noch nicht belegt.",
+    "output_columns": [
+      "Prüfung",
+      "Befund",
+      "Nächster Beleg"
+    ],
+    "output_rows": [
+      [
+        "Investitionsbezug · B1/C1",
+        "Maschinen beschrieben",
+        "Technischen Vergleich vervollständigen"
+      ],
+      [
+        "Standort · B1 § 2",
+        "Nicht geprüft",
+        "Betriebsstättennachweis"
+      ],
+      [
+        "Ausgabenbeginn · B1 § 4",
+        "Nicht geprüft",
+        "Bestellung und Ausgabenchronologie"
+      ]
+    ],
+    "check": "Relevanz beweist keine Förderfähigkeit. Eine Übersicht ersetzt nicht den amtlichen Aufruf mit Anlagen.",
+    "question": "Das Angebot passt perfekt. Können wir Arco als förderfähig bezeichnen?",
+    "answer": "Nein. Standort, Zeitpunkt und alle weiteren Bedingungen der vollständigen Quelle müssen geprüft werden. Liefere die offenen Vorbereitungspunkte.",
+    "practice": "Ergänze eine fiktive Bestellung vor der Antragstellung und prüfe die zeitliche Bedingung erneut.",
+    "next": "Wähle eine echte Förderung und ein Unternehmen; prüfe die aktuelle amtliche Quelle vor jeder Zusage."
+  },
+  "vera/browser-automation": {
+    "title": "Einen wiederholbaren Browserschritt beibringen",
+    "goal": "Aus einem beobachteten Ablauf eine lokal prüfbare Fähigkeit mit klaren Abbruchbedingungen entwickeln.",
+    "scenario": "Ein fiktives lokales Portal zeigt ein Dokument und eine Download-Schaltfläche. Wiederholt werden soll genau dieser Download. Die Übungsseite enthält keine Zugangsdaten, Zahlungen oder Mandantenunterlagen.",
+    "request": "Vera, lerne dieses Dokument aus dem Testportal herunterzuladen und zeige die entstandene Datei.",
+    "scope": "Lokale fiktive Website und ein Lese-/Downloadvorgang. Ein Zugang zu einem echten Buchhaltungssystem wird nicht vorgetäuscht.",
+    "input_columns": [
+      "Fiktives Seitenelement",
+      "Beobachtbarer Beleg",
+      "Grenze"
+    ],
+    "input_rows": [
+      [
+        "Dokumentenliste",
+        "Ein Dokument namens DEMO-01",
+        "Synthetischer Inhalt"
+      ],
+      [
+        "Download-Schaltfläche",
+        "synthetic-download.txt",
+        "Ein vorgesehener Vorgang"
+      ],
+      [
+        "Erwartete Datei",
+        "Kennzeichnender Text des Beispiels",
+        "Öffnen und prüfen"
+      ]
+    ],
+    "basis": "Der Ablauf beruht auf der beobachteten Seite und dem tatsächlichen Dateiinhalt. Eine vorhandene Schaltfläche belegt keinen erfolgreichen Download.",
+    "method": [
+      "Beobachte die Website und definiere Ziel, erlaubten Umfang und Abbruchbedingungen.",
+      "Erstelle die Fähigkeit anhand tatsächlich beobachteter Elemente. Teste lokal und bewahre Belege der Schritte und Ergebnisse auf.",
+      "Wiederhole den erlaubten Schritt, öffne die Datei und vergleiche ihren Inhalt. Bei Änderungen an Seite oder Bedienelementen muss die Fähigkeit überprüft werden."
+    ],
+    "result_title": "DEMO-01 herunterladen · Ergebnis prüfen",
+    "conclusion": "Das Ergebnis ist das richtige Dokument und ein Ablauf, der erkennt, wann er nicht fortfahren kann.",
+    "output_columns": [
+      "Schritt",
+      "Erforderlicher Beleg",
+      "Falls er fehlt"
+    ],
+    "output_rows": [
+      [
+        "Dokument auswählen",
+        "DEMO-01 auf der Seite identifiziert",
+        "Stoppen und prüfen"
+      ],
+      [
+        "Herunterladen",
+        "Datei am Ziel vorhanden",
+        "Keinen Erfolg behaupten"
+      ],
+      [
+        "Inhalt prüfen",
+        "Erwarteter Text in geöffneter Datei",
+        "Abweichendes Ergebnis melden"
+      ]
+    ],
+    "check": "Ein erfolgreicher Klick belegt keinen richtigen Download. Eine veränderte Seite verlangt neue Beobachtung, keine erfundenen Selektoren oder übersprungene Freigabe.",
+    "question": "Die Schaltfläche funktioniert, die Datei enthält aber eine Fehlerseite. War der Schritt erfolgreich?",
+    "answer": "Nein. Entscheidend ist der tatsächliche Inhalt. Bewahre den Fehlerbeleg auf und stoppe, ohne den Dokumentenerwerb als erfolgreich zu melden.",
+    "practice": "Nutze die Testseite, ändere danach das verfügbare Dokument und prüfe, ob das Ergebnis erneut kontrolliert wird.",
+    "next": "Beginne auf einer echten Website mit genau einem erlaubten Vorgang und einem tatsächlich verfügbaren Browserzugang."
+  }
+}

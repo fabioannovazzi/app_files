@@ -1,0 +1,396 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "sales-plan",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/sales-plan/scripts/check_dependencies.py",
+      "repository_path": "plugins/sales-plan/scripts/check_dependencies.py",
+      "sha256": "8b08dcc85f7ff8e36e4496e9d4cedd64663540281839ffe3a6073b771e9fe138"
+    },
+    {
+      "path": "modules/sales-plan/scripts/model_use.py",
+      "repository_path": "plugins/sales-plan/scripts/model_use.py",
+      "sha256": "a0930f5a5321885eae9c4885eeb7e8e604194f4a928a58eaa9b80453bedb8408"
+    },
+    {
+      "path": "modules/sales-plan/scripts/plan_contract_kernel.py",
+      "repository_path": "plugins/sales-plan/scripts/plan_contract_kernel.py",
+      "sha256": "e3c8dc36fbf616b45ac6192de68ef93aadd9a0e56ed2fc93fceb3c05b0257661"
+    },
+    {
+      "path": "modules/sales-plan/scripts/prepare_sales_plan_case.py",
+      "repository_path": "plugins/sales-plan/scripts/prepare_sales_plan_case.py",
+      "sha256": "c9d75ec65768a2aebc50d98fad0f3d04107cb4cd49f14ec504fdd3a24ac3c8c7"
+    },
+    {
+      "path": "modules/sales-plan/scripts/run_plan.py",
+      "repository_path": "plugins/sales-plan/scripts/run_plan.py",
+      "sha256": "ef97fda91c08cb9592c3fe7e492ddb0a6d1a83cf17a9066099c3233388a1d44d"
+    },
+    {
+      "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
+      "repository_path": "plugins/sales-plan/skills/sales-plan/SKILL.md",
+      "sha256": "8311e07bd1d5b9608bec60280680a5464b89ea552aba28380b0155baf0eb0d2c"
+    },
+    {
+      "path": "skills/sales-plan/SKILL.md",
+      "repository_path": "plugins/vera/skills/sales-plan/SKILL.md",
+      "sha256": "cbbfa9185f2273a48910f70961d963071e867e1e2182143f724d763d63f79cf5"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Vendite in crescita: quantità, prezzo o cambio?",
+      "goal": "Tradurre una richiesta commerciale in ipotesi di piano precise prima di calcolare.",
+      "scenario": "La riga Actual fittizia vende 100 unità a 20 USD, con cambio 0,90 EUR per USD. Il professionista propone +10% di unità e un USD più debole del 5% contro EUR. Il prezzo in USD rimane invariato.",
+      "request": "Vera, prepara il piano con più volumi e un dollaro più debole, poi rileggimi le ipotesi.",
+      "scope": "Piano vendite da Actual e variazioni percentuali confermate. Non prevede costi o margini assenti, non riempie mesi mancanti e non sceglie automaticamente le ipotesi.",
+      "input_columns": [
+        "Dato o ipotesi fittizia",
+        "Valore",
+        "Significato"
+      ],
+      "input_rows": [
+        [
+          "Actual · S1",
+          "100 × 20 USD × 0,90",
+          "1.800 EUR"
+        ],
+        [
+          "A1 · unità",
+          "+10%",
+          "110 unità"
+        ],
+        [
+          "A2 · cambio EUR per USD",
+          "−5%",
+          "0,855 EUR per USD"
+        ]
+      ],
+      "basis": "S1 è la riga Actual. A1 e A2 sono le due ipotesi esplicite del caso; la direzione del cambio è valuta di report per unità di valuta della transazione.",
+      "method": [
+        "Ispeziona colonne e membri effettivi; rileggi driver, ambito, periodi, priorità e direzione del cambio prima del calcolo.",
+        "Risolvi eventuali sovrapposizioni fra ipotesi e conferma le basi di sconti o costi quando presenti. Esegui la ricetta corrente sugli Actual riveduti.",
+        "Leggi Plan, registro delle ipotesi, riconciliazione e limiti. Mantieni indisponibili le misure che dipendono da dati mancanti."
+      ],
+      "result_title": "Più unità, cambio meno favorevole",
+      "conclusion": "Il Plan produce 110 × 20 × 0,855 = 1.881 EUR, cioè +81 EUR rispetto agli Actual. Il +10% di volume diventa +4,5% in valuta di report.",
+      "output_columns": [
+        "Scenario",
+        "Quantità e cambio",
+        "Vendite EUR"
+      ],
+      "output_rows": [
+        [
+          "Actual",
+          "100 unità · 0,90 EUR/USD",
+          "1.800"
+        ],
+        [
+          "Plan",
+          "110 unità · 0,855 EUR/USD",
+          "1.881"
+        ],
+        [
+          "Differenza",
+          "Ipotesi A1 + A2",
+          "+81 · +4,5%"
+        ]
+      ],
+      "check": "'Vendite +10%' è ambiguo finché non significa quantità, prezzo o vendite lorde. Un cambio invertito cambia il risultato.",
+      "question": "Per un dollaro più debole aumentiamo il cambio da 0,90 a 0,945?",
+      "answer": "No. Con EUR per USD, il dollaro più debole riduce il cambio del 5% a 0,855. La direzione va riletta prima del calcolo.",
+      "practice": "Mantieni il cambio costante e confronta il Plan per isolare l'effetto delle unità.",
+      "next": "Seleziona gli Actual mensili e descrivi le variazioni desiderate; conferma la tabella delle ipotesi preparata da Vera."
+    },
+    "en": {
+      "title": "Sales growth: volume, price or exchange rate?",
+      "goal": "Translate a commercial request into precise planning assumptions before calculating.",
+      "scenario": "A fictional Actual row sells 100 units at USD 20 with EUR 0.90 per USD. The professional proposes 10% more units and a dollar 5% weaker against EUR. The USD unit price remains unchanged.",
+      "request": "Vera, prepare the Plan with higher volume and a weaker dollar, then read back the assumptions.",
+      "scope": "Sales planning from reviewed Actuals and confirmed percentage changes. Missing costs, margins and months are not invented.",
+      "input_columns": [
+        "Fictional fact or assumption",
+        "Value",
+        "Meaning"
+      ],
+      "input_rows": [
+        [
+          "Actual · S1",
+          "100 × USD 20 × 0.90",
+          "EUR 1,800"
+        ],
+        [
+          "A1 · units",
+          "+10%",
+          "110 units"
+        ],
+        [
+          "A2 · EUR per USD",
+          "−5%",
+          "EUR 0.855 per USD"
+        ]
+      ],
+      "basis": "S1 is the Actual row. A1 and A2 are explicit case assumptions. The rate means reporting-currency units per transaction-currency unit.",
+      "method": [
+        "Inspect actual columns and members. Read back drivers, exact scope, periods, priority and exchange-rate direction.",
+        "Resolve overlapping assumptions and confirm discount or cost bases when supplied. Execute the current recipe on reviewed Actuals.",
+        "Read Plan, assumption ledger, reconciliation and limitations. Keep measures dependent on missing inputs unavailable."
+      ],
+      "result_title": "More units, a less favorable exchange rate",
+      "conclusion": "Plan revenue is 110 × 20 × 0.855 = EUR 1,881, up EUR 81. A 10% unit increase becomes 4.5% growth in reporting currency.",
+      "output_columns": [
+        "Scenario",
+        "Volume and rate",
+        "Revenue EUR"
+      ],
+      "output_rows": [
+        [
+          "Actual",
+          "100 units · 0.90 EUR/USD",
+          "1,800"
+        ],
+        [
+          "Plan",
+          "110 units · 0.855 EUR/USD",
+          "1,881"
+        ],
+        [
+          "Difference",
+          "A1 + A2",
+          "+81 · +4.5%"
+        ]
+      ],
+      "check": "'Sales increase 10%' is ambiguous until it means units, price or gross sales. Reversing the rate changes the result.",
+      "question": "For a weaker dollar, should 0.90 increase to 0.945?",
+      "answer": "No. With EUR per USD, a 5% weaker dollar reduces the rate to 0.855. Confirm the direction before calculating.",
+      "practice": "Keep the rate constant and compare Plan results to isolate the unit effect.",
+      "next": "Select monthly Actuals, describe desired changes and confirm Vera's structured assumption read-back."
+    },
+    "fr": {
+      "title": "Croissance des ventes : volumes, prix ou change ?",
+      "goal": "Traduire une demande commerciale en hypothèses précises avant de calculer.",
+      "scenario": "Une ligne Actual fictive vend 100 unités à 20 USD avec 0,90 EUR par USD. Le professionnel propose +10 % d'unités et un dollar plus faible de 5 % contre EUR. Le prix en USD reste inchangé.",
+      "request": "Vera, prépare le Plan avec plus de volume et un dollar plus faible, puis relis-moi les hypothèses.",
+      "scope": "Plan commercial sur Actual revus et variations en pourcentage confirmées. Coûts, marges ou mois absents ne sont pas inventés.",
+      "input_columns": [
+        "Fait ou hypothèse fictive",
+        "Valeur",
+        "Signification"
+      ],
+      "input_rows": [
+        [
+          "Actual · S1",
+          "100 × 20 USD × 0,90",
+          "1 800 EUR"
+        ],
+        [
+          "A1 · unités",
+          "+10 %",
+          "110 unités"
+        ],
+        [
+          "A2 · EUR par USD",
+          "−5 %",
+          "0,855 EUR par USD"
+        ]
+      ],
+      "basis": "S1 est l'Actual. A1 et A2 sont explicites ; le change est exprimé en devise de reporting par unité de devise de transaction.",
+      "method": [
+        "Examine colonnes et membres réels ; relis drivers, périmètre, périodes, priorité et sens du change.",
+        "Résous les chevauchements d'hypothèses et confirme les bases des remises ou coûts fournis. Exécute la recette courante sur les Actual revus.",
+        "Lis Plan, registre d'hypothèses, rapprochement et limites. Les mesures dépendant de données manquantes restent indisponibles."
+      ],
+      "result_title": "Plus d'unités, un change moins favorable",
+      "conclusion": "Le Plan donne 110 × 20 × 0,855 = 1 881 EUR, soit +81 EUR. Le volume augmente de 10 %, les ventes en devise de reporting de 4,5 %.",
+      "output_columns": [
+        "Scénario",
+        "Volume et change",
+        "Ventes EUR"
+      ],
+      "output_rows": [
+        [
+          "Actual",
+          "100 unités · 0,90 EUR/USD",
+          "1 800"
+        ],
+        [
+          "Plan",
+          "110 unités · 0,855 EUR/USD",
+          "1 881"
+        ],
+        [
+          "Écart",
+          "A1 + A2",
+          "+81 · +4,5 %"
+        ]
+      ],
+      "check": "'Ventes +10 %' reste ambigu sans distinguer unités, prix ou ventes brutes. Inverser le sens du change modifie le résultat.",
+      "question": "Pour un dollar plus faible, faut-il passer de 0,90 à 0,945 ?",
+      "answer": "Non. Avec EUR par USD, une baisse de 5 % du dollar ramène le taux à 0,855. Le sens doit être confirmé.",
+      "practice": "Garde le change constant et compare le Plan pour isoler l'effet volume.",
+      "next": "Sélectionne les Actual mensuels, décris les changements et confirme la table des hypothèses préparée par Vera."
+    },
+    "de": {
+      "title": "Umsatzwachstum: Menge, Preis oder Wechselkurs?",
+      "goal": "Einen kommerziellen Wunsch vor der Berechnung in genaue Planannahmen übersetzen.",
+      "scenario": "Eine fiktive Ist-Zeile verkauft 100 Einheiten zu USD 20 bei EUR 0,90 je USD. Vorgeschlagen sind 10 % mehr Einheiten und ein gegenüber EUR um 5 % schwächerer Dollar. Der USD-Stückpreis bleibt gleich.",
+      "request": "Vera, erstelle den Plan mit höherer Menge und schwächerem Dollar und lies die Annahmen zurück.",
+      "scope": "Umsatzplanung aus geprüftem Ist und bestätigten prozentualen Änderungen. Fehlende Kosten, Margen und Monate werden nicht erfunden.",
+      "input_columns": [
+        "Fiktiver Fakt oder Annahme",
+        "Wert",
+        "Bedeutung"
+      ],
+      "input_rows": [
+        [
+          "Ist · S1",
+          "100 × USD 20 × 0,90",
+          "EUR 1.800"
+        ],
+        [
+          "A1 · Einheiten",
+          "+10 %",
+          "110 Einheiten"
+        ],
+        [
+          "A2 · EUR je USD",
+          "−5 %",
+          "EUR 0,855 je USD"
+        ]
+      ],
+      "basis": "S1 ist die Ist-Zeile. A1 und A2 sind ausdrückliche Fallannahmen. Der Kurs bezeichnet Einheiten der Berichtswährung je Einheit der Transaktionswährung.",
+      "method": [
+        "Prüfe tatsächliche Spalten und Ausprägungen. Lies Treiber, genauen Umfang, Perioden, Priorität und Kursrichtung zurück.",
+        "Kläre überlappende Annahmen und bestätige gegebenenfalls Rabatt- oder Kostenbasis. Führe die aktuelle Berechnung auf geprüftem Ist aus.",
+        "Lies Plan, Annahmenregister, Abstimmung und Grenzen. Kennzahlen mit fehlenden Eingangsdaten bleiben nicht verfügbar."
+      ],
+      "result_title": "Mehr Einheiten, ungünstigerer Wechselkurs",
+      "conclusion": "Planumsatz: 110 × 20 × 0,855 = EUR 1.881, also EUR 81 mehr. Aus 10 % Mengenwachstum werden 4,5 % Wachstum in Berichtswährung.",
+      "output_columns": [
+        "Szenario",
+        "Menge und Kurs",
+        "Umsatz EUR"
+      ],
+      "output_rows": [
+        [
+          "Ist",
+          "100 Einheiten · 0,90 EUR/USD",
+          "1.800"
+        ],
+        [
+          "Plan",
+          "110 Einheiten · 0,855 EUR/USD",
+          "1.881"
+        ],
+        [
+          "Differenz",
+          "A1 + A2",
+          "+81 · +4,5 %"
+        ]
+      ],
+      "check": "'10 % mehr Umsatz' ist mehrdeutig, bis Menge, Preis oder Bruttoumsatz feststehen. Eine umgekehrte Kursrichtung verändert das Ergebnis.",
+      "question": "Soll 0,90 bei schwächerem Dollar auf 0,945 steigen?",
+      "answer": "Nein. Bei EUR je USD senkt ein 5 % schwächerer Dollar den Kurs auf 0,855. Bestätige die Richtung vor der Berechnung.",
+      "practice": "Halte den Kurs konstant und vergleiche die Pläne, um den Mengeneffekt zu isolieren.",
+      "next": "Wähle monatliche Ist-Daten, beschreibe gewünschte Änderungen und bestätige Veras strukturierte Wiedergabe der Annahmen."
+    },
+    "es": {
+      "title": "Crecimiento de ventas: ¿volumen, precio o divisa?",
+      "goal": "Traducir una petición comercial en supuestos precisos antes de calcular.",
+      "scenario": "Una fila ficticia de Real vende 100 unidades a USD 20 con EUR 0,90 por USD. Se proponen un 10 % más de unidades y un dólar un 5 % más débil frente al euro. El precio unitario en USD permanece igual.",
+      "request": "Vera, prepara el Plan con más volumen y un dólar más débil y vuelve a leer los supuestos.",
+      "scope": "Planificación comercial desde datos reales revisados y cambios porcentuales confirmados. No se inventan costes, márgenes o meses ausentes.",
+      "input_columns": [
+        "Hecho o supuesto ficticio",
+        "Valor",
+        "Significado"
+      ],
+      "input_rows": [
+        [
+          "Real · S1",
+          "100 × USD 20 × 0,90",
+          "EUR 1.800"
+        ],
+        [
+          "A1 · unidades",
+          "+10 %",
+          "110 unidades"
+        ],
+        [
+          "A2 · EUR por USD",
+          "−5 %",
+          "EUR 0,855 por USD"
+        ]
+      ],
+      "basis": "S1 es la fila Real. A1 y A2 son supuestos explícitos. El tipo significa unidades de moneda de informe por unidad de moneda de transacción.",
+      "method": [
+        "Inspecciona columnas y miembros efectivos. Confirma impulsores, alcance exacto, periodos, prioridad y dirección del cambio.",
+        "Resuelve solapamientos de supuestos y confirma bases de descuentos o costes si existen. Ejecuta la configuración actual sobre el Real revisado.",
+        "Lee Plan, registro de supuestos, conciliación y límites. Mantén no disponibles las métricas dependientes de datos ausentes."
+      ],
+      "result_title": "Más unidades, tipo de cambio menos favorable",
+      "conclusion": "Ingresos del Plan: 110 × 20 × 0,855 = EUR 1.881, EUR 81 más. Un aumento del 10 % en unidades se convierte en un 4,5 % en moneda de informe.",
+      "output_columns": [
+        "Escenario",
+        "Volumen y cambio",
+        "Ingresos EUR"
+      ],
+      "output_rows": [
+        [
+          "Real",
+          "100 unidades · 0,90 EUR/USD",
+          "1.800"
+        ],
+        [
+          "Plan",
+          "110 unidades · 0,855 EUR/USD",
+          "1.881"
+        ],
+        [
+          "Diferencia",
+          "A1 + A2",
+          "+81 · +4,5 %"
+        ]
+      ],
+      "check": "'Las ventas crecen un 10 %' es ambiguo hasta precisar unidades, precio o ventas brutas. Invertir el tipo cambia el resultado.",
+      "question": "Con un dólar más débil, ¿debe subir 0,90 a 0,945?",
+      "answer": "No. Expresado en EUR por USD, un dólar un 5 % más débil reduce el tipo a 0,855. Confirma la dirección antes de calcular.",
+      "practice": "Mantén constante el tipo y compara los planes para aislar el efecto de unidades.",
+      "next": "Selecciona Real mensual, describe cambios deseados y confirma la lectura estructurada de supuestos de Vera."
+    }
+  },
+  "visual": {
+    "column": 2,
+    "bars": [
+      [
+        0,
+        1800
+      ],
+      [
+        1,
+        1881
+      ]
+    ]
+  }
+}
