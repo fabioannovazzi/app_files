@@ -3,17 +3,14 @@
   "basis": "Version directly confirmed as Published in OpenAI Platform; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.193",
+      "version": "0.1.194",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-11",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa3d2ea7ca88191aa04bd07d24badd9",
-      "basis": "OpenAI Platform directly showed Clara 0.1.193 Published after all 15 skill checks passed, the user authorized the terms and publisher declarations, and Publish Version completed on 2026-09-11. The public directory independently displayed Version 0.1.193.",
-      "package_sha256": "e64d48659d66c864c5b37d343384ef44eabf0393d9b8df4124bbe475a7bdfbb8",
-      "review_fingerprint_submission": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa3dc29b32c8191944c86a0c8ab4c87",
-      "review_fingerprint_package_sha256": "84c5ad647a287d9fcd2b315afc6a642ec6ae825ee5a0914aab7b4cb0a5102e16",
-      "package_review_note": "The post-publication replacement archive changes only privacy/hosted-services/plugin-update-check.json to cover the published version notice. Executable files and the Cowork archive are unchanged.",
-      "repository_package_sha256": "f88fb766db8ea951001ed82e1dd94c741a85515f613689263572b9be2fc6a3e9",
-      "repository_package_review_note": "The repository archive was rebuilt after the Vera 0.1.245 publication notice changed the shared version manifest governed by Clara plugin-update-check. Only that privacy review fingerprint/date differs from the previous repository archive; executable files and the Cowork archive are unchanged. This records the repository artifact, not a new Clara marketplace submission."
+      "observed_at": "2026-09-13",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa6793a287c8191a826b643bfe9b973",
+      "basis": "OpenAI Platform directly showed Clara 0.1.194 Published after all 16 skill checks passed, the user confirmed the displayed terms and publisher declarations, and Publish Version completed on 2026-09-13. The public directory independently displayed Version 0.1.194.",
+      "package_sha256": "e284b5585ee71814bf39bd7c8891d0aaf24699c7c7c8cd8579049bc597068c1a",
+      "repository_package_sha256": "4ef1245e8836752d9bc151f0f9b58f0012f12685741ca5d1010dc602bc4453df",
+      "repository_package_review_note": "The repository archive was rebuilt after publishing the Clara 0.1.194 update notice. Only privacy/hosted-services/plugin-update-check.json differs from the exact published archive. Executable files, teaching instructions and Cowork bytes are unchanged; package_sha256 identifies the actual uploaded and published bytes."
     },
     "vera": {
       "version": "0.1.245",
@@ -26,12 +23,12 @@
       "repository_package_review_note": "Only privacy/services/local-onboarding.json differs from the exact published archive, reflecting review of the shared teaching page copy when adding Clara and Lucia. Vera executable files and tutorial instructions are unchanged. The published archive remains identified separately by package_sha256."
     },
     "lucia": {
-      "version": "0.1.41",
+      "version": "0.1.42",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae",
-      "observed_at": "2026-09-12",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae/submissions/appsub_6aa58bcc74388191b169573e71f3196a",
-      "basis": "OpenAI Platform directly showed Lucia 0.1.41 Published after all 9 skill checks passed, the user authorized publication following the terms and publisher declarations, and Publish Version completed on 2026-09-12. The public directory independently displayed Version 0.1.41.",
-      "package_sha256": "07cbf3914f376160a8a313577b9ef4306f733ccee80259d48ee30d1d526ee562"
+      "observed_at": "2026-09-13",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae/submissions/appsub_6aa67bbb92288191908de2eb21dc72f2",
+      "basis": "OpenAI Platform directly showed Lucia 0.1.42 Published after all 10 skill checks passed, the user confirmed the displayed terms and publisher declarations, and Publish Version completed on 2026-09-13. The public directory independently displayed Version 0.1.42 and Impara con Lucia.",
+      "package_sha256": "0277188e000cd00e7aec025733f4e1365e5d6abe6003e6c46c57fb15c8021368"
     }
   }
 }
