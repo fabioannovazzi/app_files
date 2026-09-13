@@ -34,6 +34,17 @@ jobs:
           tests/plugins/test_plugin_update_notifications.py
           --cov=local_teaching --cov=local_onboarding --cov=local_onboarding_case
           --cov=onboarding_session_start --cov-fail-under=80
+      - name: Verify Clara and Lucia local teaching, isolation and native handoffs
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_desktop_teaching.py tests/plugins/test_desktop_teaching_packages.py
+          --cov=desktop_teaching --cov-fail-under=80
+      - name: Check shared teaching code quality
+        run: |
+          python -m black --check plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py
+          python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py
+          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py
+          python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching
       - name: Check onboarding code quality
         run: |
           python -m black --check plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
@@ -148,6 +159,7 @@ jobs:
           plugins/passive-invoice-audit/tests/test_passive_invoice_audit.py
           tests/plugins/test_deep_research_validator_plugin.py
           tests/plugins/test_management_control_pack.py
+          tests/plugins/test_desktop_teaching_workflows.py
           --cov --cov-config=tests/plugin_correctness.coveragerc
           --cov-report=term-missing
 

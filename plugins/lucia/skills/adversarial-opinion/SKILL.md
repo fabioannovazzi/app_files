@@ -3,6 +3,15 @@ name: adversarial-opinion
 description: Develop and review the strongest evidence-bound opposing case when Lucia is asked for an opinion on a concrete legal, tax or compliance position or explicitly for an opposing opinion. Informational research alone does not activate it; respect an instruction to omit it.
 ---
 
+<!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../lucia/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- LUCIA_OPENAI_ONBOARDING_END -->
+
 # Parere contrapposto
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../lucia/SKILL.md`.

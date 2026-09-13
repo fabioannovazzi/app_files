@@ -65,6 +65,11 @@ ROOT_OMITTED_PATHS = frozenset(
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
         "scripts/change_requests.py",
         "scripts/check_for_update.py",
+        "scripts/_desktop_teaching.py",
+        "skills/clara/references/local-onboarding.md",
+        "skills/clara/references/tutorial-cases.md",
+        "skills/lucia/references/local-onboarding.md",
+        "skills/lucia/references/tutorial-cases.md",
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",
         "scripts/local_onboarding_case.py",
@@ -1672,6 +1677,13 @@ def _without_openai_onboarding(content: bytes) -> bytes:
         flags=re.DOTALL,
     )
     text = re.sub(
+        r"<!-- (?:CLARA|LUCIA)_OPENAI_ONBOARDING_BEGIN -->\n.*?"
+        r"<!-- (?:CLARA|LUCIA)_OPENAI_ONBOARDING_END -->(?:\n|$)\n?",
+        "",
+        text,
+        flags=re.DOTALL,
+    )
+    text = re.sub(
         r"^    # VERA_OPENAI_ONBOARDING_BEGIN\n.*?"
         r"^    # VERA_OPENAI_ONBOARDING_END\n",
         "",
@@ -2258,6 +2270,22 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
 
     parts = Path(relative_path).parts
     if relative_path in {
+        "scripts/_desktop_teaching.py",
+        "scripts/local_onboarding.py",
+        "scripts/local_teaching.py",
+        "scripts/local_onboarding_case.py",
+        "scripts/onboarding_session_start.py",
+        "skills/clara/references/local-onboarding.md",
+        "skills/clara/references/tutorial-cases.md",
+    } or relative_path.startswith(
+        (
+            "skills/learn-with-clara/",
+            "assets/onboarding/",
+            "vendor/modules/desktop_teaching/",
+        )
+    ):
+        return True
+    if relative_path in {
         ".codex-plugin/plugin.json",
         "hooks/hooks.json",
         "hooks/cowork-hooks.json",
@@ -2470,6 +2498,8 @@ def _clara_package_entries(
     for relative, content in source_entries.items():
         if _clara_cowork_omits_path(relative):
             continue
+        if relative.endswith(".md"):
+            content = _without_openai_onboarding(content)
         if relative == "README.md":
             content = CLARA_COWORK_README.encode("utf-8")
         elif relative.endswith("/SKILL.md"):
@@ -2609,7 +2639,7 @@ def _lucia_package_entries(
         wrapper_text = re.sub(
             r"(?m)^After substantive use of this workflow,.*\n\n",
             "",
-            wrapper.decode("utf-8"),
+            _without_openai_onboarding(wrapper).decode("utf-8"),
             count=1,
         )
         entries[wrapper_name] = _project_cowork_instruction_markdown(
@@ -2643,6 +2673,8 @@ def _lucia_package_entries(
     )
     entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
     for name, content in source_entries.items():
+        if name in ROOT_OMITTED_PATHS:
+            continue
         if name.startswith("scripts/") or name in {
             "requirements.txt",
             "requirements-shared-core.txt",
@@ -2769,7 +2801,14 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative.startswith("evals/"):
             continue
-        if relative.startswith("skills/learn-with-vera/"):
+        if relative.startswith(
+            (
+                "skills/learn-with-vera/",
+                "skills/learn-with-clara/",
+                "skills/learn-with-lucia/",
+                "vendor/modules/desktop_teaching/",
+            )
+        ):
             continue
         if relative.startswith("assets/onboarding/"):
             continue

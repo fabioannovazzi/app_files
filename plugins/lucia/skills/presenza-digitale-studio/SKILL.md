@@ -3,6 +3,15 @@ name: presenza-digitale-studio
 description: Use when Lucia must refresh an existing law-firm website or create a first informational website from verified lawyer or firm materials, with responsive implementation, exact browser review, a reviewable preview, mechanical validation, and approval-bound publication. Applies the shared website workflow through Lucia's lawyer-specific confidentiality and professional-information profile.
 ---
 
+<!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../lucia/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- LUCIA_OPENAI_ONBOARDING_END -->
+
 # Presenza digitale dello studio
 
 After substantive use of this workflow, read and follow the `Plugin Improvement

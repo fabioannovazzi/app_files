@@ -3,6 +3,15 @@ name: advisory-brief-planner
 description: Use internally when Clara receives a new or materially reframed advisory assignment and must turn the natural request into a reviewable assignment contract and generation handoff. Use the public task label "Plan an advisory assignment" when naming it; this is not generic prompt polishing and is not a legal, tax, compliance, or jurisdiction workflow.
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 ## ChatGPT and Codex Runtime
 
 In ChatGPT, prepare and review the contract in conversation from supplied

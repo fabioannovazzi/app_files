@@ -3,6 +3,15 @@ name: interview
 description: "Prepare and operate Clara-hosted external voice interviews: select an exact versioned research campaign or define a scoped one-off case interview, create an expiring no-login participant link, check its status, and retrieve the completed JSON bundle and post-interview quality review. Use when the user asks to interview a client, stakeholder, expert, research participant, or other external respondent through a hosted browser link, or asks to retrieve or review that interview's result. Do not use for interviewing the user in chat, advisor voice debriefs, uploading or transcribing existing recordings, bulk outreach or email campaigns, or importing Hosted Voice bundles."
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 # Interview
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.

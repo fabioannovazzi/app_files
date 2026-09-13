@@ -725,7 +725,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             if name.startswith(skill_prefix)
         }
         assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
-        if plugin_name == "clara":
+        if plugin_name not in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
             assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
         else:
             assert "WORKFLOW.md" not in packaged_skill_files
@@ -742,7 +742,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             )
         )
         assert entries[interface_name] == expected_interface
-        if plugin_name == "clara":
+        if plugin_name not in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
             assert "\n\n" not in body, name
             assert builder.REQUIRED_CHATGPT_HEADING not in body, name
             assert builder.REQUIRED_CODEX_RECOMMENDATION not in body, name
@@ -751,9 +751,9 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             assert not body.startswith("#"), name
     if plugin_name == "clara":
         deck_correction = card_bodies["skills/deck-correction/SKILL.md"]
-        assert deck_correction.startswith("Attach the current presentation")
-        assert "protects untouched content" in deck_correction
-        assert "verification findings" in deck_correction
+        assert "# Deck Correction" in deck_correction
+        assert "Keep the original untouched and edit a copy" in deck_correction
+        assert "verify" in deck_correction
         reporting_interface = entries[
             "skills/reporting-engine/agents/openai.yaml"
         ].decode("utf-8")
@@ -777,6 +777,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             "skills/adversarial-opinion/SKILL.md",
             "skills/studio-archive/SKILL.md",
             "skills/lucia/SKILL.md",
+            "skills/learn-with-lucia/SKILL.md",
             "skills/quesito-legale-fiscale/SKILL.md",
             "skills/prompt-optimizer/SKILL.md",
             "skills/deep-research-validator/SKILL.md",
@@ -2669,10 +2670,13 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
             if (
-                plugin_root.name == "vera"
-                and skill_file.parent.name == "learn-with-vera"
+                plugin_root.name in {"vera", "clara", "lucia"}
+                and skill_file.parent.name == f"learn-with-{plugin_root.name}"
             ):
-                assert "Read `../vera/references/workflow-catalog.md`" in skill_text
+                assert (
+                    f"Read `../{plugin_root.name}/references/workflow-catalog.md`"
+                    in skill_text
+                )
                 assert "selected specialist skill completely" in normalized_skill_text
                 assert "complete execution contract" in normalized_skill_text
                 assert "local_onboarding_case.py" in skill_text
@@ -4957,7 +4961,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     assert 'id="data-handling"' not in page
     assert 'id="presentations"' not in page
     assert 'id="videos"' not in page
-    assert page.count('class="function-link"') == 11
+    assert page.count('class="function-link"') == 12
     for stale_snippet in (
         "Clara prepares the work. The judgment remains yours.",
         "Clara prepara il lavoro. Il giudizio resta tuo.",
@@ -5634,7 +5638,7 @@ def test_clara_public_page_uses_vera_visual_system() -> None:
     assert 'href="clara-page.css?v=' in page
     assert 'src="icon.svg"' in page
     assert 'class="function-directory"' in page
-    assert page.count('class="function-link"') == 11
+    assert page.count('class="function-link"') == 12
     for color in ("#002060", "#0070C0", "#00B0F0", "#FFFFFF"):
         assert color in stylesheet
     for black in ("#000000", "#171816"):

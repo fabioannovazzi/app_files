@@ -3,6 +3,15 @@ name: transcribe
 description: Capture, transcribe, import, attribute, and review advisor voice notes, consultant debriefs, meetings, calls, and existing audio recordings with Clara Hosted Voice. Use when the user asks to start Voice Capture, transcribe an audio file, import a case-notes-audio or case-notes-voice ZIP/JSON bundle, preserve a transcript in an ordinary folder with deduplication, or add a reviewed transcript to a Clara case. Do not use to create an adaptive external-participant interview link or to revise a deck from spoken feedback.
 ---
 
+<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../clara/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- CLARA_OPENAI_ONBOARDING_END -->
+
 # Transcribe
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.

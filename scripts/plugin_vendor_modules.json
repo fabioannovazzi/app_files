@@ -16,10 +16,14 @@
     "distribution-analysis": {},
     "mix-contribution-analysis": {},
     "period-comparison": {
-      "overlays": [{
-        "source_root": "plugins/_shared/vendor/modules",
-        "module_roots": ["reporting_table.py"]
-      }]
+      "overlays": [
+        {
+          "source_root": "plugins/_shared/vendor/modules",
+          "module_roots": [
+            "reporting_table.py"
+          ]
+        }
+      ]
     },
     "scatter-bubble-analysis": {},
     "set-overlap-analysis": {},
@@ -163,16 +167,22 @@
       "overlays": [
         {
           "source_root": "plugins/vera/scripts",
-          "module_roots": ["model_data_report.py"]
+          "module_roots": [
+            "model_data_report.py"
+          ]
         },
         {
           "source_root": "plugins/vera/skills/vera/references",
-          "module_roots": ["model-data-report-contract.md"]
+          "module_roots": [
+            "model-data-report-contract.md"
+          ]
         }
       ]
     },
     "adeguati-assetti": {
-      "module_roots": ["vera_assurance"]
+      "module_roots": [
+        "vera_assurance"
+      ]
     },
     "aml-review": {
       "module_roots": [
@@ -182,6 +192,16 @@
     "treasury-forecast": {
       "module_roots": [
         "vera_assurance"
+      ]
+    },
+    "clara": {
+      "module_roots": [
+        "desktop_teaching"
+      ]
+    },
+    "lucia": {
+      "module_roots": [
+        "desktop_teaching"
       ]
     }
   }

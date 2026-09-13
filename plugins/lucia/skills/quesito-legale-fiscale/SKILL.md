@@ -3,6 +3,15 @@ name: quesito-legale-fiscale
 description: Use when Lucia receives a substantive legal, tax-law, or compliance question, analysis request, or source-backed legal drafting request and must take it through one complete question-to-reviewed-answer journey. Do not use for filings, signatures, submissions, or operational forms that require a dedicated workflow or the lawyer's direct action.
 ---
 
+<!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
+Before the first substantive action, read `../lucia/references/local-onboarding.md`.
+Check the shared OS-user local profile even on direct specialist invocation.
+A verified native working-chat handoff executes only its bound lesson and token.
+During a tutorial all profile, progress, examples and feedback remain local;
+never send a change request, stamp a tutorial receipt or call hosted interviews.
+This learning gate takes precedence over ordinary feedback and cloud fallback.
+<!-- LUCIA_OPENAI_ONBOARDING_END -->
+
 # Risposta a quesiti legali e fiscali
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../lucia/SKILL.md`.
