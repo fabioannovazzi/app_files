@@ -184,24 +184,24 @@
         <div class="pf-hero__aside"><p>${text.useWhen}</p></div>
       </section>
       <section class="pf-facts" aria-label="${text.name}">
-        <article class="pf-fact"><h2>${ui.input}</h2><p>${text.input}</p></article>
-        <article class="pf-fact"><h2>${ui.work}</h2><p>${text.work}</p></article>
-        <article class="pf-fact"><h2>${ui.output}</h2><p>${text.output}</p></article>
+        <article class="pf-fact"><h2>${text.inputLabel || ui.input}</h2><p>${text.input}</p></article>
+        <article class="pf-fact"><h2>${text.workLabel || ui.work}</h2><p>${text.work}</p></article>
+        <article class="pf-fact"><h2>${text.outputLabel || ui.output}</h2><p>${text.output}</p></article>
       </section>
       ${publicExample}
       <section class="pf-section">
         <div class="pf-section__head">
-          <div><p class="pf-section__label">${ui.responsibilitiesLabel}</p><h2>${ui.responsibilitiesTitle}</h2></div>
+          <div><p class="pf-section__label">${text.responsibilitiesLabel || ui.responsibilitiesLabel}</p><h2>${text.responsibilitiesTitle || ui.responsibilitiesTitle}</h2></div>
           <p class="pf-section__copy">${text.responsibilityIntro}</p>
         </div>
         <div class="pf-responsibilities">
-          <article class="pf-responsibility"><h3>${isShared ? ui.sharedRole : ui.productRole(page.product)}</h3><p>${text.productRole}</p></article>
-          <article class="pf-responsibility"><h3>${ui.professionalRole}</h3><p>${text.professionalRole}</p></article>
+          <article class="pf-responsibility"><h3>${text.productRoleTitle || (isShared ? ui.sharedRole : ui.productRole(page.product))}</h3><p>${text.productRole}</p></article>
+          <article class="pf-responsibility"><h3>${text.professionalRoleTitle || ui.professionalRole}</h3><p>${text.professionalRole}</p></article>
         </div>
       </section>
       <section class="pf-section">
         <div class="pf-section__head">
-          <div><p class="pf-section__label">${ui.promptLabel}</p><h2>${ui.promptTitle}</h2></div>
+          <div><p class="pf-section__label">${ui.promptLabel}</p><h2>${text.promptTitle || ui.promptTitle}</h2></div>
           <code class="pf-prompt">${text.prompt}</code>
         </div>
       </section>
