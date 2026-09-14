@@ -73,12 +73,12 @@
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "493081ee9c521dd101af92688e21514f98ce66489a3ac2e863d1f4d7619ba753"
+      "sha256": "72f5dd311a1ecac3a6076562567b559f4ce662c43325c18cd64ba8ace8565236"
     },
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "0800f193c296f1867adb8db61281a723fe84b08e264a5494c2930d5a4002143c"
+      "sha256": "9debf852d7d1a3ac98d19997426db28ae63cf9de7604aa4652014c7746564d86"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

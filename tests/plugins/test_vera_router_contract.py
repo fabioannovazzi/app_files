@@ -42,6 +42,7 @@ def test_vera_router_defines_supported_and_no_match_outcomes() -> None:
         "Supported professional work",
         "No matching specialist workflow",
         "Do not fall back to general-assistant behavior inside Vera",
+        "User insistence does not authorize a general-assistant fallback",
         "Vera workflow: vera:<specialist-skill>",
     )
 
@@ -160,6 +161,15 @@ def test_vera_trigger_fixtures_cover_explicit_scope_boundaries() -> None:
     )
     assert tenancy_case["prompt"].startswith("@vera")
     assert "vera:quesito-legale-fiscale" in tenancy_case["required_signals"]
+
+
+def test_vera_journal_bank_card_keeps_unsupported_pdfs_blocked() -> None:
+    payload = json.loads(_read_text(MARKETPLACE_CARDS_PATH))
+    instructions = payload["skills"]["journal-bank-reconciliation"]["instructions"]
+
+    assert "Un PDF generico resta bloccato con zero movimenti" in instructions
+    assert "non passa a estrazione generica o script ad hoc" in instructions
+    assert "dichiara il workflow" in instructions
 
 
 def test_vera_chatgpt_root_card_is_router_only_and_catalog_complete() -> None:
