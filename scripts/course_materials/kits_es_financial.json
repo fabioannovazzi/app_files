@@ -1,0 +1,52 @@
+{
+  "vera/financial-report-builder": {
+    "title": "Preparar un informe financiero con Vera",
+    "goal": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras.",
+    "scenario": "Officina Arco aporta cuenta de resultados, balance y flujos de caja. El despacho quiere un primer informe de gestión del período.",
+    "scope": "Un informe de gestión con los estados disponibles. La función organiza datos y explicaciones en un documento; las secciones sin fuentes quedan señaladas como pendientes.",
+    "inputs": "Abre january-february.xlsx y context-es.md. Mira las tres hojas, período y moneda. Indica destinatario, tipo de informe e idioma; no necesitas preparar diapositivas ni una configuración técnica.",
+    "request": "Vera, prepara un informe de gestión de Officina Arco con los estados de enero y febrero. Ayúdame a revisar el uso de las tablas y muéstrame después el Word y los puntos que debo revisar.",
+    "steps": [
+      "En la conversación de trabajo, Vera inspecciona las hojas y propone sus secciones. La voz explica estructura y fuentes y ayuda a confirmar empresa, período e importes.",
+      "Vera registra la correspondencia revisada, prepara comentarios respaldados y ejecuta el flujo actual. La voz sigue resultados reales y explica las secciones sin información.",
+      "Abre el Word generado. Lee resumen, una tabla y su comentario; sigue una cifra hasta la hoja original. Usa la revisión del informe para registrar correcciones o aclaraciones."
+    ],
+    "deliverables": [
+      "Informe Word y versión Markdown con secciones, tablas y comentarios.",
+      "Libro de tablas y referencias a datos para comprobar el documento."
+    ],
+    "review": "Comprueba período, moneda, correspondencia de hojas y fidelidad de comentarios. No cuentes dos veces los subtotales. Distingue secciones documentadas y pendientes y revisa el texto antes del uso profesional.",
+    "checkpoints": [
+      "Antes de generar, identifica qué información entrará en el informe.",
+      "En Word, encuentra una cifra y su estado original y después un punto para revisar."
+    ],
+    "practice": "Repite con january-march.xlsx para un nuevo informe hasta marzo, conservando el anterior. Comprueba actualización del período, tablas y comentarios; elige una corrección que proponer.",
+    "success": "Sabes aportar estados, pedir y abrir el informe, verificar una fuente y repetir el trabajo para otro período.",
+    "repeat": "Aporta a Vera los estados del cliente e indica período, destinatario, idioma y tipo de informe. Revisa estructura, importes y comentarios y sigue el proceso habitual de aprobación."
+  },
+  "vera/financial-analysis": {
+    "title": "Preparar un análisis financiero con Vera",
+    "goal": "Aprender a solicitar un análisis concreto, aportar datos, revisar decisiones y utilizar resultados financieros comprobables.",
+    "scenario": "Officina Arco quiere conocer su deuda neta al cierre de febrero. El estado muestra préstamo, caja disponible y otras dos partidas por clasificar.",
+    "scope": "Financial Analysis prepara análisis contables y cálculos de due diligence con datos revisados. Esta primera ejecución completa calcula deuda neta a una fecha; los demás análisis requieren sus propios datos y decisiones.",
+    "inputs": "Abre balances-february.csv y context-es.md. Indica empresa, fecha, EUR y definición solicitada. La nota explica saldos; Vera prepara estructuras técnicas tras la revisión sin pedirte que programes.",
+    "request": "Vera, prepara la deuda neta de Officina Arco al 28 de febrero con este estado y la definición de la nota. Guíame por las decisiones y muestra resultado, detalle y controles.",
+    "steps": [
+      "En la conversación de trabajo, Vera identifica el análisis adecuado y propone clasificar las partidas. La voz explica la medida y ayuda a revisar importes, fecha, inclusiones y exclusiones.",
+      "Tras la revisión real, Vera registra decisiones y ejecuta el cálculo actual. La voz sigue la ejecución y distingue comprobación aritmética e integridad de los datos aportados.",
+      "Lee el resumen de entrega y abre el detalle generado. Sigue préstamo y caja hasta las filas originales y encuentra partidas excluidas, controles y preguntas pendientes."
+    ],
+    "deliverables": [
+      "Resultado y detalle de partidas incluidas y excluidas presentados en la entrega.",
+      "Paquete de datos, controles y referencias a decisiones y fuentes para revisión profesional."
+    ],
+    "review": "Comprueba definición solicitada y fecha común de los saldos. Un cálculo reproducible por sí solo no prueba integridad ni corrección contable. Revisa fuentes y conclusiones antes del uso.",
+    "checkpoints": [
+      "Antes de calcular, explica qué quieres medir y qué datos necesitas.",
+      "En el resultado, identifica un saldo incluido, otro excluido y sus motivos."
+    ],
+    "practice": "Usa balances-march.csv para un análisis nuevo al 31 de marzo con la misma definición. Conserva febrero e identifica los saldos y el resultado que cambian.",
+    "success": "Sabes elegir análisis, aportar el estado, revisar decisiones, encontrar resultado y detalle y actualizar el trabajo a otra fecha.",
+    "repeat": "Describe a Vera pregunta financiera, empresa, fecha o período y datos disponibles. Revisa análisis propuesto y decisiones sustanciales, y comprueba el paquete generado antes del uso profesional."
+  }
+}

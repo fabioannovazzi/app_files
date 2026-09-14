@@ -1,0 +1,27 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Create an assortment report with Clara",
+    "goal": "Learn to supply an existing retail evidence package, request an analysis and use the checked HTML report.",
+    "scenario": "A product team wants to understand an assortment before its next review. Start with a fictional knitwear package, follow Clara’s report preparation and check the conclusions against the underlying products. Then repeat with an updated package.",
+    "scope": "A complete first report from an existing local evidence package. The example teaches intake, comparison, interpretation, independent review and delivery. Collection from retailer websites, central attribute mapping and Brand Fit are separate work; none is simulated here.",
+    "inputs": "Open brief-en.md and supply assortment-demo-en.zip. The archive contains fictional product records, explicitly assigned new-arrival and best-seller groups, computed comparisons and an integrity check. It contains no finished report, approved interpretation or server receipt.",
+    "request": "Clara, create an assortment report from this package for our product team. Explain what the data covers, compare best sellers and new arrivals with the rest, and show me the report and its checks.",
+    "steps": [
+      "Confirm the retailer/category scope, the supplied snapshot and the audience. Clara safely opens the package and checks its integrity. The voice chat explains the source records and what the retailer-defined groups mean.",
+      "Clara prepares the normal comparison tables and writes the report from their evidence. Follow one comparison from products to table to conclusion; distinguish a visible assortment pattern from sales quantities or a causal explanation.",
+      "An independent review checks the claims and readability, and browser checks inspect the HTML. Open the actual report, its verdict and any caveats. Find the summary, supporting tables, product evidence and the next question for the team."
+    ],
+    "deliverables": [
+      "A local HTML report with comparisons, interpretation, source links and an explicit correctness verdict.",
+      "Supporting evidence tables and review records that explain the verdict and remaining limits."
+    ],
+    "review": "Check the supplied snapshot, group definitions and support for a conclusion. New arrivals are the source’s designated group; best-seller placement does not provide sales quantities. Read the verdict’s reasons before using the report.",
+    "checkpoints": [
+      "Identify the package and request needed to start, and explain the output Clara will produce.",
+      "Open the report and follow one conclusion to its evidence and review status."
+    ],
+    "practice": "Supply assortment-practice-en.zip, which changes the fictional new-arrival group. Ask for a new report with the same audience. Keep the first report and compare what changed in the evidence and interpretation.",
+    "success": "You can start a report, read its summary and evidence, understand the verdict and repeat the workflow with another package.",
+    "repeat": "Supply an integrity-checked evidence package and state the audience and question. Clara prepares, reviews and delivers the HTML locally. A request for current central data follows the separate authenticated intake and its stated data boundary."
+  }
+}

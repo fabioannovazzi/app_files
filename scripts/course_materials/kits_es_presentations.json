@@ -1,0 +1,52 @@
+{
+  "clara/html-deck": {
+    "title": "Crear una presentación HTML con Clara",
+    "goal": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador.",
+    "scenario": "Officina Arco debe explicar al personal una propuesta de recepción. Partimos de las notas de la reunión.",
+    "scope": "Una presentación interna basada en las notas, con diapositivas y notas del ponente. El procedimiento sigue siendo una propuesta; no se añaden resultados ni gráficos sin documentar.",
+    "inputs": "Abre brief-es.md. Indica público, objetivo y mensaje: debatir la propuesta, sin anunciar un procedimiento ya adoptado.",
+    "request": "Clara, prepara una presentación HTML breve con estas notas para la reunión del personal. Explica problema, propuesta, funciones y decisión. Mantén visible que es una propuesta y añade notas para presentar.",
+    "steps": [
+      "En el hilo de trabajo Clara lee las notas y propone la secuencia. La voz explica cómo precisar público y objetivo y ayuda a revisar el orden de los mensajes.",
+      "Clara compone las diapositivas con el workflow actual y revisa legibilidad, contenido y navegación. La voz sigue resultados reales y responde durante la preparación.",
+      "Abre la presentación generada. Usa las flechas, abre las notas y compara una diapositiva con el documento inicial. Identifica propuesta y decisión solicitada."
+    ],
+    "deliverables": [
+      "Una presentación HTML autónoma con notas y navegación para abrir en el navegador.",
+      "El paquete, materiales editables y verificaciones de la versión producida."
+    ],
+    "review": "Comprueba fidelidad a las notas, legibilidad y distinción entre propuesta y práctica actual. Un diseño atractivo no justifica resultados inventados. Revisa también conclusión y notas.",
+    "checkpoints": [
+      "Antes de crear las diapositivas, identifica público y decisión esperada.",
+      "En la presentación, encuentra un mensaje y la nota que lo respalda."
+    ],
+    "practice": "Añade new-audience-es.md y pide una nueva versión para compañeros nuevos con el ejemplo de solicitud incompleta. Conserva la primera y explica cómo público y objetivo cambiaron la presentación.",
+    "success": "Sabes aportar fuentes y objetivo, leer y presentar el resultado y pedir una versión para otro público.",
+    "repeat": "Pide a Clara una presentación HTML, adjunta materiales e indica público, objetivo, idioma y mensajes que conservar. También puedes invocar la corrección de diapositivas para una presentación existente."
+  },
+  "clara/deck-correction": {
+    "title": "Corregir una presentación con Clara",
+    "goal": "Aprender a convertir comentarios en cambios verificables de diapositivas, manteniendo el control sobre lo que cambia.",
+    "scenario": "La presentación de la propuesta de Officina Arco ya existe. Un comentario cambia la persona propuesta para recoger solicitudes.",
+    "scope": "Una corrección concreta de una presentación HTML: entender comentarios, modificar una copia y comparar. No hace falta recrear toda la presentación.",
+    "inputs": "Abre original-deck-es.html y feedback-es.md. original-work-es.zip contiene los materiales editables para Clara. Tú indicas presentación y cambio.",
+    "request": "Clara, corrige esta presentación según el comentario adjunto: Elena recogerá y aclarará solicitudes en lugar de Sara. Paolo conserva su función. Guarda el original y muéstrame el cambio.",
+    "steps": [
+      "En el hilo de trabajo Clara lee presentación y comentario y resume el cambio previsto. La voz ayuda a comprobar qué diapositiva y significado cambiarán.",
+      "Clara aplica la petición a una copia con el workflow actual, conserva otras diapositivas y verifica la revisión. La voz sigue el progreso real y explica cuándo aclarar comentarios ambiguos.",
+      "Abre original y copia corregida. Compara la diapositiva de responsabilidades y después una sin cambios. Revisa resultado visible, notas y resumen de cambios."
+    ],
+    "deliverables": [
+      "Una copia corregida de la presentación, conservando el original.",
+      "Petición interpretada, comparación antes/después y verificaciones de la versión corregida."
+    ],
+    "review": "Comprueba que cambia la persona propuesta, sin cambiar la función de Paolo ni declarar aprobado el procedimiento. Las demás diapositivas deben conservar significado, orden y estilo. El resultado debe reflejar el comentario, además de superar controles técnicos.",
+    "checkpoints": [
+      "Antes de editar, explica qué debe cambiar y qué debe conservarse.",
+      "Después, encuentra el cambio pedido y una parte conservada."
+    ],
+    "practice": "Vuelve al original con practice-feedback-es.md. Pide recoger primero las dudas del personal, sustituyendo solo el paso final sobre la prueba. Conserva las copias y comprueba la conclusión.",
+    "success": "Sabes identificar una presentación, dar comentarios precisos y verificar una revisión sin perder el original.",
+    "repeat": "Muestra la presentación a Clara y describe el cambio, también mediante voz nativa. Adjunta nuevos datos o textos. Clara aclara dudas y edita una copia; el recorrido PPTX incluye revisar el plan de cambios antes de aplicarlo."
+  }
+}

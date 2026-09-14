@@ -1,0 +1,27 @@
+{
+  "vera/concordato-plan-review": {
+    "title": "Revoir un plan de concordato avec Vera",
+    "goal": "Apprendre à lancer la revue d’une proposition et d’un plan, fournir les documents et utiliser le dossier produit dans le travail professionnel.",
+    "scenario": "Officina Riva a rédigé un premier projet pour poursuivre l’activité et payer les créanciers. Le professionnel doit comprendre son contenu, les hypothèses à vérifier et les pièces manquantes.",
+    "scope": "Un premier parcours complet : mission, sources, cadre de procédure, créanciers, proposition, plan, questions ouvertes et rapport. Le petit cas enseigne le workflow, sans prétendre couvrir tout le droit italien des procédures collectives.",
+    "inputs": "Ouvrez demo-fr.xlsx : Dossier présente demande et état du projet, Créanciers les positions déclarées et Plan les flux annuels supposés. Ce sont des sources fictives à examiner, pas des conclusions approuvées.",
+    "request": "Vera, revois la proposition et le plan de concordato preventivo d’Officina Riva dans ce fichier. Prépare le dossier avec traitement des créanciers, ressources et emplois, trésorerie, pièces manquantes et questions à clarifier.",
+    "steps": [
+      "Dans le fil de travail, Vera lit le fichier et résume mission, date, étape et documents disponibles. Dans le fil vocal, elle explique le parcours et vous demande de confirmer ou corriger le périmètre.",
+      "Vera reconstitue le cas à partir des sources, vérifie le cadre pertinent et prépare les interprétations à revoir. Elle examine proposition, plan, créanciers, comparaison avec la liquidation, trésorerie et lacunes. Vous revoyez interprétations et hypothèses avant la confirmation requise par le workflow.",
+      "Le workflow courant produit les vrais tableaux et documents. Ouvrez le rapport puis le classeur : reliez une question à sa source, examinez les données et identifiez l’action utile. La voix explique uniquement l’avancement et les résultats réels."
+    ],
+    "deliverables": [
+      "Rapport Word et résumé lisible de la revue, avec limites et questions ouvertes.",
+      "Classeur de travail Excel et tableaux des créanciers, traitement, ressources et emplois, trésorerie et contrôles."
+    ],
+    "review": "Vérifiez sources, dates, périmètre des créanciers, hypothèses et demandes de pièces. Un calcul cohérent ne démontre ni faisabilité ni validité juridique. Le projet ne contient pas l’attestation ni la preuve de disponibilité du financement.",
+    "checkpoints": [
+      "Avant de poursuivre, expliquez le travail demandé à Vera et les fichiers fournis.",
+      "Repérez la synthèse, une question à revoir et le document ou éclaircissement nécessaire."
+    ],
+    "practice": "Lancez une nouvelle revue avec practice-fr.xlsx, qui actualise l’hypothèse de financement. Conservez le premier dossier. Demandez à Vera de réexaminer le cas et expliquez les résultats et actions modifiés, sans simplement remplacer un montant dans l’ancien rapport.",
+    "success": "Vous savez lancer le workflow, revoir périmètre et interprétations, utiliser les livrables et recommencer avec une version actualisée.",
+    "repeat": "Donnez à Vera proposition, plan, liste des créanciers, attestation et justificatifs disponibles, avec étape, date et objectif. Confirmez le périmètre, revoyez les sources et utilisez le dossier dans le parcours professionnel normal."
+  }
+}

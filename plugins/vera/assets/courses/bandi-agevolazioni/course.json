@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "bandi-agevolazioni",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,24 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "selected_simulated_call_to_reviewable_application_dossier"
+  },
   "sources": [
+    {
+      "path": "modules/bandi-agevolazioni/assets/icon.svg",
+      "repository_path": "plugins/bandi-agevolazioni/assets/icon.svg",
+      "sha256": "c7d7f2ccea0928e164523629e59c051f4a756637f1c54c1cc407e2d9852a5427"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/requirements.txt",
+      "repository_path": "plugins/bandi-agevolazioni/requirements.txt",
+      "sha256": "7e0273143c31047b73b19285da545908faf637d9ee970c3b21d536940355f544"
+    },
     {
       "path": "modules/bandi-agevolazioni/schemas/application_workbench.schema.json",
       "repository_path": "plugins/bandi-agevolazioni/schemas/application_workbench.schema.json",
@@ -136,6 +153,11 @@
       "sha256": "9f3faaf0ae5fc3551851b4bc720fb2e17a4d36221659917c5a62b24ca6201194"
     },
     {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
+      "sha256": "8c6e48f9f0391adad001d0c6fb0a712de15195c585810e54db7238198026a532"
+    },
+    {
       "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
       "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
       "sha256": "1a3e105a8a83aabe98c6189028e2e598a12784d35ea07afcec38c64dfb96e1fa"
@@ -176,333 +198,538 @@
       "sha256": "42cb768396007bee5e482461e7ccd4ba8a85adcdeac5052cd3c406a9e7053c8d"
     },
     {
+      "path": "modules/bandi-agevolazioni/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/bandi-agevolazioni/SKILL.md",
       "repository_path": "plugins/vera/skills/bandi-agevolazioni/SKILL.md",
       "sha256": "9047796079131308a277141a3b92f052315e349f6c9f61730547410bd000b643"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/avviso-it.md",
+      "sha256": "9df65bcdb14a027a11ba96b36bc42eb318bb99502323250cc2daa143e57bebd1",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-it.md",
+      "sha256": "a91a38aed4e0839fb9ce27eb7dedfcd606ecb0f8a243ddd299a3b56c22b78858",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-it.csv",
+      "sha256": "700348615a894c088e31e7c0a9adecbb6dc3942332aa315ba5ad8beaeea4e7fe",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-it.md",
+      "sha256": "9df65bcdb14a027a11ba96b36bc42eb318bb99502323250cc2daa143e57bebd1",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-it.md",
+      "sha256": "a91a38aed4e0839fb9ce27eb7dedfcd606ecb0f8a243ddd299a3b56c22b78858",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-it.csv",
+      "sha256": "04f11c969c9f013d3012e6bc535660945477728ca3bf02f8cc20452c8296bc83",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-en.md",
+      "sha256": "2c8373c85f40533a916b946dd7673e28ad4eed3b46619e684c52070e2971edac",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-en.md",
+      "sha256": "41b1274ea15558c6f170c5e24ee6f49199329f23d7b52c7c0f2a7b08f0cb8786",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-en.csv",
+      "sha256": "d18a2b04d81fc10f93863462f8f261270c951f541d2c16874d78b140832d94e5",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-en.md",
+      "sha256": "2c8373c85f40533a916b946dd7673e28ad4eed3b46619e684c52070e2971edac",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-en.md",
+      "sha256": "41b1274ea15558c6f170c5e24ee6f49199329f23d7b52c7c0f2a7b08f0cb8786",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-en.csv",
+      "sha256": "06d510def74bc15ee45a8e18d2677e5ea7e67be7aa74e1e399b2241bbc0a5918",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-fr.md",
+      "sha256": "c7ae10afb000693463081ff307312469905903ce1986b800e4aeb6f3f697e872",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-fr.md",
+      "sha256": "a325c36b8818886531b914e8905954600ac6f2b8647e6a19ae78f8cb351612a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-fr.csv",
+      "sha256": "49fb266df1e3d614ac04ea3e50056200baf08dfa35e794048f7a2e2413c4bccc",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-fr.md",
+      "sha256": "c7ae10afb000693463081ff307312469905903ce1986b800e4aeb6f3f697e872",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-fr.md",
+      "sha256": "a325c36b8818886531b914e8905954600ac6f2b8647e6a19ae78f8cb351612a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-fr.csv",
+      "sha256": "b8a0ac6428912bf2e90e533f4ea09754281cb0c23a948f2b8ab829b15493b447",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-de.md",
+      "sha256": "2ff582f642a340a830d2c9319eb747bbea2bf918b33a910a4984f4ca45667847",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-de.md",
+      "sha256": "fcbc18de933867858b16cc3fe18e98460ed12c8919c719da13cc8426fe569039",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-de.csv",
+      "sha256": "29b2c743bffca3885fa18140e1bc34c1ebf270f93001efb25d69c1292c623a13",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-de.md",
+      "sha256": "2ff582f642a340a830d2c9319eb747bbea2bf918b33a910a4984f4ca45667847",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-de.md",
+      "sha256": "fcbc18de933867858b16cc3fe18e98460ed12c8919c719da13cc8426fe569039",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-de.csv",
+      "sha256": "50b3f6e8a57d0fac2637141e1f0b855685b04ef83190c73e9c70ca713583df37",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/avviso-es.md",
+      "sha256": "4a3a00b78ee77e69f403a222a3f82a6dd571550999b16dd8d2d6752c95443dbe",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/progetto-es.md",
+      "sha256": "9fe908d98e9303e28afbc8f000ead7e22aefe58b8cd2b273fac11bc0ddebf38a",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/preventivo-es.csv",
+      "sha256": "d9e95889b6a93f00e218ffa8c1b7dd351fdc36f280ca593e789c59923404775c",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso-es.md",
+      "sha256": "4a3a00b78ee77e69f403a222a3f82a6dd571550999b16dd8d2d6752c95443dbe",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/progetto-es.md",
+      "sha256": "9fe908d98e9303e28afbc8f000ead7e22aefe58b8cd2b273fac11bc0ddebf38a",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/preventivo-aggiornato-es.csv",
+      "sha256": "fe67f87f1e0613ca53d2f0730d8239f252cf4434186bd131fc831da7cd7ca4e9",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Un'opportunità interessante è già candidabile?",
-      "goal": "Separare la scoperta di un bando dall'istruttoria documentale per un'impresa concreta.",
-      "scenario": "Un avviso interamente fittizio finanzia macchinari per imprese manifatturiere di una regione. Arco produce componenti e propone un investimento di 80.000 EUR. Mancano le prove sulla sede dell'unità produttiva e sulla data di avvio della spesa.",
-      "request": "Vera, mostrami come passiamo da un bando trovato alla lista delle verifiche per l'impresa.",
-      "scope": "Il bando DEMO non esiste e non è candidabile. Il caso insegna a leggere una fonte e preparare l'istruttoria; i bandi reali richiedono fonti ufficiali correnti.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Condizione o dato",
-        "Evidenza"
+      "title": "Preparare un dossier per un bando con Vera",
+      "goal": "Imparare a partire da un bando selezionato, fornire i documenti dell’impresa e rivedere il dossier preparato da Vera.",
+      "scenario": "Uno studio valuta un progetto digitale per una piccola impresa. Usa un avviso interamente fittizio e documenti simulati per seguire il lavoro dalle condizioni del bando al dossier, poi aggiorna il preventivo.",
+      "scope": "Preparazione del dossier dopo la selezione di un bando: fonti, requisiti, evidenze, spese, documenti, bozza e revisione. La ricerca di opportunità è l’altra fase della funzione; qui il bando è già fornito. Le condizioni dell’esercizio non sono norme o agevolazioni reali.",
+      "inputs": "Apri avviso-it.md, progetto-it.md e preventivo-it.csv. Sono l’avviso simulato, i fatti dichiarati dell’impresa e i costi proposti. Non contengono valutazioni di ammissibilità, classificazioni di spesa o approvazioni già eseguite.",
+      "request": "Vera, prepara un dossier di esercitazione da questo avviso e dai documenti dell’impresa. Mostrami requisiti, confronto con le evidenze, spese, documenti necessari e punti che devo rivedere.",
+      "steps": [
+        "Nella finestra di lavoro Vera apre la pratica e registra i documenti. La conversazione vocale spiega incarico, fonti e risultato. Rivedi quali documenti governano l’esercizio e quali descrivono l’impresa.",
+        "Vera propone requisiti e confronti con i fatti, esamina le spese e prepara elenco documenti e bozza. Segui un passaggio dalla fonte alla proposta e rivedi le decisioni richieste dal normale procedimento.",
+        "Apri il dossier e i controlli. Esamina esito proposto, documenti mancanti, spese e prossime azioni. Vera spiega il successivo percorso di revisione e preparazione della domanda; questa esercitazione non usa portali e non invia nulla."
       ],
-      "input_rows": [
-        [
-          "B1 · avviso DEMO, § 2",
-          "Unità produttiva nella regione del bando",
-          "Sede operativa non documentata"
-        ],
-        [
-          "B1 · § 4",
-          "Spese avviate dopo la domanda",
-          "Data ordine non fornita"
-        ],
-        [
-          "C1 · progetto Arco",
-          "Macchinario: 80.000 EUR",
-          "Preventivo disponibile"
-        ]
+      "deliverables": [
+        "Dossier locale con requisiti, evidenze, valutazioni proposte, spese, documenti e bozza.",
+        "Controlli e registro delle revisioni con punti aperti e prossime azioni."
       ],
-      "basis": "Le condizioni del solo esempio sono riportate in B1. C1 documenta un progetto, non il possesso di tutti i requisiti. Nessuna percentuale di contributo viene inventata.",
-      "method": [
-        "Nella fase di scoperta definisci l'obiettivo e rivedi le fonti pertinenti. Ogni opportunità resta legata alla fonte e alla sua versione.",
-        "Per l'impresa selezionata apri l'istruttoria: confronta ogni requisito con evidenze aziendali e individua i documenti mancanti.",
-        "Prepara scheda, checklist e dossier rivedibile. Mantieni separati opportunità pertinente, requisito verificato e domanda pronta; non inviare la candidatura."
+      "review": "Verifica che ogni requisito rimandi all’avviso e ogni fatto al documento corretto. Distingui disponibilità dei documenti, esito proposto e decisione dell’ente: il dossier non concede un’agevolazione.",
+      "checkpoints": [
+        "Spiega quali file e quale richiesta servono quando un bando è già selezionato.",
+        "Apri il dossier, collega una proposta alla fonte e individua ciò che resta da rivedere."
       ],
-      "result_title": "DEMO · istruttoria ancora aperta",
-      "conclusion": "Il progetto appare pertinente al tema dell'avviso. Due requisiti decisivi non sono ancora documentati.",
-      "output_columns": [
-        "Verifica",
-        "Esito nel caso",
-        "Prossima evidenza"
-      ],
-      "output_rows": [
-        [
-          "Investimento coerente · B1/C1",
-          "Macchinario descritto",
-          "Confronto tecnico completo"
-        ],
-        [
-          "Localizzazione · B1 § 2",
-          "Non verificata",
-          "Documento dell'unità produttiva"
-        ],
-        [
-          "Avvio spesa · B1 § 4",
-          "Non verificato",
-          "Ordine e cronologia delle spese"
-        ]
-      ],
-      "check": "La pertinenza di un bando non dimostra l'ammissibilità dell'impresa. Una scheda sintetica non sostituisce gli allegati e la versione ufficiale dell'avviso.",
-      "question": "Il preventivo è perfetto: possiamo scrivere che Arco è ammissibile?",
-      "answer": "No. Restano da verificare sede operativa, cronologia e gli altri requisiti della fonte completa. Il risultato corretto è un'istruttoria con punti aperti.",
-      "practice": "Aggiungi un ordine precedente alla domanda nell'esempio: come cambia la verifica del requisito temporale?",
-      "next": "Per un incarico reale scegli l'opportunità e l'impresa; controlla la fonte ufficiale aggiornata prima di promettere un beneficio."
+      "practice": "Fornisci il preventivo aggiornato dell’esercizio. Chiedi un nuovo dossier, conservando il primo, e controlla come cambiano costi, importo proposto e revisioni necessarie.",
+      "success": "Sai avviare il lavoro da un bando, rivedere il dossier e richiedere un aggiornamento senza confondere una proposta con un’approvazione.",
+      "repeat": "Fornisci bando ufficiale selezionato, allegati e documenti dell’impresa, indicando progetto e data di riferimento. Vera prepara il dossier con le normali revisioni. Se cerchi prima un’opportunità, chiedi la ricerca specificando territorio e progetto."
     },
     "en": {
-      "title": "An interesting opportunity is not yet an eligible application",
-      "goal": "Separate grant discovery from evidence-based preparation for a specific enterprise.",
-      "scenario": "A wholly fictional call funds machinery for manufacturing businesses in one region. Arco proposes an EUR 80,000 investment. Evidence of the operating location and the date the expenditure started is missing.",
-      "request": "Vera, show how a discovered call becomes a set of checks for this business.",
-      "scope": "The DEMO call does not exist and cannot receive applications. Real opportunities require current official sources.",
-      "input_columns": [
-        "Fictional source",
-        "Condition or fact",
-        "Evidence"
+      "title": "Prepare a grant-application dossier with Vera",
+      "goal": "Learn to start from a selected call, supply company documents and review the dossier Vera prepares.",
+      "scenario": "An accounting firm assesses a small company’s digital project. Use a wholly fictional call and simulated documents to follow the work from call requirements to dossier, then update the quotation.",
+      "scope": "Dossier preparation after a call has been selected: sources, requirements, evidence, costs, documents, drafting and review. Opportunity discovery is the other stage of this function; this example supplies the call. Its conditions are not real law or funding.",
+      "inputs": "Open avviso-en.md, progetto-en.md and preventivo-en.csv: the simulated call, declared company facts and proposed costs. They contain no prior eligibility assessment, accepted cost classification or approval.",
+      "request": "Vera, prepare a training dossier from this call and the company documents. Show me requirements, evidence comparisons, costs, required documents and the points I need to review.",
+      "steps": [
+        "In the working window, Vera opens the case and registers the documents. The voice chat explains the assignment, sources and result. Review which documents govern the exercise and which describe the company.",
+        "Vera proposes requirements and comparisons with the facts, examines costs and prepares the checklist and draft. Follow a step from source to proposal and review the decisions required by the normal process.",
+        "Open the dossier and checks. Examine the proposed outcome, missing documents, costs and next actions. Vera explains the later review and application-preparation steps; this exercise uses no portal and sends nothing."
       ],
-      "input_rows": [
-        [
-          "B1 · DEMO call § 2",
-          "Operating unit in the call's region",
-          "Location not documented"
-        ],
-        [
-          "B1 · § 4",
-          "Expenditure starts after application",
-          "Order date missing"
-        ],
-        [
-          "C1 · Arco project",
-          "Machinery: EUR 80,000",
-          "Quotation supplied"
-        ]
+      "deliverables": [
+        "A local dossier with requirements, evidence, proposed assessments, costs, documents and draft content.",
+        "Checks and a review record with open points and next actions."
       ],
-      "basis": "B1 defines only the example's conditions. C1 establishes a project, not satisfaction of every requirement. No grant percentage is invented.",
-      "method": [
-        "Define the discovery objective and review relevant sources. Bind each opportunity to its exact source and version.",
-        "For the selected business, compare every requirement with company evidence and identify missing documents.",
-        "Prepare the opportunity sheet, checklist and reviewable dossier. Distinguish relevance, verified requirements and documentary readiness; do not submit the application."
+      "review": "Check that each requirement links to the call and each fact to the correct document. Distinguish document availability, proposed outcome and the authority’s decision: preparing a dossier does not award funding.",
+      "checkpoints": [
+        "Explain the files and request needed when a call has already been selected.",
+        "Open the dossier, trace a proposal to its source and identify the remaining review."
       ],
-      "result_title": "DEMO · preparation remains open",
-      "conclusion": "The project is relevant to the call's subject. Two decisive conditions remain undocumented.",
-      "output_columns": [
-        "Check",
-        "Case finding",
-        "Next evidence"
-      ],
-      "output_rows": [
-        [
-          "Investment fit · B1/C1",
-          "Machinery described",
-          "Complete technical comparison"
-        ],
-        [
-          "Location · B1 § 2",
-          "Not verified",
-          "Operating-unit document"
-        ],
-        [
-          "Expenditure start · B1 § 4",
-          "Not verified",
-          "Order and expenditure chronology"
-        ]
-      ],
-      "check": "Relevance does not establish eligibility. A summary sheet does not replace the official call and attachments.",
-      "question": "The quotation is an ideal match. Can we state that Arco is eligible?",
-      "answer": "No. Location, timing and the other conditions in the complete source still require assessment. Deliver the open preparation checks.",
-      "practice": "Add a fictional order dated before the application and reconsider the timing condition.",
-      "next": "Select a real opportunity and enterprise; verify the current official source before promising a benefit."
+      "practice": "Supply the exercise’s updated quotation. Request a new dossier while retaining the first, then check how costs, the proposed amount and required reviews change.",
+      "success": "You can start from a selected call, review the dossier and request an update without treating a proposal as approval.",
+      "repeat": "Supply the selected official call, annexes and company documents, with the project and reference date. Vera prepares the dossier through normal reviews. To discover an opportunity first, request a search with the territory and project."
     },
     "fr": {
-      "title": "Une opportunité pertinente est-elle déjà recevable ?",
-      "goal": "Distinguer découverte d'une aide et préparation documentée pour une entreprise précise.",
-      "scenario": "Un appel entièrement fictif finance des machines pour les industriels d'une région. Arco propose 80 000 EUR d'investissement. L'implantation de l'unité et la date de début des dépenses ne sont pas documentées.",
-      "request": "Vera, montre comment passer d'un appel repéré aux vérifications pour cette entreprise.",
-      "scope": "L'appel DEMO n'existe pas et ne reçoit aucune candidature. Les opportunités réelles nécessitent des sources officielles à jour.",
-      "input_columns": [
-        "Source fictive",
-        "Condition ou donnée",
-        "Preuve"
+      "title": "Préparer un dossier de demande d’aide avec Vera",
+      "goal": "Apprendre à partir d’un appel sélectionné, fournir les documents de l’entreprise et relire le dossier préparé par Vera.",
+      "scenario": "Un cabinet examine le projet numérique d’une petite entreprise. Un appel entièrement fictif et des documents simulés permettent de suivre le travail des conditions au dossier, puis d’actualiser le devis.",
+      "scope": "Préparation après sélection d’un appel : sources, exigences, preuves, dépenses, documents, rédaction et révision. La recherche d’opportunités est l’autre étape de cette fonction ; l’appel est fourni ici. Ses conditions ne sont ni du droit ni un financement réels.",
+      "inputs": "Ouvrez avviso-fr.md, progetto-fr.md et preventivo-fr.csv : appel simulé, faits déclarés par l’entreprise et coûts proposés. Aucune évaluation d’éligibilité, classification de dépenses acceptée ou approbation n’est déjà fournie.",
+      "request": "Vera, prépare un dossier d’exercice à partir de cet appel et des documents de l’entreprise. Montre les exigences, leur rapprochement avec les preuves, les dépenses, les documents nécessaires et les points à relire.",
+      "steps": [
+        "Dans la fenêtre de travail, Vera ouvre le dossier et enregistre les documents. La conversation vocale explique la mission, les sources et le résultat. Vérifiez quels documents gouvernent l’exercice et lesquels décrivent l’entreprise.",
+        "Vera propose les exigences et leur rapprochement avec les faits, examine les dépenses et prépare la liste des pièces et le projet. Suivez un point de sa source à la proposition et effectuez les révisions prévues par le processus normal.",
+        "Ouvrez le dossier et ses contrôles. Examinez résultat proposé, pièces manquantes, dépenses et prochaines actions. Vera explique la suite de la révision et de la préparation de la demande ; l’exercice n’utilise aucun portail et n’envoie rien."
       ],
-      "input_rows": [
-        [
-          "B1 · appel DEMO § 2",
-          "Unité dans la région concernée",
-          "Implantation non documentée"
-        ],
-        [
-          "B1 · § 4",
-          "Dépenses engagées après la demande",
-          "Date de commande absente"
-        ],
-        [
-          "C1 · projet Arco",
-          "Machine : 80 000 EUR",
-          "Devis fourni"
-        ]
+      "deliverables": [
+        "Dossier local avec exigences, preuves, évaluations proposées, dépenses, pièces et rédaction préparatoire.",
+        "Contrôles et historique des révisions avec points ouverts et prochaines actions."
       ],
-      "basis": "B1 définit les conditions du seul exemple. C1 prouve un projet, pas tous ses critères d'éligibilité. Aucun taux d'aide n'est inventé.",
-      "method": [
-        "Définis l'objectif de recherche et revois les sources pertinentes. Relie chaque opportunité à sa version exacte.",
-        "Pour l'entreprise sélectionnée, confronte les exigences aux pièces et identifie ce qui manque.",
-        "Prépare fiche, vérifications et dossier à revoir. Sépare pertinence, critères vérifiés et préparation documentaire ; ne soumets pas la candidature."
+      "review": "Vérifiez le lien de chaque exigence à l’appel et de chaque fait au bon document. Distinguez présence des pièces, résultat proposé et décision de l’autorité : un dossier ne vaut pas attribution d’aide.",
+      "checkpoints": [
+        "Expliquez les fichiers et la demande nécessaires lorsqu’un appel est déjà sélectionné.",
+        "Ouvrez le dossier, reliez une proposition à sa source et identifiez la révision restante."
       ],
-      "result_title": "DEMO · préparation encore ouverte",
-      "conclusion": "Le projet correspond au thème de l'appel. Deux conditions déterminantes restent sans preuve.",
-      "output_columns": [
-        "Vérification",
-        "Constat du cas",
-        "Pièce suivante"
-      ],
-      "output_rows": [
-        [
-          "Investissement · B1/C1",
-          "Machine décrite",
-          "Comparaison technique complète"
-        ],
-        [
-          "Localisation · B1 § 2",
-          "Non vérifiée",
-          "Document de l'unité productive"
-        ],
-        [
-          "Début des dépenses · B1 § 4",
-          "Non vérifié",
-          "Commande et chronologie"
-        ]
-      ],
-      "check": "Pertinence ne signifie pas éligibilité. La fiche ne remplace pas l'appel officiel et ses annexes.",
-      "question": "Le devis correspond parfaitement. Peut-on déclarer Arco éligible ?",
-      "answer": "Non. Implantation, chronologie et autres critères de la source complète restent à vérifier. Le résultat est un dossier avec points ouverts.",
-      "practice": "Ajoute une commande fictive antérieure à la demande et revois le critère temporel.",
-      "next": "Sélectionne l'opportunité et l'entreprise réelles ; vérifie la source officielle actuelle avant de promettre un avantage."
+      "practice": "Fournissez le devis actualisé de l’exercice. Demandez un nouveau dossier en conservant le premier et examinez les changements de coûts, montant proposé et révisions nécessaires.",
+      "success": "Vous savez démarrer avec un appel sélectionné, relire le dossier et demander une mise à jour sans confondre proposition et approbation.",
+      "repeat": "Fournissez l’appel officiel sélectionné, ses annexes et les documents de l’entreprise, en précisant projet et date de référence. Vera prépare le dossier avec les révisions normales. Pour rechercher d’abord une opportunité, indiquez territoire et projet."
     },
     "de": {
-      "title": "Eine passende Förderung ist noch kein belegter Anspruch",
-      "goal": "Fördersuche und beleggestützte Vorbereitung für ein bestimmtes Unternehmen unterscheiden.",
-      "scenario": "Ein vollständig fiktiver Aufruf fördert Maschinen produzierender Unternehmen in einer bestimmten Region. Arco plant EUR 80.000 Investition. Nachweise zum Betriebsstandort und Beginn der Ausgaben fehlen.",
-      "request": "Vera, zeige, wie aus einem gefundenen Förderaufruf konkrete Prüfungen für dieses Unternehmen werden.",
-      "scope": "Der DEMO-Aufruf existiert nicht und nimmt keine Anträge an. Echte Förderungen benötigen aktuelle amtliche Quellen.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Bedingung oder Fakt",
-        "Beleg"
+      "title": "Mit Vera einen Förderantrag vorbereiten",
+      "goal": "Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.",
+      "scenario": "Eine Kanzlei untersucht das Digitalprojekt eines kleinen Unternehmens. Ein vollständig fiktiver Aufruf und simulierte Unterlagen zeigen den Ablauf von den Bedingungen bis zum Dossier. Anschließend wird das Angebot aktualisiert.",
+      "scope": "Dossiervorbereitung nach Auswahl eines Aufrufs: Quellen, Anforderungen, Belege, Kosten, Unterlagen, Entwurf und Prüfung. Die Suche nach Fördermöglichkeiten ist die andere Stufe dieser Funktion; hier liegt der Aufruf vor. Seine Bedingungen sind kein geltendes Recht und keine echte Förderung.",
+      "inputs": "Öffnen Sie avviso-de.md, progetto-de.md und preventivo-de.csv: simulierter Aufruf, erklärte Unternehmensfakten und vorgeschlagene Kosten. Förderfähigkeit, Kostenklassifizierung und Freigaben wurden noch nicht beurteilt.",
+      "request": "Vera, bereite aus diesem Aufruf und den Unternehmensunterlagen ein Übungsdossier vor. Zeige Anforderungen, Belegabgleich, Kosten, nötige Dokumente und meine Prüfpunkte.",
+      "steps": [
+        "Im Arbeitsfenster eröffnet Vera den Fall und registriert die Unterlagen. Im Sprachchat erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.",
+        "Vera schlägt Anforderungen und Faktenabgleiche vor, prüft die Kosten und erstellt Dokumentenliste und Entwurf. Verfolgen Sie einen Punkt von der Quelle zum Vorschlag und führen Sie die vorgesehenen Prüfentscheidungen durch.",
+        "Öffnen Sie Dossier und Prüfungen. Betrachten Sie vorgeschlagenes Ergebnis, fehlende Unterlagen, Kosten und nächste Schritte. Vera erklärt die weitere Prüfung und Antragsvorbereitung; diese Übung nutzt kein Portal und versendet nichts."
       ],
-      "input_rows": [
-        [
-          "B1 · DEMO-Aufruf § 2",
-          "Betriebsstätte in der Förderregion",
-          "Standort nicht dokumentiert"
-        ],
-        [
-          "B1 · § 4",
-          "Ausgabenbeginn nach Antragstellung",
-          "Bestelldatum fehlt"
-        ],
-        [
-          "C1 · Arco-Projekt",
-          "Maschinen: EUR 80.000",
-          "Angebot vorhanden"
-        ]
+      "deliverables": [
+        "Lokales Dossier mit Anforderungen, Belegen, vorgeschlagenen Bewertungen, Kosten, Unterlagen und Entwurf.",
+        "Prüfungen und Entscheidungsverlauf mit offenen Punkten und nächsten Schritten."
       ],
-      "basis": "B1 definiert nur die Bedingungen des Beispiels. C1 belegt ein Vorhaben, nicht die Erfüllung aller Voraussetzungen. Eine Förderquote wird nicht erfunden.",
-      "method": [
-        "Bestimme das Suchziel und prüfe relevante Quellen. Verknüpfe jede Gelegenheit mit ihrer genauen Quelle und Version.",
-        "Vergleiche jede Voraussetzung mit den Unternehmensbelegen und benenne fehlende Unterlagen.",
-        "Erstelle Förderübersicht, Prüfliste und prüfbares Dossier. Unterscheide Relevanz, belegte Voraussetzungen und Dokumentenstand; stelle keinen Antrag."
+      "review": "Prüfen Sie den Quellenbezug jeder Anforderung und den Dokumentenbezug jedes Fakts. Unterscheiden Sie vollständige Unterlagen, vorgeschlagenes Ergebnis und Behördenentscheidung: Ein Dossier bewilligt keine Förderung.",
+      "checkpoints": [
+        "Erklären Sie benötigte Dateien und Anfrage bei einem bereits ausgewählten Aufruf.",
+        "Öffnen Sie das Dossier, verfolgen Sie einen Vorschlag zur Quelle und benennen Sie die offene Prüfung."
       ],
-      "result_title": "DEMO · Vorbereitung noch offen",
-      "conclusion": "Das Vorhaben passt zum Gegenstand des Aufrufs. Zwei entscheidende Bedingungen sind noch nicht belegt.",
-      "output_columns": [
-        "Prüfung",
-        "Befund",
-        "Nächster Beleg"
-      ],
-      "output_rows": [
-        [
-          "Investitionsbezug · B1/C1",
-          "Maschinen beschrieben",
-          "Technischen Vergleich vervollständigen"
-        ],
-        [
-          "Standort · B1 § 2",
-          "Nicht geprüft",
-          "Betriebsstättennachweis"
-        ],
-        [
-          "Ausgabenbeginn · B1 § 4",
-          "Nicht geprüft",
-          "Bestellung und Ausgabenchronologie"
-        ]
-      ],
-      "check": "Relevanz beweist keine Förderfähigkeit. Eine Übersicht ersetzt nicht den amtlichen Aufruf mit Anlagen.",
-      "question": "Das Angebot passt perfekt. Können wir Arco als förderfähig bezeichnen?",
-      "answer": "Nein. Standort, Zeitpunkt und alle weiteren Bedingungen der vollständigen Quelle müssen geprüft werden. Liefere die offenen Vorbereitungspunkte.",
-      "practice": "Ergänze eine fiktive Bestellung vor der Antragstellung und prüfe die zeitliche Bedingung erneut.",
-      "next": "Wähle eine echte Förderung und ein Unternehmen; prüfe die aktuelle amtliche Quelle vor jeder Zusage."
+      "practice": "Stellen Sie das aktualisierte Übungsangebot bereit. Verlangen Sie ein neues Dossier unter Beibehaltung des ersten und prüfen Sie Änderungen an Kosten, vorgeschlagenem Betrag und nötigen Prüfungen.",
+      "success": "Sie können mit einem ausgewählten Aufruf beginnen, das Dossier prüfen und eine Aktualisierung verlangen, ohne einen Vorschlag als Freigabe zu behandeln.",
+      "repeat": "Stellen Sie offiziellen Aufruf, Anlagen und Unternehmensunterlagen bereit und nennen Sie Projekt und Stichtag. Vera bereitet das Dossier mit den normalen Prüfungen vor. Für eine vorgelagerte Fördersuche geben Sie Gebiet und Projekt an."
     },
     "es": {
-      "title": "Una oportunidad interesante no acredita la elegibilidad",
-      "goal": "Distinguir la búsqueda de ayudas de la preparación documentada para una empresa concreta.",
-      "scenario": "Una convocatoria totalmente ficticia financia maquinaria para fabricantes de una región. Arco propone invertir EUR 80.000. Faltan pruebas del establecimiento y de la fecha de inicio del gasto.",
-      "request": "Vera, muestra cómo una convocatoria encontrada se convierte en comprobaciones para esta empresa.",
-      "scope": "La convocatoria DEMO no existe y no admite solicitudes. Las oportunidades reales requieren fuentes oficiales actuales.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Condición o hecho",
-        "Prueba"
+      "title": "Preparar un expediente de ayudas con Vera",
+      "goal": "Aprender a empezar con una convocatoria seleccionada, aportar documentos de la empresa y revisar el expediente preparado por Vera.",
+      "scenario": "Un despacho examina el proyecto digital de una pequeña empresa. Una convocatoria totalmente ficticia y documentos simulados permiten seguir el trabajo desde las condiciones hasta el expediente y actualizar después el presupuesto.",
+      "scope": "Preparación tras seleccionar una convocatoria: fuentes, requisitos, evidencias, gastos, documentos, borrador y revisión. La búsqueda de oportunidades es la otra etapa de la función; aquí ya se aporta la convocatoria. Sus condiciones no son normas ni financiación reales.",
+      "inputs": "Abre avviso-es.md, progetto-es.md y preventivo-es.csv: convocatoria simulada, hechos declarados de la empresa y costes propuestos. No incluyen una evaluación de elegibilidad, clasificación de gastos aceptada ni aprobación previa.",
+      "request": "Vera, prepara un expediente de práctica con esta convocatoria y los documentos de la empresa. Muéstrame requisitos, comparación con las evidencias, gastos, documentos necesarios y puntos que debo revisar.",
+      "steps": [
+        "En la ventana de trabajo, Vera abre el caso y registra los documentos. La conversación de voz explica encargo, fuentes y resultado. Revisa qué documentos rigen el ejercicio y cuáles describen la empresa.",
+        "Vera propone requisitos y comparaciones con los hechos, examina gastos y prepara la lista de documentos y el borrador. Sigue un punto desde la fuente hasta la propuesta y revisa las decisiones previstas por el procedimiento normal.",
+        "Abre el expediente y sus controles. Examina resultado propuesto, documentos pendientes, gastos y próximas acciones. Vera explica la revisión posterior y la preparación de la solicitud; este ejercicio no utiliza portales ni envía nada."
       ],
-      "input_rows": [
-        [
-          "B1 · convocatoria DEMO § 2",
-          "Establecimiento en la región convocante",
-          "Ubicación sin documentar"
-        ],
-        [
-          "B1 · § 4",
-          "Gasto iniciado después de solicitar",
-          "Falta fecha del pedido"
-        ],
-        [
-          "C1 · proyecto Arco",
-          "Maquinaria: EUR 80.000",
-          "Presupuesto entregado"
-        ]
+      "deliverables": [
+        "Expediente local con requisitos, evidencias, evaluaciones propuestas, gastos, documentos y borrador.",
+        "Controles y registro de revisiones con puntos abiertos y próximas acciones."
       ],
-      "basis": "B1 define solo las condiciones del ejemplo. C1 acredita un proyecto, no el cumplimiento de todos los requisitos. No se inventa un porcentaje de ayuda.",
-      "method": [
-        "Define el objetivo de búsqueda y revisa fuentes pertinentes. Vincula cada oportunidad con fuente y versión exactas.",
-        "Compara cada requisito con las pruebas de la empresa seleccionada e identifica documentos pendientes.",
-        "Prepara ficha, lista de comprobación y dossier revisable. Distingue pertinencia, requisitos verificados y preparación documental; no presentes la solicitud."
+      "review": "Comprueba que cada requisito remita a la convocatoria y cada hecho al documento correcto. Distingue disponibilidad documental, resultado propuesto y decisión del organismo: un expediente no concede una ayuda.",
+      "checkpoints": [
+        "Explica los archivos y la petición necesarios cuando ya hay una convocatoria seleccionada.",
+        "Abre el expediente, vincula una propuesta con su fuente e identifica la revisión pendiente."
       ],
-      "result_title": "DEMO · preparación todavía abierta",
-      "conclusion": "El proyecto encaja con el objeto de la convocatoria. Dos condiciones decisivas siguen sin documentar.",
-      "output_columns": [
-        "Comprobación",
-        "Resultado del caso",
-        "Próxima prueba"
-      ],
-      "output_rows": [
-        [
-          "Encaje de inversión · B1/C1",
-          "Maquinaria descrita",
-          "Completar comparación técnica"
-        ],
-        [
-          "Ubicación · B1 § 2",
-          "No verificada",
-          "Documento del establecimiento"
-        ],
-        [
-          "Inicio del gasto · B1 § 4",
-          "No verificado",
-          "Pedido y cronología del gasto"
-        ]
-      ],
-      "check": "La pertinencia no demuestra elegibilidad. Una ficha no sustituye la convocatoria oficial y sus anexos.",
-      "question": "El presupuesto encaja perfectamente. ¿Podemos afirmar que Arco es elegible?",
-      "answer": "No. Ubicación, momento y demás condiciones de la fuente completa necesitan evaluación. Entrega las comprobaciones abiertas.",
-      "practice": "Añade un pedido ficticio anterior a la solicitud y reconsidera la condición temporal.",
-      "next": "Selecciona oportunidad y empresa reales y verifica la fuente oficial vigente antes de prometer una ayuda."
+      "practice": "Aporta el presupuesto actualizado del ejercicio. Pide un nuevo expediente conservando el primero y revisa cómo cambian costes, importe propuesto y revisiones necesarias.",
+      "success": "Sabes iniciar el trabajo con una convocatoria, revisar el expediente y solicitar una actualización sin confundir propuesta y aprobación.",
+      "repeat": "Aporta convocatoria oficial, anexos y documentos de la empresa, con proyecto y fecha de referencia. Vera prepara el expediente con las revisiones normales. Si primero buscas una oportunidad, indica territorio y proyecto."
     }
   }
 }

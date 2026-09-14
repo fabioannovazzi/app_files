@@ -36,7 +36,7 @@ python3 <vera-root>/scripts/local_teaching.py <command> --session <id> --revisio
 | `pair` | `{"teacher_thread_id":"actual-id","worker_thread_id":"actual-id"}` |
 | `checkpoint` | `{"next_step":"…","question":"optional user question","voice_preference":"native_voice"}`; `text_requested` only for the user's choice |
 | `pause` / `resume` | `{"next_step":"Last observed state and next bounded step"}` |
-| `demo` / `practice` | `{"artifacts":["relative/path.csv"],"prompt":"Actual natural request","review":"Observed result and professional checks"}` |
+| `demo` / `practice` | `{"artifacts":["relative/path.csv"],"prompt":"Actual natural request","review":"Observed result and professional checks","execution_record":"demo-execution.json"}` |
 | `focus` | `{"result":"demo","artifact":"relative/path.csv","location":"Sheet / row / section","explanation":"Source-linked explanation","host_result":"queued"}`; host outcome is `opened`, `queued` or `user_confirmed` |
 | `use-files` | `{"selected_by_user":true,"sources":["/absolute/selected/file"],"destination":"/absolute/real-work-directory","goal":"Actual requested assignment"}` |
 | `application` | Same evidence input as `demo`, with result paths relative to the selected real-work destination |
@@ -67,7 +67,8 @@ python3 <vera-root>/scripts/local_onboarding_case.py --session <id> --thread-id 
 
 Use `--phase practice` after recording the demo. The original onboarding adapter
 omits `--session`. The same genuine managed-case setup and specialist commands in
-`../../vera/references/tutorial-cases.md` apply. One adapter call creates a new
+`../../vera/references/tutorial-cases.md` apply. The `studio-archive` search route also requires the prepared archive
+`--source-root`, as documented there. One adapter call creates a new
 attempt; inspect `tutorial_case.json` and reuse an interrupted attempt first.
 
 Only the teacher records progress. The worker returns actual artifacts and state.
@@ -84,8 +85,15 @@ valid copy, then use `recover --session <id> --input <copy>`. Recovery leaves th
 session paused and invalidates old worker tokens. Never delete the enrollment,
 mark lessons complete without participation or remove the local-only marker.
 
-## Prepared course material
+## Prepared teaching kit
 
-Before creating lesson materials, follow `prepared-courses.md` and reuse the
-source-checked local library. Its renderer does not record demonstration,
-practice or understanding; retain the actual session evidence requirements.
+Follow `prepared-courses.md` and use the source-checked kit. Import its exact
+source files into the real case for the demo. For practice, follow the
+specialist: use a new run in the same case when an update requires its actual
+predecessor, or a fresh case for an independent attempt. Preserve the demo. The renderer writes instructions and inputs only.
+The worker executes the current pipeline and returns actual artifacts. The
+teacher explains verified progress, records actual evidence and waits for real
+participation before recording practice or confirmed understanding.
+
+Before recording `demo`, `practice` or `application`, follow
+`execution-evidence.md`. Prepared lesson files cannot count as actual results.

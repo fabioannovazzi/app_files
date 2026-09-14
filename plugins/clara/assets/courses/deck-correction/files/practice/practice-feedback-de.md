@@ -1,0 +1,1 @@
+Unabhängige Korrekturübung: von der Originalpräsentation ausgehen. Auf der Schlussfolie den Versuchsvorschlag durch die Bitte ersetzen, zuerst Fragen des Teams zum Formular zu sammeln. Keinen Versuch beginnen oder ankündigen. Alles andere sowie beide korrigierten Kopien erhalten.

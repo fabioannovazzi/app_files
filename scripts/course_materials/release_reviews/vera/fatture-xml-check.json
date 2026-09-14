@@ -1,0 +1,246 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "fatture-xml-check",
+  "course_sha256": "7ea732d04479103c6018762a2c0e8fa2d1d4bbb1280f4ac52ef0894bab782b31",
+  "reviewer": "Codex: first-use teaching-kit editorial and native-output review",
+  "reviewed_at": "2026-09-14T13:57:46.251567+00:00",
+  "review_scope": "Prepared lesson, fictional sources, actual native extraction outputs and closed local execution records. This does not approve a professional case or establish human learner, native voice or two-window acceptance.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches delivering a folder of received XML invoices, asking for a check, reading the summary and locating an item needing review. It explains the complete ordinary use before any anomaly detail.",
+        "inputs_and_request": "Three clearly fictional FatturaPA files and a localized case note supply a small March batch. The ordinary-language request names the month, documents, amounts and review points. No generated summary is supplied as the answer.",
+        "execution_and_checkpoints": "The actual current XML parser runs on the bound local inputs. The lesson checks the selected folder before execution and asks the learner to trace a summary row to its XML afterwards; voice follows the paired working chat.",
+        "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
+        "practice_and_repeat": "The learner adds the fourth April invoice in a fresh practice folder and requests all four. Actual outputs distinguish March and April. Repeat instructions select the client folder, request the same check and review findings before further work.",
+        "language_and_pacing": "Italian instructions identify the exact files and distinguish checking or extracting source data from bookkeeping and tax conclusions. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[it-demo-numbers0]",
+        "result_review": "The actual summary contains DEMO-001 through DEMO-003, all March 2026, totalling EUR 2440.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "a2e18d14ffadd7f3d9c177f3239cd69a5ec284db954eda9db66125d1fa8e4232"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[it-practice-numbers1]",
+        "result_review": "The actual summary preserves the March batch and adds DEMO-004 dated 2026-04-03 for EUR 976.00, bringing the batch to EUR 3416.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "ec1ef7851e914507b7fd27e767e5a7a211a49f46e9676bf2a9d9286e96bdff67"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches delivering a folder of received XML invoices, asking for a check, reading the summary and locating an item needing review. It explains the complete ordinary use before any anomaly detail.",
+        "inputs_and_request": "Three clearly fictional FatturaPA files and a localized case note supply a small March batch. The ordinary-language request names the month, documents, amounts and review points. No generated summary is supplied as the answer.",
+        "execution_and_checkpoints": "The actual current XML parser runs on the bound local inputs. The lesson checks the selected folder before execution and asks the learner to trace a summary row to its XML afterwards; voice follows the paired working chat.",
+        "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
+        "practice_and_repeat": "The learner adds the fourth April invoice in a fresh practice folder and requests all four. Actual outputs distinguish March and April. Repeat instructions select the client folder, request the same check and review findings before further work.",
+        "language_and_pacing": "English instructions give a complete everyday request, identify the Italian source formats and explain how to trace the result back to a document. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[en-demo-numbers0]",
+        "result_review": "The actual summary contains DEMO-001 through DEMO-003, all March 2026, totalling EUR 2440.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "9df7db5bd717e21b9d09a0a9d0f9ae29d1ce2d3dc4b7ef4e6d9eeed8d97b90b8"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[en-practice-numbers1]",
+        "result_review": "The actual summary preserves the March batch and adds DEMO-004 dated 2026-04-03 for EUR 976.00, bringing the batch to EUR 3416.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "ed98b7bdef44b2fdfa133fcebec6f22fbe98ddacaf47dd0158eab9cc1efd51b1"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches delivering a folder of received XML invoices, asking for a check, reading the summary and locating an item needing review. It explains the complete ordinary use before any anomaly detail.",
+        "inputs_and_request": "Three clearly fictional FatturaPA files and a localized case note supply a small March batch. The ordinary-language request names the month, documents, amounts and review points. No generated summary is supplied as the answer.",
+        "execution_and_checkpoints": "The actual current XML parser runs on the bound local inputs. The lesson checks the selected folder before execution and asks the learner to trace a summary row to its XML afterwards; voice follows the paired working chat.",
+        "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
+        "practice_and_repeat": "The learner adds the fourth April invoice in a fresh practice folder and requests all four. Actual outputs distinguish March and April. Repeat instructions select the client folder, request the same check and review findings before further work.",
+        "language_and_pacing": "French instructions consistently use dossier, source and the named Italian document formats; the exercise adds a document without replacing the original. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[fr-demo-numbers0]",
+        "result_review": "The actual summary contains DEMO-001 through DEMO-003, all March 2026, totalling EUR 2440.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "2f9a802dbdb14b800b3bbc62c0c64141d0a64fc7df6f21f779ed6f8fb0946d95"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[fr-practice-numbers1]",
+        "result_review": "The actual summary preserves the March batch and adds DEMO-004 dated 2026-04-03 for EUR 976.00, bringing the batch to EUR 3416.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "9eb44d1a8323c975b2c57f40bba53647c4a97287473cdc25e54398123477957d"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches delivering a folder of received XML invoices, asking for a check, reading the summary and locating an item needing review. It explains the complete ordinary use before any anomaly detail.",
+        "inputs_and_request": "Three clearly fictional FatturaPA files and a localized case note supply a small March batch. The ordinary-language request names the month, documents, amounts and review points. No generated summary is supplied as the answer.",
+        "execution_and_checkpoints": "The actual current XML parser runs on the bound local inputs. The lesson checks the selected folder before execution and asks the learner to trace a summary row to its XML afterwards; voice follows the paired working chat.",
+        "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
+        "practice_and_repeat": "The learner adds the fourth April invoice in a fresh practice folder and requests all four. Actual outputs distinguish March and April. Repeat instructions select the client folder, request the same check and review findings before further work.",
+        "language_and_pacing": "German instructions consistently distinguish the document and reporting period, identify the files, and ask the learner to find source evidence. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[de-demo-numbers0]",
+        "result_review": "The actual summary contains DEMO-001 through DEMO-003, all March 2026, totalling EUR 2440.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "82e5a2c1e0474f8f96035cf19d302b3c2192038853f9857d82cbe261eeba4b0d"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[de-practice-numbers1]",
+        "result_review": "The actual summary preserves the March batch and adds DEMO-004 dated 2026-04-03 for EUR 976.00, bringing the batch to EUR 3416.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "866d0dd59d4f48bcaaee6934b622ac0f2ee999b89946075b2f4268faf51180da"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches delivering a folder of received XML invoices, asking for a check, reading the summary and locating an item needing review. It explains the complete ordinary use before any anomaly detail.",
+        "inputs_and_request": "Three clearly fictional FatturaPA files and a localized case note supply a small March batch. The ordinary-language request names the month, documents, amounts and review points. No generated summary is supplied as the answer.",
+        "execution_and_checkpoints": "The actual current XML parser runs on the bound local inputs. The lesson checks the selected folder before execution and asks the learner to trace a summary row to its XML afterwards; voice follows the paired working chat.",
+        "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
+        "practice_and_repeat": "The learner adds the fourth April invoice in a fresh practice folder and requests all four. Actual outputs distinguish March and April. Repeat instructions select the client folder, request the same check and review findings before further work.",
+        "language_and_pacing": "Spanish instructions identify the files and explain checking the result and repeating the request; Italian source formats retain their proper names. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[es-demo-numbers0]",
+        "result_review": "The actual summary contains DEMO-001 through DEMO-003, all March 2026, totalling EUR 2440.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "c56402ea920e7d8af7b9c700f2555f24dba8f66b82e404710e4425174a55139b"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[es-practice-numbers1]",
+        "result_review": "The actual summary preserves the March batch and adds DEMO-004 dated 2026-04-03 for EUR 976.00, bringing the batch to EUR 3416.00. No formal anomaly or duplicate is reported for these ordinary inputs. This is the parser result, not confirmation of fiscal validity. The ledger closes the actual output set.",
+        "reviewed_artifacts": [
+          {
+            "name": "fatture_summary.csv",
+            "sha256": "98a199537d0dbd3cf3f1e4efa7ac6333b20e88954a23b4c20e321e4fb3058c62"
+          },
+          {
+            "name": "formal_anomalies.md",
+            "sha256": "e4e290a29ff1bc96e591005813f15d58f9914d84fa6c9f3901791b1013525193"
+          },
+          {
+            "name": "duplicate_candidates.csv",
+            "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
+          }
+        ]
+      }
+    }
+  }
+}

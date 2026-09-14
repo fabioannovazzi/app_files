@@ -14,6 +14,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._teaching_execution import execution_record
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 from desktop_teaching import cases, onboarding, teaching
@@ -81,6 +83,7 @@ def evidence(store, phase, workflow=None):
         store,
         phase,
         artifacts=[str(path)],
+        execution_record=execution_record(store, phase, path, workflow),
         prompt="Mostrami il risultato",
         review="Fixture review; no professional certification",
         **({"workflow_id": workflow} if workflow else {}),
@@ -333,6 +336,7 @@ def test_selected_files_scope_and_application(store, tmp_path):
         session,
         "application",
         artifacts=[str(result)],
+        execution_record=execution_record(session, "application", result),
         prompt="Use my files",
         review="Actual selected-source review",
     )
@@ -598,3 +602,38 @@ def test_os_user_locations_are_distinct_and_independent_of_version(
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
     assert onboarding.default_root("clara") == tmp_path / "Clara/onboarding"
     assert onboarding.default_root("lucia") == tmp_path / "Lucia/onboarding"
+
+
+def test_lucia_website_prepares_project_without_a_false_ledger_context(tmp_path):
+    store = onboarding.Store(tmp_path / "lucia", plugin_root=ROOT / "plugins/lucia")
+    prepare(store)
+    workflow = "presenza-digitale-studio"
+    change(
+        store,
+        "plan",
+        lessons=[
+            {
+                "workflow_id": wf,
+                "reason": "Fictional website fixture",
+                "goal": "Verify the selected intake",
+            }
+            for wf in (workflow, "apertura-pratica", "comunicazione-professionale")
+        ],
+    )
+    state = change(store, "start", workflow_id=workflow)
+    lesson = next(item for item in state["lessons"] if item["workflow_id"] == workflow)
+    source = tmp_path / "studio.md"
+    source.write_text("Fictional law firm for local website work.")
+    result = cases.prepare_case(
+        store,
+        thread_id="worker",
+        workflow=workflow,
+        token=lesson["worker_token"],
+        sources=[source],
+        phase="demo",
+    )
+    assert result["status"] == "prepared"
+    assert "context_path" not in result
+    assert Path(result["inputs"][0]["path"]).read_bytes() == source.read_bytes()
+    assert Path(result["output_dir"]).is_relative_to(store.root)
+    assert not (Path(result["directory"]) / "Vera").exists()

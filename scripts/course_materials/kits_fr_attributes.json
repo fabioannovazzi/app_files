@@ -1,0 +1,27 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Créer un rapport sur l’assortiment avec Clara",
+    "goal": "Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.",
+    "scenario": "Une équipe produit veut comprendre l’assortiment avant sa prochaine réunion. Partez d’un dossier fictif sur la maille, suivez la préparation du rapport et rapprochez les conclusions des produits sources. Recommencez avec un dossier actualisé.",
+    "scope": "Un premier rapport complet à partir d’un dossier local existant : réception, comparaison, interprétation, révision indépendante et livraison. La collecte sur les sites, le classement central des attributs et Brand Fit sont des travaux distincts, sans simulation dans cette leçon.",
+    "inputs": "Ouvrez brief-fr.md et fournissez assortment-demo-fr.zip. L’archive contient des produits fictifs, des groupes explicitement définis de nouveautés et de meilleures ventes, des comparaisons calculées et un contrôle d’intégrité. Aucun rapport final, interprétation approuvée ou reçu serveur n’est fourni.",
+    "request": "Clara, prépare un rapport sur l’assortiment à partir de ce dossier pour notre équipe produit. Explique les données couvertes, compare meilleures ventes et nouveautés au reste, puis montre le rapport et ses contrôles.",
+    "steps": [
+      "Confirmez distributeur, catégorie, données fournies et destinataires. Clara ouvre l’archive et vérifie son intégrité. La conversation vocale explique les produits sources et les groupes définis par le distributeur.",
+      "Clara prépare les tableaux comparatifs habituels et rédige le rapport à partir des preuves. Suivez une comparaison des produits au tableau puis à la conclusion ; distinguez une caractéristique de l’assortiment des volumes vendus ou d’une explication causale.",
+      "Une révision indépendante vérifie les affirmations et la lisibilité ; les contrôles dans le navigateur examinent l’HTML. Ouvrez le rapport réel, son verdict et ses réserves. Repérez synthèse, tableaux, produits sources et prochaine question pour l’équipe."
+    ],
+    "deliverables": [
+      "Un rapport HTML local avec comparaisons, interprétation, références et verdict explicite sur sa justesse.",
+      "Des tableaux sources et comptes rendus de révision expliquant le verdict et les limites."
+    ],
+    "review": "Vérifiez les données fournies, les groupes et les preuves d’une conclusion. Les nouveautés sont celles désignées par la source ; le classement des meilleures ventes ne donne pas les volumes vendus. Lisez les motifs du verdict avant utilisation.",
+    "checkpoints": [
+      "Identifiez le dossier et la demande nécessaires pour commencer, puis expliquez le résultat attendu.",
+      "Ouvrez le rapport et reliez une conclusion à ses preuves et à son état de révision."
+    ],
+    "practice": "Fournissez assortment-practice-fr.zip, qui modifie le groupe fictif des nouveautés. Demandez un nouveau rapport pour le même public. Conservez le premier et comparez les changements dans les preuves et l’interprétation.",
+    "success": "Vous savez lancer un rapport, lire sa synthèse et ses preuves, comprendre le verdict et recommencer avec un autre dossier.",
+    "repeat": "Fournissez un dossier dont l’intégrité a été vérifiée et précisez le public et la question. Clara prépare, révise et livre l’HTML localement. Les données centrales actuelles suivent une réception authentifiée distincte et son périmètre de données déclaré."
+  }
+}

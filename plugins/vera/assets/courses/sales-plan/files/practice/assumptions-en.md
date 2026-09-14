@@ -1,0 +1,5 @@
+# Ciclo Arco
+
+Entirely fictional case: Ciclo Arco sells urban and trekking bicycles. actual-sales.csv contains monthly actuals for January and February 2026 in EUR; units, gross sales, discounts and cost of goods sold are available. Positive amounts, ungrouped dot decimals; FX is one. Prepare January and February 2027 from the same months in 2026. Demonstration assumption: units +10% for both products; unit prices unchanged, discounts and COGS proportional to sales. No FX conversion, overlapping assumptions or estimates for missing months. This is a scenario request to read back and confirm during the lesson, not evidence of future demand or prefilled professional confirmation.
+
+Practice: use the same actuals and target months but change units growth from +10% to +5% for both products. Prices, discount/cost rules and currency stay as in the demonstration. Request a separate new scenario and compare summaries; preserve the first result.

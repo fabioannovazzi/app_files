@@ -1,0 +1,127 @@
+{
+  "vera/journal-bank-reconciliation": {
+    "title": "Einen Kontoauszug mit Vera abstimmen",
+    "goal": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
+    "scenario": "Officina Arco schließt den März ab. Kontoauszug und Bankkonto sollten dieselben Zahlungen zeigen. Wir vergleichen sie und prüfen die erstellten Arbeitspapiere.",
+    "scope": "Ein Bankkonto in EUR, März 2026. Der Fall verwendet eindeutige Referenzen und einzelne Zahlungen. Andere Konten und Zeiträume bleiben außerhalb dieses Laufs.",
+    "inputs": "Öffnen Sie bank-march.csv, bank-ledger-march.csv und case-de.md. Der Kontoauszug liefert die Bankbewegungen, das Kontoblatt die Buchungen zum Vergleich. Datumswerte sind im ISO-Format; Auszahlungen sind in beiden Dateien negativ.",
+    "request": "Vera, stimme Arcos Kontoauszug für März mit dem Bankkonto der Buchhaltung ab. Zeige zugeordnete Zahlungen, offene Zuordnungen und die zu prüfenden Kontrollen.",
+    "steps": [
+      "Vera importiert beide Exporte in den Übungsfall und untersucht ihre Struktur. Bestätigen Sie Konto, Datum, Vorzeichen und Referenzspalten.",
+      "Prüfen Sie die vorgeschlagenen Regeln: einzelne Zahlungen, genaue Referenzen und Beträge sowie keine doppelte Verwendung einer Bewegung. Der aktuelle Ablauf führt den Vergleich lokal aus.",
+      "Öffnen Sie die erzeugte Arbeitsmappe und die Prüfhinweise. Verfolgen Sie eine Zahlung vom Kontoauszug zur Buchungsreferenz und finden Sie anschließend offene Zuordnungen und Kontrollergebnisse."
+    ],
+    "deliverables": [
+      "Abstimmungsmappe und Detailtabellen: dienen zur Prüfung der Zuordnungen und noch zu klärenden Bewegungen.",
+      "Prüfhinweise und Kontrollen: erläutern Abdeckung, angewandte Regeln und benötigte zusätzliche Belege."
+    ],
+    "review": "Prüfen Sie, ob beide Dateien dasselbe Konto und denselben Zeitraum betreffen. Finden Sie zu einer Zuordnung beide Quellzeilen. Die Abstimmung einer Zahlung bestimmt noch nicht die steuerliche Behandlung der Rechnung.",
+    "checkpoints": [
+      "Vor dem Start: Welche Datei stammt von der Bank, welche aus der Buchhaltung?",
+      "Bei der Übergabe: Finden Sie eine zugeordnete Zahlung und die Stelle für nicht zugeordnete Bewegungen."
+    ],
+    "practice": "Fordern Sie mit bank-april.csv und bank-ledger-april.csv eine neue Abstimmung bis zum 4. April an. Die kumulierten Dateien ergänzen die dritte Rechnungszahlung. Bewahren Sie das März-Ergebnis auf.",
+    "success": "Der neue Lauf enthält die Aprilbewegung. Erklären Sie, wie Sie eine im Kontoblatt fehlende Bankbewegung untersuchen würden.",
+    "repeat": "Stellen Sie vergleichbare Bank- und Buchhaltungsexporte bereit, nennen Sie Konto und Zeitraum, prüfen Sie die vorgeschlagene Interpretation und klären Sie Unterschiede anhand der Abstimmung."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Offene Posten mit Vera prüfen",
+    "goal": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und vollständig, teilweise oder noch nicht ausgeglichene Rechnungen zum Stichtag zu erkennen.",
+    "scenario": "Eine ältere Lieferantenliste von Arco führt noch drei Rechnungen als offen. Die Bankbewegungen ermöglichen die Prüfung zum 31. März.",
+    "scope": "Drei Lieferantenrechnungen in EUR. Die März-Prüfung berücksichtigt keine Zahlungen nach dem Stichtag; die Übung aktualisiert diesen Stichtag.",
+    "inputs": "Öffnen Sie open-items-de.pdf und bank-march-de.pdf. Das erste Dokument enthält den zu prüfenden Bestand, das zweite die Auszahlungen. Beide sind fiktive Übungsexporte. Beträge verwenden das italienische Dezimalkomma, Datumswerte Tag/Monat/Jahr.",
+    "request": "Vera, prüfe diese offenen Lieferantenposten zum 31. März 2026. Zeige anhand der Bankzahlungsnachweise, was bezahlt ist, was offen bleibt und was geprüft werden muss.",
+    "steps": [
+      "Vera importiert die Dateien, bestimmt den Ausgangsbestand und schlägt Rolle und Betragsbedeutung jeder Quelle vor. Bestätigen Sie Stichtag und Umgang mit späteren Zahlungen.",
+      "Der aktuelle Ablauf verknüpft Rechnungen mit Zahlungsnachweisen, berechnet Restbeträge und erstellt das Prüfungspaket. Der Sprachchat erklärt Fortschritt und fehlende Unterlagen.",
+      "Öffnen Sie die lokale Prüfseite und die Arbeitspapiere. Verfolgen Sie eine Rechnung vom gemeldeten offenen Betrag über den Zahlungsnachweis zum Restbetrag. Prüfentscheidungen bleiben ausstehend, bis sie tatsächlich getroffen werden."
+    ],
+    "deliverables": [
+      "Excel-Arbeitspapiere und Arbeitsübersicht: zeigen geprüften Bestand, Zahlungszuordnungen, Restbeträge und Ausnahmen.",
+      "Word-Bericht und lokale Prüfseite: erläutern die Ergebnisse und ermöglichen die fachliche Prüfung sowie Dokumentenanforderungen."
+    ],
+    "review": "Prüfen Sie zuerst Bestand und Stichtag. Die März-Belege stützen den Ausgleich der ersten beiden Rechnungen; die dritte bleibt mit diesen Unterlagen ungeklärt. Prüfen Sie Datum und Quellen vor einer Entscheidung.",
+    "checkpoints": [
+      "Vor dem Start: Unterscheiden Sie den zu prüfenden Bestand von den Nachweisen.",
+      "Bei der Übergabe: Finden Sie die verbleibende Rechnung, ihren Betrag und den noch benötigten Nachweis."
+    ],
+    "practice": "Behalten Sie open-items-de.pdf bei und fordern Sie mit bank-april-de.pdf eine neue Prüfung zum 30. April an. Der kumulierte Bankbeleg enthält die dritte Zahlung. Bewahren Sie die März-Unterlagen auf.",
+    "success": "Die neue Prüfung berücksichtigt die dritte Zahlung. Erklären Sie den Unterschied zwischen März und April und zeigen Sie, wo eine Prüfentscheidung gespeichert wird.",
+    "repeat": "Stellen Sie die Liste offener Posten, den Stichtag und die Belege bereit. Prüfen Sie Restbeträge und ungeklärte Punkte im erzeugten Paket, bevor Sie das Ergebnis verwenden."
+  },
+  "vera/variance-analysis": {
+    "title": "Ist und Budget mit Vera vergleichen",
+    "goal": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
+    "scenario": "Officina Arco möchte das operative Ergebnis von Januar und Februar mit dem Budget vergleichen. Monatliche Erlöse und Kosten sowie eine erläuternde Notiz liegen vor.",
+    "scope": "Erster Einsatz der Abweichungsanalyse: ein Unternehmen, zwei Monate, EUR. Wir vergleichen Beträge; Mengen und Nachweise wirtschaftlicher Ursachen fehlen.",
+    "inputs": "Öffnen Sie january-february.csv und context-de.md. Suchen Sie Scenario (PL Budget, AC Ist), Month, Category und Amount. Die Notiz erklärt Vorzeichen und Kontrollsummen. Vera legt eine Kopie in der Übungsakte ab.",
+    "request": "Vera, vergleiche das tatsächliche operative Ergebnis von Officina Arco für Januar und Februar 2026 mit dem Budget in Euro. Zeige mir den Bericht und erkläre, welche Positionen zur Abweichung beitragen.",
+    "steps": [
+      "Im Arbeitschat liest Vera die Datei und schlägt den Vergleich vor. Der Sprachchat hilft, Monate, Ausgangsbudget, Ist, Währung und negative Kostenvorzeichen vor der Berechnung zu prüfen.",
+      "Der aktuelle Ablauf berechnet Abweichungen und erstellt Tabellen, Diagramme und einen Berichtsentwurf. Währenddessen erklärt die Stimme den Ablauf und beantwortet Fragen, ohne noch nicht erzeugte Ergebnisse vorwegzunehmen.",
+      "Öffnen Sie den tatsächlich erstellten Bericht und das Hauptdiagramm. Beginnen Sie beim Gesamtergebnis, betrachten Sie dann Erlös- und Kostenbeiträge und ein Monatsdetail. Vera verbindet Kommentare mit berechneten Daten und speichert tatsächliche Prüfentscheidungen."
+    ],
+    "deliverables": [
+      "Word-Berichtsentwurf und Diagramme zum Übergang vom Budget zum Ist.",
+      "Abweichungstabellen und Abstimmungskontrollen zur Rückverfolgung der Beträge."
+    ],
+    "review": "Prüfen Sie Umfang und Monate, Anfangs- und Endsumme, Änderung in EUR und sinnvolle Prozentangaben. Beachten Sie die Bedeutung negativer Kostenvorzeichen. Die Berechnung zeigt Beiträge, beweist aber keine wirtschaftlichen Ursachen. Der Bericht bleibt bis zur üblichen fachlichen Prüfung ein Entwurf.",
+    "checkpoints": [
+      "Benennen Sie vor der Berechnung die verglichenen Werte.",
+      "Finden Sie im Ergebnis eine beitragende Position und den zugehörigen Betrag."
+    ],
+    "practice": "Wiederholen Sie mit january-march.csv den Vergleich für Januar bis März. Fordern Sie ein neues Ergebnis an und behalten Sie die Zweimonatsfassung. Finden Sie die Veränderung der Gesamtsumme und einer Position; fragen Sie nur bei Bedarf nach Hilfe.",
+    "success": "Sie können Datei und Vergleich wählen, den Bericht finden, eine Abweichung lesen und die Analyse um einen neuen Monat erweitern.",
+    "repeat": "Nennen Sie bei eigenen Dateien Unternehmen, Zeitraum, Budget oder andere Vergleichsbasis und Währung. Vera klärt mehrdeutige Spalten, erstellt Ergebnisse und begleitet die Prüfung."
+  },
+  "vera/journal-sampling": {
+    "title": "Eine Stichprobe aus dem Buchungsjournal ziehen",
+    "goal": "Lernen, ein Journal bereitzustellen, seine Einlesung zu prüfen und ausgewählte Zeilen für die weitere Prüfung zu erhalten.",
+    "scenario": "Die Kanzlei möchte Journalzeilen von Officina Arco zur Prüfung auswählen. Eine kleine fiktive Datei macht jeden Schritt nachvollziehbar.",
+    "scope": "Erster Einsatz von Journal Sampling: 5 zufällige Zeilen, Startwert 42. Die Lektion erklärt die Bedienung; im echten Auftrag bestimmt der Prüfungsplan Methode und Umfang.",
+    "inputs": "Öffnen Sie journal-march.csv und context-de.md. Finden Sie Datum, Buchung, Zeile, Konto, Soll und Haben. Das Original bleibt in der Übungsakte erhalten.",
+    "request": "Vera, ziehe aus dem Märzjournal von Officina Arco 5 zufällige Zeilen mit Startwert 42. Lass mich zuerst die Spalten prüfen und zeige anschließend Stichprobe und Aufbereitungskontrollen.",
+    "steps": [
+      "Vera öffnet das Journal im Arbeitschat. Die Stimme begleitet die Prüfung von Spalten, Zeitraum und Betragsbedeutung; Vera speichert die tatsächlich geprüfte Zuordnung.",
+      "Der Ablauf bereitet das Journal auf und prüft die Erhaltung von Zeilen und Beträgen. Klären Sie fehlgeschlagene Aufbereitungskontrollen vor der Stichprobe.",
+      "Vera zieht die Stichprobe und öffnet die Excel-Datei. Verfolgen Sie eine ausgewählte Zeile zum Journal zurück und prüfen Sie gemeinsam Grundgesamtheit, Methode und Anzahl der gezogenen Zeilen."
+    ],
+    "deliverables": [
+      "Stichprobe als Excel und CSV mit Verweisen auf Originalzeilen.",
+      "Aufbereitetes Journal, Kontrollen und Auswahlparameter zur Wiederholung der Ziehung."
+    ],
+    "review": "Prüfen Sie Zeitraum, Konten und erwartete Zeilenzahl. Aufbereitungskontrollen bestätigen weder korrekte Buchungen noch einen ausreichenden Stichprobenumfang. Mit der Belegprüfung werden anschließend Belege verglichen.",
+    "checkpoints": [
+      "Erklären Sie vor der Ziehung die ausgewählte Grundgesamtheit.",
+      "Finden Sie eine gezogene Zeile in der Quelldatei wieder."
+    ],
+    "practice": "Wiederholen Sie mit journal-april.csv, das eine Aprilzahlung ergänzt. Behalten Sie 5 zufällige Zeilen und das erste Ergebnis bei. Prüfen Sie die neue Grundgesamtheit und finden Sie eine Zeile der neuen Stichprobe.",
+    "success": "Sie können den Auftrag formulieren, die Stichprobe finden und eine Zeile zum Journal zurückverfolgen, ohne gezogene Zeilen von Hand auszutauschen.",
+    "repeat": "Nennen Sie Vera Mandant, Journal, Zeitraum, gegebenenfalls Filter sowie Methode und Umfang aus Ihrem Prüfungsplan. Bitten Sie um Belegprüfung, um die Stichprobe mit Belegen zu vergleichen."
+  },
+  "vera/vouching": {
+    "title": "Gezogene Buchungszeilen mit Rechnungen prüfen",
+    "goal": "Lernen, eine Stichprobe mit Rechnungen zu verbinden, Ergebnisse zu lesen und fachlich zu beurteilende Punkte zu prüfen.",
+    "scenario": "Die Kanzlei hat Buchungen zu drei Rechnungen und deren XML-Dateien. Zwei gezogene Zeilen sollen mit den Originalbelegen verglichen werden.",
+    "scope": "Belegprüfung einer Stichprobe. Vera erstellt diese zuerst mit Journal Sampling in derselben Übungsakte und führt dann die Prüfung aus. Das gesamte Journal wird nicht geprüft.",
+    "inputs": "Öffnen Sie invoice-journal.csv, context-de.md und die drei XML-Rechnungen. Die Notiz nennt Konto 2100 und eine Übungsstichprobe von zwei Zeilen. Vera übernimmt die Übergabe; interne technische Dateien müssen Sie nicht auswählen.",
+    "request": "Vera, ziehe zwei zufällige Zeilen aus Lieferantenkonto 2100 mit Startwert 42 und prüfe sie anhand dieser XML-Rechnungen. Zeige mir die Ergebnisse und begleite die Prüfung.",
+    "steps": [
+      "Der Arbeitschat erzeugt die tatsächliche Stichprobe. Die Stimme erklärt die zu prüfenden Zeilen und hilft, den Umfang vor dem Belegvergleich zu bestätigen.",
+      "Vera verbindet die neue Stichprobe mit den drei ausgewählten Rechnungen und startet die Belegprüfung. Die Stimme erklärt den Vergleich anhand des tatsächlichen Fortschritts.",
+      "Öffnen Sie die Ergebnismappe und eine Zeile mit verknüpftem Beleg. Prüfen Sie Referenz, Datum, Betrag und Partei sowie offene Rückfragen. Vera erhält tatsächliche Entscheidungen und Quellenverknüpfungen."
+    ],
+    "deliverables": [
+      "Excel- und CSV-Prüfergebnisse zur Stichprobe mit Belegen und Feststellungen.",
+      "Prüfnotizen und Nachweise zum Wiederfinden von Stichprobe und Quellen."
+    ],
+    "review": "Prüfen Sie, dass nur gezogene Zeilen untersucht wurden. Eine Zuordnung ist noch kein Urteil über die Buchung: Partei, Buchungsrichtung und Schlussfolgerung benötigen die vorgesehene Prüfung. Fehlende oder mehrdeutige Belege bleiben offen.",
+    "checkpoints": [
+      "Benennen Sie vor der Prüfung ausgewählte Zeilen und Belege.",
+      "Erklären Sie im Ergebnis eine Feststellung anhand von Buchung und Rechnung."
+    ],
+    "practice": "Fordern Sie eine neue Stichprobe mit drei Zeilen aus Konto 2100 an und wiederholen Sie die Prüfung mit denselben Rechnungen. Bewahren Sie das erste Ergebnis auf und prüfen Sie, dass der neue Lauf der neuen Stichprobe folgt.",
+    "success": "Sie können die Belegprüfung starten, das Ergebnis öffnen, einen Beleg zurückverfolgen und mechanische Kontrollen von fachlichen Schlussfolgerungen unterscheiden.",
+    "repeat": "Wählen Sie im echten Auftrag den Journal-Sampling-Lauf der richtigen Akte und liefern Sie das Belegpaket. Vera übernimmt die Verbindung und prüft nur die ausgewählten Zeilen."
+  }
+}

@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "clara",
   "workflow": "deck-correction",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,335 +19,602 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "inspect_existing_deck_then_revise_copy"
+  },
   "sources": [
+    {
+      "path": "scripts/advisor_case_core.py",
+      "repository_path": "plugins/clara/scripts/advisor_case_core.py",
+      "sha256": "f91c4cf808c1c80296121b80bbf87b4a16fe25d26080be2d6d4e2bba9e631a29"
+    },
+    {
+      "path": "scripts/advisory_evidence_lineage.py",
+      "repository_path": "plugins/clara/scripts/advisory_evidence_lineage.py",
+      "sha256": "4051364542fc6c8f518b609bb76c2412b9728366a467453855e0af2a9b02e290"
+    },
+    {
+      "path": "scripts/analyze_deck_revision_materials.py",
+      "repository_path": "plugins/clara/scripts/analyze_deck_revision_materials.py",
+      "sha256": "d619d0235be9ffe41e0aa70b583fd7fc071b281b0ccac28c63ccff7a4db9ad75"
+    },
+    {
+      "path": "scripts/apply_deck_revision_plan.py",
+      "repository_path": "plugins/clara/scripts/apply_deck_revision_plan.py",
+      "sha256": "9e104194c0a904f304ec2a714b13436580fc49baff8b2c56331f7c7a80403b98"
+    },
+    {
+      "path": "scripts/approve_deck_revision_plan.py",
+      "repository_path": "plugins/clara/scripts/approve_deck_revision_plan.py",
+      "sha256": "066673b928fbbf8a276be2e1d4656d6b783c1ea1df2ce9f647c95b9eafee778e"
+    },
+    {
+      "path": "scripts/auto_attribute_hosted_transcript.py",
+      "repository_path": "plugins/clara/scripts/auto_attribute_hosted_transcript.py",
+      "sha256": "1bd1a85dd8f64e7be9f698bcf3f9df290e4c9135482c090a936a105276fa3566"
+    },
+    {
+      "path": "scripts/build_deck_revision_execution_packets.py",
+      "repository_path": "plugins/clara/scripts/build_deck_revision_execution_packets.py",
+      "sha256": "aa888eb6776800297fc90a9f617a306732fc281413823f0ca7a24f295dca3067"
+    },
+    {
+      "path": "scripts/build_deck_revision_execution_plan.py",
+      "repository_path": "plugins/clara/scripts/build_deck_revision_execution_plan.py",
+      "sha256": "fcc3707a7d7eeab55ef4e754f657c2f2120c1497657907b4f5dc7bfc7a9f4033"
+    },
+    {
+      "path": "scripts/build_deck_revision_interpretation_packets.py",
+      "repository_path": "plugins/clara/scripts/build_deck_revision_interpretation_packets.py",
+      "sha256": "1444a3ecb7d3e4040390aefd7e4833847a5b4a36926a171a43b140cb609bf750"
+    },
+    {
+      "path": "scripts/build_deck_revision_quote_candidate_matrix.py",
+      "repository_path": "plugins/clara/scripts/build_deck_revision_quote_candidate_matrix.py",
+      "sha256": "e8855ad6f298f414c4c0d59aaf4f16860dbf704745a08fc09ee80f658243f6cf"
+    },
+    {
+      "path": "scripts/build_deck_revision_workbench.py",
+      "repository_path": "plugins/clara/scripts/build_deck_revision_workbench.py",
+      "sha256": "9ae9564d4f913d67af7deb27ca289e127ea7fd8858300948930b37df1c2c1c0e"
+    },
+    {
+      "path": "scripts/build_voice_feedback_timeline.py",
+      "repository_path": "plugins/clara/scripts/build_voice_feedback_timeline.py",
+      "sha256": "411efb9a66a51d2c64fdcf1d34cc8cc01805c67b2b839696e17385934d12c325"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "repository_path": "plugins/clara/scripts/check_dependencies.py",
+      "sha256": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c"
+    },
+    {
+      "path": "scripts/complete_deck_revision_output_review.py",
+      "repository_path": "plugins/clara/scripts/complete_deck_revision_output_review.py",
+      "sha256": "0080605ad573a80aa897587f10bea1d04f4dad81e09458290f0bf0411b6e3488"
+    },
+    {
+      "path": "scripts/deck_revision_execution_contract.py",
+      "repository_path": "plugins/clara/scripts/deck_revision_execution_contract.py",
+      "sha256": "5088e508561027979ed3fce8c758cdbcf1277a0d1ffdd4fb45c6c4eb3035fe3a"
+    },
+    {
+      "path": "scripts/deck_revision_text_match.py",
+      "repository_path": "plugins/clara/scripts/deck_revision_text_match.py",
+      "sha256": "ca3c2f11197f17727f5bb98d37482fa5bf204ae3b44fb08cacbbb9facc15263a"
+    },
+    {
+      "path": "scripts/finalize_deck_revision_plan.py",
+      "repository_path": "plugins/clara/scripts/finalize_deck_revision_plan.py",
+      "sha256": "d20c0aa909a3423ab635fd2a75ecdf5ec68fcecc559c730a1ef5b5a3b8fb27e8"
+    },
+    {
+      "path": "scripts/finalize_hosted_transcript.py",
+      "repository_path": "plugins/clara/scripts/finalize_hosted_transcript.py",
+      "sha256": "89dac1605b87374c2d046f765208abda90aae211453f38b8de2b42ec9f1f6cb6"
+    },
+    {
+      "path": "scripts/html_deck_runtime.py",
+      "repository_path": "plugins/clara/scripts/html_deck_runtime.py",
+      "sha256": "3e41fb7921317c92153fcdab66e7cdc8e4078366c29f518093d8fb2a2eb84f27"
+    },
+    {
+      "path": "scripts/import_hosted_voice_bundle.py",
+      "repository_path": "plugins/clara/scripts/import_hosted_voice_bundle.py",
+      "sha256": "cec89bc124b742b7b7dadb19dc4f966bf2796a8a640b1ed6344f661824ede8b2"
+    },
+    {
+      "path": "scripts/import_latest_hosted_voice_bundle.py",
+      "repository_path": "plugins/clara/scripts/import_latest_hosted_voice_bundle.py",
+      "sha256": "8e2522669da7c108e28853bc724ae69d523523e6c8b3112c42036cfa0fd3c5d2"
+    },
+    {
+      "path": "scripts/launch_hosted_voice.py",
+      "repository_path": "plugins/clara/scripts/launch_hosted_voice.py",
+      "sha256": "bc2ba93bea494b5acd8185e917d6597604730639e37a2bdb1a17d50639dbd048"
+    },
+    {
+      "path": "scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/clara/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+    },
+    {
+      "path": "scripts/match_feedback_frames_to_deck_slides.py",
+      "repository_path": "plugins/clara/scripts/match_feedback_frames_to_deck_slides.py",
+      "sha256": "6671a51e5a354d8ca71ceed75dab32d4fdea3df4bf292f4770d70e695cda68e6"
+    },
+    {
+      "path": "scripts/prepare_voice_deck_revision.py",
+      "repository_path": "plugins/clara/scripts/prepare_voice_deck_revision.py",
+      "sha256": "57281337f54d1b2e85e0a7bb6e0e30e65b9c2a64b0e5c6a3ee40a8f5c00d0645"
+    },
+    {
+      "path": "scripts/repair_audio_pointer_links.py",
+      "repository_path": "plugins/clara/scripts/repair_audio_pointer_links.py",
+      "sha256": "bea98821df1d30cd78b4f14587846890f22884e2aee500f7eb0c882efa0a3a74"
+    },
+    {
+      "path": "scripts/start_deck_feedback.py",
+      "repository_path": "plugins/clara/scripts/start_deck_feedback.py",
+      "sha256": "608f63e705eedcb0e3b43af6ff624ab8f05587fd3d4f41ff21168564f61618a8"
+    },
+    {
+      "path": "scripts/upload_hosted_audio.py",
+      "repository_path": "plugins/clara/scripts/upload_hosted_audio.py",
+      "sha256": "a41f78c84e9419ebe4422d1faef995edb68ab49d164cea14b7e8214e2749a18b"
+    },
+    {
+      "path": "scripts/verify_deck_revision_output.py",
+      "repository_path": "plugins/clara/scripts/verify_deck_revision_output.py",
+      "sha256": "e6f5100f32de3b71963e03a61932622dd035b182be85765bdb152ec1b0c591d1"
+    },
     {
       "path": "skills/deck-correction/SKILL.md",
       "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
       "sha256": "cc674f45a013113ae6d4e31de69f626e9f99a945835a472cf73392ade3c08e9a"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/__init__.py",
+      "sha256": "361dab625f1122781bef9bc5fa04c7d62cf31e6fc55a10433e818a96f4bc4309"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/cases.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/cases.py",
+      "sha256": "faf8ca6bbd59f16f679796a057b027b2efbcccfc4798dfc6c5e356d3239cb602"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/onboarding.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+      "sha256": "3a230127225683b86ead89c6fd93101092b756f062b396d9be45e757dc530b14"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/teaching.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+      "sha256": "9e672584218ce40d8a5e397d61f3198eacea4bdffdcb37fd813333799875a4d4"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/original-deck-it.html",
+      "sha256": "ded847f03de50bf6f82cd3c316b0dc407004b86a5a16f035b8af7c86fc958d32",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/original-work-it.zip",
+      "sha256": "17f48e7ba02277f388c26bad9747a8942a87ebfad981ab8bd42090f39cdb0a92",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/feedback-it.md",
+      "sha256": "b85fd8f44c4499590bbd8fb5fbc2ece55b79d3ae583125201aab2a13b86c815a",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/original-deck-it.html",
+      "sha256": "ded847f03de50bf6f82cd3c316b0dc407004b86a5a16f035b8af7c86fc958d32",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/original-work-it.zip",
+      "sha256": "17f48e7ba02277f388c26bad9747a8942a87ebfad981ab8bd42090f39cdb0a92",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-feedback-it.md",
+      "sha256": "b5ddbcbfdd5ca971e0d1c00262bc1e547e726e7b3fff99a1a0b5a970406bf1a3",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/original-deck-en.html",
+      "sha256": "71c15bb49dd14aca342da50ba966eb94d7219a97d91974fe4a7a47381bb71f20",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/original-work-en.zip",
+      "sha256": "034c84bfc05509c3784e6aa95764a914c5db6d13721f1a6e7276f88bf47b83d2",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/feedback-en.md",
+      "sha256": "c3d9e8245adb78170c33d3dc1b0a43c2ec32d360db440239c8775262ccf0b56d",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/original-deck-en.html",
+      "sha256": "71c15bb49dd14aca342da50ba966eb94d7219a97d91974fe4a7a47381bb71f20",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/original-work-en.zip",
+      "sha256": "034c84bfc05509c3784e6aa95764a914c5db6d13721f1a6e7276f88bf47b83d2",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-feedback-en.md",
+      "sha256": "df464ce16e4858c615e60d02029f43c65214956acd7fc576bd5282aa98607af4",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/original-deck-fr.html",
+      "sha256": "f56585a82d0ef50307324832680b1b21908400f9c561f976432ec2cce119aad2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/original-work-fr.zip",
+      "sha256": "1516421260b0ee872882ad4b37165f9acf16b313721b82d7f648d080fe34a3a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/feedback-fr.md",
+      "sha256": "203005342c223db490b06baa8bbab5983736686a303dee88c9b29318c5a7f471",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/original-deck-fr.html",
+      "sha256": "f56585a82d0ef50307324832680b1b21908400f9c561f976432ec2cce119aad2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/original-work-fr.zip",
+      "sha256": "1516421260b0ee872882ad4b37165f9acf16b313721b82d7f648d080fe34a3a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-feedback-fr.md",
+      "sha256": "c30470e66d2d29f1ff3326e664b7342940b9ef8d014de4fc795f23a3052b2a45",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/original-deck-de.html",
+      "sha256": "e743524bf0fb415f739a4a256af69e4339b43acf568f7c98c43a90d711abb625",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/original-work-de.zip",
+      "sha256": "678e1d5bdfec203d508e14df34efdcf41f06aac7366b658224c139a8c03f1379",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/feedback-de.md",
+      "sha256": "bfd814d2f269f6a879acf7ee2445814d5879027581fd140f49925b770c02f546",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/original-deck-de.html",
+      "sha256": "e743524bf0fb415f739a4a256af69e4339b43acf568f7c98c43a90d711abb625",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/original-work-de.zip",
+      "sha256": "678e1d5bdfec203d508e14df34efdcf41f06aac7366b658224c139a8c03f1379",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-feedback-de.md",
+      "sha256": "e0cefa6c54c343ab545972e7535ae568af3067d11a49d972dc758f550b27cb4e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/original-deck-es.html",
+      "sha256": "2133148944088e09b5114964c6ae4745148ca66a320c8f9a758482d0a46647ae",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/original-work-es.zip",
+      "sha256": "de258660cc5577d9797b1b34e030550cfe30749a30cc400a83551c8507961c6b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/feedback-es.md",
+      "sha256": "0f6688a871391f9d9513eca786f2fe545997710ddcda754374b9727d6dec4b87",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/original-deck-es.html",
+      "sha256": "2133148944088e09b5114964c6ae4745148ca66a320c8f9a758482d0a46647ae",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/original-work-es.zip",
+      "sha256": "de258660cc5577d9797b1b34e030550cfe30749a30cc400a83551c8507961c6b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-feedback-es.md",
+      "sha256": "612d7bc0494bcebebef1cb017f227b3493bc1351850b047d052cbf00eb2dc343",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Dal commento alla slide corretta",
-      "goal": "Trasformare un feedback in modifiche verificabili mantenendo intatti i contenuti non interessati.",
-      "scenario": "Una presentazione fittizia di tre slide contiene un confronto 2025–2026. Il feedback dice: 'Nella seconda slide mostra prima il risultato; non cambiare i numeri né la terza slide'. Il risultato da mettere in evidenza è +12%, già presente nella fonte.",
-      "request": "Clara, applica questo feedback alla presentazione e mostrami esattamente cosa è cambiato.",
-      "scope": "Correzione di una copia della presentazione esistente. La lezione usa note scritte fittizie; non avvia acquisizione vocale hosted né inventa una registrazione.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Contenuto",
-        "Autorità"
+      "title": "Correggere una presentazione con Clara",
+      "goal": "Imparare a trasformare un commento sulle slide in una modifica verificabile, mantenendo il controllo su ciò che cambia.",
+      "scenario": "La presentazione della proposta di Officina Arco è già pronta. Un commento aggiorna la persona che dovrebbe raccogliere le richieste.",
+      "scope": "Una correzione mirata di una presentazione HTML esistente. Il percorso comprende lettura del commento, modifica di una copia e confronto; non ricrea ogni volta la presentazione.",
+      "inputs": "Apri original-deck-it.html e feedback-it.md. Il pacchetto original-work-it.zip contiene i materiali modificabili che Clara usa. Tu indichi quale presentazione correggere e cosa cambiare.",
+      "request": "Clara, correggi questa presentazione secondo il commento allegato: Elena raccoglierà e chiarirà le richieste al posto di Sara. Paolo mantiene il suo ruolo. Conserva l’originale e mostrami la modifica.",
+      "steps": [
+        "Nel thread di lavoro Clara legge la presentazione e il commento e riepiloga il cambiamento previsto. La voce ti aiuta a verificare quale slide e quale significato saranno modificati.",
+        "Clara applica la richiesta a una copia con il workflow corrente, mantenendo le altre slide, e controlla la revisione. La voce segue l’avanzamento effettivo e spiega quando occorre chiarire un commento ambiguo.",
+        "Apri originale e copia corretta. Confronta la slide sulle responsabilità, poi una slide rimasta uguale. Controlla il risultato visibile, le note e il riepilogo delle modifiche."
       ],
-      "input_rows": [
-        [
-          "D1 · deck originale",
-          "Tre slide, stile e numeri esistenti",
-          "Base visiva"
-        ],
-        [
-          "D2 · feedback",
-          "Risultato prima nella slide 2",
-          "Richiesta di modifica"
-        ],
-        [
-          "D3 · dato",
-          "+12% nel confronto",
-          "Base dell'affermazione"
-        ]
+      "deliverables": [
+        "Una copia corretta della presentazione, con l’originale conservato.",
+        "Riepilogo della richiesta, confronto prima/dopo e verifiche della versione corretta."
       ],
-      "basis": "D2 autorizza la modifica dell'ordine del messaggio, non nuovi calcoli. D1 conserva lo stile e la terza slide; D3 sostiene il numero.",
-      "method": [
-        "Identifica deck e feedback esatti; interpreta ogni richiesta, distinguendo scopo, ambiguità e parti da preservare.",
-        "Prepara il registro delle modifiche e il risultato atteso; per PPTX segui il passaggio di comprensione e approvazione previsto prima di applicare alla copia.",
-        "Renderizza e ispeziona la versione finale, confrontando prima e dopo. Verifica numeri, leggibilità e contenuti non interessati; conserva il collegamento alle fonti."
+      "review": "Controlla che cambi la persona proposta, senza spostare il ruolo di Paolo o dichiarare approvata la procedura. Verifica che le altre slide conservino significato, ordine e stile. Il risultato deve riflettere il commento, non solo aver superato un controllo tecnico.",
+      "checkpoints": [
+        "Prima dell’intervento, spiega quale cambiamento ti aspetti e cosa deve restare uguale.",
+        "Dopo, trova il cambiamento nella slide e una parte rimasta invariata."
       ],
-      "result_title": "Slide 2 · il risultato apre il messaggio",
-      "conclusion": "Il titolo può diventare 'Il risultato cresce del 12%'. La spiegazione segue; i valori e la terza slide rimangono come nell'originale.",
-      "output_columns": [
-        "Richiesta",
-        "Modifica prevista",
-        "Prova di riuscita"
-      ],
-      "output_rows": [
-        [
-          "Risultato prima",
-          "Titolo della slide 2",
-          "Il +12% è visibile in apertura"
-        ],
-        [
-          "Non cambiare i numeri",
-          "Nessuna modifica ai dati",
-          "Confronto con D1/D3"
-        ],
-        [
-          "Preservare slide 3",
-          "Nessuna modifica",
-          "Confronto prima/dopo"
-        ]
-      ],
-      "check": "Una slide individuata dal numero è solo una localizzazione: bisogna capire il significato del feedback. Non ricostruire l'intero deck quando sono richieste modifiche limitate.",
-      "question": "Possiamo cambiare il +12% in 'forte crescita' per rendere il titolo più brillante?",
-      "answer": "Il feedback chiede di anticipare il risultato, non di sostituirlo con un giudizio. Mantieni la misura verificata e rivedi qualsiasi interpretazione aggiuntiva.",
-      "practice": "Aggiungi una seconda richiesta di modifica e definisci il criterio concreto con cui verificherai il risultato.",
-      "next": "Seleziona la presentazione esatta e il feedback; se il feedback è audio, usa prima il percorso di trascrizione autorizzato fuori dalla lezione."
+      "practice": "Riparti dall’originale con practice-feedback-it.md. Chiedi di raccogliere prima i dubbi del personale, sostituendo soltanto il passo conclusivo sulla prova. Conserva le copie e controlla che la nuova conclusione corrisponda alla richiesta.",
+      "success": "Sai indicare una presentazione, formulare un commento preciso e verificare una revisione senza perdere l’originale.",
+      "repeat": "Mostra a Clara la presentazione e descrivi il cambiamento, anche a voce nel dialogo nativo. Allega eventuali nuovi dati o testi. Clara chiarisce i dubbi e modifica una copia; per PPTX il percorso include la revisione del piano di modifica prima dell’applicazione."
     },
     "en": {
-      "title": "From feedback to a verified slide change",
-      "goal": "Turn a comment into an inspectable revision while preserving unaffected content.",
-      "scenario": "A fictional three-slide deck compares 2025 and 2026. Feedback asks to lead with the result on slide two without changing the numbers or slide three. The +12% result already appears in the source.",
-      "request": "Clara, apply this feedback and show exactly what changed.",
-      "scope": "Revise a copy of an existing deck. The lesson uses fictional written notes; it does not start hosted voice capture or invent a recording.",
-      "input_columns": [
-        "Fictional source",
-        "Content",
-        "Authority"
+      "title": "Correct a presentation with Clara",
+      "goal": "Learn to turn feedback into a verifiable slide change while retaining control of what changes.",
+      "scenario": "The Officina Arco proposal presentation already exists. Feedback updates the person proposed to gather requests.",
+      "scope": "A targeted correction to an existing HTML presentation: understand feedback, edit a copy and compare. The workflow does not recreate the whole presentation for every change.",
+      "inputs": "Open original-deck-en.html and feedback-en.md. The original-work-en.zip package contains editable materials for Clara. You identify the presentation and the change.",
+      "request": "Clara, correct this presentation using the attached feedback: Elena will gather and clarify requests instead of Sara. Paolo keeps his role. Preserve the original and show me the change.",
+      "steps": [
+        "In the working chat Clara reads the presentation and feedback and summarizes the intended change. Voice helps you check which slide and meaning will change.",
+        "Clara applies the request to a copy through the current workflow, preserves other slides and checks the revision. Voice follows actual progress and explains when ambiguous feedback needs clarification.",
+        "Open the original and corrected copy. Compare the responsibilities slide and then an unchanged slide. Check the visible result, notes and change summary."
       ],
-      "input_rows": [
-        [
-          "D1 · original deck",
-          "Three slides, existing style and figures",
-          "Visual baseline"
-        ],
-        [
-          "D2 · feedback",
-          "Result first on slide 2",
-          "Requested change"
-        ],
-        [
-          "D3 · data",
-          "+12% comparison",
-          "Claim basis"
-        ]
+      "deliverables": [
+        "A corrected presentation copy, with the original preserved.",
+        "The interpreted request, before/after comparison and checks of the corrected version."
       ],
-      "basis": "D2 requests a different message order, not new calculations. D1 defines preserved content and D3 supports the figure.",
-      "method": [
-        "Identify the exact deck and feedback. Interpret every request, its scope, uncertainty and preserved parts.",
-        "Prepare the change ledger and success criteria. For PPTX, follow the required understanding and approval checkpoint before editing the copy.",
-        "Render and inspect the final deck against the original. Check numbers, readability and unaffected slides while retaining evidence lineage."
+      "review": "Check that the proposed person changes without changing Paolo’s role or declaring the procedure approved. Other slides should retain meaning, order and style. The result must reflect the feedback, beyond passing a technical check.",
+      "checkpoints": [
+        "Before the edit, explain what should change and what should stay the same.",
+        "Afterwards, find the requested change and something preserved."
       ],
-      "result_title": "Slide 2 · the result leads",
-      "conclusion": "The title can become 'The result increases by 12%'. Explanation follows; figures and slide three remain unchanged.",
-      "output_columns": [
-        "Request",
-        "Intended change",
-        "Success evidence"
-      ],
-      "output_rows": [
-        [
-          "Result first",
-          "Slide 2 title",
-          "+12% visible at the start"
-        ],
-        [
-          "Keep figures",
-          "No data changes",
-          "Comparison with D1/D3"
-        ],
-        [
-          "Preserve slide 3",
-          "No change",
-          "Before/after comparison"
-        ]
-      ],
-      "check": "A slide number locates content but does not interpret the request. Avoid rebuilding the whole deck for a bounded correction.",
-      "question": "Can we replace +12% with 'strong growth' to make the title more exciting?",
-      "answer": "The request is to foreground the result, not replace it with a judgment. Keep the supported measure and review any added interpretation.",
-      "practice": "Add another change request and define the concrete evidence that will show it succeeded.",
-      "next": "Select the exact deck and feedback. Real audio follows the authorized transcription route outside this lesson."
+      "practice": "Start again from the original with practice-feedback-en.md. Ask to collect staff questions first, replacing only the closing trial step. Preserve the copies and check that the conclusion matches the request.",
+      "success": "You can identify a presentation, give precise feedback and verify a revision without losing the original.",
+      "repeat": "Show Clara the presentation and describe the change, including by native voice conversation. Supply any new figures or wording. Clara resolves ambiguity and edits a copy; PPTX work also includes reviewing the change plan before application."
     },
     "fr": {
-      "title": "Du commentaire à une diapositive corrigée et vérifiée",
-      "goal": "Transformer un retour en modification contrôlable tout en préservant le reste du deck.",
-      "scenario": "Un deck fictif de trois slides compare 2025 et 2026. Le retour demande d'ouvrir la slide 2 par le résultat sans changer les chiffres ni la slide 3. Le +12 % figure déjà dans la source.",
-      "request": "Clara, applique ce retour et montre exactement ce qui a changé.",
-      "scope": "Correction d'une copie existante à partir de notes fictives. Aucun enregistrement ni capture vocale hosted n'est créé.",
-      "input_columns": [
-        "Source fictive",
-        "Contenu",
-        "Autorité"
+      "title": "Corriger une présentation avec Clara",
+      "goal": "Apprendre à transformer un commentaire en modification vérifiable des diapositives, en gardant le contrôle du changement.",
+      "scenario": "La présentation de la proposition d’Officina Arco existe déjà. Un commentaire modifie la personne proposée pour recueillir les demandes.",
+      "scope": "Une correction ciblée d’une présentation HTML : comprendre le commentaire, modifier une copie et comparer. Il n’est pas nécessaire de recréer toute la présentation.",
+      "inputs": "Ouvrez original-deck-fr.html et feedback-fr.md. Le paquet original-work-fr.zip contient les matériaux modifiables pour Clara. Vous indiquez la présentation et le changement souhaité.",
+      "request": "Clara, corrige cette présentation selon le commentaire joint : Elena recueillera et clarifiera les demandes à la place de Sara. Paolo conserve son rôle. Garde l’original et montre-moi la modification.",
+      "steps": [
+        "Dans le fil de travail, Clara lit la présentation et le commentaire, puis résume la modification. La voix vous aide à vérifier la diapositive et le sens concernés.",
+        "Clara applique la demande à une copie avec le workflow courant, préserve les autres diapositives et vérifie la révision. La voix suit le travail réel et explique quand un commentaire ambigu doit être clarifié.",
+        "Ouvrez l’original et la copie corrigée. Comparez la diapositive des responsabilités, puis une diapositive inchangée. Examinez le résultat visible, les notes et le résumé des modifications."
       ],
-      "input_rows": [
-        [
-          "D1 · deck original",
-          "Trois slides, style et chiffres",
-          "Base visuelle"
-        ],
-        [
-          "D2 · retour",
-          "Résultat d'abord sur la slide 2",
-          "Modification demandée"
-        ],
-        [
-          "D3 · données",
-          "+12 % dans le comparatif",
-          "Base de l'affirmation"
-        ]
+      "deliverables": [
+        "Une copie corrigée de la présentation, avec conservation de l’original.",
+        "La demande interprétée, la comparaison avant/après et les vérifications de la version corrigée."
       ],
-      "basis": "D2 autorise un nouvel ordre du message, pas de nouveaux calculs. D1 fixe le contenu préservé et D3 soutient le chiffre.",
-      "method": [
-        "Identifie deck et retour exacts ; interprète chaque demande, son périmètre, ses ambiguïtés et les éléments à préserver.",
-        "Prépare registre des changements et critères de réussite. Pour PPTX, suis le point de compréhension et d'approbation avant de modifier la copie.",
-        "Rends et examine la version finale face à l'original : chiffres, lisibilité et slides inchangées, avec leurs liens aux preuves."
+      "review": "Vérifiez que la personne proposée change, sans modifier le rôle de Paolo ni approuver la procédure. Les autres diapositives doivent garder sens, ordre et style. Le résultat doit respecter le commentaire au-delà d’un contrôle technique.",
+      "checkpoints": [
+        "Avant la modification, expliquez ce qui doit changer et rester identique.",
+        "Après, trouvez la modification demandée et un élément préservé."
       ],
-      "result_title": "Slide 2 · le résultat ouvre le message",
-      "conclusion": "Le titre peut devenir 'Le résultat augmente de 12 %'. L'explication suit ; chiffres et slide 3 sont conservés.",
-      "output_columns": [
-        "Demande",
-        "Modification prévue",
-        "Preuve de réussite"
-      ],
-      "output_rows": [
-        [
-          "Résultat d'abord",
-          "Titre de la slide 2",
-          "+12 % visible dès l'ouverture"
-        ],
-        [
-          "Conserver les chiffres",
-          "Aucune donnée changée",
-          "Comparaison avec D1/D3"
-        ],
-        [
-          "Préserver la slide 3",
-          "Aucun changement",
-          "Comparaison avant/après"
-        ]
-      ],
-      "check": "Le numéro d'une slide localise le contenu sans interpréter la demande. Une correction limitée ne justifie pas de reconstruire tout le deck.",
-      "question": "Peut-on remplacer +12 % par 'forte croissance' pour un titre plus séduisant ?",
-      "answer": "La demande est de mettre le résultat en avant, pas de le remplacer par un jugement. Conserve la mesure étayée et revois toute interprétation ajoutée.",
-      "practice": "Ajoute une autre demande et définis la preuve concrète qui permettra de la vérifier.",
-      "next": "Sélectionne deck et retour exacts. Un véritable audio suit la transcription autorisée en dehors de cette leçon."
+      "practice": "Repartez de l’original avec practice-feedback-fr.md. Demandez de recueillir d’abord les questions du personnel, en remplaçant seulement l’étape finale sur le test. Gardez les copies et vérifiez la conclusion.",
+      "success": "Vous savez désigner une présentation, donner un commentaire précis et vérifier une révision sans perdre l’original.",
+      "repeat": "Montrez la présentation à Clara et décrivez le changement, y compris dans le dialogue vocal natif. Joignez les nouvelles données ou formulations. Clara clarifie et modifie une copie ; le parcours PPTX comprend aussi la revue du plan avant application."
     },
     "de": {
-      "title": "Aus Feedback eine überprüfbare Folienänderung machen",
-      "goal": "Einen Kommentar in eine sichtbare Überarbeitung umsetzen und unbetroffene Inhalte erhalten.",
-      "scenario": "Eine fiktive Präsentation mit drei Folien vergleicht 2025 und 2026. Auf Folie zwei soll das Ergebnis zuerst stehen; Zahlen und Folie drei sollen bleiben. Das Ergebnis +12 % ist bereits belegt.",
-      "request": "Clara, setze dieses Feedback um und zeige genau die Änderungen.",
-      "scope": "Überarbeitung einer Kopie. Die Lektion nutzt fiktive schriftliche Notizen, startet keine gehostete Sprachaufnahme und erfindet keine Aufnahme.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Inhalt",
-        "Rolle"
+      "title": "Eine Präsentation mit Clara korrigieren",
+      "goal": "Lernen Sie, Rückmeldungen in überprüfbare Folienänderungen umzusetzen und den Umfang der Änderungen zu kontrollieren.",
+      "scenario": "Die Präsentation zum Vorschlag von Officina Arco liegt bereits vor. Eine Rückmeldung ändert die für die Annahme vorgeschlagene Person.",
+      "scope": "Eine gezielte Korrektur einer bestehenden HTML-Präsentation: Rückmeldung verstehen, Kopie bearbeiten und vergleichen. Die ganze Präsentation muss nicht neu erstellt werden.",
+      "inputs": "Öffnen Sie original-deck-de.html und feedback-de.md. original-work-de.zip enthält die bearbeitbaren Materialien für Clara. Sie nennen Präsentation und gewünschte Änderung.",
+      "request": "Clara, korrigiere diese Präsentation nach der Rückmeldung: Elena soll statt Sara Anfragen aufnehmen und klären. Paolo behält seine Rolle. Erhalte das Original und zeige mir die Änderung.",
+      "steps": [
+        "Im Arbeitschat liest Clara Präsentation und Rückmeldung und fasst die geplante Änderung zusammen. Die Stimme hilft zu prüfen, welche Folie und Aussage betroffen sind.",
+        "Clara bearbeitet eine Kopie mit dem aktuellen Workflow, erhält die anderen Folien und prüft die Revision. Die Stimme folgt dem tatsächlichen Fortschritt und erklärt, wann unklare Rückmeldungen geklärt werden müssen.",
+        "Öffnen Sie Original und korrigierte Kopie. Vergleichen Sie die Zuständigkeitsfolie und dann eine unveränderte Folie. Prüfen Sie sichtbares Ergebnis, Notizen und Änderungsübersicht."
       ],
-      "input_rows": [
-        [
-          "D1 · Originalpräsentation",
-          "Drei Folien, vorhandener Stil und Zahlen",
-          "Visuelle Grundlage"
-        ],
-        [
-          "D2 · Feedback",
-          "Ergebnis zuerst auf Folie 2",
-          "Gewünschte Änderung"
-        ],
-        [
-          "D3 · Daten",
-          "+12 % im Vergleich",
-          "Aussagegrundlage"
-        ]
+      "deliverables": [
+        "Eine korrigierte Präsentationskopie bei erhaltenem Original.",
+        "Die verstandene Anfrage, Vorher-nachher-Vergleich und Prüfungen der korrigierten Fassung."
       ],
-      "basis": "D2 verlangt eine andere Reihenfolge, keine neue Berechnung. D1 bestimmt zu erhaltende Inhalte, D3 belegt die Zahl.",
-      "method": [
-        "Bestimme genaue Präsentation und Feedback. Interpretiere jede Anforderung mit Umfang, Unsicherheit und unveränderten Teilen.",
-        "Erstelle Änderungsregister und Erfolgskriterien. Bei PPTX kommt der vorgeschriebene Verständnis- und Freigabepunkt vor Bearbeitung der Kopie.",
-        "Rendere und prüfe die Endfassung gegen das Original. Kontrolliere Zahlen, Lesbarkeit und unbetroffene Folien unter Erhalt der Belegverbindungen."
+      "review": "Prüfen Sie, dass nur die vorgeschlagene Person wechselt, Paolo seine Rolle behält und das Verfahren nicht als genehmigt erscheint. Andere Folien müssen Aussage, Reihenfolge und Stil bewahren. Ein technischer Erfolg allein bestätigt die Umsetzung der Rückmeldung nicht.",
+      "checkpoints": [
+        "Erklären Sie vor der Bearbeitung, was sich ändern und was gleich bleiben soll.",
+        "Finden Sie danach die gewünschte Änderung und einen erhaltenen Bestandteil."
       ],
-      "result_title": "Folie 2 · das Ergebnis steht zuerst",
-      "conclusion": "Der Titel kann 'Das Ergebnis steigt um 12 %' lauten. Die Erklärung folgt; Zahlen und Folie drei bleiben unverändert.",
-      "output_columns": [
-        "Anforderung",
-        "Geplante Änderung",
-        "Erfolgsbeleg"
-      ],
-      "output_rows": [
-        [
-          "Ergebnis zuerst",
-          "Titel von Folie 2",
-          "+12 % am Anfang sichtbar"
-        ],
-        [
-          "Zahlen erhalten",
-          "Keine Datenänderung",
-          "Vergleich mit D1/D3"
-        ],
-        [
-          "Folie 3 erhalten",
-          "Keine Änderung",
-          "Vorher-Nachher-Vergleich"
-        ]
-      ],
-      "check": "Eine Foliennummer lokalisiert Inhalt, interpretiert aber keine Anweisung. Eine begrenzte Korrektur verlangt keinen kompletten Neuaufbau.",
-      "question": "Dürfen wir +12 % durch 'starkes Wachstum' ersetzen, um den Titel spannender zu machen?",
-      "answer": "Gewünscht ist, das Ergebnis hervorzuheben, nicht durch ein Urteil zu ersetzen. Erhalte die belegte Kennzahl und prüfe zusätzliche Interpretation.",
-      "practice": "Ergänze eine weitere Änderung und definiere den konkreten Beleg für ihre erfolgreiche Umsetzung.",
-      "next": "Wähle genaue Präsentation und Feedback. Echte Audiodaten folgen außerhalb dieser Lektion dem autorisierten Transkriptionsweg."
+      "practice": "Beginnen Sie erneut mit dem Original und practice-feedback-de.md. Bitten Sie, zuerst Fragen des Teams zu sammeln und nur den abschließenden Versuchsschritt zu ersetzen. Bewahren Sie die Kopien auf und prüfen Sie die Schlussfolgerung.",
+      "success": "Sie können eine Präsentation benennen, präzise Rückmeldung geben und eine Revision prüfen, ohne das Original zu verlieren.",
+      "repeat": "Zeigen Sie Clara die Präsentation und beschreiben Sie die Änderung, auch im nativen Sprachdialog. Ergänzen Sie neue Daten oder Formulierungen. Clara klärt Zweifel und bearbeitet eine Kopie; bei PPTX wird vor der Anwendung auch der Änderungsplan geprüft."
     },
     "es": {
-      "title": "Del comentario a una modificación de diapositiva verificada",
-      "goal": "Convertir una observación en una revisión visible conservando el contenido no afectado.",
-      "scenario": "Una presentación ficticia de tres diapositivas compara 2025 y 2026. Se pide destacar primero el resultado en la segunda, sin cambiar cifras ni la tercera. El +12 % ya está en la fuente.",
-      "request": "Clara, aplica este comentario y muestra exactamente lo que cambió.",
-      "scope": "Revisión de una copia existente. Se usan notas ficticias escritas, sin iniciar captura de voz alojada ni inventar grabación.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Contenido",
-        "Función"
+      "title": "Corregir una presentación con Clara",
+      "goal": "Aprender a convertir comentarios en cambios verificables de diapositivas, manteniendo el control sobre lo que cambia.",
+      "scenario": "La presentación de la propuesta de Officina Arco ya existe. Un comentario cambia la persona propuesta para recoger solicitudes.",
+      "scope": "Una corrección concreta de una presentación HTML: entender comentarios, modificar una copia y comparar. No hace falta recrear toda la presentación.",
+      "inputs": "Abre original-deck-es.html y feedback-es.md. original-work-es.zip contiene los materiales editables para Clara. Tú indicas presentación y cambio.",
+      "request": "Clara, corrige esta presentación según el comentario adjunto: Elena recogerá y aclarará solicitudes en lugar de Sara. Paolo conserva su función. Guarda el original y muéstrame el cambio.",
+      "steps": [
+        "En el hilo de trabajo Clara lee presentación y comentario y resume el cambio previsto. La voz ayuda a comprobar qué diapositiva y significado cambiarán.",
+        "Clara aplica la petición a una copia con el workflow actual, conserva otras diapositivas y verifica la revisión. La voz sigue el progreso real y explica cuándo aclarar comentarios ambiguos.",
+        "Abre original y copia corregida. Compara la diapositiva de responsabilidades y después una sin cambios. Revisa resultado visible, notas y resumen de cambios."
       ],
-      "input_rows": [
-        [
-          "D1 · presentación original",
-          "Tres diapositivas, estilo y cifras existentes",
-          "Base visual"
-        ],
-        [
-          "D2 · comentario",
-          "Resultado primero en diapositiva 2",
-          "Cambio solicitado"
-        ],
-        [
-          "D3 · datos",
-          "+12 % comparativo",
-          "Base de la afirmación"
-        ]
+      "deliverables": [
+        "Una copia corregida de la presentación, conservando el original.",
+        "Petición interpretada, comparación antes/después y verificaciones de la versión corregida."
       ],
-      "basis": "D2 pide otro orden del mensaje, no nuevos cálculos. D1 define contenido conservado y D3 respalda la cifra.",
-      "method": [
-        "Identifica presentación y comentarios exactos. Interpreta cada petición, alcance, incertidumbre y partes que deben conservarse.",
-        "Prepara registro de cambios y criterios de éxito. Para PPTX, respeta el punto obligatorio de comprensión y aprobación antes de editar la copia.",
-        "Renderiza e inspecciona la versión final contra el original. Comprueba cifras, legibilidad y diapositivas no afectadas y conserva trazabilidad."
+      "review": "Comprueba que cambia la persona propuesta, sin cambiar la función de Paolo ni declarar aprobado el procedimiento. Las demás diapositivas deben conservar significado, orden y estilo. El resultado debe reflejar el comentario, además de superar controles técnicos.",
+      "checkpoints": [
+        "Antes de editar, explica qué debe cambiar y qué debe conservarse.",
+        "Después, encuentra el cambio pedido y una parte conservada."
       ],
-      "result_title": "Diapositiva 2 · el resultado abre el mensaje",
-      "conclusion": "El título puede ser 'El resultado aumenta un 12 %'. La explicación sigue; las cifras y la tercera diapositiva se mantienen.",
-      "output_columns": [
-        "Petición",
-        "Cambio previsto",
-        "Prueba de éxito"
-      ],
-      "output_rows": [
-        [
-          "Resultado primero",
-          "Título de diapositiva 2",
-          "+12 % visible al inicio"
-        ],
-        [
-          "Conservar cifras",
-          "Sin cambios de datos",
-          "Comparación con D1/D3"
-        ],
-        [
-          "Conservar diapositiva 3",
-          "Sin cambios",
-          "Comparación antes/después"
-        ]
-      ],
-      "check": "El número de diapositiva localiza contenido, pero no interpreta la petición. Evita reconstruir toda la presentación por una corrección acotada.",
-      "question": "¿Podemos sustituir +12 % por 'fuerte crecimiento' para animar el título?",
-      "answer": "Se pide destacar el resultado, no sustituirlo por un juicio. Conserva la medida respaldada y revisa cualquier interpretación adicional.",
-      "practice": "Añade otra petición de cambio y define la evidencia concreta de que se aplicó correctamente.",
-      "next": "Selecciona presentación y comentarios exactos. El audio real sigue su vía autorizada de transcripción fuera de esta lección."
+      "practice": "Vuelve al original con practice-feedback-es.md. Pide recoger primero las dudas del personal, sustituyendo solo el paso final sobre la prueba. Conserva las copias y comprueba la conclusión.",
+      "success": "Sabes identificar una presentación, dar comentarios precisos y verificar una revisión sin perder el original.",
+      "repeat": "Muestra la presentación a Clara y describe el cambio, también mediante voz nativa. Adjunta nuevos datos o textos. Clara aclara dudas y edita una copia; el recorrido PPTX incluye revisar el plan de cambios antes de aplicarlo."
     }
   }
 }

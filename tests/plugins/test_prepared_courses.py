@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -47,7 +48,7 @@ def digest(path):
 def isolated(tmp_path):
     """An installed product with one authored course and a local method source."""
     root = tmp_path / "vera"
-    original = ROOT / "plugins/vera/assets/courses/variance-analysis/course.json"
+    original = ROOT / "plugins/vera/assets/courses/fatture-xml-check/course.json"
     course = json.loads(original.read_text(encoding="utf-8"))
     skill = root / "skills/variance-analysis/SKILL.md"
     skill.parent.mkdir(parents=True)
@@ -55,8 +56,12 @@ def isolated(tmp_path):
     course["sources"] = [
         {"path": "skills/variance-analysis/SKILL.md", "sha256": digest(skill)}
     ]
-    course["files"] = []
+    course["workflow"] = "variance-analysis"
     manifest = root / "assets/courses/variance-analysis/course.json"
+    for asset in course["files"]:
+        target = manifest.parent / asset["path"]
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(original.parent / asset["path"], target)
     write_json(manifest, course)
     write_json(root / ".codex-plugin/plugin.json", {"name": "vera"})
     index = {
@@ -94,24 +99,24 @@ def test_every_installed_workflow_has_a_source_current_course(product, workflow)
     assert course["workflow"] == workflow
     assert sum(course["seconds"]) == 390
     assert course["sources"]
-    assert course["example_kind"] == "authored_synthetic_specimen_not_execution_receipt"
+    assert course["schema"] == "mparanza.teaching_kit.v2"
+    assert {f["role"] for f in course["files"]} == {"source", "practice"}
 
 
 @pytest.mark.parametrize("product,workflow", COURSES)
-def test_each_course_has_a_specific_case_result_check_and_answer(product, workflow):
+def test_each_kit_explains_first_use_and_supplies_actual_inputs(product, workflow):
     course = CourseLibrary(ROOT / "plugins" / product, builder._eligible(product)).load(
         workflow, "it"
     )
     content = course["locales"]["it"]
-
-    assert len(content["input_rows"]) >= 2
-    assert len(content["output_rows"]) >= 2
-    assert len(content["method"]) == 3
-    assert len(content["scenario"].split()) >= 25
-    assert len(content["answer"].split()) >= 12
-    assert content["answer"] != content["question"]
-    assert content["scope"]
-    assert content["basis"]
+    assert content["request"]
+    assert content["steps"]
+    assert content["deliverables"]
+    assert content["review"]
+    assert content["practice"] != content["request"]
+    assert content["success"]
+    assert content["repeat"]
+    assert not {"output_rows", "conclusion", "answer", "result_title"} & set(content)
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
@@ -154,6 +159,43 @@ def test_source_change_requires_editorial_refresh(isolated):
     skill.write_text("# Changed method\n", encoding="utf-8")
     with pytest.raises(CourseError, match="editorial refresh"):
         CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
+
+
+@pytest.mark.parametrize(
+    "product,workflow,packaged,repository",
+    [
+        (
+            "clara",
+            "attribute-reporting",
+            "modules/attribute-reporting/vendor/modules/pdp/attribute_table_templates.py",
+            "modules/pdp/attribute_table_templates.py",
+        ),
+        (
+            "vera",
+            "bilancio-oic",
+            "modules/bilancio-xbrl-it/rulepacks/it/disclosures-2026.1.json",
+            "plugins/bilancio-xbrl-it/rulepacks/it/disclosures-2026.1.json",
+        ),
+        (
+            "vera",
+            "browser-automation",
+            "modules/browser-automation/scripts/discovery_runtime.mjs",
+            "plugins/browser-automation/scripts/discovery_runtime.mjs",
+        ),
+    ],
+)
+def test_kit_fingerprints_include_actual_bundled_engine_dependencies(
+    product, workflow, packaged, repository
+):
+    records = builder._source_records(product, workflow)
+    matches = [record for record in records if record["path"] == packaged]
+    assert matches == [
+        {
+            "path": packaged,
+            "repository_path": repository,
+            "sha256": digest(ROOT / repository),
+        }
+    ]
 
 
 def test_missing_source_cannot_fall_back_to_another_installation(isolated):
@@ -226,7 +268,7 @@ def test_changed_attached_example_is_rejected(isolated):
         ),
     )
     attachment.write_text("amount\n11\n", encoding="utf-8")
-    with pytest.raises(CourseError, match="Prepared example changed"):
+    with pytest.raises(CourseError, match="Teaching input changed"):
         CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
 
 
@@ -238,7 +280,7 @@ def test_changed_attached_example_is_rejected(isolated):
         ("lucia", "apertura-pratica"),
     ],
 )
-def test_render_delivers_case_example_voice_guide_and_actual_starter_without_completing_a_lesson(
+def test_render_supplies_inputs_and_worker_request_without_manufacturing_a_result(
     tmp_path, product, workflow
 ):
     library = CourseLibrary(ROOT / "plugins" / product, builder._eligible(product))
@@ -249,12 +291,19 @@ def test_render_delivers_case_example_voice_guide_and_actual_starter_without_com
     assert receipt["prepared_material_only"] is True
     assert receipt["execution_receipt"] is False
     assert receipt["understanding_confirmed"] is False
-    assert (output / "files/executed-starter/provenance.json").is_file()
-    assert (output / "source.md").read_text(encoding="utf-8").startswith("# ")
-    assert (output / "input.csv").is_file()
+    assert receipt["source_files"]
+    assert receipt["practice_files"]
+    request = json.loads(
+        (output / "execution-request.json").read_text(encoding="utf-8")
+    )
+    assert request["product"] == product
+    assert request["workflow"] == workflow
+    assert request["execution_receipt"] is False
+    assert request["source_files"] == receipt["source_files"]
+    assert not (output / "example.html").exists()
     page = (output / "course.html").read_text(encoding="utf-8")
     assert "Due chat, una lezione" in page
-    assert "<details>" in page
+    assert "execution-request.json" not in page
     assert "<html lang='it'>" in page
     assert "<script" not in page
     assert "https://" not in page
@@ -323,26 +372,32 @@ def test_cli_shows_prepared_source_checked_content(isolated, capsys):
     assert result["language"] == "it"
     assert result["sources_current"] is True
     assert "locales" not in result
-    assert result["content"]["question"]
+    assert result["content"]["checkpoints"]
 
 
-def test_cli_preserves_localized_symbols_on_legacy_windows_console(monkeypatch):
+def test_cli_preserves_localized_symbols_on_legacy_windows_console(
+    monkeypatch, isolated
+):
+    root, _, _ = isolated
+    alter_course(
+        isolated, lambda course: course["locales"]["en"].update(title="Δ 预算")
+    )
     buffer = io.BytesIO()
     console = io.TextIOWrapper(buffer, encoding="cp1252")
     monkeypatch.setattr(sys, "stdout", console)
 
     assert (
         main(
-            ROOT / "plugins/vera",
-            builder._eligible("vera"),
-            ["show", "--workflow", "management-control-pack", "--language", "en"],
+            root,
+            {"variance-analysis"},
+            ["show", "--workflow", "variance-analysis", "--language", "en"],
         )
         == 0
     )
 
     console.flush()
     result = json.loads(buffer.getvalue().decode("cp1252"))
-    assert "Δ" in json.dumps(result["content"], ensure_ascii=False)
+    assert result["content"]["title"] == "Δ 预算"
 
 
 @pytest.mark.parametrize("default_encoding", ["utf-8", "cp1252"])
@@ -358,10 +413,88 @@ def test_complete_compiled_catalog_matches_authoring_and_current_sources(
 
     monkeypatch.setattr(Path, "read_text", read_with_host_default)
     assert builder.build(check=True) == {
-        "workflows": 44,
-        "localized_courses": 200,
-        "missing_translations": {},
+        "workflow_kits": len(COURSES),
+        "localized_kits": len(LOCALIZED),
+        "missing_translations": [],
     }
+
+
+def test_compiler_removes_retired_specimens_and_rejects_stale_extra_files(tmp_path):
+    kit = tmp_path / "generated-kit"
+    current = kit / "files/input/invoice.xml"
+    current.parent.mkdir(parents=True)
+    current.write_text("current fictional source", encoding="utf-8")
+    old = kit / "files/executed-starter/old-result.html"
+    old.parent.mkdir()
+    old.write_text("retired output specimen", encoding="utf-8")
+    expected = {"course.json", "files/input/invoice.xml"}
+    with pytest.raises(ValueError, match="Unreferenced generated teaching files"):
+        builder._generated_files(kit, expected, check=True)
+    assert old.exists()
+    builder._generated_files(kit, expected)
+    assert not old.parent.exists()
+    assert current.read_text(encoding="utf-8") == "current fictional source"
+    builder._generated_files(kit, expected, check=True)
+
+
+def test_compiler_refuses_linked_generated_assets_without_touching_target(tmp_path):
+    kit = tmp_path / "generated-kit"
+    kit.mkdir()
+    outside = tmp_path / "outside"
+    outside.write_text("preserve", encoding="utf-8")
+    (kit / "linked-input").symlink_to(outside)
+    with pytest.raises(ValueError, match="symlinks"):
+        builder._generated_files(kit, set())
+    assert outside.read_text(encoding="utf-8") == "preserve"
+
+
+def test_compiler_rejects_cross_language_file_collision_before_changing_kit(
+    tmp_path, monkeypatch
+):
+    authoring = tmp_path / "authoring"
+    write_json(
+        authoring / "kits.json",
+        {
+            "vera/previdenza-inps": {
+                "files": [
+                    {
+                        "source": "italian.csv",
+                        "path": "files/input/periods.csv",
+                        "role": "source",
+                        "languages": ["it"],
+                    },
+                    {
+                        "source": "english.csv",
+                        "path": "files/input/periods.csv",
+                        "role": "source",
+                        "languages": ["en"],
+                    },
+                ]
+            }
+        },
+    )
+    kit = tmp_path / "plugins/vera/assets/courses/previdenza-inps"
+    kit.mkdir(parents=True)
+    existing = kit / "existing-artifact.txt"
+    existing.write_text("Preserve the existing kit on invalid authoring input")
+    monkeypatch.setattr(builder, "ROOT", tmp_path)
+    monkeypatch.setattr(builder, "AUTHORING", authoring)
+    monkeypatch.setattr(
+        builder,
+        "_eligible",
+        lambda product: {"previdenza-inps"} if product == "vera" else set(),
+    )
+    monkeypatch.setattr(
+        builder,
+        "_locales",
+        lambda: {"vera/previdenza-inps": {lang: {} for lang in builder.LANGUAGES}},
+    )
+    with pytest.raises(ValueError, match="unique destinations across all languages"):
+        builder.build(require_complete=False)
+    assert list(kit.iterdir()) == [existing]
+    assert (
+        existing.read_text() == "Preserve the existing kit on invalid authoring input"
+    )
 
 
 @pytest.mark.parametrize("product,workflow,language", LOCALIZED)
@@ -376,28 +509,18 @@ def test_every_supported_locale_has_complete_renderable_material(
         "scenario",
         "request",
         "scope",
-        "input_columns",
-        "input_rows",
-        "basis",
-        "method",
-        "result_title",
-        "conclusion",
-        "output_columns",
-        "output_rows",
-        "check",
-        "question",
-        "answer",
+        "inputs",
+        "steps",
+        "deliverables",
+        "review",
+        "checkpoints",
         "practice",
-        "next",
+        "success",
+        "repeat",
     }
     assert all(content.values())
-    assert len(content["method"]) == 3
-    assert all(
-        len(row) == len(content["input_columns"]) for row in content["input_rows"]
-    )
-    assert all(
-        len(row) == len(content["output_columns"]) for row in content["output_rows"]
-    )
+    assert all(content["steps"])
+    assert all(content["checkpoints"])
     destination = tmp_path / "lesson"
 
     library.render(workflow, language, destination)
@@ -405,36 +528,40 @@ def test_every_supported_locale_has_complete_renderable_material(
     page = (destination / "course.html").read_text(encoding="utf-8")
     assert f"<html lang='{language}'>" in page
     assert page.count("class='lesson-step'") == 6
-    assert "<details>" in page
+    assert "execution-request.json" not in page
     assert "<script" not in page
     assert "https://" not in page
-    assert (destination / "example.html").is_file()
+    assert not (destination / "example.html").exists()
+    assert (destination / "execution-request.json").is_file()
 
 
 @pytest.mark.parametrize("language", builder.LANGUAGES)
-def test_lucia_website_case_has_legal_services_in_each_language(language):
+def test_lucia_website_kit_remains_owned_by_lucia(language):
     library = CourseLibrary(ROOT / "plugins/lucia", builder._eligible("lucia"))
-    content = library.load("presenza-digitale-studio", language)["locales"][language]
-    assert (
-        content["input_rows"][1][1]
-        == {
-            "it": "Contratti e controversie commerciali",
-            "en": "Contracts and commercial disputes",
-            "fr": "Contrats et litiges commerciaux",
-            "de": "Verträge und Handelsstreitigkeiten",
-            "es": "Contratos y controversias comerciales",
-        }[language]
-    )
+    course = library.load("presenza-digitale-studio", language)
+    content = course["locales"][language]
+    assert "Lucia" in content["request"]
     assert "Vera" not in json.dumps(content)
+    assert course["product"] == "lucia"
 
 
-def test_chart_uses_authored_case_values_and_localized_labels(tmp_path):
-    library = CourseLibrary(ROOT / "plugins/clara", builder._eligible("clara"))
-    library.render("attribute-reporting", "es", tmp_path / "chart")
-    page = (tmp_path / "chart/example.html").read_text(encoding="utf-8")
-    assert "width='600.000'" in page
-    assert "width='300.000'" in page
-    assert "Nuevos" in page and "60 %" in page and "30 %" in page
+def test_precomputed_output_cannot_be_packaged_as_a_teaching_input(isolated):
+    root, _, _ = isolated
+    alter_course(isolated, lambda course: course["files"][0].update(role="output"))
+    with pytest.raises(CourseError, match="source and practice files"):
+        CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
+
+
+def test_kit_cannot_omit_the_learners_practice_inputs(isolated):
+    root, _, _ = isolated
+    alter_course(
+        isolated,
+        lambda course: course.update(
+            files=[f for f in course["files"] if f["role"] == "source"]
+        ),
+    )
+    with pytest.raises(CourseError, match="needs source and practice"):
+        CourseLibrary(root, {"variance-analysis"}).load("variance-analysis", "it")
 
 
 def test_cli_refuses_foreign_workflow(isolated, capsys):

@@ -1,0 +1,27 @@
+{
+  "vera/purchase-invoice-review": {
+    "title": "Review purchase invoices against the ledger",
+    "goal": "Learn to compare an invoice batch with existing postings and use the exception workbook for review.",
+    "scenario": "Officina Arco supplies three XML invoices and their March postings. The practice wants to identify points requiring examination.",
+    "scope": "First use of Italian purchase-invoice review. Vera reads invoices and ledger, compares them and assesses account consistency; it does not change postings.",
+    "inputs": "Open ledger-march.csv, the invoices folder and context-en.md. Supply invoices and actual ledger entries for the same period. Vera checks the columns and prepares their mapping for review before execution.",
+    "request": "Vera, review these purchase invoices against Officina Arco’s March postings. Show me what needs attention in the exception workbook and explain why.",
+    "steps": [
+      "The working chat checks the batch and ledger columns. Voice explains invoice, movement and booked account identity and helps resolve material ambiguities.",
+      "The current workflow matches invoices to movements, checks amounts and uses its native reviewer to assess descriptions and accounts. Voice follows actual progress and distinguishes calculation from judgement.",
+      "Open the Excel exception workbook first. Choose a row, read the reason for review and trace it to the invoice description and account actually used. Review findings before drawing conclusions."
+    ],
+    "deliverables": [
+      "Excel exception workbook with reasons and references to examine.",
+      "Batch summary and comparison trail back to invoices and ledger entries."
+    ],
+    "review": "Check batch coverage and whether documents support each finding. “No issue detected” is a screening outcome, not certification. Decisions to change accounts or correct entries follow the normal accounting process.",
+    "checkpoints": [
+      "Before execution, identify the two sets of evidence being compared.",
+      "In the result, explain a finding using its invoice and posting."
+    ],
+    "practice": "Repeat with ledger-march-april.csv and the four practice invoices. Keep the first result. Check the new invoice count and a finding, asking Vera for help where needed.",
+    "success": "You can provide both inputs, start review, find exceptions and check their reasons without confusing screening with approval.",
+    "repeat": "Ask Vera to review a client’s purchase invoices for a specified period and supply the actual ledger too. Review mapping, coverage and findings in the correct case."
+  }
+}

@@ -21,6 +21,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for candidate in (
+    PLUGIN_ROOT / "vendor/modules",
+    PLUGIN_ROOT.parent / "_shared/vendor/modules",
+):
+    if (candidate / "courseware/execution.py").is_file():
+        sys.path.insert(0, str(candidate))
+        break
+else:
+    raise RuntimeError(
+        "The installed teaching runtime is missing; reinstall this plugin"
+    )
+
+from courseware.execution import ExecutionError, collect_execution, verify_execution
+
 __all__ = ["OnboardingError", "Store", "default_root", "main"]
 
 MARKER = ".vera-onboarding-local-only"
@@ -182,6 +197,8 @@ class Store:
     """A local profile shared explicitly by Codex and local ChatGPT Work."""
 
     def __init__(self, root: Path | None = None) -> None:
+        self.plugin_root = PLUGIN_ROOT
+        self.product = "vera"
         self.root = (root or default_root()).expanduser().absolute()
         if any(part.is_symlink() for part in (self.root, *self.root.parents)):
             raise OnboardingError(
@@ -303,6 +320,42 @@ class Store:
             ),
             "recorded_at": _now(),
         }
+
+    def _execution(
+        self,
+        lesson: dict[str, Any],
+        phase: str,
+        data: dict[str, Any],
+        artifacts: list[dict[str, str]],
+        pair: dict[str, str],
+    ) -> dict[str, Any]:
+        try:
+            return collect_execution(
+                root=self.lesson_root(lesson),
+                plugin_root=self.plugin_root,
+                product=self.product,
+                workflow=lesson["workflow_id"],
+                phase=phase,
+                worker_thread_id=pair["worker_thread_id"],
+                record_path=data.get("execution_record"),
+                artifacts=artifacts,
+            )
+        except ExecutionError as exc:
+            raise OnboardingError(str(exc)) from exc
+
+    def _verify_execution(self, lesson: dict[str, Any], phase: str) -> None:
+        try:
+            verify_execution(
+                root=self.lesson_root(lesson),
+                plugin_root=self.plugin_root,
+                product=self.product,
+                workflow=lesson["workflow_id"],
+                phase=phase,
+                recorded=lesson[phase].get("execution"),
+                artifacts=lesson[phase]["artifacts"],
+            )
+        except ExecutionError as exc:
+            raise OnboardingError(str(exc)) from exc
 
     def change(
         self, action: str, revision: int, data: dict[str, Any]
@@ -446,6 +499,9 @@ class Store:
                         raise OnboardingError(
                             "Record the user's own attempt, not the demonstration again"
                         )
+                    evidence["execution"] = self._execution(
+                        lesson, action, data, evidence["artifacts"], state["pair"]
+                    )
                     lesson[action] = evidence
                     lesson.pop("understanding", None)
                     if action == "demo":
@@ -494,6 +550,7 @@ class Store:
                 raise OnboardingError(
                     "Lesson artifacts changed; review and record the actual results again"
                 )
+            self._verify_execution(lesson, phase)
 
     def worker(self, thread_id: str, workflow: str, token: str) -> dict[str, Any]:
         """Authorize only the active lesson handoff, never a general onboarding bypass.

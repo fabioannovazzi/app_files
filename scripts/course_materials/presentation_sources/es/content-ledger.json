@@ -1,0 +1,105 @@
+{
+  "schema_version": "clara.html_deck_ledger.v1",
+  "sources": [
+    {
+      "id": "brief",
+      "label": "Propuesta ficticia para debatir",
+      "kind": "document",
+      "locator": "brief-es.md",
+      "sha256": "b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514",
+      "publish_locator": false
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "opening",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-opening",
+          "statement": "Propuesta para recibir solicitudes",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Propuesta ficticia para debatir"
+        }
+      ]
+    },
+    {
+      "slide_id": "request",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-request",
+          "statement": "Hacer comprensible la solicitud",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Propuesta ficticia para debatir"
+        }
+      ]
+    },
+    {
+      "slide_id": "process",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-process",
+          "statement": "Aclarar la solicitud antes de actuar",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Propuesta ficticia para debatir"
+        }
+      ]
+    },
+    {
+      "slide_id": "responsibilities",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-responsibilities",
+          "statement": "Acordar quién sigue la solicitud",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Propuesta ficticia para debatir"
+        }
+      ]
+    },
+    {
+      "slide_id": "decision",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-decision",
+          "statement": "Decidir si probar la ficha",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Propuesta ficticia para debatir"
+        }
+      ]
+    }
+  ]
+}

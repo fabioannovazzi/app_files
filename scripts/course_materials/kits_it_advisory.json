@@ -1,0 +1,77 @@
+{
+  "clara/advisory-brief-planner": {
+    "title": "Impostare un incarico di consulenza con Clara",
+    "goal": "Imparare a trasformare una richiesta in un incarico chiaro: decisione, fonti, risultato e lavoro da svolgere.",
+    "scenario": "Ciclo Arco sta valutando un servizio di ritiro biciclette. Prima di preparare la consulenza, definiamo ciò che chiede la titolare e ciò che le note disponibili permettono di valutare.",
+    "scope": "Impostazione iniziale dell’incarico con le note fittizie fornite. La lezione termina con il passaggio al lavoro successivo; la raccomandazione sul servizio verrà elaborata da quel flusso.",
+    "inputs": "Apri assignment-it.md e notes-it.md. Il primo indica decisione, destinataria e limiti; il secondo contiene dichiarazioni dei clienti e informazioni operative.",
+    "request": "Clara, imposta questo incarico. Mostrami la decisione da sostenere, il risultato previsto, le fonti disponibili, le lacune e come organizzare il lavoro.",
+    "steps": [
+      "Clara legge richiesta e note, individua eventuali chiarimenti sostanziali e propone l’incarico in termini comprensibili.",
+      "Rivedi decisione, perimetro, risultato e informazioni mancanti. Clara registra il piano e lo verifica rispetto alle fonti esatte con il flusso corrente.",
+      "Leggi il riepilogo e il passaggio di consegne. Individua il flusso Clara disponibile che proseguirebbe il lavoro e gli elementi da mantenere."
+    ],
+    "deliverables": [
+      "Definizione dell’incarico e riepilogo leggibile: scopo, confini e risultato atteso.",
+      "Verifica del piano e consegne operative: se il lavoro può proseguire e che cosa riceverà il flusso successivo."
+    ],
+    "review": "Controlla che la destinataria resti la titolare, che il piano confronti le opzioni richieste e che non inventi prezzi, domanda o autorizzazioni a contattare persone. Il piano non è ancora una raccomandazione eseguita.",
+    "checkpoints": [
+      "Prima della stesura, identifica decisione e destinataria.",
+      "Alla consegna, spiega il risultato successivo e quali informazioni mancano."
+    ],
+    "practice": "Usa i file della prova, compresi revised-assignment-it.md e update-it.md, per impostare la nuova richiesta più circoscritta: una lista di azioni per verificare la fattibilità del pilota. Conserva il piano iniziale.",
+    "success": "Il nuovo piano riflette obiettivo e risultato modificati. Indica il risultato da produrre e una condizione da verificare prima di avviare il pilota.",
+    "repeat": "Descrivi decisione, destinatario, risultato desiderato e file disponibili. Rivedi perimetro e piano delle fonti prima dell’esecuzione del flusso selezionato."
+  },
+  "clara/advisory-case-director": {
+    "title": "Sviluppare un caso di consulenza con Clara",
+    "goal": "Imparare a mantenere una valutazione di lavoro fondata sulle fonti e aggiornare le prossime azioni quando arrivano nuove informazioni.",
+    "scenario": "Ciclo Arco deve valutare un servizio di ritiro biciclette. I commenti dei clienti indicano un possibile interesse; le note operative descrivono una possibilità limitata di provarlo.",
+    "scope": "Un caso di consulenza locale basato sulle note fornite. Il risultato è una valutazione di lavoro, non una previsione economica né un’autorizzazione all’avvio.",
+    "inputs": "Apri assignment-it.md e notes-it.md: contengono decisione, commenti dei clienti e disponibilità del mezzo. La chat di lavoro crea il caso durante la lezione.",
+    "request": "Clara, sviluppa questo caso. Dammi la tua raccomandazione attuale, le fonti e i limiti su cui si basa e il prossimo lavoro utile alla decisione della titolare.",
+    "steps": [
+      "Clara definisce l’incarico e crea un caso locale. Registra i materiali e formula una prima risposta con le sue condizioni.",
+      "Il flusso corrente registra ragionamento e collegamenti alle fonti, poi salva la valutazione. La chat vocale spiega raccomandazione e questioni aperte.",
+      "Apri il documento di lavoro e la mappa delle fonti. Segui una conclusione fino alla fonte e discuti quale verifica potrebbe cambiare la risposta."
+    ],
+    "deliverables": [
+      "Documento di lavoro corrente: raccomandazione, motivi, incognite importanti e azioni proposte.",
+      "Mappa delle fonti e storico del caso: supporto delle conclusioni e modifiche intervenute nel lavoro."
+    ],
+    "review": "L’interesse espresso non è una prenotazione né una prova della domanda complessiva. Controlla ciò che consente davvero la nota sul mezzo. Clara propone; la titolare decide se attuare.",
+    "checkpoints": [
+      "Alla prima risposta, distingui gli elementi supportati dalle condizioni da verificare.",
+      "Alla consegna, trova la fonte di una conclusione e la prossima verifica utile."
+    ],
+    "practice": "Aggiungi update-it.md allo stesso caso didattico. Chiedi a Clara come l’indisponibilità del mezzo cambia valutazione e prossime azioni. Apri il documento aggiornato e la versione precedente conservata.",
+    "success": "Il caso recepisce la nuova disponibilità e non considera concordato il possibile prestito. Spiega che cosa è cambiato nella raccomandazione o nelle sue condizioni.",
+    "repeat": "Chiedi a Clara di riprendere il caso, fornisci nuove fonti e indica la decisione da prendere. Rivedi risposta aggiornata, motivi e prossimo lavoro."
+  },
+  "clara/advisory-deliverable-validator": {
+    "title": "Rivedere un memo di consulenza con Clara",
+    "goal": "Imparare a verificare se un documento risponde all’incarico e se la raccomandazione deriva dalle fonti disponibili.",
+    "scenario": "Un memo esterno raccomanda il servizio quotidiano di ritiro per Ciclo Arco. Rivediamo l’intero breve documento rispetto alla richiesta della titolare e alle note di partenza.",
+    "scope": "Un memo Markdown fornito e fonti locali. Lo storico della sua redazione non è disponibile: la revisione confronta le affermazioni con le fonti ora fornite.",
+    "inputs": "Apri external-memo-it.md, assignment-it.md e notes-it.md. Il memo è il documento da rivedere; gli altri file descrivono incarico e informazioni disponibili.",
+    "request": "Clara, rivedi questo memo rispetto all’incarico e alle note fornite. Spiega se è utilizzabile, che cosa va corretto e quali decisioni restano alla titolare.",
+    "steps": [
+      "Clara definisce il perimetro della revisione, conserva il memo e prepara l’inventario dei contenuti e delle fonti selezionate.",
+      "Il flusso corrente esamina perimetro, affermazioni, ragionamento, raccomandazione, limiti e stato di consegna. La chat vocale collega i rilievi ai passaggi esatti del memo e delle note.",
+      "Apri il pacchetto di revisione. Leggi esito complessivo, rilievi sostanziali e correzioni proposte. L’originale resta intatto; un memo corretto richiede una propria revisione."
+    ],
+    "deliverables": [
+      "Revisione leggibile: conclusione complessiva, confronto con le fonti, correzioni e incertezze residue.",
+      "Verifica del registro e inventari: contenuti esaminati e completezza formale della revisione."
+    ],
+    "review": "Confronta il servizio quotidiano raccomandato con le dichiarazioni effettive dei clienti e la disponibilità del mezzo. Un registro completo non approva il memo né dimostra da solo le sue affermazioni.",
+    "checkpoints": [
+      "Prima di iniziare, distingui il documento da rivedere dalle fonti di supporto.",
+      "Alla consegna, spiega l’esito e trova il passaggio e la fonte di un rilievo importante."
+    ],
+    "practice": "Aggiungi update-it.md e richiedi una nuova revisione del memo esterno invariato con le fonti aggiornate. Conserva la prima revisione e confronta i rilievi.",
+    "success": "La nuova revisione recepisce l’indisponibilità del mezzo e ne chiarisce l’effetto sull’uso del memo. Indica che cosa deve cambiare perché aiuti la decisione della titolare.",
+    "repeat": "Fornisci documento, incarico e fonti. Leggi esito complessivo e rilievi sostanziali, poi rivedi separatamente le eventuali correzioni prima dell’utilizzo."
+  }
+}

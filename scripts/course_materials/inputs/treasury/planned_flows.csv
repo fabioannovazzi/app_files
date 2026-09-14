@@ -1,0 +1,3 @@
+flow_id,side,amount,expected_date,description,basis
+payroll-apr,payable,14000.00,2026-04-27,Retribuzioni aprile,Prospetto previsionale didattico della direzione
+rent-may,payable,2500.00,2026-05-02,Canone maggio,Scadenza fornita nel contratto fittizio

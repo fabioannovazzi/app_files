@@ -7,7 +7,6 @@ coverage. They do not judge professional relevance, correctness or understanding
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import html
 import json
@@ -43,46 +42,11 @@ def _esc(value: Any) -> str:
     return html.escape(str(value), quote=True)
 
 
-def _table(columns: list[str], rows: list[list[str]]) -> str:
-    head = "".join(f"<th scope='col'>{_esc(value)}</th>" for value in columns)
-    body = "".join(
-        "<tr>" + "".join(f"<td>{_esc(value)}</td>" for value in row) + "</tr>"
-        for row in rows
-    )
-    return f"<div class='table-scroll'><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>"
-
-
-def _markdown_table(columns: list[str], rows: list[list[str]]) -> str:
-    lines = [columns, ["---"] * len(columns), *rows]
-    return "\n".join(
-        "| "
-        + " | ".join(str(value).replace("|", "\\|").replace("\n", " ") for value in row)
-        + " |"
-        for row in lines
-    )
-
-
-def _visual(course: dict[str, Any], content: dict[str, Any]) -> str:
-    """Draw the case's explicitly authored values from a common zero baseline."""
-    if "visual" not in course:
-        return ""
-    visual = course["visual"]
-    maximum = visual.get("maximum", max(value for _, value in visual["bars"]))
-    rows = []
-    for index, value in visual["bars"]:
-        label = content["output_rows"][index][0]
-        display = content["output_rows"][index][visual["column"]]
-        width = value / maximum * 1000
-        rows.append(
-            f"<div class='chart-row'><div><span>{_esc(label)}</span><strong>{_esc(display)}</strong></div>"
-            f"<svg viewBox='0 0 1000 22' aria-hidden='true' focusable='false'>"
-            f"<rect class='chart-track' width='1000' height='22'/><rect class='chart-bar' width='{width:.3f}' height='22'/></svg></div>"
-        )
+def _list(values: list[str]) -> str:
     return (
-        "<figure class='case-chart'>"
-        f"<figcaption>{_esc(content['output_columns'][visual['column']])}</figcaption>"
-        + "".join(rows)
-        + "</figure>"
+        "<ol class='method'>"
+        + "".join(f"<li>{_esc(value)}</li>" for value in values)
+        + "</ol>"
     )
 
 
@@ -122,13 +86,45 @@ class CourseLibrary:
             raise CourseError("Course content changed; rebuild the reviewed catalog")
         course = _read(manifest)
         if (
-            course.get("schema") != "mparanza.course.v1"
+            course.get("schema") != "mparanza.teaching_kit.v2"
             or course.get("product") != self.product
             or course.get("workflow") != workflow
             or sorted(course["locales"]) != sorted(entry["languages"])
+            or len(course["seconds"]) != 6
+            or any(
+                type(seconds) is not int or seconds <= 0
+                for seconds in course["seconds"]
+            )
             or not 300 <= sum(course["seconds"]) <= 480
         ):
             raise CourseError("Invalid course identity, language coverage or duration")
+        if course["group"] not in {"workflow", "supporting_task"}:
+            raise CourseError("Invalid teaching-kit catalogue group")
+        content = course["locales"][language]
+        for field in (
+            "title",
+            "goal",
+            "scenario",
+            "scope",
+            "inputs",
+            "request",
+            "review",
+            "practice",
+            "success",
+            "repeat",
+        ):
+            if not isinstance(content.get(field), str) or not content[field].strip():
+                raise CourseError(f"Teaching kit is missing its {field}")
+        for field in ("steps", "deliverables", "checkpoints"):
+            if (
+                not isinstance(content.get(field), list)
+                or not content[field]
+                or any(
+                    not isinstance(value, str) or not value.strip()
+                    for value in content[field]
+                )
+            ):
+                raise CourseError(f"Teaching kit is missing its {field}")
         for source in course["sources"]:
             # The package contains its own component; source checkouts use the
             # explicitly pinned sibling component, never an installed plugin.
@@ -146,10 +142,27 @@ class CourseLibrary:
                 raise CourseError(
                     f"Course needs editorial refresh after a workflow change: {relative}"
                 )
+        selected_roles = set()
+        seen_paths = set()
         for asset in course.get("files", []):
             path = _inside(manifest.parent, asset["path"])
             if _digest(path) != asset["sha256"]:
-                raise CourseError("Prepared example changed; rebuild its course")
+                raise CourseError("Teaching input changed; review and rebuild its kit")
+            if (
+                asset["path"] in seen_paths
+                or asset["role"] not in {"source", "practice"}
+                or not set(asset["languages"]) <= set(entry["languages"])
+            ):
+                raise CourseError(
+                    "Teaching kits may contain only uniquely identified source and practice files"
+                )
+            seen_paths.add(asset["path"])
+            if language in asset["languages"]:
+                selected_roles.add(asset["role"])
+        if selected_roles != {"source", "practice"}:
+            raise CourseError(
+                "Teaching kit needs source and practice files in the selected language"
+            )
         return course
 
     def render(self, workflow: str, language: str, destination: Path) -> dict[str, Any]:
@@ -174,46 +187,44 @@ class CourseLibrary:
         source_dir = (self.assets / self.index["courses"][workflow]["path"]).parent
         files = []
         for asset in course.get("files", []):
+            if language not in asset["languages"]:
+                continue
             target = destination / asset["path"]
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(_inside(source_dir, asset["path"]), target)
-            files.append(asset["path"])
-        specimen = self._specimen(course, copy, ui, language)
-        (destination / "example.html").write_text(specimen, encoding="utf-8")
+            files.append(asset)
         (destination / "course.html").write_text(
             self._page(course, copy, ui, language, files), encoding="utf-8"
         )
         (destination / "teacher.md").write_text(
             self._teacher(course, copy, ui), encoding="utf-8"
         )
-        # A ready-to-inspect synthetic input, not an invented execution recipe.
-        (destination / "case.json").write_text(
-            json.dumps(
-                {
-                    "kind": "authored_synthetic_teaching_case",
-                    "workflow": workflow,
-                    "scenario": copy["scenario"],
-                    "columns": copy["input_columns"],
-                    "rows": copy["input_rows"],
-                    "scope": copy["scope"],
-                },
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-        with (destination / "input.csv").open(
-            "w", encoding="utf-8", newline=""
-        ) as stream:
-            writer = csv.writer(stream)
-            writer.writerow(copy["input_columns"])
-            writer.writerows(copy["input_rows"])
-        (destination / "source.md").write_text(
-            f"# {copy['title']}\n\n{ui['synthetic']}\n\n{copy['scenario']}\n\n"
-            + _markdown_table(copy["input_columns"], copy["input_rows"])
-            + f"\n\n{copy['basis']}\n\n{copy['scope']}\n",
-            encoding="utf-8",
+        # This is an instruction handoff, never an execution or review receipt.
+        execution = {
+            "schema": "mparanza.teaching_execution_request.v1",
+            "product": self.product,
+            "workflow": workflow,
+            "language": language,
+            "skill": str(self.root / "skills" / workflow / "SKILL.md"),
+            "request": copy["request"],
+            "source_files": [
+                str(destination / f["path"]) for f in files if f["role"] == "source"
+            ],
+            "practice_files": [
+                str(destination / f["path"]) for f in files if f["role"] == "practice"
+            ],
+            "execution": course["execution"],
+            "steps": copy["steps"],
+            "checkpoints": copy["checkpoints"],
+            "deliverables": copy["deliverables"],
+            "practice": copy["practice"],
+            "success": copy["success"],
+            "sources": course["sources"],
+            "execution_receipt": False,
+            "rule": "Read the current own-product skill and delegated procedure completely. Prepare the real bound tutorial case from source_files. Execute one authorized working-thread step at a time. Open and explain the actual outputs. Rendering this kit completes no demo, practice or understanding checkpoint. Never replace a missing or blocked pipeline with authored output. Keep the tutorial local; a hosted step needs the user's separate explicit choice and normal workflow authority.",
+        }
+        (destination / "execution-request.json").write_text(
+            json.dumps(execution, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
         receipt = {
             "product": self.product,
@@ -224,9 +235,19 @@ class CourseLibrary:
             "execution_receipt": False,
             "understanding_confirmed": False,
             "course": str(destination / "course.html"),
-            "example": str(destination / "example.html"),
+            "execution_request": str(destination / "execution-request.json"),
+            "source_files": execution["source_files"],
+            "practice_files": execution["practice_files"],
             "teacher": str(destination / "teacher.md"),
             "sources": course["sources"],
+            "prepared_artifacts": [
+                {
+                    "path": path.relative_to(destination).as_posix(),
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                }
+                for path in sorted(destination.rglob("*"))
+                if path.is_file()
+            ],
         }
         (destination / "course-provenance.json").write_text(
             json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -242,62 +263,41 @@ class CourseLibrary:
             f"<body>{body}</body></html>\n"
         )
 
-    def _specimen(
-        self,
-        course: dict[str, Any],
-        copy: dict[str, Any],
-        ui: dict[str, Any],
-        language: str,
-    ) -> str:
-        rows = _table(copy["output_columns"], copy["output_rows"])
-        return self._shell(
-            copy["title"],
-            language,
-            f"<header class='masthead'><b>{_esc(self.product.title())}</b><span>{_esc(ui['example'])}</span></header>"
-            f"<main class='report'><p class='eyebrow'>{_esc(ui['prepared'])}</p><h1>{_esc(copy['result_title'])}</h1>"
-            f"<p class='lead'>{_esc(copy['conclusion'])}</p><p class='caption'>{_esc(ui['synthetic'])}</p>"
-            f"{_visual(course, copy)}{rows}<section><h2>{_esc(ui['source'])}</h2><p>{_esc(copy['basis'])}</p></section>"
-            f"<section class='review'><h2>{_esc(ui['check'])}</h2><p>{_esc(copy['check'])}</p>"
-            f"<p>{_esc(copy['scope'])}</p></section><footer>{_esc(ui['specimen_notice'])}</footer></main>",
-        )
-
     def _page(
         self,
         course: dict[str, Any],
         copy: dict[str, Any],
         ui: dict[str, Any],
         language: str,
-        files: list[str],
+        files: list[dict[str, Any]],
     ) -> str:
         labels = ui["stages"]
         nav = "".join(
             f"<a href='#step-{i}'><span>0{i+1}</span>{_esc(label)}</a>"
             for i, label in enumerate(labels)
         )
-        methods = "".join(f"<li>{_esc(step)}</li>" for step in copy["method"])
         downloads = "".join(
-            f"<li><a href='{_esc(file)}'>{_esc(file)}</a></li>" for file in files
+            f"<li><a href='{_esc(file['path'])}'>{_esc(Path(file['path']).name)}</a></li>"
+            for file in files
+            if file["role"] == "source"
         )
-        supplement = (
-            f"<h3>{_esc(ui['supplement_title'])}</h3><p>{_esc(ui['supplement_text'])}</p><ul>{downloads}</ul>"
-            if files
-            else ""
+        practice_files = "".join(
+            f"<li><a href='{_esc(file['path'])}'>{_esc(Path(file['path']).name)}</a></li>"
+            for file in files
+            if file["role"] == "practice"
         )
         parts = [
-            f"<p class='lead'>{_esc(copy['scenario'])}</p><blockquote>{_esc(copy['request'])}</blockquote><p>{_esc(copy['scope'])}</p>",
-            _table(copy["input_columns"], copy["input_rows"])
-            + f"<p>{_esc(copy['basis'])}</p><a href='source.md' download>{_esc(ui['case_download'])}</a> · <a href='input.csv' download>CSV</a>",
-            f"<ol class='method'>{methods}</ol>",
-            f"<div class='result-preview'><p class='eyebrow'>{_esc(ui['prepared'])}</p><h3>{_esc(copy['result_title'])}</h3><p>{_esc(copy['conclusion'])}</p>"
-            + _visual(course, copy)
-            + _table(copy["output_columns"], copy["output_rows"])
-            + f"<a class='button' href='example.html' target='_blank' rel='noopener'>{_esc(ui['open_example'])} ↗</a></div>{supplement}",
-            f"<p class='lead'>{_esc(copy['check'])}</p><p>{_esc(copy['question'])}</p><details><summary>{_esc(ui['answer'])}</summary><p>{_esc(copy['answer'])}</p></details>",
-            f"<blockquote>{_esc(copy['practice'])}</blockquote><p>{_esc(ui['optional_practice'])}</p><p>{_esc(copy['next'])}</p>",
+            f"<p class='lead'>{_esc(copy['scenario'])}</p><p>{_esc(copy['scope'])}</p>",
+            f"<p>{_esc(copy['inputs'])}</p><ul>{downloads}</ul><blockquote>{_esc(copy['request'])}</blockquote>",
+            _list(copy["steps"])
+            + f"<aside class='paired'>{_esc(ui['live_rule'])}</aside>",
+            _list(copy["deliverables"]) + f"<p>{_esc(copy['review'])}</p>",
+            _list(copy["checkpoints"]) + f"<p>{_esc(ui['checkpoint_rule'])}</p>",
+            f"<blockquote>{_esc(copy['practice'])}</blockquote><ul>{practice_files}</ul><p>{_esc(copy['success'])}</p><p>{_esc(copy['repeat'])}</p>",
         ]
         sections = "".join(
-            f"<section id='step-{i}' class='lesson-step'><div class='section-label'><span>0{i+1} / {course['seconds'][i]} s</span><h2>{_esc(labels[i])}</h2></div>"
-            f"<div class='section-body'><p class='voice-cue'>{_esc(ui['cues'][i])}</p>{part}</div></section>"
+            f"<section id='step-{i}' class='lesson-step'><div class='section-label'><span>0{i+1}</span><h2>{_esc(labels[i])}</h2></div>"
+            f"<div class='section-body'>{part}</div></section>"
             for i, part in enumerate(parts)
         )
         body = (
@@ -306,7 +306,7 @@ class CourseLibrary:
             f"<p class='lead'>{_esc(copy['goal'])}</p><p class='caption'>{_esc(ui['timing'])}</p></div>"
             f"<aside class='paired'><b>{_esc(ui['two_threads'])}</b><p>{_esc(ui['pair_explanation'])}</p></aside>"
             f"<nav aria-label='{_esc(ui['contents'])}'>{nav}</nav>{sections}"
-            f"<footer><p>{_esc(ui['specimen_notice'])}</p><p>{_esc(ui['privacy'])}</p>"
+            f"<footer><p>{_esc(ui['kit_notice'])}</p><p>{_esc(ui['privacy'])}</p>"
             f"<a href='course-provenance.json'>{_esc(ui['provenance'])}</a> · {_esc(course['revision'])}</footer></main>"
         )
         return self._shell(copy["title"], language, body)
@@ -315,25 +315,17 @@ class CourseLibrary:
         self, course: dict[str, Any], copy: dict[str, Any], ui: dict[str, Any]
     ) -> str:
         blocks = [
-            copy["scenario"] + "\n\n" + copy["request"],
-            copy["basis"] + "\n\n" + json.dumps(copy["input_rows"], ensure_ascii=False),
-            "\n".join(copy["method"]),
-            copy["conclusion"]
-            + "\n\n"
-            + json.dumps(copy["output_rows"], ensure_ascii=False),
-            copy["check"]
-            + "\n\n"
-            + copy["question"]
-            + "\n\n"
-            + ui["answer"]
-            + ": "
-            + copy["answer"],
-            copy["practice"] + "\n\n" + copy["next"],
+            copy["goal"] + "\n\n" + copy["scenario"] + "\n\n" + copy["scope"],
+            copy["inputs"] + "\n\n" + copy["request"],
+            "\n\n".join(copy["steps"]) + "\n\n" + ui["live_rule"],
+            "\n\n".join(copy["deliverables"]) + "\n\n" + copy["review"],
+            "\n\n".join(copy["checkpoints"]) + "\n\n" + ui["checkpoint_rule"],
+            copy["practice"] + "\n\n" + copy["success"] + "\n\n" + copy["repeat"],
         ]
         text = f"# {copy['title']}\n\n{ui['timing']}\n\n{ui['pair_explanation']}\n\n{ui['teacher_rule']}\n\n"
         for i, block in enumerate(blocks):
             text += f"## {i+1}. {ui['stages'][i]} · {course['seconds'][i]} s\n\n{ui['cues'][i]}\n\n{block}\n\n"
-        return text + ui["specimen_notice"] + "\n\n" + ui["privacy"] + "\n"
+        return text + ui["kit_notice"] + "\n\n" + ui["privacy"] + "\n"
 
 
 def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -> int:
@@ -365,7 +357,8 @@ def main(plugin_root: Path, eligible: set[str], argv: list[str] | None = None) -
                     "seconds": course["seconds"],
                     "sources_current": True,
                     "source_count": len(course["sources"]),
-                    "example_kind": course["example_kind"],
+                    "execution": course["execution"],
+                    "group": course["group"],
                     "content": course["locales"][args.language],
                     "files": [asset["path"] for asset in course.get("files", [])],
                 }

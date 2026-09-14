@@ -1,0 +1,52 @@
+{
+  "vera/financial-report-builder": {
+    "title": "Préparer un rapport financier avec Vera",
+    "goal": "Apprendre à transformer des états comptables en rapport lisible, avec tableaux, commentaires et références pour vérifier les chiffres.",
+    "scenario": "Officina Arco fournit compte de résultat, bilan et flux de trésorerie. Le cabinet souhaite un premier rapport de gestion sur la période.",
+    "scope": "Un rapport de gestion à partir des états disponibles. Cette fonction organise données et explications dans un document ; les sections sans sources restent signalées comme manquantes.",
+    "inputs": "Ouvrez january-february.xlsx et context-fr.md. Regardez les trois feuilles, la période et la devise. Indiquez à Vera destinataire, type de rapport et langue ; aucune présentation ni configuration technique à préparer.",
+    "request": "Vera, prépare un rapport de gestion pour Officina Arco à partir des états de janvier et février. Aide-moi à vérifier l’utilisation des tableaux, puis montre le Word et les points à revoir.",
+    "steps": [
+      "Dans la conversation de travail, Vera inspecte les feuilles et propose leur place dans le rapport. La voix explique structure et sources et vous aide à confirmer entreprise, période et montants à reprendre.",
+      "Vera enregistre la correspondance revue, prépare des commentaires étayés et exécute la procédure courante. La voix suit les résultats réels et explique les sections sans informations.",
+      "Ouvrez le Word produit. Lisez synthèse, tableau et commentaire associé ; retrouvez le chiffre dans la feuille source. Utilisez la revue du rapport pour enregistrer corrections et demandes de précision."
+    ],
+    "deliverables": [
+      "Rapport Word et version Markdown avec sections, tableaux et commentaires.",
+      "Classeur des tableaux et références aux données pour vérifier le document."
+    ],
+    "review": "Vérifiez période, devise, affectation des feuilles et fidélité des commentaires. Ne comptez pas deux fois les sous-totaux. Distinguez sections documentées et manquantes et relisez avant usage professionnel.",
+    "checkpoints": [
+      "Avant la génération, identifiez les informations qui entreront dans le rapport.",
+      "Dans Word, retrouvez un chiffre et son état source, puis un point à revoir."
+    ],
+    "practice": "Recommencez avec january-march.xlsx pour un nouveau rapport jusqu’à mars, en conservant le précédent. Vérifiez actualisation de la période, des tableaux et des commentaires ; proposez une correction.",
+    "success": "Vous savez fournir les états, demander et ouvrir le rapport, vérifier une source et recommencer pour une nouvelle période.",
+    "repeat": "Fournissez les états du client et précisez période, destinataire, langue et type de rapport. Revoyez structure, montants et commentaires, puis suivez le processus habituel d’approbation."
+  },
+  "vera/financial-analysis": {
+    "title": "Préparer une analyse financière avec Vera",
+    "goal": "Apprendre à demander une analyse précise, fournir les données, revoir les choix et utiliser des résultats financiers vérifiables.",
+    "scenario": "Officina Arco veut connaître sa dette nette fin février. Le tableau présente emprunt, trésorerie disponible et deux autres postes à classer.",
+    "scope": "Financial Analysis prépare analyses comptables et calculs de due diligence à partir de données revues. Cette première exécution complète calcule la dette nette à une date ; les autres analyses nécessitent leurs propres données et choix.",
+    "inputs": "Ouvrez balances-february.csv et context-fr.md. Précisez société, date, EUR et définition demandée. La note explique les soldes ; Vera prépare la structure technique après revue, sans vous demander de programmer.",
+    "request": "Vera, prépare la dette nette d’Officina Arco au 28 février avec ce tableau et la définition de la note. Guide-moi dans les choix puis montre résultat, détail et contrôles.",
+    "steps": [
+      "Dans la conversation de travail, Vera identifie l’analyse adaptée et propose le classement des postes. La voix explique la mesure et accompagne la revue des montants, date, inclusions et exclusions.",
+      "Après la revue réelle, Vera enregistre les choix et exécute le calcul courant. La voix suit l’exécution et distingue contrôle arithmétique et exhaustivité des données reçues.",
+      "Lisez la synthèse de livraison et ouvrez le détail produit. Retrouvez emprunt et trésorerie dans les lignes sources, puis les postes exclus, contrôles et questions ouvertes."
+    ],
+    "deliverables": [
+      "Résultat de l’analyse et détail des postes inclus et exclus présentés à la livraison.",
+      "Données, contrôles et références aux choix et sources pour la revue professionnelle."
+    ],
+    "review": "Vérifiez la définition demandée et la date commune des soldes. Un calcul reproductible ne prouve seul ni exhaustivité ni exactitude comptable. Revoyez sources et conclusions avant utilisation.",
+    "checkpoints": [
+      "Avant le calcul, expliquez la mesure souhaitée et les données nécessaires.",
+      "Dans le résultat, identifiez un solde inclus, un solde exclu et leurs motifs."
+    ],
+    "practice": "Utilisez balances-march.csv pour une nouvelle analyse au 31 mars avec la même définition. Conservez février et repérez les soldes et le résultat qui changent.",
+    "success": "Vous savez choisir l’analyse, fournir le tableau, revoir les choix, retrouver résultat et détail et actualiser à une nouvelle date.",
+    "repeat": "Décrivez à Vera question financière, société, date ou période et données disponibles. Revoyez analyse proposée et choix de fond, puis contrôlez le dossier produit avant usage professionnel."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "vera/browser-automation": {
+    "title": "Apprendre à Vera une procédure dans le navigateur",
+    "goal": "Apprendre à montrer une tâche répétitive à Vera, relire la procédure enregistrée et comprendre comment elle devient une automatisation vérifiée.",
+    "scenario": "Un cabinet prépare régulièrement des dossiers de documents sur un site. Utilisez la page locale fictive fournie par Vera pour montrer un exemple complet, relire les étapes et essayer un autre type de document.",
+    "scope": "Observation d’une procédure web, enregistrement local, révision et préparation de sa réutilisation. L’exemple utilise la page locale de test du plugin et ne démontre aucun accès à un logiciel métier réel. Les commandes de la page sont en anglais.",
+    "inputs": "Lisez task-fr.md : client fictif, type de document et résultat demandé. Vera lance sa page locale dans la fenêtre de travail. Aucun identifiant, document client ou automatisme déjà préparé n’est nécessaire.",
+    "request": "Vera, montre-moi comment t’apprendre cette procédure dans le navigateur. Suis l’exemple fictif, enregistre les étapes et explique ce que je dois relire avant que tu puisses la répéter.",
+    "steps": [
+      "Confirmez la tâche et le résultat attendu. Vera commence l’enregistrement avant d’agir. Sélectionnez le client fictif et le document dans la fenêtre de travail ; la conversation vocale explique les choix de l’utilisateur et ce que Vera enregistre.",
+      "Suivez l’exemple jusqu’à la confirmation que le dossier est prêt. Vera vérifie le résultat réel, explique les étapes et enregistre la procédure. Ouvrez son compte rendu et comparez-le au travail observé.",
+      "Relisez la procédure proposée et ses limites. Après l’approbation effectivement requise, Vera crée la version exécutable et vérifie deux exécutions complètes depuis la page de départ. Distinguez exemple observé, procédure approuvée et automatisation testée."
+    ],
+    "deliverables": [
+      "Une procédure locale enregistrée et un compte rendu permettant de reprendre le travail.",
+      "Un projet à relire ; après l’approbation requise et les essais réussis, une procédure réutilisable avec ses traces d’exécution."
+    ],
+    "review": "Vérifiez la page de départ, les données, les actions et le résultat final. Un clic ou un projet enregistré ne prouve pas que l’automatisation fonctionne. Relisez la procédure réelle avant la création de sa version exécutable.",
+    "checkpoints": [
+      "Expliquez ce dont Vera a besoin pour apprendre une tâche web et où trouver les étapes enregistrées.",
+      "Montrez le résultat observé et indiquez si la procédure est un projet, approuvée ou testée."
+    ],
+    "practice": "Lisez practice-fr.md et demandez la même procédure pour un avoir. Faites reprendre la procédure enregistrée, relisez les modifications nécessaires et observez le nouveau résultat. Conservez le premier exemple ; un essai ne réussit que si le document choisi et le résultat concordent.",
+    "success": "Vous savez montrer une tâche web délimitée, relire les étapes enregistrées et demander une nouvelle exécution en reconnaissant les révisions ou essais manquants.",
+    "repeat": "Décrivez le site, la tâche et le résultat souhaité. Ouvrez la page autorisée dans Chrome connecté et montrez un exemple. Vera enregistre et vérifie la procédure ; vous la relisez avant de réutiliser l’automatisation approuvée."
+  }
+}

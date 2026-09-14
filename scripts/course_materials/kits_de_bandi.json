@@ -1,0 +1,27 @@
+{
+  "vera/bandi-agevolazioni": {
+    "title": "Mit Vera einen Förderantrag vorbereiten",
+    "goal": "Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.",
+    "scenario": "Eine Kanzlei untersucht das Digitalprojekt eines kleinen Unternehmens. Ein vollständig fiktiver Aufruf und simulierte Unterlagen zeigen den Ablauf von den Bedingungen bis zum Dossier. Anschließend wird das Angebot aktualisiert.",
+    "scope": "Dossiervorbereitung nach Auswahl eines Aufrufs: Quellen, Anforderungen, Belege, Kosten, Unterlagen, Entwurf und Prüfung. Die Suche nach Fördermöglichkeiten ist die andere Stufe dieser Funktion; hier liegt der Aufruf vor. Seine Bedingungen sind kein geltendes Recht und keine echte Förderung.",
+    "inputs": "Öffnen Sie avviso-de.md, progetto-de.md und preventivo-de.csv: simulierter Aufruf, erklärte Unternehmensfakten und vorgeschlagene Kosten. Förderfähigkeit, Kostenklassifizierung und Freigaben wurden noch nicht beurteilt.",
+    "request": "Vera, bereite aus diesem Aufruf und den Unternehmensunterlagen ein Übungsdossier vor. Zeige Anforderungen, Belegabgleich, Kosten, nötige Dokumente und meine Prüfpunkte.",
+    "steps": [
+      "Im Arbeitsfenster eröffnet Vera den Fall und registriert die Unterlagen. Im Sprachchat erklärt sie Auftrag, Quellen und Ergebnis. Prüfen Sie, welche Dokumente das Übungsszenario regeln und welche das Unternehmen beschreiben.",
+      "Vera schlägt Anforderungen und Faktenabgleiche vor, prüft die Kosten und erstellt Dokumentenliste und Entwurf. Verfolgen Sie einen Punkt von der Quelle zum Vorschlag und führen Sie die vorgesehenen Prüfentscheidungen durch.",
+      "Öffnen Sie Dossier und Prüfungen. Betrachten Sie vorgeschlagenes Ergebnis, fehlende Unterlagen, Kosten und nächste Schritte. Vera erklärt die weitere Prüfung und Antragsvorbereitung; diese Übung nutzt kein Portal und versendet nichts."
+    ],
+    "deliverables": [
+      "Lokales Dossier mit Anforderungen, Belegen, vorgeschlagenen Bewertungen, Kosten, Unterlagen und Entwurf.",
+      "Prüfungen und Entscheidungsverlauf mit offenen Punkten und nächsten Schritten."
+    ],
+    "review": "Prüfen Sie den Quellenbezug jeder Anforderung und den Dokumentenbezug jedes Fakts. Unterscheiden Sie vollständige Unterlagen, vorgeschlagenes Ergebnis und Behördenentscheidung: Ein Dossier bewilligt keine Förderung.",
+    "checkpoints": [
+      "Erklären Sie benötigte Dateien und Anfrage bei einem bereits ausgewählten Aufruf.",
+      "Öffnen Sie das Dossier, verfolgen Sie einen Vorschlag zur Quelle und benennen Sie die offene Prüfung."
+    ],
+    "practice": "Stellen Sie das aktualisierte Übungsangebot bereit. Verlangen Sie ein neues Dossier unter Beibehaltung des ersten und prüfen Sie Änderungen an Kosten, vorgeschlagenem Betrag und nötigen Prüfungen.",
+    "success": "Sie können mit einem ausgewählten Aufruf beginnen, das Dossier prüfen und eine Aktualisierung verlangen, ohne einen Vorschlag als Freigabe zu behandeln.",
+    "repeat": "Stellen Sie offiziellen Aufruf, Anlagen und Unternehmensunterlagen bereit und nennen Sie Projekt und Stichtag. Vera bereitet das Dossier mit den normalen Prüfungen vor. Für eine vorgelagerte Fördersuche geben Sie Gebiet und Projekt an."
+  }
+}

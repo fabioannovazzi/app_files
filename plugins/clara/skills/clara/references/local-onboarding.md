@@ -145,7 +145,7 @@ worker returns actual output evidence to the teacher.
 | `pair` | `{"teacher_thread_id":"…","worker_thread_id":"…"}` |
 | `start` | `{"workflow_id":"…"}` |
 | `pause` / `resume` / `checkpoint` | `{"workflow_id":"…","next_step":"Observed state and next bounded step"}` |
-| `demo` / `practice` | `{"workflow_id":"…","artifacts":["relative/output.md"],"prompt":"Actual natural request","review":"Observed result and professional checks"}` |
+| `demo` / `practice` | `{"workflow_id":"…","artifacts":["relative/output.md"],"prompt":"Actual natural request","review":"Observed result and professional checks","execution_record":"demo-execution.json"}` |
 | `finish` | `{"workflow_id":"…","confirmed_by_user":true,"understanding":"What the user understood; resolved questions"}` |
 | `feedback` | `{"feedback":"User's optional feedback, kept local"}` |
 
@@ -164,3 +164,8 @@ For each selected workflow, first reuse the prepared 5–8 minute course describ
 in `../../learn-with-clara/references/prepared-courses.md`. Read the current
 specialist and check the course source fingerprints. Prepared pages do not count
 as an executed demonstration, user practice or confirmed understanding.
+
+Before recording demonstration or practice evidence, read
+`../../learn-with-clara/references/execution-evidence.md`. Preserve the
+actual working-thread run records and generated outputs; the prepared kit
+cannot complete a lesson.

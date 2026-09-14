@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "dati-fiscali-strutturati",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,11 +19,37 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "supporting_task",
+  "parent_workflow": "new-client",
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
   "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "84264b4da1dc3b4d289f20b5ae85cd633ad7a6f56a1f797218be39bfcdf005a3"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "repository_path": "plugins/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
       "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
       "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "repository_path": "plugins/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
     },
     {
       "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
@@ -91,333 +117,368 @@
       "sha256": "6afe808bd2c5aeb44adcd56285cdda4d7cb4e6b2b04a6f8fbde97fab8c1584ea"
     },
     {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "repository_path": "plugins/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "repository_path": "plugins/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/dati-fiscali-strutturati/SKILL.md",
       "repository_path": "plugins/vera/skills/dati-fiscali-strutturati/SKILL.md",
       "sha256": "bc2fc8b6409c0bcd57288098ca06cc380bd20a8b97743f2b8b96d8600ef95a3b"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/F24-second.md",
+      "sha256": "13a039e7120c38ee08a289ea2e831a2731e7bf4fcb8995dcd638f6579e34c3da",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Un numero estratto deve mantenere la sua fonte",
-      "goal": "Leggere i campi fiscali con valore, documento e stato di estrazione, senza completare i vuoti per supposizione.",
-      "scenario": "Il fascicolo fittizio contiene un prospetto F24 leggibile e un secondo documento scansionato poco leggibile. Nel primo sono visibili codice tributo 1001, anno 2025 e debito di 1.250 EUR. Il secondo non permette di leggere importi affidabili.",
-      "request": "Vera, mostrami quali dati fiscali possiamo usare e quali richiedono verifica sull'originale.",
-      "scope": "Estrazione e revisione di campi. Il codice e l'anno sono dati riportati nella fonte, non una verifica del corretto adempimento o del pagamento.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Contenuto leggibile",
-        "Disposizione"
+      "title": "Estrarre dati fiscali dai documenti con Vera",
+      "goal": "Imparare a trasformare documenti fiscali leggibili in un elenco di campi verificabili sulle fonti.",
+      "scenario": "Lo studio deve preparare i dati di Marco Prova. Ha una CU e un F24 fittizi e vuole leggere i valori senza ricopiarli manualmente.",
+      "scope": "Estrazione da documenti italiani, con spiegazioni nella lingua scelta. I valori estratti descrivono le fonti; non costituiscono una dichiarazione o un calcolo delle imposte.",
+      "inputs": "Apri CU-income.md e F24-first.md: sono trascrizioni didattiche leggibili, con redditi, ritenute e campi di versamento inventati. Indica la campagna 2026 e distingui anno del documento e periodo d’imposta.",
+      "request": "Vera, estrai i dati fiscali da questi documenti di Marco Prova per la campagna 2026. Mostra i campi, la fonte di ogni valore e ciò che devo controllare.",
+      "steps": [
+        "Vera importa i documenti nella pratica didattica ed esegue la preparazione e l’estrazione correnti. Segui quali file riesce a leggere e come ne identifica il tipo.",
+        "La procedura produce i campi strutturati e la sintesi. Se il tipo di documento è incerto, Vera verifica il contenuto e registra l’interpretazione nel normale percorso di revisione.",
+        "Apri la sintesi e il CSV prodotti. Trova redditi e ritenute della CU, poi anno, codice e importo dell’F24, risalendo al testo di origine."
       ],
-      "input_rows": [
-        [
-          "F1 · prospetto F24, riga 1",
-          "1001 · 2025 · debito 1.250 EUR",
-          "Campi estraibili"
-        ],
-        [
-          "F2 · scansione",
-          "Importi non leggibili",
-          "Da recuperare o verificare visivamente"
-        ]
+      "deliverables": [
+        "Sintesi dei dati fiscali: raccoglie i campi per documento e segnala le limitazioni.",
+        "CSV dei campi e rapporto di estrazione: permettono di controllare valori, fonti e documenti non elaborati."
       ],
-      "basis": "F1 fornisce tre valori localizzati. F2 non fornisce valori affidabili; una lista vuota non significa assenza di dati fiscali.",
-      "method": [
-        "Riprendi l'estrazione del medesimo incarico e leggi tutti i campi e tutte le disposizioni documentali previste dal passaggio.",
-        "Verifica tipo di documento e corrispondenza col testo. Mantieni le ambiguità di layout e i casi illeggibili; una riclassificazione riveduta richiede una nuova generazione coerente.",
-        "Consegna tabella, riepilogo e citazioni. Distingui documenti non supportati, illeggibili, non valutati e riconosciuti senza campi."
+      "review": "Confronta i valori con entrambe le fonti, inclusi anno e valuta. Controlla anche i documenti senza campi: un’estrazione vuota non prova che siano privi di informazioni utili.",
+      "checkpoints": [
+        "Prima di partire, identifica i due documenti e la campagna.",
+        "Alla consegna, collega un valore estratto alla sua fonte e trova eventuali limitazioni."
       ],
-      "result_title": "Tre campi utilizzabili, una fonte da chiarire",
-      "conclusion": "Il riepilogo conserva i tre dati di F1 e segnala F2 come fonte non leggibile. Non assegna zero agli importi mancanti.",
-      "output_columns": [
-        "Campo",
-        "Valore estratto",
-        "Fonte"
-      ],
-      "output_rows": [
-        [
-          "Codice tributo",
-          "1001",
-          "F1 · riga 1"
-        ],
-        [
-          "Anno di riferimento",
-          "2025",
-          "F1 · riga 1"
-        ],
-        [
-          "Importo a debito",
-          "1.250 EUR",
-          "F1 · riga 1"
-        ],
-        [
-          "Importi di F2",
-          "Non disponibili",
-          "F2 · originale da verificare"
-        ]
-      ],
-      "check": "L'estrazione non prova il pagamento né la corretta compilazione. Mantieni valuta e anno della fonte, senza inferirli dal nome della cartella.",
-      "question": "F2 non ha campi estratti: possiamo sommarlo come zero?",
-      "answer": "No. È una fonte illeggibile, non un documento con importo nullo. Il totale deve dichiarare che quella fonte non è quantificata.",
-      "practice": "Sostituisci F2 con una copia leggibile e rigenera il passaggio, controllando quali campi entrano nel riepilogo.",
-      "next": "Seleziona documenti leggibili e il corretto perimetro territoriale; conserva gli originali per verificare le righe dipendenti dal layout."
+      "practice": "Aggiungi F24-second.md ai due documenti iniziali e chiedi una nuova estrazione. Il secondo F24 è aggiuntivo: conserva il primo risultato e non sostituire il primo documento.",
+      "success": "Il nuovo elenco distingue entrambi gli F24 e le rispettive fonti. Sai ritrovare anno e importo prima di riutilizzare un dato.",
+      "repeat": "Fornisci i documenti leggibili, indica paese e campagna, chiedi l’estrazione e verifica campi e fonti prima dell’uso professionale."
     },
     "en": {
-      "title": "An extracted number must keep its source",
-      "goal": "Read tax fields with values, document references and extraction status, without filling gaps by assumption.",
-      "scenario": "The fictional file contains a readable Italian F24 statement and a poorly readable scan. The first shows tax code 1001, reference year 2025 and EUR 1,250 debit. The second does not provide reliable amounts.",
-      "request": "Vera, show which tax data we can use and which require the original layout.",
-      "scope": "Field extraction and review. Values in a source do not verify the correct filing, treatment or payment.",
-      "input_columns": [
-        "Fictional source",
-        "Readable content",
-        "Disposition"
+      "title": "Extract tax data from documents with Vera",
+      "goal": "Learn to turn readable tax documents into a field list that you can verify against its sources.",
+      "scenario": "The practice is preparing Marco Prova’s data. It has a fictional Italian CU income certificate and F24 payment form and wants to read their values without manually retyping them.",
+      "scope": "Italian source documents, explained in the chosen language. Extracted values describe the documents; they are not a tax return or a tax calculation.",
+      "inputs": "Open CU-income.md and F24-first.md. These are readable teaching transcriptions with invented income, withholding and payment fields. Specify the 2026 filing campaign and distinguish document year from tax period.",
+      "request": "Vera, extract the tax data from Marco Prova’s documents for the 2026 filing campaign. Show the fields, each value’s source and what I need to check.",
+      "steps": [
+        "Vera imports the documents into the teaching case and runs current preparation and extraction. Follow which files it can read and how their document types are identified.",
+        "The workflow produces structured fields and a summary. If a document type is uncertain, Vera checks its content and records its interpretation through the normal review process.",
+        "Open the new summary and CSV. Find income and withholding in the CU, then year, code and amount in the F24, tracing them back to the source text."
       ],
-      "input_rows": [
-        [
-          "F1 · F24 row 1",
-          "1001 · 2025 · EUR 1,250 debit",
-          "Extractable fields"
-        ],
-        [
-          "F2 · scan",
-          "Unreadable amounts",
-          "Recover or inspect visually"
-        ]
+      "deliverables": [
+        "Tax-data summary: groups fields by document and states limitations.",
+        "Field CSV and extraction report: let you check values, sources and documents that were not processed."
       ],
-      "basis": "F1 supports three located values. F2 supplies no reliable amount; an empty extraction does not establish absence of tax data.",
-      "method": [
-        "Resume the same engagement's extraction and read every required field and document disposition in the handoff.",
-        "Check document meaning and text correspondence. Preserve layout uncertainty and unreadable sources; reviewed reclassification requires coherent regeneration.",
-        "Deliver the field table, summary and citations. Distinguish unsupported, unreadable, unevaluated and recognized-without-fields documents."
+      "review": "Compare values with both sources, including year and currency. Also inspect documents with no extracted fields: an empty result does not establish that the document contains no useful information.",
+      "checkpoints": [
+        "Before starting, identify the two documents and filing campaign.",
+        "At delivery, trace one extracted value to its source and find any extraction limitations."
       ],
-      "result_title": "Three usable fields, one unresolved source",
-      "conclusion": "The summary preserves F1's three fields and flags F2 as unreadable. Missing amounts are not assigned zero.",
-      "output_columns": [
-        "Field",
-        "Extracted value",
-        "Source"
-      ],
-      "output_rows": [
-        [
-          "Tax code",
-          "1001",
-          "F1 · row 1"
-        ],
-        [
-          "Reference year",
-          "2025",
-          "F1 · row 1"
-        ],
-        [
-          "Debit amount",
-          "EUR 1,250",
-          "F1 · row 1"
-        ],
-        [
-          "F2 amounts",
-          "Unavailable",
-          "F2 · original to inspect"
-        ]
-      ],
-      "check": "Extraction does not prove payment or correct completion. Retain source currency and year rather than inferring them from a folder name.",
-      "question": "Can we include F2 as zero because it has no extracted fields?",
-      "answer": "No. It is unreadable, not a zero-value document. Any total must disclose that this source remains unquantified.",
-      "practice": "Replace F2 with a readable copy and regenerate, checking the newly included fields.",
-      "next": "Select readable documents and the correct territorial scope; retain originals for layout-sensitive checks."
+      "practice": "Add F24-second.md to the two initial documents and request a fresh extraction. The second F24 is additional; retain the preceding result and original document.",
+      "success": "The new list distinguishes both F24 documents and their sources. You can find the year and amount before reusing a value.",
+      "repeat": "Supply readable documents, specify country and filing campaign, request extraction and verify fields against their sources before professional use."
     },
     "fr": {
-      "title": "Un montant extrait doit garder sa source",
-      "goal": "Lire les champs fiscaux avec valeurs, références et états d'extraction sans remplir les blancs par hypothèse.",
-      "scenario": "Le dossier fictif contient un F24 italien lisible et un scan peu lisible. Le premier montre code 1001, année 2025 et débit de 1 250 EUR. Le second ne permet pas de lire des montants fiables.",
-      "request": "Vera, montre les données fiscales utilisables et celles à vérifier sur l'original.",
-      "scope": "Extraction et revue de champs. Les valeurs lues ne prouvent pas la conformité de la déclaration, du traitement ou du paiement.",
-      "input_columns": [
-        "Source fictive",
-        "Contenu lisible",
-        "Disposition"
+      "title": "Extraire des données fiscales avec Vera",
+      "goal": "Apprendre à transformer des documents fiscaux lisibles en une liste de champs vérifiables dans les sources.",
+      "scenario": "Le cabinet prépare les données de Marco Prova. Il dispose d’une attestation de revenus CU et d’un formulaire F24 italiens fictifs et souhaite lire leurs valeurs sans les ressaisir.",
+      "scope": "Documents sources italiens, expliqués dans la langue choisie. Les valeurs extraites décrivent les documents ; elles ne constituent ni déclaration ni calcul d’impôt.",
+      "inputs": "Ouvrez CU-income.md et F24-first.md : ces transcriptions pédagogiques contiennent des revenus, retenues et champs de paiement inventés. Indiquez la campagne déclarative 2026 et distinguez année du document et période fiscale.",
+      "request": "Vera, extrais les données fiscales des documents de Marco Prova pour la campagne 2026. Montre les champs, la source de chaque valeur et les vérifications nécessaires.",
+      "steps": [
+        "Vera importe les documents dans le dossier pédagogique puis exécute la préparation et l’extraction actuelles. Suivez les fichiers lisibles et l’identification de leur type.",
+        "La procédure produit les champs structurés et la synthèse. Si le type est incertain, Vera examine le contenu et enregistre son interprétation dans le parcours normal de revue.",
+        "Ouvrez la nouvelle synthèse et le CSV. Retrouvez revenus et retenues de la CU, puis année, code et montant du F24, en remontant au texte source."
       ],
-      "input_rows": [
-        [
-          "F1 · F24 ligne 1",
-          "1001 · 2025 · débit 1 250 EUR",
-          "Champs extractibles"
-        ],
-        [
-          "F2 · scan",
-          "Montants illisibles",
-          "À récupérer ou vérifier visuellement"
-        ]
+      "deliverables": [
+        "Synthèse fiscale : regroupe les champs par document et indique les limites.",
+        "CSV des champs et rapport d’extraction : permettent de vérifier valeurs, sources et documents non traités."
       ],
-      "basis": "F1 étaye trois valeurs localisées. F2 ne fournit aucun montant fiable ; l'absence de champs extraits ne signifie pas absence de données fiscales.",
-      "method": [
-        "Reprends l'extraction du même dossier et lis tous les champs et toutes les dispositions documentaires attendues.",
-        "Vérifie nature du document et correspondance au texte. Conserve incertitudes de mise en page et sources illisibles ; une reclassification revue nécessite une régénération cohérente.",
-        "Livre tableau, synthèse et citations en séparant documents non pris en charge, illisibles, non évalués et reconnus sans champs."
+      "review": "Comparez les valeurs aux deux sources, y compris année et devise. Examinez aussi les documents sans champs extraits : un résultat vide ne prouve pas l’absence d’informations utiles.",
+      "checkpoints": [
+        "Avant de commencer, identifiez les deux documents et la campagne.",
+        "À la livraison, reliez une valeur extraite à sa source et trouvez les éventuelles limites."
       ],
-      "result_title": "Trois champs utilisables, une source à clarifier",
-      "conclusion": "La synthèse conserve les trois champs de F1 et signale F2 comme illisible. Les montants manquants ne deviennent pas zéro.",
-      "output_columns": [
-        "Champ",
-        "Valeur extraite",
-        "Source"
-      ],
-      "output_rows": [
-        [
-          "Code fiscal du versement",
-          "1001",
-          "F1 · ligne 1"
-        ],
-        [
-          "Année de référence",
-          "2025",
-          "F1 · ligne 1"
-        ],
-        [
-          "Montant au débit",
-          "1 250 EUR",
-          "F1 · ligne 1"
-        ],
-        [
-          "Montants de F2",
-          "Indisponibles",
-          "F2 · original à vérifier"
-        ]
-      ],
-      "check": "L'extraction ne prouve ni paiement ni bonne saisie. Conserve devise et année de la source, sans les déduire du nom du dossier.",
-      "question": "Peut-on inclure F2 pour zéro puisqu'aucun champ n'a été extrait ?",
-      "answer": "Non. La source est illisible, pas nulle. Tout total doit préciser que cette pièce n'est pas quantifiée.",
-      "practice": "Remplace F2 par une copie lisible et régénère en contrôlant les nouveaux champs inclus.",
-      "next": "Sélectionne les documents lisibles et le bon périmètre territorial ; conserve les originaux pour les contrôles de mise en page."
+      "practice": "Ajoutez F24-second.md aux deux documents initiaux et demandez une nouvelle extraction. Ce second F24 est supplémentaire : conservez le premier résultat et le document initial.",
+      "success": "La nouvelle liste distingue les deux F24 et leurs sources. Vous savez retrouver année et montant avant de réutiliser une donnée.",
+      "repeat": "Fournissez des documents lisibles, précisez pays et campagne, demandez l’extraction et vérifiez champs et sources avant utilisation professionnelle."
     },
     "de": {
-      "title": "Eine extrahierte Zahl behält ihre Quelle",
-      "goal": "Steuerfelder mit Werten, Fundstellen und Extraktionsstatus lesen, ohne Lücken durch Annahmen zu füllen.",
-      "scenario": "Die fiktive Akte enthält ein lesbares italienisches F24-Dokument und einen schlecht lesbaren Scan. Das erste zeigt Steuercode 1001, Bezugsjahr 2025 und EUR 1.250 Belastung. Der Scan liefert keine verlässlichen Beträge.",
-      "request": "Vera, zeige, welche Steuerdaten nutzbar sind und welche das Original benötigen.",
-      "scope": "Feldextraktion und Prüfung. Ein Wert im Dokument bestätigt weder richtige Erklärung noch Behandlung oder Zahlung.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Lesbarer Inhalt",
-        "Bearbeitungsstatus"
+      "title": "Steuerdaten mit Vera aus Dokumenten extrahieren",
+      "goal": "Lernen, lesbare Steuerunterlagen in eine Feldliste zu überführen und die Werte anhand ihrer Quellen zu prüfen.",
+      "scenario": "Die Kanzlei bereitet Marco Provas Daten vor. Eine fiktive italienische CU-Einkommensbescheinigung und ein F24-Zahlungsformular liegen vor; ihre Werte sollen ohne manuelles Abtippen übernommen werden.",
+      "scope": "Italienische Quelldokumente mit Erläuterungen in der gewählten Sprache. Extrahierte Werte beschreiben die Unterlagen; sie sind weder Steuererklärung noch Steuerberechnung.",
+      "inputs": "Öffnen Sie CU-income.md und F24-first.md. Die lesbaren Übungstranskriptionen enthalten erfundene Einkommens-, Einbehalts- und Zahlungsangaben. Nennen Sie die Erklärungskampagne 2026 und unterscheiden Sie Dokumentjahr und Steuerzeitraum.",
+      "request": "Vera, extrahiere die Steuerdaten aus Marco Provas Unterlagen für die Erklärungskampagne 2026. Zeige die Felder, die Quelle jedes Wertes und den Prüfbedarf.",
+      "steps": [
+        "Vera importiert die Dokumente in den Übungsfall und führt die aktuelle Aufbereitung und Extraktion aus. Verfolgen Sie, welche Dateien lesbar sind und wie ihr Dokumenttyp bestimmt wird.",
+        "Der Ablauf erzeugt strukturierte Felder und eine Zusammenfassung. Bei unklarem Dokumenttyp prüft Vera den Inhalt und hält ihre Interpretation im üblichen Prüfprozess fest.",
+        "Öffnen Sie die neue Zusammenfassung und CSV-Datei. Finden Sie Einkommen und Einbehalte der CU sowie Jahr, Code und Betrag des F24 und verfolgen Sie diese zum Quelltext zurück."
       ],
-      "input_rows": [
-        [
-          "F1 · F24 Zeile 1",
-          "1001 · 2025 · EUR 1.250 Belastung",
-          "Extrahierbare Felder"
-        ],
-        [
-          "F2 · Scan",
-          "Unlesbare Beträge",
-          "Wiederbeschaffen oder visuell prüfen"
-        ]
+      "deliverables": [
+        "Steuerdatenübersicht: ordnet die Felder nach Dokument und nennt Einschränkungen.",
+        "Feld-CSV und Extraktionsbericht: ermöglichen die Prüfung von Werten, Quellen und nicht verarbeiteten Dokumenten."
       ],
-      "basis": "F1 belegt drei lokalisierte Werte. F2 liefert keinen verlässlichen Betrag; eine leere Extraktion beweist nicht das Fehlen steuerlicher Daten.",
-      "method": [
-        "Setze die Extraktion desselben Mandats fort und lies alle erforderlichen Felder und Dokumentenstatus der Übergabe.",
-        "Prüfe Dokumentbedeutung und Textbezug. Erhalte Layoutunsicherheit und unlesbare Quellen; eine geprüfte Neueinordnung erfordert eine konsistente Neuerstellung.",
-        "Liefere Feldtabelle, Zusammenfassung und Fundstellen. Unterscheide nicht unterstützte, unlesbare, ungeprüfte und erkannte Dokumente ohne Felder."
+      "review": "Vergleichen Sie die Werte mit beiden Quellen, einschließlich Jahr und Währung. Prüfen Sie auch Dokumente ohne extrahierte Felder: Ein leeres Ergebnis beweist nicht, dass sie keine nützlichen Angaben enthalten.",
+      "checkpoints": [
+        "Vor dem Start: Benennen Sie beide Dokumente und die Erklärungskampagne.",
+        "Bei der Übergabe: Verfolgen Sie einen Wert zur Quelle und finden Sie mögliche Einschränkungen."
       ],
-      "result_title": "Drei nutzbare Felder, eine offene Quelle",
-      "conclusion": "Die Zusammenfassung erhält die drei F1-Felder und kennzeichnet F2 als unlesbar. Fehlende Beträge werden nicht auf null gesetzt.",
-      "output_columns": [
-        "Feld",
-        "Extrahierter Wert",
-        "Quelle"
-      ],
-      "output_rows": [
-        [
-          "Steuercode",
-          "1001",
-          "F1 · Zeile 1"
-        ],
-        [
-          "Bezugsjahr",
-          "2025",
-          "F1 · Zeile 1"
-        ],
-        [
-          "Belastungsbetrag",
-          "EUR 1.250",
-          "F1 · Zeile 1"
-        ],
-        [
-          "Beträge aus F2",
-          "Nicht verfügbar",
-          "F2 · Original prüfen"
-        ]
-      ],
-      "check": "Extraktion belegt weder Zahlung noch korrekte Ausfüllung. Übernimm Währung und Jahr aus der Quelle, nicht aus dem Ordnernamen.",
-      "question": "Können wir F2 mit null einbeziehen, weil keine Felder extrahiert wurden?",
-      "answer": "Nein. Das Dokument ist unlesbar, nicht wertlos. Jede Summe muss offenlegen, dass diese Quelle unbeziffert bleibt.",
-      "practice": "Ersetze F2 durch eine lesbare Kopie und erstelle die Auswertung neu. Prüfe die hinzugekommenen Felder.",
-      "next": "Wähle lesbare Dokumente und den richtigen räumlichen Geltungsbereich; bewahre Originale für layoutabhängige Prüfungen auf."
+      "practice": "Ergänzen Sie F24-second.md zu den beiden ursprünglichen Dokumenten und fordern Sie eine neue Extraktion an. Das zweite F24 ist zusätzlich; bewahren Sie das erste Ergebnis und Originaldokument auf.",
+      "success": "Die neue Liste unterscheidet beide F24-Dokumente und ihre Quellen. Sie können Jahr und Betrag vor der Weiterverwendung eines Wertes finden.",
+      "repeat": "Stellen Sie lesbare Unterlagen bereit, nennen Sie Land und Erklärungskampagne, fordern Sie die Extraktion an und prüfen Sie Felder und Quellen vor der fachlichen Verwendung."
     },
     "es": {
-      "title": "Una cifra extraída debe conservar su fuente",
-      "goal": "Leer campos fiscales con valores, referencias y estado de extracción sin rellenar vacíos por suposición.",
-      "scenario": "El expediente ficticio contiene un F24 italiano legible y un escaneo poco legible. El primero muestra código tributario 1001, ejercicio 2025 y EUR 1.250 a débito. El segundo no ofrece importes fiables.",
-      "request": "Vera, muestra qué datos fiscales podemos utilizar y cuáles necesitan el original.",
-      "scope": "Extracción y revisión de campos. Un valor en la fuente no verifica declaración, tratamiento o pago correctos.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Contenido legible",
-        "Tratamiento"
+      "title": "Extraer datos fiscales de documentos con Vera",
+      "goal": "Aprender a convertir documentos fiscales legibles en una lista de campos verificables en las fuentes.",
+      "scenario": "El despacho prepara los datos de Marco Prova. Tiene un certificado de ingresos CU y un formulario F24 italianos ficticios y quiere leer sus valores sin copiarlos manualmente.",
+      "scope": "Documentos originales italianos, explicados en el idioma elegido. Los valores extraídos describen los documentos; no constituyen una declaración ni un cálculo de impuestos.",
+      "inputs": "Abre CU-income.md y F24-first.md: son transcripciones didácticas legibles con ingresos, retenciones y campos de pago inventados. Indica la campaña de declaración 2026 y distingue el año del documento del periodo fiscal.",
+      "request": "Vera, extrae los datos fiscales de los documentos de Marco Prova para la campaña 2026. Muestra los campos, la fuente de cada valor y lo que debo comprobar.",
+      "steps": [
+        "Vera importa los documentos al expediente didáctico y ejecuta la preparación y extracción actuales. Sigue qué archivos puede leer y cómo identifica su tipo.",
+        "El procedimiento genera los campos estructurados y el resumen. Si el tipo documental es incierto, Vera revisa el contenido y registra su interpretación mediante el proceso normal de revisión.",
+        "Abre el nuevo resumen y el CSV. Encuentra ingresos y retenciones de la CU, después año, código e importe del F24, volviendo al texto de origen."
       ],
-      "input_rows": [
-        [
-          "F1 · F24 fila 1",
-          "1001 · 2025 · EUR 1.250 a débito",
-          "Campos extraíbles"
-        ],
-        [
-          "F2 · escaneo",
-          "Importes ilegibles",
-          "Recuperar o inspeccionar visualmente"
-        ]
+      "deliverables": [
+        "Resumen fiscal: agrupa campos por documento e indica las limitaciones.",
+        "CSV de campos e informe de extracción: permiten comprobar valores, fuentes y documentos no procesados."
       ],
-      "basis": "F1 respalda tres valores localizados. F2 no aporta un importe fiable; una extracción vacía no demuestra ausencia de datos fiscales.",
-      "method": [
-        "Retoma la extracción del mismo encargo y lee todos los campos requeridos y estados documentales de la entrega.",
-        "Comprueba significado y correspondencia textual. Conserva incertidumbre de formato y fuentes ilegibles; reclasificar tras revisión exige una regeneración coherente.",
-        "Entrega tabla, resumen y citas. Distingue documentos no compatibles, ilegibles, no evaluados y reconocidos sin campos."
+      "review": "Compara los valores con las dos fuentes, incluidos año y moneda. Revisa también los documentos sin campos extraídos: un resultado vacío no demuestra que carezcan de información útil.",
+      "checkpoints": [
+        "Antes de empezar, identifica los dos documentos y la campaña.",
+        "En la entrega, relaciona un valor extraído con su fuente y encuentra las posibles limitaciones."
       ],
-      "result_title": "Tres campos utilizables y una fuente pendiente",
-      "conclusion": "El resumen conserva los tres campos de F1 y marca F2 como ilegible. Los importes ausentes no se convierten en cero.",
-      "output_columns": [
-        "Campo",
-        "Valor extraído",
-        "Fuente"
-      ],
-      "output_rows": [
-        [
-          "Código tributario",
-          "1001",
-          "F1 · fila 1"
-        ],
-        [
-          "Ejercicio de referencia",
-          "2025",
-          "F1 · fila 1"
-        ],
-        [
-          "Importe a débito",
-          "EUR 1.250",
-          "F1 · fila 1"
-        ],
-        [
-          "Importes de F2",
-          "No disponibles",
-          "F2 · revisar original"
-        ]
-      ],
-      "check": "Extraer no prueba pago ni cumplimentación correcta. Conserva moneda y ejercicio de la fuente en lugar de inferirlos del nombre de carpeta.",
-      "question": "¿Podemos incluir F2 como cero porque no tiene campos extraídos?",
-      "answer": "No. Es ilegible, no un documento de valor cero. Cualquier suma debe revelar que esta fuente sigue sin cuantificar.",
-      "practice": "Sustituye F2 por una copia legible, regenera y comprueba los campos incorporados.",
-      "next": "Selecciona documentos legibles y el ámbito territorial correcto; conserva originales para comprobaciones que dependan del formato."
+      "practice": "Añade F24-second.md a los dos documentos iniciales y pide una nueva extracción. El segundo F24 es adicional: conserva el primer resultado y el documento original.",
+      "success": "La nueva lista distingue los dos F24 y sus fuentes. Sabes encontrar año e importe antes de reutilizar un dato.",
+      "repeat": "Facilita documentos legibles, indica país y campaña, solicita la extracción y comprueba campos y fuentes antes del uso profesional."
     }
   }
 }

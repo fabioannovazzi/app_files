@@ -1,0 +1,77 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "XML-Rechnungen mit Vera prüfen",
+    "goal": "Lernen Sie, einen Rechnungsordner bereitzustellen, die Übersicht zu lesen und offene Prüfpunkte zu bearbeiten.",
+    "scenario": "Die Kanzlei Arco hat drei XML-Rechnungen für März für einen fiktiven Mandanten erhalten. Sie möchte die Dokumente erfassen und ihre Lesbarkeit und Konsistenz vor der weiteren Buchhaltungsarbeit prüfen.",
+    "scope": "Die Funktion bereitet eingegangene Dokumente auf und prüft sie. Buchung und Übermittlung an SdI haben eigene Abläufe.",
+    "inputs": "Öffnen Sie invoice-01.xml, invoice-02.xml und invoice-03.xml. Es sind FatturaPA-Übungsdateien mit fiktiven Kennungen. Die Fallnotiz nennt Zeitraum und erwarteten Gesamtbetrag: 2.440 EUR.",
+    "request": "Vera, prüfe die XML-Rechnungen für März in diesem Ordner. Zeige die eingegangenen Dokumente, ihre Beträge und die offenen Prüfpunkte.",
+    "steps": [
+      "Vera importiert den Ordner in den Übungsfall und liest die XML-Dateien mit dem Parser der Funktion. Prüfen Sie, welche Dateien enthalten sind.",
+      "Im Arbeitschat extrahiert der Workflow Nummern, Daten, Beteiligte und Beträge, prüft die Struktur und meldet Auffälligkeiten oder mögliche Dubletten.",
+      "Öffnen Sie die neue Übersicht. Vera verknüpft Feststellungen mit den Quelldateien und nennt sinnvolle Prüfungen vor dem nächsten Schritt."
+    ],
+    "deliverables": [
+      "Rechnungsübersicht: Finden Sie Nummer, Datum und Gesamtbetrag eines Dokuments in dessen XML wieder.",
+      "Auffälligkeiten: Prüfen Sie betroffene Datei, beobachtetes Problem und nötige Kontrolle. Die Dokumentenzahl zeigt den Umfang der Prüfung."
+    ],
+    "review": "Vergleichen Sie die drei erhaltenen Dokumente mit Übersicht und Gesamtbetrag. Klären Sie Feststellungen anhand der Quelle; diese Prüfung entscheidet weder über Abzugsfähigkeit noch bestätigt sie Buchungen.",
+    "checkpoints": [
+      "Vor dem Start: Benennen Sie Ordner und Prüfmonat.",
+      "Beim Ergebnis: Öffnen Sie eine Zeile und das zugehörige XML; zeigen Sie, wo Auffälligkeiten stehen."
+    ],
+    "practice": "Fügen Sie invoice-04.xml in einen neuen Übungsordner ein und lassen Sie alle vier Rechnungen einschließlich April prüfen.",
+    "success": "Die neue Übersicht muss die vierte Rechnung und beide Monate enthalten. Erklären Sie, wo Sie eine problematische Datei prüfen würden.",
+    "repeat": "Für die Arbeit wählen Sie den Mandantenordner und bitten um Prüfung der erhaltenen XML-Rechnungen. Sehen Sie Übersicht und Feststellungen durch, bevor Sie fortfahren."
+  },
+  "clara/reporting-engine": {
+    "title": "Einen Bericht aus Daten mit Clara erstellen",
+    "goal": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
+    "scenario": "Arco hat die Managementzahlen für Januar und Februar und das Budget derselben Monate vorbereitet. Die Leitung möchte das operative Ergebnis und die zu untersuchenden Kategorien vor der Monatsbesprechung verstehen.",
+    "scope": "Der Fall umfasst Umsatz, Wareneinsatz und Betriebsaufwand in EUR. Clara wählt die Analyse anhand von Frage und Daten; diese erste Anwendung zeigt einen Budgetvergleich und bleibt lokal.",
+    "inputs": "Öffnen Sie actual-budget.xlsx und facts.md. GL enthält monatliche Bewegungen nach Konto und Kategorie, Budget den vergleichbaren Plan. Umsätze sind positiv, Kosten negativ. Die Kontrollsummen betragen 53.000 EUR im Ist und 47.000 EUR im Budget.",
+    "request": "Clara, erstelle aus dieser Arbeitsmappe Arcos Ist-Budget-Bericht für Januar und Februar 2026. Zeige operatives Ergebnis, Abweichungen und Kategorien.",
+    "steps": [
+      "Clara untersucht die Tabellen und schlägt die Spalten für Datum, Kategorie und Betrag vor. Bestätigen Sie Januar–Februar und die Vorzeichen vor der Berechnung.",
+      "Der Workflow verwendet die geprüfte Zuordnung, vergleicht Ist und Budget und kontrolliert die Summen. Der Sprachchat erklärt den tatsächlichen Schritt und etwaige Rückfragen.",
+      "Öffnen Sie Dashboard und Arbeitsmappe aus dem Arbeitschat. Beginnen Sie bei der Zusammenfassung, danach Monatsvergleich und Kategorien."
+    ],
+    "deliverables": [
+      "Dashboard: Ergebnis des Zeitraums sowie absolute und sinnvolle prozentuale Abweichungen. Wählen Sie daraus Kategorien zur weiteren Untersuchung.",
+      "Arbeitsmappe und Bericht: Tabellen, Kontrollen und Datenbezüge. Die Zusammenfassung unterscheidet die gemessene Abweichung von ihrer noch zu prüfenden Ursache."
+    ],
+    "review": "Prüfen Sie gleiche Monate in beiden Tabellen und die erwarteten Vorzeichen der Kosten. Verfolgen Sie eine Differenz zu Kategorie und Ursprungsmonat. Fragen Sie das Unternehmen nach Erklärungen, wenn die Zahlen keine Ursache belegen.",
+    "checkpoints": [
+      "Vor der Berechnung: Finden Sie beide Tabellen und bestätigen Sie den Zeitraum.",
+      "Beim Ergebnis: Zeigen Sie Gesamtvergleich und eine näher zu untersuchende Kategorie."
+    ],
+    "practice": "Fordern Sie mit actual-budget-march.xlsx eine Aktualisierung bis März an. Formulieren Sie die Anfrage, bestätigen Sie den Zeitraum und vergleichen Sie mit dem vorherigen Bericht.",
+    "success": "Der neue Bericht enthält März und bewahrt die vorherige Version. Sie finden den Budgetvergleich und die Ursprungsdaten einer Kategorie.",
+    "repeat": "Für die Wiederholung stellen Sie Ist und Plan für vergleichbare Zeiträume bereit, nennen Zeitraum und Besprechungsziel, prüfen die Interpretation der Daten und öffnen den erstellten Bericht."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Eine neue Angelegenheit mit Lucia vorbereiten",
+    "goal": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
+    "scenario": "Beta Laboratorio bittet um Unterstützung wegen einer unvollständigen Lieferung. Vorhanden sind Anfrage, Lieferzusammenfassung und ein kleines fiktives Kanzleiregister. Wir bereiten die Angelegenheit zur anwaltlichen Prüfung vor.",
+    "scope": "Die Funktion organisiert die Akteneröffnung. Entscheidungen über Konflikte, Mandat, Fristen und Eröffnung folgen der normalen Prüfung.",
+    "inputs": "Öffnen Sie request-de.md, supply-de.md und register.csv. Die Anfrage nennt Mandant, Gegenpartei, Ziel und berichtete Dringlichkeit; die Lieferunterlage beschreibt den Fall; das Register zeigt die verfügbaren fiktiven Prüfunterlagen.",
+    "request": "Lucia, bereite eine neue Angelegenheit für Beta Laboratorio zur Lieferung von Gamma Forniture vor. Nutze diese Dokumente und zeige Akte, fehlende Informationen und Entscheidungen vor der Eröffnung.",
+    "steps": [
+      "Lucia erstellt den Übungsfall, importiert Unterlagen und rekonstruiert Mandant, Beteiligte, Anfrage und Ablauf. Der Sprachchat erklärt, welche Informationen aus welchen Quellen stammen.",
+      "Der Arbeitschat bereitet Übersicht, Kandidaten zur Konfliktprüfung, Mandatsumfang und mögliche Fristpunkte vor. Fehlende Informationen bleiben sichtbar.",
+      "Lucia erstellt das Paket und öffnet die Prüfung. Sehen Sie die Entscheidungen zu Konflikten, Mandat, Fristen und Eröffnung sowie das Speichern und Anwenden einer tatsächlichen Entscheidung an."
+    ],
+    "deliverables": [
+      "Eröffnungsvermerk und Informationsanforderung: Beginnen Sie mit Ziel, Beteiligten und verfügbaren Dokumenten; erkennen Sie Rückfragen an den Mandanten.",
+      "Ordnerplan und Prüfseite: zeigen Aktenorganisation und notwendige Entscheidungen. Der Status unterscheidet eine vorbereitete Akte von einer zur Eröffnung bereiten Angelegenheit."
+    ],
+    "review": "Vergleichen Sie Mandant und Gegenpartei mit der Anfrage und prüfen Sie den Umfang des durchgesehenen Registers. Lesen Sie Mandatsvorschlag und Fristpunkte vor Ihrer Entscheidung. Ein Vermerk allein bestätigt keine Mandatsannahme.",
+    "checkpoints": [
+      "Vor der Vorbereitung: Benennen Sie Mandant, Gegenpartei und gewünschtes Ergebnis.",
+      "In der Akte: Zeigen Sie fehlende Dokumente und noch offene Entscheidungen."
+    ],
+    "practice": "Ergänzen Sie update-de.md: Gamma schlägt einen Liefertermin für die restlichen Komponenten vor. Lassen Sie Lucia die Akte mit dieser Korrespondenz aktualisieren und die vorherige Version erhalten.",
+    "success": "Die neue Version enthält Vorschlag und Quelle, ohne Lieferung oder Annahme vorauszusetzen. Sie erkennen den erneuten Prüfbedarf.",
+    "repeat": "Stellen Sie für die Wiederholung Anfrage, Unterlagen und tatsächlich verfügbares Register bereit; nennen Sie neuen oder bestehenden Mandanten und prüfen Sie das Paket vor der Eröffnung."
+  }
+}

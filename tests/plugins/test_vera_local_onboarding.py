@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._teaching_execution import execution_record
+
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/vera/scripts"
 
@@ -85,6 +87,7 @@ def evidence(store, workflow, phase):
         phase,
         workflow_id=workflow,
         artifacts=[output.name],
+        execution_record=execution_record(store, phase, output, workflow),
         prompt="Controlla questo esempio",
         review="Valori confrontati con gli input; limite spiegato",
     )
@@ -412,7 +415,6 @@ def test_tutorial_prepares_real_isolated_studio_ledger_with_bound_source(
 @pytest.mark.parametrize(
     ("skill", "component", "role"),
     [
-        ("vouching", "check-entries", "journal"),
         ("bilancio-oic", "bilancio-xbrl-it", "source"),
         ("purchase-invoice-review", "passive-invoice-audit", "source"),
         ("financial-report-builder", "report-builder", "source"),
@@ -687,3 +689,602 @@ def test_cli_preserves_unicode_profile_on_a_non_unicode_console(module, store):
     console.flush()
     assert json.loads(buffer.getvalue())["profile"] == multilingual
     assert json.loads(store.path.read_text(encoding="utf-8"))["profile"] == multilingual
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
+    store, module, tmp_path, monkeypatch, language
+):
+    import shutil
+
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    from courseware.library import CourseLibrary
+
+    store.begin()
+    change(
+        store,
+        "profile",
+        confirmed_by_user=True,
+        profile={**profile(), "language": language},
+    )
+    change(
+        store,
+        "plan",
+        lessons=[
+            {
+                "workflow_id": workflow,
+                "reason": "Fictional regression exercise",
+                "goal": "Learn the current workflow",
+            }
+            for workflow in ("studio-archive", "journal-sampling", "variance-analysis")
+        ],
+    )
+    change(
+        store,
+        "pair",
+        teacher_thread_id="native-teacher",
+        worker_thread_id="native-worker",
+    )
+    started = change(store, "start", workflow_id="studio-archive")
+    token = started["lessons"][0]["worker_token"]
+    kit_root = tmp_path / "kit"
+    kit = CourseLibrary(ROOT / "plugins/vera", {"studio-archive"}).render(
+        "studio-archive", language, kit_root
+    )
+    sources = [Path(path) for path in kit["source_files"]]
+    original_bytes = {str(path): path.read_bytes() for path in sources}
+    adapter = load("local_onboarding_case")
+    result = adapter.prepare_case(
+        store,
+        thread_id="native-worker",
+        workflow="studio-archive",
+        token=token,
+        sources=sources,
+        source_root=kit_root / "files/input/archive",
+        phase="demo",
+    )
+    assert result["setup_required"] is True
+    assert result["execution_receipt"] is False
+    archive = Path(result["archive_root"])
+    state_dir = Path(result["archive_state_dir"])
+    assert archive.is_relative_to(store.root / "lessons/studio-archive")
+    assert not state_dir.is_relative_to(archive)
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", result["archive_session_id"])
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
+    import archive_core
+
+    status = archive_core.configure_archive(archive, state_dir=state_dir)
+    scope = next(
+        item["scope_id"]
+        for item in status["scopes"]
+        if item["display_name"] == "Ciclo Arco"
+    )
+    archive_core.refresh_archive(state_dir=state_dir)
+    initial = archive_core.search_archive(
+        "Tecnica Esempio", scope_id=scope, state_dir=state_dir
+    )
+    assert initial["result_count"] == 1
+    opened = archive_core.open_archive_source(
+        initial["results"][0]["source_id"], state_dir=state_dir
+    )
+    assert opened["source_verified"] is True
+    assert "Ciclo Arco" in opened["relative_path"]
+    update = next(
+        Path(path)
+        for path in kit["practice_files"]
+        if Path(path).name == f"update-{language}.md"
+    )
+    store.worker("native-worker", "studio-archive", token)
+    shutil.copyfile(update, archive / "Ciclo Arco" / update.name)
+    archive_core.refresh_archive(state_dir=state_dir)
+    refreshed = archive_core.search_archive(
+        "Tecnica Esempio", scope_id=scope, state_dir=state_dir
+    )
+    assert refreshed["result_count"] == 2
+    verified = [
+        archive_core.open_archive_source(row["source_id"], state_dir=state_dir)
+        for row in refreshed["results"]
+    ]
+    assert all(row["source_verified"] for row in verified)
+    assert all("Ciclo Arco" in row["relative_path"] for row in verified)
+    assert any("2027" in json.dumps(row["fragments"]) for row in verified)
+    assert {str(path): path.read_bytes() for path in sources} == original_bytes
+    assert not (tmp_path / "studio-archive").exists()
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize(
+    "dataset,expected_count", [("source_files", 3), ("practice_files", 4)]
+)
+def test_organization_kit_runs_real_snapshot_review_apply_and_rollback(
+    store, module, tmp_path, monkeypatch, language, dataset, expected_count
+):
+    import hashlib
+
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    from courseware.library import CourseLibrary
+
+    store.begin()
+    change(
+        store,
+        "profile",
+        confirmed_by_user=True,
+        profile={**profile(), "language": language},
+    )
+    change(
+        store,
+        "plan",
+        lessons=[
+            {
+                "workflow_id": workflow,
+                "reason": "Fictional execution fixture",
+                "goal": "Verify the current workflow",
+            }
+            for workflow in (
+                "archive-organization",
+                "journal-sampling",
+                "variance-analysis",
+            )
+        ],
+    )
+    change(
+        store,
+        "pair",
+        teacher_thread_id="native-teacher",
+        worker_thread_id="native-worker",
+    )
+    started = change(store, "start", workflow_id="archive-organization")
+    kit_root = tmp_path / "kit"
+    kit = CourseLibrary(ROOT / "plugins/vera", {"archive-organization"}).render(
+        "archive-organization", language, kit_root
+    )
+    sources = [Path(path) for path in kit[dataset]]
+    source_root = kit_root / (
+        "files/input/client" if dataset == "source_files" else "files/practice/client"
+    )
+    original = {
+        path.relative_to(source_root).as_posix(): path.read_bytes() for path in sources
+    }
+    adapter = load("local_onboarding_case")
+    # Independent compatibility runs for both input sets; this does not record
+    # learner demonstration, practice, understanding or professional approval.
+    run = adapter.prepare_case(
+        store,
+        thread_id="native-worker",
+        workflow="archive-organization",
+        token=started["lessons"][0]["worker_token"],
+        sources=sources,
+        source_root=source_root,
+        phase="demo",
+    )
+    case = Path(run["client_root"])
+    context_path = Path(run["context_path"])
+    context = run["context"]
+    assert len(context["input_bindings"]) == 1
+    snapshot = json.loads(Path(context["input_bindings"][0]["path"]).read_text())
+    assert snapshot["file_count"] == expected_count
+    assert all(
+        not row["relative_path"].startswith("Vera/") for row in snapshot["files"]
+    )
+    assert Path(run["tutorial_case_path"]).parent == case / "Vera"
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
+    import archive_core
+
+    state_dir = tmp_path / "organization-index"
+    archive_core.configure_archive(case.parent, state_dir=state_dir)
+    snapshot_id = context["input_bindings"][0]["binding_id"]
+    inventory = archive_core.get_studio_archive_organization_inventory(
+        context["client_id"], context["engagement_id"], snapshot_id, state_dir=state_dir
+    )["model_inventory"]
+    proposals = []
+    meanings = {
+        f"maintenance-{language}.md": (
+            "contratti",
+            "accordo-manutenzione",
+            None,
+            "The supplied agreement describes this client’s monthly maintenance service.",
+        ),
+        f"maintenance-copy-{language}.md": (
+            "contratti",
+            "accordo-manutenzione",
+            None,
+            "This is the same maintenance agreement; exact duplication is determined by the source snapshot.",
+        ),
+        f"meeting-{language}.md": (
+            "documenti-societari",
+            "verbale-interno",
+            "2026-03-10",
+            "The internal dated meeting note names this client and an administrative contact.",
+        ),
+        f"update-{language}.md": (
+            "contratti",
+            "aggiornamento-accordo",
+            "2026-12-15",
+            "The supplied dated update extends the same maintenance agreement.",
+        ),
+    }
+    for item in inventory["files"]:
+        evidence = archive_core.open_studio_archive_organization_item(
+            context["client_id"],
+            context["engagement_id"],
+            snapshot_id,
+            item["item_ref"],
+            state_dir=state_dir,
+        )
+        assert evidence["source_identity_revalidated"] is True
+        assert evidence["google_drive_api_called"] is False
+        # Explicit model-authored meanings of these exact fictional documents;
+        # this lookup is not a runtime filename classification rule.
+        category, doc_type, doc_date, reason = meanings[item["name"]]
+        proposals.append(
+            {
+                "item_ref": item["item_ref"],
+                "category_id": category,
+                "document_type": doc_type,
+                "document_date": doc_date,
+                "entity": "Ciclo-Arco",
+                "reference": None,
+                "practice": None,
+                "confidence": "high",
+                "reason": reason,
+                "probable_duplicate_of": None,
+                "anomalies": [],
+            }
+        )
+    proposed = tmp_path / "semantic-proposals.json"
+    proposed.write_text(
+        json.dumps(
+            {
+                "schema_version": "vera.archive_organization_model_proposals.v1",
+                "inventory_ref": inventory["inventory_ref"],
+                "proposals": proposals,
+            }
+        ),
+        encoding="utf-8",
+    )
+    spec = importlib.util.spec_from_file_location(
+        "kit_archive_organizer",
+        ROOT / "plugins/archive-organization/scripts/archive_organization.py",
+    )
+    organizer = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = organizer
+    spec.loader.exec_module(organizer)
+    review = organizer.build_review_package(context_path, proposed)
+    assert review["source_archive_mutated"] is False
+    assert {
+        relative: (case / relative).read_bytes() for relative in original
+    } == original
+    payload = json.loads(Path(review["review_payload_path"]).read_text())
+    decisions_path = tmp_path / "fixture-decisions.json"
+    decisions_path.write_text(
+        json.dumps(
+            {
+                "reviewer": "fictional-regression-reviewer",
+                "decision_source": "pytest",
+                "decisions": [
+                    {"item_id": item["id"], "action": "accept"}
+                    for item in payload["items"]
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    saved = organizer.persist_review_decisions(context_path, decisions_path)
+    approved = organizer.compile_approved_plan(
+        context_path, Path(saved["ui_decisions_path"])
+    )
+    with pytest.raises(
+        organizer.ArchiveOrganizationError, match="Explicit apply approval"
+    ):
+        organizer.apply_approved_plan(
+            context_path, Path(approved["approved_plan_path"]), explicit_approval=False
+        )
+    applied = organizer.apply_approved_plan(
+        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+    )
+    assert applied["applied_count"] == expected_count
+    quarantine = list((case / "Da_verificare/Duplicati_esatti").rglob("*.md"))
+    assert len(quarantine) == 1
+    assert (
+        quarantine[0].read_bytes()
+        == original[f"Download/maintenance-copy-{language}.md"]
+    )
+    assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
+    assert {
+        relative: (case / relative).read_bytes() for relative in original
+    } == original
+    assert {
+        path.relative_to(source_root).as_posix(): path.read_bytes() for path in sources
+    } == original
+
+
+def test_website_teaching_prepares_private_project_for_current_specialist(
+    store, module, tmp_path
+):
+    store.begin()
+    change(store, "profile", confirmed_by_user=True, profile=profile())
+    workflows = ("presenza-digitale-studio", "fatture-xml-check", "variance-analysis")
+    change(
+        store,
+        "plan",
+        lessons=[
+            {
+                "workflow_id": wf,
+                "reason": "Fictional fixture",
+                "goal": "Run the current local website workflow",
+            }
+            for wf in workflows
+        ],
+    )
+    change(store, "pair", teacher_thread_id="teacher", worker_thread_id="worker")
+    started = change(store, "start", workflow_id=workflows[0])
+    source = tmp_path / "studio.md"
+    source.write_text("Fictional studio for the selected local website exercise.")
+    result = load("local_onboarding_case").prepare_case(
+        store,
+        thread_id="worker",
+        workflow=workflows[0],
+        token=started["lessons"][0]["worker_token"],
+        sources=[source],
+        phase="demo",
+    )
+    assert result["status"] == "prepared"
+    assert "context_path" not in result
+    assert Path(result["inputs"][0]["path"]).read_bytes() == source.read_bytes()
+    assert Path(result["output_dir"]).is_relative_to(store.root)
+    assert not (Path(result["directory"]) / "Vera").exists()
+
+
+def test_sampling_teaching_binds_one_journal_and_separate_context_note(
+    store, module, tmp_path
+):
+    store.begin()
+    change(store, "profile", confirmed_by_user=True, profile=profile())
+    change(
+        store,
+        "plan",
+        lessons=[
+            {"workflow_id": wf, "reason": "Fictional fixture", "goal": "Learn sampling"}
+            for wf in ("journal-sampling", "fatture-xml-check", "variance-analysis")
+        ],
+    )
+    change(store, "pair", teacher_thread_id="teacher", worker_thread_id="worker")
+    started = change(store, "start", workflow_id="journal-sampling")
+    source = ROOT / "scripts/course_materials/inputs/accounting/journal-march.csv"
+    note = ROOT / "scripts/course_materials/inputs/journal-sampling/context-it.md"
+    result = load("local_onboarding_case").prepare_case(
+        store,
+        thread_id="worker",
+        workflow="journal-sampling",
+        token=started["lessons"][0]["worker_token"],
+        sources=[source, note],
+        phase="demo",
+    )
+    bindings = result["context"]["input_bindings"]
+    assert [item["role"] for item in bindings] == ["journal", "source"]
+    assert Path(bindings[0]["path"]).read_bytes() == source.read_bytes()
+    assert Path(bindings[1]["path"]).read_bytes() == note.read_bytes()
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
+    store, module, tmp_path, monkeypatch, language
+):
+    import csv
+    import mimetypes
+
+    monkeypatch.syspath_prepend(str(ROOT / "tests/plugins"))
+    from test_teaching_kit_execution import _sample_teaching_journal
+
+    from tests.model_data_helpers import write_no_model_report
+
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    from courseware.library import CourseLibrary
+
+    kit = CourseLibrary(ROOT / "plugins/vera", {"vouching"}).render(
+        "vouching", language, tmp_path / "kit"
+    )
+    store.begin()
+    change(
+        store,
+        "profile",
+        confirmed_by_user=True,
+        profile={**profile(), "language": language},
+    )
+    change(
+        store,
+        "plan",
+        lessons=[
+            {
+                "workflow_id": wf,
+                "reason": "Fictional regression",
+                "goal": "Learn document checks",
+            }
+            for wf in ("vouching", "journal-sampling", "variance-analysis")
+        ],
+    )
+    change(store, "pair", teacher_thread_id="teacher", worker_thread_id="worker")
+    started = change(store, "start", workflow_id="vouching")
+    token = started["lessons"][0]["worker_token"]
+    adapter = load("local_onboarding_case")
+    # Reject invoices alone: no fake predecessor or raw-journal check run.
+    with pytest.raises(module.OnboardingError, match="one CSV/Excel journal"):
+        adapter.prepare_case(
+            store,
+            thread_id="worker",
+            workflow="vouching",
+            token=token,
+            sources=[Path(p) for p in kit["source_files"] if p.endswith(".xml")],
+            phase="demo",
+        )
+    first_result = None
+    for phase, size, selected in (
+        ("demo", 2, kit["source_files"]),
+        ("practice", 3, kit["practice_files"]),
+    ):
+        prepared = adapter.prepare_case(
+            store,
+            thread_id="worker",
+            workflow="vouching",
+            token=token,
+            sources=[Path(p) for p in selected],
+            phase=phase,
+        )
+        assert prepared["prerequisite_workflow"] == "journal-sampling"
+        assert prepared["run"]["workflow_id"] == "journal-sampling"
+        assert len(prepared["support_input_ids"]) == 3
+        assert {item["role"] for item in prepared["context"]["input_bindings"]} == {
+            "journal",
+            "source",
+        }
+        _sample_teaching_journal(
+            prepared,
+            monkeypatch,
+            language,
+            population=9,
+            size=size,
+            include_accounts="2100",
+        )
+        ledger = adapter._ledger()
+        output = Path(prepared["output_dir"])
+        context = prepared["context"]
+        client = context["client_id"]
+        engagement = context["engagement_id"]
+        sample_run = context["run_id"]
+        special = {
+            "normalization/normalized_journal.csv": "prepared.normalized_journal",
+            "normalization/normalization_diagnostics.json": "internal.normalization_diagnostics",
+            "sample/journal_sample.csv": "prepared.journal_sample_csv",
+        }
+        declarations = [
+            {
+                "artifact_id": special.get(
+                    path.relative_to(output).as_posix(), f"internal.teaching.{index}"
+                ),
+                "path": path.relative_to(output).as_posix(),
+                "purpose": "Preserve actual fictional sampling output for document checks",
+                "audience": "review",
+                "media_type": mimetypes.guess_type(path.name)[0]
+                or "application/octet-stream",
+            }
+            for index, path in enumerate(
+                sorted(p for p in output.rglob("*") if p.is_file())
+            )
+        ]
+        declarations.extend(
+            write_no_model_report(output, "journal-sampling", sample_run)
+        )
+        ledger.finalize_run(
+            Path(prepared["client_root"]), engagement, sample_run, declarations
+        )
+        ledger.complete_run(Path(prepared["client_root"]), engagement, sample_run)
+        # Reuse the configured in-process archive instance and its session lock.
+        archive = sys.modules["vera_tutorial_archive"]
+        handoff = archive.start_check_entries_from_sample(
+            client,
+            engagement,
+            sample_run,
+            support_input_ids=prepared["support_input_ids"],
+            state_dir=Path(prepared["archive_state_dir"]),
+        )
+        check_context = handoff["client_engagement"]
+        normalized = next(
+            Path(item["path"])
+            for item in check_context["input_bindings"]
+            if item.get("upstream_artifact_id") == "prepared.normalized_journal"
+        )
+        support = next(
+            Path(item["path"])
+            for item in check_context["input_bindings"]
+            if item["role"] == "support"
+        ).parent.parent
+        check_output = Path(check_context["output_dir"])
+        for script, destination, extra in (
+            ("inspect_entries.py", "inspection", []),
+            (
+                "run_checks.py",
+                "checks",
+                ["--recipe", str(check_output / "inspection/suggested_recipe.json")],
+            ),
+        ):
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    str(ROOT / "plugins/check-entries/scripts" / script),
+                    str(normalized),
+                    str(support),
+                    "--output-dir",
+                    str(check_output / destination),
+                    "--client-engagement",
+                    handoff["client_engagement_path"],
+                    "--language",
+                    language,
+                    "--document-language",
+                    "it",
+                    *extra,
+                ],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+            assert result.returncode == 0, result.stdout + result.stderr
+        result_path = check_output / "checks/check_results.csv"
+        with result_path.open(encoding="utf-8-sig", newline="") as stream:
+            checked = list(csv.DictReader(stream))
+        assert len(checked) == size
+        assert all(
+            row["professional_conclusion"] == "pending_review" for row in checked
+        )
+        assert (check_output / "checks/check_results.xlsx").is_file()
+        assert (check_output / "checks/review_notes.md").is_file()
+        audit = json.loads((check_output / "checks/check_audit.json").read_text())
+        assert audit["invoice_count"] == 3
+        assert audit["invoice_error_count"] == 0
+        check_run = check_context["run_id"]
+        check_declarations = [
+            {
+                "artifact_id": f"internal.vouching.{index}",
+                "path": path.relative_to(check_output).as_posix(),
+                "purpose": "Preserve actual fictional document-check output",
+                "audience": "review",
+                "media_type": mimetypes.guess_type(path.name)[0]
+                or "application/octet-stream",
+            }
+            for index, path in enumerate(
+                sorted(p for p in check_output.rglob("*") if p.is_file())
+            )
+        ]
+        check_declarations.extend(
+            write_no_model_report(check_output, "check-entries", check_run)
+        )
+        ledger.finalize_run(
+            Path(prepared["client_root"]), engagement, check_run, check_declarations
+        )
+        completed = ledger.complete_run(
+            Path(prepared["client_root"]), engagement, check_run
+        )
+        assert completed["run"]["status"] == "completed"
+        if first_result is None:
+            first_result = (result_path, result_path.read_bytes())
+        else:
+            assert first_result[0].read_bytes() == first_result[1]
+        # Persist actual generated evidence, without claiming learner approval.
+        change(
+            store,
+            phase,
+            workflow_id="vouching",
+            artifacts=[str(result_path.relative_to(store.root / "lessons/vouching"))],
+            execution_record=execution_record(
+                store,
+                phase,
+                result_path,
+                "vouching",
+                inputs=[Path(item["path"]) for item in check_context["input_bindings"]],
+                native=[check_output / "checks/check_audit.json"],
+            ),
+            prompt="Run the prepared fictional document check",
+            review="Mechanical regression evidence only; native learner review unverified",
+        )

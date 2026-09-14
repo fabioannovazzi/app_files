@@ -1,0 +1,102 @@
+{
+  "vera/dati-fiscali-strutturati": {
+    "title": "Steuerdaten mit Vera aus Dokumenten extrahieren",
+    "goal": "Lernen, lesbare Steuerunterlagen in eine Feldliste zu überführen und die Werte anhand ihrer Quellen zu prüfen.",
+    "scenario": "Die Kanzlei bereitet Marco Provas Daten vor. Eine fiktive italienische CU-Einkommensbescheinigung und ein F24-Zahlungsformular liegen vor; ihre Werte sollen ohne manuelles Abtippen übernommen werden.",
+    "scope": "Italienische Quelldokumente mit Erläuterungen in der gewählten Sprache. Extrahierte Werte beschreiben die Unterlagen; sie sind weder Steuererklärung noch Steuerberechnung.",
+    "inputs": "Öffnen Sie CU-income.md und F24-first.md. Die lesbaren Übungstranskriptionen enthalten erfundene Einkommens-, Einbehalts- und Zahlungsangaben. Nennen Sie die Erklärungskampagne 2026 und unterscheiden Sie Dokumentjahr und Steuerzeitraum.",
+    "request": "Vera, extrahiere die Steuerdaten aus Marco Provas Unterlagen für die Erklärungskampagne 2026. Zeige die Felder, die Quelle jedes Wertes und den Prüfbedarf.",
+    "steps": [
+      "Vera importiert die Dokumente in den Übungsfall und führt die aktuelle Aufbereitung und Extraktion aus. Verfolgen Sie, welche Dateien lesbar sind und wie ihr Dokumenttyp bestimmt wird.",
+      "Der Ablauf erzeugt strukturierte Felder und eine Zusammenfassung. Bei unklarem Dokumenttyp prüft Vera den Inhalt und hält ihre Interpretation im üblichen Prüfprozess fest.",
+      "Öffnen Sie die neue Zusammenfassung und CSV-Datei. Finden Sie Einkommen und Einbehalte der CU sowie Jahr, Code und Betrag des F24 und verfolgen Sie diese zum Quelltext zurück."
+    ],
+    "deliverables": [
+      "Steuerdatenübersicht: ordnet die Felder nach Dokument und nennt Einschränkungen.",
+      "Feld-CSV und Extraktionsbericht: ermöglichen die Prüfung von Werten, Quellen und nicht verarbeiteten Dokumenten."
+    ],
+    "review": "Vergleichen Sie die Werte mit beiden Quellen, einschließlich Jahr und Währung. Prüfen Sie auch Dokumente ohne extrahierte Felder: Ein leeres Ergebnis beweist nicht, dass sie keine nützlichen Angaben enthalten.",
+    "checkpoints": [
+      "Vor dem Start: Benennen Sie beide Dokumente und die Erklärungskampagne.",
+      "Bei der Übergabe: Verfolgen Sie einen Wert zur Quelle und finden Sie mögliche Einschränkungen."
+    ],
+    "practice": "Ergänzen Sie F24-second.md zu den beiden ursprünglichen Dokumenten und fordern Sie eine neue Extraktion an. Das zweite F24 ist zusätzlich; bewahren Sie das erste Ergebnis und Originaldokument auf.",
+    "success": "Die neue Liste unterscheidet beide F24-Dokumente und ihre Quellen. Sie können Jahr und Betrag vor der Weiterverwendung eines Wertes finden.",
+    "repeat": "Stellen Sie lesbare Unterlagen bereit, nennen Sie Land und Erklärungskampagne, fordern Sie die Extraktion an und prüfen Sie Felder und Quellen vor der fachlichen Verwendung."
+  },
+  "vera/avviso-intake": {
+    "title": "Ein Steuerschreiben mit Vera erstmals sichten",
+    "goal": "Lernen, ein Steuerschreiben bereitzustellen und eine Arbeitsnotiz mit Referenzen, fehlenden Informationen und nächsten Prüfungen zu erhalten.",
+    "scenario": "Marco Prova bringt der Kanzlei eine Dokumentenanforderung. Vor der Entscheidung über das weitere Vorgehen müssen Inhalt, benötigte Unterlagen und zu prüfende Daten geklärt werden.",
+    "scope": "Fiktiver italienischer Fall. Die Erstsichtung ordnet Dokumentangaben; rechtliche Bewertung und Antwort folgen dem üblichen fachlichen Verfahren.",
+    "inputs": "Öffnen Sie avviso.md, eine italienische Übungstranskription des Schreibens DEMO-NOTICE-01. Empfänger, Zeitraum, angeforderte Unterlagen und Antwortdatum sind genannt; ein Zugangsnachweis fehlt.",
+    "request": "Vera, erstelle eine erste Arbeitsnotiz zu diesem Schreiben für Marco Prova. Fasse Anforderung, Referenzen, zu prüfende Daten und benötigte Unterlagen zusammen.",
+    "steps": [
+      "Vera importiert das Schreiben in den Übungsfall und führt Lesen und Extraktion aus. Prüfen Sie Lesbarkeit und Übereinstimmung der Dokumentklassifikation mit dem Inhalt.",
+      "Der Ablauf erstellt die Arbeitsnotiz und Referenzliste. Der Sprachchat erklärt, welche Angaben aus dem Schreiben stammen und welche noch fehlen.",
+      "Öffnen Sie die Ergebnisse und vergleichen Sie diese mit dem Schreiben. Finden Sie Dokumentenanforderung, Referenz, genannte Daten und nächste Prüfungen."
+    ],
+    "deliverables": [
+      "Notiz zur Erstsichtung: hilft der Kanzlei, die Anforderung einzuordnen und Unterlagen zu beschaffen.",
+      "Tabelle mit Daten, Beträgen und Referenzen: erleichtert die Quellenprüfung; ein gefundenes Datum ist nicht automatisch eine geprüfte gesetzliche Frist."
+    ],
+    "review": "Prüfen Sie Referenz, Zeitraum und Anforderung am Text. Das Schreiben beziffert keine Schuld. Unterscheiden Sie das genannte Antwortdatum vom fehlenden Zugangsnachweis.",
+    "checkpoints": [
+      "Vor dem Start: Benennen Sie Schreiben und Ziel der Erstsichtung.",
+      "Bei der Übergabe: Zeigen Sie die Anforderung und die vor einer Antwort benötigten Informationen."
+    ],
+    "practice": "Ergänzen Sie client-update.md und fordern Sie eine neue Notiz an. Der Mandant berichtet, wann er das Schreiben fand und welche Dokumente er beschafft hat; die Kanzlei hat diese noch nicht erhalten.",
+    "success": "Die aktualisierte Notiz unterscheidet die Aussage des Mandanten vom Zugangsnachweis und zeigt weiterhin fehlende Unterlagen.",
+    "repeat": "Stellen Sie das vollständige Schreiben und vorhandene Zugangsnachweise bereit, fordern Sie eine Erstsichtung an und prüfen Sie die Notiz vor weiteren Schritten."
+  },
+  "vera/new-client": {
+    "title": "Einen neuen Mandanten mit Vera vorbereiten",
+    "goal": "Lernen, Erstkontaktinformationen in ein Mandatsdossier zu überführen, das die Kanzlei prüfen und vervollständigen kann.",
+    "scenario": "Officina Arco wünscht laufende Buchhaltungsunterstützung. Aus dem Gesprächsbogen erstellen wir ein Dossier mit Beteiligten, gewünschten Leistungen, benötigten Unterlagen und offenen Entscheidungen.",
+    "scope": "Aufnahme eines italienischen Mandanten. Ergebnis ist ein internes Dossier zur fachlichen Prüfung mit Dokumenten- und Überwachungsplan. Unterschrift und Mandatsaktivierung folgen dem normalen Kanzleiprozess.",
+    "inputs": "Öffnen Sie profile-de.md. Der Bogen enthält Angaben zu Gesellschaft, Vertreterin, Beteiligungen und Leistungen. Er ist bereits geordnet und stammt nicht aus einem freigegebenen Aufbereitungslauf; Vera muss ihn als direkte Quelle erfassen.",
+    "request": "Vera, bereite Officina Arcos Dossier als neuen Mandanten aus diesem Bogen vor. Ordne die Angaben, den Mandatsvorschlag, erforderliche Prüfungen und anzufordernde Unterlagen.",
+    "steps": [
+      "Vera eröffnet den Übungsfall und verknüpft den Bogen mit dem neuen Mandanten. Bei ungeordneten Dateien umfasst dieselbe Funktion auch die Dokumentenaufbereitung.",
+      "Der aktuelle Ablauf ordnet Beteiligte und Leistungen, bereitet Vorschläge und Informationsanforderungen vor und erstellt das Dossier. Der Sprachchat unterscheidet dabei Angaben, Prüfungen und Entscheidungen.",
+      "Öffnen Sie die Prüfseite des Dossiers. Beginnen Sie mit Mandant und Auftrag, dann folgen benötigte Dokumente und offene Entscheidungen. Notiz und weitere Anlagen enthalten die unterstützenden Kontrollen."
+    ],
+    "deliverables": [
+      "Prüfseite und Fallangaben: bilden eine geordnete Gesprächsgrundlage mit Mandant, Auftrag und Quellen.",
+      "Informationsanforderung, Dokumentenplan und Überwachungsplan: zeigen weitere Arbeit und noch zu bestätigende Punkte."
+    ],
+    "review": "Vergleichen Sie Beteiligte, Beteiligungen und Leistungen mit dem Bogen. Identität, Geldwäscheprävention, Datenschutz und Bedingungen erfordern die üblichen fachlichen Prüfungen; gemeldete Angaben sind noch nicht verifiziert.",
+    "checkpoints": [
+      "Vor dem Start: Benennen Sie Mandant und gewünschte Leistungen.",
+      "Bei der Übergabe: Finden Sie eine Quelle, eine benötigte Unterlage und eine offene Entscheidung."
+    ],
+    "practice": "Ergänzen Sie contact-update-de.md und fordern Sie eine neue Dossierversion an. Sara wird Verwaltungskontakt für Dokumente; Elena bleibt die genannte Vertreterin.",
+    "success": "Das neue Dossier enthält Kontakt und Quelle, bewahrt die vorherige Version und weist keine nicht angegebenen Vertretungsbefugnisse zu.",
+    "repeat": "Stellen Sie Angaben und Unterlagen des neuen Mandanten bereit, nennen Sie die Leistungen und nutzen Sie das Dossier, um Prüfungen, Bedingungen und fachliche Freigabe vor Mandatsbeginn abzuschließen."
+  },
+  "vera/email-cliente": {
+    "title": "Eine E-Mail zur Dokumentenanforderung vorbereiten",
+    "goal": "Lernen, aus den Dokumentenanfragen einer Akte eine kurze, präzise E-Mail zur Prüfung durch die Kanzlei zu erstellen.",
+    "scenario": "Der Mandant hat eine CU und einen F24 vorgelegt. Die Kanzlei will wissen, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Wir bereiten die Anfrage gemeinsam vor.",
+    "scope": "Unterstützende Aufgabe der Aktenvorbereitung, italienische Kampagne 2026. Die Lektion erstellt einen lokalen Entwurf; Versand und Steuerberatung sind nicht enthalten.",
+    "inputs": "Öffnen Sie context-de.md, CU-income.md und F24-first.md. Der Kontext nennt die beiden gesuchten Bestätigungen. Vera bereitet die Übungsakte vor und liest die Dokumente im aktuellen Ablauf; eine bereits genehmigte Anfrageliste ist nicht erforderlich.",
+    "request": "Vera, entwirf eine E-Mail mit der Frage, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Lass mich die Anfragen zunächst anhand dieser Akte prüfen.",
+    "steps": [
+      "Der Arbeitschat bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Sprachchat erklärt, was vorliegt und welche Bestätigungen fehlen.",
+      "Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.",
+      "Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert."
+    ],
+    "deliverables": [
+      "Lokaler E-Mail-Entwurf zur Prüfung und Verwendung als Nachrichtentext der Kanzlei.",
+      "Geprüfte Dokumentenanfragen und unterstützende Akte als Grundlage jeder Frage."
+    ],
+    "review": "Jede Frage muss einer ausgewählten Anfrage entsprechen. Bereits vorgelegte Dateien nicht erneut anfordern: Klären Sie, ob weitere existieren oder der Satz vollständig ist. Die Vorlage nutzt die Mandantenreferenz des Ablaufs; Empfänger und Versand müssen im normalen Arbeitsgang geprüft werden.",
+    "checkpoints": [
+      "Benennen Sie vor dem Entwurf die gewünschte Bestätigung.",
+      "Ordnen Sie bei der Übergabe jede Frage ihrer geprüften Anfrage zu."
+    ],
+    "practice": "Starten Sie mit client-reply-de.md und denselben Dokumenten einen neuen Durchlauf. Der Mandant bestätigt vollständige F24. Prüfen Sie die Anfragen und erstellen Sie einen neuen Entwurf nur zur offenen CU-Frage; bewahren Sie die erste Fassung auf.",
+    "success": "Sie können den Entwurf finden, jede Frage begründen und ihn nach einer Antwort aktualisieren, ohne geklärte Punkte erneut anzufragen.",
+    "repeat": "Bitten Sie Vera, die Akte fortzusetzen und aus geprüften Anfragen zu schreiben. Prüfen Sie Fragen, Empfänger und Anhänge vor dem Versand über den üblichen Kanzleikanal."
+  }
+}

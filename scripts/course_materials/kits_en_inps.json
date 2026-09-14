@@ -1,0 +1,27 @@
+{
+  "vera/previdenza-inps": {
+    "title": "Review an INPS case with Vera",
+    "goal": "Learn to provide a social-security question and documents, check evidence and use the resulting file for professional review.",
+    "scenario": "Marta wants to understand her contribution record for a period of employment. She has an employer statement and a fictional record of periods.",
+    "scope": "An Italian private-employment document case. Follow question, sources, chronology, relevant research and draft; no pension calculation or portal operation.",
+    "inputs": "Open case-en.md, employment-en.md, record-context-en.md and contribution-periods-en.csv. Identify the person, period and question. The teaching record is fictional, not an official export.",
+    "request": "Vera, review this INPS case for January through June 2025. Explain what the documents show, check relevant official sources and prepare a draft with questions and documents to request.",
+    "steps": [
+      "In the working chat Vera reads the files and summarizes question, period and Italian framework for confirmation. Voice explains the process and helps separate available information from open questions.",
+      "Vera organizes facts and chronology, links facts to documents, researches the relevant framework and prepares the file through the current workflow. Voice follows actual evidence and results without anticipating a conclusion.",
+      "Open the generated memo, chronology and document requests. Start with the answer to the question, trace a fact to its source and check what remains for review."
+    ],
+    "deliverables": [
+      "A study memo in Word and text, clearly marked as a draft for professional review.",
+      "Chronology, evidence matrix and document requests to continue the case."
+    ],
+    "review": "Check period, person and cited documents. An employment statement and a period appearing in a record are different evidence. Check source scope and missing information before drawing conclusions or making a report.",
+    "checkpoints": [
+      "Before analysis, state the question the case file should answer.",
+      "In the memo, find a fact, its source and the next useful clarification."
+    ],
+    "practice": "Repeat the request with the practice inputs, including an updated record. Preserve the first file and compare which observations and requests change. Do not infer when or why data changed if the documents do not explain it.",
+    "success": "You can start the review, supply documents, read the memo and sources and update the work with new evidence.",
+    "repeat": "Tell Vera the INPS question, period, people and available documents, including any deadlines. Review scope and evidence and use the draft in the normal professional process."
+  }
+}

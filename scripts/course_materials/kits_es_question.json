@@ -1,0 +1,52 @@
+{
+  "vera/quesito-legale-fiscale": {
+    "title": "Obtener una respuesta verificada con Vera",
+    "goal": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos.",
+    "scenario": "Imprese Arco pide al profesional una nota breve sobre las reglas de la UE contra la morosidad. Partimos del encargo escrito y las fuentes iniciales para producir una respuesta real mediante el workflow.",
+    "scope": "El recorrido completo desde la pregunta hasta la respuesta verificada. Una nota informativa permite aprender el proceso; un dictamen sobre una posición concreta puede necesitar además el examen de la tesis contraria.",
+    "inputs": "Abre question-es.md para ver encargo, público, alcance y formato. sources-es.md presenta la guía y el texto oficial adjuntos. No necesitas preparar instrucciones técnicas ni elegir etapas internas.",
+    "request": "Vera, responde a la cuestión de Imprese Arco en este archivo. Prepara la nota breve solicitada, verifica fuentes y respuesta y muéstrame el documento y los puntos que requieren revisión.",
+    "steps": [
+      "En el hilo de trabajo, Vera lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. La voz explica qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.",
+      "Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El hilo de trabajo investiga y redacta. La voz sigue el progreso real y responde a tus preguntas.",
+      "Vera verifica la respuesta frente al encargo, las fuentes y el razonamiento y corrige lo necesario. Abre la nota Word, observa las conclusiones y localiza una fuente. Revisa límites y puntos abiertos antes de usarla."
+    ],
+    "deliverables": [
+      "Nota Word y texto de la respuesta verificada, con fuentes y límites.",
+      "Paquete de verificación que permite reconstruir la revisión de las afirmaciones y los puntos pendientes."
+    ],
+    "review": "Comprueba que la nota responde al encargo con el alcance y el idioma previstos. Abre una fuente y compárala con una afirmación. Distingue una regla general de su aplicación al cliente; las comprobaciones no sustituyen el juicio profesional.",
+    "checkpoints": [
+      "Explica la pregunta, su destinatario y el marco jurídico.",
+      "Encuentra una conclusión, su fuente y un límite o comprobación pendiente."
+    ],
+    "practice": "Lee practice-es.md y pide una nueva versión para la reunión que incluye proveedores de administraciones públicas. Conserva la primera versión, sigue la nueva investigación y verificación y explica cómo usar la comparación producida.",
+    "success": "Sabes plantear una pregunta completa, elegir la investigación, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.",
+    "repeat": "Proporciona a Vera pregunta, hechos disponibles, país o marco jurídico, destinatario y resultado esperado. Revisa alcance, fuentes, conclusiones y puntos abiertos en el documento generado."
+  },
+  "lucia/quesito-legale-fiscale": {
+    "title": "Obtener una respuesta verificada con Lucia",
+    "goal": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos.",
+    "scenario": "Imprese Arco pide al profesional una nota breve sobre las reglas de la UE contra la morosidad. Partimos del encargo escrito y las fuentes iniciales para producir una respuesta real mediante el workflow.",
+    "scope": "El recorrido completo desde la pregunta hasta la respuesta verificada. Una nota informativa permite aprender el proceso; un dictamen sobre una posición concreta puede necesitar además el examen de la tesis contraria.",
+    "inputs": "Abre question-es.md para ver encargo, público, alcance y formato. sources-es.md presenta la guía y el texto oficial adjuntos. No necesitas preparar instrucciones técnicas ni elegir etapas internas.",
+    "request": "Lucia, responde a la cuestión de Imprese Arco en este archivo. Prepara la nota breve solicitada, verifica fuentes y respuesta y muéstrame el documento y los puntos que requieren revisión.",
+    "steps": [
+      "En el hilo de trabajo, Lucia lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. La voz explica qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.",
+      "Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El hilo de trabajo investiga y redacta. La voz sigue el progreso real y responde a tus preguntas.",
+      "Lucia verifica la respuesta frente al encargo, las fuentes y el razonamiento y corrige lo necesario. Abre la nota Word, observa las conclusiones y localiza una fuente. Revisa límites y puntos abiertos antes de usarla."
+    ],
+    "deliverables": [
+      "Nota Word y texto de la respuesta verificada, con fuentes y límites.",
+      "Paquete de verificación que permite reconstruir la revisión de las afirmaciones y los puntos pendientes."
+    ],
+    "review": "Comprueba que la nota responde al encargo con el alcance y el idioma previstos. Abre una fuente y compárala con una afirmación. Distingue una regla general de su aplicación al cliente; las comprobaciones no sustituyen el juicio profesional.",
+    "checkpoints": [
+      "Explica la pregunta, su destinatario y el marco jurídico.",
+      "Encuentra una conclusión, su fuente y un límite o comprobación pendiente."
+    ],
+    "practice": "Lee practice-es.md y pide una nueva versión para la reunión que incluye proveedores de administraciones públicas. Conserva la primera versión, sigue la nueva investigación y verificación y explica cómo usar la comparación producida.",
+    "success": "Sabes plantear una pregunta completa, elegir la investigación, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.",
+    "repeat": "Proporciona a Lucia pregunta, hechos disponibles, país o marco jurídico, destinatario y resultado esperado. Revisa alcance, fuentes, conclusiones y puntos abiertos en el documento generado."
+  }
+}

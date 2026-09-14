@@ -1,0 +1,127 @@
+{
+  "vera/journal-bank-reconciliation": {
+    "title": "Riconciliare un estratto conto con Vera",
+    "goal": "Imparare a confrontare i movimenti bancari con il mastro banca e usare la riconciliazione nella chiusura mensile.",
+    "scenario": "Officina Arco sta chiudendo marzo. L’estratto conto e il mastro banca dovrebbero descrivere gli stessi pagamenti. Li confrontiamo e leggiamo le carte di lavoro prodotte.",
+    "scope": "Un conto bancario in EUR, marzo 2026. Il caso usa riferimenti esatti e pagamenti singoli. Gli altri conti e periodi sono fuori dal perimetro.",
+    "inputs": "Apri bank-march.csv, bank-ledger-march.csv e case-it.md. L’estratto conto contiene i movimenti della banca; il mastro contiene quelli contabili da confrontare. Le date sono ISO e i pagamenti sono negativi in entrambi i file.",
+    "request": "Vera, riconcilia l’estratto conto di marzo di Arco con il mastro banca. Mostrami pagamenti abbinati, eventuali movimenti non abbinati e controlli da rivedere.",
+    "steps": [
+      "Vera importa i due export nella pratica didattica e ne legge la struttura. Conferma conto, date, segni degli importi e colonne dei riferimenti bancari.",
+      "Rivedi le regole proposte in termini contabili: pagamenti singoli, riferimenti e importi esatti, senza riutilizzare un movimento. La procedura corrente esegue il confronto localmente.",
+      "Apri il foglio di riconciliazione e le note prodotti. Segui un pagamento dalla banca al riferimento nel mastro, poi individua gli elenchi dei non abbinati e i controlli."
+    ],
+    "deliverables": [
+      "Cartella di riconciliazione e tabelle di dettaglio: servono a verificare gli abbinamenti e i movimenti rimasti da chiarire.",
+      "Note di revisione e controlli: spiegano copertura, regole applicate e punti che richiedono altre prove."
+    ],
+    "review": "Controlla che i file riguardino lo stesso conto e periodo. Risali da un abbinamento alle due righe di origine. Riconciliare un pagamento non determina il trattamento fiscale della fattura.",
+    "checkpoints": [
+      "Prima di partire, indica quale file proviene dalla banca e quale dalla contabilità.",
+      "Alla consegna, trova un pagamento abbinato e il punto in cui comparirebbe un movimento non abbinato."
+    ],
+    "practice": "Usa bank-april.csv e bank-ledger-april.csv per chiedere una nuova riconciliazione fino al 4 aprile. I file cumulativi aggiungono il pagamento della terza fattura; conserva il risultato di marzo.",
+    "success": "La nuova esecuzione comprende il movimento di aprile. Spiega come approfondiresti un movimento bancario assente dal mastro.",
+    "repeat": "Fornisci export bancari e contabili confrontabili, indica conto e periodo, rivedi l’interpretazione proposta e usa la riconciliazione per risolvere le differenze."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Verificare le partite aperte con Vera",
+    "goal": "Imparare a verificare un elenco di insoluti e distinguere fatture chiuse, parzialmente chiuse e ancora aperte a una data.",
+    "scenario": "Un precedente elenco fornitori di Arco riporta ancora tre fatture aperte. I movimenti bancari permettono di verificarne la situazione al 31 marzo.",
+    "scope": "Tre fatture fornitori in EUR. La verifica di marzo esclude i pagamenti successivi alla data di riferimento; l’esercizio aggiorna la data.",
+    "inputs": "Apri open-items-it.pdf e bank-march-it.pdf. Il primo documento è la popolazione da verificare; il secondo riporta i pagamenti in uscita. Sono export didattici fittizi, con virgola decimale e date giorno/mese/anno.",
+    "request": "Vera, verifica queste partite fornitori al 31 marzo 2026. Usa le prove di pagamento bancario per mostrare cosa risulta pagato, cosa resta aperto e cosa devo rivedere.",
+    "steps": [
+      "Vera importa i file, identifica la popolazione iniziale e propone ruolo e significato degli importi di ciascuna fonte. Conferma data di riferimento e trattamento dei pagamenti successivi.",
+      "La procedura corrente collega fatture e prove di pagamento, calcola i residui e prepara il pacchetto di revisione. La chat vocale spiega l’avanzamento e gli eventuali documenti mancanti.",
+      "Apri la pagina locale di revisione e le carte di lavoro. Segui una fattura dall’importo segnalato come aperto alle prove di pagamento e al residuo. Le decisioni restano da prendere finché non vengono espresse."
+    ],
+    "deliverables": [
+      "Carte di lavoro Excel e scheda operativa: mostrano popolazione verificata, collegamenti ai pagamenti, residui ed eccezioni.",
+      "Relazione Word e pagina locale di revisione: spiegano le conclusioni e permettono al professionista di rivedere le voci e richiedere documenti."
+    ],
+    "review": "Controlla prima popolazione e data. Le prove di marzo sostengono la chiusura delle prime due fatture; la terza resta irrisolta con questi documenti. Verifica date e fonti prima di accettare una conclusione.",
+    "checkpoints": [
+      "Prima di partire, distingui l’elenco da verificare dalle prove usate per controllarlo.",
+      "Alla consegna, trova la fattura residua, il suo importo e la prova ancora necessaria per risolverla."
+    ],
+    "practice": "Mantieni open-items-it.pdf e usa bank-april-it.pdf per chiedere una nuova verifica al 30 aprile. Il documento bancario cumulativo comprende il terzo pagamento. Conserva le carte di marzo.",
+    "success": "La nuova verifica considera il terzo pagamento. Spiega perché le conclusioni di marzo e aprile cambiano e dove registreresti una decisione di revisione.",
+    "repeat": "Fornisci elenco delle partite, data di riferimento e prove a supporto. Rivedi residui e punti irrisolti nel pacchetto generato prima di usare le conclusioni."
+  },
+  "vera/variance-analysis": {
+    "title": "Confrontare consuntivo e budget con Vera",
+    "goal": "Imparare a fornire i dati, avviare il confronto e leggere un report che mostra quanto e dove il risultato si discosta dal budget.",
+    "scenario": "Officina Arco vuole confrontare il risultato operativo di gennaio e febbraio con il budget. Ha un file con ricavi e costi per mese e una nota che ne spiega il significato.",
+    "scope": "Primo utilizzo dell’analisi degli scostamenti: una società, due mesi, EUR. Confrontiamo importi; il file non contiene quantità o prove delle cause commerciali.",
+    "inputs": "Apri january-february.csv e context-it.md. Individua Scenario (PL budget, AC consuntivo), Month, Category e Amount. La nota chiarisce segni e totali di controllo. Vera prepara una copia nel fascicolo didattico.",
+    "request": "Vera, confronta il risultato operativo effettivo di gennaio e febbraio 2026 con il budget di Officina Arco, in euro. Mostrami il report e spiegami quali voci contribuiscono allo scostamento.",
+    "steps": [
+      "Nella chat di lavoro Vera legge il file e propone il confronto. La chat vocale ti aiuta a verificare mesi, budget di partenza, consuntivo, valuta e significato dei costi negativi prima del calcolo.",
+      "La procedura corrente calcola gli scostamenti e genera tabelle, grafici e bozza del report. Mentre lavora, la voce spiega il percorso e risponde alle domande senza anticipare risultati non ancora prodotti.",
+      "Apri il report e il grafico principale effettivi. Parti dal risultato complessivo, poi leggi il contributo di ricavi e costi e un dettaglio mensile. Vera collega ciascun commento ai dati calcolati e salva le decisioni di revisione effettive."
+    ],
+    "deliverables": [
+      "Bozza Word del report e grafici per leggere il passaggio dal budget al consuntivo.",
+      "Tabelle degli scostamenti e controlli di riconciliazione per risalire agli importi sorgenti."
+    ],
+    "review": "Controlla perimetro e mesi, totali iniziale e finale, variazione in EUR e percentuale dove significativa. Un costo negativo richiede di leggere il significato del segno. Il calcolo individua contributi, ma non prova da solo una causa commerciale. Il report resta una bozza fino alla normale revisione professionale.",
+    "checkpoints": [
+      "Prima del calcolo, indica quali valori stai confrontando.",
+      "Sul risultato, trova una voce che contribuisce allo scostamento e il dato che la sostiene."
+    ],
+    "practice": "Usa january-march.csv per ripetere il confronto da gennaio a marzo. Chiedi un nuovo risultato mantenendo quello dei primi due mesi. Individua cosa è cambiato nel totale e in una voce; fatti aiutare soltanto dove serve.",
+    "success": "Sai scegliere il file e il confronto, trovare il report, leggere uno scostamento e ripetere l’analisi quando arriva un altro mese.",
+    "repeat": "Con un tuo file, indica società, periodo, budget o altro termine di confronto e valuta. Vera chiarisce le colonne ambigue, produce i risultati e ti guida nella revisione."
+  },
+  "vera/journal-sampling": {
+    "title": "Estrarre un campione dal giornale contabile",
+    "goal": "Imparare a consegnare un giornale, verificare come viene letto e ottenere le righe selezionate per il successivo controllo.",
+    "scenario": "Lo studio deve scegliere alcune righe del giornale di Officina Arco da esaminare. Usiamo un piccolo file fittizio per seguire ogni passaggio.",
+    "scope": "Prima esecuzione di Journal Sampling: campione casuale di 5 righe, seme 42. La lezione insegna l’uso; il piano di revisione stabilisce metodo e numerosità nel lavoro reale.",
+    "inputs": "Apri journal-march.csv e context-it.md. Trova data, registrazione, riga, conto, dare e avere. Il file originale resta conservato nel fascicolo didattico.",
+    "request": "Vera, estrai dal giornale di marzo di Officina Arco un campione casuale di 5 righe con seme 42. Prima fammi verificare le colonne e poi mostrami il campione e i controlli sul giornale.",
+    "steps": [
+      "Vera apre il giornale nella chat di lavoro. La voce ti accompagna nel controllo di colonne, periodo e significato degli importi; Vera registra la mappatura effettivamente rivista.",
+      "La procedura prepara il giornale e controlla che le righe e gli importi siano conservati. Se la preparazione non passa, chiarisci il problema prima di selezionare il campione.",
+      "Vera esegue il campionamento e apre il risultato Excel. Individua una riga scelta e torna alla stessa riga nel giornale; rivedi insieme dimensione della popolazione, metodo e numero di righe estratte."
+    ],
+    "deliverables": [
+      "Campione in Excel e CSV, con riferimenti alle righe originali.",
+      "Giornale preparato, controlli e riepilogo delle scelte per riprodurre l’estrazione."
+    ],
+    "review": "Verifica che il campione provenga dal periodo e dai conti richiesti e contenga il numero di righe previsto. I controlli di preparazione non certificano le registrazioni o l’adeguatezza del campione. Per controllare i documenti si prosegue con Verifica documentale.",
+    "checkpoints": [
+      "Prima dell’estrazione, spiega quale popolazione stai campionando.",
+      "Sul risultato, ritrova una riga campionata nel file sorgente."
+    ],
+    "practice": "Ripeti con journal-april.csv, che aggiunge un pagamento di aprile. Mantieni il campione casuale di 5 righe e conserva il primo risultato. Verifica la nuova popolazione e individua una riga del nuovo campione.",
+    "success": "Sai preparare la richiesta, trovare il campione e collegare una riga al giornale, senza modificare a mano le righe estratte.",
+    "repeat": "Indica a Vera cliente, giornale, periodo ed eventuali filtri, metodo e numerosità previsti dal tuo piano. Chiedi Verifica documentale quando vuoi confrontare il campione con i documenti."
+  },
+  "vera/vouching": {
+    "title": "Verificare le registrazioni campionate con le fatture",
+    "goal": "Imparare a collegare un campione alle fatture, leggere gli esiti e rivedere i punti che richiedono giudizio professionale.",
+    "scenario": "Lo studio ha le registrazioni di tre fatture e i relativi XML. Vuole confrontare due righe campionate con i documenti originali.",
+    "scope": "Verifica documentale di un campione. Vera prepara prima il campione con Journal Sampling nello stesso fascicolo didattico, poi esegue la verifica effettiva. Non è un controllo dell’intero giornale.",
+    "inputs": "Apri invoice-journal.csv, context-it.md e le tre fatture XML. La nota indica il conto 2100 e il campione didattico di due righe. Vera gestisce il passaggio dal campione ai documenti; non devi scegliere file tecnici interni.",
+    "request": "Vera, prepara un campione casuale di due righe del conto fornitori 2100, con seme 42, e verifica le righe con queste fatture XML. Mostrami i risultati e aiutami a rivederli.",
+    "steps": [
+      "La chat di lavoro prepara davvero il campione. La voce spiega quali righe verranno controllate e ti fa verificare il perimetro prima di passare alle fatture.",
+      "Vera collega il campione appena prodotto alle tre fatture selezionate e avvia Verifica documentale. La voce spiega il confronto fra registrazione e documento seguendo l’avanzamento reale.",
+      "Apri il foglio dei risultati e una riga con il documento collegato. Controlla riferimento, data, importo e soggetto; rivedi le richieste di chiarimento. Vera conserva le decisioni effettive e i collegamenti alle fonti."
+    ],
+    "deliverables": [
+      "Foglio Excel e CSV dei controlli sul campione, con documenti collegati ed esiti.",
+      "Note di revisione e fascicolo dei controlli per ritrovare campione e fonti."
+    ],
+    "review": "Verifica che siano state esaminate soltanto le righe del campione. Distingui un abbinamento dal giudizio sulla registrazione: soggetto, segno contabile e conclusione richiedono la revisione prevista. Un documento mancante o ambiguo deve restare da chiarire.",
+    "checkpoints": [
+      "Prima della verifica, indica quali righe e quali documenti fanno parte del controllo.",
+      "Sul risultato, spiega l’esito di una riga usando la registrazione e la fattura."
+    ],
+    "practice": "Chiedi un nuovo campione di tre righe del conto 2100 e ripeti il controllo con le stesse fatture. Conserva il primo risultato e verifica che il nuovo controllo segua il nuovo campione.",
+    "success": "Sai avviare la verifica, aprire il risultato, risalire al documento e distinguere controllo meccanico e conclusione professionale.",
+    "repeat": "Nel lavoro reale, scegli il campione di Journal Sampling nel fascicolo corretto e fornisci il lotto di documenti. Vera riprende il collegamento e controlla solo le righe selezionate."
+  }
+}

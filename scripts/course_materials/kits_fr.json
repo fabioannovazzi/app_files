@@ -1,0 +1,77 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Contrôler les factures XML avec Vera",
+    "goal": "Apprenez à fournir un dossier de factures, lire le récapitulatif et traiter les points à vérifier.",
+    "scenario": "Le cabinet Arco a reçu trois factures XML de mars pour un client fictif. Il veut identifier les documents et vérifier leur lisibilité et leur cohérence avant de poursuivre le travail comptable.",
+    "scope": "Cette fonction prépare et contrôle les documents reçus. La comptabilisation et l’envoi à SdI suivent leurs propres procédures.",
+    "inputs": "Ouvrez invoice-01.xml, invoice-02.xml et invoice-03.xml. Ce sont des FatturaPA pédagogiques avec des identifiants fictifs. La note précise la période et le total attendu du lot : 2 440 EUR.",
+    "request": "Vera, contrôle les factures XML de mars dans ce dossier. Montre les documents reçus, leurs montants et les points à vérifier.",
+    "steps": [
+      "Vera importe le dossier dans le cas pédagogique et lit les XML avec le parseur de la fonction. Regardez quels fichiers sont inclus.",
+      "Dans la conversation de travail, la procédure extrait numéros, dates, parties et montants, contrôle la structure et signale anomalies ou doublons possibles.",
+      "Ouvrez le nouveau récapitulatif. Vera relie les constats aux fichiers et indique les vérifications utiles avant la suite."
+    ],
+    "deliverables": [
+      "Récapitulatif des factures : retrouvez le numéro, la date et le total d’un document dans son XML.",
+      "Liste des anomalies : examinez le fichier concerné, le problème constaté et la vérification demandée. Le nombre de documents indique le périmètre traité."
+    ],
+    "review": "Comparez les trois documents reçus au récapitulatif et au total du lot. Vérifiez chaque constat dans sa source ; ce contrôle ne décide pas de la déductibilité et ne confirme aucune écriture.",
+    "checkpoints": [
+      "Avant de lancer : indiquez le dossier et le mois à contrôler.",
+      "Sur le résultat : ouvrez une ligne et son XML ; repérez où apparaissent les anomalies."
+    ],
+    "practice": "Ajoutez invoice-04.xml dans un nouveau dossier d’exercice et demandez le contrôle des quatre factures, y compris avril.",
+    "success": "Le nouveau récapitulatif doit inclure la quatrième facture et distinguer les deux mois. Expliquez où examiner un fichier problématique.",
+    "repeat": "Pour recommencer au travail, sélectionnez le dossier du client et demandez le contrôle des XML reçus. Revoyez le récapitulatif et les constats avant de poursuivre."
+  },
+  "clara/reporting-engine": {
+    "title": "Préparer un rapport à partir des données avec Clara",
+    "goal": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
+    "scenario": "Arco a préparé ses comptes de gestion de janvier et février et le budget des mêmes mois. Le responsable veut comprendre le résultat opérationnel et les catégories à approfondir avant la réunion mensuelle.",
+    "scope": "Le cas comprend chiffre d’affaires, coût des ventes et charges opérationnelles en EUR. Clara choisit l’analyse selon la question et les données ; ce premier parcours utilise une comparaison au budget et reste local.",
+    "inputs": "Ouvrez actual-budget.xlsx et facts.md. GL contient les mouvements mensuels par compte et catégorie ; Budget contient le plan comparable. Les revenus sont positifs, les charges négatives. Les totaux de contrôle sont 53 000 EUR au réel et 47 000 EUR au budget.",
+    "request": "Clara, prépare le rapport réel–budget d’Arco pour janvier et février 2026 avec ce classeur. Montre le résultat opérationnel, les écarts et le détail par catégorie.",
+    "steps": [
+      "Clara examine les feuilles et propose les colonnes de dates, catégories et montants. Confirmez janvier–février et le sens des signes avant le calcul.",
+      "La procédure applique la correspondance vérifiée, compare réel et budget et contrôle les totaux. La conversation vocale explique l’étape réelle et les informations éventuellement demandées.",
+      "Ouvrez le tableau de bord et le classeur produits dans la conversation de travail. Commencez par la synthèse, puis passez au comparatif mensuel et aux catégories."
+    ],
+    "deliverables": [
+      "Tableau de bord : résultat de la période, écarts en valeur et en pourcentage lorsque cela a un sens. Repérez les catégories à approfondir.",
+      "Classeur et rapport : tableaux, contrôles et liens vers les données. La synthèse distingue la mesure de l’écart de sa cause à vérifier."
+    ],
+    "review": "Vérifiez que les feuilles couvrent les mêmes mois et que les charges ont le signe attendu. Reliez un écart à sa catégorie et à son mois d’origine. Demandez des explications à l’entreprise lorsque les chiffres ne prouvent pas la cause.",
+    "checkpoints": [
+      "Avant le calcul : repérez les deux feuilles et confirmez la période.",
+      "Sur le résultat : trouvez le comparatif global et une catégorie à approfondir."
+    ],
+    "practice": "Utilisez actual-budget-march.xlsx pour demander une mise à jour jusqu’en mars. Formulez la demande, confirmez la nouvelle période et comparez avec le rapport précédent.",
+    "success": "Le nouveau rapport inclut mars et préserve le précédent. Vous savez trouver la comparaison au budget et remonter aux données d’une catégorie.",
+    "repeat": "Pour recommencer, fournissez réel et budget sur des périodes comparables, précisez la période et le but de la réunion, revoyez l’interprétation des données et ouvrez le rapport généré."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Préparer un nouveau dossier avec Lucia",
+    "goal": "Apprenez à partir de la demande et des documents du client, obtenir un dossier à revoir et identifier ce qui manque avant son ouverture.",
+    "scenario": "Beta Laboratorio demande une assistance pour une livraison incomplète. Nous disposons de sa demande, d’une synthèse de la fourniture et d’un petit registre fictif du cabinet. Préparons le dossier pour la revue de l’avocat.",
+    "scope": "La fonction organise l’ouverture du dossier. Les décisions sur conflits, mission, délais et ouverture suivent la procédure normale de revue.",
+    "inputs": "Ouvrez request-fr.md, supply-fr.md et register.csv. La demande indique client, partie adverse, objectif et urgence déclarée ; la fourniture documente le cas ; le registre précise les dossiers fictifs disponibles pour le contrôle.",
+    "request": "Lucia, prépare un nouveau dossier pour Beta Laboratorio concernant la livraison de Gamma Forniture. Utilise ces documents et montre le dossier, les informations manquantes et les décisions à revoir avant l’ouverture.",
+    "steps": [
+      "Lucia crée le cas pédagogique, importe les documents et reconstitue client, parties, demande et chronologie. La conversation vocale suit les informations et leurs sources.",
+      "La conversation de travail prépare la fiche, les candidats au contrôle des conflits, le périmètre de la mission et les points éventuels sur les délais. Les informations manquantes restent visibles.",
+      "Lucia produit le paquet et ouvre la revue. Examinez les décisions sur conflits, mission, délais et ouverture, puis la façon dont une décision réelle est enregistrée et appliquée au dossier."
+    ],
+    "deliverables": [
+      "Note d’ouverture et demande d’informations : commencez par objectif, parties et documents disponibles ; repérez ce qu’il faut demander au client.",
+      "Plan des dossiers et page de revue : organisation proposée et décisions nécessaires. Le statut distingue un dossier préparé d’un dossier prêt à ouvrir."
+    ],
+    "review": "Comparez client et partie adverse à la demande et vérifiez le périmètre du registre consulté. Lisez la proposition de mission et les points sur les délais avant de décider. Une note produite ne signifie pas que la mission est acceptée.",
+    "checkpoints": [
+      "Avant la préparation : identifiez client, partie adverse et résultat demandé.",
+      "Dans le dossier : montrez les documents manquants et les décisions encore à revoir."
+    ],
+    "practice": "Ajoutez update-fr.md : Gamma propose une date pour les composants restants. Demandez à Lucia d’actualiser le dossier avec cette correspondance en conservant la version précédente.",
+    "success": "La nouvelle version reprend la proposition et sa source sans supposer livraison ou acceptation. Vous savez quels points nécessitent une nouvelle revue.",
+    "repeat": "Pour recommencer, fournissez demande, documents et registre réellement disponible ; précisez si le client est nouveau ou existant et revoyez le paquet avant d’ouvrir le dossier."
+  }
+}

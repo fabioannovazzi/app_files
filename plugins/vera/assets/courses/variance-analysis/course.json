@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "variance-analysis",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,11 +19,32 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
   "sources": [
+    {
+      "path": "modules/variance-analysis/assets/icon.svg",
+      "repository_path": "plugins/variance-analysis/assets/icon.svg",
+      "sha256": "b0d8e14b9b0087908ac190c8e626838c43f2f81f84b4dbe542c0ce2a19c0b912"
+    },
+    {
+      "path": "modules/variance-analysis/assets/variance-analysis-review-widget.html",
+      "repository_path": "plugins/variance-analysis/assets/variance-analysis-review-widget.html",
+      "sha256": "e183760e6663846080476fa8cd875cab850e815e59cf5a9642b05c02e64057c2"
+    },
     {
       "path": "modules/variance-analysis/references/legacy_inventory.json",
       "repository_path": "plugins/variance-analysis/references/legacy_inventory.json",
       "sha256": "40245a5dabf9448d8221662f3e20710bda51925b263b7f365e0faaa680a8d2f1"
+    },
+    {
+      "path": "modules/variance-analysis/requirements.txt",
+      "repository_path": "plugins/variance-analysis/requirements.txt",
+      "sha256": "7733ce9295f777cfdfa8de578dfee3c513c525012bbe38a2445a45dc0c58dde0"
     },
     {
       "path": "modules/variance-analysis/scripts/accounting_controls.py",
@@ -111,308 +132,737 @@
       "sha256": "8da92b27d7f3d83c96d5a80c200af14c0ede3b708d12dc56f52a8a79a78a50d1"
     },
     {
+      "path": "modules/variance-analysis/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/auth/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/auth/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/auth/config.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/auth/config.py",
+      "sha256": "7e95dfe02a16f254346f49ae981890d5641ca11fa6c32e1ba92269c6e04327a9"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/auth/google_identity.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/auth/google_identity.py",
+      "sha256": "bc33a5cacf88ab073c72171640c7067429c6884927ab1628f5fece503262dd9e"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/auth/session.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/auth/session.py",
+      "sha256": "554cb2902d1ad2ee3ce232dd5c06422cd23232d0995489e18c25be61778ae42b"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/__init__.py",
+      "sha256": "64040e09b08b176a94cee3a65971c649479d7bc2d47a7a48c0fed0bf00c65dc5"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/analysis_context.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/analysis_context.py",
+      "sha256": "b1a530fffe1f9ae963950e779dd409920d94a168289f3faafef6cc93c8c2985e"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/artifacts.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/artifacts.py",
+      "sha256": "190476ae688368778b08804e049244e595461edb7206f3525a0a1baec1f5b5e6"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/date_parsing.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/date_parsing.py",
+      "sha256": "05b91fe963ee974d6fea7d2bcb806effa0524d9fa353f8910643379a50c2a2ac"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/metric_semantics.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/metric_semantics.py",
+      "sha256": "10849cdef532699ff323233f4f699eddee7fba7836075984199657c5c8d41f5a"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/period_contract.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/period_contract.py",
+      "sha256": "1d04dd1a23808ecda086a53f3d76a492a2600c2b58917a63cd272a0b330e1384"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/period_derivations.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/period_derivations.py",
+      "sha256": "dfbe2252a94f7a264c1431a82fcf6cedd664756496399ad3090d9ee05c7fe614"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/period_label_policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/period_label_policy.py",
+      "sha256": "e03d299651e00918a803e39c135eaeeeda9d972b77336fc8032daf7a068d946b"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/recipe_filters.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/recipe_filters.py",
+      "sha256": "7a5bf6afab4cada57bb7093b517351c2ebeeb586c1524ae4b5a0d265fdc26792"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/chart_harness/reporting_titles.py",
+      "repository_path": "plugins/_shared/vendor/modules/chart_harness/reporting_titles.py",
+      "sha256": "b60bd2d5d20ed1f05fb1ce41c2a6807b139fc147789b22dde516de72f5fd830f"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/__init__.py",
+      "sha256": "69b6ac2411dd762e4bcf7e0a4040dc61a0deadebfd03515245824eaf8c877688"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/adjust_position.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/adjust_position.py",
+      "sha256": "751380954c931e84368ac95bce9398f7f15638bb98f80d6a9a78366c17541d83"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/chart_helpers.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/chart_helpers.py",
+      "sha256": "c9b4a573bbc69a3797e42e53824415eecaa7bbb8f57347d8ead8f40e65936cf5"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/chart_primitives.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/chart_primitives.py",
+      "sha256": "b7d556e52c4d251f6cf5ffce438d2ae77d53fc8442f734134d7581c17e0502d6"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/draw_charts_utils.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/draw_charts_utils.py",
+      "sha256": "739fc6ae318b25ef6834a4f25a0c15510fd52cc280c02bd8e8e832c13156c4f8"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/draw_multitier.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/draw_multitier.py",
+      "sha256": "c76b8f9d8baced6008b723540ffa680ef188002a759c3f2e6c459d83b8087373"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/draw_waterfall.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/draw_waterfall.py",
+      "sha256": "cc502a8093d0241a8a2c0b5a3fc5bee6f8eed5b51532c1ead6b5f01be71db1f2"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/legacy_draw_waterfall.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/legacy_draw_waterfall.py",
+      "sha256": "6a14e69341f1b1e37bb65fc0b090bfac72ac1951e05a0611507deb739a98ce14"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/make_titles.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/make_titles.py",
+      "sha256": "68f8e95febbe5f9b59ac77d58c943410d97d5f2010d53651ffed1277046710dc"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/plot_charts.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/plot_charts.py",
+      "sha256": "90c05ad9535fd2fd9747d108bdaf93f21c78262b865bbb68f0bc4dad38d54fd8"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/polars_helpers.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/polars_helpers.py",
+      "sha256": "2e1fc52cbc2a85c9516ae1c090a832c91e7aa4817dfe6222736c4d6e4d42fd0d"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/prepare_charts.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/prepare_charts.py",
+      "sha256": "ed24ed55fd080dfd7cf0f78e89bde614eda97052928b4f8004a813d0047db729"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/setup_fig.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/setup_fig.py",
+      "sha256": "b9c0664e65ca9eb8ca5855eb26863bd57e8905124fadbc93b8f73905f2ceb2bc"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/update_layouts.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/update_layouts.py",
+      "sha256": "92a28c57fe5544c1a6ad64115d6da94056e36372ecb48eb9fc986d4cacfa6d12"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/charting/upset_helpers.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/charting/upset_helpers.py",
+      "sha256": "c7ef21bbe353280653a5983f5a972a6f406aecbd5a7c024b0bec2a7088447b3f"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/data/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/data/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/data/common_data_utils.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/data/common_data_utils.py",
+      "sha256": "3381fcbd8f2dfb14462605fec885fba4885d9ebcf456e8722df99af21ee4d96d"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/data/misc_charts_data_prep.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/data/misc_charts_data_prep.py",
+      "sha256": "b7d10cf0b3836c50a99e256ae8a8630ecb6ca786cf6cf6be06e189f04ffbf463"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/data/multidimensional_charts_prep.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/data/multidimensional_charts_prep.py",
+      "sha256": "6935e57d40d71a8ee4723955bded6c5153188140f3d031ee7c08b307435aa784"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/data/waterfall_data_prep.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/data/waterfall_data_prep.py",
+      "sha256": "ec2b6bf7b4193eeb6ba25a6ee6789aa25cb163a730322e787d53bc190421a7a6"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/core/ui_adapter.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/core/ui_adapter.py",
+      "sha256": "76b429c2939fe46aea274d84d3100d74ce491b4efef77f5daed0c88a943d3182"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/core/widget_state.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/core/widget_state.py",
+      "sha256": "981c40c7692385a2759846de4c95e98e2d9966ac956e33dce4346d62047c1538"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/layout_data.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/layout_data.py",
+      "sha256": "87cf31d1387ad2d7845aa9ecc212feae1bfc6206cc50db9b67b8b72d63574523"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/layout_helpers.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/layout_helpers.py",
+      "sha256": "62b1dae0b4881d9194d4cd10e339417a161b159b76d78d8bde0b1d3efd13c3a4"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/memoization.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/memoization.py",
+      "sha256": "ead4a46d07b43ea84aba55fe0555ee41408e2ba142c0557f0f8d1be91e931ba3"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/session_manager.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/session_manager.py",
+      "sha256": "2e2d8bcc45065741009c314209239be57270455203d22176784dd084e49910f4"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/set_up_widgets.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/set_up_widgets.py",
+      "sha256": "d12359ef6f67d0be4908a5e849a89935e6aee580897442609f8f71a29d78a5e5"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/layout/widgets.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/layout/widgets.py",
+      "sha256": "a4c5d79b664bc303080e083850ac0941ce66a0527e9e5858fec66e21aef0f6c0"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/llm/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/llm/__init__.py",
+      "sha256": "e416198937f477b64f1d2857ae2c442ae0fd5142def500be486a160c2a3d5340"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/llm/confirm_plots.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/llm/confirm_plots.py",
+      "sha256": "8d14b250f446893c6266d689f26a40ed8c275ab96fcd2b474a49cd6b60e6bacb"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/llm/interpret_plots.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/llm/interpret_plots.py",
+      "sha256": "e31c4f09ee2b1881fe9b5bbb2105da7a903714e70b469e34e4f61752e0ea90d3"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/plan/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/plan/__init__.py",
+      "sha256": "8ca432b4acd188c61581e22655212589661f36359f6f409ea6b9faca4c018a20"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/plan/plan_dataset.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/plan/plan_dataset.py",
+      "sha256": "b45b85a3af41ac3496cdd4ca165ebe529e7bd31c312abaaaf3bc96af4cbc752f"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/config.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/config.py",
+      "sha256": "d139c54ec4880ef91db4674dd0d093cb795c62072a5e89a1a8a0246af3f1fc33"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/error_messages.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/error_messages.py",
+      "sha256": "87828173f92a862ef37a88181d813ed39a3c1255ff2a6e5ab4a6d6d63d926315"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/helpers.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/helpers.py",
+      "sha256": "43c2c6083ad0635ab84664c7c6c8402780363aa718ea239e694785cf98ce29f7"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/logging_utils.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/logging_utils.py",
+      "sha256": "e78581502d65120f8a76560769a460702817206fbaf6226f95fdac94eb8e3f84"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/notifier.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/notifier.py",
+      "sha256": "5bcd244b4d319381b9cf67e8f1d6d7a9764891c32fd589801dd1ae5d98846b08"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/session_context.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/session_context.py",
+      "sha256": "93399e3e3c8ae812269304f6c3d5325f524baf3f8ce25835391108d158445b3c"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/ui_notifier.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/ui_notifier.py",
+      "sha256": "918c62f85ff5ddd16337c608d8325b68a356573c54492ac0607a5316b09239cf"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utilities/utils.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utilities/utils.py",
+      "sha256": "568d9bbc77d8c01afcb868f3816d3839d346f60121be148acca1bd5b8c5a4900"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utils/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utils/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/utils/polars_excel_writer.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/utils/polars_excel_writer.py",
+      "sha256": "c70e202ca92489ee3411bddfa266a786c6838b6b7a9b512c80212f07c737def4"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/variance/__init__.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/variance/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/variance/index_handling.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/variance/index_handling.py",
+      "sha256": "d7e578c8dd5cf2a008469d6aee132ca19d0fc416c19761f9f9af4cf9a61ac449"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/variance/variance_decomposition.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/variance/variance_decomposition.py",
+      "sha256": "769cbf8b2096398fa1d9df6ad045f26085b3b0e331cc71f77d2ddde3ded373fe"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/variance/variance_formulas.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/variance/variance_formulas.py",
+      "sha256": "af95c36e55a861585a1e8e59b2a247f2b1a11cdc747c5a9d561a63b0a7f3e947"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/variance/variance_orchestrator.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/variance/variance_orchestrator.py",
+      "sha256": "5a1176d5a5ed9a4e97b1d7bd953de68f57a7fde2170480fbd4dfffa5bd92b5c9"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/variance/variance_utils.py",
+      "repository_path": "plugins/_shared/variance/vendor/modules/variance/variance_utils.py",
+      "sha256": "60b50dd739ff11f1d1b098fcc3c340974ed0825033df0a204fa54980fc6667cf"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "repository_path": "plugins/vera/scripts/check_dependencies.py",
+      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+    },
+    {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
       "sha256": "fcbbd189b9f4eb8fa0d40e003f822a38e2fa4604d5ecb1836cf90bbe83684392"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/january-february.csv",
+      "sha256": "0aa68a029ad534364391430746c9405b19981d06eb469def150ea5d83dd1e951",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/january-march.csv",
+      "sha256": "d4629330913ec58be1cd73f760aaf0d81930a660ccfa94e6095c5920a8a673fc",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "ab66aaae1d247597be84b80ec5a2525987aa509ad4f472d753ca7c648e7ddf65",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "ab66aaae1d247597be84b80ec5a2525987aa509ad4f472d753ca7c648e7ddf65",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "098a204bf35089352b8a7d480abd9d0b769fbf750a07e126a0ebf0dcda2febf5",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "098a204bf35089352b8a7d480abd9d0b769fbf750a07e126a0ebf0dcda2febf5",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "abb948836727590cddda1680db053a4a900a8bb9bec57e80b53b5249e7066836",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "abb948836727590cddda1680db053a4a900a8bb9bec57e80b53b5249e7066836",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "42988ff87cd3a3867ed77f419c377c719d754f58fbc19a9f4d359e8a118a2298",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "42988ff87cd3a3867ed77f419c377c719d754f58fbc19a9f4d359e8a118a2298",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "923313d09a12a14014ddd4866540c58eddf9917de2b290a9088915b9785420b3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "923313d09a12a14014ddd4866540c58eddf9917de2b290a9088915b9785420b3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Spiegare uno scostamento senza inventarne la causa",
-      "goal": "Seguire un ponte tra due periodi e verificare che i contributi spieghino la differenza osservata.",
-      "scenario": "Nel caso fittizio il prodotto A passa da 100 unità a 10 EUR a 120 unità a 11 EUR. Il ricavo cresce da 1.000 a 1.320 EUR. Per illustrare il ponte usiamo prima l'effetto quantità al prezzo iniziale, poi il prezzo sulle quantità finali.",
-      "request": "Vera, spiegami il passaggio da 1.000 a 1.320 EUR e fammi vedere i contributi.",
-      "scope": "Ponte elementare di un prodotto. Il workflow reale esegue le alternative e i drilldown previsti; l'ordine di decomposizione deve rimanere quello calcolato e documentato.",
-      "input_columns": [
-        "Periodo fittizio",
-        "Quantità",
-        "Prezzo · ricavo"
+      "title": "Confrontare consuntivo e budget con Vera",
+      "goal": "Imparare a fornire i dati, avviare il confronto e leggere un report che mostra quanto e dove il risultato si discosta dal budget.",
+      "scenario": "Officina Arco vuole confrontare il risultato operativo di gennaio e febbraio con il budget. Ha un file con ricavi e costi per mese e una nota che ne spiega il significato.",
+      "scope": "Primo utilizzo dell’analisi degli scostamenti: una società, due mesi, EUR. Confrontiamo importi; il file non contiene quantità o prove delle cause commerciali.",
+      "inputs": "Apri january-february.csv e context-it.md. Individua Scenario (PL budget, AC consuntivo), Month, Category e Amount. La nota chiarisce segni e totali di controllo. Vera prepara una copia nel fascicolo didattico.",
+      "request": "Vera, confronta il risultato operativo effettivo di gennaio e febbraio 2026 con il budget di Officina Arco, in euro. Mostrami il report e spiegami quali voci contribuiscono allo scostamento.",
+      "steps": [
+        "Nella chat di lavoro Vera legge il file e propone il confronto. La chat vocale ti aiuta a verificare mesi, budget di partenza, consuntivo, valuta e significato dei costi negativi prima del calcolo.",
+        "La procedura corrente calcola gli scostamenti e genera tabelle, grafici e bozza del report. Mentre lavora, la voce spiega il percorso e risponde alle domande senza anticipare risultati non ancora prodotti.",
+        "Apri il report e il grafico principale effettivi. Parti dal risultato complessivo, poi leggi il contributo di ricavi e costi e un dettaglio mensile. Vera collega ciascun commento ai dati calcolati e salva le decisioni di revisione effettive."
       ],
-      "input_rows": [
-        [
-          "Base",
-          "100",
-          "10 EUR · 1.000 EUR"
-        ],
-        [
-          "Confronto",
-          "120",
-          "11 EUR · 1.320 EUR"
-        ]
+      "deliverables": [
+        "Bozza Word del report e grafici per leggere il passaggio dal budget al consuntivo.",
+        "Tabelle degli scostamenti e controlli di riconciliazione per risalire agli importi sorgenti."
       ],
-      "basis": "V1 contiene quantità e ricavi nei due periodi. Il ponte illustrato esplicita l'ordine: quantità al prezzo base, poi prezzo sulle quantità di confronto.",
-      "method": [
-        "Ispeziona dati e confronto, rivedendo periodi, importi, unità, dimensioni e granularità dalle fonti.",
-        "Esegui analisi delle cause, alternative e drilldown standard. Leggi i contributi e la riconciliazione senza cambiare la sequenza dei risultati calcolati.",
-        "Mostra waterfall, tabelle e bozza di commento. Distingui decomposizione numerica, interpretazione commerciale e ipotesi che richiedono altre prove."
+      "review": "Controlla perimetro e mesi, totali iniziale e finale, variazione in EUR e percentuale dove significativa. Un costo negativo richiede di leggere il significato del segno. Il calcolo individua contributi, ma non prova da solo una causa commerciale. Il report resta una bozza fino alla normale revisione professionale.",
+      "checkpoints": [
+        "Prima del calcolo, indica quali valori stai confrontando.",
+        "Sul risultato, trova una voce che contribuisce allo scostamento e il dato che la sostiene."
       ],
-      "result_title": "+320 EUR, riconciliati in due contributi",
-      "conclusion": "Nell'ordine illustrato, +20 unità a 10 EUR producono +200 EUR; +1 EUR su 120 unità produce +120 EUR. I contributi sommano allo scostamento di +320 EUR.",
-      "output_columns": [
-        "Passaggio",
-        "Contributo",
-        "Ricavo dopo il passaggio"
-      ],
-      "output_rows": [
-        [
-          "Base",
-          "—",
-          "1.000 EUR"
-        ],
-        [
-          "Quantità",
-          "+200 EUR",
-          "1.200 EUR"
-        ],
-        [
-          "Prezzo",
-          "+120 EUR",
-          "1.320 EUR"
-        ]
-      ],
-      "check": "Un altro ordine può distribuire diversamente l'interazione. Il ponte prova la scomposizione aritmetica, non che una campagna abbia causato l'aumento delle unità.",
-      "question": "Possiamo dire che il marketing ha generato i 200 EUR di volume?",
-      "answer": "Non da V1. Il contributo quantità è calcolato; la causa commerciale richiede evidenze ulteriori. Il commento deve distinguerli.",
-      "practice": "Porta il prezzo di confronto a 9 EUR e verifica come il ponte combina volume favorevole e prezzo sfavorevole.",
-      "next": "Seleziona due periodi confrontabili e i dati granulari disponibili; lascia che il workflow mostri le alternative sostenute dalle fonti."
+      "practice": "Usa january-march.csv per ripetere il confronto da gennaio a marzo. Chiedi un nuovo risultato mantenendo quello dei primi due mesi. Individua cosa è cambiato nel totale e in una voce; fatti aiutare soltanto dove serve.",
+      "success": "Sai scegliere il file e il confronto, trovare il report, leggere uno scostamento e ripetere l’analisi quando arriva un altro mese.",
+      "repeat": "Con un tuo file, indica società, periodo, budget o altro termine di confronto e valuta. Vera chiarisce le colonne ambigue, produce i risultati e ti guida nella revisione."
     },
     "en": {
-      "title": "Follow the bridge from one period to the next",
-      "goal": "Explain a measured difference through contributions that reconcile to the observed change.",
-      "scenario": "Fictional product A moves from 100 units at EUR 10 to 120 units at EUR 11. Revenue rises from EUR 1,000 to EUR 1,320. This bridge applies volume at the initial price first, then price at final volume.",
-      "request": "Vera, explain the move from EUR 1,000 to EUR 1,320 and show the contributions.",
-      "scope": "A one-product bridge. The real workflow runs its supported alternatives and drilldowns; retain the calculated, documented decomposition order.",
-      "input_columns": [
-        "Fictional period",
-        "Units",
-        "Price · revenue"
+      "title": "Compare actual results with budget using Vera",
+      "goal": "Learn which data to provide, how to start the comparison and how to read a report showing the size and location of differences from budget.",
+      "scenario": "Officina Arco wants to compare January and February operating profit with budget. It has monthly revenue and cost data and a note explaining the figures.",
+      "scope": "First use of variance analysis: one company, two months, EUR. We compare amounts; the file contains no quantities or evidence of commercial causes.",
+      "inputs": "Open january-february.csv and context-en.md. Find Scenario (PL budget, AC actual), Month, Category and Amount. The note explains signs and control totals. Vera stages a copy in the teaching case.",
+      "request": "Vera, compare Officina Arco’s actual operating profit for January and February 2026 with budget, in euros. Show me the report and explain which categories contribute to the difference.",
+      "steps": [
+        "In the working chat, Vera reads the file and proposes the comparison. The voice chat helps you check months, starting budget, actual results, currency and negative cost signs before calculation.",
+        "The current workflow calculates variances and creates tables, charts and a report draft. While it runs, the voice explains the process and answers questions without anticipating results that have not been produced.",
+        "Open the actual report and main chart. Start with the overall result, then read revenue and cost contributions and one monthly detail. Vera connects each comment to calculated data and saves actual review decisions."
       ],
-      "input_rows": [
-        [
-          "Base",
-          "100",
-          "EUR 10 · EUR 1,000"
-        ],
-        [
-          "Comparison",
-          "120",
-          "EUR 11 · EUR 1,320"
-        ]
+      "deliverables": [
+        "Word report draft and charts showing the movement from budget to actual.",
+        "Variance tables and reconciliation controls for tracing amounts to their sources."
       ],
-      "basis": "V1 supplies volume and revenue for both periods. The illustrated order is volume at base price, then price at comparison volume.",
-      "method": [
-        "Inspect and review periods, amounts, units, dimensions and calculation grain against the sources.",
-        "Run standard root-cause analysis, alternatives and drilldowns. Read contributions and reconciliation without changing the calculated sequence.",
-        "Show the waterfall, tables and commentary draft. Separate numeric decomposition from commercial interpretation and hypotheses needing evidence."
+      "review": "Check scope and months, starting and ending totals, change in EUR and percentage where meaningful. Read the meaning of negative cost signs. Calculation identifies contributions but does not itself prove commercial causes. The report remains a draft until normal professional review.",
+      "checkpoints": [
+        "Before calculation, identify the values being compared.",
+        "In the result, find one contributing category and its supporting figure."
       ],
-      "result_title": "+EUR 320 explained by two contributions",
-      "conclusion": "In this order, 20 extra units at EUR 10 add EUR 200; EUR 1 on 120 units adds EUR 120. Together they reconcile to EUR 320.",
-      "output_columns": [
-        "Step",
-        "Contribution",
-        "Revenue after step"
-      ],
-      "output_rows": [
-        [
-          "Base",
-          "—",
-          "EUR 1,000"
-        ],
-        [
-          "Volume",
-          "+EUR 200",
-          "EUR 1,200"
-        ],
-        [
-          "Price",
-          "+EUR 120",
-          "EUR 1,320"
-        ]
-      ],
-      "check": "Another order can allocate the interaction differently. The bridge establishes arithmetic, not that a campaign caused the volume increase.",
-      "question": "Can we attribute the EUR 200 volume contribution to marketing?",
-      "answer": "Not from V1. The volume contribution is calculated; its commercial cause requires separate evidence and should be described accordingly.",
-      "practice": "Reduce the comparison price to EUR 9 and inspect favorable volume against unfavorable price.",
-      "next": "Select comparable periods and available granular data; let the workflow expose the alternatives supported by the sources."
+      "practice": "Use january-march.csv to repeat the comparison for January through March. Request a new result while keeping the two-month version. Identify the change in the total and one category; ask for help only where needed.",
+      "success": "You can choose the file and comparison, find the report, read a variance and repeat the analysis when another month arrives.",
+      "repeat": "With your own file, state company, period, budget or other comparison basis and currency. Vera clarifies ambiguous columns, produces the results and guides your review."
     },
     "fr": {
-      "title": "Suivre le pont entre deux périodes",
-      "goal": "Expliquer un écart par des contributions qui se réconcilient au changement observé.",
-      "scenario": "Le produit fictif A passe de 100 unités à 10 EUR à 120 unités à 11 EUR. Les ventes montent de 1 000 à 1 320 EUR. Le pont applique d'abord le volume au prix initial, puis le prix au volume final.",
-      "request": "Vera, explique le passage de 1 000 à 1 320 EUR et montre les contributions.",
-      "scope": "Pont élémentaire d'un produit. Le workflow réel exécute ses alternatives et approfondissements ; conserve l'ordre de décomposition calculé et documenté.",
-      "input_columns": [
-        "Période fictive",
-        "Unités",
-        "Prix · ventes"
+      "title": "Comparer le réalisé au budget avec Vera",
+      "goal": "Apprendre quels fichiers fournir, comment lancer la comparaison et lire un rapport montrant le montant et les composantes des écarts au budget.",
+      "scenario": "Officina Arco veut comparer son résultat opérationnel de janvier et février au budget. Elle dispose des produits et charges mensuels et d’une note expliquant les chiffres.",
+      "scope": "Première utilisation de l’analyse des écarts : une entreprise, deux mois, EUR. Nous comparons des montants ; le fichier ne fournit ni quantités ni preuves de causes commerciales.",
+      "inputs": "Ouvrez january-february.csv et context-fr.md. Repérez Scenario (PL budget, AC réalisé), Month, Category et Amount. La note explique signes et totaux de contrôle. Vera prépare une copie dans le dossier pédagogique.",
+      "request": "Vera, compare le résultat opérationnel réel d’Officina Arco de janvier et février 2026 au budget, en euros. Montre-moi le rapport et explique les rubriques qui contribuent à l’écart.",
+      "steps": [
+        "Dans la conversation de travail, Vera lit le fichier et propose la comparaison. La voix vous aide à vérifier mois, budget de départ, réalisé, devise et signe négatif des charges avant le calcul.",
+        "La procédure courante calcule les écarts et produit tableaux, graphiques et brouillon du rapport. Pendant l’exécution, la voix explique le parcours et répond sans anticiper des résultats non encore produits.",
+        "Ouvrez le rapport et le graphique principal effectivement créés. Commencez par le résultat global, puis les contributions des produits et charges et un détail mensuel. Vera relie ses commentaires aux données calculées et enregistre les décisions de revue effectives."
       ],
-      "input_rows": [
-        [
-          "Base",
-          "100",
-          "10 EUR · 1 000 EUR"
-        ],
-        [
-          "Comparaison",
-          "120",
-          "11 EUR · 1 320 EUR"
-        ]
+      "deliverables": [
+        "Brouillon Word du rapport et graphiques montrant le passage du budget au réalisé.",
+        "Tableaux des écarts et contrôles de rapprochement pour retrouver les montants sources."
       ],
-      "basis": "V1 fournit unités et ventes des deux périodes. L'ordre illustré est volume au prix de base, puis prix au volume comparé.",
-      "method": [
-        "Examine périodes, montants, unités, dimensions et granularité contre les sources.",
-        "Exécute l'analyse standard, ses alternatives et approfondissements. Lis contributions et rapprochement sans changer la séquence calculée.",
-        "Présente waterfall, tableaux et commentaire. Sépare décomposition numérique, interprétation commerciale et hypothèses nécessitant d'autres preuves."
+      "review": "Vérifiez périmètre et mois, totaux de départ et d’arrivée, variation en EUR et en pourcentage lorsque pertinente. Interprétez le signe négatif des charges. Le calcul identifie des contributions sans prouver les causes commerciales. Le rapport reste un brouillon jusqu’à la revue professionnelle habituelle.",
+      "checkpoints": [
+        "Avant le calcul, indiquez quelles valeurs sont comparées.",
+        "Dans le résultat, trouvez une rubrique contributrice et le chiffre qui la justifie."
       ],
-      "result_title": "+320 EUR expliqués par deux contributions",
-      "conclusion": "Dans cet ordre, 20 unités à 10 EUR ajoutent 200 EUR, puis 1 EUR sur 120 unités ajoute 120 EUR. La somme explique les 320 EUR.",
-      "output_columns": [
-        "Étape",
-        "Contribution",
-        "Ventes après étape"
-      ],
-      "output_rows": [
-        [
-          "Base",
-          "—",
-          "1 000 EUR"
-        ],
-        [
-          "Volume",
-          "+200 EUR",
-          "1 200 EUR"
-        ],
-        [
-          "Prix",
-          "+120 EUR",
-          "1 320 EUR"
-        ]
-      ],
-      "check": "Un autre ordre peut répartir différemment l'interaction. Le pont établit une décomposition, pas l'effet causal d'une campagne.",
-      "question": "Peut-on attribuer les 200 EUR de volume au marketing ?",
-      "answer": "Pas à partir de V1. La contribution volume est calculée ; sa cause commerciale demande des preuves distinctes.",
-      "practice": "Ramène le prix comparé à 9 EUR et examine volume favorable et prix défavorable.",
-      "next": "Sélectionne des périodes comparables et les données granulaires disponibles ; laisse le workflow montrer les alternatives étayées."
+      "practice": "Utilisez january-march.csv pour refaire la comparaison de janvier à mars. Demandez un nouveau résultat en conservant la version sur deux mois. Repérez ce qui change dans le total et une rubrique ; demandez de l’aide seulement si nécessaire.",
+      "success": "Vous savez choisir fichier et comparaison, retrouver le rapport, lire un écart et refaire l’analyse à l’arrivée d’un nouveau mois.",
+      "repeat": "Avec votre fichier, indiquez entreprise, période, budget ou autre base de comparaison et devise. Vera clarifie les colonnes ambiguës, produit les résultats et accompagne la revue."
     },
     "de": {
-      "title": "Die Brücke zwischen zwei Perioden nachvollziehen",
-      "goal": "Eine gemessene Differenz durch Beiträge erklären, die zur Gesamtveränderung passen.",
-      "scenario": "Das fiktive Produkt A steigt von 100 Einheiten zu EUR 10 auf 120 Einheiten zu EUR 11. Umsatz: EUR 1.000 auf EUR 1.320. Die Brücke berechnet zuerst Menge zum Ausgangspreis, danach Preis bei Endmenge.",
-      "request": "Vera, erkläre den Weg von EUR 1.000 auf EUR 1.320 und zeige die Beiträge.",
-      "scope": "Brücke für ein Produkt. Der reale Workflow berechnet unterstützte Alternativen und Vertiefungen; behalte seine dokumentierte Zerlegungsreihenfolge bei.",
-      "input_columns": [
-        "Fiktive Periode",
-        "Einheiten",
-        "Preis · Umsatz"
+      "title": "Ist und Budget mit Vera vergleichen",
+      "goal": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
+      "scenario": "Officina Arco möchte das operative Ergebnis von Januar und Februar mit dem Budget vergleichen. Monatliche Erlöse und Kosten sowie eine erläuternde Notiz liegen vor.",
+      "scope": "Erster Einsatz der Abweichungsanalyse: ein Unternehmen, zwei Monate, EUR. Wir vergleichen Beträge; Mengen und Nachweise wirtschaftlicher Ursachen fehlen.",
+      "inputs": "Öffnen Sie january-february.csv und context-de.md. Suchen Sie Scenario (PL Budget, AC Ist), Month, Category und Amount. Die Notiz erklärt Vorzeichen und Kontrollsummen. Vera legt eine Kopie in der Übungsakte ab.",
+      "request": "Vera, vergleiche das tatsächliche operative Ergebnis von Officina Arco für Januar und Februar 2026 mit dem Budget in Euro. Zeige mir den Bericht und erkläre, welche Positionen zur Abweichung beitragen.",
+      "steps": [
+        "Im Arbeitschat liest Vera die Datei und schlägt den Vergleich vor. Der Sprachchat hilft, Monate, Ausgangsbudget, Ist, Währung und negative Kostenvorzeichen vor der Berechnung zu prüfen.",
+        "Der aktuelle Ablauf berechnet Abweichungen und erstellt Tabellen, Diagramme und einen Berichtsentwurf. Währenddessen erklärt die Stimme den Ablauf und beantwortet Fragen, ohne noch nicht erzeugte Ergebnisse vorwegzunehmen.",
+        "Öffnen Sie den tatsächlich erstellten Bericht und das Hauptdiagramm. Beginnen Sie beim Gesamtergebnis, betrachten Sie dann Erlös- und Kostenbeiträge und ein Monatsdetail. Vera verbindet Kommentare mit berechneten Daten und speichert tatsächliche Prüfentscheidungen."
       ],
-      "input_rows": [
-        [
-          "Basis",
-          "100",
-          "EUR 10 · EUR 1.000"
-        ],
-        [
-          "Vergleich",
-          "120",
-          "EUR 11 · EUR 1.320"
-        ]
+      "deliverables": [
+        "Word-Berichtsentwurf und Diagramme zum Übergang vom Budget zum Ist.",
+        "Abweichungstabellen und Abstimmungskontrollen zur Rückverfolgung der Beträge."
       ],
-      "basis": "V1 liefert Menge und Umsatz beider Perioden. Gezeigt wird Menge zum Basispreis, dann Preis bei Vergleichsmenge.",
-      "method": [
-        "Prüfe Perioden, Beträge, Einheiten, Dimensionen und Berechnungsebene anhand der Quellen.",
-        "Führe reguläre Ursachenanalyse, Alternativen und Vertiefungen aus. Lies Beiträge und Abstimmung ohne Änderung der berechneten Reihenfolge.",
-        "Zeige Wasserfalldiagramm, Tabellen und Kommentarentwurf. Trenne rechnerische Zerlegung von geschäftlicher Interpretation und belegbedürftigen Hypothesen."
+      "review": "Prüfen Sie Umfang und Monate, Anfangs- und Endsumme, Änderung in EUR und sinnvolle Prozentangaben. Beachten Sie die Bedeutung negativer Kostenvorzeichen. Die Berechnung zeigt Beiträge, beweist aber keine wirtschaftlichen Ursachen. Der Bericht bleibt bis zur üblichen fachlichen Prüfung ein Entwurf.",
+      "checkpoints": [
+        "Benennen Sie vor der Berechnung die verglichenen Werte.",
+        "Finden Sie im Ergebnis eine beitragende Position und den zugehörigen Betrag."
       ],
-      "result_title": "+EUR 320 durch zwei Beiträge erklärt",
-      "conclusion": "In dieser Reihenfolge bringen 20 zusätzliche Einheiten zu EUR 10 genau EUR 200; EUR 1 auf 120 Einheiten bringt EUR 120. Zusammen ergeben sie EUR 320.",
-      "output_columns": [
-        "Schritt",
-        "Beitrag",
-        "Umsatz nach Schritt"
-      ],
-      "output_rows": [
-        [
-          "Basis",
-          "—",
-          "EUR 1.000"
-        ],
-        [
-          "Menge",
-          "+EUR 200",
-          "EUR 1.200"
-        ],
-        [
-          "Preis",
-          "+EUR 120",
-          "EUR 1.320"
-        ]
-      ],
-      "check": "Eine andere Reihenfolge kann den Interaktionseffekt anders verteilen. Die Brücke belegt Rechenwege, nicht dass eine Kampagne das Mengenwachstum verursachte.",
-      "question": "Können wir den Mengenbeitrag von EUR 200 dem Marketing zuschreiben?",
-      "answer": "Nicht aus V1. Der Mengenbeitrag ist berechnet; seine geschäftliche Ursache benötigt separate Belege und ist entsprechend zu kennzeichnen.",
-      "practice": "Senke den Vergleichspreis auf EUR 9 und prüfe günstigen Mengen- gegen ungünstigen Preiseffekt.",
-      "next": "Wähle vergleichbare Perioden und verfügbare Detaildaten; der Workflow zeigt die durch Quellen gestützten Alternativen."
+      "practice": "Wiederholen Sie mit january-march.csv den Vergleich für Januar bis März. Fordern Sie ein neues Ergebnis an und behalten Sie die Zweimonatsfassung. Finden Sie die Veränderung der Gesamtsumme und einer Position; fragen Sie nur bei Bedarf nach Hilfe.",
+      "success": "Sie können Datei und Vergleich wählen, den Bericht finden, eine Abweichung lesen und die Analyse um einen neuen Monat erweitern.",
+      "repeat": "Nennen Sie bei eigenen Dateien Unternehmen, Zeitraum, Budget oder andere Vergleichsbasis und Währung. Vera klärt mehrdeutige Spalten, erstellt Ergebnisse und begleitet die Prüfung."
     },
     "es": {
-      "title": "Seguir el puente entre dos periodos",
-      "goal": "Explicar una diferencia medida mediante contribuciones que concilian con la variación observada.",
-      "scenario": "El producto ficticio A pasa de 100 unidades a EUR 10 a 120 unidades a EUR 11. Los ingresos suben de EUR 1.000 a EUR 1.320. El puente aplica primero volumen al precio inicial y después precio al volumen final.",
-      "request": "Vera, explica el paso de EUR 1.000 a EUR 1.320 y muestra las contribuciones.",
-      "scope": "Puente de un producto. El workflow real ejecuta alternativas y desgloses compatibles; conserva el orden de descomposición calculado y documentado.",
-      "input_columns": [
-        "Periodo ficticio",
-        "Unidades",
-        "Precio · ingresos"
+      "title": "Comparar resultados reales y presupuesto con Vera",
+      "goal": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones.",
+      "scenario": "Officina Arco quiere comparar su resultado operativo de enero y febrero con el presupuesto. Tiene ingresos y costes mensuales y una nota que explica las cifras.",
+      "scope": "Primer uso del análisis de desviaciones: una empresa, dos meses, EUR. Comparamos importes; el archivo no contiene cantidades ni pruebas de causas comerciales.",
+      "inputs": "Abre january-february.csv y context-es.md. Localiza Scenario (PL presupuesto, AC real), Month, Category y Amount. La nota explica signos y totales de control. Vera prepara una copia en el expediente didáctico.",
+      "request": "Vera, compara el resultado operativo real de Officina Arco de enero y febrero de 2026 con el presupuesto, en euros. Muéstrame el informe y explica qué partidas contribuyen a la desviación.",
+      "steps": [
+        "En la conversación de trabajo, Vera lee el archivo y propone la comparación. La voz ayuda a comprobar meses, presupuesto inicial, real, moneda y signos negativos de costes antes del cálculo.",
+        "El flujo actual calcula las desviaciones y genera tablas, gráficos y un borrador del informe. Mientras se ejecuta, la voz explica el proceso y responde sin anticipar resultados aún no producidos.",
+        "Abre el informe y el gráfico principal realmente generados. Empieza por el resultado global, después los aportes de ingresos y costes y un detalle mensual. Vera vincula sus comentarios con datos calculados y guarda las decisiones reales de revisión."
       ],
-      "input_rows": [
-        [
-          "Base",
-          "100",
-          "EUR 10 · EUR 1.000"
-        ],
-        [
-          "Comparación",
-          "120",
-          "EUR 11 · EUR 1.320"
-        ]
+      "deliverables": [
+        "Borrador Word del informe y gráficos que muestran el paso del presupuesto al real.",
+        "Tablas de desviaciones y controles de conciliación para rastrear los importes de origen."
       ],
-      "basis": "V1 aporta volumen e ingresos de ambos periodos. El orden ilustrado es volumen a precio base y luego precio a volumen comparativo.",
-      "method": [
-        "Inspecciona y revisa periodos, importes, unidades, dimensiones y nivel de cálculo contra las fuentes.",
-        "Ejecuta análisis habitual de causas, alternativas y desgloses. Lee contribuciones y conciliación sin cambiar la secuencia calculada.",
-        "Muestra cascada, tablas y comentario preliminar. Separa descomposición numérica de interpretación comercial e hipótesis que requieren pruebas."
+      "review": "Comprueba alcance y meses, totales inicial y final, variación en EUR y porcentaje cuando tenga sentido. Interpreta el signo negativo de los costes. El cálculo identifica aportes, pero no demuestra por sí solo causas comerciales. El informe sigue siendo borrador hasta la revisión profesional habitual.",
+      "checkpoints": [
+        "Antes del cálculo, indica qué valores se comparan.",
+        "En el resultado, encuentra una partida que contribuya y la cifra que la respalda."
       ],
-      "result_title": "+EUR 320 explicados por dos contribuciones",
-      "conclusion": "En este orden, 20 unidades adicionales a EUR 10 aportan EUR 200; EUR 1 sobre 120 unidades aporta EUR 120. Juntas concilian EUR 320.",
-      "output_columns": [
-        "Paso",
-        "Contribución",
-        "Ingresos tras el paso"
-      ],
-      "output_rows": [
-        [
-          "Base",
-          "—",
-          "EUR 1.000"
-        ],
-        [
-          "Volumen",
-          "+EUR 200",
-          "EUR 1.200"
-        ],
-        [
-          "Precio",
-          "+EUR 120",
-          "EUR 1.320"
-        ]
-      ],
-      "check": "Otro orden puede repartir la interacción de otra forma. El puente demuestra aritmética, no que una campaña causara el volumen adicional.",
-      "question": "¿Podemos atribuir a marketing los EUR 200 de volumen?",
-      "answer": "No a partir de V1. La contribución está calculada; su causa comercial necesita evidencia independiente y debe describirse como tal.",
-      "practice": "Reduce el precio comparativo a EUR 9 y examina volumen favorable frente a precio desfavorable.",
-      "next": "Selecciona periodos comparables y datos detallados disponibles; el workflow expone las alternativas respaldadas por las fuentes."
+      "practice": "Usa january-march.csv para repetir la comparación de enero a marzo. Solicita un nuevo resultado conservando la versión de dos meses. Identifica qué cambia en el total y una partida; pide ayuda solo donde haga falta.",
+      "success": "Sabes elegir archivo y comparación, encontrar el informe, leer una desviación y repetir el análisis cuando llegue otro mes.",
+      "repeat": "Con tu archivo, indica empresa, período, presupuesto u otra base de comparación y moneda. Vera aclara columnas ambiguas, produce resultados y acompaña la revisión."
     }
   }
 }

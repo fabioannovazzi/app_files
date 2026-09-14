@@ -7,19 +7,12 @@ selected skill, inspect input meaning, review mappings, run its commands and
 explain the real outputs. Do not claim an assurance review succeeded merely
 because a command returned zero.
 
-Copy the relevant files from `<vera-root>/assets/onboarding/` below the active
-lesson directory before use. Read the source files with the user. For practice,
-let the user choose a change and write a separate source copy based on that
-request. Other catalog workflows can use small synthetic inputs authored for
-the professional's goal; inspect their current input and host contracts first.
-Do not replace a complex capability with a fake local approximation to finish
-onboarding. Resolve the requirement and resume the lesson.
-
-| Starter | Possible lesson | Example natural request / professional check |
-| --- | --- | --- |
-| `invoice.xml` | `fatture-xml-check` | “Mi aiuti a controllare queste fatture XML?” Review date, totals, VAT and anomaly evidence; an arithmetic check does not certify deductibility. |
-| `journal.csv` | `journal-sampling` | “Vorrei estrarre un campione ripetibile da questo giornale.” Confirm date/amount meanings and sample basis; a sample is not an audit opinion. |
-| `actual-budget.csv` | `variance-analysis` | “Dove ci siamo scostati dal budget?” Confirm periods and signs; show amount and percentage, and distinguish arithmetic from a supported business cause. |
+Use the prepared kit from `scripts/local_courses.py` for the selected current
+Vera workflow and language. Follow
+`../../learn-with-vera/references/prepared-courses.md`; the kit provides valid
+fictional source files and practice inputs. Existing files in
+`assets/onboarding/` are compatibility fixtures, not an alternative lesson
+library. A custom example may adapt a current own-product kit when useful.
 
 ## Genuine managed case setup
 
@@ -30,8 +23,12 @@ lesson. In the **working** chat run:
 python3 <vera-root>/scripts/local_onboarding_case.py --thread-id <actual-worker-id> --workflow <selected-workflow> --token <current-lesson-token> --phase demo --source <absolute-selected-source-file>
 ```
 
-Repeat `--source` for each selected input. Use `--phase practice` for the user's
-own attempt, after the teacher recorded the demonstration. The helper creates
+Repeat `--source` for each selected input. Use `--phase practice` for an
+independent new attempt after the teacher recorded the demonstration. When the
+lesson updates a previous assessment, follow its same-engagement route in
+`../../learn-with-vera/references/prepared-courses.md`: retain the initial case,
+import its actual record and the new evidence, and start a subsequent run there.
+Do not create a different client to bypass a required predecessor. The helper creates
 a separate synthetic customer folder and engagement **inside this lesson**,
 imports immutable selected inputs, prepares and starts a genuine portable
 Studio Archive run, and returns its real `context_path`, bound input paths and
@@ -62,3 +59,62 @@ is a reviewed draft or a completed reviewed run. A lesson can teach a profession
 review stage, but cannot count a failed computation as a successful demonstration.
 The teacher assesses user understanding; scripts enforce only evidence identity
 and the requirement for distinct demonstration and practice outputs.
+
+## Local archive search teaching route
+
+`studio-archive` local search indexes client folders; it does not execute a
+professional calculation against a ledger run input directory. Validate the
+active worker token, then stage the selected kit files with the same adapter:
+
+```text
+python3 <vera-root>/scripts/local_onboarding_case.py --thread-id <actual-worker-id> --workflow studio-archive --token <current-lesson-token> --phase demo --source-root <kit>/files/input/archive --source <kit>/files/input/archive/<client>/<file>
+```
+
+Add `--session <id>` for a repeated lesson and repeat `--source` for every
+returned demonstration source. Preserve the relative client-folder tree. The
+adapter returns `archive_root`, `archive_state_dir`, `archive_session_id` and
+`setup_required: true`; this stages files only and is not a completed search.
+It creates no false ledger run or client-engagement context.
+
+Use the current Studio Archive local commands with both
+`VERA_STUDIO_ARCHIVE_STATE_DIR` and `VERA_STUDIO_ARCHIVE_SESSION_ID` set to the
+returned values for every command. Diagnose access, configure that exact staged
+root, refresh, select the intended scope from the returned scope list, search
+and open the actual source IDs. This explicit tutorial setup uses the known
+staged folder; do not repoint the user's normal MCP archive configuration or
+invoke a real-folder chooser for the synthetic setup. Explain the normal guided
+folder chooser when teaching how the professional will use their own archive.
+
+Keep the private index outside `archive_root`, at the returned state directory.
+Save the actual search/open results and source-backed answer in separate local
+demo and practice output files for the teacher's evidence and focus steps; an
+index file or staged source alone is not the search answer. The practice adds
+only the selected update to this same teaching archive, refreshes the same
+index and executes a new search. Revalidate the current worker handoff before
+that bounded step. Preserve the demo's result files and all source agreements.
+A later professional handoff uses the ordinary Studio Archive setup and its
+current user-selected folder; it does not reuse this synthetic configuration.
+
+## Local client-folder organisation route
+
+For `archive-organization`, use the same adapter with `--source-root
+<kit>/files/input/client` and each selected `--source`. It preserves the prepared
+folder structure inside a new teaching client, takes a real client-folder
+snapshot and starts the normal organisation workflow against that snapshot.
+Resume from the returned `tutorial_case_path`, which lives under `Vera/` and
+is excluded from the source snapshot. Do not import individual documents as a
+substitute for the folder snapshot.
+
+Use an isolated Studio Archive state directory outside this client folder and
+an explicit tutorial session ID consistently for the current inventory/open
+commands. Configure only the teaching client's parent directory in that private
+state. The snapshot input ID is the `binding_id` in the run's input binding.
+Read the projected inventory and open the actual items before interpreting
+their categories. Follow the current organisation procedure to prepare its
+review page, save all decisions, compile the plan and obtain the user's separate
+apply choice. Prepared kit files carry no review or apply approval.
+
+Apply only to this teaching copy when authorized. Inspect the resulting paths,
+retained duplicate copy and operation journal. Explain rollback with the actual
+journal; do not perform it merely to make the demonstration look complete.
+Practice uses its own supplied client-folder copy and a newly reviewed plan.

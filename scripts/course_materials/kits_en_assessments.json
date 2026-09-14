@@ -1,0 +1,52 @@
+{
+  "vera/aml-review": {
+    "title": "Prepare an AML review with Vera",
+    "goal": "Learn to have a client file examined, reconstruct the facts and obtain a reasoned assessment with evidence and questions to review.",
+    "scenario": "The practice reviews Officina Arco: fictional documents describe its activity, owners, representative and a shareholder loan.",
+    "scope": "One AML review for an Italian accounting practice. Vera prepares the analysis; the professional decides measures, acceptance and any reporting.",
+    "inputs": "Open client-en.md, ownership-en.md and loan-en.md. State client, engagement and review date: 31 August 2026. The documents are case statements and references, not completed checks.",
+    "request": "Vera, prepare an AML review of Officina Arco at 31 August using these documents. Show supported facts, points to clarify and the proposed assessment for my review.",
+    "steps": [
+      "In the working chat, Vera reads the documents and reconstructs people, ownership, activity and transaction. Voice explains the review’s purpose and distinguishes statements, corroboration and missing information.",
+      "Vera compares evidence, verifies relevant current professional sources and asks focused questions. Voice follows the actual issues without inventing suspicion or screening results.",
+      "Open the generated memo and a source link. Read the assessment, reasons and evidence still needed. The record preserves the proposal; professional decisions are recorded only when actually expressed."
+    ],
+    "deliverables": [
+      "Readable memo with proposed assessment, facts, sources, limitations and focused questions.",
+      "Saved version in the client file for linking later reviews without losing the earlier one."
+    ],
+    "review": "Check who asserted each fact, what corroborates it and which checks are missing. A calculation or saved file does not approve a client. The memo is internal; do not automatically send it to the client.",
+    "checkpoints": [
+      "Before analysis, identify the client, engagement and supplied documents.",
+      "In the memo, find a documented fact, a client statement and an open question."
+    ],
+    "practice": "Add ownership-update-en.md in the same client file and request review at 10 September. Vera links the newly generated record and compares the changed ownership with the earlier position. Identify the change and missing evidence.",
+    "success": "You can start a review, use the memo, distinguish proposal and decision and update the file when new facts arrive.",
+    "repeat": "Ask Vera for a review of a named client for a specific reason, supplying documents and any previous assessment. Examine evidence and record actual professional decisions."
+  },
+  "vera/adeguati-assetti": {
+    "title": "Assess company arrangements with Vera",
+    "goal": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
+    "scenario": "Officina Arco wants to review responsibilities, monthly closing and collection information. We have its company profile, a procedure and one operating example in the fictional case.",
+    "scope": "An initial focused assessment of organizational, administrative and accounting arrangements in an Italian company. Scope follows the documents; this is not a whole-company certificate.",
+    "inputs": "Open company-en.md, procedure-en.md and operation-en.md. State company, assignment and date: 31 March 2026. Provide operating examples alongside written procedures.",
+    "request": "Vera, assess Officina Arco’s arrangements for responsibilities, monthly closing and collection information. Use these documents and show the assessment, limits and actions to discuss.",
+    "steps": [
+      "In the working chat, Vera reconstructs how the company operates and proposes scope. Voice explains why both a procedure and an example of its use are useful.",
+      "Vera compares responsibilities, deadlines, deliveries and decisions, verifies relevant professional sources and prepares proportionate findings. Voice follows actual evidence and questions that could change the assessment.",
+      "Open the generated memo. Read the overall assessment first, then one finding, its source and linked action. Distinguish proposed owners and timing from accepted commitments."
+    ],
+    "deliverables": [
+      "Memo with reasoned assessment, observations, findings and improvement plan.",
+      "Source-linked record for subsequent assessment and decisions actually expressed."
+    ],
+    "review": "Check the link between assessment and evidence, scope, unassessed areas and proportionate actions. A written policy or one successful cycle does not prove continuity; a documentation gap alone does not prove the process fails.",
+    "checkpoints": [
+      "Before analysis, identify the process and one available operating example.",
+      "In the memo, link an action to the finding and source that justify it."
+    ],
+    "practice": "Add update-en.md to the same file and request review at 30 April. Vera links the newly generated record, reassesses every earlier action and preserves the first version. Explain how the new evidence changes the assessment.",
+    "success": "You can provide useful documents, request the assessment, use the action plan and request a reassessment based on new evidence.",
+    "repeat": "Describe company, purpose and scope. Give Vera relevant procedures, operating examples and prior reviews. Review conclusions and actions before agreeing them with the company."
+  }
+}

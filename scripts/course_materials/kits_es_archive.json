@@ -1,0 +1,52 @@
+{
+  "vera/studio-archive": {
+    "title": "Encontrar documentos de un cliente con Vera",
+    "goal": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos.",
+    "scenario": "El despacho quiere encontrar el mantenimiento acordado por Ciclo Arco y el final indicado en su acuerdo. El archivo ficticio también contiene otro cliente.",
+    "scope": "Búsqueda en documentos locales. Gmail, WhatsApp y Google Drive son rutas separadas con sus propias conexiones; no se activan en esta lección.",
+    "inputs": "Abre archive: contiene Ciclo Arco y Delta, cada uno con su acuerdo. Vera prepara una copia didáctica y un índice local separado, manteniendo los ajustes del archivo habitual.",
+    "request": "Vera, busca el acuerdo de Ciclo Arco con Tecnica Esempio. ¿Qué servicio se prevé y hasta cuándo? Muéstrame los pasajes que respaldan la respuesta.",
+    "steps": [
+      "En la conversación de trabajo, Vera prepara la carpeta didáctica, comprueba el acceso e indexa los documentos legibles. Si hay que elegir una carpeta, selecciona la del ejercicio.",
+      "Selecciona Ciclo Arco. El flujo actual busca dentro de ese cliente y abre las fuentes pertinentes; la conversación de voz explica cómo pasar del resultado al documento.",
+      "Lee la respuesta y abre las citas. Comprueba cliente, servicio mensual y periodo indicado. Localiza también límites de lectura o documentos no indexados."
+    ],
+    "deliverables": [
+      "Respuesta con enlaces: servicio, periodo y pasajes de los documentos que los describen.",
+      "Estado del índice y registro de búsqueda: cliente, fuentes abiertas y límites encontrados."
+    ],
+    "review": "Comprueba el cliente seleccionado y lee el pasaje citado. La búsqueda encuentra lo indexado; no demuestra que estén todos los acuerdos ni la validez jurídica de un documento.",
+    "checkpoints": [
+      "Antes de buscar, identifica la carpeta de Ciclo Arco.",
+      "En la respuesta, abre una cita y encuentra el dato en el documento."
+    ],
+    "practice": "Añade update-es.md desde los archivos de práctica a la copia didáctica de Ciclo Arco, conserva el acuerdo y pide actualizar el índice. Repite la pregunta sobre el final del servicio y abre ambas fuentes.",
+    "success": "La respuesta recoge la ampliación hasta el 30 de junio de 2027 y conserva la referencia al acuerdo inicial. Explica cuándo actualizar el índice.",
+    "repeat": "Indica cliente y pregunta concreta. Actualiza cuando lleguen documentos y abre las fuentes antes de usar la respuesta."
+  },
+  "vera/archive-organization": {
+    "title": "Ordenar la carpeta de un cliente con Vera",
+    "goal": "Aprender a obtener un plan de organización, revisar destinos y aplicar los cambios aprobados.",
+    "scenario": "La carpeta de Ciclo Arco contiene un acuerdo, una copia exacta y un acta interna en dos carpetas de entrada. Prepararemos un plan legible y lo probaremos en una copia didáctica.",
+    "scope": "Un cliente y archivos locales ficticios. Aplicar cambios requiere una decisión explícita; no se modifica el archivo real del despacho.",
+    "inputs": "Abre client y observa Da archiviare y Download. Lee acuerdo y acta. Vera los copia a un cliente didáctico separado y usa la política de carpetas del flujo. Las carpetas predeterminadas tienen nombres italianos.",
+    "request": "Vera, propón cómo ordenar esta carpeta de Ciclo Arco. Muéstrame documentos, destinos y copias duplicadas antes de mover nada.",
+    "steps": [
+      "La conversación de trabajo crea el cliente didáctico y registra el estado de sus archivos. Vera lee las pruebas necesarias y propone categorías y destinos según el contenido.",
+      "Abre la página de revisión generada. Examina cada propuesta, conserva o cambia el destino y decide qué hacer con la copia exacta. El plan sigue siendo una propuesta hasta su revisión.",
+      "Tras esas decisiones, Vera resume los movimientos y pregunta por separado si debe aplicarlos. Si apruebas los cambios en la copia didáctica, ejecuta el plan y muestra carpetas resultantes y registro."
+    ],
+    "deliverables": [
+      "Página de revisión y plan: archivos iniciales, destinos, motivos y decisiones guardadas.",
+      "Tras la aplicación autorizada: carpeta ordenada y registro para comprobar movimientos y valorar su reversión."
+    ],
+    "review": "Sigue un documento desde su ubicación inicial hasta el destino. La copia exacta se conserva en la zona de revisión de duplicados, no se elimina. Revisar una propuesta no autoriza por sí solo a mover archivos.",
+    "checkpoints": [
+      "Antes del plan, identifica cliente y carpeta didáctica.",
+      "Antes de aplicar, explica un destino elegido y comprueba los movimientos previstos."
+    ],
+    "practice": "Usa la nueva copia client de los archivos de práctica, que añade update-es.md. Pide otro plan, revisa dónde guardar la actualización junto al acuerdo y decide si aplicarlo. Conserva la demostración.",
+    "success": "Sabes leer el plan, cambiar una propuesta y distinguir revisión y aplicación. Si no autorizas movimientos, el resultado sigue siendo un plan para revisar, no una carpeta ya ordenada.",
+    "repeat": "Selecciona un cliente, pide una propuesta y revisa cada cambio. Aplica tras el resumen explícito y conserva el registro."
+  }
+}

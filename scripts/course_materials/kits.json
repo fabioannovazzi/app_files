@@ -1,0 +1,7877 @@
+{
+  "vera/adeguati-assetti": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "assess_arrangements_then_review_new_evidence"
+    },
+    "files": [
+      {
+        "source": "assetti/company-it.md",
+        "path": "files/input/company-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/company-it.md",
+        "path": "files/practice/company-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/procedure-it.md",
+        "path": "files/input/procedure-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/procedure-it.md",
+        "path": "files/practice/procedure-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/operation-it.md",
+        "path": "files/input/operation-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/operation-it.md",
+        "path": "files/practice/operation-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/company-en.md",
+        "path": "files/input/company-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/company-en.md",
+        "path": "files/practice/company-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/procedure-en.md",
+        "path": "files/input/procedure-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/procedure-en.md",
+        "path": "files/practice/procedure-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/operation-en.md",
+        "path": "files/input/operation-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/operation-en.md",
+        "path": "files/practice/operation-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/company-fr.md",
+        "path": "files/input/company-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/company-fr.md",
+        "path": "files/practice/company-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/procedure-fr.md",
+        "path": "files/input/procedure-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/procedure-fr.md",
+        "path": "files/practice/procedure-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/operation-fr.md",
+        "path": "files/input/operation-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/operation-fr.md",
+        "path": "files/practice/operation-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/update-fr.md",
+        "path": "files/practice/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/company-de.md",
+        "path": "files/input/company-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/company-de.md",
+        "path": "files/practice/company-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/procedure-de.md",
+        "path": "files/input/procedure-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/procedure-de.md",
+        "path": "files/practice/procedure-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/operation-de.md",
+        "path": "files/input/operation-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/operation-de.md",
+        "path": "files/practice/operation-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/update-de.md",
+        "path": "files/practice/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/company-es.md",
+        "path": "files/input/company-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/company-es.md",
+        "path": "files/practice/company-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/procedure-es.md",
+        "path": "files/input/procedure-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/procedure-es.md",
+        "path": "files/practice/procedure-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/operation-es.md",
+        "path": "files/input/operation-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/operation-es.md",
+        "path": "files/practice/operation-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/update-es.md",
+        "path": "files/practice/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/aml-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_client_evidence_then_follow_up"
+    },
+    "files": [
+      {
+        "source": "aml/client-it.md",
+        "path": "files/input/client-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/client-it.md",
+        "path": "files/practice/client-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/ownership-it.md",
+        "path": "files/input/ownership-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/ownership-it.md",
+        "path": "files/practice/ownership-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/loan-it.md",
+        "path": "files/input/loan-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/loan-it.md",
+        "path": "files/practice/loan-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/ownership-update-it.md",
+        "path": "files/practice/ownership-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "aml/client-en.md",
+        "path": "files/input/client-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/client-en.md",
+        "path": "files/practice/client-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/ownership-en.md",
+        "path": "files/input/ownership-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/ownership-en.md",
+        "path": "files/practice/ownership-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/loan-en.md",
+        "path": "files/input/loan-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/loan-en.md",
+        "path": "files/practice/loan-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/ownership-update-en.md",
+        "path": "files/practice/ownership-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "aml/client-fr.md",
+        "path": "files/input/client-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/client-fr.md",
+        "path": "files/practice/client-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/ownership-fr.md",
+        "path": "files/input/ownership-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/ownership-fr.md",
+        "path": "files/practice/ownership-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/loan-fr.md",
+        "path": "files/input/loan-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/loan-fr.md",
+        "path": "files/practice/loan-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/ownership-update-fr.md",
+        "path": "files/practice/ownership-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "aml/client-de.md",
+        "path": "files/input/client-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/client-de.md",
+        "path": "files/practice/client-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/ownership-de.md",
+        "path": "files/input/ownership-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/ownership-de.md",
+        "path": "files/practice/ownership-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/loan-de.md",
+        "path": "files/input/loan-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/loan-de.md",
+        "path": "files/practice/loan-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/ownership-update-de.md",
+        "path": "files/practice/ownership-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "aml/client-es.md",
+        "path": "files/input/client-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "aml/client-es.md",
+        "path": "files/practice/client-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "aml/ownership-es.md",
+        "path": "files/input/ownership-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "aml/ownership-es.md",
+        "path": "files/practice/ownership-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "aml/loan-es.md",
+        "path": "files/input/loan-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "aml/loan-es.md",
+        "path": "files/practice/loan-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "aml/ownership-update-es.md",
+        "path": "files/practice/ownership-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/archive-organization": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "local_client_folder_snapshot"
+    },
+    "files": [
+      {
+        "source": "archive-search/arco-it.md",
+        "path": "files/input/client/Da archiviare/maintenance-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/arco-it.md",
+        "path": "files/input/client/Download/maintenance-copy-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-it.md",
+        "path": "files/input/client/Download/meeting-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/arco-it.md",
+        "path": "files/practice/client/Da archiviare/maintenance-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/arco-it.md",
+        "path": "files/practice/client/Download/maintenance-copy-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-it.md",
+        "path": "files/practice/client/Download/meeting-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/update-it.md",
+        "path": "files/practice/client/Download/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/arco-en.md",
+        "path": "files/input/client/Da archiviare/maintenance-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/arco-en.md",
+        "path": "files/input/client/Download/maintenance-copy-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-en.md",
+        "path": "files/input/client/Download/meeting-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/arco-en.md",
+        "path": "files/practice/client/Da archiviare/maintenance-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/arco-en.md",
+        "path": "files/practice/client/Download/maintenance-copy-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-en.md",
+        "path": "files/practice/client/Download/meeting-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/update-en.md",
+        "path": "files/practice/client/Download/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/arco-fr.md",
+        "path": "files/input/client/Da archiviare/maintenance-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/arco-fr.md",
+        "path": "files/input/client/Download/maintenance-copy-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-fr.md",
+        "path": "files/input/client/Download/meeting-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/arco-fr.md",
+        "path": "files/practice/client/Da archiviare/maintenance-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/arco-fr.md",
+        "path": "files/practice/client/Download/maintenance-copy-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-fr.md",
+        "path": "files/practice/client/Download/meeting-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/update-fr.md",
+        "path": "files/practice/client/Download/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/arco-de.md",
+        "path": "files/input/client/Da archiviare/maintenance-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/arco-de.md",
+        "path": "files/input/client/Download/maintenance-copy-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-de.md",
+        "path": "files/input/client/Download/meeting-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/arco-de.md",
+        "path": "files/practice/client/Da archiviare/maintenance-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/arco-de.md",
+        "path": "files/practice/client/Download/maintenance-copy-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-de.md",
+        "path": "files/practice/client/Download/meeting-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/update-de.md",
+        "path": "files/practice/client/Download/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/arco-es.md",
+        "path": "files/input/client/Da archiviare/maintenance-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/arco-es.md",
+        "path": "files/input/client/Download/maintenance-copy-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-es.md",
+        "path": "files/input/client/Download/meeting-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/arco-es.md",
+        "path": "files/practice/client/Da archiviare/maintenance-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/arco-es.md",
+        "path": "files/practice/client/Download/maintenance-copy-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-organization/meeting-es.md",
+        "path": "files/practice/client/Download/meeting-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/update-es.md",
+        "path": "files/practice/client/Download/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/avviso-intake": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "notice/avviso.md",
+        "path": "files/input/avviso.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "notice/avviso.md",
+        "path": "files/practice/avviso.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "notice/client-update.md",
+        "path": "files/practice/client-update.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/bandi-agevolazioni": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "selected_simulated_call_to_reviewable_application_dossier"
+    },
+    "files": [
+      {
+        "source": "bandi/avviso-it.md",
+        "path": "files/input/avviso-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bandi/progetto-it.md",
+        "path": "files/input/progetto-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-it.csv",
+        "path": "files/input/preventivo-it.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bandi/avviso-it.md",
+        "path": "files/practice/avviso-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bandi/progetto-it.md",
+        "path": "files/practice/progetto-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-aggiornato-it.csv",
+        "path": "files/practice/preventivo-aggiornato-it.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bandi/avviso-en.md",
+        "path": "files/input/avviso-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bandi/progetto-en.md",
+        "path": "files/input/progetto-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-en.csv",
+        "path": "files/input/preventivo-en.csv",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bandi/avviso-en.md",
+        "path": "files/practice/avviso-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bandi/progetto-en.md",
+        "path": "files/practice/progetto-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-aggiornato-en.csv",
+        "path": "files/practice/preventivo-aggiornato-en.csv",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bandi/avviso-fr.md",
+        "path": "files/input/avviso-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "bandi/progetto-fr.md",
+        "path": "files/input/progetto-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-fr.csv",
+        "path": "files/input/preventivo-fr.csv",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "bandi/avviso-fr.md",
+        "path": "files/practice/avviso-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "bandi/progetto-fr.md",
+        "path": "files/practice/progetto-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-aggiornato-fr.csv",
+        "path": "files/practice/preventivo-aggiornato-fr.csv",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "bandi/avviso-de.md",
+        "path": "files/input/avviso-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "bandi/progetto-de.md",
+        "path": "files/input/progetto-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-de.csv",
+        "path": "files/input/preventivo-de.csv",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "bandi/avviso-de.md",
+        "path": "files/practice/avviso-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "bandi/progetto-de.md",
+        "path": "files/practice/progetto-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-aggiornato-de.csv",
+        "path": "files/practice/preventivo-aggiornato-de.csv",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "bandi/avviso-es.md",
+        "path": "files/input/avviso-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "bandi/progetto-es.md",
+        "path": "files/input/progetto-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-es.csv",
+        "path": "files/input/preventivo-es.csv",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "bandi/avviso-es.md",
+        "path": "files/practice/avviso-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "bandi/progetto-es.md",
+        "path": "files/practice/progetto-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "bandi/preventivo-aggiornato-es.csv",
+        "path": "files/practice/preventivo-aggiornato-es.csv",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/bilancio-oic": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "prepare_oic_draft_then_update_trial_balance"
+    },
+    "files": [
+      {
+        "source": "bilancio/company-it.md",
+        "path": "files/input/company-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/trial-balance-it.csv",
+        "path": "files/input/trial-balance-it.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/company-it.md",
+        "path": "files/practice/company-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/trial-balance-updated-it.csv",
+        "path": "files/practice/trial-balance-updated-it.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "bilancio/company-en.md",
+        "path": "files/input/company-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bilancio/trial-balance-en.csv",
+        "path": "files/input/trial-balance-en.csv",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bilancio/company-en.md",
+        "path": "files/practice/company-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bilancio/trial-balance-updated-en.csv",
+        "path": "files/practice/trial-balance-updated-en.csv",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "bilancio/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      }
+    ]
+  },
+  "vera/browser-automation": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "observe_local_browser_procedure_then_review_and_replay"
+    },
+    "files": [
+      {
+        "source": "browser/task-en.md",
+        "path": "files/input/task-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "browser/practice-en.md",
+        "path": "files/practice/practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "browser/task-it.md",
+        "path": "files/input/task-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "browser/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "browser/task-fr.md",
+        "path": "files/input/task-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "browser/practice-fr.md",
+        "path": "files/practice/practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "browser/task-de.md",
+        "path": "files/input/task-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "browser/practice-de.md",
+        "path": "files/practice/practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "browser/task-es.md",
+        "path": "files/input/task-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "browser/practice-es.md",
+        "path": "files/practice/practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/business-planning": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "assess_pilot_then_revise_same_business_case"
+    },
+    "files": [
+      {
+        "source": "business-plan/pilot-economics.csv",
+        "path": "files/input/pilot-economics.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/pilot-economics.csv",
+        "path": "files/practice/pilot-economics.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-it.md",
+        "path": "files/input/proposal-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-it.md",
+        "path": "files/practice/proposal-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/economics-it.md",
+        "path": "files/input/economics-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/economics-it.md",
+        "path": "files/practice/economics-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/operations-it.md",
+        "path": "files/input/operations-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/operations-it.md",
+        "path": "files/practice/operations-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-en.md",
+        "path": "files/input/proposal-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-en.md",
+        "path": "files/practice/proposal-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/economics-en.md",
+        "path": "files/input/economics-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/economics-en.md",
+        "path": "files/practice/economics-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/operations-en.md",
+        "path": "files/input/operations-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/operations-en.md",
+        "path": "files/practice/operations-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      }
+    ]
+  },
+  "vera/centrale-rischi-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "centrale-rischi/centrale-rischi-gen-mar.csv",
+        "path": "files/input/centrale-rischi-gen-mar.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "centrale-rischi/caso.md",
+        "path": "files/input/caso.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "centrale-rischi/centrale-rischi-gen-apr.csv",
+        "path": "files/practice/centrale-rischi-gen-apr.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "centrale-rischi/prova.md",
+        "path": "files/practice/prova.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
+  },
+  "vera/comunicazione-professionale": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "prepare_sources_then_review_communication_package"
+    },
+    "files": [
+      {
+        "source": "communication/vera/brief-it.md",
+        "path": "files/input/brief-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it.md",
+        "path": "files/input/source-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it-provenance.json",
+        "path": "files/input/source-it-provenance.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-it.md",
+        "path": "files/practice/brief-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it.md",
+        "path": "files/practice/source-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it-provenance.json",
+        "path": "files/practice/source-it-provenance.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/vera/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-en.md",
+        "path": "files/input/brief-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en.md",
+        "path": "files/input/source-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en-provenance.json",
+        "path": "files/input/source-en-provenance.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-en.md",
+        "path": "files/practice/brief-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en.md",
+        "path": "files/practice/source-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en-provenance.json",
+        "path": "files/practice/source-en-provenance.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/vera/practice-en.md",
+        "path": "files/practice/practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-fr.md",
+        "path": "files/input/brief-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr.md",
+        "path": "files/input/source-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr-provenance.json",
+        "path": "files/input/source-fr-provenance.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-fr.md",
+        "path": "files/practice/brief-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr.md",
+        "path": "files/practice/source-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr-provenance.json",
+        "path": "files/practice/source-fr-provenance.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/vera/practice-fr.md",
+        "path": "files/practice/practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-de.md",
+        "path": "files/input/brief-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de.md",
+        "path": "files/input/source-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de-provenance.json",
+        "path": "files/input/source-de-provenance.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-de.md",
+        "path": "files/practice/brief-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de.md",
+        "path": "files/practice/source-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de-provenance.json",
+        "path": "files/practice/source-de-provenance.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/vera/practice-de.md",
+        "path": "files/practice/practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-es.md",
+        "path": "files/input/brief-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es.md",
+        "path": "files/input/source-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es-provenance.json",
+        "path": "files/input/source-es-provenance.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/vera/brief-es.md",
+        "path": "files/practice/brief-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es.md",
+        "path": "files/practice/source-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es-provenance.json",
+        "path": "files/practice/source-es-provenance.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/vera/practice-es.md",
+        "path": "files/practice/practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/concordato-plan-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_plan_sources_then_build_professional_workpaper"
+    },
+    "files": [
+      {
+        "source": "concordato/demo-it.xlsx",
+        "path": "files/input/demo-it.xlsx",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "concordato/practice-it.xlsx",
+        "path": "files/practice/practice-it.xlsx",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "concordato/demo-en.xlsx",
+        "path": "files/input/demo-en.xlsx",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "concordato/practice-en.xlsx",
+        "path": "files/practice/practice-en.xlsx",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "concordato/demo-fr.xlsx",
+        "path": "files/input/demo-fr.xlsx",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "concordato/practice-fr.xlsx",
+        "path": "files/practice/practice-fr.xlsx",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "concordato/demo-de.xlsx",
+        "path": "files/input/demo-de.xlsx",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "concordato/practice-de.xlsx",
+        "path": "files/practice/practice-de.xlsx",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "concordato/demo-es.xlsx",
+        "path": "files/input/demo-es.xlsx",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "concordato/practice-es.xlsx",
+        "path": "files/practice/practice-es.xlsx",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/dati-fiscali-strutturati": {
+    "group": "supporting_task",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "tax-intake/CU-income.md",
+        "path": "files/input/CU-income.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/F24-first.md",
+        "path": "files/input/F24-first.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/CU-income.md",
+        "path": "files/practice/CU-income.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/F24-first.md",
+        "path": "files/practice/F24-first.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/F24-second.md",
+        "path": "files/practice/F24-second.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ],
+    "parent_workflow": "new-client"
+  },
+  "vera/email-cliente": {
+    "group": "supporting_task",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "current_intake_review_and_client_email"
+    },
+    "files": [
+      {
+        "source": "tax-intake/CU-income.md",
+        "path": "files/input/CU-income.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/F24-first.md",
+        "path": "files/input/F24-first.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/CU-income.md",
+        "path": "files/practice/CU-income.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "tax-intake/F24-first.md",
+        "path": "files/practice/F24-first.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "client-email/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "client-email/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "client-email/client-reply-it.md",
+        "path": "files/practice/client-reply-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "client-email/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "client-email/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "client-email/client-reply-en.md",
+        "path": "files/practice/client-reply-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "client-email/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "client-email/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "client-email/client-reply-fr.md",
+        "path": "files/practice/client-reply-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "client-email/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "client-email/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "client-email/client-reply-de.md",
+        "path": "files/practice/client-reply-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "client-email/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "client-email/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "client-email/client-reply-es.md",
+        "path": "files/practice/client-reply-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ],
+    "parent_workflow": "new-client"
+  },
+  "vera/fatture-xml-check": {
+    "group": "supporting_task",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "invoices/invoice-01.xml",
+        "path": "files/input/invoice-01.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-02.xml",
+        "path": "files/input/invoice-02.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-03.xml",
+        "path": "files/input/invoice-03.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-01.xml",
+        "path": "files/practice/invoice-01.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-02.xml",
+        "path": "files/practice/invoice-02.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-03.xml",
+        "path": "files/practice/invoice-03.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-04.xml",
+        "path": "files/practice/invoice-04.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/case-it.md",
+        "path": "files/input/case-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "invoices/case-en.md",
+        "path": "files/input/case-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "invoices/case-fr.md",
+        "path": "files/input/case-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "invoices/case-de.md",
+        "path": "files/input/case-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "invoices/case-es.md",
+        "path": "files/input/case-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      }
+    ],
+    "parent_workflow": "new-client"
+  },
+  "vera/financial-analysis": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_net_debt_then_run_registered_pack"
+    },
+    "files": [
+      {
+        "source": "financial-analysis/balances-february.csv",
+        "path": "files/input/balances-february.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "financial-analysis/balances-march.csv",
+        "path": "files/practice/balances-march.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "financial-analysis/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/financial-report-builder": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_review_tables_then_build_report"
+    },
+    "files": [
+      {
+        "source": "financial-report/january-february.xlsx",
+        "path": "files/input/january-february.xlsx",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "financial-report/january-march.xlsx",
+        "path": "files/practice/january-march.xlsx",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "financial-report/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "financial-report/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "financial-report/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "financial-report/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "financial-report/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "financial-report/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "financial-report/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "financial-report/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "financial-report/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "financial-report/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/journal-bank-reconciliation": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "accounting/bank-march.csv",
+        "path": "files/input/bank-march.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "accounting/bank-ledger-march.csv",
+        "path": "files/input/bank-ledger-march.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "accounting/case-it.md",
+        "path": "files/input/case-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "accounting/case-en.md",
+        "path": "files/input/case-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "accounting/case-fr.md",
+        "path": "files/input/case-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "accounting/case-de.md",
+        "path": "files/input/case-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "accounting/case-es.md",
+        "path": "files/input/case-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "accounting/bank-april.csv",
+        "path": "files/practice/bank-april.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "accounting/bank-ledger-april.csv",
+        "path": "files/practice/bank-ledger-april.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "accounting/case-it.md",
+        "path": "files/practice/case-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "accounting/case-en.md",
+        "path": "files/practice/case-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "accounting/case-fr.md",
+        "path": "files/practice/case-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "accounting/case-de.md",
+        "path": "files/practice/case-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "accounting/case-es.md",
+        "path": "files/practice/case-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/journal-sampling": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "accounting/journal-march.csv",
+        "path": "files/input/journal-march.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "accounting/journal-april.csv",
+        "path": "files/practice/journal-april.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "journal-sampling/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/management-control-pack": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "budget/actual-budget.xlsx",
+        "path": "files/input/actual-budget.xlsx",
+        "role": "source",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/input/facts.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "budget/actual-budget-march.xlsx",
+        "path": "files/practice/actual-budget-march.xlsx",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/practice/facts.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en"
+        ]
+      }
+    ]
+  },
+  "vera/new-client": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "new-client/profile-it.md",
+        "path": "files/input/profile-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "new-client/profile-it.md",
+        "path": "files/practice/profile-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "new-client/contact-update-it.md",
+        "path": "files/practice/contact-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "new-client/profile-en.md",
+        "path": "files/input/profile-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "new-client/profile-en.md",
+        "path": "files/practice/profile-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "new-client/contact-update-en.md",
+        "path": "files/practice/contact-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "new-client/profile-fr.md",
+        "path": "files/input/profile-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "new-client/profile-fr.md",
+        "path": "files/practice/profile-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "new-client/contact-update-fr.md",
+        "path": "files/practice/contact-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "new-client/profile-de.md",
+        "path": "files/input/profile-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "new-client/profile-de.md",
+        "path": "files/practice/profile-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "new-client/contact-update-de.md",
+        "path": "files/practice/contact-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "new-client/profile-es.md",
+        "path": "files/input/profile-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "new-client/profile-es.md",
+        "path": "files/practice/profile-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "new-client/contact-update-es.md",
+        "path": "files/practice/contact-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/open-item-reconciliation": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "open-items/open-items-it.pdf",
+        "path": "files/input/open-items-it.pdf",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "open-items/bank-march-it.pdf",
+        "path": "files/input/bank-march-it.pdf",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "open-items/open-items-en.pdf",
+        "path": "files/input/open-items-en.pdf",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "open-items/bank-march-en.pdf",
+        "path": "files/input/bank-march-en.pdf",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "open-items/open-items-fr.pdf",
+        "path": "files/input/open-items-fr.pdf",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "open-items/bank-march-fr.pdf",
+        "path": "files/input/bank-march-fr.pdf",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "open-items/open-items-de.pdf",
+        "path": "files/input/open-items-de.pdf",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "open-items/bank-march-de.pdf",
+        "path": "files/input/bank-march-de.pdf",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "open-items/open-items-es.pdf",
+        "path": "files/input/open-items-es.pdf",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "open-items/bank-march-es.pdf",
+        "path": "files/input/bank-march-es.pdf",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "open-items/open-items-it.pdf",
+        "path": "files/practice/open-items-it.pdf",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "open-items/bank-april-it.pdf",
+        "path": "files/practice/bank-april-it.pdf",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "open-items/open-items-en.pdf",
+        "path": "files/practice/open-items-en.pdf",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "open-items/bank-april-en.pdf",
+        "path": "files/practice/bank-april-en.pdf",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "open-items/open-items-fr.pdf",
+        "path": "files/practice/open-items-fr.pdf",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "open-items/bank-april-fr.pdf",
+        "path": "files/practice/bank-april-fr.pdf",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "open-items/open-items-de.pdf",
+        "path": "files/practice/open-items-de.pdf",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "open-items/bank-april-de.pdf",
+        "path": "files/practice/bank-april-de.pdf",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "open-items/open-items-es.pdf",
+        "path": "files/practice/open-items-es.pdf",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "open-items/bank-april-es.pdf",
+        "path": "files/practice/bank-april-es.pdf",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/presenza-digitale-studio": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "local_website_workspace"
+    },
+    "files": [
+      {
+        "source": "website/vera-studio-it.md",
+        "path": "files/input/vera-studio-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "website/vera-studio-it.md",
+        "path": "files/practice/vera-studio-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "website/vera-update-it.md",
+        "path": "files/practice/vera-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "website/vera-studio-en.md",
+        "path": "files/input/vera-studio-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "website/vera-studio-en.md",
+        "path": "files/practice/vera-studio-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "website/vera-update-en.md",
+        "path": "files/practice/vera-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "website/vera-studio-fr.md",
+        "path": "files/input/vera-studio-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "website/vera-studio-fr.md",
+        "path": "files/practice/vera-studio-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "website/vera-update-fr.md",
+        "path": "files/practice/vera-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "website/vera-studio-de.md",
+        "path": "files/input/vera-studio-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "website/vera-studio-de.md",
+        "path": "files/practice/vera-studio-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "website/vera-update-de.md",
+        "path": "files/practice/vera-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "website/vera-studio-es.md",
+        "path": "files/input/vera-studio-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "website/vera-studio-es.md",
+        "path": "files/practice/vera-studio-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "website/vera-update-es.md",
+        "path": "files/practice/vera-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/previdenza-inps": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_local_case_then_prepare_professional_draft"
+    },
+    "files": [
+      {
+        "source": "inps/case-it.md",
+        "path": "files/input/case-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/case-it.md",
+        "path": "files/practice/case-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/employment-it.md",
+        "path": "files/input/employment-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/employment-it.md",
+        "path": "files/practice/employment-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/record-context-it.md",
+        "path": "files/input/record-context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/record-context-it.md",
+        "path": "files/practice/record-context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/periods-input-it.csv",
+        "path": "files/input/contribution-periods-it.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/periods-practice-it.csv",
+        "path": "files/practice/contribution-periods-it.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "inps/case-en.md",
+        "path": "files/input/case-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/case-en.md",
+        "path": "files/practice/case-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/employment-en.md",
+        "path": "files/input/employment-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/employment-en.md",
+        "path": "files/practice/employment-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/record-context-en.md",
+        "path": "files/input/record-context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/record-context-en.md",
+        "path": "files/practice/record-context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/periods-input-en.csv",
+        "path": "files/input/contribution-periods-en.csv",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/periods-practice-en.csv",
+        "path": "files/practice/contribution-periods-en.csv",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "inps/case-fr.md",
+        "path": "files/input/case-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/case-fr.md",
+        "path": "files/practice/case-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/employment-fr.md",
+        "path": "files/input/employment-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/employment-fr.md",
+        "path": "files/practice/employment-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/record-context-fr.md",
+        "path": "files/input/record-context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/record-context-fr.md",
+        "path": "files/practice/record-context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/periods-input-fr.csv",
+        "path": "files/input/contribution-periods-fr.csv",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/periods-practice-fr.csv",
+        "path": "files/practice/contribution-periods-fr.csv",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "inps/case-de.md",
+        "path": "files/input/case-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/case-de.md",
+        "path": "files/practice/case-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/employment-de.md",
+        "path": "files/input/employment-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/employment-de.md",
+        "path": "files/practice/employment-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/record-context-de.md",
+        "path": "files/input/record-context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/record-context-de.md",
+        "path": "files/practice/record-context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/periods-input-de.csv",
+        "path": "files/input/contribution-periods-de.csv",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/periods-practice-de.csv",
+        "path": "files/practice/contribution-periods-de.csv",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "inps/case-es.md",
+        "path": "files/input/case-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/case-es.md",
+        "path": "files/practice/case-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/employment-es.md",
+        "path": "files/input/employment-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/employment-es.md",
+        "path": "files/practice/employment-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/record-context-es.md",
+        "path": "files/input/record-context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/record-context-es.md",
+        "path": "files/practice/record-context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/periods-input-es.csv",
+        "path": "files/input/contribution-periods-es.csv",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "inps/periods-practice-es.csv",
+        "path": "files/practice/contribution-periods-es.csv",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/purchase-invoice-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_mapping_then_native_invoice_audit"
+    },
+    "files": [
+      {
+        "source": "purchase-audit/ledger-march.csv",
+        "path": "files/input/ledger-march.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-01.xml",
+        "path": "files/input/invoices/invoice-01.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-02.xml",
+        "path": "files/input/invoices/invoice-02.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-03.xml",
+        "path": "files/input/invoices/invoice-03.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/ledger-march-april.csv",
+        "path": "files/practice/ledger-march-april.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-01.xml",
+        "path": "files/practice/invoices/invoice-01.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-02.xml",
+        "path": "files/practice/invoices/invoice-02.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-03.xml",
+        "path": "files/practice/invoices/invoice-03.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/invoice-04.xml",
+        "path": "files/practice/invoices/invoice-04.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "purchase-audit/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/quesito-legale-fiscale": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "plan_question_research_then_validate_answer"
+    },
+    "files": [
+      {
+        "source": "question/question-it.md",
+        "path": "files/input/question-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/sources-it.md",
+        "path": "files/input/sources-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/guide-it.md",
+        "path": "files/input/guide-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/source-provenance-it.json",
+        "path": "files/input/source-provenance-it.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/question-it.md",
+        "path": "files/practice/question-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/sources-it.md",
+        "path": "files/practice/sources-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/guide-it.md",
+        "path": "files/practice/guide-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/source-provenance-it.json",
+        "path": "files/practice/source-provenance-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/question-en.md",
+        "path": "files/input/question-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/sources-en.md",
+        "path": "files/input/sources-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/guide-en.md",
+        "path": "files/input/guide-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/source-provenance-en.json",
+        "path": "files/input/source-provenance-en.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/question-en.md",
+        "path": "files/practice/question-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/sources-en.md",
+        "path": "files/practice/sources-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/guide-en.md",
+        "path": "files/practice/guide-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/source-provenance-en.json",
+        "path": "files/practice/source-provenance-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/practice-en.md",
+        "path": "files/practice/practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/question-fr.md",
+        "path": "files/input/question-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/sources-fr.md",
+        "path": "files/input/sources-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/guide-fr.md",
+        "path": "files/input/guide-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/source-provenance-fr.json",
+        "path": "files/input/source-provenance-fr.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/question-fr.md",
+        "path": "files/practice/question-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/sources-fr.md",
+        "path": "files/practice/sources-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/guide-fr.md",
+        "path": "files/practice/guide-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/source-provenance-fr.json",
+        "path": "files/practice/source-provenance-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/practice-fr.md",
+        "path": "files/practice/practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/question-de.md",
+        "path": "files/input/question-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/sources-de.md",
+        "path": "files/input/sources-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/guide-de.md",
+        "path": "files/input/guide-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/source-provenance-de.json",
+        "path": "files/input/source-provenance-de.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/question-de.md",
+        "path": "files/practice/question-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/sources-de.md",
+        "path": "files/practice/sources-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/guide-de.md",
+        "path": "files/practice/guide-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/source-provenance-de.json",
+        "path": "files/practice/source-provenance-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/practice-de.md",
+        "path": "files/practice/practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/question-es.md",
+        "path": "files/input/question-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/sources-es.md",
+        "path": "files/input/sources-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/guide-es.md",
+        "path": "files/input/guide-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/source-provenance-es.json",
+        "path": "files/input/source-provenance-es.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/question-es.md",
+        "path": "files/practice/question-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/sources-es.md",
+        "path": "files/practice/sources-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/guide-es.md",
+        "path": "files/practice/guide-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/source-provenance-es.json",
+        "path": "files/practice/source-provenance-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/practice-es.md",
+        "path": "files/practice/practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/directive-original-es.pdf",
+        "path": "files/input/directive-original-es.pdf",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "question/directive-original-es.pdf",
+        "path": "files/practice/directive-original-es.pdf",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/registro-imprese-sari": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "prepare_registry_practice_then_review_updated_request"
+    },
+    "files": [
+      {
+        "source": "registro/company-it.md",
+        "path": "files/input/company-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "registro/sources-it.md",
+        "path": "files/input/sources-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "registro/company-it.md",
+        "path": "files/practice/company-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "registro/sources-it.md",
+        "path": "files/practice/sources-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "registro/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "registro/company-en.md",
+        "path": "files/input/company-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "registro/sources-en.md",
+        "path": "files/input/sources-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "registro/company-en.md",
+        "path": "files/practice/company-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "registro/sources-en.md",
+        "path": "files/practice/sources-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "registro/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "registro/company-fr.md",
+        "path": "files/input/company-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "registro/sources-fr.md",
+        "path": "files/input/sources-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "registro/company-fr.md",
+        "path": "files/practice/company-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "registro/sources-fr.md",
+        "path": "files/practice/sources-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "registro/update-fr.md",
+        "path": "files/practice/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "registro/company-de.md",
+        "path": "files/input/company-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "registro/sources-de.md",
+        "path": "files/input/sources-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "registro/company-de.md",
+        "path": "files/practice/company-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "registro/sources-de.md",
+        "path": "files/practice/sources-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "registro/update-de.md",
+        "path": "files/practice/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "registro/company-es.md",
+        "path": "files/input/company-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "registro/sources-es.md",
+        "path": "files/input/sources-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "registro/company-es.md",
+        "path": "files/practice/company-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "registro/sources-es.md",
+        "path": "files/practice/sources-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "registro/update-es.md",
+        "path": "files/practice/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "registro/source-index.json",
+        "path": "files/input/source-index.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "registro/source-index.json",
+        "path": "files/practice/source-index.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/sales-plan": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_sales_assumptions_then_run_plan"
+    },
+    "files": [
+      {
+        "source": "sales-plan/actual-sales.csv",
+        "path": "files/input/actual-sales.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "sales-plan/actual-sales.csv",
+        "path": "files/practice/actual-sales.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "sales-plan/input-assumptions-it.md",
+        "path": "files/input/assumptions-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "sales-plan/practice-assumptions-it.md",
+        "path": "files/practice/assumptions-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "sales-plan/input-assumptions-en.md",
+        "path": "files/input/assumptions-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "sales-plan/practice-assumptions-en.md",
+        "path": "files/practice/assumptions-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "sales-plan/input-assumptions-fr.md",
+        "path": "files/input/assumptions-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "sales-plan/practice-assumptions-fr.md",
+        "path": "files/practice/assumptions-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "sales-plan/input-assumptions-de.md",
+        "path": "files/input/assumptions-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "sales-plan/practice-assumptions-de.md",
+        "path": "files/practice/assumptions-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "sales-plan/input-assumptions-es.md",
+        "path": "files/input/assumptions-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "sales-plan/practice-assumptions-es.md",
+        "path": "files/practice/assumptions-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/studio-archive": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "local_archive_search"
+    },
+    "files": [
+      {
+        "source": "archive-search/arco-it.md",
+        "path": "files/input/archive/Ciclo Arco/maintenance-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/delta-it.md",
+        "path": "files/input/archive/Delta/maintenance-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/arco-it.md",
+        "path": "files/practice/archive/Ciclo Arco/maintenance-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/delta-it.md",
+        "path": "files/practice/archive/Delta/maintenance-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/update-it.md",
+        "path": "files/practice/archive/Ciclo Arco/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "archive-search/arco-en.md",
+        "path": "files/input/archive/Ciclo Arco/maintenance-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/delta-en.md",
+        "path": "files/input/archive/Delta/maintenance-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/arco-en.md",
+        "path": "files/practice/archive/Ciclo Arco/maintenance-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/delta-en.md",
+        "path": "files/practice/archive/Delta/maintenance-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/update-en.md",
+        "path": "files/practice/archive/Ciclo Arco/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "archive-search/arco-fr.md",
+        "path": "files/input/archive/Ciclo Arco/maintenance-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/delta-fr.md",
+        "path": "files/input/archive/Delta/maintenance-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/arco-fr.md",
+        "path": "files/practice/archive/Ciclo Arco/maintenance-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/delta-fr.md",
+        "path": "files/practice/archive/Delta/maintenance-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/update-fr.md",
+        "path": "files/practice/archive/Ciclo Arco/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "archive-search/arco-de.md",
+        "path": "files/input/archive/Ciclo Arco/maintenance-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/delta-de.md",
+        "path": "files/input/archive/Delta/maintenance-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/arco-de.md",
+        "path": "files/practice/archive/Ciclo Arco/maintenance-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/delta-de.md",
+        "path": "files/practice/archive/Delta/maintenance-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/update-de.md",
+        "path": "files/practice/archive/Ciclo Arco/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "archive-search/arco-es.md",
+        "path": "files/input/archive/Ciclo Arco/maintenance-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/delta-es.md",
+        "path": "files/input/archive/Delta/maintenance-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/arco-es.md",
+        "path": "files/practice/archive/Ciclo Arco/maintenance-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/delta-es.md",
+        "path": "files/practice/archive/Delta/maintenance-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "archive-search/update-es.md",
+        "path": "files/practice/archive/Ciclo Arco/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/treasury-forecast": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "treasury/accounts.csv",
+        "path": "files/input/accounts.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury/adjustments.csv",
+        "path": "files/input/adjustments.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury/allocations.csv",
+        "path": "files/input/allocations.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury/bank_movements.csv",
+        "path": "files/input/bank_movements.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury/caso.md",
+        "path": "files/input/caso.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury/open_items.csv",
+        "path": "files/input/open_items.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury/planned_flows.csv",
+        "path": "files/input/planned_flows.csv",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/accounts.csv",
+        "path": "files/practice/accounts.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/adjustments.csv",
+        "path": "files/practice/adjustments.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/allocations.csv",
+        "path": "files/practice/allocations.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/bank_movements.csv",
+        "path": "files/practice/bank_movements.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/caso.md",
+        "path": "files/practice/caso.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/open_items.csv",
+        "path": "files/practice/open_items.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "treasury-practice/planned_flows.csv",
+        "path": "files/practice/planned_flows.csv",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
+  },
+  "vera/variance-analysis": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "variance/january-february.csv",
+        "path": "files/input/january-february.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "variance/january-march.csv",
+        "path": "files/practice/january-march.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "variance/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "variance/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "variance/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "variance/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "variance/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "variance/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "variance/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "variance/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "variance/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "variance/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/vouching": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "live_journal_sample_then_support_checks"
+    },
+    "files": [
+      {
+        "source": "vouching/invoice-journal.csv",
+        "path": "files/input/invoice-journal.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-01.xml",
+        "path": "files/input/invoice-01.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-02.xml",
+        "path": "files/input/invoice-02.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-03.xml",
+        "path": "files/input/invoice-03.xml",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "vouching/invoice-journal.csv",
+        "path": "files/practice/invoice-journal.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-01.xml",
+        "path": "files/practice/invoice-01.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-02.xml",
+        "path": "files/practice/invoice-02.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "invoices/invoice-03.xml",
+        "path": "files/practice/invoice-03.xml",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "vouching/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "vouching/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "vouching/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "vouching/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "vouching/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "vouching/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "vouching/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "vouching/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "vouching/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "vouching/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/attribute-reporting": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "existing_fictional_package_to_checked_html_report"
+    },
+    "files": [
+      {
+        "source": "attributes/assortment-demo-en.zip",
+        "path": "files/input/assortment-demo-en.zip",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "attributes/brief-en.md",
+        "path": "files/input/brief-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "attributes/assortment-practice-en.zip",
+        "path": "files/practice/assortment-practice-en.zip",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "attributes/brief-en.md",
+        "path": "files/practice/brief-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "attributes/assortment-demo-it.zip",
+        "path": "files/input/assortment-demo-it.zip",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "attributes/brief-it.md",
+        "path": "files/input/brief-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "attributes/assortment-practice-it.zip",
+        "path": "files/practice/assortment-practice-it.zip",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "attributes/brief-it.md",
+        "path": "files/practice/brief-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "attributes/assortment-demo-fr.zip",
+        "path": "files/input/assortment-demo-fr.zip",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "attributes/brief-fr.md",
+        "path": "files/input/brief-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "attributes/assortment-practice-fr.zip",
+        "path": "files/practice/assortment-practice-fr.zip",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "attributes/brief-fr.md",
+        "path": "files/practice/brief-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "attributes/assortment-demo-de.zip",
+        "path": "files/input/assortment-demo-de.zip",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "attributes/brief-de.md",
+        "path": "files/input/brief-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "attributes/assortment-practice-de.zip",
+        "path": "files/practice/assortment-practice-de.zip",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "attributes/brief-de.md",
+        "path": "files/practice/brief-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "attributes/assortment-demo-es.zip",
+        "path": "files/input/assortment-demo-es.zip",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "attributes/brief-es.md",
+        "path": "files/input/brief-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "attributes/assortment-practice-es.zip",
+        "path": "files/practice/assortment-practice-es.zip",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "attributes/brief-es.md",
+        "path": "files/practice/brief-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/brand-fit": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": []
+  },
+  "clara/business-planning": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "assess_pilot_then_revise_same_business_case"
+    },
+    "files": [
+      {
+        "source": "business-plan/pilot-economics.csv",
+        "path": "files/input/pilot-economics.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/pilot-economics.csv",
+        "path": "files/practice/pilot-economics.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-it.md",
+        "path": "files/input/proposal-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-it.md",
+        "path": "files/practice/proposal-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/economics-it.md",
+        "path": "files/input/economics-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/economics-it.md",
+        "path": "files/practice/economics-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/operations-it.md",
+        "path": "files/input/operations-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/operations-it.md",
+        "path": "files/practice/operations-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-en.md",
+        "path": "files/input/proposal-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/proposal-en.md",
+        "path": "files/practice/proposal-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/economics-en.md",
+        "path": "files/input/economics-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/economics-en.md",
+        "path": "files/practice/economics-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/operations-en.md",
+        "path": "files/input/operations-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/operations-en.md",
+        "path": "files/practice/operations-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "business-plan/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      }
+    ]
+  },
+  "clara/deck-correction": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_existing_deck_then_revise_copy"
+    },
+    "files": [
+      {
+        "source": "presentations/original-deck-it.html",
+        "path": "files/input/original-deck-it.html",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/original-work-it.zip",
+        "path": "files/input/original-work-it.zip",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/feedback-it.md",
+        "path": "files/input/feedback-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-it.html",
+        "path": "files/practice/original-deck-it.html",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/original-work-it.zip",
+        "path": "files/practice/original-work-it.zip",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/practice-feedback-it.md",
+        "path": "files/practice/practice-feedback-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-en.html",
+        "path": "files/input/original-deck-en.html",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/original-work-en.zip",
+        "path": "files/input/original-work-en.zip",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/feedback-en.md",
+        "path": "files/input/feedback-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-en.html",
+        "path": "files/practice/original-deck-en.html",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/original-work-en.zip",
+        "path": "files/practice/original-work-en.zip",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/practice-feedback-en.md",
+        "path": "files/practice/practice-feedback-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-fr.html",
+        "path": "files/input/original-deck-fr.html",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/original-work-fr.zip",
+        "path": "files/input/original-work-fr.zip",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/feedback-fr.md",
+        "path": "files/input/feedback-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-fr.html",
+        "path": "files/practice/original-deck-fr.html",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/original-work-fr.zip",
+        "path": "files/practice/original-work-fr.zip",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/practice-feedback-fr.md",
+        "path": "files/practice/practice-feedback-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-de.html",
+        "path": "files/input/original-deck-de.html",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/original-work-de.zip",
+        "path": "files/input/original-work-de.zip",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/feedback-de.md",
+        "path": "files/input/feedback-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-de.html",
+        "path": "files/practice/original-deck-de.html",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/original-work-de.zip",
+        "path": "files/practice/original-work-de.zip",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/practice-feedback-de.md",
+        "path": "files/practice/practice-feedback-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-es.html",
+        "path": "files/input/original-deck-es.html",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/original-work-es.zip",
+        "path": "files/input/original-work-es.zip",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/feedback-es.md",
+        "path": "files/input/feedback-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/original-deck-es.html",
+        "path": "files/practice/original-deck-es.html",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/original-work-es.zip",
+        "path": "files/practice/original-work-es.zip",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/practice-feedback-es.md",
+        "path": "files/practice/practice-feedback-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/hosted-interview": {
+    "group": "workflow",
+    "execution": {
+      "mode": "hosted_step_requires_explicit_choice",
+      "local_tutorial": true
+    },
+    "files": []
+  },
+  "clara/html-deck": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "author_standalone_talk_then_build_and_review"
+    },
+    "files": [
+      {
+        "source": "presentations/brief-it.md",
+        "path": "files/input/brief-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/brief-it.md",
+        "path": "files/practice/brief-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/new-audience-it.md",
+        "path": "files/practice/new-audience-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "presentations/brief-en.md",
+        "path": "files/input/brief-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/brief-en.md",
+        "path": "files/practice/brief-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/new-audience-en.md",
+        "path": "files/practice/new-audience-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "presentations/brief-fr.md",
+        "path": "files/input/brief-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/brief-fr.md",
+        "path": "files/practice/brief-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/new-audience-fr.md",
+        "path": "files/practice/new-audience-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "presentations/brief-de.md",
+        "path": "files/input/brief-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/brief-de.md",
+        "path": "files/practice/brief-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/new-audience-de.md",
+        "path": "files/practice/new-audience-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "presentations/brief-es.md",
+        "path": "files/input/brief-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/brief-es.md",
+        "path": "files/practice/brief-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "presentations/new-audience-es.md",
+        "path": "files/practice/new-audience-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/reporting-engine": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "budget/actual-budget.xlsx",
+        "path": "files/input/actual-budget.xlsx",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/input/facts.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "budget/actual-budget-march.xlsx",
+        "path": "files/practice/actual-budget-march.xlsx",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "budget/facts.md",
+        "path": "files/practice/facts.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/research-video": {
+    "group": "workflow",
+    "execution": {
+      "mode": "hosted_step_requires_explicit_choice",
+      "local_tutorial": true
+    },
+    "files": []
+  },
+  "clara/transcribe": {
+    "group": "workflow",
+    "execution": {
+      "mode": "hosted_step_requires_explicit_choice",
+      "local_tutorial": true,
+      "route": "local_bundle_import_and_review"
+    },
+    "files": [
+      {
+        "source": "transcribe/case-notes-voice-input-it.json",
+        "path": "files/input/case-notes-voice-input-it.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "transcribe/context-it.md",
+        "path": "files/input/context-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-practice-it.json",
+        "path": "files/practice/case-notes-voice-practice-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "transcribe/context-it.md",
+        "path": "files/practice/context-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-input-en.json",
+        "path": "files/input/case-notes-voice-input-en.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "transcribe/context-en.md",
+        "path": "files/input/context-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-practice-en.json",
+        "path": "files/practice/case-notes-voice-practice-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "transcribe/context-en.md",
+        "path": "files/practice/context-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-input-fr.json",
+        "path": "files/input/case-notes-voice-input-fr.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "transcribe/context-fr.md",
+        "path": "files/input/context-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-practice-fr.json",
+        "path": "files/practice/case-notes-voice-practice-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "transcribe/context-fr.md",
+        "path": "files/practice/context-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-input-de.json",
+        "path": "files/input/case-notes-voice-input-de.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "transcribe/context-de.md",
+        "path": "files/input/context-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-practice-de.json",
+        "path": "files/practice/case-notes-voice-practice-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "transcribe/context-de.md",
+        "path": "files/practice/context-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-input-es.json",
+        "path": "files/input/case-notes-voice-input-es.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "transcribe/context-es.md",
+        "path": "files/input/context-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "transcribe/case-notes-voice-practice-es.json",
+        "path": "files/practice/case-notes-voice-practice-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "transcribe/context-es.md",
+        "path": "files/practice/context-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "lucia/apertura-pratica": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "matter/request-it.md",
+        "path": "files/input/request-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "matter/supply-it.md",
+        "path": "files/input/supply-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "matter/request-it.md",
+        "path": "files/practice/request-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "matter/supply-it.md",
+        "path": "files/practice/supply-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "matter/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "matter/request-en.md",
+        "path": "files/input/request-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "matter/supply-en.md",
+        "path": "files/input/supply-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "matter/request-en.md",
+        "path": "files/practice/request-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "matter/supply-en.md",
+        "path": "files/practice/supply-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "matter/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "matter/request-fr.md",
+        "path": "files/input/request-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "matter/supply-fr.md",
+        "path": "files/input/supply-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "matter/request-fr.md",
+        "path": "files/practice/request-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "matter/supply-fr.md",
+        "path": "files/practice/supply-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "matter/update-fr.md",
+        "path": "files/practice/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "matter/request-de.md",
+        "path": "files/input/request-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "matter/supply-de.md",
+        "path": "files/input/supply-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "matter/request-de.md",
+        "path": "files/practice/request-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "matter/supply-de.md",
+        "path": "files/practice/supply-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "matter/update-de.md",
+        "path": "files/practice/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "matter/request-es.md",
+        "path": "files/input/request-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "matter/supply-es.md",
+        "path": "files/input/supply-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "matter/request-es.md",
+        "path": "files/practice/request-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "matter/supply-es.md",
+        "path": "files/practice/supply-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "matter/update-es.md",
+        "path": "files/practice/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "matter/register.csv",
+        "path": "files/input/register.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "matter/register.csv",
+        "path": "files/practice/register.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "lucia/comunicazione-professionale": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "prepare_sources_then_review_communication_package"
+    },
+    "files": [
+      {
+        "source": "communication/lucia/brief-it.md",
+        "path": "files/input/brief-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it.md",
+        "path": "files/input/source-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it-provenance.json",
+        "path": "files/input/source-it-provenance.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-it.md",
+        "path": "files/practice/brief-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it.md",
+        "path": "files/practice/source-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/source-it-provenance.json",
+        "path": "files/practice/source-it-provenance.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/lucia/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-en.md",
+        "path": "files/input/brief-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en.md",
+        "path": "files/input/source-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en-provenance.json",
+        "path": "files/input/source-en-provenance.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-en.md",
+        "path": "files/practice/brief-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en.md",
+        "path": "files/practice/source-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/source-en-provenance.json",
+        "path": "files/practice/source-en-provenance.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/lucia/practice-en.md",
+        "path": "files/practice/practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-fr.md",
+        "path": "files/input/brief-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr.md",
+        "path": "files/input/source-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr-provenance.json",
+        "path": "files/input/source-fr-provenance.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-fr.md",
+        "path": "files/practice/brief-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr.md",
+        "path": "files/practice/source-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/source-fr-provenance.json",
+        "path": "files/practice/source-fr-provenance.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/lucia/practice-fr.md",
+        "path": "files/practice/practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-de.md",
+        "path": "files/input/brief-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de.md",
+        "path": "files/input/source-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de-provenance.json",
+        "path": "files/input/source-de-provenance.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-de.md",
+        "path": "files/practice/brief-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de.md",
+        "path": "files/practice/source-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/source-de-provenance.json",
+        "path": "files/practice/source-de-provenance.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/lucia/practice-de.md",
+        "path": "files/practice/practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-es.md",
+        "path": "files/input/brief-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es.md",
+        "path": "files/input/source-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es-provenance.json",
+        "path": "files/input/source-es-provenance.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/lucia/brief-es.md",
+        "path": "files/practice/brief-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es.md",
+        "path": "files/practice/source-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/source-es-provenance.json",
+        "path": "files/practice/source-es-provenance.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "communication/lucia/practice-es.md",
+        "path": "files/practice/practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "lucia/presenza-digitale-studio": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "local_website_workspace"
+    },
+    "files": [
+      {
+        "source": "website/lucia-studio-it.md",
+        "path": "files/input/lucia-studio-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-it.md",
+        "path": "files/practice/lucia-studio-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "website/lucia-update-it.md",
+        "path": "files/practice/lucia-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-en.md",
+        "path": "files/input/lucia-studio-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-en.md",
+        "path": "files/practice/lucia-studio-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "website/lucia-update-en.md",
+        "path": "files/practice/lucia-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-fr.md",
+        "path": "files/input/lucia-studio-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-fr.md",
+        "path": "files/practice/lucia-studio-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "website/lucia-update-fr.md",
+        "path": "files/practice/lucia-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-de.md",
+        "path": "files/input/lucia-studio-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-de.md",
+        "path": "files/practice/lucia-studio-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "website/lucia-update-de.md",
+        "path": "files/practice/lucia-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-es.md",
+        "path": "files/input/lucia-studio-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "website/lucia-studio-es.md",
+        "path": "files/practice/lucia-studio-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "website/lucia-update-es.md",
+        "path": "files/practice/lucia-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "lucia/quesito-legale-fiscale": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "plan_question_research_then_validate_answer"
+    },
+    "files": [
+      {
+        "source": "question/question-it.md",
+        "path": "files/input/question-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/sources-it.md",
+        "path": "files/input/sources-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/guide-it.md",
+        "path": "files/input/guide-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/source-provenance-it.json",
+        "path": "files/input/source-provenance-it.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/question-it.md",
+        "path": "files/practice/question-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/sources-it.md",
+        "path": "files/practice/sources-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/guide-it.md",
+        "path": "files/practice/guide-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/source-provenance-it.json",
+        "path": "files/practice/source-provenance-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "question/question-en.md",
+        "path": "files/input/question-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/sources-en.md",
+        "path": "files/input/sources-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/guide-en.md",
+        "path": "files/input/guide-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/source-provenance-en.json",
+        "path": "files/input/source-provenance-en.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/question-en.md",
+        "path": "files/practice/question-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/sources-en.md",
+        "path": "files/practice/sources-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/guide-en.md",
+        "path": "files/practice/guide-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/source-provenance-en.json",
+        "path": "files/practice/source-provenance-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/practice-en.md",
+        "path": "files/practice/practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "question/question-fr.md",
+        "path": "files/input/question-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/sources-fr.md",
+        "path": "files/input/sources-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/guide-fr.md",
+        "path": "files/input/guide-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/source-provenance-fr.json",
+        "path": "files/input/source-provenance-fr.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/question-fr.md",
+        "path": "files/practice/question-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/sources-fr.md",
+        "path": "files/practice/sources-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/guide-fr.md",
+        "path": "files/practice/guide-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/source-provenance-fr.json",
+        "path": "files/practice/source-provenance-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/practice-fr.md",
+        "path": "files/practice/practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "question/question-de.md",
+        "path": "files/input/question-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/sources-de.md",
+        "path": "files/input/sources-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/guide-de.md",
+        "path": "files/input/guide-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/source-provenance-de.json",
+        "path": "files/input/source-provenance-de.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/question-de.md",
+        "path": "files/practice/question-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/sources-de.md",
+        "path": "files/practice/sources-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/guide-de.md",
+        "path": "files/practice/guide-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/source-provenance-de.json",
+        "path": "files/practice/source-provenance-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/practice-de.md",
+        "path": "files/practice/practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "question/question-es.md",
+        "path": "files/input/question-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/sources-es.md",
+        "path": "files/input/sources-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/guide-es.md",
+        "path": "files/input/guide-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/source-provenance-es.json",
+        "path": "files/input/source-provenance-es.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/question-es.md",
+        "path": "files/practice/question-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/sources-es.md",
+        "path": "files/practice/sources-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/guide-es.md",
+        "path": "files/practice/guide-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/source-provenance-es.json",
+        "path": "files/practice/source-provenance-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/practice-es.md",
+        "path": "files/practice/practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "question/directive-original-es.pdf",
+        "path": "files/input/directive-original-es.pdf",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "question/directive-original-es.pdf",
+        "path": "files/practice/directive-original-es.pdf",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/advisory-brief-planner": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "advisory/assignment-it.md",
+        "path": "files/input/assignment-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/notes-it.md",
+        "path": "files/input/notes-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/assignment-it.md",
+        "path": "files/practice/assignment-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/notes-it.md",
+        "path": "files/practice/notes-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/assignment-en.md",
+        "path": "files/input/assignment-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/notes-en.md",
+        "path": "files/input/notes-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/assignment-en.md",
+        "path": "files/practice/assignment-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/notes-en.md",
+        "path": "files/practice/notes-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/assignment-fr.md",
+        "path": "files/input/assignment-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/notes-fr.md",
+        "path": "files/input/notes-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/assignment-fr.md",
+        "path": "files/practice/assignment-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/notes-fr.md",
+        "path": "files/practice/notes-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/update-fr.md",
+        "path": "files/practice/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/assignment-de.md",
+        "path": "files/input/assignment-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/notes-de.md",
+        "path": "files/input/notes-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/assignment-de.md",
+        "path": "files/practice/assignment-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/notes-de.md",
+        "path": "files/practice/notes-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/update-de.md",
+        "path": "files/practice/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/assignment-es.md",
+        "path": "files/input/assignment-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/notes-es.md",
+        "path": "files/input/notes-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/assignment-es.md",
+        "path": "files/practice/assignment-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/notes-es.md",
+        "path": "files/practice/notes-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/update-es.md",
+        "path": "files/practice/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/revised-assignment-it.md",
+        "path": "files/practice/revised-assignment-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/revised-assignment-en.md",
+        "path": "files/practice/revised-assignment-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/revised-assignment-fr.md",
+        "path": "files/practice/revised-assignment-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/revised-assignment-de.md",
+        "path": "files/practice/revised-assignment-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/revised-assignment-es.md",
+        "path": "files/practice/revised-assignment-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/advisory-case-director": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "advisory/assignment-it.md",
+        "path": "files/input/assignment-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/notes-it.md",
+        "path": "files/input/notes-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/assignment-it.md",
+        "path": "files/practice/assignment-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/notes-it.md",
+        "path": "files/practice/notes-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/assignment-en.md",
+        "path": "files/input/assignment-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/notes-en.md",
+        "path": "files/input/notes-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/assignment-en.md",
+        "path": "files/practice/assignment-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/notes-en.md",
+        "path": "files/practice/notes-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/assignment-fr.md",
+        "path": "files/input/assignment-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/notes-fr.md",
+        "path": "files/input/notes-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/assignment-fr.md",
+        "path": "files/practice/assignment-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/notes-fr.md",
+        "path": "files/practice/notes-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/update-fr.md",
+        "path": "files/practice/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/assignment-de.md",
+        "path": "files/input/assignment-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/notes-de.md",
+        "path": "files/input/notes-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/assignment-de.md",
+        "path": "files/practice/assignment-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/notes-de.md",
+        "path": "files/practice/notes-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/update-de.md",
+        "path": "files/practice/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/assignment-es.md",
+        "path": "files/input/assignment-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/notes-es.md",
+        "path": "files/input/notes-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/assignment-es.md",
+        "path": "files/practice/assignment-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/notes-es.md",
+        "path": "files/practice/notes-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/update-es.md",
+        "path": "files/practice/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "clara/advisory-deliverable-validator": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "advisory/assignment-it.md",
+        "path": "files/input/assignment-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/notes-it.md",
+        "path": "files/input/notes-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-it.md",
+        "path": "files/input/external-memo-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/assignment-it.md",
+        "path": "files/practice/assignment-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/notes-it.md",
+        "path": "files/practice/notes-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-it.md",
+        "path": "files/practice/external-memo-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/update-it.md",
+        "path": "files/practice/update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "advisory/assignment-en.md",
+        "path": "files/input/assignment-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/notes-en.md",
+        "path": "files/input/notes-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-en.md",
+        "path": "files/input/external-memo-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/assignment-en.md",
+        "path": "files/practice/assignment-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/notes-en.md",
+        "path": "files/practice/notes-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-en.md",
+        "path": "files/practice/external-memo-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "advisory/assignment-fr.md",
+        "path": "files/input/assignment-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/notes-fr.md",
+        "path": "files/input/notes-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-fr.md",
+        "path": "files/input/external-memo-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/assignment-fr.md",
+        "path": "files/practice/assignment-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/notes-fr.md",
+        "path": "files/practice/notes-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-fr.md",
+        "path": "files/practice/external-memo-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/update-fr.md",
+        "path": "files/practice/update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "advisory/assignment-de.md",
+        "path": "files/input/assignment-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/notes-de.md",
+        "path": "files/input/notes-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-de.md",
+        "path": "files/input/external-memo-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/assignment-de.md",
+        "path": "files/practice/assignment-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/notes-de.md",
+        "path": "files/practice/notes-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-de.md",
+        "path": "files/practice/external-memo-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/update-de.md",
+        "path": "files/practice/update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "advisory/assignment-es.md",
+        "path": "files/input/assignment-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/notes-es.md",
+        "path": "files/input/notes-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-es.md",
+        "path": "files/input/external-memo-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/assignment-es.md",
+        "path": "files/practice/assignment-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/notes-es.md",
+        "path": "files/practice/notes-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/external-memo-es.md",
+        "path": "files/practice/external-memo-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "advisory/update-es.md",
+        "path": "files/practice/update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  }
+}

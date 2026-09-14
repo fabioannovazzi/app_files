@@ -1,0 +1,4 @@
+scenario,period,units,net_price_eur,variable_cost_per_order_eur,fixed_cost_eur
+pilot,2027-01,20,45,18,800
+pilot,2027-02,30,45,18,800
+pilot,2027-03,40,45,18,800

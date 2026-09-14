@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,19 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "assess_arrangements_then_review_new_evidence"
+  },
   "sources": [
+    {
+      "path": "modules/adeguati-assetti/assets/icon.svg",
+      "repository_path": "plugins/adeguati-assetti/assets/icon.svg",
+      "sha256": "d215fd17d4913d8f3fe5a4bf4d492f78ee46fa65408d0ec878b3fec32db8a004"
+    },
     {
       "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
       "repository_path": "plugins/adeguati-assetti/references/intelligent-assessment.md",
@@ -34,6 +46,11 @@
       "path": "modules/adeguati-assetti/references/record-contract.md",
       "repository_path": "plugins/adeguati-assetti/references/record-contract.md",
       "sha256": "398c0dee2f402f5fd1e0aaec75db77ab03f04f8986d02ded403e7af0d5336591"
+    },
+    {
+      "path": "modules/adeguati-assetti/requirements.txt",
+      "repository_path": "plugins/adeguati-assetti/requirements.txt",
+      "sha256": "a289f525166e15bc5b9d66d072d85822ef3152ad0f0456a801a99ed82593ca58"
     },
     {
       "path": "modules/adeguati-assetti/scripts/assetti_review.py",
@@ -51,308 +68,578 @@
       "sha256": "e899b5b5352a63249a6ad86ed92978f0710b030655f96c1e929ca3c91921e3e9"
     },
     {
+      "path": "modules/adeguati-assetti/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
       "sha256": "295332691d871c1b4b99419fedaf8a4873039f235fcdf0025fec58ea43a4a698"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/company-it.md",
+      "sha256": "63e991cc0a2363680116ab14d85f2de8e89d64e8687d59031e6324307d1f516f",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-it.md",
+      "sha256": "63e991cc0a2363680116ab14d85f2de8e89d64e8687d59031e6324307d1f516f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-it.md",
+      "sha256": "6f7a7beb8b67741474f657a27088d3602f05d33200d979aae6cdf61a971d1479",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-it.md",
+      "sha256": "6f7a7beb8b67741474f657a27088d3602f05d33200d979aae6cdf61a971d1479",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-it.md",
+      "sha256": "6dc0f6fd6f685739e6d2a9a4a1f8d9ba74b8e0bbaa2cafa43b573f0ce4a580c4",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-it.md",
+      "sha256": "6dc0f6fd6f685739e6d2a9a4a1f8d9ba74b8e0bbaa2cafa43b573f0ce4a580c4",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-it.md",
+      "sha256": "0512a27a30f2345062088f8b66a5990fad709f2687b80e35849b07f634f97f9f",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-en.md",
+      "sha256": "cc734b7fb3ea492c612b5e372b51aa6c5dfae91f78996c97bd0be53f60d4bc66",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-en.md",
+      "sha256": "cc734b7fb3ea492c612b5e372b51aa6c5dfae91f78996c97bd0be53f60d4bc66",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-en.md",
+      "sha256": "06039e8a2a4aab2974c8c555e7c541460dc2646bedfb7c108e4d17fed1707836",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-en.md",
+      "sha256": "06039e8a2a4aab2974c8c555e7c541460dc2646bedfb7c108e4d17fed1707836",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-en.md",
+      "sha256": "4c5552d23d43b7a0a95cda2a7ec596f17c215d0afecc7ef113bc4cb78f1a5e3a",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-en.md",
+      "sha256": "4c5552d23d43b7a0a95cda2a7ec596f17c215d0afecc7ef113bc4cb78f1a5e3a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "c258126aa9e69ca2b174c72b5b1e889b3c5b9b7ad6ce7e15e74ca587ab2d4ac6",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-fr.md",
+      "sha256": "cd009e509f37a8f012dd33f7001283a8606512592db936636db8f82bde322b65",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-fr.md",
+      "sha256": "cd009e509f37a8f012dd33f7001283a8606512592db936636db8f82bde322b65",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-fr.md",
+      "sha256": "e268e23a6222514da13dd702cab8c12bf327efc8dc6321797c8806530208b140",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-fr.md",
+      "sha256": "e268e23a6222514da13dd702cab8c12bf327efc8dc6321797c8806530208b140",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-fr.md",
+      "sha256": "ccd482f74133c775014467236ba92df0d51f576b7d3c315369dffeda125215f6",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-fr.md",
+      "sha256": "ccd482f74133c775014467236ba92df0d51f576b7d3c315369dffeda125215f6",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-fr.md",
+      "sha256": "2091058243f06b7cc83e0c7b1807186d41c51092e4d5b76d08ac11a9f2975a16",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-de.md",
+      "sha256": "70c66f2b64cb4087d2d21b00d7f0ad41e467499cd54839d3a63065460a69385d",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-de.md",
+      "sha256": "70c66f2b64cb4087d2d21b00d7f0ad41e467499cd54839d3a63065460a69385d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-de.md",
+      "sha256": "25885c986c21f6f414bb0a5ebf03fa0db2730b5c187502881e3e5ac2fcc97b20",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-de.md",
+      "sha256": "25885c986c21f6f414bb0a5ebf03fa0db2730b5c187502881e3e5ac2fcc97b20",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-de.md",
+      "sha256": "ce01ca87e4599bed1239e0f81d4108e8c5fe22b015e499de3aa56612514b7a8e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-de.md",
+      "sha256": "ce01ca87e4599bed1239e0f81d4108e8c5fe22b015e499de3aa56612514b7a8e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-de.md",
+      "sha256": "9069d44a470ceb2a17d32fd24daf7e9d24b1e67395621d387c780d933fe8d4a6",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/company-es.md",
+      "sha256": "8bc84cfd3ea1292c6a694e9ffdd3ff553b329474fa482c8c4cebd1f88c921a45",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/company-es.md",
+      "sha256": "8bc84cfd3ea1292c6a694e9ffdd3ff553b329474fa482c8c4cebd1f88c921a45",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/procedure-es.md",
+      "sha256": "a6f707bb9121f14d932cde7da6bb7c1f584577a2292e37cbf3692a1bc5bbc8b3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/procedure-es.md",
+      "sha256": "a6f707bb9121f14d932cde7da6bb7c1f584577a2292e37cbf3692a1bc5bbc8b3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/operation-es.md",
+      "sha256": "5ed25f831384972cb21ea030a0f457b5f973e2363702494596228291b2e01b6c",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/operation-es.md",
+      "sha256": "5ed25f831384972cb21ea030a0f457b5f973e2363702494596228291b2e01b6c",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/update-es.md",
+      "sha256": "cf38699872fa602ace8cee5f1c17939f7a60f8b65e74f9902977d51a92eb1b25",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Una procedura scritta funziona davvero?",
-      "goal": "Leggere gli assetti di un'impresa attraverso le prove del loro funzionamento e costruire un piano di miglioramento rivedibile.",
-      "scenario": "Officina Arco ha 18 addetti. La procedura richiede un report di cassa settimanale. Il fascicolo contiene la procedura, un solo report di giugno e un verbale di luglio: il direttore chiede di riceverlo più spesso. Non sappiamo se altri report esistano.",
-      "request": "Vera, aiutami a capire se il controllo di cassa viene usato e cosa chiedere all'azienda.",
-      "scope": "Valutazione limitata al processo di informazione sulla cassa. Il caso non permette un giudizio complessivo sugli assetti aziendali.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Evidenza",
-        "Limite"
+      "title": "Valutare gli assetti aziendali con Vera",
+      "goal": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
+      "scenario": "Officina Arco vuole rivedere responsabilità, chiusura mensile e informazioni sugli incassi. Abbiamo il profilo aziendale, una procedura e un esempio reale nel caso fittizio.",
+      "scope": "Una prima valutazione mirata degli assetti organizzativi, amministrativi e contabili. Il perimetro è quello descritto nei documenti; non è una certificazione dell’intera azienda.",
+      "inputs": "Apri company-it.md, procedure-it.md e operation-it.md. Spiega a Vera impresa, incarico e data: 31 marzo 2026. Fornisci esempi di lavoro svolto insieme alle procedure scritte.",
+      "request": "Vera, valuta gli assetti di Officina Arco per responsabilità, chiusura mensile e gestione delle informazioni sugli incassi. Usa questi documenti e mostrami valutazione, limiti e azioni da discutere.",
+      "steps": [
+        "Nel thread di lavoro Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. La voce spiega perché una procedura e un esempio della sua applicazione sono entrambi utili.",
+        "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. La voce segue le evidenze effettive e le domande che possono cambiare il giudizio.",
+        "Apri il memo prodotto. Leggi prima la valutazione complessiva, poi un rilievo, la sua fonte e l’azione collegata. Distingui chi e quando sono proposti da impegni già accettati."
       ],
-      "input_rows": [
-        [
-          "P1 · procedura, § 3",
-          "Report ogni venerdì; responsabile amministrativo",
-          "Descrive il processo previsto"
-        ],
-        [
-          "R1 · report 26 giugno",
-          "Saldo e scadenze della settimana successiva",
-          "Un solo periodo disponibile"
-        ],
-        [
-          "V1 · verbale 10 luglio",
-          "Il direttore richiede maggiore frequenza",
-          "Non documenta tutti gli invii"
-        ]
+      "deliverables": [
+        "Memo con valutazione motivata, osservazioni, rilievi e piano di miglioramento.",
+        "Record collegato alle fonti che consente un riesame successivo e conserva le decisioni effettivamente espresse."
       ],
-      "basis": "P1 documenta il disegno del processo. R1 prova una singola produzione. V1 documenta una richiesta di miglioramento, senza dimostrare l'assenza di tutti gli altri report.",
-      "method": [
-        "Separa procedura prevista, dichiarazioni e prove operative. Cita ogni documento con il punto esatto.",
-        "Confronta una possibile irregolarità degli invii con l'alternativa di un fascicolo incompleto. Formula la domanda che distingue le due ipotesi.",
-        "Prepara osservazione, conseguenza, azione proposta e prova da raccogliere. Mantieni responsabile e scadenza come proposte fino alla revisione."
+      "review": "Controlla la corrispondenza tra giudizio e prove, il perimetro, le aree non esaminate e la proporzione delle azioni. Un documento scritto o un ciclo riuscito non prova continuità; una lacuna documentale non dimostra da sola che il processo non funzioni.",
+      "checkpoints": [
+        "Prima dell’analisi, identifica il processo e un esempio di funzionamento disponibile.",
+        "Nel memo, collega un’azione al rilievo e alla fonte che la motivano."
       ],
-      "result_title": "Controllo di cassa: funzionamento da documentare",
-      "conclusion": "Il processo è previsto e risulta eseguito almeno una volta. La continuità e l'uso delle informazioni restano da verificare.",
-      "output_columns": [
-        "Osservazione",
-        "Azione proposta",
-        "Prova di attuazione"
-      ],
-      "output_rows": [
-        [
-          "Frequenza non ricostruibile · P1/R1",
-          "Recuperare il registro degli invii di giugno e luglio",
-          "Report datati e destinatari"
-        ],
-        [
-          "Richiesta del direttore · V1",
-          "Chiarire quali decisioni richiedono maggiore frequenza",
-          "Verbale e successivo utilizzo del report"
-        ]
-      ],
-      "check": "Un documento mancante limita la verifica: non prova che il processo non esista. Un saldo positivo non dimostra l'adeguatezza degli assetti.",
-      "question": "Arriva una nuova procedura firmata. Possiamo chiudere il rilievo?",
-      "answer": "La firma aggiorna il disegno del processo. Servono ancora prove degli invii e dell'uso del report per valutarne il funzionamento.",
-      "practice": "Aggiungiamo due report e una decisione del direttore: quali conclusioni possiamo ora sostenere?",
-      "next": "Nel tuo incarico seleziona un processo concreto, i documenti che lo descrivono e almeno un esempio del suo utilizzo."
+      "practice": "Aggiungi update-it.md nello stesso dossier e chiedi il riesame al 30 aprile. Vera collega il record appena prodotto, rivaluta ogni azione precedente e conserva la prima versione. Spiega come le nuove evidenze cambiano il giudizio.",
+      "success": "Sai fornire documenti utili, richiedere la valutazione, usare il piano di azioni e chiedere un riesame basato su nuove evidenze.",
+      "repeat": "Descrivi impresa, finalità e perimetro della valutazione. Dai a Vera procedure, esempi operativi e precedenti pertinenti. Rivedi conclusioni e azioni prima di concordarle con l’impresa."
     },
     "en": {
-      "title": "Does the written procedure actually operate?",
-      "goal": "Assess an enterprise's arrangements through operating evidence and prepare a reviewable improvement plan.",
-      "scenario": "Fictional Arco Workshop has 18 employees. Its procedure requires a weekly cash report. The file contains that procedure, one June report and July minutes in which the director asks for more frequent reporting. Other reports may exist outside the supplied file.",
-      "request": "Vera, help me understand whether cash reporting is used and what to ask the company.",
-      "scope": "One cash-information process. This case does not support an overall conclusion on the company's arrangements.",
-      "input_columns": [
-        "Fictional source",
-        "Evidence",
-        "Limit"
+      "title": "Assess company arrangements with Vera",
+      "goal": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
+      "scenario": "Officina Arco wants to review responsibilities, monthly closing and collection information. We have its company profile, a procedure and one operating example in the fictional case.",
+      "scope": "An initial focused assessment of organizational, administrative and accounting arrangements in an Italian company. Scope follows the documents; this is not a whole-company certificate.",
+      "inputs": "Open company-en.md, procedure-en.md and operation-en.md. State company, assignment and date: 31 March 2026. Provide operating examples alongside written procedures.",
+      "request": "Vera, assess Officina Arco’s arrangements for responsibilities, monthly closing and collection information. Use these documents and show the assessment, limits and actions to discuss.",
+      "steps": [
+        "In the working chat, Vera reconstructs how the company operates and proposes scope. Voice explains why both a procedure and an example of its use are useful.",
+        "Vera compares responsibilities, deadlines, deliveries and decisions, verifies relevant professional sources and prepares proportionate findings. Voice follows actual evidence and questions that could change the assessment.",
+        "Open the generated memo. Read the overall assessment first, then one finding, its source and linked action. Distinguish proposed owners and timing from accepted commitments."
       ],
-      "input_rows": [
-        [
-          "P1 · procedure § 3",
-          "Report every Friday; administration manager responsible",
-          "Intended process"
-        ],
-        [
-          "R1 · 26 June report",
-          "Cash balance and next week's payments",
-          "One observed period"
-        ],
-        [
-          "V1 · 10 July minutes",
-          "Director requests greater frequency",
-          "Not a complete dispatch record"
-        ]
+      "deliverables": [
+        "Memo with reasoned assessment, observations, findings and improvement plan.",
+        "Source-linked record for subsequent assessment and decisions actually expressed."
       ],
-      "basis": "P1 describes the design. R1 demonstrates one report. V1 documents a request, without proving that every other report was absent.",
-      "method": [
-        "Separate documented procedure, assertions and operating evidence. Cite each observation precisely.",
-        "Compare irregular production with the alternative explanation of an incomplete file. Ask the question that distinguishes them.",
-        "Prepare the finding, consequence, proposed action and implementation evidence. Owners and dates remain proposals until reviewed."
+      "review": "Check the link between assessment and evidence, scope, unassessed areas and proportionate actions. A written policy or one successful cycle does not prove continuity; a documentation gap alone does not prove the process fails.",
+      "checkpoints": [
+        "Before analysis, identify the process and one available operating example.",
+        "In the memo, link an action to the finding and source that justify it."
       ],
-      "result_title": "Cash reporting: continuity still to establish",
-      "conclusion": "The process is documented and was performed at least once. Its continuity and use remain to be verified.",
-      "output_columns": [
-        "Observation",
-        "Proposed action",
-        "Implementation evidence"
-      ],
-      "output_rows": [
-        [
-          "Frequency unclear · P1/R1",
-          "Recover June and July dispatch records",
-          "Dated reports and recipients"
-        ],
-        [
-          "Director's request · V1",
-          "Clarify which decisions need faster reporting",
-          "Minutes and subsequent use"
-        ]
-      ],
-      "check": "Missing documents limit the assessment; they do not prove that a process never operates. A positive cash balance does not establish adequate arrangements.",
-      "question": "A newly signed procedure arrives. Can we close the finding?",
-      "answer": "It updates the process design. Evidence of reporting and use is still needed to assess operation.",
-      "practice": "Add two reports and a director's decision: which conclusions can we now support?",
-      "next": "Choose one real process, its procedure and evidence of its actual use."
+      "practice": "Add update-en.md to the same file and request review at 30 April. Vera links the newly generated record, reassesses every earlier action and preserves the first version. Explain how the new evidence changes the assessment.",
+      "success": "You can provide useful documents, request the assessment, use the action plan and request a reassessment based on new evidence.",
+      "repeat": "Describe company, purpose and scope. Give Vera relevant procedures, operating examples and prior reviews. Review conclusions and actions before agreeing them with the company."
     },
     "fr": {
-      "title": "La procédure écrite fonctionne-t-elle réellement ?",
-      "goal": "Évaluer l'organisation d'une entreprise à partir de preuves de fonctionnement et préparer des améliorations à revoir.",
-      "scenario": "L'atelier fictif Arco emploie 18 personnes. Sa procédure prévoit un rapport de trésorerie hebdomadaire. Le dossier contient cette procédure, un seul rapport de juin et un procès-verbal de juillet demandant une fréquence accrue. D'autres rapports peuvent exister ailleurs.",
-      "request": "Vera, aide-moi à comprendre comment le suivi de trésorerie est utilisé et quelles questions poser.",
-      "scope": "Un seul processus d'information sur la trésorerie. Le cas ne permet pas un avis global sur l'organisation de l'entreprise.",
-      "input_columns": [
-        "Source fictive",
-        "Élément constaté",
-        "Limite"
+      "title": "Évaluer l’organisation de l’entreprise avec Vera",
+      "goal": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
+      "scenario": "Officina Arco revoit responsabilités, clôture mensuelle et informations de recouvrement. Le cas fictif fournit profil, procédure et un exemple de fonctionnement.",
+      "scope": "Une première évaluation ciblée des dispositifs organisationnels, administratifs et comptables d’une entreprise italienne. Le périmètre suit les documents ; aucune certification de toute l’entreprise.",
+      "inputs": "Ouvrez company-fr.md, procedure-fr.md et operation-fr.md. Précisez entreprise, mission et date : 31 mars 2026. Fournissez des exemples de travail avec les procédures écrites.",
+      "request": "Vera, évalue les dispositifs d’Officina Arco pour responsabilités, clôture mensuelle et informations de recouvrement. Utilise ces documents et montre évaluation, limites et actions à discuter.",
+      "steps": [
+        "Dans la conversation de travail, Vera reconstitue le fonctionnement et propose le périmètre. La voix explique l’utilité conjointe d’une procédure et d’un exemple de son application.",
+        "Vera compare responsabilités, échéances, livraisons et décisions, vérifie les sources professionnelles pertinentes et prépare des constats proportionnés. La voix suit les preuves réelles et questions pouvant modifier le jugement.",
+        "Ouvrez le mémo produit. Lisez l’évaluation globale, puis un constat, sa source et l’action liée. Distinguez responsables et délais proposés des engagements acceptés."
       ],
-      "input_rows": [
-        [
-          "P1 · procédure § 3",
-          "Rapport chaque vendredi ; responsable administratif",
-          "Processus prévu"
-        ],
-        [
-          "R1 · rapport du 26 juin",
-          "Solde et échéances de la semaine suivante",
-          "Une seule période"
-        ],
-        [
-          "V1 · procès-verbal du 10 juillet",
-          "Demande de fréquence accrue",
-          "Ne recense pas tous les envois"
-        ]
+      "deliverables": [
+        "Mémo avec évaluation motivée, observations, constats et plan d’amélioration.",
+        "Version liée aux sources permettant un réexamen et la conservation des décisions exprimées."
       ],
-      "basis": "P1 décrit la conception du processus. R1 prouve une production. V1 documente une demande, sans établir l'absence de tous les autres rapports.",
-      "method": [
-        "Sépare procédure prévue, déclarations et preuves opérationnelles. Cite précisément chaque observation.",
-        "Compare une production irrégulière avec l'hypothèse d'un dossier incomplet. Pose la question permettant de les départager.",
-        "Prépare constat, conséquence, action proposée et preuve d'application. Responsables et dates restent des propositions jusqu'à leur revue."
+      "review": "Vérifiez lien entre jugement et preuves, périmètre, domaines non examinés et proportion des actions. Une procédure ou un cycle réussi ne prouve pas la continuité ; une lacune documentaire ne prouve pas seule un dysfonctionnement.",
+      "checkpoints": [
+        "Avant l’analyse, identifiez le processus et un exemple disponible de son fonctionnement.",
+        "Dans le mémo, reliez une action au constat et à sa source."
       ],
-      "result_title": "Suivi de trésorerie : continuité à documenter",
-      "conclusion": "Le processus est prévu et a été exécuté au moins une fois. Sa continuité et son utilisation restent à vérifier.",
-      "output_columns": [
-        "Observation",
-        "Action proposée",
-        "Preuve attendue"
-      ],
-      "output_rows": [
-        [
-          "Fréquence incertaine · P1/R1",
-          "Récupérer les envois de juin et juillet",
-          "Rapports datés et destinataires"
-        ],
-        [
-          "Demande du directeur · V1",
-          "Préciser les décisions nécessitant plus de fréquence",
-          "Procès-verbal et utilisation ultérieure"
-        ]
-      ],
-      "check": "Un document manquant limite la vérification ; il ne prouve pas l'absence du processus. Un solde positif ne démontre pas l'adéquation de l'organisation.",
-      "question": "Une nouvelle procédure signée arrive. Peut-on clore le constat ?",
-      "answer": "Elle actualise la conception du processus. Des preuves de production, d'envoi et d'utilisation restent nécessaires pour apprécier son fonctionnement.",
-      "practice": "Ajoutons deux rapports et une décision du directeur : quelles conclusions deviennent étayées ?",
-      "next": "Choisis un processus concret, sa procédure et des preuves de son utilisation effective."
+      "practice": "Ajoutez update-fr.md au même dossier et demandez un réexamen au 30 avril. Vera relie la version produite, réévalue chaque action antérieure et conserve la première version. Expliquez l’effet des nouvelles preuves.",
+      "success": "Vous savez fournir les pièces, demander l’évaluation, utiliser le plan d’actions et solliciter un réexamen avec de nouvelles preuves.",
+      "repeat": "Décrivez entreprise, finalité et périmètre. Fournissez procédures, exemples et revues antérieures pertinentes. Revoyez conclusions et actions avant de les convenir avec l’entreprise."
     },
     "de": {
-      "title": "Wird die dokumentierte Regel tatsächlich angewendet?",
-      "goal": "Betriebliche Strukturen anhand ihrer tatsächlichen Anwendung beurteilen und nachvollziehbare Verbesserungen vorschlagen.",
-      "scenario": "Die fiktive Werkstatt Arco beschäftigt 18 Personen. Laut Verfahrensanweisung ist jeden Freitag ein Liquiditätsbericht erforderlich. Vorhanden sind die Anweisung, ein Juni-Bericht und ein Juli-Protokoll, in dem die Geschäftsleitung häufigere Berichte verlangt. Weitere Berichte könnten außerhalb der übergebenen Akte liegen.",
-      "request": "Vera, zeige mir, ob die Liquiditätsberichterstattung genutzt wird und was wir das Unternehmen fragen sollten.",
-      "scope": "Ein einzelner Informationsprozess. Der Fall erlaubt kein Gesamturteil über die Unternehmensorganisation.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Beleg",
-        "Grenze"
+      "title": "Unternehmensorganisation mit Vera beurteilen",
+      "goal": "Lernen, eine Beurteilung betrieblicher Vorkehrungen anzufordern, Nachweise ihrer Anwendung zu liefern und Feststellungen sowie Maßnahmenvorschläge zu nutzen.",
+      "scenario": "Officina Arco prüft Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Der fiktive Fall enthält Unternehmensprofil, Verfahren und ein Betriebsbeispiel.",
+      "scope": "Eine erste gezielte Beurteilung organisatorischer, administrativer und buchhalterischer Vorkehrungen eines italienischen Unternehmens. Der Umfang folgt den Unterlagen; keine Zertifizierung des gesamten Unternehmens.",
+      "inputs": "Öffnen Sie company-de.md, procedure-de.md und operation-de.md. Nennen Sie Unternehmen, Auftrag und Stichtag: 31. März 2026. Liefern Sie Betriebsbeispiele neben schriftlichen Verfahren.",
+      "request": "Vera, beurteile bei Officina Arco Zuständigkeiten, Monatsabschluss und Informationen zum Forderungseinzug. Nutze diese Unterlagen und zeige Beurteilung, Grenzen und zu besprechende Maßnahmen.",
+      "steps": [
+        "Im Arbeitschat rekonstruiert Vera die Abläufe und schlägt den Umfang vor. Die Stimme erklärt, warum Verfahren und Anwendungsbeispiel gemeinsam nützlich sind.",
+        "Vera vergleicht Zuständigkeiten, Fristen, Übergaben und Entscheidungen, prüft relevante Fachquellen und erarbeitet verhältnismäßige Feststellungen. Die Stimme folgt den tatsächlichen Nachweisen und entscheidungsrelevanten Fragen.",
+        "Öffnen Sie das Memo. Lesen Sie zuerst Gesamtbeurteilung, dann eine Feststellung mit Quelle und Maßnahme. Unterscheiden Sie vorgeschlagene Zuständige und Termine von vereinbarten Zusagen."
       ],
-      "input_rows": [
-        [
-          "P1 · Anweisung § 3",
-          "Bericht jeden Freitag; verantwortlich: Verwaltung",
-          "Vorgesehener Ablauf"
-        ],
-        [
-          "R1 · Bericht vom 26. Juni",
-          "Liquidität und Zahlungen der Folgewoche",
-          "Eine beobachtete Periode"
-        ],
-        [
-          "V1 · Protokoll vom 10. Juli",
-          "Geschäftsleitung verlangt häufigere Berichte",
-          "Kein vollständiger Versandnachweis"
-        ]
+      "deliverables": [
+        "Memo mit begründeter Beurteilung, Beobachtungen, Feststellungen und Verbesserungsplan.",
+        "Quellengebundene Version für spätere Beurteilungen und tatsächlich geäußerte Entscheidungen."
       ],
-      "basis": "P1 beschreibt die Konzeption, R1 belegt einen Bericht und V1 eine Anforderung. Daraus folgt nicht, dass alle anderen Berichte fehlen.",
-      "method": [
-        "Trenne dokumentierte Regeln, Aussagen und Belege der tatsächlichen Anwendung. Verweise auf die genaue Fundstelle.",
-        "Vergleiche unregelmäßige Berichterstattung mit der möglichen Erklärung einer unvollständigen Akte. Formuliere eine klärende Frage.",
-        "Bereite Feststellung, Auswirkung, Maßnahme und Umsetzungsnachweis vor. Verantwortliche und Termine bleiben bis zur Prüfung Vorschläge."
+      "review": "Prüfen Sie Beleggrundlage, Umfang, ungeprüfte Bereiche und Verhältnismäßigkeit. Ein Verfahren oder erfolgreicher Zyklus beweist keine Kontinuität; eine Dokumentationslücke allein beweist kein Versagen.",
+      "checkpoints": [
+        "Benennen Sie vor der Analyse Prozess und verfügbares Betriebsbeispiel.",
+        "Verbinden Sie im Memo eine Maßnahme mit Feststellung und Quelle."
       ],
-      "result_title": "Liquiditätsberichte: Kontinuität noch zu belegen",
-      "conclusion": "Der Prozess ist dokumentiert und wurde mindestens einmal ausgeführt. Regelmäßigkeit und tatsächliche Nutzung sind noch zu prüfen.",
-      "output_columns": [
-        "Beobachtung",
-        "Vorgeschlagene Maßnahme",
-        "Umsetzungsnachweis"
-      ],
-      "output_rows": [
-        [
-          "Häufigkeit unklar · P1/R1",
-          "Versandnachweise für Juni und Juli beschaffen",
-          "Datierte Berichte und Empfänger"
-        ],
-        [
-          "Anforderung der Geschäftsleitung · V1",
-          "Entscheidungen mit schnellerem Informationsbedarf klären",
-          "Protokolle und anschließende Nutzung"
-        ]
-      ],
-      "check": "Fehlende Unterlagen begrenzen die Beurteilung; sie beweisen nicht, dass der Prozess nie stattfindet. Ein positiver Kassenbestand belegt keine angemessene Organisation.",
-      "question": "Eine neu unterschriebene Verfahrensanweisung trifft ein. Können wir die Feststellung schließen?",
-      "answer": "Sie aktualisiert die Konzeption. Für die tatsächliche Anwendung brauchen wir weiterhin Berichte und Belege ihrer Nutzung.",
-      "practice": "Ergänze zwei Berichte und eine Entscheidung der Geschäftsleitung. Welche Schlussfolgerungen sind jetzt belegt?",
-      "next": "Wähle einen realen Prozess, seine Anweisung und Belege seiner Anwendung."
+      "practice": "Fügen Sie update-de.md derselben Akte hinzu und bitten Sie um Prüfung zum 30. April. Vera verknüpft die erzeugte Version, bewertet jede frühere Maßnahme neu und bewahrt die erste Version. Erklären Sie die Wirkung der neuen Nachweise.",
+      "success": "Sie können geeignete Unterlagen liefern, die Beurteilung anfordern, den Maßnahmenplan nutzen und mit neuen Belegen erneut prüfen lassen.",
+      "repeat": "Beschreiben Sie Unternehmen, Zweck und Umfang. Geben Sie Vera relevante Verfahren, Betriebsbeispiele und frühere Beurteilungen. Prüfen Sie Schlussfolgerungen und Maßnahmen vor der Abstimmung mit dem Unternehmen."
     },
     "es": {
-      "title": "¿El procedimiento escrito se utiliza realmente?",
-      "goal": "Evaluar la organización de una empresa a partir de pruebas de funcionamiento y preparar mejoras revisables.",
-      "scenario": "El taller ficticio Arco tiene 18 empleados. Su procedimiento exige un informe de tesorería cada viernes. El expediente contiene el procedimiento, un informe de junio y un acta de julio que pide mayor frecuencia. Podrían existir otros informes fuera de lo entregado.",
-      "request": "Vera, ayúdame a entender si se utiliza la información de tesorería y qué debemos preguntar a la empresa.",
-      "scope": "Un solo proceso informativo. Este caso no permite concluir sobre toda la organización empresarial.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Prueba",
-        "Límite"
+      "title": "Evaluar la organización de la empresa con Vera",
+      "goal": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas.",
+      "scenario": "Officina Arco revisa responsabilidades, cierre mensual e información de cobros. El caso ficticio aporta perfil, procedimiento y un ejemplo operativo.",
+      "scope": "Una primera evaluación concreta de mecanismos organizativos, administrativos y contables de una empresa italiana. El alcance sigue los documentos; no es certificación de toda la empresa.",
+      "inputs": "Abre company-es.md, procedure-es.md y operation-es.md. Indica empresa, encargo y fecha: 31 de marzo de 2026. Aporta ejemplos operativos junto a procedimientos escritos.",
+      "request": "Vera, evalúa los mecanismos de Officina Arco para responsabilidades, cierre mensual e información de cobros. Usa estos documentos y muestra evaluación, límites y acciones que discutir.",
+      "steps": [
+        "En la conversación de trabajo, Vera reconstruye el funcionamiento y propone alcance. La voz explica por qué son útiles tanto procedimiento como ejemplo de aplicación.",
+        "Vera compara responsabilidades, plazos, entregas y decisiones, verifica fuentes profesionales pertinentes y prepara hallazgos proporcionados. La voz sigue pruebas reales y preguntas que pueden cambiar la evaluación.",
+        "Abre el memo generado. Lee primero la evaluación global, después un hallazgo, su fuente y acción vinculada. Distingue responsables y fechas propuestos de compromisos aceptados."
       ],
-      "input_rows": [
-        [
-          "P1 · procedimiento § 3",
-          "Informe cada viernes; responsable de administración",
-          "Proceso previsto"
-        ],
-        [
-          "R1 · informe del 26 de junio",
-          "Saldo y pagos de la semana siguiente",
-          "Un periodo observado"
-        ],
-        [
-          "V1 · acta del 10 de julio",
-          "La dirección pide mayor frecuencia",
-          "No es un registro completo de envíos"
-        ]
+      "deliverables": [
+        "Memo con evaluación razonada, observaciones, hallazgos y plan de mejora.",
+        "Versión vinculada a fuentes para revisiones posteriores y decisiones realmente expresadas."
       ],
-      "basis": "P1 describe el diseño; R1 demuestra un informe; V1 documenta una petición, sin probar que todos los demás informes falten.",
-      "method": [
-        "Separa procedimientos, declaraciones y pruebas de funcionamiento. Cita la ubicación exacta de cada observación.",
-        "Compara la producción irregular con la explicación alternativa de un expediente incompleto. Formula la pregunta que permita distinguirlas.",
-        "Prepara hallazgo, consecuencia, acción propuesta y prueba de implantación. Responsables y fechas siguen siendo propuestas hasta su revisión."
+      "review": "Comprueba relación entre juicio y pruebas, alcance, áreas no examinadas y proporción de acciones. Un procedimiento o ciclo correcto no prueba continuidad; una carencia documental no demuestra por sí sola fallo del proceso.",
+      "checkpoints": [
+        "Antes del análisis, identifica proceso y ejemplo operativo disponible.",
+        "En el memo, relaciona una acción con el hallazgo y su fuente."
       ],
-      "result_title": "Información de tesorería: continuidad por demostrar",
-      "conclusion": "El proceso está documentado y se ejecutó al menos una vez. Quedan por verificar su continuidad y utilización.",
-      "output_columns": [
-        "Observación",
-        "Acción propuesta",
-        "Prueba de implantación"
-      ],
-      "output_rows": [
-        [
-          "Frecuencia incierta · P1/R1",
-          "Recuperar registros de envío de junio y julio",
-          "Informes fechados y destinatarios"
-        ],
-        [
-          "Petición de la dirección · V1",
-          "Aclarar decisiones que necesitan información más rápida",
-          "Actas y uso posterior"
-        ]
-      ],
-      "check": "La ausencia documental limita la evaluación; no demuestra que el proceso nunca funcione. Un saldo positivo no acredita una organización adecuada.",
-      "question": "Llega un procedimiento recién firmado. ¿Podemos cerrar el hallazgo?",
-      "answer": "Actualiza el diseño. Para evaluar el funcionamiento siguen haciendo falta informes y pruebas de su utilización.",
-      "practice": "Añade dos informes y una decisión de la dirección. ¿Qué conclusiones quedan ahora respaldadas?",
-      "next": "Elige un proceso real, su procedimiento y pruebas de su aplicación."
+      "practice": "Añade update-es.md al mismo expediente y pide revisión al 30 de abril. Vera enlaza la versión generada, reevalúa cada acción anterior y conserva la primera. Explica cómo cambian la evaluación las nuevas pruebas.",
+      "success": "Sabes aportar documentos útiles, pedir la evaluación, usar el plan de acciones y solicitar revisión con nuevas pruebas.",
+      "repeat": "Describe empresa, finalidad y alcance. Da a Vera procedimientos, ejemplos y revisiones anteriores pertinentes. Revisa conclusiones y acciones antes de acordarlas con la empresa."
     }
   }
 }

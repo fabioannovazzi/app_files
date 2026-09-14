@@ -76,7 +76,7 @@ def prepare_case(
         )
     case = root / f"{phase}-{secrets.token_hex(8)}"
     case.mkdir(mode=0o700)
-    if store.product == "clara":
+    if store.product == "clara" or workflow == "presenza-digitale-studio":
         inputs = case / "inputs"
         outputs = case / "outputs"
         inputs.mkdir()
@@ -105,7 +105,7 @@ def prepare_case(
         (case / "tutorial_case.json").write_text(
             json.dumps(result, indent=2) + "\n", encoding="utf-8"
         )
-        # An isolated Clara project is prepared, not a completed professional run.
+        # A private project is prepared, not a completed professional run.
         # The selected specialist still owns execution and output validation.
         return result
     ledger = _ledger(store.plugin_root)

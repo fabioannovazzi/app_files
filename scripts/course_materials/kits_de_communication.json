@@ -1,0 +1,52 @@
+{
+  "vera/comunicazione-professionale": {
+    "title": "Eine professionelle Mitteilung mit Vera erstellen",
+    "goal": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+    "scenario": "Studio Riva möchte seinen kleinen Unternehmenskunden den Umgang mit Auskunftsanfragen erleichtern. Wir erstellen anhand einer ausgewählten offiziellen Quelle eine kurze FAQ.",
+    "scope": "Der vollständige Ablauf: Ziel und Zielgruppe, Quellen, redaktionelle Entscheidung, Entwurf, Kontrollen, Prüfung und fertige Dateien. Das rechtliche Beispiel dient zum Erproben des Workflows; die Lektion ist kein DSGVO-Kurs.",
+    "inputs": "Öffne brief-de.md für Auftrag und Formatwünsche sowie source-de.md für den ausgewählten offiziellen Leitfaden. Die fiktive Kanzlei startet ohne frühere Mitteilungen.",
+    "request": "Vera, erstelle eine FAQ zum Umgang mit Auskunftsanfragen für die kleinen Unternehmenskunden von Studio Riva. Nutze diesen Auftrag und diese Quelle. Lass mich Inhalt und Format prüfen und erstelle das lokale Paket ohne Versand oder Veröffentlichung.",
+    "steps": [
+      "Im Arbeitsthread klärt Vera Zielgruppe, Ziel, Sprache und Kanal und bereitet den lokalen Arbeitsbereich der Kanzlei vor. Im Sprachchat erklärt sie das geplante Ergebnis. Du bestätigst Umfang und Speicherort.",
+      "Vera prüft die Quelle, wählt nützliche Inhalte und entwirft FAQ und Format. Der aktuelle Workflow kontrolliert Aussagen und redaktionelle Qualität getrennt. Die Spracherklärung folgt den tatsächlichen Ergebnissen und nötigen Überarbeitungen.",
+      "Prüfe Mitteilung, Quellen und Format. Öffne nach den vorgesehenen Bestätigungen das tatsächlich erzeugte Paket und orientiere dich in den verwendbaren Dateien. Versand oder Veröffentlichung sind spätere, separate Schritte."
+    ],
+    "deliverables": [
+      "FAQ als Markdown und HTML, zur Prüfung und anschließenden Verwendung.",
+      "Fachliche Grundlage, Quellenverweise sowie Nachweise der Kontrollen und Entscheidungen."
+    ],
+    "review": "Lies die FAQ aus Kundensicht: Zielgruppe und Nutzen müssen klar sein. Prüfe Quellenbezug, sichtbare Grenzen und das bestätigte Format. Der Workflow kann eine Überarbeitung verlangen oder begründen, weshalb keine Mitteilung sinnvoll ist.",
+    "checkpoints": [
+      "Benenne Zielgruppe, benötigten Inhalt und gewünschtes Format.",
+      "Finde im Paket den verwendbaren Text und die Quelle einer Aussage; erkläre, was du vor der Verwendung prüfen musst."
+    ],
+    "practice": "Lies practice-de.md und fordere eine neue Version mit einer Begleit-E-Mail zur FAQ an. Prüfe die Anpassung an den Kanal, bewahre das erste Paket und öffne die neuen Dateien. Nichts versenden.",
+    "success": "Du kannst mit ausgewählten Quellen beginnen, Kontrollen verfolgen, die Mitteilung prüfen und eine neue Version für einen anderen Kanal anfordern.",
+    "repeat": "Nenne Vera Thema, Zielgruppe, Kanäle und verfügbare Quellen. Du kannst konkrete Stilbeispiele der Kanzlei ergänzen. Prüfe Vorschlag, Quellen und Paket vor der Verwendung."
+  },
+  "lucia/comunicazione-professionale": {
+    "title": "Eine professionelle Mitteilung mit Lucia erstellen",
+    "goal": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+    "scenario": "Studio Riva möchte seinen kleinen Unternehmenskunden den Umgang mit Auskunftsanfragen erleichtern. Wir erstellen anhand einer ausgewählten offiziellen Quelle eine kurze FAQ.",
+    "scope": "Der vollständige Ablauf: Ziel und Zielgruppe, Quellen, redaktionelle Entscheidung, Entwurf, Kontrollen, Prüfung und fertige Dateien. Das rechtliche Beispiel dient zum Erproben des Workflows; die Lektion ist kein DSGVO-Kurs.",
+    "inputs": "Öffne brief-de.md für Auftrag und Formatwünsche sowie source-de.md für den ausgewählten offiziellen Leitfaden. Die fiktive Kanzlei startet ohne frühere Mitteilungen.",
+    "request": "Lucia, erstelle eine FAQ zum Umgang mit Auskunftsanfragen für die kleinen Unternehmenskunden von Studio Riva. Nutze diesen Auftrag und diese Quelle. Lass mich Inhalt und Format prüfen und erstelle das lokale Paket ohne Versand oder Veröffentlichung.",
+    "steps": [
+      "Im Arbeitsthread klärt Lucia Zielgruppe, Ziel, Sprache und Kanal und bereitet den lokalen Arbeitsbereich der Kanzlei vor. Im Sprachchat erklärt sie das geplante Ergebnis. Du bestätigst Umfang und Speicherort.",
+      "Lucia prüft die Quelle, wählt nützliche Inhalte und entwirft FAQ und Format. Der aktuelle Workflow kontrolliert Aussagen und redaktionelle Qualität getrennt. Die Spracherklärung folgt den tatsächlichen Ergebnissen und nötigen Überarbeitungen.",
+      "Prüfe Mitteilung, Quellen und Format. Öffne nach den vorgesehenen Bestätigungen das tatsächlich erzeugte Paket und orientiere dich in den verwendbaren Dateien. Versand oder Veröffentlichung sind spätere, separate Schritte."
+    ],
+    "deliverables": [
+      "FAQ als Markdown und HTML, zur Prüfung und anschließenden Verwendung.",
+      "Fachliche Grundlage, Quellenverweise sowie Nachweise der Kontrollen und Entscheidungen."
+    ],
+    "review": "Lies die FAQ aus Kundensicht: Zielgruppe und Nutzen müssen klar sein. Prüfe Quellenbezug, sichtbare Grenzen und das bestätigte Format. Der Workflow kann eine Überarbeitung verlangen oder begründen, weshalb keine Mitteilung sinnvoll ist.",
+    "checkpoints": [
+      "Benenne Zielgruppe, benötigten Inhalt und gewünschtes Format.",
+      "Finde im Paket den verwendbaren Text und die Quelle einer Aussage; erkläre, was du vor der Verwendung prüfen musst."
+    ],
+    "practice": "Lies practice-de.md und fordere eine neue Version mit einer Begleit-E-Mail zur FAQ an. Prüfe die Anpassung an den Kanal, bewahre das erste Paket und öffne die neuen Dateien. Nichts versenden.",
+    "success": "Du kannst mit ausgewählten Quellen beginnen, Kontrollen verfolgen, die Mitteilung prüfen und eine neue Version für einen anderen Kanal anfordern.",
+    "repeat": "Nenne Lucia Thema, Zielgruppe, Kanäle und verfügbare Quellen. Du kannst konkrete Stilbeispiele der Kanzlei ergänzen. Prüfe Vorschlag, Quellen und Paket vor der Verwendung."
+  }
+}

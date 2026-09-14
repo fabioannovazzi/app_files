@@ -53,50 +53,60 @@ missing questions. Interpret meaning with the native model, without keyword
 classification or an automatic daily greeting that interrupts ordinary work.
 
 Read `../clara/references/workflow-catalog.md` and the selected specialist skill
-completely. That current skill is the teaching source of truth. Read its current
-input, execution, review and host requirements before promising a demo. Reuse the prepared course for the selected workflow, then use its fictional facts
-for any requested real practice; use
-`../clara/references/tutorial-cases.md` for the product-specific
-starters. Other workflows require their own real supported inputs and execution.
-Do not present the prepared specimen as a newly executed workflow. A mocked
-capability or unrelated easy workflow cannot replace the requested execution. An unavailable host capability stays pending;
-explain what is needed and retain the goal.
+completely, including its delegated current procedure. That procedure owns the
+input, execution, output and review contract. The teaching kit supplies prepared
+fictional inputs and a lesson outline; it never replaces the actual pipeline.
 
-## Prepared courses · 5–8 minutes
+## Prepared teaching kits and live execution · 5–8 minutes
 
-Before authoring a new example, read `references/prepared-courses.md`. Every
-currently teachable Clara workflow has an authored local course: a fictional
-case, source preview, worked specimen, professional check, answer and optional
-practice. Use `scripts/local_courses.py list` from this exact installed product
-root, then `show` for the selected workflow and supported language. Select by
-meaning with the native model, never by a keyword classifier. Do not translate
-an unavailable course silently or borrow another product's course.
+Read `references/prepared-courses.md`. Use `scripts/local_courses.py list`, then
+`show` for this product's exact workflow and a supported language. Explain the
+function in plain terms: when to use it, which files to provide, what to ask,
+what happens, what is delivered, what to review and how to repeat it. Teach a
+complete ordinary first use. Technical exceptions belong only where they affect
+that use or answer the learner's question. Use the plain workflow title.
 
-Materialize the course once in a fresh folder beneath the active lesson's local
-files. Read its `teacher.md` and open `course.html` and `example.html` in the paired
-working chat. Reuse the authored content; adapt spoken pacing and emphasis to the
-user without regenerating the class. Its six steps total 6½ minutes including
-observation and conversation. Voice setup, external processing and optional
-practice have separate time. First onboarding still requires all 3–4 selected
-lessons and their real practice; do not count merely opened course files as demo,
-practice, professional approval or confirmed understanding.
+Materialize its kit once below the active lesson's local files. Read `teacher.md`
+and `execution-request.json`. Open `course.html` as the outline in the working
+window, then inspect the supplied input files with the user. Import those exact
+source files through the real tutorial case adapter. Preserve the returned
+input bindings and output directory. Read the active worker contract before
+each bounded dispatch and execute the actual current pipeline in that worker.
+The teacher stays in the voice chat and follows the worker's verified progress.
+Pause at the kit's relevant checkpoints during execution, not as an unrelated
+quiz after the explanation. Never simulate the user's answers or participation.
 
-A prepared specimen is explicitly an authored synthetic example. An attached
-actual workflow output retains its separate provenance. Never claim either was
-newly executed. Explain the specimen promptly, then use the current specialist's
-real execution contract for the requested demonstration or practice. The case
-preview is not automatically a valid engine input or a sealed upstream handoff;
-use supplied runnable fixtures where available, otherwise prepare the supported
-input from the stated fictional facts inside the bound tutorial case. Do not
-invent missing source facts, approvals, receipts or external actions.
+When the worker produces the normal deliverables, open those actual files in its
+window. Explain where to start, what the main sections mean, how a finding links
+to the inputs and what the user can do next. Rendering the outline produces no
+result specimen and completes no demo. A prepared input, outline, request or
+old execution output is never proof of this session's execution. A missing,
+blocked or interrupted pipeline stays pending; do not substitute a generic
+report, another product's skill or an invented result to finish the lesson.
 
-If source fingerprints differ, stop reuse of that course and explain that it
-needs refresh. Read the current own-product specialist; a stale course cannot
-authorize a retired or foreign workflow. Keep the lesson pending where a required
-capability is unavailable. For normally hosted workflows the core lesson can
-inspect its prepared local brief or specimen, but never send tutorial content
-to a server or manufacture a completed hosted demonstration. A real hosted
-assignment starts only through the existing user-selected professional handoff.
+Let the user make the short practice request using the supplied practice inputs.
+Use a fresh bound case and preserve the demo outputs. Explain and record the
+actual practice result, then ask the user to show how they would repeat the
+workflow on their work. First onboarding selects 3–4 relevant workflows and
+requires demonstration, participation and confirmed understanding for each.
+Supporting intake tasks are identified as such in the catalogue; do not inflate
+the number of distinct main functions by counting those subtasks or translations.
+A later demonstration-only session may end after the demo at the user's choice,
+without pretending that practice or understanding was confirmed.
+
+The explanation and a short practice target 5–8 minutes. Processing, questions
+and additional practice can extend the session. Adapt spoken pace, depth and
+examples to the local profile and current request. Prefer the prepared case;
+create a custom variation when it makes the workflow more relevant, explicitly
+state the changed fictional facts, validate its supported inputs and execute
+it afresh. Do not force identical wording or recreate all materials every time.
+
+If kit or workflow fingerprints differ, require editorial refresh before reusing
+that kit. Current product membership and source checks apply to custom examples
+too. Normally hosted steps require a separate explicit user choice through the
+normal professional handoff; preparation alone never counts as their execution.
+Keep the interview, profile, lesson progress and tutorial files local. Do not
+silently send teaching data to hosted services to make a demonstration complete.
 
 ## Native voice and two parallel threads
 

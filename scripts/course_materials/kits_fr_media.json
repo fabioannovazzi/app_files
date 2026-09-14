@@ -1,0 +1,27 @@
+{
+  "clara/transcribe": {
+    "title": "Importer et revoir une transcription avec Clara",
+    "goal": "Apprendre à ajouter une transcription à un dossier, vérifier qui parle et conserver une version utilisable reliée à sa source.",
+    "scenario": "Sara a préparé une courte note pour la prochaine réunion de Ciclo Arco. Nous partons du paquet téléchargé pour obtenir une transcription enregistrée dans le dossier.",
+    "scope": "La leçon exécute le parcours local d’importation et de revue. Le paquet est entièrement fictif et ne contient aucun audio. Enregistrer ou transcrire un nouvel audio constitue une étape hébergée distincte, à choisir séparément.",
+    "inputs": "Ouvrez context-fr.md et case-notes-voice-input-fr.json. Le contexte précise la provenance et la personne connue. Il suffit d’indiquer le paquet et le dossier cible à Clara, sans interpréter les champs techniques.",
+    "request": "Clara, importe cette note dans le dossier pédagogique Ciclo Arco, conserve l’original, vérifie qui parle et montre la transcription revue. N’ajoute pas de décision sur le service.",
+    "steps": [
+      "La conversation de travail prépare le dossier et importe le paquet par le parcours courant. Ouvrez la transcription originale et comparez-la au contexte ; la conversation vocale explique où les fichiers sont conservés.",
+      "Clara revoit l’attribution et le texte sans modifier le sens. Observez comment elle identifie Sara et conserve le prix et le parcours comme questions ouvertes.",
+      "Le processus enregistre la version revue et sa source dans le dossier. Ouvrez le texte final et sa référence : l’enregistrement établit les propos rapportés, pas la véracité de chaque affirmation."
+    ],
+    "deliverables": [
+      "Transcription originale et paquet conservés dans la session locale.",
+      "Transcription revue, état d’attribution et source enregistrée dans le dossier."
+    ],
+    "review": "Comparez un passage mot à mot, le nom de la personne et la phrase indiquant que le service n’est pas encore décidé. Sans audio dans cet exemple, aucune comparaison avec un enregistrement n’est possible.",
+    "checkpoints": [
+      "Avant importation, indiquez le paquet et le dossier cible.",
+      "À la livraison, retrouvez une phrase dans les versions originale et revue."
+    ],
+    "practice": "Importez le paquet d’exercice à deux voix dans le même dossier. Demandez à Clara de conserver Voix 1 et Voix 2 tant que les noms ne sont pas documentés. Comparez une réplique avec l’original et préservez la première note.",
+    "success": "Vous savez importer une nouvelle note, retrouver les deux versions et reconnaître une attribution incertaine sans inventer de nom.",
+    "repeat": "Indiquez enregistrement ou paquet, langue et destination. Un dossier ordinaire suffit pour conserver une transcription ; son utilisation comme preuve dans un cas nécessite aussi revue et enregistrement."
+  }
+}

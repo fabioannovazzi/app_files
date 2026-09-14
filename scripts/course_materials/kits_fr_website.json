@@ -1,0 +1,52 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "Préparer le site du cabinet avec Vera",
+    "goal": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
+    "scenario": "Studio Arco n’a pas de site. Nous créons une page présentant le cabinet, les activités fournies et le contact, à partir du seul profil fictif.",
+    "scope": "Premier site informatif d’un cabinet italien. La démonstration produit une version locale à revoir ; publier ensuite exige une destination et des validations du site exact.",
+    "inputs": "Ouvrez vera-studio-fr.md : public, activités, contact et horaires. Sélectionnez ce fichier pour la leçon et un dossier pédagogique. Logo et photos ne sont pas indispensables ; les faits absents restent absents.",
+    "request": "Vera, prépare le premier site de Studio Arco avec ces informations : présentation, activités et contact sur une page lisible sur ordinateur et téléphone. Montre une version locale à revoir.",
+    "steps": [
+      "La conversation de travail enregistre le matériel choisi et prépare le projet. Vera résume les faits et propose ordre, typographie et couleurs ; la conversation vocale relie ces choix aux questions du visiteur.",
+      "Le processus réalise la page HTML et ses styles, puis vérifie fichiers et liens. Ouvrez le site fonctionnel et parcourez présentation, activités et contact en comparant le texte aux sources.",
+      "Revoyez la page aux largeurs ordinateur et téléphone, avec les captures. Vérifiez identité, informations, lisibilité et liens. Vera montre les contrôles et ce qui manque avant une publication réelle."
+    ],
+    "deliverables": [
+      "Site local fonctionnel et fichiers modifiables à ouvrir et revoir.",
+      "Résumé des sources et choix, contrôles techniques, captures ordinateur et téléphone et état des revues."
+    ],
+    "review": "Comparez activités, contact et horaires au profil. Aucun titre, résultat ou contact ne doit être inventé. La revue professionnelle appartient au cabinet ; un site local vérifié n’est pas déjà publié.",
+    "checkpoints": [
+      "Avant construction, identifiez le visiteur et l’emplacement du contact.",
+      "Lors de la revue, ouvrez les contacts en format téléphone et vérifiez horaires et lisibilité."
+    ],
+    "practice": "Utilisez vera-update-fr.md pour ajouter les horaires du vendredi dans une nouvelle version en conservant les informations précédentes. Rouvrez les deux formats et vérifiez que l’ajout ne remplace pas les autres horaires.",
+    "success": "Vous savez fournir le matériel, demander le site, retrouver la version fonctionnelle et vérifier une modification. Aperçu externe et publication finale sont des choix ultérieurs liés aux fichiers approuvés.",
+    "repeat": "Pour votre cabinet, indiquez site existant ou premier site, matériel destiné au public et objectif. Après revue, choisissez la destination ; le processus ne prépare et publie que la version exacte autorisée."
+  },
+  "lucia/presenza-digitale-studio": {
+    "title": "Préparer le site du cabinet avec Lucia",
+    "goal": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
+    "scenario": "Studio Arco n’a pas de site. Nous créons une page présentant le cabinet, les activités fournies et le contact, à partir du seul profil fictif.",
+    "scope": "Premier site informatif d’un cabinet italien. La démonstration produit une version locale à revoir ; publier ensuite exige une destination et des validations du site exact.",
+    "inputs": "Ouvrez lucia-studio-fr.md : public, activités, contact et horaires. Sélectionnez ce fichier pour la leçon et un dossier pédagogique. Logo et photos ne sont pas indispensables ; les faits absents restent absents.",
+    "request": "Lucia, prépare le premier site de Studio Arco avec ces informations : présentation, activités et contact sur une page lisible sur ordinateur et téléphone. Montre une version locale à revoir.",
+    "steps": [
+      "La conversation de travail enregistre le matériel choisi et prépare le projet. Lucia résume les faits et propose ordre, typographie et couleurs ; la conversation vocale relie ces choix aux questions du visiteur.",
+      "Le processus réalise la page HTML et ses styles, puis vérifie fichiers et liens. Ouvrez le site fonctionnel et parcourez présentation, activités et contact en comparant le texte aux sources.",
+      "Revoyez la page aux largeurs ordinateur et téléphone, avec les captures. Vérifiez identité, informations, lisibilité et liens. Lucia montre les contrôles et ce qui manque avant une publication réelle."
+    ],
+    "deliverables": [
+      "Site local fonctionnel et fichiers modifiables à ouvrir et revoir.",
+      "Résumé des sources et choix, contrôles techniques, captures ordinateur et téléphone et état des revues."
+    ],
+    "review": "Comparez activités, contact et horaires au profil. Aucun titre, résultat ou contact ne doit être inventé. La revue professionnelle appartient au cabinet ; un site local vérifié n’est pas déjà publié.",
+    "checkpoints": [
+      "Avant construction, identifiez le visiteur et l’emplacement du contact.",
+      "Lors de la revue, ouvrez les contacts en format téléphone et vérifiez horaires et lisibilité."
+    ],
+    "practice": "Utilisez lucia-update-fr.md pour ajouter les horaires du vendredi dans une nouvelle version en conservant les informations précédentes. Rouvrez les deux formats et vérifiez que l’ajout ne remplace pas les autres horaires.",
+    "success": "Vous savez fournir le matériel, demander le site, retrouver la version fonctionnelle et vérifier une modification. Aperçu externe et publication finale sont des choix ultérieurs liés aux fichiers approuvés.",
+    "repeat": "Pour votre cabinet, indiquez site existant ou premier site, matériel destiné au public et objectif. Après revue, choisissez la destination ; le processus ne prépare et publie que la version exacte autorisée."
+  }
+}

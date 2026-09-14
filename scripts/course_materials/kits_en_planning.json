@@ -1,0 +1,77 @@
+{
+  "vera/sales-plan": {
+    "title": "Prepare a sales plan with Vera",
+    "goal": "Learn to turn actual sales and commercial assumptions into a future scenario, checking what changed and why.",
+    "scenario": "Ciclo Arco wants to plan January and February sales next year. We have actuals for the same months and an assumption of higher unit sales.",
+    "scope": "One sales plan for two products and two months. The workflow applies reviewed assumptions; it does not prove demand growth or complete a business plan.",
+    "inputs": "Open actual-sales.csv and assumptions-en.md. Identify months, products, units, sales, discounts and costs. The note specifies the same months next year and unit growth, not higher prices.",
+    "request": "Vera, plan January and February 2027 for Ciclo Arco from these actuals, with units up 10%. First summarize the assumptions for confirmation, then show the plan and comparison with the base.",
+    "steps": [
+      "In the working chat, Vera inspects data and presents a short assumption table. Voice explains which months and products change and helps you confirm the request’s meaning.",
+      "With the assumptions actually confirmed, Vera runs the current plan and checks. Voice follows result generation without confusing a scenario with evidenced future demand.",
+      "Open the generated summary and scenario detail. Compare base and plan, then trace a product through units, sales, discounts and costs and find its applied assumption."
+    ],
+    "deliverables": [
+      "Sales scenario CSV and summary for reviewing planned amounts.",
+      "Applied-assumption ledger and controls for understanding and repeating the calculation."
+    ],
+    "review": "Check assumption meaning, comparable months and unchanged factors. Read amount and percentage changes in the context of base values. The plan and assumptions need normal professional review.",
+    "checkpoints": [
+      "Before calculation, explain whether the change concerns units or prices.",
+      "In the result, find a row and the assumption determining its value."
+    ],
+    "practice": "Use the practice inputs to request a new scenario with units up 5%, preserving the 10% scenario. Confirm the new assumption and compare summaries; explain why results differ.",
+    "success": "You can supply actuals, specify and confirm assumptions, read the plan and checks and compare an alternative.",
+    "repeat": "Tell Vera the actuals, target months, currency and commercial assumptions. Review the interpretation before calculation and use the result as a scenario conditional on those assumptions."
+  },
+  "vera/business-planning": {
+    "title": "Prepare a business plan with Vera",
+    "goal": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate.",
+    "scenario": "Ciclo Arco is considering bicycle pickup and return. A proposal, economic assumptions and operating information are available, with important points still unverified.",
+    "scope": "A first business plan for a pilot decision. The report covers proposition, customers, operations, economics, cash, alternatives and next actions; missing information remains explicit.",
+    "inputs": "Open proposal-en.md, economics-en.md, operations-en.md and pilot-economics.csv. Explain the idea and decision and provide what you have. You need neither a complete model nor technical configuration files.",
+    "request": "Vera, prepare a business plan to assess this bicycle pickup service. Use the proposal and assumptions, distinguish them from evidence and show what should be tested before launching the pilot.",
+    "steps": [
+      "In the working chat, Vera reads the proposal and clarifies customer, need and decision. Voice explains the planning process and which information helps answer the question.",
+      "Vera assesses demand, operations, costs and alternatives, calculates supported economics and builds the report through the current workflow. Voice distinguishes evidence, assumptions and gaps without inventing missing cash costs.",
+      "Open the generated HTML report. Start with the recommendation, move to economics and operations and trace a figure to its source. Read the cash limitations and the proposed test before making commitments."
+    ],
+    "deliverables": [
+      "One readable HTML report with recommendation, reasoning, available calculated figures and next actions.",
+      "Sources and assumptions accessible in the report, with provisional status and matters for review."
+    ],
+    "review": "Check that the recommendation follows from evidence, informal interest does not become proven demand, and partial economics are not presented as complete funding needs. Assumptions and conclusions remain subject to review.",
+    "checkpoints": [
+      "Before work starts, identify the decision the business plan should inform.",
+      "In the report, find the recommendation, one dependency and the next useful test."
+    ],
+    "practice": "Add update-en.md to the same case and ask how the changed vehicle availability affects the plan. Vera revises recommendation, assumptions and required tests in a new report linked to the earlier one. Identify what changes even without new figures.",
+    "success": "You can start a business plan with available information, read its recommendation and revise it when new evidence arrives.",
+    "repeat": "Describe the business, customers, decision and constraints to Vera; provide documents and assumptions. Use the report to discuss the next step and return to the same case when prices, demand, operations or financing change."
+  },
+  "clara/business-planning": {
+    "title": "Prepare a business plan with Clara",
+    "goal": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate.",
+    "scenario": "Ciclo Arco is considering bicycle pickup and return. A proposal, economic assumptions and operating information are available, with important points still unverified.",
+    "scope": "A first business plan for a pilot decision. The report covers proposition, customers, operations, economics, cash, alternatives and next actions; missing information remains explicit.",
+    "inputs": "Open proposal-en.md, economics-en.md, operations-en.md and pilot-economics.csv. Explain the idea and decision and provide what you have. You need neither a complete model nor technical configuration files.",
+    "request": "Clara, prepare a business plan to assess this bicycle pickup service. Use the proposal and assumptions, distinguish them from evidence and show what should be tested before launching the pilot.",
+    "steps": [
+      "In the working chat, Clara reads the proposal and clarifies customer, need and decision. Voice explains the planning process and which information helps answer the question.",
+      "Clara assesses demand, operations, costs and alternatives, calculates supported economics and builds the report through the current workflow. Voice distinguishes evidence, assumptions and gaps without inventing missing cash costs.",
+      "Open the generated HTML report. Start with the recommendation, move to economics and operations and trace a figure to its source. Read the cash limitations and the proposed test before making commitments."
+    ],
+    "deliverables": [
+      "One readable HTML report with recommendation, reasoning, available calculated figures and next actions.",
+      "Sources and assumptions accessible in the report, with provisional status and matters for review."
+    ],
+    "review": "Check that the recommendation follows from evidence, informal interest does not become proven demand, and partial economics are not presented as complete funding needs. Assumptions and conclusions remain subject to review.",
+    "checkpoints": [
+      "Before work starts, identify the decision the business plan should inform.",
+      "In the report, find the recommendation, one dependency and the next useful test."
+    ],
+    "practice": "Add update-en.md to the same case and ask how the changed vehicle availability affects the plan. Clara revises recommendation, assumptions and required tests in a new report linked to the earlier one. Identify what changes even without new figures.",
+    "success": "You can start a business plan with available information, read its recommendation and revise it when new evidence arrives.",
+    "repeat": "Describe the business, customers, decision and constraints to Clara; provide documents and assumptions. Use the report to discuss the next step and return to the same case when prices, demand, operations or financing change."
+  }
+}

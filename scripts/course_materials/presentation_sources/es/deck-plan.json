@@ -1,0 +1,171 @@
+{
+  "schema_version": "clara.html_deck_plan.v1",
+  "allow_bespoke_html": false,
+  "slides": [
+    {
+      "id": "opening",
+      "layout_id": "editorial-cover",
+      "title": "Propuesta para recibir solicitudes",
+      "chapter": "opening",
+      "chapter_label": "Propuesta",
+      "tone": "dark",
+      "notes": "Propuesta ficticia para debatir. Propuesta para recibir solicitudes",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-opening"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Debate interno",
+        "title": "Propuesta para recibir solicitudes",
+        "source_note": "Propuesta ficticia para debatir",
+        "subtitle": "Una ficha común para probar con el equipo",
+        "author": "Officina Arco"
+      }
+    },
+    {
+      "id": "request",
+      "layout_id": "paired-comparison",
+      "title": "Hacer comprensible la solicitud",
+      "chapter": "request",
+      "chapter_label": "Solicitud",
+      "tone": "light",
+      "notes": "Propuesta ficticia para debatir. Hacer comprensible la solicitud",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-request"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Debate interno",
+        "title": "Hacer comprensible la solicitud",
+        "source_note": "Propuesta ficticia para debatir",
+        "left_label": "Hoy",
+        "left_title": "Información dispersa",
+        "left_items": [
+          {
+            "label": "Contacto",
+            "body": "A veces falta un contacto."
+          },
+          {
+            "label": "Problema",
+            "body": "La descripción puede necesitar aclaraciones."
+          }
+        ],
+        "right_label": "Propuesta",
+        "right_title": "Una ficha común",
+        "right_items": [
+          {
+            "label": "Contacto",
+            "body": "Recoger contacto y medio acordado para responder."
+          },
+          {
+            "label": "Problema",
+            "body": "Describir lo que señala el cliente, sin inventar diagnósticos."
+          }
+        ]
+      }
+    },
+    {
+      "id": "process",
+      "layout_id": "process-flow",
+      "title": "Aclarar la solicitud antes de actuar",
+      "chapter": "process",
+      "chapter_label": "Pasos",
+      "tone": "light",
+      "notes": "Propuesta ficticia para debatir. Aclarar la solicitud antes de actuar",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-process"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Debate interno",
+        "title": "Aclarar la solicitud antes de actuar",
+        "source_note": "Propuesta ficticia para debatir",
+        "steps": [
+          {
+            "label": "A",
+            "title": "Solicitud del cliente",
+            "body": "Registrar bicicleta, problema y contacto.",
+            "_fragment": 1
+          },
+          {
+            "label": "B",
+            "title": "Información pendiente",
+            "body": "Pedir información pendiente antes de evaluar.",
+            "_fragment": 2
+          },
+          {
+            "label": "C",
+            "title": "Evaluación de Paolo",
+            "body": "Evaluar el trabajo y preparar el presupuesto.",
+            "_fragment": 3
+          },
+          {
+            "label": "D",
+            "title": "Presupuesto al cliente",
+            "body": "Esperar confirmación antes del trabajo y sus ampliaciones.",
+            "_fragment": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "responsibilities",
+      "layout_id": "assertion",
+      "title": "Acordar quién sigue la solicitud",
+      "chapter": "responsibilities",
+      "chapter_label": "Responsabilidades",
+      "tone": "dark",
+      "notes": "Propuesta ficticia para debatir. Acordar quién sigue la solicitud",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-responsibilities"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Debate interno",
+        "title": "Acordar quién sigue la solicitud",
+        "source_note": "Propuesta ficticia para debatir",
+        "body": "Sara recogería y aclararía solicitudes. Paolo evaluaría el trabajo y prepararía el presupuesto.",
+        "implication": "Funciones propuestas que acordar antes de la prueba."
+      }
+    },
+    {
+      "id": "decision",
+      "layout_id": "closing-decision",
+      "title": "Decidir si probar la ficha",
+      "chapter": "decision",
+      "chapter_label": "Decisión",
+      "tone": "light",
+      "notes": "Propuesta ficticia para debatir. Decidir si probar la ficha",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-decision"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Debate interno",
+        "title": "Decidir si probar la ficha",
+        "source_note": "Propuesta ficticia para debatir",
+        "actions": [
+          {
+            "verb": "Acordar",
+            "body": "Definir funciones y condiciones antes de la prueba."
+          },
+          {
+            "verb": "Revisar",
+            "body": "Recoger comentarios y revisar la ficha tras la prueba."
+          }
+        ],
+        "closing_line": "La reunión debe acordar quién recogerá los comentarios."
+      }
+    }
+  ]
+}

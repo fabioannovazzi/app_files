@@ -1,0 +1,4 @@
+Party,Invoice,InvoiceDate,DueDate,OriginalAmount,ReportedOpenAmount,Currency
+Fictional supplier,DEMO-001,2026-03-05,2026-04-30,1220.00,1220.00,EUR
+Fictional supplier,DEMO-002,2026-03-12,2026-04-30,732.00,732.00,EUR
+Fictional supplier,DEMO-003,2026-03-22,2026-04-30,488.00,488.00,EUR

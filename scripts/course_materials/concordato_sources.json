@@ -1,0 +1,237 @@
+{
+  "it": {
+    "tabs": [
+      "Caso",
+      "Creditori",
+      "Piano"
+    ],
+    "title": "Officina Riva — bozza di concordato",
+    "fiction": "Tutti i nomi, importi e documenti sono fittizi. Bozza didattica, non depositata.",
+    "fields": [
+      "Impresa e richiesta",
+      "Fase e data",
+      "Proposta",
+      "Documenti disponibili",
+      "Evidenze mancanti",
+      "Finanziamento",
+      "Attuazione",
+      "Aggiornamento"
+    ],
+    "notes": [
+      "Officina Riva S.r.l., manutenzione di macchinari in Italia. Il professionista vuole una revisione iniziale della proposta e del piano, con questioni da chiarire e documenti da richiedere.",
+      "Bozza al 14 settembre 2026. Nessun deposito, numero di procedura o provvedimento del tribunale è documentato. Situazione dei creditori riferita al 31 agosto 2026.",
+      "L’impresa propone di proseguire direttamente l’attività nel 2027. Il foglio Creditori riporta tre posizioni e i pagamenti ipotizzati. Chirografo e classe unica sono qualificazioni proposte dall’impresa, da verificare. Il voto non è stato valutato.",
+      "Questo file contiene il riepilogo della proposta, l’elenco fornito dei creditori, stime di recupero in liquidazione e un piano di cassa annuale. Gli importi sono in euro, senza arrotondamento in migliaia.",
+      "Non sono forniti attestazione, contabilità di supporto, contratti dei creditori, verifica del perimetro tributario/previdenziale, perizia di liquidazione o previsioni mensili. L’elenco non è dimostrato completo. Le stime di liquidazione sono dell’impresa.",
+      "Il piano ipotizza nuova finanza di 50.000 euro. Non sono allegati impegno del finanziatore, condizioni, data di erogazione o piano di rimborso.",
+      "I pagamenti ai tre creditori sono previsti entro il 31 dicembre 2027. L’avvio operativo è ipotizzato a gennaio 2027. Costi e tempistiche della procedura richiedono verifica; nessuna approvazione o fattibilità è attestata.",
+      "La versione aggiornata ipotizza soltanto 30.000 euro di nuova finanza. Restano invariati creditori, pagamenti e flussi operativi. Nessun nuovo documento prova disponibilità o condizioni dei fondi. Rivedere l’intero dossier sulla nuova versione."
+    ],
+    "creditorHeaders": [
+      "Creditore",
+      "Credito (EUR)",
+      "Pagamento proposto (EUR)",
+      "Stima liquidazione (EUR)"
+    ],
+    "creditorNote": "Posizioni dichiarate, chirografo e classe unica proposti; verifica professionale pendente. Recuperi in denaro entro il 31/12/2027.",
+    "planTitle": "Piano di cassa 2027 (EUR)",
+    "metrics": [
+      "Incassi operativi",
+      "Uscite operative",
+      "Nuova finanza ipotizzata",
+      "Costi della procedura",
+      "Pagamenti ai creditori",
+      "Cassa iniziale",
+      "Cassa finale indicata dal piano"
+    ],
+    "planNote": "Piano annuale dell’impresa. La cassa finale è il saldo aritmetico dei valori forniti. Non dimostra la disponibilità dei fondi né la liquidità nei singoli mesi."
+  },
+  "en": {
+    "tabs": [
+      "Case",
+      "Creditors",
+      "Plan"
+    ],
+    "title": "Officina Riva — draft composition plan",
+    "fiction": "All names, amounts and documents are fictional. Teaching draft, not filed.",
+    "fields": [
+      "Business and request",
+      "Stage and date",
+      "Proposal",
+      "Available documents",
+      "Missing evidence",
+      "Financing",
+      "Implementation",
+      "Update"
+    ],
+    "notes": [
+      "Officina Riva S.r.l. maintains machinery in Italy. The professional requests an initial review of the proposal and plan, with questions and documents to request.",
+      "Draft dated 14 September 2026. No filing, procedure number or court order is documented. The supplied creditor position is dated 31 August 2026.",
+      "The business proposes to continue operating directly in 2027. Creditors lists three positions and intended payments. Unsecured status and a single class are company proposals requiring review. Voting has not been assessed.",
+      "This file contains the proposal summary, supplied creditor list, estimated liquidation recoveries and an annual cash plan. Amounts are euros, not thousands.",
+      "No attestation, supporting accounts, creditor contracts, tax/social-security perimeter review, liquidation valuation or monthly forecasts are supplied. Completeness of the creditor list is unproven. Liquidation estimates are the company’s.",
+      "The plan assumes EUR 50,000 in new financing. No lender commitment, conditions, drawdown date or repayment schedule is attached.",
+      "Payments to the three creditors are planned by 31 December 2027. Operations are assumed to start in January 2027. Procedure costs and timing require review; neither approval nor feasibility is attested.",
+      "The update assumes only EUR 30,000 in new financing. Creditors, payments and operating flows are unchanged. No new document establishes availability or conditions of funding. Review the whole file against this new version."
+    ],
+    "creditorHeaders": [
+      "Creditor",
+      "Claim (EUR)",
+      "Proposed payment (EUR)",
+      "Liquidation estimate (EUR)"
+    ],
+    "creditorNote": "Declared claims; company-proposed unsecured status and single class await professional review. Cash recovery planned by 31/12/2027.",
+    "planTitle": "2027 cash plan (EUR)",
+    "metrics": [
+      "Operating receipts",
+      "Operating payments",
+      "Assumed new financing",
+      "Procedure costs",
+      "Creditor payments",
+      "Opening cash",
+      "Closing cash reported by the plan"
+    ],
+    "planNote": "Company annual plan. Closing cash is the arithmetic balance of supplied values. It establishes neither funding availability nor cash sufficiency within individual months."
+  },
+  "fr": {
+    "tabs": [
+      "Dossier",
+      "Créanciers",
+      "Plan"
+    ],
+    "title": "Officina Riva — projet de concordato",
+    "fiction": "Noms, montants et documents entièrement fictifs. Projet pédagogique non déposé.",
+    "fields": [
+      "Entreprise et demande",
+      "Étape et date",
+      "Proposition",
+      "Documents disponibles",
+      "Preuves manquantes",
+      "Financement",
+      "Mise en œuvre",
+      "Actualisation"
+    ],
+    "notes": [
+      "Officina Riva S.r.l. entretient des machines en Italie. Le professionnel demande une première revue de la proposition et du plan, avec questions et pièces à demander.",
+      "Projet du 14 septembre 2026. Aucun dépôt, numéro de procédure ou acte du tribunal n’est documenté. Situation des créanciers au 31 août 2026.",
+      "L’entreprise propose de poursuivre directement son activité en 2027. Créanciers présente trois positions et les paiements envisagés. Caractère chirographaire et classe unique sont proposés par l’entreprise et restent à vérifier. Le vote n’a pas été évalué.",
+      "Le fichier contient résumé de la proposition, liste fournie des créanciers, estimations de recouvrement en liquidation et plan annuel de trésorerie. Montants en euros, pas en milliers.",
+      "Attestation, comptabilité justificative, contrats des créanciers, revue du périmètre fiscal/social, expertise de liquidation et prévisions mensuelles ne sont pas fournis. L’exhaustivité de la liste n’est pas démontrée. Les estimations de liquidation proviennent de l’entreprise.",
+      "Le plan suppose un nouveau financement de 50 000 euros. Aucun engagement du prêteur, conditions, date de versement ou échéancier de remboursement n’est joint.",
+      "Paiements aux trois créanciers prévus avant le 31 décembre 2027. Démarrage opérationnel envisagé en janvier 2027. Coûts et calendrier de procédure restent à vérifier ; ni approbation ni faisabilité ne sont attestées.",
+      "La version actualisée suppose seulement 30 000 euros de financement nouveau. Créanciers, paiements et flux opérationnels restent inchangés. Aucun document nouveau ne prouve la disponibilité ou les conditions des fonds. Revoir tout le dossier avec cette version."
+    ],
+    "creditorHeaders": [
+      "Créancier",
+      "Créance (EUR)",
+      "Paiement proposé (EUR)",
+      "Estimation liquidation (EUR)"
+    ],
+    "creditorNote": "Créances déclarées ; caractère chirographaire et classe unique proposés, revue professionnelle en attente. Paiement en numéraire avant le 31/12/2027.",
+    "planTitle": "Plan de trésorerie 2027 (EUR)",
+    "metrics": [
+      "Encaissements opérationnels",
+      "Décaissements opérationnels",
+      "Financement nouveau supposé",
+      "Coûts de procédure",
+      "Paiements aux créanciers",
+      "Trésorerie initiale",
+      "Trésorerie finale du plan"
+    ],
+    "planNote": "Plan annuel de l’entreprise. Le solde final est le résultat arithmétique des valeurs fournies. Il ne prouve ni disponibilité des fonds ni trésorerie suffisante chaque mois."
+  },
+  "de": {
+    "tabs": [
+      "Fall",
+      "Gläubiger",
+      "Plan"
+    ],
+    "title": "Officina Riva — Concordato-Entwurf",
+    "fiction": "Alle Namen, Beträge und Dokumente sind fiktiv. Nicht eingereichter Lehrentwurf.",
+    "fields": [
+      "Unternehmen und Auftrag",
+      "Stand und Datum",
+      "Vorschlag",
+      "Vorliegende Unterlagen",
+      "Fehlende Belege",
+      "Finanzierung",
+      "Umsetzung",
+      "Aktualisierung"
+    ],
+    "notes": [
+      "Officina Riva S.r.l. wartet Maschinen in Italien. Der fachliche Auftrag lautet, Vorschlag und Plan erstmals zu prüfen und offene Fragen sowie anzufordernde Unterlagen festzuhalten.",
+      "Entwurf vom 14. September 2026. Einreichung, Verfahrensnummer und Gerichtsbeschluss sind nicht dokumentiert. Gläubigerstand zum 31. August 2026.",
+      "Das Unternehmen schlägt die unmittelbare Betriebsfortführung 2027 vor. Gläubiger enthält drei Positionen und geplante Zahlungen. Ungesicherter Rang und eine gemeinsame Klasse sind Vorschläge des Unternehmens und fachlich zu prüfen. Stimmrechte wurden nicht beurteilt.",
+      "Die Datei enthält Vorschlagszusammenfassung, vorgelegte Gläubigerliste, geschätzte Liquidationserlöse und Jahresliquiditätsplan. Beträge in Euro, nicht in Tausend.",
+      "Attestierung, belegende Buchführung, Gläubigerverträge, Prüfung des Steuer-/Sozialversicherungsumfangs, Liquidationsgutachten und Monatsprognosen fehlen. Vollständigkeit der Liste ist nicht belegt. Liquidationsschätzungen stammen vom Unternehmen.",
+      "Der Plan nimmt 50.000 Euro neue Finanzierung an. Finanzierungszusage, Bedingungen, Auszahlungstermin und Rückzahlungsplan fehlen.",
+      "Zahlungen an die drei Gläubiger sind bis 31. Dezember 2027 geplant. Betriebsbeginn wird für Januar 2027 angenommen. Verfahrenskosten und Termine erfordern Prüfung; Genehmigung und Machbarkeit sind nicht attestiert.",
+      "Die aktualisierte Fassung nimmt nur 30.000 Euro neue Finanzierung an. Gläubiger, Zahlungen und operative Zahlungsströme bleiben gleich. Kein neuer Beleg bestätigt Verfügbarkeit oder Bedingungen. Die gesamte Akte anhand der neuen Fassung prüfen."
+    ],
+    "creditorHeaders": [
+      "Gläubiger",
+      "Forderung (EUR)",
+      "Geplante Zahlung (EUR)",
+      "Liquidationsschätzung (EUR)"
+    ],
+    "creditorNote": "Erklärte Forderungen; vorgeschlagener ungesicherter Rang und gemeinsame Klasse sind noch fachlich zu prüfen. Geldzahlung bis 31.12.2027 geplant.",
+    "planTitle": "Liquiditätsplan 2027 (EUR)",
+    "metrics": [
+      "Operative Einzahlungen",
+      "Operative Auszahlungen",
+      "Angenommene neue Finanzierung",
+      "Verfahrenskosten",
+      "Gläubigerzahlungen",
+      "Anfangsliquidität",
+      "Endliquidität laut Plan"
+    ],
+    "planNote": "Jahresplan des Unternehmens. Endliquidität ist der rechnerische Saldo der vorgelegten Werte. Sie belegt weder Mittelverfügbarkeit noch ausreichende Liquidität in einzelnen Monaten."
+  },
+  "es": {
+    "tabs": [
+      "Caso",
+      "Acreedores",
+      "Plan"
+    ],
+    "title": "Officina Riva — borrador de concordato",
+    "fiction": "Todos los nombres, importes y documentos son ficticios. Borrador didáctico no presentado.",
+    "fields": [
+      "Empresa y encargo",
+      "Fase y fecha",
+      "Propuesta",
+      "Documentos disponibles",
+      "Evidencias pendientes",
+      "Financiación",
+      "Ejecución",
+      "Actualización"
+    ],
+    "notes": [
+      "Officina Riva S.r.l. mantiene maquinaria en Italia. El profesional pide una revisión inicial de la propuesta y del plan, con preguntas y documentos que solicitar.",
+      "Borrador del 14 de septiembre de 2026. No constan presentación, número de procedimiento ni resolución judicial. Situación de acreedores al 31 de agosto de 2026.",
+      "La empresa propone continuar directamente la actividad en 2027. Acreedores incluye tres posiciones y pagos previstos. Carácter ordinario sin garantía y clase única son propuestas de la empresa pendientes de revisión. No se ha evaluado el voto.",
+      "El archivo contiene resumen de la propuesta, lista aportada de acreedores, estimaciones de recuperación en liquidación y plan anual de caja. Importes en euros, no en miles.",
+      "Faltan atestación, contabilidad justificativa, contratos de acreedores, revisión fiscal/previsional, valoración de liquidación y previsiones mensuales. La integridad de la lista no está demostrada. Las estimaciones de liquidación son de la empresa.",
+      "El plan supone 50.000 euros de nueva financiación. No se adjuntan compromiso del financiador, condiciones, fecha de desembolso ni calendario de devolución.",
+      "Pagos a los tres acreedores previstos antes del 31 de diciembre de 2027. Inicio operativo supuesto en enero de 2027. Costes y fechas del procedimiento requieren revisión; no se acredita aprobación ni viabilidad.",
+      "La actualización supone solo 30.000 euros de nueva financiación. Acreedores, pagos y flujos operativos no cambian. Ningún documento nuevo acredita disponibilidad o condiciones de los fondos. Revisar todo el expediente con esta versión."
+    ],
+    "creditorHeaders": [
+      "Acreedor",
+      "Crédito (EUR)",
+      "Pago propuesto (EUR)",
+      "Estimación liquidación (EUR)"
+    ],
+    "creditorNote": "Créditos declarados; rango ordinario sin garantía y clase única propuestos, pendientes de revisión profesional. Pago en efectivo antes del 31/12/2027.",
+    "planTitle": "Plan de caja 2027 (EUR)",
+    "metrics": [
+      "Cobros operativos",
+      "Pagos operativos",
+      "Nueva financiación supuesta",
+      "Costes del procedimiento",
+      "Pagos a acreedores",
+      "Caja inicial",
+      "Caja final indicada por el plan"
+    ],
+    "planNote": "Plan anual de la empresa. La caja final es el saldo aritmético de los valores aportados. No demuestra disponibilidad de fondos ni suficiencia de caja en cada mes."
+  }
+}

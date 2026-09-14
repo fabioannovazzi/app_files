@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from courseware.execution import ExecutionError, collect_execution, verify_execution
+
 __all__ = ["OnboardingError", "Store", "default_root", "main"]
 
 # Retain the legacy marker recognized by existing shared receipt clients.
@@ -156,9 +158,6 @@ def eligible_workflows(plugin_root: Path) -> set[str]:
         "privacy-surface-review",
         "learn-with-clara",
         "learn-with-lucia",
-        "advisory-brief-planner",
-        "advisory-case-director",
-        "advisory-deliverable-validator",
         "claim-basis-map",
         "studio-archive",
     }
@@ -334,6 +333,42 @@ class Store:
             "recorded_at": _now(),
         }
 
+    def _execution(
+        self,
+        lesson: dict[str, Any],
+        phase: str,
+        data: dict[str, Any],
+        artifacts: list[dict[str, str]],
+        pair: dict[str, str],
+    ) -> dict[str, Any]:
+        try:
+            return collect_execution(
+                root=self.lesson_root(lesson),
+                plugin_root=self.plugin_root,
+                product=self.product,
+                workflow=lesson["workflow_id"],
+                phase=phase,
+                worker_thread_id=pair["worker_thread_id"],
+                record_path=data.get("execution_record"),
+                artifacts=artifacts,
+            )
+        except ExecutionError as exc:
+            raise OnboardingError(str(exc)) from exc
+
+    def _verify_execution(self, lesson: dict[str, Any], phase: str) -> None:
+        try:
+            verify_execution(
+                root=self.lesson_root(lesson),
+                plugin_root=self.plugin_root,
+                product=self.product,
+                workflow=lesson["workflow_id"],
+                phase=phase,
+                recorded=lesson[phase].get("execution"),
+                artifacts=lesson[phase]["artifacts"],
+            )
+        except ExecutionError as exc:
+            raise OnboardingError(str(exc)) from exc
+
     def change(
         self, action: str, revision: int, data: dict[str, Any]
     ) -> dict[str, Any]:
@@ -476,6 +511,9 @@ class Store:
                         raise OnboardingError(
                             "Record the user's own attempt, not the demonstration again"
                         )
+                    evidence["execution"] = self._execution(
+                        lesson, action, data, evidence["artifacts"], state["pair"]
+                    )
                     lesson[action] = evidence
                     lesson.pop("understanding", None)
                     if action == "demo":
@@ -524,6 +562,7 @@ class Store:
                 raise OnboardingError(
                     "Lesson artifacts changed; review and record the actual results again"
                 )
+            self._verify_execution(lesson, phase)
 
     def worker(self, thread_id: str, workflow: str, token: str) -> dict[str, Any]:
         """Authorize only the active lesson handoff, never a general onboarding bypass.

@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "journal-sampling",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,11 +19,37 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
   "sources": [
+    {
+      "path": "modules/journal-sampling/assets/icon.svg",
+      "repository_path": "plugins/journal-sampling/assets/icon.svg",
+      "sha256": "5d326ae58e0cf649cf21f071b2ea482c14d1a43318808ebab4219e4fd60091b9"
+    },
+    {
+      "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
+      "repository_path": "plugins/journal-sampling/assets/journal-sampling-review-widget.html",
+      "sha256": "5da5790f3ac008454110cc2ffc4c85af319d77d7914fb7607fd96f72b47d9113"
+    },
+    {
+      "path": "modules/journal-sampling/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/journal-sampling/assets/review-workbench-adapter.json",
+      "sha256": "3c433e46a5cb624f3f5bf6e4871acd43a7b833b66802a4b7b22e5b0dcfaf1fb7"
+    },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
       "repository_path": "plugins/journal-sampling/references/workflow-reference.md",
       "sha256": "ab7e0505c4a68383b9cbd196994d0452ffbf1ff84e2d641fa1fb9091701cc69e"
+    },
+    {
+      "path": "modules/journal-sampling/requirements.txt",
+      "repository_path": "plugins/journal-sampling/requirements.txt",
+      "sha256": "884f4a5849cac35ee7ad5b35b4d130f029d038d9a458b410a580824ef8cebc7f"
     },
     {
       "path": "modules/journal-sampling/scripts/check_dependencies.py",
@@ -76,333 +102,402 @@
       "sha256": "3b52f91367bda51748c817010c8202c8c079e148ff6ca4d9fbdb8355159b81b6"
     },
     {
+      "path": "modules/journal-sampling/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
       "sha256": "f2cf8fc43a6de0fbafbcd110431fd4ad405a0c271d526268cd9ad77fd45124a7"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/journal-march.csv",
+      "sha256": "9700cf19ad337acb2b838e7116099c8144a3b2a7a16766494ad9a38bf2f72c54",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/journal-april.csv",
+      "sha256": "ec676b6ea02c63a6bb0fd38a8275c993e2e51ffcf89db5a13d307a2a2d4bb7f9",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "546790b8dd25a0815e4fd562407ef2e62cc175f25fdb346c19101d55b17fade9",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "546790b8dd25a0815e4fd562407ef2e62cc175f25fdb346c19101d55b17fade9",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "44d80693a5bbc34e70e98f0af1b52fb8dcf50bdd3e9b54306c7464a94ec74684",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "44d80693a5bbc34e70e98f0af1b52fb8dcf50bdd3e9b54306c7464a94ec74684",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "da027487021328aca7c118a1f7a658d1c07a07d256d9ecb2953752fdd4e853bb",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "da027487021328aca7c118a1f7a658d1c07a07d256d9ecb2953752fdd4e853bb",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "240b49794569e69accccf04056a2a236e9db30c114abef64cfa09c3744319129",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "240b49794569e69accccf04056a2a236e9db30c114abef64cfa09c3744319129",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "43ebbf1a3fa08e8bbe38b1df644a918a2c3835756c8b7af78601c209ebcfa5ed",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "43ebbf1a3fa08e8bbe38b1df644a918a2c3835756c8b7af78601c209ebcfa5ed",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Prima del campione, una popolazione affidabile",
-      "goal": "Capire perché la qualificazione del giornale precede la selezione delle scritture da verificare.",
-      "scenario": "Il giornale fittizio contiene movimenti con identificativi originali, conti e importi dare/avere. Una riga mostra '1.200,00': il formato deve essere interpretato correttamente. Una riga di totale non è un movimento da campionare.",
-      "request": "Vera, prepara questo giornale e mostrami il campione insieme ai controlli sulla popolazione.",
-      "scope": "Preparazione e campionamento secondo il contratto corrente. Una selezione non è di per sé un campione statisticamente rappresentativo né una verifica documentale.",
-      "input_columns": [
-        "Riga fittizia",
-        "Dato",
-        "Scelta da rivedere"
+      "title": "Estrarre un campione dal giornale contabile",
+      "goal": "Imparare a consegnare un giornale, verificare come viene letto e ottenere le righe selezionate per il successivo controllo.",
+      "scenario": "Lo studio deve scegliere alcune righe del giornale di Officina Arco da esaminare. Usiamo un piccolo file fittizio per seguire ogni passaggio.",
+      "scope": "Prima esecuzione di Journal Sampling: campione casuale di 5 righe, seme 42. La lezione insegna l’uso; il piano di revisione stabilisce metodo e numerosità nel lavoro reale.",
+      "inputs": "Apri journal-march.csv e context-it.md. Trova data, registrazione, riga, conto, dare e avere. Il file originale resta conservato nel fascicolo didattico.",
+      "request": "Vera, estrai dal giornale di marzo di Officina Arco un campione casuale di 5 righe con seme 42. Prima fammi verificare le colonne e poi mostrami il campione e i controlli sul giornale.",
+      "steps": [
+        "Vera apre il giornale nella chat di lavoro. La voce ti accompagna nel controllo di colonne, periodo e significato degli importi; Vera registra la mappatura effettivamente rivista.",
+        "La procedura prepara il giornale e controlla che le righe e gli importi siano conservati. Se la preparazione non passa, chiarisci il problema prima di selezionare il campione.",
+        "Vera esegue il campionamento e apre il risultato Excel. Individua una riga scelta e torna alla stessa riga nel giornale; rivedi insieme dimensione della popolazione, metodo e numero di righe estratte."
       ],
-      "input_rows": [
-        [
-          "G1 · riga 2",
-          "Movimento M-101; dare 1.200,00",
-          "Formato numerico italiano"
-        ],
-        [
-          "G1 · riga 3",
-          "Movimento M-101; avere 1.200,00",
-          "Due righe dello stesso movimento"
-        ],
-        [
-          "G1 · riga 4",
-          "Totale 1.200,00 / 1.200,00",
-          "Riepilogo, non scrittura"
-        ]
+      "deliverables": [
+        "Campione in Excel e CSV, con riferimenti alle righe originali.",
+        "Giornale preparato, controlli e riepilogo delle scelte per riprodurre l’estrazione."
       ],
-      "basis": "Gli identificativi e i localizzatori provengono da G1. Il numero della riga non sostituisce il numero di movimento originale.",
-      "method": [
-        "Ispeziona la fonte e rivedi perimetro, mappature, formato monetario e righe di riepilogo, prima di normalizzare.",
-        "Qualifica la popolazione completa e verifica chiusura e controlli monetari. Applica il metodo di selezione riveduto conservando gli identificativi originali.",
-        "Consegna popolazione normalizzata, diagnostica, campione e allegati di assurance. Il successivo controllo documentale usa questo passaggio chiuso senza rifare le mappature."
+      "review": "Verifica che il campione provenga dal periodo e dai conti richiesti e contenga il numero di righe previsto. I controlli di preparazione non certificano le registrazioni o l’adeguatezza del campione. Per controllare i documenti si prosegue con Verifica documentale.",
+      "checkpoints": [
+        "Prima dell’estrazione, spiega quale popolazione stai campionando.",
+        "Sul risultato, ritrova una riga campionata nel file sorgente."
       ],
-      "result_title": "Una popolazione qualificata prima della selezione",
-      "conclusion": "Il caso distingue due righe contabili di un movimento da una riga di totale. Il formato 1.200,00 rappresenta 1.200 EUR.",
-      "output_columns": [
-        "Elemento",
-        "Trattamento illustrato",
-        "Perché"
-      ],
-      "output_rows": [
-        [
-          "Righe 2–3",
-          "Popolazione: movimento M-101",
-          "Identità originale e due lati"
-        ],
-        [
-          "Riga 4",
-          "Riepilogo escluso con base riveduta",
-          "Evita il doppio conteggio"
-        ],
-        [
-          "Campione successivo",
-          "Vincolato alla popolazione qualificata",
-          "Mantiene tracciabilità"
-        ]
-      ],
-      "check": "Un file normalizzato non è qualificato soltanto perché si apre. Una mappatura errata può produrre numeri formalmente validi ma sostanzialmente sbagliati.",
-      "question": "Possiamo chiamare 'M-2' il movimento perché è sulla seconda riga?",
-      "answer": "No. Si conserva M-101 dalla fonte. Il localizzatore della riga serve a ritrovare l'evidenza, non a inventare l'identità del movimento.",
-      "practice": "Aggiungi una riga non bilanciata e verifica che la qualificazione la renda visibile prima del campionamento.",
-      "next": "Prepara l'export completo e i totali di controllo; descrivi l'obiettivo della selezione senza scegliere a priori un metodo inadatto."
+      "practice": "Ripeti con journal-april.csv, che aggiunge un pagamento di aprile. Mantieni il campione casuale di 5 righe e conserva il primo risultato. Verifica la nuova popolazione e individua una riga del nuovo campione.",
+      "success": "Sai preparare la richiesta, trovare il campione e collegare una riga al giornale, senza modificare a mano le righe estratte.",
+      "repeat": "Indica a Vera cliente, giornale, periodo ed eventuali filtri, metodo e numerosità previsti dal tuo piano. Chiedi Verifica documentale quando vuoi confrontare il campione con i documenti."
     },
     "en": {
-      "title": "A reliable population before the sample",
-      "goal": "Understand why journal qualification precedes the selection of entries for review.",
-      "scenario": "The fictional journal retains original movement IDs, accounts and debit/credit amounts. A value reads '1.200,00', requiring the correct numeric interpretation. A total row is a summary, not another posting to sample.",
-      "request": "Vera, prepare this journal and show the sample alongside the population checks.",
-      "scope": "Preparation and sampling under the current contract. A selection is not automatically statistically representative or document-vouched.",
-      "input_columns": [
-        "Fictional row",
-        "Data",
-        "Review choice"
+      "title": "Select a sample from an accounting journal",
+      "goal": "Learn to provide a journal, check how it is read and obtain selected rows for subsequent examination.",
+      "scenario": "The practice needs to select some Officina Arco journal rows for review. A small fictional file lets us follow every step.",
+      "scope": "First Journal Sampling run: 5 random rows, seed 42. This teaches operation; the real audit plan determines method and sample size.",
+      "inputs": "Open journal-march.csv and context-en.md. Find date, posting, line, account, debit and credit. The original remains preserved in the teaching case.",
+      "request": "Vera, select 5 random rows from Officina Arco’s March journal using seed 42. First let me check the columns, then show me the sample and journal preparation checks.",
+      "steps": [
+        "Vera opens the journal in the working chat. Voice guides you through columns, period and amount meanings; Vera records the mapping actually reviewed.",
+        "The workflow prepares the journal and checks that rows and amounts are preserved. If preparation fails, resolve the issue before selecting a sample.",
+        "Vera runs the sampling and opens the Excel result. Find one selected row and trace it to the journal; review population size, method and number of sampled rows together."
       ],
-      "input_rows": [
-        [
-          "G1 · row 2",
-          "M-101; debit 1.200,00",
-          "Italian number format"
-        ],
-        [
-          "G1 · row 3",
-          "M-101; credit 1.200,00",
-          "Same movement, second line"
-        ],
-        [
-          "G1 · row 4",
-          "Total 1.200,00 / 1.200,00",
-          "Summary, not a posting"
-        ]
+      "deliverables": [
+        "Excel and CSV sample with references to original rows.",
+        "Prepared journal, checks and sampling choices for reproducing the selection."
       ],
-      "basis": "IDs and locators come from G1. A physical row number does not replace the original movement identifier.",
-      "method": [
-        "Inspect and review scope, mappings, number format and summary rows before normalization.",
-        "Qualify the complete population and verify closure and monetary controls. Apply the reviewed selection method while preserving original identifiers.",
-        "Deliver normalized population, diagnostics, sample and assurance companions. Downstream Vouching uses this closed handoff without remapping the source."
+      "review": "Check that the sample covers the requested period and accounts and has the expected row count. Preparation checks do not certify postings or sample sufficiency. Continue with Vouching to check supporting documents.",
+      "checkpoints": [
+        "Before selection, explain which population you are sampling.",
+        "In the result, trace a sampled row to the source file."
       ],
-      "result_title": "Qualified population before selection",
-      "conclusion": "The case separates two accounting lines of one movement from a total row. Under the reviewed format, 1.200,00 means EUR 1,200.",
-      "output_columns": [
-        "Item",
-        "Illustrated treatment",
-        "Reason"
-      ],
-      "output_rows": [
-        [
-          "Rows 2–3",
-          "Population: movement M-101",
-          "Original identity and both sides"
-        ],
-        [
-          "Row 4",
-          "Summary excluded with reviewed basis",
-          "Avoid double counting"
-        ],
-        [
-          "Later sample",
-          "Bound to qualified population",
-          "Preserve traceability"
-        ]
-      ],
-      "check": "A normalized file is not qualified merely because it opens. Wrong mappings can yield plausible but incorrect numbers.",
-      "question": "Can we call the movement M-2 because it is on row two?",
-      "answer": "No. Preserve M-101 from the source. The row locator helps recover evidence; it does not create movement identity.",
-      "practice": "Add an unbalanced line and verify that qualification exposes it before sampling.",
-      "next": "Prepare the full export and control totals, then explain the purpose of selection."
+      "practice": "Repeat with journal-april.csv, which adds an April payment. Keep the random sample of 5 rows and preserve the first result. Check the new population and identify one row in the new sample.",
+      "success": "You can make the request, find the sample and trace a row to the journal without manually replacing selected rows.",
+      "repeat": "Tell Vera the client, journal, period, any filters, and the method and size in your audit plan. Ask for Vouching when you want to compare the sample with supporting documents."
     },
     "fr": {
-      "title": "Une population fiable avant l'échantillon",
-      "goal": "Comprendre pourquoi la qualification du journal précède la sélection des écritures.",
-      "scenario": "Le journal fictif conserve numéros de mouvement, comptes et montants débit-crédit. Une valeur est écrite '1.200,00' et demande la bonne lecture numérique. Une ligne de total est un récapitulatif, pas une écriture supplémentaire.",
-      "request": "Vera, prépare ce journal et montre l'échantillon avec les contrôles de population.",
-      "scope": "Préparation et échantillonnage selon le contrat courant. Une sélection n'est pas automatiquement représentative statistiquement ni contrôlée sur pièces.",
-      "input_columns": [
-        "Ligne fictive",
-        "Donnée",
-        "Choix à revoir"
+      "title": "Extraire un échantillon du journal comptable",
+      "goal": "Apprendre à fournir un journal, vérifier sa lecture et obtenir les lignes sélectionnées pour un contrôle ultérieur.",
+      "scenario": "Le cabinet doit sélectionner des lignes du journal d’Officina Arco à examiner. Un petit fichier fictif permet de suivre chaque étape.",
+      "scope": "Première exécution de Journal Sampling : 5 lignes aléatoires, graine 42. La leçon enseigne l’utilisation ; le plan d’audit réel détermine méthode et taille.",
+      "inputs": "Ouvrez journal-march.csv et context-fr.md. Repérez date, écriture, ligne, compte, débit et crédit. L’original reste conservé dans le dossier pédagogique.",
+      "request": "Vera, sélectionne 5 lignes aléatoires du journal de mars d’Officina Arco, avec la graine 42. Fais-moi d’abord vérifier les colonnes, puis montre l’échantillon et les contrôles de préparation.",
+      "steps": [
+        "Vera ouvre le journal dans la conversation de travail. La voix accompagne la vérification des colonnes, de la période et des montants ; Vera enregistre la correspondance effectivement revue.",
+        "La procédure prépare le journal et vérifie la conservation des lignes et montants. Si la préparation échoue, résolvez le problème avant la sélection.",
+        "Vera exécute le tirage et ouvre le résultat Excel. Retrouvez une ligne choisie dans le journal ; vérifiez ensemble population, méthode et nombre de lignes sélectionnées."
       ],
-      "input_rows": [
-        [
-          "G1 · ligne 2",
-          "M-101 ; débit 1.200,00",
-          "Format numérique italien"
-        ],
-        [
-          "G1 · ligne 3",
-          "M-101 ; crédit 1.200,00",
-          "Deuxième ligne du même mouvement"
-        ],
-        [
-          "G1 · ligne 4",
-          "Total 1.200,00 / 1.200,00",
-          "Récapitulatif"
-        ]
+      "deliverables": [
+        "Échantillon Excel et CSV avec références aux lignes originales.",
+        "Journal préparé, contrôles et choix de tirage pour reproduire la sélection."
       ],
-      "basis": "Identifiants et localisateurs viennent de G1. Le numéro de ligne physique ne remplace pas l'identifiant original du mouvement.",
-      "method": [
-        "Examine et revois périmètre, mappings, format monétaire et lignes de total avant normalisation.",
-        "Qualifie la population complète et vérifie clôture et contrôles monétaires. Applique la sélection revue en gardant les identifiants d'origine.",
-        "Livre population normalisée, diagnostic, échantillon et pièces d'assurance. Vouching utilise ensuite ce passage clos sans refaire la préparation."
+      "review": "Vérifiez période, comptes et nombre de lignes attendu. Les contrôles de préparation ne certifient ni les écritures ni la suffisance de l’échantillon. Le Contrôle sur pièces permet ensuite de vérifier les justificatifs.",
+      "checkpoints": [
+        "Avant le tirage, expliquez quelle population est échantillonnée.",
+        "Dans le résultat, retrouvez une ligne sélectionnée dans la source."
       ],
-      "result_title": "La qualification précède la sélection",
-      "conclusion": "Le cas distingue deux lignes comptables d'un mouvement et une ligne de total. Le format revu donne 1 200 EUR pour '1.200,00'.",
-      "output_columns": [
-        "Élément",
-        "Traitement illustré",
-        "Raison"
-      ],
-      "output_rows": [
-        [
-          "Lignes 2–3",
-          "Population : M-101",
-          "Identité originale et deux côtés"
-        ],
-        [
-          "Ligne 4",
-          "Total exclu sur base revue",
-          "Éviter le double comptage"
-        ],
-        [
-          "Échantillon ultérieur",
-          "Lié à la population qualifiée",
-          "Traçabilité"
-        ]
-      ],
-      "check": "Un fichier normalisé n'est pas qualifié parce qu'il s'ouvre. Un mauvais mapping peut produire des nombres plausibles mais faux.",
-      "question": "Peut-on nommer le mouvement M-2 parce qu'il est sur la deuxième ligne ?",
-      "answer": "Non. Il faut conserver M-101. Le localisateur permet de retrouver la preuve, pas de créer une identité de mouvement.",
-      "practice": "Ajoute une ligne déséquilibrée et vérifie que la qualification la rend visible avant l'échantillonnage.",
-      "next": "Prépare l'export complet et les totaux de contrôle, puis explique l'objectif de la sélection."
+      "practice": "Recommencez avec journal-april.csv, qui ajoute un paiement d’avril. Gardez 5 lignes aléatoires et conservez le premier résultat. Vérifiez la nouvelle population et repérez une ligne du nouvel échantillon.",
+      "success": "Vous savez formuler la demande, retrouver l’échantillon et relier une ligne au journal sans remplacer manuellement les lignes tirées.",
+      "repeat": "Indiquez client, journal, période, filtres éventuels, méthode et taille prévues par le plan d’audit. Demandez un Contrôle sur pièces pour comparer l’échantillon aux justificatifs."
     },
     "de": {
-      "title": "Eine verlässliche Grundgesamtheit vor der Stichprobe",
-      "goal": "Verstehen, warum die Journalqualifizierung vor der Auswahl zu prüfender Buchungen kommt.",
-      "scenario": "Das fiktive Journal enthält ursprüngliche Bewegungskennungen, Konten und Soll-/Habenbeträge. Der Wert '1.200,00' verlangt die passende Zahleninterpretation. Eine Summenzeile ist keine zusätzliche Buchung für die Stichprobe.",
-      "request": "Vera, bereite dieses Journal vor und zeige Stichprobe und Prüfungen der Grundgesamtheit.",
-      "scope": "Aufbereitung und Auswahl nach aktuellem Vertrag. Die Auswahl ist nicht automatisch statistisch repräsentativ oder beleggeprüft.",
-      "input_columns": [
-        "Fiktive Zeile",
-        "Daten",
-        "Prüfentscheidung"
+      "title": "Eine Stichprobe aus dem Buchungsjournal ziehen",
+      "goal": "Lernen, ein Journal bereitzustellen, seine Einlesung zu prüfen und ausgewählte Zeilen für die weitere Prüfung zu erhalten.",
+      "scenario": "Die Kanzlei möchte Journalzeilen von Officina Arco zur Prüfung auswählen. Eine kleine fiktive Datei macht jeden Schritt nachvollziehbar.",
+      "scope": "Erster Einsatz von Journal Sampling: 5 zufällige Zeilen, Startwert 42. Die Lektion erklärt die Bedienung; im echten Auftrag bestimmt der Prüfungsplan Methode und Umfang.",
+      "inputs": "Öffnen Sie journal-march.csv und context-de.md. Finden Sie Datum, Buchung, Zeile, Konto, Soll und Haben. Das Original bleibt in der Übungsakte erhalten.",
+      "request": "Vera, ziehe aus dem Märzjournal von Officina Arco 5 zufällige Zeilen mit Startwert 42. Lass mich zuerst die Spalten prüfen und zeige anschließend Stichprobe und Aufbereitungskontrollen.",
+      "steps": [
+        "Vera öffnet das Journal im Arbeitschat. Die Stimme begleitet die Prüfung von Spalten, Zeitraum und Betragsbedeutung; Vera speichert die tatsächlich geprüfte Zuordnung.",
+        "Der Ablauf bereitet das Journal auf und prüft die Erhaltung von Zeilen und Beträgen. Klären Sie fehlgeschlagene Aufbereitungskontrollen vor der Stichprobe.",
+        "Vera zieht die Stichprobe und öffnet die Excel-Datei. Verfolgen Sie eine ausgewählte Zeile zum Journal zurück und prüfen Sie gemeinsam Grundgesamtheit, Methode und Anzahl der gezogenen Zeilen."
       ],
-      "input_rows": [
-        [
-          "G1 · Zeile 2",
-          "M-101; Soll 1.200,00",
-          "Italienisches Zahlenformat"
-        ],
-        [
-          "G1 · Zeile 3",
-          "M-101; Haben 1.200,00",
-          "Gleiche Bewegung, zweite Zeile"
-        ],
-        [
-          "G1 · Zeile 4",
-          "Summe 1.200,00 / 1.200,00",
-          "Zusammenfassung, keine Buchung"
-        ]
+      "deliverables": [
+        "Stichprobe als Excel und CSV mit Verweisen auf Originalzeilen.",
+        "Aufbereitetes Journal, Kontrollen und Auswahlparameter zur Wiederholung der Ziehung."
       ],
-      "basis": "Kennungen und Fundstellen stammen aus G1. Eine physische Zeilennummer ersetzt keine ursprüngliche Bewegungskennung.",
-      "method": [
-        "Prüfe Umfang, Zuordnungen, Zahlenformat und Summenzeilen vor der Normalisierung.",
-        "Qualifiziere die vollständige Grundgesamtheit und prüfe Abschluss sowie Betragskontrollen. Wende die geprüfte Auswahlmethode unter Erhalt der ursprünglichen Kennungen an.",
-        "Liefere normalisierte Grundgesamtheit, Diagnosen, Stichprobe und Qualifizierungsnachweise. Nachgelagertes Vouching verwendet diese abgeschlossene Übergabe ohne neue Quellenzuordnung."
+      "review": "Prüfen Sie Zeitraum, Konten und erwartete Zeilenzahl. Aufbereitungskontrollen bestätigen weder korrekte Buchungen noch einen ausreichenden Stichprobenumfang. Mit der Belegprüfung werden anschließend Belege verglichen.",
+      "checkpoints": [
+        "Erklären Sie vor der Ziehung die ausgewählte Grundgesamtheit.",
+        "Finden Sie eine gezogene Zeile in der Quelldatei wieder."
       ],
-      "result_title": "Qualifizierte Grundgesamtheit vor der Auswahl",
-      "conclusion": "Der Fall trennt zwei Buchungszeilen einer Bewegung von einer Summenzeile. Im geprüften Format bedeutet 1.200,00 genau EUR 1.200.",
-      "output_columns": [
-        "Element",
-        "Beispielbehandlung",
-        "Grund"
-      ],
-      "output_rows": [
-        [
-          "Zeilen 2–3",
-          "Grundgesamtheit: Bewegung M-101",
-          "Originalkennung und beide Seiten"
-        ],
-        [
-          "Zeile 4",
-          "Summenzeile begründet ausgeschlossen",
-          "Doppelzählung vermeiden"
-        ],
-        [
-          "Spätere Stichprobe",
-          "An qualifizierte Grundgesamtheit gebunden",
-          "Nachvollziehbarkeit erhalten"
-        ]
-      ],
-      "check": "Eine Datei ist nicht qualifiziert, nur weil sie geöffnet werden kann. Falsche Zuordnungen können plausible falsche Zahlen erzeugen.",
-      "question": "Dürfen wir die Bewegung M-2 nennen, weil sie in Zeile zwei steht?",
-      "answer": "Nein. Erhalte M-101 aus der Quelle. Die Zeilenfundstelle hilft beim Nachschlagen, schafft aber keine Bewegungsidentität.",
-      "practice": "Ergänze eine unausgeglichene Zeile und prüfe, ob die Qualifizierung sie vor der Auswahl aufzeigt.",
-      "next": "Bereite den vollständigen Export mit Kontrollsummen vor und erläutere den Zweck der Auswahl."
+      "practice": "Wiederholen Sie mit journal-april.csv, das eine Aprilzahlung ergänzt. Behalten Sie 5 zufällige Zeilen und das erste Ergebnis bei. Prüfen Sie die neue Grundgesamtheit und finden Sie eine Zeile der neuen Stichprobe.",
+      "success": "Sie können den Auftrag formulieren, die Stichprobe finden und eine Zeile zum Journal zurückverfolgen, ohne gezogene Zeilen von Hand auszutauschen.",
+      "repeat": "Nennen Sie Vera Mandant, Journal, Zeitraum, gegebenenfalls Filter sowie Methode und Umfang aus Ihrem Prüfungsplan. Bitten Sie um Belegprüfung, um die Stichprobe mit Belegen zu vergleichen."
     },
     "es": {
-      "title": "Una población fiable antes de la muestra",
-      "goal": "Entender por qué la cualificación del diario precede a seleccionar asientos para revisión.",
-      "scenario": "El diario ficticio conserva identificadores originales, cuentas e importes de debe y haber. '1.200,00' exige interpretar correctamente el formato numérico. Una fila de total es un resumen, no otro asiento que seleccionar.",
-      "request": "Vera, prepara este diario y muestra la muestra junto a los controles de población.",
-      "scope": "Preparación y muestreo conforme al contrato actual. Una selección no es automáticamente representativa estadísticamente ni verificada contra documentos.",
-      "input_columns": [
-        "Fila ficticia",
-        "Datos",
-        "Decisión de revisión"
+      "title": "Extraer una muestra del diario contable",
+      "goal": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior.",
+      "scenario": "El despacho necesita seleccionar líneas del diario de Officina Arco para examinarlas. Un pequeño archivo ficticio permite seguir todos los pasos.",
+      "scope": "Primera ejecución de Journal Sampling: 5 líneas aleatorias, semilla 42. La lección enseña el uso; el plan de auditoría real determina método y tamaño.",
+      "inputs": "Abre journal-march.csv y context-es.md. Localiza fecha, asiento, línea, cuenta, debe y haber. El original se conserva en el expediente didáctico.",
+      "request": "Vera, extrae 5 líneas aleatorias del diario de marzo de Officina Arco con semilla 42. Primero déjame comprobar las columnas y después muestra la muestra y los controles de preparación.",
+      "steps": [
+        "Vera abre el diario en la conversación de trabajo. La voz acompaña la revisión de columnas, período y significado de importes; Vera registra la correspondencia realmente revisada.",
+        "El flujo prepara el diario y comprueba que conserva líneas e importes. Si falla la preparación, resuelve el problema antes de extraer la muestra.",
+        "Vera ejecuta el muestreo y abre el resultado Excel. Encuentra una línea seleccionada en el diario; revisa con la voz población, método y número de líneas extraídas."
       ],
-      "input_rows": [
-        [
-          "G1 · fila 2",
-          "M-101; debe 1.200,00",
-          "Formato numérico italiano"
-        ],
-        [
-          "G1 · fila 3",
-          "M-101; haber 1.200,00",
-          "Mismo movimiento, segunda línea"
-        ],
-        [
-          "G1 · fila 4",
-          "Total 1.200,00 / 1.200,00",
-          "Resumen, no asiento"
-        ]
+      "deliverables": [
+        "Muestra Excel y CSV con referencias a las líneas originales.",
+        "Diario preparado, controles y parámetros para reproducir la selección."
       ],
-      "basis": "Identificadores y ubicaciones proceden de G1. Un número de fila no sustituye el identificador original del movimiento.",
-      "method": [
-        "Inspecciona y revisa alcance, correspondencias, formato numérico y filas resumen antes de normalizar.",
-        "Cualifica toda la población y verifica cierre y controles monetarios. Aplica el método de selección revisado conservando identificadores originales.",
-        "Entrega población normalizada, diagnósticos, muestra y documentos de cualificación. Vouching utiliza esta entrega cerrada sin volver a mapear la fuente."
+      "review": "Comprueba período, cuentas y número esperado de líneas. Los controles de preparación no certifican los asientos ni la suficiencia de la muestra. La Verificación documental permite después revisar los justificantes.",
+      "checkpoints": [
+        "Antes de extraer, explica qué población se muestrea.",
+        "En el resultado, localiza una línea seleccionada en el archivo fuente."
       ],
-      "result_title": "Población cualificada antes de seleccionar",
-      "conclusion": "El caso separa dos líneas contables de un movimiento de una fila de total. Con el formato revisado, 1.200,00 significa EUR 1.200.",
-      "output_columns": [
-        "Elemento",
-        "Tratamiento ilustrado",
-        "Motivo"
-      ],
-      "output_rows": [
-        [
-          "Filas 2–3",
-          "Población: movimiento M-101",
-          "Identidad original y ambos lados"
-        ],
-        [
-          "Fila 4",
-          "Resumen excluido con base revisada",
-          "Evitar doble conteo"
-        ],
-        [
-          "Muestra posterior",
-          "Vinculada a población cualificada",
-          "Conservar trazabilidad"
-        ]
-      ],
-      "check": "Que un archivo normalizado se abra no acredita su cualificación. Un mapeo equivocado puede producir cifras plausibles e incorrectas.",
-      "question": "¿Podemos llamar M-2 al movimiento porque está en la fila dos?",
-      "answer": "No. Conserva M-101 de la fuente. La ubicación ayuda a recuperar evidencia, pero no crea identidad del movimiento.",
-      "practice": "Añade una línea descuadrada y verifica que la cualificación la expone antes del muestreo.",
-      "next": "Prepara export completo y totales de control y explica el propósito de selección."
+      "practice": "Repite con journal-april.csv, que añade un pago de abril. Conserva las 5 líneas aleatorias y el primer resultado. Comprueba la nueva población e identifica una línea de la nueva muestra.",
+      "success": "Sabes formular la petición, encontrar la muestra y rastrear una línea al diario sin sustituir manualmente las líneas seleccionadas.",
+      "repeat": "Indica a Vera cliente, diario, período, filtros si procede, método y tamaño previstos en tu plan de auditoría. Pide Verificación documental para comparar la muestra con los justificantes."
     }
   }
 }

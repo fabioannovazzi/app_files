@@ -1,0 +1,27 @@
+{
+  "vera/concordato-plan-review": {
+    "title": "Revisar un plan de concordato con Vera",
+    "goal": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional.",
+    "scenario": "Officina Riva ha preparado un primer borrador para continuar la actividad y pagar a los acreedores. El profesional necesita entender su contenido, los supuestos que revisar y los documentos pendientes.",
+    "scope": "Un primer recorrido completo: encargo, fuentes, marco procesal, acreedores, propuesta, plan, preguntas abiertas e informe. El caso pequeño enseña el workflow, sin intentar cubrir todo el derecho concursal italiano.",
+    "inputs": "Abre demo-es.xlsx: Caso explica el encargo y estado del borrador, Acreedores recoge posiciones declaradas y Plan los flujos anuales supuestos. Son fuentes ficticias que examinar, no conclusiones aprobadas.",
+    "request": "Vera, revisa la propuesta y el plan de concordato preventivo de Officina Riva en este archivo. Prepara el expediente con tratamiento de acreedores, fuentes y usos, liquidez, documentos pendientes y preguntas por aclarar.",
+    "steps": [
+      "En el hilo de trabajo Vera lee el archivo y resume encargo, fecha, fase y documentos. En el hilo de voz explica el recorrido y pide confirmar o corregir el alcance.",
+      "Vera reconstruye el caso desde las fuentes, verifica el marco pertinente y prepara interpretaciones para revisar. Examina propuesta, plan, acreedores, comparación con liquidación, caja y lagunas. Revisas interpretaciones y supuestos antes de la confirmación exigida por el workflow.",
+      "El workflow actual genera los cuadros y documentos reales. Abre primero el informe y después el libro: sigue una cuestión hasta su fuente, examina los datos y reconoce la siguiente acción útil. La voz explica únicamente avances y resultados reales."
+    ],
+    "deliverables": [
+      "Informe Word y resumen legible de la revisión, con límites y preguntas abiertas.",
+      "Libro de trabajo Excel y cuadros de acreedores, tratamiento, fuentes y usos, liquidez y controles."
+    ],
+    "review": "Comprueba fuentes, fechas, perímetro de acreedores, supuestos y solicitudes. Que las cifras cuadren no prueba viabilidad ni validez jurídica. El borrador carece de atestación y de prueba de disponibilidad de financiación.",
+    "checkpoints": [
+      "Antes de continuar, explica el trabajo que pides a Vera y los archivos que aportas.",
+      "Localiza la síntesis, una cuestión por revisar y el documento o aclaración necesarios."
+    ],
+    "practice": "Inicia otra revisión con practice-es.xlsx, que actualiza la financiación supuesta. Conserva el primer expediente. Pide a Vera que reexamine el caso y explica qué resultados y acciones cambian; no sustituyas simplemente una cifra en el informe anterior.",
+    "success": "Sabes iniciar el workflow, revisar alcance e interpretaciones, usar los resultados y repetir el trabajo con una versión actualizada.",
+    "repeat": "Aporta a Vera propuesta, plan, lista de acreedores, atestación y justificantes disponibles, indicando fase, fecha y objetivo. Confirma el alcance, revisa las fuentes y usa el expediente en el recorrido profesional habitual."
+  }
+}

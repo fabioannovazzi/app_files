@@ -1,0 +1,105 @@
+{
+  "schema_version": "clara.html_deck_ledger.v1",
+  "sources": [
+    {
+      "id": "brief",
+      "label": "Proposta fittizia, ancora da discutere",
+      "kind": "document",
+      "locator": "brief-it.md",
+      "sha256": "3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d",
+      "publish_locator": false
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "opening",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-opening",
+          "statement": "Proposta per ricevere le richieste",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposta fittizia, ancora da discutere"
+        }
+      ]
+    },
+    {
+      "slide_id": "request",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-request",
+          "statement": "La richiesta deve essere comprensibile",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposta fittizia, ancora da discutere"
+        }
+      ]
+    },
+    {
+      "slide_id": "process",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-process",
+          "statement": "Chiarire la richiesta prima di procedere",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposta fittizia, ancora da discutere"
+        }
+      ]
+    },
+    {
+      "slide_id": "responsibilities",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-responsibilities",
+          "statement": "Concordare chi segue la richiesta",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposta fittizia, ancora da discutere"
+        }
+      ]
+    },
+    {
+      "slide_id": "decision",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-decision",
+          "statement": "Decidere se provare la scheda",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposta fittizia, ancora da discutere"
+        }
+      ]
+    }
+  ]
+}

@@ -7,10 +7,14 @@ require editorial review before regenerating their recorded fingerprints.
 from __future__ import annotations
 
 import argparse
-import copy
+import ast
 import hashlib
+import importlib.util
 import json
 import re
+import shutil
+import sys
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -27,9 +31,6 @@ EXCLUDED = {
     "learn-with-vera",
     "learn-with-clara",
     "learn-with-lucia",
-    "advisory-brief-planner",
-    "advisory-case-director",
-    "advisory-deliverable-validator",
     "claim-basis-map",
 }
 LIMITED_LANGUAGES = {
@@ -39,24 +40,6 @@ LIMITED_LANGUAGES = {
     "vera/management-control-pack": ["it", "en"],
     "vera/centrale-rischi-review": ["it"],
     "vera/treasury-forecast": ["it"],
-}
-# Authored plotting values, checked against each case's displayed output rows.
-# Labels and value text come from those localized rows, never guessed headers.
-VISUALS = {
-    "vera/business-planning": {"column": 1, "bars": [[0, 60000], [1, 42000]]},
-    "clara/business-planning": {"column": 1, "bars": [[0, 60000], [1, 42000]]},
-    "vera/financial-analysis": {
-        "column": 2,
-        "maximum": 100,
-        "bars": [[0, 60], [1, 85]],
-    },
-    "vera/sales-plan": {"column": 2, "bars": [[0, 1800], [1, 1881]]},
-    "clara/attribute-reporting": {
-        "column": 2,
-        "maximum": 100,
-        "bars": [[0, 60], [1, 30]],
-    },
-    "clara/reporting-engine": {"column": 1, "bars": [[0, 40000], [1, 50000]]},
 }
 
 
@@ -97,6 +80,35 @@ def _eligible(product: str) -> set[str]:
     }
 
 
+@lru_cache(maxsize=1)
+def _package_builder() -> Any:
+    """Reuse the package's authoritative vendor selection, including overlays."""
+    spec = importlib.util.spec_from_file_location(
+        "teaching_package_sources", ROOT / "scripts/build_codex_plugin_zip.py"
+    )
+    if spec is None or spec.loader is None:
+        raise ValueError("Package source registry is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _vendor_records(component: str, prefix: str) -> list[dict[str, str]]:
+    package = _package_builder()
+    configuration = package.load_vendor_module_config()
+    return [
+        {
+            "path": f"{prefix}vendor/modules/{relative}",
+            "repository_path": source.relative_to(ROOT).as_posix(),
+            "sha256": _sha(source),
+        }
+        for relative, source in package.shared_vendor_module_entries(
+            configuration.get(component)
+        ).items()
+    ]
+
+
 def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
     root = ROOT / "plugins" / product
     skill = root / "skills" / workflow / "SKILL.md"
@@ -105,15 +117,55 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
         path for path in skill.parent.rglob("*.md") if path.name != "cowork-runtime.md"
     )
     paths.update(skill.parent.rglob("*.py"))
+    # Native Clara workflows call product-root helpers rather than a component
+    # wrapper. Pin the referenced helpers and their same-directory imports too.
+    documents = "\n".join(
+        path.read_text(encoding="utf-8") for path in paths if path.suffix == ".md"
+    )
+    pending = [
+        root / "scripts" / name
+        for name in set(re.findall(r"scripts/([a-zA-Z0-9_/-]+\.py)", documents))
+        if (root / "scripts" / name).is_file()
+    ]
+    visited: set[Path] = set()
+    while pending:
+        helper = pending.pop()
+        if helper in visited:
+            continue
+        visited.add(helper)
+        paths.add(helper)
+        tree = ast.parse(helper.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            modules = (
+                [node.module]
+                if isinstance(node, ast.ImportFrom) and node.module
+                else (
+                    [item.name for item in node.names]
+                    if isinstance(node, ast.Import)
+                    else []
+                )
+            )
+            for name in modules:
+                dependency = helper.parent / (name.replace(".", "/") + ".py")
+                if dependency.is_file() and dependency.resolve().is_relative_to(root):
+                    pending.append(dependency)
+    for relative in set(
+        re.findall(r"((?:contracts|schemas)/[a-zA-Z0-9_./-]+\.json)", documents)
+    ):
+        candidate = root / relative
+        if candidate.is_file():
+            paths.add(candidate)
     text = skill.read_text(encoding="utf-8")
+    vendored = _vendor_records(product, "")
     for module in set(re.findall(r"\.\./\.\./modules/([a-z0-9-]+)", text)):
         module_root = root / "modules" / module
         if not module_root.is_dir():
             module_root = ROOT / "plugins" / module
         if not module_root.is_dir():
             raise ValueError(f"Missing component source: {product}/{module}")
-        # Pin method documents, input schemas and execution code. Compiled and
-        # package-generated support files are deliberately outside this set.
+        vendored.extend(_vendor_records(module, f"modules/{module}/"))
+        # Pin execution code and the rule packs/templates/assets it consumes.
+        # A changed disclosure rule or report template also affects its lesson.
         if module_root == root / "modules" / module:
             candidates = [module_root / "scripts", module_root / "references"]
         else:
@@ -124,12 +176,22 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
                 module_root / "scripts",
                 module_root / "schemas",
             ]
+        candidates += [
+            module_root / name
+            for name in ("rulepacks", "taxonomy", "templates", "assets")
+        ]
+        requirements = module_root / "requirements.txt"
+        if requirements.is_file():
+            paths.add(requirements)
         for candidate in candidates:
             if candidate.is_dir():
                 paths.update(
                     p
                     for p in candidate.rglob("*")
-                    if p.suffix in {".md", ".py", ".json"} and p.is_file()
+                    if p.is_file()
+                    and not {"__pycache__", "node_modules", ".git"} & set(p.parts)
+                    and p.suffix not in {".pyc", ".pyo"}
+                    and p.name != ".DS_Store"
                 )
     records = []
     for path in sorted(paths, key=lambda item: item.as_posix()):
@@ -144,150 +206,172 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
                 "sha256": _sha(path),
             }
         )
-    return records
+    return sorted([*records, *vendored], key=lambda record: record["path"])
 
 
 def _locales() -> dict[str, dict[str, Any]]:
     result: dict[str, dict[str, Any]] = {}
     for language in LANGUAGES:
-        for file in sorted(AUTHORING.glob(f"lessons_{language}*.json")):
+        for file in sorted(AUTHORING.glob(f"kits_{language}*.json")):
             for key, content in _json(file).items():
                 if language in result.setdefault(key, {}):
-                    raise ValueError(f"Duplicate course locale: {key}/{language}")
+                    raise ValueError(f"Duplicate kit locale: {key}/{language}")
                 result[key][language] = content
-    # These products own the same shared workflows. Reuse the course only with
-    # an explicit product adaptation, then bind to the target's own sources.
-    for target, source in {
-        "clara/business-planning": "vera/business-planning",
-        "lucia/comunicazione-professionale": "vera/comunicazione-professionale",
-        "lucia/presenza-digitale-studio": "vera/presenza-digitale-studio",
-        "lucia/quesito-legale-fiscale": "vera/quesito-legale-fiscale",
-    }.items():
-        content = copy.deepcopy(result[source])
-        name = target.split("/")[0].title()
-        # JSON text replacement only changes the invoking assistant and the
-        # supplied fictional firm's actual service; no runtime translation.
-        serialized = json.dumps(content, ensure_ascii=False).replace("Vera", name)
-        if target == "lucia/presenza-digitale-studio":
-            serialized = (
-                serialized.replace("consulenza contabile", "assistenza legale")
-                .replace(
-                    "Contabilità e controllo di gestione",
-                    "Contratti e controversie commerciali",
-                )
-                .replace(
-                    "contabilità e controllo di gestione",
-                    "contratti e controversie commerciali",
-                )
-                .replace("accounting advisory", "legal advisory")
-                .replace(
-                    "Accounting and management control",
-                    "Contracts and commercial disputes",
-                )
-                .replace("conseil comptable", "conseil juridique")
-                .replace(
-                    "Comptabilité et contrôle de gestion",
-                    "Contrats et litiges commerciaux",
-                )
-                .replace("Buchhaltungsberatung", "Rechtsberatung")
-                .replace(
-                    "Buchhaltung und Controlling", "Verträge und Handelsstreitigkeiten"
-                )
-                .replace("asesoramiento contable", "asesoramiento jurídico")
-                .replace(
-                    "Contabilidad y control de gestión",
-                    "Contratos y controversias comerciales",
-                )
-            )
-        result[target] = json.loads(serialized)
     return result
 
 
+def _generated_files(folder: Path, expected: set[str], *, check: bool = False) -> None:
+    """Keep a compiler-owned kit free of retired inputs and output specimens."""
+    if folder.is_symlink():
+        raise ValueError(f"Generated kit folder must not be a symlink: {folder}")
+    if not folder.exists():
+        return
+    entries = list(folder.rglob("*"))
+    if any(path.is_symlink() for path in entries):
+        raise ValueError(f"Generated kit must not contain symlinks: {folder}")
+    unexpected = [
+        path
+        for path in entries
+        if path.is_file() and path.relative_to(folder).as_posix() not in expected
+    ]
+    if check and unexpected:
+        raise ValueError(
+            f"Unreferenced generated teaching files: {[str(p) for p in unexpected]}"
+        )
+    for path in unexpected:
+        path.unlink()
+    if not check:
+        for directory in sorted(
+            (path for path in entries if path.is_dir()),
+            key=lambda path: len(path.parts),
+            reverse=True,
+        ):
+            if not any(directory.iterdir()):
+                directory.rmdir()
+
+
 def build(*, require_complete: bool = True, check: bool = False) -> dict[str, Any]:
-    """Build exact product catalogs; reject missing or unexpected authored lessons."""
+    """Compile reviewed kits with exact input files; never author outputs."""
     locales = _locales()
-    expected = {
-        f"{product}/{key}"
-        for product in ("vera", "clara", "lucia")
-        for key in _eligible(product)
-    }
-    if set(locales) != expected:
+    definitions = _json(AUTHORING / "kits.json")
+    expected = {f"{p}/{w}" for p in ("vera", "clara", "lucia") for w in _eligible(p)}
+    if set(definitions) != expected:
         raise ValueError(
-            f"Course coverage mismatch: missing={sorted(expected-set(locales))}; unexpected={sorted(set(locales)-expected)}"
+            f"Kit inventory differs from current teaching scope: {set(definitions) ^ expected}"
         )
-    missing = {
-        key: sorted(set(LIMITED_LANGUAGES.get(key, LANGUAGES)) - set(locales[key]))
-        for key in expected
-    }
-    missing = {key: value for key, value in missing.items() if value}
-    if require_complete and missing:
-        raise ValueError(
-            "Missing authored translations: " + json.dumps(missing, ensure_ascii=False)
-        )
+    if set(locales) - expected:
+        raise ValueError("A kit names a foreign or unavailable workflow")
     count = 0
+    missing = []
     for product in ("vera", "clara", "lucia"):
+        assets = ROOT / "plugins" / product / "assets/courses"
         index: dict[str, Any] = {
-            "schema": "mparanza.course_catalog.v1",
+            "schema": "mparanza.teaching_catalog.v2",
             "product": product,
             "courses": {},
         }
-        assets = ROOT / "plugins" / product / "assets/courses"
         for workflow in sorted(_eligible(product)):
             key = f"{product}/{workflow}"
             supported = LIMITED_LANGUAGES.get(key, LANGUAGES)
-            extra = set(locales[key]) - set(supported)
-            if extra:
-                raise ValueError(f"Unsupported course translations: {key}: {extra}")
+            absent = set(supported) - set(locales.get(key, {}))
+            if absent:
+                missing.append(f"{key}: {sorted(absent)}")
+                if not require_complete:
+                    continue
+                raise ValueError(f"Missing teaching translations: {missing}")
+            if set(locales[key]) - set(supported):
+                raise ValueError(f"Unsupported teaching translation: {key}")
+            definition = definitions[key]
+            destinations = [asset["path"] for asset in definition["files"]]
+            if len(destinations) != len(set(destinations)):
+                raise ValueError(
+                    f"Teaching inputs need unique destinations across all languages: {key}"
+                )
+            files = []
+            _generated_files(
+                assets / workflow,
+                {"course.json", *(asset["path"] for asset in definition["files"])},
+                check=check,
+            )
+            for asset in definition["files"]:
+                source = AUTHORING / "inputs" / asset["source"]
+                target = assets / workflow / asset["path"]
+                if (
+                    source.is_symlink()
+                    or not source.is_file()
+                    or not source.resolve().is_relative_to(
+                        (AUTHORING / "inputs").resolve()
+                    )
+                ):
+                    raise ValueError(f"Missing or foreign input file: {source}")
+                if (
+                    not asset["path"].startswith("files/")
+                    or ".." in Path(asset["path"]).parts
+                ):
+                    raise ValueError(
+                        "Kit file destinations must be contained below files/"
+                    )
+                if check:
+                    if (
+                        not target.is_file()
+                        or target.read_bytes() != source.read_bytes()
+                    ):
+                        raise ValueError(f"Teaching input is stale: {target}")
+                else:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(source, target)
+                files.append(
+                    {
+                        "path": asset["path"],
+                        "sha256": _sha(source),
+                        "languages": asset["languages"],
+                        "role": asset["role"],
+                    }
+                )
+            for language in supported:
+                for role in ("source", "practice"):
+                    if not any(
+                        f["role"] == role and language in f["languages"] for f in files
+                    ):
+                        raise ValueError(f"Kit needs {role} inputs: {key}/{language}")
             course = {
-                "schema": "mparanza.course.v1",
+                "schema": "mparanza.teaching_kit.v2",
                 "product": product,
                 "workflow": workflow,
-                "revision": "2026-09-14.1",
-                "seconds": [45, 60, 75, 90, 75, 45],
+                "revision": "2026-09-14.2",
+                "seconds": [45, 60, 105, 75, 45, 60],
                 "supported_languages": supported,
                 "language_basis": (
                     "workflow_output_contract"
                     if key in LIMITED_LANGUAGES
                     else "product_conversation_language_and_workflow_narrative"
                 ),
+                "group": definition["group"],
+                "parent_workflow": definition.get("parent_workflow"),
+                "execution": definition["execution"],
                 "sources": _source_records(product, workflow),
-                "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-                "files": [],
+                "files": files,
                 "locales": locales[key],
             }
-            if key in VISUALS:
-                course["visual"] = VISUALS[key]
-            # Explicit attachments are authored separately and hash-bound. An
-            # output from a real fixture run includes its own execution evidence.
-            attachment_root = assets / workflow / "files"
-            if attachment_root.is_dir():
-                course["files"] = [
-                    {
-                        "path": "files/" + p.relative_to(attachment_root).as_posix(),
-                        "sha256": _sha(p),
-                    }
-                    for p in sorted(attachment_root.rglob("*"))
-                    if p.is_file()
-                ]
             path = assets / workflow / "course.json"
             _write(path, course, check=check)
             index["courses"][workflow] = {
                 "path": path.relative_to(assets).as_posix(),
                 "sha256": _sha(path),
-                "languages": [
-                    language for language in supported if language in locales[key]
-                ],
+                "languages": supported,
                 "duration_seconds": sum(course["seconds"]),
+                "group": definition["group"],
+                "parent_workflow": definition.get("parent_workflow"),
                 "titles": {
-                    language: content["title"]
-                    for language, content in locales[key].items()
+                    lang: value["title"] for lang, value in locales[key].items()
                 },
+                "goals": {lang: value["goal"] for lang, value in locales[key].items()},
             }
             count += len(locales[key])
         _write(assets / "index.json", index, check=check)
     return {
-        "workflows": len(expected),
-        "localized_courses": count,
+        "workflow_kits": len(locales),
+        "localized_kits": count,
         "missing_translations": missing,
     }
 

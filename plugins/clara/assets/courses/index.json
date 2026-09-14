@@ -1,10 +1,10 @@
 {
-  "schema": "mparanza.course_catalog.v1",
+  "schema": "mparanza.teaching_catalog.v2",
   "product": "clara",
   "courses": {
-    "attribute-reporting": {
-      "path": "attribute-reporting/course.json",
-      "sha256": "20cf94533ba12397f6c01528c49109de04fbe67b2ba7ad2b0262656acc632767",
+    "advisory-brief-planner": {
+      "path": "advisory-brief-planner/course.json",
+      "sha256": "60616926cc3090e5af33a364f4b03a2aeeb92deacdb274831a1eb06fb142dd3c",
       "languages": [
         "it",
         "en",
@@ -13,17 +13,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un segnale di assortimento non è una quota di mercato",
-        "en": "An assortment signal is not market share",
-        "fr": "Un signal d'assortiment n'est pas une part de marché",
-        "de": "Ein Sortimentssignal ist kein Marktanteil",
-        "es": "Una señal de surtido no es cuota de mercado"
+        "it": "Impostare un incarico di consulenza con Clara",
+        "en": "Plan an advisory assignment with Clara",
+        "fr": "Définir une mission de conseil avec Clara",
+        "de": "Einen Beratungsauftrag mit Clara planen",
+        "es": "Planificar un encargo de consultoría con Clara"
+      },
+      "goals": {
+        "it": "Imparare a trasformare una richiesta in un incarico chiaro: decisione, fonti, risultato e lavoro da svolgere.",
+        "en": "Learn to turn a request into a clear assignment: the decision, evidence, deliverable and next work.",
+        "fr": "Apprendre à transformer une demande en mission claire : décision, sources, livrable et travail à réaliser.",
+        "de": "Lernen, aus einer Anfrage einen klaren Auftrag mit Entscheidung, Quellen, Ergebnis und nächsten Arbeitsschritten zu machen.",
+        "es": "Aprender a convertir una petición en un encargo claro: decisión, fuentes, entregable y trabajo siguiente."
       }
     },
-    "brand-fit": {
-      "path": "brand-fit/course.json",
-      "sha256": "7911691fe458a3df835f20051d8a7f4df72b1951849e63232a2e2d49e23f64cf",
+    "advisory-case-director": {
+      "path": "advisory-case-director/course.json",
+      "sha256": "65504c1045221c51e163a4ebc0b5a72e66f2845138d264456d697539ca7937df",
       "languages": [
         "it",
         "en",
@@ -32,30 +41,101 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un vuoto sul retailer non è un vuoto nel catalogo",
-        "en": "A retailer gap is not necessarily a catalog gap",
-        "fr": "Une absence chez le distributeur n'est pas une absence du catalogue",
-        "de": "Eine Händlerlücke ist nicht immer eine Kataloglücke",
-        "es": "Una carencia en el distribuidor no siempre falta en el catálogo"
+        "it": "Sviluppare un caso di consulenza con Clara",
+        "en": "Develop an advisory case with Clara",
+        "fr": "Faire évoluer un dossier de conseil avec Clara",
+        "de": "Einen Beratungsfall mit Clara entwickeln",
+        "es": "Desarrollar un caso de consultoría con Clara"
+      },
+      "goals": {
+        "it": "Imparare a mantenere una valutazione di lavoro fondata sulle fonti e aggiornare le prossime azioni quando arrivano nuove informazioni.",
+        "en": "Learn to maintain an evidence-based working answer and update the next actions when new information arrives.",
+        "fr": "Apprendre à maintenir une analyse fondée sur les sources et à actualiser les prochaines actions lorsque de nouvelles informations arrivent.",
+        "de": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
+        "es": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información."
+      }
+    },
+    "advisory-deliverable-validator": {
+      "path": "advisory-deliverable-validator/course.json",
+      "sha256": "51770bd834f717c711d5cbbe75bb86c60a78b401ec112ff236ff8dbffc6e9fc9",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Rivedere un memo di consulenza con Clara",
+        "en": "Review an advisory memo with Clara",
+        "fr": "Revoir une note de conseil avec Clara",
+        "de": "Ein Beratungsmemo mit Clara prüfen",
+        "es": "Revisar un informe de consultoría con Clara"
+      },
+      "goals": {
+        "it": "Imparare a verificare se un documento risponde all’incarico e se la raccomandazione deriva dalle fonti disponibili.",
+        "en": "Learn to check whether an advisory document answers its assignment and whether its recommendation follows from the available evidence.",
+        "fr": "Apprendre à vérifier qu’un document répond à sa mission et que sa recommandation découle des sources disponibles.",
+        "de": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
+        "es": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles."
+      }
+    },
+    "attribute-reporting": {
+      "path": "attribute-reporting/course.json",
+      "sha256": "70c3e70c6b645954e675f00b44016bd262aec56b373690bf8c265b0e6d0dc9fb",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Creare un rapporto sull’assortimento con Clara",
+        "en": "Create an assortment report with Clara",
+        "fr": "Créer un rapport sur l’assortiment avec Clara",
+        "de": "Mit Clara einen Sortimentsbericht erstellen",
+        "es": "Crear un informe del surtido con Clara"
+      },
+      "goals": {
+        "it": "Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.",
+        "en": "Learn to supply an existing retail evidence package, request an analysis and use the checked HTML report.",
+        "fr": "Apprendre à fournir un dossier de données commerciales existant, demander une analyse et utiliser le rapport HTML vérifié.",
+        "de": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
+        "es": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado."
       }
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "81b9712c91432fb0bab7724accd9e4b0d6019ab038f0264bc3a6fa5455ab655a",
+      "sha256": "69723d6bf5e12dd68da4c2001526377ff8172b7a18beb5b8a47cfda91617cff8",
       "languages": [
         "it",
         "en"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un investimento, due ipotesi da verificare",
-        "en": "One investment, two assumptions to test"
+        "it": "Preparare un business plan con Clara",
+        "en": "Prepare a business plan with Clara"
+      },
+      "goals": {
+        "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
+        "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       }
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "905942aa6add2fd8e19ca12f02955289fd35f43bedbf7955561f560387a6dd71",
+      "sha256": "cdc2280a0b2e4f6bac94bf36c5f678f0f7012a7909205a0c06ad75d90f98f4d4",
       "languages": [
         "it",
         "en",
@@ -64,36 +144,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Dal commento alla slide corretta",
-        "en": "From feedback to a verified slide change",
-        "fr": "Du commentaire à une diapositive corrigée et vérifiée",
-        "de": "Aus Feedback eine überprüfbare Folienänderung machen",
-        "es": "Del comentario a una modificación de diapositiva verificada"
-      }
-    },
-    "hosted-interview": {
-      "path": "hosted-interview/course.json",
-      "sha256": "22b4211fa6e3f6e2e5f2306c0aa8a368b370f442d42859943106054acc4dc970",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "duration_seconds": 390,
-      "titles": {
-        "it": "Un'intervista che approfondisce senza suggerire le risposte",
-        "en": "Ask deeper questions without suggesting the answer",
-        "fr": "Approfondir sans suggérer la réponse",
-        "de": "Vertiefend fragen, ohne Antworten vorzugeben",
-        "es": "Profundizar sin sugerir la respuesta"
+        "it": "Correggere una presentazione con Clara",
+        "en": "Correct a presentation with Clara",
+        "fr": "Corriger une présentation avec Clara",
+        "de": "Eine Präsentation mit Clara korrigieren",
+        "es": "Corregir una presentación con Clara"
+      },
+      "goals": {
+        "it": "Imparare a trasformare un commento sulle slide in una modifica verificabile, mantenendo il controllo su ciò che cambia.",
+        "en": "Learn to turn feedback into a verifiable slide change while retaining control of what changes.",
+        "fr": "Apprendre à transformer un commentaire en modification vérifiable des diapositives, en gardant le contrôle du changement.",
+        "de": "Lernen Sie, Rückmeldungen in überprüfbare Folienänderungen umzusetzen und den Umfang der Änderungen zu kontrollieren.",
+        "es": "Aprender a convertir comentarios en cambios verificables de diapositivas, manteniendo el control sobre lo que cambia."
       }
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "66375dfa0cdcddc0401790bbfa76f1c7497184511894418c52800a071ad0a203",
+      "sha256": "a417c6b1804afe4f5d3c520d42e181200779c3e90cb70b2bfc5ae7aa9be0f76d",
       "languages": [
         "it",
         "en",
@@ -102,17 +172,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Tre slide che accompagnano una decisione",
-        "en": "Three slides that support a decision",
-        "fr": "Trois slides pour accompagner une décision",
-        "de": "Drei Folien für eine Entscheidung",
-        "es": "Tres diapositivas para una decisión"
+        "it": "Creare una presentazione HTML con Clara",
+        "en": "Create an HTML presentation with Clara",
+        "fr": "Créer une présentation HTML avec Clara",
+        "de": "Eine HTML-Präsentation mit Clara erstellen",
+        "es": "Crear una presentación HTML con Clara"
+      },
+      "goals": {
+        "it": "Imparare a trasformare documenti e una richiesta in slide utilizzabili, controllare ciò che viene detto e presentarle dal browser.",
+        "en": "Learn to turn documents and a clear request into usable slides, check their message and present them in a browser.",
+        "fr": "Apprendre à transformer des documents et une demande en diapositives utilisables, vérifier leur message et les présenter dans le navigateur.",
+        "de": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
+        "es": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador."
       }
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "caaa36b3557126c6d5358d17658ff3611e654eb575bc3d82a6ca6d198d5077bb",
+      "sha256": "a44a023fed85dbad776c1d91d0a9fdb29127dcde214021b7b72a45c2314fddc3",
       "languages": [
         "it",
         "en",
@@ -121,36 +200,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Prima del grafico, il significato dei dati",
-        "en": "Before the chart, establish what the data means",
-        "fr": "Avant le graphique, le sens des données",
-        "de": "Vor der Grafik klären, was die Daten bedeuten",
-        "es": "Antes del gráfico, establecer qué significan los datos"
-      }
-    },
-    "research-video": {
-      "path": "research-video/course.json",
-      "sha256": "6fa78d1acc7642627ce6280a0dc5da36cf3df75c9c5348e17f0196b08fe497f7",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "duration_seconds": 390,
-      "titles": {
-        "it": "Una scena, una fonte, una frase",
-        "en": "One scene, one source, one sentence",
-        "fr": "Une scène, une source, une phrase",
-        "de": "Eine Szene, eine Quelle, ein Satz",
-        "es": "Una escena, una fuente, una frase"
+        "it": "Preparare un report dai dati con Clara",
+        "en": "Prepare a report from data with Clara",
+        "fr": "Préparer un rapport à partir des données avec Clara",
+        "de": "Einen Bericht aus Daten mit Clara erstellen",
+        "es": "Preparar un informe a partir de datos con Clara"
+      },
+      "goals": {
+        "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+        "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+        "fr": "Apprenez à comparer les résultats au budget, suivre la préparation du rapport et utiliser les écarts lors d’une revue mensuelle.",
+        "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
+        "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
       }
     },
     "transcribe": {
       "path": "transcribe/course.json",
-      "sha256": "81775e85761b155445ae92146378a8abedf2e1389b1480351c73c596277dad5d",
+      "sha256": "75b9810512270826020541f6d7cd39d75c6e9c82cada2d5d150d24863cdca2c7",
       "languages": [
         "it",
         "en",
@@ -159,12 +228,21 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Chi lo ha detto non prova ancora che sia vero",
-        "en": "Who said it does not prove it is true",
-        "fr": "Savoir qui parle ne prouve pas que l'affirmation est vraie",
-        "de": "Wer etwas sagt, beweist noch nicht seine Richtigkeit",
-        "es": "Quién lo dijo no demuestra que sea cierto"
+        "it": "Importare e rivedere una trascrizione con Clara",
+        "en": "Import and review a transcript with Clara",
+        "fr": "Importer et revoir une transcription avec Clara",
+        "de": "Ein Transkript mit Clara importieren und prüfen",
+        "es": "Importar y revisar una transcripción con Clara"
+      },
+      "goals": {
+        "it": "Imparare a portare una trascrizione in un caso, controllare chi parla e conservare una versione utilizzabile con la sua fonte.",
+        "en": "Learn to add a transcript to a case, check who is speaking and preserve a usable version linked to its source.",
+        "fr": "Apprendre à ajouter une transcription à un dossier, vérifier qui parle et conserver une version utilisable reliée à sa source.",
+        "de": "Lernen, ein Transkript einer Fallakte hinzuzufügen, Stimmen zuzuordnen und eine nutzbare Fassung mit Quellenbezug aufzubewahren.",
+        "es": "Aprender a incorporar una transcripción a un expediente, comprobar quién habla y conservar una versión utilizable vinculada a su fuente."
       }
     }
   }

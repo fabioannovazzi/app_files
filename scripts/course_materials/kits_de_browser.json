@@ -1,0 +1,27 @@
+{
+  "vera/browser-automation": {
+    "title": "Vera einen Ablauf im Browser beibringen",
+    "goal": "Lernen, Vera eine wiederkehrende Browseraufgabe zu zeigen, den gespeicherten Ablauf zu prüfen und den Weg zur getesteten Automatisierung zu verstehen.",
+    "scenario": "Eine Kanzlei stellt auf einer Website regelmäßig Dokumentenpakete zusammen. Zeigen Sie auf Veras mitgelieferter fiktiver lokaler Seite ein vollständiges Beispiel, prüfen Sie den gespeicherten Ablauf und versuchen Sie eine andere Dokumentart.",
+    "scope": "Einen Browserablauf erfassen, lokal speichern, prüfen und zur Wiederverwendung vorbereiten. Das Beispiel nutzt die lokale Testseite des Plugins und belegt keinen Zugang zu einer echten Kanzleisoftware. Die Bedienelemente der Seite sind auf Englisch.",
+    "inputs": "Lesen Sie task-de.md mit fiktivem Mandanten, Dokumentart und gewünschtem Ergebnis. Vera öffnet die mitgelieferte lokale Seite im Arbeitsfenster. Zugangsdaten, echte Mandantendokumente und vorbereitete Automatisierungen sind nicht erforderlich.",
+    "request": "Vera, zeige mir, wie ich dir diesen Browserablauf beibringe. Führe das fiktive Beispiel durch, speichere die Schritte und erkläre, was ich vor einer Wiederholung prüfen muss.",
+    "steps": [
+      "Bestätigen Sie Aufgabe und Ziel. Vera beginnt vor der ersten Aktion mit dem Speichern. Wählen Sie im Arbeitsfenster den fiktiven Mandanten und die Dokumentart; im Sprachchat erklärt Vera Ihre Entscheidungen und die aufgezeichneten Schritte.",
+      "Verfolgen Sie das Beispiel bis zur Bestätigung, dass das Paket bereitsteht. Vera prüft das tatsächliche Ergebnis, erklärt die Schritte und speichert den Ablauf. Öffnen Sie den Fortschrittsbericht und vergleichen Sie ihn mit der beobachteten Arbeit.",
+      "Prüfen Sie den vorgeschlagenen Ablauf und seine Grenzen. Nach der tatsächlich erforderlichen Freigabe erstellt Vera die ausführbare Version und prüft zwei vollständige Durchläufe ab der Startseite. Unterscheiden Sie beobachtetes Beispiel, freigegebenen Ablauf und getestete Automatisierung."
+    ],
+    "deliverables": [
+      "Lokal gespeicherter Ablauf mit Fortschrittsbericht zum späteren Fortsetzen.",
+      "Ein Entwurf zur Prüfung; nach erforderlicher Freigabe und erfolgreichen Tests ein wiederverwendbarer Ablauf mit Ausführungsnachweisen."
+    ],
+    "review": "Prüfen Sie Startseite, Eingaben, Aktionen und Endergebnis. Ein Klick oder gespeicherter Entwurf beweist keine funktionierende Automatisierung. Prüfen Sie den tatsächlichen Ablauf vor Erstellung der ausführbaren Version.",
+    "checkpoints": [
+      "Erklären Sie, welche Angaben Vera für eine Browseraufgabe braucht und wo die gespeicherten Schritte liegen.",
+      "Zeigen Sie das beobachtete Ergebnis und benennen Sie den Stand: Entwurf, freigegeben oder getestet."
+    ],
+    "practice": "Lesen Sie practice-de.md und verlangen Sie denselben Ablauf für eine Gutschrift. Lassen Sie Vera die gespeicherten Schritte verwenden, prüfen Sie nötige Änderungen und betrachten Sie das neue Ergebnis. Bewahren Sie das erste Beispiel auf; ein Durchlauf ist nur erfolgreich, wenn Dokumentauswahl und Ergebnis übereinstimmen.",
+    "success": "Sie können Vera eine begrenzte Browseraufgabe zeigen, den gespeicherten Ablauf prüfen und eine Wiederholung anfordern, ohne offene Prüfungen mit erfolgreichen Tests zu verwechseln.",
+    "repeat": "Beschreiben Sie Website, Aufgabe und Ziel. Öffnen Sie die berechtigte Seite im verbundenen Chrome und zeigen Sie ein Beispiel. Vera speichert und prüft den Ablauf; Sie prüfen ihn vor der Wiederverwendung der freigegebenen Automatisierung."
+  }
+}

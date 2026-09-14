@@ -1,0 +1,103 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Check XML invoices with Vera",
+    "goal": "Learn to supply an invoice folder, read the document summary and handle items needing review.",
+    "scenario": "Arco Practice has received three March XML invoices for a fictional client. It wants to identify the documents and check that they are readable and consistent before continuing the accounting work.",
+    "scope": "This function prepares and checks received documents. Accounting entries and submission to SdI follow their own processes.",
+    "inputs": "Open invoice-01.xml, invoice-02.xml and invoice-03.xml. These are teaching FatturaPA files with fictional identifiers. The case note states the period and the expected batch total: EUR 2,440.",
+    "request": "Vera, check the March XML invoices in this folder. Show the documents received, their amounts and anything that needs review.",
+    "steps": [
+      "Vera imports the folder into the teaching case and reads the XML files through the function’s parser. Check which files are included.",
+      "In the working chat, the workflow extracts numbers, dates, parties and amounts, checks structure and reports anomalies or possible duplicates.",
+      "Open the new summary. Vera links findings to the source files and identifies useful checks before the next step."
+    ],
+    "deliverables": [
+      "Invoice summary: find one document and locate its number, date and total in the XML.",
+      "Anomaly list: inspect the affected file, observed problem and required check. The document count shows the coverage."
+    ],
+    "review": "Compare the three received documents with the summary and batch total. Resolve a finding against its source; this check does not decide deductibility or confirm bookkeeping.",
+    "checkpoints": [
+      "Before running: identify the folder and month to check.",
+      "At the result: open one row and its XML; locate where any anomalies would appear."
+    ],
+    "practice": "Add invoice-04.xml to a fresh practice folder and request a check of all four invoices, including April.",
+    "success": "The new summary must include the fourth invoice and distinguish the two months. Explain where you would investigate a problematic file.",
+    "repeat": "To repeat this at work, select the client folder and ask Vera to check the received XML invoices. Review the summary and findings before continuing."
+  },
+  "vera/management-control-pack": {
+    "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+    "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
+    "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence.",
+    "inputs": "Open actual-budget.xlsx and facts.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
+    "steps": [
+      "Vera imports the data into the client-bound teaching case. The management-control pack also accepts other exports; here we learn the complete actual-versus-budget reporting journey.",
+      "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
+      "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
+      "Open the dashboard and workbook produced in the working chat. Start with the period summary, then the monthly comparison and category detail."
+    ],
+    "deliverables": [
+      "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",
+      "Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation."
+    ],
+    "review": "Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.",
+    "checkpoints": [
+      "Before calculation: find the two sheets and confirm the reporting period.",
+      "At the result: locate the overall comparison and one category you would investigate."
+    ],
+    "practice": "Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.",
+    "success": "The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.",
+    "repeat": "To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.",
+    "title": "Prepare a management-control report with Vera",
+    "request": "Vera, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail."
+  },
+  "clara/reporting-engine": {
+    "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
+    "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
+    "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence. Clara selects the analysis from the question and data; this first use follows a budget comparison. The teaching report stays local.",
+    "inputs": "Open actual-budget.xlsx and facts.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
+    "steps": [
+      "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
+      "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
+      "Open the dashboard and workbook produced in the working chat. Start with the period summary, then the monthly comparison and category detail."
+    ],
+    "deliverables": [
+      "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",
+      "Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation."
+    ],
+    "review": "Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.",
+    "checkpoints": [
+      "Before calculation: find the two sheets and confirm the reporting period.",
+      "At the result: locate the overall comparison and one category you would investigate."
+    ],
+    "practice": "Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.",
+    "success": "The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.",
+    "repeat": "To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.",
+    "title": "Prepare a report from data with Clara",
+    "request": "Clara, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Prepare a new matter with Lucia",
+    "goal": "Learn to start from a client request and documents, obtain a reviewable matter file and identify what is needed before opening.",
+    "scenario": "Beta Laboratorio requests help with an incomplete delivery. We have its request, a supply summary and a small fictional firm register. We prepare the matter for the lawyer’s review.",
+    "scope": "This function organizes matter opening. Conflict, engagement, deadline and opening decisions follow the normal review process.",
+    "inputs": "Open request-en.md, supply-en.md and register.csv. The request identifies client, counterparty, objective and reported urgency; the supply record documents the case; the register shows the fictional matters available for checking.",
+    "request": "Lucia, prepare a new matter for Beta Laboratorio concerning Gamma Forniture’s delivery. Use these documents and show the matter file, missing information and decisions to review before opening.",
+    "steps": [
+      "Lucia creates the teaching case, imports documents and reconstructs the client, parties, request and timeline. The voice chat follows which information comes from each source.",
+      "The working chat prepares the matter summary, conflict-check candidates, engagement scope and any deadline points. Missing information stays visible.",
+      "Lucia generates the package and opens review. Inspect the conflict, engagement, deadline and opening decisions and how a real decision is saved and applied to the file."
+    ],
+    "deliverables": [
+      "Opening memo and information request: start with objective, parties and available documents; identify what to ask the client.",
+      "Folder plan and review page: show how to organize the file and which decisions are needed. Status distinguishes a prepared dossier from a matter ready to open."
+    ],
+    "review": "Compare client and counterparty with the request and check the scope of the register examined. Read the engagement proposal and deadline points before deciding. A memo’s existence does not mean the engagement was accepted.",
+    "checkpoints": [
+      "Before preparation: identify the client, counterparty and requested outcome.",
+      "In the dossier: show where to find missing documents and decisions still awaiting review."
+    ],
+    "practice": "Add update-en.md: Gamma proposes a delivery date for the remaining components. Ask Lucia to update the dossier with this correspondence while preserving the preceding version.",
+    "success": "The new version includes the proposal and its source without assuming delivery or acceptance. You can identify which matter points need further review.",
+    "repeat": "To repeat, supply the request, documents and actually available register; state whether the client is new or existing, then review the package before opening the matter."
+  }
+}

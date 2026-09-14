@@ -1,0 +1,27 @@
+{
+  "vera/purchase-invoice-review": {
+    "title": "Revoir les factures d’achat avec la comptabilité",
+    "goal": "Apprendre à comparer un lot de factures aux écritures existantes et à utiliser le classeur des exceptions.",
+    "scenario": "Officina Arco fournit trois factures XML et leurs écritures de mars. Le cabinet veut repérer les points à examiner.",
+    "scope": "Première utilisation de la revue des factures d’achat italiennes. Vera lit factures et comptabilité, les compare et évalue la cohérence des comptes ; elle ne modifie pas les écritures.",
+    "inputs": "Ouvrez ledger-march.csv, le dossier invoices et context-fr.md. Fournissez factures et écritures réelles de la même période. Vera vérifie les colonnes et prépare leur correspondance à revoir avant exécution.",
+    "request": "Vera, revois ces factures d’achat en les comparant aux écritures de mars d’Officina Arco. Montre dans le classeur des exceptions les points à contrôler et explique pourquoi.",
+    "steps": [
+      "La conversation de travail vérifie le lot et les colonnes comptables. La voix explique identification de facture, écriture et compte utilisé, puis aide à résoudre les ambiguïtés importantes.",
+      "Le flux courant rapproche factures et écritures, contrôle les montants et utilise son réviseur natif pour évaluer descriptions et comptes. La voix suit l’avancement réel et distingue calcul et jugement.",
+      "Ouvrez d’abord le classeur Excel des exceptions. Choisissez une ligne, lisez le motif du contrôle et retrouvez description de facture et compte utilisé. Revoyez les constats avant toute conclusion."
+    ],
+    "deliverables": [
+      "Classeur Excel des exceptions avec motifs et références à examiner.",
+      "Récapitulatif du lot et trace des comparaisons vers factures et écritures."
+    ],
+    "review": "Vérifiez la couverture du lot et les pièces justifiant chaque signalement. « Aucun problème détecté » est un résultat de sélection, pas une certification. Changer un compte ou corriger une écriture relève du processus comptable habituel.",
+    "checkpoints": [
+      "Avant l’exécution, identifiez les deux ensembles de pièces comparés.",
+      "Dans le résultat, expliquez un constat avec sa facture et son écriture."
+    ],
+    "practice": "Recommencez avec ledger-march-april.csv et les quatre factures de la pratique. Conservez le premier résultat. Vérifiez le nouveau nombre de factures et un constat, avec aide seulement si nécessaire.",
+    "success": "Vous savez fournir les deux entrées, lancer la revue, retrouver les exceptions et vérifier leurs motifs sans confondre sélection et approbation.",
+    "repeat": "Demandez à Vera de revoir les factures d’achat d’un client sur une période précise et fournissez également la comptabilité enregistrée. Revoyez correspondance, couverture et constats dans le bon dossier."
+  }
+}

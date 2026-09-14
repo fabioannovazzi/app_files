@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "new-client",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,11 +19,37 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
   "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "84264b4da1dc3b4d289f20b5ae85cd633ad7a6f56a1f797218be39bfcdf005a3"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "repository_path": "plugins/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
       "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
       "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "repository_path": "plugins/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
     },
     {
       "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
@@ -91,6 +117,76 @@
       "sha256": "00b69742577995070896e7262df2d9a02bfc555842ef8422a39b90f989a51bed"
     },
     {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "repository_path": "plugins/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "repository_path": "plugins/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "modules/new-client/assets/icon.svg",
+      "repository_path": "plugins/new-client/assets/icon.svg",
+      "sha256": "dc04f539bfb2f40bb739fd2bec31909c42efe188c11d967b6753190a1ffc78f5"
+    },
+    {
+      "path": "modules/new-client/assets/new-client-review-widget.html",
+      "repository_path": "plugins/new-client/assets/new-client-review-widget.html",
+      "sha256": "0b4d77a9afe1e7daa78ba8999bbfa4f22ba555631af1e8b30c09e47b4e4e46be"
+    },
+    {
+      "path": "modules/new-client/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/new-client/assets/review-workbench-adapter.json",
+      "sha256": "3d78b33524679358bf85ae40928ee4fd4e0d1e69bd250cd926f4c7ae337f7bea"
+    },
+    {
       "path": "modules/new-client/references/research-provenance.json",
       "repository_path": "plugins/new-client/references/research-provenance.json",
       "sha256": "84f5a6ba412c72de20d04f8dd051538ce99f08807b55ce69def7a5724eb6f4c7"
@@ -109,6 +205,11 @@
       "path": "modules/new-client/references/workflow-reference.md",
       "repository_path": "plugins/new-client/references/workflow-reference.md",
       "sha256": "afe34b1fd6f8dc4384651eca80b099a5ef17c7d771885a066d9c2c60c9e62e22"
+    },
+    {
+      "path": "modules/new-client/requirements.txt",
+      "repository_path": "plugins/new-client/requirements.txt",
+      "sha256": "88b5908303fea9ef638771e27c10a7010f79d7e6308c35d32854170f2ef582a8"
     },
     {
       "path": "modules/new-client/schemas/new_client_input.schema.json",
@@ -151,358 +252,418 @@
       "sha256": "f9822215291d21d110c70ae68ada2ac9d6405c5c2503d8e93e7acc824862a826"
     },
     {
+      "path": "modules/new-client/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/new-client/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/new-client/SKILL.md",
       "repository_path": "plugins/vera/skills/new-client/SKILL.md",
       "sha256": "eae0bd9f696be94cf1d19943a5a64f6b8e37d159bd9dbb2cf617c32bc463a19f"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/profile-it.md",
+      "sha256": "8acd1b34b6398f99265f1180d12778f87e55c17e8c0df119ee4b05c63b7dae34",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-it.md",
+      "sha256": "8acd1b34b6398f99265f1180d12778f87e55c17e8c0df119ee4b05c63b7dae34",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-it.md",
+      "sha256": "94ffb355ed566c660ebd46001a306bc7dc35eeec51750de5ecd292e480c37220",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-en.md",
+      "sha256": "3020b4a4cc44b5b3edd03e647a3fc3e0fc684d34372f50fd3b81d0da13b10454",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-en.md",
+      "sha256": "3020b4a4cc44b5b3edd03e647a3fc3e0fc684d34372f50fd3b81d0da13b10454",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-en.md",
+      "sha256": "f7b5d95b8ef94463cae9210e5142393ee851cab363829f9eb0d788ebaf2f72ac",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-fr.md",
+      "sha256": "a1825e6c664b93135b6a92fada20f91d474f95e94ba8cb1f9de72465bd90410d",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-fr.md",
+      "sha256": "a1825e6c664b93135b6a92fada20f91d474f95e94ba8cb1f9de72465bd90410d",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-fr.md",
+      "sha256": "ba64fdd98620b1f8fc9f753be41a8f920b550a8b48cc03c813a5ae55de5924f1",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-de.md",
+      "sha256": "ee946fec98a07c9068a65a85dbf2d6b988ef2f4cdacdd33a1a6eb719ed026769",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-de.md",
+      "sha256": "ee946fec98a07c9068a65a85dbf2d6b988ef2f4cdacdd33a1a6eb719ed026769",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-de.md",
+      "sha256": "c85c347864cf464612534936db2e696ea94f8aca2c55ea876555064b0e439d75",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/profile-es.md",
+      "sha256": "98609cb562dacafa0054bb40a822f79a5771fda4c19550d24602a8cb71177362",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/profile-es.md",
+      "sha256": "98609cb562dacafa0054bb40a822f79a5771fda4c19550d24602a8cb71177362",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/contact-update-es.md",
+      "sha256": "077d81a5a84ba76d9b2790a4c0cb4ced52c3ae16f654c17d752299cc2235d80b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Aprire un cliente senza trasformare i vuoti in conferme",
-      "goal": "Passare dai documenti ricevuti a un fascicolo e a una proposta di setup professionale con mancanze esplicite.",
-      "scenario": "Arco Srl invia visura, documento del rappresentante e una bozza di incarico. Il mandato non è firmato e la dichiarazione sulla titolarità effettiva manca. La fase di preparazione documentale precede il setup professionale italiano.",
-      "request": "Vera, organizza l'ingresso di questo nuovo cliente e mostrami cosa serve ancora.",
-      "scope": "Caso italiano fittizio. Il setup professionale corrente usa il country pack Italia; un intake in un'altra lingua non abilita automaticamente un altro paese.",
-      "input_columns": [
-        "Documento fittizio",
-        "Stato osservato",
-        "Significato"
+      "title": "Preparare un nuovo cliente con Vera",
+      "goal": "Imparare a trasformare le informazioni di primo contatto in un dossier di avvio da rivedere e completare con lo studio.",
+      "scenario": "Officina Arco chiede assistenza contabile continuativa. Partiamo dalla scheda del colloquio e prepariamo il dossier con soggetti, servizi richiesti, documenti da acquisire e decisioni ancora da prendere.",
+      "scope": "Avvio di un cliente italiano. Il risultato è un dossier interno per la revisione professionale, con piano documentale e di monitoraggio. La firma e l’attivazione del rapporto seguono il normale processo dello studio.",
+      "inputs": "Apri profile-it.md. La scheda contiene dati dichiarati su società, rappresentante, partecipazioni e servizi. È già ordinata e non deriva da una precedente preparazione documentale approvata: Vera deve registrarla come evidenza diretta.",
+      "request": "Vera, prepara il dossier di nuovo cliente per Officina Arco usando questa scheda. Organizza i dati, l’incarico proposto, i controlli da svolgere e i documenti da richiedere.",
+      "steps": [
+        "Vera apre la pratica didattica e collega la scheda al nuovo cliente. Se si parte da un fascicolo da ordinare, la stessa funzione comprende anche la preparazione dei documenti.",
+        "La procedura corrente organizza soggetti e servizi, prepara proposte e richieste mancanti e compone il dossier. La voce segue i passaggi e distingue dati dichiarati, verifiche e decisioni.",
+        "Apri la pagina di revisione del dossier. Parti dai dati del cliente e dall’incarico, poi passa ai documenti da acquisire e alle decisioni da completare. Il memo e gli altri allegati conservano i controlli di supporto."
       ],
-      "input_rows": [
-        [
-          "N1 · visura",
-          "Leggibile",
-          "Identità societaria da rivedere"
-        ],
-        [
-          "N2 · documento rappresentante",
-          "Ricevuto",
-          "Collegamento e validità da verificare"
-        ],
-        [
-          "N3 · incarico",
-          "Bozza senza firma",
-          "Non prova accettazione"
-        ],
-        [
-          "Dichiarazione titolarità effettiva",
-          "Non ricevuta",
-          "Richiesta da rivedere"
-        ]
+      "deliverables": [
+        "Pagina di revisione e dati del caso: danno allo studio una base ordinata per il colloquio, con cliente, incarico e fonti.",
+        "Richiesta delle informazioni mancanti, piano documentale e piano di monitoraggio: indicano il lavoro successivo e gli elementi ancora da confermare."
       ],
-      "basis": "I file ricevuti sostengono la disponibilità documentale. La firma assente e la dichiarazione mancante restano distinti dalle proposte di attività professionale.",
-      "method": [
-        "Prepara e classifica i documenti ricevuti, mantenendo estrazioni e mancanze legate alle fonti.",
-        "Rivedi e applica le decisioni della fase documentale; promuovi soltanto un passaggio italiano coerente al setup professionale.",
-        "Prepara identità, incarico, privacy, AML e monitoraggio come proposte con prove e punti aperti. Il professionista salva le proprie decisioni nelle superfici di revisione."
+      "review": "Confronta soggetti, partecipazioni e servizi con la scheda. Identità, antiriciclaggio, privacy e condizioni richiedono le normali verifiche professionali; i dati dichiarati non sono già verificati.",
+      "checkpoints": [
+        "Prima di partire, identifica cliente e servizi richiesti.",
+        "Alla consegna, trova una fonte, un documento da acquisire e una decisione ancora da prendere."
       ],
-      "result_title": "Documenti organizzati, accettazione ancora da completare",
-      "conclusion": "Visura e documento sono disponibili. Il mandato non è sottoscritto e la titolarità effettiva richiede documentazione; il fascicolo non viene dichiarato completo.",
-      "output_columns": [
-        "Area",
-        "Base",
-        "Passo successivo"
-      ],
-      "output_rows": [
-        [
-          "Identità",
-          "N1–N2",
-          "Rivedere i collegamenti"
-        ],
-        [
-          "Incarico",
-          "N3 senza firma",
-          "Completare il normale percorso di accettazione"
-        ],
-        [
-          "AML",
-          "Dichiarazione assente",
-          "Rivedere la richiesta e svolgere l'analisi pertinente"
-        ]
-      ],
-      "check": "Ricevere un documento non equivale ad accettarne il contenuto. Un workflow completato consegna il lavoro; non certifica automaticamente il cliente come accettato.",
-      "question": "La cartella si chiama 'cliente approvato': possiamo usare questo stato?",
-      "answer": "No. Lo stato deriva dalle evidenze e dalle decisioni persistite, non dal nome della cartella.",
-      "practice": "Aggiungi il mandato sottoscritto e aggiorna soltanto le proposte interessate, conservando i punti AML ancora aperti.",
-      "next": "Seleziona cliente e documenti effettivamente ricevuti; evita di ripetere tutto l'onboarding per una sola revisione AML successiva."
+      "practice": "Aggiungi contact-update-it.md e chiedi una nuova versione del dossier. Sara diventa referente amministrativa per i documenti; la rappresentante indicata resta Elena.",
+      "success": "Il nuovo dossier include il referente e la fonte dell’aggiornamento, conserva la versione precedente e non gli attribuisce poteri di rappresentanza non dichiarati.",
+      "repeat": "Fornisci le informazioni e i documenti del nuovo cliente, indica i servizi richiesti e usa il dossier per completare verifiche, condizioni e revisione prima dell’avvio."
     },
     "en": {
-      "title": "Start a client file without turning gaps into confirmations",
-      "goal": "Move from received documents to a professional setup proposal with explicit missing evidence.",
-      "scenario": "Fictional Arco Srl supplies a company extract, the representative's ID and a draft engagement letter. The letter is unsigned and the beneficial-ownership declaration is missing. Document preparation precedes Italian professional setup.",
-      "request": "Vera, organize this new client's intake and show what is still needed.",
-      "scope": "Fictional Italian case. Another working language does not enable a different professional country pack.",
-      "input_columns": [
-        "Fictional document",
-        "Observed state",
-        "Meaning"
+      "title": "Prepare a new client with Vera",
+      "goal": "Learn to turn first-contact information into a client-startup dossier for the practice to review and complete.",
+      "scenario": "Officina Arco requests ongoing accounting support. Starting from the interview form, we prepare a dossier covering parties, requested services, documents to obtain and decisions still needed.",
+      "scope": "Onboarding an Italian client. The result is an internal professional-review dossier, including document and monitoring plans. Signing and activating the relationship follow the practice’s normal process.",
+      "inputs": "Open profile-en.md. It records reported facts about the company, representative, ownership and services. It is already organized and does not come from an approved document-preparation run; Vera must record it as direct evidence.",
+      "request": "Vera, prepare Officina Arco’s new-client dossier from this form. Organize the facts, proposed engagement, checks to perform and documents to request.",
+      "steps": [
+        "Vera opens the teaching case and links the form to the new client. When starting from an unorganized folder, the same function also includes document preparation.",
+        "The current workflow organizes parties and services, prepares proposals and missing-information requests, and compiles the dossier. The voice chat follows these steps and distinguishes reported facts, checks and decisions.",
+        "Open the dossier’s review page. Start with client facts and the engagement, then documents to obtain and decisions to complete. The memo and other attachments retain the supporting checks."
       ],
-      "input_rows": [
-        [
-          "N1 · company extract",
-          "Readable",
-          "Identity for review"
-        ],
-        [
-          "N2 · representative ID",
-          "Received",
-          "Relationship and validity to check"
-        ],
-        [
-          "N3 · engagement letter",
-          "Unsigned draft",
-          "Does not prove acceptance"
-        ],
-        [
-          "Ownership declaration",
-          "Not received",
-          "Request for review"
-        ]
+      "deliverables": [
+        "Review page and case facts: give the practice an organized basis for the interview, with client, engagement and sources.",
+        "Missing-information request, document plan and monitoring plan: identify subsequent work and matters still requiring confirmation."
       ],
-      "basis": "Received files establish documentary availability. Missing signature and declaration remain separate from proposed professional actions.",
-      "method": [
-        "Prepare and classify the received documents, linking extraction and missing items to their sources.",
-        "Review and apply documentary decisions; promote only a coherent Italian handoff into the professional setup phase.",
-        "Prepare identity, engagement, privacy, AML and monitoring proposals with evidence and open points. The professional persists actual decisions through the review surfaces."
+      "review": "Compare parties, ownership and services with the form. Identity, AML, privacy and terms require normal professional checks; reported facts are not already verified.",
+      "checkpoints": [
+        "Before starting, identify the client and requested services.",
+        "At delivery, find a source, a document to obtain and a decision still needed."
       ],
-      "result_title": "Documents organized, acceptance still incomplete",
-      "conclusion": "The extract and ID are available. Engagement is unsigned and ownership documentation is missing; the file is not declared complete.",
-      "output_columns": [
-        "Area",
-        "Basis",
-        "Next step"
-      ],
-      "output_rows": [
-        [
-          "Identity",
-          "N1–N2",
-          "Review relationships"
-        ],
-        [
-          "Engagement",
-          "Unsigned N3",
-          "Complete ordinary acceptance"
-        ],
-        [
-          "AML",
-          "Missing declaration",
-          "Review request and relevant analysis"
-        ]
-      ],
-      "check": "Receiving a document does not mean accepting its content. Workflow completion records delivery, not automatic client acceptance.",
-      "question": "The folder is named 'approved client'. Can we use that status?",
-      "answer": "No. Status comes from evidence and persisted decisions, not the folder name or its implied meaning.",
-      "practice": "Add the signed engagement letter and update affected proposals while retaining open AML issues.",
-      "next": "Select the actual client and received documents. A later focused AML review need not repeat all intake."
+      "practice": "Add contact-update-en.md and request a new dossier version. Sara becomes the administrative document contact; Elena remains the named representative.",
+      "success": "The new dossier includes the contact and update source, preserves the preceding version and does not grant representation powers that were not reported.",
+      "repeat": "Supply the new client’s information and documents, state the requested services and use the dossier to complete checks, terms and review before starting the relationship."
     },
     "fr": {
-      "title": "Commencer le dossier sans transformer les manques en confirmations",
-      "goal": "Passer des pièces reçues à une proposition de mise en place professionnelle avec preuves manquantes explicites.",
-      "scenario": "La société fictive Arco Srl fournit extrait du registre, identité du représentant et projet de lettre de mission. La lettre n'est pas signée et la déclaration de bénéficiaire effectif manque. La préparation documentaire précède la mise en place professionnelle italienne.",
-      "request": "Vera, organise l'entrée de ce client et montre ce qu'il faut encore obtenir.",
-      "scope": "Cas italien fictif. Changer la langue de travail n'active pas un autre module professionnel national.",
-      "input_columns": [
-        "Document fictif",
-        "État observé",
-        "Signification"
+      "title": "Préparer un nouveau client avec Vera",
+      "goal": "Apprendre à transformer les informations du premier contact en un dossier d’entrée en relation à revoir et compléter avec le cabinet.",
+      "scenario": "Officina Arco demande un accompagnement comptable continu. À partir de la fiche d’entretien, nous préparons le dossier : parties, services demandés, pièces à obtenir et décisions encore nécessaires.",
+      "scope": "Entrée en relation avec un client italien. Le résultat est un dossier interne de revue professionnelle, avec plans documentaire et de suivi. Signature et activation suivent le processus normal du cabinet.",
+      "inputs": "Ouvrez profile-fr.md. La fiche rassemble les faits déclarés sur société, représentante, participations et services. Elle est déjà organisée et ne provient pas d’une préparation documentaire approuvée : Vera doit l’enregistrer comme pièce directe.",
+      "request": "Vera, prépare le dossier de nouveau client d’Officina Arco à partir de cette fiche. Organise les faits, la mission proposée, les contrôles et les pièces à demander.",
+      "steps": [
+        "Vera ouvre le dossier pédagogique et relie la fiche au nouveau client. Si les fichiers doivent être organisés, cette même fonction comprend aussi leur préparation.",
+        "La procédure actuelle organise parties et services, prépare propositions et demandes manquantes, puis compose le dossier. La voix distingue faits déclarés, contrôles et décisions au fil du travail.",
+        "Ouvrez la page de revue du dossier. Commencez par le client et la mission, puis les pièces à obtenir et les décisions à compléter. La note et les autres annexes conservent les contrôles de support."
       ],
-      "input_rows": [
-        [
-          "N1 · extrait",
-          "Lisible",
-          "Identité à revoir"
-        ],
-        [
-          "N2 · identité du représentant",
-          "Reçue",
-          "Lien et validité à contrôler"
-        ],
-        [
-          "N3 · lettre de mission",
-          "Projet non signé",
-          "Ne prouve pas l'acceptation"
-        ],
-        [
-          "Déclaration bénéficiaire effectif",
-          "Non reçue",
-          "Demande à revoir"
-        ]
+      "deliverables": [
+        "Page de revue et faits du dossier : offrent une base organisée pour l’entretien, avec client, mission et sources.",
+        "Demande d’informations, plan documentaire et plan de suivi : indiquent le travail suivant et les éléments à confirmer."
       ],
-      "basis": "Les fichiers attestent la disponibilité de pièces. Signature et déclaration manquantes restent distinctes des actions professionnelles proposées.",
-      "method": [
-        "Prépare et classe les pièces reçues en reliant extractions et manques aux sources.",
-        "Revois et applique les décisions documentaires ; seul un passage italien cohérent peut être promu vers la mise en place professionnelle.",
-        "Prépare identité, mission, confidentialité, AML et suivi avec preuves et points ouverts. Le professionnel enregistre ses décisions réelles dans les surfaces de revue."
+      "review": "Comparez parties, participations et services à la fiche. Identité, lutte contre le blanchiment, protection des données et conditions exigent les vérifications professionnelles normales ; les faits déclarés ne sont pas déjà vérifiés.",
+      "checkpoints": [
+        "Avant de commencer, identifiez client et services demandés.",
+        "À la livraison, trouvez une source, une pièce à obtenir et une décision encore nécessaire."
       ],
-      "result_title": "Pièces organisées, acceptation à compléter",
-      "conclusion": "Extrait et pièce d'identité sont disponibles. Lettre non signée et déclaration manquante empêchent de présenter le dossier comme complet.",
-      "output_columns": [
-        "Domaine",
-        "Base",
-        "Étape suivante"
-      ],
-      "output_rows": [
-        [
-          "Identité",
-          "N1–N2",
-          "Revoir les liens"
-        ],
-        [
-          "Mission",
-          "N3 non signée",
-          "Parcours normal d'acceptation"
-        ],
-        [
-          "AML",
-          "Déclaration absente",
-          "Revoir la demande et l'analyse pertinente"
-        ]
-      ],
-      "check": "Recevoir une pièce n'est pas en accepter le contenu. Achever le workflow signifie livrer le travail, pas accepter automatiquement le client.",
-      "question": "Le dossier s'appelle 'client approuvé'. Peut-on reprendre ce statut ?",
-      "answer": "Non. Le statut découle des preuves et décisions persistées, pas du nom donné au dossier.",
-      "practice": "Ajoute la lettre signée et actualise les propositions concernées en gardant ouverts les points AML non résolus.",
-      "next": "Sélectionne client et pièces réellement reçues. Une revue AML ultérieure ciblée ne demande pas de refaire toute l'entrée."
+      "practice": "Ajoutez contact-update-fr.md et demandez une nouvelle version. Sara devient le contact administratif pour les documents ; Elena reste la représentante indiquée.",
+      "success": "Le nouveau dossier inclut le contact et sa source, conserve la version précédente et n’attribue aucun pouvoir de représentation non déclaré.",
+      "repeat": "Fournissez informations et documents du nouveau client, précisez les services et utilisez le dossier pour compléter contrôles, conditions et revue avant l’entrée en relation."
     },
     "de": {
-      "title": "Ein Mandat beginnen, ohne Lücken als bestätigt auszugeben",
-      "goal": "Von eingegangenen Unterlagen zu einem prüfbaren Einrichtungsvorschlag mit sichtbaren Fehlbelegen gelangen.",
-      "scenario": "Die fiktive Arco Srl liefert Registerauszug, Ausweis des Vertreters und einen Mandatsvertragsentwurf. Der Vertrag ist nicht unterschrieben; die Erklärung zum wirtschaftlich Berechtigten fehlt. Die Dokumentenaufbereitung kommt vor der italienischen Mandatseinrichtung.",
-      "request": "Vera, ordne die Aufnahme dieses Mandanten und zeige, was noch fehlt.",
-      "scope": "Fiktiver italienischer Fall. Eine andere Arbeitssprache aktiviert kein fachliches Länderpaket für ein anderes Land.",
-      "input_columns": [
-        "Fiktives Dokument",
-        "Beobachteter Stand",
-        "Bedeutung"
+      "title": "Einen neuen Mandanten mit Vera vorbereiten",
+      "goal": "Lernen, Erstkontaktinformationen in ein Mandatsdossier zu überführen, das die Kanzlei prüfen und vervollständigen kann.",
+      "scenario": "Officina Arco wünscht laufende Buchhaltungsunterstützung. Aus dem Gesprächsbogen erstellen wir ein Dossier mit Beteiligten, gewünschten Leistungen, benötigten Unterlagen und offenen Entscheidungen.",
+      "scope": "Aufnahme eines italienischen Mandanten. Ergebnis ist ein internes Dossier zur fachlichen Prüfung mit Dokumenten- und Überwachungsplan. Unterschrift und Mandatsaktivierung folgen dem normalen Kanzleiprozess.",
+      "inputs": "Öffnen Sie profile-de.md. Der Bogen enthält Angaben zu Gesellschaft, Vertreterin, Beteiligungen und Leistungen. Er ist bereits geordnet und stammt nicht aus einem freigegebenen Aufbereitungslauf; Vera muss ihn als direkte Quelle erfassen.",
+      "request": "Vera, bereite Officina Arcos Dossier als neuen Mandanten aus diesem Bogen vor. Ordne die Angaben, den Mandatsvorschlag, erforderliche Prüfungen und anzufordernde Unterlagen.",
+      "steps": [
+        "Vera eröffnet den Übungsfall und verknüpft den Bogen mit dem neuen Mandanten. Bei ungeordneten Dateien umfasst dieselbe Funktion auch die Dokumentenaufbereitung.",
+        "Der aktuelle Ablauf ordnet Beteiligte und Leistungen, bereitet Vorschläge und Informationsanforderungen vor und erstellt das Dossier. Der Sprachchat unterscheidet dabei Angaben, Prüfungen und Entscheidungen.",
+        "Öffnen Sie die Prüfseite des Dossiers. Beginnen Sie mit Mandant und Auftrag, dann folgen benötigte Dokumente und offene Entscheidungen. Notiz und weitere Anlagen enthalten die unterstützenden Kontrollen."
       ],
-      "input_rows": [
-        [
-          "N1 · Registerauszug",
-          "Lesbar",
-          "Identität zu prüfen"
-        ],
-        [
-          "N2 · Vertreterausweis",
-          "Eingegangen",
-          "Beziehung und Gültigkeit prüfen"
-        ],
-        [
-          "N3 · Mandatsvertrag",
-          "Unterschriebene Fassung fehlt",
-          "Keine Annahme belegt"
-        ],
-        [
-          "Eigentümererklärung",
-          "Nicht eingegangen",
-          "Anforderung zu prüfen"
-        ]
+      "deliverables": [
+        "Prüfseite und Fallangaben: bilden eine geordnete Gesprächsgrundlage mit Mandant, Auftrag und Quellen.",
+        "Informationsanforderung, Dokumentenplan und Überwachungsplan: zeigen weitere Arbeit und noch zu bestätigende Punkte."
       ],
-      "basis": "Vorhandene Dateien belegen Dokumentenverfügbarkeit. Fehlende Unterschrift und Erklärung bleiben von vorgeschlagenen fachlichen Maßnahmen getrennt.",
-      "method": [
-        "Bereite die Dokumente auf und klassifiziere sie; verknüpfe extrahierte Daten und Fehlunterlagen mit ihren Quellen.",
-        "Prüfe und übernimm Dokumentenentscheidungen. Nur eine konsistente italienische Übergabe führt in die fachliche Einrichtungsphase.",
-        "Bereite Vorschläge zu Identität, Mandat, Datenschutz, Geldwäsche und Überwachung vor. Die Fachperson speichert tatsächliche Entscheidungen über die vorgesehenen Prüfflächen."
+      "review": "Vergleichen Sie Beteiligte, Beteiligungen und Leistungen mit dem Bogen. Identität, Geldwäscheprävention, Datenschutz und Bedingungen erfordern die üblichen fachlichen Prüfungen; gemeldete Angaben sind noch nicht verifiziert.",
+      "checkpoints": [
+        "Vor dem Start: Benennen Sie Mandant und gewünschte Leistungen.",
+        "Bei der Übergabe: Finden Sie eine Quelle, eine benötigte Unterlage und eine offene Entscheidung."
       ],
-      "result_title": "Unterlagen geordnet, Mandatsannahme noch offen",
-      "conclusion": "Registerauszug und Ausweis liegen vor. Der Mandatsvertrag ist nicht unterschrieben, Eigentümerunterlagen fehlen; die Akte wird nicht als vollständig bezeichnet.",
-      "output_columns": [
-        "Bereich",
-        "Grundlage",
-        "Nächster Schritt"
-      ],
-      "output_rows": [
-        [
-          "Identität",
-          "N1–N2",
-          "Beziehungen prüfen"
-        ],
-        [
-          "Mandat",
-          "N3 ohne Unterschrift",
-          "Reguläre Annahme abschließen"
-        ],
-        [
-          "Geldwäsche",
-          "Erklärung fehlt",
-          "Anforderung und Analyse prüfen"
-        ]
-      ],
-      "check": "Dokumenteneingang bedeutet keine inhaltliche Annahme. Workflow-Abschluss dokumentiert die Lieferung, nicht automatische Mandatsannahme.",
-      "question": "Der Ordner heißt 'freigegebener Mandant'. Dürfen wir diesen Status übernehmen?",
-      "answer": "Nein. Der Status folgt aus Belegen und gespeicherten Entscheidungen, nicht aus dem Ordnernamen.",
-      "practice": "Ergänze den unterschriebenen Vertrag und aktualisiere betroffene Vorschläge; offene Geldwäschefragen bleiben bestehen.",
-      "next": "Wähle Mandant und erhaltene Dokumente. Eine spätere gezielte Geldwäscheprüfung muss nicht die gesamte Aufnahme wiederholen."
+      "practice": "Ergänzen Sie contact-update-de.md und fordern Sie eine neue Dossierversion an. Sara wird Verwaltungskontakt für Dokumente; Elena bleibt die genannte Vertreterin.",
+      "success": "Das neue Dossier enthält Kontakt und Quelle, bewahrt die vorherige Version und weist keine nicht angegebenen Vertretungsbefugnisse zu.",
+      "repeat": "Stellen Sie Angaben und Unterlagen des neuen Mandanten bereit, nennen Sie die Leistungen und nutzen Sie das Dossier, um Prüfungen, Bedingungen und fachliche Freigabe vor Mandatsbeginn abzuschließen."
     },
     "es": {
-      "title": "Iniciar un expediente sin convertir vacíos en confirmaciones",
-      "goal": "Pasar de documentos recibidos a una propuesta profesional de alta con pruebas pendientes explícitas.",
-      "scenario": "La ficticia Arco Srl entrega extracto registral, documento del representante y borrador de carta de encargo. La carta no está firmada y falta la declaración de titularidad real. La preparación documental precede al alta profesional italiana.",
-      "request": "Vera, organiza la incorporación de este cliente y muestra qué falta.",
-      "scope": "Caso italiano ficticio. Cambiar la lengua de trabajo no habilita un paquete profesional de otro país.",
-      "input_columns": [
-        "Documento ficticio",
-        "Estado observado",
-        "Significado"
+      "title": "Preparar un nuevo cliente con Vera",
+      "goal": "Aprender a convertir la información del primer contacto en un expediente de incorporación que el despacho pueda revisar y completar.",
+      "scenario": "Officina Arco solicita asistencia contable continuada. Partimos de la ficha de entrevista y preparamos un expediente con partes, servicios solicitados, documentos por obtener y decisiones pendientes.",
+      "scope": "Incorporación de un cliente italiano. El resultado es un expediente interno de revisión profesional, con planes documental y de seguimiento. Firma y activación siguen el proceso normal del despacho.",
+      "inputs": "Abre profile-es.md. La ficha recoge datos declarados sobre sociedad, representante, participaciones y servicios. Ya está ordenada y no procede de una preparación documental aprobada; Vera debe registrarla como fuente directa.",
+      "request": "Vera, prepara el expediente de nuevo cliente de Officina Arco con esta ficha. Organiza los datos, el encargo propuesto, las comprobaciones y los documentos que faltan.",
+      "steps": [
+        "Vera abre el expediente didáctico y vincula la ficha al nuevo cliente. Cuando se parte de archivos desordenados, la misma función incluye su preparación.",
+        "El procedimiento actual organiza partes y servicios, prepara propuestas y solicitudes de información y compone el expediente. La voz distingue datos declarados, verificaciones y decisiones durante el trabajo.",
+        "Abre la página de revisión del expediente. Empieza por el cliente y el encargo; después revisa documentos por obtener y decisiones pendientes. La nota y los demás anexos conservan las comprobaciones de apoyo."
       ],
-      "input_rows": [
-        [
-          "N1 · extracto registral",
-          "Legible",
-          "Identidad por revisar"
-        ],
-        [
-          "N2 · documento del representante",
-          "Recibido",
-          "Relación y validez por comprobar"
-        ],
-        [
-          "N3 · carta de encargo",
-          "Borrador sin firma",
-          "No acredita aceptación"
-        ],
-        [
-          "Declaración de titularidad",
-          "No recibida",
-          "Solicitud por revisar"
-        ]
+      "deliverables": [
+        "Página de revisión y datos del caso: ofrecen una base ordenada para la entrevista, con cliente, encargo y fuentes.",
+        "Solicitud de información, plan documental y plan de seguimiento: indican el trabajo posterior y los puntos que requieren confirmación."
       ],
-      "basis": "Los archivos recibidos acreditan disponibilidad documental. Firma y declaración ausentes permanecen separadas de las acciones profesionales propuestas.",
-      "method": [
-        "Prepara y clasifica documentos, vinculando extracción y carencias con sus fuentes.",
-        "Revisa y aplica decisiones documentales. Solo una entrega italiana coherente pasa a la fase de alta profesional.",
-        "Prepara propuestas de identidad, encargo, privacidad, prevención del blanqueo y seguimiento con pruebas y cuestiones abiertas. El profesional registra sus decisiones reales en las superficies de revisión."
+      "review": "Compara partes, participaciones y servicios con la ficha. Identidad, prevención del blanqueo, privacidad y condiciones requieren las comprobaciones profesionales normales; los datos declarados no están ya verificados.",
+      "checkpoints": [
+        "Antes de empezar, identifica al cliente y los servicios solicitados.",
+        "En la entrega, encuentra una fuente, un documento por obtener y una decisión pendiente."
       ],
-      "result_title": "Documentos organizados, aceptación incompleta",
-      "conclusion": "Extracto y documento de identidad están disponibles. El encargo sigue sin firma y falta titularidad real; no se declara completo el expediente.",
-      "output_columns": [
-        "Área",
-        "Base",
-        "Siguiente paso"
-      ],
-      "output_rows": [
-        [
-          "Identidad",
-          "N1–N2",
-          "Revisar relaciones"
-        ],
-        [
-          "Encargo",
-          "N3 sin firmar",
-          "Completar aceptación ordinaria"
-        ],
-        [
-          "Prevención del blanqueo",
-          "Declaración ausente",
-          "Revisar solicitud y análisis pertinente"
-        ]
-      ],
-      "check": "Recibir un documento no equivale a aceptar su contenido. Completar el workflow registra la entrega, no la aceptación automática del cliente.",
-      "question": "La carpeta se llama 'cliente aprobado'. ¿Podemos usar ese estado?",
-      "answer": "No. El estado deriva de pruebas y decisiones guardadas, no del nombre de carpeta.",
-      "practice": "Añade la carta firmada y actualiza las propuestas afectadas conservando las cuestiones abiertas sobre blanqueo.",
-      "next": "Selecciona cliente real y documentos recibidos. Una revisión posterior específica de blanqueo no exige repetir toda el alta."
+      "practice": "Añade contact-update-es.md y pide una versión nueva del expediente. Sara pasa a ser el contacto administrativo para los documentos; Elena sigue siendo la representante indicada.",
+      "success": "El nuevo expediente incluye contacto y fuente, conserva la versión anterior y no atribuye poderes de representación que no se han declarado.",
+      "repeat": "Facilita información y documentos del nuevo cliente, indica los servicios y usa el expediente para completar comprobaciones, condiciones y revisión antes del inicio de la relación."
     }
   }
 }

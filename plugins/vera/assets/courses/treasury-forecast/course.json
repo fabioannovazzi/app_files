@@ -1,25 +1,71 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "treasury-forecast",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it"
   ],
   "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
   "sources": [
+    {
+      "path": "modules/treasury-forecast/assets/custom_select.js",
+      "repository_path": "plugins/treasury-forecast/assets/custom_select.js",
+      "sha256": "bf6197a3a4bb2f20560350e8ceb78314c7cb12cea515e5ad5d9433833753aed4"
+    },
+    {
+      "path": "modules/treasury-forecast/assets/icon.svg",
+      "repository_path": "plugins/treasury-forecast/assets/icon.svg",
+      "sha256": "dfcc3789bce9c6930c699c5a880fa2be68a9f7d874fa364a0397ffc194f55d51"
+    },
+    {
+      "path": "modules/treasury-forecast/assets/instrument-sans-400.ttf",
+      "repository_path": "plugins/treasury-forecast/assets/instrument-sans-400.ttf",
+      "sha256": "01689ad055025ff1891607b077513c9389f73360d471dcffa036e326af179b00"
+    },
+    {
+      "path": "modules/treasury-forecast/assets/local-review-contract.json",
+      "repository_path": "plugins/treasury-forecast/assets/local-review-contract.json",
+      "sha256": "f4e689db652987988a3af4f24cd4cb63b138d5a946f8435786af36982dcbfa66"
+    },
+    {
+      "path": "modules/treasury-forecast/assets/review.css",
+      "repository_path": "plugins/treasury-forecast/assets/review.css",
+      "sha256": "c96fe870e3425bcfc443a47e1a7d1e69955b039c5bb2049d2cb5078b4d5ad807"
+    },
+    {
+      "path": "modules/treasury-forecast/assets/review.html",
+      "repository_path": "plugins/treasury-forecast/assets/review.html",
+      "sha256": "d68370ac38dcfe1b7313cdf2f6a29a86a012f7021ce8491164921a4214ee7876"
+    },
+    {
+      "path": "modules/treasury-forecast/assets/review.js",
+      "repository_path": "plugins/treasury-forecast/assets/review.js",
+      "sha256": "be178bb4d3b249f46e856be7a8cc3ab697da169b7a100f4dc046f193702a2c97"
+    },
     {
       "path": "modules/treasury-forecast/references/input-contract.md",
       "repository_path": "plugins/treasury-forecast/references/input-contract.md",
       "sha256": "c2ebd94e8e9f61bdef8d2c2c5d441f25865b91f694220a939b26ae516284a3fa"
+    },
+    {
+      "path": "modules/treasury-forecast/requirements.txt",
+      "repository_path": "plugins/treasury-forecast/requirements.txt",
+      "sha256": "9bba605fd7b6ea23038de15e5a1ae6714b3d3fb14ed2d6e6bedbfb0665ca2122"
     },
     {
       "path": "modules/treasury-forecast/scripts/check_dependencies.py",
@@ -62,82 +108,311 @@
       "sha256": "dbf0ec6c863137f5e85ce2c14296757b48b2a666ef2a8a71300a850467d9cbb6"
     },
     {
+      "path": "modules/treasury-forecast/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/treasury-forecast/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/treasury-forecast/SKILL.md",
       "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
       "sha256": "0364c242853f0343c790f6866f4b332288719721f66b4e8306353306ad654125"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "0283f269c5ec898a51c79d2ded38b70fa378569e66ccc2494c56a95f905a755a"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "7e0008d6785e140f3b4e7a1d8c5e1c6b785478b32524ace2e8ae5a1c09e0757b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/accounts.csv",
+      "sha256": "c4d7758a447e2f15760ae89135402208d70326e32893abd24c11dc09881bc526",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/adjustments.csv",
+      "sha256": "5a9a543f060efab502532273ecb32eab5e9dc7d94afe209f39b7ff1f978aa867",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/allocations.csv",
+      "sha256": "414b598218082cb79b69234c381146c7867a345de93b59f2d70f7681e7322968",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/bank_movements.csv",
+      "sha256": "e9ee44d7f8b0d0f464518ee956fb2b803f50983f98b3f44de6b40aecadce6ac6",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/caso.md",
+      "sha256": "6c003563305a65428545cabc9cbaa1f440a189fd91f4a891e8b62e218ef17d81",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/open_items.csv",
+      "sha256": "c3724e155b577eb8deaaed36eb5a3d0b79997d0bcbe97cf58c0085689b416499",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/planned_flows.csv",
+      "sha256": "63329d6d53f4e1f27b2ca70262573582fe4f0cd9a9854ee29c55a5ef285a12ba",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/accounts.csv",
+      "sha256": "c4d7758a447e2f15760ae89135402208d70326e32893abd24c11dc09881bc526",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/adjustments.csv",
+      "sha256": "5a9a543f060efab502532273ecb32eab5e9dc7d94afe209f39b7ff1f978aa867",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/allocations.csv",
+      "sha256": "414b598218082cb79b69234c381146c7867a345de93b59f2d70f7681e7322968",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/bank_movements.csv",
+      "sha256": "e9ee44d7f8b0d0f464518ee956fb2b803f50983f98b3f44de6b40aecadce6ac6",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/caso.md",
+      "sha256": "9a7d3094b6240803e870ba4fc14a9cd529b152bc6f62f31f86a4341a451fd6e7",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/open_items.csv",
+      "sha256": "c3724e155b577eb8deaaed36eb5a3d0b79997d0bcbe97cf58c0085689b416499",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/planned_flows.csv",
+      "sha256": "63329d6d53f4e1f27b2ca70262573582fe4f0cd9a9854ee29c55a5ef285a12ba",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "La cassa dipende anche dal giorno dell'incasso",
-      "goal": "Leggere una previsione di tesoreria e l'effetto di un incasso posticipato, senza dedurre saldi aperti dalle fatture.",
-      "scenario": "Al 10 settembre Arco ha 20.000 EUR disponibili. Deve pagare 15.000 EUR il 15 settembre e prevede un incasso residuo di 12.000 EUR il 18. Un ulteriore pagamento pianificato di 10.000 EUR cade il 20 settembre.",
-      "request": "Vera, mostrami il punto di cassa più basso e cosa succede se l'incasso slitta.",
-      "scope": "Una società, EUR e un orizzonte definito. Il caso usa saldi residui e date fornite; non prevede automaticamente il comportamento dei clienti.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Data",
-        "Flusso EUR"
+      "title": "Preparare una previsione di cassa con Vera",
+      "goal": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane.",
+      "scenario": "Officina Arco vuole preparare i pagamenti di aprile e maggio. Ha EUR 25.000 sul conto e conosce alcuni incassi e uscite futuri. Usiamo queste informazioni per costruire una prima previsione e valutare un ritardo di incasso.",
+      "scope": "Il caso riguarda una società, euro e un conto bancario. La previsione copre i flussi forniti: le ipotesi su incassi e pagamenti restano visibili e da rivedere.",
+      "inputs": "Apri caso.md e i sei CSV. accounts contiene il saldo effettivo; open_items i residui da incassare o pagare; planned_flows le altre uscite previste. Gli altri tre prospetti sono vuoti nella prima previsione e servono negli aggiornamenti a spiegare movimenti e regolamenti.",
+      "request": "Vera, prepara la previsione di cassa di Officina Arco dal 31 marzo al 31 maggio usando questi saldi, partite e flussi. Mostrami le date da rivedere e le disponibilità per settimana.",
+      "steps": [
+        "Vera importa le tabelle nel caso didattico, verifica società, euro, saldo iniziale e periodo. La chat vocale mostra quali dati dovrai procurarti per un tuo cliente.",
+        "Il workflow prepara gli eventi e apre la pagina di revisione. Guarda incassi e pagamenti con la loro data e il motivo: puoi chiedere una correzione prima di ricalcolare.",
+        "Dopo il ricalcolo, apri il prospetto giornaliero e settimanale e il workbook. Vera conserva la versione e distingue una bozza da una previsione accettata dal professionista."
       ],
-      "input_rows": [
-        [
-          "T1 · saldo disponibile",
-          "10 settembre",
-          "+20.000 iniziali"
-        ],
-        [
-          "T2 · debito residuo",
-          "15 settembre",
-          "−15.000"
-        ],
-        [
-          "T3 · credito residuo",
-          "18 settembre",
-          "+12.000 attesi"
-        ],
-        [
-          "T4 · flusso pianificato",
-          "20 settembre",
-          "−10.000"
-        ]
+      "deliverables": [
+        "Pagina di revisione e report: mostrano assunzioni, eventi e cassa nel tempo. Parti dal saldo e segui le settimane prima dei pagamenti principali.",
+        "Workbook e prospetti di dettaglio: permettono di ritrovare ogni incasso o uscita e controllare l’effetto di una data modificata. Le versioni precedenti restano disponibili."
       ],
-      "basis": "T1 è il saldo al cutoff; T2 e T3 sono residui dichiarati, non importi originali delle fatture. T4 ha una base di pianificazione separata.",
-      "method": [
-        "Prepara le sei tabelle del contratto: conti, movimenti, partite, flussi pianificati, allocazioni e rettifiche. Anche le tabelle vuote conservano le intestazioni.",
-        "Rivedi perimetro, saldi residui e date attese; esegui la previsione corrente e confronta ogni variazione con le fonti.",
-        "Leggi il report e il workbook; negli aggiornamenti riconcilia saldi e regolamenti, senza duplicare una fattura che sostituisce un flusso pianificato."
+      "review": "Controlla saldo iniziale, periodo e copertura dei flussi. Rivedi le date proposte e la loro base, poi guarda il minimo di cassa e le settimane interessate. Il passaggio di accettazione richiede la decisione sul prospetto esatto; il calcolo da solo non la sostituisce.",
+      "checkpoints": [
+        "Prima del calcolo: indica quali file contengono saldo reale e flussi futuri.",
+        "Nella pagina di revisione: scegli un incasso, trova data e motivazione e indica dove chiederesti una modifica.",
+        "Sul report: mostra la settimana da esaminare prima di programmare un pagamento."
       ],
-      "result_title": "5.000 EUR al minimo, se l'incasso arriva il 18",
-      "conclusion": "La cassa scende a 5.000 EUR il 15, risale a 17.000 il 18 e chiude a 7.000 il 20. Se l'incasso arriva il 25, il 20 settembre si presenta un fabbisogno di 5.000 EUR.",
-      "output_columns": [
-        "Data",
-        "Scenario base",
-        "Incasso il 25"
-      ],
-      "output_rows": [
-        [
-          "15 settembre",
-          "5.000 EUR",
-          "5.000 EUR"
-        ],
-        [
-          "18 settembre",
-          "17.000 EUR",
-          "5.000 EUR"
-        ],
-        [
-          "20 settembre",
-          "7.000 EUR",
-          "−5.000 EUR"
-        ]
-      ],
-      "check": "La previsione descrive le assunzioni rivedute, non garantisce l'incasso. Una nota di credito riduce un residuo ma non genera automaticamente un movimento di banca.",
-      "question": "La fattura vale 20.000 EUR ma il residuo è 12.000: quale importo entra?",
-      "answer": "Il residuo di cassa documentato di 12.000 EUR. L'importo originale non sostituisce l'evidenza di quanto resta da incassare.",
-      "practice": "Sposta l'incasso al 25 e riesegui: individua la data del fabbisogno e la fonte dell'ipotesi modificata.",
-      "next": "Prepara saldi al cutoff, scadenzari residui e flussi futuri con basi e date attese; negli aggiornamenti conserva gli identificativi."
+      "practice": "Il cliente Aurora sposta l’incasso di EUR 18.000 dal 10 al 20 aprile. Usa i file della prova e chiedi a Vera di mostrarti l’effetto del ritardo, conservando la previsione iniziale.",
+      "success": "La prova riesce quando sai trovare il periodo influenzato dal ritardo e distinguere l’ipotesi alternativa dalla previsione di partenza. Nessuna accettazione professionale è simulata.",
+      "repeat": "Per rifarlo, fornisci i saldi effettivi, i residui delle partite e i flussi previsti con le date. Negli aggiornamenti aggiungi i movimenti e i regolamenti effettivi e riparti dalla versione accettata corretta."
     }
   }
 }

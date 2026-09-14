@@ -1,0 +1,27 @@
+{
+  "vera/sales-plan": {
+    "title": "Préparer un plan de ventes avec Vera",
+    "goal": "Apprendre à transformer réalisé et hypothèses commerciales en scénario futur, en vérifiant ce qui change et pourquoi.",
+    "scenario": "Ciclo Arco veut planifier janvier et février de l’an prochain. Le réalisé des mêmes mois et une hypothèse de hausse des unités sont disponibles.",
+    "scope": "Un plan pour deux produits et deux mois. La procédure applique des hypothèses revues ; elle ne prouve pas la demande future et ne constitue pas un business plan complet.",
+    "inputs": "Ouvrez actual-sales.csv et assumptions-fr.md. Repérez mois, produits, unités, ventes, remises et coûts. La note vise les mêmes mois de l’année suivante et une hausse des unités, pas des prix.",
+    "request": "Vera, planifie janvier et février 2027 pour Ciclo Arco avec ce réalisé et des unités en hausse de 10 %. Reformule d’abord les hypothèses à confirmer, puis montre le plan et sa comparaison à la base.",
+    "steps": [
+      "Dans la conversation de travail, Vera inspecte les données et présente une courte table d’hypothèses. La voix explique les mois et produits concernés et accompagne la confirmation du sens de la demande.",
+      "Après confirmation réelle, Vera exécute le plan courant et ses contrôles. La voix suit la production sans assimiler scénario et demande future établie.",
+      "Ouvrez synthèse et détail produits. Comparez base et plan puis suivez un produit : unités, ventes, remises, coûts et hypothèse appliquée."
+    ],
+    "deliverables": [
+      "Scénario des ventes en CSV et synthèse pour examiner les montants planifiés.",
+      "Journal des hypothèses appliquées et contrôles pour comprendre et répéter le calcul."
+    ],
+    "review": "Vérifiez sens des hypothèses, mois comparables et paramètres inchangés. Lisez écarts en montant et pourcentage avec leurs bases. Plan et hypothèses nécessitent la revue professionnelle habituelle.",
+    "checkpoints": [
+      "Avant le calcul, expliquez si le changement porte sur unités ou prix.",
+      "Dans le résultat, retrouvez une ligne et son hypothèse."
+    ],
+    "practice": "Avec les données de pratique, demandez un nouveau scénario à +5 % d’unités en conservant celui à +10 %. Confirmez l’hypothèse, comparez les synthèses et expliquez la différence.",
+    "success": "Vous savez fournir le réalisé, préciser et confirmer les hypothèses, lire résultats et contrôles et comparer une alternative.",
+    "repeat": "Indiquez à Vera réalisé, mois cibles, devise et hypothèses. Revoyez l’interprétation avant calcul et utilisez le résultat comme scénario conditionnel."
+  }
+}

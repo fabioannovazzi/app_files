@@ -1,0 +1,157 @@
+{
+  "vera/centrale-rischi-review": {
+    "title": "Analizzare una Centrale Rischi con Vera",
+    "goal": "Impara a partire da una Centrale Rischi, ottenere un’analisi verificabile e usarla per preparare il confronto con il cliente.",
+    "scenario": "Officina Arco Srl deve rivedere la propria situazione bancaria con il commercialista. Abbiamo tre mesi di rapporti con due banche: vogliamo capire affidamenti, utilizzi e andamento, e preparare una sintesi leggibile per l’incontro.",
+    "scope": "Seguiamo un export già normalizzato. Con i tuoi clienti puoi partire anche dal PDF digitale originale della Banca d’Italia: Vera lo esamina prima di analizzarlo. Il risultato è una base documentata per la tua revisione professionale.",
+    "inputs": "Apri caso.md e centrale-rischi-gen-mar.csv. Il primo descrive società, obiettivo e significato delle colonne; il secondo contiene i rapporti bancari di gennaio, febbraio e marzo. Mostra che una riga identifica banca, categoria e mese. Per il primo utilizzo non devi preparare codice o conoscere i nomi interni della procedura.",
+    "request": "Vera, analizza la Centrale Rischi di Officina Arco usando questo export. Prepara il quadro a marzo 2026, confrontalo con gennaio e febbraio e mostrami cruscotto, Excel e sintesi per l’incontro con il cliente.",
+    "steps": [
+      "Nella chat di lavoro Vera importa i file nel caso didattico e ne esamina contenuto e mesi disponibili. La chat vocale spiega quali file servirebbero per un tuo cliente e dove finiranno i risultati.",
+      "Vera propone il collegamento fra colonne e significati e conferma società, euro e mese corrente. Guarda la proposta: le durate originaria e residua hanno ruoli diversi. Basta riconoscere la scelta e sapere quando chiedere una correzione.",
+      "Dopo la verifica dei significati, il workflow calcola l’esposizione per banca, categoria e durata, controlla i totali e confronta i mesi. L’insegnante aspetta i risultati effettivi e spiega eventuali richieste o problemi mostrati dalla procedura.",
+      "Vera produce gli output previsti e scrive una sintesi collegata ai risultati verificati. Nella finestra di lavoro apri il cruscotto appena creato; passa poi al prospetto Excel e alle questioni aperte."
+    ],
+    "deliverables": [
+      "Cruscotto HTML: parti dal mese corrente e dal totale utilizzato; passa agli indicatori per categoria e al confronto con il mese precedente. Usalo per orientare la conversazione con il cliente.",
+      "Prospetto Excel: apri Esposizioni per ritrovare rapporti e banche, Serie mensile per i tre mesi e Controlli per il riscontro dei totali. Torna alle righe dell’export quando un dato richiede verifica.",
+      "Sintesi e questioni aperte: leggi cosa è sostenuto dai dati e quali informazioni aggiuntive servirebbero. Gli output strutturati e le ricevute conservano la tracciabilità del lavoro."
+    ],
+    "review": "Controlla prima società, periodo e totale utilizzato. Poi scegli una banca e collega il suo dato alle righe di origine. Il caso non fornisce bilancio o flussi: un indicatore non calcolabile deve restare tale. Il commento prepara il tuo giudizio; puoi chiedere una revisione o un approfondimento specifico.",
+    "checkpoints": [
+      "Prima del calcolo: individua i file di partenza e conferma che il quadro corrente deve riferirsi a marzo. Se vuoi un altro obiettivo, formulalo qui.",
+      "Quando appare il cruscotto: apri il risultato e indica dove leggere la situazione corrente e dove trovare il dettaglio. La chat vocale verifica che tu stia guardando l’output appena prodotto.",
+      "Prima di concludere: spiega quali file forniresti per il tuo cliente e quale parte del risultato rivedresti prima dell’incontro."
+    ],
+    "practice": "Ora chiedi a Vera di aggiornare la stessa analisi ad aprile usando centrale-rischi-gen-apr.csv e prova.md. Formula tu la richiesta, conferma il nuovo mese e apri il risultato della nuova esecuzione.",
+    "success": "La prova è riuscita quando il nuovo risultato riguarda aprile, il risultato di marzo è conservato e sai trovare il confronto con il mese precedente. Se manca un passaggio, lo ripetiamo insieme; la sola apertura del kit non completa la prova.",
+    "repeat": "Per rifarlo sul lavoro: scegli il cliente, allega il PDF digitale originale o un export verificato, indica periodo e obiettivo, rivedi le scelte proposte e apri gli output. Puoi richiamare “Impara con Vera” in qualsiasi momento e fare altre domande."
+  },
+  "vera/fatture-xml-check": {
+    "title": "Controllare le fatture XML con Vera",
+    "goal": "Impara a consegnare una cartella di fatture, leggere il riepilogo dei documenti e gestire ciò che richiede verifica.",
+    "scenario": "Lo Studio Arco ha ricevuto tre fatture XML di marzo per un cliente fittizio. Vuole sapere quali documenti sono arrivati e se sono leggibili e coerenti prima di proseguire il lavoro contabile.",
+    "scope": "Questo controllo prepara e verifica i documenti ricevuti. Registrazione contabile e invio a SdI seguono i propri processi.",
+    "inputs": "Apri i tre file invoice-01.xml, invoice-02.xml e invoice-03.xml. Sono FatturaPA didattiche con identificativi fittizi. La nota del caso indica il periodo e il totale atteso del lotto: EUR 2.440.",
+    "request": "Vera, controlla le fatture XML di marzo in questa cartella. Mostrami quali documenti abbiamo ricevuto, il riepilogo degli importi e gli eventuali punti da verificare.",
+    "steps": [
+      "Vera prende in carico la cartella nel caso didattico e legge gli XML con il parser della funzione. Guarda quali file vengono inclusi.",
+      "Nella chat di lavoro il workflow estrae numero, data, soggetti e importi, controlla la forma e segnala eventuali anomalie o duplicati candidati.",
+      "Apri il riepilogo appena prodotto. Vera collega le segnalazioni ai file e prepara le verifiche utili prima del passaggio successivo."
+    ],
+    "deliverables": [
+      "Riepilogo delle fatture: individua un documento e ritrova numero, data e totale nel suo XML.",
+      "Elenco delle anomalie: leggi file interessato, problema osservato e verifica richiesta. Il conteggio dei documenti chiarisce cosa è stato esaminato."
+    ],
+    "review": "Confronta i tre documenti ricevuti con il riepilogo e il totale del lotto. Una segnalazione richiede un riscontro sul documento: il controllo non decide la detraibilità né conferma una contabilizzazione.",
+    "checkpoints": [
+      "Prima di avviare: indica la cartella e il mese da controllare.",
+      "Sul risultato: apri una riga e il relativo XML; individua dove leggeresti eventuali anomalie."
+    ],
+    "practice": "Aggiungi invoice-04.xml a una nuova cartella di prova e chiedi il controllo delle quattro fatture, includendo aprile.",
+    "success": "Il nuovo riepilogo deve includere la quarta fattura e rendere riconoscibili i due mesi. Spiega dove controlleresti un file problematico.",
+    "repeat": "Per rifarlo, seleziona la cartella del cliente e chiedi il controllo degli XML ricevuti. Rivedi riepilogo e segnalazioni prima di continuare."
+  },
+  "vera/treasury-forecast": {
+    "title": "Preparare una previsione di cassa con Vera",
+    "goal": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane.",
+    "scenario": "Officina Arco vuole preparare i pagamenti di aprile e maggio. Ha EUR 25.000 sul conto e conosce alcuni incassi e uscite futuri. Usiamo queste informazioni per costruire una prima previsione e valutare un ritardo di incasso.",
+    "scope": "Il caso riguarda una società, euro e un conto bancario. La previsione copre i flussi forniti: le ipotesi su incassi e pagamenti restano visibili e da rivedere.",
+    "inputs": "Apri caso.md e i sei CSV. accounts contiene il saldo effettivo; open_items i residui da incassare o pagare; planned_flows le altre uscite previste. Gli altri tre prospetti sono vuoti nella prima previsione e servono negli aggiornamenti a spiegare movimenti e regolamenti.",
+    "request": "Vera, prepara la previsione di cassa di Officina Arco dal 31 marzo al 31 maggio usando questi saldi, partite e flussi. Mostrami le date da rivedere e le disponibilità per settimana.",
+    "steps": [
+      "Vera importa le tabelle nel caso didattico, verifica società, euro, saldo iniziale e periodo. La chat vocale mostra quali dati dovrai procurarti per un tuo cliente.",
+      "Il workflow prepara gli eventi e apre la pagina di revisione. Guarda incassi e pagamenti con la loro data e il motivo: puoi chiedere una correzione prima di ricalcolare.",
+      "Dopo il ricalcolo, apri il prospetto giornaliero e settimanale e il workbook. Vera conserva la versione e distingue una bozza da una previsione accettata dal professionista."
+    ],
+    "deliverables": [
+      "Pagina di revisione e report: mostrano assunzioni, eventi e cassa nel tempo. Parti dal saldo e segui le settimane prima dei pagamenti principali.",
+      "Workbook e prospetti di dettaglio: permettono di ritrovare ogni incasso o uscita e controllare l’effetto di una data modificata. Le versioni precedenti restano disponibili."
+    ],
+    "review": "Controlla saldo iniziale, periodo e copertura dei flussi. Rivedi le date proposte e la loro base, poi guarda il minimo di cassa e le settimane interessate. Il passaggio di accettazione richiede la decisione sul prospetto esatto; il calcolo da solo non la sostituisce.",
+    "checkpoints": [
+      "Prima del calcolo: indica quali file contengono saldo reale e flussi futuri.",
+      "Nella pagina di revisione: scegli un incasso, trova data e motivazione e indica dove chiederesti una modifica.",
+      "Sul report: mostra la settimana da esaminare prima di programmare un pagamento."
+    ],
+    "practice": "Il cliente Aurora sposta l’incasso di EUR 18.000 dal 10 al 20 aprile. Usa i file della prova e chiedi a Vera di mostrarti l’effetto del ritardo, conservando la previsione iniziale.",
+    "success": "La prova riesce quando sai trovare il periodo influenzato dal ritardo e distinguere l’ipotesi alternativa dalla previsione di partenza. Nessuna accettazione professionale è simulata.",
+    "repeat": "Per rifarlo, fornisci i saldi effettivi, i residui delle partite e i flussi previsti con le date. Negli aggiornamenti aggiungi i movimenti e i regolamenti effettivi e riparti dalla versione accettata corretta."
+  },
+  "vera/management-control-pack": {
+    "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+    "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
+    "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda.",
+    "inputs": "Apri actual-budget.xlsx e facts.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
+    "steps": [
+      "Vera importa i dati nel caso didattico collegato al cliente. Il pacchetto di controllo di gestione può includere anche altri export; qui impariamo il percorso completo del confronto economico con il budget.",
+      "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
+      "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
+      "Apri il cruscotto e il workbook prodotti nella chat di lavoro. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie."
+    ],
+    "deliverables": [
+      "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
+      "Workbook e report: conservano prospetti, controlli e collegamenti ai dati. La sintesi distingue la misura dello scostamento dalla sua causa da verificare."
+    ],
+    "review": "Controlla che i due fogli coprano gli stessi mesi e che i costi abbiano il segno previsto. Collega una differenza alla categoria e al mese di origine. Chiedi spiegazioni all’azienda quando i numeri non documentano la causa.",
+    "checkpoints": [
+      "Prima del calcolo: trova i due fogli e conferma il periodo del report.",
+      "Sul risultato: indica il confronto complessivo e poi una categoria che approfondiresti."
+    ],
+    "practice": "Usa actual-budget-march.xlsx per chiedere un aggiornamento fino a marzo. Formula la richiesta, conferma il nuovo periodo e confronta il risultato con il report precedente.",
+    "success": "Il nuovo report deve includere marzo e conservare il precedente. Sai trovare il confronto con il budget e risalire ai dati di una categoria.",
+    "repeat": "Per rifarlo, fornisci consuntivo e piano con periodi comparabili, indica il periodo e lo scopo della riunione, rivedi la lettura dei dati e apri il report generato.",
+    "title": "Preparare il controllo di gestione con Vera",
+    "request": "Vera, prepara il report consuntivo–budget di Arco per gennaio e febbraio 2026 da questo workbook. Mostrami risultato operativo, scostamenti e dettaglio per categoria."
+  },
+  "clara/reporting-engine": {
+    "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
+    "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
+    "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda. Clara sceglie l’analisi in base alla domanda e ai dati; questo primo utilizzo segue il confronto con il budget. Il report della lezione resta locale.",
+    "inputs": "Apri actual-budget.xlsx e facts.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
+    "steps": [
+      "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
+      "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
+      "Apri il cruscotto e il workbook prodotti nella chat di lavoro. Parti dalla sintesi del periodo, passa al confronto mensile e poi al dettaglio delle categorie."
+    ],
+    "deliverables": [
+      "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
+      "Workbook e report: conservano prospetti, controlli e collegamenti ai dati. La sintesi distingue la misura dello scostamento dalla sua causa da verificare."
+    ],
+    "review": "Controlla che i due fogli coprano gli stessi mesi e che i costi abbiano il segno previsto. Collega una differenza alla categoria e al mese di origine. Chiedi spiegazioni all’azienda quando i numeri non documentano la causa.",
+    "checkpoints": [
+      "Prima del calcolo: trova i due fogli e conferma il periodo del report.",
+      "Sul risultato: indica il confronto complessivo e poi una categoria che approfondiresti."
+    ],
+    "practice": "Usa actual-budget-march.xlsx per chiedere un aggiornamento fino a marzo. Formula la richiesta, conferma il nuovo periodo e confronta il risultato con il report precedente.",
+    "success": "Il nuovo report deve includere marzo e conservare il precedente. Sai trovare il confronto con il budget e risalire ai dati di una categoria.",
+    "repeat": "Per rifarlo, fornisci consuntivo e piano con periodi comparabili, indica il periodo e lo scopo della riunione, rivedi la lettura dei dati e apri il report generato.",
+    "title": "Preparare un report dai dati con Clara",
+    "request": "Clara, prepara il report consuntivo–budget di Arco per gennaio e febbraio 2026 da questo workbook. Mostrami risultato operativo, scostamenti e dettaglio per categoria."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Preparare una nuova pratica con Lucia",
+    "goal": "Impara a partire dalla richiesta e dai documenti del cliente, ottenere un fascicolo da rivedere e capire cosa manca prima dell’apertura.",
+    "scenario": "Beta Laboratorio chiede assistenza per una consegna incompleta. Abbiamo la richiesta, un riepilogo della fornitura e un piccolo registro didattico dello studio. Prepariamo la pratica per la revisione dell’avvocato.",
+    "scope": "La funzione organizza l’apertura della pratica. Le decisioni su conflitti, incarico, termini e apertura restano nel normale percorso di revisione.",
+    "inputs": "Apri request-it.md, supply-it.md e register.csv. La richiesta identifica cliente, controparte, obiettivo e urgenza riferita; la fornitura documenta il caso; il registro indica quali pratiche fittizie sono disponibili per il controllo.",
+    "request": "Lucia, prepara una nuova pratica per Beta Laboratorio sulla consegna di Gamma Forniture. Usa questi documenti e mostrami il fascicolo, le informazioni mancanti e le decisioni da rivedere prima dell’apertura.",
+    "steps": [
+      "Lucia crea il caso didattico, importa i documenti e ricostruisce cliente, parti, richiesta e cronologia. Nella chat vocale segui quali informazioni vengono dalle fonti.",
+      "La chat di lavoro prepara la scheda della pratica, i candidati per la verifica dei conflitti, il perimetro dell’incarico e gli eventuali punti sui termini. Le informazioni mancanti restano visibili.",
+      "Lucia genera il pacchetto e apre la revisione. Guarda le decisioni su conflitti, incarico, termini e apertura e come una decisione effettiva viene salvata e applicata al fascicolo."
+    ],
+    "deliverables": [
+      "Memo di apertura e richiesta di informazioni: parti da obiettivo, parti e documenti disponibili; individua cosa chiedere al cliente.",
+      "Piano delle cartelle e pagina di revisione: mostrano come organizzare il fascicolo e quali decisioni servono. Lo stato distingue un dossier preparato da una pratica pronta ad aprire."
+    ],
+    "review": "Confronta cliente e controparte con la richiesta e verifica il perimetro del registro esaminato. Leggi la proposta di incarico e i punti sui termini prima di decidere. La semplice presenza del memo non significa che l’incarico sia stato accettato.",
+    "checkpoints": [
+      "Prima della preparazione: individua cliente, controparte e risultato richiesto.",
+      "Nel fascicolo: mostra dove trovi documenti mancanti e decisioni ancora da rivedere."
+    ],
+    "practice": "Aggiungi update-it.md: Gamma propone una data per i componenti residui. Chiedi a Lucia di aggiornare il dossier con questa nuova corrispondenza, preservando la versione precedente.",
+    "success": "La nuova versione include la proposta e la sua fonte senza presumere consegna o accettazione. Sai individuare quali punti della pratica richiedono una nuova revisione.",
+    "repeat": "Per rifarlo, fornisci la richiesta, i documenti e il registro effettivamente disponibile; indica se il cliente è nuovo o esistente e rivedi il pacchetto prima di aprire la pratica."
+  }
+}

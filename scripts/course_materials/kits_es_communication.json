@@ -1,0 +1,52 @@
+{
+  "vera/comunicazione-professionale": {
+    "title": "Preparar una comunicación profesional con Vera",
+    "goal": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo.",
+    "scenario": "Studio Riva quiere orientar a sus pequeñas empresas clientes cuando reciben una solicitud de acceso a datos. Preparamos una FAQ breve con una fuente oficial seleccionada.",
+    "scope": "El proceso completo: objetivo y público, fuentes, decisión editorial, borrador, comprobaciones, revisión y archivos finales. El ejemplo jurídico sirve para probar el workflow; esta lección no es un curso sobre el RGPD.",
+    "inputs": "Abre brief-es.md para conocer el encargo y formato solicitado, y source-es.md para consultar la guía oficial seleccionada. El despacho ficticio empieza sin comunicaciones anteriores.",
+    "request": "Vera, prepara una FAQ sobre la gestión de solicitudes de acceso a datos para las pequeñas empresas clientes de Studio Riva. Usa este brief y esta fuente. Déjame revisar contenido y formato; después prepara el paquete local sin enviarlo ni publicarlo.",
+    "steps": [
+      "En el hilo de trabajo, Vera concreta público, objetivo, idioma y canal y prepara el espacio local del despacho. En la conversación de voz explica qué produciremos. Confirmas el alcance y dónde guardar el trabajo.",
+      "Vera examina la fuente, selecciona la información útil y prepara la FAQ y el formato propuesto. El workflow actual comprueba por separado las afirmaciones y la calidad editorial. La voz sigue los resultados reales y las correcciones necesarias.",
+      "Revisa comunicación, fuentes y formato. Tras las confirmaciones previstas, abre el paquete realmente generado y aprende a utilizar sus archivos. Enviarlo o publicarlo es una acción posterior independiente."
+    ],
+    "deliverables": [
+      "FAQ en Markdown y HTML, para revisar y reutilizar después de la revisión.",
+      "Base técnica, referencias a las fuentes y registros de comprobaciones y decisiones."
+    ],
+    "review": "Lee la FAQ como un cliente: público y utilidad deben estar claros. Comprueba que las afirmaciones corresponden a la fuente, los límites siguen visibles y el formato es el aceptado. El workflow puede pedir cambios o explicar por qué no conviene comunicar.",
+    "checkpoints": [
+      "Indica a qué público quieres llegar, qué contenido necesita y qué formato deseas.",
+      "Encuentra el texto utilizable y la fuente de una afirmación en el paquete; explica qué debes revisar antes de usarlo."
+    ],
+    "practice": "Lee practice-es.md y solicita una nueva versión con un correo de presentación de la FAQ. Revisa la adaptación al canal, conserva el primer paquete y abre los archivos nuevos. No envíes nada.",
+    "success": "Sabes empezar con fuentes seleccionadas, seguir las comprobaciones, revisar la comunicación y pedir una versión para otro canal.",
+    "repeat": "Indica a Vera tema, público, canales y fuentes disponibles. Puedes añadir ejemplos concretos del estilo del despacho. Revisa propuesta, fuentes y paquete antes de utilizarlo."
+  },
+  "lucia/comunicazione-professionale": {
+    "title": "Preparar una comunicación profesional con Lucia",
+    "goal": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo.",
+    "scenario": "Studio Riva quiere orientar a sus pequeñas empresas clientes cuando reciben una solicitud de acceso a datos. Preparamos una FAQ breve con una fuente oficial seleccionada.",
+    "scope": "El proceso completo: objetivo y público, fuentes, decisión editorial, borrador, comprobaciones, revisión y archivos finales. El ejemplo jurídico sirve para probar el workflow; esta lección no es un curso sobre el RGPD.",
+    "inputs": "Abre brief-es.md para conocer el encargo y formato solicitado, y source-es.md para consultar la guía oficial seleccionada. El despacho ficticio empieza sin comunicaciones anteriores.",
+    "request": "Lucia, prepara una FAQ sobre la gestión de solicitudes de acceso a datos para las pequeñas empresas clientes de Studio Riva. Usa este brief y esta fuente. Déjame revisar contenido y formato; después prepara el paquete local sin enviarlo ni publicarlo.",
+    "steps": [
+      "En el hilo de trabajo, Lucia concreta público, objetivo, idioma y canal y prepara el espacio local del despacho. En la conversación de voz explica qué produciremos. Confirmas el alcance y dónde guardar el trabajo.",
+      "Lucia examina la fuente, selecciona la información útil y prepara la FAQ y el formato propuesto. El workflow actual comprueba por separado las afirmaciones y la calidad editorial. La voz sigue los resultados reales y las correcciones necesarias.",
+      "Revisa comunicación, fuentes y formato. Tras las confirmaciones previstas, abre el paquete realmente generado y aprende a utilizar sus archivos. Enviarlo o publicarlo es una acción posterior independiente."
+    ],
+    "deliverables": [
+      "FAQ en Markdown y HTML, para revisar y reutilizar después de la revisión.",
+      "Base técnica, referencias a las fuentes y registros de comprobaciones y decisiones."
+    ],
+    "review": "Lee la FAQ como un cliente: público y utilidad deben estar claros. Comprueba que las afirmaciones corresponden a la fuente, los límites siguen visibles y el formato es el aceptado. El workflow puede pedir cambios o explicar por qué no conviene comunicar.",
+    "checkpoints": [
+      "Indica a qué público quieres llegar, qué contenido necesita y qué formato deseas.",
+      "Encuentra el texto utilizable y la fuente de una afirmación en el paquete; explica qué debes revisar antes de usarlo."
+    ],
+    "practice": "Lee practice-es.md y solicita una nueva versión con un correo de presentación de la FAQ. Revisa la adaptación al canal, conserva el primer paquete y abre los archivos nuevos. No envíes nada.",
+    "success": "Sabes empezar con fuentes seleccionadas, seguir las comprobaciones, revisar la comunicación y pedir una versión para otro canal.",
+    "repeat": "Indica a Lucia tema, público, canales y fuentes disponibles. Puedes añadir ejemplos concretos del estilo del despacho. Revisa propuesta, fuentes y paquete antes de utilizarlo."
+  }
+}

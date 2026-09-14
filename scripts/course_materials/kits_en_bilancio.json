@@ -1,0 +1,27 @@
+{
+  "vera/bilancio-oic": {
+    "title": "Prepare draft annual accounts with Vera",
+    "goal": "Learn to start from accounting records, review classifications and read draft annual accounts together with the evidence still needed.",
+    "scenario": "An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.",
+    "scope": "First preparation of individual Italian OIC annual accounts: documents, account interpretation, statutory form, classifications, statements, missing evidence and checks. The lesson ends with a reviewable draft. Approval and XBRL export require the workflow’s remaining checks to be completed.",
+    "inputs": "Open company-en.md and trial-balance-en.csv. The first describes the company, period and assignment; the second contains seven accounts, movements and closing balances. These are fictional inputs with no prior decisions or finished accounts.",
+    "request": "Vera, prepare first-draft OIC annual accounts from these files. Explain how you read the accounts, propose the form and classifications, then show the statements and what is still needed to complete them.",
+    "steps": [
+      "In the working window, Vera opens the case, imports the files and checks how the balances were read. In the voice chat, it explains the inputs and intended result. Confirm the movement convention after comparing it with the source file.",
+      "Review the proposed form and classifications for the seven accounts. Vera explains a classification with its amount and source, then calculates statements from decisions actually reviewed. Open proposals remain visible.",
+      "Open the generated draft and checks. Follow the accounts into the statements and identify information still needed for notes, tax and other checks. The voice chat explains the path to review, validation and XBRL once the case is complete."
+    ],
+    "deliverables": [
+      "A case with imported accounts, proposed or reviewed classifications and sources.",
+      "Draft statements, preview and checks, with evidence requests and unresolved decisions."
+    ],
+    "review": "Compare an amount with the trial balance and check which decisions support the statements. Balancing does not establish complete annual accounts: review the outstanding information before approval.",
+    "checkpoints": [
+      "Name the files needed to start and the point where you review Vera’s proposals.",
+      "Open the draft and find an amount, its source and an item of information still needed."
+    ],
+    "practice": "Read update-en.md and supply trial-balance-updated-en.csv. Ask Vera for a new version while retaining the previous one. Follow the change to the cost, payable and result, and review the checks required by the new version.",
+    "success": "You can start the work, follow account decisions, read the draft and request an update while retaining the previous version.",
+    "repeat": "Supply the trial balance, company details, period and available supporting documents. Ask for annual-accounts preparation, review the proposals and complete the outstanding evidence before approval and export."
+  }
+}

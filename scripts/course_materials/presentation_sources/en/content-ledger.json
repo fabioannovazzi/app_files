@@ -1,0 +1,105 @@
+{
+  "schema_version": "clara.html_deck_ledger.v1",
+  "sources": [
+    {
+      "id": "brief",
+      "label": "Fictional proposal for discussion",
+      "kind": "document",
+      "locator": "brief-en.md",
+      "sha256": "9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03",
+      "publish_locator": false
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "opening",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-opening",
+          "statement": "A proposal for receiving requests",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fictional proposal for discussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "request",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-request",
+          "statement": "Make the request understandable",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fictional proposal for discussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "process",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-process",
+          "statement": "Clarify the request before proceeding",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fictional proposal for discussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "responsibilities",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-responsibilities",
+          "statement": "Agree who follows the request",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fictional proposal for discussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "decision",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-decision",
+          "statement": "Decide whether to trial the form",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fictional proposal for discussion"
+        }
+      ]
+    }
+  ]
+}

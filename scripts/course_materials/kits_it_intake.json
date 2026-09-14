@@ -1,0 +1,102 @@
+{
+  "vera/dati-fiscali-strutturati": {
+    "title": "Estrarre dati fiscali dai documenti con Vera",
+    "goal": "Imparare a trasformare documenti fiscali leggibili in un elenco di campi verificabili sulle fonti.",
+    "scenario": "Lo studio deve preparare i dati di Marco Prova. Ha una CU e un F24 fittizi e vuole leggere i valori senza ricopiarli manualmente.",
+    "scope": "Estrazione da documenti italiani, con spiegazioni nella lingua scelta. I valori estratti descrivono le fonti; non costituiscono una dichiarazione o un calcolo delle imposte.",
+    "inputs": "Apri CU-income.md e F24-first.md: sono trascrizioni didattiche leggibili, con redditi, ritenute e campi di versamento inventati. Indica la campagna 2026 e distingui anno del documento e periodo d’imposta.",
+    "request": "Vera, estrai i dati fiscali da questi documenti di Marco Prova per la campagna 2026. Mostra i campi, la fonte di ogni valore e ciò che devo controllare.",
+    "steps": [
+      "Vera importa i documenti nella pratica didattica ed esegue la preparazione e l’estrazione correnti. Segui quali file riesce a leggere e come ne identifica il tipo.",
+      "La procedura produce i campi strutturati e la sintesi. Se il tipo di documento è incerto, Vera verifica il contenuto e registra l’interpretazione nel normale percorso di revisione.",
+      "Apri la sintesi e il CSV prodotti. Trova redditi e ritenute della CU, poi anno, codice e importo dell’F24, risalendo al testo di origine."
+    ],
+    "deliverables": [
+      "Sintesi dei dati fiscali: raccoglie i campi per documento e segnala le limitazioni.",
+      "CSV dei campi e rapporto di estrazione: permettono di controllare valori, fonti e documenti non elaborati."
+    ],
+    "review": "Confronta i valori con entrambe le fonti, inclusi anno e valuta. Controlla anche i documenti senza campi: un’estrazione vuota non prova che siano privi di informazioni utili.",
+    "checkpoints": [
+      "Prima di partire, identifica i due documenti e la campagna.",
+      "Alla consegna, collega un valore estratto alla sua fonte e trova eventuali limitazioni."
+    ],
+    "practice": "Aggiungi F24-second.md ai due documenti iniziali e chiedi una nuova estrazione. Il secondo F24 è aggiuntivo: conserva il primo risultato e non sostituire il primo documento.",
+    "success": "Il nuovo elenco distingue entrambi gli F24 e le rispettive fonti. Sai ritrovare anno e importo prima di riutilizzare un dato.",
+    "repeat": "Fornisci i documenti leggibili, indica paese e campagna, chiedi l’estrazione e verifica campi e fonti prima dell’uso professionale."
+  },
+  "vera/avviso-intake": {
+    "title": "Preparare la prima lettura di un avviso con Vera",
+    "goal": "Imparare a fornire una comunicazione fiscale e ottenere una nota operativa con riferimenti, informazioni mancanti e verifiche da svolgere.",
+    "scenario": "Marco Prova porta allo studio una richiesta di documenti. Occorre capire che cosa dice, quali materiali recuperare e quali date verificare prima di decidere come procedere.",
+    "scope": "Caso italiano fittizio. La prima lettura organizza i dati del documento; la valutazione giuridica e la risposta seguono il normale percorso professionale.",
+    "inputs": "Apri avviso.md, una trascrizione didattica della comunicazione DEMO-NOTICE-01. Sono indicati destinatario, periodo, documenti richiesti e una data di risposta; manca la prova di ricezione.",
+    "request": "Vera, prepara la prima lettura di questa comunicazione per Marco Prova. Riassumi la richiesta, i riferimenti, le date da verificare e i documenti da recuperare.",
+    "steps": [
+      "Vera importa la comunicazione nella pratica didattica e ne esegue lettura ed estrazione. Controlla che il testo sia leggibile e che la classificazione corrisponda al contenuto.",
+      "La procedura prepara la nota di prima lettura e l’elenco dei riferimenti. La voce spiega quali elementi provengono dalla lettera e quali informazioni restano mancanti.",
+      "Apri i risultati e confrontali con la comunicazione. Individua richiesta documentale, protocollo, date riportate e prossime verifiche."
+    ],
+    "deliverables": [
+      "Nota di prima lettura: permette allo studio di inquadrare la richiesta e organizzare i documenti da acquisire.",
+      "Tabella di date, importi e riferimenti: aiuta a tornare alle fonti; una data individuata non è automaticamente un termine legale verificato."
+    ],
+    "review": "Verifica protocollo, periodo e richiesta sul testo. La lettera non quantifica un debito. Distingui la data indicata per rispondere dalla prova di ricezione ancora mancante.",
+    "checkpoints": [
+      "Prima di partire, identifica comunicazione e obiettivo della prima lettura.",
+      "Alla consegna, mostra che cosa viene richiesto e quali informazioni servono prima della risposta."
+    ],
+    "practice": "Aggiungi client-update.md e chiedi una nuova nota. Il cliente dichiara quando ha trovato la comunicazione e quali documenti ha recuperato; lo studio non li ha ancora ricevuti.",
+    "success": "La nota aggiornata distingue la dichiarazione del cliente dalla prova di ricezione e mantiene visibili i documenti ancora da acquisire.",
+    "repeat": "Fornisci comunicazione completa e prove di ricezione disponibili, chiedi la prima lettura e controlla la nota prima di decidere risposta e approfondimenti."
+  },
+  "vera/new-client": {
+    "title": "Preparare un nuovo cliente con Vera",
+    "goal": "Imparare a trasformare le informazioni di primo contatto in un dossier di avvio da rivedere e completare con lo studio.",
+    "scenario": "Officina Arco chiede assistenza contabile continuativa. Partiamo dalla scheda del colloquio e prepariamo il dossier con soggetti, servizi richiesti, documenti da acquisire e decisioni ancora da prendere.",
+    "scope": "Avvio di un cliente italiano. Il risultato è un dossier interno per la revisione professionale, con piano documentale e di monitoraggio. La firma e l’attivazione del rapporto seguono il normale processo dello studio.",
+    "inputs": "Apri profile-it.md. La scheda contiene dati dichiarati su società, rappresentante, partecipazioni e servizi. È già ordinata e non deriva da una precedente preparazione documentale approvata: Vera deve registrarla come evidenza diretta.",
+    "request": "Vera, prepara il dossier di nuovo cliente per Officina Arco usando questa scheda. Organizza i dati, l’incarico proposto, i controlli da svolgere e i documenti da richiedere.",
+    "steps": [
+      "Vera apre la pratica didattica e collega la scheda al nuovo cliente. Se si parte da un fascicolo da ordinare, la stessa funzione comprende anche la preparazione dei documenti.",
+      "La procedura corrente organizza soggetti e servizi, prepara proposte e richieste mancanti e compone il dossier. La voce segue i passaggi e distingue dati dichiarati, verifiche e decisioni.",
+      "Apri la pagina di revisione del dossier. Parti dai dati del cliente e dall’incarico, poi passa ai documenti da acquisire e alle decisioni da completare. Il memo e gli altri allegati conservano i controlli di supporto."
+    ],
+    "deliverables": [
+      "Pagina di revisione e dati del caso: danno allo studio una base ordinata per il colloquio, con cliente, incarico e fonti.",
+      "Richiesta delle informazioni mancanti, piano documentale e piano di monitoraggio: indicano il lavoro successivo e gli elementi ancora da confermare."
+    ],
+    "review": "Confronta soggetti, partecipazioni e servizi con la scheda. Identità, antiriciclaggio, privacy e condizioni richiedono le normali verifiche professionali; i dati dichiarati non sono già verificati.",
+    "checkpoints": [
+      "Prima di partire, identifica cliente e servizi richiesti.",
+      "Alla consegna, trova una fonte, un documento da acquisire e una decisione ancora da prendere."
+    ],
+    "practice": "Aggiungi contact-update-it.md e chiedi una nuova versione del dossier. Sara diventa referente amministrativa per i documenti; la rappresentante indicata resta Elena.",
+    "success": "Il nuovo dossier include il referente e la fonte dell’aggiornamento, conserva la versione precedente e non gli attribuisce poteri di rappresentanza non dichiarati.",
+    "repeat": "Fornisci le informazioni e i documenti del nuovo cliente, indica i servizi richiesti e usa il dossier per completare verifiche, condizioni e revisione prima dell’avvio."
+  },
+  "vera/email-cliente": {
+    "title": "Preparare una email per chiedere documenti al cliente",
+    "goal": "Imparare a trasformare le richieste documentali del fascicolo in una email breve, precisa e pronta per la revisione dello studio.",
+    "scenario": "Il cliente ha consegnato una CU e un F24. Lo studio deve capire se esistono altre CU e se tutti gli F24 della campagna sono già presenti. Prepariamo insieme la richiesta.",
+    "scope": "Operazione di supporto alla preparazione del fascicolo, campagna italiana 2026. Si prepara una bozza locale: invio e consulenza fiscale non fanno parte della lezione.",
+    "inputs": "Apri context-it.md, CU-income.md e F24-first.md. Il contesto indica le due conferme cercate. Vera prepara il fascicolo didattico e legge i documenti con il percorso corrente; non serve un elenco di richieste già approvate.",
+    "request": "Vera, prepara una email per chiedere al cliente se ha altre CU e se ci ha consegnato tutti gli F24 della campagna. Fammi prima rivedere le richieste sulla base di questo fascicolo.",
+    "steps": [
+      "La chat di lavoro esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. La chat vocale spiega quali informazioni sono già disponibili e quali conferme si cercano.",
+      "Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.",
+      "Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni."
+    ],
+    "deliverables": [
+      "Bozza email locale da rivedere e usare come testo del messaggio al cliente.",
+      "Richieste documentali riviste e fascicolo di supporto, per verificare da dove proviene ogni domanda."
+    ],
+    "review": "Ogni domanda deve corrispondere a una richiesta scelta. Non chiedere di nuovo i file già ricevuti: chiedi se ne esistono altri o se il gruppo è completo. La bozza usa il riferimento cliente della procedura; destinatario e invio vanno controllati nel normale lavoro.",
+    "checkpoints": [
+      "Prima della bozza, indica quale conferma vuoi ottenere dal cliente.",
+      "Alla consegna, collega ciascuna domanda alla richiesta rivista."
+    ],
+    "practice": "Prepara un nuovo passaggio con client-reply-it.md insieme agli stessi documenti. Il cliente conferma che gli F24 sono completi. Rivedi le richieste e fai produrre una nuova bozza limitata alla conferma ancora aperta sulle CU; conserva la prima versione.",
+    "success": "Sai trovare la bozza, spiegare perché contiene ogni domanda e aggiornarla quando arriva una risposta, senza ripetere una richiesta risolta.",
+    "repeat": "Chiedi a Vera di riprendere il fascicolo e preparare la email dalle richieste riviste. Controlla domande, destinatario e allegati prima di inviarla con il normale canale dello studio."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "vera/previdenza-inps": {
+    "title": "Examinar un caso INPS con Vera",
+    "goal": "Aprender a aportar una pregunta de seguridad social y documentos, verificar evidencias y usar el expediente para revisión profesional.",
+    "scenario": "Marta quiere entender su posición contributiva durante un periodo trabajado. Tiene una declaración del empleador y un registro didáctico de periodos.",
+    "scope": "Un caso documental italiano de empleo privado. Seguimos pregunta, fuentes, cronología, investigación pertinente y borrador; no calculamos pensión ni operamos en el portal.",
+    "inputs": "Abre case-es.md, employment-es.md, record-context-es.md y contribution-periods-es.csv. Identifica persona, periodo y pregunta. El registro es ficticio, no una exportación oficial.",
+    "request": "Vera, examina este caso INPS de enero a junio de 2025. Explica qué muestran los documentos, verifica fuentes oficiales pertinentes y prepara un borrador con preguntas y documentos que solicitar.",
+    "steps": [
+      "En el hilo de trabajo Vera lee los archivos y resume pregunta, periodo y marco italiano para confirmar. La voz explica el recorrido y distingue información disponible de preguntas abiertas.",
+      "Vera organiza hechos y cronología, los vincula a documentos, investiga el marco pertinente y prepara el expediente con el workflow actual. La voz sigue evidencias y resultados reales sin anticipar conclusiones.",
+      "Abre el memo, la cronología y las solicitudes generadas. Empieza por la respuesta, sigue un hecho hasta su fuente y comprueba qué queda por revisar."
+    ],
+    "deliverables": [
+      "Memo en Word y texto, claramente marcado como borrador para revisión profesional.",
+      "Cronología, cuadro de evidencias y solicitudes de documentos para continuar."
+    ],
+    "review": "Comprueba periodo, persona y documentos citados. Una declaración de empleo y un periodo visible en un registro son evidencias distintas. Revisa alcance de fuentes e información pendiente antes de concluir o comunicar.",
+    "checkpoints": [
+      "Antes del análisis, formula la pregunta que debe responder el expediente.",
+      "En el memo, encuentra un hecho, su fuente y la próxima aclaración útil."
+    ],
+    "practice": "Repite la petición con los archivos de práctica y el registro actualizado. Conserva el primer expediente y compara observaciones y solicitudes. No deduzcas cuándo ni por qué cambiaron los datos si no consta.",
+    "success": "Sabes iniciar la revisión, aportar documentos, leer memo y fuentes y actualizar el trabajo con nuevas evidencias.",
+    "repeat": "Indica a Vera pregunta INPS, periodo, personas y documentos, señalando posibles plazos. Revisa alcance y evidencias y utiliza el borrador en el recorrido profesional habitual."
+  }
+}

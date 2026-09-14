@@ -1,0 +1,127 @@
+{
+  "vera/journal-bank-reconciliation": {
+    "title": "Reconcile a bank statement with Vera",
+    "goal": "Learn to compare bank movements with the bank ledger and use the reconciliation for a month-end review.",
+    "scenario": "Officina Arco is closing March. Its bank statement and bank ledger should describe the same payments. We will compare them and inspect the resulting workpapers.",
+    "scope": "One EUR bank account, March 2026. The case uses exact transaction references and individual payments. Other accounts and periods are outside this run.",
+    "inputs": "Open bank-march.csv, bank-ledger-march.csv and case-en.md. The statement is the external movement source; the ledger is the accounting comparison. Dates are ISO dates and outgoing payments are negative in both exports.",
+    "request": "Vera, reconcile Arco’s March bank statement with its bank ledger. Show the matched payments, any unmatched movements and the checks I should review.",
+    "steps": [
+      "Vera imports both exports into the teaching case and inspects their structure. Confirm the account, dates, amount signs and transaction-reference columns.",
+      "Review the proposed matching rules in ordinary accounting terms: individual payments, exact references and amounts, with no reuse of a movement. The current pipeline performs the comparison locally.",
+      "Open the generated workbook and review notes. Follow one matched bank payment to its ledger reference, then locate the unmatched-movement lists and control results."
+    ],
+    "deliverables": [
+      "Reconciliation workbook and detailed tables: use these to inspect matched payments and any remaining movements.",
+      "Review notes and controls: explain coverage, matching rules and issues requiring further evidence."
+    ],
+    "review": "Check that both files cover the same account and period. Trace one match to both source rows. A reconciled bank movement does not itself establish the tax treatment of the underlying invoice.",
+    "checkpoints": [
+      "Before running, identify which file comes from the bank and which from accounting.",
+      "At delivery, find a matched payment and where an unmatched item would appear."
+    ],
+    "practice": "Use bank-april.csv and bank-ledger-april.csv to request a fresh reconciliation through 4 April. These cumulative files add the third invoice payment; retain the March result.",
+    "success": "The new run includes the April movement. Explain how you would investigate a bank movement missing from the ledger.",
+    "repeat": "Supply comparable bank and ledger exports, name the account and period, review the proposed interpretation and use the resulting reconciliation to resolve differences."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Review open items with Vera",
+    "goal": "Learn to test a list reported as unpaid and identify which invoices are closed, partly closed or still open at a chosen date.",
+    "scenario": "An earlier supplier list for Arco still shows three invoices as open. The bank payment records let us check their position at 31 March.",
+    "scope": "Three supplier invoices in EUR. The March review excludes payments after the cut-off; the practice updates that date.",
+    "inputs": "Open open-items-en.pdf and bank-march-en.pdf. The first document is the population being tested; the second records its outgoing payments. Both are fictional teaching exports. Amounts use an Italian decimal comma and dates use day/month/year; the guide is in English.",
+    "request": "Vera, review these reported supplier open items at 31 March 2026. Use the bank payment evidence to show what is paid, what remains open and what needs review.",
+    "steps": [
+      "Vera imports the files, identifies the starting population and proposes the role and monetary meaning of each source. Confirm the cut-off and the treatment of later payments.",
+      "The current workflow links invoices and payment evidence, calculates residuals and prepares the review package. The voice chat explains progress and any missing evidence.",
+      "Open the local review page and workpapers. Follow an invoice from its reported open amount to the payment evidence and remaining balance. Review decisions stay pending until actually made."
+    ],
+    "deliverables": [
+      "Excel workpapers and operational schedule: show the tested population, payment links, residuals and exceptions.",
+      "Word report and local review page: explain the conclusion and let the professional review items and request missing documents."
+    ],
+    "review": "Check the population and cut-off first. March evidence supports closure of the first two invoices; the third remains unresolved with these documents. Inspect dates and source links before accepting a conclusion.",
+    "checkpoints": [
+      "Before running, distinguish the list under review from the evidence used to test it.",
+      "At delivery, find the remaining invoice, its amount and the evidence still needed to resolve it."
+    ],
+    "practice": "Keep open-items-en.pdf and use bank-april-en.pdf to request a fresh review at 30 April. The cumulative bank document includes the third payment. Preserve the March workpapers.",
+    "success": "The updated review accounts for the third payment. Explain why the March and April conclusions differ and where you would record a review decision.",
+    "repeat": "Provide the reported open-item population, cut-off and supporting evidence. Review residuals and unresolved items in the generated package before using the conclusion."
+  },
+  "vera/variance-analysis": {
+    "title": "Compare actual results with budget using Vera",
+    "goal": "Learn which data to provide, how to start the comparison and how to read a report showing the size and location of differences from budget.",
+    "scenario": "Officina Arco wants to compare January and February operating profit with budget. It has monthly revenue and cost data and a note explaining the figures.",
+    "scope": "First use of variance analysis: one company, two months, EUR. We compare amounts; the file contains no quantities or evidence of commercial causes.",
+    "inputs": "Open january-february.csv and context-en.md. Find Scenario (PL budget, AC actual), Month, Category and Amount. The note explains signs and control totals. Vera stages a copy in the teaching case.",
+    "request": "Vera, compare Officina Arco’s actual operating profit for January and February 2026 with budget, in euros. Show me the report and explain which categories contribute to the difference.",
+    "steps": [
+      "In the working chat, Vera reads the file and proposes the comparison. The voice chat helps you check months, starting budget, actual results, currency and negative cost signs before calculation.",
+      "The current workflow calculates variances and creates tables, charts and a report draft. While it runs, the voice explains the process and answers questions without anticipating results that have not been produced.",
+      "Open the actual report and main chart. Start with the overall result, then read revenue and cost contributions and one monthly detail. Vera connects each comment to calculated data and saves actual review decisions."
+    ],
+    "deliverables": [
+      "Word report draft and charts showing the movement from budget to actual.",
+      "Variance tables and reconciliation controls for tracing amounts to their sources."
+    ],
+    "review": "Check scope and months, starting and ending totals, change in EUR and percentage where meaningful. Read the meaning of negative cost signs. Calculation identifies contributions but does not itself prove commercial causes. The report remains a draft until normal professional review.",
+    "checkpoints": [
+      "Before calculation, identify the values being compared.",
+      "In the result, find one contributing category and its supporting figure."
+    ],
+    "practice": "Use january-march.csv to repeat the comparison for January through March. Request a new result while keeping the two-month version. Identify the change in the total and one category; ask for help only where needed.",
+    "success": "You can choose the file and comparison, find the report, read a variance and repeat the analysis when another month arrives.",
+    "repeat": "With your own file, state company, period, budget or other comparison basis and currency. Vera clarifies ambiguous columns, produces the results and guides your review."
+  },
+  "vera/journal-sampling": {
+    "title": "Select a sample from an accounting journal",
+    "goal": "Learn to provide a journal, check how it is read and obtain selected rows for subsequent examination.",
+    "scenario": "The practice needs to select some Officina Arco journal rows for review. A small fictional file lets us follow every step.",
+    "scope": "First Journal Sampling run: 5 random rows, seed 42. This teaches operation; the real audit plan determines method and sample size.",
+    "inputs": "Open journal-march.csv and context-en.md. Find date, posting, line, account, debit and credit. The original remains preserved in the teaching case.",
+    "request": "Vera, select 5 random rows from Officina Arco’s March journal using seed 42. First let me check the columns, then show me the sample and journal preparation checks.",
+    "steps": [
+      "Vera opens the journal in the working chat. Voice guides you through columns, period and amount meanings; Vera records the mapping actually reviewed.",
+      "The workflow prepares the journal and checks that rows and amounts are preserved. If preparation fails, resolve the issue before selecting a sample.",
+      "Vera runs the sampling and opens the Excel result. Find one selected row and trace it to the journal; review population size, method and number of sampled rows together."
+    ],
+    "deliverables": [
+      "Excel and CSV sample with references to original rows.",
+      "Prepared journal, checks and sampling choices for reproducing the selection."
+    ],
+    "review": "Check that the sample covers the requested period and accounts and has the expected row count. Preparation checks do not certify postings or sample sufficiency. Continue with Vouching to check supporting documents.",
+    "checkpoints": [
+      "Before selection, explain which population you are sampling.",
+      "In the result, trace a sampled row to the source file."
+    ],
+    "practice": "Repeat with journal-april.csv, which adds an April payment. Keep the random sample of 5 rows and preserve the first result. Check the new population and identify one row in the new sample.",
+    "success": "You can make the request, find the sample and trace a row to the journal without manually replacing selected rows.",
+    "repeat": "Tell Vera the client, journal, period, any filters, and the method and size in your audit plan. Ask for Vouching when you want to compare the sample with supporting documents."
+  },
+  "vera/vouching": {
+    "title": "Check sampled journal entries against invoices",
+    "goal": "Learn to connect a sample to invoices, read the results and review points requiring professional judgement.",
+    "scenario": "The practice has postings for three invoices and their XML files. It wants to compare two sampled rows with the original documents.",
+    "scope": "Vouching of a sample. Vera first creates the sample with Journal Sampling in the same teaching case, then runs the actual checks. This does not examine the whole journal.",
+    "inputs": "Open invoice-journal.csv, context-en.md and the three XML invoices. The note specifies account 2100 and a two-row teaching sample. Vera handles the sample-to-document handoff; you do not select internal technical files.",
+    "request": "Vera, create a random sample of two rows from supplier account 2100 with seed 42, then check them against these XML invoices. Show me the results and help me review them.",
+    "steps": [
+      "The working chat produces the actual sample. Voice explains which rows will be checked and helps confirm scope before moving to invoices.",
+      "Vera connects the newly produced sample to the three selected invoices and starts Vouching. Voice explains the entry-to-document comparison from actual progress.",
+      "Open the results workbook and a row with its linked document. Check reference, date, amount and party, then review clarification requests. Vera preserves actual decisions and source links."
+    ],
+    "deliverables": [
+      "Excel and CSV check results for the sample, with linked documents and outcomes.",
+      "Review notes and check records for retrieving the sample and sources."
+    ],
+    "review": "Confirm that only sampled rows were examined. A match is distinct from a conclusion about the posting: party, accounting direction and conclusions require the workflow’s review. Missing or ambiguous evidence remains unresolved.",
+    "checkpoints": [
+      "Before checking, identify the selected rows and documents.",
+      "In the result, explain one row’s outcome using its posting and invoice."
+    ],
+    "practice": "Request a new sample of three account-2100 rows and repeat the checks with the same invoices. Keep the first result and verify that the new checks follow the new sample.",
+    "success": "You can start Vouching, open its result, trace a document and distinguish mechanical checks from professional conclusions.",
+    "repeat": "For real work, select the Journal Sampling run in the correct case and provide the document batch. Vera resumes that handoff and checks only the selected rows."
+  }
+}
