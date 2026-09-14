@@ -161,6 +161,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "financial-analysis": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
     "journal-bank-reconciliation": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
     "purchase-invoice-review": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+    "invoice-xml": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
     "journal-sampling": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
     "management-control-pack": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
     "centrale-rischi-review": "modules/centrale-rischi-review/skills/centrale-rischi-review/SKILL.md",

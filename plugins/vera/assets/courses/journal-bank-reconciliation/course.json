@@ -99,7 +99,7 @@
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "493081ee9c521dd101af92688e21514f98ce66489a3ac2e863d1f4d7619ba753"
+      "sha256": "72f5dd311a1ecac3a6076562567b559f4ce662c43325c18cd64ba8ace8565236"
     },
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/__init__.py",

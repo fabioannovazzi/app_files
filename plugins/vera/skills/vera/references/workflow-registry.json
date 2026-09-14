@@ -152,6 +152,17 @@
       ]
     },
     {
+      "component_id": "invoice-xml",
+      "skills": [
+        "modules/invoice-xml/skills/invoice-xml/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/invoice-xml/scripts/check_dependencies.py",
+        "modules/invoice-xml/scripts/invoice_workflow.py",
+        "modules/invoice-xml/scripts/source_evidence.py"
+      ]
+    },
+    {
       "component_id": "sales-plan",
       "skills": [
         "modules/sales-plan/skills/sales-plan/SKILL.md"
@@ -466,6 +477,7 @@
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",
+    "skills/invoice-xml/SKILL.md",
     "skills/journal-bank-reconciliation/SKILL.md",
     "skills/journal-sampling/SKILL.md",
     "skills/learn-with-vera/SKILL.md",

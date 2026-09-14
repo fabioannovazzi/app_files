@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Preparazione fatture XML | Vera</title><meta name="description" content="Da PDF e foto a fatture XML con revisione professionale."><link rel="canonical" href="https://mparanza.com/static/shared/invoice-xml/index.html"><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../plugin-page-shell.css?v=20260813-function-pages"><link rel="stylesheet" href="../vera-journey.css"><link rel="stylesheet" href="../function-model-data.css"><style>.hero{grid-template-columns:1fr;min-height:0;padding-block:4rem}.hero h1{max-width:18ch}.lead{max-width:65ch}.section-head p{max-width:68ch}#example{border-left:3px solid var(--vj-blue);padding-left:1.4rem}.brand-text{color:#002060;font-weight:700;font-size:1.3rem;text-decoration:none}button{font:inherit} @media(max-width:600px){.nav-shell{gap:1rem;flex-wrap:wrap}}</style></head>
+<body data-vera-module="invoice-xml"><header class="topbar"><div class="nav-shell"><a class="brand" href="../vera/index.html"><img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza"></a><div class="lang-switch" aria-label="Language"><button type="button" data-lang="it" aria-pressed="true">IT</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button><button type="button" data-lang="de" aria-pressed="false">DE</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div></div></header><main class="page-shell" id="main-content"><section class="hero"><div><h1 data-i18n="title">Preparazione fatture XML</h1><p class="lead" data-i18n="lead">Prepara una fattura elettronica da PDF, foto o dati confermati. Mostra i campi estratti e richiede la revisione professionale prima di esportare il file XML.</p></div></section><section id="inputs" class="content-section"><div class="section-head"><div class="section-title"><h2 data-i18n="inputs.title">Documenti e dati della fattura</h2></div><p data-i18n="inputs.copy">Seleziona le fatture, le diverse foto dello stesso documento e gli eventuali dati anagrafici confermati. Vera conserva le fonti e segnala valori illeggibili, informazioni mancanti e contraddizioni. Una foto non autorizza a emettere nuovamente una fattura già emessa.</p></div></section>
+<section id="method" class="content-section"><div class="section-head"><div class="section-title"><h2 data-i18n="method.title">Estrazione, revisione ed esportazione</h2></div><p data-i18n="method.copy">Vera propone i campi con la relativa fonte. Il professionista conferma dati, numerazione, date e trattamento IVA. Per le fatture estere rivede anche operazione, scelta TD17/TD18/TD19 e riferimento alla fattura originale. Il codice verifica lo schema XML e le riconciliazioni aritmetiche; una modifica richiede una nuova revisione.</p></div></section>
+<section id="example" class="content-section"><div class="section-head"><div class="section-title"><h2 data-i18n="example.title">Più foto della stessa fattura</h2></div><p data-i18n="example.copy">Una foto mostra l&#x27;intestazione e un&#x27;altra il totale. Vera le tratta come evidenze della stessa fattura, propone i valori leggibili e chiede quelli mancanti prima di esportare.</p></div></section>
+<section id="result" class="content-section"><div class="section-head"><div class="section-title"><h2 data-i18n="result.title">File e documenti di revisione</h2></div><p data-i18n="result.copy">Ricevi un&#x27;anteprima leggibile, i dati strutturati con le fonti, le decisioni del revisore e il rapporto dei controlli. L&#x27;XML viene creato solo per la versione approvata senza blocchi irrisolti.</p></div></section>
+<section id="limits" class="content-section"><div class="section-head"><div class="section-title"><h2 data-i18n="limits.title">Perimetro e responsabilità</h2></div><p data-i18n="limits.copy">Prima versione: fatture ordinarie FPR12 in EUR e integrazioni estere rivedute. PA, fatture semplificate, articolo 73, sconti sul documento e riconciliazione del bollo restano bloccati. Vera non firma, non invia allo SdI e non registra in contabilità. Lo schema valido non prova correttezza fiscale, esistenza degli identificativi o accettazione SdI.</p></div></section>
+<section id="prompt" class="content-section"><div class="section-head"><div class="section-title"><h2 data-i18n="prompt.title">Prepara la bozza</h2></div><p data-i18n="prompt.copy">Vera, prepara una fattura XML da questi documenti. Mostrami i campi da verificare e le informazioni mancanti prima dell&#x27;esportazione.</p></div></section>
+<section id="model" class="content-section function-model-data" data-model-data-workflow="invoice-xml" data-model-data-status="relevant"><div class="section-head function-model-data__body"><div class="section-title"><h2 data-i18n="model.title">Quali dati arrivano al modello</h2></div><p class="function-model-data__copy" data-i18n="model.copy">Il modello può leggere le fatture complete, le foto, le pagine PDF, i testi estratti, i profili anagrafici selezionati, gli importi, le informazioni fiscali e di pagamento, le fonti e le decisioni. PDF, immagini e controlli XML vengono preparati localmente; l&#x27;interpretazione usa l&#x27;account OpenAI di Codex o Anthropic di Cowork scelto dallo Studio. Non vi è anonimizzazione automatica né garanzia di elaborazione solo locale. Le ricerche pubbliche usano argomenti generici senza dati cliente. Il rapporto del run registra ciò che il modello ha effettivamente letto. Senza strumenti locali si ottiene solo una bozza in chat, non un XML validato.</p></div></section>
+</main><script>const translations = {
+  "it": {
+    "title": "Preparazione fatture XML",
+    "lead": "Prepara una fattura elettronica da PDF, foto o dati confermati. Mostra i campi estratti e richiede la revisione professionale prima di esportare il file XML.",
+    "inputs.title": "Documenti e dati della fattura",
+    "inputs.copy": "Seleziona le fatture, le diverse foto dello stesso documento e gli eventuali dati anagrafici confermati. Vera conserva le fonti e segnala valori illeggibili, informazioni mancanti e contraddizioni. Una foto non autorizza a emettere nuovamente una fattura già emessa.",
+    "method.title": "Estrazione, revisione ed esportazione",
+    "method.copy": "Vera propone i campi con la relativa fonte. Il professionista conferma dati, numerazione, date e trattamento IVA. Per le fatture estere rivede anche operazione, scelta TD17/TD18/TD19 e riferimento alla fattura originale. Il codice verifica lo schema XML e le riconciliazioni aritmetiche; una modifica richiede una nuova revisione.",
+    "example.title": "Più foto della stessa fattura",
+    "example.copy": "Una foto mostra l'intestazione e un'altra il totale. Vera le tratta come evidenze della stessa fattura, propone i valori leggibili e chiede quelli mancanti prima di esportare.",
+    "result.title": "File e documenti di revisione",
+    "result.copy": "Ricevi un'anteprima leggibile, i dati strutturati con le fonti, le decisioni del revisore e il rapporto dei controlli. L'XML viene creato solo per la versione approvata senza blocchi irrisolti.",
+    "limits.title": "Perimetro e responsabilità",
+    "limits.copy": "Prima versione: fatture ordinarie FPR12 in EUR e integrazioni estere rivedute. PA, fatture semplificate, articolo 73, sconti sul documento e riconciliazione del bollo restano bloccati. Vera non firma, non invia allo SdI e non registra in contabilità. Lo schema valido non prova correttezza fiscale, esistenza degli identificativi o accettazione SdI.",
+    "prompt.title": "Prepara la bozza",
+    "prompt.copy": "Vera, prepara una fattura XML da questi documenti. Mostrami i campi da verificare e le informazioni mancanti prima dell'esportazione.",
+    "model.title": "Quali dati arrivano al modello",
+    "model.copy": "Il modello può leggere le fatture complete, le foto, le pagine PDF, i testi estratti, i profili anagrafici selezionati, gli importi, le informazioni fiscali e di pagamento, le fonti e le decisioni. PDF, immagini e controlli XML vengono preparati localmente; l'interpretazione usa l'account OpenAI di Codex o Anthropic di Cowork scelto dallo Studio. Non vi è anonimizzazione automatica né garanzia di elaborazione solo locale. Le ricerche pubbliche usano argomenti generici senza dati cliente. Il rapporto del run registra ciò che il modello ha effettivamente letto. Senza strumenti locali si ottiene solo una bozza in chat, non un XML validato."
+  },
+  "en": {
+    "title": "Prepare invoice XML",
+    "lead": "Prepare an electronic invoice from PDFs, photos or confirmed data. Review the extracted fields before exporting the XML file.",
+    "inputs.title": "Invoice documents and details",
+    "inputs.copy": "Select invoices, multiple views of the same document and confirmed party profiles. Vera retains sources and flags unreadable, missing or contradictory values. A photograph does not authorize reissuing an existing invoice.",
+    "method.title": "Extract, review and export",
+    "method.copy": "Vera proposes source-linked fields. The professional confirms details, numbering, dates and VAT treatment. Foreign invoices also require review of the operation, TD17/TD18/TD19 selection and original reference. Code checks the XML schema and arithmetic reconciliation; changes require a new review.",
+    "example.title": "Several photos of one invoice",
+    "example.copy": "One photo shows the header and another the total. Vera combines their evidence into one draft and requests missing information before export.",
+    "result.title": "Files and review evidence",
+    "result.copy": "Receive a readable preview, structured fields with sources, reviewer decisions and a validation report. XML is created only for the approved version with no unresolved blockers.",
+    "limits.title": "Scope and responsibility",
+    "limits.copy": "First version: ordinary FPR12 invoices in EUR and reviewed foreign integrations. PA, simplified invoices, article 73, document-level discounts and stamp-duty reconciliation remain blocked. Vera does not sign, submit to SdI or post entries. Schema validity does not prove tax correctness, identifier existence or SdI acceptance.",
+    "prompt.title": "Prepare a draft",
+    "prompt.copy": "Vera, prepare invoice XML from these documents. Show me fields to review and missing information before export.",
+    "model.title": "What data reaches the model",
+    "model.copy": "The model may read complete invoices, photos, PDF pages, extracted text, selected party profiles, amounts, tax and payment information, sources and decisions. PDF/image preparation and XML checks run locally; interpretation uses the firm's selected OpenAI account in Codex or Anthropic account in Cowork. Data is not automatically anonymized and processing is not exclusively local. Public research uses generic topics without client details. The run report records what the model actually read. Without local tools, only an in-chat draft is available, not validated XML."
+  },
+  "fr": {
+    "title": "Préparation des factures XML",
+    "lead": "Prépare une facture électronique à partir de PDF, photos ou données confirmées, avec revue professionnelle avant l'export XML.",
+    "inputs.title": "Documents et données",
+    "inputs.copy": "Sélectionnez les factures, leurs différentes photos et les données des parties confirmées. Vera conserve les sources et signale valeurs illisibles, lacunes et contradictions. Une photo n'autorise pas une nouvelle émission d'une facture existante.",
+    "method.title": "Extraction, revue et export",
+    "method.copy": "Vera propose des champs liés aux sources. Le professionnel confirme données, numérotation, dates et TVA. Pour l'étranger, il revoit l'opération, le choix TD17/TD18/TD19 et la référence originale. Le code contrôle le schéma XML et les calculs. Toute modification impose une nouvelle revue.",
+    "example.title": "Plusieurs photos d'une facture",
+    "example.copy": "Une photo montre l'en-tête, une autre le total. Vera réunit ces preuves dans un brouillon et demande les informations manquantes avant l'export.",
+    "result.title": "Fichiers et preuves de revue",
+    "result.copy": "Vous recevez aperçu lisible, données structurées sourcées, décisions et rapport de contrôle. L'XML est créé uniquement pour la version approuvée sans blocage non résolu.",
+    "limits.title": "Périmètre et responsabilités",
+    "limits.copy": "Première version : FPR12 ordinaire en EUR et intégrations étrangères revues. PA, factures simplifiées, article 73, remises globales et rapprochement du timbre restent bloqués. Aucun envoi SdI, signature ou écriture comptable. Un schéma valide ne prouve ni exactitude fiscale, ni existence des identifiants, ni acceptation SdI.",
+    "prompt.title": "Préparer un brouillon",
+    "prompt.copy": "Vera, prépare l'XML de ces factures. Montre les champs à revoir et les données manquantes avant l'export.",
+    "model.title": "Quelles données parviennent au modèle",
+    "model.copy": "Le modèle peut lire factures complètes, photos, pages PDF, textes extraits, profils sélectionnés, montants, données fiscales et de paiement, sources et décisions. La préparation des fichiers et les contrôles XML sont locaux ; l'interprétation utilise le compte OpenAI de Codex ou Anthropic de Cowork choisi par le cabinet. Il n'y a ni anonymisation automatique ni traitement exclusivement local. La recherche publique utilise des sujets génériques sans données client. Le rapport décrit les lectures effectives. Sans outils locaux, seul un brouillon dans la conversation est disponible, pas d'XML validé."
+  },
+  "de": {
+    "title": "Rechnungs-XML vorbereiten",
+    "lead": "Bereitet elektronische Rechnungen aus PDFs, Fotos oder bestätigten Daten vor. Der XML-Export folgt erst nach fachlicher Prüfung.",
+    "inputs.title": "Rechnungen und Angaben",
+    "inputs.copy": "Wählen Sie Rechnungen, verschiedene Fotos desselben Dokuments und bestätigte Stammdaten. Vera bewahrt Quellen und zeigt unlesbare, fehlende oder widersprüchliche Angaben. Ein Foto erlaubt keine erneute Ausstellung einer bestehenden Rechnung.",
+    "method.title": "Erfassen, prüfen und exportieren",
+    "method.copy": "Vera schlägt Felder mit Quellen vor. Die Fachperson bestätigt Daten, Nummerierung, Datum und Umsatzsteuerbehandlung. Bei Auslandsrechnungen prüft sie Sachverhalt, TD17/TD18/TD19 und Originalreferenz. Code prüft XML-Schema und Rechenabstimmungen. Änderungen erfordern eine neue Prüfung.",
+    "example.title": "Mehrere Fotos einer Rechnung",
+    "example.copy": "Ein Foto zeigt den Kopf, ein weiteres den Gesamtbetrag. Vera führt die Belege zu einem Entwurf zusammen und fragt fehlende Angaben vor dem Export ab.",
+    "result.title": "Dateien und Prüfbelege",
+    "result.copy": "Sie erhalten Vorschau, strukturierte Felder mit Quellen, Prüfentscheidungen und Kontrollbericht. XML entsteht nur für die freigegebene Version ohne offene Sperren.",
+    "limits.title": "Umfang und Verantwortung",
+    "limits.copy": "Erste Version: reguläres FPR12 in EUR und geprüfte Ergänzungen für Auslandsrechnungen. PA, vereinfachte Rechnungen, Artikel 73, Gesamtrabatte und Stempelsteuerabstimmung bleiben gesperrt. Keine Signatur, SdI-Übermittlung oder Buchung. Schemavalidität beweist weder steuerliche Richtigkeit noch Existenz von Kennungen oder SdI-Annahme.",
+    "prompt.title": "Entwurf vorbereiten",
+    "prompt.copy": "Vera, bereite Rechnungs-XML aus diesen Dokumenten vor. Zeige prüfbedürftige Felder und fehlende Angaben vor dem Export.",
+    "model.title": "Welche Daten das Modell erreichen",
+    "model.copy": "Das Modell kann vollständige Rechnungen, Fotos, PDF-Seiten, extrahierte Texte, ausgewählte Stammdaten, Beträge, Steuer- und Zahlungsdaten, Quellen und Entscheidungen lesen. Dateiaufbereitung und XML-Prüfungen laufen lokal; die Interpretation nutzt das gewählte OpenAI-Konto in Codex oder Anthropic-Konto in Cowork. Keine automatische Anonymisierung oder ausschließlich lokale Verarbeitung. Öffentliche Recherche verwendet allgemeine Themen ohne Mandantendaten. Der Ausführungsbericht erfasst tatsächliche Modell-Lektüre. Ohne lokale Werkzeuge entsteht nur ein Chat-Entwurf, kein validiertes XML."
+  },
+  "es": {
+    "title": "Preparación de facturas XML",
+    "lead": "Prepara facturas electrónicas desde PDF, fotos o datos confirmados, con revisión profesional antes de exportar el XML.",
+    "inputs.title": "Documentos y datos",
+    "inputs.copy": "Selecciona facturas, distintas fotos del mismo documento y datos confirmados de las partes. Vera conserva fuentes y señala valores ilegibles, ausencias y contradicciones. Una foto no autoriza a emitir otra vez una factura existente.",
+    "method.title": "Extraer, revisar y exportar",
+    "method.copy": "Vera propone campos vinculados a fuentes. El profesional confirma datos, numeración, fechas e IVA. Para facturas extranjeras revisa operación, elección TD17/TD18/TD19 y referencia original. El código verifica esquema XML y conciliaciones aritméticas. Cada cambio requiere nueva revisión.",
+    "example.title": "Varias fotos de una factura",
+    "example.copy": "Una foto muestra la cabecera y otra el total. Vera reúne sus evidencias en un borrador y pide los datos que faltan antes de exportar.",
+    "result.title": "Archivos y evidencias de revisión",
+    "result.copy": "Recibes vista legible, campos estructurados con fuentes, decisiones y control de validación. El XML se crea solo para la versión aprobada sin bloqueos pendientes.",
+    "limits.title": "Alcance y responsabilidades",
+    "limits.copy": "Primera versión: FPR12 ordinario en EUR e integraciones extranjeras revisadas. PA, facturas simplificadas, artículo 73, descuentos globales y conciliación del timbre quedan bloqueados. Sin firma, envío a SdI ni asientos. Un esquema válido no demuestra corrección fiscal, existencia de identificadores o aceptación SdI.",
+    "prompt.title": "Preparar el borrador",
+    "prompt.copy": "Vera, prepara XML de factura desde estos documentos. Muéstrame campos por revisar y datos que faltan antes de exportar.",
+    "model.title": "Qué datos llegan al modelo",
+    "model.copy": "El modelo puede leer facturas completas, fotos, páginas PDF, textos extraídos, perfiles seleccionados, importes, datos fiscales y de pago, fuentes y decisiones. Preparación de archivos y controles XML son locales; la interpretación usa la cuenta OpenAI en Codex o Anthropic en Cowork elegida por el despacho. No hay anonimización automática ni procesamiento exclusivamente local. La investigación pública usa temas genéricos sin datos del cliente. El informe registra lo que el modelo leyó. Sin herramientas locales, solo se prepara un borrador en chat, no XML validado."
+  }
+};
+function setLanguage(lang){if(!translations[lang])lang='it';document.documentElement.lang=lang;document.title=translations[lang].title+' | Vera';document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=translations[lang][el.dataset.i18n]);document.querySelectorAll('[data-lang]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.lang===lang)));const url=new URL(location.href);url.searchParams.set('lang',lang);history.replaceState(null,'',url);document.querySelector('.brand').href='../vera/index.html?lang='+lang;}
+document.querySelectorAll('[data-lang]').forEach(el=>el.addEventListener('click',()=>setLanguage(el.dataset.lang)));setLanguage(new URLSearchParams(location.search).get('lang')||'it');</script><script src="../function-model-data.js"></script></body></html>

@@ -222,6 +222,12 @@
       "short_description": "Impara a voce con esempi eseguiti in due chat",
       "default_prompt": "Usa $learn-with-vera: mostrami a voce come funziona un controllo utile al mio lavoro, esegui un esempio nella seconda chat e poi proviamolo insieme.",
       "instructions": "Vera insegna esclusivamente i workflow operativi del proprio catalogo e della propria installazione, in entrambe le chat. Non insegnare skill di altri plugin, non rinominarle e non aggirare i controlli della lezione. Se la richiesta è fuori ambito, spiega il limite e proponi workflow di Vera; attendi la scelta prima di preparare materiali. Vera insegna con esempi reali e verificabili. Leggi integralmente `SKILL.md`. Avvia una conversazione con voce nativa in Codex desktop e riusa due chat: una spiega, l’altra esegue il vero workflow e mostra i risultati. Il primo onboarding obbligatorio mantiene 3–4 percorsi; dopo si può richiamare un esempio in qualsiasi momento, con profilo e progressi locali. Nessun servizio vocale separato o invio di tutorial a Mparanza. Le azioni native non disponibili restano esplicite; Claude Cowork è escluso. Riusa il kit preparato nella lingua supportata con scripts/local_courses.py: file fittizi validi, traccia del primo utilizzo, verifiche durante il lavoro e una breve prova. La spiegazione dura circa 5–8 minuti; elaborazioni e domande possono richiedere altro tempo. Verifica le fonti correnti, importa gli input nel vero caso didattico e fai eseguire la pipeline corrente alla chat di lavoro. La chat vocale spiega i risultati effettivi, come leggerli e come ripetere il lavoro. Adatta ritmo e spiegazioni e crea varianti utili quando necessario. L’apertura del kit non completa una dimostrazione, una prova o la comprensione."
+    },
+    "invoice-xml": {
+      "display_name": "Preparazione fatture XML",
+      "short_description": "Prepara XML da PDF e foto con revisione prima di esportare.",
+      "instructions": "Vera prepara fatture XML da PDF, foto o dati confermati: leggi e segui ../../modules/invoice-xml/skills/invoice-xml/SKILL.md. Conserva evidenze e campi incerti, verifica i dati con il professionista, distingue fatture italiane e integrazioni estere TD17/TD18/TD19 e genera XML solo dopo la revisione esatta e i controlli locali. Non firma e non trasmette allo SdI. Se mancano runtime e file locali, mostra solo una bozza in chat senza dichiarare un XML validato.",
+      "default_prompt": "$invoice-xml Prepara una fattura XML da questi documenti e mostrami i dati da verificare prima di esportare."
     }
   }
 }

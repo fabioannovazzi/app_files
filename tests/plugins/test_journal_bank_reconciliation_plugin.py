@@ -67,6 +67,52 @@ TABULAR_V7_EXTENSION_CONTRACT_PATH = (
     / "vera_audit_assurance"
     / "journal-bank-tabular-v7-extension-contract.v1.json"
 )
+PDF_FALLBACK_BEHAVIOR_CASES_PATH = (
+    ROOT
+    / "plugins"
+    / "journal-bank-reconciliation"
+    / "evals"
+    / "pdf_fallback_behavior_cases.json"
+)
+JOURNAL_BANK_SKILL_PATH = (
+    ROOT
+    / "plugins"
+    / "journal-bank-reconciliation"
+    / "skills"
+    / "journal-bank-reconciliation"
+    / "SKILL.md"
+)
+
+
+def test_unsupported_pdf_user_insistence_contract_stays_blocked() -> None:
+    skill = JOURNAL_BANK_SKILL_PATH.read_text(encoding="utf-8")
+    payload = json.loads(PDF_FALLBACK_BEHAVIOR_CASES_PATH.read_text(encoding="utf-8"))
+    case = payload["cases"][0]
+
+    assert payload["kind"] == "manual-behavior-evaluation"
+    assert payload["workflow"] == "vera:journal-bank-reconciliation"
+    assert case["id"] == "unsupported-text-pdf-user-insistence-hard-stop"
+    assert [turn["role"] for turn in case["conversation"]] == [
+        "user",
+        "user_follow_up",
+    ]
+    assert "pdfplumber" in case["conversation"][1]["content"]
+    assert case["required_result"] == {
+        "workflow": "vera:journal-bank-reconciliation",
+        "status": "blocked",
+        "source_qualification": "unsupported_source_layout",
+        "emitted_movements": 0,
+        "reconciliation_deliverable": "not_created",
+        "next_supported_input": "reviewed CSV or XLSX export",
+    }
+    assert "invoke run_reconciliation.py" in case["must_not"]
+    assert any("ad hoc Python" in item for item in case["must_not"])
+    assert any("ordered tool trace" in item for item in case["evidence_to_record"])
+    assert (
+        "A user's instruction to proceed anyway does not authorize a fallback" in skill
+    )
+    assert "Do not offer or start a non-Vera alternative in the same run" in skill
+    assert "`emitted_movements`: `0`" in skill
 
 
 def _load_customer_ledger() -> Any:

@@ -23,5 +23,10 @@ plugin_packages/*/claude/** -diff linguist-generated=true
 # Actual workflow starter outputs retain their exact hashed bytes, including
 # CSV line endings and intentional Markdown hard breaks.
 plugins/*/assets/courses/*/files/** -text whitespace=-blank-at-eol
+# Prepared input masters must match their copied, hash-bound lesson files.
+scripts/course_materials/inputs/** -text whitespace=-blank-at-eol
+# Authoritative invoice schemas are pinned by their original byte digests.
+plugins/invoice-xml/references/xsd/*.xsd -text whitespace=-blank-at-eol,-space-before-tab
+plugin_packages/vera/claude/vera/modules/invoice-xml/references/xsd/*.xsd -text whitespace=-blank-at-eol,-space-before-tab
 plugins/*/assets/*-review-widget.html -diff linguist-generated=true
 static/shared/????????????????????????????????????????????????????????????????/** -diff linguist-generated=true

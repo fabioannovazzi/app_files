@@ -420,6 +420,25 @@
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       }
     },
+    "invoice-xml": {
+      "path": "invoice-xml/course.json",
+      "sha256": "685cc41e111e559a4e60d134abc983b81a3c1297c58ece77e2e1bd9511aa5a3e",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Preparare XML da due foto della stessa fattura",
+        "en": "Prepare XML from two photographs of one invoice",
+        "fr": "Préparer le XML à partir de deux photos d'une facture",
+        "de": "XML aus zwei Fotos einer Rechnung vorbereiten",
+        "es": "Preparar XML a partir de dos fotos de una factura"
+      }
+    },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
       "sha256": "65f8df438f6a71222da5566315125698a67ba9a86a544886e2ee3086d87ac616",

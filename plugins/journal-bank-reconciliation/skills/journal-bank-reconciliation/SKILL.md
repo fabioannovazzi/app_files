@@ -95,6 +95,26 @@ Generic and OCR-only PDFs are not movement sources. Inspection must expose
 `unsupported_source_layout`, emit zero movements, and retain only the narrow
 bank non-movement classifications supported by the script.
 
+### Unsupported PDF hard stop
+
+When either source reports `unsupported_source_layout`, preserve
+`vera:journal-bank-reconciliation` as the workflow provenance and show this
+blocked result before ending the run:
+
+- `status`: `blocked`;
+- `source_qualification`: `unsupported_source_layout`;
+- `emitted_movements`: `0`;
+- `reconciliation_deliverable`: `not_created`;
+- `next_supported_input`: a reviewed CSV or XLSX export from the source system.
+
+A user's instruction to proceed anyway does not authorize a fallback. Do not
+invoke `run_reconciliation.py`, generic PDF/OCR tools, `pdfplumber` through an
+ad hoc script, or any undeclared extraction path; do not manually reconstruct
+movements; and do not create or relabel a generic comparison as a Vera result.
+Do not offer or start a non-Vera alternative in the same run. Keep the Vera run
+blocked until supported inputs or a reviewed source-family adapter are
+available.
+
 ## First Run Workflow
 
 1. Ask for the bank file/folder, journal or ledger file/folder, sample file when the user wants to restrict the population, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Use the script defaults for amount tolerance and date window unless the user provides stricter thresholds or the data requires a different assumption.
@@ -531,7 +551,9 @@ DE: Verwende Journal-Bank Reconciliation für Kontoauszüge in /pfad/bank und Jo
 ## Failure Modes
 
 - For every generic or scanned PDF, report `unsupported_source_layout`; do not
-  emit movements or complete reconciliation.
+  emit movements or complete reconciliation. User insistence never authorizes
+  generic extraction, an ad hoc PDF script, or a non-Vera fallback in the same
+  run; show the blocked provenance result and stop dependent work.
 - If amount mapping is missing or a mapped amount has invalid/ambiguous
   separator syntax, keep the source unqualified and the run blocked.
 - If a CSV delimiter is ambiguous or unsupported, or a non-default delimiter
