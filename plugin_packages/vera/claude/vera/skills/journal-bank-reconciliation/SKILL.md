@@ -110,3 +110,10 @@ blank-date/no-reference summary labels; it never silently upgrades v6 sources.
 Before reporting native values, require the module's fresh
 `material_value_ledger.json` replay and review the unclassified exact
 `relationship_residuals.csv`; do not infer a residual disposition.
+
+If either source is a generic or OCR-only PDF, follow the module's unsupported
+PDF hard stop even when the user asks to proceed anyway. Do not switch to
+generic Claude extraction, ad hoc scripts, or another parser inside this Vera
+run. Preserve `vera:journal-bank-reconciliation` as the workflow provenance,
+report zero emitted movements and no reconciliation deliverable, request a
+reviewed CSV/XLSX export, and stop dependent work.
