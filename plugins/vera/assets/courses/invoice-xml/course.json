@@ -53,7 +53,7 @@
     {
       "path": "modules/invoice-xml/scripts/invoice_workflow.py",
       "repository_path": "plugins/invoice-xml/scripts/invoice_workflow.py",
-      "sha256": "0e43e46e2a2d8f5b32f81ad8b234a7c41ec7d5f96f03032cd5a8c894833c7ecc"
+      "sha256": "c37c1e4082f365ba6326dacee21673916faca211fb1585e3264ceb80fdd31cdb"
     },
     {
       "path": "modules/invoice-xml/scripts/source_evidence.py",
