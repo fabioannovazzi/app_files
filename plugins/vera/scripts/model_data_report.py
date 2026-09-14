@@ -20,6 +20,7 @@ __all__ = [
     "ModelDataReportError",
     "build_model_data_report",
     "main",
+    "show_model_data_report",
     "validate_model_data_report",
 ]
 
@@ -877,6 +878,20 @@ def _atomic_write(path: Path, data: bytes) -> None:
             temporary.unlink()
 
 
+def show_model_data_report(report_path: str | Path) -> str:
+    """Render the recorded report without changing files or contacting a service.
+
+    Hash checks preserve the recorded facts. Viewing a historical report does
+    not re-read source documents or claim that its evidence is still available.
+    """
+
+    path = Path(report_path).expanduser()
+    if path.is_symlink() or not path.is_file():
+        raise ModelDataReportError("report must be an existing regular JSON file")
+    report = validate_model_data_report(json.loads(path.read_text(encoding="utf-8")))
+    return _render_markdown(report)
+
+
 def _write_once_or_identical(path: Path, data: bytes) -> None:
     if path.exists():
         if path.is_symlink() or not path.is_file():
@@ -900,14 +915,21 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--output-dir", type=Path, required=True)
     validate = subparsers.add_parser("validate")
     validate.add_argument("--report", type=Path, required=True)
+    show = subparsers.add_parser(
+        "show", help="Display a saved report without rerunning it"
+    )
+    show.add_argument("--report", type=Path, required=True)
     return parser
 
 
 def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> int:
-    """Build or validate a Vera model-data report."""
+    """Build, validate, or display a Vera model-data report."""
 
     args = _parser().parse_args(argv)
     try:
+        if args.command == "show":
+            sys.stdout.write(show_model_data_report(args.report))
+            return 0
         if args.command == "validate":
             report_path = args.report.expanduser()
             if report_path.is_symlink() or not report_path.is_file():
@@ -982,6 +1004,7 @@ def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> i
                     "report_id": report["report_id"],
                     "json_path": str(json_path),
                     "markdown_path": str(markdown_path),
+                    "display_markdown": markdown,
                     "server_receipt": server_receipt,
                 },
                 ensure_ascii=False,

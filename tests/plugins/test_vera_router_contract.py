@@ -30,7 +30,11 @@ def test_vera_router_frontmatter_triggers_for_explicit_invocation() -> None:
 
     assert "whenever Vera is explicitly invoked" in frontmatter
     assert "including through @vera" in frontmatter
-    assert "stop without answering when no specialist workflow matches" in frontmatter
+    assert (
+        "stop without answering when no specialist workflow or saved-report request matches"
+        in frontmatter
+    )
+    assert "show or reopen the privacy report of a Vera run" in frontmatter
     assert "capability gap" not in frontmatter
     assert "out of scope" not in frontmatter
 
