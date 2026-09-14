@@ -1,0 +1,13 @@
+{
+  "plugin": "invoice-xml",
+  "version": 1,
+  "should_trigger": [
+    {"id": "photo-invoice", "prompt": "Vera, prepara la fattura XML da queste tre foto della stessa fattura.", "required_signals": ["fattura XML", "foto"]},
+    {"id": "foreign-pdf", "prompt": "Prepara l'integrazione XML di questa fattura estera in PDF, dopo aver rivisto il trattamento IVA.", "required_signals": ["integrazione XML", "fattura estera"]},
+    {"id": "structured-draft", "prompt": "Genera una bozza FatturaPA dai dati confermati e mostramela prima di esportarla.", "required_signals": ["FatturaPA", "dati confermati"]}
+  ],
+  "should_not_trigger": [
+    {"id": "existing-xml-check", "prompt": "Controlla questi file XML FatturaPA già ricevuti.", "reason": "Existing XML checking belongs to fatture-xml-check."},
+    {"id": "invoice-audit", "prompt": "Confronta le fatture passive registrate con contratti e ordini.", "reason": "Booked purchase-invoice audit belongs to purchase-invoice-review."}
+  ]
+}

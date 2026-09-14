@@ -20,6 +20,12 @@ relevant Vera workflows without silently substituting or teaching the other plug
 
 ## Professional workflows
 
+- `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
+  or confirmed structured data; combine source views, retain field evidence,
+  surface missing or uncertain facts, review domestic or foreign TD17/18/19
+  treatment, and export only the exact professionally reviewed draft after
+  schema and local arithmetic checks. No signing, issuance or SdI submission.
+
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
   and accounting arrangements using proportionate review of responsibilities,
   processes and actual reporting/operating evidence; prepare findings, improvement

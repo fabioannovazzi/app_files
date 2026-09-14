@@ -1,0 +1,43 @@
+{
+  "name": "invoice-xml",
+  "version": "0.1.0",
+  "description": "Prepara fatture elettroniche XML da PDF, foto e dati confermati, con revisione prima di esportare.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/invoice-xml/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "fatturapa",
+    "invoice",
+    "xml",
+    "pdf",
+    "vera"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Preparazione fatture XML",
+    "shortDescription": "Da PDF e foto a una fattura XML rivedibile.",
+    "longDescription": "Estrae i dati con evidenze, segnala campi mancanti, conserva la revisione professionale ed esporta XML FPR12 validato. Include la preparazione TD17, TD18 e TD19 con decisioni fiscali esplicite. Non firma e non trasmette allo SdI.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Vera, prepara una fattura XML da questo PDF o da queste foto e mostrami i dati da verificare prima di esportare."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

@@ -10,6 +10,33 @@ permissions:
   contents: read
 
 jobs:
+  invoice-xml:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/invoice-xml/requirements.txt
+      - name: Verify invoice preparation, approval and XML export
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=plugins/invoice-xml/tests
+          plugins/invoice-xml/tests --cov=plugins/invoice-xml/scripts
+          --cov-report=term-missing --cov-fail-under=80
+      - name: Check invoice code quality
+        run: |
+          python -m black --check plugins/invoice-xml
+          python -m isort --check-only plugins/invoice-xml
+          python -m mypy --config-file plugins/invoice-xml/mypy.ini plugins/invoice-xml/scripts
+          python -m bandit -q -r plugins/invoice-xml/scripts
+
   vera-local-onboarding:
     runs-on: ${{ matrix.os }}
     strategy:

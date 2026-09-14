@@ -206,6 +206,11 @@
         "desktop_teaching",
         "courseware"
       ]
+    },
+    "invoice-xml": {
+      "module_roots": [
+        "vera_assurance"
+      ]
     }
   }
 }
