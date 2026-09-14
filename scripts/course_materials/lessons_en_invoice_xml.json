@@ -1,0 +1,22 @@
+{
+  "vera/invoice-xml": {
+    "title": "Prepare XML from two photographs of one invoice",
+    "goal": "Review extracted fields, resolve missing evidence and distinguish a draft from XML exported after approval.",
+    "scenario": "Fictional company Arco receives two photographs of the same Italian invoice A17 dated 14 September 2026. The service is EUR 100, the stated VAT is EUR 22 and the total is EUR 122. The supplier's VAT identifier is unreadable; a separately verified party record is available.",
+    "request": "Vera, prepare invoice XML from these two photographs and show me what I must confirm before export.",
+    "scope": "One ordinary FPR12 invoice in EUR. This case illustrates Italian preparation; foreign TD17/18/19 integrations require a separate review. Signing and SdI submission are excluded.",
+    "input_columns": ["Fictional source", "Evidence", "Status"],
+    "input_rows": [["F1 · upper photograph", "A17 · 14/09/2026 · unreadable VAT identifier", "Missing field"], ["F2 · lower photograph", "EUR 100 + EUR 22 = EUR 122", "Same invoice as F1"], ["A1 · party record", "Tax identity verified separately", "Link to the field"]],
+    "basis": "F1 and F2 are views of one document, not two invoices. Each field retains its source reference; this authored specimen contains no usable tax identifiers or execution receipt.",
+    "method": ["Register the selected sources in the engagement, group the two photographs and interpret visible fields without guessing the VAT identifier.", "Save a draft, preview and missing-field question. Link the verified record and review parties, number, date, VAT treatment, recipient routing and issue status.", "Present the new revision. Only after actual professional approval, recheck source bytes, schema and amounts, then export XML, the review record and the report."],
+    "result_title": "A blocked draft followed by a revision awaiting approval",
+    "conclusion": "The first draft retains EUR 122 and identifies the missing VAT identifier. Verified evidence produces a new revision; correcting the field alone does not authorize export.",
+    "output_columns": ["Stage", "Result", "XML"],
+    "output_rows": [["Two photographs", "One invoice, EUR 122 total, incomplete identity", "Absent"], ["Party record linked", "New revision awaiting approval", "Absent"], ["Approval and successful checks", "XML and export report", "Local file, not submitted"]],
+    "check": "The professional also checks whether the invoice has already been issued. Schema validity and reconciled amounts do not establish tax correctness or SdI acceptance. Changed source bytes invalidate the previous review.",
+    "question": "The VAT identifier has been corrected. Can Vera export using approval of the old draft?",
+    "answer": "No. The correction changes the revision: the updated fields must be shown and the professional must actually approve that specific version before export.",
+    "practice": "In the synthetic case, change the total from EUR 122 to EUR 121 and identify the control blocking export; then restore the documented amount.",
+    "next": "Provide the selected documents and verified party records. Vera prepares the preview; the professional resolves uncertain fields and approves the revision for export."
+  }
+}

@@ -50,7 +50,7 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
     assert (
         json.loads(result.stdout)
         == {
-            "vera": {"workflows": 31, "locales": 138},
+            "vera": {"workflows": 32, "locales": 143},
             "clara": {"workflows": 9, "locales": 42},
             "lucia": {"workflows": 4, "locales": 20},
         }[product]
@@ -65,7 +65,7 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
         check=True,
     )
     catalog = json.loads(result.stdout)
-    assert len(catalog) == {"vera": 31, "clara": 9, "lucia": 4}[product]
+    assert len(catalog) == {"vera": 32, "clara": 9, "lucia": 4}[product]
     assert (root / "vendor/modules/courseware/library.py").read_bytes() == (
         ROOT / "plugins/_shared/vendor/modules/courseware/library.py"
     ).read_bytes()

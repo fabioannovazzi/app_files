@@ -1,7 +1,7 @@
 # Prepared workflow courses
 
-The native teaching library contains 44 operational workflows: 31 Vera, 9 Clara
-and 4 Lucia. There are 200 authored language versions. Each has a fictional
+The native teaching library contains 45 operational workflows: 32 Vera, 9 Clara
+and 4 Lucia. There are 205 authored language versions. Each has a fictional
 case, a natural request, bounded sources, three method steps, a worked result,
 a professional check, a question with a revealable answer, and optional practice.
 The six stages target 390 seconds including observation and conversation.

@@ -1,0 +1,22 @@
+{
+  "vera/invoice-xml": {
+    "title": "Preparar XML a partir de dos fotos de una factura",
+    "goal": "Revisar los campos extraídos, resolver un dato ausente y distinguir el borrador del XML exportado después de la aprobación.",
+    "scenario": "La empresa ficticia Arco recibe dos fotos de la misma factura italiana A17 del 14 de septiembre de 2026. El servicio cuesta 100 EUR, el IVA indicado es de 22 EUR y el total es de 122 EUR. El identificador fiscal del proveedor es ilegible; existe una ficha de datos verificada por separado.",
+    "request": "Vera, prepara el XML de la factura con estas dos fotos y muéstrame qué debo confirmar antes de exportar.",
+    "scope": "Una factura ordinaria italiana FPR12 en EUR. Las integraciones extranjeras TD17/18/19 requieren una revisión separada. El caso no incluye firma ni envío a SdI.",
+    "input_columns": ["Fuente ficticia", "Evidencia", "Estado"],
+    "input_rows": [["F1 · foto superior", "A17 · 14/09/2026 · identificador de IVA ilegible", "Campo ausente"], ["F2 · foto inferior", "100 EUR + 22 EUR = 122 EUR", "Misma factura que F1"], ["A1 · ficha de datos", "Identidad fiscal verificada por separado", "Vincular al campo"]],
+    "basis": "F1 y F2 son vistas de un documento, no dos facturas. Cada campo conserva su referencia de origen; este ejemplo editorial no contiene identificadores fiscales utilizables ni un comprobante de ejecución.",
+    "method": ["Registra las fuentes seleccionadas en el expediente, agrupa las dos fotos e interpreta los campos visibles sin adivinar el identificador de IVA.", "Guarda el borrador, la vista previa y la pregunta sobre el dato ausente. Vincula la ficha verificada y revisa partes, número, fecha, IVA, destinatario y estado de emisión.", "Presenta la nueva versión. Solo después de la aprobación efectiva del profesional, vuelve a comprobar fuentes, esquema e importes y exporta el XML, el registro de revisión y el informe."],
+    "result_title": "Un borrador bloqueado y después una versión pendiente de aprobación",
+    "conclusion": "El primer borrador conserva 122 EUR y señala el identificador de IVA ausente. El dato verificado produce una nueva versión; corregirlo no autoriza por sí solo la exportación.",
+    "output_columns": ["Paso", "Resultado", "XML"],
+    "output_rows": [["Dos fotos", "Una factura, total de 122 EUR, identidad incompleta", "Ausente"], ["Ficha vinculada", "Nueva versión pendiente de aprobación", "Ausente"], ["Aprobación y controles superados", "XML e informe de exportación", "Archivo local, no enviado"]],
+    "check": "El profesional también comprueba si la factura ya se ha emitido. Un esquema válido y unos importes conciliados no demuestran corrección fiscal ni aceptación por SdI. Modificar las fuentes invalida la revisión anterior.",
+    "question": "Se ha corregido el identificador de IVA: ¿puede Vera exportar con la aprobación del borrador anterior?",
+    "answer": "No. La corrección cambia la versión: hay que mostrar los nuevos datos y obtener la aprobación efectiva del profesional para esa versión concreta antes de exportar.",
+    "practice": "En el caso sintético, cambia el total de 122 a 121 EUR e identifica el control que bloquea la exportación; después restablece el importe documentado.",
+    "next": "Aporta los documentos seleccionados y las fichas verificadas. Vera prepara la vista previa; el profesional resuelve los datos inciertos y aprueba la versión que se exportará."
+  }
+}

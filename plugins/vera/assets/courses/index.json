@@ -286,6 +286,25 @@
         "es": "Un informe financiero que vuelve a sus tablas"
       }
     },
+    "invoice-xml": {
+      "path": "invoice-xml/course.json",
+      "sha256": "aa816e28957ec2cfbcf1c38e1cbbd5ff2a76601cac0162248518562a04382519",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "titles": {
+        "it": "Preparare XML da due foto della stessa fattura",
+        "en": "Prepare XML from two photographs of one invoice",
+        "fr": "Préparer le XML à partir de deux photos d'une facture",
+        "de": "XML aus zwei Fotos einer Rechnung vorbereiten",
+        "es": "Preparar XML a partir de dos fotos de una factura"
+      }
+    },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
       "sha256": "25cf57564d09c11352b4f89b6ac7831547ee02f6864032c70ec7a6572a390f5a",
