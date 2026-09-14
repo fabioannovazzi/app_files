@@ -11,12 +11,12 @@
       "package_sha256": "201c69c6aba00f308360bd0b49d9cb145ff9a922d8aff2d30715ef7a8c939678"
     },
     "vera": {
-      "version": "0.1.251",
+      "version": "0.1.252",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
       "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa7fc0bf06481918905c3d7b6f4f519",
-      "basis": "OpenAI Platform directly showed Vera 0.1.251 Published after all 38 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.251 and the Preparazione fatture XML skill.",
-      "package_sha256": "d4541c88726f0e96ac97bd22ae868f140cc4e3d081c794866135f9041a775525"
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa8126b7f108191aff5f89372e68f5d",
+      "basis": "OpenAI Platform directly showed Vera 0.1.252 Published after all 38 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.252 and the Install plugin action.",
+      "package_sha256": "083c96da88a64ef552d0ad97aa1f9b53c9c0ae57e38080f48e439af1d6d2686f"
     },
     "lucia": {
       "version": "0.1.45",
