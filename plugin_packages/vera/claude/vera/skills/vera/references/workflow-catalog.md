@@ -190,6 +190,10 @@ stored in a single client's Studio Archive engagement.
 
 ## Run-wide model-data evidence
 
+Showing or explaining an existing privacy/model-data report is supported artifact
+retrieval. Follow **Show an existing report** in `model-data-report-contract.md`
+without selecting a new professional workflow or starting another run.
+
 Every substantive professional workflow follows
 `model-data-report-contract.md` after its model-visible phases. The report is a
 cross-pipeline run artifact, not a specialist workflow: it records what was

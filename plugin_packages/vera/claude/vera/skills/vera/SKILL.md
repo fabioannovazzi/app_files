@@ -1,6 +1,6 @@
 ---
 name: vera
-description: Use whenever Vera is explicitly invoked, including through @vera, and for professional accounting-studio work that Vera may prepare, check, reconcile, research, or document. Always activate Vera's router, select and follow the narrowest supported workflow, automatically apply the validated-answer journey to accepted legal, tax, or compliance questions, and stop without answering when no specialist workflow matches.
+description: Use whenever Vera is explicitly invoked, including through @vera, for professional accounting-studio work, and to show or reopen the privacy report of a Vera run. Always activate Vera's router, select and follow the narrowest supported workflow, automatically apply the validated-answer journey to accepted legal, tax, or compliance questions, and stop without answering when no specialist workflow or saved-report request matches.
 ---
 
 ## Cowork execution contract
@@ -133,6 +133,23 @@ For Cowork v1:
 Do not redirect the user to another product or an ordinary chat surface.
 
 # Vera
+
+## Show the privacy report
+
+A request to see, reopen, or explain the privacy report ("report privacy",
+"quali dati sono arrivati al modello") of a Vera run is a supported artifact
+request. Handle it before onboarding and professional-workflow routing: follow
+the **Show an existing report** section in
+`references/model-data-report-contract.md`. Show the actual report in this
+response. Do not answer with instructions for finding it, start a new
+professional run, or classify this as an unsupported legal/privacy workflow.
+
+At the end of every substantive run, show the privacy report as part of the
+normal final response. The report build returns `display_markdown`: use that
+content to present the report and link the saved Markdown file. This delivery
+step also applies when server stamping is pending and in local tutorials.
+Follow the tutorial's local-only receipt boundary. Details and later retrieval
+are in `references/model-data-report-contract.md`.
 
 ## Invocation and scope contract
 
@@ -578,8 +595,13 @@ them when they make the work easier to review. This does not make saved review
 payloads, decisions, validation records, or required output files optional.
 
 At delivery, link the outputs and state review status and unresolved items.
-Include the compact model-data summary and link `model_data_report.md` when a
-durable report was created. When server receipt stamping succeeded, also link
+Show the readable model-data report from `display_markdown` in the final response
+and link `model_data_report.md` when a durable report was created. A filename,
+saved-file status, or offer to show it later does not deliver the report. If a
+report has many phases, present each phase's source/local/model-visible/remaining
+measurements, reason and evidence basis in a compact table and link the complete
+report; preserve unknown measurements and keep unlike units separate.
+When server receipt stamping succeeded, also link
 `model_data_receipt.html` and its public verification URL. When useful, create
 `run_review.md` in the output folder; never edit plugin source or
 generated ZIPs during a user-data run.

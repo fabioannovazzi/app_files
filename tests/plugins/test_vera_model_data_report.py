@@ -320,6 +320,9 @@ def test_studio_archive_report_helper_needs_no_receipt_module_or_network(
     assert report["phases"][0]["outcome"] == "reduced_projection"
     assert _load_module().validate_model_data_report(report, evidence_root=output)
     assert (output / "model_data_report.md").is_file()
+    assert json.loads(result.stdout)["display_markdown"] == (
+        output / "model_data_report.md"
+    ).read_text(encoding="utf-8")
     assert not (output / "model_data_receipt_request.json").exists()
 
 
@@ -373,7 +376,9 @@ def test_cli_writes_json_and_markdown_idempotently(
 
 
 def test_every_durable_build_stamps_the_server_receipt(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     module = _load_module()
     payload_path = tmp_path / "mapping_payload.json"
@@ -409,6 +414,11 @@ def test_every_durable_build_stamps_the_server_receipt(
     )
 
     assert result == 0
+    response = json.loads(capsys.readouterr().out)
+    assert response["display_markdown"] == (
+        tmp_path / "model_data_report.md"
+    ).read_text(encoding="utf-8")
+    assert "Visibile al modello: 10 rows" in response["display_markdown"]
     assert calls == [
         (
             tmp_path / "model_data_report.json",
@@ -485,11 +495,94 @@ def test_receipt_outage_keeps_completed_work_and_returns_pending(
         "report_sha256",
     }
     assert response["status"] == "written"
+    assert response["display_markdown"] == (
+        tmp_path / "model_data_report.md"
+    ).read_text(encoding="utf-8")
     assert response["server_receipt"] == {
         "status": "pending",
         "reason": "receipt service is unavailable",
         "request_path": str(tmp_path / "model_data_receipt_request.json"),
     }
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_show_displays_saved_report_without_writes_or_stamping(
+    tmp_path: Path,
+    language: str,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    module = _load_module()
+    report, markdown = module.build_model_data_report(
+        _full_document_request(language), evidence_root=tmp_path
+    )
+    path = tmp_path / "model_data_report.json"
+    saved = json.dumps(report, ensure_ascii=False).encode("utf-8")
+    path.write_bytes(saved)
+    modified = path.stat().st_mtime_ns
+    # A display request must work without importing the network receipt client.
+    monkeypatch.setitem(sys.modules, "notarized_run_receipt", None)
+
+    result = module.main(["show", "--report", str(path)])
+
+    assert result == 0
+    assert capsys.readouterr().out == markdown
+    assert path.read_bytes() == saved
+    assert path.stat().st_mtime_ns == modified
+    assert list(tmp_path.iterdir()) == [path]
+
+
+def test_show_keeps_recorded_exposure_when_source_payload_is_no_longer_available(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    module = _load_module()
+    evidence = tmp_path / "mapping_payload.json"
+    evidence.write_text("{}\n", encoding="utf-8")
+    report, markdown = module.build_model_data_report(
+        _reduced_request(), evidence_root=tmp_path
+    )
+    path = tmp_path / "model_data_report.json"
+    path.write_text(json.dumps(report), encoding="utf-8")
+    evidence.unlink()
+
+    result = module.main(["show", "--report", str(path)])
+
+    assert result == 0
+    assert capsys.readouterr().out == markdown
+    assert list(tmp_path.iterdir()) == [path]
+
+
+def test_show_rejects_changed_report_without_displaying_its_claims(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    module = _load_module()
+    report, _markdown = module.build_model_data_report(
+        _full_document_request(), evidence_root=tmp_path
+    )
+    report["professional_purpose"] = "Changed purpose"
+    path = tmp_path / "model_data_report.json"
+    path.write_text(json.dumps(report), encoding="utf-8")
+
+    result = module.main(["show", "--report", str(path)])
+
+    output = capsys.readouterr()
+    assert result == 2
+    assert output.out == ""
+    assert "hash does not match" in output.err
+
+
+def test_show_missing_report_does_not_generate_a_replacement(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    module = _load_module()
+
+    result = module.main(["show", "--report", str(tmp_path / "model_data_report.json")])
+
+    output = capsys.readouterr()
+    assert result == 2
+    assert output.out == ""
+    assert "existing regular JSON file" in output.err
+    assert list(tmp_path.iterdir()) == []
 
 
 def test_router_requires_report_for_every_substantive_run() -> None:
@@ -502,6 +595,12 @@ def test_router_requires_report_for_every_substantive_run() -> None:
     assert "after every substantive Vera run" in contract
     assert '"runtime_profile": "openai-chatgpt"' in contract
     assert "candidate_needs_validation" in contract
+    assert router.index("## Show the privacy report") < router.index(
+        "## Invocation and scope contract"
+    )
+    assert "display_markdown" in router
+    assert "Show an existing report" in contract
+    assert "scripts/model_data_report.py show" in contract
 
 
 def test_onboarding_reports_and_direct_stamp_retries_stay_local(
