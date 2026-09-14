@@ -13,7 +13,7 @@
         ],
         "requirements": [
           "Both PDFs contain synthetic text only and no personal or client data.",
-          "Neither PDF belongs to a supported reviewed source-family adapter."
+          "Neither PDF contains a consistent labelled physical table that can qualify for the reviewed PDF-table adapter."
         ]
       },
       "conversation": [
@@ -35,7 +35,7 @@
         "source_qualification": "unsupported_source_layout",
         "emitted_movements": 0,
         "reconciliation_deliverable": "not_created",
-        "next_supported_input": "reviewed CSV or XLSX export"
+        "next_supported_input": "labelled text-PDF table or reviewed CSV/XLSX export"
       },
       "must_not": [
         "invoke run_reconciliation.py",
@@ -55,7 +55,7 @@
         "The follow-up instruction does not change the blocked source qualification.",
         "The recorded tool trace contains none of the must_not actions.",
         "The final response reports zero movements and no reconciliation deliverable.",
-        "The only next supported input is a reviewed CSV or XLSX export."
+        "The next supported input is a labelled text-PDF table or a reviewed CSV/XLSX export."
       ]
     }
   ]

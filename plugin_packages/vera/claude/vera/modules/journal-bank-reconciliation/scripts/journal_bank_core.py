@@ -108,6 +108,8 @@ EXTENDED_TABULAR_ADAPTER_VERSION = "7"
 EXTENDED_TABULAR_ADAPTER_ID = "journal_bank.tabular.v7"
 TEXT_PDF_ADAPTER_VERSION = "2"
 TEXT_PDF_ADAPTER_ID = "journal_bank.text_pdf.disabled.v2"
+PDF_TABLE_ADAPTER_VERSION = "1"
+PDF_TABLE_ADAPTER_ID = "journal_bank.pdf_table.v1"
 RELATIONSHIP_ADAPTER_ID = "journal_bank.relationship.v3"
 RELATIONSHIP_ADAPTER_VERSION = "3"
 NORMALIZATION_SCHEMA_VERSION = "journal_bank.normalization.v2"
@@ -416,7 +418,14 @@ EXACT_HEADER_ALIASES: dict[str, frozenset[str]] = {
     ),
     "debit": frozenset({"debit", "dare", "addebito", "soll", "importo dare"}),
     "credit": frozenset(
-        {"credit", "avere", "credito", "haben", "accredito", "importo avere"}
+        {
+            "credit",
+            "avere",
+            "credito",
+            "haben",
+            "accredito",
+            "importo avere",
+        }
     ),
     "description": frozenset(
         {
@@ -774,6 +783,8 @@ __all__ = [
     "MATCH_STAGE_ORDER",
     "NATIVE_OUTPUT_FILES",
     "NON_MOVEMENT_COLUMNS",
+    "PDF_TABLE_ADAPTER_ID",
+    "PDF_TABLE_ADAPTER_VERSION",
     "EXTENDED_TABULAR_ADAPTER_ID",
     "EXTENDED_TABULAR_ADAPTER_VERSION",
     "POST_REVIEW_OUTPUT_FILES",
@@ -1288,6 +1299,274 @@ def _read_table_raw(
     raise ValueError(f"Unsupported tabular file: {path}")
 
 
+def _pdf_cell_text(value: object) -> str:
+    """Normalize one extracted PDF table cell without assigning its meaning."""
+
+    return re.sub(r"\s+", " ", _clean_text(value)).strip()
+
+
+def _pdf_page_has_unmapped_candidates(page_text: str) -> bool:
+    """Detect pages whose transaction-like text was not captured as a table.
+
+    This check is mechanical: it withholds the entire source when a page has a
+    date and monetary token outside the bounded table extraction. It does not
+    decide whether the text is actually an accounting movement.
+    """
+
+    date_token = re.compile(
+        r"\b(?:\d{4}[./-]\d{1,2}[./-]\d{1,2}|" r"\d{1,2}[./-]\d{1,2}[./-]\d{2,4})\b"
+    )
+    return any(
+        date_token.search(line) is not None and AMOUNT_TOKEN_RE.search(line) is not None
+        for line in page_text.splitlines()
+    )
+
+
+def _pdf_header_has_required_roles(header: Sequence[str]) -> bool:
+    """Require explicit date and monetary labels before proposing a PDF table."""
+
+    labels = {_norm_label(value) for value in header if _norm_label(value)}
+    monetary_labels = (
+        EXACT_HEADER_ALIASES["amount"]
+        | EXACT_HEADER_ALIASES["debit"]
+        | EXACT_HEADER_ALIASES["credit"]
+        | {"uscite", "entrate", "saldo", "balance"}
+    )
+    return bool(labels & EXACT_HEADER_ALIASES["date"]) and bool(
+        labels & monetary_labels
+    )
+
+
+def _pdf_word_rows(
+    page: Any, *, top_tolerance: float = 3.0
+) -> list[list[dict[str, Any]]]:
+    """Group positioned PDF words into physical text lines."""
+
+    rows: list[list[dict[str, Any]]] = []
+    for word in sorted(
+        page.extract_words() or [],
+        key=lambda item: (float(item["top"]), float(item["x0"])),
+    ):
+        if (
+            not rows
+            or abs(float(word["top"]) - float(rows[-1][0]["top"])) > top_tolerance
+        ):
+            rows.append([word])
+        else:
+            rows[-1].append(word)
+    return rows
+
+
+def _pdf_header_groups(
+    words: Sequence[dict[str, Any]],
+    *,
+    within_header_gap: float = 12.0,
+) -> list[list[dict[str, Any]]]:
+    """Group adjacent header words while keeping visibly separate columns apart."""
+
+    groups: list[list[dict[str, Any]]] = []
+    for word in sorted(words, key=lambda item: float(item["x0"])):
+        if (
+            not groups
+            or float(word["x0"]) - float(groups[-1][-1]["x1"]) > within_header_gap
+        ):
+            groups.append([word])
+        else:
+            groups[-1].append(word)
+    return groups
+
+
+def _extract_pdf_positioned_table(page: Any) -> list[list[str]] | None:
+    """Recover an unruled table only from a labelled, positioned column grid."""
+
+    word_rows = _pdf_word_rows(page)
+    header_index: int | None = None
+    header_groups: list[list[dict[str, Any]]] = []
+    header: list[str] = []
+    for row_index, words in enumerate(word_rows):
+        groups = _pdf_header_groups(words)
+        labels = [" ".join(str(word["text"]) for word in group) for group in groups]
+        if len(labels) >= 2 and _pdf_header_has_required_roles(labels):
+            header_index = row_index
+            header_groups = groups
+            header = labels
+            break
+    if header_index is None:
+        return None
+
+    boundaries = [0.0]
+    for left_group, right_group in zip(header_groups, header_groups[1:]):
+        boundaries.append(
+            (float(left_group[-1]["x1"]) + float(right_group[0]["x0"])) / 2
+        )
+    boundaries.append(float(page.width))
+    body: list[list[str]] = []
+    for words in word_rows[header_index + 1 :]:
+        cells: list[list[str]] = [[] for _ in header]
+        for word in sorted(words, key=lambda item: float(item["x0"])):
+            center = (float(word["x0"]) + float(word["x1"])) / 2
+            column_index = next(
+                (
+                    index
+                    for index in range(len(header))
+                    if boundaries[index] <= center < boundaries[index + 1]
+                ),
+                len(header) - 1,
+            )
+            cells[column_index].append(str(word["text"]))
+        row = [" ".join(cell) for cell in cells]
+        if sum(bool(value) for value in row) >= 2:
+            body.append(row)
+    if not body:
+        return None
+    return [header, *body]
+
+
+def _read_pdf_table_raw_unchecked(
+    path: Path,
+) -> tuple[pl.DataFrame, list[tuple[str, int]], dict[str, Any]]:
+    """Extract one repeated-header PDF table family with page-row lineage.
+
+    PDF table extraction is deterministic here because only physical cells,
+    exact repeated headers, and page/table coordinates are retained. Column
+    meaning and monetary ownership remain subject to a source-bound reviewed
+    mapping receipt.
+    """
+
+    import pdfplumber
+
+    canonical_header: list[str] | None = None
+    rows: list[list[str]] = []
+    locators: list[tuple[str, int]] = []
+    page_row_counts: dict[str, int] = {}
+    page_count = 0
+    table_count = 0
+    candidate_pages_without_tables: list[int] = []
+    inconsistent_tables: list[str] = []
+    with pdfplumber.open(path) as document:
+        for page_number, page in enumerate(document.pages, start=1):
+            page_count = page_number
+            page_tables = page.extract_tables() or []
+            if not any(
+                table
+                and len(table) >= 2
+                and _pdf_header_has_required_roles(
+                    [_pdf_cell_text(cell) for cell in table[0]]
+                )
+                for table in page_tables
+            ):
+                positioned_table = _extract_pdf_positioned_table(page)
+                page_tables = [positioned_table] if positioned_table is not None else []
+            if not page_tables:
+                page_tables = (
+                    page.extract_tables(
+                        table_settings={
+                            "vertical_strategy": "text",
+                            "horizontal_strategy": "text",
+                            "min_words_vertical": 2,
+                            "min_words_horizontal": 1,
+                            "intersection_tolerance": 5,
+                            "text_tolerance": 3,
+                        }
+                    )
+                    or []
+                )
+            usable_tables = []
+            for table_number, raw_table in enumerate(page_tables, start=1):
+                table_rows = [
+                    [_pdf_cell_text(cell) for cell in row]
+                    for row in (raw_table or [])
+                    if row and any(_pdf_cell_text(cell) for cell in row)
+                ]
+                if (
+                    len(table_rows) >= 2
+                    and len(table_rows[0]) >= 2
+                    and _pdf_header_has_required_roles(table_rows[0])
+                ):
+                    usable_tables.append((table_number, table_rows))
+            if not usable_tables:
+                page_text = page.extract_text() or ""
+                if _pdf_page_has_unmapped_candidates(page_text):
+                    candidate_pages_without_tables.append(page_number)
+                continue
+            for table_number, table_rows in usable_tables:
+                table_count += 1
+                header = table_rows[0]
+                if canonical_header is None:
+                    canonical_header = header
+                if header != canonical_header:
+                    inconsistent_tables.append(
+                        f"page {page_number} table {table_number}"
+                    )
+                    continue
+                locator_sheet = f"PDF page {page_number} table {table_number}"
+                for row_number, row in enumerate(table_rows[1:], start=2):
+                    if len(row) != len(canonical_header):
+                        inconsistent_tables.append(
+                            f"page {page_number} table {table_number} row {row_number}"
+                        )
+                        continue
+                    rows.append(row)
+                    locators.append((locator_sheet, row_number))
+                    page_key = str(page_number)
+                    page_row_counts[page_key] = page_row_counts.get(page_key, 0) + 1
+
+    failure_kind: str | None = None
+    limitations: list[str] = []
+    if candidate_pages_without_tables:
+        failure_kind = "unmapped_pdf_candidate_page"
+        limitations.append(
+            "Transaction-like text appeared on a page with no bounded extracted table."
+        )
+    elif canonical_header is None:
+        failure_kind = "pdf_table_not_found"
+        limitations.append(
+            "No bounded multi-column PDF table with a header and body rows was found."
+        )
+    elif inconsistent_tables:
+        failure_kind = "inconsistent_pdf_table_layout"
+        limitations.append(
+            "Every extracted table must use the exact same physical header and width."
+        )
+    elif not rows:
+        failure_kind = "empty_pdf_table"
+        limitations.append("The extracted PDF table contained no body rows.")
+
+    metadata = {
+        "page_count": page_count,
+        "table_count": table_count,
+        "page_row_counts": page_row_counts,
+        "candidate_pages_without_tables": candidate_pages_without_tables,
+        "inconsistent_tables": inconsistent_tables,
+        "failure_kind": failure_kind,
+        "limitations": limitations,
+    }
+    if failure_kind is not None or canonical_header is None:
+        return pl.DataFrame(), [], metadata
+    all_rows = [canonical_header, *rows]
+    raw = pl.DataFrame(
+        {
+            f"column_{index}": [row[index] for row in all_rows]
+            for index in range(len(canonical_header))
+        },
+        strict=False,
+    )
+    return raw, [("PDF header", 1), *locators], metadata
+
+
+def _read_pdf_table_raw(
+    path: Path,
+) -> tuple[pl.DataFrame, list[tuple[str, int]], dict[str, Any]]:
+    """Run PDF table extraction without imposing pdfplumber on other workflows."""
+
+    from pdfplumber.utils.exceptions import PdfminerException
+
+    try:
+        return _read_pdf_table_raw_unchecked(path)
+    except PdfminerException as exc:
+        raise ValueError("PDF table parser could not read the source") from exc
+
+
 def _drop_empty_columns(df: pl.DataFrame) -> pl.DataFrame:
     if df.is_empty() or df.width == 0:
         return df
@@ -1394,6 +1673,7 @@ def _apply_header(
     rows_1_indexed: Sequence[int],
     *,
     source_sheet: str | None = None,
+    source_locators: Sequence[tuple[str, int]] | None = None,
 ) -> pl.DataFrame:
     if df.is_empty():
         return df
@@ -1408,14 +1688,31 @@ def _apply_header(
     if body.width != len(labels):
         labels = _unique_names(labels[: body.width])
     body.columns = labels
-    body = body.with_columns(
-        pl.Series(
-            SOURCE_ROW_COLUMN,
-            list(range(body_start + 1, body_start + 1 + body.height)),
-            dtype=pl.Int64,
-        ),
-        pl.lit(source_sheet or "CSV").alias(SOURCE_SHEET_COLUMN),
-    )
+    if source_locators is not None:
+        body_locators = list(source_locators[body_start:])
+        if len(body_locators) != body.height:
+            raise ValueError("PDF source locators do not match extracted table rows")
+        body = body.with_columns(
+            pl.Series(
+                SOURCE_ROW_COLUMN,
+                [row_number for _, row_number in body_locators],
+                dtype=pl.Int64,
+            ),
+            pl.Series(
+                SOURCE_SHEET_COLUMN,
+                [sheet for sheet, _ in body_locators],
+                dtype=pl.Utf8,
+            ),
+        )
+    else:
+        body = body.with_columns(
+            pl.Series(
+                SOURCE_ROW_COLUMN,
+                list(range(body_start + 1, body_start + 1 + body.height)),
+                dtype=pl.Int64,
+            ),
+            pl.lit(source_sheet or "CSV").alias(SOURCE_SHEET_COLUMN),
+        )
     # Preserve header-owned columns even when every body cell is blank. A
     # debit/credit export commonly leaves one side empty for the entire file,
     # but the explicit header still carries the monetary-role contract.
@@ -1425,6 +1722,8 @@ def _apply_header(
 def _source_sheet_names(path: Path) -> list[str]:
     if path.suffix.lower() == ".csv":
         return ["CSV"]
+    if path.suffix.lower() == ".pdf":
+        return ["PDF"]
     workbook = fastexcel.read_excel(path)
     return [str(value) for value in workbook.sheet_names]
 
@@ -1923,8 +2222,13 @@ def _normalized_non_movement_summary_labels(
 def _tabular_adapter_binding(
     date_locale: str | None,
     non_movement_summary_labels: Sequence[str] = (),
+    *,
+    source_file: str | None = None,
 ) -> tuple[str, str]:
-    """Select v7 only for an explicit localized-date or summary authority."""
+    """Select the source adapter bound by the reviewed mapping receipt."""
+
+    if source_file and Path(source_file).suffix.lower() == ".pdf":
+        return PDF_TABLE_ADAPTER_ID, PDF_TABLE_ADAPTER_VERSION
 
     if date_locale is not None or non_movement_summary_labels:
         return EXTENDED_TABULAR_ADAPTER_ID, EXTENDED_TABULAR_ADAPTER_VERSION
@@ -2065,6 +2369,7 @@ def build_mapping_review_receipt(
     adapter_id, adapter_version = _tabular_adapter_binding(
         normalized_date_locale,
         normalized_summary_labels,
+        source_file=source_file,
     )
     return build_reviewed_decision_receipt(
         decision_id=decision_id,
@@ -2708,12 +3013,43 @@ def _normalize_table(
             ],
         }
     csv_field_delimiter = delimiter_resolution["delimiter"]
-    raw = _read_table_raw(
-        path,
-        csv_field_delimiter=(
-            str(csv_field_delimiter) if csv_field_delimiter is not None else None
-        ),
-    )
+    pdf_metadata: dict[str, Any] = {}
+    source_locators: list[tuple[str, int]] | None = None
+    if path.suffix.lower() == ".pdf":
+        raw, source_locators, pdf_metadata = _read_pdf_table_raw(path)
+        if pdf_metadata["failure_kind"] is not None:
+            frame, text_diagnostic = _normalize_text_pdf(
+                path,
+                side,
+                recipe,
+                source_identity=source_identity,
+            )
+            return frame, {
+                **text_diagnostic,
+                "parser": "pdf_table",
+                "adapter_id": TEXT_PDF_ADAPTER_ID,
+                "source_family": "pdf.table.unqualified.v1",
+                "qualification_status": "unsupported_source_layout",
+                "failure_kind": pdf_metadata["failure_kind"],
+                "missing_required_mapping": ["supported reviewed PDF table"],
+                **pdf_metadata,
+                "limitations": [
+                    *pdf_metadata["limitations"],
+                    *text_diagnostic.get("limitations", []),
+                ],
+            }
+        pdf_metadata = {
+            key: value
+            for key, value in pdf_metadata.items()
+            if key not in {"failure_kind", "limitations"}
+        }
+    else:
+        raw = _read_table_raw(
+            path,
+            csv_field_delimiter=(
+                str(csv_field_delimiter) if csv_field_delimiter is not None else None
+            ),
+        )
     exact_contract = _exact_header_contract(raw)
     raw_header_rows = file_recipe.get("header_rows")
     header_rows_shape_valid = "header_rows" not in file_recipe or (
@@ -2735,7 +3071,12 @@ def _normalize_table(
             else _suggest_header_rows(raw)
         )
     )
-    table = _apply_header(raw, header_rows, source_sheet=source_sheet)
+    table = _apply_header(
+        raw,
+        header_rows,
+        source_sheet=source_sheet,
+        source_locators=source_locators,
+    )
     raw_mapping = file_recipe.get("mapping")
     mapping_shape_valid = "mapping" not in file_recipe or (
         isinstance(raw_mapping, dict)
@@ -2782,6 +3123,7 @@ def _normalize_table(
     tabular_adapter_id, tabular_adapter_version = _tabular_adapter_binding(
         date_locale,
         non_movement_summary_labels,
+        source_file=source_identity,
     )
     observed_direction_values = sorted(
         {
@@ -2902,6 +3244,7 @@ def _normalize_table(
     )
     automatic_contract_applies = (
         exact_mapping_applies
+        and path.suffix.lower() != ".pdf"
         and not direction_value_mapping
         and date_convention is None
         and date_locale is None
@@ -3007,9 +3350,13 @@ def _normalize_table(
         return _transaction_frame([]), {
             "source_file": source_identity,
             "source_sheet": source_sheet,
-            "parser": "tabular",
+            "parser": "pdf_table" if path.suffix.lower() == ".pdf" else "tabular",
             "adapter_id": tabular_adapter_id,
-            "source_family": "tabular.explicit_columns.v1",
+            "source_family": (
+                "pdf.table.reviewed.v1"
+                if path.suffix.lower() == ".pdf"
+                else "tabular.explicit_columns.v1"
+            ),
             "qualification_status": "needs_review",
             "failure_kind": "mapping_review_required",
             "header_rows": header_rows,
@@ -3054,6 +3401,7 @@ def _normalize_table(
             "row_disposition_counts": {},
             "row_dispositions": [],
             "limitations": limitations,
+            **pdf_metadata,
         }
 
     records: list[dict[str, Any]] = []
@@ -3063,6 +3411,7 @@ def _normalize_table(
     monetary_candidate_count = 0
     for row in table.iter_rows(named=True):
         source_row = int(row[SOURCE_ROW_COLUMN])
+        row_source_sheet = str(row[SOURCE_SHEET_COLUMN])
         amount = _amount_from_row(
             row,
             mapping,
@@ -3092,7 +3441,7 @@ def _normalize_table(
             _mapped(row, mapping, "credit"),
         )
         has_monetary_value = any(_clean_text(value) for value in source_amount_values)
-        locator = {"source_sheet": source_sheet, "source_row": source_row}
+        locator = {"source_sheet": row_source_sheet, "source_row": source_row}
         if not has_monetary_value:
             disposition_counts["excluded_non_monetary"] += 1
             row_dispositions.append(
@@ -3208,7 +3557,7 @@ def _normalize_table(
         )
         transaction_id = (
             f"{side}:{_source_identity_fragment(source_identity)}:"
-            f"{_identifier_fragment(source_sheet)}:{source_row}"
+            f"{_identifier_fragment(row_source_sheet)}:{source_row}"
         )
         records.append(
             {
@@ -3230,7 +3579,7 @@ def _normalize_table(
                 "party_ref": party_ref or None,
                 "direction": direction,
                 "source_file": source_identity,
-                "source_sheet": source_sheet,
+                "source_sheet": row_source_sheet,
                 "source_row": source_row,
             }
         )
@@ -3238,9 +3587,13 @@ def _normalize_table(
         return _transaction_frame([]), {
             "source_file": source_identity,
             "source_sheet": source_sheet,
-            "parser": "tabular",
+            "parser": "pdf_table" if path.suffix.lower() == ".pdf" else "tabular",
             "adapter_id": tabular_adapter_id,
-            "source_family": "tabular.explicit_columns.v1",
+            "source_family": (
+                "pdf.table.reviewed.v1"
+                if path.suffix.lower() == ".pdf"
+                else "tabular.explicit_columns.v1"
+            ),
             "qualification_status": "unsupported_source_layout",
             "failure_kind": "candidate_row_contract_failed",
             "header_rows": header_rows,
@@ -3289,14 +3642,19 @@ def _normalize_table(
                 "At least one monetary candidate failed exact amount, date, or "
                 "reviewed-direction disposition; no rows were emitted."
             ],
+            **pdf_metadata,
         }
     frame = _transaction_frame(records)
     diagnostics = {
         "source_file": source_identity,
         "source_sheet": source_sheet,
-        "parser": "tabular",
+        "parser": "pdf_table" if path.suffix.lower() == ".pdf" else "tabular",
         "adapter_id": tabular_adapter_id,
-        "source_family": "tabular.explicit_columns.v1",
+        "source_family": (
+            "pdf.table.reviewed.v1"
+            if path.suffix.lower() == ".pdf"
+            else "tabular.explicit_columns.v1"
+        ),
         "qualification_status": "qualified",
         "failure_kind": None,
         "header_rows": header_rows,
@@ -3345,6 +3703,7 @@ def _normalize_table(
             if disposition_counts["emitted_reference_only"]
             else []
         ),
+        **pdf_metadata,
     }
     return frame, diagnostics
 
@@ -3510,21 +3869,13 @@ def _normalize_files(
     for file_path in supported_files(input_path):
         source_identity = _source_identity(input_path, file_path)
         try:
-            if file_path.suffix.lower() == ".pdf":
-                frame, diag = _normalize_text_pdf(
-                    file_path,
-                    side,
-                    recipe,
-                    source_identity=source_identity,
-                )
-            else:
-                frame, diag = _normalize_table(
-                    file_path,
-                    side,
-                    recipe,
-                    source_identity=source_identity,
-                    source_artifact_ref=source_refs[(side, source_identity)],
-                )
+            frame, diag = _normalize_table(
+                file_path,
+                side,
+                recipe,
+                source_identity=source_identity,
+                source_artifact_ref=source_refs[(side, source_identity)],
+            )
         except (
             fastexcel.CalamineError,
             BadZipFile,
@@ -3700,6 +4051,8 @@ def _source_qualifications(
             adapter_version = EXTENDED_TABULAR_ADAPTER_VERSION
         elif adapter_id == TEXT_PDF_ADAPTER_ID:
             adapter_version = TEXT_PDF_ADAPTER_VERSION
+        elif adapter_id == PDF_TABLE_ADAPTER_ID:
+            adapter_version = PDF_TABLE_ADAPTER_VERSION
         else:
             raise ValueError(f"Unsupported Journal-Bank adapter: {adapter_id}")
         supported = status == "qualified"

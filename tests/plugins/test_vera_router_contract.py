@@ -167,7 +167,9 @@ def test_vera_journal_bank_card_keeps_unsupported_pdfs_blocked() -> None:
     payload = json.loads(_read_text(MARKETPLACE_CARDS_PATH))
     instructions = payload["skills"]["journal-bank-reconciliation"]["instructions"]
 
-    assert "Un PDF generico resta bloccato con zero movimenti" in instructions
+    assert "PDF testuale con colonne riconoscibili" in instructions
+    assert "approvare intestazioni, segni, colonne entrate/uscite" in instructions
+    assert "Un PDF generico, incoerente o solo OCR resta bloccato" in instructions
     assert "non passa a estrazione generica o script ad hoc" in instructions
     assert "dichiara il workflow" in instructions
 

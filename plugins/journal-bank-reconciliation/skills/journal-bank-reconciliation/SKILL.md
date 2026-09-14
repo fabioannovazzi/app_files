@@ -74,11 +74,13 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 
 Required:
 
-- a bank statement file or folder in `.xlsx`, `.xls`, or `.csv` format; text
-  `.pdf` files may be inspected but cannot emit movements without a supported,
-  source-family-specific reviewed adapter;
-- a journal or ledger file or folder in `.xlsx`, `.xls`, or `.csv` format;
-  text `.pdf` files have the same fail-closed adapter requirement.
+- a bank statement file or folder in `.xlsx`, `.xls`, `.csv`, or text `.pdf`
+  format. A PDF can emit movements only when inspection recovers a labelled
+  physical column grid and a current source-bound receipt approves the header,
+  amount/debit/credit roles, sign convention, and every excluded monetary
+  column such as a running balance;
+- a journal or ledger file or folder in `.xlsx`, `.xls`, `.csv`, or text `.pdf`
+  format, subject to the same reviewed PDF-table contract.
 
 Optional:
 
@@ -91,9 +93,11 @@ Optional:
 - date window in days;
 - working language and source-document language.
 
-Generic and OCR-only PDFs are not movement sources. Inspection must expose
+PDF text without a labelled physical column grid, inconsistent page tables,
+and OCR-only PDFs are not movement sources. Inspection must expose
 `unsupported_source_layout`, emit zero movements, and retain only the narrow
-bank non-movement classifications supported by the script.
+bank non-movement classifications supported by the script. The presence of a
+date and one or more amounts on a line is never enough to infer a movement.
 
 ### Unsupported PDF hard stop
 
@@ -105,15 +109,15 @@ blocked result before ending the run:
 - `source_qualification`: `unsupported_source_layout`;
 - `emitted_movements`: `0`;
 - `reconciliation_deliverable`: `not_created`;
-- `next_supported_input`: a reviewed CSV or XLSX export from the source system.
+- `next_supported_input`: a labelled text-PDF table or a reviewed CSV/XLSX
+  export from the source system.
 
 A user's instruction to proceed anyway does not authorize a fallback. Do not
 invoke `run_reconciliation.py`, generic PDF/OCR tools, `pdfplumber` through an
 ad hoc script, or any undeclared extraction path; do not manually reconstruct
 movements; and do not create or relabel a generic comparison as a Vera result.
 Do not offer or start a non-Vera alternative in the same run. Keep the Vera run
-blocked until supported inputs or a reviewed source-family adapter are
-available.
+blocked until supported inputs or a reviewed PDF-table mapping are available.
 
 ## First Run Workflow
 
@@ -140,8 +144,10 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    source with `needs_review` has emitted zero rows. Ask the smallest needed
    question about the physical header, monetary role, CSV field delimiter,
    decimal/thousands separators, ambiguous day/month date convention, or
-   perimeter field. Treat the three separators as separate inputs. A generic
-   PDF cannot be approved merely by changing a mapping.
+   perimeter field. Treat the three separators as separate inputs. For a PDF,
+   explicitly review the recovered physical header, incoming/outgoing sign
+   roles, and all running-balance or total columns. A PDF with no qualified
+   physical column grid cannot be approved merely by changing a mapping.
 5. If a mapping decision is needed, edit `suggested_recipe.json` in the work
    folder, then use `journal_bank_core.build_mapping_review_receipt` to seal the
    reviewed header rows, mapping, CSV field delimiter, numeric separators,
@@ -550,8 +556,9 @@ DE: Verwende Journal-Bank Reconciliation für Kontoauszüge in /pfad/bank und Jo
 
 ## Failure Modes
 
-- For every generic or scanned PDF, report `unsupported_source_layout`; do not
-  emit movements or complete reconciliation. User insistence never authorizes
+- For every PDF without a consistent labelled physical table, and every
+  scanned/OCR-only PDF, report `unsupported_source_layout`; do not emit
+  movements or complete reconciliation. User insistence never authorizes
   generic extraction, an ad hoc PDF script, or a non-Vera fallback in the same
   run; show the blocked provenance result and stop dependent work.
 - If amount mapping is missing or a mapped amount has invalid/ambiguous
