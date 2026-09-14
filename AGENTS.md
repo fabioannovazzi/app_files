@@ -241,6 +241,24 @@ This executes the full quality gate:
   were changed outside git and restore the server to a clean git-managed state
   before considering the work complete.
 
+### Marketplace version publication
+
+- Fabio gives standing authorization to publish new plugin versions to their
+  existing OpenAI Marketplace listings as part of the release procedure. Once
+  the required release checks pass, upload, submit, and publish the version
+  without asking for another user confirmation or stopping at "ready to publish."
+- This authorization covers Marketplace version publication only. Permissions
+  for merging, server deployment, cleanup, new listings, and public identity
+  changes remain unchanged. Honor explicit verification-only, draft-only, or
+  narrower requests.
+- This rule supersedes separate-confirmation requirements for Marketplace
+  version publication in release skills and memory, including
+  `app-files-release-verification`. Preserve tool and platform permission
+  enforcement; report an actual denial without bypassing it.
+- Verify the exact version's `Published` status in the authoritative Marketplace
+  version list before reporting publication complete. Upload, submission, and
+  Draft status are not publication evidence.
+
 ### Branch and worktree lifecycle
 
 - The repository steady state is exactly one local branch (`main`), one remote
