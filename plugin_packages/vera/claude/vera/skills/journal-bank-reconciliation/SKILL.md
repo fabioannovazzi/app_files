@@ -111,9 +111,13 @@ Before reporting native values, require the module's fresh
 `material_value_ledger.json` replay and review the unclassified exact
 `relationship_residuals.csv`; do not infer a residual disposition.
 
-If either source is a generic or OCR-only PDF, follow the module's unsupported
-PDF hard stop even when the user asks to proceed anyway. Do not switch to
-generic Claude extraction, ad hoc scripts, or another parser inside this Vera
-run. Preserve `vera:journal-bank-reconciliation` as the workflow provenance,
-report zero emitted movements and no reconciliation deliverable, request a
-reviewed CSV/XLSX export, and stop dependent work.
+The module may admit a text PDF only when inspection recovers a consistent,
+labelled physical table and the professional approves a source-bound mapping
+of date, incoming/outgoing or signed amount, sign convention, and every
+excluded monetary column such as running balance. If either source is generic,
+inconsistent, or OCR-only PDF text, follow the module's unsupported PDF hard
+stop even when the user asks to proceed anyway. Do not switch to generic Claude
+extraction, ad hoc scripts, or another parser inside this Vera run. Preserve
+`vera:journal-bank-reconciliation` as the workflow provenance, report zero
+emitted movements and no reconciliation deliverable, request a labelled text
+PDF table or reviewed CSV/XLSX export, and stop dependent work.
