@@ -306,11 +306,15 @@ the main Codex chat and deterministic reconciliation remain unchanged.
   label.
 - Ambiguous separator syntax such as `1.000` is rejected unless the recipe
   explicitly declares the separator convention.
-- Generic text-PDF movement extraction emits zero rows with
-  `unsupported_source_layout`. Narrow balance, total, scalare, and conditions
+- `journal_bank.pdf_table.v1` accepts ruled or positionally aligned text-PDF
+  tables only when they have an explicit date header and at least one monetary
+  header, every page repeats the same physical header, and a current
+  source-bound mapping receipt approves amount/debit/credit roles, signs, and
+  every excluded monetary column. Page/table/row coordinates remain lineage.
+- Generic PDF text, inconsistent page tables, and OCR-only input emit zero rows
+  with `unsupported_source_layout`. A date plus numeric tokens on a free-form
+  line is not a movement. Narrow balance, total, scalare, and conditions
   classifications may still be retained as non-movement review evidence.
-- A future PDF adapter must be source-family-specific and tested; a free-form
-  recipe label does not qualify an adapter.
 - A supplied sample must contain movement identifiers and select journal rows.
   Empty, invalid, or nonmatching samples block instead of falling back to the
   full journal.

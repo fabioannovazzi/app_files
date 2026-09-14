@@ -101,7 +101,7 @@
       "display_name": "Riconciliazione banca-contabilità",
       "short_description": "Abbina estratti conto e giornale contabile",
       "default_prompt": "Usa $journal-bank-reconciliation per riconciliare questi estratti conto con il giornale contabile e separare abbinamenti, residui ed eccezioni.",
-      "instructions": "Allega gli estratti conto e l'esportazione del giornale contabile o del mastro in CSV o XLSX. Vera rivede la mappatura dei campi, abbina importi, date e riferimenti e restituisce corrispondenze, movimenti non abbinati, residui ed eccezioni senza attribuire automaticamente i casi ambigui. Un PDF generico resta bloccato con zero movimenti: anche se l'utente chiede di procedere, Vera non passa a estrazione generica o script ad hoc, dichiara il workflow e richiede un export CSV o XLSX."
+      "instructions": "Allega gli estratti conto e l'esportazione del giornale contabile o del mastro in CSV, XLSX o PDF testuale con colonne riconoscibili. Per un PDF, Vera conserva pagina, tabella e riga e chiede di approvare intestazioni, segni, colonne entrate/uscite e l'esclusione del saldo prima di emettere movimenti. Poi abbina importi, date e riferimenti e restituisce corrispondenze, movimenti non abbinati, residui ed eccezioni senza attribuire automaticamente i casi ambigui. Un PDF generico, incoerente o solo OCR resta bloccato con zero movimenti: anche se l'utente chiede di procedere, Vera non passa a estrazione generica o script ad hoc, dichiara il workflow e richiede un PDF tabellare leggibile o un export CSV/XLSX."
     },
     "purchase-invoice-review": {
       "display_name": "Audit intelligente fatture passive",
