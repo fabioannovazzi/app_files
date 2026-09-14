@@ -56,10 +56,30 @@ script URL, optional OCR package identity and management-control dependency
 catalog membership. The relevant functions and production sources were unchanged
 from the starting commit; this release does not repair those separate issues.
 
-PR #621 contains the reviewable change. Marketplace publication and update
-notifications remain separate from built artifacts and production deployment;
-these candidate versions must not be advertised as OpenAI Published until that
-state is directly observed.
+PR #621 contains the reviewable change, merged and deployed on 2026-09-13.
+PR #622 aligned the remaining HTML and video-catalog workflow references;
+181 website tests and all 23 CI checks passed, and the six changed public assets
+matched the deployed source.
+
+On 2026-09-14, Vera 0.1.248, Clara 0.1.197 and Lucia 0.1.45 each showed
+Published in OpenAI Platform and the same version in the public directory.
+All 63 skill checks passed (Vera 37, Clara 16, Lucia 10). The user confirmed
+the four publisher declarations before submission and publication.
+`marketplace-publications.json` records each submission URL and the SHA-256
+of the exact uploaded archive; the public update manifest advertises the
+confirmed Vera and Clara versions.
+
+The subsequent teaching release in PR #623 advanced repository packages to
+Vera 0.1.249, Clara 0.1.198 and Lucia 0.1.46. Those repository versions remain
+unchanged by this publication record. Refreshing Clara's privacy fingerprint
+for the update manifest rebuilds its current 0.1.198 archives; the Marketplace
+hash continues to identify the actual published 0.1.197 archive.
+
+Publication follow-up validation: 477 package, update-notification, release,
+skill-identity and privacy tests passed, with two environment-dependent skips.
+All three product distribution checks passed. Comparing both rebuilt Clara ZIPs
+with their PR #623 versions found only the reviewed
+`privacy/hosted-services/plugin-update-check.json` change.
 
 These are workflow-name changes. No model substitution or claim of measured
 improvement in Astra's skill selection is included.
