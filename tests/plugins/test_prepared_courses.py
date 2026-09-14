@@ -358,8 +358,8 @@ def test_complete_compiled_catalog_matches_authoring_and_current_sources(
 
     monkeypatch.setattr(Path, "read_text", read_with_host_default)
     assert builder.build(check=True) == {
-        "workflows": 44,
-        "localized_courses": 200,
+        "workflows": 45,
+        "localized_courses": 205,
         "missing_translations": {},
     }
 

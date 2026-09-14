@@ -149,6 +149,7 @@
     "journal-bank-reconciliation": [["vera", "area-accounting"]],
     "management-control-pack": [["vera", "area-analysis"]],
     "passive-invoice-audit": [["vera", "area-accounting"]],
+    "invoice-xml": [["vera", "area-accounting"]],
     "journal-sampling": [["vera", "area-accounting"]],
     "new-client": [["vera", "area-clients"]],
     "new-client/geneva": [["vera", "area-clients"]],

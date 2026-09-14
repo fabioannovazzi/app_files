@@ -1,0 +1,83 @@
+{
+  "schema_version": 3,
+  "workstream": "invoice-xml",
+  "display_name": "Preparazione fatture XML",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "invoice-extraction",
+        "purpose": "Read selected invoices and supporting profiles to prepare source-linked fields and resolve ambiguity",
+        "content": "Selected invoice PDFs, their locally extracted text and rendered pages, native-vision photos, party profiles, source filenames and identifiers, invoice numbers and dates, descriptions, quantities, amounts, VAT and routing or payment information when present. Multiple photos can form one invoice evidence group. The model may need the full relevant invoice. The local material inventory is not proof of model exposure.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "draft-and-professional-review",
+        "purpose": "Review extracted fields, fiscal proposals, missing facts, corrections and final export status",
+        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "official-tax-source-research",
+      "kind": "public_research",
+      "destination": "Official public tax and FatturaPA documentation",
+      "purpose": "Verify applicable technical and fiscal guidance for the selected invoice preparation route",
+      "content": "Generic technical or tax topics without client names, identifiers, private invoice text or private files",
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "optional": false,
+      "controls": [
+        "No client identifiers or invoice content in public queries; never upload source documents."
+      ],
+      "requires_confirmation": false
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "managed-input-output-boundary",
+      "control": "CLI commands require a running Studio Archive invoice-xml context; source references stay below the bound input directory and outputs below the selected run. Symlink sources and source paths containing traversal are rejected."
+    },
+    {
+      "id": "source-and-review-binding",
+      "control": "Source files have retained SHA-256 values. A complete proposal digest names an immutable revision, and export requires approval bound to that exact digest after rechecking sources, XSD and arithmetic. Conflicting writes are rejected; identical retries reuse artifacts."
+    },
+    {
+      "id": "offline-schema-resolution",
+      "control": "The schema bundle checks retained file digests and its resolver allows only the bundled W3C import. XML parsing disables network and DTD loading. Serialization accepts schema-declared elements and escapes field text."
+    },
+    {
+      "id": "preview-content-escaping",
+      "control": "The static local preview escapes source values and declares a no-network/no-script/no-form content security policy. It has no send, signing, submission or accounting-posting control."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-14",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "9f6eaecb8ce6cffcb88ccd82f273055880c6db161054edb4fc972b15939c2ce2"
+  }
+}

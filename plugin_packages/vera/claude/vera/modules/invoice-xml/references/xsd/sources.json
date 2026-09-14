@@ -1,0 +1,15 @@
+{
+  "retrieved_at": "2026-09-14",
+  "files": [
+    {
+      "path": "Schema_VFPR12_v1.2.3.xsd",
+      "url": "https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.4/Schema_VFPR12_v1.2.3.xsd",
+      "sha256": "152944f6eef9f5d69ef6e955ee173b32142b00a8c1c5222fc97dfab5910e8a8c"
+    },
+    {
+      "path": "xmldsig-core-schema.xsd",
+      "url": "https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd",
+      "sha256": "35cf8197da812c85e40d57891b35c94187569ed474a2dac813ce5090dafcd35c"
+    }
+  ]
+}
