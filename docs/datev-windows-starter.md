@@ -15,9 +15,11 @@ documentati dall'host corrente. Non è un esecutore DATEV unattended.
 
 ## Evidenza e limite di piattaforma
 
-- Versione candidata DATEV: 0.1.256. La 0.1.255 appartiene al rilascio di
-  recupero della PR #635; prima della pubblicazione DATEV occorre integrare
-  quel rilascio, ricostruire e verificare i pacchetti combinati.
+- Vera 0.1.256 è stata confermata **Published** nell'elenco ufficiale OpenAI
+  il 15 settembre 2026. Le PR #635 e #638 sono integrate; il pacchetto combinato
+  ha superato 32 controlli CI e tutte le 39 scansioni delle skill del Marketplace.
+  La ricevuta della pubblicazione e l'hash dello ZIP caricato sono registrati in
+  `docs/releases/marketplace-publications.json`.
 - Base sorgente ispezionata: `8d555b00`, coincidente con `origin/main` il
   15 settembre 2026; Vera sorgente e Marketplace Published 0.1.254. Il registro
   pubblico del sito era ancora 0.1.253. Questi sono gli stati iniziali osservati,
