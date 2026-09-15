@@ -34,6 +34,15 @@ templates and must not declare a separate version. Bump the canonical patch
 version for a release on either host, then rebuild every affected host package.
 Do not maintain independent Codex and Cowork version sequences.
 
+Before reserving a patch version, inspect the current canonical version and the
+product manifest changes in other open release PRs. Choose a version above all
+those candidates; do not let independent worktrees publish different packages
+with the same version. Immediately before publication, check the authoritative
+Published version again. Never publish a lower version over a newer release
+unless the user explicitly requests that rollback. If main has advanced, integrate
+its source, rebuild and rerun checks before publishing; do not drop the intervening
+release or reuse an already-uploaded archive after source changes.
+
 ## Required Workflow
 
 1. Finish source edits under `plugins/<plugin-name>`.
@@ -76,6 +85,48 @@ before completing the release.
 - ZIP path;
 - tests run;
 - whether the ZIP matches repo source.
+
+## Installed-version acceptance
+
+Source tests, ZIP parity, server deployment and Marketplace publication never
+prove that a user's enabled plugin or already-open conversation updated.
+Before reporting a fix as working for a user:
+
+1. Use `codex plugin list --json` to inspect the actual enabled installation.
+   Do not infer it from cache directories. A local `mp-vera`/`mp-clara` copy is
+   a separate installation; publishing an official version does not replace it.
+2. Compare the exact version with the release being accepted. Use the exact
+   skill path exposed in the current host catalog, not a newer path discovered
+   on disk:
+
+   ```sh
+   python scripts/check_installed_product.py vera \
+     --expected-version <published-version> \
+     --skill-path <currently-exposed-SKILL.md>
+   ```
+
+   This command rejects missing, disabled, duplicate, local or wrong-version
+   installations and missing or stale exposed skills. Run its unit regressions
+   in CI; run the live command on the acceptance host after installation.
+3. After replacing an obsolete installation, use a fresh conversation and
+   repeat the check there. Never substitute the new cache path into an old
+   conversation to manufacture a pass. If fresh-session inspection is unavailable,
+   report installation repaired and active-session acceptance outstanding.
+4. Exercise the user's actual acceptance case. For privacy-report delivery,
+   an ordinary synthetic analysis must show its readable privacy report without
+   prompting; a later request must reopen that saved report without rerunning
+   the analysis. Backend receipts and saved file paths do not prove delivery.
+
+When repairing an authorized stale local installation, install the official
+plugin first, verify it is enabled at the expected version, and only then remove
+the obsolete local plugin registration and marketplace entry. Preserve user
+case files and tutorial data. Use supported plugin-management commands; never
+edit a generated cache or approve hook trust on the user's behalf.
+
+The release is not accepted on every user's computer merely because it passed
+on one host. Older copies, declined updates, disabled hooks and already-open
+conversations remain explicit rollout limits. Do not promise that a plugin can
+force the host to update or replace instructions in an existing conversation.
 
 ## Post-publish update notification
 

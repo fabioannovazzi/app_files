@@ -163,6 +163,14 @@ jobs:
             --expected-sha256 c24b86375529469ca0be9a06b231fbb05da18df99fa36a1db2e587ab51e2f0f1 \
             --official-source https://it.xbrl.org/wp-content/uploads/sites/5/2018/11/PCI-2018-11-04.zip \
             --output "$TEACHING_TAXONOMY_CATALOGUE"
+      # A CLI may provision the shared environment before importing the workflow.
+      # Keep cold setup outside the teaching tests' 60-second analysis deadline;
+      # the dedicated cold-start matrix still verifies first-time installation.
+      - name: Prepare the declared managed workflow runtime
+        timeout-minutes: 10
+        run: |
+          python plugins/clara/scripts/check_dependencies.py --module variance-analysis
+          python plugins/vera/scripts/check_dependencies.py --module concordato-plan-review
       - name: Verify teaching-kit languages, real executions and native packages
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

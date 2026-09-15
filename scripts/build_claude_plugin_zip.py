@@ -1683,15 +1683,15 @@ def _without_openai_onboarding(content: bytes) -> bytes:
     """Keep the one-off OpenAI onboarding out of the unchanged Cowork runtime."""
     text = content.decode("utf-8")
     text = re.sub(
-        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV)_BEGIN -->\n.*?"
-        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV)_END -->\n\n",
+        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION)_BEGIN -->\n.*?"
+        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION)_END -->\n\n",
         "",
         text,
         flags=re.DOTALL,
     )
     text = re.sub(
-        r"<!-- (?:CLARA|LUCIA)_OPENAI_ONBOARDING_BEGIN -->\n.*?"
-        r"<!-- (?:CLARA|LUCIA)_OPENAI_ONBOARDING_END -->(?:\n|$)\n?",
+        r"<!-- (?:CLARA|LUCIA)_OPENAI_(?:ONBOARDING|VERSION)_BEGIN -->\n.*?"
+        r"<!-- (?:CLARA|LUCIA)_OPENAI_(?:ONBOARDING|VERSION)_END -->(?:\n|$)\n?",
         "",
         text,
         flags=re.DOTALL,

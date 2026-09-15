@@ -3,9 +3,11 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -13,7 +15,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-__all__ = ["check_for_update", "is_newer_version", "main"]
+__all__ = ["check_for_update", "is_newer_version", "session_start_output", "main"]
 
 VERSION_MANIFEST_URL = "https://mparanza.com/static/shared/codex-plugin-versions.json"
 CHECK_INTERVAL_SECONDS = 24 * 60 * 60
@@ -166,10 +168,6 @@ def check_for_update(
                 "checked_at": checked_at,
                 "manifest": remote_manifest,
             }
-            if cache is not None:
-                for key in ("last_notified_at", "last_notified_version"):
-                    if key in cache:
-                        cache_payload[key] = cache[key]
             _write_json(
                 cache_path,
                 cache_payload,
@@ -185,25 +183,6 @@ def check_for_update(
         return None
     if not update_available:
         return None
-    if cache is not None:
-        last_notified_version = cache.get("last_notified_version")
-        last_notified_at = cache.get("last_notified_at")
-        if (
-            last_notified_version == published_version
-            and isinstance(last_notified_at, (int, float))
-            and checked_at - float(last_notified_at) < CHECK_INTERVAL_SECONDS
-        ):
-            return None
-    if cache_path is not None:
-        _write_json(
-            cache_path,
-            {
-                "checked_at": checked_at,
-                "manifest": remote_manifest,
-                "last_notified_at": checked_at,
-                "last_notified_version": published_version,
-            },
-        )
     interface = local_manifest.get("interface")
     display_name = (
         interface.get("displayName") if isinstance(interface, dict) else None
@@ -211,7 +190,9 @@ def check_for_update(
     return (
         f"{display_name} update available: installed {installed_version}, "
         f"published {published_version}. Visit {install_url} to get the latest "
-        "published version."
+        "published version. If you use a local or ZIP copy, verify the official "
+        "installation before disabling the old local copy, then start a fresh "
+        "conversation. Installing from the listing does not remove a local copy."
     )
 
 
@@ -232,19 +213,54 @@ def _check_fixed_change_requests(
         return None
 
 
-def main() -> int:
-    """Run the fail-open SessionStart update check."""
-
+def session_start_output(*, include_change_requests: bool = True) -> dict[str, Any]:
+    """Build one hook response; package identity is local, never sent upstream."""
     plugin_root = Path(
         os.environ.get("PLUGIN_ROOT", Path(__file__).resolve().parents[1])
     ).resolve()
     plugin_data_value = os.environ.get("PLUGIN_DATA")
     plugin_data = Path(plugin_data_value).resolve() if plugin_data_value else None
-    message = _check_fixed_change_requests(plugin_root, plugin_data)
-    if message is None:
-        message = check_for_update(plugin_root, plugin_data)
-    if message is not None:
-        print(json.dumps({"systemMessage": message}))
+    manifest = _read_json(plugin_root / ".codex-plugin/plugin.json") or {}
+    identity = (
+        f"Installed plugin manifest: {manifest.get('name', 'unknown')} "
+        f"{manifest.get('version', 'unknown')}. "
+        "This identifies this package, not Marketplace publication or successful "
+        "user-visible behavior. Do not claim a fix is active from source tests, "
+        "a download or another cached version."
+    )
+    messages = []
+    if include_change_requests:
+        fixed_message = _check_fixed_change_requests(plugin_root, plugin_data)
+        if fixed_message:
+            messages.append(fixed_message)
+    update_message = check_for_update(plugin_root, plugin_data)
+    if update_message:
+        messages.append(update_message)
+    output: dict[str, Any] = {
+        "hookSpecificOutput": {
+            "hookEventName": "SessionStart",
+            "additionalContext": identity,
+        }
+    }
+    if messages:
+        message = "\n".join(messages)
+        output["systemMessage"] = message
+        output["hookSpecificOutput"]["additionalContext"] += (
+            " Tell the user the following notice in their language before "
+            "continuing; do not treat it as proof they saw it: " + message
+        )
+    return output
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Check from the installed package, including when a trusted hook is absent."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--version-only", action="store_true", help="Do not poll change requests."
+    )
+    args = parser.parse_args(argv)
+    output = session_start_output(include_change_requests=not args.version_only)
+    sys.stdout.write(json.dumps(output) + "\n")
     return 0
 
 
