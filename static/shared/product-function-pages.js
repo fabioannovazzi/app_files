@@ -97,7 +97,7 @@
     "it": {
       "name": "Impara con Clara",
       "summary": "Parli con Clara in una finestra; nell’altra vedi l’esempio che sta eseguendo. Puoi fermarla, fare domande e provare insieme.",
-      "useWhen": "Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate.",
+      "useWhen": "L’introduzione è facoltativa: puoi saltarla o interromperla e usare subito Clara, anche se il tutorial non funziona. Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate.",
       "input": "Racconta di che cosa ti occupi e che cosa vorresti fare. Se non hai ancora un’idea, Clara ti propone qualche attività utile al tuo lavoro.",
       "work": "La prima volta Clara ti fa qualche domanda sul tuo lavoro, poi ti accompagna in 3–4 attività scelte con te. In seguito puoi tornare quando vuoi per imparare un’altra funzione, senza rifare l’intervista.",
       "output": "Clara ricorda sul tuo computer gli esempi fatti e il punto a cui sei arrivato. Puoi riprendere una prova, rifarla con dati diversi o passare ai documenti che scegli tu.",
@@ -120,7 +120,7 @@
     "en": {
       "name": "Learn with Clara",
       "summary": "Talk to Clara in one window and watch the example she is running in the other. You can stop her, ask questions and try it together.",
-      "useWhen": "For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows.",
+      "useWhen": "The introduction is optional: you can skip or leave it and use Clara immediately, even if the tutorial fails. For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows.",
       "input": "Tell Clara about your work and what you would like to do. If you have no idea yet, she suggests a few activities that could help with your work.",
       "work": "The first time, Clara asks a few questions about your work, then guides you through 3–4 activities chosen together. Come back anytime to learn another function, without repeating the interview.",
       "output": "Clara keeps the examples you have tried and your place on your computer. Resume an example, repeat it with different data or move on to documents you choose.",
@@ -143,7 +143,7 @@
     "fr": {
       "name": "Apprendre avec Clara",
       "summary": "Tu parles avec Clara dans une fenêtre et tu regardes l’exemple qu’elle réalise dans l’autre. Tu peux l’arrêter, poser des questions et essayer avec elle.",
-      "useWhen": "Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte.",
+      "useWhen": "La présentation est facultative : tu peux la passer ou l’arrêter et utiliser Clara immédiatement, même si le tutoriel ne fonctionne pas. Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte.",
       "input": "Raconte ton travail et ce que tu aimerais faire. Si tu n’as pas encore d’idée, Clara te propose quelques activités utiles à ton travail.",
       "work": "La première fois, Clara te pose quelques questions sur ton travail, puis te guide dans 3–4 activités choisies ensemble. Tu peux ensuite revenir apprendre une autre fonction sans refaire l’entretien.",
       "output": "Clara conserve sur ton ordinateur les exemples essayés et l’endroit où tu t’es arrêté. Reprends un essai, refais-le avec d’autres données ou passe aux documents que tu choisis.",
@@ -166,7 +166,7 @@
     "de": {
       "name": "Mit Clara lernen",
       "summary": "Du sprichst mit Clara in einem Fenster und siehst im anderen, wie sie ein Beispiel ausführt. Du kannst sie unterbrechen, Fragen stellen und es gemeinsam ausprobieren.",
-      "useWhen": "Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern.",
+      "useWhen": "Die Einführung ist freiwillig: Du kannst sie überspringen oder abbrechen und Clara sofort nutzen, auch wenn das Tutorial nicht funktioniert. Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern.",
       "input": "Erzähle Clara von deiner Arbeit und davon, was du tun möchtest. Wenn du noch keine Idee hast, schlägt sie dir einige passende Aufgaben vor.",
       "work": "Beim ersten Mal stellt Clara dir einige Fragen zu deiner Arbeit und begleitet dich dann durch 3–4 gemeinsam ausgewählte Aufgaben. Später kannst du jederzeit eine weitere Funktion kennenlernen, ohne das Gespräch zu wiederholen.",
       "output": "Clara speichert die ausprobierten Beispiele und deinen Fortschritt auf deinem Computer. Setze ein Beispiel fort, wiederhole es mit anderen Daten oder verwende selbst ausgewählte Dokumente.",
@@ -189,7 +189,7 @@
     "es": {
       "name": "Aprende con Clara",
       "summary": "Hablas con Clara en una ventana y ves el ejemplo que está realizando en la otra. Puedes detenerla, hacer preguntas y probar juntos.",
-      "useWhen": "Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas.",
+      "useWhen": "La introducción es opcional: puedes omitirla o interrumpirla y usar Clara de inmediato, incluso si el tutorial falla. Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas.",
       "input": "Cuéntale a Clara a qué te dedicas y qué te gustaría hacer. Si todavía no tienes una idea, te propone algunas actividades útiles para tu trabajo.",
       "work": "La primera vez, Clara te hace algunas preguntas sobre tu trabajo y te guía en 3–4 actividades elegidas juntos. Después puedes volver cuando quieras para aprender otra función sin repetir la entrevista.",
       "output": "Clara guarda en tu ordenador los ejemplos que has probado y dónde te quedaste. Retoma un ejemplo, repítelo con otros datos o pasa a los documentos que elijas.",
@@ -218,7 +218,7 @@
     "it": {
       "name": "Impara con Lucia",
       "summary": "Parli con Lucia in una finestra; nell’altra vedi l’esempio che sta eseguendo. Puoi fermarla, fare domande e provare insieme.",
-      "useWhen": "Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate.",
+      "useWhen": "L’introduzione è facoltativa: puoi saltarla o interromperla e usare subito Lucia, anche se il tutorial non funziona. Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate.",
       "input": "Racconta di che cosa ti occupi e che cosa vorresti fare. Se non hai ancora un’idea, Lucia ti propone qualche attività utile al tuo lavoro.",
       "work": "La prima volta Lucia ti fa qualche domanda sul tuo lavoro, poi ti accompagna in 3–4 attività scelte con te. In seguito puoi tornare quando vuoi per imparare un’altra funzione, senza rifare l’intervista.",
       "output": "Lucia ricorda sul tuo computer gli esempi fatti e il punto a cui sei arrivato. Puoi riprendere una prova, rifarla con dati diversi o passare ai documenti che scegli tu.",
@@ -241,7 +241,7 @@
     "en": {
       "name": "Learn with Lucia",
       "summary": "Talk to Lucia in one window and watch the example she is running in the other. You can stop her, ask questions and try it together.",
-      "useWhen": "For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows.",
+      "useWhen": "The introduction is optional: you can skip or leave it and use Lucia immediately, even if the tutorial fails. For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows.",
       "input": "Tell Lucia about your work and what you would like to do. If you have no idea yet, she suggests a few activities that could help with your work.",
       "work": "The first time, Lucia asks a few questions about your work, then guides you through 3–4 activities chosen together. Come back anytime to learn another function, without repeating the interview.",
       "output": "Lucia keeps the examples you have tried and your place on your computer. Resume an example, repeat it with different data or move on to documents you choose.",
@@ -264,7 +264,7 @@
     "fr": {
       "name": "Apprendre avec Lucia",
       "summary": "Tu parles avec Lucia dans une fenêtre et tu regardes l’exemple qu’elle réalise dans l’autre. Tu peux l’arrêter, poser des questions et essayer avec elle.",
-      "useWhen": "Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte.",
+      "useWhen": "La présentation est facultative : tu peux la passer ou l’arrêter et utiliser Lucia immédiatement, même si le tutoriel ne fonctionne pas. Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte.",
       "input": "Raconte ton travail et ce que tu aimerais faire. Si tu n’as pas encore d’idée, Lucia te propose quelques activités utiles à ton travail.",
       "work": "La première fois, Lucia te pose quelques questions sur ton travail, puis te guide dans 3–4 activités choisies ensemble. Tu peux ensuite revenir apprendre une autre fonction sans refaire l’entretien.",
       "output": "Lucia conserve sur ton ordinateur les exemples essayés et l’endroit où tu t’es arrêté. Reprends un essai, refais-le avec d’autres données ou passe aux documents que tu choisis.",
@@ -287,7 +287,7 @@
     "de": {
       "name": "Mit Lucia lernen",
       "summary": "Du sprichst mit Lucia in einem Fenster und siehst im anderen, wie sie ein Beispiel ausführt. Du kannst sie unterbrechen, Fragen stellen und es gemeinsam ausprobieren.",
-      "useWhen": "Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern.",
+      "useWhen": "Die Einführung ist freiwillig: Du kannst sie überspringen oder abbrechen und Lucia sofort nutzen, auch wenn das Tutorial nicht funktioniert. Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern.",
       "input": "Erzähle Lucia von deiner Arbeit und davon, was du tun möchtest. Wenn du noch keine Idee hast, schlägt sie dir einige passende Aufgaben vor.",
       "work": "Beim ersten Mal stellt Lucia dir einige Fragen zu deiner Arbeit und begleitet dich dann durch 3–4 gemeinsam ausgewählte Aufgaben. Später kannst du jederzeit eine weitere Funktion kennenlernen, ohne das Gespräch zu wiederholen.",
       "output": "Lucia speichert die ausprobierten Beispiele und deinen Fortschritt auf deinem Computer. Setze ein Beispiel fort, wiederhole es mit anderen Daten oder verwende selbst ausgewählte Dokumente.",
@@ -310,7 +310,7 @@
     "es": {
       "name": "Aprende con Lucia",
       "summary": "Hablas con Lucia en una ventana y ves el ejemplo que está realizando en la otra. Puedes detenerla, hacer preguntas y probar juntos.",
-      "useWhen": "Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas.",
+      "useWhen": "La introducción es opcional: puedes omitirla o interrumpirla y usar Lucia de inmediato, incluso si el tutorial falla. Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas.",
       "input": "Cuéntale a Lucia a qué te dedicas y qué te gustaría hacer. Si todavía no tienes una idea, te propone algunas actividades útiles para tu trabajo.",
       "work": "La primera vez, Lucia te hace algunas preguntas sobre tu trabajo y te guía en 3–4 actividades elegidas juntos. Después puedes volver cuando quieras para aprender otra función sin repetir la entrevista.",
       "output": "Lucia guarda en tu ordenador los ejemplos que has probado y dónde te quedaste. Retoma un ejemplo, repítelo con otros datos o pasa a los documentos que elijas.",
@@ -339,7 +339,7 @@
         "it": {
           "name": "Impara con Vera",
           "summary": "Parli con Vera in una finestra; nell’altra vedi l’esempio che sta eseguendo. Puoi fermarla, fare domande e provare insieme.",
-          "useWhen": "Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate.",
+          "useWhen": "L’introduzione è facoltativa: puoi saltarla o interromperla e usare subito Vera, anche se il tutorial non funziona. Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate.",
           "input": "Racconta di che cosa ti occupi e che cosa vorresti fare. Se non hai ancora un’idea, Vera ti propone qualche attività utile al tuo lavoro.",
           "work": "La prima volta Vera ti fa qualche domanda sul tuo lavoro, poi ti accompagna in 3–4 attività scelte con te. In seguito puoi tornare quando vuoi per imparare un’altra funzione, senza rifare l’intervista.",
           "output": "Vera ricorda sul tuo computer gli esempi fatti e il punto a cui sei arrivato. Puoi riprendere una prova, rifarla con dati diversi o passare ai documenti che scegli tu.",
@@ -362,7 +362,7 @@
         "en": {
           "name": "Learn with Vera",
           "summary": "Talk to Vera in one window and watch the example she is running in the other. You can stop her, ask questions and try it together.",
-          "useWhen": "For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows.",
+          "useWhen": "The introduction is optional: you can skip or leave it and use Vera immediately, even if the tutorial fails. For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows.",
           "input": "Tell Vera about your work and what you would like to do. If you have no idea yet, she suggests a few activities that could help with your work.",
           "work": "The first time, Vera asks a few questions about your work, then guides you through 3–4 activities chosen together. Come back anytime to learn another function, without repeating the interview.",
           "output": "Vera keeps the examples you have tried and your place on your computer. Resume an example, repeat it with different data or move on to documents you choose.",
@@ -385,7 +385,7 @@
         "fr": {
           "name": "Apprendre avec Vera",
           "summary": "Tu parles avec Vera dans une fenêtre et tu regardes l’exemple qu’elle réalise dans l’autre. Tu peux l’arrêter, poser des questions et essayer avec elle.",
-          "useWhen": "Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte.",
+          "useWhen": "La présentation est facultative : tu peux la passer ou l’arrêter et utiliser Vera immédiatement, même si le tutoriel ne fonctionne pas. Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte.",
           "input": "Raconte ton travail et ce que tu aimerais faire. Si tu n’as pas encore d’idée, Vera te propose quelques activités utiles à ton travail.",
           "work": "La première fois, Vera te pose quelques questions sur ton travail, puis te guide dans 3–4 activités choisies ensemble. Tu peux ensuite revenir apprendre une autre fonction sans refaire l’entretien.",
           "output": "Vera conserve sur ton ordinateur les exemples essayés et l’endroit où tu t’es arrêté. Reprends un essai, refais-le avec d’autres données ou passe aux documents que tu choisis.",
@@ -408,7 +408,7 @@
         "de": {
           "name": "Mit Vera lernen",
           "summary": "Du sprichst mit Vera in einem Fenster und siehst im anderen, wie sie ein Beispiel ausführt. Du kannst sie unterbrechen, Fragen stellen und es gemeinsam ausprobieren.",
-          "useWhen": "Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern.",
+          "useWhen": "Die Einführung ist freiwillig: Du kannst sie überspringen oder abbrechen und Vera sofort nutzen, auch wenn das Tutorial nicht funktioniert. Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern.",
           "input": "Erzähle Vera von deiner Arbeit und davon, was du tun möchtest. Wenn du noch keine Idee hast, schlägt sie dir einige passende Aufgaben vor.",
           "work": "Beim ersten Mal stellt Vera dir einige Fragen zu deiner Arbeit und begleitet dich dann durch 3–4 gemeinsam ausgewählte Aufgaben. Später kannst du jederzeit eine weitere Funktion kennenlernen, ohne das Gespräch zu wiederholen.",
           "output": "Vera speichert die ausprobierten Beispiele und deinen Fortschritt auf deinem Computer. Setze ein Beispiel fort, wiederhole es mit anderen Daten oder verwende selbst ausgewählte Dokumente.",
@@ -431,7 +431,7 @@
         "es": {
           "name": "Aprende con Vera",
           "summary": "Hablas con Vera en una ventana y ves el ejemplo que está realizando en la otra. Puedes detenerla, hacer preguntas y probar juntos.",
-          "useWhen": "Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas.",
+          "useWhen": "La introducción es opcional: puedes omitirla o interrumpirla y usar Vera de inmediato, incluso si el tutorial falla. Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas.",
           "input": "Cuéntale a Vera a qué te dedicas y qué te gustaría hacer. Si todavía no tienes una idea, te propone algunas actividades útiles para tu trabajo.",
           "work": "La primera vez, Vera te hace algunas preguntas sobre tu trabajo y te guía en 3–4 actividades elegidas juntos. Después puedes volver cuando quieras para aprender otra función sin repetir la entrevista.",
           "output": "Vera guarda en tu ordenador los ejemplos que has probado y dónde te quedaste. Retoma un ejemplo, repítelo con otros datos o pasa a los documentos que elijas.",

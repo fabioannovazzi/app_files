@@ -1,10 +1,12 @@
 # First conversation with Vera
 
-This is Vera's mandatory, one-off onboarding for **Codex desktop**. It also
-loads and resumes the same profile in **local ChatGPT Work on the same OS user
-account**. An existing Vera user gets this introduction once when no completed record
-exists. Plugin updates and new clients never
-reset completion. This is not client onboarding (`new-client`).
+This is Vera's optional, one-off introduction for **Codex desktop**, available
+when the user asks to learn or chooses to start it. It can reuse the same profile
+in **local ChatGPT Work on the same OS user account**. New and existing users can
+use ordinary workflows without starting or completing this introduction. Plugin
+updates and new clients never reset saved progress or completion.
+This is not client or matter intake: each professional workflow keeps its own
+required inputs, review and authorization rules.
 
 For a demonstration, guided practice or discovery request, route to
 `../../learn-with-vera/SKILL.md`. A working chat carrying a native teacher's
@@ -20,12 +22,18 @@ an explanation of Vera's scope and selection of a supported Vera lesson.
 
 ## Entry and local profile
 
-Before the first substantive Vera action in every session, including direct
-specialist invocation, resolve the installed Vera root from this reference and
-run `python3 <vera-root>/scripts/local_onboarding.py status` with the host's
-local execution tool. Use the shared managed Python interpreter for lessons.
-Do not require an API key or create an additional environment for the interview.
-The helper uses only Python's standard library and makes no network calls.
+Do not run `local_onboarding.py status` before ordinary work or direct specialist
+invocation. Do not require a profile, repeat an invitation or redirect a concrete
+professional request into a tutorial. If the user skips, declines, pauses or
+leaves onboarding, continue the requested professional workflow immediately.
+Keep any existing lesson progress; skipping is not completion.
+
+Only after the user requests a tutorial or chooses the introduction, resolve the
+installed Vera root and run
+`python3 <vera-root>/scripts/local_onboarding.py status` with the host's local execution tool. Use the shared managed Python
+interpreter for lessons. Do not require an API key or create an additional
+environment for the interview. The helper uses only Python's standard library
+and makes no network calls.
 
 The default directory is `~/.local/share/vera/onboarding` on macOS/Linux and
 `%LOCALAPPDATA%/Vera/onboarding` on Windows. It is independent of the current
@@ -36,35 +44,40 @@ If tools cannot access this location, connect the existing directory through
 the host's normal permissions. Never interpret denied access, a different
 sandbox home, corrupt JSON or a missing enrolled profile as a new user.
 
-- `required`: start in a native Codex teaching chat, run `begin`, then conduct
-  the conversation below. If first invoked from local Work, guide the user into
-  that Codex chat. Do this for established Vera users too; do not infer completion
-  from earlier work.
-- `interview`: resume from `interview_notes`, without repeating answered questions.
-- `teaching`: reflect the confirmed profile briefly and resume the first unfinished
-  lesson, reusing its real outputs and the two existing chats where available.
-- `complete`: use the confirmed profile as context for normal routing. The current
-  request always takes precedence over stored interests, language or preferences.
-- `recovery_required` or a failed command: explain the local access/recovery issue,
-  preserve the existing files, and reconnect or recover before proceeding.
+These statuses describe only the optional tutorial, never permission to use Vera:
 
-On cloud ChatGPT, mobile or a host without local execution, explain that the
-first voice introduction needs desktop Codex. Do not create a pretend local
-profile, start a second interview in a sandbox, or mark onboarding complete.
-After desktop onboarding, cloud chats still cannot assume they can read it.
-Claude Cowork is outside this feature; its projected package omits this flow.
+- `required`: no tutorial record exists. The historical status name does not make
+  onboarding mandatory. Run `begin` only for the introduction the user chose.
+- `interview`: on a request to resume, use `interview_notes` without repeating
+  answered questions.
+- `teaching`: on a request to resume, use the first unfinished lesson and its real
+  outputs and existing chats where available.
+- `complete`: reuse the confirmed profile for requested teaching. The current
+  request always takes precedence over saved preferences.
+- `recovery_required` or a failed command: preserve the existing files and explain
+  the issue only when it affects the requested tutorial. The user may recover it
+  or leave the tutorial and continue the requested professional workflow. Never
+  require recovery, Python setup, profile access or a completed lesson for ordinary
+  work; do not reset state or manufacture completion to bypass the issue.
 
-This gate is a host instruction with checked local checkpoints; plugins cannot
-intercept every native UI action. Follow explicit user instructions to pause,
-use an accessibility text conversation, correct a preference or recover files.
-Never claim a host microphone or second window was opened when it was not.
+On cloud ChatGPT, mobile or a host without local execution, only the optional
+desktop tutorial is unavailable. Continue ordinary work supported by the host and
+the selected specialist. Do not create a pretend local profile, start a second
+interview in a sandbox, or mark onboarding complete. Cloud chats cannot assume
+they can read a desktop profile. Claude Cowork's package omits this tutorial.
+
+Follow explicit user instructions to pause, leave, use an accessibility text
+conversation, correct a preference or recover files. Never claim a host microphone
+or second window was opened when it was not. Voice, window, course, helper or
+profile failures affect only the requested tutorial and never access to Vera.
 
 ## Shared teaching process
 
 Read `../../learn-with-vera/SKILL.md` for native voice, the two parallel chats,
 interruptions, demonstration, explanation and guided practice. Onboarding uses
-that same teaching process with the command contract below. Keep the first
-3–4 workflows mandatory; later teaching uses separate repeatable sessions and
+that same teaching process with the command contract below. The selected
+introduction covers 3–4 workflows, but completion is never needed for ordinary
+work. Later teaching uses separate repeatable sessions and
 never resets this profile or completion record.
 
 ## A short interview
@@ -99,8 +112,8 @@ Do not replace started lessons merely because the app resumed.
 Use the complete demonstration/explanation/practice process in
 `../../learn-with-vera/SKILL.md`. Bind the native pair with `pair`, `start` the
 first unfinished lesson, and use this helper's `worker`, `demo`, `practice` and
-`finish` commands. Keep all required 3–4 lessons and the user's actual practice
-and confirmed understanding. Read `tutorial-cases.md` for the real case adapter.
+`finish` commands. Record completion only after all selected 3–4 lessons, the
+user’s actual practice and confirmed understanding. Read `tutorial-cases.md` for the real case adapter.
 Use `pause`, `resume` and `checkpoint` with the active workflow ID and a short
 `next_step` during teaching. Pausing revokes its token and prevents new lesson
 steps until resumed. Save `notes` during the interview. Inspect native worker

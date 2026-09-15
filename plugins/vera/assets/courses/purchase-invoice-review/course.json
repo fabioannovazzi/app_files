@@ -68,7 +68,7 @@
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
       "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "08611c4efdf9b4045c0791c3cc9dc8aef4c122b56308127f90c735346c740181"
+      "sha256": "bcbeb9a1c412bb81a9e84e9292b700dd4089815fdae64a373f7a2d3ac3d96c7b"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

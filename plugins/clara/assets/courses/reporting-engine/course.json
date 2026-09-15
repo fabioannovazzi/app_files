@@ -83,7 +83,7 @@
     {
       "path": "skills/reporting-engine/SKILL.md",
       "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
-      "sha256": "99dd75ddf0ccc90b0f9aae5e0ca987765f6fdb86108ac9896a00959d300ec3af"
+      "sha256": "a03da342f9ff4832ce89d038cc1cdad642e76b9a2db168da007b4d803d06c1d2"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

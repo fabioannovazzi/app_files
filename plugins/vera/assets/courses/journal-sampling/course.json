@@ -78,7 +78,7 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "f2cf8fc43a6de0fbafbcd110431fd4ad405a0c271d526268cd9ad77fd45124a7"
+      "sha256": "e5f21cad5b41df588cc3df48d304bbff39c8aa56e2d6a6876169a0e959d173d5"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

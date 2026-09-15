@@ -4,12 +4,17 @@ description: Use this when Lucia or @lucia is explicitly invoked, or when a lawy
 ---
 
 <!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../lucia/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../lucia/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- LUCIA_OPENAI_ONBOARDING_END -->
 
 ## ChatGPT and Codex Runtime
@@ -197,8 +202,9 @@ ordinary professional routing. Both chats teach only Lucia's own installed
 operational workflows. Never teach or hand off to another plugin, relabel its
 workflow or bypass the teaching helpers. Explain outside requests and offer
 actual Lucia workflows; wait for the user's choice before preparing an alternative.
-First use requires 3–4 tailored workflow lessons,
-also for established users. Later teaching never resets this completed interview.
+Onboarding is optional, including for established users. A user-selected
+introduction covers 3–4 tailored workflow lessons and can be paused or left at
+any time to do ordinary work. Later teaching never resets the completed interview.
 Current user intent takes precedence over saved preferences. The teaching chat
 explains by native voice while a second visible native working chat executes.
 The user controls voice and window setup; verify actual native capabilities.

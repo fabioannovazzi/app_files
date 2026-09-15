@@ -7,8 +7,10 @@ description: Teach only this installation's supported Vera workflows through a n
 
 Help the commercialista obtain and understand a useful result by describing their
 work naturally. Use native voice first, a teaching chat and a parallel working
-chat. Preserve mandatory first onboarding with **3–4 distinct tailored workflows**;
-afterward this skill can teach one workflow or a user-chosen sequence anytime.
+chat. Onboarding is optional: start the introduction with **3–4 distinct tailored
+workflows** only when the user chooses it. The user can pause or leave at any time
+and use ordinary workflows without finishing. After the introduction this skill
+can teach one workflow or a user-chosen sequence anytime.
 Do not require the user to know skill names or how to write technical prompts.
 
 ## Vera workflows only
@@ -37,8 +39,11 @@ actual input/output contract fits. Read that contract before making the choice.
 ## Start from the user's goal
 
 Read `../vera/references/local-onboarding.md` and use its installed-root discovery
-and shared OS-user profile. If onboarding is unfinished, follow its interview
-and 3–4 lesson plan using the teaching process here. Never reset a completed
+and shared OS-user profile. For this user-requested tutorial, if onboarding is
+unfinished, explain the optional introduction and follow its interview and 3–4
+lesson plan only if the user chooses it. If they decline or want ordinary work,
+route directly to the requested specialist. A tutorial setup or recovery error
+must never prevent that transition. Never reset a completed
 profile or use repeated teaching to manufacture onboarding completion.
 
 For a completed profile, read `references/local-sessions.md`, then run
@@ -80,7 +85,7 @@ files. Read its `teacher.md` and open `course.html` and `example.html` in the pa
 working chat. Reuse the authored content; adapt spoken pacing and emphasis to the
 user without regenerating the class. Its six steps total 6½ minutes including
 observation and conversation. Voice setup, external processing and optional
-practice have separate time. First onboarding still requires all 3–4 selected
+practice have separate time. Recording the optional introduction as complete requires all 3–4 selected
 lessons and their real practice; do not count merely opened course files as demo,
 practice, professional approval or confirmed understanding.
 
@@ -193,10 +198,12 @@ stop/transfer rules; never end the call merely because a lesson is complete.
 
 ## “Ora facciamolo con i miei documenti”
 
-Keep the pair and the conversational explanation. Have the user select the exact
-files and real-work destination. Do not search unrelated client folders. During
-mandatory onboarding, complete the selected practice in the isolated lesson from
-explicitly selected copies, then finish all 3–4 lessons before ordinary work.
+If the user wants ordinary work during the optional introduction, pause the
+active lesson and route directly to the requested specialist. Preserve unfinished
+progress; do not finish other lessons, require recovery or mark completion.
+Keep tutorial files under their local-only marker. Have the user select the exact
+files and real-work destination through the specialist’s normal intake.
+Do not search unrelated client folders or reuse a tutorial token for real work.
 
 After onboarding, use `use-files` to bind the actual selected inputs and separate
 real-work destination. Tell the user that the next step is their professional

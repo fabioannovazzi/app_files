@@ -4,12 +4,17 @@ description: Use when a user wants Clara to map retail product attributes, prese
 ---
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../clara/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../clara/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- CLARA_OPENAI_ONBOARDING_END -->
 
 # Attribute Reporting

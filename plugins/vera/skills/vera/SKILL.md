@@ -69,11 +69,17 @@ are in `references/model-data-report-contract.md`.
 ## Invocation and scope contract
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
-Before normal routing, read `references/local-onboarding.md` and check the shared
-local profile. Mandatory onboarding is a supported Vera setup action even when
-no professional workflow has yet been selected. It applies once to new and
-existing users on desktop Codex, and shares its record with local ChatGPT Work.
-A completed profile informs routing but never overrides the current request.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 For requests to learn, see a demonstration, work through an example, revisit a
 lesson, or discover what Vera could do today, read `../learn-with-vera/SKILL.md`
 before professional routing. It is a supported teaching/setup route that selects
