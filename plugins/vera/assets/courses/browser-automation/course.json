@@ -178,7 +178,7 @@
     {
       "path": "modules/browser-automation/scripts/process_skills.py",
       "repository_path": "plugins/browser-automation/scripts/process_skills.py",
-      "sha256": "20b4136251f79539684cbfcd292a1bb9888566dc6fd2c1d27528642181bbf384"
+      "sha256": "b7465fd97cef25824b186e16a4930c1da3feb919739a1c405be7ce34bfa604cd"
     },
     {
       "path": "modules/browser-automation/scripts/teaching_checkpoint.py",

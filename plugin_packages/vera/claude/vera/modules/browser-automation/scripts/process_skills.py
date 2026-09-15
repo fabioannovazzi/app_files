@@ -66,7 +66,9 @@ def export_skill(
     store.export_binding(process_id, target / "process.json")
     card = {key: specification[key] for key in sorted(CARD_FIELDS)}
     (target / "marketplace-card.json").write_text(
-        json.dumps(card, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        json.dumps(card, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
     (target / "agents").mkdir()
     interface = {key: card[key] for key in CARD_FIELDS - {"instructions"}}
@@ -77,6 +79,7 @@ def export_skill(
             for key, value in sorted(interface.items())
         ),
         encoding="utf-8",
+        newline="\n",
     )
     description = current["description"]
     inputs = (
@@ -145,7 +148,7 @@ After substantive use of this workflow, read and follow the `Plugin Improvement 
 
 {specification['model_data']}
 """
-    (target / "SKILL.md").write_text(skill, encoding="utf-8")
+    (target / "SKILL.md").write_text(skill, encoding="utf-8", newline="\n")
     return target
 
 

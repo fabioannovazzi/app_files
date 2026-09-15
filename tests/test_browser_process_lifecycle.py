@@ -1001,6 +1001,8 @@ def test_named_skill_export_cannot_overwrite_existing_operation(lifecycle, tmp_p
             store, process, named_skill_specification(), tmp_path / "skills"
         )
     assert (directory / "SKILL.md").read_bytes() == original
+    assert original.startswith(b"---\n")
+    assert b"\r\n" not in original
 
 
 @pytest.mark.parametrize("package_format", ["chatgpt", "cowork"])
