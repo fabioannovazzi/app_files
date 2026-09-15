@@ -1,0 +1,10 @@
+{
+  "product": "lucia",
+  "workflow": "quesito-legale-fiscale",
+  "language": "de",
+  "prepared_material_only": true,
+  "execution_receipt": false,
+  "understanding_confirmed": false,
+  "course": "course.html",
+  "teacher": "teacher.md"
+}

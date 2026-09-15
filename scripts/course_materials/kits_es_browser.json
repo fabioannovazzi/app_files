@@ -1,0 +1,27 @@
+{
+  "vera/browser-automation": {
+    "title": "Enseñar a Vera un procedimiento en el navegador",
+    "goal": "Aprender a mostrar a Vera una tarea repetitiva, revisar el procedimiento guardado y comprender cómo se convierte en una automatización comprobada.",
+    "scenario": "Un despacho prepara con frecuencia paquetes de documentos en una web. Utiliza la página local ficticia incluida en Vera para mostrar un ejemplo completo, revisar los pasos y probar otro tipo de documento.",
+    "scope": "Observación de un procedimiento web, guardado local, revisión y preparación para reutilizarlo. El ejemplo utiliza la página local de prueba del plugin y no demuestra acceso a un programa profesional real. Los controles de la página están en inglés.",
+    "inputs": "Lee task-es.md: incluye cliente ficticio, tipo de documento y resultado solicitado. Vera abre su página local en la ventana de trabajo. No se necesitan credenciales, documentos de clientes ni automatizaciones preparadas.",
+    "request": "Vera, muéstrame cómo enseñarte este procedimiento en el navegador. Sigue el ejemplo ficticio, guarda los pasos y explícame qué debo revisar antes de que puedas repetirlo.",
+    "steps": [
+      "Confirma la tarea y el resultado esperado. Vera comienza a guardar antes de actuar. Selecciona el cliente ficticio y el documento en la ventana de trabajo; la conversación de voz explica tus decisiones y lo que Vera registra.",
+      "Sigue el ejemplo hasta que la página confirme que el paquete está preparado. Vera comprueba el resultado real, explica los pasos y guarda el procedimiento. Abre su resumen y compáralo con el trabajo observado.",
+      "Revisa el procedimiento propuesto y sus límites. Con la aprobación que realmente se requiere, Vera crea la versión ejecutable y comprueba dos ejecuciones completas desde la página inicial. Distingue entre ejemplo observado, procedimiento aprobado y automatización probada."
+    ],
+    "deliverables": [
+      "Procedimiento local guardado y resumen de avances para retomar el trabajo.",
+      "Borrador para revisar; tras la aprobación necesaria y las pruebas satisfactorias, procedimiento reutilizable con sus registros de ejecución."
+    ],
+    "review": "Comprueba la página inicial, los datos, las acciones y el resultado final. Un clic o un borrador guardado no demuestra que la automatización funcione. Revisa el procedimiento real antes de crear la versión ejecutable.",
+    "checkpoints": [
+      "Explica qué necesita Vera para aprender una tarea web y dónde encontrar los pasos guardados.",
+      "Muestra el resultado observado e identifica si el procedimiento es un borrador, está aprobado o ha sido probado."
+    ],
+    "practice": "Lee practice-es.md y solicita el mismo procedimiento para una nota de crédito. Pide a Vera que use los pasos guardados, revisa los cambios necesarios y observa el nuevo resultado. Conserva el primer ejemplo; una prueba solo termina con éxito cuando coinciden el documento elegido y el resultado.",
+    "success": "Sabes enseñar una tarea web delimitada, revisar los pasos guardados y pedir una repetición, reconociendo las revisiones o pruebas pendientes.",
+    "repeat": "Describe el sitio, la tarea y el resultado deseado. Abre la página autorizada en Chrome conectado y muestra un ejemplo. Vera registra y comprueba el procedimiento; tú lo revisas antes de reutilizar la automatización aprobada."
+  }
+}

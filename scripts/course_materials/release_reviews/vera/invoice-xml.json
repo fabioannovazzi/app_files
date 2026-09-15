@@ -1,0 +1,413 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "invoice-xml",
+  "course_sha256": "97cc07f46a4a071b6e98dd4189ee479088e5cd6241faf9c9f87689f610e3cf47",
+  "reviewer": "Codex: first-use kit, source and native invoice-output review",
+  "reviewed_at": "2026-09-14T16:28:02.594672+00:00",
+  "review_scope": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying invoice data, obtaining and reviewing a preview, approving or pausing export, finding the file and repeating the workflow. Its title names the function plainly; no missing-field puzzle displaces the ordinary use.",
+        "inputs_and_request": "A short complete fictional text sheet is a natively supported input. The request states new draft, asks for the actual preview and reserves the exact export decision. Number, date, identifiers, VAT and routing are explicit exercise facts; no approval or prepared XML is supplied.",
+        "execution_and_checkpoints": "The working chat uses source evidence preparation, model interpretation, immutable draft preparation and the current exporter. Voice explains the observed progress. The checkpoints ask for purpose/source before starting and service/total/export decision in the actual preview.",
+        "deliverable_and_next_action": "The actual preview displays one invoice, its parties, line, quantity, price, VAT and total. The expandable table retains every field and source section. Native export checks produce schema-valid XML and a scoped export report only after a content-bound review event. The lesson teaches where to find these and that no issue, signature or transmission occurs.",
+        "practice_and_repeat": "Practice supplies a complete second invoice, with its own number/date and two units. It asks for a separate preview and export decision while preserving the first. The repeat instructions also mention readable PDFs/photos without pretending this text-source exercise verified native vision.",
+        "language_and_pacing": "Italian guide and fixture interpretation match the source data. The preview uses Italian headings and some stable English decision keys. The six sections total 390 seconds, allowing processing and questions to extend the session. The timing is a teaching target, not an observed human duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[demo-DID-001-122.00-it]",
+        "result_review": "The actual native preview and XML contain DID-001, TD01, and total EUR 122.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "8fc1c39d87ac5f4f23de543bd9c6acc9da9c8f023c86ecb56255385aa3c51b87"
+          },
+          {
+            "name": "IT01234567897_DID01.xml",
+            "sha256": "6136d73166c147afcde427dfd7d248dd64a71f9673eb571b441776293bd304a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "0a0c524399019d02097477967d5cdf4d8371fbecb2cf903f79a38912ef6ea3c3"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "1af34b2205e5a8db6f4ee008c69067e2b07b7d1d0ce4a6e08457bee6ac5dfe62"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "92691a8fc0059e88bdefb81ea69499e09c337348ec90cd7d777ea3601b3d492e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[practice-DID-002-244.00-it]",
+        "result_review": "The actual native preview and XML contain DID-002, TD01, and total EUR 244.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "3953c41b0623ad4eb71f4336a35daf1ab9d32dadab5238268c35f6ede108e15f"
+          },
+          {
+            "name": "IT01234567897_DID02.xml",
+            "sha256": "8e5dc42033dfda39fbf86cbe9faa1232d82f431e1bcc7835e8038207418f30a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "751f17e103dd81df0fc37e6834da6edcc8b647d448ab9deba2549da1f525ac8c"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "d113e1bdce68e1c26664d79c8a6725df60389348dbd13212077713d6313529ba"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "e41be02323771e17e42d781976cfde0ddec04d70d414ab3eeb291f08ceb9947b"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying invoice data, obtaining and reviewing a preview, approving or pausing export, finding the file and repeating the workflow. Its title names the function plainly; no missing-field puzzle displaces the ordinary use.",
+        "inputs_and_request": "A short complete fictional text sheet is a natively supported input. The request states new draft, asks for the actual preview and reserves the exact export decision. Number, date, identifiers, VAT and routing are explicit exercise facts; no approval or prepared XML is supplied.",
+        "execution_and_checkpoints": "The working chat uses source evidence preparation, model interpretation, immutable draft preparation and the current exporter. Voice explains the observed progress. The checkpoints ask for purpose/source before starting and service/total/export decision in the actual preview.",
+        "deliverable_and_next_action": "The actual preview displays one invoice, its parties, line, quantity, price, VAT and total. The expandable table retains every field and source section. Native export checks produce schema-valid XML and a scoped export report only after a content-bound review event. The lesson teaches where to find these and that no issue, signature or transmission occurs.",
+        "practice_and_repeat": "Practice supplies a complete second invoice, with its own number/date and two units. It asks for a separate preview and export decision while preserving the first. The repeat instructions also mention readable PDFs/photos without pretending this text-source exercise verified native vision.",
+        "language_and_pacing": "The English guide explicitly says the data and native invoice terms remain Italian. The field explanations and authored decisions are English. The six sections total 390 seconds, allowing processing and questions to extend the session. The timing is a teaching target, not an observed human duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[demo-DID-001-122.00-en]",
+        "result_review": "The actual native preview and XML contain DID-001, TD01, and total EUR 122.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "ed1385298919cddbc1ab59cfd39be776fbb4271d4f5afa23f4eb8085a812476f"
+          },
+          {
+            "name": "IT01234567897_DID01.xml",
+            "sha256": "6136d73166c147afcde427dfd7d248dd64a71f9673eb571b441776293bd304a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "0e0aec2eb8400f4c432d9f519c0ee4981d6b11a45d38a982ec0b4112c926f794"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "a3153619faddcb13610f7a22e42bb91f361ff51f646bfa3fde2d6a2710aeab74"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "f139364ae9aa8a236b50f6465ed4d64574f5806a1cecd2fdf03f2c64489e13fb"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[practice-DID-002-244.00-en]",
+        "result_review": "The actual native preview and XML contain DID-002, TD01, and total EUR 244.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "8f13ed4749ab733e03ef3573461aefa3b02332465eabc07b4b343846590456ac"
+          },
+          {
+            "name": "IT01234567897_DID02.xml",
+            "sha256": "8e5dc42033dfda39fbf86cbe9faa1232d82f431e1bcc7835e8038207418f30a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "9e8ad9b477ed329399d738bb051823639447bd44b838ba1517f3deaf5ad0faf8"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "4bdcb3e288bb3da512c26c4cb19dac0d8b55a095c85009ab0134c3fa1f4ae0c4"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "2da8ce30fc7efbb6aa6db848e04016372e0d74aef73c2c8cf03ff810fd30becd"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying invoice data, obtaining and reviewing a preview, approving or pausing export, finding the file and repeating the workflow. Its title names the function plainly; no missing-field puzzle displaces the ordinary use.",
+        "inputs_and_request": "A short complete fictional text sheet is a natively supported input. The request states new draft, asks for the actual preview and reserves the exact export decision. Number, date, identifiers, VAT and routing are explicit exercise facts; no approval or prepared XML is supplied.",
+        "execution_and_checkpoints": "The working chat uses source evidence preparation, model interpretation, immutable draft preparation and the current exporter. Voice explains the observed progress. The checkpoints ask for purpose/source before starting and service/total/export decision in the actual preview.",
+        "deliverable_and_next_action": "The actual preview displays one invoice, its parties, line, quantity, price, VAT and total. The expandable table retains every field and source section. Native export checks produce schema-valid XML and a scoped export report only after a content-bound review event. The lesson teaches where to find these and that no issue, signature or transmission occurs.",
+        "practice_and_repeat": "Practice supplies a complete second invoice, with its own number/date and two units. It asks for a separate preview and export decision while preserving the first. The repeat instructions also mention readable PDFs/photos without pretending this text-source exercise verified native vision.",
+        "language_and_pacing": "The French guide explicitly identifies Italian source/preview terms and uses demande, aperçu, revue and export consistently. Authored decision explanations are French. The six sections total 390 seconds, allowing processing and questions to extend the session. The timing is a teaching target, not an observed human duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[demo-DID-001-122.00-fr]",
+        "result_review": "The actual native preview and XML contain DID-001, TD01, and total EUR 122.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "e18afa39cf2e2ba44b0fbda334fc315f7662502bff7e2e79a4a07a67b4dcd95c"
+          },
+          {
+            "name": "IT01234567897_DID01.xml",
+            "sha256": "6136d73166c147afcde427dfd7d248dd64a71f9673eb571b441776293bd304a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "6f09dd21227ffe5a8e7d1c89ee1cf78f8d626280fa03f30deb75a2fa044c6cf9"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "3ce3ea541ea5352d7a8b9f68435755e62239fd1eab48c750c2f0af39fa064588"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "b8cf8f8f9d08e419ced806138ac9c44c634e9b0eaed31a4772005b5b47e2d801"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[practice-DID-002-244.00-fr]",
+        "result_review": "The actual native preview and XML contain DID-002, TD01, and total EUR 244.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "f48897c8a438030c41a34465bbe3b8ca7f5c85b18df337984a3ee460f4965908"
+          },
+          {
+            "name": "IT01234567897_DID02.xml",
+            "sha256": "8e5dc42033dfda39fbf86cbe9faa1232d82f431e1bcc7835e8038207418f30a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "da1c2883693ea0c6dedcc2ccbfdb88f9f569a5e5ddd6b03b1c4d9cfd19ce2c71"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "84125f99fc689b536411d8679e96a5ea155bf82bec1724fcd890fc96ce524c10"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "c6eac49e7057525aa328f6f6fc70cc8939d297832a0ad02d5b992143a66788af"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying invoice data, obtaining and reviewing a preview, approving or pausing export, finding the file and repeating the workflow. Its title names the function plainly; no missing-field puzzle displaces the ordinary use.",
+        "inputs_and_request": "A short complete fictional text sheet is a natively supported input. The request states new draft, asks for the actual preview and reserves the exact export decision. Number, date, identifiers, VAT and routing are explicit exercise facts; no approval or prepared XML is supplied.",
+        "execution_and_checkpoints": "The working chat uses source evidence preparation, model interpretation, immutable draft preparation and the current exporter. Voice explains the observed progress. The checkpoints ask for purpose/source before starting and service/total/export decision in the actual preview.",
+        "deliverable_and_next_action": "The actual preview displays one invoice, its parties, line, quantity, price, VAT and total. The expandable table retains every field and source section. Native export checks produce schema-valid XML and a scoped export report only after a content-bound review event. The lesson teaches where to find these and that no issue, signature or transmission occurs.",
+        "practice_and_repeat": "Practice supplies a complete second invoice, with its own number/date and two units. It asks for a separate preview and export decision while preserving the first. The repeat instructions also mention readable PDFs/photos without pretending this text-source exercise verified native vision.",
+        "language_and_pacing": "The German guide explicitly identifies Italian source/preview terms and separates Entwurf, Prüfung and Export. The longer German explanations remain readable in the inspected practice preview. The six sections total 390 seconds, allowing processing and questions to extend the session. The timing is a teaching target, not an observed human duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[demo-DID-001-122.00-de]",
+        "result_review": "The actual native preview and XML contain DID-001, TD01, and total EUR 122.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "a1fb20c35cccee5b96ea0ba556c44970969a71df9053e9d16b16c50b71508f8b"
+          },
+          {
+            "name": "IT01234567897_DID01.xml",
+            "sha256": "6136d73166c147afcde427dfd7d248dd64a71f9673eb571b441776293bd304a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "f54a92874b138adc60a0e6dcc7ea47789842b36b9117a3934b9a9ade8befe1a6"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "77a81f405cf3254f18f78a29d81a9ed62291652dca55e395f7803c4d0ef260c0"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "9691760baece9a135c31bd1068241fbcf1708bcd918a2c275ab5784c662b4856"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[practice-DID-002-244.00-de]",
+        "result_review": "The actual native preview and XML contain DID-002, TD01, and total EUR 244.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "8e1fdca1a60dfaf345d5f6c4c8d44559b7443e23a011be7bd11e3484f7e78515"
+          },
+          {
+            "name": "IT01234567897_DID02.xml",
+            "sha256": "8e5dc42033dfda39fbf86cbe9faa1232d82f431e1bcc7835e8038207418f30a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "00485cffae46f5a5c78319e96edeeffd8bdbde3417515003269ed9c2cf8ec695"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "e27f2825b2593b90ffecb1528aa415294151c2696e318a15c1b5e18116fdd25b"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "0fb3582ee27206f4f74bd8d464ccd75a5433ba041d53c4ed2c5439f8cf3f4c63"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying invoice data, obtaining and reviewing a preview, approving or pausing export, finding the file and repeating the workflow. Its title names the function plainly; no missing-field puzzle displaces the ordinary use.",
+        "inputs_and_request": "A short complete fictional text sheet is a natively supported input. The request states new draft, asks for the actual preview and reserves the exact export decision. Number, date, identifiers, VAT and routing are explicit exercise facts; no approval or prepared XML is supplied.",
+        "execution_and_checkpoints": "The working chat uses source evidence preparation, model interpretation, immutable draft preparation and the current exporter. Voice explains the observed progress. The checkpoints ask for purpose/source before starting and service/total/export decision in the actual preview.",
+        "deliverable_and_next_action": "The actual preview displays one invoice, its parties, line, quantity, price, VAT and total. The expandable table retains every field and source section. Native export checks produce schema-valid XML and a scoped export report only after a content-bound review event. The lesson teaches where to find these and that no issue, signature or transmission occurs.",
+        "practice_and_repeat": "Practice supplies a complete second invoice, with its own number/date and two units. It asks for a separate preview and export decision while preserving the first. The repeat instructions also mention readable PDFs/photos without pretending this text-source exercise verified native vision.",
+        "language_and_pacing": "The Spanish guide explicitly identifies Italian source/preview terms and consistently separates borrador, revisión and exportación. Authored decisions are Spanish. The six sections total 390 seconds, allowing processing and questions to extend the session. The timing is a teaching target, not an observed human duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[demo-DID-001-122.00-es]",
+        "result_review": "The actual native preview and XML contain DID-001, TD01, and total EUR 122.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "4295fc5aa1f987e6e1dc0bb93edb69b46c4863512541985399ef11bab71db83d"
+          },
+          {
+            "name": "IT01234567897_DID01.xml",
+            "sha256": "6136d73166c147afcde427dfd7d248dd64a71f9673eb571b441776293bd304a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "999fbfd5c4c7bda5eba2681917648afd3c25d8e2fd3592b5f1cb617f547ca0c0"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "6d09827930ad41b45f3d717014193a2828b4a665db7141134dc3d282aa630b62"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "e797edfd135fff6fc87e0631d9adc4a9420daab4906c8636fc55e258e8a12ff7"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_invoice_xml_execution::test_invoice_kit_prepares_reviews_and_exports_current_native_xml[practice-DID-002-244.00-es]",
+        "result_review": "The actual native preview and XML contain DID-002, TD01, and total EUR 244.00, matching the selected source sheet. Native schema and arithmetic checks pass. The unapproved review request is rejected by the exporter; the subsequent test-only synthetic review event permits local export with SdI acceptance not tested. Original source and preview bytes remain unchanged, and the local run closes its artifact declaration. No real professional approval is asserted.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview.html",
+            "sha256": "cd953618fb04dfc9a5adcf8b42e203b6ba77a48eeb6740ab4572a0bf34041efe"
+          },
+          {
+            "name": "IT01234567897_DID02.xml",
+            "sha256": "8e5dc42033dfda39fbf86cbe9faa1232d82f431e1bcc7835e8038207418f30a8"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "validation.json",
+            "sha256": "873e0b63f9a1444ce3a24f3f4d024101c964a8ba2b8b35f4d457da159ff18e27"
+          },
+          {
+            "name": "proposal.json",
+            "sha256": "c508ef321234aad029eeeb29bec48038b84f607bc1ab4917d16a61dc0d9d9fef"
+          },
+          {
+            "name": "export_report.json",
+            "sha256": "ec5bc7333deaf2bd8d0725e58cbf923a08ba26377901a3c684fccafe9f09c6ac"
+          }
+        ]
+      }
+    }
+  },
+  "refresh_review": {
+    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
+    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals.",
+    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
+    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed."
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.173100+00:00",
+    "previous_course_sha256": "7aef3d0181d69d99de63d568e33e9dbcb9cad62876ccd024b8a6aa6144bf52cb",
+    "source_snapshot": "/private/tmp/teaching-library-refresh-02/test_invoice_kit_prepares_revi7/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.391377+00:00",
+    "previous_course_sha256": "23bc0f7b084fb893477c7ea9f67da084014a217a4e378b2f731aa5692fd8a2c2",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/invoice-xml/SKILL.md",
+        "before": "4862168719d6b1d9c4b544159c76603c23b2cddbfac1425ad649418cc5d2c306",
+        "after": "15f33b17c999b9c555abe1d9fd0916d29c1c59bcc5e202730c6ff901ca0b8538"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

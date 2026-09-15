@@ -23,6 +23,7 @@ def review_for(path: Path, input_root: Path) -> dict:
     return {
         "schema_version": 1,
         "jurisdiction": "IT",
+        "language": "en",
         "as_of": "2026-09-05",
         "scope": "Review the documented shareholder loan.",
         "sources": [
@@ -393,3 +394,11 @@ def test_packaged_cli_runs_with_archive_receipts(
     assert result.returncode == 0, result.stderr
     saved = next(workspace["output_dir"].glob("aml-review-*.json"))
     assert json.loads(saved.read_text())["workflow_id"] == "aml-review"
+
+
+@pytest.mark.parametrize("language", ["pt", ["it"]])
+def test_unsupported_memo_language_is_rejected(tmp_path: Path, language) -> None:
+    review = case(tmp_path)
+    review["language"] = language
+    with pytest.raises(ValueError, match="memo language"):
+        build(review, tmp_path)

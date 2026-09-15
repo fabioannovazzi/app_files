@@ -1,0 +1,35 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "contract_digest": "2a9ab92ccea869b656847e13d176e81441ba84e003423dfaa0b99be617b9f9d8",
+  "correction_policy": "correct_when_supported",
+  "document_type": "professional_communication_package",
+  "evidence_display": "inline_citations",
+  "generation_instructions": {
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Selected fictional teaching context from this run's run_intake.json (SHA-256 fdecee8dd60531d5a0d811c37e0a732bb0e9539216b3544729c490d45fa043aa): the studio and assignment are invented lesson material. The studio brief and draft visual values below are supplied context, not selected communication history or professional approval.",
+      "Studio Riva — Steuerberatung. Logo, Kontaktdaten, frühere Mitteilungen und ein freigegebener Hausstil liegen nicht vor. Schlage ein schlichtes blau-weißes Format mit lesbarer Schrift, klaren Überschriften und erkennbaren Quellen vor. Die verantwortliche Fachperson prüft es vor der Verwendung.",
+      "Run-selected fictional studio identity and draft visual values from brand_profile; not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ],
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ]
+  },
+  "generation_route": "codex_direct",
+  "judgment_policy": "flag_for_professional_review",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "output_language": "de",
+  "purpose": "Die Kanzlei möchte eine kurze FAQ für ihre kleinen Unternehmenskunden in Italien erstellen: Wie erkennt und organisiert man eine Auskunftsanfrage zu personenbezogenen Daten? Dies ist eine Informationsinitiative der Kanzlei, keine Meldung über ein neues Gesetz und keine Antwort an eine reale Person. Die Leser arbeiten in Verwaltung und Kundenbetreuung und sollen erkennen, wann sie die für Datenschutz zuständige Person einbeziehen müssen. Nutze den ausgewählten offiziellen EDSA-Leitfaden und trenne allgemeine Hinweise von der Bewertung eines Einzelfalls. Kundendaten, echte Anfragen und eine betriebliche Datenschutzrichtlinie liegen nicht vor. Erstelle das Paket zur internen Prüfung, ohne Versand oder Veröffentlichung. Die fertigen Texte sollen auf Deutsch sein.",
+  "question_domain": "compliance",
+  "run_id": "vera-de-demo",
+  "schema_version": 1,
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims"
+}

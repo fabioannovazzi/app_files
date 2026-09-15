@@ -3714,6 +3714,7 @@ def run_concordato_review(
         language=language,
         matches=matches,
         candidate_count=plan_candidate_count,
+        numeric_comparison_executed=qualification_status == "qualified",
         error=semantic_review_error,
     )
     _write_summary_docx(

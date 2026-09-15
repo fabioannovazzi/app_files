@@ -10,6 +10,7 @@ source per plugin.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import logging
@@ -1367,6 +1368,65 @@ def load_chatgpt_skill_cards(
     return cards
 
 
+def project_chatgpt_course_sources(
+    entries: dict[str, bytes], native: dict[str, bytes], prefix: str
+) -> None:
+    """Bind lessons to shipped bytes while retaining the reviewed source identity.
+
+    Hash equality and the existing runtime-section projection are mechanical
+    checks. This never refreshes an editorial review or accepts arbitrary changes.
+    """
+    index_path = "assets/courses/index.json"
+    if index_path not in entries:
+        return
+    index = json.loads(entries[index_path])
+    changed = False
+    for workflow, entry in index["courses"].items():
+        course_path = f"assets/courses/{workflow}/course.json"
+        original = native[prefix + course_path]
+        original_sha = hashlib.sha256(original).hexdigest()
+        if entry["sha256"] != original_sha or entries[course_path] != original:
+            raise ValueError(f"Rebuild and review the source course: {workflow}")
+        course = json.loads(original)
+        projected = False
+        for source in course["sources"]:
+            relative = source["path"]
+            before = native.get(prefix + relative)
+            after = entries.get(relative)
+            if before is None or after is None:
+                raise ValueError(f"Missing packaged teaching source: {relative}")
+            if hashlib.sha256(before).hexdigest() != source["sha256"]:
+                raise ValueError(f"Rebuild and review the source course: {relative}")
+            if before == after:
+                continue
+            parts = relative.split("/")
+            if (
+                len(parts) != 3
+                or parts[0] != "skills"
+                or parts[2] != "SKILL.md"
+                or after != project_chatgpt_source_skill(before)
+            ):
+                raise ValueError(f"Unsupported teaching source projection: {relative}")
+            source["source_sha256"] = source["sha256"]
+            source["sha256"] = hashlib.sha256(after).hexdigest()
+            projected = True
+        if projected:
+            course["source_package"] = {
+                "surface": "chatgpt-upload",
+                "course_sha256": original_sha,
+                "projection": "project_chatgpt_source_skill",
+            }
+            content = (json.dumps(course, ensure_ascii=False, indent=2) + "\n").encode()
+            entries[course_path] = content
+            entry["source_sha256"] = original_sha
+            entry["sha256"] = hashlib.sha256(content).hexdigest()
+            changed = True
+    if changed:
+        entries[index_path] = (
+            json.dumps(index, ensure_ascii=False, indent=2) + "\n"
+        ).encode()
+
+
 def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     """Return one source-derived, skills-only tree for OpenAI Platform."""
 
@@ -1490,6 +1550,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         )
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
+    project_chatgpt_course_sources(entries, packaged_entries, prefix)
     return dict(sorted(entries.items()))
 
 

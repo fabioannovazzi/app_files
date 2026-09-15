@@ -76,7 +76,7 @@ def _physical_tree(output_dir: Path) -> tuple[set[str], set[str]]:
         current = pending.pop()
         with os.scandir(current) as entries:
             for entry in entries:
-                observed = entry.stat(follow_symlinks=False)
+                observed = os.lstat(entry.path)
                 relative = Path(entry.path).relative_to(root).as_posix()
                 if stat.S_ISLNK(observed.st_mode):
                     raise ValueError(

@@ -1,0 +1,105 @@
+{
+  "schema_version": "clara.html_deck_ledger.v1",
+  "sources": [
+    {
+      "id": "brief",
+      "label": "Proposition fictive à discuter",
+      "kind": "document",
+      "locator": "brief-fr.md",
+      "sha256": "a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0",
+      "publish_locator": false
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "opening",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-opening",
+          "statement": "Une proposition pour recevoir les demandes",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposition fictive à discuter"
+        }
+      ]
+    },
+    {
+      "slide_id": "request",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-request",
+          "statement": "Rendre la demande compréhensible",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposition fictive à discuter"
+        }
+      ]
+    },
+    {
+      "slide_id": "process",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-process",
+          "statement": "Clarifier la demande avant d’agir",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposition fictive à discuter"
+        }
+      ]
+    },
+    {
+      "slide_id": "responsibilities",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-responsibilities",
+          "statement": "Convenir du suivi de la demande",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposition fictive à discuter"
+        }
+      ]
+    },
+    {
+      "slide_id": "decision",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-decision",
+          "statement": "Décider s’il faut tester la fiche",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Proposition fictive à discuter"
+        }
+      ]
+    }
+  ]
+}

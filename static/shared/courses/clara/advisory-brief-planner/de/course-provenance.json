@@ -1,0 +1,10 @@
+{
+  "product": "clara",
+  "workflow": "advisory-brief-planner",
+  "language": "de",
+  "prepared_material_only": true,
+  "execution_receipt": false,
+  "understanding_confirmed": false,
+  "course": "course.html",
+  "teacher": "teacher.md"
+}

@@ -1,0 +1,52 @@
+{
+  "vera/financial-report-builder": {
+    "title": "Einen Finanzbericht mit Vera erstellen",
+    "goal": "Lernen, wie aus Buchhaltungsaufstellungen ein lesbarer Bericht mit Tabellen, Kommentaren und prüfbaren Quellenverweisen entsteht.",
+    "scenario": "Officina Arco liefert GuV, Bilanz und Kapitalflussrechnung. Die Kanzlei möchte einen ersten Managementbericht für den Zeitraum.",
+    "scope": "Ein Managementbericht aus vorhandenen Aufstellungen. Die Funktion ordnet Daten und Erklärungen in einem Dokument; Abschnitte ohne Quellen bleiben als fehlend erkennbar.",
+    "inputs": "Öffnen Sie january-february.xlsx und context-de.md. Prüfen Sie die drei Blätter, Zeitraum und Währung. Nennen Sie Vera Zielgruppe, Berichtsart und Sprache; Folien oder technische Konfigurationen müssen Sie nicht vorbereiten.",
+    "request": "Vera, erstelle für Officina Arco einen Managementbericht aus den Aufstellungen für Januar und Februar. Hilf mir, die Tabellenzuordnung zu prüfen, und zeige mir dann Word-Dokument und offene Prüfpunkte.",
+    "steps": [
+      "Im Arbeitschat untersucht Vera die Blätter und schlägt Berichtsabschnitte vor. Die Stimme erklärt Aufbau und Quellen und hilft bei der Bestätigung von Unternehmen, Zeitraum und Beträgen.",
+      "Vera hält die geprüfte Zuordnung fest, formuliert belegte Kommentare und führt den aktuellen Ablauf aus. Die Stimme folgt echten Ergebnissen und erklärt Abschnitte ohne Informationen.",
+      "Öffnen Sie das erzeugte Word-Dokument. Lesen Sie Zusammenfassung, eine Tabelle und ihren Kommentar; verfolgen Sie eine Zahl zum Quellblatt. Erfassen Sie Korrekturen oder Rückfragen in der Berichtsprüfung."
+    ],
+    "deliverables": [
+      "Word-Bericht und Markdown-Version mit Abschnitten, Tabellen und Kommentaren.",
+      "Tabellenarbeitsmappe und Datennachweise zur Prüfung des Dokuments."
+    ],
+    "review": "Prüfen Sie Zeitraum, Währung, Blattzuordnung und Quellenbindung der Kommentare. Zwischensummen nicht doppelt zählen. Unterscheiden Sie belegte und fehlende Abschnitte und prüfen Sie den Text vor fachlicher Nutzung.",
+    "checkpoints": [
+      "Benennen Sie vor der Erstellung, welche Informationen in den Bericht eingehen.",
+      "Finden Sie in Word eine Zahl mit ihrer Quelle und anschließend einen Prüfpunkt."
+    ],
+    "practice": "Wiederholen Sie mit january-march.xlsx für einen neuen Bericht bis März und behalten Sie den alten. Prüfen Sie aktualisierten Zeitraum, Tabellen und Kommentare; schlagen Sie eine Korrektur vor.",
+    "success": "Sie können Aufstellungen liefern, den Bericht anfordern und öffnen, eine Quelle prüfen und den Ablauf für einen neuen Zeitraum wiederholen.",
+    "repeat": "Geben Sie Vera die Mandantenaufstellungen und nennen Sie Zeitraum, Zielgruppe, Sprache und Berichtsart. Prüfen Sie Aufbau, Beträge und Kommentare und nutzen Sie den üblichen Freigabeprozess."
+  },
+  "vera/financial-analysis": {
+    "title": "Eine Finanzanalyse mit Vera vorbereiten",
+    "goal": "Lernen, eine konkrete Analyse anzufordern, Daten bereitzustellen, Entscheidungen zu prüfen und nachvollziehbare Finanzergebnisse zu nutzen.",
+    "scenario": "Officina Arco möchte die Nettoverschuldung Ende Februar kennen. Die Aufstellung zeigt Darlehen, verfügbare Liquidität und zwei weitere einzuordnende Posten.",
+    "scope": "Financial Analysis bereitet Buchhaltungsanalysen und Due-Diligence-Berechnungen aus geprüften Eingaben vor. Dieser vollständige erste Ablauf berechnet Nettoverschuldung zu einem Stichtag; andere Analysen benötigen eigene Daten und Entscheidungen.",
+    "inputs": "Öffnen Sie balances-february.csv und context-de.md. Nennen Sie Unternehmen, Stichtag, EUR und gewünschte Definition. Die Notiz erklärt Bestände; Vera erstellt nach der Prüfung die technischen Strukturen, ohne dass Sie programmieren müssen.",
+    "request": "Vera, bereite die Nettoverschuldung von Officina Arco zum 28. Februar mit dieser Aufstellung und der Definition in der Notiz vor. Führe mich durch die Entscheidungen und zeige Ergebnis, Details und Kontrollen.",
+    "steps": [
+      "Im Arbeitschat wählt Vera die passende Analyse und schlägt die Einordnung der Posten vor. Die Stimme erklärt die Messgröße und hilft bei Beträgen, Stichtag, Einbeziehung und Ausschlüssen.",
+      "Nach der tatsächlichen Prüfung hält Vera Entscheidungen fest und startet die aktuelle Berechnung. Die Stimme folgt dem Ablauf und unterscheidet Rechenkontrolle und Vollständigkeit der gelieferten Daten.",
+      "Lesen Sie die Ergebnisübersicht und öffnen Sie die erzeugten Details. Verfolgen Sie Darlehen und Guthaben zu Quellzeilen und finden Sie ausgeschlossene Posten, Kontrollen und offene Fragen."
+    ],
+    "deliverables": [
+      "Analyseergebnis und Details einbezogener und ausgeschlossener Posten bei der Übergabe.",
+      "Datenpaket, Kontrollen und Verweise auf Entscheidungen und Quellen zur fachlichen Prüfung."
+    ],
+    "review": "Prüfen Sie Definition und gemeinsamen Stichtag. Reproduzierbare Rechnung belegt allein weder Vollständigkeit noch buchhalterische Richtigkeit. Prüfen Sie Quellen und Schlussfolgerungen vor Nutzung.",
+    "checkpoints": [
+      "Erklären Sie vor der Berechnung die gewünschte Messgröße und benötigte Daten.",
+      "Benennen Sie im Ergebnis einen einbezogenen und einen ausgeschlossenen Bestand mit Begründung."
+    ],
+    "practice": "Nutzen Sie balances-march.csv für eine neue Analyse zum 31. März mit derselben Definition. Bewahren Sie Februar auf und erkennen Sie geänderte Bestände und Ergebnisse.",
+    "success": "Sie können Analyse und Daten wählen, Entscheidungen prüfen, Ergebnis und Details finden und den Ablauf zu einem neuen Stichtag wiederholen.",
+    "repeat": "Beschreiben Sie Vera Finanzfrage, Unternehmen, Stichtag oder Zeitraum und vorhandene Daten. Prüfen Sie vorgeschlagene Analyse und fachliche Entscheidungen, dann das erzeugte Paket vor professioneller Nutzung."
+  }
+}

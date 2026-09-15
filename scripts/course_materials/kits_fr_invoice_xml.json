@@ -1,0 +1,27 @@
+{
+  "vera/invoice-xml": {
+    "title": "Préparer un fichier XML de facture avec Vera",
+    "goal": "Apprendre à fournir les données d’une facture, revoir le brouillon et obtenir le fichier XML local après avoir approuvé la version exacte.",
+    "scenario": "Officina Arco doit préparer le fichier d’une facture italienne ordinaire. Une courte fiche fictive permet de suivre tout le parcours : demande, aperçu, revue et export local.",
+    "scope": "Une facture nationale italienne fictive en EUR. Les données et l’aperçu natif emploient les termes italiens de facturation ; Vera les explique en français. Cette leçon part de données fournies. Le même workflow accepte aussi des PDF et photographies lisibles. Il ne signe ni ne transmet à SdI.",
+    "inputs": "Fournissez invoice-data.txt. La fiche contient fournisseur, client, prestation, numéro, date, montants et données d’acheminement fictifs. Elle précise qu’il s’agit d’un nouveau brouillon et qu’aucune émission ni exportation antérieure n’existe dans le cas pédagogique.",
+    "request": "Vera, prépare un brouillon de facture XML à partir de cette fiche fictive. Montre l’aperçu, les sources et les contrôles. Laisse-moi revoir la version exacte avant d’exporter le fichier sur l’ordinateur.",
+    "steps": [
+      "Dans le fil de travail, Vera lit la source, précise le but de la préparation et identifie les données. Le fil vocal montre les informations à fournir et répond aux questions pendant la lecture.",
+      "Le workflow courant prépare le brouillon et ouvre son aperçu réel. Comparez fournisseur, client, numéro, date, prestation, TVA et total à la fiche. Demandez les corrections nécessaires ; chacune produit une nouvelle version.",
+      "Revoyez la version affichée. Vera n’effectue les contrôles d’export et ne crée le XML local qu’après votre approbation explicite de cette version. Ouvrez le rapport d’export et retrouvez le fichier XML. Sans approbation, le brouillon reste disponible sans export."
+    ],
+    "deliverables": [
+      "L’aperçu du brouillon réel, avec champs reliés aux sources et contrôles pour la revue.",
+      "Après approbation et contrôles réussis, le fichier XML et le rapport d’export, avec la version revue."
+    ],
+    "review": "Comparez données, finalité et traitement fiscal aux faits fournis. Un aperçu lisible et un schéma valide ne prouvent ni justesse fiscale ni acceptation SdI. Ne réutilisez jamais les identifiants ou montants pédagogiques dans une facture réelle.",
+    "checkpoints": [
+      "Avant de commencer, indiquez la source et précisez s’il s’agit d’un nouveau brouillon ou de la reconstruction d’une facture existante.",
+      "Dans l’aperçu, trouvez prestation et total, puis expliquez ce que vous approuvez et où le fichier exporté sera enregistré."
+    ],
+    "practice": "Fournissez practice-invoice-data.txt et demandez une deuxième facture avec le même parcours. Elle possède ses propres numéro, date et quantité. Conservez le premier résultat, revoyez le nouvel aperçu et décidez séparément de son export.",
+    "success": "Vous savez lancer le workflow, vérifier l’aperçu, approuver ou suspendre l’export et recommencer pour une autre facture en conservant la première.",
+    "repeat": "Fournissez les documents ou données confirmées et précisez la finalité et toute émission antérieure. Vera prépare un brouillon vérifiable, clarifie les faits manquants et exporte seulement la version approuvée. Envoi et comptabilisation suivent le processus distinct du cabinet."
+  }
+}

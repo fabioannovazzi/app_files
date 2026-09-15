@@ -1,0 +1,105 @@
+{
+  "schema_version": "clara.html_deck_ledger.v1",
+  "sources": [
+    {
+      "id": "brief",
+      "label": "Fiktiver Vorschlag zur Diskussion",
+      "kind": "document",
+      "locator": "brief-de.md",
+      "sha256": "b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196",
+      "publish_locator": false
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "opening",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-opening",
+          "statement": "Vorschlag zur Annahme von Anfragen",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fiktiver Vorschlag zur Diskussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "request",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-request",
+          "statement": "Die Anfrage verständlich machen",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fiktiver Vorschlag zur Diskussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "process",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-process",
+          "statement": "Die Anfrage vor Arbeitsbeginn klären",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fiktiver Vorschlag zur Diskussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "responsibilities",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-responsibilities",
+          "statement": "Die Zuständigkeiten vereinbaren",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fiktiver Vorschlag zur Diskussion"
+        }
+      ]
+    },
+    {
+      "slide_id": "decision",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-decision",
+          "statement": "Über einen Formularversuch entscheiden",
+          "classification": "judgement",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "brief"
+          ],
+          "qualification": "Fiktiver Vorschlag zur Diskussion"
+        }
+      ]
+    }
+  ]
+}

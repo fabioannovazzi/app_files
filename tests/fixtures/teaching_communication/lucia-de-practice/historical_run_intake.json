@@ -1,0 +1,76 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "brand_profile": {
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "primary_color": "#153855",
+    "studio_name": "Studio Riva",
+    "text_color": "#1C2935"
+  },
+  "data_posture": {
+    "automatic_anonymization_before_selected_runtime": false,
+    "downstream_history_requires_complete_pseudonymized_documents": false,
+    "helper_scripts_call_models": false,
+    "helper_scripts_use_connectors": false,
+    "independent_derivative_privacy_review_required": false,
+    "local_identity_map_kept_out_of_model_context": false,
+    "mechanical_identifier_stripping_before_selected_runtime": false,
+    "mechanically_stripped_history_model_context_limited_to_one_pseudonymization_pass": false,
+    "raw_history_sent_to_model": false,
+    "selected_prior_communications_snapshotted_locally": 0,
+    "selected_source_files_snapshotted_locally": 1,
+    "transient_stripped_history_deleted_before_generation": false
+  },
+  "execution_trace": [
+    {
+      "command": "python scripts/prepare_run.py --workspace <workspace> --intake <intake>",
+      "execution_location": "local_codex_workspace",
+      "inputs": [
+        "/private/tmp/communication-teaching-check-02/lucia-de-practice-intake.json"
+      ],
+      "kind": "local_input_snapshot",
+      "outputs": [
+        "run_intake.json",
+        "source_register.json",
+        "model_task_packet.json"
+      ],
+      "status": "completed",
+      "step_id": "prepare-run"
+    }
+  ],
+  "external_routes": {
+    "creative_production": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "public_research": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  },
+  "input_digest": "f541bc8c5be5f9167552aa4301effdd925861e0d8d31e905e425cae7f848f2f6",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "language": "de",
+  "objective": "Die Kanzlei möchte eine kurze FAQ für ihre kleinen Unternehmenskunden in Italien erstellen: Wie erkennt und organisiert man eine Auskunftsanfrage zu personenbezogenen Daten? Dies ist eine Informationsinitiative der Kanzlei, keine Meldung über ein neues Gesetz und keine Antwort an eine reale Person. Die Leser arbeiten in Verwaltung und Kundenbetreuung und sollen erkennen, wann sie die für Datenschutz zuständige Person einbeziehen müssen. Nutze den ausgewählten offiziellen EDSA-Leitfaden und trenne allgemeine Hinweise von der Bewertung eines Einzelfalls. Kundendaten, echte Anfragen und eine betriebliche Datenschutzrichtlinie liegen nicht vor. Erstelle das Paket zur internen Prüfung, ohne Versand oder Veröffentlichung. Die fertigen Texte sollen auf Deutsch sein.\nErstelle nach Prüfung der FAQ eine neue Paketversion mit einer kurzen Begleit-E-Mail an Kunden. Erläutere Zielgruppe und Verwendung der FAQ. Bewahre Quellen, Grenzen und erste Version. Erfinde keine Empfänger, bereits versandten Anhänge oder neue Pflicht. Nichts versenden.",
+  "output_dir": "/private/tmp/communication-teaching-check-02/workspace/runs/lucia-de-practice",
+  "plugin": "comunicazione-professionale",
+  "prepared_at": "2026-09-14T11:08:04+00:00",
+  "profile_revision_required": true,
+  "reference_date": "2026-09-14",
+  "requested_channels": [
+    "faq",
+    "client_email"
+  ],
+  "run_id": "lucia-de-practice",
+  "schema_version": 1,
+  "studio_format_brief": "Studio Riva — Rechtsberatung. Logo, Kontaktdaten, frühere Mitteilungen und ein freigegebener Hausstil liegen nicht vor. Schlage ein schlichtes blau-weißes Format mit lesbarer Schrift, klaren Überschriften und erkennbaren Quellen vor. Die verantwortliche Fachperson prüft es vor der Verwendung.",
+  "studio_profile": null,
+  "visual_requested": false,
+  "workflow": "comunicazione-professionale",
+  "workspace_id": "fictional-teaching-studio-riva",
+  "workspace_path": "/private/tmp/communication-teaching-check-02/workspace"
+}

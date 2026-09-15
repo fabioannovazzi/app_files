@@ -353,6 +353,13 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     ]
     assert normalized.frame.get_column("source_row").to_list() == [2, 3, 4]
     assert sample.frame.height == 2
+    workbook = openpyxl.load_workbook(sample_dir / "journal_sample.xlsx")
+    sheet = workbook.worksheets[0]
+    assert sheet.freeze_panes == "D2"
+    assert sheet.column_dimensions["A"].width >= 11
+    assert sheet.row_dimensions[1].height >= 26
+    assert sheet.sheet_view.showGridLines is False
+    workbook.close()
     sample_rows = sample.frame.to_dicts()
     first_sample_row = sample_rows[0]
     second_sample_row = sample_rows[1]
@@ -3648,7 +3655,9 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_save",
         run_id: "forged-run",
@@ -3658,7 +3667,8 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
         ui_decisions_path: "/private/client/forged-ui.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _journal_transaction_call(
@@ -3685,7 +3695,9 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_apply",
         run_id: "forged-run",
@@ -3704,7 +3716,8 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
         run_intake_path: "/private/client/forged-intake.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _journal_transaction_call(

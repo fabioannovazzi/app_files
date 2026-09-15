@@ -1,0 +1,347 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "new-client",
+  "course_sha256": "eef2e45cb356c468fcea177f5b5299afa8b56d3fdbc8be9a23d96375de096aac",
+  "reviewer": "Codex: five-language first-use material and actual New Client draft-dossier review",
+  "reviewed_at": "2026-09-15T00:09:04.432157+00:00",
+  "review_scope": "Reviewed all five lesson outlines, fictional profile/contact sources, actual localized document requests, final cards, studio notes and memo facts/services. Inspected the current review widget in five loopback browser views, including the client facts and English engagement details. This accepts the prepared first use: produce and inspect an internal draft dossier, save a proposed request and revise from new contact evidence. It does not attest completed professional review, client acceptance, signing or sending. Native MCP validate/render/save, mandatory model-data disclosure, sealed delivery and Studio Archive completion are exercised. Apply is not part of the completed lesson evidence: the registry review date has expired, and a real attempted Apply correctly stopped. Source refresh is still required before decisions can be applied. Native voice, actual paired-window learner interaction and human timing/comprehension remain unverified.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces preparing a new Italian client from first-contact information. The outline follows the natural request, real dossier preparation, review of facts/services and missing documents, delivery and a second version. It teaches the user where to start and what to do next; AML arithmetic is supporting material rather than the lesson objective.",
+        "inputs_and_request": "Read profile-it.md and contact-update-it.md. The explicitly fictional workshop has twelve employees, Elena as reported representative and holdings of Elena 60%/Paolo 40%. It requests monthly bookkeeping and 2026 financial statements. Identity documents, current register evidence, confirmed ownership and agreed terms are missing. The natural request uses the organized interview form as direct evidence.",
+        "execution_and_checkpoints": "The actual kit adapter creates a local teaching engagement. Current initialization and packaging retain unverified facts, unset start date and unassessed risk scores. Native MCP validates/renders the actual dossier and saves one proposed document request without a professional approval. The review screen now exposes grouped client facts and services before decision controls. The learner first identifies client/services, then finds a source, a missing document and a pending decision.",
+        "deliverable_and_next_action": "Read the actual memo, four proposed document questions, studio review note and linked final card. The reader sees requested services, missing evidence and the next step of collecting responses. All card links resolve. The normal local model-data report is present; delivery is sealed and the archive run completed. This completion preserves a draft for professional review, not an activated relationship. The current source-registry expiry is disclosed in the studio review note.",
+        "practice_and_repeat": "A second real run in the same engagement adds Sara Campione as document contact from the update. It preserves the first run bytes and existing facts/services, identifies the new source, keeps Elena as reported representative and adds no inferred authority. The learner formulates the new request; test fixtures are unapproved authored readings and do not fabricate learner responses or ship predetermined results.",
+        "language_and_pacing": "Read the complete it outline and actual localized demonstration/practice deliverables. The relevant client, service, evidence and status wording in the review UI follows the selected language. Six planned stages total 390 seconds, with one short profile and one contact update. Processing and questions can extend this target. Human timing, comprehension and native voice interaction have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[it-demo]",
+        "result_review": "The current pipeline prepares the reported company facts and requested services, saves a proposed document request, delivers the localized internal draft with native disclosure, seals it and completes the archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "a525dc1ccbdba1520c8a9355f640c4efbbc5d8ebd55c9b6d8a6934264feacb5a"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "852767ddf47a6c8ae7c2b4fd9a22a4a3e6d73d1d5da895c40ecd3c232094e874"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "46966738acf79ead418f2dbf799db2049ac60a91b7c7cd604c711f82cb4cf728"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "661a3c5bc085d9f991db2cddf13512c4276203e6dae08efc26dbf165c297b9de"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[it-practice]",
+        "result_review": "The current pipeline completes a distinct second run in the same engagement with the added administrative contact, while every first-run file remains byte-identical and the prior parties/services are preserved. No professional review is marked applied.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "cd66b9be465617560a670b0d81c8bc4c07c2c2ac0ed5e8e216d6689421874aaa"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "852767ddf47a6c8ae7c2b4fd9a22a4a3e6d73d1d5da895c40ecd3c232094e874"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "eb6f372334d86d1d969793e520864016115afcb1f763e2c5288f2c84bd02eb09"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "1b65c2d0fdd28e9c41a558c3b3fef619d9af069cafeb84a94b409c050cdf911d"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces preparing a new Italian client from first-contact information. The outline follows the natural request, real dossier preparation, review of facts/services and missing documents, delivery and a second version. It teaches the user where to start and what to do next; AML arithmetic is supporting material rather than the lesson objective.",
+        "inputs_and_request": "Read profile-en.md and contact-update-en.md. The explicitly fictional workshop has twelve employees, Elena as reported representative and holdings of Elena 60%/Paolo 40%. It requests monthly bookkeeping and 2026 financial statements. Identity documents, current register evidence, confirmed ownership and agreed terms are missing. The natural request uses the organized interview form as direct evidence.",
+        "execution_and_checkpoints": "The actual kit adapter creates a local teaching engagement. Current initialization and packaging retain unverified facts, unset start date and unassessed risk scores. Native MCP validates/renders the actual dossier and saves one proposed document request without a professional approval. The review screen now exposes grouped client facts and services before decision controls. The learner first identifies client/services, then finds a source, a missing document and a pending decision.",
+        "deliverable_and_next_action": "Read the actual memo, four proposed document questions, studio review note and linked final card. The reader sees requested services, missing evidence and the next step of collecting responses. All card links resolve. The normal local model-data report is present; delivery is sealed and the archive run completed. This completion preserves a draft for professional review, not an activated relationship. The current source-registry expiry is disclosed in the studio review note.",
+        "practice_and_repeat": "A second real run in the same engagement adds Sara Campione as document contact from the update. It preserves the first run bytes and existing facts/services, identifies the new source, keeps Elena as reported representative and adds no inferred authority. The learner formulates the new request; test fixtures are unapproved authored readings and do not fabricate learner responses or ship predetermined results.",
+        "language_and_pacing": "Read the complete en outline and actual localized demonstration/practice deliverables. The relevant client, service, evidence and status wording in the review UI follows the selected language. Six planned stages total 390 seconds, with one short profile and one contact update. Processing and questions can extend this target. Human timing, comprehension and native voice interaction have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[en-demo]",
+        "result_review": "The current pipeline prepares the reported company facts and requested services, saves a proposed document request, delivers the localized internal draft with native disclosure, seals it and completes the archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "7ccfecd4b1d67dcb3f214d7138f675ddd21fdc7be9b298568d5608c32de39202"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "45cfe131607005546bc40a42b825c90d71179c8cdc1cb2d42f2f85a302ca9145"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "b68c2eb174b79ca71fef406c893810aa0452803cfd46634b9a22bfc243d00505"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "5194c5f42f228944887e3115cc8a87d27a8f71fb8c73044200c00ef75e3772ab"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[en-practice]",
+        "result_review": "The current pipeline completes a distinct second run in the same engagement with the added administrative contact, while every first-run file remains byte-identical and the prior parties/services are preserved. No professional review is marked applied.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "ccdfa0463f9f2158c66d02ab5abd7842621bac0a8b1ba010ae3cd2d2c6238edb"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "45cfe131607005546bc40a42b825c90d71179c8cdc1cb2d42f2f85a302ca9145"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "71deb4d7c7d847171c806d546013944fff47944acab42edeadd7ccc5a2506008"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "c5ff987f4ce5f07b6a9305c2a246da002e82d7df8fd3deb4b52de027206fac56"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces preparing a new Italian client from first-contact information. The outline follows the natural request, real dossier preparation, review of facts/services and missing documents, delivery and a second version. It teaches the user where to start and what to do next; AML arithmetic is supporting material rather than the lesson objective.",
+        "inputs_and_request": "Read profile-fr.md and contact-update-fr.md. The explicitly fictional workshop has twelve employees, Elena as reported representative and holdings of Elena 60%/Paolo 40%. It requests monthly bookkeeping and 2026 financial statements. Identity documents, current register evidence, confirmed ownership and agreed terms are missing. The natural request uses the organized interview form as direct evidence.",
+        "execution_and_checkpoints": "The actual kit adapter creates a local teaching engagement. Current initialization and packaging retain unverified facts, unset start date and unassessed risk scores. Native MCP validates/renders the actual dossier and saves one proposed document request without a professional approval. The review screen now exposes grouped client facts and services before decision controls. The learner first identifies client/services, then finds a source, a missing document and a pending decision.",
+        "deliverable_and_next_action": "Read the actual memo, four proposed document questions, studio review note and linked final card. The reader sees requested services, missing evidence and the next step of collecting responses. All card links resolve. The normal local model-data report is present; delivery is sealed and the archive run completed. This completion preserves a draft for professional review, not an activated relationship. The current source-registry expiry is disclosed in the studio review note.",
+        "practice_and_repeat": "A second real run in the same engagement adds Sara Campione as document contact from the update. It preserves the first run bytes and existing facts/services, identifies the new source, keeps Elena as reported representative and adds no inferred authority. The learner formulates the new request; test fixtures are unapproved authored readings and do not fabricate learner responses or ship predetermined results.",
+        "language_and_pacing": "Read the complete fr outline and actual localized demonstration/practice deliverables. The relevant client, service, evidence and status wording in the review UI follows the selected language. Six planned stages total 390 seconds, with one short profile and one contact update. Processing and questions can extend this target. Human timing, comprehension and native voice interaction have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[fr-demo]",
+        "result_review": "The current pipeline prepares the reported company facts and requested services, saves a proposed document request, delivers the localized internal draft with native disclosure, seals it and completes the archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "c6c4b6f88a7727a03b3e7550a6cf513e787dfda26494cc1adbec05136126c2ff"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "eb5421f596e60d27c3e78c6d44cae7be62ee7d0f503c9217f1bd85bbcdfc1f82"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "36e2bc276c55eaaa1f32939c95f9fbbcc2e711df23c744ed69c92da601766bc9"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "7556f55c65e72b22f0f187f91e40238a4746eb67cadb9438ec65ab6486e84d5d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[fr-practice]",
+        "result_review": "The current pipeline completes a distinct second run in the same engagement with the added administrative contact, while every first-run file remains byte-identical and the prior parties/services are preserved. No professional review is marked applied.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "1d7a54560b49224148c0da5c4d67527a5c7c782e692f1900981989b4d63c99f8"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "eb5421f596e60d27c3e78c6d44cae7be62ee7d0f503c9217f1bd85bbcdfc1f82"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "c5852c0841ccd465bfeb2d3008d34cc16dc3206d6e0fab07f007761a9627cf3a"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "5c0a5d021bb3d14febe5d9a38dd961c0c2b62f2fb7e4cf1f66c43b7a31e63f1c"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces preparing a new Italian client from first-contact information. The outline follows the natural request, real dossier preparation, review of facts/services and missing documents, delivery and a second version. It teaches the user where to start and what to do next; AML arithmetic is supporting material rather than the lesson objective.",
+        "inputs_and_request": "Read profile-de.md and contact-update-de.md. The explicitly fictional workshop has twelve employees, Elena as reported representative and holdings of Elena 60%/Paolo 40%. It requests monthly bookkeeping and 2026 financial statements. Identity documents, current register evidence, confirmed ownership and agreed terms are missing. The natural request uses the organized interview form as direct evidence.",
+        "execution_and_checkpoints": "The actual kit adapter creates a local teaching engagement. Current initialization and packaging retain unverified facts, unset start date and unassessed risk scores. Native MCP validates/renders the actual dossier and saves one proposed document request without a professional approval. The review screen now exposes grouped client facts and services before decision controls. The learner first identifies client/services, then finds a source, a missing document and a pending decision.",
+        "deliverable_and_next_action": "Read the actual memo, four proposed document questions, studio review note and linked final card. The reader sees requested services, missing evidence and the next step of collecting responses. All card links resolve. The normal local model-data report is present; delivery is sealed and the archive run completed. This completion preserves a draft for professional review, not an activated relationship. The current source-registry expiry is disclosed in the studio review note.",
+        "practice_and_repeat": "A second real run in the same engagement adds Sara Campione as document contact from the update. It preserves the first run bytes and existing facts/services, identifies the new source, keeps Elena as reported representative and adds no inferred authority. The learner formulates the new request; test fixtures are unapproved authored readings and do not fabricate learner responses or ship predetermined results.",
+        "language_and_pacing": "Read the complete de outline and actual localized demonstration/practice deliverables. The relevant client, service, evidence and status wording in the review UI follows the selected language. Six planned stages total 390 seconds, with one short profile and one contact update. Processing and questions can extend this target. Human timing, comprehension and native voice interaction have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[de-demo]",
+        "result_review": "The current pipeline prepares the reported company facts and requested services, saves a proposed document request, delivers the localized internal draft with native disclosure, seals it and completes the archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "3384b518d41b4a9c3445da05dfbcd1de2bb4cbdeb6fa97a6cc86ce14ac8bddd0"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "9535e196a7019de5f072080fa560b482b8f01259db156e565e7d3f5047235268"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "a01033ed05f99227c94ed91b6a851a41ccd3853f2e1bed3e65f5453aa6c33457"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "6879126014747054b4b1bf8ab2a768c7fe24cc4ffa3b0f7fff9ca70fc2d5c265"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[de-practice]",
+        "result_review": "The current pipeline completes a distinct second run in the same engagement with the added administrative contact, while every first-run file remains byte-identical and the prior parties/services are preserved. No professional review is marked applied.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "a99ce097dfa0485b404985691be1feb7065b144632fc397e29c3b3880b60eb17"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "9535e196a7019de5f072080fa560b482b8f01259db156e565e7d3f5047235268"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "a0e0563b688a82cbc387c4f60bc78297e1552e310d771076a061f932c24e5f2d"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "62b4471b7cec36c9b05f34f48d858fa2af2f04a287ff958fd153d420f7695150"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces preparing a new Italian client from first-contact information. The outline follows the natural request, real dossier preparation, review of facts/services and missing documents, delivery and a second version. It teaches the user where to start and what to do next; AML arithmetic is supporting material rather than the lesson objective.",
+        "inputs_and_request": "Read profile-es.md and contact-update-es.md. The explicitly fictional workshop has twelve employees, Elena as reported representative and holdings of Elena 60%/Paolo 40%. It requests monthly bookkeeping and 2026 financial statements. Identity documents, current register evidence, confirmed ownership and agreed terms are missing. The natural request uses the organized interview form as direct evidence.",
+        "execution_and_checkpoints": "The actual kit adapter creates a local teaching engagement. Current initialization and packaging retain unverified facts, unset start date and unassessed risk scores. Native MCP validates/renders the actual dossier and saves one proposed document request without a professional approval. The review screen now exposes grouped client facts and services before decision controls. The learner first identifies client/services, then finds a source, a missing document and a pending decision.",
+        "deliverable_and_next_action": "Read the actual memo, four proposed document questions, studio review note and linked final card. The reader sees requested services, missing evidence and the next step of collecting responses. All card links resolve. The normal local model-data report is present; delivery is sealed and the archive run completed. This completion preserves a draft for professional review, not an activated relationship. The current source-registry expiry is disclosed in the studio review note.",
+        "practice_and_repeat": "A second real run in the same engagement adds Sara Campione as document contact from the update. It preserves the first run bytes and existing facts/services, identifies the new source, keeps Elena as reported representative and adds no inferred authority. The learner formulates the new request; test fixtures are unapproved authored readings and do not fabricate learner responses or ship predetermined results.",
+        "language_and_pacing": "Read the complete es outline and actual localized demonstration/practice deliverables. The relevant client, service, evidence and status wording in the review UI follows the selected language. Six planned stages total 390 seconds, with one short profile and one contact update. Processing and questions can extend this target. Human timing, comprehension and native voice interaction have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[es-demo]",
+        "result_review": "The current pipeline prepares the reported company facts and requested services, saves a proposed document request, delivers the localized internal draft with native disclosure, seals it and completes the archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "8648b2b582edfb46c3a99cf1aed591bfbcef27b45fa806bff976c0f320e1d8d2"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "7fcc5a54c023aa780caf131ca830ec0aa7f1521b8474aca67edf4d519415021a"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "d4d68bea47e9096ad6c43fe73c67a9e11ab4be28b6985bc998b413ab2d086efb"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "678c273e3979c40e599409f8e33e2d8c062eec38389905c5ef04763bc41fdc83"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_new_client_kit_runs_actual_dossier_from_reported_facts[es-practice]",
+        "result_review": "The current pipeline completes a distinct second run in the same engagement with the added administrative contact, while every first-run file remains byte-identical and the prior parties/services are preserved. No professional review is marked applied.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_new_client_memo.md",
+            "sha256": "4bf4c4446246ec1fd54c5323ea7f37455ff08420f7fee9e64905860b2163af15"
+          },
+          {
+            "name": "client_questions.md",
+            "sha256": "7fcc5a54c023aa780caf131ca830ec0aa7f1521b8474aca67edf4d519415021a"
+          },
+          {
+            "name": "run_review.md",
+            "sha256": "2387f550b9eb2da6ecc8d4616efdd6e93e4b8be2343eed7ef9a16002e462cbe9"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "b28f999ab28b9308eaee52d1c0165a04f27f4cdf05d110347a192e7ef25f8522"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.159763+00:00",
+    "previous_course_sha256": "e15e4c4a3f96dcd9e0a60bcecbca3e4fe0deafbfc43f3b3ea35c9ea96b65941c",
+    "source_snapshot": "/private/tmp/new-client-teaching-release-11/test_new_client_kit_runs_actua7/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.423903+00:00",
+    "previous_course_sha256": "73652da0cc2fb28ffdc154815fbd77e0393dd7a0284d600d98d4109e3130de26",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/new-client/SKILL.md",
+        "before": "eae0bd9f696be94cf1d19943a5a64f6b8e37d159bd9dbb2cf617c32bc463a19f",
+        "after": "4e283f6c6144a9e48dc2ecebc3255a1ab6e4deb5088c846b7cd6d51e70d8b5db"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "purchase-invoice-review",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/passive-invoice-audit/references/ledger-mapping.example.json",
+      "repository_path": "plugins/passive-invoice-audit/references/ledger-mapping.example.json",
+      "sha256": "d3a3c42606b1e41aa20f337e87caeae49dc1e4d83b587ba5751afd729778b432"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/audit_core.py",
+      "repository_path": "plugins/passive-invoice-audit/scripts/audit_core.py",
+      "sha256": "35e01647f6d8ae2d48d489bf7fc3f3bf00ddd48378f0ccbd7771ca0ddb21c754"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/check_dependencies.py",
+      "repository_path": "plugins/passive-invoice-audit/scripts/check_dependencies.py",
+      "sha256": "a1f133f70cad55df5b580dc69bcb99a239b4f1490f03d022cdd71b2e0d738ef1"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/cowork_worker.py",
+      "repository_path": "plugins/passive-invoice-audit/scripts/cowork_worker.py",
+      "sha256": "7256bc67eb1cb8ad6dc82713da1cdf4601fa39ddafb0fe389b4386df1f47bf6c"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/evaluate_audit.py",
+      "repository_path": "plugins/passive-invoice-audit/scripts/evaluate_audit.py",
+      "sha256": "e5544f527695597e7ce70082c5a965d9937c10d176e52508d9201ef888598288"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/luna_worker.py",
+      "repository_path": "plugins/passive-invoice-audit/scripts/luna_worker.py",
+      "sha256": "c103ac553dab2f821e62cf4c7c304969794762170eeded60e3ed4017c91dffd4"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/run_audit.py",
+      "repository_path": "plugins/passive-invoice-audit/scripts/run_audit.py",
+      "sha256": "5c193e0ebfb063eb6191a9283ab3d2e76f4f417fe2057b12c3b601b36bd8a383"
+    },
+    {
+      "path": "modules/passive-invoice-audit/scripts/worker_config.json",
+      "repository_path": "plugins/passive-invoice-audit/scripts/worker_config.json",
+      "sha256": "0a5b82584a2fbdd7e9a52238a3ad45df3d5b7a884786fa14a8d85c9b47e0f89a"
+    },
+    {
+      "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+      "repository_path": "plugins/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
+      "sha256": "346d208a0a42022763bd25668b77582ec63c89246f9ee79e7d97e7733463c81a"
+    },
+    {
+      "path": "skills/purchase-invoice-review/SKILL.md",
+      "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
+      "sha256": "bcbeb9a1c412bb81a9e84e9292b700dd4089815fdae64a373f7a2d3ac3d96c7b"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Fatture passive: collegare ogni documento alla registrazione",
+      "goal": "Leggere la copertura di una popolazione di fatture passive e riconoscere i casi che richiedono revisione contabile.",
+      "scenario": "Il lotto fittizio contiene tre fatture passive: una collegata a una registrazione, una senza registrazione trovata e una con due candidati ambigui. Il periodo e la popolazione contabile sono esplicitamente delimitati.",
+      "request": "Vera, controlla come questo lotto di fatture passive si collega alla contabilità effettiva.",
+      "scope": "Revisione della popolazione passiva e delle registrazioni fornite. Un mancato collegamento nel perimetro non prova da solo che una fattura non sia mai stata contabilizzata.",
+      "input_columns": [
+        "Fattura fittizia",
+        "Supporto contabile disponibile",
+        "Questione"
+      ],
+      "input_rows": [
+        [
+          "PA-101 · 1.220 EUR",
+          "Una registrazione coerente",
+          "Controllare natura e trattamento"
+        ],
+        [
+          "PA-102 · 610 EUR",
+          "Nessun candidato nel periodo",
+          "Recuperare o chiarire"
+        ],
+        [
+          "PA-103 · 244 EUR",
+          "Due candidati",
+          "Identità da risolvere"
+        ]
+      ],
+      "basis": "P1 è il lotto XML e G1 l'export delle registrazioni del periodo. Le conclusioni restano legate a entrambi i perimetri; nessuna registrazione viene inventata.",
+      "method": [
+        "Importa la popolazione XML e le registrazioni effettive; qualifica periodo, conti, identità e totale del lotto.",
+        "Esegui il metodo corrente di abbinamento e revisione, comprese le capacità native richieste. Se una capacità manca, mantieni il passaggio pendente senza simularne l'esecuzione.",
+        "Leggi copertura, ambiguità e proposte di revisione. Il professionista valuta natura della spesa e trattamento; le proposte non diventano registrazioni o approvazioni automatiche."
+      ],
+      "result_title": "Tre fatture, tre stati distinti",
+      "conclusion": "Un collegamento è disponibile, uno manca nel perimetro e uno è ambiguo. La revisione deve preservare queste differenze.",
+      "output_columns": [
+        "Documento",
+        "Stato illustrato",
+        "Passo utile"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Collegamento disponibile",
+          "Rivedere il trattamento sulla fonte"
+        ],
+        [
+          "PA-102",
+          "Non trovato nel perimetro",
+          "Controllare periodo ed export"
+        ],
+        [
+          "PA-103",
+          "Ambiguo",
+          "Risolvere i candidati con evidenza"
+        ]
+      ],
+      "check": "Copertura dell'abbinamento e correttezza contabile sono verifiche diverse. Un'esecuzione tecnica riuscita non approva deducibilità o IVA.",
+      "question": "PA-102 non compare: possiamo scrivere 'fattura non registrata' senza limiti?",
+      "answer": "La conclusione sostenuta è 'registrazione non trovata nel perimetro esaminato'. Prima di una conclusione più ampia occorre verificare completezza e periodo dell'export.",
+      "practice": "Aggiungi la registrazione di PA-102 e confronta la copertura della nuova esecuzione senza cancellare il risultato precedente.",
+      "next": "Seleziona lotto passivo e registrazioni effettive del periodo; verifica le capacità native richieste dal workflow installato."
+    },
+    "en": {
+      "title": "Connect each purchase invoice to the actual posting",
+      "goal": "Read population coverage and identify invoices needing accounting review.",
+      "scenario": "The fictional purchase batch has three invoices: one with a consistent posting, one with no posting found and one with two ambiguous candidates. Both the period and accounting population are explicitly bounded.",
+      "request": "Vera, check how this purchase-invoice batch connects to the actual accounting entries.",
+      "scope": "Review of supplied purchase invoices and postings. A missing link in this perimeter does not prove an invoice was never booked.",
+      "input_columns": [
+        "Fictional invoice",
+        "Available accounting support",
+        "Question"
+      ],
+      "input_rows": [
+        [
+          "PA-101 · EUR 1,220",
+          "One consistent entry",
+          "Review nature and treatment"
+        ],
+        [
+          "PA-102 · EUR 610",
+          "No candidate in the period",
+          "Recover or clarify"
+        ],
+        [
+          "PA-103 · EUR 244",
+          "Two candidates",
+          "Resolve identity"
+        ]
+      ],
+      "basis": "P1 is the XML batch and G1 the period's posting export. Findings stay bound to both perimeters; no missing posting is invented.",
+      "method": [
+        "Import the invoice population and actual postings; qualify period, accounts, identities and batch totals.",
+        "Run the current matching and review method, including its required native capabilities. Leave unavailable stages pending instead of simulating them.",
+        "Read coverage, ambiguities and review proposals. The professional assesses expense nature and treatment; proposals do not become automatic postings or approvals."
+      ],
+      "result_title": "Three invoices, three distinct states",
+      "conclusion": "One link is available, one is absent within scope and one is ambiguous. Preserve those distinctions through review.",
+      "output_columns": [
+        "Document",
+        "Illustrated state",
+        "Useful next step"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Link available",
+          "Review treatment against evidence"
+        ],
+        [
+          "PA-102",
+          "Not found within scope",
+          "Check period and export"
+        ],
+        [
+          "PA-103",
+          "Ambiguous",
+          "Resolve candidates with evidence"
+        ]
+      ],
+      "check": "Matching coverage differs from accounting correctness. A successful technical run does not approve deductibility or VAT treatment.",
+      "question": "Can we state 'invoice not booked' without qualification for PA-102?",
+      "answer": "The supported finding is 'posting not found in the examined perimeter'. Check export completeness and period before a broader conclusion.",
+      "practice": "Add PA-102's posting and compare a fresh run without deleting the previous result.",
+      "next": "Select the purchase batch and actual period postings, and verify the installed workflow's required native capabilities."
+    },
+    "fr": {
+      "title": "Relier chaque facture fournisseur à l'écriture réelle",
+      "goal": "Lire la couverture d'une population de factures et repérer les cas nécessitant une revue comptable.",
+      "scenario": "Le lot fictif contient trois factures : une avec écriture cohérente, une sans écriture trouvée et une avec deux candidats ambigus. Période et population comptable sont explicitement délimitées.",
+      "request": "Vera, vérifie le lien entre ce lot fournisseur et les écritures réellement fournies.",
+      "scope": "Revue du lot et de la comptabilité sélectionnés. Un lien manquant dans ce périmètre ne prouve pas qu'une facture n'a jamais été enregistrée.",
+      "input_columns": [
+        "Facture fictive",
+        "Support comptable disponible",
+        "Question"
+      ],
+      "input_rows": [
+        [
+          "PA-101 · 1 220 EUR",
+          "Une écriture cohérente",
+          "Nature et traitement à revoir"
+        ],
+        [
+          "PA-102 · 610 EUR",
+          "Aucun candidat dans la période",
+          "À récupérer ou clarifier"
+        ],
+        [
+          "PA-103 · 244 EUR",
+          "Deux candidats",
+          "Identité à résoudre"
+        ]
+      ],
+      "basis": "P1 est le lot XML et G1 l'export de la période. Les constats restent liés aux deux périmètres ; aucune écriture absente n'est inventée.",
+      "method": [
+        "Importe factures et écritures effectives ; qualifie période, comptes, identités et totaux du lot.",
+        "Exécute la méthode actuelle et ses capacités natives requises. Une étape indisponible reste en attente au lieu d'être simulée.",
+        "Lis couverture, ambiguïtés et propositions. Le professionnel apprécie nature et traitement ; les propositions ne deviennent ni écritures ni approbations automatiques."
+      ],
+      "result_title": "Trois factures, trois états distincts",
+      "conclusion": "Un lien existe, un manque dans le périmètre et un reste ambigu. La revue doit préserver ces différences.",
+      "output_columns": [
+        "Document",
+        "État illustré",
+        "Suite utile"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Lien disponible",
+          "Revoir le traitement sur pièce"
+        ],
+        [
+          "PA-102",
+          "Non trouvé dans le périmètre",
+          "Vérifier période et export"
+        ],
+        [
+          "PA-103",
+          "Ambigu",
+          "Départager les candidats par les preuves"
+        ]
+      ],
+      "check": "Couverture du rapprochement et exactitude comptable sont distinctes. Une réussite technique n'approuve pas déductibilité ou TVA.",
+      "question": "Peut-on écrire sans réserve 'facture non enregistrée' pour PA-102 ?",
+      "answer": "Le constat étayé est 'écriture non trouvée dans le périmètre examiné'. Vérifie période et exhaustivité avant de conclure plus largement.",
+      "practice": "Ajoute l'écriture de PA-102 et compare une nouvelle exécution sans supprimer l'ancien résultat.",
+      "next": "Sélectionne factures et écritures de la période et vérifie les capacités natives requises par le workflow installé."
+    },
+    "de": {
+      "title": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
+      "goal": "Die Abdeckung eines Rechnungsbestands lesen und buchhalterischen Prüfbedarf erkennen.",
+      "scenario": "Der fiktive Bestand enthält drei Eingangsrechnungen: eine mit passender Buchung, eine ohne gefundene Buchung und eine mit zwei mehrdeutigen Kandidaten. Periode und Buchungsbestand sind ausdrücklich abgegrenzt.",
+      "request": "Vera, prüfe die Verknüpfung dieser Eingangsrechnungen mit den tatsächlichen Buchungen.",
+      "scope": "Prüfung der gelieferten Rechnungen und Buchungen. Eine fehlende Verbindung in diesem Umfang beweist nicht, dass eine Rechnung nie gebucht wurde.",
+      "input_columns": [
+        "Fiktive Rechnung",
+        "Vorhandene Buchungsbelege",
+        "Frage"
+      ],
+      "input_rows": [
+        [
+          "PA-101 · EUR 1.220",
+          "Eine passende Buchung",
+          "Art und Behandlung prüfen"
+        ],
+        [
+          "PA-102 · EUR 610",
+          "Kein Kandidat in der Periode",
+          "Nachbeschaffen oder klären"
+        ],
+        [
+          "PA-103 · EUR 244",
+          "Zwei Kandidaten",
+          "Identität klären"
+        ]
+      ],
+      "basis": "P1 ist der XML-Bestand, G1 der Buchungsexport der Periode. Feststellungen bleiben an beide Umfänge gebunden; fehlende Buchungen werden nicht erfunden.",
+      "method": [
+        "Importiere Rechnungsbestand und tatsächliche Buchungen. Qualifiziere Periode, Konten, Identitäten und Kontrollsummen.",
+        "Führe die aktuelle Zuordnungs- und Prüfmethode mit den benötigten nativen Fähigkeiten aus. Nicht verfügbare Stufen bleiben offen statt simuliert.",
+        "Lies Abdeckung, Mehrdeutigkeiten und Vorschläge. Die Fachperson beurteilt Aufwandsart und Behandlung; Vorschläge sind keine automatischen Buchungen oder Freigaben."
+      ],
+      "result_title": "Drei Rechnungen, drei verschiedene Zustände",
+      "conclusion": "Eine Verbindung ist vorhanden, eine im geprüften Umfang nicht gefunden und eine mehrdeutig. Diese Zustände bleiben während der Prüfung getrennt.",
+      "output_columns": [
+        "Dokument",
+        "Beispielstatus",
+        "Nützlicher nächster Schritt"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Verbindung vorhanden",
+          "Behandlung anhand der Belege prüfen"
+        ],
+        [
+          "PA-102",
+          "Im Umfang nicht gefunden",
+          "Periode und Export prüfen"
+        ],
+        [
+          "PA-103",
+          "Mehrdeutig",
+          "Kandidaten mit Belegen klären"
+        ]
+      ],
+      "check": "Zuordnungsabdeckung ist nicht Buchhaltungsrichtigkeit. Ein erfolgreicher technischer Lauf bestätigt weder Abzugsfähigkeit noch Umsatzsteuerbehandlung.",
+      "question": "Dürfen wir PA-102 ohne Einschränkung als 'nicht gebucht' bezeichnen?",
+      "answer": "Belegt ist: 'Buchung im untersuchten Umfang nicht gefunden'. Prüfe Vollständigkeit und Periode des Exports vor einer weitergehenden Aussage.",
+      "practice": "Ergänze die Buchung zu PA-102 und vergleiche einen neuen Lauf, ohne das vorherige Ergebnis zu löschen.",
+      "next": "Wähle Rechnungsbestand und tatsächliche Periodenbuchungen und prüfe die benötigten nativen Fähigkeiten des installierten Workflows."
+    },
+    "es": {
+      "title": "Vincular cada factura de compra con el asiento real",
+      "goal": "Leer la cobertura de una población e identificar facturas que requieren revisión contable.",
+      "scenario": "El lote ficticio tiene tres facturas: una con asiento coherente, otra sin asiento encontrado y otra con dos candidatos ambiguos. Periodo y población contable están delimitados expresamente.",
+      "request": "Vera, comprueba la relación entre este lote de facturas de compra y los asientos reales.",
+      "scope": "Revisión de facturas y asientos entregados. Un vínculo ausente en este alcance no demuestra que la factura nunca se contabilizara.",
+      "input_columns": [
+        "Factura ficticia",
+        "Soporte contable disponible",
+        "Pregunta"
+      ],
+      "input_rows": [
+        [
+          "PA-101 · EUR 1.220",
+          "Un asiento coherente",
+          "Revisar naturaleza y tratamiento"
+        ],
+        [
+          "PA-102 · EUR 610",
+          "Ningún candidato en el periodo",
+          "Recuperar o aclarar"
+        ],
+        [
+          "PA-103 · EUR 244",
+          "Dos candidatos",
+          "Resolver identidad"
+        ]
+      ],
+      "basis": "P1 es el lote XML y G1 el export contable del periodo. Los hallazgos quedan vinculados a ambos alcances; no se inventa ningún asiento ausente.",
+      "method": [
+        "Importa facturas y asientos reales y cualifica periodo, cuentas, identidades y totales de lote.",
+        "Ejecuta el método actual de asociación y revisión con sus capacidades nativas requeridas. Deja pendientes las etapas no disponibles en lugar de simularlas.",
+        "Lee cobertura, ambigüedades y propuestas. El profesional evalúa naturaleza y tratamiento del gasto; las propuestas no se convierten en asientos o aprobaciones automáticas."
+      ],
+      "result_title": "Tres facturas, tres estados distintos",
+      "conclusion": "Hay un vínculo disponible, otro no encontrado dentro del alcance y otro ambiguo. Conserva esas diferencias durante la revisión.",
+      "output_columns": [
+        "Documento",
+        "Estado ilustrado",
+        "Próximo paso útil"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Vínculo disponible",
+          "Revisar tratamiento contra pruebas"
+        ],
+        [
+          "PA-102",
+          "No encontrado dentro del alcance",
+          "Comprobar periodo y export"
+        ],
+        [
+          "PA-103",
+          "Ambiguo",
+          "Resolver candidatos con evidencia"
+        ]
+      ],
+      "check": "Cobertura de asociaciones no equivale a corrección contable. Una ejecución técnica satisfactoria no aprueba deducibilidad ni IVA.",
+      "question": "¿Podemos afirmar sin matices 'factura no contabilizada' para PA-102?",
+      "answer": "Lo respaldado es 'asiento no encontrado en el alcance examinado'. Comprueba integridad y periodo del export antes de concluir más ampliamente.",
+      "practice": "Añade el asiento de PA-102 y compara una nueva ejecución sin borrar el resultado anterior.",
+      "next": "Selecciona lote y asientos reales del periodo y comprueba las capacidades nativas requeridas por el workflow instalado."
+    }
+  }
+}

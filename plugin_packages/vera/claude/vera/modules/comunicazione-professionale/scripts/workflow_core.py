@@ -17,7 +17,6 @@ from pathlib import Path
 from typing import Any, Iterable, Iterator
 
 import jsonschema
-
 from history_privacy import (
     normalized_identity_visible,
     residual_mechanical_identifiers,
@@ -1238,7 +1237,9 @@ def validate_claim_assurance(
                 raise ValueError(
                     f"Claim assurance must route judgment to professional review: {claim['id']}"
                 )
-        elif issue_types != {"none"}:
+        elif issue_types and issue_types != {"none"}:
+            # The schema permits both an empty issue list and an explicit
+            # "none" entry. Neither reports an unresolved defect.
             raise ValueError(
                 f"Claim assurance retains an unresolved defect: {claim['id']}"
             )

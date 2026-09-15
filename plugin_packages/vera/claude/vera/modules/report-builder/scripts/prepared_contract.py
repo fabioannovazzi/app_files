@@ -144,6 +144,12 @@ def _expected_analysis(
         "entity": core.clean_text(recipe.get("entity")),
         "period": core.clean_text(recipe.get("period")),
         "sections": sections,
+        "include_table_previews": recipe.get("render", {}).get(
+            "include_table_previews", True
+        ),
+        "include_unassigned_tables": recipe.get("render", {}).get(
+            "include_unassigned_tables", False
+        ),
         "assigned_section_count": len(assigned),
         "missing_sections": missing,
         "numeric_measure_pending_sections": numeric_pending,
@@ -171,25 +177,7 @@ def _validate_audit_projection(
         if section.get("numeric_measure_status") == "needs_review"
     ]
     language = str(analysis.get("language") or "en")
-    notes = (
-        [
-            "El texto narrativo lo proporciona Claude en la receta, no los scripts auxiliares.",
-            "Revise las secciones sin asignar y los comentarios pendientes de Claude antes del uso final.",
-        ]
-        if language == "es"
-        else [
-            "Narrative text is supplied by Claude in the recipe, not by helper scripts.",
-            "Review unassigned sections and Claude-pending comments before final use.",
-        ]
-    )
-    if numeric_pending:
-        notes.append(
-            (
-                "Las columnas con apariencia numérica permanecen excluidas de los totales hasta que se revise su función como medidas."
-                if language == "es"
-                else "Numeric-looking columns remain excluded from totals until their measure role is reviewed."
-            )
-        )
+    notes = core.audit_notes(language, numeric_measure_pending=bool(numeric_pending))
     input_paths = run_intake.get("input_paths")
     if not isinstance(input_paths, list) or len(input_paths) != 1:
         raise ValueError("Report Builder audit input identity is stale.")

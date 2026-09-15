@@ -1,0 +1,27 @@
+{
+  "vera/invoice-xml": {
+    "title": "Preparar un archivo XML de factura con Vera",
+    "goal": "Aprender a proporcionar datos de una factura, revisar el borrador y obtener el XML local tras aprobar la versión exacta.",
+    "scenario": "Officina Arco necesita el archivo de una factura italiana ordinaria. Una ficha ficticia breve permite seguir todo el recorrido: petición, vista previa, revisión y exportación local.",
+    "scope": "Una factura nacional italiana ficticia en EUR. Los datos y la vista previa nativa usan términos italianos de facturación; Vera los explica en español. La lección parte de datos proporcionados. El mismo workflow admite también PDF y fotografías legibles. No firma ni transmite a SdI.",
+    "inputs": "Proporciona invoice-data.txt. Contiene proveedor, cliente, servicio, número, fecha, importes y datos de encaminamiento ficticios. Indica que es un nuevo borrador y que no existe emisión ni exportación previa en el caso didáctico.",
+    "request": "Vera, prepara un borrador de factura XML con esta ficha ficticia. Muéstrame vista previa, fuentes y controles. Déjame revisar la versión exacta antes de exportar el archivo al ordenador.",
+    "steps": [
+      "En el hilo de trabajo Vera lee la fuente, registra el propósito e identifica los datos de la factura. El hilo de voz muestra qué información aportar y responde durante la lectura.",
+      "El workflow actual prepara el borrador y abre su vista previa real. Compara proveedor, cliente, número, fecha, servicio, IVA y total con la ficha. Pide corregir las diferencias; cada corrección genera una nueva versión.",
+      "Revisa la versión mostrada. Solo después de tu aprobación explícita de esa versión Vera ejecuta los controles de exportación y crea el XML local. Abre el informe de exportación y localiza el archivo XML. Sin aprobación, el borrador sigue disponible sin exportar."
+    ],
+    "deliverables": [
+      "Vista previa del borrador real, con campos vinculados a fuentes y controles para la revisión.",
+      "Tras la aprobación y los controles superados, el archivo XML y el informe de exportación junto a la versión revisada."
+    ],
+    "review": "Compara datos, propósito y tratamiento fiscal con la información aportada. Una vista previa legible y un esquema válido no demuestran corrección fiscal ni aceptación SdI. Nunca reutilices identificadores o importes didácticos en una factura real.",
+    "checkpoints": [
+      "Antes de empezar, identifica la fuente y aclara si preparas un nuevo borrador o reconstruyes una factura existente.",
+      "En la vista previa, encuentra servicio y total y explica qué apruebas y dónde se guardará el archivo exportado."
+    ],
+    "practice": "Proporciona practice-invoice-data.txt y pide una segunda factura con el mismo recorrido. Tiene número, fecha y cantidad propios. Conserva el primer resultado, revisa la nueva vista previa y decide por separado si exportarla.",
+    "success": "Sabes iniciar el workflow, comprobar la vista previa, aprobar o detener la exportación y repetirlo para otra factura conservando la primera.",
+    "repeat": "Aporta documentos o datos confirmados y explica el propósito y cualquier emisión anterior. Vera prepara un borrador revisable, aclara los datos que faltan y exporta solo la versión aprobada. Envío y contabilización siguen el proceso separado del despacho."
+  }
+}

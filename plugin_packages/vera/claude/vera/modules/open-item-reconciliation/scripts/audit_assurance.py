@@ -105,6 +105,7 @@ from pathlib import Path
 from typing import Any
 
 from docx import Document
+from locale_support import canonical_word_label
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 
@@ -4042,6 +4043,11 @@ def _rendered_value_formula(
 ) -> tuple[list[str], dict[str, Any]]:
     """Bind a rendered value to a mechanically replayable record formula."""
 
+    # Resolve only the exact captions owned by the current renderer. Amounts
+    # must still reproduce the same canonical record/source formula below.
+    header = canonical_word_label(header)
+    values = [canonical_word_label(item) for item in values]
+
     rows_by_id = {str(row.get("record_id") or ""): row for row in support_rows}
     rows_by_id.update(
         {str(row.get("record_id") or ""): row for row in reconciliation_rows}
@@ -4049,7 +4055,16 @@ def _rendered_value_formula(
     owners = [rows_by_id[record_id] for record_id in owner_refs]
     number = Decimal(value)
     header_token = _semantic_token(header)
-    amount_header = any(
+    from build_missing_evidence_requests import TEXT
+
+    # Use the renderer's exact amount labels, including French and German.
+    # This resolves presentation identity only; the record sum is still replayed.
+    request_amount_headers = {
+        catalog["headers"][field]
+        for catalog in TEXT.values()
+        for field in ("amount", "amount_total")
+    }
+    amount_header = header in request_amount_headers or any(
         token in header_token
         for token in (
             "amount",

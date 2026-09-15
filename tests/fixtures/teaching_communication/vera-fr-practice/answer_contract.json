@@ -1,0 +1,35 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "contract_digest": "551aa7fc1d3f1fe7acda2002223f61055e3193535f70d578fad9bb11e2f348dd",
+  "correction_policy": "correct_when_supported",
+  "document_type": "professional_communication_package",
+  "evidence_display": "inline_citations",
+  "generation_instructions": {
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Selected fictional teaching context from this run's run_intake.json (SHA-256 183a8cd0ce6d0a00d4f22d0f571c1eca2f0c7e9b2a80d9f7140e55e5f7e61e7c): the studio and assignment are invented lesson material. The studio brief and draft visual values below are supplied context, not selected communication history or professional approval.",
+      "Studio Riva — experts-comptables. Aucun logo, coordonnées, communication antérieure ou format approuvé n’est fourni. Propose un format sobre bleu et blanc, avec une police lisible, des titres clairs et des sources identifiables. Le professionnel le reverra avant utilisation.",
+      "Run-selected fictional studio identity and draft visual values from brand_profile; not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ],
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ]
+  },
+  "generation_route": "codex_direct",
+  "judgment_policy": "flag_for_professional_review",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "output_language": "fr",
+  "purpose": "Le cabinet souhaite une courte FAQ pour ses petites entreprises clientes en Italie : comment reconnaître et organiser une demande d’accès aux données personnelles. Il s’agit d’une initiative d’information du cabinet, pas de l’annonce d’une nouvelle loi ni d’une réponse à une personne réelle. Les lecteurs gèrent l’administration et la relation client et doivent savoir quand solliciter le responsable de la protection des données. Utilise le guide officiel du CEPD sélectionné, en distinguant recommandations générales et appréciation du cas particulier. Aucune donnée client, demande réelle ou politique de confidentialité d’entreprise n’est fournie. Prépare le dossier pour revue interne, sans envoi ni publication. Rédige les documents finaux en français.\nAprès revue de la FAQ, prépare une nouvelle version du dossier comprenant aussi un bref courriel d’accompagnement aux clients. Explique à qui la FAQ s’adresse et comment l’utiliser. Conserve les sources, limites et première version. N’invente ni destinataires, ni pièces déjà envoyées, ni nouvelle obligation. Aucun envoi.",
+  "question_domain": "compliance",
+  "run_id": "vera-fr-practice",
+  "schema_version": 1,
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims"
+}

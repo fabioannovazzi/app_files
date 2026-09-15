@@ -19,6 +19,7 @@ const CONCORDATO_PLUGIN_IMPLEMENTATION_PATHS = [
   "mcp/server.cjs",
   "scripts/apply_review_edits.py",
   "scripts/check_dependencies.py",
+  "scripts/concordato_labels.py",
   "scripts/concordato_plan_core.py",
   "scripts/concordato_semantic.py",
   "scripts/finalize_output_closure.py",

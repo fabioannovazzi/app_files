@@ -1,0 +1,27 @@
+{
+  "clara/transcribe": {
+    "title": "Import and review a transcript with Clara",
+    "goal": "Learn to add a transcript to a case, check who is speaking and preserve a usable version linked to its source.",
+    "scenario": "Sara has prepared a short note for Ciclo Arco’s next meeting. We start from a downloaded bundle and turn it into a registered case transcript.",
+    "scope": "This runs the local import and review route. The bundle is entirely fictional and contains no audio. Recording or transcribing new audio is a separate hosted step requiring a separate choice.",
+    "inputs": "Open context-en.md and case-notes-voice-input-en.json. The context explains provenance and the known speaker. You need not interpret technical fields: identify the bundle and target case for Clara.",
+    "request": "Clara, import this note into the Ciclo Arco teaching case, preserve the original, check who is speaking and show the reviewed transcript. Do not add a decision about the service.",
+    "steps": [
+      "The working chat prepares the case and imports the bundle through the current workflow. Open the raw transcript and compare it with the context note; the voice chat explains where the files are stored.",
+      "Clara reviews speaker attribution and wording without changing meaning. See how it identifies Sara and keeps price and route as unanswered questions.",
+      "The workflow registers the reviewed version and links its source in the case. Open the final text and source reference; registration establishes the recorded wording, not the truth of every assertion."
+    ],
+    "deliverables": [
+      "Original transcript and bundle preserved in the local session.",
+      "Reviewed transcript, attribution status and source registration in the case."
+    ],
+    "review": "Check one passage word for word, the speaker’s name and the sentence saying the service has not been decided. There is no audio in this example, so you cannot verify the text against a recording.",
+    "checkpoints": [
+      "Before import, identify the bundle and target case.",
+      "At delivery, locate one sentence in both the original and reviewed versions."
+    ],
+    "practice": "Import the practice bundle with two speakers into the same case. Ask Clara to retain Speaker 1 and Speaker 2 until their names are documented. Compare one turn with the original and preserve the first note.",
+    "success": "You can import a new note, find original and reviewed text and recognize uncertain attribution without inventing a name.",
+    "repeat": "Specify the recording or bundle, language and destination. Use an ordinary folder when you only need to store a transcript; using it as case evidence also requires review and registration."
+  }
+}

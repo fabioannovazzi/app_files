@@ -74,6 +74,7 @@ if str(SCRIPT_DIR) not in sys.path:
 from report_builder_core import (  # noqa: E402
     _public_table_inspection,
     analysis_for_section,
+    audit_notes,
     clean_text,
     inspect_table,
     load_indexed_tables,
@@ -108,29 +109,6 @@ FINAL_HANDOFF_ACTION = (
     "Use final_artifacts.json as the reviewed artifact gallery for handoff."
 )
 COMPLETE_REVIEW_ACTION = "Complete remaining review decisions before final handoff."
-
-
-def _audit_notes(language: str, *, numeric_measure_pending: bool) -> list[str]:
-    notes = (
-        [
-            "El texto narrativo lo proporciona Codex en la receta, no los scripts auxiliares.",
-            "Revise las secciones sin asignar y los comentarios pendientes de Codex antes del uso final.",
-        ]
-        if language == "es"
-        else [
-            "Narrative text is supplied by Codex in the recipe, not by helper scripts.",
-            "Review unassigned sections and Codex-pending comments before final use.",
-        ]
-    )
-    if numeric_measure_pending:
-        notes.append(
-            (
-                "Las columnas con apariencia numérica permanecen excluidas de los totales hasta que se revise su función como medidas."
-                if language == "es"
-                else "Numeric-looking columns remain excluded from totals until their measure role is reviewed."
-            )
-        )
-    return notes
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -374,6 +352,12 @@ def _recompute_report_analysis(
         "entity": clean_text(recipe.get("entity")),
         "period": clean_text(recipe.get("period")),
         "sections": sections_analysis,
+        "include_table_previews": recipe.get("render", {}).get(
+            "include_table_previews", True
+        ),
+        "include_unassigned_tables": recipe.get("render", {}).get(
+            "include_unassigned_tables", False
+        ),
         "assigned_section_count": len(assigned_sections),
         "missing_sections": missing_sections,
         "numeric_measure_pending_sections": [
@@ -401,7 +385,7 @@ def _recompute_report_analysis(
                 for section in sections_analysis
                 if clean_text(section.get("codex_comment"))
             ),
-            "notes": _audit_notes(
+            "notes": audit_notes(
                 str(analysis["language"]),
                 numeric_measure_pending=bool(
                     analysis["numeric_measure_pending_sections"]

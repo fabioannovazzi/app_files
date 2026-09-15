@@ -1,0 +1,384 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "vouching",
+  "course_sha256": "47732ab90b426237cb4e9cffed52ee65f310fe82e02e81d0b23b07f7a4dbae5a",
+  "reviewer": "Codex: first-use material, source-to-sample handoff and actual output review",
+  "reviewed_at": "2026-09-14T18:25:17.746640+00:00",
+  "review_scope": "Read all five lesson outlines and contexts, the nine-line journal and the three fictional XML invoice facts. Ten distinct locale/phase native checks execute the current teaching adapter, Journal Sampling prerequisite, Studio Archive handoff and Vouching run, within 29 passing focused checks. Reviewed the localized Markdown notes and eighteen native Excel views: five horizontal views of each distinct phase, plus the localized review-note columns for the other eight cases. All other CSV fields match within each phase; document receipt references vary by run and were traced separately. Canonical spreadsheet columns remain English. The samples and outputs are generated during execution; learner decisions, professional conclusions, voice, two-window behavior and browser widget interaction are not attested.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking sampled journal entries against their invoice documents. The sequence covers supplying the inputs, defining the selected rows, performing the actual checks, opening the results, tracing a document and recognizing the review decisions still required.",
+        "inputs_and_request": "Read this localized context and the actual fictional journal and XMLs. Nine debit/credit lines represent three purchase invoices; account 2100 contains their three payable lines. Debit and credit totals each equal EUR 2,440. The XML totals are 1,220, 732 and 488, with matching invoice references and dates. The teaching request chooses two random account-2100 rows with seed 42. Placeholder identities are explicitly fictional and no transmission is requested.",
+        "execution_and_checkpoints": "The native tutorial adapter binds the journal separately from the context, runs the current Journal Sampling preparation and selection, seals its artifacts and invokes start_check_entries_from_sample with the chosen support receipts. Vouching checks only those selected rows. Checkpoints identify the selected population and require explaining one result from the journal and invoice. No prepared sample, fabricated final output or learner approval substitutes for live execution.",
+        "deliverable_and_next_action": "Actual Excel and CSV results preserve matched documents, monetary facts and pending professional conclusions. Fitted columns and frozen entry identifiers make the workpaper readable; four technical identifier/JSON fields remain available in hidden columns. Native localized review notes now name each entry, date, account, journal amount, document amount, source row, document and outstanding question. They explain reviewing supplier/customer identity and debit/credit direction in ordinary language. Source matching is distinguished from approval; signed support amounts remain withheld until the required review. Initial export and reviewed-note regeneration share the same workbook writer.",
+        "practice_and_repeat": "Practice requests a new three-row sample from account 2100 and checks all three selected invoices. The native test preserves the original two-row results and seals the second sample and check run separately. The repeat instruction asks for the correct existing Journal Sampling run and an explicit document batch, with the internal handoff handled by Vera.",
+        "language_and_pacing": "Read the it first-use outline, context and native review-note content. Localized row guidance was visually checked in both phase workbooks. Narrative and review notes follow this language; canonical technical column names remain English. Six stages total 390 seconds, with processing and questions allowed to extend the lesson. There is no measured learner-duration or voice claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-it]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 2 rows. The XML batch parses without errors and the checks return exactly 2 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "5b09dd98ca54ffb4a814f5ebbe392cd158ebcaab5fdaba5b0e1a63c23bc61c0a"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "af099e3340ec4024dc157516fb4779152acdc088b6096861da4d997a4db0f42b"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "098a89723bcf2ace2c0fd10fa04eb2b0ea7c4092fbceeb7d5d8a2968e56fa570"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[practice-it]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 3 rows. The XML batch parses without errors and the checks return exactly 3 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "694a41a442b96571f0566ceff78a7831f80776fd1b7b699ef8d2c866c3bc49b0"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "68dc95826c80580ed1f44d396eb57c104276169cd5bc158031c0510adee93891"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "d014bdfd657a45d27dc6c9c256e2d4dea1a25e6ede9e5a0a8fbebc9b6b34b65b"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking sampled journal entries against their invoice documents. The sequence covers supplying the inputs, defining the selected rows, performing the actual checks, opening the results, tracing a document and recognizing the review decisions still required.",
+        "inputs_and_request": "Read this localized context and the actual fictional journal and XMLs. Nine debit/credit lines represent three purchase invoices; account 2100 contains their three payable lines. Debit and credit totals each equal EUR 2,440. The XML totals are 1,220, 732 and 488, with matching invoice references and dates. The teaching request chooses two random account-2100 rows with seed 42. Placeholder identities are explicitly fictional and no transmission is requested.",
+        "execution_and_checkpoints": "The native tutorial adapter binds the journal separately from the context, runs the current Journal Sampling preparation and selection, seals its artifacts and invokes start_check_entries_from_sample with the chosen support receipts. Vouching checks only those selected rows. Checkpoints identify the selected population and require explaining one result from the journal and invoice. No prepared sample, fabricated final output or learner approval substitutes for live execution.",
+        "deliverable_and_next_action": "Actual Excel and CSV results preserve matched documents, monetary facts and pending professional conclusions. Fitted columns and frozen entry identifiers make the workpaper readable; four technical identifier/JSON fields remain available in hidden columns. Native localized review notes now name each entry, date, account, journal amount, document amount, source row, document and outstanding question. They explain reviewing supplier/customer identity and debit/credit direction in ordinary language. Source matching is distinguished from approval; signed support amounts remain withheld until the required review. Initial export and reviewed-note regeneration share the same workbook writer.",
+        "practice_and_repeat": "Practice requests a new three-row sample from account 2100 and checks all three selected invoices. The native test preserves the original two-row results and seals the second sample and check run separately. The repeat instruction asks for the correct existing Journal Sampling run and an explicit document batch, with the internal handoff handled by Vera.",
+        "language_and_pacing": "Read the en first-use outline, context and native review-note content. Localized row guidance was visually checked in both phase workbooks. Narrative and review notes follow this language; canonical technical column names remain English. Six stages total 390 seconds, with processing and questions allowed to extend the lesson. There is no measured learner-duration or voice claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-en]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 2 rows. The XML batch parses without errors and the checks return exactly 2 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "d357a70498884912cb2992666f6fdac2e7355f3f5e22bf3e386156cbac4188fb"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "28a7c4b9a9aeb194036ed0ca2946ae2c03077ea106cd4d021507fa86cdd504b4"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "8410b29587470823af79c618ed929869c4c84c354aa6590e3c8789f8ceed0ffa"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[practice-en]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 3 rows. The XML batch parses without errors and the checks return exactly 3 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "d54dddeca409da558caf94b60ca62795a98b1c8b78b50e9bb488dd7b2e1d3981"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "80ee6d0c7acb798eb221f79b21673f0c3fe26933f4effc33fbf49315ee8c6aed"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "d38fe90947d0094712799dff9f1dee26201a3598fac5fd5f59c335e3e096cdf1"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking sampled journal entries against their invoice documents. The sequence covers supplying the inputs, defining the selected rows, performing the actual checks, opening the results, tracing a document and recognizing the review decisions still required.",
+        "inputs_and_request": "Read this localized context and the actual fictional journal and XMLs. Nine debit/credit lines represent three purchase invoices; account 2100 contains their three payable lines. Debit and credit totals each equal EUR 2,440. The XML totals are 1,220, 732 and 488, with matching invoice references and dates. The teaching request chooses two random account-2100 rows with seed 42. Placeholder identities are explicitly fictional and no transmission is requested.",
+        "execution_and_checkpoints": "The native tutorial adapter binds the journal separately from the context, runs the current Journal Sampling preparation and selection, seals its artifacts and invokes start_check_entries_from_sample with the chosen support receipts. Vouching checks only those selected rows. Checkpoints identify the selected population and require explaining one result from the journal and invoice. No prepared sample, fabricated final output or learner approval substitutes for live execution.",
+        "deliverable_and_next_action": "Actual Excel and CSV results preserve matched documents, monetary facts and pending professional conclusions. Fitted columns and frozen entry identifiers make the workpaper readable; four technical identifier/JSON fields remain available in hidden columns. Native localized review notes now name each entry, date, account, journal amount, document amount, source row, document and outstanding question. They explain reviewing supplier/customer identity and debit/credit direction in ordinary language. Source matching is distinguished from approval; signed support amounts remain withheld until the required review. Initial export and reviewed-note regeneration share the same workbook writer.",
+        "practice_and_repeat": "Practice requests a new three-row sample from account 2100 and checks all three selected invoices. The native test preserves the original two-row results and seals the second sample and check run separately. The repeat instruction asks for the correct existing Journal Sampling run and an explicit document batch, with the internal handoff handled by Vera.",
+        "language_and_pacing": "Read the fr first-use outline, context and native review-note content. Localized row guidance was visually checked in both phase workbooks. Narrative and review notes follow this language; canonical technical column names remain English. Six stages total 390 seconds, with processing and questions allowed to extend the lesson. There is no measured learner-duration or voice claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-fr]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 2 rows. The XML batch parses without errors and the checks return exactly 2 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "06135eda31f58261a6a00bac34fb01e1b751afafbf2688c20dc1ab42881c73ab"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "a5f64b0a0b265642d3888a8a574340d6153d80435f6050d8b9a62e4edceadd5f"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "88695d8e65742cd7b35491420cc08d2b9f8aae4bc5594aaa8654f8554dd46589"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[practice-fr]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 3 rows. The XML batch parses without errors and the checks return exactly 3 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "6e4b6397f37821f917cd9a0a1276fc7d30673a3924ed9c1ebe63e340f4275b7f"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "6911afaad1e0087631dce785bb2766f00954b13622af8e641be78016bb052798"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "1ac85b7dc5bc99e7cbd8754c179993e4ef7850d2ad4d0a2da398aa465f90e746"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking sampled journal entries against their invoice documents. The sequence covers supplying the inputs, defining the selected rows, performing the actual checks, opening the results, tracing a document and recognizing the review decisions still required.",
+        "inputs_and_request": "Read this localized context and the actual fictional journal and XMLs. Nine debit/credit lines represent three purchase invoices; account 2100 contains their three payable lines. Debit and credit totals each equal EUR 2,440. The XML totals are 1,220, 732 and 488, with matching invoice references and dates. The teaching request chooses two random account-2100 rows with seed 42. Placeholder identities are explicitly fictional and no transmission is requested.",
+        "execution_and_checkpoints": "The native tutorial adapter binds the journal separately from the context, runs the current Journal Sampling preparation and selection, seals its artifacts and invokes start_check_entries_from_sample with the chosen support receipts. Vouching checks only those selected rows. Checkpoints identify the selected population and require explaining one result from the journal and invoice. No prepared sample, fabricated final output or learner approval substitutes for live execution.",
+        "deliverable_and_next_action": "Actual Excel and CSV results preserve matched documents, monetary facts and pending professional conclusions. Fitted columns and frozen entry identifiers make the workpaper readable; four technical identifier/JSON fields remain available in hidden columns. Native localized review notes now name each entry, date, account, journal amount, document amount, source row, document and outstanding question. They explain reviewing supplier/customer identity and debit/credit direction in ordinary language. Source matching is distinguished from approval; signed support amounts remain withheld until the required review. Initial export and reviewed-note regeneration share the same workbook writer.",
+        "practice_and_repeat": "Practice requests a new three-row sample from account 2100 and checks all three selected invoices. The native test preserves the original two-row results and seals the second sample and check run separately. The repeat instruction asks for the correct existing Journal Sampling run and an explicit document batch, with the internal handoff handled by Vera.",
+        "language_and_pacing": "Read the de first-use outline, context and native review-note content. Localized row guidance was visually checked in both phase workbooks. Narrative and review notes follow this language; canonical technical column names remain English. Six stages total 390 seconds, with processing and questions allowed to extend the lesson. There is no measured learner-duration or voice claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-de]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 2 rows. The XML batch parses without errors and the checks return exactly 2 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "ccd4e07c3436c329bade96dc3d1f72c98a0b1c813790ba42f28d3bdabdd489c3"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "91f6a504b4ea56d1996e69d014f51aa4bd174d0defdc4607372907ddaf84811a"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "75d77d3eac4a0775ec847215e7e9a1f38b3ad58b206082f7a3e1921a97221471"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[practice-de]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 3 rows. The XML batch parses without errors and the checks return exactly 3 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "835aa3676026ba45be97a3e9553ca42ce6031e841eb10ab3367e0bf0618384ed"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "acab1ffcfc13e12312185af0af9b93a3316344c3e9f3a9b260fc317b34171b80"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "7774944694be3627dfeaeaa301c96c955d31d711ea3823f5486ecc170462470e"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches checking sampled journal entries against their invoice documents. The sequence covers supplying the inputs, defining the selected rows, performing the actual checks, opening the results, tracing a document and recognizing the review decisions still required.",
+        "inputs_and_request": "Read this localized context and the actual fictional journal and XMLs. Nine debit/credit lines represent three purchase invoices; account 2100 contains their three payable lines. Debit and credit totals each equal EUR 2,440. The XML totals are 1,220, 732 and 488, with matching invoice references and dates. The teaching request chooses two random account-2100 rows with seed 42. Placeholder identities are explicitly fictional and no transmission is requested.",
+        "execution_and_checkpoints": "The native tutorial adapter binds the journal separately from the context, runs the current Journal Sampling preparation and selection, seals its artifacts and invokes start_check_entries_from_sample with the chosen support receipts. Vouching checks only those selected rows. Checkpoints identify the selected population and require explaining one result from the journal and invoice. No prepared sample, fabricated final output or learner approval substitutes for live execution.",
+        "deliverable_and_next_action": "Actual Excel and CSV results preserve matched documents, monetary facts and pending professional conclusions. Fitted columns and frozen entry identifiers make the workpaper readable; four technical identifier/JSON fields remain available in hidden columns. Native localized review notes now name each entry, date, account, journal amount, document amount, source row, document and outstanding question. They explain reviewing supplier/customer identity and debit/credit direction in ordinary language. Source matching is distinguished from approval; signed support amounts remain withheld until the required review. Initial export and reviewed-note regeneration share the same workbook writer.",
+        "practice_and_repeat": "Practice requests a new three-row sample from account 2100 and checks all three selected invoices. The native test preserves the original two-row results and seals the second sample and check run separately. The repeat instruction asks for the correct existing Journal Sampling run and an explicit document batch, with the internal handoff handled by Vera.",
+        "language_and_pacing": "Read the es first-use outline, context and native review-note content. Localized row guidance was visually checked in both phase workbooks. Narrative and review notes follow this language; canonical technical column names remain English. Six stages total 390 seconds, with processing and questions allowed to extend the lesson. There is no measured learner-duration or voice claim."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-es]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 2 rows. The XML batch parses without errors and the checks return exactly 2 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "6994dbaeb1b5abe8462614794f1861ae752c53f6978937546959bc90739a9b37"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "ac8b6bbe02b02431459e2d43c3b78b85c5568be18e203b88bb7071e69baa4b16"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "10d1a823b675a352f863a2876071ae8332c625f67632749a1626d1283afc1d59"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_vouching_kit_runs_live_sample_handoff_and_current_checks[practice-es]",
+        "result_review": "The actual nine-line journal is normalized, filtered to the three account-2100 rows and sampled to 3 rows. The XML batch parses without errors and the checks return exactly 3 selected rows. Each selected invoice has an explicit reference, matching date and amount magnitude. Supplier/customer and debit/credit review remain pending; status is manual_review and professional_conclusion is pending_review. The generated notes explain those outstanding steps and point to the exact journal row and invoice. The workflow outputs are finalized without claiming professional approval.",
+        "reviewed_artifacts": [
+          {
+            "name": "check_results.xlsx",
+            "sha256": "d55429cb0ed992c8073e69569968e2321226df22062ec7f7e4651d6225c1f1e3"
+          },
+          {
+            "name": "check_results.csv",
+            "sha256": "4734780f74540c3110a236e6f36a2596df09e32c326619a0ac0556358121e6a3"
+          },
+          {
+            "name": "review_notes.md",
+            "sha256": "c579f98101b4e3f1b782e9469d884aea1811f94b5034850539376955dc4cb35b"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.162945+00:00",
+    "previous_course_sha256": "d3bbc376b295be148b496ddf9060065392c409bdfffff11eb11e0837f41bf91f",
+    "source_snapshot": "/private/tmp/organization-teaching-release-02/test_vouching_kit_runs_live_sa4/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.518066+00:00",
+    "previous_course_sha256": "bd9e233a9500028f5f893283caf741e4850b7ebc9498311e7abaddc9b3ce02d6",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/vouching/SKILL.md",
+        "before": "548deff72f83d7db825a68bc0526a3301c1d9f19f666aa2be7eec878b3f95515",
+        "after": "125f9120dcd760b06b19d38b670a0058635fca5d7202f883e28b927bd9f6660e"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "windows_workflow_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:27:33.403891+00:00",
+    "previous_course_sha256": "6e01d552b20ad810fbaad12365cc137a3533c5893ddb5a4b11fc82f7b25e617b",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/implementation_bootstrap.py",
+        "before": "4ac2e3a16f09af539d54f3d0c418f4245b5c5e134066043bae5e16ba743da837",
+        "after": "134993676b211553c0ca76eedb0628d7138d7f69ab4e09fb6014c272e80bd29a"
+      }
+    ],
+    "scope": "Authored lessons and inputs are unchanged. Archive Organization closes its source reader before unlinking on Windows and rechecks the approved source hash. Journal Sampling records the filesystem-observed bootstrap mode and still verifies exact mode/hash closure. Journal Sampling and Vouching obtain real link counts through lstat. These are local execution corrections; they add no transmission and do not establish Windows ACL privacy. Original named editorial and artifact reviews remain preserved. Current native execution is established separately by the release verifier using the actual supplied JUnit records."
+  },
+  "binary_read_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:46:38.012348+00:00",
+    "previous_course_sha256": "8278e2cbfe637d958d804eba40906370ae38da42e88c36ed2af0ff7b0c88c649",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/check_entries_core.py",
+        "before": "15958a08cbaf88f1fb3d0cb8cb53d0d8c5f549d3d436343c311debc6202e52b2",
+        "after": "23ad48f484039bd3776a9ce3ca9c86a730cb5bb5054f2096f30a9e78c0bb8a1f"
+      }
+    ],
+    "scope": "Authored lessons and inputs are unchanged. The two descriptor reads now explicitly select binary mode on Windows, preserving CRLF and control-Z bytes for exact receipts. Stable identity, single-link, size and final-path checks are unchanged. No transmission or new data exposure. Original named editorial and artifact reviews remain preserved; current native execution is established separately by the release verifier using actual JUnit records."
+  },
+  "stat_api_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:58:49.674408+00:00",
+    "previous_course_sha256": "d2b70009458485708c3d022d36ec7cf619a511a0252d9f32a587e8fc84773763",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/check_entries_core.py",
+        "before": "23ad48f484039bd3776a9ce3ca9c86a730cb5bb5054f2096f30a9e78c0bb8a1f",
+        "after": "7935ffdf687e031b6720a11aa8973a7710a00664fca980d4be6d7d51957d2091"
+      }
+    ],
+    "scope": "Authored lessons and inputs unchanged. CPython 3.12 Windows pathname stat aliases ctime to birthtime while descriptor stat reports change time. Cross-API comparison retains device, inode, mode, link count, size and mtime. Full ctime checks remain within before/after descriptor observations and within before/after pathname observations. Exact bytes and final-path checks remain required. No transmission or new model context. Original editorial reviews remain preserved; native execution evidence is verified separately."
+  },
+  "remaining_file_api_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T11:14:35.066176+00:00",
+    "previous_course_sha256": "d8d8390508498232aff8c9a7edebbb515f7aa51b696c5808fd4d75c18387f992",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/check_entries_core.py",
+        "before": "7935ffdf687e031b6720a11aa8973a7710a00664fca980d4be6d7d51957d2091",
+        "after": "c4218b1b3f684126c899dcf30d5b7358f10c4a7c25504ee356d62c9d8098f651"
+      },
+      {
+        "path": "plugins/check-entries/scripts/physical_output_set.py",
+        "before": "db7476ac9b3ac97101f4f8f27478b74735698403201af73535b5c54e4f07a745",
+        "after": "0870043ab7ac3171cc73d951d6915e80ec4ab67219eec4362c05550bccdd5107"
+      },
+      {
+        "path": "plugins/check-entries/scripts/check_dependencies.py",
+        "before": "f09811af1b143aa055c7fa131aaf2e82a3aa4ebcdb8783ad9599e4c711c69acd",
+        "after": "84bb7bb504ba4b17d80edd6234af4395c445d03ce54ec191a7d9384744ac67a0"
+      },
+      {
+        "path": "plugins/check-entries/scripts/inspect_entries.py",
+        "before": "bf47b59b303955aeebea6f05b5af94370646d6052adc99c2c04fcf1e734d4810",
+        "after": "9a84ce790b4d6763c07610c03b93a85cb34830c734162fd8d528ed84d98a6090"
+      },
+      {
+        "path": "plugins/check-entries/scripts/run_checks.py",
+        "before": "829d99a3b5ef67ac4ddacc76c1e73d7e21d62b0bc307bf179a67fa5b4c90e419",
+        "after": "66168e82f9b60e46e1a36c07be05735e4eb401b9f3206cb9881ac3ff618ee91a"
+      },
+      {
+        "path": "plugins/check-entries/scripts/apply_review_edits.py",
+        "before": "4937b9bdc916177eac603c60a733f9d4790c85771fc2025e2206ffe8011f739e",
+        "after": "6d88b150f32fbc627d2090debb536cfa49c3f51de6728fc469d5488dff9fac5e"
+      }
+    ],
+    "scope": "Authored lessons and inputs unchanged. All three remaining Vouching directory scans obtain actual link counts with lstat. The four command entrypoint snapshots and reviewed-successor byte capture now compare ctime only within the same API, preserving before/after and final-path checks, and explicitly use binary reads. Symlink, hardlink, size, exact-byte and replacement rejection remain in place. No transmission or new model context. Original editorial and artifact reviews are preserved; actual native execution is checked separately."
+  }
+}

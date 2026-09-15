@@ -1,0 +1,27 @@
+{
+  "vera/registro-imprese-sari": {
+    "title": "Eine Registro-Imprese-Angelegenheit mit Vera vorbereiten",
+    "goal": "Lernen, den Fall bereitzustellen, die Quellenprüfung zu verfolgen und Bearbeitungsplan und Unterlagenliste zu prüfen.",
+    "scenario": "Ein Unternehmen möchte seine eingetragene PEC-Adresse ändern. Wir bereiten die Arbeit der Kanzlei vom Auftrag und den vorhandenen Angaben bis zum Prüfplan vor.",
+    "scope": "Der vollständige Vorbereitungsablauf an einem einfachen Fall: Angaben, Quellen, Vorschlag, Kontrollen und Prüfung. SARI hilft bei der Orientierung; Vera erstellt ein Paket für die Fachperson ohne Einreichung.",
+    "inputs": "Öffnen Sie company-de.md mit Auftrag, Unternehmen, Kammer, Adressen und genanntem Datum. sources-de.md nennt zu prüfende öffentliche Seiten. Zugangsdaten und technische Anweisungen sind nicht nötig.",
+    "request": "Vera, bereite die Registro-Imprese-Angelegenheit aus dieser Datei vor. Prüfe die einschlägigen Quellen und zeige mir Plan, anzufordernde Unterlagen und Vorschläge zur Prüfung. Keine Portalanmeldung oder Einreichung.",
+    "steps": [
+      "Im Arbeitschat eröffnet Vera den Fall und liest die Unterlagen. Im Sprachchat erklärt sie die geplante Vorbereitung und fehlende Angaben. Prüfen Sie Kammer, Vorgang und vorgeschlagene Daten.",
+      "Vera prüft aktuelle amtliche Quellen und verknüpft Vorschläge mit Fallangaben. Muss eine SARI-Karte ausgewählt werden, zeigt sie passende Möglichkeiten und wartet auf Ihre Wahl. Die Stimme erklärt den laufenden Schritt.",
+      "Öffnen Sie studio_checklist.md und den erzeugten Plan. Verfolgen Sie eine Angabe vom Auftrag zum vorgeschlagenen Feld und zur Quelle. Sie können zustimmen, Unterlagen anfordern oder eine Änderung verlangen; diese muss anschließend noch umgesetzt werden."
+    ],
+    "deliverables": [
+      "Bearbeitungsplan mit Feldern, Unterlagen, Kontrollen und Quellen.",
+      "Kanzleicheckliste, gegebenenfalls eine Frage für SARI und Prüfunterlagen mit offenen Punkten."
+    ],
+    "review": "Prüfen Sie, ob der Plan zum Auftrag passt. Finden Sie eine zu bestätigende Angabe und den dafür benötigten Beleg. Es bleibt ein fachlicher Entwurf; eine angenommene Prüfung bedeutet weder Einreichung noch Portalzugriff.",
+    "checkpoints": [
+      "Erklären Sie, welche Angaben Vera braucht und welches Ergebnis Sie erwarten.",
+      "Finden Sie ein vorgeschlagenes Feld, seinen Beleg und den nächsten fachlichen Prüfschritt."
+    ],
+    "practice": "Lesen Sie update-de.md und fordern Sie die neue Version an. Prüfen Sie Adresse und Datum, weiterhin fehlende Belege und die Aufbewahrung der ersten Version.",
+    "success": "Sie können die Vorbereitung starten, Plan und Quellen lesen, Vorschläge prüfen und den Fall nach einem geänderten Auftrag aktualisieren.",
+    "repeat": "Stellen Sie Auftrag, vorhandene Unterlagen, Kammer und bekannte Daten bereit. Fordern Sie Plan und Kontrollen an und prüfen Sie Vorschläge und Lücken vor dem üblichen fachlichen Einreichungsverfahren."
+  }
+}

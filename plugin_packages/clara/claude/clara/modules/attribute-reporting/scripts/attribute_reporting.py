@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import html
+import importlib.util
 import json
 import logging
 import math
@@ -1222,28 +1223,67 @@ def _collect_package_warnings(
     return warnings
 
 
-def _load_attribute_table_builder() -> Any:
+def _load_attribute_table_runtime() -> Any:
     plugin_root = Path(__file__).resolve().parents[1]
     candidates = [plugin_root / "vendor", plugin_root.parents[1]]
     for candidate in candidates:
-        if (candidate / "modules" / "pdp" / "attribute_table_templates.py").exists():
+        template = candidate / "modules" / "pdp" / "attribute_table_templates.py"
+        if template.is_file():
+            loaded = sys.modules.get("attribute_reporting_table_templates")
+            if loaded is not None and getattr(loaded, "__file__", None) == str(
+                template
+            ):
+                return loaded
             candidate_text = str(candidate)
             if candidate_text not in sys.path:
                 sys.path.insert(0, candidate_text)
-            from modules.pdp.attribute_table_templates import (  # noqa: PLC0415
-                build_attribute_tables_from_package,
+            # The table module is standalone. Importing its parent PDP package
+            # in a source checkout also loads scraping adapters and their
+            # unrelated dependencies, which are absent from this component.
+            spec = importlib.util.spec_from_file_location(
+                "attribute_reporting_table_templates", template
             )
-
-            return build_attribute_tables_from_package
+            if spec is None or spec.loader is None:
+                raise ContractError(f"Cannot load attribute-table runtime: {template}")
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = module
+            spec.loader.exec_module(module)
+            return module
     raise ContractError(
         "The deterministic attribute-table runtime is unavailable. Run the plugin "
         "dependency checker and use the packaged plugin or the app repository."
     )
 
 
-def _build_attribute_tables(package_dir: Path, evidence_dir: Path) -> dict[str, Any]:
+def _load_attribute_table_builder() -> Any:
+    return _load_attribute_table_runtime().build_attribute_tables_from_package
+
+
+def _display(text: str, language: str) -> str:
+    return str(_load_attribute_table_runtime().report_display_text(text, language))
+
+
+def _report_language(value: Any) -> str:
+    if value not in ("en", "it", "fr", "de", "es"):
+        raise ContractError("Report language must be en, it, fr, de or es")
+    return str(value)
+
+
+def _verdict_placeholder(language: str) -> str:
+    result = VERDICT_PLACEHOLDER_HTML
+    for text in (
+        "Correctness review pending",
+        "The final evidence-backed verdict will replace this banner after independent semantic review and browser QA.",
+    ):
+        result = result.replace(text, html.escape(_display(text, language)))
+    return result
+
+
+def _build_attribute_tables(
+    package_dir: Path, evidence_dir: Path, language: str
+) -> dict[str, Any]:
     builder = _load_attribute_table_builder()
-    result = dict(builder(package_dir, output_dir=evidence_dir))
+    result = dict(builder(package_dir, output_dir=evidence_dir, language=language))
     enriched_tables: list[dict[str, Any]] = []
     for raw_item in result.get("tables") or []:
         item = dict(raw_item)
@@ -1301,6 +1341,7 @@ def _report_model_template(
     author_agent_id: str,
     summary: Mapping[str, Any],
     warnings: Sequence[Mapping[str, str]],
+    language: str = "en",
 ) -> dict[str, Any]:
     retailer = str(
         summary.get("retailer_label") or summary.get("retailer") or "Retailer"
@@ -1319,6 +1360,7 @@ def _report_model_template(
     }
     return {
         "schema_version": MODEL_SCHEMA,
+        "language": language,
         "report_id": report_id,
         "author": {
             "execution": "codex_agent",
@@ -1326,13 +1368,15 @@ def _report_model_template(
             "role": "report_author",
         },
         "title": f"{retailer} {category}",
-        "subtitle": "Attribute signals across retailer-defined newness and sales rank",
-        "audience": "Market and product teams",
+        "subtitle": _display(
+            "Attribute signals across retailer-defined newness and sales rank", language
+        ),
+        "audience": _display("Market and product teams", language),
         "acknowledged_warning_codes": [item["code"] for item in warnings],
         "sections": [
             {
                 "section_id": section_id,
-                "title": titles[section_id],
+                "title": _display(titles[section_id], language),
                 "summary": "",
                 "claim_ids": [],
                 "table_keys": [],
@@ -2060,6 +2104,7 @@ def prepare_run(
     output_dir: Path,
     *,
     author_agent_id: str,
+    language: str = "en",
     preview_rows: int = 12,
     require_browser_qa: bool = False,
     mapping_provenance_dir: Path | None = None,
@@ -2069,6 +2114,7 @@ def prepare_run(
 ) -> dict[str, Any]:
     """Prepare immutable evidence views and Claude authoring templates."""
 
+    language = _report_language(language)
     package = package_dir.expanduser().resolve()
     if not package.is_dir():
         raise ContractError(f"Evidence package directory not found: {package}")
@@ -2182,7 +2228,7 @@ def prepare_run(
             "artifact_sha256": _sha256_file(no_work_target),
         }
     evidence_dir = output / "evidence"
-    tables_result = _build_attribute_tables(package, evidence_dir)
+    tables_result = _build_attribute_tables(package, evidence_dir, language)
     provenance: dict[str, Any] | None = None
     if no_work_basis is None and (
         mapping_provenance_dir is not None
@@ -2417,12 +2463,14 @@ def prepare_run(
         author_agent_id=author_agent_id,
         summary=summary,
         warnings=warnings,
+        language=language,
     )
     semantic_review = _semantic_review_template(
         report_id=report_id,
         author_agent_id=author_agent_id,
     )
     catalog["run_intake_sha256"] = _canonical_json_sha256(run_intake)
+    catalog["language"] = language
     _write_json(output / "run_intake.json", run_intake)
     _write_json(output / "evidence_catalog.json", catalog)
     _write_json(output / "report_model.json", report_model)
@@ -2588,6 +2636,11 @@ def _validate_report_model(
         )
     if model.get("report_id") != catalog.get("report_id"):
         raise ContractError("report_model report_id does not match evidence_catalog")
+    language = _report_language(model.get("language", "en"))
+    if language != catalog.get("language", "en"):
+        raise ContractError(
+            "Report language differs from prepared evidence; prepare a new run in the requested language"
+        )
     if model.get("authoring_status") != "codex_complete":
         raise ContractError(
             "report_model authoring_status must be codex_complete before rendering"
@@ -3097,6 +3150,7 @@ def _render_table(
     table: Mapping[str, Any],
     *,
     output_dir: Path,
+    language: str = "en",
 ) -> tuple[str, dict[str, Any]]:
     relative = _safe_relative_path(str(table["csv"]), label="table CSV")
     path = output_dir / "evidence" / relative
@@ -3111,26 +3165,28 @@ def _render_table(
         raise ContractError(
             f"Deterministic table row count changed: {table['table_key']}"
         )
-    header = "".join(
-        f'<th scope="col">{html.escape(column)}</th>' for column in columns
+    title, labels, display_rows = _load_attribute_table_runtime().table_display_labels(
+        str(table["table_key"]), columns, rows, language
     )
+    header = "".join(f'<th scope="col">{html.escape(label)}</th>' for label in labels)
     body_rows = []
-    for row in rows:
-        cells = "".join(
-            f"<td>{html.escape(str(row.get(column) or ''))}</td>" for column in columns
-        )
+    for row in display_rows:
+        cells = "".join(f"<td>{html.escape(value)}</td>" for value in row)
         body_rows.append(f"<tr>{cells}</tr>")
+    row_count_label = _display(
+        "1 evidence row" if len(rows) == 1 else "{count} evidence rows", language
+    ).format(count=len(rows))
     table_html = (
         f"<figure class=\"evidence-table\" data-table-key=\"{html.escape(str(table['table_key']))}\" "
         f'data-table-sha256="{actual_sha}">'
-        f"<figcaption><span>{html.escape(str(table.get('title') or table['table_key']))}</span>"
-        f"<small>{len(rows)} evidence rows</small></figcaption>"
+        f"<figcaption><span>{html.escape(title)}</span>"
+        f"<small>{html.escape(row_count_label)}</small></figcaption>"
         '<div class="table-scroll"><table><thead><tr>'
         + header
         + "</tr></thead><tbody>"
         + "".join(body_rows)
         + "</tbody></table></div>"
-        f"<p class=\"source-note\">Source: {html.escape(', '.join(table.get('source_files') or []))}</p>"
+        f"<p class=\"source-note\">{html.escape(_display('Source:', language))} {html.escape(', '.join(table.get('source_files') or []))}</p>"
         "</figure>"
     )
     record = {
@@ -3209,6 +3265,7 @@ def _copy_featured_products(
     *,
     package_dir: Path,
     output_dir: Path,
+    language: str = "en",
 ) -> tuple[str, list[dict[str, Any]]]:
     products = _product_index(package_dir)
     assets_dir = output_dir / "assets" / "products"
@@ -3237,7 +3294,7 @@ def _copy_featured_products(
                 f"alt=\"{html.escape(str(row.get('product_name') or product_id))}\">"
             )
         else:
-            image_markup = '<div class="image-placeholder" aria-label="Image unavailable">No local image</div>'
+            image_markup = f'<div class="image-placeholder" aria-label="{html.escape(_display("Image unavailable", language))}">{html.escape(_display("No local image", language))}</div>'
         product_url = _safe_http_url(row.get("pdp_url"))
         name = str(row.get("product_name") or product_id)
         linked_name = (
@@ -3248,7 +3305,7 @@ def _copy_featured_products(
         cards.append(
             f'<article class="product-card" data-product-id="{html.escape(product_id)}">'
             f'<div class="product-image">{image_markup}</div>'
-            f"<div class=\"product-copy\"><p class=\"product-role\">{html.escape(str(item['role']).replace('_', ' '))}</p>"
+            f"<div class=\"product-copy\"><p class=\"product-role\">{html.escape(_display('Winning now' if item['role'] == 'winning_now' else 'Emerging signal', language))}</p>"
             f"<h3>{linked_name}</h3><p class=\"brand\">{html.escape(str(row.get('brand') or ''))}</p>"
             f"<p>{html.escape(str(item['rationale']))}</p></div></article>"
         )
@@ -3267,7 +3324,9 @@ def _copy_featured_products(
     return f'<div class="product-grid">{"".join(cards)}</div>', records
 
 
-def _claim_html(claim: Mapping[str, Any], resolved_text: str) -> str:
+def _claim_html(
+    claim: Mapping[str, Any], resolved_text: str, language: str = "en"
+) -> str:
     claim_id = str(claim["claim_id"])
     interpretation = str(claim.get("interpretation") or "").strip()
     caveat = str(claim.get("caveat") or "").strip()
@@ -3281,8 +3340,8 @@ def _claim_html(claim: Mapping[str, Any], resolved_text: str) -> str:
         f'<article class="claim" data-claim-id="{html.escape(claim_id)}" '
         f"data-claim-kind=\"{html.escape(str(claim['kind']))}\" "
         f'data-supporting-claims="{html.escape(supporting)}">'
-        f"<div class=\"claim-meta\"><span>{html.escape(str(claim['kind']))}</span>"
-        f"<span>{html.escape(str(claim['confidence']))} confidence</span></div>"
+        f"<div class=\"claim-meta\"><span>{html.escape(_display(str(claim['kind']), language))}</span>"
+        f"<span>{html.escape(_display(str(claim['confidence']) + ' confidence', language))}</span></div>"
         f"<h3>{html.escape(str(claim['headline']))}</h3>"
         f'<p class="claim-statement">{html.escape(resolved_text)}</p>{extras}</article>'
     )
@@ -3298,6 +3357,7 @@ a{color:inherit}.report-shell{max-width:1240px;margin:0 auto;padding:28px}.hero{
 .evidence-table{margin:20px 0 0;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}.evidence-table figcaption{display:flex;justify-content:space-between;gap:20px;padding:18px 20px;border-bottom:1px solid var(--line);font-family:Georgia,serif;font-size:1.25rem}.evidence-table figcaption small{font-family:inherit;color:var(--muted);font-size:.76rem}.table-scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.78rem}th,td{padding:11px 13px;text-align:left;border-bottom:1px solid #ece8de;vertical-align:top}th{position:sticky;top:0;background:#eeece4;text-transform:uppercase;letter-spacing:.05em;font-size:.66rem}tbody tr:hover{background:#f5f4ef}.source-note{padding:0 18px 12px;color:var(--muted);font-size:.72rem}
 .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px}.product-card{display:grid;grid-template-columns:42% 1fr;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:18px}.product-image{min-height:230px;background:#e9e7df}.product-image img{width:100%;height:100%;object-fit:cover;display:block}.image-placeholder{height:100%;min-height:230px;display:grid;place-items:center;color:var(--muted)}.product-copy{padding:20px}.product-copy h3{font-family:Georgia,serif;font-weight:500;margin:.3rem 0}.brand{color:var(--muted)}.product-role{color:var(--amber)}
 .limitations{display:grid;gap:10px}.limitation{border-left:4px solid var(--amber);background:#f5ead6;padding:15px 18px;border-radius:0 12px 12px 0}.limitation code{font-size:.72rem}.footer{display:flex;justify-content:space-between;gap:20px;padding:32px 0 12px;color:var(--muted);font-size:.75rem}.print-button{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 14px;cursor:pointer}
+.evidence-table th,.evidence-table td{min-width:84px}.evidence-table[data-table-key="product_signal_evidence_table"] td:nth-child(4){min-width:130px}.evidence-table[data-table-key="product_signal_evidence_table"] td:nth-child(9){min-width:240px}
 @media(max-width:850px){.report-shell{padding:14px}.hero{padding:38px 25px;border-radius:20px}.report-section{grid-template-columns:1fr;gap:18px;padding:38px 0}.section-heading{position:static}.claim-grid,.product-grid{grid-template-columns:1fr}.product-card{grid-template-columns:38% 1fr}.footer{flex-direction:column}}
 @media(max-width:520px){.claim-grid{display:block}.claim{margin-bottom:12px}.product-card{grid-template-columns:1fr}.product-image{max-height:360px}.evidence-table figcaption{display:block}.evidence-table figcaption small{display:block;margin-top:5px}.hero h1{font-size:2.6rem}}
 @media print{body{background:white}.report-shell{max-width:none;padding:0}.hero{box-shadow:none;border-radius:0}.report-nav,.print-button{display:none}.report-section{break-inside:avoid}.claim,.evidence-table,.product-card{break-inside:avoid;box-shadow:none}}
@@ -3315,6 +3375,7 @@ def _render_draft_html(
     product_html: str,
 ) -> str:
     package = catalog["package"]
+    language = _report_language(model.get("language", "en"))
     nav = "".join(
         f"<a href=\"#{html.escape(str(section['section_id']))}\">{html.escape(str(section['title']))}</a>"
         for section in sections
@@ -3323,7 +3384,7 @@ def _render_draft_html(
     for index, section in enumerate(sections, start=1):
         section_id = str(section["section_id"])
         claims = "".join(
-            _claim_html(claim_by_id[claim_id], resolved_text[claim_id])
+            _claim_html(claim_by_id[claim_id], resolved_text[claim_id], language)
             for claim_id in section.get("claim_ids") or []
         )
         claim_grid = f'<div class="claim-grid">{claims}</div>' if claims else ""
@@ -3351,18 +3412,18 @@ def _render_draft_html(
             f'<div class="section-body">{claim_grid}{tables}{products}{limitations}</div></section>'
         )
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light"><title>{html.escape(str(model['title']))}</title><style>{_report_css()}</style></head>
 <body data-report-id="{html.escape(str(model['report_id']))}" data-package-sha256="{html.escape(str(package['sha256']))}">
-<main class="report-shell"><header class="hero"><p class="eyebrow">Attribute intelligence · private local report</p>
+<main class="report-shell"><header class="hero"><p class="eyebrow">{html.escape(_display('Assortment report · private local file', language))}</p>
 <h1>{html.escape(str(model['title']))}</h1><p class="subtitle">{html.escape(str(model['subtitle']))}</p>
 <div class="hero-meta"><span>{html.escape(str(package.get('retailer_label') or package.get('retailer') or ''))}</span>
 <span>{html.escape(str(package.get('category_label') or package.get('category_key') or ''))}</span>
-<span>Snapshot {html.escape(str(package.get('discovery_crawl_ts') or 'unknown'))}</span></div></header>
-<div class="verdict-slot">{VERDICT_PLACEHOLDER_HTML}</div><nav class="report-nav" aria-label="Report sections">{nav}</nav>
+<span>{html.escape(_display('Snapshot', language))} {html.escape(str(package.get('discovery_crawl_ts') or _display('unknown', language)))}</span></div></header>
+<div class="verdict-slot">{_verdict_placeholder(language)}</div><nav class="report-nav" aria-label="{html.escape(_display('Report sections', language))}">{nav}</nav>
 {''.join(section_markup)}
-<footer class="footer"><span>Generated and checked locally. This report is not stored on the server.</span>
-<button class="print-button" type="button" onclick="window.print()">Print report</button></footer></main></body></html>
+<footer class="footer"><span>{html.escape(_display('Generated and checked locally. This report is not stored on the server.', language))}</span>
+<button class="print-button" type="button" onclick="window.print()">{html.escape(_display('Print report', language))}</button></footer></main></body></html>
 """
 
 
@@ -3376,6 +3437,7 @@ def render_report(output_dir: Path) -> dict[str, Any]:
         raise ContractError("Unsupported evidence catalog schema")
     package_dir = Path(str(catalog["package"]["path"])).resolve()
     claim_by_id, sections = _validate_report_model(model, catalog=catalog)
+    language = _report_language(model.get("language", "en"))
     resolved_text, claim_ledger = _resolve_claims(claim_by_id, package_dir=package_dir)
     table_manifest = _table_manifest_by_key(catalog)
     used_table_keys = {
@@ -3386,13 +3448,16 @@ def render_report(output_dir: Path) -> dict[str, Any]:
     table_html_by_key: dict[str, str] = {}
     rendered_tables: list[dict[str, Any]] = []
     for table_key in sorted(used_table_keys):
-        table_html, record = _render_table(table_manifest[table_key], output_dir=output)
+        table_html, record = _render_table(
+            table_manifest[table_key], output_dir=output, language=language
+        )
         table_html_by_key[table_key] = table_html
         rendered_tables.append(record)
     product_html, product_records = _copy_featured_products(
         model.get("featured_products") or [],
         package_dir=package_dir,
         output_dir=output,
+        language=language,
     )
     draft = _render_draft_html(
         model,
@@ -4930,6 +4995,7 @@ def _verdict_banner(
     verdict: str,
     summary: str,
     details: Sequence[Mapping[str, str]],
+    language: str = "en",
 ) -> str:
     marks = {
         "correct": "✓",
@@ -4942,14 +5008,15 @@ def _verdict_banner(
         detail_html = (
             '<ul class="verdict-details">'
             + "".join(
-                f"<li>{html.escape(str(item['message']))}</li>" for item in details
+                f"<li>{html.escape(_display(str(item['message']), language))}</li>"
+                for item in details
             )
             + "</ul>"
         )
     return (
         f'<aside class="verdict {verdict}" data-correctness-verdict="{verdict}">'
-        f'<span class="mark">{marks[verdict]}</span><div><strong>{VERDICT_LABELS[verdict]}</strong>'
-        f"<span>{html.escape(summary)}</span>{detail_html}</div></aside>"
+        f'<span class="mark">{marks[verdict]}</span><div><strong>{html.escape(_display(VERDICT_LABELS[verdict], language))}</strong>'
+        f"<span>{html.escape(_display(summary, language))}</span>{detail_html}</div></aside>"
     )
 
 
@@ -4958,6 +5025,7 @@ def _write_run_review(
     *,
     verdict: str,
     correctness: Mapping[str, Any],
+    language: str = "en",
 ) -> None:
     mechanical = correctness.get("mechanical_findings") or []
     mapping = correctness.get("mapping_findings") or []
@@ -4965,49 +5033,52 @@ def _write_run_review(
     semantic = correctness.get("semantic_findings") or []
     caveats = correctness.get("caveats") or []
     lines = [
-        "# Attribute Report Run Review",
+        "# " + _display("Attribute Report Run Review", language),
         "",
-        f"**Correctness verdict:** {VERDICT_LABELS[verdict]}",
+        f"**{_display('Correctness verdict:', language)}** {_display(VERDICT_LABELS[verdict], language)}",
         "",
-        "## Artifact Card",
+        "## " + _display("Artifact Card", language),
         "",
-        "| Artifact | Purpose | Review status |",
+        f"| {_display('Artifact', language)} | {_display('Purpose', language)} | {_display('Review status', language)} |",
         "| --- | --- | --- |",
-        f"| `report.html` | Final private local HTML report | {VERDICT_LABELS[verdict]} |",
-        "| `correctness_verdict.json` | Machine-readable direct verdict and basis | Written |",
-        "| `claim_ledger.json` | Bound claims and source rows | Checked |",
+        f"| `report.html` | {_display('Final private local HTML report', language)} | {_display(VERDICT_LABELS[verdict], language)} |",
+        f"| `correctness_verdict.json` | {_display('Machine-readable direct verdict and basis', language)} | {_display('Written', language)} |",
+        f"| `claim_ledger.json` | {_display('Bound claims and source rows', language)} | {correctness['basis']['mechanical_claims']} |",
         (
-            "| `mapping_review.json` | Independent semantic mapping review | "
+            f"| `mapping_review.json` | {_display('Independent semantic mapping review', language)} | "
             f"{str(correctness.get('basis', {}).get('mapping_review') or 'not_applicable')} |"
         ),
         (
-            "| `browser_qa.json` | Desktop/mobile mechanical browser QA | "
+            f"| `browser_qa.json` | {_display('Desktop/mobile mechanical browser QA', language)} | "
             f"{str(correctness.get('basis', {}).get('browser_qa') or 'not_applicable')} |"
         ),
-        "| `semantic_review.json` | Independent Claude semantic review | Checked |",
+        f"| `semantic_review.json` | {_display('Independent Claude semantic review', language)} | {correctness['basis']['semantic_review']} |",
         "",
-        "## Findings",
+        "## " + _display("Findings", language),
         "",
     ]
     if not mechanical and not mapping and not browser and not semantic and not caveats:
-        lines.append("No blocking mechanical or semantic findings.")
+        lines.append(_display("No blocking mechanical or semantic findings.", language))
     else:
         for item in [*mechanical, *mapping, *browser, *semantic]:
-            lines.append(f"- `{item['code']}` — {item['message']}")
+            lines.append(f"- `{item['code']}` — {_display(item['message'], language)}")
         finding_codes = {item["code"] for item in [*mapping, *browser, *semantic]}
         for item in caveats:
             if item["code"] not in finding_codes:
-                lines.append(f"- `{item['code']}` — {item['message']}")
+                lines.append(
+                    f"- `{item['code']}` — {_display(item['message'], language)}"
+                )
     lines.extend(
         [
             "",
-            "## Privacy",
+            "## " + _display("Privacy", language),
             "",
-            (
+            _display(
                 "The HTML report, report semantic review, browser QA, and correctness "
                 "artifacts remain in this local output folder and were not uploaded. "
                 "Only approved structured mapping artifacts may have crossed the "
-                "authenticated server boundary."
+                "authenticated server boundary.",
+                language,
             ),
             "",
         ]
@@ -5250,14 +5321,24 @@ def finalize_report(output_dir: Path) -> dict[str, Any]:
     }
     _write_json(output / "correctness_verdict.json", correctness)
     final_html = draft.replace(
-        VERDICT_PLACEHOLDER_HTML,
-        _verdict_banner(verdict, verdict_summary, verdict_details),
+        _verdict_placeholder(_report_language(model.get("language", "en"))),
+        _verdict_banner(
+            verdict,
+            verdict_summary,
+            verdict_details,
+            _report_language(model.get("language", "en")),
+        ),
         1,
     )
     final_path = output / "report.html"
     final_path.write_text(final_html, encoding="utf-8")
     final_sha = _sha256_file(final_path)
-    _write_run_review(output, verdict=verdict, correctness=correctness)
+    _write_run_review(
+        output,
+        verdict=verdict,
+        correctness=correctness,
+        language=_report_language(model.get("language", "en")),
+    )
     status = (
         "final_ready"
         if verdict in {"correct", "correct_with_caveats"}

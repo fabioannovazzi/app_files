@@ -20,7 +20,8 @@
     "assets/courses",
     "marketplace_skill_instructions.json",
     "repository/plugins/_shared/vendor/modules/courseware",
-    "repository/scripts/course_materials"
+    "repository/scripts/course_materials",
+    "repository/static/shared/courses"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -28,7 +29,7 @@
       {
         "id": "native-teaching-context",
         "purpose": "Understand professional interests and explain actual selected workflow results",
-        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts. The selected prepared synthetic course, worked specimen and attached starter output may also be read to support the lesson."
+        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts. The selected prepared synthetic course, worked specimen and attached starter output may also be read to support the lesson. New kits supply demonstration and practice inputs and a first-use outline; retained lessons keep their published specimens. Local host-attested execution records include input, run-record and output paths and hashes. Those records stay in the local lesson; the public catalogue contains only prepared fictional materials and relative provenance."
       }
     ]
   },
@@ -78,13 +79,13 @@
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local stdlib course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. It has no network or model client and performs no profile or completion write. Prepared specimens and actual supplementary outputs remain distinct; no tutorial hosted call or execution receipt is created."
+      "control": "The local stdlib course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer has no network or model client and performs no profile or completion write. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "aaa4ed72b08ca0df3dfcf48dd6643375c299a72ac1bdec6755f316f57008ffe5"
+    "source_fingerprint": "6db6abf89d51c941736db3280b21a487eb78fc719a1d9bd5ed57846f52cd4993"
   }
 }

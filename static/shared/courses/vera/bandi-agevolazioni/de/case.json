@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "bandi-agevolazioni",
+  "scenario": "Ein vollständig fiktiver Aufruf fördert Maschinen produzierender Unternehmen in einer bestimmten Region. Arco plant EUR 80.000 Investition. Nachweise zum Betriebsstandort und Beginn der Ausgaben fehlen.",
+  "columns": [
+    "Fiktive Quelle",
+    "Bedingung oder Fakt",
+    "Beleg"
+  ],
+  "rows": [
+    [
+      "B1 · DEMO-Aufruf § 2",
+      "Betriebsstätte in der Förderregion",
+      "Standort nicht dokumentiert"
+    ],
+    [
+      "B1 · § 4",
+      "Ausgabenbeginn nach Antragstellung",
+      "Bestelldatum fehlt"
+    ],
+    [
+      "C1 · Arco-Projekt",
+      "Maschinen: EUR 80.000",
+      "Angebot vorhanden"
+    ]
+  ],
+  "scope": "Der DEMO-Aufruf existiert nicht und nimmt keine Anträge an. Echte Förderungen benötigen aktuelle amtliche Quellen."
+}

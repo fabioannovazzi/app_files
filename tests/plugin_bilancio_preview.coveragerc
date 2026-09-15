@@ -1,0 +1,10 @@
+[run]
+include =
+    */plugins/bilancio-xbrl-it/scripts/accounts_preview.py
+    */plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py
+    */plugins/bilancio-xbrl-it/scripts/xbrl_case.py
+patch = subprocess
+
+[report]
+fail_under = 80
+show_missing = True

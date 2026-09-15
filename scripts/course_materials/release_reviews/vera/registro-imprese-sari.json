@@ -1,0 +1,426 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "registro-imprese-sari",
+  "course_sha256": "3389a8ccfffc7dd464754b151a49183a9193d30fd2d173dbea1aaa49d56b1558",
+  "reviewer": "Codex: direct lesson, source-file, native artifact and browser review",
+  "reviewed_at": "2026-09-15T01:54:14.804674+00:00",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and complete outline teach how to ask Vera to prepare a Registro Imprese case, provide the client request, follow source checks, open the preparation checklist, review a proposal and request an updated version. The company PEC change gives the workflow a concrete beginning and useful output. It does not turn the lesson into a technical field tutorial or promise filing.",
+        "inputs_and_request": "Read company-it.md, sources-it.md and update-it.md in full. The fictional Milan company supplies the chamber, activity, unchanged company facts, old and proposed certified-email address, request date and requested effective date. The update changes the address and date. Reserved .invalid addresses and the absent activation evidence are explicit. Public links are starting references, not a selected SARI card; the Italian jurisdiction is retained in every teaching language.",
+        "execution_and_checkpoints": "The real current component initializes and inventories a managed case, registers the two declared official references, validates an explicitly authored case/plan, packages the checklist and draft question, executes native MCP render/save/apply with a synthetic document request, and completes the Studio Archive declaration. Tests do not claim to perform live research or model inference. The learner checks the requested operation before execution, then traces a proposed address/date to the request and identifies evidence still needed. The actual shipped review widget was inspected in a browser for both phases in all five languages; an English practice panel was also inspected at 600 pixels. No horizontal document overflow or console warnings/errors were observed. A local page-state document request and note changed the decision count to one; browser Save/Apply was not used on these read-only snapshots.",
+        "deliverable_and_next_action": "Read the it checklist, question and final handoff. The checklist leads with the client request, shows proposed values and source links, and keeps technical IDs expandable. It provides company scope, proposed preparation steps, required documents, open evidence and the next professional checks. The native handoff now links the checklist and question and explains how to ask Vera to open review, save decisions and check what remains. Both links resolve in all ten current outputs. The result remains partial_review with professional applicability and activation evidence pending, zero validation errors and 13 recorded blockers. No exact DIRE form, portal access, professional acceptance or filing is represented as complete.",
+        "practice_and_repeat": "Each practice test first completes the demonstration, then imports the updated request into a second native run in the same engagement. The proposed address changes from societa@riva-nuova.invalid to amministrazione@riva-nuova.invalid and the requested date from 2026-09-21 to 2026-09-28. Every original run file remains byte-identical. Read both versions; their checklist/question/handoff prose differs only in those expected values and source-access timestamps. The lesson asks the learner to find the changes and remaining evidence and explains what to provide for a real repeat.",
+        "language_and_pacing": "Read the complete it outline, fictional files and output prose. Fixed interface/checklist/handoff labels use this language; authentic Italian institutional source titles remain unchanged. Six planned stages total 390 seconds and cover intake, execution, result review and one small practice change. Native execution and questions can extend the target. This is editorial acceptance of the teaching kit, not a measured learner-comprehension, timing or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[demo-it]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "47cf9d324645eda5c5ca8b58a0ab15cc34d441148d48ed165ebeb79acdb04aec"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "258732d994bfac003dcc18b32eccfddee82fd47010a592cad37cd4290515a607"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "35b1a19b038a0fcb459c9726c5e91accd19823b21c537f6a74a1f87605140537"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "7d29fa0ec1f4084323130aa66cee2b150e186bc6e701a52e3567486532c12428"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "a953353d75d9f603131adc4626cf92952ad0f6049b07397b2ebb2dc72d9f6ba7"
+          },
+          {
+            "name": "it-demo-PEC.jpg",
+            "sha256": "c474695bf7661254126c17966aa23454eec3aa36a1bff78caf1cac11ff95e6b8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[practice-it]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "47a67c8058c1043e671b3864202b217c4fa724c2ba9d37f040ba0ead3a1958a2"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "258732d994bfac003dcc18b32eccfddee82fd47010a592cad37cd4290515a607"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "35b1a19b038a0fcb459c9726c5e91accd19823b21c537f6a74a1f87605140537"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "bf6d98844d4fb72fb20be5a49f019aad4742719067280b57b45f8717813c1941"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "c35ff62820bb38ce27b7a8ec6332e84ff176a1fa82d26256677d2478f668f26f"
+          },
+          {
+            "name": "it-practice-PEC.jpg",
+            "sha256": "8e65068a3e9355eb7e0faa1f752d3b5f9373e3ea9986b1b635ff0bd412aeb796"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and complete outline teach how to ask Vera to prepare a Registro Imprese case, provide the client request, follow source checks, open the preparation checklist, review a proposal and request an updated version. The company PEC change gives the workflow a concrete beginning and useful output. It does not turn the lesson into a technical field tutorial or promise filing.",
+        "inputs_and_request": "Read company-en.md, sources-en.md and update-en.md in full. The fictional Milan company supplies the chamber, activity, unchanged company facts, old and proposed certified-email address, request date and requested effective date. The update changes the address and date. Reserved .invalid addresses and the absent activation evidence are explicit. Public links are starting references, not a selected SARI card; the Italian jurisdiction is retained in every teaching language.",
+        "execution_and_checkpoints": "The real current component initializes and inventories a managed case, registers the two declared official references, validates an explicitly authored case/plan, packages the checklist and draft question, executes native MCP render/save/apply with a synthetic document request, and completes the Studio Archive declaration. Tests do not claim to perform live research or model inference. The learner checks the requested operation before execution, then traces a proposed address/date to the request and identifies evidence still needed. The actual shipped review widget was inspected in a browser for both phases in all five languages; an English practice panel was also inspected at 600 pixels. No horizontal document overflow or console warnings/errors were observed. A local page-state document request and note changed the decision count to one; browser Save/Apply was not used on these read-only snapshots.",
+        "deliverable_and_next_action": "Read the en checklist, question and final handoff. The checklist leads with the client request, shows proposed values and source links, and keeps technical IDs expandable. It provides company scope, proposed preparation steps, required documents, open evidence and the next professional checks. The native handoff now links the checklist and question and explains how to ask Vera to open review, save decisions and check what remains. Both links resolve in all ten current outputs. The result remains partial_review with professional applicability and activation evidence pending, zero validation errors and 13 recorded blockers. No exact DIRE form, portal access, professional acceptance or filing is represented as complete.",
+        "practice_and_repeat": "Each practice test first completes the demonstration, then imports the updated request into a second native run in the same engagement. The proposed address changes from societa@riva-nuova.invalid to amministrazione@riva-nuova.invalid and the requested date from 2026-09-21 to 2026-09-28. Every original run file remains byte-identical. Read both versions; their checklist/question/handoff prose differs only in those expected values and source-access timestamps. The lesson asks the learner to find the changes and remaining evidence and explains what to provide for a real repeat.",
+        "language_and_pacing": "Read the complete en outline, fictional files and output prose. Fixed interface/checklist/handoff labels use this language; authentic Italian institutional source titles remain unchanged. Six planned stages total 390 seconds and cover intake, execution, result review and one small practice change. Native execution and questions can extend the target. This is editorial acceptance of the teaching kit, not a measured learner-comprehension, timing or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[demo-en]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "5f0b096de6c61b5e8ecc130ecc28e0e819a8232412f4e6952cb7630d6fe88262"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "7336a397279c44e153528728aaf6600548e90ea37f747c27c3692c003db974ff"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "6b5d42562de02801fc2d513a6bc2b7bb82b63f4e61002fa0e3119806453c6f43"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "e0cc157b35cc85c4b8438943e475120b7dbb36e5c36bb6a3a00aa341f1ea0ab9"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "7df43ee2525b6922e3c17465e2322b3bd5b152b19d5ef6992ffe441f398132fe"
+          },
+          {
+            "name": "en-demo-PEC.jpg",
+            "sha256": "55b4ad49e9467137623b5adb575b4f8469b9acb6955b4580d9a7f80582a368ca"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[practice-en]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "2bf9ac975745261c9341a52a86b6ba0589d3502b7b45c38c7b173cbdcfedaee4"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "7336a397279c44e153528728aaf6600548e90ea37f747c27c3692c003db974ff"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "6b5d42562de02801fc2d513a6bc2b7bb82b63f4e61002fa0e3119806453c6f43"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "01e21c469d09b10bb8b0d0be0b97c355eaf129d351d3156f4c801e40f15d099d"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "19d0a5d27119d030a7861e118ad5cc7288ec9a03e98c56763ca838da90fe32d8"
+          },
+          {
+            "name": "en-practice-PEC.jpg",
+            "sha256": "6b4479b46cf5967ef79077b14385dce1f73dbeacbabe78d5d571536008006337"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and complete outline teach how to ask Vera to prepare a Registro Imprese case, provide the client request, follow source checks, open the preparation checklist, review a proposal and request an updated version. The company PEC change gives the workflow a concrete beginning and useful output. It does not turn the lesson into a technical field tutorial or promise filing.",
+        "inputs_and_request": "Read company-fr.md, sources-fr.md and update-fr.md in full. The fictional Milan company supplies the chamber, activity, unchanged company facts, old and proposed certified-email address, request date and requested effective date. The update changes the address and date. Reserved .invalid addresses and the absent activation evidence are explicit. Public links are starting references, not a selected SARI card; the Italian jurisdiction is retained in every teaching language.",
+        "execution_and_checkpoints": "The real current component initializes and inventories a managed case, registers the two declared official references, validates an explicitly authored case/plan, packages the checklist and draft question, executes native MCP render/save/apply with a synthetic document request, and completes the Studio Archive declaration. Tests do not claim to perform live research or model inference. The learner checks the requested operation before execution, then traces a proposed address/date to the request and identifies evidence still needed. The actual shipped review widget was inspected in a browser for both phases in all five languages; an English practice panel was also inspected at 600 pixels. No horizontal document overflow or console warnings/errors were observed. A local page-state document request and note changed the decision count to one; browser Save/Apply was not used on these read-only snapshots.",
+        "deliverable_and_next_action": "Read the fr checklist, question and final handoff. The checklist leads with the client request, shows proposed values and source links, and keeps technical IDs expandable. It provides company scope, proposed preparation steps, required documents, open evidence and the next professional checks. The native handoff now links the checklist and question and explains how to ask Vera to open review, save decisions and check what remains. Both links resolve in all ten current outputs. The result remains partial_review with professional applicability and activation evidence pending, zero validation errors and 13 recorded blockers. No exact DIRE form, portal access, professional acceptance or filing is represented as complete.",
+        "practice_and_repeat": "Each practice test first completes the demonstration, then imports the updated request into a second native run in the same engagement. The proposed address changes from societa@riva-nuova.invalid to amministrazione@riva-nuova.invalid and the requested date from 2026-09-21 to 2026-09-28. Every original run file remains byte-identical. Read both versions; their checklist/question/handoff prose differs only in those expected values and source-access timestamps. The lesson asks the learner to find the changes and remaining evidence and explains what to provide for a real repeat.",
+        "language_and_pacing": "Read the complete fr outline, fictional files and output prose. Fixed interface/checklist/handoff labels use this language; authentic Italian institutional source titles remain unchanged. Six planned stages total 390 seconds and cover intake, execution, result review and one small practice change. Native execution and questions can extend the target. This is editorial acceptance of the teaching kit, not a measured learner-comprehension, timing or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[demo-fr]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "eedb7cd1544c53afeb20e694fc7a71e41d306a961293b7bc4e759333046b52e8"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "712dc1865142a9241a68c46f7b45c8532b2a7643f53cb25b6a7358b26ca49293"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "a30fd66e352820c2c2a9d30a511ea99b332fafb0f701970c1c6781bb978da684"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "2575fc3201a4147ce9bfc286158cdcb9707449a5038d9908dc87f13f943285e5"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "acde8db7ecb97fd0788604e23dc0ca40cb11e6a79f1eca94b48148c34fb31ad6"
+          },
+          {
+            "name": "fr-demo-PEC.jpg",
+            "sha256": "4b8a8c6cfa2419ea24f48437a8021d5140788db08b6e9f374fb0a6be68058d92"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[practice-fr]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "b8041ac19e2f0caad07b2d76bcd230d9fb0c84c81443f5463677c1ed42ce2a16"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "712dc1865142a9241a68c46f7b45c8532b2a7643f53cb25b6a7358b26ca49293"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "a30fd66e352820c2c2a9d30a511ea99b332fafb0f701970c1c6781bb978da684"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "ab5a977e401e3b1014308e8c9af1b2b3519fde523e5e83a4aa889ce0d464f50e"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "9260b851cc5870d28a4d11da157e824e75bdc22137f050a9151aac70472722cc"
+          },
+          {
+            "name": "fr-practice-PEC.jpg",
+            "sha256": "2467ec54de93286d90824846d77ad39d128240e5c804fa21b5800d20ac5690c1"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and complete outline teach how to ask Vera to prepare a Registro Imprese case, provide the client request, follow source checks, open the preparation checklist, review a proposal and request an updated version. The company PEC change gives the workflow a concrete beginning and useful output. It does not turn the lesson into a technical field tutorial or promise filing.",
+        "inputs_and_request": "Read company-de.md, sources-de.md and update-de.md in full. The fictional Milan company supplies the chamber, activity, unchanged company facts, old and proposed certified-email address, request date and requested effective date. The update changes the address and date. Reserved .invalid addresses and the absent activation evidence are explicit. Public links are starting references, not a selected SARI card; the Italian jurisdiction is retained in every teaching language.",
+        "execution_and_checkpoints": "The real current component initializes and inventories a managed case, registers the two declared official references, validates an explicitly authored case/plan, packages the checklist and draft question, executes native MCP render/save/apply with a synthetic document request, and completes the Studio Archive declaration. Tests do not claim to perform live research or model inference. The learner checks the requested operation before execution, then traces a proposed address/date to the request and identifies evidence still needed. The actual shipped review widget was inspected in a browser for both phases in all five languages; an English practice panel was also inspected at 600 pixels. No horizontal document overflow or console warnings/errors were observed. A local page-state document request and note changed the decision count to one; browser Save/Apply was not used on these read-only snapshots.",
+        "deliverable_and_next_action": "Read the de checklist, question and final handoff. The checklist leads with the client request, shows proposed values and source links, and keeps technical IDs expandable. It provides company scope, proposed preparation steps, required documents, open evidence and the next professional checks. The native handoff now links the checklist and question and explains how to ask Vera to open review, save decisions and check what remains. Both links resolve in all ten current outputs. The result remains partial_review with professional applicability and activation evidence pending, zero validation errors and 13 recorded blockers. No exact DIRE form, portal access, professional acceptance or filing is represented as complete.",
+        "practice_and_repeat": "Each practice test first completes the demonstration, then imports the updated request into a second native run in the same engagement. The proposed address changes from societa@riva-nuova.invalid to amministrazione@riva-nuova.invalid and the requested date from 2026-09-21 to 2026-09-28. Every original run file remains byte-identical. Read both versions; their checklist/question/handoff prose differs only in those expected values and source-access timestamps. The lesson asks the learner to find the changes and remaining evidence and explains what to provide for a real repeat.",
+        "language_and_pacing": "Read the complete de outline, fictional files and output prose. Fixed interface/checklist/handoff labels use this language; authentic Italian institutional source titles remain unchanged. Six planned stages total 390 seconds and cover intake, execution, result review and one small practice change. Native execution and questions can extend the target. This is editorial acceptance of the teaching kit, not a measured learner-comprehension, timing or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[demo-de]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "49fb33e20fa723d9401504d4e43b9edd9ed15f5b09104d2edc37b34059553bff"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "3bdd6bc1c1cf37706dd333c2ba9d32387fb01f1641ccda50b56d5582dd9773e8"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "60f876cdace396ffb1cd0c827cf319a37dd46ad32b46b0130737ddb61456e0e2"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "24d17d8b149edb22ff0877cb5d154e06617a6adb257a345e7fda82996d8bd97f"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "5621588273600e3cdd8506f61ea6985fec6e4dadc8d81ac351a319e536d8f4e3"
+          },
+          {
+            "name": "de-demo-PEC.jpg",
+            "sha256": "d4b75e555f6d21b6b4ab2590c1b313551482aa17ad96456389b2d0c45c3a9ea1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[practice-de]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. The browser snapshot precedes the handoff-only change; the shipped widget is unchanged, and the current checklist/question prose was checked to differ only in source-access timestamps. The updated handoff was read separately. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "3f0c280a90bcf10f5127a5dcffb2feb376013e4faae2ff29645ee189240953b7"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "3bdd6bc1c1cf37706dd333c2ba9d32387fb01f1641ccda50b56d5582dd9773e8"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "60f876cdace396ffb1cd0c827cf319a37dd46ad32b46b0130737ddb61456e0e2"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "3d546b53b2dc0c5e2ab5e9a44bec2c26fbf13333e38a1b83f969b6b88d0b10e3"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "d3367769f8cc810243d1f2acffab17f0b47144520e024bffad83066e72223d77"
+          },
+          {
+            "name": "de-practice-PEC.jpg",
+            "sha256": "0059b7143a3269c7f334e40f14ddc882684f07b864f90ff687fe94cd3402cdf6"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and complete outline teach how to ask Vera to prepare a Registro Imprese case, provide the client request, follow source checks, open the preparation checklist, review a proposal and request an updated version. The company PEC change gives the workflow a concrete beginning and useful output. It does not turn the lesson into a technical field tutorial or promise filing.",
+        "inputs_and_request": "Read company-es.md, sources-es.md and update-es.md in full. The fictional Milan company supplies the chamber, activity, unchanged company facts, old and proposed certified-email address, request date and requested effective date. The update changes the address and date. Reserved .invalid addresses and the absent activation evidence are explicit. Public links are starting references, not a selected SARI card; the Italian jurisdiction is retained in every teaching language.",
+        "execution_and_checkpoints": "The real current component initializes and inventories a managed case, registers the two declared official references, validates an explicitly authored case/plan, packages the checklist and draft question, executes native MCP render/save/apply with a synthetic document request, and completes the Studio Archive declaration. Tests do not claim to perform live research or model inference. The learner checks the requested operation before execution, then traces a proposed address/date to the request and identifies evidence still needed. The actual shipped review widget was inspected in a browser for both phases in all five languages; an English practice panel was also inspected at 600 pixels. No horizontal document overflow or console warnings/errors were observed. A local page-state document request and note changed the decision count to one; browser Save/Apply was not used on these read-only snapshots.",
+        "deliverable_and_next_action": "Read the es checklist, question and final handoff. The checklist leads with the client request, shows proposed values and source links, and keeps technical IDs expandable. It provides company scope, proposed preparation steps, required documents, open evidence and the next professional checks. The native handoff now links the checklist and question and explains how to ask Vera to open review, save decisions and check what remains. Both links resolve in all ten current outputs. The result remains partial_review with professional applicability and activation evidence pending, zero validation errors and 13 recorded blockers. No exact DIRE form, portal access, professional acceptance or filing is represented as complete.",
+        "practice_and_repeat": "Each practice test first completes the demonstration, then imports the updated request into a second native run in the same engagement. The proposed address changes from societa@riva-nuova.invalid to amministrazione@riva-nuova.invalid and the requested date from 2026-09-21 to 2026-09-28. Every original run file remains byte-identical. Read both versions; their checklist/question/handoff prose differs only in those expected values and source-access timestamps. The lesson asks the learner to find the changes and remaining evidence and explains what to provide for a real repeat.",
+        "language_and_pacing": "Read the complete es outline, fictional files and output prose. Fixed interface/checklist/handoff labels use this language; authentic Italian institutional source titles remain unchanged. Six planned stages total 390 seconds and cover intake, execution, result review and one small practice change. Native execution and questions can extend the target. This is editorial acceptance of the teaching kit, not a measured learner-comprehension, timing or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[demo-es]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. Current Spanish browser snapshots include the corrected authored wording. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "ed1db89d26c14b16c85c724af1fb1dca5afece49747d23ce4e9fc371730d387a"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "6acd4df0c5c79aec559780bbbb37526ad2407830414d064c491055d992f4d039"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "b687ccf141527304dad0b9ef8043abec95c64c90b4ed562660a64f62ed82d5c8"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "7ffc243b4550559e440410f5ba787d26e1fa5a31711e511f1392ee52465349c0"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "86557648ad86967ff8189de888e5cd7e004b8b609cdaba9d3fd077701de730da"
+          },
+          {
+            "name": "es-demo-PEC-1280.jpg",
+            "sha256": "8241cce5315e284bd1c84a464ee3a22e7aae0c4c918e6f71f686b01a087e767d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_registro_execution::test_registro_kit_uses_current_plan_package_and_preserves_pending_review[practice-es]",
+        "result_review": "Current native demonstration/practice phase passed with exact course identity and expected values. Actual managed output artifacts are listed below. Current Spanish browser snapshots include the corrected authored wording. Browser snapshots inject the actual native render result into the shipped widget and do not provide a persistence bridge; actual native save/apply behavior is separately exercised by the regression.",
+        "reviewed_artifacts": [
+          {
+            "name": "studio_checklist.md",
+            "sha256": "44ac4f5f5cde8f7e235309c1a3c232a4b10f48dfbf314f22694c17000e2456e2"
+          },
+          {
+            "name": "sari_question_draft.md",
+            "sha256": "6acd4df0c5c79aec559780bbbb37526ad2407830414d064c491055d992f4d039"
+          },
+          {
+            "name": "review_handoff.md",
+            "sha256": "b687ccf141527304dad0b9ef8043abec95c64c90b4ed562660a64f62ed82d5c8"
+          },
+          {
+            "name": "dire_practice_plan.json",
+            "sha256": "51b0eeba2ff34ebad782781cabf2a828aeac9d67c8597373d1ebe5a9cf637ba7"
+          },
+          {
+            "name": "final_artifacts.json",
+            "sha256": "f05e1cf32d46835a5bf80bc9f1abfd84edc918093d15c24a90dd3fb4717ca288"
+          },
+          {
+            "name": "es-practice-PEC-1280.jpg",
+            "sha256": "2c44ff85afe9f443c7fc8f1c5274decb2dbe500fed60777e9ec865e50b390579"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.164642+00:00",
+    "previous_course_sha256": "39395e76730ea787c10b175d993851a14b0dc75d5f7bae0623fce83023d59c88",
+    "source_snapshot": "/private/tmp/registry-teaching-release-07/test_registro_kit_uses_current0/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.465483+00:00",
+    "previous_course_sha256": "3f6e145eaae3c614fbc1eaf3bdf556f39c1acb5c415ee5241b4d9a7867208bc0",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/registro-imprese-sari/SKILL.md",
+        "before": "7a587ae67deccd9ae30f429f1d7257f0409896e8abc6deaaf68e1ab3860c5f48",
+        "after": "ff979814b993b2c3a8f61cc92029a13f59634374a9033779f99051a0bdd925ef"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

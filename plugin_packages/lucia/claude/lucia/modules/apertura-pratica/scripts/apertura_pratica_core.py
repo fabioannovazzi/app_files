@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+import apertura_pratica_display as display
 from jsonschema import Draft202012Validator, FormatChecker
 
 __all__ = [
@@ -1136,6 +1137,39 @@ def _build_review_payload(
                 evidence_ids=missing["evidence_ids"],
             )
         )
+    words = display.labels(intake["language"])
+    title_keys = {
+        "conflict_scope": "conflict",
+        "engagement": "engagement",
+        "deadline_posture": "deadlines",
+        "party_map": "parties",
+        "confidentiality": "classification",
+        "aml_applicability": "aml_title",
+        "privacy_retention": "privacy_title",
+        "folder_plan": "folders",
+        "conflict_candidate": "matched_reference",
+        "deadline_candidate": "due_at",
+        "missing_item": "missing_title",
+    }
+    for item in items:
+        item["title"] = words[title_keys[item["item_type"]]]
+        if item["item_type"] in {"deadline_candidate", "missing_item"}:
+            item["title"] += " · " + item["data"]["description"]
+        elif item["item_type"] == "conflict_candidate":
+            item["title"] += " · " + item["data"]["matched_reference"]
+    items.insert(
+        0,
+        _item(
+            "review-matter-request",
+            scope="opening",
+            item_type="matter_request",
+            title=words["summary"],
+            status="proposed",
+            recommended_action="return",
+            data={"client": intake["client"], "matter": intake["matter"]},
+            evidence_ids=[row["evidence_id"] for row in intake["evidence_register"]],
+        ),
+    )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "workflow": WORKFLOW_ID,
@@ -1155,64 +1189,12 @@ def _build_review_payload(
         },
         "items": items,
         "item_count": len(items),
+        "evidence_sources": [
+            {"evidence_id": row["evidence_id"], "name": row["original_name"]}
+            for row in intake["evidence_register"]
+        ],
     }
     return payload
-
-
-_HEADINGS = {
-    "it": ("Memo di apertura pratica", "Informazioni e documenti mancanti"),
-    "en": ("Matter-opening memo", "Missing information and documents"),
-    "fr": ("Mémo d'ouverture du dossier", "Informations et documents manquants"),
-    "de": ("Mandatseröffnungsvermerk", "Fehlende Informationen und Unterlagen"),
-    "es": ("Memorando de apertura del asunto", "Información y documentos pendientes"),
-}
-
-
-def _matter_memo(intake: Mapping[str, Any], report: Mapping[str, Any]) -> str:
-    title, _ = _HEADINGS[intake["language"]]
-    parties = "\n".join(
-        f"- {item['display_name']} — {', '.join(item['roles'])} — {item['identity_status']}"
-        for item in intake["parties"]
-    )
-    blockers = "\n".join(f"- {item}" for item in report["blockers"]) or "- None"
-    warnings = "\n".join(f"- {item}" for item in report["warnings"]) or "- None"
-    return (
-        f"# {title}\n\n"
-        f"**Status:** `{report['status']}`  \n"
-        f"**Client:** {intake['client']['display_name'] or intake['client']['reference']}  \n"
-        f"**Matter:** {intake['matter']['title'] or intake['matter']['reference']}  \n"
-        f"**Jurisdiction:** {intake['matter']['jurisdiction']['primary'] or 'unresolved'}  \n"
-        f"**Opening mode:** `{intake['opening_mode']}`\n\n"
-        "## Objective\n\n"
-        f"{intake['matter']['objective'] or 'Unresolved'}\n\n"
-        "## Requested work\n\n"
-        f"{intake['matter']['requested_work'] or 'Unresolved'}\n\n"
-        "## Parties\n\n"
-        f"{parties}\n\n"
-        "## Conflict posture\n\n"
-        f"Register scope: `{intake['conflict_check']['register_scope']}`; "
-        f"professional decision: `{intake['conflict_check']['professional_decision']['status']}`.\n\n"
-        "## Deadline posture\n\n"
-        f"`{intake['deadline_review']['status']}` with "
-        f"{len(intake['deadline_review']['candidates'])} recorded candidate(s).\n\n"
-        "## Blockers\n\n"
-        f"{blockers}\n\n"
-        "## Warnings\n\n"
-        f"{warnings}\n\n"
-        "This memo is a review artifact. It is not conflict clearance, engagement acceptance, "
-        "a binding deadline calculation, or legal advice.\n"
-    )
-
-
-def _missing_request(intake: Mapping[str, Any]) -> str:
-    _, title = _HEADINGS[intake["language"]]
-    open_items = [item for item in intake["missing_items"] if item["status"] == "open"]
-    body = "\n".join(f"- {item['description']}" for item in open_items) or "- None"
-    return (
-        f"# {title}\n\n{body}\n\n"
-        "Draft for lawyer review. Do not send until recipient, wording, confidentiality and "
-        "matter identity have been confirmed.\n"
-    )
 
 
 def _artifact_manifest(
@@ -1250,23 +1232,16 @@ def prepare_review(run_dir: Path) -> dict[str, Any]:
     write_json(root / "validation_report.json", report)
     write_json(root / "review_payload.json", review_payload)
     write_json(root / "folder_plan.json", {"folders": intake["folder_plan"]})
-    _write_text(root / "matter_opening_memo.md", _matter_memo(intake, report))
-    _write_text(root / "missing_information_request.md", _missing_request(intake))
+    _write_text(root / "matter_opening_memo.md", display.matter_memo(intake, report))
     _write_text(
-        root / "review_handoff.md",
-        "# Apertura pratica · review\n\n"
-        f"Current status: `{report['status']}`. Review every item in `review_payload.json` "
-        "through the local workbench or an equivalent explicitly confirmed review. "
-        "No source file operation is authorized by this package.\n",
+        root / "missing_information_request.md", display.missing_request(intake)
     )
     _write_text(
-        root / "run_review.md",
-        "# Apertura pratica · stato del run\n\n"
-        f"Status: `{report['status']}`  \n"
-        f"Blockers: {len(report['blockers'])}  \n"
-        f"Warnings: {len(report['warnings'])}  \n\n"
-        "Use `review_payload.json` for the item review and `review_handoff.md` "
-        "for the professional boundary.\n",
+        root / "review_handoff.md",
+        display.handoff(intake["language"], report["status"]),
+    )
+    _write_text(
+        root / "run_review.md", display.run_review(intake["language"], report)
     )
     names = (
         INTAKE_NAME,

@@ -102,9 +102,14 @@ storage does not mean the model or voice operates offline.
 Then read `workflow-catalog.md` in full and select **three or four distinct
 operational workflows** using model judgment. Explain each through an outcome
 relevant to this professional and ask what they want to try first. They should
-not need to know the word “pipeline” or select internal skill IDs. A planner,
-validator, adversarial review or onboarding itself is not a standalone lesson.
+not need to know the word “pipeline” or select internal skill IDs. Clara's
+registered assignment planner, case director and deliverable reviewer can each
+be taught when that is the requested task. Internal assurance stages and
+onboarding itself are not additional standalone lessons.
 Use the `plan` command to save the agreed sequence with the reason and goal.
+Select from the local course catalogue. Brand Fit, Hosted Interview and Research
+Video remain unavailable in local teaching because their execution requires
+hosted services; do not offer or dispatch them as onboarding lessons.
 Do not replace started lessons merely because the app resumed.
 
 ## Each onboarding lesson
@@ -158,7 +163,7 @@ worker returns actual output evidence to the teacher.
 | `pair` | `{"teacher_thread_id":"…","worker_thread_id":"…"}` |
 | `start` | `{"workflow_id":"…"}` |
 | `pause` / `resume` / `checkpoint` | `{"workflow_id":"…","next_step":"Observed state and next bounded step"}` |
-| `demo` / `practice` | `{"workflow_id":"…","artifacts":["relative/output.md"],"prompt":"Actual natural request","review":"Observed result and professional checks"}` |
+| `demo` / `practice` | `{"workflow_id":"…","artifacts":["relative/output.md"],"prompt":"Actual natural request","review":"Observed result and professional checks","execution_record":"demo-execution.json"}` |
 | `finish` | `{"workflow_id":"…","confirmed_by_user":true,"understanding":"What the user understood; resolved questions"}` |
 | `feedback` | `{"feedback":"User's optional feedback, kept local"}` |
 
@@ -177,3 +182,8 @@ For each selected workflow, first reuse the prepared 5–8 minute course describ
 in `../../learn-with-clara/references/prepared-courses.md`. Read the current
 specialist and check the course source fingerprints. Prepared pages do not count
 as an executed demonstration, user practice or confirmed understanding.
+
+Before recording demonstration or practice evidence, read
+`../../learn-with-clara/references/execution-evidence.md`. Preserve the
+actual working-thread run records and generated outputs; the prepared kit
+cannot complete a lesson.

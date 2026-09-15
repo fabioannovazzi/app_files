@@ -1,0 +1,77 @@
+{
+  "clara/advisory-brief-planner": {
+    "title": "Définir une mission de conseil avec Clara",
+    "goal": "Apprendre à transformer une demande en mission claire : décision, sources, livrable et travail à réaliser.",
+    "scenario": "Ciclo Arco envisage un service de collecte de vélos. Avant de préparer le conseil, nous précisons la demande de la dirigeante et ce que les notes permettent d’évaluer.",
+    "scope": "Cadrage initial à partir des notes fictives fournies. La leçon se termine par la transmission au travail suivant ; la recommandation sur le service relève de ce prochain flux.",
+    "inputs": "Ouvrez assignment-fr.md et notes-fr.md. Le premier précise décision, destinataire et limites ; le second contient déclarations clients et informations opérationnelles.",
+    "request": "Clara, définis cette mission de conseil. Présente la décision à éclairer, le livrable, les sources disponibles, les lacunes et l’organisation du travail.",
+    "steps": [
+      "Clara lit la demande et les notes, repère les clarifications importantes et propose une mission dans un langage courant.",
+      "Revoyez décision, périmètre, livrable et éléments manquants. Clara enregistre le plan et le vérifie par rapport aux sources exactes avec le flux actuel.",
+      "Lisez le résumé et les consignes de transmission. Identifiez le flux Clara disponible qui poursuivrait la mission et les éléments à préserver."
+    ],
+    "deliverables": [
+      "Contrat de mission et résumé lisible : objectif, limites et livrable attendu.",
+      "Rapport de vérification et consignes : possibilité de poursuivre et éléments transmis au flux suivant."
+    ],
+    "review": "Vérifiez que la dirigeante reste destinataire, que les options demandées sont comparées et qu’aucun prix, demande ou droit de contacter des personnes n’est inventé. Un plan valide n’est pas encore une recommandation exécutée.",
+    "checkpoints": [
+      "Avant la rédaction, identifiez décision et destinataire.",
+      "À la remise, expliquez le prochain livrable et les informations encore manquantes."
+    ],
+    "practice": "Utilisez les fichiers d’exercice, dont revised-assignment-fr.md et update-fr.md, pour cadrer la nouvelle demande plus limitée : une liste d’actions pour vérifier la faisabilité du pilote. Conservez le premier plan.",
+    "success": "Le nouveau plan reflète l’objectif et le livrable modifiés. Nommez le résultat attendu et une condition à vérifier avant le pilote.",
+    "repeat": "Décrivez décision, destinataire, livrable souhaité et fichiers disponibles. Revoyez périmètre et sources avant l’exécution du flux sélectionné."
+  },
+  "clara/advisory-case-director": {
+    "title": "Faire évoluer un dossier de conseil avec Clara",
+    "goal": "Apprendre à maintenir une analyse fondée sur les sources et à actualiser les prochaines actions lorsque de nouvelles informations arrivent.",
+    "scenario": "Ciclo Arco évalue un service de collecte de vélos. Les commentaires clients suggèrent un intérêt possible ; les notes opérationnelles décrivent une possibilité limitée de l’essayer.",
+    "scope": "Un dossier local fondé sur les notes fournies. Le résultat est une analyse de travail, pas une prévision financière ni une autorisation de lancement.",
+    "inputs": "Ouvrez assignment-fr.md et notes-fr.md : décision, commentaires clients et disponibilité du véhicule. La conversation de travail crée le dossier pendant la leçon.",
+    "request": "Clara, développe ce dossier. Donne ta recommandation actuelle, ses sources et ses limites, puis le prochain travail utile à la décision de la dirigeante.",
+    "steps": [
+      "Clara cadre la mission et crée un dossier local. Elle enregistre les documents et formule une première réponse avec ses conditions.",
+      "Le flux actuel enregistre le raisonnement et ses liens avec les sources, puis sauvegarde l’analyse. La conversation vocale explique recommandation et questions ouvertes.",
+      "Ouvrez le document de travail et la carte des sources. Remontez d’une conclusion à sa source et discutez de la vérification qui pourrait changer la réponse."
+    ],
+    "deliverables": [
+      "Document de travail actuel : recommandation, raisonnement, inconnues importantes et actions proposées.",
+      "Carte des sources et historique : éléments étayant les conclusions et changements apportés au dossier."
+    ],
+    "review": "Un intérêt exprimé n’est ni une réservation ni une preuve de demande globale. Vérifiez ce que la note sur le véhicule permet réellement. Clara propose ; la dirigeante décide de la mise en œuvre.",
+    "checkpoints": [
+      "À la première réponse, distinguez les éléments étayés des conditions à vérifier.",
+      "À la remise, retrouvez la source d’une conclusion et la prochaine vérification utile."
+    ],
+    "practice": "Ajoutez update-fr.md au même dossier pédagogique. Demandez comment l’indisponibilité du véhicule change l’analyse et les prochaines actions. Ouvrez le document actualisé et la version précédente conservée.",
+    "success": "Le dossier intègre la nouvelle disponibilité sans considérer un prêt éventuel comme convenu. Expliquez ce qui change dans la recommandation ou ses conditions.",
+    "repeat": "Demandez à Clara de reprendre le dossier, fournissez de nouvelles sources et précisez la décision. Revoyez réponse actualisée, motifs et prochain travail."
+  },
+  "clara/advisory-deliverable-validator": {
+    "title": "Revoir une note de conseil avec Clara",
+    "goal": "Apprendre à vérifier qu’un document répond à sa mission et que sa recommandation découle des sources disponibles.",
+    "scenario": "Une note externe recommande le service quotidien de collecte pour Ciclo Arco. Nous revoyons toute cette courte note par rapport à la demande et aux sources.",
+    "scope": "Une note Markdown fournie et des sources locales. Son historique de rédaction est indisponible : la revue rapproche les affirmations des éléments maintenant fournis.",
+    "inputs": "Ouvrez external-memo-fr.md, assignment-fr.md et notes-fr.md. La note est le document à revoir ; les autres fichiers établissent la demande et les informations connues.",
+    "request": "Clara, revois cette note par rapport à la mission et aux sources fournies. Explique si elle est utilisable, ce qui doit être corrigé et les décisions qui restent à la dirigeante.",
+    "steps": [
+      "Clara définit le périmètre de revue, préserve la note et prépare l’inventaire de ses contenus et des sources sélectionnées.",
+      "Le flux actuel examine périmètre, affirmations, raisonnement, recommandation, limites et état de remise. La conversation vocale relie les constats aux passages exacts de la note et des sources.",
+      "Ouvrez le dossier de revue. Lisez l’état global, les constats importants et les corrections proposées. L’original reste intact ; une note corrigée demande sa propre revue."
+    ],
+    "deliverables": [
+      "Revue lisible : conclusion globale, rapprochements avec les sources, corrections et incertitudes résiduelles.",
+      "Audit du dossier et inventaires : contenus examinés et complétude formelle de la revue."
+    ],
+    "review": "Comparez le service quotidien recommandé avec les déclarations réelles des clients et la disponibilité du véhicule. Un dossier complet n’approuve pas la note et ne prouve pas à lui seul ses affirmations.",
+    "checkpoints": [
+      "Avant la revue, distinguez le document de ses sources.",
+      "À la remise, expliquez l’état de préparation et retrouvez passage et source d’un constat important."
+    ],
+    "practice": "Ajoutez update-fr.md et demandez une nouvelle revue de la note externe inchangée avec les sources actualisées. Conservez la première revue et comparez les constats.",
+    "success": "La nouvelle revue intègre l’indisponibilité du véhicule et précise sa conséquence sur l’utilisation de la note. Indiquez ce qui doit changer pour éclairer la décision.",
+    "repeat": "Fournissez document, mission et sources. Lisez conclusion et constats importants, puis revoyez séparément toute correction avant utilisation."
+  }
+}

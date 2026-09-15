@@ -1,0 +1,52 @@
+{
+  "vera/aml-review": {
+    "title": "Préparer une revue antiblanchiment avec Vera",
+    "goal": "Apprendre à faire examiner un dossier client, reconstituer les faits et obtenir une évaluation motivée avec preuves et questions à revoir.",
+    "scenario": "Le cabinet revoit Officina Arco : les documents fictifs décrivent activité, associés, représentante et prêt d’associé.",
+    "scope": "Une revue antiblanchiment pour un cabinet comptable italien. Vera prépare l’analyse ; le professionnel décide mesures, acceptation et déclaration éventuelle.",
+    "inputs": "Ouvrez client-fr.md, ownership-fr.md et loan-fr.md. Précisez client, mission et date de revue : 31 août 2026. Les documents sont des déclarations et références du cas, pas des contrôles achevés.",
+    "request": "Vera, prépare une revue antiblanchiment d’Officina Arco au 31 août avec ces documents. Présente faits étayés, points à éclaircir et évaluation proposée pour ma revue.",
+    "steps": [
+      "Dans la conversation de travail, Vera lit les documents et reconstitue personnes, propriété, activité et opération. La voix explique la finalité et distingue déclarations, corroborations et informations manquantes.",
+      "Vera compare les preuves, vérifie les sources professionnelles actuelles pertinentes et formule des questions ciblées. La voix suit les vrais points sans inventer soupçons ni résultats de filtrage.",
+      "Ouvrez le mémo produit et un lien source. Lisez évaluation, motifs et preuves encore nécessaires. La version enregistrée conserve la proposition ; les décisions professionnelles ne sont enregistrées que lorsqu’elles sont exprimées."
+    ],
+    "deliverables": [
+      "Mémo lisible avec évaluation proposée, faits, sources, limites et questions ciblées.",
+      "Version conservée au dossier pour relier une revue ultérieure sans perdre la précédente."
+    ],
+    "review": "Vérifiez l’auteur des déclarations, les corroborations et les contrôles manquants. Un calcul ou fichier sauvegardé ne vaut pas acceptation du client. Le mémo est interne ; ne pas l’envoyer automatiquement au client.",
+    "checkpoints": [
+      "Avant l’analyse, identifiez client, mission et documents fournis.",
+      "Dans le mémo, trouvez un fait documenté, une déclaration et une question ouverte."
+    ],
+    "practice": "Ajoutez ownership-update-fr.md au même dossier et demandez un réexamen au 10 septembre. Vera relie la version nouvellement produite et compare le nouvel actionnariat au précédent. Repérez changement et preuve manquante.",
+    "success": "Vous savez lancer la revue, utiliser le mémo, distinguer proposition et décision et actualiser le dossier avec de nouveaux faits.",
+    "repeat": "Demandez une revue d’un client pour un motif précis, avec documents et éventuelle évaluation précédente. Examinez les preuves et enregistrez les décisions professionnelles réelles."
+  },
+  "vera/adeguati-assetti": {
+    "title": "Évaluer l’organisation de l’entreprise avec Vera",
+    "goal": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
+    "scenario": "Officina Arco revoit responsabilités, clôture mensuelle et informations de recouvrement. Le cas fictif fournit profil, procédure et un exemple de fonctionnement.",
+    "scope": "Une première évaluation ciblée des dispositifs organisationnels, administratifs et comptables d’une entreprise italienne. Le périmètre suit les documents ; aucune certification de toute l’entreprise.",
+    "inputs": "Ouvrez company-fr.md, procedure-fr.md et operation-fr.md. Précisez entreprise, mission et date : 31 mars 2026. Fournissez des exemples de travail avec les procédures écrites.",
+    "request": "Vera, évalue les dispositifs d’Officina Arco pour responsabilités, clôture mensuelle et informations de recouvrement. Utilise ces documents et montre évaluation, limites et actions à discuter.",
+    "steps": [
+      "Dans la conversation de travail, Vera reconstitue le fonctionnement et propose le périmètre. La voix explique l’utilité conjointe d’une procédure et d’un exemple de son application.",
+      "Vera compare responsabilités, échéances, livraisons et décisions, vérifie les sources professionnelles pertinentes et prépare des constats proportionnés. La voix suit les preuves réelles et questions pouvant modifier le jugement.",
+      "Ouvrez le mémo produit. Lisez l’évaluation globale, puis un constat, sa source et l’action liée. Distinguez responsables et délais proposés des engagements acceptés."
+    ],
+    "deliverables": [
+      "Mémo avec évaluation motivée, observations, constats et plan d’amélioration.",
+      "Version liée aux sources permettant un réexamen et la conservation des décisions exprimées."
+    ],
+    "review": "Vérifiez lien entre jugement et preuves, périmètre, domaines non examinés et proportion des actions. Une procédure ou un cycle réussi ne prouve pas la continuité ; une lacune documentaire ne prouve pas seule un dysfonctionnement.",
+    "checkpoints": [
+      "Avant l’analyse, identifiez le processus et un exemple disponible de son fonctionnement.",
+      "Dans le mémo, reliez une action au constat et à sa source."
+    ],
+    "practice": "Ajoutez update-fr.md au même dossier et demandez un réexamen au 30 avril. Vera relie la version produite, réévalue chaque action antérieure et conserve la première version. Expliquez l’effet des nouvelles preuves.",
+    "success": "Vous savez fournir les pièces, demander l’évaluation, utiliser le plan d’actions et solliciter un réexamen avec de nouvelles preuves.",
+    "repeat": "Décrivez entreprise, finalité et périmètre. Fournissez procédures, exemples et revues antérieures pertinentes. Revoyez conclusions et actions avant de les convenir avec l’entreprise."
+  }
+}

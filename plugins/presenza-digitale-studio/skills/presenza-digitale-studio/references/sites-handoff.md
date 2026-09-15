@@ -29,7 +29,7 @@ before its delivery receipt can be recorded.
    `.openai/hosting.json`; do not place credentials in the run. Confirm that the
    adapter serves the accepted `work/site/` meaning and assets; if it changes
    them, copy the resulting public files back and review those bytes instead.
-2. Validate `work/site/`, capture its desktop and phone PNG evidence, record the
+2. Validate `work/site/`, capture its desktop and phone PNG or JPEG evidence, record the
    current quality assessment and, for a release, record all three professional
    decisions.
 3. Create the exact Vera package with `package_website.py`.
@@ -53,7 +53,7 @@ before its delivery receipt can be recorded.
    and poll the deployment directly to `succeeded`.
 7. Open the exact succeeded deployed URL, inspect the full page at a desktop
    width of at least 1024 pixels and a phone width of at most 600 pixels, and
-   save both PNGs below `reviews/sites/`. Write `sites_delivery.json` against
+   save both PNG or JPEG images below `reviews/sites/`. Write `sites_delivery.json` against
    `schemas/sites_delivery.schema.json` with those paths and hashes, the exact
    deployment ID and URL, the real local archive path and SHA-256, both Vera
    archive member names, provider IDs, commit SHA and every digest copied from
@@ -68,7 +68,7 @@ before its delivery receipt can be recorded.
 
 The recorder rehashes the Vera package and Sites archive, reads the binding and
 nested approved-site payload directly from the archive, verifies the hosting
-project and server bundle, rechecks the deployed browser PNGs, and rejects a
+project and server bundle, rechecks the deployed browser PNG or JPEG images, and rejects a
 failed, stale, incomplete, unsigned or mismatched delivery. Only its successful
 receipt supports `preview_published` or `published`.
 

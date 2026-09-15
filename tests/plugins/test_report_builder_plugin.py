@@ -143,7 +143,7 @@ def test_render_markdown_localizes_all_spanish_wrapper_copy() -> None:
         "language": "es",
         "report_type": "management_report",
         "context_items": {"Moneda": "EUR"},
-        "render": {"include_table_previews": False},
+        "render": {"include_table_previews": False, "include_unassigned_tables": True},
     }
     analysis = {
         "sections": [
@@ -179,7 +179,7 @@ def test_render_markdown_localizes_all_spanish_wrapper_copy() -> None:
     assert "La revisión de Codex está pendiente para esta sección." in markdown
     assert "Fuente: informe.xlsx / Resultados" in markdown
     assert "Filas: 3 | Columnas: 2" in markdown
-    assert "Totales numéricos deterministas:" in markdown
+    assert "Totales:" in markdown
     assert "Importe: suma 250.00" in markdown
     assert "recuento 3" not in markdown
     assert "Todavía no hay una tabla asignada." in markdown
@@ -2529,8 +2529,13 @@ def test_reviewed_measure_mapping_excludes_numeric_identifiers(tmp_path: Path) -
             encoding="utf-8"
         )
     )
-    assert len(ledger["entries"]) == 1
+    assert len(ledger["entries"]) == 3
     assert ledger["entries"][0]["value"] == "30"
+    assert [entry["value"] for entry in ledger["entries"][1:]] == ["10", "20"]
+    assert [entry["source"]["locator"] for entry in ledger["entries"][1:]] == [
+        "budget.csv!B2",
+        "budget.csv!B3",
+    ]
     assert "account_id" not in ledger["entries"][0]["source"]["locator"]
 
 
@@ -3241,7 +3246,10 @@ def test_explicit_headerless_review_closes_every_row_and_rendered_output(
         "unit",
         "scale",
     ]
-    assert "column_3: sum 300 | Currency: USD | Unit: currency | Scale: 1" in markdown
+    assert (
+        "column_3: sum 300 | Currency: USD | Unit: Monetary amount | Scale: 1"
+        in markdown
+    )
 
 
 def test_header_heuristic_cannot_hide_the_only_numeric_candidate(
@@ -3745,7 +3753,11 @@ def test_plugin_inspects_and_builds_report_without_model_calls(tmp_path: Path) -
         for output in final_artifacts["outputs"]
         if output["path"] == "report_draft.md"
     )
-    first_section_title = analysis_payload["sections"][0]["title"]
+    first_section_title = next(
+        section["title"]
+        for section in analysis_payload["sections"]
+        if section["status"] == "assigned"
+    )
     assert "## Executive summary" in report_draft_output["required_text"]
     assert f"## {first_section_title}" in report_draft_output["required_text"]
     assert "Source:" in report_draft_output["required_text"]
@@ -5946,14 +5958,24 @@ def test_all_nine_reviewed_measures_render_and_close_to_ledger(
     )
 
     assert len(section["numeric_columns"]) == 9
-    assert len(ledger["entries"]) == 9
-    assert "Measure 9: sum 9 | Currency: USD | Unit: currency | Scale: 1" in markdown
+    assert len(ledger["entries"]) == 14  # Nine totals plus five visible detail cells.
+    assert [entry["value"] for entry in ledger["entries"][9:]] == [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+    ]
+    assert (
+        "Measure 9: sum 9 | Currency: USD | Unit: Monetary amount | Scale: 1"
+        in markdown
+    )
     assert len(numeric_table.rows) == 10
     assert [cell.text for cell in numeric_table.rows[-1].cells] == [
         "Measure 9",
         "9",
         "USD",
-        "currency",
+        "Monetary amount",
         "1",
     ]
 
@@ -5967,6 +5989,124 @@ def test_build_rejects_direct_input_symlink(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="input path cannot be a symbolic link"):
         core.build_report(linked_source, tmp_path / "output")
+
+
+def _build_reviewed_detail_report(tmp_path: Path, *, previews: bool = True):
+    """Prepare localized, scaled literals with a blank row and excluded subtotal."""
+    core = load_core()
+    source = tmp_path / "income_statement.xlsx"
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Income Statement"
+    sheet.append(["Line", "Amount", "Account"])
+    sheet.append(["Sales", "1.000,25", "1001"])
+    sheet.append([None, None, None])
+    sheet.append(["Cost", "-200,10", "2001"])
+    sheet.append(["Subtotal", "800,15", "9999"])
+    workbook.save(source)
+    inspected = core.inspect_inputs(source, tmp_path / "inspection")
+    table_id = inspected.inspection["tables"][0]["table_id"]
+    recipe = inspected.suggested_recipe
+    recipe["sections"]["income_statement"]["assigned_table"] = table_id
+    recipe["render"]["include_table_previews"] = previews
+    recipe = core.review_numeric_measure_columns(
+        inspected.inspection,
+        recipe,
+        section_key="income_statement",
+        **_numeric_review_args(
+            inspected.inspection,
+            table_id,
+            ["Amount"],
+            excluded_cell_rows={"Amount": {5}},
+        ),
+        reviewer_ref="reviewer.detail-regression",
+        reviewed_on="2026-09-14",
+        numeric_locale="it",
+        currency="EUR",
+        unit="currency",
+        scale="1000",
+        parse_policy="strict_all_nonblank_v1",
+    )
+    recipe_path = tmp_path / "recipe.json"
+    core.write_json(recipe_path, recipe)
+    output = tmp_path / "report"
+    core.build_report(source, output, recipe_path=recipe_path)
+    return core, output
+
+
+@pytest.mark.parametrize("previews", [True, False])
+def test_reviewed_details_preserve_scale_sign_source_rows_and_exclusions(
+    tmp_path: Path, previews: bool
+) -> None:
+    core, output = _build_reviewed_detail_report(tmp_path, previews=previews)
+    analysis = core.read_json(output / "report_analysis.json")
+    ledger = core.read_json(output / "numeric_evidence_ledger.json")
+    detail = [entry for entry in ledger["entries"] if ".row_" in entry["evidence_id"]]
+    assert [entry["value"] for entry in detail] == ["1000250", "-200100"]
+    assert [entry["source"]["locator"] for entry in detail] == [
+        "Income Statement!B2",
+        "Income Statement!B4",
+    ]
+    assert all(entry["source"]["value"] == entry["value"] for entry in detail)
+    assert all(len(entry["outputs"]) == (3 if previews else 1) for entry in detail)
+    section = next(
+        s for s in analysis["sections"] if s["section"] == "income_statement"
+    )
+    assert section["preview_rows"] == [
+        {
+            "Line": "Sales",
+            "Amount": "1000250",
+            "Account": "[excluded from calculation]",
+        },
+        {
+            "Line": "Cost",
+            "Amount": "-200100",
+            "Account": "[excluded from calculation]",
+        },
+        {
+            "Line": "Subtotal",
+            "Amount": "[excluded from calculation]",
+            "Account": "[excluded from calculation]",
+        },
+    ]
+    markdown = (output / "report_draft.md").read_text(encoding="utf-8")
+    assert ("1000250" in markdown) is previews
+    assert "No table assigned yet." not in markdown
+    assert "## Ratios" not in markdown
+    assert "overview" in analysis["missing_sections"]
+
+
+@pytest.mark.parametrize("artifact", ["word", "markdown", "excel"])
+def test_numeric_detail_closure_rejects_changed_rendered_cell(
+    tmp_path: Path, artifact: str
+) -> None:
+    core, output = _build_reviewed_detail_report(tmp_path)
+    analysis = core.read_json(output / "report_analysis.json")
+    if artifact == "word":
+        path = output / "report.docx"
+        document = Document(path)
+        table = next(
+            t
+            for t in document.tables
+            if [c.text for c in t.rows[0].cells] == ["Line", "Amount", "Account"]
+        )
+        table.rows[1].cells[1].text = "999999"
+        document.save(path)
+    elif artifact == "markdown":
+        path = output / "report_draft.md"
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "| Sales | 1000250 |", "| Sales | 999999 |"
+            ),
+            encoding="utf-8",
+        )
+    else:
+        path = output / "report_tables.xlsx"
+        workbook = openpyxl.load_workbook(path)
+        workbook["income_statement"]["B2"] = "999999"
+        workbook.save(path)
+    with pytest.raises(ValueError, match="Numeric detail closure failed"):
+        core.write_numeric_evidence_ledger(output, analysis)
 
     assert not (tmp_path / "output").exists()
 

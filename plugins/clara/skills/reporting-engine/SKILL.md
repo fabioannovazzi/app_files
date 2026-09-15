@@ -31,8 +31,13 @@ normal dependency check below (`requirements.txt` includes openpyxl).
    Ask only unresolved business decisions; never ask the user to edit JSON.
 3. `python scripts/budget_report.py run --input <exports.xlsx> --recipe <reviewed.json> --output-dir <new-report-folder>`
 4. Read `model_context.json`, not raw populations by default, and prepare
-   commentary bound to its metric IDs and pack hash. Treat observations and
-   hypotheses separately; professional review remains explicit.
+   commentary from `commentary_template.json`, bound to its metric IDs and pack
+   hash. Treat observations and hypotheses separately; professional review
+   remains explicit. Deliver that explanation with the local report by running
+   `python scripts/budget_report.py run --input <exports.xlsx> --recipe <reviewed.json> --commentary <commentary.json> --output-dir <new-explained-report-folder>`.
+   This replays the original sources, rejects stale commentary and writes the
+   explained dashboard, `management_control_report.md`, the numeric workbook
+   and an execution receipt. Keep the earlier calculation folder intact.
 5. If the user requests Sites: `python scripts/budget_report.py site --input <exports.xlsx> --recipe <reviewed.json> --pack <management_control_pack.json> --commentary <commentary.json> --audience <client> --output-dir <new-site-folder>`.
 
 Repeat `--input` for separate exports. The optional `forecast` role uses the same

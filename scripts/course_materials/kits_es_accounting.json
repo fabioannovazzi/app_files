@@ -1,0 +1,127 @@
+{
+  "vera/journal-bank-reconciliation": {
+    "title": "Conciliar un extracto bancario con Vera",
+    "goal": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual.",
+    "scenario": "Officina Arco está cerrando marzo. El extracto y la cuenta bancaria del mayor deberían reflejar los mismos pagos. Los comparamos y examinamos los documentos generados.",
+    "scope": "Una cuenta bancaria en EUR, marzo de 2026. El caso utiliza referencias exactas y pagos individuales. Otras cuentas y periodos quedan fuera del alcance.",
+    "inputs": "Abre bank-march.csv, bank-ledger-march.csv y case-es.md. El extracto contiene los movimientos del banco; el mayor contiene los apuntes contables que se comparan. Las fechas tienen formato ISO y los pagos son negativos en ambos archivos.",
+    "request": "Vera, concilia el extracto bancario de marzo de Arco con su cuenta contable del banco. Muestra los pagos conciliados, los movimientos sin conciliar y los controles que debo revisar.",
+    "steps": [
+      "Vera importa los dos archivos en el expediente didáctico y examina su estructura. Confirma cuenta, fechas, signos de los importes y columnas de referencias.",
+      "Revisa las reglas propuestas: pagos individuales, referencias e importes exactos y sin reutilizar movimientos. El procedimiento actual realiza la comparación localmente.",
+      "Abre el libro y las notas generados. Sigue un pago desde el extracto hasta su referencia contable; después localiza los movimientos sin conciliar y los controles."
+    ],
+    "deliverables": [
+      "Libro de conciliación y tablas detalladas: permiten comprobar las correspondencias y los movimientos pendientes de aclaración.",
+      "Notas de revisión y controles: explican la cobertura, las reglas aplicadas y los puntos que necesitan más justificantes."
+    ],
+    "review": "Comprueba que los archivos correspondan a la misma cuenta y periodo. Localiza las dos filas originales de una coincidencia. Conciliar un pago no determina el tratamiento fiscal de la factura.",
+    "checkpoints": [
+      "Antes de ejecutar, identifica qué archivo procede del banco y cuál de contabilidad.",
+      "En la entrega, encuentra un pago conciliado y dónde aparecerían los movimientos sin conciliar."
+    ],
+    "practice": "Usa bank-april.csv y bank-ledger-april.csv para pedir una nueva conciliación hasta el 4 de abril. Los archivos acumulados añaden el pago de la tercera factura; conserva el resultado de marzo.",
+    "success": "La nueva ejecución incluye el movimiento de abril. Explica cómo investigarías un movimiento bancario que falta en el mayor.",
+    "repeat": "Facilita archivos bancarios y contables comparables, indica cuenta y periodo, revisa su interpretación y utiliza la conciliación para resolver diferencias."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Revisar partidas abiertas con Vera",
+    "goal": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta.",
+    "scenario": "Una lista anterior de proveedores de Arco todavía muestra tres facturas abiertas. Los movimientos bancarios permiten comprobar su situación a 31 de marzo.",
+    "scope": "Tres facturas de proveedores en EUR. La revisión de marzo excluye pagos posteriores a la fecha de corte; el ejercicio actualiza esa fecha.",
+    "inputs": "Abre open-items-es.pdf y bank-march-es.pdf. El primer documento es la población que se comprueba; el segundo recoge los pagos de salida. Son exportaciones didácticas ficticias. Los importes siguen la convención italiana con coma decimal y las fechas tienen formato día/mes/año.",
+    "request": "Vera, revisa estas partidas de proveedores a 31 de marzo de 2026. Usa las pruebas de pago bancario para mostrar qué está pagado, qué sigue abierto y qué debo revisar.",
+    "steps": [
+      "Vera importa los archivos, identifica la población inicial y propone el papel y el significado monetario de cada fuente. Confirma la fecha de corte y el tratamiento de pagos posteriores.",
+      "El procedimiento actual relaciona facturas y pruebas de pago, distingue partidas saldadas de partidas sin resolver y prepara el paquete de revisión. El chat de voz explica el avance y la documentación que falta.",
+      "Abre la página local de revisión y los papeles de trabajo. Sigue una factura desde el importe declarado abierto hasta la prueba de pago y el resultado propuesto. Las decisiones permanecen pendientes hasta que realmente se toman."
+    ],
+    "deliverables": [
+      "Papeles Excel y ficha operativa: muestran importes iniciales, pagos vinculados, resultados propuestos y excepciones.",
+      "Informe Word y página local de revisión: explican las conclusiones y permiten al profesional revisar partidas y solicitar documentos."
+    ],
+    "review": "Comprueba primero población y fecha. Las pruebas de marzo respaldan el cierre de las dos primeras facturas; la tercera queda sin resolver con estos documentos. Revisa fechas y fuentes antes de aceptar una conclusión.",
+    "checkpoints": [
+      "Antes de ejecutar, distingue la lista que se comprueba de las pruebas utilizadas.",
+      "En la entrega, localiza la factura restante, su importe y la prueba que falta para resolverla."
+    ],
+    "practice": "Mantén open-items-es.pdf y usa bank-april-es.pdf para pedir una nueva revisión a 30 de abril. El documento bancario acumulado incluye el tercer pago. Conserva los documentos de marzo.",
+    "success": "La revisión actualizada considera el tercer pago. Explica por qué cambian las conclusiones entre marzo y abril y dónde registrarías una decisión de revisión.",
+    "repeat": "Facilita la población de partidas abiertas, la fecha de corte y los justificantes. Revisa los resultados propuestos y los puntos pendientes antes de utilizar las conclusiones."
+  },
+  "vera/variance-analysis": {
+    "title": "Comparar resultados reales y presupuesto con Vera",
+    "goal": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones.",
+    "scenario": "Officina Arco quiere comparar su resultado operativo de enero y febrero con el presupuesto. Tiene ingresos y costes mensuales y una nota que explica las cifras.",
+    "scope": "Primer uso del análisis de desviaciones: una empresa, dos meses, EUR. Comparamos importes; el archivo no contiene cantidades ni pruebas de causas comerciales.",
+    "inputs": "Abre january-february.csv y context-es.md. Localiza Scenario (PL presupuesto, AC real), Month, Category y Amount. La nota explica signos y totales de control. Vera prepara una copia en el expediente didáctico.",
+    "request": "Vera, compara el resultado operativo real de Officina Arco de enero y febrero de 2026 con el presupuesto, en euros. Muéstrame el informe y explica qué partidas contribuyen a la desviación.",
+    "steps": [
+      "En la conversación de trabajo, Vera lee el archivo y propone la comparación. La voz ayuda a comprobar meses, presupuesto inicial, real, moneda y signos negativos de costes antes del cálculo.",
+      "El flujo actual calcula las desviaciones y genera tablas, gráficos y un borrador del informe. Mientras se ejecuta, la voz explica el proceso y responde sin anticipar resultados aún no producidos.",
+      "Abre el informe y el gráfico principal realmente generados. Empieza por el resultado global, después los aportes de ingresos y costes y un detalle mensual. Vera vincula sus comentarios con datos calculados y guarda las decisiones reales de revisión."
+    ],
+    "deliverables": [
+      "Borrador Word del informe y gráficos que muestran el paso del presupuesto al real.",
+      "Tablas de desviaciones y controles de conciliación para rastrear los importes de origen."
+    ],
+    "review": "Comprueba alcance y meses, totales inicial y final, variación en EUR y porcentaje cuando tenga sentido. Interpreta el signo negativo de los costes. El cálculo identifica aportes, pero no demuestra por sí solo causas comerciales. El informe sigue siendo borrador hasta la revisión profesional habitual.",
+    "checkpoints": [
+      "Antes del cálculo, indica qué valores se comparan.",
+      "En el resultado, encuentra una partida que contribuya y la cifra que la respalda."
+    ],
+    "practice": "Usa january-march.csv para repetir la comparación de enero a marzo. Solicita un nuevo resultado conservando la versión de dos meses. Identifica qué cambia en el total y una partida; pide ayuda solo donde haga falta.",
+    "success": "Sabes elegir archivo y comparación, encontrar el informe, leer una desviación y repetir el análisis cuando llegue otro mes.",
+    "repeat": "Con tu archivo, indica empresa, período, presupuesto u otra base de comparación y moneda. Vera aclara columnas ambiguas, produce resultados y acompaña la revisión."
+  },
+  "vera/journal-sampling": {
+    "title": "Extraer una muestra del diario contable",
+    "goal": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior.",
+    "scenario": "El despacho necesita seleccionar líneas del diario de Officina Arco para examinarlas. Un pequeño archivo ficticio permite seguir todos los pasos.",
+    "scope": "Primera ejecución de Journal Sampling: 5 líneas aleatorias, semilla 42. La lección enseña el uso; el plan de auditoría real determina método y tamaño.",
+    "inputs": "Abre journal-march.csv y context-es.md. Localiza fecha, asiento, línea, cuenta, debe y haber. El original se conserva en el expediente didáctico.",
+    "request": "Vera, extrae 5 líneas aleatorias del diario de marzo de Officina Arco con semilla 42. Primero déjame comprobar las columnas y después muestra la muestra y los controles de preparación.",
+    "steps": [
+      "Vera abre el diario en la conversación de trabajo. La voz acompaña la revisión de columnas, período y significado de importes; Vera registra la correspondencia realmente revisada.",
+      "El flujo prepara el diario y comprueba que conserva líneas e importes. Si falla la preparación, resuelve el problema antes de extraer la muestra.",
+      "Vera ejecuta el muestreo y abre el resultado Excel. Encuentra una línea seleccionada en el diario; revisa con la voz población, método y número de líneas extraídas."
+    ],
+    "deliverables": [
+      "Muestra Excel y CSV con referencias a las líneas originales.",
+      "Diario preparado, controles y parámetros para reproducir la selección."
+    ],
+    "review": "Comprueba período, cuentas y número esperado de líneas. Los controles de preparación no certifican los asientos ni la suficiencia de la muestra. La Verificación documental permite después revisar los justificantes.",
+    "checkpoints": [
+      "Antes de extraer, explica qué población se muestrea.",
+      "En el resultado, localiza una línea seleccionada en el archivo fuente."
+    ],
+    "practice": "Repite con journal-april.csv, que añade un pago de abril. Conserva las 5 líneas aleatorias y el primer resultado. Comprueba la nueva población e identifica una línea de la nueva muestra.",
+    "success": "Sabes formular la petición, encontrar la muestra y rastrear una línea al diario sin sustituir manualmente las líneas seleccionadas.",
+    "repeat": "Indica a Vera cliente, diario, período, filtros si procede, método y tamaño previstos en tu plan de auditoría. Pide Verificación documental para comparar la muestra con los justificantes."
+  },
+  "vera/vouching": {
+    "title": "Verificar los asientos seleccionados con las facturas",
+    "goal": "Aprender a relacionar una muestra con sus facturas, leer resultados y revisar los puntos que requieren juicio profesional.",
+    "scenario": "El despacho tiene los asientos de tres facturas y sus XML. Quiere comparar dos líneas de la muestra con los documentos originales.",
+    "scope": "Verificación documental de una muestra. Vera la crea primero con Journal Sampling en el mismo expediente didáctico y después ejecuta los controles. No se examina todo el diario.",
+    "inputs": "Abre invoice-journal.csv, context-es.md y las tres facturas XML. La nota indica la cuenta 2100 y una muestra didáctica de dos líneas. Vera gestiona la conexión; no tienes que elegir archivos técnicos internos.",
+    "request": "Vera, crea una muestra aleatoria de dos líneas de la cuenta de proveedores 2100, semilla 42, y verifícalas con estas facturas XML. Muéstrame los resultados y acompaña mi revisión.",
+    "steps": [
+      "La conversación de trabajo produce la muestra real. La voz explica qué líneas se comprobarán y ayuda a confirmar el alcance antes de pasar a las facturas.",
+      "Vera conecta la muestra generada con las tres facturas seleccionadas e inicia la Verificación documental. La voz explica la comparación según el avance real.",
+      "Abre el libro de resultados y una línea con su documento asociado. Comprueba referencia, fecha, importe y parte, y revisa las aclaraciones pendientes. Vera conserva decisiones reales y vínculos a las fuentes."
+    ],
+    "deliverables": [
+      "Resultados Excel y CSV del control de la muestra, con documentos asociados y estados.",
+      "Notas de revisión y expediente de controles para recuperar muestra y fuentes."
+    ],
+    "review": "Comprueba que solo se examinaron las líneas seleccionadas. Una coincidencia no equivale a una conclusión sobre el asiento: parte, signo contable y conclusión requieren la revisión prevista. Los documentos ausentes o ambiguos permanecen pendientes.",
+    "checkpoints": [
+      "Antes del control, identifica las líneas y documentos seleccionados.",
+      "En el resultado, explica el estado de una línea mediante asiento y factura."
+    ],
+    "practice": "Pide una nueva muestra de tres líneas de la cuenta 2100 y repite los controles con las mismas facturas. Conserva el primer resultado y comprueba que la nueva revisión sigue la nueva muestra.",
+    "success": "Sabes iniciar la verificación, abrir el resultado, rastrear un documento y distinguir controles mecánicos de conclusiones profesionales.",
+    "repeat": "En un caso real, selecciona la ejecución Journal Sampling del expediente correcto y aporta el lote documental. Vera retoma la conexión y comprueba solo las líneas seleccionadas."
+  }
+}

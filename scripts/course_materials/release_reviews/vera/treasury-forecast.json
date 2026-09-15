@@ -1,0 +1,147 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "treasury-forecast",
+  "course_sha256": "a0461f6feb563d83d14827daafd2f9236ab84e25a891eedf376e68df789f1306",
+  "reviewer": "Codex: Italian first-use treasury lesson, native forecast and delivery review",
+  "reviewed_at": "2026-09-14T19:47:49.498130+00:00",
+  "review_scope": "Read the Italian first-use outline, both fictional contexts and six source-table roles. Two current bound native teaching cases run preparation and versioned date review; practice also runs the native hypothetical-date scenario, preserving the baseline. All 62 component/native checks pass without failures or skips. Reviewed actual events, daily/weekly balances, version inventory, delivery note and exact artifact links. Visually inspected all six workbook sheets through eight views; the practice baseline workbook has identical cells, styles, widths and row heights. Read both native HTML reports as parsed source text and the Markdown report. Browser URL security policy blocked opening the local HTML report; visual browser presentation and interactive learner behavior remain unverified. Material acceptance does not claim live voice, learner understanding or professional approval.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain Italian lesson teaches providing cash balances and expected flows, confirming scope, reviewing dates and their basis, reading daily and weekly cash and reopening the preserved result. The delayed receipt is a practice step after this first-use sequence, not the whole lesson.",
+        "inputs_and_request": "The fictional Officina Arco case starts on 31 March with 25,000 EUR, two receivables of 18,000 and 12,000, one 9,000 payable, 14,000 payroll and 2,500 rent. The six CSV roles are explained; bank movements, allocations and adjustments are intentionally empty for this first forecast. The request specifies the company, EUR and 31 May horizon without making the learner author technical configuration.",
+        "execution_and_checkpoints": "Actual native preparation and review commands import the bound sources, persist date assumptions from the fictional case and preserve immutable earlier versions. The checkpoints cover which source holds actual cash, where an expected receipt date and its basis appear, and which week should be inspected. CLI review and the local HTTP contract are exercised; browser interaction with the lesson page was not visually verified because URL policy blocked access.",
+        "deliverable_and_next_action": "The native Italian workbook shows a draft status, supplied coverage, fitted descriptions and assumptions, signed flows and weekly cash. Eight rendered views were inspected. Native report source now contains real weekly HTML tables and localized status rather than duplicated raw Markdown; no browser visual acceptance is claimed. The delivery card links the exact current report, workbook and explanation. Forecast review remains None and no payment or professional acceptance occurs.",
+        "practice_and_repeat": "The native scenario moves only the Aurora receipt from 10 to 20 April. The ordinary Codex delivery note reads the actual scenario and compares four dates with the unchanged baseline. It explains that this alternative is a separate hypothetical JSON calculation and that original report/workbook still describe the original forecast. The lesson then explains inputs needed to repeat and the additional movement/settlement evidence needed for later updates.",
+        "language_and_pacing": "This workflow supports Italian; the complete lesson and primary workbook/report labels are Italian. Canonical JSON and CSV field names stay stable for traceability. Six stages total 390 seconds, with processing and questions allowed to extend elapsed time. User comprehension and native voice performance remain separate acceptance steps."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance[demo]",
+        "result_review": "The baseline forecast starts and reaches a minimum at 25,000 EUR, closes at 29,500 EUR on 31 May and preserves the initial prepared version after recording three fictional date assumptions. All five event amounts, dates and bases remain traceable; calculation is complete within the declared coverage, with draft_for_review status and no professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "52af35c9dfe2095f64574375d4edbf4145500af63ed0a91a85d3ccc4ca5d9cf0"
+          },
+          {
+            "name": "report.md",
+            "sha256": "c33559f37119a3aa194f87f83658b8c0ba69effa93a60ac2835e629f56e26d61"
+          },
+          {
+            "name": "tesoreria.xlsx",
+            "sha256": "5f620eef432cd5facb23d89115f44347c9367c96e42917871d78faf5bd6b018e"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "f3fcfb5ef49cdbc0e26b2d7eee3127aac599556ad7b54dc581d35f04e4d9688a"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "b9fd0ac30dbe1ef2576555d6112b3fec33d2ec52434391453d086bcc18b75ae2"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "4b120985f4d389a94f36aa28d1926bfa96f176b4e1c4e77e2b663a54e2e8403a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance[practice]",
+        "result_review": "The native hypothetical alternative lowers cash to 16,000 EUR on 15 April, versus 34,000 in the unchanged baseline. Cash is 34,000 in both from the 20 April receipt and both end at 29,500 on 31 May. The delivery note reports the correct four-date comparison and explicitly distinguishes the alternative JSON from the preserved baseline report and workbook. The original forecast bytes and final-artifact pointers are unchanged; no professional acceptance is simulated.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "fea0a0733c83a384ce52d5090882f2e557669eaa4bb694b00dd575be19208197"
+          },
+          {
+            "name": "report.md",
+            "sha256": "b076cf40aae83427e6d7f9d1f8a8a4e2dde79f7e65f30be4e7f3f577a43fd8ff"
+          },
+          {
+            "name": "tesoreria.xlsx",
+            "sha256": "5f620eef432cd5facb23d89115f44347c9367c96e42917871d78faf5bd6b018e"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "2816cbe3f49932af5022c91120fce56661d01e43a29730f77eb511cf105353ae"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "4ad3bc27e4e51a11b91e8e5f6dcfd947120f8044d8b1b9fe99a051be41d327ba"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "a537f0162f8a1f96562ce7df262bda9770fd2ce7126f0feb35f45a41dd7c23b1"
+          },
+          {
+            "name": "scenario-f8a8ee311075816583e8c7ec91505037433f65e73db5e7b0ae432f45f9f71e6b.json",
+            "sha256": "aeac723540290c864dc1fd8e46e8aa4a94584bdf399ebf1513d97f6e4e20d26a"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.169321+00:00",
+    "previous_course_sha256": "39f75b535772747bccbe98cd92e86b13d0108309af2b93cd7c41b5badfbe86e2",
+    "source_snapshot": "/private/tmp/teaching-library-refresh-02/test_treasury_kit_inputs_produ0/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.496753+00:00",
+    "previous_course_sha256": "6ebcf97027c1ff9a689f49e6cfd3ca14077403afe7ec573ab34cb2b09923a858",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/treasury-forecast/SKILL.md",
+        "before": "0364c242853f0343c790f6866f4b332288719721f66b4e8306353306ad654125",
+        "after": "459a6232861683b9bbd7b9e264551c7469368d2c991d995c6930687ef76db20b"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

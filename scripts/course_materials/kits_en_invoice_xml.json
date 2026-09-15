@@ -1,0 +1,27 @@
+{
+  "vera/invoice-xml": {
+    "title": "Prepare an invoice XML file with Vera",
+    "goal": "Learn to provide invoice data, review the draft and obtain a local XML file after approving the exact version.",
+    "scenario": "Officina Arco needs an ordinary Italian invoice file. We use a short fictional data sheet to follow the whole process, from the request to the preview, review and local export.",
+    "scope": "One fictional domestic invoice in EUR. The source data and native preview use Italian invoice terms; Vera explains them in English. This lesson starts from supplied data. The same workflow also accepts readable PDFs and photographs. It does not sign or submit the file to SdI.",
+    "inputs": "Provide invoice-data.txt. It contains the fictional supplier, customer, service, number, date, amounts and file-routing data. It also states that this is a new draft and that no previous issue or export exists in the fictional case.",
+    "request": "Vera, prepare a draft invoice XML from this fictional data sheet. Show me the preview, sources and checks. Let me review the exact version before exporting the file locally.",
+    "steps": [
+      "In the working chat Vera reads the selected source, records the preparation purpose and identifies the invoice fields. The voice chat shows what information you need to provide and answers questions while the source is checked.",
+      "The current workflow prepares the draft and opens its actual preview. Compare supplier, customer, number, date, service, VAT and total with the data sheet. Ask Vera to correct anything that does not match; corrections produce a new version.",
+      "Review the version on screen. Only after your explicit approval of that version does Vera run the export checks and create the local XML. Open the export report and find the XML file. If you do not approve, the draft remains available and no XML is exported."
+    ],
+    "deliverables": [
+      "The actual draft preview, with source-linked fields and checks to support your review.",
+      "After approval and successful checks, the XML file and export report, alongside the reviewed version."
+    ],
+    "review": "Check the invoice fields, purpose and tax treatment against the supplied facts. A readable preview and successful schema check do not establish tax correctness or SdI acceptance. The exercise's identifiers and amounts must never be reused in a real invoice.",
+    "checkpoints": [
+      "Before starting, identify the source and explain whether you are preparing a new draft or reconstructing an existing invoice.",
+      "In the preview, find the service and total, then explain what you are approving and where the exported file will be saved."
+    ],
+    "practice": "Provide practice-invoice-data.txt and ask for a second invoice through the same process. It has its own number, date and quantity. Preserve the first result, review the new preview and make a separate decision about this export.",
+    "success": "You can start the workflow, check its preview, approve or pause the export and repeat it for another invoice while keeping the earlier result.",
+    "repeat": "Provide the invoice documents or confirmed data and explain the preparation purpose and any prior issue. Vera prepares a reviewable draft, asks about missing material facts and exports only the approved version. Sending or bookkeeping follows the practice's separate process."
+  }
+}

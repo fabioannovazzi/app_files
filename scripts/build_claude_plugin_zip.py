@@ -1447,7 +1447,7 @@ def _project_presenza_digitale_cowork_skill(text: str) -> str:
             "When the selected provider is Sites, do not use the generic delivery\n"
             "    recorder. Follow `references/sites-handoff.md`, place the current "
             "binding\n    and the exact approved-site payload inside the deployment "
-            "archive, capture\n    desktop and phone PNG evidence from the succeeded "
+            "archive, capture\n    desktop and phone PNG or JPEG evidence from the succeeded "
             "deployed URL, and record\n    the Sites receipt with "
             "`record_sites_delivery.py`.",
             "When supplied artifacts name Sites, follow "
@@ -1885,7 +1885,7 @@ when the professional explicitly selects that different route.
             "source\ncommit, deployment archive, saved version and succeeded "
             "deployment. The archive\nmust contain both the current Vera binding and "
             "a re-verifiable ZIP of the exact\napproved site files. Treat the deployed "
-            "URL as proof only after desktop and\nphone PNG evidence covers that exact "
+            "URL as proof only after desktop and\nphone PNG or JPEG evidence covers that exact "
             "succeeded deployment."
         )
         if text.count(source_paragraph) != 1:

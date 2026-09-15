@@ -1,0 +1,27 @@
+{
+  "vera/previdenza-inps": {
+    "title": "Examiner un dossier INPS avec Vera",
+    "goal": "Apprendre à fournir une question de protection sociale et des documents, vérifier les preuves et utiliser le dossier pour la revue professionnelle.",
+    "scenario": "Marta veut comprendre sa position contributive pour une période travaillée. Elle dispose d’une déclaration de l’employeur et d’un relevé pédagogique des périodes.",
+    "scope": "Un dossier documentaire italien d’emploi salarié privé. Le parcours couvre question, sources, chronologie, recherche pertinente et projet ; aucun calcul de retraite ni opération sur le portail.",
+    "inputs": "Ouvrez case-fr.md, employment-fr.md, record-context-fr.md et contribution-periods-fr.csv. Repérez personne, période et question. Le relevé est fictif, pas un export officiel.",
+    "request": "Vera, examine ce dossier INPS de janvier à juin 2025. Explique ce que montrent les documents, vérifie les sources officielles pertinentes et prépare un projet avec les questions et pièces à demander.",
+    "steps": [
+      "Dans le fil de travail, Vera lit les fichiers et résume question, période et cadre italien à confirmer. La voix explique le parcours et distingue informations disponibles et questions ouvertes.",
+      "Vera organise faits et chronologie, les relie aux documents, recherche le cadre pertinent et prépare le dossier avec le workflow courant. La voix suit les preuves et résultats réels, sans anticiper la conclusion.",
+      "Ouvrez le mémo, la chronologie et les demandes de pièces produits. Partez de la réponse, suivez un fait jusqu’à sa source et vérifiez ce qui reste à revoir."
+    ],
+    "deliverables": [
+      "Un mémo en Word et texte, clairement présenté comme projet pour revue professionnelle.",
+      "Chronologie, tableau des preuves et demandes de pièces pour poursuivre le dossier."
+    ],
+    "review": "Vérifiez période, personne et documents cités. Une déclaration d’emploi et une période figurant dans un relevé sont des preuves différentes. Examinez portée des sources et lacunes avant toute conclusion ou démarche.",
+    "checkpoints": [
+      "Avant l’analyse, formulez la question à laquelle le dossier doit répondre.",
+      "Dans le mémo, trouvez un fait, sa source et la prochaine clarification utile."
+    ],
+    "practice": "Répétez la demande avec les fichiers d’exercice et le relevé actualisé. Conservez le premier dossier et comparez observations et demandes modifiées. Ne déduisez pas quand ni pourquoi les données ont changé sans preuve.",
+    "success": "Vous savez lancer la revue, fournir les pièces, lire mémo et sources et actualiser le travail avec de nouvelles preuves.",
+    "repeat": "Indiquez à Vera question INPS, période, personnes et documents, ainsi que les éventuels délais. Revoyez périmètre et preuves et utilisez le projet dans le parcours professionnel normal."
+  }
+}

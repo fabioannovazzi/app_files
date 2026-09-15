@@ -1,0 +1,27 @@
+{
+  "vera/purchase-invoice-review": {
+    "title": "Rivedere le fatture di acquisto con la contabilità",
+    "goal": "Imparare a confrontare un lotto di fatture con le registrazioni già effettuate e usare il foglio delle eccezioni per la revisione.",
+    "scenario": "Officina Arco consegna tre fatture XML e le corrispondenti registrazioni di marzo. Lo studio vuole sapere quali punti richiedono un controllo.",
+    "scope": "Primo utilizzo della revisione delle fatture di acquisto italiane. Vera legge fatture e contabilità, esegue i confronti e valuta la coerenza dei conti; non modifica le registrazioni.",
+    "inputs": "Apri ledger-march.csv, la cartella invoices e context-it.md. Servono fatture e contabilità effettiva dello stesso periodo. Vera controlla le colonne e prepara la mappatura da rivedere prima di avviare il lavoro.",
+    "request": "Vera, rivedi queste fatture di acquisto confrontandole con le registrazioni di marzo di Officina Arco. Mostrami nel foglio delle eccezioni ciò che devo controllare e perché.",
+    "steps": [
+      "La chat di lavoro verifica il lotto e le colonne della contabilità. La voce spiega come identificare fattura, movimento e conto registrato; conferma con te le eventuali ambiguità.",
+      "Il flusso corrente abbina fatture e movimenti, controlla gli importi e usa il proprio revisore nativo per valutare descrizioni e conti. La voce segue lo stato reale del lavoro e distingue calcoli e valutazioni.",
+      "Apri prima il foglio Excel delle eccezioni. Scegli una riga, leggi la ragione del controllo e ritrova descrizione della fattura e conto effettivamente usato. Rivedi le segnalazioni prima di trarre conclusioni."
+    ],
+    "deliverables": [
+      "Foglio Excel delle eccezioni, con motivi e riferimenti da esaminare.",
+      "Riepilogo del lotto e traccia dei confronti per risalire alle fatture e alle registrazioni."
+    ],
+    "review": "Controlla che il lotto sia completo e che ogni segnalazione sia sostenuta dai documenti. “Nessun problema rilevato” è un esito di screening, non una certificazione. Un cambio di conto o una correzione si decide e si esegue nel normale lavoro contabile.",
+    "checkpoints": [
+      "Prima dell’esecuzione, indica quali due insiemi di documenti stai confrontando.",
+      "Sul risultato, spiega una segnalazione usando fattura e registrazione."
+    ],
+    "practice": "Ripeti con ledger-march-april.csv e le quattro fatture della prova. Conserva il primo risultato. Controlla il nuovo numero di fatture e una segnalazione, chiedendo a Vera aiuto solo dove serve.",
+    "success": "Sai fornire entrambi gli input, avviare la revisione, trovare le eccezioni e verificarne le ragioni senza confondere screening e approvazione.",
+    "repeat": "Chiedi a Vera di rivedere le fatture di acquisto di un cliente per un periodo preciso e fornisci anche la contabilità registrata. Rivedi mappatura, copertura e segnalazioni nel fascicolo corretto."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "question": "Preparar el expediente del proyecto digital a partir de la convocatoria ficticia y los documentos aportados.",
+  "title": "Reserva digital de citas",
+  "site": "Milán",
+  "summary": "Arco Servizi propone software y formación para cuatro empleados. El expediente relaciona las condiciones de la convocatoria con las declaraciones y el presupuesto. Las interpretaciones y los documentos siguen pendientes de revisión.",
+  "fictional": "Fuente totalmente ficticia; no hay organismo ni financiación reales.",
+  "fixture": "Interpretación sintética para probar el flujo de trabajo; no es una revisión profesional real.",
+  "project": "Introducir la reserva digital de citas y formar al personal.",
+  "commitment": "El presupuesto no se ha aceptado; no hay pedidos firmados ni gastos realizados.",
+  "requirement_evidence": "Documentos del proyecto y presupuesto que deben revisarse para esta condición.",
+  "clauses": [
+    "La declaración indica un centro operativo en Milán. La ubicación declarada coincide con la condición territorial, pendiente de revisión.",
+    "Se declaran cuatro empleados, por debajo del límite de diez. El dato procede de la declaración de la empresa y debe revisarse.",
+    "El proyecto declarado incluye reserva digital de citas y formación del personal, coherentes con el objeto de la convocatoria.",
+    "Q-001 describe una nueva licencia del software previsto. Se propone incluirla en los gastos admisibles según la condición 4, pendiente de revisión.",
+    "Q-002 describe la formación del personal prevista en el proyecto. Su relación con el proyecto se propone para revisión.",
+    "Q-003 es un ordenador. Se propone excluirlo de la base admisible porque la convocatoria excluye los equipos informáticos; puede seguir formando parte del coste total.",
+    "Aplicar el 50 % a la base admisible propuesta de {eligible} EUR da una solicitud hipotética de {grant} EUR, sujeta a revisión de costes.",
+    "La solicitud hipotética de {grant} EUR no supera el límite de 5.000 EUR. No constituye una concesión de ayuda.",
+    "El documento del proyecto contiene la descripción exigida; su presencia no confirma por sí sola su contenido.",
+    "El documento de la empresa declara el centro y cuatro empleados; la declaración sigue pendiente de revisión.",
+    "El presupuesto separa software, formación y ordenador con importes individuales. Las condiciones comerciales deben revisarse.",
+    "La fecha del expediente, 14 de septiembre de 2026, está dentro del plazo ficticio del 1 al 30 de septiembre. La comparación no acredita que una convocatoria real esté abierta.",
+    "La empresa declara que no ha aceptado el presupuesto ni firmado pedidos o realizado gastos. La condición parece cumplida según esa declaración, pendiente de revisión."
+  ],
+  "documents": [
+    "Descripción del proyecto",
+    "Declaración del centro y del personal",
+    "Presupuesto desglosado"
+  ],
+  "document_reason": "El documento aportado está relacionado con la condición indicada; su contenido y fiabilidad deben revisarse.",
+  "narrative": "Arco Servizi propone reservar citas digitalmente en su centro declarado de Milán y formar a sus cuatro empleados. El presupuesto incluye una licencia de software, formación y un ordenador. No se han aceptado presupuestos ni firmado pedidos. La base propuesta para la ayuda incluye software y formación, excluyendo el ordenador. La interpretación de los costes y las declaraciones de la empresa deben revisarse.",
+  "budget": "Coste total propuesto: {total} EUR; base admisible propuesta: {eligible} EUR; equipos excluidos: 3.000 EUR; ayuda hipotética: {grant} EUR. El cálculo utiliza exclusivamente las condiciones ficticias 7 y 8.",
+  "consistency": "Comprobar la correspondencia entre presupuesto, base propuesta e importe hipotético.",
+  "issue": "Revisar las declaraciones de la empresa, la interpretación de las condiciones y las clasificaciones de gasto antes de confirmar el expediente."
+}

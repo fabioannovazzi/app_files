@@ -1,0 +1,27 @@
+{
+  "kind": "actual_local_workflow_output_from_packaged_synthetic_starter",
+  "course": "clara/reporting-engine",
+  "supplementary_case": true,
+  "source_test": "tests/plugins/test_desktop_teaching_workflows.py::test_actual_product_workflow_from_the_bound_tutorial_case",
+  "validation": "3 passed in 0.39s",
+  "professional_approval": false,
+  "live_user_participation": false,
+  "files": [
+    {
+      "file": "management_control_dashboard.html",
+      "sha256": "d2a4b71ba9a789eb70e250c8ff13608f01b16892a88330d81a3e73e2bd25cbb3"
+    },
+    {
+      "file": "management_control_pack.xlsx",
+      "sha256": "e1fea33a4c014685350c7f200b31f51b38b1c73a8f410d4dcdd4200a64c37e71"
+    },
+    {
+      "file": "management_control_pack.json",
+      "sha256": "c569d486044ab3697ddf90045ba55e57810b2f3a59348eeae143a334028d3c26"
+    },
+    {
+      "file": "actual-budget.xlsx",
+      "sha256": "8d6512c94dc0157476844eed608082feac49d89156d832c127525f82b19a839a"
+    }
+  ]
+}

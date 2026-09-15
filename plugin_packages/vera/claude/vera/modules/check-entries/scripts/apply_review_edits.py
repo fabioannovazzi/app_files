@@ -27,6 +27,7 @@ if _bootstrap_lstat.st_mode & 0o170000 != 0o100000 or _bootstrap_lstat.st_nlink 
 _bootstrap_flags = _bootstrap_os.O_RDONLY
 _bootstrap_flags |= getattr(_bootstrap_os, "O_NOFOLLOW", 0)
 _bootstrap_flags |= getattr(_bootstrap_os, "O_NONBLOCK", 0)
+_bootstrap_flags |= getattr(_bootstrap_os, "O_BINARY", 0)
 _bootstrap_fd = _bootstrap_os.open(_BOOTSTRAP_PATH, _bootstrap_flags)
 try:
     _bootstrap_before = _bootstrap_os.fstat(_bootstrap_fd)
@@ -39,7 +40,7 @@ try:
         _bootstrap_before.st_mtime_ns,
         _bootstrap_before.st_ctime_ns,
     )
-    if _bootstrap_identity != (
+    _bootstrap_path_identity = (
         _bootstrap_lstat.st_dev,
         _bootstrap_lstat.st_ino,
         _bootstrap_lstat.st_mode,
@@ -47,7 +48,9 @@ try:
         _bootstrap_lstat.st_size,
         _bootstrap_lstat.st_mtime_ns,
         _bootstrap_lstat.st_ctime_ns,
-    ):
+    )
+    # Windows path and descriptor ctime have different meanings.
+    if _bootstrap_identity[:-1] != _bootstrap_path_identity[:-1]:
         raise RuntimeError("implementation bootstrap changed before open")
     _bootstrap_chunks = []
     _bootstrap_remaining = _bootstrap_before.st_size
@@ -74,7 +77,7 @@ try:
 finally:
     _bootstrap_os.close(_bootstrap_fd)
 _bootstrap_path_after = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
-if _bootstrap_identity != (
+if _bootstrap_path_identity != (
     _bootstrap_path_after.st_dev,
     _bootstrap_path_after.st_ino,
     _bootstrap_path_after.st_mode,
@@ -97,7 +100,7 @@ _BOOTSTRAP_NAMESPACE["load_assurance_package"](
     _BOOTSTRAP_ROOTS["assurance_implementation"]
 )
 _bootstrap_path_final = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
-if _bootstrap_identity != (
+if _bootstrap_path_identity != (
     _bootstrap_path_final.st_dev,
     _bootstrap_path_final.st_ino,
     _bootstrap_path_final.st_mode,
@@ -127,7 +130,8 @@ from pathlib import Path
 from typing import Any
 
 import openpyxl
-from check_entries_core import run_entry_checks  # noqa: E402
+import polars as pl
+from check_entries_core import run_entry_checks, write_result_workbook  # noqa: E402
 from implementation_contract import (  # noqa: E402
     implementation_artifact_roots,
     validate_implementation_contract,
@@ -137,7 +141,6 @@ from physical_output_set import (
     validate_review_successor_output_set,
     validate_review_transition_output_set,
 )
-from stable_ooxml import write_stable_xlsx
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     artifact_receipt,
@@ -202,7 +205,7 @@ def _validate_output_tree(output_dir: Path) -> Path:
             raise ValueError("output directory changed during validation") from exc
         for entry in entries:
             try:
-                entry_stat = entry.stat(follow_symlinks=False)
+                entry_stat = os.lstat(entry.path)
             except FileNotFoundError as exc:
                 raise ValueError("output directory changed during validation") from exc
             if stat.S_ISLNK(entry_stat.st_mode):
@@ -418,20 +421,12 @@ def _csv_rows(path: Path) -> tuple[list[str], list[list[str]]]:
 
 
 def _write_check_results_workbook(csv_path: Path, workbook_path: Path) -> int:
-    header, rows = _csv_rows(csv_path)
-
-    def writer(candidate: Path) -> None:
-        workbook = openpyxl.Workbook()
-        sheet = workbook.active
-        sheet.title = "Sheet1"
-        sheet.append(header)
-        for row in rows:
-            sheet.append([value if value != "" else None for value in row])
-        workbook.save(candidate)
+    _, rows = _csv_rows(csv_path)
+    frame = pl.read_csv(csv_path, infer_schema=False)
 
     with tempfile.TemporaryDirectory(prefix="check-entries-workbook-") as temp_name:
         staged_workbook = Path(temp_name) / workbook_path.name
-        write_stable_xlsx(staged_workbook, writer)
+        write_result_workbook(frame, staged_workbook)
         _atomic_write_bytes(workbook_path, staged_workbook.read_bytes())
     return len(rows)
 
@@ -759,7 +754,7 @@ def _stable_regular_bytes(path: Path, *, label: str) -> bytes:
         or observed_path.st_nlink != 1
     ):
         raise ValueError(f"{label} must be an ordinary single-link file")
-    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0)
     descriptor = os.open(candidate, flags)
     try:
         before = os.fstat(descriptor)
@@ -781,7 +776,7 @@ def _stable_regular_bytes(path: Path, *, label: str) -> bytes:
         before.st_mtime_ns,
         before.st_ctime_ns,
     )
-    if identity != (
+    path_identity = (
         observed_path.st_dev,
         observed_path.st_ino,
         observed_path.st_mode,
@@ -789,7 +784,8 @@ def _stable_regular_bytes(path: Path, *, label: str) -> bytes:
         observed_path.st_size,
         observed_path.st_mtime_ns,
         observed_path.st_ctime_ns,
-    ) or identity != (
+    )
+    if identity[:-1] != path_identity[:-1] or identity != (
         after.st_dev,
         after.st_ino,
         after.st_mode,
@@ -801,7 +797,7 @@ def _stable_regular_bytes(path: Path, *, label: str) -> bytes:
         raise ValueError(f"{label} changed during snapshot")
     final_path = candidate.lstat()
     if (
-        identity
+        path_identity
         != (
             final_path.st_dev,
             final_path.st_ino,

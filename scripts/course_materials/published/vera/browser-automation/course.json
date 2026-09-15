@@ -1,0 +1,443 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "browser-automation",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/browser-automation/references/agenzia-download.md",
+      "repository_path": "plugins/browser-automation/references/agenzia-download.md",
+      "sha256": "affd27e1967ce61ae2bc173eeeddae09706465137fb855a7bdc17fde0549854a"
+    },
+    {
+      "path": "modules/browser-automation/references/batch-review.md",
+      "repository_path": "plugins/browser-automation/references/batch-review.md",
+      "sha256": "4d378633081517528e60e7065b0d5e3850dc52128648d4a4edf67104177ac526"
+    },
+    {
+      "path": "modules/browser-automation/references/browser-session.md",
+      "repository_path": "plugins/browser-automation/references/browser-session.md",
+      "sha256": "cb081249537d561c51941a6f5cac1ab2aeb27c0653ebd18656d9d190b677352b"
+    },
+    {
+      "path": "modules/browser-automation/references/capability-contract.md",
+      "repository_path": "plugins/browser-automation/references/capability-contract.md",
+      "sha256": "c2ad2581e7500a8d797c88dd4351b89e02aa9d264d53a1b8ec4e09ba828ef6c9"
+    },
+    {
+      "path": "modules/browser-automation/references/development-request.md",
+      "repository_path": "plugins/browser-automation/references/development-request.md",
+      "sha256": "3d9e59a8a78905d3d3d45331324ffbc6c78191eafbf3a4e2b28d3878e20a6391"
+    },
+    {
+      "path": "modules/browser-automation/references/discovery-playbook.md",
+      "repository_path": "plugins/browser-automation/references/discovery-playbook.md",
+      "sha256": "9cd9a7e2afed193bac617e232bca5223cc2c5f51f556c995a07bff2afec16463"
+    },
+    {
+      "path": "modules/browser-automation/references/econs-review.md",
+      "repository_path": "plugins/browser-automation/references/econs-review.md",
+      "sha256": "38695555c377722a9fd6768823243797d89a58b9d4aa7c21d4280755161acb9f"
+    },
+    {
+      "path": "modules/browser-automation/references/passive-invoice-procedure.md",
+      "repository_path": "plugins/browser-automation/references/passive-invoice-procedure.md",
+      "sha256": "ac4e805ce23f2b407ea45898f0c32cad489055d655a739e73e0dd2f30c85fb37"
+    },
+    {
+      "path": "modules/browser-automation/references/teaching-checkpoint.md",
+      "repository_path": "plugins/browser-automation/references/teaching-checkpoint.md",
+      "sha256": "a2a8ad3dcddb5c3169a3fb76f259f841a8526e7a4c6e6154af4f1da7aaf1d5e6"
+    },
+    {
+      "path": "modules/browser-automation/scripts/acceptance_fixture.py",
+      "repository_path": "plugins/browser-automation/scripts/acceptance_fixture.py",
+      "sha256": "e24928b0a984ed45fc3acb08439d7a4451bfc8d57be043efb601215f9481d13a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/batch_review.py",
+      "repository_path": "plugins/browser-automation/scripts/batch_review.py",
+      "sha256": "1f1e348b1cdcbd2c0a56f67d74e27c527ada36c0b053f09c0c04fe9e42feb56e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/capability_pipeline.py",
+      "repository_path": "plugins/browser-automation/scripts/capability_pipeline.py",
+      "sha256": "f859b8fdd1acf20e94105525a0a7c2533e674e4db04744d95cafc9e1c1a9b5b3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/check_dependencies.py",
+      "repository_path": "plugins/browser-automation/scripts/check_dependencies.py",
+      "sha256": "6d61daf36ee61458017a312ce5748a9a22f9f3ff2fcc6569873eddc457523e6e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/check_installation.py",
+      "repository_path": "plugins/browser-automation/scripts/check_installation.py",
+      "sha256": "09e69649196837fe2b3d4dd9ae36b547096df637ad5f9065558e55b8115cacfd"
+    },
+    {
+      "path": "modules/browser-automation/scripts/development_request.py",
+      "repository_path": "plugins/browser-automation/scripts/development_request.py",
+      "sha256": "d55445aefc7037579b01e242574f6ba99a07265098c7e7844d7289cab48fa73e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/discovery_pack.py",
+      "repository_path": "plugins/browser-automation/scripts/discovery_pack.py",
+      "sha256": "14060a623ec3b8a211379747d397084fb6a7fe938c9b40a30469f78acadc3544"
+    },
+    {
+      "path": "modules/browser-automation/scripts/teaching_checkpoint.py",
+      "repository_path": "plugins/browser-automation/scripts/teaching_checkpoint.py",
+      "sha256": "25d266b4e1162b6df2e0e9e0e6f91fe63355d5f205d872f7002b018246ecf0da"
+    },
+    {
+      "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
+      "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
+      "sha256": "8a11fc11ff461989d23abcdde4c41a98c6e0a85464405aaff7961c439dbce44e"
+    },
+    {
+      "path": "skills/browser-automation/SKILL.md",
+      "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
+      "sha256": "32882e5ef1f46c968ad9a84bde07106e6f378d20efd71d9255ecfc52cb0d012c"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Insegnare un passaggio ripetibile nel browser",
+      "goal": "Comprendere come una procedura osservata diventa una capacità locale verificabile, con limiti e arresti espliciti.",
+      "scenario": "Un portale didattico locale ha una pagina con un elenco di documenti e un pulsante per scaricare un file di prova. Vogliamo ripetere soltanto quel download. Non ci sono credenziali, pagamenti o dati di clienti.",
+      "request": "Vera, impara a scaricare questo documento dal portale di prova e mostrarmi il file ottenuto.",
+      "scope": "Sito fittizio locale, operazione di sola lettura e download. Non viene simulato l'accesso a un gestionale né resa disponibile una capacità per un sito reale.",
+      "input_columns": [
+        "Elemento del sito fittizio",
+        "Evidenza osservabile",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "Pagina elenco",
+          "Un documento denominato DEMO-01",
+          "Contenuto sintetico"
+        ],
+        [
+          "Pulsante Scarica",
+          "Download di synthetic-download.txt",
+          "Una sola operazione prevista"
+        ],
+        [
+          "File atteso",
+          "Testo identificativo del caso",
+          "Va letto e verificato dopo il download"
+        ]
+      ],
+      "basis": "La procedura deriva dalla pagina di prova e dal file effettivamente scaricato. La presenza di un pulsante non dimostra che il download sia riuscito.",
+      "method": [
+        "Osserva il sito e definisci l'obiettivo, il perimetro autorizzato e le condizioni che devono fermare la procedura.",
+        "Prepara la capacità usando gli elementi realmente osservati. Verifica la procedura sul sito locale e conserva evidenze di passaggi e risultato.",
+        "Riesegui il passo autorizzato, apri il file ottenuto e confrontalo con l'atteso. Se pagina o controlli cambiano, rivedi la capacità prima di proseguire."
+      ],
+      "result_title": "Download DEMO-01 · cosa verificare",
+      "conclusion": "Il risultato utile è il documento corretto, con una procedura che riconosce quando non può più procedere.",
+      "output_columns": [
+        "Passaggio",
+        "Prova richiesta",
+        "Se manca"
+      ],
+      "output_rows": [
+        [
+          "Selezione documento",
+          "Identità DEMO-01 nella pagina",
+          "Fermarsi e rileggere la pagina"
+        ],
+        [
+          "Download",
+          "File presente nella destinazione",
+          "Non dichiarare successo"
+        ],
+        [
+          "Verifica contenuto",
+          "Testo atteso nel file aperto",
+          "Segnalare il risultato inatteso"
+        ]
+      ],
+      "check": "Un clic riuscito non prova il download corretto. Una schermata diversa richiede nuova osservazione; non si devono inventare selettori o saltare richieste di autorizzazione.",
+      "question": "Il pulsante esiste ma il file scaricato è una pagina di errore: il passo è riuscito?",
+      "answer": "No. La verifica riguarda il contenuto finale. La procedura deve conservare l'evidenza dell'errore e fermarsi senza dichiarare il documento acquisito.",
+      "practice": "Prova sul sito didattico, poi cambia il documento disponibile e verifica che il risultato venga ricontrollato.",
+      "next": "Sul sito reale parti da una singola operazione autorizzata, con il browser e l'accesso effettivamente disponibili."
+    },
+    "en": {
+      "title": "Teach a repeatable browser step",
+      "goal": "Turn an observed procedure into a locally verifiable capability with explicit stopping conditions.",
+      "scenario": "A fictional local portal lists one document with a download button. The task is to repeat that single download. There are no credentials, payments or client records in the teaching site.",
+      "request": "Vera, learn to download this document from the test portal and show the resulting file.",
+      "scope": "Local fictional website and read/download operation only. No access to a real accounting system is simulated.",
+      "input_columns": [
+        "Fictional website element",
+        "Observable evidence",
+        "Limit"
+      ],
+      "input_rows": [
+        [
+          "Document list",
+          "One document named DEMO-01",
+          "Synthetic content"
+        ],
+        [
+          "Download button",
+          "synthetic-download.txt",
+          "One intended operation"
+        ],
+        [
+          "Expected file",
+          "Identifying text for the case",
+          "Must be opened and checked"
+        ]
+      ],
+      "basis": "The procedure rests on the observed page and actual downloaded content. A button's presence does not prove a successful download.",
+      "method": [
+        "Observe the site and define the objective, authorized scope and conditions that must stop the procedure.",
+        "Prepare the capability from actual observed elements. Test on the local site and preserve evidence of steps and results.",
+        "Rerun the authorized step, open the downloaded file and compare it with the expected content. Review the capability if the page or controls change."
+      ],
+      "result_title": "DEMO-01 download · verify the result",
+      "conclusion": "The useful outcome is the correct document and a procedure that recognizes when it cannot proceed.",
+      "output_columns": [
+        "Step",
+        "Required evidence",
+        "If missing"
+      ],
+      "output_rows": [
+        [
+          "Select document",
+          "DEMO-01 identity on the page",
+          "Stop and inspect"
+        ],
+        [
+          "Download",
+          "File exists at the destination",
+          "Do not claim success"
+        ],
+        [
+          "Check content",
+          "Expected text in the opened file",
+          "Report the unexpected result"
+        ]
+      ],
+      "check": "A successful click does not establish the correct download. A changed page requires observation, not invented selectors or skipped authorization.",
+      "question": "The button works but the downloaded file is an error page. Did the step succeed?",
+      "answer": "No. Verification concerns the final content. Preserve the error evidence and stop without claiming document acquisition.",
+      "practice": "Run the test site, then change the available document and verify that the result is checked again.",
+      "next": "On a real site, begin with one authorized operation and an actually available browser and access route."
+    },
+    "fr": {
+      "title": "Apprendre un geste répétable dans le navigateur",
+      "goal": "Transformer une procédure observée en capacité locale vérifiable, avec des conditions d'arrêt explicites.",
+      "scenario": "Un portail fictif local présente un document et un bouton de téléchargement. Nous voulons répéter uniquement ce téléchargement. Le site pédagogique ne contient ni identifiants, ni paiements, ni données de clients.",
+      "request": "Vera, apprends à télécharger ce document de test et montre le fichier obtenu.",
+      "scope": "Site local fictif, lecture et téléchargement. Aucun accès à un logiciel comptable réel n'est simulé.",
+      "input_columns": [
+        "Élément fictif",
+        "Preuve observable",
+        "Limite"
+      ],
+      "input_rows": [
+        [
+          "Liste de documents",
+          "Un document DEMO-01",
+          "Contenu synthétique"
+        ],
+        [
+          "Bouton Télécharger",
+          "synthetic-download.txt",
+          "Une opération prévue"
+        ],
+        [
+          "Fichier attendu",
+          "Texte identifiant le cas",
+          "À ouvrir et vérifier"
+        ]
+      ],
+      "basis": "La procédure repose sur la page observée et le contenu réellement obtenu. La présence du bouton ne prouve pas la réussite du téléchargement.",
+      "method": [
+        "Observe le site et définis objectif, périmètre autorisé et conditions imposant l'arrêt.",
+        "Prépare la capacité à partir des éléments observés, teste-la sur le site local et conserve les preuves des étapes et résultats.",
+        "Répète le geste autorisé, ouvre le fichier et compare son contenu. Si la page ou ses contrôles changent, revois la capacité avant de continuer."
+      ],
+      "result_title": "Téléchargement DEMO-01 · vérifier le contenu",
+      "conclusion": "Le résultat utile est le bon document et une procédure capable de reconnaître qu'elle ne peut plus poursuivre.",
+      "output_columns": [
+        "Étape",
+        "Preuve requise",
+        "Si elle manque"
+      ],
+      "output_rows": [
+        [
+          "Sélection",
+          "Identité DEMO-01 sur la page",
+          "S'arrêter et observer"
+        ],
+        [
+          "Téléchargement",
+          "Fichier présent à destination",
+          "Ne pas annoncer de réussite"
+        ],
+        [
+          "Contenu",
+          "Texte attendu dans le fichier ouvert",
+          "Signaler le résultat inattendu"
+        ]
+      ],
+      "check": "Un clic réussi ne prouve pas le bon téléchargement. Une page modifiée nécessite une nouvelle observation, sans sélecteurs inventés ni autorisation contournée.",
+      "question": "Le bouton fonctionne, mais le fichier est une page d'erreur. L'étape a-t-elle réussi ?",
+      "answer": "Non. La vérification porte sur le contenu final. Conserve l'erreur et arrête la procédure sans annoncer le document acquis.",
+      "practice": "Essaie le site didactique, puis change le document disponible et vérifie que le résultat est de nouveau contrôlé.",
+      "next": "Sur un site réel, commence par une seule opération autorisée avec le navigateur et l'accès effectivement disponibles."
+    },
+    "de": {
+      "title": "Einen wiederholbaren Browserschritt beibringen",
+      "goal": "Aus einem beobachteten Ablauf eine lokal prüfbare Fähigkeit mit klaren Abbruchbedingungen entwickeln.",
+      "scenario": "Ein fiktives lokales Portal zeigt ein Dokument und eine Download-Schaltfläche. Wiederholt werden soll genau dieser Download. Die Übungsseite enthält keine Zugangsdaten, Zahlungen oder Mandantenunterlagen.",
+      "request": "Vera, lerne dieses Dokument aus dem Testportal herunterzuladen und zeige die entstandene Datei.",
+      "scope": "Lokale fiktive Website und ein Lese-/Downloadvorgang. Ein Zugang zu einem echten Buchhaltungssystem wird nicht vorgetäuscht.",
+      "input_columns": [
+        "Fiktives Seitenelement",
+        "Beobachtbarer Beleg",
+        "Grenze"
+      ],
+      "input_rows": [
+        [
+          "Dokumentenliste",
+          "Ein Dokument namens DEMO-01",
+          "Synthetischer Inhalt"
+        ],
+        [
+          "Download-Schaltfläche",
+          "synthetic-download.txt",
+          "Ein vorgesehener Vorgang"
+        ],
+        [
+          "Erwartete Datei",
+          "Kennzeichnender Text des Beispiels",
+          "Öffnen und prüfen"
+        ]
+      ],
+      "basis": "Der Ablauf beruht auf der beobachteten Seite und dem tatsächlichen Dateiinhalt. Eine vorhandene Schaltfläche belegt keinen erfolgreichen Download.",
+      "method": [
+        "Beobachte die Website und definiere Ziel, erlaubten Umfang und Abbruchbedingungen.",
+        "Erstelle die Fähigkeit anhand tatsächlich beobachteter Elemente. Teste lokal und bewahre Belege der Schritte und Ergebnisse auf.",
+        "Wiederhole den erlaubten Schritt, öffne die Datei und vergleiche ihren Inhalt. Bei Änderungen an Seite oder Bedienelementen muss die Fähigkeit überprüft werden."
+      ],
+      "result_title": "DEMO-01 herunterladen · Ergebnis prüfen",
+      "conclusion": "Das Ergebnis ist das richtige Dokument und ein Ablauf, der erkennt, wann er nicht fortfahren kann.",
+      "output_columns": [
+        "Schritt",
+        "Erforderlicher Beleg",
+        "Falls er fehlt"
+      ],
+      "output_rows": [
+        [
+          "Dokument auswählen",
+          "DEMO-01 auf der Seite identifiziert",
+          "Stoppen und prüfen"
+        ],
+        [
+          "Herunterladen",
+          "Datei am Ziel vorhanden",
+          "Keinen Erfolg behaupten"
+        ],
+        [
+          "Inhalt prüfen",
+          "Erwarteter Text in geöffneter Datei",
+          "Abweichendes Ergebnis melden"
+        ]
+      ],
+      "check": "Ein erfolgreicher Klick belegt keinen richtigen Download. Eine veränderte Seite verlangt neue Beobachtung, keine erfundenen Selektoren oder übersprungene Freigabe.",
+      "question": "Die Schaltfläche funktioniert, die Datei enthält aber eine Fehlerseite. War der Schritt erfolgreich?",
+      "answer": "Nein. Entscheidend ist der tatsächliche Inhalt. Bewahre den Fehlerbeleg auf und stoppe, ohne den Dokumentenerwerb als erfolgreich zu melden.",
+      "practice": "Nutze die Testseite, ändere danach das verfügbare Dokument und prüfe, ob das Ergebnis erneut kontrolliert wird.",
+      "next": "Beginne auf einer echten Website mit genau einem erlaubten Vorgang und einem tatsächlich verfügbaren Browserzugang."
+    },
+    "es": {
+      "title": "Enseñar un paso repetible en el navegador",
+      "goal": "Transformar un procedimiento observado en una capacidad verificable localmente y con condiciones de parada.",
+      "scenario": "Un portal local ficticio muestra un documento y un botón de descarga. La tarea consiste en repetir esa única descarga. La página didáctica no contiene credenciales, pagos ni documentos de clientes.",
+      "request": "Vera, aprende a descargar este documento del portal de prueba y muestra el archivo resultante.",
+      "scope": "Sitio local ficticio y operación de lectura y descarga. No se simula acceso a un sistema contable real.",
+      "input_columns": [
+        "Elemento ficticio",
+        "Prueba observable",
+        "Límite"
+      ],
+      "input_rows": [
+        [
+          "Lista de documentos",
+          "Un documento llamado DEMO-01",
+          "Contenido sintético"
+        ],
+        [
+          "Botón de descarga",
+          "synthetic-download.txt",
+          "Una operación prevista"
+        ],
+        [
+          "Archivo esperado",
+          "Texto identificativo del caso",
+          "Abrir y comprobar"
+        ]
+      ],
+      "basis": "El procedimiento se apoya en la página observada y en el contenido realmente descargado. La presencia de un botón no prueba una descarga correcta.",
+      "method": [
+        "Observa el sitio y define objetivo, alcance autorizado y condiciones de parada.",
+        "Prepara la capacidad con elementos realmente observados. Prueba en el sitio local y conserva evidencias de pasos y resultados.",
+        "Repite el paso autorizado, abre el archivo y compara su contenido. Revisa la capacidad si cambia la página o sus controles."
+      ],
+      "result_title": "Descarga DEMO-01 · comprobar el resultado",
+      "conclusion": "El resultado útil es el documento correcto y un procedimiento que reconoce cuándo no puede continuar.",
+      "output_columns": [
+        "Paso",
+        "Prueba necesaria",
+        "Si falta"
+      ],
+      "output_rows": [
+        [
+          "Seleccionar documento",
+          "Identidad DEMO-01 en la página",
+          "Parar e inspeccionar"
+        ],
+        [
+          "Descargar",
+          "Archivo presente en el destino",
+          "No afirmar éxito"
+        ],
+        [
+          "Comprobar contenido",
+          "Texto esperado en el archivo abierto",
+          "Informar del resultado inesperado"
+        ]
+      ],
+      "check": "Un clic correcto no prueba una descarga correcta. Una página modificada exige observación, no selectores inventados ni autorizaciones omitidas.",
+      "question": "El botón funciona, pero el archivo contiene una página de error. ¿Ha funcionado el paso?",
+      "answer": "No. La verificación se refiere al contenido final. Conserva la evidencia del error y detente sin afirmar que se obtuvo el documento.",
+      "practice": "Ejecuta la prueba local, cambia el documento disponible y comprueba que el resultado vuelve a verificarse.",
+      "next": "En un sitio real, empieza por una operación autorizada y un navegador y vía de acceso disponibles."
+    }
+  }
+}

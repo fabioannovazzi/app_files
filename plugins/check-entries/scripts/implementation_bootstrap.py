@@ -127,7 +127,7 @@ def _scan_tree(
             entries = sorted(iterator, key=lambda entry: entry.name)
         for entry in entries:
             relative = _os.path.relpath(entry.path, root).replace(_os.sep, "/")
-            observed = entry.stat(follow_symlinks=False)
+            observed = _os.lstat(entry.path)
             entry_type = observed.st_mode & _TYPE_MASK
             if entry.is_symlink():
                 raise RuntimeError("implementation entries must not be symlinks")
@@ -300,7 +300,7 @@ def repair_vendor_bytecode() -> int:
                 directory.name == "__pycache__"
                 and entry.name.endswith(".pyc")
                 and entry.is_file(follow_symlinks=False)
-                and entry.stat(follow_symlinks=False).st_nlink == 1
+                and _os.lstat(entry.path).st_nlink == 1
             ):
                 Path(entry.path).unlink()
                 removed += 1

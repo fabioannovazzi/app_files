@@ -217,6 +217,23 @@ def _what_text(
     unit = _currency_unit(recipe)
     dimension_text = _localized_dimension_text(dimension, language)
     selection_text = _clean_text(selection_label)
+    mappings = recipe.get("mappings") or {}
+    if "units_column" in mappings and not mappings["units_column"]:
+        # An amount can be profit, revenue or a signed accounting balance.
+        # Absence of quantities does not establish either sales or PVM causes.
+        amount_titles = {
+            "it": ("Scostamento degli importi", "per", "Dettaglio"),
+            "en": ("Amount variance", "by", "Detail"),
+            "fr": ("Écart des montants", "par", "Détail"),
+            "de": ("Betragsabweichung", "nach", "Detail"),
+            "es": ("Variación de importes", "por", "Detalle"),
+        }
+        base, by, detail = amount_titles.get(language, amount_titles["en"])
+        if dimension_text:
+            base += f" {by} {dimension_text}"
+        if selection_text:
+            base += f" — {detail}: {selection_text}"
+        return f"{base} | {unit}" if unit else base
     if language == "it":
         base = {
             "standard_variance": "Varianza vendite",

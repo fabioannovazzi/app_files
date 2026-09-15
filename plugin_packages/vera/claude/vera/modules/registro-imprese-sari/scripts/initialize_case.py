@@ -16,6 +16,7 @@ from case_core import (
     validate_iso_date,
     write_private_json,
 )
+from registry_display import text
 
 __all__ = ["initialize_case", "main"]
 
@@ -40,7 +41,6 @@ def initialize_case(
     language = str(language or "").strip().lower()
     if not 2 <= len(language) <= 12 or not language.replace("-", "").isalpha():
         raise ValueError("language must be a short language tag")
-    spanish = language == "es" or language.startswith("es-")
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
     output_reference = safe_output.as_posix()
     context_reference = (
@@ -145,31 +145,9 @@ def initialize_case(
             "path_reference": path_reference,
             "input_paths": [],
             "output_dir": output_reference,
-            "inferred_task": (
-                (
-                    "Preparar un borrador respaldado por fuentes para la apertura "
-                    "de una posición en Registro Imprese/DIRE y su revisión profesional."
-                )
-                if spanish
-                else (
-                    "Prepare a source-backed Registro Imprese/DIRE position-opening "
-                    "draft for professional review."
-                )
-            ),
-            "assumptions": [
-                (
-                    "La inicialización no elige ninguna clasificación jurídica, posición destinataria ni campo DIRE."
-                    if spanish
-                    else "Initialization does not choose a legal classification, recipient position, or DIRE field."
-                )
-            ],
-            "unresolved_questions": [
-                (
-                    "Confirme la Cámara competente, el sujeto, la actividad, la operación solicitada y la fecha de efecto."
-                    if spanish
-                    else "Confirm the competent chamber, subject, activity, requested operation, and effective date."
-                )
-            ],
+            "inferred_task": (text(language, "initial_task")),
+            "assumptions": [text(language, "initial_assumption")],
+            "unresolved_questions": [text(language, "initial_question")],
             "dependency_check": {
                 "status": "not_recorded",
                 "command": ["python", "scripts/check_dependencies.py"],

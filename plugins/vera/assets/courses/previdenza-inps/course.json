@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "previdenza-inps",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,24 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_local_case_then_prepare_professional_draft"
+  },
   "sources": [
+    {
+      "path": "modules/previdenza-inps/assets/icon.svg",
+      "repository_path": "plugins/previdenza-inps/assets/icon.svg",
+      "sha256": "418d8d1c873df068b91b484e9f7b80a873d89f78ebe8361e48d892bf6f0e9665"
+    },
+    {
+      "path": "modules/previdenza-inps/assets/previdenza-inps-review-widget.html",
+      "repository_path": "plugins/previdenza-inps/assets/previdenza-inps-review-widget.html",
+      "sha256": "988fd301385dc3854796c3684292d333c510319e89fbe18cee63e774eb9a19f4"
+    },
     {
       "path": "modules/previdenza-inps/references/inps-access-channels.md",
       "repository_path": "plugins/previdenza-inps/references/inps-access-channels.md",
@@ -29,6 +46,11 @@
       "path": "modules/previdenza-inps/references/workflow-reference.md",
       "repository_path": "plugins/previdenza-inps/references/workflow-reference.md",
       "sha256": "c0066d34620bba05f2b59c410d0062e81d1ebea8ce5aef2af3dee12ed2fbfd1c"
+    },
+    {
+      "path": "modules/previdenza-inps/requirements.txt",
+      "repository_path": "plugins/previdenza-inps/requirements.txt",
+      "sha256": "04685ebe2159acdad5939b20aa2f3922d7fb4a8f9094350f0267ece614c8f030"
     },
     {
       "path": "modules/previdenza-inps/schemas/arithmetic_recipes.schema.json",
@@ -71,9 +93,14 @@
       "sha256": "0b3c6310ac57bc79880e0955eb15c6f13960ad9f77d9cba3346c72f79a227dbe"
     },
     {
+      "path": "modules/previdenza-inps/scripts/memo_labels.py",
+      "repository_path": "plugins/previdenza-inps/scripts/memo_labels.py",
+      "sha256": "1076ac8ff3cce2fc15f8f04b1afc490939aa0f03c0cad0e91743432202bc288c"
+    },
+    {
       "path": "modules/previdenza-inps/scripts/package_case.py",
       "repository_path": "plugins/previdenza-inps/scripts/package_case.py",
-      "sha256": "a3caa114f8971ac339af8609e215fe98b46724e3cde1afe8aa7cddd3bb05940f"
+      "sha256": "e9cfcdb94bf6de03fcc67fcd83f4e28eaa4c1b1c053f9ab42177a01ce46d04b7"
     },
     {
       "path": "modules/previdenza-inps/scripts/privacy_guard.py",
@@ -101,308 +128,643 @@
       "sha256": "d537ffee9d7b0363c734e298831393ac5504482157dfcc29ebe3969fc5bfdfec"
     },
     {
+      "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
+      "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
+      "sha256": "bbe8ab077fed5caf28db2ff4fb6e12c5ac6ff4c5cfe5fb4b7f5d2e3b817e891f"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
       "sha256": "081afa5f1f8e5abf2ec366693b3e3b564d13a70c3a67fe36cff9c6d218f90631"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/case-it.md",
+      "sha256": "1b626789217b957e65ec67af771f175a43d7acc2332fa551a65a0daf586f3b35",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-it.md",
+      "sha256": "1b626789217b957e65ec67af771f175a43d7acc2332fa551a65a0daf586f3b35",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/employment-it.md",
+      "sha256": "e9744b9c69b28b2da08156b00c36c9a06e167c150376436857326d194a4825d1",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/employment-it.md",
+      "sha256": "e9744b9c69b28b2da08156b00c36c9a06e167c150376436857326d194a4825d1",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/record-context-it.md",
+      "sha256": "ffd5ba3d251df94a27b6f446fe37372ee3e1d197c48fea41a8173ca4821e2f70",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/record-context-it.md",
+      "sha256": "ffd5ba3d251df94a27b6f446fe37372ee3e1d197c48fea41a8173ca4821e2f70",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/contribution-periods-it.csv",
+      "sha256": "d5f956bd01ad0658445b3caf76649753381f178271766c132d7265d1f7248f9b",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/contribution-periods-it.csv",
+      "sha256": "b5983fc21ea91ad2c34c95a2f4251acc354a5c93572498532c9be1c77fdadae5",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-en.md",
+      "sha256": "cd379dd684e41cf6d2c73eb5680c0ae13bc31745cc66fb2891efd09b09fbab49",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-en.md",
+      "sha256": "cd379dd684e41cf6d2c73eb5680c0ae13bc31745cc66fb2891efd09b09fbab49",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/employment-en.md",
+      "sha256": "b061ec1e3febbf4e87b5340a3115579dbfd312b6f1d82a58af66a73200adfa99",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/employment-en.md",
+      "sha256": "b061ec1e3febbf4e87b5340a3115579dbfd312b6f1d82a58af66a73200adfa99",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/record-context-en.md",
+      "sha256": "03d1cf8e7aa7d92b5d7fe9238fcf844893da8193f740d7b80b6b51e1fa5a6e00",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/record-context-en.md",
+      "sha256": "03d1cf8e7aa7d92b5d7fe9238fcf844893da8193f740d7b80b6b51e1fa5a6e00",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/contribution-periods-en.csv",
+      "sha256": "8bad415bfd5f3cee01b0e3f1258e40b6cef6055bb057fd51759bb238bb78e0cb",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/contribution-periods-en.csv",
+      "sha256": "d0de2d7a1de4b310e453c4179ea2ab712c97690637a804c8c2d9b1091abb610f",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-fr.md",
+      "sha256": "1783d99eacd59e6f1f17e35e08068dfc5452414d99e4a1d5a85d14537adc674b",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-fr.md",
+      "sha256": "1783d99eacd59e6f1f17e35e08068dfc5452414d99e4a1d5a85d14537adc674b",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/employment-fr.md",
+      "sha256": "3e20755a82c299223688a281e08391732ca8470334f7354e7eb161b14eec943d",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/employment-fr.md",
+      "sha256": "3e20755a82c299223688a281e08391732ca8470334f7354e7eb161b14eec943d",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/record-context-fr.md",
+      "sha256": "aaa8227a30763c647576b95e73873e0c1b63416a215b9d875c0035bc40c2b495",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/record-context-fr.md",
+      "sha256": "aaa8227a30763c647576b95e73873e0c1b63416a215b9d875c0035bc40c2b495",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/contribution-periods-fr.csv",
+      "sha256": "3f2178ea609c7e7e51adb8f8a30b28c76f235308575164df40efb180daff80f0",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/contribution-periods-fr.csv",
+      "sha256": "9792d414abfac4dc2fbe3187211ceb7580cac34746bc8a89eea1043f008a2a66",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-de.md",
+      "sha256": "71cc9c150d8f4b7d594cfd1ebeddaec0af2ead47ac9b040b479b5e1489ab2298",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-de.md",
+      "sha256": "71cc9c150d8f4b7d594cfd1ebeddaec0af2ead47ac9b040b479b5e1489ab2298",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/employment-de.md",
+      "sha256": "fc337f4588ff3e38d4cb5905356a3ce12af6f624bd4886a318ff181e577541fc",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/employment-de.md",
+      "sha256": "fc337f4588ff3e38d4cb5905356a3ce12af6f624bd4886a318ff181e577541fc",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/record-context-de.md",
+      "sha256": "fdda656cdc57b59bda163f5ff9636594b21e78fadd73574bb5b50936d6ca3c8a",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/record-context-de.md",
+      "sha256": "fdda656cdc57b59bda163f5ff9636594b21e78fadd73574bb5b50936d6ca3c8a",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/contribution-periods-de.csv",
+      "sha256": "f6fda383963807fad384301f05623d316d1a750a8ba8165a62aa9b5b0ecbebe8",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/contribution-periods-de.csv",
+      "sha256": "2c9130c4c4b7d820a8c052e78a9f52d58c3665a16a5b5021a634b906b24b289b",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-es.md",
+      "sha256": "46b674f71ea9746449463772c67c80b2e9bb16f1a816b24566f08e074fbe35eb",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-es.md",
+      "sha256": "46b674f71ea9746449463772c67c80b2e9bb16f1a816b24566f08e074fbe35eb",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/employment-es.md",
+      "sha256": "69bd69d6887ee5e3cb34430ee98649662f5b50c91b9d731628947de70c85a0a1",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/employment-es.md",
+      "sha256": "69bd69d6887ee5e3cb34430ee98649662f5b50c91b9d731628947de70c85a0a1",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/record-context-es.md",
+      "sha256": "38f90bb18b0acf6c722daa3331fdb76160188dc99b375f56d285d58b11b5ec28",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/record-context-es.md",
+      "sha256": "38f90bb18b0acf6c722daa3331fdb76160188dc99b375f56d285d58b11b5ec28",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/contribution-periods-es.csv",
+      "sha256": "52a15f17812d68107eb4246c457b6ee4c8c22135737cd1ec544b783604e69974",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/contribution-periods-es.csv",
+      "sha256": "e3e6ab18cb6a68ddf8224f425d16aea19ee43d814b0c911eb65a954e08d09f86",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Una posizione contributiva, una cronologia verificabile",
-      "goal": "Organizzare documenti e periodi senza dedurre il regime contributivo da un'etichetta ambigua.",
-      "scenario": "Un export fittizio riporta i periodi gennaio–marzo e maggio–giugno. Una lettera cita un 'gruppo 3' senza definirlo. Il cliente fornisce anche una ricevuta di pagamento di aprile, ma non sappiamo a quale periodo sia imputata.",
-      "request": "Vera, aiutami a ricostruire cosa sappiamo della posizione e cosa manca per rispondere.",
-      "scope": "Ricostruzione documentale INPS. Il caso non applica aliquote, non calcola termini e non stabilisce un inquadramento; non accede al portale.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Dato",
-        "Limite"
+      "title": "Esaminare un caso INPS con Vera",
+      "goal": "Imparare a fornire una domanda previdenziale e i documenti, controllare le evidenze e usare il dossier prodotto per la revisione professionale.",
+      "scenario": "Marta vuole capire cosa risulta della propria posizione contributiva nel periodo lavorato. Ha una dichiarazione del datore e una scheda didattica dei periodi.",
+      "scope": "Un caso documentale di lavoro dipendente privato in Italia. Seguiamo domanda, fonti, cronologia, ricerca pertinente e bozza; non calcoliamo la pensione né operiamo nel portale.",
+      "inputs": "Apri case-it.md, employment-it.md, record-context-it.md e contribution-periods-it.csv. Nota chi è interessato, il periodo e cosa chiede. La scheda è fittizia, non un export ufficiale.",
+      "request": "Vera, esamina questo caso INPS dal primo gennaio a fine giugno 2025. Spiegami cosa mostrano i documenti, verifica le fonti ufficiali pertinenti e prepara una bozza con punti da chiarire e documenti da chiedere.",
+      "steps": [
+        "Nel thread di lavoro Vera legge i file e riepiloga domanda, periodo e quadro italiano da confermare. La voce spiega il percorso e ti fa distinguere le informazioni disponibili dalle domande ancora aperte.",
+        "Vera organizza fatti e cronologia, collega ogni fatto al documento, ricerca il quadro pertinente e prepara il dossier con il workflow corrente. La voce segue le evidenze e i risultati effettivi, senza anticipare una conclusione.",
+        "Apri il memo generato, la cronologia e le richieste documentali. Parti dalla risposta alla domanda, segui un fatto alla sua fonte e controlla quali conclusioni restano da rivedere."
       ],
-      "input_rows": [
-        [
-          "I1 · export",
-          "Gennaio–marzo; maggio–giugno",
-          "Aprile non visibile nel perimetro"
-        ],
-        [
-          "I2 · lettera",
-          "Etichetta 'gruppo 3'",
-          "Significato non definito"
-        ],
-        [
-          "I3 · ricevuta",
-          "Pagamento in aprile",
-          "Periodo di imputazione non dimostrato"
-        ]
+      "deliverables": [
+        "Memo di studio in Word e testo, marcato come bozza per revisione professionale.",
+        "Cronologia, quadro delle evidenze e richieste documentali per proseguire il caso."
       ],
-      "basis": "I1 documenta i periodi mostrati. La data di I3 non basta a stabilire il periodo contributivo; I2 richiede il contesto che definisce l'etichetta.",
-      "method": [
-        "Acquisisci i documenti selezionati e registra fatti con localizzatori e cronologia, mantenendo distinta la provenienza dichiarata dalla verifica dei byte.",
-        "Chiarisci etichette, periodi e quesito; ricerca le fonti ufficiali pertinenti solo sul quadro confermato. Mantieni esplorative le alternative non risolte.",
-        "Prepara il dossier e le questioni per il professionista. Esegui eventuale aritmetica soltanto su formula e parametri riveduti; consegna una bozza con limiti espliciti."
+      "review": "Verifica periodo, soggetto e documenti citati. Una dichiarazione di impiego e un periodo visibile in una scheda sono evidenze diverse. Controlla la portata delle fonti e le informazioni mancanti prima di qualsiasi conclusione o segnalazione.",
+      "checkpoints": [
+        "Prima dell’analisi, formula la domanda a cui deve rispondere il dossier.",
+        "Nel memo, trova un fatto, la sua fonte e il prossimo chiarimento utile."
       ],
-      "result_title": "Aprile e classificazione: due questioni diverse",
-      "conclusion": "La posizione fornita non mostra aprile. La ricevuta prova un pagamento, ma non ne risolve da sola l'imputazione; il significato di 'gruppo 3' rimane aperto.",
-      "output_columns": [
-        "Questione",
-        "Evidenza disponibile",
-        "Da recuperare"
-      ],
-      "output_rows": [
-        [
-          "Periodo aprile",
-          "Assente in I1; pagamento I3",
-          "Dettaglio dell'imputazione"
-        ],
-        [
-          "Gruppo 3",
-          "Etichetta in I2",
-          "Documento che la definisce nel periodo"
-        ]
-      ],
-      "check": "Non trasformare una lacuna nell'export in una certezza di omissione contributiva. Non scegliere aliquote o regimi dal solo nome di un gruppo.",
-      "question": "La ricevuta è datata aprile: possiamo riempire aprile nella posizione?",
-      "answer": "No. Occorre il collegamento fra pagamento e periodo. Il dossier mantiene la ricevuta e formula la verifica mirata.",
-      "practice": "Aggiungi il dettaglio di imputazione e aggiorna la cronologia, lasciando separata la questione del gruppo.",
-      "next": "Seleziona export ufficiali già disponibili, lettere e ricevute. Specifica il quesito e i periodi prima di discutere un calcolo."
+      "practice": "Ripeti la richiesta con gli input di pratica, che includono una scheda aggiornata. Conserva il primo dossier e confronta quali osservazioni e richieste cambiano. Non dedurre quando o perché il dato è cambiato se i documenti non lo spiegano.",
+      "success": "Sai avviare la revisione, fornire i documenti, leggere memo e fonti e aggiornare il lavoro con nuove evidenze.",
+      "repeat": "Indica a Vera domanda INPS, periodo, soggetti e documenti disponibili, segnalando eventuali scadenze. Rivedi il perimetro e le evidenze e usa la bozza nel normale percorso professionale."
     },
     "en": {
-      "title": "Build a verifiable contribution chronology",
-      "goal": "Organize contribution evidence without choosing a regime from an ambiguous label.",
-      "scenario": "A fictional extract shows January–March and May–June. A letter mentions 'group 3' without defining it. The client also supplies an April payment receipt, but its allocated contribution period is unknown.",
-      "request": "Vera, reconstruct what we know about this position and what is missing.",
-      "scope": "Italian INPS documentary reconstruction. No rates, legal deadlines or contribution classification are applied, and no portal is accessed.",
-      "input_columns": [
-        "Fictional source",
-        "Fact",
-        "Limit"
+      "title": "Review an INPS case with Vera",
+      "goal": "Learn to provide a social-security question and documents, check evidence and use the resulting file for professional review.",
+      "scenario": "Marta wants to understand her contribution record for a period of employment. She has an employer statement and a fictional record of periods.",
+      "scope": "An Italian private-employment document case. Follow question, sources, chronology, relevant research and draft; no pension calculation or portal operation.",
+      "inputs": "Open case-en.md, employment-en.md, record-context-en.md and contribution-periods-en.csv. Identify the person, period and question. The teaching record is fictional, not an official export.",
+      "request": "Vera, review this INPS case for January through June 2025. Explain what the documents show, check relevant official sources and prepare a draft with questions and documents to request.",
+      "steps": [
+        "In the working chat Vera reads the files and summarizes question, period and Italian framework for confirmation. Voice explains the process and helps separate available information from open questions.",
+        "Vera organizes facts and chronology, links facts to documents, researches the relevant framework and prepares the file through the current workflow. Voice follows actual evidence and results without anticipating a conclusion.",
+        "Open the generated memo, chronology and document requests. Start with the answer to the question, trace a fact to its source and check what remains for review."
       ],
-      "input_rows": [
-        [
-          "I1 · extract",
-          "January–March; May–June",
-          "April not visible in scope"
-        ],
-        [
-          "I2 · letter",
-          "'Group 3' label",
-          "Meaning undefined"
-        ],
-        [
-          "I3 · receipt",
-          "Payment in April",
-          "Allocation period unproven"
-        ]
+      "deliverables": [
+        "A study memo in Word and text, clearly marked as a draft for professional review.",
+        "Chronology, evidence matrix and document requests to continue the case."
       ],
-      "basis": "I1 establishes the displayed periods. I3's payment date does not establish allocation, and I2 needs the context defining its label.",
-      "method": [
-        "Acquire selected documents and record facts with locators and chronology, separating declared provenance from byte verification.",
-        "Clarify labels, periods and the question. Research official sources for the confirmed framework; unresolved alternatives remain exploratory.",
-        "Prepare the dossier and professional questions. Perform arithmetic only with reviewed formulas and parameters, and deliver explicit limitations."
+      "review": "Check period, person and cited documents. An employment statement and a period appearing in a record are different evidence. Check source scope and missing information before drawing conclusions or making a report.",
+      "checkpoints": [
+        "Before analysis, state the question the case file should answer.",
+        "In the memo, find a fact, its source and the next useful clarification."
       ],
-      "result_title": "April and classification are separate questions",
-      "conclusion": "The supplied position does not show April. The receipt establishes payment without resolving allocation; 'group 3' remains undefined.",
-      "output_columns": [
-        "Question",
-        "Available evidence",
-        "Needed next"
-      ],
-      "output_rows": [
-        [
-          "April period",
-          "Absent in I1; payment I3",
-          "Allocation detail"
-        ],
-        [
-          "Group 3",
-          "Label in I2",
-          "Its definition for that period"
-        ]
-      ],
-      "check": "An extract gap does not prove omitted contributions. A label alone cannot select rates or regimes.",
-      "question": "Can the April-dated receipt fill April in the position?",
-      "answer": "No. The payment-to-period link is still needed. Preserve the receipt and make that targeted verification explicit.",
-      "practice": "Add allocation detail and update the chronology while keeping the classification question separate.",
-      "next": "Select available official exports, letters and receipts; specify the question and periods before discussing calculations."
+      "practice": "Repeat the request with the practice inputs, including an updated record. Preserve the first file and compare which observations and requests change. Do not infer when or why data changed if the documents do not explain it.",
+      "success": "You can start the review, supply documents, read the memo and sources and update the work with new evidence.",
+      "repeat": "Tell Vera the INPS question, period, people and available documents, including any deadlines. Review scope and evidence and use the draft in the normal professional process."
     },
     "fr": {
-      "title": "Construire une chronologie contributive vérifiable",
-      "goal": "Organiser les périodes et pièces sans choisir un régime à partir d'une étiquette ambiguë.",
-      "scenario": "L'extrait fictif montre janvier–mars et mai–juin. Une lettre mentionne un 'groupe 3' sans le définir. Le client fournit un reçu de paiement d'avril, dont la période d'imputation est inconnue.",
-      "request": "Vera, reconstitue ce que nous savons de cette position et les éléments manquants.",
-      "scope": "Reconstruction documentaire INPS italienne. Aucun taux, délai juridique ou classement contributif n'est appliqué et aucun portail n'est ouvert.",
-      "input_columns": [
-        "Source fictive",
-        "Fait",
-        "Limite"
+      "title": "Examiner un dossier INPS avec Vera",
+      "goal": "Apprendre à fournir une question de protection sociale et des documents, vérifier les preuves et utiliser le dossier pour la revue professionnelle.",
+      "scenario": "Marta veut comprendre sa position contributive pour une période travaillée. Elle dispose d’une déclaration de l’employeur et d’un relevé pédagogique des périodes.",
+      "scope": "Un dossier documentaire italien d’emploi salarié privé. Le parcours couvre question, sources, chronologie, recherche pertinente et projet ; aucun calcul de retraite ni opération sur le portail.",
+      "inputs": "Ouvrez case-fr.md, employment-fr.md, record-context-fr.md et contribution-periods-fr.csv. Repérez personne, période et question. Le relevé est fictif, pas un export officiel.",
+      "request": "Vera, examine ce dossier INPS de janvier à juin 2025. Explique ce que montrent les documents, vérifie les sources officielles pertinentes et prépare un projet avec les questions et pièces à demander.",
+      "steps": [
+        "Dans le fil de travail, Vera lit les fichiers et résume question, période et cadre italien à confirmer. La voix explique le parcours et distingue informations disponibles et questions ouvertes.",
+        "Vera organise faits et chronologie, les relie aux documents, recherche le cadre pertinent et prépare le dossier avec le workflow courant. La voix suit les preuves et résultats réels, sans anticiper la conclusion.",
+        "Ouvrez le mémo, la chronologie et les demandes de pièces produits. Partez de la réponse, suivez un fait jusqu’à sa source et vérifiez ce qui reste à revoir."
       ],
-      "input_rows": [
-        [
-          "I1 · extrait",
-          "Janvier–mars ; mai–juin",
-          "Avril absent du périmètre visible"
-        ],
-        [
-          "I2 · lettre",
-          "Étiquette 'groupe 3'",
-          "Sens non défini"
-        ],
-        [
-          "I3 · reçu",
-          "Paiement en avril",
-          "Imputation non établie"
-        ]
+      "deliverables": [
+        "Un mémo en Word et texte, clairement présenté comme projet pour revue professionnelle.",
+        "Chronologie, tableau des preuves et demandes de pièces pour poursuivre le dossier."
       ],
-      "basis": "I1 documente les périodes affichées. La date de I3 ne prouve pas son imputation ; I2 nécessite le contexte définissant le groupe.",
-      "method": [
-        "Acquiers les pièces sélectionnées et consigne faits, localisateurs et chronologie, en distinguant provenance déclarée et vérification des octets.",
-        "Clarifie étiquettes, périodes et question. Recherche les sources officielles sur le cadre confirmé ; les alternatives non résolues restent exploratoires.",
-        "Prépare dossier et questions professionnelles. N'effectue des calculs qu'avec formules et paramètres revus, en livrant les limites explicites."
+      "review": "Vérifiez période, personne et documents cités. Une déclaration d’emploi et une période figurant dans un relevé sont des preuves différentes. Examinez portée des sources et lacunes avant toute conclusion ou démarche.",
+      "checkpoints": [
+        "Avant l’analyse, formulez la question à laquelle le dossier doit répondre.",
+        "Dans le mémo, trouvez un fait, sa source et la prochaine clarification utile."
       ],
-      "result_title": "Avril et classification : deux questions séparées",
-      "conclusion": "La position fournie ne montre pas avril. Le reçu prouve un paiement sans en résoudre l'imputation ; le 'groupe 3' reste indéfini.",
-      "output_columns": [
-        "Question",
-        "Preuve disponible",
-        "Pièce nécessaire"
-      ],
-      "output_rows": [
-        [
-          "Période avril",
-          "Absente de I1 ; paiement I3",
-          "Détail d'imputation"
-        ],
-        [
-          "Groupe 3",
-          "Étiquette dans I2",
-          "Définition pour la période"
-        ]
-      ],
-      "check": "Une lacune de l'extrait ne prouve pas une omission de cotisations. Une étiquette seule ne choisit ni taux ni régime.",
-      "question": "Le reçu daté d'avril peut-il remplir avril dans la position ?",
-      "answer": "Non. Le lien entre paiement et période reste nécessaire. Conserve le reçu et formule cette vérification ciblée.",
-      "practice": "Ajoute le détail d'imputation et actualise la chronologie en gardant la classification distincte.",
-      "next": "Sélectionne exports officiels disponibles, lettres et reçus ; précise question et périodes avant de discuter un calcul."
+      "practice": "Répétez la demande avec les fichiers d’exercice et le relevé actualisé. Conservez le premier dossier et comparez observations et demandes modifiées. Ne déduisez pas quand ni pourquoi les données ont changé sans preuve.",
+      "success": "Vous savez lancer la revue, fournir les pièces, lire mémo et sources et actualiser le travail avec de nouvelles preuves.",
+      "repeat": "Indiquez à Vera question INPS, période, personnes et documents, ainsi que les éventuels délais. Revoyez périmètre et preuves et utilisez le projet dans le parcours professionnel normal."
     },
     "de": {
-      "title": "Eine belegbare Beitragschronologie erstellen",
-      "goal": "Beitragsbelege ordnen, ohne aus einer mehrdeutigen Bezeichnung eine Regelung abzuleiten.",
-      "scenario": "Ein fiktiver Auszug zeigt Januar–März und Mai–Juni. Ein Schreiben nennt 'Gruppe 3', ohne sie zu definieren. Der Mandant liefert außerdem eine Zahlungsquittung aus April; der zugeordnete Beitragszeitraum ist unbekannt.",
-      "request": "Vera, rekonstruiere den bekannten Stand und die fehlenden Informationen.",
-      "scope": "Dokumentarische Rekonstruktion eines italienischen INPS-Falls. Keine Beitragssätze, Rechtsfristen oder Einordnungen werden angewendet; kein Portal wird aufgerufen.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Fakt",
-        "Grenze"
+      "title": "Einen INPS-Fall mit Vera prüfen",
+      "goal": "Lernen Sie, eine sozialversicherungsrechtliche Frage und Unterlagen bereitzustellen, Belege zu prüfen und die erstellte Akte fachlich zu nutzen.",
+      "scenario": "Marta möchte ihre Beitragsposition für einen Beschäftigungszeitraum verstehen. Vorhanden sind eine Arbeitgebererklärung und eine fiktive Übersicht der Zeiträume.",
+      "scope": "Ein italienischer Dokumentenfall zu privater abhängiger Beschäftigung. Der Ablauf umfasst Frage, Quellen, Chronologie, passende Recherche und Entwurf; keine Rentenberechnung oder Portalbedienung.",
+      "inputs": "Öffnen Sie case-de.md, employment-de.md, record-context-de.md und contribution-periods-de.csv. Bestimmen Sie Person, Zeitraum und Frage. Die Lehrübersicht ist fiktiv, kein offizieller Export.",
+      "request": "Vera, prüfe diesen INPS-Fall von Januar bis Juni 2025. Erkläre die Unterlagen, prüfe passende offizielle Quellen und erstelle einen Entwurf mit offenen Fragen und anzufordernden Dokumenten.",
+      "steps": [
+        "Im Arbeitschat liest Vera die Dateien und fasst Frage, Zeitraum und italienischen Rahmen zur Bestätigung zusammen. Die Stimme erklärt den Ablauf und trennt vorhandene Informationen von offenen Fragen.",
+        "Vera ordnet Fakten und Chronologie, verknüpft Fakten mit Dokumenten, recherchiert den passenden Rahmen und erstellt die Akte mit dem aktuellen Workflow. Die Stimme folgt tatsächlichen Belegen und Ergebnissen ohne vorweggenommene Schlussfolgerung.",
+        "Öffnen Sie Memo, Chronologie und Dokumentenanforderungen. Beginnen Sie mit der Antwort, verfolgen Sie einen Fakt zur Quelle und prüfen Sie offene fachliche Punkte."
       ],
-      "input_rows": [
-        [
-          "I1 · Auszug",
-          "Januar–März; Mai–Juni",
-          "April im Umfang nicht sichtbar"
-        ],
-        [
-          "I2 · Schreiben",
-          "Bezeichnung 'Gruppe 3'",
-          "Bedeutung undefiniert"
-        ],
-        [
-          "I3 · Quittung",
-          "Zahlung im April",
-          "Beitragszeitraum nicht belegt"
-        ]
+      "deliverables": [
+        "Ein Memo in Word und Text, deutlich als Entwurf zur fachlichen Prüfung gekennzeichnet.",
+        "Chronologie, Belegübersicht und Dokumentenanforderungen zur weiteren Bearbeitung."
       ],
-      "basis": "I1 belegt die angezeigten Zeiträume. Das Zahlungsdatum von I3 belegt keine Zuordnung; I2 braucht den Kontext der Gruppenbezeichnung.",
-      "method": [
-        "Erfasse ausgewählte Dokumente, Fundstellen und Chronologie. Trenne erklärte Herkunft von tatsächlicher Dateiverifikation.",
-        "Kläre Bezeichnungen, Zeiträume und Frage. Recherchiere amtliche Quellen für den bestätigten Rahmen; offene Alternativen bleiben vorläufig.",
-        "Erstelle Dossier und fachliche Rückfragen. Berechne nur mit geprüften Formeln und Parametern und benenne die Grenzen."
+      "review": "Prüfen Sie Zeitraum, Person und zitierte Unterlagen. Beschäftigungserklärung und in einer Übersicht sichtbarer Zeitraum sind unterschiedliche Belege. Quellenumfang und fehlende Angaben vor Schlussfolgerungen oder Meldungen prüfen.",
+      "checkpoints": [
+        "Formulieren Sie vor der Analyse die Frage, die die Akte beantworten soll.",
+        "Finden Sie im Memo einen Fakt, seine Quelle und die nächste sinnvolle Rückfrage."
       ],
-      "result_title": "April und Einordnung sind getrennte Fragen",
-      "conclusion": "Der vorliegende Stand zeigt April nicht. Die Quittung belegt eine Zahlung ohne ihre Zuordnung; 'Gruppe 3' bleibt undefiniert.",
-      "output_columns": [
-        "Frage",
-        "Vorhandene Evidenz",
-        "Als Nächstes benötigt"
-      ],
-      "output_rows": [
-        [
-          "Zeitraum April",
-          "Fehlt in I1; Zahlung I3",
-          "Zuordnungsdetails"
-        ],
-        [
-          "Gruppe 3",
-          "Bezeichnung in I2",
-          "Definition für diese Periode"
-        ]
-      ],
-      "check": "Eine Lücke im Auszug beweist keine unterlassene Beitragszahlung. Eine Bezeichnung allein bestimmt weder Sätze noch Regelung.",
-      "question": "Kann die Aprilquittung den April im Beitragsstand auffüllen?",
-      "answer": "Nein. Die Verbindung zwischen Zahlung und Zeitraum fehlt. Erhalte die Quittung und benenne diese gezielte Prüfung.",
-      "practice": "Ergänze Zuordnungsdetails und aktualisiere die Chronologie; halte die Einordnungsfrage getrennt.",
-      "next": "Wähle vorhandene amtliche Exporte, Schreiben und Quittungen und bestimme Frage und Zeiträume vor Berechnungen."
+      "practice": "Wiederholen Sie die Anfrage mit den Übungsdateien und der aktualisierten Übersicht. Bewahren Sie die erste Akte auf und vergleichen Sie geänderte Beobachtungen und Anforderungen. Zeitpunkt oder Ursache einer Datenänderung ohne Beleg nicht ableiten.",
+      "success": "Sie können die Prüfung starten, Unterlagen liefern, Memo und Quellen lesen und neue Belege einarbeiten lassen.",
+      "repeat": "Nennen Sie Vera INPS-Frage, Zeitraum, Personen, Unterlagen und mögliche Fristen. Prüfen Sie Umfang und Belege und nutzen Sie den Entwurf im üblichen fachlichen Verfahren."
     },
     "es": {
-      "title": "Construir una cronología verificable de cotizaciones",
-      "goal": "Organizar pruebas de cotización sin elegir un régimen a partir de una etiqueta ambigua.",
-      "scenario": "Un extracto ficticio muestra enero–marzo y mayo–junio. Una carta menciona 'grupo 3' sin definirlo. El cliente aporta un recibo de pago de abril, pero se desconoce el periodo de cotización al que se imputa.",
-      "request": "Vera, reconstruye lo que sabemos de esta situación y lo que falta.",
-      "scope": "Reconstrucción documental de INPS italiano. No se aplican tipos, plazos jurídicos ni clasificaciones y no se accede al portal.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Hecho",
-        "Límite"
+      "title": "Examinar un caso INPS con Vera",
+      "goal": "Aprender a aportar una pregunta de seguridad social y documentos, verificar evidencias y usar el expediente para revisión profesional.",
+      "scenario": "Marta quiere entender su posición contributiva durante un periodo trabajado. Tiene una declaración del empleador y un registro didáctico de periodos.",
+      "scope": "Un caso documental italiano de empleo privado. Seguimos pregunta, fuentes, cronología, investigación pertinente y borrador; no calculamos pensión ni operamos en el portal.",
+      "inputs": "Abre case-es.md, employment-es.md, record-context-es.md y contribution-periods-es.csv. Identifica persona, periodo y pregunta. El registro es ficticio, no una exportación oficial.",
+      "request": "Vera, examina este caso INPS de enero a junio de 2025. Explica qué muestran los documentos, verifica fuentes oficiales pertinentes y prepara un borrador con preguntas y documentos que solicitar.",
+      "steps": [
+        "En el hilo de trabajo Vera lee los archivos y resume pregunta, periodo y marco italiano para confirmar. La voz explica el recorrido y distingue información disponible de preguntas abiertas.",
+        "Vera organiza hechos y cronología, los vincula a documentos, investiga el marco pertinente y prepara el expediente con el workflow actual. La voz sigue evidencias y resultados reales sin anticipar conclusiones.",
+        "Abre el memo, la cronología y las solicitudes generadas. Empieza por la respuesta, sigue un hecho hasta su fuente y comprueba qué queda por revisar."
       ],
-      "input_rows": [
-        [
-          "I1 · extracto",
-          "Enero–marzo; mayo–junio",
-          "Abril no visible en el alcance"
-        ],
-        [
-          "I2 · carta",
-          "Etiqueta 'grupo 3'",
-          "Significado indefinido"
-        ],
-        [
-          "I3 · recibo",
-          "Pago en abril",
-          "Periodo imputado no acreditado"
-        ]
+      "deliverables": [
+        "Memo en Word y texto, claramente marcado como borrador para revisión profesional.",
+        "Cronología, cuadro de evidencias y solicitudes de documentos para continuar."
       ],
-      "basis": "I1 acredita periodos visibles. La fecha de pago de I3 no prueba imputación e I2 necesita el contexto que define su etiqueta.",
-      "method": [
-        "Incorpora documentos seleccionados y registra hechos con ubicaciones y cronología, separando procedencia declarada de verificación de archivos.",
-        "Aclara etiquetas, periodos y pregunta. Investiga fuentes oficiales del marco confirmado; las alternativas pendientes siguen siendo exploratorias.",
-        "Prepara dossier y preguntas profesionales. Calcula solo con fórmulas y parámetros revisados y explicita las limitaciones."
+      "review": "Comprueba periodo, persona y documentos citados. Una declaración de empleo y un periodo visible en un registro son evidencias distintas. Revisa alcance de fuentes e información pendiente antes de concluir o comunicar.",
+      "checkpoints": [
+        "Antes del análisis, formula la pregunta que debe responder el expediente.",
+        "En el memo, encuentra un hecho, su fuente y la próxima aclaración útil."
       ],
-      "result_title": "Abril y clasificación son preguntas distintas",
-      "conclusion": "La situación entregada no muestra abril. El recibo acredita pago sin resolver su imputación; 'grupo 3' sigue indefinido.",
-      "output_columns": [
-        "Pregunta",
-        "Prueba disponible",
-        "Necesidad siguiente"
-      ],
-      "output_rows": [
-        [
-          "Periodo abril",
-          "Ausente en I1; pago I3",
-          "Detalle de imputación"
-        ],
-        [
-          "Grupo 3",
-          "Etiqueta en I2",
-          "Definición para ese periodo"
-        ]
-      ],
-      "check": "Un vacío en el extracto no demuestra cotizaciones omitidas. Una etiqueta sola no determina tipos o regímenes.",
-      "question": "¿Puede el recibo fechado en abril completar abril en la situación?",
-      "answer": "No. Sigue faltando la relación pago-periodo. Conserva el recibo y explicita esa comprobación concreta.",
-      "practice": "Añade el detalle de imputación y actualiza la cronología manteniendo separada la clasificación.",
-      "next": "Selecciona exports oficiales, cartas y recibos disponibles y fija pregunta y periodos antes de calcular."
+      "practice": "Repite la petición con los archivos de práctica y el registro actualizado. Conserva el primer expediente y compara observaciones y solicitudes. No deduzcas cuándo ni por qué cambiaron los datos si no consta.",
+      "success": "Sabes iniciar la revisión, aportar documentos, leer memo y fuentes y actualizar el trabajo con nuevas evidencias.",
+      "repeat": "Indica a Vera pregunta INPS, periodo, personas y documentos, señalando posibles plazos. Revisa alcance y evidencias y utiliza el borrador en el recorrido profesional habitual."
     }
   }
 }

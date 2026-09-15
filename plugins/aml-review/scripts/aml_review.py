@@ -12,10 +12,114 @@ import sys
 from datetime import date
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 __all__ = ["build_record", "digest", "main", "render_memo", "save_record"]
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# Fixed presentation labels; case judgments remain model-authored.
+_MEMO_LABELS: dict[str, dict[str, str]] = {
+    "it": {
+        "findings": "Rilievi",
+        "observation": "Osservazione",
+        "interpretation": "Valutazione",
+        "alternatives": "Spiegazioni alternative",
+        "follow_up": "Approfondimento proposto",
+        "draft_for_review": "Bozza da rivedere",
+        "professional_decision_recorded": "Decisione professionale registrata",
+        "assessment_evidence": "Evidenze della valutazione",
+        "sources": "Fonti del caso",
+        "professional_basis": "Riferimenti professionali",
+        "changes": "Variazioni dal riesame precedente",
+        "limitations": "Limiti della valutazione",
+        "proposed_review": "Riesame proposto",
+        "title": "Revisione antiriciclaggio",
+        "calculation": "Calcolo",
+        "assurance_limit": "Le impronte digitali verificano l’integrità del record, non la "
+        "veridicità delle evidenze, l’identità del revisore o la conformità "
+        "antiriciclaggio.",
+    },
+    "en": {
+        "findings": "Findings",
+        "observation": "Observation",
+        "interpretation": "Assessment",
+        "alternatives": "Alternative explanations",
+        "follow_up": "Proposed follow-up",
+        "draft_for_review": "Draft for professional review",
+        "professional_decision_recorded": "Professional decision recorded",
+        "assessment_evidence": "Assessment evidence",
+        "sources": "Case sources",
+        "professional_basis": "Professional basis",
+        "changes": "Changes since the previous review",
+        "limitations": "Assessment limitations",
+        "proposed_review": "Proposed review",
+        "title": "Anti-money-laundering review",
+        "calculation": "Calculation",
+        "assurance_limit": "Hashes establish record integrity, not evidence truth, reviewer "
+        "identity or AML compliance.",
+    },
+    "fr": {
+        "findings": "Constats",
+        "observation": "Observation",
+        "interpretation": "Évaluation",
+        "alternatives": "Explications possibles",
+        "follow_up": "Vérification proposée",
+        "draft_for_review": "Projet à examiner",
+        "professional_decision_recorded": "Décision professionnelle enregistrée",
+        "assessment_evidence": "Preuves de l’évaluation",
+        "sources": "Sources du dossier",
+        "professional_basis": "Références professionnelles",
+        "changes": "Évolutions depuis la revue précédente",
+        "limitations": "Limites de l’évaluation",
+        "proposed_review": "Revue proposée",
+        "title": "Revue de lutte contre le blanchiment",
+        "calculation": "Calcul",
+        "assurance_limit": "Les empreintes vérifient l’intégrité de l’enregistrement, pas la "
+        "véracité des preuves, l’identité du réviseur ni la conformité "
+        "antiblanchiment.",
+    },
+    "de": {
+        "findings": "Feststellungen",
+        "observation": "Beobachtung",
+        "interpretation": "Beurteilung",
+        "alternatives": "Alternative Erklärungen",
+        "follow_up": "Vorgeschlagene Klärung",
+        "draft_for_review": "Entwurf zur fachlichen Prüfung",
+        "professional_decision_recorded": "Fachliche Entscheidung dokumentiert",
+        "assessment_evidence": "Beurteilungsgrundlagen",
+        "sources": "Fallquellen",
+        "professional_basis": "Fachliche Grundlagen",
+        "changes": "Änderungen seit der letzten Prüfung",
+        "limitations": "Grenzen der Beurteilung",
+        "proposed_review": "Vorgeschlagene Folgeprüfung",
+        "title": "Geldwäscheprüfung",
+        "calculation": "Berechnung",
+        "assurance_limit": "Prüfsummen belegen die Integrität des Datensatzes, nicht die Wahrheit "
+        "der Nachweise, die Identität des Prüfers oder die Einhaltung der "
+        "Geldwäschevorschriften.",
+    },
+    "es": {
+        "findings": "Hallazgos",
+        "observation": "Observación",
+        "interpretation": "Evaluación",
+        "alternatives": "Explicaciones alternativas",
+        "follow_up": "Comprobación propuesta",
+        "draft_for_review": "Borrador para revisión profesional",
+        "professional_decision_recorded": "Decisión profesional registrada",
+        "assessment_evidence": "Evidencias de la evaluación",
+        "sources": "Fuentes del expediente",
+        "professional_basis": "Referencias profesionales",
+        "changes": "Cambios desde la revisión anterior",
+        "limitations": "Límites de la evaluación",
+        "proposed_review": "Revisión propuesta",
+        "title": "Revisión de prevención del blanqueo de capitales",
+        "calculation": "Cálculo",
+        "assurance_limit": "Las huellas verifican la integridad del registro, no la veracidad de "
+        "las pruebas, la identidad del revisor ni el cumplimiento de las "
+        "obligaciones de prevención del blanqueo.",
+    },
+}
 
 
 def digest(value: Any) -> str:
@@ -49,6 +153,9 @@ def build_record(
 ) -> dict[str, Any]:
     """Validate exact references, not the truth or quality of AML judgments."""
     review = copy.deepcopy(review)
+    language = review.get("language", "it")
+    if not isinstance(language, str) or language not in _MEMO_LABELS:
+        raise ValueError("Expected memo language it, en, fr, de or es")
     if review["schema_version"] != 1 or review["jurisdiction"] != "IT":
         raise ValueError("Expected version 1 Italian AML review")
     for field in ("scope", "assessment", "limitations"):
@@ -161,38 +268,39 @@ def build_record(
 def render_memo(record: dict[str, Any]) -> str:
     """Render every finding and decision without silently clearing open issues."""
     review = record["review"]
+    labels = _MEMO_LABELS[review.get("language", "it")]
     lines = [
-        "# AML review / Revisione antiriciclaggio",
+        f"# {labels['title']}",
         "",
         str(review["as_of"]),
         "",
-        record["status"],
+        labels[record["status"]],
         "",
         review["scope"],
         "",
         review["assessment"],
         "",
-        "## Findings / Osservazioni",
+        f"## {labels['findings']}",
         "",
     ]
     for item in review["findings"]:
         lines.extend([f"### {item['id']}", ""])
         for field in ("observation", "interpretation", "alternatives", "follow_up"):
-            lines.extend([f"**{field}:** {item[field]}", ""])
+            lines.extend([f"**{labels[field]}:** {item[field]}", ""])
         lines.extend([f"- {c['source_id']}: {c['locator']}" for c in item["citations"]])
         lines.append("")
-    lines.extend(["## Assessment evidence / Evidenze della valutazione", ""])
+    lines.extend([f"## {labels['assessment_evidence']}", ""])
     lines.extend(
         [f"- {c['source_id']}: {c['locator']}" for c in review["assessment_citations"]]
     )
-    lines.extend(["", "## Sources / Fonti", ""])
+    lines.extend(["", f"## {labels['sources']}", ""])
     lines.extend(
         [
-            f"- {s['id']}: {s['title']} ({s['path']}); SHA-256 {s['sha256']}"
+            f"- {s['id']}: [{s['title']}](<../inputs/{quote(s['path'])}>); SHA-256 {s['sha256']}"
             for s in review["sources"]
         ]
     )
-    lines.extend(["", "## Professional basis / Riferimenti professionali", ""])
+    lines.extend(["", f"## {labels['professional_basis']}", ""])
     lines.extend(
         [
             f"- [{b['title']}]({b['url']}), {b['locator']}; {b['checked_at']}. {b['applicability']}"
@@ -201,14 +309,14 @@ def render_memo(record: dict[str, Any]) -> str:
     )
     if review.get("previous") is not None:
         lines.extend(
-            ["", "## Changes / Variazioni", "", review["changes_since_previous"]]
+            ["", f"## {labels['changes']}", "", review["changes_since_previous"]]
         )
-    lines.extend(["", "## Limitations / Limiti", "", review["limitations"]])
+    lines.extend(["", f"## {labels['limitations']}", "", review["limitations"]])
     if record["calculation"] is not None:
         lines.extend(
             [
                 "",
-                "## Calculation / Calcolo",
+                f"## {labels['calculation']}",
                 "",
                 "```json",
                 json.dumps(record["calculation"], ensure_ascii=False, indent=2),
@@ -219,7 +327,7 @@ def render_memo(record: dict[str, Any]) -> str:
         lines.extend(
             [
                 "",
-                "## Recorded decision / Decisione registrata",
+                f"## {labels['professional_decision_recorded']}",
                 "",
                 "```json",
                 json.dumps(
@@ -231,7 +339,7 @@ def render_memo(record: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            record["assurance_limit"],
+            labels["assurance_limit"],
             "",
             f"Record SHA-256: {record['record_sha256']}",
             "",

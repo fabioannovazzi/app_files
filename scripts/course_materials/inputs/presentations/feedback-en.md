@@ -1,0 +1,1 @@
+Correction feedback: on the responsibilities slide, replace Sara with Elena as the proposed person gathering and clarifying requests. Paolo still assesses work and prepares quotes. Preserve titles, order, style and the other slides. This note changes only the proposed responsibility; it does not approve the procedure.

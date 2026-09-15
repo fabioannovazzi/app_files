@@ -1,0 +1,52 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "Prepare the firm’s website with Vera",
+    "goal": "Learn to start from firm information, obtain a working website and review it before choosing publication.",
+    "scenario": "Studio Arco has no website. We build a page introducing the firm, its supplied activities and contact path, using only the fictional profile.",
+    "scope": "First informational website for an Italian practice. The demonstration produces a local version for review; later publication needs a destination and approvals for the exact site.",
+    "inputs": "Open vera-studio-en.md with the audience, activities, contact and hours. Select it for the lesson and choose a teaching folder. A logo or photographs are not required; missing facts stay missing.",
+    "request": "Vera, prepare Studio Arco’s first website from this information: introduction, activities and contact on one page readable on desktop and phone. Show a local version for review.",
+    "steps": [
+      "The working chat records the selected material and prepares the project. Vera summarises the facts to use and proposes content order, typography and colours; the voice chat links these choices to the visitor’s questions.",
+      "The workflow implements HTML and styles and checks files and links. Open the working site and move through introduction, activities and contact, checking how the source information became copy.",
+      "Review the page at desktop and phone widths with its captured images. Check identity and claims, readability and links. Vera shows validation status and what remains before real publication."
+    ],
+    "deliverables": [
+      "Working local website and editable files: the result to open and review.",
+      "Source and design summary, technical checks, desktop and phone captures and review status."
+    ],
+    "review": "Compare activities, contact and hours with the profile. There should be no invented qualifications, results or contact details. The firm owns professional review; a checked local site is not an already published site.",
+    "checkpoints": [
+      "Before building, name the visitor and where they should find the contact.",
+      "At review, open the contact section on the phone layout and check hours and readability."
+    ],
+    "practice": "Use vera-update-en.md to add Friday hours in a new version while retaining the earlier information. Reopen both layouts and verify that the addition does not replace the other hours.",
+    "success": "You can supply material, request the site, find the working version and check a change. You know that external preview and final publication are later choices bound to approved files.",
+    "repeat": "For your practice, identify an existing or first website, public-use materials and objective. After review choose the destination; the workflow packages and publishes only the exact authorized version."
+  },
+  "lucia/presenza-digitale-studio": {
+    "title": "Prepare the firm’s website with Lucia",
+    "goal": "Learn to start from firm information, obtain a working website and review it before choosing publication.",
+    "scenario": "Studio Arco has no website. We build a page introducing the firm, its supplied activities and contact path, using only the fictional profile.",
+    "scope": "First informational website for an Italian practice. The demonstration produces a local version for review; later publication needs a destination and approvals for the exact site.",
+    "inputs": "Open lucia-studio-en.md with the audience, activities, contact and hours. Select it for the lesson and choose a teaching folder. A logo or photographs are not required; missing facts stay missing.",
+    "request": "Lucia, prepare Studio Arco’s first website from this information: introduction, activities and contact on one page readable on desktop and phone. Show a local version for review.",
+    "steps": [
+      "The working chat records the selected material and prepares the project. Lucia summarises the facts to use and proposes content order, typography and colours; the voice chat links these choices to the visitor’s questions.",
+      "The workflow implements HTML and styles and checks files and links. Open the working site and move through introduction, activities and contact, checking how the source information became copy.",
+      "Review the page at desktop and phone widths with its captured images. Check identity and claims, readability and links. Lucia shows validation status and what remains before real publication."
+    ],
+    "deliverables": [
+      "Working local website and editable files: the result to open and review.",
+      "Source and design summary, technical checks, desktop and phone captures and review status."
+    ],
+    "review": "Compare activities, contact and hours with the profile. There should be no invented qualifications, results or contact details. The firm owns professional review; a checked local site is not an already published site.",
+    "checkpoints": [
+      "Before building, name the visitor and where they should find the contact.",
+      "At review, open the contact section on the phone layout and check hours and readability."
+    ],
+    "practice": "Use lucia-update-en.md to add Friday hours in a new version while retaining the earlier information. Reopen both layouts and verify that the addition does not replace the other hours.",
+    "success": "You can supply material, request the site, find the working version and check a change. You know that external preview and final publication are later choices bound to approved files.",
+    "repeat": "For your practice, identify an existing or first website, public-use materials and objective. After review choose the destination; the workflow packages and publishes only the exact authorized version."
+  }
+}

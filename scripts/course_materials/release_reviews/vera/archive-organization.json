@@ -1,0 +1,280 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "archive-organization",
+  "course_sha256": "5eaa7357c439e891cd5779c2c0e56ac3d267a658c5a172e4df39bfadd1a6428e",
+  "reviewer": "Codex: five-language archive organisation material, execution and browser presentation review",
+  "reviewed_at": "2026-09-14T22:54:42.105288+00:00",
+  "review_scope": "Reviewed all five full lesson outlines, fifteen unique fictional source documents and ten final artifact cards with actual approved destinations and operation-journal states. The current widget was rendered in a loopback-only browser harness using actual MCP render responses; all five language views were inspected, and the Italian destination edit and reviewer fields were exercised. The final compact list layout was checked in all five languages. Read-only browser geometry confirmed separate filename/control bounds in Italian and no horizontal overflow or overlapping rows in English at the desktop viewport. The complete shipped widget script generates the requests used by ten current MCP/pipeline regressions, with real local persistence and separately authorized fictional filesystem execution. These regression reviewers and semantic fixtures are not real learner approvals. Native in-chat widget hosting, native voice, two-window interaction, human elapsed time and comprehension remain unverified.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches organising one client folder from the first natural request through a proposed plan, reviewed destinations, separately approved file moves and a retained result. The lesson begins with what the user has and wants to do, then follows the whole workflow.",
+        "inputs_and_request": "Read the localized maintenance agreement, exact copy, internal meeting note and later update. The original service is monthly equipment inspection plus a written report in calendar 2026; the dated internal note names an administrative contact without representation powers. The 15 December 2026 update extends the service to 30 June 2027 and must be retained. The natural request asks to see proposed destinations and duplicates before moving files. All documents are explicitly fictional.",
+        "execution_and_checkpoints": "The actual adapter stages a private teaching client, takes an immutable snapshot, opens every scoped item and builds the current review package. Source-grounded semantic decisions are authored regression fixtures outside the kit. The shipped widget validates reviewer attribution and creates the real MCP requests; those validate, render, save and compile a plan while source files remain unchanged. A reviewer-edited meeting destination is exercised. Apply without its separate approval is rejected; the approved teaching-copy operation verifies every destination byte.",
+        "deliverable_and_next_action": "Inspected the localized artifact card and actual final destinations. The agreement, dated meeting note and exact duplicate are retained in their intended folders. The delivery links the organised folder, operation journal and review handoff, and explains how to repeat the workflow. All links resolve. The browser presentation now has localized document fields, evidence labels, destination guidance and path-copy controls; the reviewer input works, and the file list avoids overlapping names.",
+        "practice_and_repeat": "Practice uses a second teaching copy with the agreement update. The real workflow retains the original agreement and places the dated update under Contratti/2026. The first organised demonstration folder and every first-run output remain byte-identical and are linked from practice. The learner is asked to explain a destination and decide whether to authorize application; tests do not claim the learner has done so.",
+        "language_and_pacing": "Language it. Read the full localized outline and delivered demo/practice text. Sources, reasons, guidance and review interface follow this language; default policy folder names remain Italian as disclosed in the lesson. Six planned stages total 390 seconds, with three initial documents and one added practice update. Questions and processing may extend the target. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[demo-it]",
+        "result_review": "The real three-file demonstration preserves agreement and meeting-note bytes, applies the reviewed Riunioni destination, retains the exact copy in quarantine, delivers the folder and completes its Studio Archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "8c76c0339d72efcc8e10676fd80fce3b8a8d3963f47a65bdcf54a4cbe7821214"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "47ffb640ffc741f8780c11736802c7df5adf3bece1d0770cb0628b8357335b46"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[practice-it]",
+        "result_review": "The second four-file teaching copy keeps the dated update with the agreement, preserves every first-demonstration file, links the prior result and completes a distinct real Studio Archive run. Both the current widget requests and MCP persistence are exercised.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "73898a9419ecd56a534b55e74525a947e4b38cf5a5325c559acd80412672b71f"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "e7312994a224e39f5695c1bedbd4d34530b8f51b01c441727dbaf4e96efd6bbf"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches organising one client folder from the first natural request through a proposed plan, reviewed destinations, separately approved file moves and a retained result. The lesson begins with what the user has and wants to do, then follows the whole workflow.",
+        "inputs_and_request": "Read the localized maintenance agreement, exact copy, internal meeting note and later update. The original service is monthly equipment inspection plus a written report in calendar 2026; the dated internal note names an administrative contact without representation powers. The 15 December 2026 update extends the service to 30 June 2027 and must be retained. The natural request asks to see proposed destinations and duplicates before moving files. All documents are explicitly fictional.",
+        "execution_and_checkpoints": "The actual adapter stages a private teaching client, takes an immutable snapshot, opens every scoped item and builds the current review package. Source-grounded semantic decisions are authored regression fixtures outside the kit. The shipped widget validates reviewer attribution and creates the real MCP requests; those validate, render, save and compile a plan while source files remain unchanged. A reviewer-edited meeting destination is exercised. Apply without its separate approval is rejected; the approved teaching-copy operation verifies every destination byte.",
+        "deliverable_and_next_action": "Inspected the localized artifact card and actual final destinations. The agreement, dated meeting note and exact duplicate are retained in their intended folders. The delivery links the organised folder, operation journal and review handoff, and explains how to repeat the workflow. All links resolve. The browser presentation now has localized document fields, evidence labels, destination guidance and path-copy controls; the reviewer input works, and the file list avoids overlapping names.",
+        "practice_and_repeat": "Practice uses a second teaching copy with the agreement update. The real workflow retains the original agreement and places the dated update under Contratti/2026. The first organised demonstration folder and every first-run output remain byte-identical and are linked from practice. The learner is asked to explain a destination and decide whether to authorize application; tests do not claim the learner has done so.",
+        "language_and_pacing": "Language en. Read the full localized outline and delivered demo/practice text. Sources, reasons, guidance and review interface follow this language; default policy folder names remain Italian as disclosed in the lesson. Six planned stages total 390 seconds, with three initial documents and one added practice update. Questions and processing may extend the target. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[demo-en]",
+        "result_review": "The real three-file demonstration preserves agreement and meeting-note bytes, applies the reviewed Riunioni destination, retains the exact copy in quarantine, delivers the folder and completes its Studio Archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "4137624caa7049bbeb2c5663b3aca25be865a718e561dea05ed9b23ea48fa26a"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "787845ed737d8a09ce6021c14e3e604d9c6bd3782c397a03895bbb1d9e47855e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[practice-en]",
+        "result_review": "The second four-file teaching copy keeps the dated update with the agreement, preserves every first-demonstration file, links the prior result and completes a distinct real Studio Archive run. Both the current widget requests and MCP persistence are exercised.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "2a41f32249bad34491dcddc74fdfc7163862d6003e23b2afdf01f05fd5f6688f"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "accc125bcfa38e25097ca56853b934915d195a8a4a480b4d4d343c1995337ccc"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches organising one client folder from the first natural request through a proposed plan, reviewed destinations, separately approved file moves and a retained result. The lesson begins with what the user has and wants to do, then follows the whole workflow.",
+        "inputs_and_request": "Read the localized maintenance agreement, exact copy, internal meeting note and later update. The original service is monthly equipment inspection plus a written report in calendar 2026; the dated internal note names an administrative contact without representation powers. The 15 December 2026 update extends the service to 30 June 2027 and must be retained. The natural request asks to see proposed destinations and duplicates before moving files. All documents are explicitly fictional.",
+        "execution_and_checkpoints": "The actual adapter stages a private teaching client, takes an immutable snapshot, opens every scoped item and builds the current review package. Source-grounded semantic decisions are authored regression fixtures outside the kit. The shipped widget validates reviewer attribution and creates the real MCP requests; those validate, render, save and compile a plan while source files remain unchanged. A reviewer-edited meeting destination is exercised. Apply without its separate approval is rejected; the approved teaching-copy operation verifies every destination byte.",
+        "deliverable_and_next_action": "Inspected the localized artifact card and actual final destinations. The agreement, dated meeting note and exact duplicate are retained in their intended folders. The delivery links the organised folder, operation journal and review handoff, and explains how to repeat the workflow. All links resolve. The browser presentation now has localized document fields, evidence labels, destination guidance and path-copy controls; the reviewer input works, and the file list avoids overlapping names.",
+        "practice_and_repeat": "Practice uses a second teaching copy with the agreement update. The real workflow retains the original agreement and places the dated update under Contratti/2026. The first organised demonstration folder and every first-run output remain byte-identical and are linked from practice. The learner is asked to explain a destination and decide whether to authorize application; tests do not claim the learner has done so.",
+        "language_and_pacing": "Language fr. Read the full localized outline and delivered demo/practice text. Sources, reasons, guidance and review interface follow this language; default policy folder names remain Italian as disclosed in the lesson. Six planned stages total 390 seconds, with three initial documents and one added practice update. Questions and processing may extend the target. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[demo-fr]",
+        "result_review": "The real three-file demonstration preserves agreement and meeting-note bytes, applies the reviewed Riunioni destination, retains the exact copy in quarantine, delivers the folder and completes its Studio Archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "8a4e1f05e2de82626fd748ae560ee5e7533a346ede434ce8301c6c96649073a9"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "7e73e263b3bccc83d0d9cbd74a1d755834ca6403d53bec5243e45d7a4362317a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[practice-fr]",
+        "result_review": "The second four-file teaching copy keeps the dated update with the agreement, preserves every first-demonstration file, links the prior result and completes a distinct real Studio Archive run. Both the current widget requests and MCP persistence are exercised.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "4b718db761b15bc833130de2fec4be031794b5a357a22069cae79865bc6d3c3b"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "4dc073b14b4967d7b6eeac562cabb661fa3bf44bb2240f3be3da7b6b541ec726"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches organising one client folder from the first natural request through a proposed plan, reviewed destinations, separately approved file moves and a retained result. The lesson begins with what the user has and wants to do, then follows the whole workflow.",
+        "inputs_and_request": "Read the localized maintenance agreement, exact copy, internal meeting note and later update. The original service is monthly equipment inspection plus a written report in calendar 2026; the dated internal note names an administrative contact without representation powers. The 15 December 2026 update extends the service to 30 June 2027 and must be retained. The natural request asks to see proposed destinations and duplicates before moving files. All documents are explicitly fictional.",
+        "execution_and_checkpoints": "The actual adapter stages a private teaching client, takes an immutable snapshot, opens every scoped item and builds the current review package. Source-grounded semantic decisions are authored regression fixtures outside the kit. The shipped widget validates reviewer attribution and creates the real MCP requests; those validate, render, save and compile a plan while source files remain unchanged. A reviewer-edited meeting destination is exercised. Apply without its separate approval is rejected; the approved teaching-copy operation verifies every destination byte.",
+        "deliverable_and_next_action": "Inspected the localized artifact card and actual final destinations. The agreement, dated meeting note and exact duplicate are retained in their intended folders. The delivery links the organised folder, operation journal and review handoff, and explains how to repeat the workflow. All links resolve. The browser presentation now has localized document fields, evidence labels, destination guidance and path-copy controls; the reviewer input works, and the file list avoids overlapping names.",
+        "practice_and_repeat": "Practice uses a second teaching copy with the agreement update. The real workflow retains the original agreement and places the dated update under Contratti/2026. The first organised demonstration folder and every first-run output remain byte-identical and are linked from practice. The learner is asked to explain a destination and decide whether to authorize application; tests do not claim the learner has done so.",
+        "language_and_pacing": "Language de. Read the full localized outline and delivered demo/practice text. Sources, reasons, guidance and review interface follow this language; default policy folder names remain Italian as disclosed in the lesson. Six planned stages total 390 seconds, with three initial documents and one added practice update. Questions and processing may extend the target. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[demo-de]",
+        "result_review": "The real three-file demonstration preserves agreement and meeting-note bytes, applies the reviewed Riunioni destination, retains the exact copy in quarantine, delivers the folder and completes its Studio Archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "fbe67a8bf7cd717b74ebfb0131dfd99b73bcce59c31846e961c93fe9b36c66c4"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "5f98f8635d0ed5d2a20f82be91546b22dbb3eb249b635f64f16155b1239c2719"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[practice-de]",
+        "result_review": "The second four-file teaching copy keeps the dated update with the agreement, preserves every first-demonstration file, links the prior result and completes a distinct real Studio Archive run. Both the current widget requests and MCP persistence are exercised.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "bbe75c91501a61d2e89587e39010b7c4986352c94e5cb426a172a942fc201fb8"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "2fa26ab57ace376dcad00b1ab03d8729345e00e4b7b8a18aeaeb0d7cfafdb136"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches organising one client folder from the first natural request through a proposed plan, reviewed destinations, separately approved file moves and a retained result. The lesson begins with what the user has and wants to do, then follows the whole workflow.",
+        "inputs_and_request": "Read the localized maintenance agreement, exact copy, internal meeting note and later update. The original service is monthly equipment inspection plus a written report in calendar 2026; the dated internal note names an administrative contact without representation powers. The 15 December 2026 update extends the service to 30 June 2027 and must be retained. The natural request asks to see proposed destinations and duplicates before moving files. All documents are explicitly fictional.",
+        "execution_and_checkpoints": "The actual adapter stages a private teaching client, takes an immutable snapshot, opens every scoped item and builds the current review package. Source-grounded semantic decisions are authored regression fixtures outside the kit. The shipped widget validates reviewer attribution and creates the real MCP requests; those validate, render, save and compile a plan while source files remain unchanged. A reviewer-edited meeting destination is exercised. Apply without its separate approval is rejected; the approved teaching-copy operation verifies every destination byte.",
+        "deliverable_and_next_action": "Inspected the localized artifact card and actual final destinations. The agreement, dated meeting note and exact duplicate are retained in their intended folders. The delivery links the organised folder, operation journal and review handoff, and explains how to repeat the workflow. All links resolve. The browser presentation now has localized document fields, evidence labels, destination guidance and path-copy controls; the reviewer input works, and the file list avoids overlapping names.",
+        "practice_and_repeat": "Practice uses a second teaching copy with the agreement update. The real workflow retains the original agreement and places the dated update under Contratti/2026. The first organised demonstration folder and every first-run output remain byte-identical and are linked from practice. The learner is asked to explain a destination and decide whether to authorize application; tests do not claim the learner has done so.",
+        "language_and_pacing": "Language es. Read the full localized outline and delivered demo/practice text. Sources, reasons, guidance and review interface follow this language; default policy folder names remain Italian as disclosed in the lesson. Six planned stages total 390 seconds, with three initial documents and one added practice update. Questions and processing may extend the target. Human timing and comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[demo-es]",
+        "result_review": "The real three-file demonstration preserves agreement and meeting-note bytes, applies the reviewed Riunioni destination, retains the exact copy in quarantine, delivers the folder and completes its Studio Archive run.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "1c92b69df3fa6deb9ffb2ac48676b22df5b1b7685d9f35ce45032d8c816f10fd"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "222618ee034d682cf05a6dffe520736262ec9fe4cdc4e2d6575b99042c057adb"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_organization_kit_keeps_result_and_runs_reviewed_practice_copy[practice-es]",
+        "result_review": "The second four-file teaching copy keeps the dated update with the agreement, preserves every first-demonstration file, links the prior result and completes a distinct real Studio Archive run. Both the current widget requests and MCP persistence are exercised.",
+        "reviewed_artifacts": [
+          {
+            "name": "artifact_card.md",
+            "sha256": "fcdfa248eff2ca16630b048cf4ae3a6ff6a3ed7c77beb6c6a743503b831f2f36"
+          },
+          {
+            "name": "approved_plan.json",
+            "sha256": "b94e0c386b6e326db7509d8355cadc1f2491acc056eaab496e22db75c7a42304"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.163857+00:00",
+    "previous_course_sha256": "854556c039be886fc13275f307ef0aaf440362f2ac72c189deea214529bb0340",
+    "source_snapshot": "/private/tmp/organization-teaching-release-06/test_organization_kit_keeps_re3/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.272206+00:00",
+    "previous_course_sha256": "f5b81d6b8cf222cb72af360a9f5fdec0c83a83ee5355d35e8ce26cf6831aeed8",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/archive-organization/SKILL.md",
+        "before": "e4fe96bd4e855da5dc0fca8ec5180186bb474d1b43b95557e297e64c7859f65d",
+        "after": "c96310cf87ddc54d340beef57202f20881bdb2f89b1c7e1dfc90c17f82776f6f"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "windows_workflow_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:27:33.365513+00:00",
+    "previous_course_sha256": "bb56d153f481a8123a63ac525e4076ab1a178cb4ac96741191284104b9cf848e",
+    "source_changes": [
+      {
+        "path": "plugins/archive-organization/scripts/archive_organization.py",
+        "before": "d822d3b54d79ba08b3afe45ca10c43d1a2bddb80abac7369f2d6666f150f0f45",
+        "after": "c113b6ad9f82f16424c2a509c8eb8806b39293394299f4ae8c7d868deefd2fa6"
+      }
+    ],
+    "scope": "Authored lessons and inputs are unchanged. Archive Organization closes its source reader before unlinking on Windows and rechecks the approved source hash. Journal Sampling records the filesystem-observed bootstrap mode and still verifies exact mode/hash closure. Journal Sampling and Vouching obtain real link counts through lstat. These are local execution corrections; they add no transmission and do not establish Windows ACL privacy. Original named editorial and artifact reviews remain preserved. Current native execution is established separately by the release verifier using the actual supplied JUnit records."
+  }
+}

@@ -1,0 +1,1 @@
+Exercice : créer une nouvelle version pour les nouveaux collègues. Ajouter une demande incomplète : « Le vélo fait du bruit. » Montrer les questions utiles : coordonnées, moment où le bruit apparaît et partie du vélo concernée. Ne pas diagnostiquer la panne. Conserver le statut de proposition et la première présentation.

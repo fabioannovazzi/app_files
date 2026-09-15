@@ -1,0 +1,365 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "clara",
+  "workflow": "advisory-brief-planner",
+  "course_sha256": "e062b561fcce392ad696e3e2a2c92ec476062d85a8d163dc45389c36d422d9f5",
+  "reviewer": "Codex: five-language first-use planning material and actual native contract review",
+  "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
+  "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches asking Clara to define an advisory assignment: decision, reader, intended output, sources, limits and next work. The guide starts from a natural request and finishes with a plan and handoff, not an already executed recommendation. It explains what the next supported Clara workflow will receive.",
+        "inputs_and_request": "The fictional bicycle shop asks to compare a small appointment-based collection pilot and an immediate daily service. Two initial documents distinguish conditional customer interest from bookings and describe Wednesday vehicle availability, the owner handling initial deliveries and no dedicated daily driver. The request excludes external research, contact, spending and an invented forecast. Original and revised source documents remain directly linked.",
+        "execution_and_checkpoints": "Native packaging validates the authored contract and exact source anchors. The human-readable delivery explains the same assignment in the selected language. Checkpoints ask the learner to identify decision and audience, review scope and gaps, and explain the next output before handoff. Canonical identifiers and statuses remain technical fields; no classification code selects the assignment meaning.",
+        "deliverable_and_next_action": "The current 280–369 word readable plans state the decision, requested output, attributed source evidence, included/excluded work, three steps, open information needs and next action. The contract selects clara:advisory-case-director. Passing local validation is distinguished from completing the subsequent advice or approving launch. All linked sources, contract, validation report and review note exist locally.",
+        "practice_and_repeat": "The practice first runs the original plan, then packages a new plan from the revised request and vehicle update. It changes the deliverable to a feasibility action list, prioritizes resolving vehicle availability and does not recommend launch or assume a loan is agreed. Initial plan bytes remain unchanged and a direct link reopens it. The lesson explains how to repeat with a new decision, reader, desired output and selected evidence.",
+        "language_and_pacing": "Language it. The whole outline, original fictional notes, generated assignment semantics, readable plan and review note were reviewed in this language. Six stages total 390 seconds; the concise output supports guided reading and practice within the requested range, with questions and processing allowed to extend elapsed time. No human timing or comprehension result is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[demo-it]",
+        "result_review": "The actual native contract binds two exact source files and eight material source paragraphs, keeps the owner as audience, excludes unsupported financial forecasts and external actions, and defines the requested comparison memo for the next workflow. The readable plan explains the source basis, work and missing prerequisites.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "14d8ae71ddbf67ac651445a3e1a59fb532d3a16a7db38a79757465b377282724"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "67fb787ba74c7de2350f312b480bca04559c3da558401b1ef977e22f7d29aad6"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "4eed4213c6591c2eac08fe82bd5f23506492b383f97f52438f87735b0828de11"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ee11dd87963119d5a6f15fb51f9fb96e998854f9a32fc910f9d57099fc65b6ed"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[practice-it]",
+        "result_review": "The revised native contract binds four exact source files and eleven source paragraphs. The new objective and action-list deliverable replace the initial recommendation request. The latest vehicle note is controlling and the proposed loan is not assumed available. The initial completed plan remains byte-identical; the new readable plan links it and explains the change.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "3bc0e0f9bbd8c92cc23e6b085a35c2e130efdce7e2cbadc7f278d9ba1f3cc03a"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "1775e1cc8581b88ee484d77aca95264b48bb502a6fa80d5f69703143ff5ffda4"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "d26e73596e75d40f0b6e394b4e9e9a5398d69a2db5f1092e2cc4e025045dd65f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ee11dd87963119d5a6f15fb51f9fb96e998854f9a32fc910f9d57099fc65b6ed"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches asking Clara to define an advisory assignment: decision, reader, intended output, sources, limits and next work. The guide starts from a natural request and finishes with a plan and handoff, not an already executed recommendation. It explains what the next supported Clara workflow will receive.",
+        "inputs_and_request": "The fictional bicycle shop asks to compare a small appointment-based collection pilot and an immediate daily service. Two initial documents distinguish conditional customer interest from bookings and describe Wednesday vehicle availability, the owner handling initial deliveries and no dedicated daily driver. The request excludes external research, contact, spending and an invented forecast. Original and revised source documents remain directly linked.",
+        "execution_and_checkpoints": "Native packaging validates the authored contract and exact source anchors. The human-readable delivery explains the same assignment in the selected language. Checkpoints ask the learner to identify decision and audience, review scope and gaps, and explain the next output before handoff. Canonical identifiers and statuses remain technical fields; no classification code selects the assignment meaning.",
+        "deliverable_and_next_action": "The current 280–369 word readable plans state the decision, requested output, attributed source evidence, included/excluded work, three steps, open information needs and next action. The contract selects clara:advisory-case-director. Passing local validation is distinguished from completing the subsequent advice or approving launch. All linked sources, contract, validation report and review note exist locally.",
+        "practice_and_repeat": "The practice first runs the original plan, then packages a new plan from the revised request and vehicle update. It changes the deliverable to a feasibility action list, prioritizes resolving vehicle availability and does not recommend launch or assume a loan is agreed. Initial plan bytes remain unchanged and a direct link reopens it. The lesson explains how to repeat with a new decision, reader, desired output and selected evidence.",
+        "language_and_pacing": "Language en. The whole outline, original fictional notes, generated assignment semantics, readable plan and review note were reviewed in this language. Six stages total 390 seconds; the concise output supports guided reading and practice within the requested range, with questions and processing allowed to extend elapsed time. No human timing or comprehension result is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[demo-en]",
+        "result_review": "The actual native contract binds two exact source files and eight material source paragraphs, keeps the owner as audience, excludes unsupported financial forecasts and external actions, and defines the requested comparison memo for the next workflow. The readable plan explains the source basis, work and missing prerequisites.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "85b8b33e729815e6f115b0ec283cf632d466a89ca8e83fb2c7dbd24268aa5e29"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "41215a26ef8bf6b181c2beeafba9b8127cff3d96f562aa5cf5b0aa0e230e3fb4"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "bd95670c204951f06909ad081d63164b50cca48e1caf0605670558b6bc01d4bc"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "187fbc4b5e7484dfbeadc06f1d436fd30ec0c4cf7fbb6d6a7d449b38a5df381a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[practice-en]",
+        "result_review": "The revised native contract binds four exact source files and eleven source paragraphs. The new objective and action-list deliverable replace the initial recommendation request. The latest vehicle note is controlling and the proposed loan is not assumed available. The initial completed plan remains byte-identical; the new readable plan links it and explains the change.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "5472462a0e154b62976e5d3d6c3bfe3c80c74dc7911985963596e5db2134c882"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "db261492ee597f1dd584fdf5b5e424aa2b558efc68b78d86f90a7f542f88dbcd"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "e27763ee64fdc87b037496bc51001615f94111acf2fe96da8b3ca4cde335db61"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "187fbc4b5e7484dfbeadc06f1d436fd30ec0c4cf7fbb6d6a7d449b38a5df381a"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches asking Clara to define an advisory assignment: decision, reader, intended output, sources, limits and next work. The guide starts from a natural request and finishes with a plan and handoff, not an already executed recommendation. It explains what the next supported Clara workflow will receive.",
+        "inputs_and_request": "The fictional bicycle shop asks to compare a small appointment-based collection pilot and an immediate daily service. Two initial documents distinguish conditional customer interest from bookings and describe Wednesday vehicle availability, the owner handling initial deliveries and no dedicated daily driver. The request excludes external research, contact, spending and an invented forecast. Original and revised source documents remain directly linked.",
+        "execution_and_checkpoints": "Native packaging validates the authored contract and exact source anchors. The human-readable delivery explains the same assignment in the selected language. Checkpoints ask the learner to identify decision and audience, review scope and gaps, and explain the next output before handoff. Canonical identifiers and statuses remain technical fields; no classification code selects the assignment meaning.",
+        "deliverable_and_next_action": "The current 280–369 word readable plans state the decision, requested output, attributed source evidence, included/excluded work, three steps, open information needs and next action. The contract selects clara:advisory-case-director. Passing local validation is distinguished from completing the subsequent advice or approving launch. All linked sources, contract, validation report and review note exist locally.",
+        "practice_and_repeat": "The practice first runs the original plan, then packages a new plan from the revised request and vehicle update. It changes the deliverable to a feasibility action list, prioritizes resolving vehicle availability and does not recommend launch or assume a loan is agreed. Initial plan bytes remain unchanged and a direct link reopens it. The lesson explains how to repeat with a new decision, reader, desired output and selected evidence.",
+        "language_and_pacing": "Language fr. The whole outline, original fictional notes, generated assignment semantics, readable plan and review note were reviewed in this language. Six stages total 390 seconds; the concise output supports guided reading and practice within the requested range, with questions and processing allowed to extend elapsed time. No human timing or comprehension result is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[demo-fr]",
+        "result_review": "The actual native contract binds two exact source files and eight material source paragraphs, keeps the owner as audience, excludes unsupported financial forecasts and external actions, and defines the requested comparison memo for the next workflow. The readable plan explains the source basis, work and missing prerequisites.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "9681a5cadee21cd631904bd383513f61edc51de30188e503c318d6d63744d6bd"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "578ae40788aafb807331d46eb26466980a0937aa3e1cca3041ca68547189129d"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "44230130c9600233e57c195ad86135b88576126816e0c821ce51b83a8126657f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ce960a2329fe19375c958ef8cfcf3dbd0a97c78e77d031e89af05a1b0230d3f6"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[practice-fr]",
+        "result_review": "The revised native contract binds four exact source files and eleven source paragraphs. The new objective and action-list deliverable replace the initial recommendation request. The latest vehicle note is controlling and the proposed loan is not assumed available. The initial completed plan remains byte-identical; the new readable plan links it and explains the change.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "951acce2987bd27d658d26e23f6faf859f363d129913ff3c70158d8e27490af9"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "899144ef6673960a9b7c2699ee54500047c6844589a39fb16ba5885e7bdc50ff"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "3d0933897558e084c7718954f1d3b1886bdd4ddfbed738d7dacd29e200ac48f0"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "ce960a2329fe19375c958ef8cfcf3dbd0a97c78e77d031e89af05a1b0230d3f6"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches asking Clara to define an advisory assignment: decision, reader, intended output, sources, limits and next work. The guide starts from a natural request and finishes with a plan and handoff, not an already executed recommendation. It explains what the next supported Clara workflow will receive.",
+        "inputs_and_request": "The fictional bicycle shop asks to compare a small appointment-based collection pilot and an immediate daily service. Two initial documents distinguish conditional customer interest from bookings and describe Wednesday vehicle availability, the owner handling initial deliveries and no dedicated daily driver. The request excludes external research, contact, spending and an invented forecast. Original and revised source documents remain directly linked.",
+        "execution_and_checkpoints": "Native packaging validates the authored contract and exact source anchors. The human-readable delivery explains the same assignment in the selected language. Checkpoints ask the learner to identify decision and audience, review scope and gaps, and explain the next output before handoff. Canonical identifiers and statuses remain technical fields; no classification code selects the assignment meaning.",
+        "deliverable_and_next_action": "The current 280–369 word readable plans state the decision, requested output, attributed source evidence, included/excluded work, three steps, open information needs and next action. The contract selects clara:advisory-case-director. Passing local validation is distinguished from completing the subsequent advice or approving launch. All linked sources, contract, validation report and review note exist locally.",
+        "practice_and_repeat": "The practice first runs the original plan, then packages a new plan from the revised request and vehicle update. It changes the deliverable to a feasibility action list, prioritizes resolving vehicle availability and does not recommend launch or assume a loan is agreed. Initial plan bytes remain unchanged and a direct link reopens it. The lesson explains how to repeat with a new decision, reader, desired output and selected evidence.",
+        "language_and_pacing": "Language de. The whole outline, original fictional notes, generated assignment semantics, readable plan and review note were reviewed in this language. Six stages total 390 seconds; the concise output supports guided reading and practice within the requested range, with questions and processing allowed to extend elapsed time. No human timing or comprehension result is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[demo-de]",
+        "result_review": "The actual native contract binds two exact source files and eight material source paragraphs, keeps the owner as audience, excludes unsupported financial forecasts and external actions, and defines the requested comparison memo for the next workflow. The readable plan explains the source basis, work and missing prerequisites.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "1e97c9a5d95f79681825324fb112d44c57d1c4e9726bd5056fc5de8e421837c5"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "7964cb4ef3da124af70f4fdfdc865715f6d8e85e7637bf960440fa7e77f5a800"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "489bfbfedbd9738a12c87d22898ed1f8942e7032c0e61b945caefdb5f34061ac"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "751cf1710c6d4887cc92ac66fc1a6898855a7972886e66065e5112c083180f36"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[practice-de]",
+        "result_review": "The revised native contract binds four exact source files and eleven source paragraphs. The new objective and action-list deliverable replace the initial recommendation request. The latest vehicle note is controlling and the proposed loan is not assumed available. The initial completed plan remains byte-identical; the new readable plan links it and explains the change.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "1680ed2ee8f34a367a764c36ea82f44690f9e37d67936234886ef713d3dcab47"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "8b6054f8e3c30fd46c9c2078f8c851681fd9edbe8bfa30de6cd2baaacb10fb7f"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "76687169951b296a40bc2ba0874c4151e2e6a3e4d561849d791747c746f0f31e"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "751cf1710c6d4887cc92ac66fc1a6898855a7972886e66065e5112c083180f36"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches asking Clara to define an advisory assignment: decision, reader, intended output, sources, limits and next work. The guide starts from a natural request and finishes with a plan and handoff, not an already executed recommendation. It explains what the next supported Clara workflow will receive.",
+        "inputs_and_request": "The fictional bicycle shop asks to compare a small appointment-based collection pilot and an immediate daily service. Two initial documents distinguish conditional customer interest from bookings and describe Wednesday vehicle availability, the owner handling initial deliveries and no dedicated daily driver. The request excludes external research, contact, spending and an invented forecast. Original and revised source documents remain directly linked.",
+        "execution_and_checkpoints": "Native packaging validates the authored contract and exact source anchors. The human-readable delivery explains the same assignment in the selected language. Checkpoints ask the learner to identify decision and audience, review scope and gaps, and explain the next output before handoff. Canonical identifiers and statuses remain technical fields; no classification code selects the assignment meaning.",
+        "deliverable_and_next_action": "The current 280–369 word readable plans state the decision, requested output, attributed source evidence, included/excluded work, three steps, open information needs and next action. The contract selects clara:advisory-case-director. Passing local validation is distinguished from completing the subsequent advice or approving launch. All linked sources, contract, validation report and review note exist locally.",
+        "practice_and_repeat": "The practice first runs the original plan, then packages a new plan from the revised request and vehicle update. It changes the deliverable to a feasibility action list, prioritizes resolving vehicle availability and does not recommend launch or assume a loan is agreed. Initial plan bytes remain unchanged and a direct link reopens it. The lesson explains how to repeat with a new decision, reader, desired output and selected evidence.",
+        "language_and_pacing": "Language es. The whole outline, original fictional notes, generated assignment semantics, readable plan and review note were reviewed in this language. Six stages total 390 seconds; the concise output supports guided reading and practice within the requested range, with questions and processing allowed to extend elapsed time. No human timing or comprehension result is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[demo-es]",
+        "result_review": "The actual native contract binds two exact source files and eight material source paragraphs, keeps the owner as audience, excludes unsupported financial forecasts and external actions, and defines the requested comparison memo for the next workflow. The readable plan explains the source basis, work and missing prerequisites.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "18612d126a6d9c383f8b78db88703794c16eba5c5a1f7ca8199597d8b2ce21c6"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "dc5be6f4b2806dfeefbc98c99a5af7435d404b70a9d64efe781252dec899dce1"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "1c6402290e22682390d75d37fe89c7da18e4d32527f62aaa55ce1ada34c5c94a"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "b2f053b5745628df612d4b0066997e244f3bf87786e98637c5d7c19151bd1c41"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_planner_kit_packages_current_source_bound_assignment[practice-es]",
+        "result_review": "The revised native contract binds four exact source files and eleven source paragraphs. The new objective and action-list deliverable replace the initial recommendation request. The latest vehicle note is controlling and the proposed loan is not assumed available. The initial completed plan remains byte-identical; the new readable plan links it and explains the change.",
+        "reviewed_artifacts": [
+          {
+            "name": "assignment_plan.md",
+            "sha256": "f95f93085a7fe42dfa8b56664908e6aa18a1a1853889009ed003ad08eaa688ae"
+          },
+          {
+            "name": "advisory_contract.json",
+            "sha256": "6c10150c979fad38f3ac84f7a1af911e76edb51701bdfcf83ebbfc76f89e3e4d"
+          },
+          {
+            "name": "advisory_contract_validation.json",
+            "sha256": "30163e6f0bff52ec5ab5eec17f59e61448cf8bea989165d7863e9d2962a0b435"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "b2f053b5745628df612d4b0066997e244f3bf87786e98637c5d7c19151bd1c41"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.141454+00:00",
+    "previous_course_sha256": "45cb9a474a7ed3bcd63eec4715b9d94a40c9240ca55a78c61c84e49d590f48ca",
+    "source_snapshot": "/private/tmp/advisory-teaching-release-02/test_planner_kit_packages_curr5/demo/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.529132+00:00",
+    "previous_course_sha256": "84692ee7e3a22b12880320a9591a2b1ff90de10dd4014df7a2253cfc76a87845",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/clara/scripts/check_dependencies.py",
+        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
+        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      },
+      {
+        "path": "plugins/clara/skills/advisory-brief-planner/SKILL.md",
+        "before": "6a27354520fd86740b97550c0d3df13f0a30497f2efbbb56c9217fc58fce601a",
+        "after": "73f9096e1b4377b326683af07960a61a8d23c3ee346dfe5d4eb245207ae88824"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "portability_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:08:05.030413+00:00",
+    "previous_course_sha256": "043ae2a9a8c60b71e079080fb05194ff650909bbc48c534ee2ce0e7f00357bfa",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      }
+    ],
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
+  }
+}

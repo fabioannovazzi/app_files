@@ -21,6 +21,16 @@
   "language_basis": "product_conversation_language_and_workflow_narrative",
   "sources": [
     {
+      "path": "modules/attribute-reporting/assets/icon.svg",
+      "repository_path": "plugins/attribute-reporting/assets/icon.svg",
+      "sha256": "0c1edab1496be5d851dc3bf5a17cce10b612ad74d0f3a8567659b8e69027710d"
+    },
+    {
+      "path": "modules/attribute-reporting/requirements.txt",
+      "repository_path": "plugins/attribute-reporting/requirements.txt",
+      "sha256": "9139674d628b35fd9a4705a55a6e6ad79f0908f7d3a64cb9868b7d16d6d1890e"
+    },
+    {
       "path": "modules/attribute-reporting/scripts/apply_validated_mappings.py",
       "repository_path": "plugins/attribute-reporting/scripts/apply_validated_mappings.py",
       "sha256": "1dcc9ab6bf2e622dcfa78d4dc3fa178f32fa6d87f696f4f12a65b1b3914098fe"
@@ -28,7 +38,7 @@
     {
       "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
       "repository_path": "plugins/attribute-reporting/scripts/attribute_reporting.py",
-      "sha256": "e722c1bd91d0f802b02851d24b6b98083a8592cc8512110db97646e635a2eef1"
+      "sha256": "55f7bcb35ccef716be75b77dcea282dda3ddb582919667485ad3f2693dc592ba"
     },
     {
       "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",
@@ -88,7 +98,7 @@
     {
       "path": "modules/attribute-reporting/scripts/prepare_run.py",
       "repository_path": "plugins/attribute-reporting/scripts/prepare_run.py",
-      "sha256": "e39a6d64b15886f90542b534419849ba4353e966344763868e4e24a5dade37e9"
+      "sha256": "86d2c52270dcc5eeebb4412e94fcf94e542182f7163fb996ed741d932d68204a"
     },
     {
       "path": "modules/attribute-reporting/scripts/project_pipeline.py",
@@ -138,12 +148,142 @@
     {
       "path": "modules/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
       "repository_path": "plugins/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
-      "sha256": "04a25c1781d5afe40ff08d922d6faef27abc8774d79a7dcc2fd54a479629ae7e"
+      "sha256": "765e0a37288e20c148c8dd3f699b53a5fb4239156e0a5592f4da8ef1fd85e8f4"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/__init__.py",
+      "repository_path": "modules/__init__.py",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_report_copy.json",
+      "repository_path": "modules/pdp/attribute_report_copy.json",
+      "sha256": "aad97b9f8e642f9d88f65f1bbb4d91e0fee24aa2752098282be3b8424f63f228"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_catalog.json",
+      "repository_path": "modules/pdp/attribute_table_catalog.json",
+      "sha256": "5f5a44e1ff0b3c6de6a64f0efe4886b1a103911fbb8e6ee7507a5fdbc5f6c1ad"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_catalog.py",
+      "repository_path": "modules/pdp/attribute_table_catalog.py",
+      "sha256": "db3eebe7ce9ded9acf25a9da33bf7ec70c8ee762f36c46512ccc2c471fefedc0"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/pdp/attribute_table_templates.py",
+      "repository_path": "modules/pdp/attribute_table_templates.py",
+      "sha256": "4e4a46812fa6a4c04e0e78d18b9f51cfee86bfaa629827abf50e9e0cd93a33f5"
+    },
+    {
+      "path": "modules/attribute-reporting/vendor/modules/utilities/utils.py",
+      "repository_path": "modules/utilities/utils.py",
+      "sha256": "dfeb4543d1482650e8be2bf6ea9f5ff313abe7dde7fef0539031c95a08a5c56e"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "repository_path": "plugins/clara/scripts/check_dependencies.py",
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+    },
+    {
+      "path": "scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/clara/scripts/managed_ocr_runtime.py",
+      "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
     },
     {
       "path": "skills/attribute-reporting/SKILL.md",
       "repository_path": "plugins/clara/skills/attribute-reporting/SKILL.md",
       "sha256": "f0ab8d8bc2c9a8fb48dffdd2991638be1176aad22886aa7d16c439c938c3ac78"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/__init__.py",
+      "sha256": "361dab625f1122781bef9bc5fa04c7d62cf31e6fc55a10433e818a96f4bc4309"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/cases.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/cases.py",
+      "sha256": "faf8ca6bbd59f16f679796a057b027b2efbcccfc4798dfc6c5e356d3239cb602"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/onboarding.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+      "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/teaching.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+      "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",
@@ -458,5 +598,9 @@
         30
       ]
     ]
+  },
+  "retained_from": {
+    "course_sha256": "f9b789c9607a886ad7588d41c79331a694a8c6bba592e2eef63f0a2fe27cb8d8",
+    "published_version": "0.1.207"
   }
 }

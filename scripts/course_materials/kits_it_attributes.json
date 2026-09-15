@@ -1,0 +1,27 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Creare un rapporto sull’assortimento con Clara",
+    "goal": "Imparare a fornire un pacchetto di dati commerciali già disponibile, chiedere un’analisi e usare il rapporto HTML verificato.",
+    "scenario": "Un team prodotto vuole capire l’assortimento prima della prossima riunione. Parti da un pacchetto fittizio sulla maglieria, segui la preparazione del rapporto e confronta le conclusioni con i prodotti di origine. Ripeti poi con un pacchetto aggiornato.",
+    "scope": "Primo rapporto completo da un pacchetto di dati locale esistente: acquisizione, confronto, interpretazione, revisione indipendente e consegna. Raccolta sui siti, classificazione centrale degli attributi e Brand Fit sono attività distinte e non vengono simulate.",
+    "inputs": "Apri brief-it.md e fornisci assortment-demo-it.zip. L’archivio contiene prodotti fittizi, gruppi di novità e più venduti dichiarati, confronti calcolati e controllo d’integrità. Non contiene un rapporto finito, interpretazioni approvate o ricevute del server.",
+    "request": "Clara, prepara da questo pacchetto un rapporto sull’assortimento per il team prodotto. Spiega quali dati contiene, confronta più venduti e novità con il resto e mostrami il rapporto con i suoi controlli.",
+    "steps": [
+      "Conferma rivenditore, categoria, dati forniti e destinatari. Clara apre l’archivio e ne verifica l’integrità. La conversazione vocale spiega i prodotti di origine e il significato dei gruppi definiti dal rivenditore.",
+      "Clara prepara le normali tabelle comparative e scrive il rapporto a partire dalle evidenze. Segui un confronto dai prodotti alla tabella e alla conclusione; distingui una caratteristica dell’assortimento da quantità vendute o spiegazioni causali.",
+      "Una revisione indipendente controlla affermazioni e leggibilità; i controlli nel browser verificano l’HTML. Apri il rapporto effettivo, il giudizio e le riserve. Trova sintesi, tabelle, prodotti di supporto e prossima domanda per il team."
+    ],
+    "deliverables": [
+      "Rapporto HTML locale con confronti, interpretazione, riferimenti alle fonti e giudizio esplicito di correttezza.",
+      "Tabelle di supporto e registri di revisione che spiegano giudizio e limiti residui."
+    ],
+    "review": "Controlla dati forniti, definizione dei gruppi e supporto di una conclusione. Le novità sono il gruppo indicato nella fonte; la posizione tra i più venduti non fornisce quantità vendute. Leggi le ragioni del giudizio prima di usare il rapporto.",
+    "checkpoints": [
+      "Indica pacchetto e richiesta necessari per iniziare e spiega che cosa produrrà Clara.",
+      "Apri il rapporto e collega una conclusione alle sue evidenze e allo stato di revisione."
+    ],
+    "practice": "Fornisci assortment-practice-it.zip, che cambia il gruppo fittizio delle novità. Chiedi un nuovo rapporto per gli stessi destinatari. Conserva il primo e confronta i cambiamenti nelle evidenze e nell’interpretazione.",
+    "success": "Sai avviare un rapporto, leggerne sintesi ed evidenze, capire il giudizio e ripetere il lavoro con un altro pacchetto.",
+    "repeat": "Fornisci un pacchetto con integrità verificata e indica destinatari e domanda. Clara prepara, rivede e consegna l’HTML localmente. La richiesta di dati centrali correnti segue l’acquisizione autenticata e il relativo confine dei dati."
+  }
+}

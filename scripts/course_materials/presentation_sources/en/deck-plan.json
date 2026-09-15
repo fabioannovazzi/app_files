@@ -1,0 +1,171 @@
+{
+  "schema_version": "clara.html_deck_plan.v1",
+  "allow_bespoke_html": false,
+  "slides": [
+    {
+      "id": "opening",
+      "layout_id": "editorial-cover",
+      "title": "A proposal for receiving requests",
+      "chapter": "opening",
+      "chapter_label": "Proposal",
+      "tone": "dark",
+      "notes": "Fictional proposal for discussion. A proposal for receiving requests",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-opening"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Internal discussion",
+        "title": "A proposal for receiving requests",
+        "source_note": "Fictional proposal for discussion",
+        "subtitle": "A shared form to trial with the team",
+        "author": "Officina Arco"
+      }
+    },
+    {
+      "id": "request",
+      "layout_id": "paired-comparison",
+      "title": "Make the request understandable",
+      "chapter": "request",
+      "chapter_label": "Request",
+      "tone": "light",
+      "notes": "Fictional proposal for discussion. Make the request understandable",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-request"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Internal discussion",
+        "title": "Make the request understandable",
+        "source_note": "Fictional proposal for discussion",
+        "left_label": "Today",
+        "left_title": "Scattered information",
+        "left_items": [
+          {
+            "label": "Contact",
+            "body": "A contact detail is sometimes missing."
+          },
+          {
+            "label": "Problem",
+            "body": "The description may need clarification."
+          }
+        ],
+        "right_label": "Proposal",
+        "right_title": "A shared form",
+        "right_items": [
+          {
+            "label": "Contact",
+            "body": "Record contact details and an agreed way to reply."
+          },
+          {
+            "label": "Problem",
+            "body": "Describe what the customer reports; do not invent a diagnosis."
+          }
+        ]
+      }
+    },
+    {
+      "id": "process",
+      "layout_id": "process-flow",
+      "title": "Clarify the request before proceeding",
+      "chapter": "process",
+      "chapter_label": "Process",
+      "tone": "light",
+      "notes": "Fictional proposal for discussion. Clarify the request before proceeding",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-process"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Internal discussion",
+        "title": "Clarify the request before proceeding",
+        "source_note": "Fictional proposal for discussion",
+        "steps": [
+          {
+            "label": "A",
+            "title": "Customer request",
+            "body": "Record bicycle, problem and contact details.",
+            "_fragment": 1
+          },
+          {
+            "label": "B",
+            "title": "Missing information",
+            "body": "Ask for missing information before assessment.",
+            "_fragment": 2
+          },
+          {
+            "label": "C",
+            "title": "Paolo's assessment",
+            "body": "Assess the work and prepare the quote.",
+            "_fragment": 3
+          },
+          {
+            "label": "D",
+            "title": "Quote to the customer",
+            "body": "Await confirmation before work and any additions.",
+            "_fragment": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "responsibilities",
+      "layout_id": "assertion",
+      "title": "Agree who follows the request",
+      "chapter": "responsibilities",
+      "chapter_label": "Responsibilities",
+      "tone": "dark",
+      "notes": "Fictional proposal for discussion. Agree who follows the request",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-responsibilities"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Internal discussion",
+        "title": "Agree who follows the request",
+        "source_note": "Fictional proposal for discussion",
+        "body": "Sara would gather and clarify requests. Paolo would assess the work and prepare the quote.",
+        "implication": "Proposed roles to agree before the trial."
+      }
+    },
+    {
+      "id": "decision",
+      "layout_id": "closing-decision",
+      "title": "Decide whether to trial the form",
+      "chapter": "decision",
+      "chapter_label": "Decision",
+      "tone": "light",
+      "notes": "Fictional proposal for discussion. Decide whether to trial the form",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-decision"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Internal discussion",
+        "title": "Decide whether to trial the form",
+        "source_note": "Fictional proposal for discussion",
+        "actions": [
+          {
+            "verb": "Agree",
+            "body": "Set roles and conditions before the trial."
+          },
+          {
+            "verb": "Review",
+            "body": "Collect feedback and revise the form after the trial."
+          }
+        ],
+        "closing_line": "The meeting must agree who will collect feedback."
+      }
+    }
+  ]
+}

@@ -1,0 +1,504 @@
+{
+  "schema_version": 1,
+  "purpose": "Historical fictional model artifacts for native regression replay only. Not shipped in teaching kits; not fresh research, professional approval or learner completion.",
+  "benchmark_sha256": "65b5a8e2942c06bb55b15ff8320bc948baf40a2c0239d3b56c5d535bf82992ca",
+  "cases": [
+    {
+      "run_id": "lucia-de-demo",
+      "product": "lucia",
+      "language": "de",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "49fd136733a99e6f4e209c5bb5e564dbde6c6414ec3e1b205e4d63279fedf985",
+        "answer_contract.json": "ab2f84d76df22210fdc89ce018bf0b874bd2f8c47b55736ad019796960183b53",
+        "claim_assurance.json": "691bfb70ebee5b289e9dc19055303aab1fbc4a66ef37b0cc70e5054e84e33902",
+        "editorial_assessment.json": "e8de2c4b13a4e5323993fafb58406b1122a061f6a4704abefd3ac280dfaca80a",
+        "historical_run_intake.json": "6e814f472d83ac54e5857d36d3ff1bb80d0495e6407aa9adff62c189f5f83935",
+        "intake.json": "4c26c1529203e26cd47d575fcfcc1ce4a3f1bdcc193d367bbb65c1a26b12bdd1"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-de.md",
+          "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-de-practice",
+      "product": "lucia",
+      "language": "de",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "4f5fdc17838d95c8b7ffebc7a07e181918f8ea439eefbc1b1e18a358df6cd032",
+        "answer_contract.json": "9208022326a23e8a125daf849f51bbb526c82af7142fff1f6a657809f9946556",
+        "claim_assurance.json": "5d8407a82b58ab56f5c11e278c7d9980463cfe9223c7d3e47bd936e64179defc",
+        "editorial_assessment.json": "b5e5a27072957c7d6cfe23f1ec5cf6bc7e018ef5310ffe0434d1829017cacae1",
+        "historical_run_intake.json": "9b007450af72ca6c7b08d9649d28842618b29e57ca6a1c229f3fa4660f5b6122",
+        "intake.json": "f4fc0efe98f052c076bede72cab5334e506b9a6b1ed91f3ba90516c316707f05"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-de.md",
+          "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-en-demo",
+      "product": "lucia",
+      "language": "en",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "0a9622654199b1446412ff0230b6beca4b2cc198d5f14e202e1a7549c96aa84a",
+        "answer_contract.json": "93c42f2f6e7a895f83bced7887dd731e2fbef0097406686f4282b987876cb438",
+        "claim_assurance.json": "e6ac35afc9f73ef1ef6e709bcea90e970c7de5678ac8daa63fe54c04b4fe0b76",
+        "editorial_assessment.json": "20f35f1fae1898644decf168782da8760976acfc50655716c7c4ecb00794c89d",
+        "historical_run_intake.json": "28b27f28d076c3d15e88fe911997c77070631faaea56240619f8fdd2bae047ef",
+        "intake.json": "9bab68735a79b01f4a17ddcdbe62ae0de6113ee16c30bfb9c65616faab9809f8"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-en.md",
+          "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-en-practice",
+      "product": "lucia",
+      "language": "en",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "ac1228ea4f3df4058c315879bac560d68a8bd427f68a05686a05009aced0aacf",
+        "answer_contract.json": "7164dde846f2f0febb4049e75d967a04ef4dac9aaba792128bdff2fc3579b832",
+        "claim_assurance.json": "1153edf1e38b168802a2800e55986e5058e49fd395d0a03cc7050cc95fd448c9",
+        "editorial_assessment.json": "e51580b56301c5dbbdbb544d4ebe24016545e86a43351401be5b7a0cf0bd1b9e",
+        "historical_run_intake.json": "992e7aab9622a12b7c10fa5781c88e480c550bc37662b8b78859c3f30010d7ef",
+        "intake.json": "d66147b1505c7a7a475cd275d7afca82050d0ef862125fef62b6c04e2235c4cb"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-en.md",
+          "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-es-demo",
+      "product": "lucia",
+      "language": "es",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "229a893458d786f76362ecccc5301b74e2761627be294582588580e791d44323",
+        "answer_contract.json": "73c2c96ee30d192b8ea864227fa28807fdaf6f483f7e3b72aec512e6168b9101",
+        "claim_assurance.json": "50b1c344e8323eadc0bb5b9f22f1cb7e78239178f2e59b5cd08f2bb52a87c7dc",
+        "editorial_assessment.json": "4f42a35304fe5d5003caf6787c3dc2786afdb51193a339c772410735e5517ca1",
+        "historical_run_intake.json": "8ba0db6fa2c1723596bc33b4302089a4b49a39805797a3698d5aa3ec461607aa",
+        "intake.json": "632e26af1b869baad713b323e95257d6420f535454021a60ac6a57d7e205c859"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-es.md",
+          "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-es-practice",
+      "product": "lucia",
+      "language": "es",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "ebc0f2d9765e454ef9af4fe885a000d217663836db55237d6d85b72a8035f6a1",
+        "answer_contract.json": "3befb87369f7a1876d5e60b9d28a7a79be13ad6a053905456cab43f1d1f9a540",
+        "claim_assurance.json": "53cb64e0fb8096de117cc1010965183f8f1b069bf93c7364b4258c8208f99989",
+        "editorial_assessment.json": "d0a3fb71d1826841a880dc070b643d01612530ea7f5e8040a97c58cf95598f2f",
+        "historical_run_intake.json": "f660202b64d8f25028af617c1f6fed0da934182cf9f1a7e17e4211e368ad08e0",
+        "intake.json": "13f654ad05f1fdf60196046050b8f464577388b32db383c9038520fa649c2b37"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-es.md",
+          "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-fr-demo",
+      "product": "lucia",
+      "language": "fr",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "aa22ed7e19294fa6e2e992e59e5b594a5587073264607275f5866ca1533f4f52",
+        "answer_contract.json": "64b4b056ad17afcaba4dcf20f7c67edbc0095e7a293fa5c386265491d432dacf",
+        "claim_assurance.json": "a641e466cbbade3c84f2d2a52027a2497b9aed8affd04320c8133cdb1d028739",
+        "editorial_assessment.json": "2f7c162b047f11dc7b81a6a6473c2387eab4b77885adbc8fe985873ed9a9bde1",
+        "historical_run_intake.json": "407d78cc438fdcd2199a582463b70b3e12bc3aaea02e63177f91c270c4c3fba8",
+        "intake.json": "f06090c1a852dce03a353d7cef156e2168bec5be5e99b9cbf24c4e97652de051"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-fr.md",
+          "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-fr-practice",
+      "product": "lucia",
+      "language": "fr",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "6819123096ce2246c3708252f53983dcb9046c3f8a33a4a34aa93f2e055c0aa0",
+        "answer_contract.json": "d88ed0172a1a4045a34cf149807da0a70e8ca312b03b0da219672a71798b8c8b",
+        "claim_assurance.json": "8bc8d19f5553bde76013b70dc19273e9cf2367c4de2d4f81ab07509dbb4a4409",
+        "editorial_assessment.json": "736b2970da806d4abede436fba24d3cea59d782b28211035f6dfb2933bf332b4",
+        "historical_run_intake.json": "66bdbf572bd1dd626f21b92220103df52499194a88deca8d1c0c483d9aab2a5a",
+        "intake.json": "c6e78984a5219b47ff072221004763707a0aa296399d893647a608a751b92bdb"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-fr.md",
+          "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-it-demo",
+      "product": "lucia",
+      "language": "it",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "27d81efe3b49df582b74fd22ad5045512d6a754c365103e57fb2eebcbf4f4db0",
+        "answer_contract.json": "75c9fcb70ebc3ecae9b14482c08e0a5a9ece932e677cfabb3e9984539a151ad2",
+        "claim_assurance.json": "2eb76e0ec9ff7793765405c705d36c0a79e5ca1d257f983668111b247abc1659",
+        "editorial_assessment.json": "aaa34082574e2599271391852a3b6918d27002d7af1a7e1685191ebc0709788a",
+        "historical_run_intake.json": "9a92c155055b0542104913682e17b7b935de0e7eb04c5b269f078e901801c485",
+        "intake.json": "0026846430c1a951baeafd14c992d568c6aa79648c5a30744a09942a5c6c31fa"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-it.md",
+          "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8"
+        }
+      ]
+    },
+    {
+      "run_id": "lucia-it-practice",
+      "product": "lucia",
+      "language": "it",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "03e50aeeda71026c824f399712049b6f9468a0927bc643db57bd29ead02b9915",
+        "answer_contract.json": "8978e2a32c8563d8b7fc5df28d10a0b8fc258b5c813b7f003b2ead5ae7818782",
+        "claim_assurance.json": "c889d18133745b65fa88d2a79c90e33d69ef856e403bc068ac1e4e4f26527572",
+        "editorial_assessment.json": "da184749b4e3967801d6781d9def5f69c3224e0829aca1a22c0975a14a3d2c6d",
+        "historical_run_intake.json": "e6e92d7a160182c22d5e4bd02551e870b1ed1b09628df9178de6b6661ce96454",
+        "intake.json": "a7288d0d04acdf6cd3533b49ad41796fe98c010a79848bb57d70ea010c5a5b22"
+      },
+      "sources": [
+        {
+          "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-it.md",
+          "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-de-demo",
+      "product": "vera",
+      "language": "de",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "08616b038f54561debdb10709130b12f50b0888d727bbd6bd535dcbc38b2aa08",
+        "answer_contract.json": "c4bc4c4e9c556342b9e6ea64dd75cf3f72cd20421de09e272841999243cce4c1",
+        "claim_assurance.json": "f92f8fa1f398bdb68a3d96c2d85395656bb50ed1932a2376ab90c290c9f869ef",
+        "editorial_assessment.json": "17b73831d6a5e5699aadbd13762cd9ebe59936411ad168d9dec1f5050b384c64",
+        "historical_run_intake.json": "fdecee8dd60531d5a0d811c37e0a732bb0e9539216b3544729c490d45fa043aa",
+        "intake.json": "dd1caebec2a47ba55edf0dc5a1c42563f87251de4e0db1bd47fbe3ef6024299c"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-de.md",
+          "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-de-practice",
+      "product": "vera",
+      "language": "de",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "9abaca59368aa19b2d34b4a89e05f0769a79fcb46fe6ea1f093f15fe7c7b4f01",
+        "answer_contract.json": "8c745ada62beb2d77fdb1c4c8eb017d5f224771784223926b2139ea92f9a4242",
+        "claim_assurance.json": "e8516d290c55fdaf59a4eb231b93b38f6c3527449c4e0c9fb143dedd20c52fd5",
+        "editorial_assessment.json": "016cd70deccc46754d02f8e9d95c772b9e9b12d22ebbe978e5ed0643ae188e90",
+        "historical_run_intake.json": "c133d87b08f459b6b7915ee8f0d90063e558371ca098d45277997c4bb7c4ae11",
+        "intake.json": "4a4e3c51ef9ca9484abbc1bb135f2b9498563479c11f64a1e48ceb9ec6b8cd1d"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-de.md",
+          "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-en-demo",
+      "product": "vera",
+      "language": "en",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "bc3a324820d1ce8f29a208b87da009d934767a0e42d3372b98371824701317a7",
+        "answer_contract.json": "81d9c64450808b0d31d4e3b98102a1745bbba56d3efa62610fe290b6dcb3566f",
+        "claim_assurance.json": "102f87be9b611e28471638cd7bdd41cf3a3fd9e5cc667ac486e38784a55f8a63",
+        "editorial_assessment.json": "5d868d95536746d77118f66d59a4275f5241d5b99a3dabf2d243a11050faf15b",
+        "historical_run_intake.json": "33119f74a72865e6c7935ed11c1161c7f6cca91a8a76467238fff0b72c83f667",
+        "intake.json": "cda87f97aaa2a4de36bf2ee42b903d9872d87961331d22aa4a8787d69cf6626e"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-en.md",
+          "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-en-practice",
+      "product": "vera",
+      "language": "en",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "893ed4f577bd0839b1f7440538013c4c674d52a464eb6488f1f2eb71b5ce32c6",
+        "answer_contract.json": "e7a9e255e52b10c21a51fa464f1dcd2a81516eb94297dd18a6171f1efaaf9215",
+        "claim_assurance.json": "b7f1133113cc6a712f11997b45c62380b583320cfd5c0c8dc02c1ab6616446c2",
+        "editorial_assessment.json": "ee82a71c7fcebeb766238d47501d91322a7a08391c8d1d823e9f385cd8304788",
+        "historical_run_intake.json": "daee5b3c5052f040dc36ebf467122b287842dca384c119bf9dbd068a46f2229b",
+        "intake.json": "66d02ff4d76184f4b447df4548af4dc6e44a990b3664f55a2309cbf40602d5ea"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-en.md",
+          "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-es-demo",
+      "product": "vera",
+      "language": "es",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "535d4293f072ccefb2d49a1f5c6753224a6fa1c6a83f6be118deecb90ba1afc4",
+        "answer_contract.json": "2b7512176fddd4fd8a398f428fbfb5e880ec17c6a47e1e2301a72f80d2cdd60d",
+        "claim_assurance.json": "25e3d596e960465da912ffa01433300fe0d24d549ee261a6f1831eb71dffffe6",
+        "editorial_assessment.json": "736c617cc8382e89ea08cb994a10d6ae148b700c5256578bd7c917af6ced920c",
+        "historical_run_intake.json": "be695521e9a4d5fba3d2e29704c782b4a86b87d2ef9d3e651406f6bfc96f1f8d",
+        "intake.json": "4a8bd3b99243a9ae300493e8796ae3c7f9d2650af7d4590d309e8992d824d867"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-es.md",
+          "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-es-practice",
+      "product": "vera",
+      "language": "es",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "da1bda1da41a64397fb2a7bdcd7e9b3949d8a359c5c5a74bdab36331c77336ae",
+        "answer_contract.json": "40be93bf16c356c0fbdeec0ef8d89cac0073431680ecef925998bb7455467a1a",
+        "claim_assurance.json": "e891ffacfab721ff625c87457a67b22e0ed99ef6417e6c5355a52a7214fe384b",
+        "editorial_assessment.json": "b4343ce10106ea2f0c889e41d8bf819b37a0436b629dcec6a5b08c6c4e28ed94",
+        "historical_run_intake.json": "945fa5904b461ac73751017d63e6cf1a5ad8e9c4de411a731069d8b53a9ab781",
+        "intake.json": "7733442016233d7db3ff195a50d9e9c40049ed3a8699bda89d9aef6c756b4f59"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-es.md",
+          "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-fr-demo",
+      "product": "vera",
+      "language": "fr",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "b22345c524527bd14195c401973174a6bd4ba92ab40597cba96df85b0a5ccc94",
+        "answer_contract.json": "5fd56402e9eaef8d5a09e2e87fcb4af42278c11a900a1760a8b2d3ad1597408d",
+        "claim_assurance.json": "6fa3bd364a8b96046e1f5b2cda79c39fdc71a6f54f54e8313921fccca058100e",
+        "editorial_assessment.json": "38cd0fc596789ebdf9536d8cd02913835974e29ad4b7890d8724b05e34225e93",
+        "historical_run_intake.json": "a5ab9feea792a8b6d9272369119934ae8f62cfbe20b8d72b1a4e1d9f5137965b",
+        "intake.json": "ae20727a263f3598b96db98fd2c51fb4a3f8532ea22c9515a69587f25c2c4053"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-fr.md",
+          "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-fr-practice",
+      "product": "vera",
+      "language": "fr",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "77bc0780d140b462f9d7dc3eaf5bb41e45aad6ed7c8b6094eb5ef926bc6a76a1",
+        "answer_contract.json": "49f556a745609270af365e2a3112edaab56a1c0d787aa4f38ebd61ff2d91e4a0",
+        "claim_assurance.json": "dd00455d47b93a29baecea647ff900e13e3ce046e45014fc88b5084e16bee9f0",
+        "editorial_assessment.json": "da6a969a971fc5a0ac8d0e3ea51c08d459e215187aa35dd92c8fbc723a558bf8",
+        "historical_run_intake.json": "183a8cd0ce6d0a00d4f22d0f571c1eca2f0c7e9b2a80d9f7140e55e5f7e61e7c",
+        "intake.json": "21a55b2aa39c40268486cc6021bee9a9176a5d0d6fe88a8fdd68b41c1f032ab8"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-fr.md",
+          "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-it-demo",
+      "product": "vera",
+      "language": "it",
+      "phase": "demo",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "27635dd99aae7da007d928a62e290758f68347a51ed310685c2b48690979ecde",
+        "answer_contract.json": "971c87c5dd0826aa7cf5e175f01a3b165cfd146151c4d8a2fccabad3c6eb2e2e",
+        "claim_assurance.json": "58d4d22641bb42bdb77f1ea1e7bd82c3c731652e79081cb6d769ac9798608e32",
+        "editorial_assessment.json": "6c720ae3210d15fe506dbe95fc25df82106717c3acbee5e205d2da8c74056ff8",
+        "historical_run_intake.json": "0f227be12e48e658cb5501a92a95d0ce235dba393bee9d9c62f316c39ce3800b",
+        "intake.json": "22f8e9f030e83e21c041a5d5f55ba9b244bbecd5f2c04ae0527c797302678c0f"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-it.md",
+          "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8"
+        }
+      ]
+    },
+    {
+      "run_id": "vera-it-practice",
+      "product": "vera",
+      "language": "it",
+      "phase": "practice",
+      "generation_session_id": "/root/communication_packaging_revision",
+      "files": {
+        "model_contribution.json": "5dcca9703c85c9d232a4fbc91bb542ef25f808c8d1a1c5f4dee888bf05d7382a",
+        "answer_contract.json": "d3dc06f1705ecaced071f1d9fd8f75ddfdd35e8637ff3c99b216ee05ecb0924d",
+        "claim_assurance.json": "35b5fc595582cf53d781d6baf6c0ca91f1991fbc0e50fc0dd0e1bad0b21e60c4",
+        "editorial_assessment.json": "a8beecb1d9faf1c6e5ad2b32c5e71d2a44728a1356f0b85e99c6567b81b86f46",
+        "historical_run_intake.json": "89c5e87b939e1b4299a5cd7ad86ed4069a216ab13e04654509c2df1ae3c52c7d",
+        "intake.json": "d7babc2aab3b9a359da8bdc62812385a8180843bc7dc13d043ae44caa10f19aa"
+      },
+      "sources": [
+        {
+          "path": "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-it.md",
+          "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8"
+        }
+      ]
+    }
+  ],
+  "kit_inputs": {
+    "vera": {
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/brief-de.md": "5c0a243e07d4c32300d6f6fced22fd2000053a32d3f68cd9e4aa639c1e594218",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/brief-en.md": "56c28c7f59e443f5b7e772c1d54cde8dbd451c774179742b317e6c3a2755b195",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/brief-es.md": "a2de9b73aea6269bdc37cf4968437b2f45b8cb987b84bc5a30f350201b6634e3",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/brief-fr.md": "ced4bae5981d708958db7ce49b7a7ee2352b91edc8cae0c1363812f5f943c279",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/brief-it.md": "ab2c7f22dcfd6edf1d8109f8a72b6bf78724d53831bc8f4d978e56d5f4890e38",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-de-provenance.json": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-de.md": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-en-provenance.json": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-en.md": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-es-provenance.json": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-es.md": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-fr-provenance.json": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-fr.md": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-it-provenance.json": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/input/source-it.md": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/brief-de.md": "5c0a243e07d4c32300d6f6fced22fd2000053a32d3f68cd9e4aa639c1e594218",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/brief-en.md": "56c28c7f59e443f5b7e772c1d54cde8dbd451c774179742b317e6c3a2755b195",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/brief-es.md": "a2de9b73aea6269bdc37cf4968437b2f45b8cb987b84bc5a30f350201b6634e3",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/brief-fr.md": "ced4bae5981d708958db7ce49b7a7ee2352b91edc8cae0c1363812f5f943c279",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/brief-it.md": "ab2c7f22dcfd6edf1d8109f8a72b6bf78724d53831bc8f4d978e56d5f4890e38",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/practice-de.md": "2bba3c1f2b3c6f36bb4f0875b08b5aef3fefabe936dfd15f457ee2e5499e4159",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/practice-en.md": "1ac855a62ab75e8b1dfda2721c1a58d704ed048eb58aef6db3651baf3ac197a7",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/practice-es.md": "829466f9c59c8b99aecb00534a622e5c3800ae121f0bb51a742345e07e775fdc",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/practice-fr.md": "2a3b50913467d3a7e60b8f8d4f6e82a4e8b3eb5a01bcad88d7ebc90bd6256435",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/practice-it.md": "dc77bac707b4e559ef8a7c2eefdfbec49a9af3584b13e3ec5793d5fbff902e57",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-de-provenance.json": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-de.md": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-en-provenance.json": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-en.md": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-es-provenance.json": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-es.md": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-fr-provenance.json": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-fr.md": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-it-provenance.json": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "plugins/vera/assets/courses/comunicazione-professionale/files/practice/source-it.md": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8"
+    },
+    "lucia": {
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/brief-de.md": "e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/brief-en.md": "f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/brief-es.md": "9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/brief-fr.md": "ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/brief-it.md": "537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-de-provenance.json": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-de.md": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-en-provenance.json": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-en.md": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-es-provenance.json": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-es.md": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-fr-provenance.json": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-fr.md": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-it-provenance.json": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/input/source-it.md": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/brief-de.md": "e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/brief-en.md": "f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/brief-es.md": "9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/brief-fr.md": "ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/brief-it.md": "537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/practice-de.md": "2bba3c1f2b3c6f36bb4f0875b08b5aef3fefabe936dfd15f457ee2e5499e4159",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/practice-en.md": "1ac855a62ab75e8b1dfda2721c1a58d704ed048eb58aef6db3651baf3ac197a7",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/practice-es.md": "829466f9c59c8b99aecb00534a622e5c3800ae121f0bb51a742345e07e775fdc",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/practice-fr.md": "2a3b50913467d3a7e60b8f8d4f6e82a4e8b3eb5a01bcad88d7ebc90bd6256435",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/practice-it.md": "dc77bac707b4e559ef8a7c2eefdfbec49a9af3584b13e3ec5793d5fbff902e57",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-de-provenance.json": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-de.md": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-en-provenance.json": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-en.md": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-es-provenance.json": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-es.md": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-fr-provenance.json": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-fr.md": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-it-provenance.json": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-it.md": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8"
+    }
+  },
+  "assessment_revision": "Contribution revision 02, claim reassessment revision 03, and fresh editorial review in /root/communication_editorial_isolated_07, a different session from the actual blind benchmark qualification. Exact earlier versions remain local."
+}

@@ -1,0 +1,1 @@
+Pratica: prepara una nuova versione per i colleghi appena arrivati. Aggiungi un esempio di richiesta incompleta: «La bici fa rumore». Mostra quali informazioni chiedere: recapito, quando si sente il rumore e quale parte della bici sembra coinvolta. Non diagnosticare il guasto. Mantieni esplicito che la procedura è proposta e conserva la prima presentazione.

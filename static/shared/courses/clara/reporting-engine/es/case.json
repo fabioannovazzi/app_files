@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "reporting-engine",
+  "scenario": "El conjunto ficticio informa ventas netas de EUR 40.000 en enero y EUR 50.000 en febrero. Falta Discount separado. Las notas confirman que Sales ya incluye descuentos; restarlos otra vez sería incorrecto.",
+  "columns": [
+    "Periodo ficticio",
+    "Sales",
+    "Nota de fuente"
+  ],
+  "rows": [
+    [
+      "2026-01",
+      "EUR 40.000",
+      "Ventas netas"
+    ],
+    [
+      "2026-02",
+      "EUR 50.000",
+      "Ventas netas"
+    ],
+    [
+      "Discount separado",
+      "Ausente",
+      "Ya reflejado en Sales"
+    ]
+  ],
+  "scope": "Recepción, significado de métricas y comparación temporal. Las medidas ausentes no son cero y la capacidad de Clara no se presenta como de Vera."
+}

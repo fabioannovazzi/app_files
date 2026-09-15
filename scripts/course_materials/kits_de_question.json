@@ -1,0 +1,52 @@
+{
+  "vera/quesito-legale-fiscale": {
+    "title": "Eine geprüfte Antwort mit Vera erhalten",
+    "goal": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
+    "scenario": "Imprese Arco bittet um eine kurze Notiz zu den EU-Regeln gegen Zahlungsverzug. Wir beginnen mit der schriftlichen Anfrage und den Ausgangsquellen und erstellen über den Workflow eine tatsächliche Antwort.",
+    "scope": "Der vollständige Weg von der Frage zur geprüften Antwort. Eine allgemeine Informationsnotiz dient als einfaches Beispiel; ein Gutachten zu einer konkreten Position kann zusätzlich die Prüfung einer Gegenposition erfordern.",
+    "inputs": "Öffne question-de.md für Anfrage, Zielgruppe, Umfang und Format. sources-de.md stellt Leitfaden und offiziellen Text vor. Du musst keine technischen Anweisungen verfassen oder interne Schritte auswählen.",
+    "request": "Vera, beantworte die Frage von Imprese Arco in dieser Datei. Erstelle die gewünschte kurze Notiz, prüfe Quellen und Antwort und zeige mir das Dokument und die noch zu prüfenden Punkte.",
+    "steps": [
+      "Im Arbeitsthread liest Vera die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Sprachchat erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.",
+      "Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. Im Arbeitsthread entstehen Recherche und Antwort. Die Spracherklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.",
+      "Vera prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung."
+    ],
+    "deliverables": [
+      "Word-Notiz und geprüfter Antworttext mit Quellen und Grenzen.",
+      "Prüfpaket, das die Kontrolle der Aussagen und verbleibende Prüfaufgaben nachvollziehbar macht."
+    ],
+    "review": "Prüfe, ob die Notiz die Frage im gewünschten Umfang und in der gewünschten Sprache beantwortet. Vergleiche eine Aussage mit ihrer Quelle. Unterscheide allgemeine Regeln und ihre Anwendung auf einen Mandanten; Prüfungen ersetzen kein fachliches Urteil.",
+    "checkpoints": [
+      "Erkläre Frage, Zielgruppe und Rechtsrahmen.",
+      "Finde eine Schlussfolgerung, ihre Quelle und eine Grenze oder ausstehende Prüfung."
+    ],
+    "practice": "Lies practice-de.md und fordere eine neue Fassung für die Einführung mit Lieferanten öffentlicher Stellen an. Bewahre die erste Version, verfolge neue Recherche und Prüfung und erläutere die Verwendung des Vergleichs.",
+    "success": "Du kannst eine vollständige Frage formulieren, den Rechercheweg wählen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.",
+    "repeat": "Nenne Vera Frage, verfügbare Fakten, Land oder Rechtsrahmen, Zielgruppe und gewünschtes Ergebnis. Prüfe Umfang, Quellen, Schlussfolgerungen und offene Punkte im erstellten Dokument."
+  },
+  "lucia/quesito-legale-fiscale": {
+    "title": "Eine geprüfte Antwort mit Lucia erhalten",
+    "goal": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
+    "scenario": "Imprese Arco bittet um eine kurze Notiz zu den EU-Regeln gegen Zahlungsverzug. Wir beginnen mit der schriftlichen Anfrage und den Ausgangsquellen und erstellen über den Workflow eine tatsächliche Antwort.",
+    "scope": "Der vollständige Weg von der Frage zur geprüften Antwort. Eine allgemeine Informationsnotiz dient als einfaches Beispiel; ein Gutachten zu einer konkreten Position kann zusätzlich die Prüfung einer Gegenposition erfordern.",
+    "inputs": "Öffne question-de.md für Anfrage, Zielgruppe, Umfang und Format. sources-de.md stellt Leitfaden und offiziellen Text vor. Du musst keine technischen Anweisungen verfassen oder interne Schritte auswählen.",
+    "request": "Lucia, beantworte die Frage von Imprese Arco in dieser Datei. Erstelle die gewünschte kurze Notiz, prüfe Quellen und Antwort und zeige mir das Dokument und die noch zu prüfenden Punkte.",
+    "steps": [
+      "Im Arbeitsthread liest Lucia die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Sprachchat erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.",
+      "Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. Im Arbeitsthread entstehen Recherche und Antwort. Die Spracherklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.",
+      "Lucia prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung."
+    ],
+    "deliverables": [
+      "Word-Notiz und geprüfter Antworttext mit Quellen und Grenzen.",
+      "Prüfpaket, das die Kontrolle der Aussagen und verbleibende Prüfaufgaben nachvollziehbar macht."
+    ],
+    "review": "Prüfe, ob die Notiz die Frage im gewünschten Umfang und in der gewünschten Sprache beantwortet. Vergleiche eine Aussage mit ihrer Quelle. Unterscheide allgemeine Regeln und ihre Anwendung auf einen Mandanten; Prüfungen ersetzen kein fachliches Urteil.",
+    "checkpoints": [
+      "Erkläre Frage, Zielgruppe und Rechtsrahmen.",
+      "Finde eine Schlussfolgerung, ihre Quelle und eine Grenze oder ausstehende Prüfung."
+    ],
+    "practice": "Lies practice-de.md und fordere eine neue Fassung für die Einführung mit Lieferanten öffentlicher Stellen an. Bewahre die erste Version, verfolge neue Recherche und Prüfung und erläutere die Verwendung des Vergleichs.",
+    "success": "Du kannst eine vollständige Frage formulieren, den Rechercheweg wählen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.",
+    "repeat": "Nenne Lucia Frage, verfügbare Fakten, Land oder Rechtsrahmen, Zielgruppe und gewünschtes Ergebnis. Prüfe Umfang, Quellen, Schlussfolgerungen und offene Punkte im erstellten Dokument."
+  }
+}

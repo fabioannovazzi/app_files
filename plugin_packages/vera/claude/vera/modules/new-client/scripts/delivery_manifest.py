@@ -223,6 +223,15 @@ def _validate_assistant_text(
     if _is_source_evidence(relative_path):
         return
 
+    if relative_path.as_posix() in {
+        "model_data_report.json",
+        "model_data_report.md",
+    }:
+        # These reserved disclosures must identify the actual processing host.
+        # Exempt only the name ban; run identity, permissions and byte receipts
+        # still apply. Their native report validator owns disclosure semantics.
+        forbidden_terms = ()
+
     _validate_scannable_text(
         relative_path.as_posix(),
         context=f"assistant-authored path {relative_path.as_posix()}",

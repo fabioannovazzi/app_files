@@ -1,0 +1,281 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "business-planning",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en"
+  ],
+  "language_basis": "workflow_output_contract",
+  "sources": [
+    {
+      "path": "modules/business-planning/references/case-contract.md",
+      "repository_path": "plugins/business-planning/references/case-contract.md",
+      "sha256": "c3255a4770c410162029bc07222693e4d12617a91ef77df38455b39c920512a1"
+    },
+    {
+      "path": "modules/business-planning/references/financing-assessment.md",
+      "repository_path": "plugins/business-planning/references/financing-assessment.md",
+      "sha256": "8fca3d1622c56814ddbfe3537adee25c762535a5aac687e43aec140f60d2125d"
+    },
+    {
+      "path": "modules/business-planning/references/sites-delivery.md",
+      "repository_path": "plugins/business-planning/references/sites-delivery.md",
+      "sha256": "11eff0e90e80cfb5fa853d509c82cbdfec60ab625a23d501ad9f4ed94e767776"
+    },
+    {
+      "path": "modules/business-planning/scripts/business_planning_contribution.py",
+      "repository_path": "plugins/business-planning/scripts/business_planning_contribution.py",
+      "sha256": "ad2f1500df8ceb0127ce22aae3bd85ead8b57c84616ebd4db23022795e1f2926"
+    },
+    {
+      "path": "modules/business-planning/scripts/business_planning_core.py",
+      "repository_path": "plugins/business-planning/scripts/business_planning_core.py",
+      "sha256": "28bf6bc3bf03fc6eb7ba05ce38c66b417a6aa5461ffcd0048b5033bf96d67963"
+    },
+    {
+      "path": "modules/business-planning/scripts/check_dependencies.py",
+      "repository_path": "plugins/business-planning/scripts/check_dependencies.py",
+      "sha256": "df7d7c9ab748163f98d50d3514f859594ea89aab65b05b302bb2d7987c8410c2"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_assessment.py",
+      "repository_path": "plugins/business-planning/scripts/planning_assessment.py",
+      "sha256": "ae5f7075ccad11e35d6a7b0559d5b1a44037efcd9d9eaf3949f7c5dd8374b389"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_cli.py",
+      "repository_path": "plugins/business-planning/scripts/planning_cli.py",
+      "sha256": "677242e2a027c0d3c3aeff6cf537cf3e879aedbfc943d2edc6cd7ae4c49874f2"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_commercial.py",
+      "repository_path": "plugins/business-planning/scripts/planning_commercial.py",
+      "sha256": "5d318e0fc442378a6ac27780e392a1435bfe0ae0f9b04c7f7e04dcdb5f3eed44"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_cycle.py",
+      "repository_path": "plugins/business-planning/scripts/planning_cycle.py",
+      "sha256": "86ea90f4c52b8b00bd012e6da49d08b337a3a8aac3ac8be072b648e8076b991e"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_decision_report.py",
+      "repository_path": "plugins/business-planning/scripts/planning_decision_report.py",
+      "sha256": "26ed46e24534a99bc3772c198785021b7365b52cbb5b99a48f11ac56b6ecacd7"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_financing.py",
+      "repository_path": "plugins/business-planning/scripts/planning_financing.py",
+      "sha256": "e6c852b3d34817a3b4a111223e7e3071430261301dfba6d509339fe60fdcd25a"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_interaction.py",
+      "repository_path": "plugins/business-planning/scripts/planning_interaction.py",
+      "sha256": "3acf8c8bc7e22042291f8050205bf2c3fcf17c5a66c9d5e3621d61cd236d63bf"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_presentation.py",
+      "repository_path": "plugins/business-planning/scripts/planning_presentation.py",
+      "sha256": "3d53a925c87ade0bd564064e10c5295709e4e2db37cbb0a5d58fc6f16ff3a55f"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_report.py",
+      "repository_path": "plugins/business-planning/scripts/planning_report.py",
+      "sha256": "e3c6dfa66b4614b96bc99d6ddfcccbe2961f41652a078291989d190e8bf4209b"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_site.py",
+      "repository_path": "plugins/business-planning/scripts/planning_site.py",
+      "sha256": "2c78c6cba31ce24603582d5b8c739c5fdabe4ed3e5eb14189331a8d69b36af7f"
+    },
+    {
+      "path": "modules/business-planning/scripts/planning_workflow.py",
+      "repository_path": "plugins/business-planning/scripts/planning_workflow.py",
+      "sha256": "44bb1a8ae6193bdea5c7e4a9173181c6cd0fb73dc0cfcc97f72fbf7d6d7ce506"
+    },
+    {
+      "path": "modules/business-planning/scripts/prepare_report_site.py",
+      "repository_path": "plugins/business-planning/scripts/prepare_report_site.py",
+      "sha256": "1d49f59d6e493f658902b828048332859edd996dfa3494a7532a31a6e056f38e"
+    },
+    {
+      "path": "modules/business-planning/scripts/run_business_plan.py",
+      "repository_path": "plugins/business-planning/scripts/run_business_plan.py",
+      "sha256": "ce43cb335e342c74b5fe578d2b52558ccc2fef85678cc6ffdf07008a87c5d9c9"
+    },
+    {
+      "path": "modules/business-planning/scripts/run_strategic_plan.py",
+      "repository_path": "plugins/business-planning/scripts/run_strategic_plan.py",
+      "sha256": "ecf900ef1a32771f53848eac3d530bd908a95b27a0a80227f0aff7cce2cf653c"
+    },
+    {
+      "path": "modules/business-planning/scripts/strategic_planning_core.py",
+      "repository_path": "plugins/business-planning/scripts/strategic_planning_core.py",
+      "sha256": "7f5360c69a0441de3647e6077fe7b0a876eaa194366afc38c3bf04a7a1b5fb51"
+    },
+    {
+      "path": "modules/business-planning/skills/business-planning/SKILL.md",
+      "repository_path": "plugins/business-planning/skills/business-planning/SKILL.md",
+      "sha256": "8b49c11af9caf9df64b7b4b85d03e83eaf89fe72c94c231ed7961d4b57d37f7b"
+    },
+    {
+      "path": "skills/business-planning/SKILL.md",
+      "repository_path": "plugins/clara/skills/business-planning/SKILL.md",
+      "sha256": "66aac3672b0a4d37f3b269d83ba3f48592acf56c1164e7daafe432e2a4efabf6"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un investimento, due ipotesi da verificare",
+      "goal": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
+      "scenario": "Arco valuta un nuovo servizio in abbonamento. Il caso assume 100 clienti medi a 50 EUR al mese e 42.000 EUR di costi annui. Il prezzo è proposto dal team; la domanda è sostenuta soltanto da cinque colloqui esplorativi.",
+      "request": "Clara, aiutami a capire quali ipotesi rendono sostenibile questo nuovo servizio.",
+      "scope": "Esempio di piano economico elementare. Ricavi e costi non bastano a stimare cassa, imposte o fabbisogno di investimento.",
+      "input_columns": [
+        "Ipotesi fittizia",
+        "Valore",
+        "Fonte"
+      ],
+      "input_rows": [
+        [
+          "Clienti medi paganti",
+          "100",
+          "P1 · ipotesi del team"
+        ],
+        [
+          "Prezzo mensile",
+          "50 EUR",
+          "P1 · proposta commerciale"
+        ],
+        [
+          "Costi annui",
+          "42.000 EUR",
+          "P2 · stima operativa"
+        ],
+        [
+          "Interviste esplorative",
+          "5",
+          "P3 · note; nessun ordine"
+        ]
+      ],
+      "basis": "P1 e P2 sono assunzioni esplicite del caso; P3 esplora bisogni, ma non dimostra 100 clienti acquisiti.",
+      "method": [
+        "Definisci la decisione e separa evidenze, assunzioni accettate e informazioni ancora da raccogliere.",
+        "Costruisci il piano corrente con clienti, prezzi, costi e tempi coerenti. Collega ogni ipotesi alla fonte e mantieni separate le dimensioni economiche e finanziarie.",
+        "Confronta scenari utili e presenta la decisione, le sensibilità e le azioni per ridurre l'incertezza. Il professionista rivede il piano e le ipotesi."
+      ],
+      "result_title": "Il volume di clienti è l'ipotesi decisiva",
+      "conclusion": "Nello scenario base i ricavi annui sono 60.000 EUR e il margine sui costi indicati è 18.000 EUR. Con 70 clienti quel margine si azzera.",
+      "output_columns": [
+        "Scenario",
+        "Ricavi annui",
+        "Ricavi meno costi indicati"
+      ],
+      "output_rows": [
+        [
+          "100 clienti medi",
+          "60.000 EUR",
+          "18.000 EUR"
+        ],
+        [
+          "70 clienti medi",
+          "42.000 EUR",
+          "0 EUR"
+        ]
+      ],
+      "check": "Il risultato è condizionato alle ipotesi. Il margine mostrato non è utile netto né cassa; i colloqui non equivalgono a ordini.",
+      "question": "Il calcolo è esatto: possiamo confermare la sostenibilità del progetto?",
+      "answer": "Possiamo confermare l'aritmetica del caso. Servono evidenze sulla domanda e il piano completo di costi, investimenti e tempi di incasso prima della decisione.",
+      "practice": "Portiamo il prezzo a 45 EUR: confrontiamo gli scenari senza nascondere quali ipotesi sono cambiate.",
+      "next": "Seleziona un investimento o un'iniziativa concreta e raccogli preventivi, evidenze commerciali e assunzioni che sei pronto a discutere."
+    },
+    "en": {
+      "title": "One investment, two assumptions to test",
+      "goal": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes.",
+      "scenario": "Fictional Arco considers a subscription service with 100 average paying customers at EUR 50 per month and EUR 42,000 annual costs. The price is a team proposal; demand evidence consists of five exploratory interviews, not orders.",
+      "request": "Clara, help me understand which assumptions make this service sustainable.",
+      "scope": "A basic economic scenario. Revenue less these costs does not establish cash flow, tax or investment needs.",
+      "input_columns": [
+        "Fictional assumption",
+        "Value",
+        "Source"
+      ],
+      "input_rows": [
+        [
+          "Average paying customers",
+          "100",
+          "P1 · team assumption"
+        ],
+        [
+          "Monthly price",
+          "EUR 50",
+          "P1 · proposal"
+        ],
+        [
+          "Annual costs",
+          "EUR 42,000",
+          "P2 · operating estimate"
+        ],
+        [
+          "Exploratory interviews",
+          "5",
+          "P3 · notes; no orders"
+        ]
+      ],
+      "basis": "P1 and P2 are explicit assumptions. P3 explores needs without proving that 100 customers will subscribe.",
+      "method": [
+        "Define the decision and separate evidence, accepted assumptions and information still needed.",
+        "Build the current plan with coherent customers, prices, costs and timing. Link assumptions to sources and distinguish economic results from cash.",
+        "Compare useful scenarios and present the decision, sensitivities and evidence-gathering actions for professional review."
+      ],
+      "result_title": "Customer volume is the decisive assumption",
+      "conclusion": "The base scenario produces EUR 60,000 annual revenue and EUR 18,000 above the stated costs. At 70 customers, that difference is zero.",
+      "output_columns": [
+        "Scenario",
+        "Annual revenue",
+        "Revenue less stated costs"
+      ],
+      "output_rows": [
+        [
+          "100 average customers",
+          "EUR 60,000",
+          "EUR 18,000"
+        ],
+        [
+          "70 average customers",
+          "EUR 42,000",
+          "EUR 0"
+        ]
+      ],
+      "check": "These are conditional results, not net profit or cash. Interviews are not orders.",
+      "question": "The arithmetic is correct. Can we confirm project viability?",
+      "answer": "We can confirm the case arithmetic. Demand evidence and a complete cost, investment and collection-timing plan are still needed.",
+      "practice": "Reduce the price to EUR 45 and compare scenarios with the changed assumption visible.",
+      "next": "Choose a concrete investment and collect quotations, commercial evidence and assumptions to discuss."
+    }
+  },
+  "visual": {
+    "column": 1,
+    "bars": [
+      [
+        0,
+        60000
+      ],
+      [
+        1,
+        42000
+      ]
+    ]
+  }
+}

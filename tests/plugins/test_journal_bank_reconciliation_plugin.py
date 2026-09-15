@@ -2372,9 +2372,9 @@ def test_plugin_inspects_and_runs_deterministic_journal_bank_reconciliation(
         if output["path"] == "review_notes.md"
     )
     assert review_notes_output["required_text"] == [
-        "# Journal-Bank Reconciliation Review Notes",
-        "## Stage Counts",
-        "## Review Policy",
+        "# Revisione della riconciliazione bancaria",
+        "## Corrispondenze per metodo",
+        "## Controlli da svolgere",
     ]
     workbook_output = next(
         output
@@ -11983,6 +11983,7 @@ def test_journal_bank_mcp_no_native_child_cannot_extend_trace_outputs(
         "hidden_column",
         "hyperlink_cell",
         "styled_cell",
+        "reused_style",
         "default_style_concealment",
         "extra_package_entry",
         "prefixed_formula",
@@ -12054,7 +12055,7 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
                 'workbook_path = output_dir / "journal_bank_reconciliation.xlsx"',
                 'if mode == "garbage_bytes":',
                 '    workbook_path.write_bytes(b"forged workbook bytes")',
-                'elif mode in {"missing_sheet", "changed_header", "changed_key_cell", "extra_sheet", "formula_cell", "hidden_sheet", "hidden_row", "hidden_column", "hyperlink_cell", "styled_cell"}:',
+                'elif mode in {"missing_sheet", "changed_header", "changed_key_cell", "extra_sheet", "formula_cell", "hidden_sheet", "hidden_row", "hidden_column", "hyperlink_cell", "styled_cell", "reused_style"}:',
                 "    workbook = openpyxl.load_workbook(workbook_path)",
                 '    if mode == "missing_sheet":',
                 '        workbook.remove(workbook["normalized_journal"])',
@@ -12074,6 +12075,8 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
                 '        workbook["matches"].column_dimensions["A"].hidden = True',
                 '    elif mode == "hyperlink_cell":',
                 '        workbook["matches"]["A1"].hyperlink = "https://example.invalid/"',
+                '    elif mode == "reused_style":',
+                '        workbook["matches"]["A2"]._style = workbook["matches"]["A1"]._style',
                 "    else:",
                 "        from openpyxl.styles import Font",
                 '        workbook["matches"]["A1"].font = Font(color="FFFFFF")',

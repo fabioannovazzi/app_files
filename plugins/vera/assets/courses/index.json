@@ -1,10 +1,10 @@
 {
-  "schema": "mparanza.course_catalog.v1",
+  "schema": "mparanza.teaching_catalog.v2",
   "product": "vera",
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "8459fee9a7583067f142c9ac35420767e5bf323a6f09750b8e4a8b16762b0001",
+      "sha256": "47fda948d8397212cd03a8d8423b24b89493a4a2b9330ae3e2bed4db9d37057a",
       "languages": [
         "it",
         "en",
@@ -13,17 +13,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Una procedura scritta funziona davvero?",
-        "en": "Does the written procedure actually operate?",
-        "fr": "La procédure écrite fonctionne-t-elle réellement ?",
-        "de": "Wird die dokumentierte Regel tatsächlich angewendet?",
-        "es": "¿El procedimiento escrito se utiliza realmente?"
+        "it": "Valutare gli assetti aziendali con Vera",
+        "en": "Assess company arrangements with Vera",
+        "fr": "Évaluer l’organisation de l’entreprise avec Vera",
+        "de": "Unternehmensorganisation mit Vera beurteilen",
+        "es": "Evaluar la organización de la empresa con Vera"
+      },
+      "goals": {
+        "it": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
+        "en": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
+        "fr": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
+        "de": "Lernen, eine Beurteilung betrieblicher Vorkehrungen anzufordern, Nachweise ihrer Anwendung zu liefern und Feststellungen sowie Maßnahmenvorschläge zu nutzen.",
+        "es": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas."
       }
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "61118a7586486d8bf6727303fbc46363031dd6b0a7b54f63ec1bb4b97049e57d",
+      "sha256": "ea7e794a216122b5ebec927dc79e61cf8c3ee9330ac1c5e938c09efe4531e33e",
       "languages": [
         "it",
         "en",
@@ -32,17 +41,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un cambiamento da capire, prima di giudicare",
-        "en": "Understand the change before drawing a conclusion",
-        "fr": "Comprendre le changement avant de conclure",
-        "de": "Eine Veränderung erst verstehen, dann beurteilen",
-        "es": "Entender el cambio antes de concluir"
+        "it": "Preparare una revisione antiriciclaggio con Vera",
+        "en": "Prepare an AML review with Vera",
+        "fr": "Préparer une revue antiblanchiment avec Vera",
+        "de": "Eine Geldwäscheprüfung mit Vera vorbereiten",
+        "es": "Preparar una revisión antiblanqueo con Vera"
+      },
+      "goals": {
+        "it": "Imparare a far leggere un dossier cliente, ricostruire i fatti e ottenere una valutazione motivata con documenti e questioni da rivedere.",
+        "en": "Learn to have a client file examined, reconstruct the facts and obtain a reasoned assessment with evidence and questions to review.",
+        "fr": "Apprendre à faire examiner un dossier client, reconstituer les faits et obtenir une évaluation motivée avec preuves et questions à revoir.",
+        "de": "Lernen, eine Mandantenakte auswerten zu lassen, Fakten nachzuvollziehen und eine begründete Beurteilung mit Nachweisen und Prüffragen zu erhalten.",
+        "es": "Aprender a revisar un expediente cliente, reconstruir hechos y obtener una evaluación razonada con pruebas y cuestiones para revisar."
       }
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "849367d18f3223af6ebc021017ac3b5c1034663967f380eb16a63050cce17573",
+      "sha256": "5eaa7357c439e891cd5779c2c0e56ac3d267a658c5a172e4df39bfadd1a6428e",
       "languages": [
         "it",
         "en",
@@ -51,17 +69,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Riordinare senza perdere le versioni",
-        "en": "Organize a folder while preserving versions",
-        "fr": "Ranger le dossier en conservant les versions",
-        "de": "Einen Ordner ordnen und Versionen erhalten",
-        "es": "Ordenar una carpeta conservando sus versiones"
+        "it": "Riordinare la cartella di un cliente con Vera",
+        "en": "Organise a client folder with Vera",
+        "fr": "Ranger le dossier d’un client avec Vera",
+        "de": "Einen Kundenordner mit Vera ordnen",
+        "es": "Ordenar la carpeta de un cliente con Vera"
+      },
+      "goals": {
+        "it": "Imparare a ottenere una proposta di riordino, rivedere le destinazioni e applicare le modifiche approvate a una cartella.",
+        "en": "Learn to obtain an organisation plan, review destinations and apply approved changes to a folder.",
+        "fr": "Apprendre à obtenir un plan de classement, revoir les destinations et appliquer les modifications approuvées.",
+        "de": "Lernen, einen Ordnungsplan zu erhalten, Zielorte zu prüfen und genehmigte Änderungen anzuwenden.",
+        "es": "Aprender a obtener un plan de organización, revisar destinos y aplicar los cambios aprobados."
       }
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "9a625cef51fa7a455237c5bb28c078c42d9b2f48b5394b3f7e661265db0b8591",
+      "sha256": "8740a59ddee69ec6e5aed06ad2052585dec096d86e19661165d2bae34c3dbc52",
       "languages": [
         "it",
         "en",
@@ -70,17 +97,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Una lettera arriva: cosa sappiamo davvero?",
-        "en": "A notice arrives: what do we actually know?",
-        "fr": "Une notification arrive : que savons-nous ?",
-        "de": "Ein Schreiben trifft ein: Was wissen wir wirklich?",
-        "es": "Llega un escrito: ¿qué sabemos realmente?"
+        "it": "Preparare la prima lettura di un avviso con Vera",
+        "en": "Prepare a first reading of a tax notice with Vera",
+        "fr": "Préparer la première lecture d’un avis fiscal avec Vera",
+        "de": "Ein Steuerschreiben mit Vera erstmals sichten",
+        "es": "Preparar la primera lectura de una comunicación fiscal con Vera"
+      },
+      "goals": {
+        "it": "Imparare a fornire una comunicazione fiscale e ottenere una nota operativa con riferimenti, informazioni mancanti e verifiche da svolgere.",
+        "en": "Learn to supply a tax communication and obtain an operational note with references, missing information and checks to perform.",
+        "fr": "Apprendre à fournir une communication fiscale et obtenir une note opérationnelle avec références, informations manquantes et vérifications à effectuer.",
+        "de": "Lernen, ein Steuerschreiben bereitzustellen und eine Arbeitsnotiz mit Referenzen, fehlenden Informationen und nächsten Prüfungen zu erhalten.",
+        "es": "Aprender a aportar una comunicación fiscal y obtener una nota operativa con referencias, información pendiente y comprobaciones necesarias."
       }
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "f9bfb06cea5dab6f136ab94b3dddcc19bf48c0b278c9c95e69d9e763b8648728",
+      "sha256": "ab6b0fa236b5c7b11e96a8ec5b342545eb90428734c5c8c17d33eb9ecde953c5",
       "languages": [
         "it",
         "en",
@@ -89,30 +125,47 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Un'opportunità interessante è già candidabile?",
         "en": "An interesting opportunity is not yet an eligible application",
         "fr": "Une opportunité pertinente est-elle déjà recevable ?",
         "de": "Eine passende Förderung ist noch kein belegter Anspruch",
         "es": "Una oportunidad interesante no acredita la elegibilidad"
-      }
+      },
+      "goals": {
+        "it": "Separare la scoperta di un bando dall'istruttoria documentale per un'impresa concreta.",
+        "en": "Separate grant discovery from evidence-based preparation for a specific enterprise.",
+        "fr": "Distinguer découverte d'une aide et préparation documentée pour une entreprise précise.",
+        "de": "Fördersuche und beleggestützte Vorbereitung für ein bestimmtes Unternehmen unterscheiden.",
+        "es": "Distinguir la búsqueda de ayudas de la preparación documentada para una empresa concreta."
+      },
+      "material": "retained"
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
+      "sha256": "69664ee067dff092e65ce8d0870e326a520d485c226c4556a3c4ffd87a109db7",
       "languages": [
         "it",
         "en"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Dal prospetto contabile alla bozza di bilancio",
         "en": "From accounting balances to a draft financial statement"
-      }
+      },
+      "goals": {
+        "it": "Capire come lettura dei saldi, mappatura e controlli accompagnano la preparazione di un bilancio OIC/XBRL da rivedere.",
+        "en": "Understand how source reading, mapping and checks support a reviewable OIC statement and XBRL output."
+      },
+      "material": "retained"
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "de3c45ea506bf0e9779a02d6d6b6e9d2b16546a561fc5738c8168e1fe661381f",
+      "sha256": "da3741631df993623682539b6195aa97305b86a62a0b3b7216e330d536f8e42b",
       "languages": [
         "it",
         "en",
@@ -121,41 +174,63 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Insegnare un passaggio ripetibile nel browser",
         "en": "Teach a repeatable browser step",
         "fr": "Apprendre un geste répétable dans le navigateur",
         "de": "Einen wiederholbaren Browserschritt beibringen",
         "es": "Enseñar un paso repetible en el navegador"
-      }
+      },
+      "goals": {
+        "it": "Comprendere come una procedura osservata diventa una capacità locale verificabile, con limiti e arresti espliciti.",
+        "en": "Turn an observed procedure into a locally verifiable capability with explicit stopping conditions.",
+        "fr": "Transformer une procédure observée en capacité locale vérifiable, avec des conditions d'arrêt explicites.",
+        "de": "Aus einem beobachteten Ablauf eine lokal prüfbare Fähigkeit mit klaren Abbruchbedingungen entwickeln.",
+        "es": "Transformar un procedimiento observado en una capacidad verificable localmente y con condiciones de parada."
+      },
+      "material": "retained"
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "bb03814c0e8a61cab8e07d4a82ddc1912d1788b291064f31db97c32735501b57",
+      "sha256": "7f8bbfa0c9560d075071d6456065e09af5484caaa14ecbdbcb501d86f8d6f69a",
       "languages": [
         "it",
         "en"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Un investimento, due ipotesi da verificare",
         "en": "One investment, two assumptions to test"
-      }
+      },
+      "goals": {
+        "it": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
+        "en": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes."
+      },
+      "material": "retained"
     },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "53f4829469fd4ed00e433d2dc2dc9dd4957ae1e32d6cdf6d0263fa46fe3c4e21",
+      "sha256": "e421c5c5fa909727cd668ab648a42afcdae24511bec258d5e7c2529710367844",
       "languages": [
         "it"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Lo spazio disponibile non cancella uno sconfinamento"
+        "it": "Analizzare una Centrale Rischi con Vera"
+      },
+      "goals": {
+        "it": "Impara a partire da una Centrale Rischi, ottenere un’analisi verificabile e usarla per preparare il confronto con il cliente."
       }
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "91554c66d26fe31301f3b7fffbad614b64ddacaba44a43917aac77ab9d539357",
+      "sha256": "673a57580e0b55bf4936dbf1aedbddc08f9ae11411c283a01dd9378ced539f76",
       "languages": [
         "it",
         "en",
@@ -164,17 +239,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Una comunicazione che può dimostrare ciò che dice",
-        "en": "A professional message that can support its claims",
-        "fr": "Un message professionnel qui peut justifier ses affirmations",
-        "de": "Eine Kanzleimitteilung mit belegbaren Aussagen",
-        "es": "Un mensaje profesional que respalda sus afirmaciones"
+        "it": "Preparare una comunicazione professionale con Vera",
+        "en": "Prepare a professional communication with Vera",
+        "fr": "Préparer une communication professionnelle avec Vera",
+        "de": "Eine professionelle Mitteilung mit Vera erstellen",
+        "es": "Preparar una comunicación profesional con Vera"
+      },
+      "goals": {
+        "it": "Imparare a partire da un argomento e dalle fonti, preparare una comunicazione per un pubblico preciso e rivedere il pacchetto prima di usarlo.",
+        "en": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+        "fr": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+        "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+        "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       }
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "4692aaa88f5208271e2b48a60870318f11eeee2e857567584f4b64760abab650",
+      "sha256": "9f2fbe0e898c8a8784086e42a3203c9e4557731d0fc0d72dd5e2c2e3db3ad48b",
       "languages": [
         "it",
         "en",
@@ -183,17 +267,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un piano coerente nei totali può mancare di liquidità",
-        "en": "Balanced totals can still conceal a funding gap",
-        "fr": "Des totaux cohérents peuvent cacher un besoin de trésorerie",
-        "de": "Ein positiver Endsaldo kann eine Finanzierungslücke verdecken",
-        "es": "Un saldo final positivo puede ocultar falta de financiación"
+        "it": "Rivedere un piano di concordato con Vera",
+        "en": "Review a composition plan with Vera",
+        "fr": "Revoir un plan de concordato avec Vera",
+        "de": "Einen Concordato-Plan mit Vera prüfen",
+        "es": "Revisar un plan de concordato con Vera"
+      },
+      "goals": {
+        "it": "Imparare ad avviare la revisione di una proposta e di un piano, fornire i documenti e usare il dossier prodotto per il lavoro professionale.",
+        "en": "Learn to start a review of a proposal and plan, provide the documents and use the resulting file in professional work.",
+        "fr": "Apprendre à lancer la revue d’une proposition et d’un plan, fournir les documents et utiliser le dossier produit dans le travail professionnel.",
+        "de": "Lernen Sie, die Prüfung von Vorschlag und Plan zu starten, Unterlagen bereitzustellen und die erzeugte Akte fachlich zu nutzen.",
+        "es": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional."
       }
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "0f5401654b71cd6a6b9e1959c5fbc276bd50e9e9d395e444219ff47ea8b36d80",
+      "sha256": "7cd83465759b020cbeafc4314f56aff731735a2d18b73fba0fc8e8535cd7cb39",
       "languages": [
         "it",
         "en",
@@ -202,17 +295,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "supporting_task",
+      "parent_workflow": "new-client",
       "titles": {
-        "it": "Un numero estratto deve mantenere la sua fonte",
-        "en": "An extracted number must keep its source",
-        "fr": "Un montant extrait doit garder sa source",
-        "de": "Eine extrahierte Zahl behält ihre Quelle",
-        "es": "Una cifra extraída debe conservar su fuente"
+        "it": "Estrarre dati fiscali dai documenti con Vera",
+        "en": "Extract tax data from documents with Vera",
+        "fr": "Extraire des données fiscales avec Vera",
+        "de": "Steuerdaten mit Vera aus Dokumenten extrahieren",
+        "es": "Extraer datos fiscales de documentos con Vera"
+      },
+      "goals": {
+        "it": "Imparare a trasformare documenti fiscali leggibili in un elenco di campi verificabili sulle fonti.",
+        "en": "Learn to turn readable tax documents into a field list that you can verify against its sources.",
+        "fr": "Apprendre à transformer des documents fiscaux lisibles en une liste de champs vérifiables dans les sources.",
+        "de": "Lernen, lesbare Steuerunterlagen in eine Feldliste zu überführen und die Werte anhand ihrer Quellen zu prüfen.",
+        "es": "Aprender a convertir documentos fiscales legibles en una lista de campos verificables en las fuentes."
       }
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "00b8ad826e6cb6aa68c5795cc2d9e62f1a8b7ac3eddcedbd0b43dc9a0e523d8f",
+      "sha256": "2ba25d56a504d9fb8b9e708fa23fb6fe20e34d77cce186aae870ec7c7066c97a",
       "languages": [
         "it",
         "en",
@@ -221,17 +323,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "supporting_task",
+      "parent_workflow": "new-client",
       "titles": {
-        "it": "Chiedere soltanto i documenti davvero necessari",
-        "en": "Ask only for the documents actually needed",
-        "fr": "Demander seulement les pièces réellement nécessaires",
-        "de": "Nur tatsächlich benötigte Unterlagen anfordern",
-        "es": "Pedir solo los documentos realmente necesarios"
+        "it": "Preparare una email per chiedere documenti al cliente",
+        "en": "Prepare a client email requesting documents",
+        "fr": "Préparer un courriel de demande de documents au client",
+        "de": "Eine E-Mail zur Dokumentenanforderung vorbereiten",
+        "es": "Preparar un correo para pedir documentos al cliente"
+      },
+      "goals": {
+        "it": "Imparare a trasformare le richieste documentali del fascicolo in una email breve, precisa e pronta per la revisione dello studio.",
+        "en": "Learn to turn a file’s document requests into a short, precise email for the practice to review.",
+        "fr": "Apprendre à transformer les demandes documentaires d’un dossier en un courriel court et précis à revoir au cabinet.",
+        "de": "Lernen, aus den Dokumentenanfragen einer Akte eine kurze, präzise E-Mail zur Prüfung durch die Kanzlei zu erstellen.",
+        "es": "Aprender a convertir las peticiones documentales del expediente en un correo breve y preciso para revisión del despacho."
       }
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "8c81dfe32a36a4fcf9507ff4f5ae8258eb0442efc1910093afb876dc623e50a1",
+      "sha256": "80ac1c409bb6d93f20c68d2a199f9a10cc6db250281fa405d5e2e1109037b94a",
       "languages": [
         "it",
         "en",
@@ -240,17 +351,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "supporting_task",
+      "parent_workflow": "new-client",
       "titles": {
-        "it": "Due file non sono sempre due fatture",
-        "en": "Two files do not always mean two invoices",
-        "fr": "Deux fichiers ne font pas toujours deux factures",
-        "de": "Zwei Dateien sind nicht immer zwei Rechnungen",
-        "es": "Dos archivos no siempre son dos facturas"
+        "it": "Controllare le fatture XML con Vera",
+        "en": "Check XML invoices with Vera",
+        "fr": "Contrôler les factures XML avec Vera",
+        "de": "XML-Rechnungen mit Vera prüfen",
+        "es": "Comprobar facturas XML con Vera"
+      },
+      "goals": {
+        "it": "Impara a consegnare una cartella di fatture, leggere il riepilogo dei documenti e gestire ciò che richiede verifica.",
+        "en": "Learn to supply an invoice folder, read the document summary and handle items needing review.",
+        "fr": "Apprenez à fournir un dossier de factures, lire le récapitulatif et traiter les points à vérifier.",
+        "de": "Lernen Sie, einen Rechnungsordner bereitzustellen, die Übersicht zu lesen und offene Prüfpunkte zu bearbeiten.",
+        "es": "Aprende a proporcionar una carpeta de facturas, leer el resumen y resolver los puntos que necesitan revisión."
       }
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "7c327c0220f055c20281d90ec7064915fe858c08059efc6c5f1a2b56530a10c0",
+      "sha256": "5226ad8a26d10e10177b98113bc5e9aa8f1a6cc9b50473fdaaff209f77556da1",
       "languages": [
         "it",
         "en",
@@ -259,17 +379,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Leggere la concentrazione dei ricavi",
-        "en": "Understand revenue concentration",
-        "fr": "Lire la concentration du chiffre d'affaires",
-        "de": "Umsatzkonzentration verstehen",
-        "es": "Comprender la concentración de ingresos"
+        "it": "Preparare un’analisi finanziaria con Vera",
+        "en": "Prepare financial analysis with Vera",
+        "fr": "Préparer une analyse financière avec Vera",
+        "de": "Eine Finanzanalyse mit Vera vorbereiten",
+        "es": "Preparar un análisis financiero con Vera"
+      },
+      "goals": {
+        "it": "Imparare a richiedere un’analisi precisa, fornire i dati, rivedere le scelte e utilizzare risultati finanziari verificabili.",
+        "en": "Learn to request a specific analysis, provide the data, review the choices and use financial results you can check.",
+        "fr": "Apprendre à demander une analyse précise, fournir les données, revoir les choix et utiliser des résultats financiers vérifiables.",
+        "de": "Lernen, eine konkrete Analyse anzufordern, Daten bereitzustellen, Entscheidungen zu prüfen und nachvollziehbare Finanzergebnisse zu nutzen.",
+        "es": "Aprender a solicitar un análisis concreto, aportar datos, revisar decisiones y utilizar resultados financieros comprobables."
       }
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "205a7c77b468da3f894a52b430e9be0ac352e8be14d9e2f8516402ccea3fbb4f",
+      "sha256": "1fd8a2f8f298ac7473e531712e95ea91238981bade40475aed73a66c247d00f4",
       "languages": [
         "it",
         "en",
@@ -278,17 +407,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un report finanziario che torna alle tabelle",
-        "en": "A financial report that leads back to its tables",
-        "fr": "Un rapport financier relié à ses tableaux",
-        "de": "Ein Finanzbericht mit Rückweg zu seinen Tabellen",
-        "es": "Un informe financiero que vuelve a sus tablas"
+        "it": "Preparare un report finanziario con Vera",
+        "en": "Prepare a financial report with Vera",
+        "fr": "Préparer un rapport financier avec Vera",
+        "de": "Einen Finanzbericht mit Vera erstellen",
+        "es": "Preparar un informe financiero con Vera"
+      },
+      "goals": {
+        "it": "Imparare a trasformare prospetti contabili in una relazione leggibile, con tabelle, commenti e riferimenti ai dati da controllare.",
+        "en": "Learn to turn accounting statements into a readable report with tables, commentary and references for checking the figures.",
+        "fr": "Apprendre à transformer des états comptables en rapport lisible, avec tableaux, commentaires et références pour vérifier les chiffres.",
+        "de": "Lernen, wie aus Buchhaltungsaufstellungen ein lesbarer Bericht mit Tabellen, Kommentaren und prüfbaren Quellenverweisen entsteht.",
+        "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       }
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "b94e27482b04cac90501e6fc924858e210c41a294423c4e5049b1cbe516a3985",
+      "sha256": "97cc07f46a4a071b6e98dd4189ee479088e5cd6241faf9c9f87689f610e3cf47",
       "languages": [
         "it",
         "en",
@@ -297,17 +435,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Preparare XML da due foto della stessa fattura",
-        "en": "Prepare XML from two photographs of one invoice",
-        "fr": "Préparer le XML à partir de deux photos d'une facture",
-        "de": "XML aus zwei Fotos einer Rechnung vorbereiten",
-        "es": "Preparar XML a partir de dos fotos de una factura"
+        "it": "Preparare una fattura XML con Vera",
+        "en": "Prepare an invoice XML file with Vera",
+        "fr": "Préparer un fichier XML de facture avec Vera",
+        "de": "Eine Rechnungs-XML mit Vera vorbereiten",
+        "es": "Preparar un archivo XML de factura con Vera"
+      },
+      "goals": {
+        "it": "Imparare a fornire i dati della fattura, rivedere la bozza e ottenere il file XML locale dopo aver approvato la versione esatta.",
+        "en": "Learn to provide invoice data, review the draft and obtain a local XML file after approving the exact version.",
+        "fr": "Apprendre à fournir les données d’une facture, revoir le brouillon et obtenir le fichier XML local après avoir approuvé la version exacte.",
+        "de": "Lernen Sie, Rechnungsdaten bereitzustellen, den Entwurf zu prüfen und nach Freigabe der genauen Fassung eine lokale XML-Datei zu erhalten.",
+        "es": "Aprender a proporcionar datos de una factura, revisar el borrador y obtener el XML local tras aprobar la versión exacta."
       }
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "4c19cd1b81b409f4e00e028de9d9f7de61711521d631d74a179bc9714f3bcba2",
+      "sha256": "25570a2b9294d44d8f56ccef8a019ad1cfb7b50afa3fcacd46fe7f0c427d7789",
       "languages": [
         "it",
         "en",
@@ -316,17 +463,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Due pagamenti per una sola scrittura",
-        "en": "Two payments for one posting",
-        "fr": "Deux règlements pour une seule écriture",
-        "de": "Zwei Zahlungen zu einer Buchung",
-        "es": "Dos cobros para un asiento"
+        "it": "Riconciliare un estratto conto con Vera",
+        "en": "Reconcile a bank statement with Vera",
+        "fr": "Rapprocher un relevé bancaire avec Vera",
+        "de": "Einen Kontoauszug mit Vera abstimmen",
+        "es": "Conciliar un extracto bancario con Vera"
+      },
+      "goals": {
+        "it": "Imparare a confrontare i movimenti bancari con il mastro banca e usare la riconciliazione nella chiusura mensile.",
+        "en": "Learn to compare bank movements with the bank ledger and use the reconciliation for a month-end review.",
+        "fr": "Apprendre à comparer les mouvements bancaires au grand livre et à utiliser le rapprochement pour la clôture mensuelle.",
+        "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
+        "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       }
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "a1891f62458b8e7ba15c98cbb22ce26922d8d41dcf4404126803c7daeb1caa43",
+      "sha256": "820fee910eec904811c08e8b128d856490495fa427a884cb68484e5fbf4a45ee",
       "languages": [
         "it",
         "en",
@@ -335,30 +491,46 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Prima del campione, una popolazione affidabile",
-        "en": "A reliable population before the sample",
-        "fr": "Une population fiable avant l'échantillon",
-        "de": "Eine verlässliche Grundgesamtheit vor der Stichprobe",
-        "es": "Una población fiable antes de la muestra"
+        "it": "Estrarre un campione dal giornale contabile",
+        "en": "Select a sample from an accounting journal",
+        "fr": "Extraire un échantillon du journal comptable",
+        "de": "Eine Stichprobe aus dem Buchungsjournal ziehen",
+        "es": "Extraer una muestra del diario contable"
+      },
+      "goals": {
+        "it": "Imparare a consegnare un giornale, verificare come viene letto e ottenere le righe selezionate per il successivo controllo.",
+        "en": "Learn to provide a journal, check how it is read and obtain selected rows for subsequent examination.",
+        "fr": "Apprendre à fournir un journal, vérifier sa lecture et obtenir les lignes sélectionnées pour un contrôle ultérieur.",
+        "de": "Lernen, ein Journal bereitzustellen, seine Einlesung zu prüfen und ausgewählte Zeilen für die weitere Prüfung zu erhalten.",
+        "es": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior."
       }
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "a4bd63f91c3b5dffe9c534742e64d4269597998c5e6d6de91b1cebc44357ece8",
+      "sha256": "fc3dfd99f6860683b0d7601c9d157cd1f53dddfc8f4762d76a00e498d36cf3c8",
       "languages": [
         "it",
         "en"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Actual e Budget: leggere importi e percentuali",
         "en": "Actual versus Budget: read amounts and percentages"
-      }
+      },
+      "goals": {
+        "it": "Interpretare un report di controllo di gestione a partire da periodo, segni e categorie rivedute.",
+        "en": "Interpret a management report using reviewed periods, signs and categories."
+      },
+      "material": "retained"
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "01fd7d700f6f45aa4a80ceee90fab0f06aee276a83ed038928de07e7fc72045f",
+      "sha256": "eef2e45cb356c468fcea177f5b5299afa8b56d3fdbc8be9a23d96375de096aac",
       "languages": [
         "it",
         "en",
@@ -367,17 +539,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Aprire un cliente senza trasformare i vuoti in conferme",
-        "en": "Start a client file without turning gaps into confirmations",
-        "fr": "Commencer le dossier sans transformer les manques en confirmations",
-        "de": "Ein Mandat beginnen, ohne Lücken als bestätigt auszugeben",
-        "es": "Iniciar un expediente sin convertir vacíos en confirmaciones"
+        "it": "Preparare un nuovo cliente con Vera",
+        "en": "Prepare a new client with Vera",
+        "fr": "Préparer un nouveau client avec Vera",
+        "de": "Einen neuen Mandanten mit Vera vorbereiten",
+        "es": "Preparar un nuevo cliente con Vera"
+      },
+      "goals": {
+        "it": "Imparare a trasformare le informazioni di primo contatto in un dossier di avvio da rivedere e completare con lo studio.",
+        "en": "Learn to turn first-contact information into a client-startup dossier for the practice to review and complete.",
+        "fr": "Apprendre à transformer les informations du premier contact en un dossier d’entrée en relation à revoir et compléter avec le cabinet.",
+        "de": "Lernen, Erstkontaktinformationen in ein Mandatsdossier zu überführen, das die Kanzlei prüfen und vervollständigen kann.",
+        "es": "Aprender a convertir la información del primer contacto en un expediente de incorporación que el despacho pueda revisar y completar."
       }
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "85d3cf2940a705133f40f017a00ebf5e06cd0c89e6812bff77d0689f2c037688",
+      "sha256": "bf51ae59605514f9e76956d7c5a8b36d872cc14af6b1d8866234c3ff8737a1f2",
       "languages": [
         "it",
         "en",
@@ -386,17 +567,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un pagamento successivo spiega la partita, ma non cambia la data",
-        "en": "A later payment explains the item, not the earlier balance",
-        "fr": "Un règlement ultérieur n'efface pas le solde historique",
-        "de": "Eine spätere Zahlung ändert nicht den früheren Saldo",
-        "es": "Un cobro posterior no cambia el saldo anterior"
+        "it": "Verificare le partite aperte con Vera",
+        "en": "Review open items with Vera",
+        "fr": "Vérifier les postes ouverts avec Vera",
+        "de": "Offene Posten mit Vera prüfen",
+        "es": "Revisar partidas abiertas con Vera"
+      },
+      "goals": {
+        "it": "Imparare a verificare un elenco di insoluti e distinguere le fatture con prova di pagamento da quelle ancora da chiarire a una data.",
+        "en": "Learn to test a list reported as unpaid and distinguish invoices with payment evidence from those still needing clarification at a chosen date.",
+        "fr": "Apprendre à vérifier une liste d’impayés et distinguer les factures disposant d’une preuve de paiement de celles restant à clarifier à une date donnée.",
+        "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
+        "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       }
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "5b7b9a8fcbd645a591a933f3b43401d2d563380ce8a0de96bb77b2207c9dda77",
+      "sha256": "69759250d37c9d4f5480050e1b1692246efdc73bbc65e4a7cbf37c361d1cadc3",
       "languages": [
         "it",
         "en",
@@ -405,17 +595,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un sito di studio che parte dai fatti",
-        "en": "A firm's website starts with verified facts",
-        "fr": "Le site du cabinet commence par des faits vérifiés",
-        "de": "Eine Kanzleiwebsite beginnt mit geprüften Fakten",
-        "es": "La web del despacho empieza por hechos verificados"
+        "it": "Preparare il sito dello studio con Vera",
+        "en": "Prepare the firm’s website with Vera",
+        "fr": "Préparer le site du cabinet avec Vera",
+        "de": "Die Kanzleiwebsite mit Vera vorbereiten",
+        "es": "Preparar el sitio del despacho con Vera"
+      },
+      "goals": {
+        "it": "Imparare a partire dalle informazioni dello studio, ottenere un sito funzionante e rivederlo prima di scegliere la pubblicazione.",
+        "en": "Learn to start from firm information, obtain a working website and review it before choosing publication.",
+        "fr": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
+        "de": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
+        "es": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación."
       }
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "0ec77f715e075df4547ca4f15d8a9f8b62bbf8a67a544874e264305cd0e866a9",
+      "sha256": "e4f08c8b5f223c2e5a38b8a68c7b163d3d9df444101f805ae5b5d0990c51675c",
       "languages": [
         "it",
         "en",
@@ -424,17 +623,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Una posizione contributiva, una cronologia verificabile",
-        "en": "Build a verifiable contribution chronology",
-        "fr": "Construire une chronologie contributive vérifiable",
-        "de": "Eine belegbare Beitragschronologie erstellen",
-        "es": "Construir una cronología verificable de cotizaciones"
+        "it": "Esaminare un caso INPS con Vera",
+        "en": "Review an INPS case with Vera",
+        "fr": "Examiner un dossier INPS avec Vera",
+        "de": "Einen INPS-Fall mit Vera prüfen",
+        "es": "Examinar un caso INPS con Vera"
+      },
+      "goals": {
+        "it": "Imparare a fornire una domanda previdenziale e i documenti, controllare le evidenze e usare il dossier prodotto per la revisione professionale.",
+        "en": "Learn to provide a social-security question and documents, check evidence and use the resulting file for professional review.",
+        "fr": "Apprendre à fournir une question de protection sociale et des documents, vérifier les preuves et utiliser le dossier pour la revue professionnelle.",
+        "de": "Lernen Sie, eine sozialversicherungsrechtliche Frage und Unterlagen bereitzustellen, Belege zu prüfen und die erstellte Akte fachlich zu nutzen.",
+        "es": "Aprender a aportar una pregunta de seguridad social y documentos, verificar evidencias y usar el expediente para revisión profesional."
       }
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "1ba782ae454688d5ce323d92dcd88d2c13b12ed7ae45c4ce180f63c0ee2dfda8",
+      "sha256": "6ea5a410da97272bd29586227b3ca1cc79d098e6377cfe36484ff4a4d188a098",
       "languages": [
         "it",
         "en",
@@ -443,17 +651,27 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Fatture passive: collegare ogni documento alla registrazione",
         "en": "Connect each purchase invoice to the actual posting",
         "fr": "Relier chaque facture fournisseur à l'écriture réelle",
         "de": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
         "es": "Vincular cada factura de compra con el asiento real"
-      }
+      },
+      "goals": {
+        "it": "Leggere la copertura di una popolazione di fatture passive e riconoscere i casi che richiedono revisione contabile.",
+        "en": "Read population coverage and identify invoices needing accounting review.",
+        "fr": "Lire la couverture d'une population de factures et repérer les cas nécessitant une revue comptable.",
+        "de": "Die Abdeckung eines Rechnungsbestands lesen und buchhalterischen Prüfbedarf erkennen.",
+        "es": "Leer la cobertura de una población e identificar facturas que requieren revisión contable."
+      },
+      "material": "retained"
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "71af217566d69f1c212190a2ea3a57200861b1ecdf908d1fe87756872bea725b",
+      "sha256": "434b24361361e9cef0196da1542499181e8bf0e582e032a629821bba270b655e",
       "languages": [
         "it",
         "en",
@@ -462,17 +680,27 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Da una domanda generica a una risposta che si può verificare",
         "en": "From a broad question to a verifiable answer",
         "fr": "D'une question générale à une réponse vérifiable",
         "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
         "es": "De una pregunta general a una respuesta verificable"
-      }
+      },
+      "goals": {
+        "it": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
+        "en": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
+        "fr": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
+        "de": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
+        "es": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional."
+      },
+      "material": "retained"
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "5e7a4dcd42e44e4008dac506f305e08331eda987971d246b3a5da04faaed5226",
+      "sha256": "3389a8ccfffc7dd464754b151a49183a9193d30fd2d173dbea1aaa49d56b1558",
       "languages": [
         "it",
         "en",
@@ -481,17 +709,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Preparare la pratica prima di entrare nel portale",
-        "en": "Prepare the practice before opening the portal",
-        "fr": "Préparer la formalité avant d'ouvrir le portail",
-        "de": "Den Vorgang vorbereiten, bevor das Portal geöffnet wird",
-        "es": "Preparar el trámite antes de abrir el portal"
+        "it": "Preparare una pratica Registro Imprese con Vera",
+        "en": "Prepare a Registro Imprese practice with Vera",
+        "fr": "Préparer un dossier Registro Imprese avec Vera",
+        "de": "Eine Registro-Imprese-Angelegenheit mit Vera vorbereiten",
+        "es": "Preparar un trámite Registro Imprese con Vera"
+      },
+      "goals": {
+        "it": "Imparare a fornire il caso, seguire le verifiche delle fonti e usare il piano della pratica e la lista dei documenti da rivedere.",
+        "en": "Learn to provide the case, follow source checks and use the practice plan and document checklist for review.",
+        "fr": "Apprendre à fournir le cas, suivre la vérification des sources et utiliser le plan du dossier et la liste des pièces à revoir.",
+        "de": "Lernen, den Fall bereitzustellen, die Quellenprüfung zu verfolgen und Bearbeitungsplan und Unterlagenliste zu prüfen.",
+        "es": "Aprender a proporcionar el caso, seguir la comprobación de fuentes y usar el plan del trámite y la lista de documentos para revisión."
       }
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "dc1123cb7df49d69027030943179154021d773e4c05a0dc5de562cf00e8c7118",
+      "sha256": "3f79d8186a6d426b276351f31fff18be1302208a3fa8d0ffe7a28512fc50f261",
       "languages": [
         "it",
         "en",
@@ -500,17 +737,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Vendite in crescita: quantità, prezzo o cambio?",
-        "en": "Sales growth: volume, price or exchange rate?",
-        "fr": "Croissance des ventes : volumes, prix ou change ?",
-        "de": "Umsatzwachstum: Menge, Preis oder Wechselkurs?",
-        "es": "Crecimiento de ventas: ¿volumen, precio o divisa?"
+        "it": "Preparare un piano vendite con Vera",
+        "en": "Prepare a sales plan with Vera",
+        "fr": "Préparer un plan de ventes avec Vera",
+        "de": "Einen Absatzplan mit Vera erstellen",
+        "es": "Preparar un plan de ventas con Vera"
+      },
+      "goals": {
+        "it": "Imparare a trasformare vendite consuntive e ipotesi commerciali in uno scenario futuro, controllando cosa è cambiato e perché.",
+        "en": "Learn to turn actual sales and commercial assumptions into a future scenario, checking what changed and why.",
+        "fr": "Apprendre à transformer réalisé et hypothèses commerciales en scénario futur, en vérifiant ce qui change et pourquoi.",
+        "de": "Lernen, Istverkäufe und kommerzielle Annahmen in ein Zukunftsszenario umzusetzen und Änderungen nachzuvollziehen.",
+        "es": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué."
       }
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "92dd81f1da232905f4e3a3eab590d6c695b091ecdb165bf9a6419da3f22f0eda",
+      "sha256": "7e113e8b9393a52c9159b19685608f821ba197ca1a4d0cca130eab2381ce8094",
       "languages": [
         "it",
         "en",
@@ -519,28 +765,42 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Riprendere un incarico senza dipendere dalla vecchia chat",
-        "en": "Resume an engagement without its old chat",
-        "fr": "Reprendre un dossier sans son ancienne conversation",
-        "de": "Ein Mandat ohne den alten Chat fortsetzen",
-        "es": "Retomar un encargo sin su conversación anterior"
+        "it": "Cercare documenti di un cliente con Vera",
+        "en": "Find a client’s documents with Vera",
+        "fr": "Retrouver les documents d’un client avec Vera",
+        "de": "Kundendokumente mit Vera finden",
+        "es": "Encontrar documentos de un cliente con Vera"
+      },
+      "goals": {
+        "it": "Imparare a collegare una cartella di studio, cercare nel cliente corretto e ottenere una risposta con riferimenti ai documenti.",
+        "en": "Learn to connect a studio folder, search the right client and obtain an answer linked to its source documents.",
+        "fr": "Apprendre à connecter un dossier de cabinet, chercher chez le bon client et obtenir une réponse reliée aux documents sources.",
+        "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
+        "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       }
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "a86d9b09e162d6ade5896d16eeeae8ae24bd30f28a88184bf9e1b1abfc9574bf",
+      "sha256": "a0461f6feb563d83d14827daafd2f9236ab84e25a891eedf376e68df789f1306",
       "languages": [
         "it"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "La cassa dipende anche dal giorno dell'incasso"
+        "it": "Preparare una previsione di cassa con Vera"
+      },
+      "goals": {
+        "it": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane."
       }
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "f6cf63485d4acef3ad1982caca01e5a5ae1fe48d110842362d6a0e50827ea54d",
+      "sha256": "836d99d8ab3ba006e22c2e8b31b6f8d3052f0ad4b3ac308bb417041b6f03ca20",
       "languages": [
         "it",
         "en",
@@ -549,17 +809,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Spiegare uno scostamento senza inventarne la causa",
-        "en": "Follow the bridge from one period to the next",
-        "fr": "Suivre le pont entre deux périodes",
-        "de": "Die Brücke zwischen zwei Perioden nachvollziehen",
-        "es": "Seguir el puente entre dos periodos"
+        "it": "Confrontare consuntivo e budget con Vera",
+        "en": "Compare actual results with budget using Vera",
+        "fr": "Comparer le réalisé au budget avec Vera",
+        "de": "Ist und Budget mit Vera vergleichen",
+        "es": "Comparar resultados reales y presupuesto con Vera"
+      },
+      "goals": {
+        "it": "Imparare a fornire i dati, avviare il confronto e leggere un report che mostra quanto e dove il risultato si discosta dal budget.",
+        "en": "Learn which data to provide, how to start the comparison and how to read a report showing the size and location of differences from budget.",
+        "fr": "Apprendre quels fichiers fournir, comment lancer la comparaison et lire un rapport montrant le montant et les composantes des écarts au budget.",
+        "de": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
+        "es": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones."
       }
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "4bd5f0c153fe588832a122174240908fe412899ef17bbe25119911fdf4d0116c",
+      "sha256": "47732ab90b426237cb4e9cffed52ee65f310fe82e02e81d0b23b07f7a4dbae5a",
       "languages": [
         "it",
         "en",
@@ -568,12 +837,21 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Dal campione al documento giusto",
-        "en": "From a sampled entry to the right document",
-        "fr": "De l'écriture échantillonnée à la bonne pièce",
-        "de": "Von der Stichprobenbuchung zum richtigen Beleg",
-        "es": "Del asiento seleccionado al justificante correcto"
+        "it": "Verificare le registrazioni campionate con le fatture",
+        "en": "Check sampled journal entries against invoices",
+        "fr": "Contrôler les écritures échantillonnées avec les factures",
+        "de": "Gezogene Buchungszeilen mit Rechnungen prüfen",
+        "es": "Verificar los asientos seleccionados con las facturas"
+      },
+      "goals": {
+        "it": "Imparare a collegare un campione alle fatture, leggere gli esiti e rivedere i punti che richiedono giudizio professionale.",
+        "en": "Learn to connect a sample to invoices, read the results and review points requiring professional judgement.",
+        "fr": "Apprendre à relier un échantillon aux factures, lire les résultats et revoir les points nécessitant un jugement professionnel.",
+        "de": "Lernen, eine Stichprobe mit Rechnungen zu verbinden, Ergebnisse zu lesen und fachlich zu beurteilende Punkte zu prüfen.",
+        "es": "Aprender a relacionar una muestra con sus facturas, leer resultados y revisar los puntos que requieren juicio profesional."
       }
     }
   }

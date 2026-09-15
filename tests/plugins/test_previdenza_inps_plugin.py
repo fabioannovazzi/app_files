@@ -49,6 +49,28 @@ def _filesystem_image(root: Path) -> tuple[tuple[str, str, bytes | None], ...]:
     return tuple(entries)
 
 
+def test_memo_word_renders_bold_in_headings_bullets_and_body(tmp_path):
+    output = tmp_path / "memo.docx"
+    _load_script("package_case")._write_docx(
+        output,
+        [
+            "## **Facts**",
+            "- **FACT-001**: source statement",
+            "Status: **pending review**",
+        ],
+    )
+    paragraphs = Document(output).paragraphs
+    assert [paragraph.text for paragraph in paragraphs] == [
+        "Facts",
+        "FACT-001: source statement",
+        "Status: pending review",
+    ]
+    assert paragraphs[1].style.name == "List Bullet"
+    assert [
+        run.text for paragraph in paragraphs for run in paragraph.runs if run.bold
+    ] == ["Facts", "FACT-001", "pending review"]
+
+
 def _write_case_records(
     path: Path, *, date_value: str = "2021-01-01", language: str = "it"
 ) -> Path:

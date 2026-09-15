@@ -277,8 +277,9 @@ website run.
    copy quality, accessibility conformance or professional truth.
 9. Render the exact site in a browser at desktop and phone widths. Inspect the
    full page, interaction state, overflow, navigation, images, typography,
-   hierarchy and console errors. Save the exact full-page PNG for each claimed
-   viewport below `reviews/browser/`, record its run-relative path and SHA-256
+   hierarchy and console errors. Save the exact full-page PNG or JPEG for each claimed
+   viewport below `reviews/browser/`, preserving the original bytes and matching
+   `.png`, `.jpg` or `.jpeg` extension. Record its run-relative path and SHA-256
    in `quality_assessment.json`, then record it:
 
    ```bash

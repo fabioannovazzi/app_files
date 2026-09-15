@@ -1,0 +1,77 @@
+{
+  "clara/advisory-brief-planner": {
+    "title": "Planificar un encargo de consultoría con Clara",
+    "goal": "Aprender a convertir una petición en un encargo claro: decisión, fuentes, entregable y trabajo siguiente.",
+    "scenario": "Ciclo Arco valora un servicio de recogida de bicicletas. Antes de preparar el asesoramiento, definimos qué pide la propietaria y qué permiten evaluar las notas disponibles.",
+    "scope": "Planificación inicial con las notas ficticias suministradas. La lección termina con el traspaso al trabajo siguiente; la recomendación sobre el servicio corresponde a ese flujo.",
+    "inputs": "Abre assignment-es.md y notes-es.md. El primero indica decisión, destinataria y límites; el segundo contiene declaraciones de clientes e información operativa.",
+    "request": "Clara, planifica este encargo. Muéstrame la decisión que debemos apoyar, el entregable previsto, las fuentes, las carencias y cómo organizar el trabajo.",
+    "steps": [
+      "Clara lee petición y notas, identifica aclaraciones importantes y propone el encargo en lenguaje sencillo.",
+      "Revisa decisión, alcance, entregable e información pendiente. Clara registra el plan y lo comprueba con las fuentes exactas mediante el flujo actual.",
+      "Lee el resumen y las instrucciones de traspaso. Identifica el flujo disponible de Clara que continuaría el trabajo y los elementos que debe preservar."
+    ],
+    "deliverables": [
+      "Definición del encargo y resumen legible: propósito, límites y resultado esperado.",
+      "Informe de comprobación y traspaso: posibilidad de continuar y elementos que recibirá el siguiente flujo."
+    ],
+    "review": "Comprueba que la propietaria siga siendo destinataria, que se comparen las opciones pedidas y que no se inventen precios, demanda o permiso para contactar. Un plan válido todavía no es una recomendación ejecutada.",
+    "checkpoints": [
+      "Antes del borrador, identifica decisión y destinataria.",
+      "En la entrega, explica el próximo resultado y la información que falta."
+    ],
+    "practice": "Usa los archivos de práctica, incluidos revised-assignment-es.md y update-es.md, para planificar la petición más limitada: una lista de acciones para comprobar la viabilidad del piloto. Conserva el plan inicial.",
+    "success": "El nuevo plan refleja el objetivo y entregable modificados. Nombra el resultado y una condición que debe comprobarse antes del piloto.",
+    "repeat": "Describe decisión, destinatario, entregable y archivos disponibles. Revisa alcance y fuentes antes de ejecutar el flujo seleccionado."
+  },
+  "clara/advisory-case-director": {
+    "title": "Desarrollar un caso de consultoría con Clara",
+    "goal": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información.",
+    "scenario": "Ciclo Arco evalúa un servicio de recogida de bicicletas. Los comentarios sugieren posible interés; las notas operativas describen una forma limitada de probarlo.",
+    "scope": "Un caso local con las notas suministradas. El resultado es una valoración de trabajo, no una previsión financiera ni autorización para lanzar el servicio.",
+    "inputs": "Abre assignment-es.md y notes-es.md: decisión, comentarios y disponibilidad del vehículo. La conversación de trabajo crea el caso durante la lección.",
+    "request": "Clara, desarrolla este caso. Dame tu recomendación actual, las fuentes y límites que la sustentan y el próximo trabajo útil para la decisión de la propietaria.",
+    "steps": [
+      "Clara define el encargo y crea un caso local. Registra los materiales y formula una primera respuesta con sus condiciones.",
+      "El flujo actual registra el razonamiento y sus vínculos con las fuentes, y guarda la valoración. La conversación de voz explica recomendación y preguntas abiertas.",
+      "Abre el documento de trabajo y el mapa de fuentes. Sigue una conclusión hasta su fuente y comenta qué comprobación podría cambiar la respuesta."
+    ],
+    "deliverables": [
+      "Documento de trabajo actual: recomendación, motivos, incógnitas importantes y acciones propuestas.",
+      "Mapa de fuentes e historial: respaldo de las conclusiones y cambios realizados durante el caso."
+    ],
+    "review": "El interés expresado no es una reserva ni demuestra la demanda general. Comprueba qué permite realmente la nota del vehículo. Clara propone; la propietaria decide si llevarlo a cabo.",
+    "checkpoints": [
+      "En la primera respuesta, distingue lo respaldado de las condiciones pendientes.",
+      "En la entrega, localiza la fuente de una conclusión y la próxima comprobación útil."
+    ],
+    "practice": "Añade update-es.md al mismo caso didáctico. Pregunta cómo cambia la valoración y las próximas acciones al faltar el vehículo. Abre el documento actualizado y la versión anterior conservada.",
+    "success": "El caso recoge la nueva disponibilidad sin dar por acordado un posible préstamo. Explica qué cambia en la recomendación o sus condiciones.",
+    "repeat": "Pide a Clara que retome el caso, aporta nuevas fuentes e indica la decisión. Revisa respuesta actualizada, motivos y próximo trabajo."
+  },
+  "clara/advisory-deliverable-validator": {
+    "title": "Revisar un informe de consultoría con Clara",
+    "goal": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles.",
+    "scenario": "Un informe externo recomienda el servicio diario de recogida para Ciclo Arco. Revisamos todo el breve documento frente a la petición de la propietaria y las notas.",
+    "scope": "Un informe Markdown suministrado y fuentes locales. No se dispone de su historial de redacción: la revisión contrasta afirmaciones con las pruebas aportadas ahora.",
+    "inputs": "Abre external-memo-es.md, assignment-es.md y notes-es.md. El informe es el documento revisado; los otros archivos establecen encargo e información conocida.",
+    "request": "Clara, revisa este informe frente al encargo y las notas. Explica si es utilizable, qué debe corregirse y qué decisiones siguen correspondiendo a la propietaria.",
+    "steps": [
+      "Clara define la revisión, conserva el informe y prepara un inventario de contenidos y fuentes seleccionadas.",
+      "El flujo actual examina alcance, afirmaciones, razonamiento, recomendación, límites y estado de entrega. La conversación de voz conecta hallazgos con los pasajes exactos del informe y las notas.",
+      "Abre el paquete de revisión. Lee estado general, hallazgos importantes y correcciones propuestas. El original queda intacto; un informe corregido requiere su propia revisión."
+    ],
+    "deliverables": [
+      "Revisión legible: conclusión general, contraste con fuentes, correcciones e incertidumbre residual.",
+      "Auditoría e inventarios: contenidos examinados e integridad formal del registro de revisión."
+    ],
+    "review": "Compara el servicio diario recomendado con las declaraciones reales de clientes y la disponibilidad del vehículo. Un registro completo no aprueba el informe ni demuestra por sí solo sus afirmaciones.",
+    "checkpoints": [
+      "Antes de revisar, distingue el documento de las fuentes que lo respaldan.",
+      "En la entrega, explica el estado y encuentra el pasaje y la fuente de un hallazgo importante."
+    ],
+    "practice": "Añade update-es.md y solicita otra revisión del informe externo sin cambios con las fuentes ampliadas. Conserva la primera revisión y compara los hallazgos.",
+    "success": "La nueva revisión refleja la falta del vehículo y aclara su efecto en el uso del informe. Indica qué debe cambiar para apoyar la decisión de la propietaria.",
+    "repeat": "Aporta documento, encargo y fuentes. Lee conclusión y hallazgos importantes y revisa por separado las correcciones antes de utilizarlas."
+  }
+}

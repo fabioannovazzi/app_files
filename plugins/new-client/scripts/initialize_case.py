@@ -46,9 +46,9 @@ __all__ = ["build_parser", "build_template", "initialize_case", "main"]
 def _factor(factor_id: str) -> dict[str, Any]:
     return {
         "factor_id": factor_id,
-        "score": 1,
+        "score": None,
         "assessment_status": "proposed",
-        "basis": "Initial placeholder; assess and document the professional basis.",
+        "basis": "Score not supplied; assess and document the professional basis.",
         "evidence_ids": [],
     }
 
@@ -154,7 +154,7 @@ def build_template(
         ],
         "engagement": {
             "kind": engagement_kind,
-            "start_date": assessment_date,
+            "start_date": None,
             "services": [
                 {
                     "service_id": "service-01",
@@ -254,7 +254,7 @@ def build_template(
         "template_references": [],
         "aml": {
             "assessment_date": assessment_date,
-            "inherent_risk": 1,
+            "inherent_risk": None,
             "inherent_risk_status": "proposed",
             "section_b_mode": "full",
             "section_b_exclusion_confirmation": None,

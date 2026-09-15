@@ -1,0 +1,507 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "variance-analysis",
+  "course_sha256": "836d99d8ab3ba006e22c2e8b31b6f8d3052f0ad4b3ac308bb417041b6f03ca20",
+  "reviewer": "Codex: first-use lesson and current native variance outputs",
+  "reviewed_at": "2026-09-14T19:41:43.894547+00:00",
+  "review_scope": "Read both fictional monthly input populations, all five localized contexts and first-use outlines, and the current calculation and interpretation outputs. Ten current native exercises pass within 92 component/native checks, without failures or skips. Visually inspected all 55 pages of the ten native Word reports, both distinct workbooks, and the four main chart families for every locale/phase. Final chart bytes match the previously inspected revision except the Spanish practice monthly chart, which was inspected separately. Workbook cells, styles and visibility match within each phase after resolving shared strings and equal-magnitude row order. Alternative sequences were reviewed through their native rows, reconciliation and authored interpretation; no visual inspection of every alternative PNG is claimed. Reports retain technical appendices, spacious chart pages and wrapped long German labels. This accepts prepared materials and their demonstrated current output, not learner understanding, voice interaction or professional approval.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson teaches choosing the source and comparison, confirming periods and signs, running the actual workflow, finding the result and repeating with another month. It starts with operating profit and category contributions; the alternative sequences are supporting detail, not a prerequisite or the focus of the first lesson.",
+        "inputs_and_request": "The fictional company has January-February budget and actual revenue, cost of sales and operating expenses. The twelve source rows and this localized context identify PL, AC, months, EUR, signed costs and control totals. The request is ordinary professional language. No quantities, commercial causes, reviewer approvals or technical configuration are invented.",
+        "execution_and_checkpoints": "The current inspection and variance commands consume the staged source and reviewed interpretation, generate normal tables, charts and Word output, and reconcile to source totals. The two checkpoints ask which values are compared and which source-backed category contributes to the difference. The paired teacher explains only actual worker progress and results.",
+        "deliverable_and_next_action": "The first Word page shows baseline, actual, absolute change and meaningful percentages by category. Read every rendered page in this locale. Both fitted native workbooks retain exact monthly rows; inapplicable price/volume/mix fields are hidden when quantities are absent, with canonical detail still retained. The localized Codex note links the actual report, category chart, monthly view and audit and explains source labels. Professional interpretation and alternative-sequence approval remain pending.",
+        "practice_and_repeat": "A distinct eighteen-row January-March input produces a new cumulative result, preserving the first run. The learner finds the changed total and one category, then can repeat by supplying company, period, comparison basis, currency and a new file. This is a complete first-use cycle, not an attempt to teach every variance-analysis option.",
+        "language_and_pacing": "Read the it outline, source context, generated report and delivery wording. Source category names and canonical spreadsheet fields remain English and are explained in the localized note. Six stages total 390 seconds; processing and questions may extend elapsed time. Native voice and learner acceptance are not asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[demo-47000-53000-it]",
+        "result_review": "The actual native result moves from 47,000 to 53,000 EUR, a +6,000 EUR change (+12.8%). Revenue +15,000, COGS -6,000 and operating expenses -3,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "0168e6b42b83fa7e298e07418ffbcaa9916bfeb24bc14375fb3551d94b039a8c"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "7c6d9b1abbd6bf2847058336ddc048574de34253691a8479be0806d4c3039ac3"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "4c4b089d9cd7a4cfeb49e72275970d916480eb634fe2af43adc1a0450cf400cb"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "3aaee2404efd85161029193b5967fec54260a219ab730b9ebf5d9d4cdd4342ef"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "94bf2f8238c8190bf7025222f74a6aaaf8a1078a1e0a023109c907802e207401"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "a448642fa4c1388cdb36b139e3700ca2cd6c4aecad96310c1d55bf59c4fb36a4"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "405e189d1086ddb52d541a7dc92b5e7933edffdc91f5fb45bfb70fb7046eacd8"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "a3a3292a085c4f84ee41d07627d2c0e8b66f1dbe50a4549aeb0ddd22ec31a7d1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[practice-77000-85000-it]",
+        "result_review": "The actual native result moves from 77,000 to 85,000 EUR, a +8,000 EUR change (+10.4%). Revenue +20,000, COGS -8,000 and operating expenses -4,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR and March adds +2,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "4e9a55077a66e4a9794fe6ad6a86da8df57cc8043f6958bd7e15b4bdd5a2f6c6"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "3fdb1ea687ec9d18239d03b42e071a8de44aa43cc4b09b0429b6e38e09f326f6"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "a44176f907e99601f13d5120481090d26a88cf10aeb0ea4dda41e125f26dca30"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "25d865daad484d88f6490af24b79ebb7a2014b2fd1c25a2efffcdd97030c21ff"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "37a638fd7765b9885d3264b51aee9ba2efa9f2eca864f963c39f3af2cf4e95bb"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "beb8b6d7bacc6b9e0fbb9af675a9c7c3cd5583cac9155072ee622ee10d0372a7"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "45a0698ca3d1a392faab60301e90364caf7925f5b21e8a8d1cf7de044769aad5"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "87b96d638b8b8a23ba2702bc4e3d153e43f0eb9f3688dd593bcd7c75783c7d0b"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson teaches choosing the source and comparison, confirming periods and signs, running the actual workflow, finding the result and repeating with another month. It starts with operating profit and category contributions; the alternative sequences are supporting detail, not a prerequisite or the focus of the first lesson.",
+        "inputs_and_request": "The fictional company has January-February budget and actual revenue, cost of sales and operating expenses. The twelve source rows and this localized context identify PL, AC, months, EUR, signed costs and control totals. The request is ordinary professional language. No quantities, commercial causes, reviewer approvals or technical configuration are invented.",
+        "execution_and_checkpoints": "The current inspection and variance commands consume the staged source and reviewed interpretation, generate normal tables, charts and Word output, and reconcile to source totals. The two checkpoints ask which values are compared and which source-backed category contributes to the difference. The paired teacher explains only actual worker progress and results.",
+        "deliverable_and_next_action": "The first Word page shows baseline, actual, absolute change and meaningful percentages by category. Read every rendered page in this locale. Both fitted native workbooks retain exact monthly rows; inapplicable price/volume/mix fields are hidden when quantities are absent, with canonical detail still retained. The localized Codex note links the actual report, category chart, monthly view and audit and explains source labels. Professional interpretation and alternative-sequence approval remain pending.",
+        "practice_and_repeat": "A distinct eighteen-row January-March input produces a new cumulative result, preserving the first run. The learner finds the changed total and one category, then can repeat by supplying company, period, comparison basis, currency and a new file. This is a complete first-use cycle, not an attempt to teach every variance-analysis option.",
+        "language_and_pacing": "Read the en outline, source context, generated report and delivery wording. Source category names and canonical spreadsheet fields remain English and are explained in the localized note. Six stages total 390 seconds; processing and questions may extend elapsed time. Native voice and learner acceptance are not asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[demo-47000-53000-en]",
+        "result_review": "The actual native result moves from 47,000 to 53,000 EUR, a +6,000 EUR change (+12.8%). Revenue +15,000, COGS -6,000 and operating expenses -3,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "d72f891beaeaaae9261ecab5fdff66fb0ea66d2e5f3fb8ad94fbd0cc2f9577e6"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "fa5b1fb0e886e27b8c14caa45d4c6a054c18e7a17decc328aafd2e7c65ec3661"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "4c4b089d9cd7a4cfeb49e72275970d916480eb634fe2af43adc1a0450cf400cb"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "44300b6db8e353cd9b7f921f6a44279e7aafb4b1c69ccb93edb6e30c79eeea52"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "b5022372cacb9b658e4ccaad8fd9680eb5be51ef40cac5db959b2f1aa59990e9"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "d895fabd7fd5bde2a317f4a7047ea3f6035d791061e6b2a91a5aba6dbc2c908c"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "bfcb9dc02e529df2161fda66e4e5a7c9dfb3dc407a705d41a5fa9ad0cb457167"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "e61fae21e1325306691f76165106a65abae672fdaa770ceb8414ea1673144968"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[practice-77000-85000-en]",
+        "result_review": "The actual native result moves from 77,000 to 85,000 EUR, a +8,000 EUR change (+10.4%). Revenue +20,000, COGS -8,000 and operating expenses -4,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR and March adds +2,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "81278f10310b4fe91097102f07f5bd49a6faf62dd92260d8091cdec77fb753c3"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "d586841f3b83610295d57899e5a4962d463dc9f6b91da3397e8e920f46119ac2"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "e6a99e55d84947fc2fdce7582562a90dfad6c87e226d9635f4625214f72a09a1"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "001ca95f0bfad1679fb0a5cd4e8c7da470886d105dc36fd88f0e87f4f0517b4e"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "2d8e519b1ef0dc42b0cfb047c3bb606c9081938a59c507616dde140b4cfd45a7"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "e872874b9d20e81ef5535046e74ee46a06d0c21f0051840493f020e0614fccf0"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "ff5ccae2fdcfe5733ddf6392876d77142fad3004f8a341569693e066f0b2351d"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "af9996ffee0c542473acee29237bd5cddd9588c460777312a292370a8570c030"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson teaches choosing the source and comparison, confirming periods and signs, running the actual workflow, finding the result and repeating with another month. It starts with operating profit and category contributions; the alternative sequences are supporting detail, not a prerequisite or the focus of the first lesson.",
+        "inputs_and_request": "The fictional company has January-February budget and actual revenue, cost of sales and operating expenses. The twelve source rows and this localized context identify PL, AC, months, EUR, signed costs and control totals. The request is ordinary professional language. No quantities, commercial causes, reviewer approvals or technical configuration are invented.",
+        "execution_and_checkpoints": "The current inspection and variance commands consume the staged source and reviewed interpretation, generate normal tables, charts and Word output, and reconcile to source totals. The two checkpoints ask which values are compared and which source-backed category contributes to the difference. The paired teacher explains only actual worker progress and results.",
+        "deliverable_and_next_action": "The first Word page shows baseline, actual, absolute change and meaningful percentages by category. Read every rendered page in this locale. Both fitted native workbooks retain exact monthly rows; inapplicable price/volume/mix fields are hidden when quantities are absent, with canonical detail still retained. The localized Codex note links the actual report, category chart, monthly view and audit and explains source labels. Professional interpretation and alternative-sequence approval remain pending.",
+        "practice_and_repeat": "A distinct eighteen-row January-March input produces a new cumulative result, preserving the first run. The learner finds the changed total and one category, then can repeat by supplying company, period, comparison basis, currency and a new file. This is a complete first-use cycle, not an attempt to teach every variance-analysis option.",
+        "language_and_pacing": "Read the fr outline, source context, generated report and delivery wording. Source category names and canonical spreadsheet fields remain English and are explained in the localized note. Six stages total 390 seconds; processing and questions may extend elapsed time. Native voice and learner acceptance are not asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[demo-47000-53000-fr]",
+        "result_review": "The actual native result moves from 47,000 to 53,000 EUR, a +6,000 EUR change (+12.8%). Revenue +15,000, COGS -6,000 and operating expenses -3,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "49d9ec87a4e058eeba5c934e08351a91386a3ee5438c799aa55b16ef54ad71e4"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "9476d8e6321b2e3edfd62bf8d266e3b831d68450bb7ba000b8f27960add76ada"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "4c4b089d9cd7a4cfeb49e72275970d916480eb634fe2af43adc1a0450cf400cb"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "d047a2fef25327b225caab70f839f0cef4e2d15bacf7d313860a0b9c2bbb5cc2"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "2e4b38e87e0e647462f646e4795240869da4abec05faac27dbde10b1517e2002"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "dc6da986266e44d5ac11659f768a24e97eb1a183102dacdec765a09cd2095a0e"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "798b01cd03ce2052464efb6db3c786976b59db0067ecca3bcdb5e3da8aa2d872"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "35a0c63addd3ef6fd535df84fb02ecdfe28f51903c5cbd5a5089a972647b3c19"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[practice-77000-85000-fr]",
+        "result_review": "The actual native result moves from 77,000 to 85,000 EUR, a +8,000 EUR change (+10.4%). Revenue +20,000, COGS -8,000 and operating expenses -4,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR and March adds +2,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "71d696709c8bb02f99ae039fefaf4d277b1a05eb2b80b6ac265fa014566873aa"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "f8f28a927898d5d1f317af8fac9f557de4be732e3d42388739db47901d63041c"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "a44176f907e99601f13d5120481090d26a88cf10aeb0ea4dda41e125f26dca30"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "cb7f8cad68513e749ba0f6a5724e2d8c019f5367168e08d5a2ee67690d158cf3"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "4fcdd3d69973abdc59629a6f0040aefa987ca6981eee6f7623cef1ed92dd89e0"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "4ef334394ccc7950d2a0c9a78e3cfc05ea7527235647366b602d3efd24edc90b"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "0b924fff93beb6223da9284dcd9776e132d0ba4fb5f61bf78a0f47b44df66e91"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "3b3a368ef8d961c6068ad751c935bafa114ab2cae84777fec0e62e7a9cff0bea"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson teaches choosing the source and comparison, confirming periods and signs, running the actual workflow, finding the result and repeating with another month. It starts with operating profit and category contributions; the alternative sequences are supporting detail, not a prerequisite or the focus of the first lesson.",
+        "inputs_and_request": "The fictional company has January-February budget and actual revenue, cost of sales and operating expenses. The twelve source rows and this localized context identify PL, AC, months, EUR, signed costs and control totals. The request is ordinary professional language. No quantities, commercial causes, reviewer approvals or technical configuration are invented.",
+        "execution_and_checkpoints": "The current inspection and variance commands consume the staged source and reviewed interpretation, generate normal tables, charts and Word output, and reconcile to source totals. The two checkpoints ask which values are compared and which source-backed category contributes to the difference. The paired teacher explains only actual worker progress and results.",
+        "deliverable_and_next_action": "The first Word page shows baseline, actual, absolute change and meaningful percentages by category. Read every rendered page in this locale. Both fitted native workbooks retain exact monthly rows; inapplicable price/volume/mix fields are hidden when quantities are absent, with canonical detail still retained. The localized Codex note links the actual report, category chart, monthly view and audit and explains source labels. Professional interpretation and alternative-sequence approval remain pending.",
+        "practice_and_repeat": "A distinct eighteen-row January-March input produces a new cumulative result, preserving the first run. The learner finds the changed total and one category, then can repeat by supplying company, period, comparison basis, currency and a new file. This is a complete first-use cycle, not an attempt to teach every variance-analysis option.",
+        "language_and_pacing": "Read the de outline, source context, generated report and delivery wording. Source category names and canonical spreadsheet fields remain English and are explained in the localized note. Six stages total 390 seconds; processing and questions may extend elapsed time. Native voice and learner acceptance are not asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[demo-47000-53000-de]",
+        "result_review": "The actual native result moves from 47,000 to 53,000 EUR, a +6,000 EUR change (+12.8%). Revenue +15,000, COGS -6,000 and operating expenses -3,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "8d0407f204934e67d37565fb0f0bb068a5836127a212a3a6f5719625ca7df726"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "072c4c612f275dec257d7f5c9b699a0ea06454aedbed2b967ab82869df0db8f0"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "4c4b089d9cd7a4cfeb49e72275970d916480eb634fe2af43adc1a0450cf400cb"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "0d47a33b7d44255b125432d3a5750aab22c22ace59e4a104d69ca8fc8d7ec0a2"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "a97db85c2bfa8a6a9d900ae2f9b2c9d12e8dba04fe0034f9f083147a7e502217"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "1699edd86cd7a3acf5d69a3b1e05cad9e1a3593133c54bf4e4969d4e9c198958"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "c913392fb2f04d89812a060e7f550e6fb846c47a9f605b3ce275567a1078dd88"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "8f6fa08eaf6fc4bb875fac09c915c9a04a8a31faf4818b53a8cfe7a024258aef"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[practice-77000-85000-de]",
+        "result_review": "The actual native result moves from 77,000 to 85,000 EUR, a +8,000 EUR change (+10.4%). Revenue +20,000, COGS -8,000 and operating expenses -4,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR and March adds +2,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "ffd9f1b460ba781ca61a41ef410b9825470e7034640d4a7c14c4807683950877"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "9a94588d6d966e8d27d6781e173c583b69df4c3135f7bb76a5663d3921db31f2"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "46e2398daa3f3510071ef8a1d9009a5b4988acdfe2eb2112aa001d3ce552f4a8"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "c24ebb1b0baf7238edca2dc0f82d0c17e0bbf88bc81562d0cd31fbe73cfdc78f"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "8609532a5adc379474d4f18c7816048c6036caf451b2430a3c577f3a9d488853"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "e0e409ecbbe228c65cfa09cf68ebc9857c8981610913862a62e46edf390802c7"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "5bae68360e665ed7e7f7b551c9c62c2fbec043229af7c4e0f934772545372fe1"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "13fc08b28d523728fa3d72937ac6bc28f7ed1ec35541b8aaa9ac0b3d697ab7ed"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain lesson teaches choosing the source and comparison, confirming periods and signs, running the actual workflow, finding the result and repeating with another month. It starts with operating profit and category contributions; the alternative sequences are supporting detail, not a prerequisite or the focus of the first lesson.",
+        "inputs_and_request": "The fictional company has January-February budget and actual revenue, cost of sales and operating expenses. The twelve source rows and this localized context identify PL, AC, months, EUR, signed costs and control totals. The request is ordinary professional language. No quantities, commercial causes, reviewer approvals or technical configuration are invented.",
+        "execution_and_checkpoints": "The current inspection and variance commands consume the staged source and reviewed interpretation, generate normal tables, charts and Word output, and reconcile to source totals. The two checkpoints ask which values are compared and which source-backed category contributes to the difference. The paired teacher explains only actual worker progress and results.",
+        "deliverable_and_next_action": "The first Word page shows baseline, actual, absolute change and meaningful percentages by category. Read every rendered page in this locale. Both fitted native workbooks retain exact monthly rows; inapplicable price/volume/mix fields are hidden when quantities are absent, with canonical detail still retained. The localized Codex note links the actual report, category chart, monthly view and audit and explains source labels. Professional interpretation and alternative-sequence approval remain pending.",
+        "practice_and_repeat": "A distinct eighteen-row January-March input produces a new cumulative result, preserving the first run. The learner finds the changed total and one category, then can repeat by supplying company, period, comparison basis, currency and a new file. This is a complete first-use cycle, not an attempt to teach every variance-analysis option.",
+        "language_and_pacing": "Read the es outline, source context, generated report and delivery wording. Source category names and canonical spreadsheet fields remain English and are explained in the localized note. Six stages total 390 seconds; processing and questions may extend elapsed time. Native voice and learner acceptance are not asserted."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[demo-47000-53000-es]",
+        "result_review": "The actual native result moves from 47,000 to 53,000 EUR, a +6,000 EUR change (+12.8%). Revenue +15,000, COGS -6,000 and operating expenses -3,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "9f63a14ec6dc15b9970604970ef1695c602316179cb360d0a1946cd880ff32dd"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "4953f45524a3ab20349c229ef05d541621cf06a58c1ab807fafc400a919c2f55"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "4c4b089d9cd7a4cfeb49e72275970d916480eb634fe2af43adc1a0450cf400cb"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "f114b06a401d0d672f87c7bedb48b4028c032f633a99bfd638b07af6cc3718fb"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "48f0e16c9eb8c2890699b16ff2da7a97cf3327dd650db53b5435593010579698"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "4f6d01b7539b0f709bf6ac5681181826b30e3e1520e99f69b0b9bc4b41016e58"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "c921b2e5c4aa90c12da1f873d3186fc041f4b8bfd54614f7b881dae6ba4ed06f"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "ecdfd3e264ae044356866cdbffd4bf1d13210e6f18771c48e933b3f3e6a8b668"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_variance_kit_runs_current_full_amount_comparison[practice-77000-85000-es]",
+        "result_review": "The actual native result moves from 77,000 to 85,000 EUR, a +8,000 EUR change (+10.4%). Revenue +20,000, COGS -8,000 and operating expenses -4,000 EUR reconcile to that total. January contributes +12,000 and February -6,000 EUR and March adds +2,000 EUR. Negative-base cost percentages remain unavailable. The native report, monthly detail and delivered interpretation agree; bridge closure passes without asserting commercial causes or professional approval. The full output inventory is finalized in the fictional local run.",
+        "reviewed_artifacts": [
+          {
+            "name": "root_cause_client_report.docx",
+            "sha256": "41e992280d5ceb112dff2d7ff4d562be9f598da8f676c959ff56a33e6caf8bc9"
+          },
+          {
+            "name": "variance_results.xlsx",
+            "sha256": "d48c65643fe3dac416b3360e779a983c47f3ff6bb8723290da01e8b4755ddc22"
+          },
+          {
+            "name": "variance_results.csv",
+            "sha256": "cfe2350c498f160b58e6de32617d430ca4e7c0819d9831b801f79b56f56d5f8c"
+          },
+          {
+            "name": "total_by_dimension_bridge.png",
+            "sha256": "a2de2ce2e8e62ec60dc7dd089a99e89f0c403e8041fbfa0662c33942f781adcc"
+          },
+          {
+            "name": "exploded_variance_bridge.png",
+            "sha256": "fd05a1f1cd68a4c3c70556cf10e971fd30f19dec3a41af94d3a889c5f20c80cf"
+          },
+          {
+            "name": "variance_audit.json",
+            "sha256": "3aaa2f7a91ffff8e3eba99a5352988cb7db8c4557d24f22bb942813e72a1575d"
+          },
+          {
+            "name": "codex_root_cause_sweep_analysis.md",
+            "sha256": "b49d1c3a2f9384ca3c1bb3a0c98930ab362fdbf67e73a48baa2ed2d9440447a5"
+          },
+          {
+            "name": "codex_business_analysis.md",
+            "sha256": "8c2c80a5bcca59ae842a69fb1d5987ec61c6839906e3179238fd1d4ca0b88c24"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.170167+00:00",
+    "previous_course_sha256": "c31bd865f6cdcf0b01e8ccd093dfc346cf54b5ebd7461ffbb3607566d8f8cc94",
+    "source_snapshot": "/private/tmp/teaching-library-refresh-02/test_variance_kit_runs_current4/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.507449+00:00",
+    "previous_course_sha256": "b0a85074c3a44cd143b6134087fc0e79e38a9d84ce996859ba8e79d74d4852a9",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/variance-analysis/SKILL.md",
+        "before": "fcbbd189b9f4eb8fa0d40e003f822a38e2fa4604d5ecb1836cf90bbe83684392",
+        "after": "f05dd16e267bd6411c18ffc7cf8ad474659aea83447b2dce53331cb21dffcff8"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

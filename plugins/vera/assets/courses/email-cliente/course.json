@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "email-cliente",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,11 +19,38 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "supporting_task",
+  "parent_workflow": "new-client",
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "current_intake_review_and_client_email"
+  },
   "sources": [
+    {
+      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+      "sha256": "84264b4da1dc3b4d289f20b5ae85cd633ad7a6f56a1f797218be39bfcdf005a3"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/icon.svg",
+      "repository_path": "plugins/client-file-preparation/assets/icon.svg",
+      "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
+    },
+    {
+      "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/client-file-preparation/assets/review-workbench-adapter.json",
+      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+    },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
       "repository_path": "plugins/client-file-preparation/references/workflow-reference.md",
       "sha256": "12494bbe3e621f2395afab400bd384a6d28c3c7853cd45eaeadb62a96269f657"
+    },
+    {
+      "path": "modules/client-file-preparation/requirements.txt",
+      "repository_path": "plugins/client-file-preparation/requirements.txt",
+      "sha256": "52d819e8a9f405e7605de84ae65521166be565d85ad602df65adc740d5693186"
     },
     {
       "path": "modules/client-file-preparation/schemas/model_handoff.schema.json",
@@ -78,7 +105,7 @@
     {
       "path": "modules/client-file-preparation/scripts/review_session.py",
       "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
-      "sha256": "78bea9a2e8127f364d3caea1d3b24cd33b4fa9fe388562fefe23c8c6b80cc286"
+      "sha256": "6b06c376237c2e1dfabfebda605ba1a6ac2030938fbbe8d298ff071b34232b7f"
     },
     {
       "path": "modules/client-file-preparation/scripts/scan_folder.py",
@@ -91,333 +118,496 @@
       "sha256": "45ad2b86a4533151830f68b940678bb70963bc7df2a76033d07fac3b1a176e1d"
     },
     {
+      "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
+      "repository_path": "plugins/client-file-preparation/templates/email_documenti_mancanti.md",
+      "sha256": "5cb95e09970123a29a0574459d953ce03a908e69a899a68bb4374d383640a704"
+    },
+    {
+      "path": "modules/client-file-preparation/templates/memo_istruttoria.md",
+      "repository_path": "plugins/client-file-preparation/templates/memo_istruttoria.md",
+      "sha256": "d718069bee76ed6cd63e4f96b1dffb2d199ba8c3e969a7da1aaf709f6ee691dd"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/email-cliente/SKILL.md",
       "repository_path": "plugins/vera/skills/email-cliente/SKILL.md",
       "sha256": "5a1abf9e8c28aed45ea7ccf31742798546a8175f3c5ecffce0405eab2069978a"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/CU-income.md",
+      "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/F24-first.md",
+      "sha256": "873b2e55c29b3794507acf566672426d8c38111a111ef26d55410673bcd1b565",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "ef70215a3d852ea58b33e34850bff7ab0899fcc2550f16787e11ac7a24b8f1db",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "ef70215a3d852ea58b33e34850bff7ab0899fcc2550f16787e11ac7a24b8f1db",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-it.md",
+      "sha256": "8d67dcf6816527ce371a71fa953c4d1247e5915251e9e1bdb366652a9d91091d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "8cbb3dd7fcb7b2b12f2261d2607b90c8d849c27866703312423c0ccd2f13d7cc",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "8cbb3dd7fcb7b2b12f2261d2607b90c8d849c27866703312423c0ccd2f13d7cc",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-en.md",
+      "sha256": "ee6573dd62331dc839c2ca785580430ceea2917c0d3498a6bd193b340462fa77",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "36810aa5a0d6f95139d3c38bcdb366fd30bd2f7d7e8b1087df0aafda5d0744a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "36810aa5a0d6f95139d3c38bcdb366fd30bd2f7d7e8b1087df0aafda5d0744a5",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-fr.md",
+      "sha256": "8cc4d0c0bf7efb49a545710fc4c72bc948c2601cb406033f9b0d11c3440160f2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "c0db760e858e5dfdeffbff8b6cf1f6721f8d60ddc09ec4d5171959cc1a3c9995",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "c0db760e858e5dfdeffbff8b6cf1f6721f8d60ddc09ec4d5171959cc1a3c9995",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-de.md",
+      "sha256": "c700b652f84d5f301bb36ddb1a814e5eb3bf0397966f2b8f4538bbd556c01490",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "e0bf63ac75267e34f7dd48223c07b88bc4c1e75fe601183054dce11b860b1161",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "e0bf63ac75267e34f7dd48223c07b88bc4c1e75fe601183054dce11b860b1161",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client-reply-es.md",
+      "sha256": "e73b1d0bafc8c5021c0a9ccc235ced1325dfcb56b48f442027817b1637d4a270",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Chiedere soltanto i documenti davvero necessari",
-      "goal": "Preparare una richiesta breve al cliente a partire dalle sole mancanze già rivedute.",
-      "scenario": "La revisione del fascicolo CLIENT-001 conferma che mancano l'estratto conto di giugno e una spiegazione per un bonifico del 12 giugno. Un possibile contratto mancante è ancora una proposta non applicata nella revisione.",
-      "request": "Vera, prepara una richiesta chiara dei documenti mancanti per questo cliente.",
-      "scope": "Bozza locale. Solo le richieste rivedute e applicate entrano nel testo; nessuna email viene inviata.",
-      "input_columns": [
-        "Voce fittizia del passaggio",
-        "Stato",
-        "Da includere"
+      "title": "Preparare una email per chiedere documenti al cliente",
+      "goal": "Imparare a trasformare le richieste documentali del fascicolo in una email breve, precisa e pronta per la revisione dello studio.",
+      "scenario": "Il cliente ha consegnato una CU e un F24. Lo studio deve capire se esistono altre CU e se tutti gli F24 della campagna sono già presenti. Prepariamo insieme la richiesta.",
+      "scope": "Operazione di supporto alla preparazione del fascicolo, campagna italiana 2026. Si prepara una bozza locale: invio e consulenza fiscale non fanno parte della lezione.",
+      "inputs": "Apri context-it.md, CU-income.md e F24-first.md. Il contesto indica le due conferme cercate. Vera prepara il fascicolo didattico e legge i documenti con il percorso corrente; non serve un elenco di richieste già approvate.",
+      "request": "Vera, prepara una email per chiedere al cliente se ha altre CU e se ci ha consegnato tutti gli F24 della campagna. Fammi prima rivedere le richieste sulla base di questo fascicolo.",
+      "steps": [
+        "La chat di lavoro esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. La chat vocale spiega quali informazioni sono già disponibili e quali conferme si cercano.",
+        "Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.",
+        "Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni."
       ],
-      "input_rows": [
-        [
-          "Estratto conto di giugno",
-          "Richiesta riveduta e applicata",
-          "Sì"
-        ],
-        [
-          "Causale del bonifico 12 giugno",
-          "Richiesta riveduta e applicata",
-          "Sì"
-        ],
-        [
-          "Possibile contratto mancante",
-          "Candidato ancora da rivedere",
-          "No"
-        ]
+      "deliverables": [
+        "Bozza email locale da rivedere e usare come testo del messaggio al cliente.",
+        "Richieste documentali riviste e fascicolo di supporto, per verificare da dove proviene ogni domanda."
       ],
-      "basis": "Il passaggio E1 contiene due voci email_request applicate e una candidatura separata. Il nome della cartella e una vecchia bozza non aggiungono richieste autorizzate.",
-      "method": [
-        "Leggi tutte le pagine del passaggio email e verifica che esistano richieste applicate. Se mancano, lascia la bozza in attesa della revisione.",
-        "Scrivi un messaggio operativo con i soli documenti e chiarimenti sostenuti dalle richieste rivedute.",
-        "Rileggi ogni frase contro il passaggio e consegna la bozza al professionista. L'eventuale invio segue una richiesta separata e il canale autorizzato."
+      "review": "Ogni domanda deve corrispondere a una richiesta scelta. Non chiedere di nuovo i file già ricevuti: chiedi se ne esistono altri o se il gruppo è completo. La bozza usa il riferimento cliente della procedura; destinatario e invio vanno controllati nel normale lavoro.",
+      "checkpoints": [
+        "Prima della bozza, indica quale conferma vuoi ottenere dal cliente.",
+        "Alla consegna, collega ciascuna domanda alla richiesta rivista."
       ],
-      "result_title": "Documenti e chiarimento per completare il fascicolo",
-      "conclusion": "Buongiorno, per completare il fascicolo vi chiediamo l'estratto conto di giugno e un chiarimento sulla causale del bonifico del 12 giugno. Grazie per la collaborazione.",
-      "output_columns": [
-        "Frase della bozza",
-        "Base",
-        "Controllo"
-      ],
-      "output_rows": [
-        [
-          "Estratto conto di giugno",
-          "E1 · email_request 1",
-          "Periodo corretto"
-        ],
-        [
-          "Causale bonifico 12 giugno",
-          "E1 · email_request 2",
-          "Riferimento corretto"
-        ],
-        [
-          "Richiesta del contratto",
-          "Candidato non applicato",
-          "Esclusa"
-        ]
-      ],
-      "check": "Una proposta di mancanza non è ancora una richiesta approvata. Il cliente non deve ricevere ipotesi interne trasformate in richieste certe.",
-      "question": "La vecchia bozza chiedeva anche il contratto: dobbiamo conservarlo per prudenza?",
-      "answer": "No. La fonte corrente sono le richieste applicate. Il contratto entra soltanto dopo la sua revisione e l'aggiornamento coerente del passaggio.",
-      "practice": "Rendi il testo ancora più breve mantenendo entrambe le richieste e i riferimenti esatti.",
-      "next": "Completa prima la revisione delle mancanze nel fascicolo; poi chiedi la bozza e controlla destinatario e tono."
+      "practice": "Prepara un nuovo passaggio con client-reply-it.md insieme agli stessi documenti. Il cliente conferma che gli F24 sono completi. Rivedi le richieste e fai produrre una nuova bozza limitata alla conferma ancora aperta sulle CU; conserva la prima versione.",
+      "success": "Sai trovare la bozza, spiegare perché contiene ogni domanda e aggiornarla quando arriva una risposta, senza ripetere una richiesta risolta.",
+      "repeat": "Chiedi a Vera di riprendere il fascicolo e preparare la email dalle richieste riviste. Controlla domande, destinatario e allegati prima di inviarla con il normale canale dello studio."
     },
     "en": {
-      "title": "Ask only for the documents actually needed",
-      "goal": "Prepare a concise client request from missing items that have already been reviewed.",
-      "scenario": "The fictional CLIENT-001 file review confirms a missing June bank statement and a question about a 12 June transfer. A possibly missing contract is still an unapplied review candidate.",
-      "request": "Vera, draft a clear request for this client's missing documents.",
-      "scope": "Local draft only. The text uses reviewed, applied requests; no email is sent.",
-      "input_columns": [
-        "Fictional handoff item",
-        "Status",
-        "Include"
+      "title": "Prepare a client email requesting documents",
+      "goal": "Learn to turn a file’s document requests into a short, precise email for the practice to review.",
+      "scenario": "The client supplied one CU and one F24. The practice needs to know whether there are other CUs and whether all campaign F24s are present. We prepare that request together.",
+      "scope": "Supporting task within client file preparation, Italian 2026 campaign. The lesson produces a local draft; sending and tax advice are outside its scope.",
+      "inputs": "Open context-en.md, CU-income.md and F24-first.md. The context names the two confirmations sought. Vera prepares the teaching file and reads the documents through the current workflow; no pre-approved request list is needed.",
+      "request": "Vera, prepare an email asking whether the client has other CUs and has supplied all F24s for the campaign. First let me review the requests against this file.",
+      "steps": [
+        "The working chat prepares the file and shows received documents and proposed questions. The voice chat explains what is already available and which confirmations are needed.",
+        "On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.",
+        "Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions."
       ],
-      "input_rows": [
-        [
-          "June bank statement",
-          "Reviewed and applied request",
-          "Yes"
-        ],
-        [
-          "12 June transfer purpose",
-          "Reviewed and applied request",
-          "Yes"
-        ],
-        [
-          "Possibly missing contract",
-          "Candidate awaiting review",
-          "No"
-        ]
+      "deliverables": [
+        "Local email draft to review and use as the practice’s message text.",
+        "Reviewed document requests and supporting file, showing the basis of each question."
       ],
-      "basis": "E1 contains two applied email_request items and a separate candidate. A folder name or old draft does not add authorized requests.",
-      "method": [
-        "Read every email handoff page and verify that applied requests exist. Otherwise leave the draft pending review.",
-        "Write an operational message using only documents and clarifications supported by those requests.",
-        "Check each sentence against the handoff and deliver the draft. Sending requires its own authorized request and channel."
+      "review": "Every question should match a selected request. Do not ask again for files already received: ask whether others exist or the set is complete. The draft uses the workflow’s client reference; check recipient and sending details in normal professional work.",
+      "checkpoints": [
+        "Before drafting, name the confirmation you want from the client.",
+        "At delivery, connect each question to its reviewed request."
       ],
-      "result_title": "Documents and clarification to complete the file",
-      "conclusion": "Hello, to complete the file, please provide the June bank statement and clarify the purpose of the transfer dated 12 June. Thank you for your help.",
-      "output_columns": [
-        "Draft item",
-        "Basis",
-        "Check"
-      ],
-      "output_rows": [
-        [
-          "June bank statement",
-          "E1 · email_request 1",
-          "Correct period"
-        ],
-        [
-          "12 June transfer purpose",
-          "E1 · email_request 2",
-          "Correct reference"
-        ],
-        [
-          "Contract request",
-          "Unapplied candidate",
-          "Excluded"
-        ]
-      ],
-      "check": "A proposed missing item is not an approved request. Do not turn internal hypotheses into definite client demands.",
-      "question": "The old draft asked for the contract. Should we keep it just in case?",
-      "answer": "No. Use the current applied requests. Include the contract only after review and a coherent handoff update.",
-      "practice": "Shorten the draft while preserving both requests and their exact references.",
-      "next": "Complete the missing-item review first, then request the draft and review its recipient and tone."
+      "practice": "Start a new pass with client-reply-en.md and the same documents. The client confirms that F24s are complete. Review the requests and produce a new draft limited to the remaining CU confirmation; retain the first version.",
+      "success": "You can find the draft, explain every question and update it after a reply without repeating a resolved request.",
+      "repeat": "Ask Vera to resume the file and draft from reviewed requests. Check questions, recipient and attachments before sending through the practice’s usual channel."
     },
     "fr": {
-      "title": "Demander seulement les pièces réellement nécessaires",
-      "goal": "Préparer une demande brève à partir des seules pièces manquantes déjà revues.",
-      "scenario": "La revue fictive de CLIENT-001 confirme l'absence du relevé bancaire de juin et une question sur le virement du 12 juin. Un contrat potentiellement manquant reste une proposition non appliquée.",
-      "request": "Vera, prépare une demande claire des documents manquants pour ce client.",
-      "scope": "Brouillon local fondé sur les demandes revues et appliquées. Aucun courriel n'est envoyé.",
-      "input_columns": [
-        "Élément fictif du passage",
-        "Statut",
-        "Inclure"
+      "title": "Préparer un courriel de demande de documents au client",
+      "goal": "Apprendre à transformer les demandes documentaires d’un dossier en un courriel court et précis à revoir au cabinet.",
+      "scenario": "Le client a fourni une CU et un F24. Le cabinet veut savoir s’il existe d’autres CU et si tous les F24 de la campagne sont présents. Nous préparons cette demande ensemble.",
+      "scope": "Opération de support à la préparation du dossier, campagne italienne 2026. La leçon produit un brouillon local ; l’envoi et le conseil fiscal sont hors périmètre.",
+      "inputs": "Ouvrez context-fr.md, CU-income.md et F24-first.md. Le contexte indique les deux confirmations recherchées. Vera prépare le dossier pédagogique et lit les documents avec le parcours courant ; aucune liste déjà approuvée n’est nécessaire.",
+      "request": "Vera, prépare un courriel demandant si le client possède d’autres CU et a transmis tous les F24 de la campagne. Fais-moi d’abord revoir les demandes à partir de ce dossier.",
+      "steps": [
+        "La conversation de travail prépare le dossier et montre documents reçus et questions proposées. La conversation vocale explique ce qui est disponible et les confirmations recherchées.",
+        "Sur la page de revue, choisissez les demandes pertinentes et limitez les suggestions trop larges aux deux confirmations du cas. Vera enregistre et applique les décisions effectives avant de rédiger.",
+        "Vera rédige à partir des demandes revues. Ouvrez le brouillon et vérifiez objet, questions et ton ; tout remplacement est enregistré par la même revue, avec son lien aux décisions."
       ],
-      "input_rows": [
-        [
-          "Relevé bancaire de juin",
-          "Demande revue et appliquée",
-          "Oui"
-        ],
-        [
-          "Objet du virement du 12 juin",
-          "Demande revue et appliquée",
-          "Oui"
-        ],
-        [
-          "Contrat potentiellement manquant",
-          "Candidat à revoir",
-          "Non"
-        ]
+      "deliverables": [
+        "Brouillon local à revoir et utiliser comme texte du courriel du cabinet.",
+        "Demandes documentaires revues et dossier de support pour retrouver la base de chaque question."
       ],
-      "basis": "E1 contient deux email_request appliquées et un candidat séparé. Une ancienne ébauche ou un nom de dossier n'ajoute pas de demande autorisée.",
-      "method": [
-        "Lis toutes les pages du passage destiné au courriel et vérifie que des demandes appliquées existent. Sinon, laisse le brouillon en attente.",
-        "Rédige un message opérationnel limité aux documents et précisions étayés par ces demandes.",
-        "Compare chaque phrase au passage et présente le brouillon. L'envoi suit une demande distincte et un canal autorisé."
+      "review": "Chaque question doit correspondre à une demande choisie. Ne redemandez pas les fichiers reçus : demandez s’il en existe d’autres ou si le groupe est complet. La procédure utilise une référence client ; destinataire et envoi restent à contrôler dans le travail réel.",
+      "checkpoints": [
+        "Avant rédaction, nommez la confirmation attendue du client.",
+        "À la livraison, reliez chaque question à la demande revue."
       ],
-      "result_title": "Documents et précision pour compléter le dossier",
-      "conclusion": "Bonjour, pour compléter le dossier, merci de nous fournir le relevé bancaire de juin et de préciser l'objet du virement du 12 juin. Merci de votre collaboration.",
-      "output_columns": [
-        "Demande du brouillon",
-        "Base",
-        "Contrôle"
-      ],
-      "output_rows": [
-        [
-          "Relevé de juin",
-          "E1 · email_request 1",
-          "Période exacte"
-        ],
-        [
-          "Objet du virement",
-          "E1 · email_request 2",
-          "Référence exacte"
-        ],
-        [
-          "Contrat",
-          "Candidat non appliqué",
-          "Exclu"
-        ]
-      ],
-      "check": "Une pièce supposée manquante n'est pas encore une demande approuvée. Ne transforme pas une hypothèse interne en exigence certaine pour le client.",
-      "question": "L'ancien brouillon demandait le contrat. Faut-il le garder par prudence ?",
-      "answer": "Non. La source actuelle est la liste des demandes appliquées. Le contrat n'entre qu'après revue et actualisation cohérente du passage.",
-      "practice": "Raccourcis le texte tout en conservant les deux demandes et leurs références exactes.",
-      "next": "Termine d'abord la revue des pièces manquantes, puis demande le brouillon et vérifie destinataire et ton."
+      "practice": "Effectuez un nouveau passage avec client-reply-fr.md et les mêmes documents. Le client confirme que les F24 sont complets. Revoyez les demandes et obtenez un nouveau brouillon limité à la confirmation encore ouverte sur les CU ; conservez la première version.",
+      "success": "Vous savez retrouver le brouillon, expliquer chaque question et le mettre à jour après une réponse sans répéter une demande résolue.",
+      "repeat": "Demandez à Vera de reprendre le dossier et de rédiger à partir des demandes revues. Vérifiez questions, destinataire et pièces jointes avant l’envoi par le canal habituel du cabinet."
     },
     "de": {
-      "title": "Nur tatsächlich benötigte Unterlagen anfordern",
-      "goal": "Aus bereits geprüften Fehlunterlagen eine kurze Mandantenanfrage formulieren.",
-      "scenario": "Für das fiktive CLIENT-001 sind der fehlende Juni-Kontoauszug und eine Rückfrage zur Überweisung vom 12. Juni bestätigt. Ein möglicherweise fehlender Vertrag ist noch ein ungeprüfter Vorschlag.",
-      "request": "Vera, entwirf eine verständliche Anfrage zu den fehlenden Mandantenunterlagen.",
-      "scope": "Nur lokaler Entwurf aus geprüften und übernommenen Anforderungen. Es wird keine E-Mail versendet.",
-      "input_columns": [
-        "Fiktiver Übergabeeintrag",
-        "Status",
-        "Aufnehmen"
+      "title": "Eine E-Mail zur Dokumentenanforderung vorbereiten",
+      "goal": "Lernen, aus den Dokumentenanfragen einer Akte eine kurze, präzise E-Mail zur Prüfung durch die Kanzlei zu erstellen.",
+      "scenario": "Der Mandant hat eine CU und einen F24 vorgelegt. Die Kanzlei will wissen, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Wir bereiten die Anfrage gemeinsam vor.",
+      "scope": "Unterstützende Aufgabe der Aktenvorbereitung, italienische Kampagne 2026. Die Lektion erstellt einen lokalen Entwurf; Versand und Steuerberatung sind nicht enthalten.",
+      "inputs": "Öffnen Sie context-de.md, CU-income.md und F24-first.md. Der Kontext nennt die beiden gesuchten Bestätigungen. Vera bereitet die Übungsakte vor und liest die Dokumente im aktuellen Ablauf; eine bereits genehmigte Anfrageliste ist nicht erforderlich.",
+      "request": "Vera, entwirf eine E-Mail mit der Frage, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Lass mich die Anfragen zunächst anhand dieser Akte prüfen.",
+      "steps": [
+        "Der Arbeitschat bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Sprachchat erklärt, was vorliegt und welche Bestätigungen fehlen.",
+        "Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.",
+        "Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert."
       ],
-      "input_rows": [
-        [
-          "Juni-Kontoauszug",
-          "Geprüfte und übernommene Anforderung",
-          "Ja"
-        ],
-        [
-          "Zweck der Überweisung vom 12. Juni",
-          "Geprüfte und übernommene Anforderung",
-          "Ja"
-        ],
-        [
-          "Möglicherweise fehlender Vertrag",
-          "Vorschlag vor Prüfung",
-          "Nein"
-        ]
+      "deliverables": [
+        "Lokaler E-Mail-Entwurf zur Prüfung und Verwendung als Nachrichtentext der Kanzlei.",
+        "Geprüfte Dokumentenanfragen und unterstützende Akte als Grundlage jeder Frage."
       ],
-      "basis": "E1 enthält zwei übernommene email_request-Einträge und einen getrennten Vorschlag. Ordnernamen und alte Entwürfe schaffen keine zusätzlichen freigegebenen Anforderungen.",
-      "method": [
-        "Lies alle Seiten der E-Mail-Übergabe und prüfe, ob übernommene Anforderungen existieren. Andernfalls bleibt der Entwurf bis zur Prüfung offen.",
-        "Formuliere eine praktische Mitteilung ausschließlich zu den belegten Unterlagen und Klärungen.",
-        "Prüfe jeden Satz gegen die Übergabe und liefere den Entwurf. Versand benötigt eine eigene autorisierte Anweisung und einen verfügbaren Kanal."
+      "review": "Jede Frage muss einer ausgewählten Anfrage entsprechen. Bereits vorgelegte Dateien nicht erneut anfordern: Klären Sie, ob weitere existieren oder der Satz vollständig ist. Die Vorlage nutzt die Mandantenreferenz des Ablaufs; Empfänger und Versand müssen im normalen Arbeitsgang geprüft werden.",
+      "checkpoints": [
+        "Benennen Sie vor dem Entwurf die gewünschte Bestätigung.",
+        "Ordnen Sie bei der Übergabe jede Frage ihrer geprüften Anfrage zu."
       ],
-      "result_title": "Unterlagen und Rückfrage zur Vervollständigung",
-      "conclusion": "Guten Tag, bitte reichen Sie zur Vervollständigung der Akte den Juni-Kontoauszug ein und erläutern Sie den Zweck der Überweisung vom 12. Juni. Vielen Dank für Ihre Unterstützung.",
-      "output_columns": [
-        "Entwurfsbestandteil",
-        "Grundlage",
-        "Prüfung"
-      ],
-      "output_rows": [
-        [
-          "Juni-Kontoauszug",
-          "E1 · email_request 1",
-          "Richtiger Zeitraum"
-        ],
-        [
-          "Überweisungszweck vom 12. Juni",
-          "E1 · email_request 2",
-          "Richtige Referenz"
-        ],
-        [
-          "Vertragsanforderung",
-          "Nicht übernommener Vorschlag",
-          "Ausgeschlossen"
-        ]
-      ],
-      "check": "Eine vermutete Fehlunterlage ist keine freigegebene Anforderung. Interne Hypothesen dürfen nicht zu sicheren Forderungen an den Mandanten werden.",
-      "question": "Der alte Entwurf verlangte den Vertrag. Sollen wir das vorsorglich beibehalten?",
-      "answer": "Nein. Maßgeblich sind die aktuell übernommenen Anforderungen. Der Vertrag kommt erst nach Prüfung und konsistenter Aktualisierung der Übergabe hinzu.",
-      "practice": "Kürze den Entwurf und erhalte beide Anforderungen mit ihren genauen Referenzen.",
-      "next": "Schließe zuerst die Fehlunterlagenprüfung ab; prüfe anschließend Empfänger und Ton des angeforderten Entwurfs."
+      "practice": "Starten Sie mit client-reply-de.md und denselben Dokumenten einen neuen Durchlauf. Der Mandant bestätigt vollständige F24. Prüfen Sie die Anfragen und erstellen Sie einen neuen Entwurf nur zur offenen CU-Frage; bewahren Sie die erste Fassung auf.",
+      "success": "Sie können den Entwurf finden, jede Frage begründen und ihn nach einer Antwort aktualisieren, ohne geklärte Punkte erneut anzufragen.",
+      "repeat": "Bitten Sie Vera, die Akte fortzusetzen und aus geprüften Anfragen zu schreiben. Prüfen Sie Fragen, Empfänger und Anhänge vor dem Versand über den üblichen Kanzleikanal."
     },
     "es": {
-      "title": "Pedir solo los documentos realmente necesarios",
-      "goal": "Preparar una solicitud breve a partir de carencias documentales ya revisadas.",
-      "scenario": "La revisión ficticia de CLIENT-001 confirma que falta el extracto bancario de junio y que debe aclararse una transferencia del 12 de junio. Un contrato posiblemente ausente sigue siendo una propuesta sin aplicar.",
-      "request": "Vera, redacta una solicitud clara de los documentos pendientes de este cliente.",
-      "scope": "Solo borrador local con solicitudes revisadas y aplicadas. No se envía ningún correo.",
-      "input_columns": [
-        "Elemento ficticio de la entrega",
-        "Estado",
-        "Incluir"
+      "title": "Preparar un correo para pedir documentos al cliente",
+      "goal": "Aprender a convertir las peticiones documentales del expediente en un correo breve y preciso para revisión del despacho.",
+      "scenario": "El cliente entregó una CU y un F24. El despacho necesita saber si existen otras CU y si están todos los F24 de la campaña. Preparamos juntos esa petición.",
+      "scope": "Tarea de apoyo a la preparación del expediente, campaña italiana 2026. La lección produce un borrador local; no incluye envío ni asesoramiento fiscal.",
+      "inputs": "Abre context-es.md, CU-income.md y F24-first.md. El contexto señala las dos confirmaciones buscadas. Vera prepara el expediente didáctico y lee los documentos mediante el flujo actual; no hace falta una lista ya aprobada.",
+      "request": "Vera, prepara un correo para preguntar si el cliente tiene otras CU y ha entregado todos los F24 de la campaña. Primero déjame revisar las peticiones a partir de este expediente.",
+      "steps": [
+        "La conversación de trabajo prepara el expediente y muestra documentos recibidos y preguntas propuestas. La conversación de voz explica qué está disponible y qué confirmaciones se necesitan.",
+        "En la página de revisión, elige peticiones pertinentes y limita las sugerencias amplias a las dos confirmaciones del caso. Vera guarda y aplica las decisiones reales antes de redactar.",
+        "Vera escribe desde las peticiones revisadas. Abre el borrador y comprueba asunto, preguntas y tono; cualquier sustitución se guarda mediante la misma revisión, vinculada a las decisiones."
       ],
-      "input_rows": [
-        [
-          "Extracto bancario de junio",
-          "Solicitud revisada y aplicada",
-          "Sí"
-        ],
-        [
-          "Finalidad de transferencia del 12 de junio",
-          "Solicitud revisada y aplicada",
-          "Sí"
-        ],
-        [
-          "Contrato posiblemente ausente",
-          "Candidato pendiente de revisión",
-          "No"
-        ]
+      "deliverables": [
+        "Borrador local para revisar y usar como texto del correo del despacho.",
+        "Peticiones documentales revisadas y expediente de apoyo para comprobar la base de cada pregunta."
       ],
-      "basis": "E1 contiene dos elementos email_request aplicados y un candidato independiente. Un nombre de carpeta o un borrador antiguo no añade solicitudes autorizadas.",
-      "method": [
-        "Lee todas las páginas de la entrega de correo y verifica que existen solicitudes aplicadas. En caso contrario, deja el borrador pendiente de revisión.",
-        "Redacta un mensaje operativo solo con documentos y aclaraciones respaldados por esas solicitudes.",
-        "Comprueba cada frase contra la entrega y presenta el borrador. Enviar requiere su propia instrucción autorizada y canal."
+      "review": "Cada pregunta debe corresponder a una petición elegida. No vuelvas a pedir archivos recibidos: pregunta si existen otros o si el conjunto está completo. El borrador usa la referencia de cliente del flujo; destinatario y envío se comprueban en el trabajo habitual.",
+      "checkpoints": [
+        "Antes de redactar, indica qué confirmación esperas del cliente.",
+        "En la entrega, relaciona cada pregunta con su petición revisada."
       ],
-      "result_title": "Documentos y aclaración para completar el expediente",
-      "conclusion": "Buenos días: para completar el expediente, facilite el extracto bancario de junio y aclare la finalidad de la transferencia del 12 de junio. Gracias por su colaboración.",
-      "output_columns": [
-        "Elemento del borrador",
-        "Base",
-        "Comprobación"
-      ],
-      "output_rows": [
-        [
-          "Extracto bancario de junio",
-          "E1 · email_request 1",
-          "Periodo correcto"
-        ],
-        [
-          "Finalidad de transferencia del 12 de junio",
-          "E1 · email_request 2",
-          "Referencia correcta"
-        ],
-        [
-          "Solicitud del contrato",
-          "Candidato sin aplicar",
-          "Excluida"
-        ]
-      ],
-      "check": "Una carencia propuesta no es una solicitud aprobada. No conviertas hipótesis internas en exigencias categóricas al cliente.",
-      "question": "El borrador anterior pedía el contrato. ¿Lo conservamos por si acaso?",
-      "answer": "No. Utiliza las solicitudes aplicadas actuales. Incluye el contrato solo después de revisión y actualización coherente de la entrega.",
-      "practice": "Acorta el borrador manteniendo ambas solicitudes y sus referencias exactas.",
-      "next": "Completa primero la revisión de carencias, solicita después el borrador y revisa destinatario y tono."
+      "practice": "Realiza un nuevo paso con client-reply-es.md y los mismos documentos. El cliente confirma que los F24 están completos. Revisa las peticiones y genera un nuevo borrador limitado a la confirmación pendiente sobre las CU; conserva la primera versión.",
+      "success": "Sabes encontrar el borrador, explicar cada pregunta y actualizarlo tras una respuesta sin repetir una petición resuelta.",
+      "repeat": "Pide a Vera retomar el expediente y redactar desde las peticiones revisadas. Comprueba preguntas, destinatario y adjuntos antes de enviar por el canal habitual del despacho."
     }
   }
 }

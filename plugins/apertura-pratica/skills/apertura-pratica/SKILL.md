@@ -79,6 +79,11 @@ facts produce explicit `partial` or `blocked` states.
    `matter_intake.json` against `schemas/matter_intake.schema.json`. Keep every
    ambiguity and missing premise visible. Never fabricate a register search,
    professional decision, engagement acceptance, source, date or document.
+   For each missing item, record who should supply the information or decision
+   in `requested_from`: `client`, `firm` or `to_confirm`. Use source-led reasoning;
+   do not classify the recipient from the item kind alone. Phrase client requests
+   as specific questions or document requests. Keep internal professional checks
+   under the firm's actions. Unassigned items remain visible for clarification.
 
 4. Prepare the specialised review package:
 
@@ -134,6 +139,8 @@ Finish with `review_handoff.md` and an Artifact Card containing the run director
 intake memo, missing-information request, review payload, review receipts,
 validation report and exact next action. State separately whether the dossier
 is `blocked`, `partial`, `ready_for_review` or `ready_to_open` and why.
+Use descriptive links in the selected language so the reader can find the memo,
+client requests and next action without recognizing internal filenames.
 
 ## Codex-Native Run UX
 

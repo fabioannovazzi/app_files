@@ -205,6 +205,9 @@ ZIPs during a customer run.
    run. It writes the policy snapshot, semantic proposals, deterministic plan,
    `review_payload.json`, and pending `ui_decisions.json`; it never moves a
    client file.
+   Pass `--language it|en|fr|de|es` for the current conversation language.
+   This sets the review interface, edit guidance and handoff language; it does
+   not translate source filenames or change the reviewed studio folder policy.
 7. Render the shared review workbench. The collaborator responsible for the
    client must accept, reject, edit, mark unclear, or skip each proposed
    change. Save decisions persistently. Editing means supplying a normalized

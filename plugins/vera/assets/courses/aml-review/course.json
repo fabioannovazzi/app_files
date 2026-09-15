@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "aml-review",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,19 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "review_client_evidence_then_follow_up"
+  },
   "sources": [
+    {
+      "path": "modules/aml-review/assets/icon.svg",
+      "repository_path": "plugins/aml-review/assets/icon.svg",
+      "sha256": "dcf6ec35c78006137cc047c07fc865b778d1ef577e95da32a71a7d70e01bb9c8"
+    },
     {
       "path": "modules/aml-review/references/professional-method.md",
       "repository_path": "plugins/aml-review/references/professional-method.md",
@@ -28,12 +40,17 @@
     {
       "path": "modules/aml-review/references/record-contract.md",
       "repository_path": "plugins/aml-review/references/record-contract.md",
-      "sha256": "1951c123cce3fabce7c33650f4992c3298a8d348907080604f7f4d0e5d8c149d"
+      "sha256": "cb5d3b6e30e16dcdbf1b7a6ea480a6d21dace0cb7fc72873d79d05f4a66f8b57"
+    },
+    {
+      "path": "modules/aml-review/requirements.txt",
+      "repository_path": "plugins/aml-review/requirements.txt",
+      "sha256": "1d163703f0cb67f2da9901a06cf701531b796a080687ba3c2935db73cebe7edb"
     },
     {
       "path": "modules/aml-review/scripts/aml_review.py",
       "repository_path": "plugins/aml-review/scripts/aml_review.py",
-      "sha256": "53119fdc589085b3ce951372e88af444f8801ce02728785945c2d4664eea10c1"
+      "sha256": "04bffe9c96c8dc2967b45cb6801f093b9725509d400dd1831fd9d533bb4a8f1a"
     },
     {
       "path": "modules/aml-review/scripts/check_dependencies.py",
@@ -46,308 +63,598 @@
       "sha256": "852cd17187b2dd3dfe4ec4f61f169ec0ad842a9535cdbed378ad6eb9c66147df"
     },
     {
+      "path": "modules/aml-review/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/aml-review/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/aml-review/SKILL.md",
       "repository_path": "plugins/vera/skills/aml-review/SKILL.md",
       "sha256": "354905ff8eb6cf1dbbdd6006547c9e73b7cfa70fcfcde4b689fa8e6365aef76f"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/client-it.md",
+      "sha256": "ba168286879863c394ce78e2c4431551121fc4e1ada64e03af554e1cd8d357a7",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client-it.md",
+      "sha256": "ba168286879863c394ce78e2c4431551121fc4e1ada64e03af554e1cd8d357a7",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/ownership-it.md",
+      "sha256": "7bbc5025469b3953b6693c44b799e67149db1883256b2795e54692f5ebaa07fc",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/ownership-it.md",
+      "sha256": "7bbc5025469b3953b6693c44b799e67149db1883256b2795e54692f5ebaa07fc",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/loan-it.md",
+      "sha256": "99e9a5368c43c82a712f6c51f7af64c0cc50205624839b6c6d4d6eda529460f7",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/loan-it.md",
+      "sha256": "99e9a5368c43c82a712f6c51f7af64c0cc50205624839b6c6d4d6eda529460f7",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/ownership-update-it.md",
+      "sha256": "a13a302839bdc3df60e7949a9abe91d57cd810b40bead8c90236dd6536291c16",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client-en.md",
+      "sha256": "e1ae55a1ea7916560118886be51b68a7355e954f1df00023d5a80f61993d0dac",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client-en.md",
+      "sha256": "e1ae55a1ea7916560118886be51b68a7355e954f1df00023d5a80f61993d0dac",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/ownership-en.md",
+      "sha256": "cd214ebae69af91d8dd25c3aca6ac00e5ae474eeb95a2df9d28e5cbf30b294cb",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/ownership-en.md",
+      "sha256": "cd214ebae69af91d8dd25c3aca6ac00e5ae474eeb95a2df9d28e5cbf30b294cb",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/loan-en.md",
+      "sha256": "9683fbc936db5ef865e40ad10779c01f2a9b0be6e9614d427c09f9ac927b60d8",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/loan-en.md",
+      "sha256": "9683fbc936db5ef865e40ad10779c01f2a9b0be6e9614d427c09f9ac927b60d8",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/ownership-update-en.md",
+      "sha256": "ad962fa17fd1cd837627c1b5c58980630f2ec53495502cb5a07b78523eb207c5",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client-fr.md",
+      "sha256": "18517dea9dad06ebbbd39fb84167aba4abc4df1c37c18e9ead5ff38cd32b9cbe",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client-fr.md",
+      "sha256": "18517dea9dad06ebbbd39fb84167aba4abc4df1c37c18e9ead5ff38cd32b9cbe",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/ownership-fr.md",
+      "sha256": "95bc80034aa9b6542b8c929c85ef92790f9fe4ca148ea44fdbd9f8c05ffb752f",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/ownership-fr.md",
+      "sha256": "95bc80034aa9b6542b8c929c85ef92790f9fe4ca148ea44fdbd9f8c05ffb752f",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/loan-fr.md",
+      "sha256": "e3911fff60ab748095eb994c144f3347e89ea3f0c504caea79a71e7b8a633d57",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/loan-fr.md",
+      "sha256": "e3911fff60ab748095eb994c144f3347e89ea3f0c504caea79a71e7b8a633d57",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/ownership-update-fr.md",
+      "sha256": "a81e61ccec18bd64e2ea43bcc2a08b285cc5f144f36c4db6133ab03b6ef11251",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client-de.md",
+      "sha256": "fe8c27e26da78ee8ebc6c2aee37bd10b60d2985e08e319763706ab411a847d4d",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client-de.md",
+      "sha256": "fe8c27e26da78ee8ebc6c2aee37bd10b60d2985e08e319763706ab411a847d4d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/ownership-de.md",
+      "sha256": "3ad816701d257aafb3a8d7540dd9bf99b819c68920060c74961a2500c00eec3e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/ownership-de.md",
+      "sha256": "3ad816701d257aafb3a8d7540dd9bf99b819c68920060c74961a2500c00eec3e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/loan-de.md",
+      "sha256": "04a4c62f6f13f4ab70915ff1866631ec39a733ac8c40a3469088ebf31d836326",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/loan-de.md",
+      "sha256": "04a4c62f6f13f4ab70915ff1866631ec39a733ac8c40a3469088ebf31d836326",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/ownership-update-de.md",
+      "sha256": "653caf2331e27df630e1846317448c87466028d173ec6ddd2bb70e79cc5bf4c7",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client-es.md",
+      "sha256": "c79bd30cc2a1d580b24562590415edc720e5efac2529f9410fef4d2baf30755b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client-es.md",
+      "sha256": "c79bd30cc2a1d580b24562590415edc720e5efac2529f9410fef4d2baf30755b",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/ownership-es.md",
+      "sha256": "2f0f19d699ba158e3a89eeb63198b5ac1069c3fa299bebd3700fe753146ecb21",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/ownership-es.md",
+      "sha256": "2f0f19d699ba158e3a89eeb63198b5ac1069c3fa299bebd3700fe753146ecb21",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/loan-es.md",
+      "sha256": "320feaedf431b6a6b40d46fda48d39e7131e875f8fd9e4744366811d54ec3342",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/loan-es.md",
+      "sha256": "320feaedf431b6a6b40d46fda48d39e7131e875f8fd9e4744366811d54ec3342",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/ownership-update-es.md",
+      "sha256": "ee713f25a3449b57ff9da01d871a866bd35170d506a9026115cfee5c055e6276",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Un cambiamento da capire, prima di giudicare",
-      "goal": "Ricostruire un cambiamento societario, distinguere fatti e spiegazioni e preparare una revisione AML con domande mirate.",
-      "scenario": "Luna Componenti consegna una visura aggiornata che mostra un nuovo socio società. Il cliente indica la stessa persona fisica come titolare effettivo, ma non fornisce ancora la catena di controllo della nuova società. Un pagamento insolito è descritto come anticipo a un fornitore.",
-      "request": "Vera, rivedi le nuove informazioni senza rifare tutta l'apertura cliente.",
-      "scope": "Revisione documentale interna. Nessuno screening esterno o giudizio automatico di sospetto; le decisioni restano al professionista.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Informazione",
-        "Stato"
+      "title": "Preparare una revisione antiriciclaggio con Vera",
+      "goal": "Imparare a far leggere un dossier cliente, ricostruire i fatti e ottenere una valutazione motivata con documenti e questioni da rivedere.",
+      "scenario": "Lo studio rivede Officina Arco: attività, soci, rappresentante e un finanziamento soci sono descritti nei documenti fittizi.",
+      "scope": "Una revisione antiriciclaggio per uno studio italiano. Vera prepara l’analisi; il professionista decide misure, accettazione e ogni eventuale segnalazione.",
+      "inputs": "Apri client-it.md, ownership-it.md e loan-it.md. Indica cliente, incarico e data della revisione: 31 agosto 2026. I documenti sono dichiarazioni e riferimenti del caso, non controlli già completati.",
+      "request": "Vera, prepara una revisione antiriciclaggio di Officina Arco al 31 agosto da questi documenti. Mostrami fatti supportati, punti da chiarire e valutazione proposta per la mia revisione.",
+      "steps": [
+        "Nel thread di lavoro Vera legge i documenti e ricostruisce persone, proprietà, attività e operazione. La voce spiega a cosa serve la revisione e distingue dichiarazioni, riscontri e informazioni mancanti.",
+        "Vera confronta le evidenze, verifica le fonti professionali attuali pertinenti e formula domande mirate. La voce segue le questioni effettive; non inventa sospetti o risultati di screening.",
+        "Apri il memo prodotto e il collegamento a una fonte. Leggi valutazione, motivi e documenti ancora necessari. Il record conserva la proposta; le decisioni professionali si registrano solo quando espresse."
       ],
-      "input_rows": [
-        [
-          "A1 · precedente valutazione",
-          "Assetto precedente ricostruito",
-          "Storico"
-        ],
-        [
-          "A2 · nuova visura",
-          "Nuovo socio società",
-          "Documentato"
-        ],
-        [
-          "A3 · dichiarazione cliente",
-          "Controllo invariato; pagamento come anticipo",
-          "Da corroborare"
-        ]
+      "deliverables": [
+        "Memo leggibile con valutazione proposta, fatti, fonti, limiti e domande mirate.",
+        "Versione salvata nel dossier che consente di collegare una successiva revisione senza perdere la precedente."
       ],
-      "basis": "Il confronto A1–A2 dimostra una modifica della partecipazione diretta. A3 è una dichiarazione, non la prova della catena di controllo né della causale economica del pagamento.",
-      "method": [
-        "Riprendi la valutazione precedente e identifica esattamente cosa è cambiato, conservando la cronologia.",
-        "Ricostruisci proprietà e controllo dalle fonti; per ogni incoerenza considera spiegazioni alternative e documenti risolutivi.",
-        "Prepara un memo con fatti, limiti e domande. Registra una decisione professionale solo dopo la revisione esplicita della proposta."
+      "review": "Controlla chi ha dichiarato i fatti, quali riscontri esistono e quali verifiche mancano. Un calcolo o un file salvato non approva il cliente. Il memo è interno: non inviarlo automaticamente al cliente.",
+      "checkpoints": [
+        "Prima dell’analisi, identifica cliente, incarico e documenti forniti.",
+        "Nel memo, trova un fatto documentato, una dichiarazione e una questione ancora aperta."
       ],
-      "result_title": "Aggiornamento AML · due verifiche mirate",
-      "conclusion": "La modifica societaria è documentata. Il controllo finale e la spiegazione del pagamento richiedono evidenze ulteriori.",
-      "output_columns": [
-        "Questione",
-        "Richiesta interna proposta",
-        "Conclusione disponibile"
-      ],
-      "output_rows": [
-        [
-          "Nuovo socio · A2",
-          "Documenti sulla catena di controllo",
-          "Partecipazione diretta modificata"
-        ],
-        [
-          "Anticipo · A3",
-          "Ordine, contratto e riscontro del beneficiario",
-          "Causale riferita dal cliente"
-        ]
-      ],
-      "check": "Un elemento insolito o un documento mancante non equivale a sospetto. Uno screening non eseguito resta sconosciuto, non negativo.",
-      "question": "Possiamo dichiarare il controllo invariato perché il cliente lo conferma?",
-      "answer": "Possiamo riportare la dichiarazione e la sua fonte. La ricostruzione del controllo rimane da corroborare con i documenti della nuova partecipazione.",
-      "practice": "Aggiungiamo la catena di controllo: quali domande possiamo chiudere e quali restano aperte?",
-      "next": "Seleziona la precedente valutazione e le sole nuove evidenze pertinenti; conserva la revisione nel medesimo incarico."
+      "practice": "Aggiungi ownership-update-it.md nello stesso dossier e chiedi il riesame al 10 settembre. Vera collega il record appena prodotto e confronta la nuova compagine con quella precedente. Individua cosa cambia e quale evidenza manca.",
+      "success": "Sai avviare la revisione, usare il memo, distinguere proposta e decisione e aggiornare il dossier quando arrivano nuovi fatti.",
+      "repeat": "Chiedi a Vera una revisione per un cliente e un motivo preciso, fornendo i documenti e l’eventuale valutazione precedente. Esamina le evidenze e registra le decisioni professionali effettive."
     },
     "en": {
-      "title": "Understand the change before drawing a conclusion",
-      "goal": "Reconstruct an ownership change and prepare an AML review with evidence and targeted questions.",
-      "scenario": "Fictional Luna Components supplies a new company extract showing a corporate shareholder. The client names the same individual as beneficial owner, but the new ownership chain is missing. An unusual payment is described as a supplier advance.",
-      "request": "Vera, review the new information without repeating the entire client intake.",
-      "scope": "Internal documentary review under the Italian workflow. No external screening, automatic suspicion judgment or professional decision is implied.",
-      "input_columns": [
-        "Fictional source",
-        "Information",
-        "Status"
+      "title": "Prepare an AML review with Vera",
+      "goal": "Learn to have a client file examined, reconstruct the facts and obtain a reasoned assessment with evidence and questions to review.",
+      "scenario": "The practice reviews Officina Arco: fictional documents describe its activity, owners, representative and a shareholder loan.",
+      "scope": "One AML review for an Italian accounting practice. Vera prepares the analysis; the professional decides measures, acceptance and any reporting.",
+      "inputs": "Open client-en.md, ownership-en.md and loan-en.md. State client, engagement and review date: 31 August 2026. The documents are case statements and references, not completed checks.",
+      "request": "Vera, prepare an AML review of Officina Arco at 31 August using these documents. Show supported facts, points to clarify and the proposed assessment for my review.",
+      "steps": [
+        "In the working chat, Vera reads the documents and reconstructs people, ownership, activity and transaction. Voice explains the review’s purpose and distinguishes statements, corroboration and missing information.",
+        "Vera compares evidence, verifies relevant current professional sources and asks focused questions. Voice follows the actual issues without inventing suspicion or screening results.",
+        "Open the generated memo and a source link. Read the assessment, reasons and evidence still needed. The record preserves the proposal; professional decisions are recorded only when actually expressed."
       ],
-      "input_rows": [
-        [
-          "A1 · prior assessment",
-          "Previous ownership reconstructed",
-          "Historical"
-        ],
-        [
-          "A2 · new extract",
-          "New corporate shareholder",
-          "Documented"
-        ],
-        [
-          "A3 · client statement",
-          "Unchanged control; supplier advance",
-          "Needs corroboration"
-        ]
+      "deliverables": [
+        "Readable memo with proposed assessment, facts, sources, limitations and focused questions.",
+        "Saved version in the client file for linking later reviews without losing the earlier one."
       ],
-      "basis": "A1–A2 establish a direct-shareholding change. A3 is a statement, not proof of ultimate control or the payment's economic purpose.",
-      "method": [
-        "Reuse the prior assessment and identify the precise changes while retaining its history.",
-        "Reconstruct ownership and control from sources. For discrepancies, compare explanations and identify evidence that would resolve them.",
-        "Prepare facts, limitations and questions. Record professional decisions only after explicit review of the exact proposal."
+      "review": "Check who asserted each fact, what corroborates it and which checks are missing. A calculation or saved file does not approve a client. The memo is internal; do not automatically send it to the client.",
+      "checkpoints": [
+        "Before analysis, identify the client, engagement and supplied documents.",
+        "In the memo, find a documented fact, a client statement and an open question."
       ],
-      "result_title": "Two focused checks in the AML update",
-      "conclusion": "The shareholding change is documented. Ultimate control and the payment explanation need further evidence.",
-      "output_columns": [
-        "Issue",
-        "Proposed internal request",
-        "Supported conclusion"
-      ],
-      "output_rows": [
-        [
-          "New shareholder · A2",
-          "Ownership and control-chain documents",
-          "Direct participation changed"
-        ],
-        [
-          "Advance · A3",
-          "Order, contract and beneficiary evidence",
-          "Client-reported purpose"
-        ]
-      ],
-      "check": "An unusual feature or missing document does not equal suspicion. Screening that was not performed remains unknown, not negative.",
-      "question": "Can we confirm unchanged control because the client says so?",
-      "answer": "We can report the statement and its source. The control reconstruction still needs corroborating ownership documents.",
-      "practice": "Add the ownership chain: which questions can close and which remain?",
-      "next": "Select the prior assessment and relevant new evidence in the same engagement."
+      "practice": "Add ownership-update-en.md in the same client file and request review at 10 September. Vera links the newly generated record and compares the changed ownership with the earlier position. Identify the change and missing evidence.",
+      "success": "You can start a review, use the memo, distinguish proposal and decision and update the file when new facts arrive.",
+      "repeat": "Ask Vera for a review of a named client for a specific reason, supplying documents and any previous assessment. Examine evidence and record actual professional decisions."
     },
     "fr": {
-      "title": "Comprendre le changement avant de conclure",
-      "goal": "Reconstituer une évolution de l'actionnariat et préparer une revue AML avec des questions ciblées.",
-      "scenario": "L'entreprise fictive Luna fournit un nouvel extrait montrant un associé personne morale. Le client désigne le même bénéficiaire effectif, mais ne fournit pas la nouvelle chaîne de contrôle. Un paiement inhabituel est présenté comme une avance fournisseur.",
-      "request": "Vera, revois ces nouvelles informations sans refaire toute l'entrée en relation.",
-      "scope": "Revue documentaire interne selon le workflow italien. Aucun filtrage externe, jugement automatique de soupçon ou décision professionnelle n'est implicite.",
-      "input_columns": [
-        "Source fictive",
-        "Information",
-        "Statut"
+      "title": "Préparer une revue antiblanchiment avec Vera",
+      "goal": "Apprendre à faire examiner un dossier client, reconstituer les faits et obtenir une évaluation motivée avec preuves et questions à revoir.",
+      "scenario": "Le cabinet revoit Officina Arco : les documents fictifs décrivent activité, associés, représentante et prêt d’associé.",
+      "scope": "Une revue antiblanchiment pour un cabinet comptable italien. Vera prépare l’analyse ; le professionnel décide mesures, acceptation et déclaration éventuelle.",
+      "inputs": "Ouvrez client-fr.md, ownership-fr.md et loan-fr.md. Précisez client, mission et date de revue : 31 août 2026. Les documents sont des déclarations et références du cas, pas des contrôles achevés.",
+      "request": "Vera, prépare une revue antiblanchiment d’Officina Arco au 31 août avec ces documents. Présente faits étayés, points à éclaircir et évaluation proposée pour ma revue.",
+      "steps": [
+        "Dans la conversation de travail, Vera lit les documents et reconstitue personnes, propriété, activité et opération. La voix explique la finalité et distingue déclarations, corroborations et informations manquantes.",
+        "Vera compare les preuves, vérifie les sources professionnelles actuelles pertinentes et formule des questions ciblées. La voix suit les vrais points sans inventer soupçons ni résultats de filtrage.",
+        "Ouvrez le mémo produit et un lien source. Lisez évaluation, motifs et preuves encore nécessaires. La version enregistrée conserve la proposition ; les décisions professionnelles ne sont enregistrées que lorsqu’elles sont exprimées."
       ],
-      "input_rows": [
-        [
-          "A1 · ancienne évaluation",
-          "Ancien actionnariat reconstitué",
-          "Historique"
-        ],
-        [
-          "A2 · nouvel extrait",
-          "Nouvel associé personne morale",
-          "Documenté"
-        ],
-        [
-          "A3 · déclaration client",
-          "Contrôle inchangé ; avance fournisseur",
-          "À corroborer"
-        ]
+      "deliverables": [
+        "Mémo lisible avec évaluation proposée, faits, sources, limites et questions ciblées.",
+        "Version conservée au dossier pour relier une revue ultérieure sans perdre la précédente."
       ],
-      "basis": "A1–A2 établissent le changement de participation directe. A3 est une déclaration, pas la preuve du contrôle final ni de la finalité économique du paiement.",
-      "method": [
-        "Reprends l'évaluation antérieure et identifie précisément les changements en conservant l'historique.",
-        "Reconstitue propriété et contrôle à partir des sources. Compare les explications des incohérences et les documents susceptibles de les résoudre.",
-        "Prépare faits, limites et questions. Ne consigne une décision professionnelle qu'après revue explicite de la proposition exacte."
+      "review": "Vérifiez l’auteur des déclarations, les corroborations et les contrôles manquants. Un calcul ou fichier sauvegardé ne vaut pas acceptation du client. Le mémo est interne ; ne pas l’envoyer automatiquement au client.",
+      "checkpoints": [
+        "Avant l’analyse, identifiez client, mission et documents fournis.",
+        "Dans le mémo, trouvez un fait documenté, une déclaration et une question ouverte."
       ],
-      "result_title": "Deux vérifications ciblées dans la revue AML",
-      "conclusion": "Le changement d'actionnariat est documenté. Le contrôle final et l'explication du paiement nécessitent d'autres preuves.",
-      "output_columns": [
-        "Question",
-        "Demande interne proposée",
-        "Conclusion étayée"
-      ],
-      "output_rows": [
-        [
-          "Nouvel associé · A2",
-          "Documents de la chaîne de contrôle",
-          "Participation directe modifiée"
-        ],
-        [
-          "Avance · A3",
-          "Commande, contrat et bénéficiaire",
-          "Finalité déclarée par le client"
-        ]
-      ],
-      "check": "Un fait inhabituel ou un document manquant n'équivaut pas à un soupçon. Un contrôle non effectué reste inconnu, et non négatif.",
-      "question": "Peut-on confirmer le contrôle inchangé sur la seule déclaration du client ?",
-      "answer": "On peut rapporter la déclaration et sa source. La reconstitution du contrôle nécessite encore les documents qui la corroborent.",
-      "practice": "Ajoute la chaîne de contrôle : quelles questions peuvent être closes et lesquelles restent ouvertes ?",
-      "next": "Sélectionne l'évaluation précédente et les nouvelles preuves pertinentes dans le même dossier."
+      "practice": "Ajoutez ownership-update-fr.md au même dossier et demandez un réexamen au 10 septembre. Vera relie la version nouvellement produite et compare le nouvel actionnariat au précédent. Repérez changement et preuve manquante.",
+      "success": "Vous savez lancer la revue, utiliser le mémo, distinguer proposition et décision et actualiser le dossier avec de nouveaux faits.",
+      "repeat": "Demandez une revue d’un client pour un motif précis, avec documents et éventuelle évaluation précédente. Examinez les preuves et enregistrez les décisions professionnelles réelles."
     },
     "de": {
-      "title": "Eine Veränderung erst verstehen, dann beurteilen",
-      "goal": "Eine Eigentumsänderung rekonstruieren und eine Geldwäscheprüfung mit Belegen und gezielten Fragen vorbereiten.",
-      "scenario": "Die fiktive Luna Components legt einen neuen Registerauszug mit einer Gesellschaft als neuer Gesellschafterin vor. Der Mandant nennt weiterhin dieselbe natürliche Person als wirtschaftlich Berechtigten; die neue Beteiligungskette fehlt. Eine ungewöhnliche Zahlung wird als Lieferantenvorauszahlung erklärt.",
-      "request": "Vera, prüfe die neuen Informationen auf Grundlage der bisherigen Mandantenprüfung.",
-      "scope": "Interne Dokumentenprüfung im italienischen Workflow. Externe Abfragen, eine automatische Verdachtsbewertung oder eine fachliche Entscheidung werden nicht vorgetäuscht.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Information",
-        "Status"
+      "title": "Eine Geldwäscheprüfung mit Vera vorbereiten",
+      "goal": "Lernen, eine Mandantenakte auswerten zu lassen, Fakten nachzuvollziehen und eine begründete Beurteilung mit Nachweisen und Prüffragen zu erhalten.",
+      "scenario": "Die Kanzlei prüft Officina Arco: Fiktive Unterlagen beschreiben Tätigkeit, Gesellschafter, Vertreterin und Gesellschafterdarlehen.",
+      "scope": "Eine Geldwäscheprüfung für eine italienische Steuerberatungskanzlei. Vera bereitet die Analyse vor; der Berufsträger entscheidet über Maßnahmen, Annahme und etwaige Meldung.",
+      "inputs": "Öffnen Sie client-de.md, ownership-de.md und loan-de.md. Nennen Sie Mandant, Auftrag und Prüfdatum: 31. August 2026. Die Unterlagen enthalten Angaben und Belege des Falles, keine abgeschlossenen Prüfungen.",
+      "request": "Vera, bereite mit diesen Unterlagen eine Geldwäscheprüfung von Officina Arco zum 31. August vor. Zeige belegte Fakten, Klärungsbedarf und die vorgeschlagene Beurteilung zur Prüfung.",
+      "steps": [
+        "Im Arbeitschat liest Vera die Unterlagen und rekonstruiert Beteiligte, Eigentum, Tätigkeit und Vorgang. Die Stimme erklärt den Zweck und unterscheidet Angaben, Bestätigungen und fehlende Informationen.",
+        "Vera vergleicht Belege, prüft relevante aktuelle Fachquellen und stellt gezielte Fragen. Die Stimme folgt den tatsächlichen Punkten, ohne Verdacht oder Screening-Ergebnisse zu erfinden.",
+        "Öffnen Sie das erzeugte Memo und einen Quellenlink. Lesen Sie Beurteilung, Gründe und fehlende Nachweise. Der Datensatz bewahrt den Vorschlag; fachliche Entscheidungen werden erst nach tatsächlicher Äußerung erfasst."
       ],
-      "input_rows": [
-        [
-          "A1 · bisherige Beurteilung",
-          "Frühere Eigentumsstruktur rekonstruiert",
-          "Historisch"
-        ],
-        [
-          "A2 · neuer Registerauszug",
-          "Neue Gesellschaft als Gesellschafterin",
-          "Dokumentiert"
-        ],
-        [
-          "A3 · Mandantenerklärung",
-          "Unveränderte Kontrolle; Lieferantenvorauszahlung",
-          "Zu belegen"
-        ]
+      "deliverables": [
+        "Lesbares Memo mit vorgeschlagener Beurteilung, Fakten, Quellen, Grenzen und gezielten Fragen.",
+        "Gespeicherte Aktenversion, die spätere Prüfungen mit der vorherigen verknüpft."
       ],
-      "basis": "A1 und A2 belegen eine Änderung der direkten Beteiligung. A3 ist eine Erklärung, kein Nachweis der letztlichen Kontrolle oder des wirtschaftlichen Zahlungsgrunds.",
-      "method": [
-        "Verwende die frühere Beurteilung und bestimme die konkreten Änderungen, ohne ihre Historie zu überschreiben.",
-        "Rekonstruiere Eigentum und Kontrolle aus den Quellen. Vergleiche bei Abweichungen mögliche Erklärungen und benötigte Belege.",
-        "Bereite Fakten, Grenzen und Rückfragen vor. Erfasse fachliche Entscheidungen erst nach ausdrücklicher Prüfung des konkreten Vorschlags."
+      "review": "Prüfen Sie Herkunft der Angaben, Bestätigungen und fehlende Kontrollen. Eine Berechnung oder gespeicherte Datei gibt den Mandanten nicht frei. Das Memo ist intern und wird nicht automatisch an ihn gesendet.",
+      "checkpoints": [
+        "Benennen Sie vor der Analyse Mandant, Auftrag und Unterlagen.",
+        "Finden Sie im Memo einen belegten Sachverhalt, eine Angabe und eine offene Frage."
       ],
-      "result_title": "Zwei gezielte Prüfungen für die Aktualisierung",
-      "conclusion": "Die Beteiligungsänderung ist dokumentiert. Die letztliche Kontrolle und die Zahlungserklärung benötigen weitere Belege.",
-      "output_columns": [
-        "Thema",
-        "Vorgeschlagene interne Rückfrage",
-        "Belegte Aussage"
-      ],
-      "output_rows": [
-        [
-          "Neue Gesellschafterin · A2",
-          "Unterlagen zur Eigentums- und Kontrollkette",
-          "Direkte Beteiligung geändert"
-        ],
-        [
-          "Vorauszahlung · A3",
-          "Bestellung, Vertrag und Zahlungsempfänger belegen",
-          "Vom Mandanten erklärter Zweck"
-        ]
-      ],
-      "check": "Eine Auffälligkeit oder fehlende Unterlage ist nicht automatisch ein Verdacht. Eine nicht durchgeführte Abfrage bleibt unbekannt, nicht negativ.",
-      "question": "Können wir unveränderte Kontrolle allein aufgrund der Mandantenaussage bestätigen?",
-      "answer": "Wir können die Aussage mit ihrer Quelle wiedergeben. Die Kontrollstruktur braucht weiterhin bestätigende Eigentumsunterlagen.",
-      "practice": "Ergänze die Beteiligungskette. Welche Fragen sind geklärt, welche bleiben offen?",
-      "next": "Wähle die bisherige Beurteilung und die neuen Belege desselben Mandats."
+      "practice": "Fügen Sie ownership-update-de.md derselben Akte hinzu und bitten Sie um Prüfung zum 10. September. Vera verknüpft den neu erzeugten Datensatz und vergleicht die Eigentümerstruktur. Benennen Sie Änderung und fehlenden Nachweis.",
+      "success": "Sie können die Prüfung starten, das Memo nutzen, Vorschlag und Entscheidung unterscheiden und die Akte bei neuen Fakten aktualisieren.",
+      "repeat": "Bitten Sie Vera um Prüfung eines Mandanten aus konkretem Anlass und liefern Sie Unterlagen sowie frühere Beurteilungen. Prüfen Sie Nachweise und erfassen Sie tatsächliche fachliche Entscheidungen."
     },
     "es": {
-      "title": "Entender el cambio antes de concluir",
-      "goal": "Reconstruir un cambio de propiedad y preparar una revisión de prevención del blanqueo con pruebas y preguntas concretas.",
-      "scenario": "La ficticia Luna Components entrega un extracto registral con una sociedad como nueva socia. El cliente mantiene que el titular real es la misma persona, pero falta la nueva cadena de propiedad. Explica un pago inusual como anticipo a un proveedor.",
-      "request": "Vera, revisa la información nueva a partir de la evaluación anterior del cliente.",
-      "scope": "Revisión documental interna del workflow italiano. No se simulan consultas externas, una valoración automática de sospecha ni decisiones profesionales.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Información",
-        "Estado"
+      "title": "Preparar una revisión antiblanqueo con Vera",
+      "goal": "Aprender a revisar un expediente cliente, reconstruir hechos y obtener una evaluación razonada con pruebas y cuestiones para revisar.",
+      "scenario": "El despacho revisa Officina Arco: documentos ficticios describen actividad, socios, representante y préstamo de socio.",
+      "scope": "Una revisión antiblanqueo para un despacho contable italiano. Vera prepara el análisis; el profesional decide medidas, aceptación y cualquier comunicación.",
+      "inputs": "Abre client-es.md, ownership-es.md y loan-es.md. Indica cliente, encargo y fecha: 31 de agosto de 2026. Los documentos son declaraciones y referencias del caso, no comprobaciones terminadas.",
+      "request": "Vera, prepara una revisión antiblanqueo de Officina Arco al 31 de agosto con estos documentos. Muéstrame hechos respaldados, puntos por aclarar y evaluación propuesta para revisar.",
+      "steps": [
+        "En la conversación de trabajo, Vera lee documentos y reconstruye personas, propiedad, actividad y operación. La voz explica la finalidad y distingue declaraciones, corroboración e información ausente.",
+        "Vera compara pruebas, verifica fuentes profesionales actuales pertinentes y plantea preguntas concretas. La voz sigue las cuestiones reales sin inventar sospechas ni resultados de cribado.",
+        "Abre el memo generado y un enlace a fuente. Lee evaluación, motivos y pruebas pendientes. El registro conserva la propuesta; las decisiones profesionales se guardan solo cuando se expresan realmente."
       ],
-      "input_rows": [
-        [
-          "A1 · evaluación anterior",
-          "Propiedad previa reconstruida",
-          "Histórico"
-        ],
-        [
-          "A2 · nuevo extracto",
-          "Nueva sociedad socia",
-          "Documentado"
-        ],
-        [
-          "A3 · declaración del cliente",
-          "Control sin cambios; anticipo a proveedor",
-          "Pendiente de corroboración"
-        ]
+      "deliverables": [
+        "Memo legible con evaluación propuesta, hechos, fuentes, límites y preguntas concretas.",
+        "Versión guardada en el expediente para enlazar revisiones posteriores sin perder la anterior."
       ],
-      "basis": "A1 y A2 acreditan el cambio de participación directa. A3 es una declaración, no prueba del control último ni del propósito económico del pago.",
-      "method": [
-        "Reutiliza la evaluación anterior e identifica los cambios precisos conservando su historial.",
-        "Reconstruye propiedad y control a partir de fuentes. Compara explicaciones de las discrepancias e identifica pruebas que las resolverían.",
-        "Prepara hechos, límites y preguntas. Registra decisiones profesionales solo después de revisar expresamente la propuesta concreta."
+      "review": "Comprueba quién declaró cada hecho, qué lo corrobora y qué verificaciones faltan. Un cálculo o archivo guardado no aprueba al cliente. El memo es interno; no enviarlo automáticamente al cliente.",
+      "checkpoints": [
+        "Antes del análisis, identifica cliente, encargo y documentos aportados.",
+        "En el memo, encuentra un hecho documentado, una declaración y una cuestión pendiente."
       ],
-      "result_title": "Dos comprobaciones para actualizar la evaluación",
-      "conclusion": "El cambio societario está documentado. El control último y la explicación del pago necesitan más pruebas.",
-      "output_columns": [
-        "Cuestión",
-        "Petición interna propuesta",
-        "Conclusión respaldada"
-      ],
-      "output_rows": [
-        [
-          "Nueva socia · A2",
-          "Documentos de propiedad y cadena de control",
-          "Cambió la participación directa"
-        ],
-        [
-          "Anticipo · A3",
-          "Pedido, contrato y beneficiario",
-          "Finalidad declarada por el cliente"
-        ]
-      ],
-      "check": "Una anomalía o un documento ausente no equivalen a sospecha. Una consulta no realizada queda desconocida, no negativa.",
-      "question": "¿Podemos confirmar que el control no cambió porque lo dice el cliente?",
-      "answer": "Podemos reproducir la declaración con su fuente. La reconstrucción del control necesita documentos de propiedad que la corroboren.",
-      "practice": "Añade la cadena de propiedad. ¿Qué preguntas se cierran y cuáles siguen abiertas?",
-      "next": "Selecciona la evaluación anterior y las pruebas nuevas pertinentes dentro del mismo encargo."
+      "practice": "Añade ownership-update-es.md al mismo expediente y pide revisión al 10 de septiembre. Vera enlaza el registro recién generado y compara la nueva propiedad con la anterior. Identifica cambio y prueba faltante.",
+      "success": "Sabes iniciar la revisión, usar el memo, distinguir propuesta y decisión y actualizar el expediente con hechos nuevos.",
+      "repeat": "Pide a Vera revisar un cliente por un motivo concreto, aportando documentos y evaluación anterior si existe. Examina pruebas y registra las decisiones profesionales reales."
     }
   }
 }
