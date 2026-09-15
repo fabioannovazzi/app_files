@@ -64,6 +64,7 @@ ROOT_OMITTED_PATHS = frozenset(
         "hooks/hooks.json",
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
         "scripts/change_requests.py",
+        "scripts/datev_starter.py",
         "scripts/check_for_update.py",
         "scripts/_desktop_teaching.py",
         "scripts/local_courses.py",
@@ -1682,8 +1683,8 @@ def _without_openai_onboarding(content: bytes) -> bytes:
     """Keep the one-off OpenAI onboarding out of the unchanged Cowork runtime."""
     text = content.decode("utf-8")
     text = re.sub(
-        r"<!-- VERA_OPENAI_ONBOARDING_BEGIN -->\n.*?"
-        r"<!-- VERA_OPENAI_ONBOARDING_END -->\n\n",
+        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV)_BEGIN -->\n.*?"
+        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV)_END -->\n\n",
         "",
         text,
         flags=re.DOTALL,
@@ -2874,6 +2875,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         if relative.startswith(
             (
                 "skills/learn-with-vera/",
+                "skills/datev-invoice-start/",
                 "skills/learn-with-clara/",
                 "skills/learn-with-lucia/",
                 "vendor/modules/desktop_teaching/",
@@ -2926,7 +2928,11 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             registry["vera_wrapper_skills"] = [
                 skill
                 for skill in registry["vera_wrapper_skills"]
-                if skill != "skills/learn-with-vera/SKILL.md"
+                if skill
+                not in {
+                    "skills/learn-with-vera/SKILL.md",
+                    "skills/datev-invoice-start/SKILL.md",
+                }
             ]
             content = _json_bytes(registry)
         if (

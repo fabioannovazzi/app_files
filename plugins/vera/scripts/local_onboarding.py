@@ -151,6 +151,7 @@ def eligible_workflows() -> set[str]:
         "legal-tax-answer-review",
         "adversarial-opinion",
         "privacy-surface-review",
+        "datev-invoice-start",
         "learn-with-vera",
     }
     return {
