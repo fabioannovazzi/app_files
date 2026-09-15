@@ -67,6 +67,46 @@ privacy records describe prepared-file fingerprints, host-attested local
 execution and the fictional public catalogue. No new teaching server, voice API,
 feedback transport or profile synchronization service was added.
 
-Planned canonical versions: Vera 0.1.258, Clara 0.1.208, Lucia 0.1.50. Deployment
-and exact Marketplace Published status must be recorded after their actual
-completion; this source record does not assert either in advance.
+## Verified deployment
+
+PR #640 merged as `306101b56ff88bb321068f3e7ae4161172fd17bb` on
+2026-09-15 after all 29 required checks passed on `e217880d`. The final full
+teaching job is GitHub Actions job `104363209802` in run `34963745313`.
+Its multilingual lesson stage passed 815 tests, with 90 explicit conditional
+skips; the release gate verified all 34 prepared kits / 162 locales. The
+remaining integration, coverage, compiler and code-quality stages passed too.
+
+Windows job `104363209881` passed 24 exact-file-capture checks, the real Vouching
+example, 150 Vera lifecycle checks (two conditional skips), and 168 shared
+Clara/Lucia teaching checks. Both measured lifecycle groups reached 88% coverage.
+Vouching retains exact binary reads, hard-link rejection and mutation checks;
+ctime is compared within the same filesystem API because Windows pathname and
+descriptor APIs expose different ctime semantics. The complete Windows job has
+a 30-minute limit; an earlier run had reached the former ten-minute limit.
+An earlier full-suite run also hit a ten-second Concordato test deadline; the
+unchanged test passed locally and the final complete CI run passed unchanged.
+
+The server was updated through Git and restarted on the merged commit. Its
+checkout was clean and Uvicorn was running. All 13 checked public files returned
+HTTP 200 and matched the reviewed SHA-256: catalogue HTML/CSS, shared process-page
+JavaScript, version registry, all three Impara wrappers, representative lessons
+for every product, and all three Cowork downloads.
+
+Catalogue: https://mparanza.com/static/shared/courses/index.html
+
+Deployed canonical packages: Vera 0.1.258, Clara 0.1.208, Lucia 0.1.50.
+Marketplace publication is recorded separately in `marketplace-publications.json`
+only after the authoritative version list shows the exact version Published.
+
+Clara 0.1.208 and Lucia 0.1.50 were directly verified Published on 2026-09-15.
+The shared registry now advertises Clara 0.1.208. Its governed privacy
+fingerprint and generated packages were refreshed; all package drift checks
+passed, followed by 67 focused publication/package tests (one unavailable-cache
+skip). The ledger preserves the exact uploaded hashes before this refresh.
+
+Vera 0.1.258 is deployed and packaged but is not claimed Published. Its final
+upload was blocked by automatic approval review of the browser upload controls;
+the requested narrow approval remains pending. The complete archive is retained
+at `/private/tmp/teaching-marketplace-final/vera-chatgpt-upload.zip`, SHA-256
+`79eb655c7b9ef7e3ccc4b4ee74cf826d76ef209eb2c13ebe190e54b1f239b36f`.
+The previous Vera 0.1.257 publication record remains unchanged.
