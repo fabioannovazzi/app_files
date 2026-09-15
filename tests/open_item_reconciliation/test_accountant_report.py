@@ -112,7 +112,11 @@ def test_write_accountant_report_workbook_creates_operational_tabs(tmp_path):
     assert "data pagamento" in main_headers
     assert "azione richiesta" in main_headers
     assert "Riscontro forte" in main_values
-    assert workbook["Scheda operativa"].freeze_panes == "A2"
+    # Keep the item identifiers visible while scrolling through the evidence;
+    # the full technical reference remains available in a hidden column.
+    assert workbook["Scheda operativa"].freeze_panes == "D2"
+    assert workbook["Scheda operativa"].column_dimensions["A"].hidden
+    assert workbook["Scheda operativa"]["A2"].value == "open-1"
 
 
 def test_post_cutoff_evidence_does_not_label_unresolved_invoice_as_paid():

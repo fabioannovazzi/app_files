@@ -14,6 +14,7 @@ __all__ = [
     "RunIntakeResult",
     "WORKBOOK_REQUIRED_HEADERS",
     "WORKBOOK_REQUIRED_SHEETS",
+    "review_notes_copy",
     "refresh_final_artifacts",
     "refresh_review_execution_trace",
     "write_review_session_artifacts",
@@ -37,6 +38,92 @@ RECONCILIATION_COMMAND = (
     "python",
     "plugins/journal-bank-reconciliation/scripts/run_reconciliation.py",
 )
+
+
+def review_notes_copy(language: object) -> dict[str, str]:
+    """Return the same fixed language copy for rendering and output checks."""
+    locale = str(language).lower().replace("_", "-").split("-", 1)[0]
+    rows = {
+        "it": (
+            "Revisione della riconciliazione bancaria",
+            "Lingua",
+            "Movimenti bancari",
+            "Registrazioni contabili",
+            "Corrispondenze",
+            "Movimenti bancari non riconciliati",
+            "Registrazioni non riconciliate",
+            "Corrispondenze per metodo",
+            "nessuna",
+            "Controlli da svolgere",
+            "Verifica conto, periodo e segno degli importi. Segui una corrispondenza nei due documenti e usa gli elenchi dei movimenti non riconciliati per richiedere le prove mancanti. Il confronto riguarda solo i file forniti; non verifica il trattamento contabile o fiscale dell'operazione.",
+        ),
+        "en": (
+            "Journal-Bank Reconciliation Review Notes",
+            "Language",
+            "Bank rows",
+            "Journal rows",
+            "Matched rows",
+            "Unmatched bank rows",
+            "Unmatched journal rows",
+            "Stage Counts",
+            "none",
+            "Review Policy",
+            "Check the account, period and amount signs. Trace a match to both documents and use the unmatched lists to request missing evidence. The comparison covers only the supplied files; it does not verify the accounting or tax treatment of the transaction.",
+        ),
+        "fr": (
+            "Revue du rapprochement bancaire",
+            "Langue",
+            "Mouvements bancaires",
+            "Écritures comptables",
+            "Correspondances",
+            "Mouvements bancaires non rapprochés",
+            "Écritures non rapprochées",
+            "Correspondances par méthode",
+            "aucune",
+            "Contrôles à effectuer",
+            "Vérifiez le compte, la période et le signe des montants. Retrouvez une correspondance dans les deux documents et utilisez les listes des mouvements non rapprochés pour demander les justificatifs manquants. La comparaison porte uniquement sur les fichiers fournis ; elle ne vérifie pas le traitement comptable ou fiscal de l'opération.",
+        ),
+        "de": (
+            "Prüfung der Bankabstimmung",
+            "Sprache",
+            "Bankbewegungen",
+            "Buchungen",
+            "Zuordnungen",
+            "Nicht zugeordnete Bankbewegungen",
+            "Nicht zugeordnete Buchungen",
+            "Zuordnungen nach Methode",
+            "keine",
+            "Weitere Prüfung",
+            "Prüfen Sie Konto, Zeitraum und Vorzeichen der Beträge. Verfolgen Sie eine Zuordnung in beiden Dokumenten und fordern Sie anhand der nicht zugeordneten Bewegungen fehlende Belege an. Der Vergleich umfasst nur die bereitgestellten Dateien; er prüft nicht die buchhalterische oder steuerliche Behandlung des Vorgangs.",
+        ),
+        "es": (
+            "Notas de revisión de la conciliación entre diario y banco",
+            "Idioma",
+            "Movimientos bancarios",
+            "Asientos del diario",
+            "Filas conciliadas",
+            "Movimientos bancarios sin conciliar",
+            "Asientos del diario sin conciliar",
+            "Recuento por etapa",
+            "ninguno",
+            "Política de revisión",
+            "Compruebe la cuenta, el período y el signo de los importes. Siga una coincidencia en ambos documentos y utilice las listas de movimientos sin conciliar para solicitar los justificantes que faltan. La comparación abarca solo los archivos facilitados; no verifica el tratamiento contable o fiscal de la operación.",
+        ),
+    }
+    keys = (
+        "title",
+        "language",
+        "bank_row_count",
+        "journal_row_count",
+        "matched_count",
+        "unmatched_bank_count",
+        "unmatched_journal_count",
+        "stages",
+        "none",
+        "review",
+        "guidance",
+    )
+    return dict(zip(keys, rows.get(locale, rows["en"]), strict=True))
 
 
 @dataclass(frozen=True)
@@ -882,19 +969,12 @@ def _output_records(
                 "amount_abs",
             ]
         elif relative == "review_notes.md":
-            output["required_text"] = (
-                [
-                    "# Notas de revisión de la conciliación entre diario y banco",
-                    "## Recuento por etapa",
-                    "## Política de revisión",
-                ]
-                if audit.get("language") == "es"
-                else [
-                    "# Journal-Bank Reconciliation Review Notes",
-                    "## Stage Counts",
-                    "## Review Policy",
-                ]
-            )
+            words = review_notes_copy(audit.get("language"))
+            output["required_text"] = [
+                f"# {words['title']}",
+                f"## {words['stages']}",
+                f"## {words['review']}",
+            ]
             output["qa_checks"] = ["nonempty_text", "required_text"]
         outputs.append(output)
     return outputs

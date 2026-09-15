@@ -1,0 +1,306 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "concordato-plan-review",
+  "course_sha256": "9f2fbe0e898c8a8784086e42a3203c9e4557731d0fc0d72dd5e2c2e3db3ad48b",
+  "reviewer": "Codex: direct lesson, source, native output and rendered artifact review",
+  "reviewed_at": "2026-09-15T03:02:32.471301+00:00",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete outline. Its plain title, goal and scenario introduce reviewing a concordato proposal and plan with Vera: provide files, confirm the assignment, review interpretations, open the actual report and workbook, and repeat with an update. The lesson covers the workflow from request to useful dossier. It does not make the amount-comparison appendix or an isolated financial exception the subject of the lesson.",
+        "inputs_and_request": "The fictional Officina Riva case uses demo-it.xlsx and management-demo-it.pdf, with matching practice versions. The workbook provides the assignment, three declared supplier claims and annual plan. The two-page management schedule supplies invoice references, a management liquidation estimate and quarterly timing, with absent originals and uncommitted financing explicit. Both PDF phases were visually reviewed in this language. These files provide information to interpret; no approved analysis or case model is shipped as an answer. The natural-language request asks for creditor treatment, sources and uses, liquidity, missing documents and open questions.",
+        "execution_and_checkpoints": "The current native runner captures both source files into a managed Studio Archive run and initially leaves the case awaiting semantic review. The regression supplies separately authored test-only interpretations, seals them through the native review helper with an explicitly synthetic reviewer, executes the real reporting pipeline and completes the archive declaration. It checks the three creditor positions and four quarterly cash balances. These tests do not claim live research, model inference or learner/professional approval. The outline places execution in the working chat and explanation/questions in the voice chat, with checkpoints for the requested work, supplied files, actual result and one source-backed next action.",
+        "deliverable_and_next_action": "Reviewed the actual primary Word report in full and the actual Excel overview, creditor, treatment, quarterly liquidity and source-note views. Word and Excel retain localized labels, complete authored reasoning and source page/cell locators. The workbook source-note links are checked by the native regression. The primary reports show EUR 200,000 claims, EUR 130,000 proposed cash payments (65%), and EUR 90,000 management-estimated liquidation recovery (45%). They retain the missing accounts, contracts, attestation, tax/social-security scope, independent valuation and monthly cash forecast. The main report explicitly says the optional amount comparison was not executed. The learner opens the summary then Excel, follows one issue to a source and chooses a document request or clarification; the teacher is instructed not to read the whole report aloud. Internal review/archive files and the optional numerical appendix are not the primary teaching deliverables.",
+        "practice_and_repeat": "The practice reruns the actual pipeline in a new run of the same engagement after importing both updated fictional files. Assumed finance falls from EUR 50,000 to EUR 30,000. Demo quarterly closing cash is 5,000 / 80,000 / 105,000 / 0; practice is 5,000 / 60,000 / 85,000 / -20,000. The updated report identifies the uncovered funding requirement and preserves the need to establish commitment, timing, repayment and monthly cash. Native tests assert every first-run file remains byte-identical. The learner is asked to explain changed results and next actions and receives a clear list of inputs to provide for a real repeat.",
+        "language_and_pacing": "Read the full it outline and primary report, and visually reviewed the native documents/workbook views. Italian wording uses a consistent direct address and plainly names the concordato review. The six planned stages total 390 seconds. Review focuses on navigating a complete small-case dossier and one useful source trace rather than reading all pages or teaching insolvency law. Questions and native execution can extend the target. This is editorial and technical kit acceptance, not measured timing, learner comprehension or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[demo-it]",
+        "result_review": "The exact current it demo teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "4e5846ab4e97a7fe448a61049128f69a46ff6212c79c2cf79cf749b0cdffe458"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "692d1bb0f76c595cac9cfbcefd0899b6d9252677afb9f95853f19cd1c2d68cdf"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "1a94db47387d82d91281e05081dc2f367676f40ade7de6088911ca08c9683b0e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[practice-it]",
+        "result_review": "The exact current it practice teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "209991d3a85c6966a445eaf865f2de30d6dabdfdbaa1c47e2231836eaefd0d8e"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "544e70ba2a494b14a21a3fa6c6b0b12d8dc2e3d17939ccec1265100135f2543b"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "8df1f3e222d5cc2967690a41c848808d56231290f434126a240729c4f3c1412d"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete outline. Its plain title, goal and scenario introduce reviewing a concordato proposal and plan with Vera: provide files, confirm the assignment, review interpretations, open the actual report and workbook, and repeat with an update. The lesson covers the workflow from request to useful dossier. It does not make the amount-comparison appendix or an isolated financial exception the subject of the lesson.",
+        "inputs_and_request": "The fictional Officina Riva case uses demo-en.xlsx and management-demo-en.pdf, with matching practice versions. The workbook provides the assignment, three declared supplier claims and annual plan. The two-page management schedule supplies invoice references, a management liquidation estimate and quarterly timing, with absent originals and uncommitted financing explicit. Both PDF phases were visually reviewed in this language. These files provide information to interpret; no approved analysis or case model is shipped as an answer. The natural-language request asks for creditor treatment, sources and uses, liquidity, missing documents and open questions.",
+        "execution_and_checkpoints": "The current native runner captures both source files into a managed Studio Archive run and initially leaves the case awaiting semantic review. The regression supplies separately authored test-only interpretations, seals them through the native review helper with an explicitly synthetic reviewer, executes the real reporting pipeline and completes the archive declaration. It checks the three creditor positions and four quarterly cash balances. These tests do not claim live research, model inference or learner/professional approval. The outline places execution in the working chat and explanation/questions in the voice chat, with checkpoints for the requested work, supplied files, actual result and one source-backed next action.",
+        "deliverable_and_next_action": "Reviewed the actual primary Word report in full and the actual Excel overview, creditor, treatment, quarterly liquidity and source-note views. Word and Excel retain localized labels, complete authored reasoning and source page/cell locators. The workbook source-note links are checked by the native regression. The primary reports show EUR 200,000 claims, EUR 130,000 proposed cash payments (65%), and EUR 90,000 management-estimated liquidation recovery (45%). They retain the missing accounts, contracts, attestation, tax/social-security scope, independent valuation and monthly cash forecast. The main report explicitly says the optional amount comparison was not executed. The learner opens the summary then Excel, follows one issue to a source and chooses a document request or clarification; the teacher is instructed not to read the whole report aloud. Internal review/archive files and the optional numerical appendix are not the primary teaching deliverables.",
+        "practice_and_repeat": "The practice reruns the actual pipeline in a new run of the same engagement after importing both updated fictional files. Assumed finance falls from EUR 50,000 to EUR 30,000. Demo quarterly closing cash is 5,000 / 80,000 / 105,000 / 0; practice is 5,000 / 60,000 / 85,000 / -20,000. The updated report identifies the uncovered funding requirement and preserves the need to establish commitment, timing, repayment and monthly cash. Native tests assert every first-run file remains byte-identical. The learner is asked to explain changed results and next actions and receives a clear list of inputs to provide for a real repeat.",
+        "language_and_pacing": "Read the full en outline and primary report, and visually reviewed the native documents/workbook views. English explains the Italian concordato preventivo scope; it does not suggest a UK or US procedure. The six planned stages total 390 seconds. Review focuses on navigating a complete small-case dossier and one useful source trace rather than reading all pages or teaching insolvency law. Questions and native execution can extend the target. This is editorial and technical kit acceptance, not measured timing, learner comprehension or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[demo-en]",
+        "result_review": "The exact current en demo teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "ccd78614b003e4cd10162eb5f6d5f13d0f8e94f22ea20b0673c068e084322241"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "de489080e4bc1dac8a7f18546bbc071d22796217cfbfbe3a22c6eb9906eda621"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "954790daefb41dbc499aa591a00711ed25d00bdc6915b9bf06ebb516d682a1f8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[practice-en]",
+        "result_review": "The exact current en practice teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "aee48e27e7e2ee108cd39c647274546bb6f4b549ef37b428994312e99f6efd47"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "74d0907ad48a951cd33461b8eab43e4dfc025b0732af1a440b66c125e00392d4"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "e8ae81e1d2a846de6d09a75e78167f706e0b6c8b20169d290cfb0971df7828e9"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete outline. Its plain title, goal and scenario introduce reviewing a concordato proposal and plan with Vera: provide files, confirm the assignment, review interpretations, open the actual report and workbook, and repeat with an update. The lesson covers the workflow from request to useful dossier. It does not make the amount-comparison appendix or an isolated financial exception the subject of the lesson.",
+        "inputs_and_request": "The fictional Officina Riva case uses demo-fr.xlsx and management-demo-fr.pdf, with matching practice versions. The workbook provides the assignment, three declared supplier claims and annual plan. The two-page management schedule supplies invoice references, a management liquidation estimate and quarterly timing, with absent originals and uncommitted financing explicit. Both PDF phases were visually reviewed in this language. These files provide information to interpret; no approved analysis or case model is shipped as an answer. The natural-language request asks for creditor treatment, sources and uses, liquidity, missing documents and open questions.",
+        "execution_and_checkpoints": "The current native runner captures both source files into a managed Studio Archive run and initially leaves the case awaiting semantic review. The regression supplies separately authored test-only interpretations, seals them through the native review helper with an explicitly synthetic reviewer, executes the real reporting pipeline and completes the archive declaration. It checks the three creditor positions and four quarterly cash balances. These tests do not claim live research, model inference or learner/professional approval. The outline places execution in the working chat and explanation/questions in the voice chat, with checkpoints for the requested work, supplied files, actual result and one source-backed next action.",
+        "deliverable_and_next_action": "Reviewed the actual primary Word report in full and the actual Excel overview, creditor, treatment, quarterly liquidity and source-note views. Word and Excel retain localized labels, complete authored reasoning and source page/cell locators. The workbook source-note links are checked by the native regression. The primary reports show EUR 200,000 claims, EUR 130,000 proposed cash payments (65%), and EUR 90,000 management-estimated liquidation recovery (45%). They retain the missing accounts, contracts, attestation, tax/social-security scope, independent valuation and monthly cash forecast. The main report explicitly says the optional amount comparison was not executed. The learner opens the summary then Excel, follows one issue to a source and chooses a document request or clarification; the teacher is instructed not to read the whole report aloud. Internal review/archive files and the optional numerical appendix are not the primary teaching deliverables.",
+        "practice_and_repeat": "The practice reruns the actual pipeline in a new run of the same engagement after importing both updated fictional files. Assumed finance falls from EUR 50,000 to EUR 30,000. Demo quarterly closing cash is 5,000 / 80,000 / 105,000 / 0; practice is 5,000 / 60,000 / 85,000 / -20,000. The updated report identifies the uncovered funding requirement and preserves the need to establish commitment, timing, repayment and monthly cash. Native tests assert every first-run file remains byte-identical. The learner is asked to explain changed results and next actions and receives a clear list of inputs to provide for a real repeat.",
+        "language_and_pacing": "Read the full fr outline and primary report, and visually reviewed the native documents/workbook views. French learner instructions consistently use vous; the example retains the Italian procedure. The six planned stages total 390 seconds. Review focuses on navigating a complete small-case dossier and one useful source trace rather than reading all pages or teaching insolvency law. Questions and native execution can extend the target. This is editorial and technical kit acceptance, not measured timing, learner comprehension or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[demo-fr]",
+        "result_review": "The exact current fr demo teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "89800a2ad42c5bb67519bdbc5d7c81513fa79290275746f0fcd23c6a0905c446"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "fbe259add52f18bcf7f73a1d2dad155c2ffd66a7f3735783b51de203a0940d95"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "8af987041a53d421fa3fbc63a2bb7e45c063aaf6512d1a2fe5c425868aa94341"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[practice-fr]",
+        "result_review": "The exact current fr practice teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "0abb9ec2fb267e2768eb3a351cceeafb0c4ae8f733f3998dc38f1bd9297375f9"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "5b0b120ae7706ab7adc5f66900bf250619f7e0f5ed04813710a85488e249cc3d"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "03e01dcdf24fa50ecdc4ada01d827df74ada9a66d83adafd47c2bbdc6937f753"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete outline. Its plain title, goal and scenario introduce reviewing a concordato proposal and plan with Vera: provide files, confirm the assignment, review interpretations, open the actual report and workbook, and repeat with an update. The lesson covers the workflow from request to useful dossier. It does not make the amount-comparison appendix or an isolated financial exception the subject of the lesson.",
+        "inputs_and_request": "The fictional Officina Riva case uses demo-de.xlsx and management-demo-de.pdf, with matching practice versions. The workbook provides the assignment, three declared supplier claims and annual plan. The two-page management schedule supplies invoice references, a management liquidation estimate and quarterly timing, with absent originals and uncommitted financing explicit. Both PDF phases were visually reviewed in this language. These files provide information to interpret; no approved analysis or case model is shipped as an answer. The natural-language request asks for creditor treatment, sources and uses, liquidity, missing documents and open questions.",
+        "execution_and_checkpoints": "The current native runner captures both source files into a managed Studio Archive run and initially leaves the case awaiting semantic review. The regression supplies separately authored test-only interpretations, seals them through the native review helper with an explicitly synthetic reviewer, executes the real reporting pipeline and completes the archive declaration. It checks the three creditor positions and four quarterly cash balances. These tests do not claim live research, model inference or learner/professional approval. The outline places execution in the working chat and explanation/questions in the voice chat, with checkpoints for the requested work, supplied files, actual result and one source-backed next action.",
+        "deliverable_and_next_action": "Reviewed the actual primary Word report in full and the actual Excel overview, creditor, treatment, quarterly liquidity and source-note views. Word and Excel retain localized labels, complete authored reasoning and source page/cell locators. The workbook source-note links are checked by the native regression. The primary reports show EUR 200,000 claims, EUR 130,000 proposed cash payments (65%), and EUR 90,000 management-estimated liquidation recovery (45%). They retain the missing accounts, contracts, attestation, tax/social-security scope, independent valuation and monthly cash forecast. The main report explicitly says the optional amount comparison was not executed. The learner opens the summary then Excel, follows one issue to a source and chooses a document request or clarification; the teacher is instructed not to read the whole report aloud. Internal review/archive files and the optional numerical appendix are not the primary teaching deliverables.",
+        "practice_and_repeat": "The practice reruns the actual pipeline in a new run of the same engagement after importing both updated fictional files. Assumed finance falls from EUR 50,000 to EUR 30,000. Demo quarterly closing cash is 5,000 / 80,000 / 105,000 / 0; practice is 5,000 / 60,000 / 85,000 / -20,000. The updated report identifies the uncovered funding requirement and preserves the need to establish commitment, timing, repayment and monthly cash. Native tests assert every first-run file remains byte-identical. The learner is asked to explain changed results and next actions and receives a clear list of inputs to provide for a real repeat.",
+        "language_and_pacing": "Read the full de outline and primary report, and visually reviewed the native documents/workbook views. German learner instructions consistently use Sie; creditor and liquidity headings are localized and long text wraps. The six planned stages total 390 seconds. Review focuses on navigating a complete small-case dossier and one useful source trace rather than reading all pages or teaching insolvency law. Questions and native execution can extend the target. This is editorial and technical kit acceptance, not measured timing, learner comprehension or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[demo-de]",
+        "result_review": "The exact current de demo teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "4ef5011e4afbffde20ff7d9a60ae75b2c520f11ef9d29de1ff02045e58bb726e"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "dc5375aae6eab3981e69f4cb05908854585a28cbd539e30c966b83f7513ba748"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "8fca976a6d01716c8e051299f773e774bd945af4bf1b85b22b8e35cd8ba261b4"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[practice-de]",
+        "result_review": "The exact current de practice teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "c55d59f7a2e1d324785107dda1177f71187350e061fbdea3efca7dae37085423"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "bb0026deb37e1af9946609663a7e073401da4669d53641a513278937d63b34fc"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "727d1ccfcc1d4350103789befe4d7b242eb74713b84d398af36cc1121419c83d"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete outline. Its plain title, goal and scenario introduce reviewing a concordato proposal and plan with Vera: provide files, confirm the assignment, review interpretations, open the actual report and workbook, and repeat with an update. The lesson covers the workflow from request to useful dossier. It does not make the amount-comparison appendix or an isolated financial exception the subject of the lesson.",
+        "inputs_and_request": "The fictional Officina Riva case uses demo-es.xlsx and management-demo-es.pdf, with matching practice versions. The workbook provides the assignment, three declared supplier claims and annual plan. The two-page management schedule supplies invoice references, a management liquidation estimate and quarterly timing, with absent originals and uncommitted financing explicit. Both PDF phases were visually reviewed in this language. These files provide information to interpret; no approved analysis or case model is shipped as an answer. The natural-language request asks for creditor treatment, sources and uses, liquidity, missing documents and open questions.",
+        "execution_and_checkpoints": "The current native runner captures both source files into a managed Studio Archive run and initially leaves the case awaiting semantic review. The regression supplies separately authored test-only interpretations, seals them through the native review helper with an explicitly synthetic reviewer, executes the real reporting pipeline and completes the archive declaration. It checks the three creditor positions and four quarterly cash balances. These tests do not claim live research, model inference or learner/professional approval. The outline places execution in the working chat and explanation/questions in the voice chat, with checkpoints for the requested work, supplied files, actual result and one source-backed next action.",
+        "deliverable_and_next_action": "Reviewed the actual primary Word report in full and the actual Excel overview, creditor, treatment, quarterly liquidity and source-note views. Word and Excel retain localized labels, complete authored reasoning and source page/cell locators. The workbook source-note links are checked by the native regression. The primary reports show EUR 200,000 claims, EUR 130,000 proposed cash payments (65%), and EUR 90,000 management-estimated liquidation recovery (45%). They retain the missing accounts, contracts, attestation, tax/social-security scope, independent valuation and monthly cash forecast. The main report explicitly says the optional amount comparison was not executed. The learner opens the summary then Excel, follows one issue to a source and chooses a document request or clarification; the teacher is instructed not to read the whole report aloud. Internal review/archive files and the optional numerical appendix are not the primary teaching deliverables.",
+        "practice_and_repeat": "The practice reruns the actual pipeline in a new run of the same engagement after importing both updated fictional files. Assumed finance falls from EUR 50,000 to EUR 30,000. Demo quarterly closing cash is 5,000 / 80,000 / 105,000 / 0; practice is 5,000 / 60,000 / 85,000 / -20,000. The updated report identifies the uncovered funding requirement and preserves the need to establish commitment, timing, repayment and monthly cash. Native tests assert every first-run file remains byte-identical. The learner is asked to explain changed results and next actions and receives a clear list of inputs to provide for a real repeat.",
+        "language_and_pacing": "Read the full es outline and primary report, and visually reviewed the native documents/workbook views. Spanish learner instructions use a consistent direct address and preserve the Italian procedure. The six planned stages total 390 seconds. Review focuses on navigating a complete small-case dossier and one useful source trace rather than reading all pages or teaching insolvency law. Questions and native execution can extend the target. This is editorial and technical kit acceptance, not measured timing, learner comprehension or live voice/two-window acceptance."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[demo-es]",
+        "result_review": "The exact current es demo teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "3224a82b42a4d49416e2c824189b47a87aab7cf07a8674838564cb159659df78"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "3e1dac269880d8248d5fe475bfaf2404d935ceec8fa9457fe3da172ce3cf2383"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "c36aca70830687ef6ef9b8ba6bb936cabe406cfa86f764f10de0b301ad407bd6"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_concordato_execution::test_concordato_kit_builds_current_review_from_fictional_plan[practice-es]",
+        "result_review": "The exact current es practice teaching case passed the native pipeline regression. Reviewed the actual Word report and its complete rendered pages, plus the actual Excel overview, creditors, treatment, liquidity and source notes. Where demo/practice creditor and treatment renders are identical, exact PNG byte equality links the practice view to its inspected demo view. No clipped text, overlapping content or missing glyphs was found. The dossier remains a review of a partial fictional draft; it is not a plan attestation or final professional approval. The optional numerical appendix was not executed. The hashes below identify the reviewed primary artifacts and QA PDF, not a substitute hand-authored report.",
+        "reviewed_artifacts": [
+          {
+            "name": "concordato_preventivo_review_summary.docx",
+            "sha256": "3882d9d5b561fee87874881eac6f5bc25d0483612645ea3df7b8b3bbebad3464"
+          },
+          {
+            "name": "concordato_review_workpaper.xlsx",
+            "sha256": "d88443a8782d9e4f590bb346df2f5115fd53d4999a71e0d88baf71b9839fefa3"
+          },
+          {
+            "name": "concordato_preventivo_review_summary.pdf",
+            "sha256": "f8bd87089c47165199ee789fd0e85b36069270394fbfa1dd904ec6571b428b83"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.153988+00:00",
+    "previous_course_sha256": "4db2fb0bdb990c45e849c76bd7aba508e07f8ca762a27bb913bfb8d835d9cf61",
+    "source_snapshot": "/private/tmp/concordato-teaching-final-18/test_concordato_kit_builds_cur3/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.320883+00:00",
+    "previous_course_sha256": "204a947e32c198a1f349e785c26b32017f2c5f2a86e0d548016c8f04e8529987",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
+        "before": "50372b0dc6a1408111c4a47b48d103948f6d90f22eba9ece2bc6f3f3fd04ba8f",
+        "after": "1c5c11a70859724d39575a0589c07cb5d3a039226c535b61ba074ec08494a0d7"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

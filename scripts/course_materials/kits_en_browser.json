@@ -1,0 +1,27 @@
+{
+  "vera/browser-automation": {
+    "title": "Teach Vera a browser procedure",
+    "goal": "Learn to show Vera a repeatable browser task, review the saved procedure and understand how it becomes tested automation.",
+    "scenario": "An accounting firm repeatedly prepares document packages on a website. Use Vera’s supplied fictional local page to show one complete example, review what was learned, then try a different document type.",
+    "scope": "Browser procedure discovery, a saved local procedure, review and the route to reusable automation. The example uses the plugin’s local test page; it does not demonstrate access to a real accounting portal. The page controls use English labels.",
+    "inputs": "Read task-en.md. It gives the fictional client, document type and intended result. Vera starts its supplied local page and opens it in the working window. No login, client documents or prebuilt automation are needed.",
+    "request": "Vera, show me how to teach you this browser procedure. Follow the fictional example, save the steps and show me what I must review before you can repeat it.",
+    "steps": [
+      "Confirm the task and intended result. Vera starts a local recording before acting. In the working window, select the fictional client and document type; the voice chat explains which choices belong to the user and what Vera records.",
+      "Follow the example until the page confirms the package is ready. Vera checks the actual result, explains each step and saves the procedure. Open its progress report and compare the recorded sequence with the work just observed.",
+      "Review the proposed reusable procedure and its limits. With the required actual approval, Vera creates the executable version and checks two clean runs from the starting page. Explain the difference between an observed example, an approved procedure and a successfully tested automation."
+    ],
+    "deliverables": [
+      "A saved local procedure and progress report that can be resumed.",
+      "A draft for review; after the required approval and successful replays, a reusable capability with its actual run records."
+    ],
+    "review": "Check the starting page, inputs, actions and final result. A click or a saved draft is not proof that the automation works. Review the actual procedure before its executable version is created.",
+    "checkpoints": [
+      "Explain what Vera needs to learn a browser task and where its saved steps are found.",
+      "Show the observed result and identify whether the procedure is a draft, approved or tested."
+    ],
+    "practice": "Read practice-en.md and request the same process for a credit note. Ask Vera to use the saved procedure, review any necessary change and show the new result. Retain the first example; a replay counts as successful only when the selected document and result agree.",
+    "success": "You can teach a bounded browser task, inspect the saved procedure and ask for a repeat while recognising unfinished review or replay checks.",
+    "repeat": "Describe the website, task and result you want. Open the authorised page in connected Chrome and demonstrate one example. Vera records and checks the procedure; you review it before approved automation is reused."
+  }
+}

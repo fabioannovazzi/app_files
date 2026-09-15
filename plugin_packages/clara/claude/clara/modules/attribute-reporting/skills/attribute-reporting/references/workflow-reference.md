@@ -1,5 +1,17 @@
 # Attribute Reporting Workflow Reference
 
+## Report language
+
+Prepare the run with `--language en|it|fr|de|es`, matching the user's language.
+This fixes the language of the report template, the native evidence tables and
+the fixed report controls. Author every heading, explanation, interpretation,
+limitation and independent-review summary in that language. Do not translate
+source product names, taxonomy values, evidence filenames or canonical codes.
+The renderer localizes its own labels; it does not translate authored prose.
+To change language, prepare a separate run so that the evidence-table files,
+report model and review hashes remain consistent. JSON verdict codes remain
+canonical across languages.
+
 ## Report model contract
 
 `report_model.json` uses schema `attribute_reporting.report_model.v1`. It keeps authored meaning separate from exact values.

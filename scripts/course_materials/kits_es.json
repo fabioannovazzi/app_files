@@ -1,0 +1,77 @@
+{
+  "vera/fatture-xml-check": {
+    "title": "Comprobar facturas XML con Vera",
+    "goal": "Aprende a proporcionar una carpeta de facturas, leer el resumen y resolver los puntos que necesitan revisión.",
+    "scenario": "El despacho Arco ha recibido tres facturas XML de marzo para un cliente ficticio. Quiere identificar los documentos y comprobar su legibilidad y coherencia antes de continuar el trabajo contable.",
+    "scope": "Esta función prepara y comprueba documentos recibidos. La contabilización y el envío a SdI siguen sus propios procesos.",
+    "inputs": "Abre invoice-01.xml, invoice-02.xml e invoice-03.xml. Son archivos FatturaPA didácticos con identificadores ficticios. La nota indica el período y el total esperado del lote: 2.440 EUR.",
+    "request": "Vera, comprueba las facturas XML de marzo de esta carpeta. Muéstrame los documentos recibidos, sus importes y los puntos que necesitan revisión.",
+    "steps": [
+      "Vera importa la carpeta al caso didáctico y lee los XML con el analizador de la función. Comprueba qué archivos se incluyen.",
+      "En la conversación de trabajo, el workflow extrae números, fechas, partes e importes, comprueba la estructura y señala anomalías o posibles duplicados.",
+      "Abre el nuevo resumen. Vera vincula los hallazgos con los archivos y señala las comprobaciones útiles antes del siguiente paso."
+    ],
+    "deliverables": [
+      "Resumen de facturas: localiza el número, la fecha y el total de un documento en su XML.",
+      "Lista de anomalías: revisa el archivo afectado, el problema observado y la comprobación necesaria. El número de documentos muestra la cobertura."
+    ],
+    "review": "Compara los tres documentos recibidos con el resumen y el total del lote. Resuelve cada hallazgo contra su fuente; este control no decide la deducibilidad ni confirma asientos contables.",
+    "checkpoints": [
+      "Antes de empezar: indica la carpeta y el mes que quieres comprobar.",
+      "En el resultado: abre una fila y su XML; localiza dónde aparecerían las anomalías."
+    ],
+    "practice": "Añade invoice-04.xml a una carpeta nueva de práctica y pide comprobar las cuatro facturas, incluyendo abril.",
+    "success": "El nuevo resumen debe incluir la cuarta factura y distinguir ambos meses. Explica dónde revisarías un archivo problemático.",
+    "repeat": "Para repetirlo en el trabajo, selecciona la carpeta del cliente y pide comprobar los XML recibidos. Revisa el resumen y los hallazgos antes de continuar."
+  },
+  "clara/reporting-engine": {
+    "title": "Preparar un informe a partir de datos con Clara",
+    "goal": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual.",
+    "scenario": "Arco ha preparado sus datos de gestión de enero y febrero y el presupuesto de esos meses. El responsable quiere entender el resultado operativo y las categorías que debe investigar antes de la reunión mensual.",
+    "scope": "El caso incluye ingresos, coste de ventas y gastos operativos en EUR. Clara elige el análisis según la pregunta y los datos; este primer uso sigue una comparación presupuestaria y permanece local.",
+    "inputs": "Abre actual-budget.xlsx y facts-es.md. GL contiene movimientos mensuales por cuenta y categoría; Budget contiene el plan comparable. Los ingresos son positivos y los costes negativos. Los totales de control son 53.000 EUR reales y 47.000 EUR presupuestados.",
+    "request": "Clara, prepara el informe real–presupuesto de Arco para enero y febrero de 2026 con este libro. Muestra resultado operativo, desviaciones y detalle por categoría.",
+    "steps": [
+      "Clara examina las hojas y propone las columnas de fechas, categorías e importes. Confirma enero–febrero y el criterio de signos antes de calcular.",
+      "El workflow aplica la correspondencia revisada, compara resultados y presupuesto y comprueba los totales. La conversación de voz explica el paso real y cualquier información solicitada.",
+      "Abre el panel y el libro producidos en la conversación de trabajo. Empieza por el resumen, sigue con la comparación mensual y después con las categorías."
+    ],
+    "deliverables": [
+      "Panel: resultado del período y desviaciones absolutas y porcentuales cuando sean significativas. Elige las categorías que requieren investigación.",
+      "Libro e informe: tablas, controles y vínculos con los datos. El resumen distingue la desviación medida de su causa pendiente de comprobar."
+    ],
+    "review": "Comprueba que ambas hojas cubran los mismos meses y que los costes tengan el signo esperado. Vincula una diferencia con su categoría y mes de origen. Pide explicaciones a la empresa cuando las cifras no demuestren una causa.",
+    "checkpoints": [
+      "Antes de calcular: localiza ambas hojas y confirma el período.",
+      "En el resultado: encuentra la comparación global y una categoría que investigarías."
+    ],
+    "practice": "Usa actual-budget-march.xlsx para pedir una actualización hasta marzo. Formula la petición, confirma el nuevo período y compara el resultado con el informe anterior.",
+    "success": "El nuevo informe incluye marzo y conserva el anterior. Sabes localizar la comparación con el presupuesto y los datos de una categoría.",
+    "repeat": "Para repetirlo, aporta datos reales y plan para períodos comparables, indica período y objetivo de la reunión, revisa la interpretación de los datos y abre el informe generado."
+  },
+  "lucia/apertura-pratica": {
+    "title": "Preparar un nuevo expediente con Lucia",
+    "goal": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo.",
+    "scenario": "Beta Laboratorio solicita asistencia por una entrega incompleta. Tenemos su solicitud, una síntesis del suministro y un pequeño registro ficticio del despacho. Preparamos el expediente para la revisión del abogado.",
+    "scope": "La función organiza la apertura del expediente. Las decisiones sobre conflictos, encargo, plazos y apertura siguen la revisión habitual.",
+    "inputs": "Abre request-es.md, supply-es.md y register.csv. La solicitud identifica cliente, contraparte, objetivo y urgencia comunicada; el suministro documenta el caso; el registro indica los asuntos ficticios disponibles para comprobar.",
+    "request": "Lucia, prepara un nuevo expediente para Beta Laboratorio sobre la entrega de Gamma Forniture. Usa estos documentos y muéstrame el expediente, la información que falta y las decisiones que revisar antes de abrirlo.",
+    "steps": [
+      "Lucia crea el caso didáctico, importa documentos y reconstruye cliente, partes, solicitud y cronología. La conversación de voz sigue qué información procede de cada fuente.",
+      "La conversación de trabajo prepara la ficha, candidatos para comprobar conflictos, alcance del encargo y posibles puntos sobre plazos. La información que falta permanece visible.",
+      "Lucia genera el paquete y abre la revisión. Examina las decisiones sobre conflictos, encargo, plazos y apertura y cómo una decisión real se guarda y aplica al expediente."
+    ],
+    "deliverables": [
+      "Memoria de apertura y solicitud de información: empieza por objetivo, partes y documentos disponibles; identifica qué pedir al cliente.",
+      "Plan de carpetas y página de revisión: muestran organización y decisiones necesarias. El estado distingue un dossier preparado de un expediente listo para abrir."
+    ],
+    "review": "Compara cliente y contraparte con la solicitud y comprueba el alcance del registro examinado. Lee la propuesta de encargo y los puntos sobre plazos antes de decidir. La existencia de una memoria no significa que se haya aceptado el encargo.",
+    "checkpoints": [
+      "Antes de preparar: identifica cliente, contraparte y resultado solicitado.",
+      "En el dossier: muestra los documentos que faltan y las decisiones pendientes de revisar."
+    ],
+    "practice": "Añade update-es.md: Gamma propone una fecha para los componentes restantes. Pide a Lucia actualizar el dossier con esta correspondencia, conservando la versión anterior.",
+    "success": "La nueva versión incluye propuesta y fuente sin presuponer entrega ni aceptación. Sabes identificar qué puntos necesitan nueva revisión.",
+    "repeat": "Para repetirlo, proporciona solicitud, documentos y registro realmente disponible; indica si es un cliente nuevo o existente y revisa el paquete antes de abrir el expediente."
+  }
+}

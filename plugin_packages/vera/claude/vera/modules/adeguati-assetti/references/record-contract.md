@@ -14,6 +14,8 @@ The model authors JSON; the user does not fill technical fields. All narrative
 strings are in the user's language. The helper verifies references and integrity,
 not evidence meaning, professional judgment or completeness of the legal analysis.
 
+Set `language` to `it`, `en`, `fr`, `de` or `es` to match the narrative and memo headings. If omitted, the memo headings default to Italian. This selects presentation only; the jurisdiction remains Italian.
+
 Required top-level fields:
 - `schema_version`: 1; `jurisdiction`: "IT"; `as_of`: ISO date.
 - `scope`, `company_context`, `proportionality_basis`, `assessment`, `limitations`:

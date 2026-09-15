@@ -1,0 +1,52 @@
+{
+  "clara/html-deck": {
+    "title": "Créer une présentation HTML avec Clara",
+    "goal": "Apprendre à transformer des documents et une demande en diapositives utilisables, vérifier leur message et les présenter dans le navigateur.",
+    "scenario": "Officina Arco doit expliquer une proposition d’accueil au personnel. Le point de départ est la note de réunion.",
+    "scope": "Une présentation interne fondée sur les notes, avec diapositives et notes du présentateur. La procédure reste proposée ; aucun résultat ni graphique non documenté n’est ajouté.",
+    "inputs": "Ouvrez brief-fr.md. Précisez public, objectif et message : discuter la proposition, sans annoncer une procédure déjà adoptée.",
+    "request": "Clara, prépare une courte présentation HTML à partir de ces notes pour la réunion du personnel. Explique le problème, la proposition, les rôles et la décision attendue. Garde le statut de proposition visible et ajoute des notes de présentation.",
+    "steps": [
+      "Dans le fil de travail, Clara lit les notes et propose le déroulé. La voix explique comment préciser public et objectif et vous aide à vérifier l’ordre des messages.",
+      "Clara compose les diapositives avec le workflow courant et vérifie lisibilité, contenu et navigation. La voix suit les résultats réels et répond pendant la préparation.",
+      "Ouvrez la présentation produite. Utilisez les flèches, ouvrez les notes et comparez une diapositive au document initial. Repérez la proposition et la décision attendue."
+    ],
+    "deliverables": [
+      "Une présentation HTML autonome avec notes et navigation, à ouvrir dans le navigateur.",
+      "Le paquet de présentation, les matériaux modifiables et les vérifications de la version produite."
+    ],
+    "review": "Vérifiez fidélité aux notes, distinction entre proposition et pratique actuelle et lisibilité. Une belle mise en page ne justifie pas des résultats inventés. Examinez aussi la conclusion et les notes.",
+    "checkpoints": [
+      "Avant la création, indiquez le public et la décision qu’il doit prendre.",
+      "Dans la présentation, retrouvez un message et sa note source."
+    ],
+    "practice": "Ajoutez new-audience-fr.md et demandez une nouvelle version pour les nouveaux collègues, avec l’exemple de demande incomplète. Gardez la première et expliquez comment public et objectif ont modifié la présentation.",
+    "success": "Vous savez fournir sources et objectif, lire et présenter le résultat et demander une version pour un autre public.",
+    "repeat": "Demandez à Clara une présentation HTML, joignez les documents et précisez public, objectif, langue et messages à conserver. Pour modifier une présentation existante, vous pouvez invoquer la correction de diapositives."
+  },
+  "clara/deck-correction": {
+    "title": "Corriger une présentation avec Clara",
+    "goal": "Apprendre à transformer un commentaire en modification vérifiable des diapositives, en gardant le contrôle du changement.",
+    "scenario": "La présentation de la proposition d’Officina Arco existe déjà. Un commentaire modifie la personne proposée pour recueillir les demandes.",
+    "scope": "Une correction ciblée d’une présentation HTML : comprendre le commentaire, modifier une copie et comparer. Il n’est pas nécessaire de recréer toute la présentation.",
+    "inputs": "Ouvrez original-deck-fr.html et feedback-fr.md. Le paquet original-work-fr.zip contient les matériaux modifiables pour Clara. Vous indiquez la présentation et le changement souhaité.",
+    "request": "Clara, corrige cette présentation selon le commentaire joint : Elena recueillera et clarifiera les demandes à la place de Sara. Paolo conserve son rôle. Garde l’original et montre-moi la modification.",
+    "steps": [
+      "Dans le fil de travail, Clara lit la présentation et le commentaire, puis résume la modification. La voix vous aide à vérifier la diapositive et le sens concernés.",
+      "Clara applique la demande à une copie avec le workflow courant, préserve les autres diapositives et vérifie la révision. La voix suit le travail réel et explique quand un commentaire ambigu doit être clarifié.",
+      "Ouvrez l’original et la copie corrigée. Comparez la diapositive des responsabilités, puis une diapositive inchangée. Examinez le résultat visible, les notes et le résumé des modifications."
+    ],
+    "deliverables": [
+      "Une copie corrigée de la présentation, avec conservation de l’original.",
+      "La demande interprétée, la comparaison avant/après et les vérifications de la version corrigée."
+    ],
+    "review": "Vérifiez que la personne proposée change, sans modifier le rôle de Paolo ni approuver la procédure. Les autres diapositives doivent garder sens, ordre et style. Le résultat doit respecter le commentaire au-delà d’un contrôle technique.",
+    "checkpoints": [
+      "Avant la modification, expliquez ce qui doit changer et rester identique.",
+      "Après, trouvez la modification demandée et un élément préservé."
+    ],
+    "practice": "Repartez de l’original avec practice-feedback-fr.md. Demandez de recueillir d’abord les questions du personnel, en remplaçant seulement l’étape finale sur le test. Gardez les copies et vérifiez la conclusion.",
+    "success": "Vous savez désigner une présentation, donner un commentaire précis et vérifier une révision sans perdre l’original.",
+    "repeat": "Montrez la présentation à Clara et décrivez le changement, y compris dans le dialogue vocal natif. Joignez les nouvelles données ou formulations. Clara clarifie et modifie une copie ; le parcours PPTX comprend aussi la revue du plan avant application."
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "management-control-pack",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en"
+  ],
+  "language_basis": "workflow_output_contract",
+  "sources": [
+    {
+      "path": "modules/management-control-pack/scripts/budget_presentation.py",
+      "repository_path": "plugins/management-control-pack/scripts/budget_presentation.py",
+      "sha256": "084c6cdac3eb316702b8df5b1fc319299045483c8d3a473152edd6b863c24926"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/check_dependencies.py",
+      "repository_path": "plugins/management-control-pack/scripts/check_dependencies.py",
+      "sha256": "edbc9f16d57800b1110eb94c9c6d68d94e2713bd2da7120cb5c8bc33186e17a5"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/finalize_pack.py",
+      "repository_path": "plugins/management-control-pack/scripts/finalize_pack.py",
+      "sha256": "7cddaa2377112588a905b04f09c54e5f5d9d57a91c9cad6810de5b93161e5a7e"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/inspect_inputs.py",
+      "repository_path": "plugins/management-control-pack/scripts/inspect_inputs.py",
+      "sha256": "02fabbeaf9770fc750003ae7981eb4f5d58e3ca745808a13f655a524ddb81456"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_control_core.py",
+      "repository_path": "plugins/management-control-pack/scripts/management_control_core.py",
+      "sha256": "b69ed33b64f42c70b7bc7377071fb18575879cd2c82beea7fbc232b7048eb67e"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_delivery.py",
+      "repository_path": "plugins/management-control-pack/scripts/management_delivery.py",
+      "sha256": "0b1349b15a5a3abbd21628fa51faf2a236f9ff269059366a311b9b604be27013"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/management_site.py",
+      "repository_path": "plugins/management-control-pack/scripts/management_site.py",
+      "sha256": "5001e888310f865a2d226770a3c1438e4d0f5fdd90f5c4f157a876d9c9828f81"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/prepare_report_site.py",
+      "repository_path": "plugins/management-control-pack/scripts/prepare_report_site.py",
+      "sha256": "17c9c3296fd152848ab4299347be4806c1a0062367cc27b6c37f173fd2510d3b"
+    },
+    {
+      "path": "modules/management-control-pack/scripts/run_pack.py",
+      "repository_path": "plugins/management-control-pack/scripts/run_pack.py",
+      "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
+    },
+    {
+      "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
+      "repository_path": "plugins/management-control-pack/skills/management-control-pack/SKILL.md",
+      "sha256": "8e1d155239804247550ccd3804f6f7e528744a42cc6035b786d9db19dbb02b03"
+    },
+    {
+      "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
+      "repository_path": "plugins/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
+      "sha256": "bd4dd0328b0f8b2f7bb5e244c50ff6ef66664934416894e4d453d071177d92e8"
+    },
+    {
+      "path": "skills/management-control-pack/SKILL.md",
+      "repository_path": "plugins/vera/skills/management-control-pack/SKILL.md",
+      "sha256": "7fb8a6ab84851546e91d357f0923faf36e2589b7d08e7b509b3c57e48b839ccf"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Actual e Budget: leggere importi e percentuali",
+      "goal": "Interpretare un report di controllo di gestione a partire da periodo, segni e categorie rivedute.",
+      "scenario": "Arco confronta gennaio e febbraio. I ricavi Actual sono 150.000 EUR contro 140.000 a Budget; i costi inclusi sono 60.000 contro 59.000. Non sono forniti scadenzari o previsioni per i mesi successivi.",
+      "request": "Vera, mostrami dove il risultato si discosta dal Budget nei due mesi chiusi.",
+      "scope": "Confronto del margine sulle categorie fornite. Le sezioni senza fonti restano indisponibili; il caso non inventa scadenzari, forecast o mesi futuri.",
+      "input_columns": [
+        "Voce · gennaio–febbraio",
+        "Actual",
+        "Budget"
+      ],
+      "input_rows": [
+        [
+          "Ricavi",
+          "150.000 EUR",
+          "140.000 EUR"
+        ],
+        [
+          "Costi inclusi",
+          "60.000 EUR",
+          "59.000 EUR"
+        ],
+        [
+          "Margine sulle voci incluse",
+          "90.000 EUR",
+          "81.000 EUR"
+        ]
+      ],
+      "basis": "M1 e M2 rappresentano gli export sintetici dei medesimi due mesi completi. Le categorie e il segno dei costi sono riveduti prima del confronto.",
+      "method": [
+        "Ispeziona gli export e rivedi ruoli, colonne, categorie, segni, valuta, periodo e cutoff; conferma i totali di controllo.",
+        "Esegui il pacchetto locale e leggi metriche e limiti. Mostra scostamento assoluto e percentuale; una base nulla o negativa non genera una percentuale fuorviante.",
+        "Spiega i principali contributi distinguendo osservazioni e ipotesi. Le sezioni opzionali compaiono solo quando esistono dati sufficienti e il commento resta rivedibile."
+      ],
+      "result_title": "Margine superiore al Budget di 9.000 EUR",
+      "conclusion": "I ricavi aggiungono 10.000 EUR; i maggiori costi ne assorbono 1.000. Il margine sulle voci fornite cresce da 81.000 a 90.000 EUR, pari a +11,11%.",
+      "output_columns": [
+        "Voce",
+        "Δ EUR",
+        "Δ % sulla base Budget"
+      ],
+      "output_rows": [
+        [
+          "Ricavi",
+          "+10.000",
+          "+7,14%"
+        ],
+        [
+          "Costi",
+          "+1.000",
+          "+1,69% · sfavorevole"
+        ],
+        [
+          "Margine",
+          "+9.000",
+          "+11,11%"
+        ]
+      ],
+      "check": "Un aumento dei costi non diventa favorevole perché il segno è positivo. Prima di spiegare una causa commerciale, verifica che periodi e categorie siano confrontabili.",
+      "question": "Se il Budget di una voce è zero, quale informazione manteniamo?",
+      "answer": "Manteniamo lo scostamento in EUR e segnaliamo la percentuale come non disponibile. Non mostriamo infinito né una percentuale inventata.",
+      "practice": "Aggiungi un mese completo a entrambi gli export e riesegui il confronto con il nuovo cutoff.",
+      "next": "Seleziona contabilità e Budget coerenti. Aggiungi scadenzari o forecast solo quando fanno parte dell'incarico e sono disponibili."
+    },
+    "en": {
+      "title": "Actual versus Budget: read amounts and percentages",
+      "goal": "Interpret a management report using reviewed periods, signs and categories.",
+      "scenario": "Fictional Arco compares January and February. Actual revenue is EUR 150,000 versus Budget 140,000; included costs are 60,000 versus 59,000. No open-item schedules or later-month forecasts are supplied.",
+      "request": "Vera, show where the result differs from Budget in the two closed months.",
+      "scope": "A margin comparison on supplied categories. Unsupported sections remain unavailable; no forecast, aging schedule or future months are invented.",
+      "input_columns": [
+        "January–February item",
+        "Actual",
+        "Budget"
+      ],
+      "input_rows": [
+        [
+          "Revenue",
+          "EUR 150,000",
+          "EUR 140,000"
+        ],
+        [
+          "Included costs",
+          "EUR 60,000",
+          "EUR 59,000"
+        ],
+        [
+          "Margin on included items",
+          "EUR 90,000",
+          "EUR 81,000"
+        ]
+      ],
+      "basis": "M1 and M2 describe the same two complete months. Category meaning and cost signs are reviewed before comparison.",
+      "method": [
+        "Inspect exports and review roles, columns, categories, signs, currency, period and cutoff. Confirm control totals.",
+        "Run the local pack and read metrics and limitations. Show absolute and percentage changes, withholding misleading percentages on zero or negative bases.",
+        "Explain the main contributions while separating observations from hypotheses. Optional sections require adequate inputs and commentary remains reviewable."
+      ],
+      "result_title": "Margin exceeds Budget by EUR 9,000",
+      "conclusion": "Extra revenue adds EUR 10,000 and higher costs absorb EUR 1,000. Margin rises from EUR 81,000 to EUR 90,000: +11.11%.",
+      "output_columns": [
+        "Item",
+        "Δ EUR",
+        "Δ % on Budget"
+      ],
+      "output_rows": [
+        [
+          "Revenue",
+          "+10,000",
+          "+7.14%"
+        ],
+        [
+          "Costs",
+          "+1,000",
+          "+1.69% · unfavorable"
+        ],
+        [
+          "Margin",
+          "+9,000",
+          "+11.11%"
+        ]
+      ],
+      "check": "A positive cost change is not favorable. Check comparable periods and categories before explaining a commercial cause.",
+      "question": "What do we retain when an item's Budget is zero?",
+      "answer": "Retain the EUR difference and mark the percentage unavailable. Do not display infinity or an invented percentage.",
+      "practice": "Add a complete month to both exports and rerun with the new cutoff.",
+      "next": "Select coherent accounting and Budget exports. Add aging or forecast inputs when they belong to the assignment and are available."
+    }
+  }
+}

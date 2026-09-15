@@ -5,7 +5,13 @@ import json
 import logging
 from pathlib import Path
 
-from apertura_pratica_core import ValidationError, validate_run, write_json
+from apertura_pratica_core import (
+    ValidationError,
+    load_json,
+    prepare_review,
+    validate_run,
+    write_json,
+)
 
 
 def main() -> int:
@@ -13,8 +19,14 @@ def main() -> int:
     parser.add_argument("run_dir", type=Path)
     args = parser.parse_args()
     try:
-        report = validate_run(args.run_dir)
-        write_json(args.run_dir / "validation_report.json", report)
+        if (args.run_dir / "artifact_manifest.json").exists():
+            # A saved package binds the validation bytes. Refresh its reports and
+            # manifests together rather than leaving the delivered hashes stale.
+            prepare_review(args.run_dir)
+            report = load_json(args.run_dir / "validation_report.json")
+        else:
+            report = validate_run(args.run_dir)
+            write_json(args.run_dir / "validation_report.json", report)
     except ValidationError as exc:
         logging.error("%s", exc)
         return 2

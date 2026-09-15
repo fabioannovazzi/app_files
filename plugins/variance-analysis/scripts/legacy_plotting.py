@@ -179,7 +179,7 @@ def _display_translations(recipe: dict[str, Any]) -> dict[str, str]:
         .replace("_", "-")
         .split("-", maxsplit=1)[0]
     )
-    return {
+    translations = {
         "it": {
             "Price & volume & mix": "Prezzo, Volume e Mix",
             "Price & units & mix": "Prezzo, Unità e Mix",
@@ -229,6 +229,15 @@ def _display_translations(recipe: dict[str, Any]) -> dict[str, str]:
             "Balance": "Saldo",
         },
     }.get(language, {})
+    if not recipe.get("mappings", {}).get("units_column"):
+        total = translations.get("Total variance", "Total variance")
+        translations.update(
+            {
+                "Price & volume & mix": total,
+                "Price & units & mix": total,
+            }
+        )
+    return translations
 
 
 def _translate_display_text(value: Any, translations: dict[str, str]) -> Any:
@@ -263,10 +272,17 @@ def _localize_rendered_labels(rendered: Any, recipe: dict[str, Any]) -> Any:
                 setattr(trace, attribute, _translate_display_text(value, translations))
     for annotation in rendered.figure.layout.annotations or ():
         annotation.text = _translate_display_text(annotation.text, translations)
-    for axis_name in ("xaxis", "yaxis"):
+    for axis_name in rendered.figure.layout:
+        if not re.fullmatch(r"[xy]axis\d*", axis_name):
+            continue
         axis = getattr(rendered.figure.layout, axis_name, None)
-        if axis is not None and axis.ticktext is not None:
-            axis.ticktext = _translate_display_text(axis.ticktext, translations)
+        if axis is not None:
+            for attribute in ("ticktext", "categoryarray"):
+                value = getattr(axis, attribute, None)
+                if value is not None:
+                    setattr(
+                        axis, attribute, _translate_display_text(value, translations)
+                    )
     return rendered
 
 

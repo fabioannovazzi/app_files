@@ -396,7 +396,7 @@ def build_total_by_dimension_bridge_rows(
         row_frames.append(other)
     rows = pl.concat(row_frames, how="vertical").with_columns(
         [
-            pl.when(pl.col("amount_baseline").abs() > TOLERANCE)
+            pl.when(pl.col("amount_baseline") > TOLERANCE)
             .then((pl.col("total_delta") / pl.col("amount_baseline")) * 100.0)
             .otherwise(None)
             .alias("percent_delta"),

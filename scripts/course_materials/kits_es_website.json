@@ -1,0 +1,52 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "Preparar el sitio del despacho con Vera",
+    "goal": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación.",
+    "scenario": "Studio Arco no tiene sitio web. Creamos una página de presentación, actividades facilitadas y contacto usando solo el perfil ficticio.",
+    "scope": "Primer sitio informativo de un despacho italiano. La demostración entrega una versión local para revisar; publicar después exige destino y aprobaciones del sitio exacto.",
+    "inputs": "Abre vera-studio-es.md con público, actividades, contacto y horario. Selecciónalo para la lección y elige una carpeta didáctica. No hacen falta logotipo ni fotos; los datos ausentes quedan pendientes.",
+    "request": "Vera, prepara el primer sitio de Studio Arco con esta información: presentación, actividades y contacto en una página legible en ordenador y teléfono. Muestra una versión local para revisar.",
+    "steps": [
+      "La conversación de trabajo registra el material elegido y prepara el proyecto. Vera resume los hechos y propone orden, tipografía y colores; la conversación de voz relaciona las decisiones con las preguntas del visitante.",
+      "El flujo crea HTML y estilos y comprueba archivos y enlaces. Abre el sitio funcional y recorre presentación, actividades y contacto comparando el texto con las fuentes.",
+      "Revisa la página en anchura de ordenador y teléfono con sus capturas. Comprueba identidad, información, legibilidad y enlaces. Vera muestra controles y pendientes antes de una publicación real."
+    ],
+    "deliverables": [
+      "Sitio local funcional y archivos editables para abrir y revisar.",
+      "Resumen de fuentes y decisiones, controles técnicos, capturas de ordenador y teléfono y estado de revisión."
+    ],
+    "review": "Compara actividades, contacto y horario con el perfil. No debe haber titulaciones, resultados ni contactos inventados. El despacho realiza la revisión profesional; un sitio local comprobado aún no está publicado.",
+    "checkpoints": [
+      "Antes de crear, identifica al visitante y dónde encontrará el contacto.",
+      "En la revisión, abre los contactos en formato teléfono y comprueba horario y legibilidad."
+    ],
+    "practice": "Usa vera-update-es.md para añadir el horario del viernes en una nueva versión conservando la información anterior. Reabre ambos formatos y verifica que la adición no sustituye los otros horarios.",
+    "success": "Sabes aportar material, solicitar el sitio, encontrar la versión funcional y comprobar un cambio. Vista previa externa y publicación final son decisiones posteriores vinculadas a los archivos aprobados.",
+    "repeat": "Para tu despacho indica sitio existente o primero, material destinado al público y objetivo. Tras revisar, elige el destino; el flujo prepara y publica solo la versión exacta autorizada."
+  },
+  "lucia/presenza-digitale-studio": {
+    "title": "Preparar el sitio del despacho con Lucia",
+    "goal": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación.",
+    "scenario": "Studio Arco no tiene sitio web. Creamos una página de presentación, actividades facilitadas y contacto usando solo el perfil ficticio.",
+    "scope": "Primer sitio informativo de un despacho italiano. La demostración entrega una versión local para revisar; publicar después exige destino y aprobaciones del sitio exacto.",
+    "inputs": "Abre lucia-studio-es.md con público, actividades, contacto y horario. Selecciónalo para la lección y elige una carpeta didáctica. No hacen falta logotipo ni fotos; los datos ausentes quedan pendientes.",
+    "request": "Lucia, prepara el primer sitio de Studio Arco con esta información: presentación, actividades y contacto en una página legible en ordenador y teléfono. Muestra una versión local para revisar.",
+    "steps": [
+      "La conversación de trabajo registra el material elegido y prepara el proyecto. Lucia resume los hechos y propone orden, tipografía y colores; la conversación de voz relaciona las decisiones con las preguntas del visitante.",
+      "El flujo crea HTML y estilos y comprueba archivos y enlaces. Abre el sitio funcional y recorre presentación, actividades y contacto comparando el texto con las fuentes.",
+      "Revisa la página en anchura de ordenador y teléfono con sus capturas. Comprueba identidad, información, legibilidad y enlaces. Lucia muestra controles y pendientes antes de una publicación real."
+    ],
+    "deliverables": [
+      "Sitio local funcional y archivos editables para abrir y revisar.",
+      "Resumen de fuentes y decisiones, controles técnicos, capturas de ordenador y teléfono y estado de revisión."
+    ],
+    "review": "Compara actividades, contacto y horario con el perfil. No debe haber titulaciones, resultados ni contactos inventados. El despacho realiza la revisión profesional; un sitio local comprobado aún no está publicado.",
+    "checkpoints": [
+      "Antes de crear, identifica al visitante y dónde encontrará el contacto.",
+      "En la revisión, abre los contactos en formato teléfono y comprueba horario y legibilidad."
+    ],
+    "practice": "Usa lucia-update-es.md para añadir el horario del viernes en una nueva versión conservando la información anterior. Reabre ambos formatos y verifica que la adición no sustituye los otros horarios.",
+    "success": "Sabes aportar material, solicitar el sitio, encontrar la versión funcional y comprobar un cambio. Vista previa externa y publicación final son decisiones posteriores vinculadas a los archivos aprobados.",
+    "repeat": "Para tu despacho indica sitio existente o primero, material destinado al público y objetivo. Tras revisar, elige el destino; el flujo prepara y publica solo la versión exacta autorizada."
+  }
+}

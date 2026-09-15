@@ -683,6 +683,12 @@ _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
         },
     },
     "risk_band": {
+        None: {
+            "it": "non calcolata: punteggi mancanti",
+            "en": "not calculated: missing scores",
+            "fr": "non calculé : scores manquants",
+            "de": "nicht berechnet: fehlende Bewertungen",
+        },
         "not_significant": {
             "it": "non significativo",
             "en": "not significant",
@@ -775,6 +781,12 @@ _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
         },
     },
     "aml_status": {
+        "blocked_incomplete_scores": {
+            "it": "in attesa dei punteggi da valutare",
+            "en": "awaiting assessed risk scores",
+            "fr": "en attente des scores à évaluer",
+            "de": "Risikobewertungen stehen aus",
+        },
         "blocked_unresolved_table_1": {
             "it": "bloccato: valutazione della Tabella 1 irrisolta",
             "en": "blocked: Table 1 assessment unresolved",
@@ -801,6 +813,12 @@ _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
         },
     },
     "monitoring_status": {
+        "blocked_incomplete_scores": {
+            "it": "nessuna scadenza: valutazione del rischio incompleta",
+            "en": "no date set: risk assessment incomplete",
+            "fr": "aucune date fixée : évaluation des risques incomplète",
+            "de": "kein Termin: Risikobewertung unvollständig",
+        },
         "not_scheduled_one_off": {
             "it": "non pianificato per incarico occasionale",
             "en": "not scheduled for a one-off engagement",
@@ -995,6 +1013,12 @@ _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
         },
     },
     "missing_reason": {
+        "aml_scores_missing": {
+            "it": "il professionista deve valutare i punteggi mancanti; nessuna fascia è stata calcolata",
+            "en": "the professional must assess the missing scores; no risk band has been calculated",
+            "fr": "le professionnel doit évaluer les scores manquants ; aucun niveau de risque n’a été calculé",
+            "de": "die fehlenden Bewertungen sind fachlich vorzunehmen; keine Risikoklasse wurde berechnet",
+        },
         "supporting_evidence_not_verified": {
             "it": "le evidenze di supporto non risultano verificate",
             "en": "the supporting evidence has not been verified",
@@ -1149,6 +1173,7 @@ _SPANISH_DISPLAY_COPY: dict[str, dict[str | None, str]] = {
         ITALY_COUNTRY_PACK: "Italia — configuración profesional 2026",
     },
     "risk_band": {
+        None: "no calculado: faltan puntuaciones",
         "not_significant": "no significativo",
         "low_significance": "poco significativo",
         "medium_significance": "bastante significativo",
@@ -1171,12 +1196,14 @@ _SPANISH_DISPLAY_COPY: dict[str, dict[str | None, str]] = {
         "enhanced": "verificación reforzada",
     },
     "aml_status": {
+        "blocked_incomplete_scores": "pendiente de evaluar las puntuaciones",
         "blocked_unresolved_table_1": "bloqueado: evaluación de la tabla 1 sin resolver",
         "blocked_unknown_mandatory_trigger": "bloqueado: indicador obligatorio sin resolver",
         "blocked_unconfirmed_positive_trigger": "bloqueado: indicador positivo pendiente de confirmación",
         "calculated_for_professional_review": "calculado para revisión profesional",
     },
     "monitoring_status": {
+        "blocked_incomplete_scores": "sin fecha: evaluación del riesgo incompleta",
         "not_scheduled_one_off": "no programado para un encargo ocasional",
         "blocked_table_1_assessment": "bloqueado a la espera de la evaluación de la tabla 1",
         "not_scheduled_conduct_rule": "periodicidad por definir conforme a la regla de conducta",
@@ -1216,6 +1243,7 @@ _SPANISH_DISPLAY_COPY: dict[str, dict[str | None, str]] = {
         "client_file_preparation_binding": "expediente preparatorio del cliente",
     },
     "missing_reason": {
+        "aml_scores_missing": "el profesional debe evaluar las puntuaciones que faltan; no se ha calculado ningún nivel de riesgo",
         "supporting_evidence_not_verified": "las evidencias de respaldo no se han verificado",
         "evidence_status_requested": "se ha solicitado, pero todavía no se ha recibido",
         "evidence_status_missing": "no está disponible actualmente",
@@ -1271,6 +1299,109 @@ def _run_id(generated_at: str, input_hash: str) -> str:
     return f"new-client-{timestamp}-{input_hash[:12]}"
 
 
+_PROFILE_LABELS = {
+    "it": {
+        "heading": "Cliente e informazioni ricevute",
+        "services": "Lavoro richiesto allo studio",
+        "note": "I dati riportati sotto conservano il loro stato di verifica; il colloquio non sostituisce i documenti.",
+        "registered_identity": "Identità / denominazione",
+        "registered_address": "Sede",
+        "business_activity": "Attività",
+        "representative_reported": "Rappresentante indicato",
+        "shareholdings_reported": "Partecipazioni dichiarate",
+        "administrative_contact": "Referente amministrativo",
+        "employee_count": "Dipendenti dichiarati",
+        "unknown": "da acquisire",
+        "reported": "dichiarato, da verificare",
+        "verified": "verificato",
+        "not_applicable": "non applicabile",
+    },
+    "en": {
+        "heading": "Client and information received",
+        "services": "Work requested from the firm",
+        "note": "The information below retains its recorded verification status; an interview does not replace documents.",
+        "registered_identity": "Identity / legal name",
+        "registered_address": "Registered address",
+        "business_activity": "Business activity",
+        "representative_reported": "Reported representative",
+        "shareholdings_reported": "Reported shareholdings",
+        "administrative_contact": "Administrative contact",
+        "employee_count": "Reported employees",
+        "unknown": "not supplied",
+        "reported": "reported, to verify",
+        "verified": "verified",
+        "not_applicable": "not applicable",
+    },
+    "fr": {
+        "heading": "Client et informations reçues",
+        "services": "Travail demandé au cabinet",
+        "note": "Les informations ci-dessous conservent leur état de vérification ; un entretien ne remplace pas les justificatifs.",
+        "registered_identity": "Identité / raison sociale",
+        "registered_address": "Siège social",
+        "business_activity": "Activité",
+        "representative_reported": "Représentant indiqué",
+        "shareholdings_reported": "Participations déclarées",
+        "administrative_contact": "Contact administratif",
+        "employee_count": "Effectif déclaré",
+        "unknown": "à fournir",
+        "reported": "déclaré, à vérifier",
+        "verified": "vérifié",
+        "not_applicable": "sans objet",
+    },
+    "de": {
+        "heading": "Mandant und vorliegende Angaben",
+        "services": "Angefragte Leistungen der Kanzlei",
+        "note": "Der erfasste Prüfstatus der Angaben bleibt erhalten; ein Gespräch ersetzt keine Nachweise.",
+        "registered_identity": "Identität / Firmenname",
+        "registered_address": "Firmensitz",
+        "business_activity": "Geschäftstätigkeit",
+        "representative_reported": "Angegebene Vertretung",
+        "shareholdings_reported": "Angegebene Beteiligungen",
+        "administrative_contact": "Verwaltungskontakt",
+        "employee_count": "Angegebene Beschäftigtenzahl",
+        "unknown": "noch vorzulegen",
+        "reported": "angegeben, noch zu prüfen",
+        "verified": "geprüft",
+        "not_applicable": "nicht anwendbar",
+    },
+    "es": {
+        "heading": "Cliente e información recibida",
+        "services": "Trabajo solicitado al despacho",
+        "note": "Los datos siguientes conservan su estado de verificación; una entrevista no sustituye a los documentos.",
+        "registered_identity": "Identidad / razón social",
+        "registered_address": "Domicilio social",
+        "business_activity": "Actividad",
+        "representative_reported": "Representante indicado",
+        "shareholdings_reported": "Participaciones declaradas",
+        "administrative_contact": "Contacto administrativo",
+        "employee_count": "Empleados declarados",
+        "unknown": "pendiente de aportar",
+        "reported": "declarado, pendiente de verificar",
+        "verified": "verificado",
+        "not_applicable": "no aplicable",
+    },
+}
+
+
+def _profile_lines(intake: Mapping[str, Any]) -> list[str]:
+    """Display supplied fields and exact statuses, without interpreting identity."""
+    words = _PROFILE_LABELS[str(intake["language"])]
+    lines = [f"## {words['heading']}", "", words["note"], ""]
+    for fact in intake["party_facts"]:
+        # Known field names have display translations; custom fact codes remain
+        # identifiable rather than being omitted or assigned a guessed meaning.
+        label = words.get(fact["fact_code"], fact["fact_code"].replace("_", " "))
+        value = (
+            str(fact["value"]).replace("\n", " ") if fact["value"] is not None else "—"
+        )
+        lines.append(f"- **{label}:** {value} ({words[fact['verification_status']]})")
+    lines.extend(["", f"## {words['services']}", ""])
+    lines.extend(
+        f"- {service['description']}" for service in intake["engagement"]["services"]
+    )
+    return lines
+
+
 def _write_memo(
     path: Path,
     *,
@@ -1303,13 +1434,22 @@ def _write_memo(
         f"- {text['country_pack']}: "
         f"{_display_value('country_pack', ITALY_COUNTRY_PACK, language)}",
         "",
+        *_profile_lines(intake),
+        "",
+        f"## {text['evidence_heading']}",
+        "",
+        f"- {text['open_items']}: `{missing['count']}`",
+        f"- {text['monitoring_status']}: "
+        f"{_display_value('monitoring_status', monitoring['status'], language)}",
+        f"- {text['documents']}: {document_statuses}",
+        "",
         f"## {text['aml_heading']}",
         "",
-        f"- RI: `{aml_result['inherent_risk']}`",
-        f"- RS: `{aml_result['specific_risk']}`",
-        f"- RE: `{aml_result['effective_risk']}`",
+        f"- RI: `{aml_result['inherent_risk'] if aml_result['inherent_risk'] is not None else '—'}`",
+        f"- RS: `{aml_result['specific_risk'] if aml_result['specific_risk'] is not None else '—'}`",
+        f"- RE: `{aml_result['effective_risk'] if aml_result['effective_risk'] is not None else '—'}`",
         f"- {text['calculated_band']}: "
-        f"{_display_value('risk_band', aml_result['calculated_band']['code'], language)}",
+        f"{_display_value('risk_band', aml_result['calculated_band']['code'] if aml_result['calculated_band'] else None, language)}",
         f"- {text['table_1_status']}: "
         f"{_display_value('table_1_status', table_1['status'], language)} "
         f"({_display_value('review_status', table_1['review_status'], language)})",
@@ -1319,14 +1459,8 @@ def _write_memo(
         f"- {text['formula']}: `RE = (RI × 30%) + (RS × 70%)`",
         f"- {text['arithmetic_note']}",
         "",
-        f"## {text['evidence_heading']}",
-        "",
-        f"- {text['open_items']}: `{missing['count']}`",
         f"- {text['aml_status']}: "
         f"{_display_value('aml_status', aml_result['status'], language)}",
-        f"- {text['monitoring_status']}: "
-        f"{_display_value('monitoring_status', monitoring['status'], language)}",
-        f"- {text['documents']}: {document_statuses}",
         "",
         f"## {text['review_boundary']}",
         "",

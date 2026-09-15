@@ -2674,18 +2674,17 @@ def test_client_file_preparation_mcp_apply_updates_draft_email_artifact(
     assert email_output["status"] == "updated_from_review"
 
 
-def test_client_file_preparation_mcp_rejects_edit_that_breaks_declared_qa(
+def test_client_file_preparation_mcp_accepts_exact_reviewed_email_replacement(
     tmp_path: Path,
 ) -> None:
     result, client_engagement = _managed_review_run(tmp_path)
     run_intake, review_payload, final_artifacts = _load_review_run(result.output_dir)
-    before = _run_tree_bytes(result.output_dir)
     decisions = [
         (
             {
                 "item_id": item["id"],
                 "action": "edit",
-                "edit_value": "This replacement omits the required document structure.",
+                "edit_value": "Oggetto: Documenti aggiornati\n\nGentile cliente, confermi i documenti ancora mancanti.",
             }
             if item["id"] == "draft-client-email"
             else {"item_id": item["id"], "action": "accept"}
@@ -2703,9 +2702,15 @@ def test_client_file_preparation_mcp_rejects_edit_that_breaks_declared_qa(
         client_engagement=client_engagement,
     )
 
-    assert payload["ok"] is False
-    assert "artifact QA failed required_text" in payload["error"]
-    assert _run_tree_bytes(result.output_dir) == before
+    assert payload["ok"] is True
+    edited = next(row["edit_value"] for row in decisions if row["action"] == "edit")
+    assert (result.output_dir / "04_bozza_email_cliente.md").read_text() == edited
+    updated = json.loads((result.output_dir / "final_artifacts.json").read_text())
+    email = next(
+        row for row in updated["outputs"] if row["path"] == "04_bozza_email_cliente.md"
+    )
+    assert email["required_text"] == [edited]
+    assert email["qa_checks"] == ["nonempty_text", "required_text"]
 
 
 def test_client_file_preparation_mcp_save_reseals_generated_package(

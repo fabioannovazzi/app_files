@@ -1922,6 +1922,16 @@ function writeDirectTextArtifactUpdates(outputDir, effects, currentFinalArtifact
       kind: path.extname(target.relativePath).replace(/^\./, "") || "txt",
       status: "updated_from_review",
       item_id: effect.item_id,
+      ...(target.relativePath === "04_bozza_email_cliente.md"
+        && effect.item_type === "draft_client_email"
+        ? {
+          // A complete reviewed replacement supersedes the starter draft's
+          // literal wording. Keep exact reviewed-text and nonempty checks;
+          // the ordinary package hashes still bind the resulting bytes.
+          qa_checks: ["nonempty_text", "required_text"],
+          required_text: [effect.edit_value],
+        }
+        : {}),
     });
     backupOutputs.push({
       path: backupRelativePath,

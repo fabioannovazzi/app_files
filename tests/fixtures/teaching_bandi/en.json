@@ -1,0 +1,36 @@
+{
+  "question": "Prepare the digital-project dossier from the fictional call and supplied documents.",
+  "title": "Digital appointment booking",
+  "site": "Milan",
+  "summary": "Arco Servizi proposes software and training for four staff. The dossier links call conditions to declarations and the quotation. Interpretations and documents remain subject to review.",
+  "fictional": "Entirely fictional source; no real authority or funding.",
+  "fixture": "Synthetic interpretation for a workflow test; not an actual professional review.",
+  "project": "Introduce digital appointment booking and train staff.",
+  "commitment": "The quotation has not been accepted; no order has been signed and no cost incurred.",
+  "requirement_evidence": "Project and quotation documents to review for this condition.",
+  "clauses": [
+    "The declaration identifies an operating site in Milan. This matches the location condition on the declared information, subject to review.",
+    "Four staff are declared, below the threshold of ten. The figure comes from the company declaration and remains subject to review.",
+    "The declared project includes digital booking and staff training, consistent with the call’s stated purpose.",
+    "Q-001 describes a new licence for the planned software. Its inclusion in eligible expenditure is proposed under clause 4 and remains subject to review.",
+    "Q-002 describes the staff training planned for the project. Its relevance is proposed for review.",
+    "Q-003 is a computer. The proposal excludes it from the eligible base because the call excludes hardware; it may remain in total project cost.",
+    "Applying 50% to the proposed eligible base of EUR {eligible} gives a hypothetical request of EUR {grant}, subject to cost review.",
+    "The hypothetical EUR {grant} request does not exceed the EUR 5,000 cap. This is not a grant award.",
+    "The project document contains the required description; its presence alone does not confirm its content.",
+    "The company document declares the site and four staff; that declaration still needs review.",
+    "The quotation separates software, training and a computer with individual amounts. Commercial terms remain subject to review.",
+    "The case date, 14 September 2026, falls within the imaginary 1–30 September window. This comparison does not establish that a real call is open.",
+    "The company declares that the quotation is unaccepted and no order or cost has been incurred. The condition appears met on that declaration, subject to review."
+  ],
+  "documents": [
+    "Project description",
+    "Site and staff declaration",
+    "Itemised quotation"
+  ],
+  "document_reason": "The supplied document is linked to the stated condition; its content and reliability remain subject to review.",
+  "narrative": "Arco Servizi proposes digital appointment booking at its declared Milan site and training for its four staff. The quotation includes a software licence, training and a computer. No quotation has been accepted or order signed. The proposed grant base includes software and training, with the computer excluded. Cost interpretation and company declarations still need review.",
+  "budget": "Proposed total project cost: EUR {total}; proposed eligible base: EUR {eligible}; excluded hardware: EUR 3,000; hypothetical grant: EUR {grant}. This calculation uses only the fictional conditions in clauses 7 and 8.",
+  "consistency": "Check the quotation against the proposed eligible base and hypothetical request.",
+  "issue": "Review the company declarations, interpretation of the conditions and cost classifications before confirming the dossier."
+}

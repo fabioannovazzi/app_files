@@ -1,0 +1,27 @@
+{
+  "vera/invoice-xml": {
+    "title": "Eine Rechnungs-XML mit Vera vorbereiten",
+    "goal": "Lernen Sie, Rechnungsdaten bereitzustellen, den Entwurf zu prüfen und nach Freigabe der genauen Fassung eine lokale XML-Datei zu erhalten.",
+    "scenario": "Officina Arco benötigt eine gewöhnliche italienische Rechnungsdatei. Ein kurzes fiktives Datenblatt führt durch den gesamten Ablauf: Anfrage, Vorschau, Prüfung und lokaler Export.",
+    "scope": "Eine fiktive italienische Inlandsrechnung in EUR. Quelldaten und native Vorschau verwenden italienische Rechnungsbegriffe; Vera erklärt sie auf Deutsch. Diese Lektion beginnt mit bereitgestellten Daten. Der Workflow akzeptiert auch lesbare PDFs und Fotos. Er signiert nicht und übermittelt nichts an SdI.",
+    "inputs": "Stellen Sie invoice-data.txt bereit. Das Blatt enthält fiktive Lieferanten- und Kundendaten, Leistung, Nummer, Datum, Beträge und Empfängerdaten für die Datei. Es nennt einen neuen Entwurf ohne vorherige Ausstellung oder Export im Übungsfall.",
+    "request": "Vera, bereite aus diesem fiktiven Datenblatt einen Rechnungs-XML-Entwurf vor. Zeige Vorschau, Quellen und Prüfungen. Lass mich die genaue Fassung prüfen, bevor du die Datei lokal exportierst.",
+    "steps": [
+      "Im Arbeitschat liest Vera die Quelle, hält den Vorbereitungszweck fest und ermittelt die Rechnungsfelder. Der Sprachchat zeigt die benötigten Angaben und beantwortet Fragen während der Prüfung.",
+      "Der aktuelle Workflow erstellt den Entwurf und öffnet seine tatsächliche Vorschau. Vergleichen Sie Lieferant, Kunde, Nummer, Datum, Leistung, Umsatzsteuer und Gesamtbetrag mit dem Blatt. Lassen Sie Abweichungen korrigieren; eine Korrektur erzeugt eine neue Fassung.",
+      "Prüfen Sie die angezeigte Fassung. Erst nach Ihrer ausdrücklichen Freigabe dieser Fassung führt Vera die Exportprüfungen aus und erstellt die lokale XML-Datei. Öffnen Sie den Exportbericht und finden Sie die XML-Datei. Ohne Freigabe bleibt der Entwurf ohne Export erhalten."
+    ],
+    "deliverables": [
+      "Die tatsächliche Entwurfsvorschau mit Quellenbezug der Felder und Prüfungen zur Durchsicht.",
+      "Nach Freigabe und erfolgreichen Prüfungen die XML-Datei und der Exportbericht neben der geprüften Fassung."
+    ],
+    "review": "Vergleichen Sie Daten, Zweck und steuerliche Behandlung mit den vorliegenden Angaben. Eine lesbare Vorschau und ein gültiges Schema beweisen weder steuerliche Richtigkeit noch SdI-Annahme. Verwenden Sie Übungskennungen und Beträge niemals in einer echten Rechnung.",
+    "checkpoints": [
+      "Benennen Sie vor dem Start die Quelle und klären Sie, ob ein neuer Entwurf oder eine bestehende Rechnung vorbereitet wird.",
+      "Finden Sie Leistung und Gesamtbetrag in der Vorschau und erklären Sie, was Sie freigeben und wo die exportierte Datei gespeichert wird."
+    ],
+    "practice": "Stellen Sie practice-invoice-data.txt bereit und bitten Sie um eine zweite Rechnung im gleichen Ablauf. Sie hat eigene Nummer, Datum und Menge. Bewahren Sie das erste Ergebnis auf, prüfen Sie die neue Vorschau und entscheiden Sie separat über deren Export.",
+    "success": "Sie können den Workflow starten, die Vorschau prüfen, den Export freigeben oder anhalten und ihn für eine weitere Rechnung wiederholen, ohne die erste zu verlieren.",
+    "repeat": "Liefern Sie Rechnungsunterlagen oder bestätigte Daten und nennen Sie Zweck und eine mögliche frühere Ausstellung. Vera bereitet den Entwurf vor, klärt fehlende Tatsachen und exportiert nur die freigegebene Fassung. Versand und Buchung folgen dem separaten Kanzleiprozess."
+  }
+}

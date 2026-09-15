@@ -15,6 +15,7 @@ import zipfile
 from decimal import Decimal
 from io import BytesIO
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import openpyxl
@@ -316,6 +317,154 @@ def load_apply_review_edits() -> Any:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def test_exact_file_read_preserves_windows_line_endings_and_control_z(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    payload = b"account,description\r\n4000,before\x1aafter\r\n"
+    source = tmp_path / "normalized.csv"
+    source.write_bytes(payload)
+
+    assert core._stable_regular_bytes(source, label="Journal") == payload
+
+
+def test_recipe_capture_preserves_windows_line_endings(tmp_path: Path) -> None:
+    core = load_core()
+    payload = b'{\r\n  "description": "reviewed"\r\n}\r\n'
+    source = tmp_path / "recipe.json"
+    source.write_bytes(payload)
+
+    assert core._captured_recipe(source) == ({"description": "reviewed"}, payload)
+
+
+@pytest.mark.parametrize(
+    "reader", ["_stable_regular_bytes", "_captured_recipe", "_successor"]
+)
+def test_file_capture_accepts_distinct_path_and_descriptor_ctime(
+    tmp_path: Path, monkeypatch: Any, reader: str
+) -> None:
+    core = load_apply_review_edits() if reader == "_successor" else load_core()
+    source = tmp_path / "source.json"
+    source.write_bytes(b'{"reviewed": true}\r\n')
+    original_fstat = os.fstat
+
+    def windows_fstat(descriptor: int) -> SimpleNamespace:
+        value = original_fstat(descriptor)
+        fields = {
+            name: getattr(value, name) for name in dir(value) if name.startswith("st_")
+        }
+        fields["st_ctime_ns"] += 1000000
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(core.os, "fstat", windows_fstat)
+    if reader in {"_stable_regular_bytes", "_successor"}:
+        result = core._stable_regular_bytes(source, label="Journal")
+    else:
+        _, result = core._captured_recipe(source)
+    assert result == source.read_bytes()
+
+
+@pytest.mark.parametrize(
+    "reader", ["_stable_regular_bytes", "_captured_recipe", "_successor"]
+)
+@pytest.mark.parametrize("field", ["st_ctime_ns", "st_ino", "st_nlink", "st_size"])
+def test_file_capture_rejects_changed_descriptor_metadata(
+    tmp_path: Path, monkeypatch: Any, reader: str, field: str
+) -> None:
+    core = load_apply_review_edits() if reader == "_successor" else load_core()
+    source = tmp_path / "source.json"
+    source.write_bytes(b'{"reviewed": true}\r\n')
+    original_fstat = os.fstat
+    calls = 0
+
+    def changed_fstat(descriptor: int) -> SimpleNamespace:
+        nonlocal calls
+        calls += 1
+        value = original_fstat(descriptor)
+        fields = {
+            name: getattr(value, name) for name in dir(value) if name.startswith("st_")
+        }
+        if calls == 2:
+            fields[field] += 1
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(core.os, "fstat", changed_fstat)
+    with pytest.raises(ValueError, match="changed (while|during)"):
+        if reader in {"_stable_regular_bytes", "_successor"}:
+            core._stable_regular_bytes(source, label="Journal")
+        else:
+            core._captured_recipe(source)
+
+
+@pytest.mark.parametrize(
+    "reader", ["_stable_regular_bytes", "_captured_recipe", "_successor"]
+)
+def test_file_capture_rejects_changed_path_ctime(
+    tmp_path: Path, monkeypatch: Any, reader: str
+) -> None:
+    core = load_apply_review_edits() if reader == "_successor" else load_core()
+    source = tmp_path / "source.json"
+    source.write_bytes(b'{"reviewed": true}\r\n')
+    original_lstat = Path.lstat
+    calls = 0
+
+    def changed_lstat(path: Path) -> Any:
+        nonlocal calls
+        value = original_lstat(path)
+        if path != source:
+            return value
+        calls += 1
+        fields = {
+            name: getattr(value, name) for name in dir(value) if name.startswith("st_")
+        }
+        if calls == 2:
+            fields["st_ctime_ns"] += 1
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(Path, "lstat", changed_lstat)
+    with pytest.raises(ValueError, match="path changed (while|during)"):
+        if reader in {"_stable_regular_bytes", "_successor"}:
+            core._stable_regular_bytes(source, label="Journal")
+        else:
+            core._captured_recipe(source)
+
+
+def test_file_capture_physical_tree_accepts_regular_file(tmp_path: Path) -> None:
+    load_core()
+    physical = importlib.import_module("physical_output_set")
+    (tmp_path / "result.csv").write_bytes(b"amount\r\n12\r\n")
+
+    assert physical._physical_tree(tmp_path) == ({"result.csv"}, set())
+
+
+def test_file_capture_physical_tree_rejects_hardlink(tmp_path: Path) -> None:
+    load_core()
+    physical = importlib.import_module("physical_output_set")
+    source = tmp_path / "result.csv"
+    source.write_bytes(b"amount\r\n12\r\n")
+    os.link(source, tmp_path / "alias.csv")
+
+    with pytest.raises(ValueError, match="hardlinks"):
+        physical._physical_tree(tmp_path)
+
+
+def test_file_capture_review_tree_accepts_regular_file(tmp_path: Path) -> None:
+    review = load_apply_review_edits()
+    (tmp_path / "result.csv").write_bytes(b"amount\r\n12\r\n")
+
+    assert review._validate_output_tree(tmp_path) == tmp_path
+
+
+def test_file_capture_review_tree_rejects_hardlink(tmp_path: Path) -> None:
+    review = load_apply_review_edits()
+    source = tmp_path / "result.csv"
+    source.write_bytes(b"amount\r\n12\r\n")
+    os.link(source, tmp_path / "alias.csv")
+
+    with pytest.raises(ValueError, match="hardlink aliases"):
+        review._validate_output_tree(tmp_path)
 
 
 def load_studio_archive_core() -> Any:
@@ -1985,9 +2134,9 @@ def test_plugin_inspects_entries_and_runs_deterministic_checks(
         if output["path"] == "review_notes.md"
     )
     assert review_notes_output["required_text"] == [
-        "# Vouching Review Notes",
-        "## Status Counts",
-        "## Review Policy",
+        "# Note di verifica documentale",
+        "## Riepilogo degli esiti",
+        "## Come rivedere il risultato",
     ]
     check_results_output = next(
         output
@@ -2386,6 +2535,13 @@ def test_review_edit_reseals_assurance_envelope(
     audit = json.loads((output_dir / "check_audit.json").read_text())
     final_artifacts = json.loads(final_artifacts_path.read_text())
     assert result["application_status"] == "blocked"
+    workbook = openpyxl.load_workbook(output_dir / "check_results.xlsx")
+    sheet = workbook["Sheet1"]
+    assert sheet.freeze_panes == "E2"
+    assert sheet.column_dimensions["A"].hidden
+    assert sheet.column_dimensions["E"].width >= 11
+    assert sheet.sheet_view.showGridLines is False
+    workbook.close()
     assert resealed["content_sha256"] != prior_envelope["content_sha256"]
     assert resealed["gate_register"]["report_ready"] is False
     review_decision = next(
@@ -6248,8 +6404,10 @@ def test_late_run_failure_restores_exact_prior_tree(
         tmp_path / "recipe.json",
     )
 
-    def fail_after_envelope(path: Path, audit: dict[str, Any]) -> None:
-        del audit
+    def fail_after_envelope(
+        path: Path, audit: dict[str, Any], results: pl.DataFrame
+    ) -> None:
+        del audit, results
         path.write_text("partial", encoding="utf-8")
         raise RuntimeError("injected late run failure")
 

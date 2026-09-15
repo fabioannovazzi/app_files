@@ -59,8 +59,8 @@ from exploded_variance_bridge_chart import (
 from exploded_variance_bridge_chart import (
     write_exploded_variance_bridge_artifacts,
 )
-from review_session import write_review_session_artifacts, write_run_intake
 from model_use import write_model_use_manifest
+from review_session import write_review_session_artifacts, write_run_intake
 from root_cause_bridge_chart import write_root_cause_bridge_png
 from root_cause_client_report import write_root_cause_client_report
 from total_by_dimension_bridge_chart import (
@@ -994,7 +994,9 @@ def standard_variance_component_columns(
 ) -> list[tuple[str, str]]:
     """Return standard variance components using the same labels as charts."""
 
-    volume_label = "Units" if recipe["mappings"].get("units_column") else "Volume"
+    if not recipe["mappings"].get("units_column"):
+        return [("Total variance", "total_delta")]
+    volume_label = "Units"
     return [
         (volume_label if label == "volume_or_units" else label, column)
         for label, column in STANDARD_VARIANCE_COMPONENT_COLUMNS
@@ -2999,8 +3001,36 @@ def write_outputs(
 
     output_dir.mkdir(parents=True, exist_ok=True)
     result.write_csv(output_dir / "variance_results.csv")
+    # Legacy component columns remain available for audit, but an amount-only
+    # workbook must not present them as measured price/volume/mix effects.
+    hidden_components = (
+        [
+            name
+            for name in (
+                "price_baseline",
+                "price_comparison",
+                "price_variance",
+                "volume_variance",
+                "mix_variance",
+            )
+            if name in result.schema
+        ]
+        if not audit["recipe"]["mappings"]["units_column"]
+        else []
+    )
     try:
-        result.write_excel(output_dir / "variance_results.xlsx")
+        result.write_excel(
+            output_dir / "variance_results.xlsx",
+            autofit=True,
+            freeze_panes=(1, 1),
+            hide_gridlines=True,
+            hidden_columns=hidden_components,
+            header_format={
+                "bold": True,
+                "font_color": "#FFFFFF",
+                "bg_color": "#183B56",
+            },
+        )
         audit["outputs"]["variance_results.xlsx"] = "written"
     except (ImportError, ModuleNotFoundError, OSError, ValueError) as exc:
         audit["outputs"]["variance_results.xlsx"] = f"not_written: {exc}"
@@ -3396,6 +3426,7 @@ def _standard_variance_context(
             "charts/waterfall.png" if (output_dir / "waterfall.png").exists() else None
         ),
         "metric": mappings.get("amount_column"),
+        "pvm_available": bool(mappings.get("units_column")),
         "unit": (recipe.get("options") or {}).get("currency") or "EUR",
         "comparison": _comparison_payload(recipe),
         "recipe_filters": (recipe.get("options") or {}).get("recipe_filter_audit"),

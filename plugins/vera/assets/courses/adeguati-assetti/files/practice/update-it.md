@@ -1,0 +1,3 @@
+# Nuove evidenze di aprile
+
+Aggiornamento fittizio al 30 aprile 2026. Sara è assente dal 7 al 18 aprile. I documenti di marzo vengono inviati da Elena il 21 aprile; il riepilogo arriva il 28 aprile e la revisione di Elena non risulta ancora annotata. Il termine di invio e quello del riepilogo indicati nella procedura non sono rispettati in questo ciclo. Paolo ha raccolto alcune fatture durante l’assenza, ma non ha ricevuto accesso allo scadenziario. Non è stato formalmente concordato un sostituto. La disponibilità del report di aprile non dimostra efficacia del processo o chiusura delle azioni precedenti.

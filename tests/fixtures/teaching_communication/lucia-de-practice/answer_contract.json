@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-de-practice",
+  "question_domain": "compliance",
+  "document_type": "professional_communication_package",
+  "purpose": "Die Kanzlei möchte eine kurze FAQ für ihre kleinen Unternehmenskunden in Italien erstellen: Wie erkennt und organisiert man eine Auskunftsanfrage zu personenbezogenen Daten? Dies ist eine Informationsinitiative der Kanzlei, keine Meldung über ein neues Gesetz und keine Antwort an eine reale Person. Die Leser arbeiten in Verwaltung und Kundenbetreuung und sollen erkennen, wann sie die für Datenschutz zuständige Person einbeziehen müssen. Nutze den ausgewählten offiziellen EDSA-Leitfaden und trenne allgemeine Hinweise von der Bewertung eines Einzelfalls. Kundendaten, echte Anfragen und eine betriebliche Datenschutzrichtlinie liegen nicht vor. Erstelle das Paket zur internen Prüfung, ohne Versand oder Veröffentlichung. Die fertigen Texte sollen auf Deutsch sein.\nErstelle nach Prüfung der FAQ eine neue Paketversion mit einer kurzen Begleit-E-Mail an Kunden. Erläutere Zielgruppe und Verwendung der FAQ. Bewahre Quellen, Grenzen und erste Version. Erfinde keine Empfänger, bereits versandten Anhänge oder neue Pflicht. Nichts versenden.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "output_language": "de",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "generation_route": "codex_direct",
+  "evidence_display": "inline_citations",
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims",
+  "correction_policy": "correct_when_supported",
+  "judgment_policy": "flag_for_professional_review",
+  "generation_instructions": {
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Fiktives Unterrichtsmaterial. Kanzlei und Auftrag sind erfunden. Der beigefügte EDSA-Leitfaden ist eine echte öffentliche Quelle, abgerufen am 14. September 2026, kein erfundenes Gesetz.",
+      "Studio Riva — Rechtsberatung. Logo, Kontaktdaten, frühere Mitteilungen und ein freigegebener Hausstil liegen nicht vor. Schlage ein schlichtes blau-weißes Format mit lesbarer Schrift, klaren Überschriften und erkennbaren Quellen vor. Die verantwortliche Fachperson prüft es vor der Verwendung.",
+      "Run-selected draft visual values, not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision.",
+      "Preserving factual conditions and qualifications in the candidate is an answer-contract check. Physical retention of the earlier package is a separate run/file check; never claim that such retention or professional approval has already been verified by claim assurance."
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ]
+  },
+  "contract_digest": "59d8d3cf33df6f488be2d9af2e9241b6302e6723bf25f73ddbb91921163eec4d"
+}

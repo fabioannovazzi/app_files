@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "management-control-pack",
+  "scenario": "Arco confronta gennaio e febbraio. I ricavi Actual sono 150.000 EUR contro 140.000 a Budget; i costi inclusi sono 60.000 contro 59.000. Non sono forniti scadenzari o previsioni per i mesi successivi.",
+  "columns": [
+    "Voce · gennaio–febbraio",
+    "Actual",
+    "Budget"
+  ],
+  "rows": [
+    [
+      "Ricavi",
+      "150.000 EUR",
+      "140.000 EUR"
+    ],
+    [
+      "Costi inclusi",
+      "60.000 EUR",
+      "59.000 EUR"
+    ],
+    [
+      "Margine sulle voci incluse",
+      "90.000 EUR",
+      "81.000 EUR"
+    ]
+  ],
+  "scope": "Confronto del margine sulle categorie fornite. Le sezioni senza fonti restano indisponibili; il caso non inventa scadenzari, forecast o mesi futuri."
+}

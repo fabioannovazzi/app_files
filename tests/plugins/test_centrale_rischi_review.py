@@ -1495,8 +1495,10 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
     _write_source(source)
     analysis, _ = _analysis_for(source)
     output = tmp_path / "analysis.xlsx"
+    original_analysis = json.dumps(analysis, sort_keys=True)
 
     write_excel(output, analysis)
+    assert json.dumps(analysis, sort_keys=True) == original_analysis
     commentary = finalize_commentary(
         analysis,
         {
@@ -1560,26 +1562,34 @@ def test_renderers_create_reviewable_html_and_excel(tmp_path: Path) -> None:
     assert workbook["KPI"]["C2"].data_type == "n"
     assert workbook["KPI"]["C2"].number_format == "#,##0"
     assert [cell.value for cell in workbook["Garanzie"][1]] == [
-        "reference_month",
-        "intermediary",
-        "risk_category",
-        "guarantee_type",
-        "guaranteed_amount",
-        "record_status",
-        "source_page",
-        "source_row_locator",
-        "extraction_confidence",
+        "Mese",
+        "Intermediario",
+        "Categoria di rischio",
+        "Tipo garanzia",
+        "Importo garantito",
+        "Versione segnalazione",
+        "Pagina fonte",
+        "Riferimento riga fonte",
+        "Affidabilità estrazione",
     ]
     assert workbook["Esposizioni"].freeze_panes == "D2"
     exposure_headers = {
         cell.value: cell.column_letter for cell in workbook["Esposizioni"][1]
     }
     assert (
-        workbook["Esposizioni"].column_dimensions[exposure_headers["source_row"]].hidden
+        workbook["Esposizioni"].column_dimensions[exposure_headers["Riga fonte"]].hidden
     )
+    assert workbook["KPI"]["E2"].value == "Disponibile"
+    assert workbook["KPI"].column_dimensions["A"].hidden
+    assert workbook["Durata originaria"]["A2"].value == "breve"
+    assert workbook["Controlli"]["E2"].value == "Superato"
+    assert workbook["Controlli"]["B2"].data_type == "n"
+    assert workbook["Categorie"]["D2"].number_format == "#,##0"
+    assert workbook["Categorie"]["G2"].number_format == "0.00"
+    assert "Non disponibile" in workbook["Garanti intestatario"]["A2"].value
 
 
-def test_html_distinguishes_unavailable_evidence_from_zero(tmp_path: Path) -> None:
+def test_reports_distinguish_unavailable_evidence_from_zero(tmp_path: Path) -> None:
     source = tmp_path / "cr.xlsx"
     _write_source(source)
     tables = load_source_tables([source])
@@ -1589,6 +1599,9 @@ def test_html_distinguishes_unavailable_evidence_from_zero(tmp_path: Path) -> No
     analysis = build_analysis(tables, recipe)
 
     rendered = render_html(analysis)
+    output = tmp_path / "analysis.xlsx"
+    write_excel(output, analysis)
+    workbook = load_workbook(output)
 
     assert analysis["coverage"]["pregiudizievoli"] == "unavailable"
     assert "Pregiudizievoli: 0" not in rendered
@@ -1596,6 +1609,7 @@ def test_html_distinguishes_unavailable_evidence_from_zero(tmp_path: Path) -> No
         "Non disponibile: nessuna riga è stata estratta o fornita per questa "
         "popolazione." in rendered
     )
+    assert "Non disponibile" in workbook["Pregiudizievoli"]["A2"].value
 
 
 def test_vera_launcher_uses_the_complete_component_registry() -> None:

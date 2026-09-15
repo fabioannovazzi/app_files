@@ -150,6 +150,111 @@ def test_initialize_lineage_refuses_to_erase_non_empty_history(tmp_path: Path) -
     assert [item["id"] for item in evidence["evidence"]] == ["ev-history"]
 
 
+@pytest.mark.parametrize(
+    "language,title,state,superseded,replaces",
+    [
+        (
+            "en",
+            "Advisory evidence map",
+            "State: active",
+            "State: superseded",
+            "Replaces earlier claim",
+        ),
+        (
+            "it",
+            "Mappa delle fonti e delle conclusioni",
+            "Stato: attuale",
+            "Stato: sostituita",
+            "Sostituisce l'affermazione precedente",
+        ),
+        (
+            "fr",
+            "Carte des sources et des conclusions",
+            "État: actuel",
+            "État: remplacé",
+            "Remplace l'affirmation précédente",
+        ),
+        (
+            "de",
+            "Quellen- und Aussagenübersicht",
+            "Status: aktuell",
+            "Status: ersetzt",
+            "Ersetzt die frühere Aussage",
+        ),
+        (
+            "es",
+            "Mapa de fuentes y conclusiones",
+            "Estado: actual",
+            "Estado: sustituida",
+            "Sustituye la afirmación anterior",
+        ),
+    ],
+)
+def test_evidence_map_localizes_navigation_and_links_retained_sources(
+    tmp_path: Path,
+    language: str,
+    title: str,
+    state: str,
+    superseded: str,
+    replaces: str,
+) -> None:
+    lineage = _lineage()
+    (tmp_path / "case_manifest.json").write_text(
+        json.dumps({"output_language": language}), encoding="utf-8"
+    )
+    paths = lineage.initialize_lineage(tmp_path)
+    source = tmp_path / "notes #1 (reviewed) [local].md"
+    source.write_text("The vehicle is unavailable.\n", encoding="utf-8")
+    source_bytes = source.read_bytes()
+    lineage.record_evidence(
+        tmp_path,
+        [
+            _receipt(
+                "ev-note",
+                observation="The vehicle is unavailable.",
+                evidence_type="local_document",
+                artifact_refs=[
+                    {
+                        "path": source.name,
+                        "path_reference": "case_relative",
+                        "sha256": hashlib.sha256(source_bytes).hexdigest(),
+                        "byte_count": len(source_bytes),
+                    }
+                ],
+            )
+        ],
+    )
+    lineage.record_claims(
+        tmp_path,
+        [_claim("cl-old", "The vehicle is unavailable.", evidence_ids=["ev-note"])],
+    )
+    current = _claim(
+        "cl-current", "Recheck vehicle availability.", evidence_ids=["ev-note"]
+    )
+    current["supersedes_claim_id"] = "cl-old"
+    current["recorded_at"] = "2026-08-18T09:00:00+00:00"
+    lineage.record_claims(tmp_path, [current])
+    retained = {
+        key: paths[key].read_bytes() for key in ("evidence_register", "claim_register")
+    }
+
+    rendered = lineage.render_evidence_map(tmp_path).read_text(encoding="utf-8")
+
+    assert rendered.startswith(f"# {title}\n")
+    assert state in rendered
+    assert superseded in rendered
+    assert f"{replaces}: cl-old" in rendered
+    assert (
+        r"[notes #1 (reviewed) \[local\].md](notes%20%231%20%28reviewed%29%20%5Blocal%5D.md)"
+        in rendered
+    )
+    assert "The vehicle is unavailable." in rendered
+    assert "Recheck vehicle availability." in rendered
+    assert source.read_bytes() == source_bytes
+    assert all(paths[key].read_bytes() == data for key, data in retained.items())
+    assert lineage.validate_lineage(tmp_path)["valid"] is True
+
+
 def test_register_distinguishes_thirteen_listings_from_three_hundred_stock(
     tmp_path: Path,
 ) -> None:

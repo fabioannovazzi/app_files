@@ -1,0 +1,12 @@
+[run]
+include =
+    */plugins/management-control-pack/scripts/management_control_core.py
+    */plugins/management-control-pack/scripts/management_report_copy.py
+    */plugins/management-control-pack/scripts/management_delivery.py
+    */plugins/management-control-pack/scripts/budget_presentation.py
+    */plugins/_shared/vendor/modules/reporting_table.py
+    */plugins/clara/modules/reporting-engine/scripts/budget_report.py
+
+[report]
+show_missing = True
+fail_under = 80

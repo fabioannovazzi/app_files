@@ -74,7 +74,7 @@ as ordinary informational-site content.
 ## 6. Review exact bytes
 
 Run mechanical validation, then inspect the rendered site at desktop and phone
-widths. Preserve a full-page PNG whose pixel width matches each claimed viewport
+widths. Preserve a full-page PNG or JPEG whose pixel width matches each claimed viewport
 and bind its path and hash to the assessment. Review identity and claims,
 responsive behavior and destination separately. Bind every decision to the
 current evidence, brief, site, validation and quality-assessment digests; any

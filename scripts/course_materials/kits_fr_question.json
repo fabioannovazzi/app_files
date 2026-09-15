@@ -1,0 +1,52 @@
+{
+  "vera/quesito-legale-fiscale": {
+    "title": "Obtenir une réponse vérifiée avec Vera",
+    "goal": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
+    "scenario": "Imprese Arco demande au professionnel une courte note sur les règles UE relatives aux retards de paiement. Nous partons de la demande écrite et des sources initiales pour produire une vraie réponse par le workflow.",
+    "scope": "Le parcours complet de la question à la réponse vérifiée. Une note informative permet d’apprendre le processus ; un avis sur une position concrète peut aussi nécessiter un examen de la thèse opposée.",
+    "inputs": "Ouvre question-fr.md pour la demande, le public, le périmètre et le format. sources-fr.md présente le guide et le texte officiel joints. Tu n’as pas à rédiger d’instructions techniques ni à choisir les étapes internes.",
+    "request": "Vera, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
+    "steps": [
+      "Dans le fil de travail, Vera lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
+      "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.",
+      "Vera vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
+    ],
+    "deliverables": [
+      "Note Word et texte de la réponse vérifiée, avec sources et limites.",
+      "Dossier de vérification retraçant le contrôle des affirmations et les points à revoir."
+    ],
+    "review": "Vérifie que la note répond à la demande dans le périmètre et la langue prévus. Ouvre une source et compare-la à une affirmation. Distingue règle générale et application au client ; les vérifications ne remplacent pas le jugement professionnel.",
+    "checkpoints": [
+      "Explique la question, son destinataire et le cadre juridique.",
+      "Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire."
+    ],
+    "practice": "Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.",
+    "success": "Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
+    "repeat": "Donne à Vera la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit."
+  },
+  "lucia/quesito-legale-fiscale": {
+    "title": "Obtenir une réponse vérifiée avec Lucia",
+    "goal": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
+    "scenario": "Imprese Arco demande au professionnel une courte note sur les règles UE relatives aux retards de paiement. Nous partons de la demande écrite et des sources initiales pour produire une vraie réponse par le workflow.",
+    "scope": "Le parcours complet de la question à la réponse vérifiée. Une note informative permet d’apprendre le processus ; un avis sur une position concrète peut aussi nécessiter un examen de la thèse opposée.",
+    "inputs": "Ouvre question-fr.md pour la demande, le public, le périmètre et le format. sources-fr.md présente le guide et le texte officiel joints. Tu n’as pas à rédiger d’instructions techniques ni à choisir les étapes internes.",
+    "request": "Lucia, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
+    "steps": [
+      "Dans le fil de travail, Lucia lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
+      "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.",
+      "Lucia vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
+    ],
+    "deliverables": [
+      "Note Word et texte de la réponse vérifiée, avec sources et limites.",
+      "Dossier de vérification retraçant le contrôle des affirmations et les points à revoir."
+    ],
+    "review": "Vérifie que la note répond à la demande dans le périmètre et la langue prévus. Ouvre une source et compare-la à une affirmation. Distingue règle générale et application au client ; les vérifications ne remplacent pas le jugement professionnel.",
+    "checkpoints": [
+      "Explique la question, son destinataire et le cadre juridique.",
+      "Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire."
+    ],
+    "practice": "Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.",
+    "success": "Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
+    "repeat": "Donne à Lucia la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit."
+  }
+}

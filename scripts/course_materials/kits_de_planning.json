@@ -1,0 +1,27 @@
+{
+  "vera/sales-plan": {
+    "title": "Einen Absatzplan mit Vera erstellen",
+    "goal": "Lernen, Istverkäufe und kommerzielle Annahmen in ein Zukunftsszenario umzusetzen und Änderungen nachzuvollziehen.",
+    "scenario": "Ciclo Arco plant Januar und Februar des nächsten Jahres. Istwerte derselben Monate und eine Annahme höherer Stückzahlen liegen vor.",
+    "scope": "Ein Absatzplan für zwei Produkte und Monate. Der Ablauf wendet geprüfte Annahmen an; er belegt keine künftige Nachfrage und ersetzt keinen vollständigen Businessplan.",
+    "inputs": "Öffnen Sie actual-sales.csv und assumptions-de.md. Finden Sie Monate, Produkte, Mengen, Umsatz, Rabatte und Kosten. Die Notiz betrifft dieselben Monate im Folgejahr und Mengenwachstum, keine Preiserhöhung.",
+    "request": "Vera, plane Januar und Februar 2027 für Ciclo Arco aus diesen Istwerten mit 10 % mehr Menge. Fasse zuerst die Annahmen zur Bestätigung zusammen und zeige dann Plan und Basisvergleich.",
+    "steps": [
+      "Im Arbeitschat prüft Vera die Daten und zeigt eine kurze Annahmentabelle. Die Stimme erklärt betroffene Monate und Produkte und hilft, die Bedeutung der Anfrage zu bestätigen.",
+      "Nach tatsächlicher Bestätigung führt Vera den aktuellen Plan und Kontrollen aus. Die Stimme folgt der Erstellung, ohne Szenario und belegte künftige Nachfrage gleichzusetzen.",
+      "Öffnen Sie erzeugte Übersicht und Szenariodetails. Vergleichen Sie Basis und Plan und verfolgen Sie bei einem Produkt Menge, Umsatz, Rabatte, Kosten und angewandte Annahme."
+    ],
+    "deliverables": [
+      "Absatzszenario als CSV und Übersicht zur Prüfung geplanter Beträge.",
+      "Angewandte Annahmen und Kontrollen zum Verstehen und Wiederholen der Rechnung."
+    ],
+    "review": "Prüfen Sie Annahmen, vergleichbare Monate und unveränderte Faktoren. Lesen Sie absolute und prozentuale Änderungen mit ihren Basiswerten. Plan und Annahmen benötigen die übliche fachliche Prüfung.",
+    "checkpoints": [
+      "Erklären Sie vor der Rechnung, ob sich Mengen oder Preise ändern.",
+      "Finden Sie im Ergebnis eine Zeile und ihre bestimmende Annahme."
+    ],
+    "practice": "Fordern Sie mit den Übungsdateien ein neues Szenario mit 5 % mehr Menge an und bewahren Sie das mit 10 %. Bestätigen Sie die Änderung und vergleichen Sie die Übersichten mit Begründung.",
+    "success": "Sie können Istwerte liefern, Annahmen präzisieren und bestätigen, Plan und Kontrollen lesen und eine Alternative vergleichen.",
+    "repeat": "Nennen Sie Vera Istwerte, Zielmonate, Währung und kommerzielle Annahmen. Prüfen Sie die Interpretation vor der Rechnung und nutzen Sie das Ergebnis als bedingtes Szenario."
+  }
+}

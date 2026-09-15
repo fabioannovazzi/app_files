@@ -1,0 +1,52 @@
+{
+  "vera/aml-review": {
+    "title": "Preparare una revisione antiriciclaggio con Vera",
+    "goal": "Imparare a far leggere un dossier cliente, ricostruire i fatti e ottenere una valutazione motivata con documenti e questioni da rivedere.",
+    "scenario": "Lo studio rivede Officina Arco: attività, soci, rappresentante e un finanziamento soci sono descritti nei documenti fittizi.",
+    "scope": "Una revisione antiriciclaggio per uno studio italiano. Vera prepara l’analisi; il professionista decide misure, accettazione e ogni eventuale segnalazione.",
+    "inputs": "Apri client-it.md, ownership-it.md e loan-it.md. Indica cliente, incarico e data della revisione: 31 agosto 2026. I documenti sono dichiarazioni e riferimenti del caso, non controlli già completati.",
+    "request": "Vera, prepara una revisione antiriciclaggio di Officina Arco al 31 agosto da questi documenti. Mostrami fatti supportati, punti da chiarire e valutazione proposta per la mia revisione.",
+    "steps": [
+      "Nel thread di lavoro Vera legge i documenti e ricostruisce persone, proprietà, attività e operazione. La voce spiega a cosa serve la revisione e distingue dichiarazioni, riscontri e informazioni mancanti.",
+      "Vera confronta le evidenze, verifica le fonti professionali attuali pertinenti e formula domande mirate. La voce segue le questioni effettive; non inventa sospetti o risultati di screening.",
+      "Apri il memo prodotto e il collegamento a una fonte. Leggi valutazione, motivi e documenti ancora necessari. Il record conserva la proposta; le decisioni professionali si registrano solo quando espresse."
+    ],
+    "deliverables": [
+      "Memo leggibile con valutazione proposta, fatti, fonti, limiti e domande mirate.",
+      "Versione salvata nel dossier che consente di collegare una successiva revisione senza perdere la precedente."
+    ],
+    "review": "Controlla chi ha dichiarato i fatti, quali riscontri esistono e quali verifiche mancano. Un calcolo o un file salvato non approva il cliente. Il memo è interno: non inviarlo automaticamente al cliente.",
+    "checkpoints": [
+      "Prima dell’analisi, identifica cliente, incarico e documenti forniti.",
+      "Nel memo, trova un fatto documentato, una dichiarazione e una questione ancora aperta."
+    ],
+    "practice": "Aggiungi ownership-update-it.md nello stesso dossier e chiedi il riesame al 10 settembre. Vera collega il record appena prodotto e confronta la nuova compagine con quella precedente. Individua cosa cambia e quale evidenza manca.",
+    "success": "Sai avviare la revisione, usare il memo, distinguere proposta e decisione e aggiornare il dossier quando arrivano nuovi fatti.",
+    "repeat": "Chiedi a Vera una revisione per un cliente e un motivo preciso, fornendo i documenti e l’eventuale valutazione precedente. Esamina le evidenze e registra le decisioni professionali effettive."
+  },
+  "vera/adeguati-assetti": {
+    "title": "Valutare gli assetti aziendali con Vera",
+    "goal": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
+    "scenario": "Officina Arco vuole rivedere responsabilità, chiusura mensile e informazioni sugli incassi. Abbiamo il profilo aziendale, una procedura e un esempio reale nel caso fittizio.",
+    "scope": "Una prima valutazione mirata degli assetti organizzativi, amministrativi e contabili. Il perimetro è quello descritto nei documenti; non è una certificazione dell’intera azienda.",
+    "inputs": "Apri company-it.md, procedure-it.md e operation-it.md. Spiega a Vera impresa, incarico e data: 31 marzo 2026. Fornisci esempi di lavoro svolto insieme alle procedure scritte.",
+    "request": "Vera, valuta gli assetti di Officina Arco per responsabilità, chiusura mensile e gestione delle informazioni sugli incassi. Usa questi documenti e mostrami valutazione, limiti e azioni da discutere.",
+    "steps": [
+      "Nel thread di lavoro Vera ricostruisce il funzionamento dell’impresa e propone il perimetro. La voce spiega perché una procedura e un esempio della sua applicazione sono entrambi utili.",
+      "Vera confronta responsabilità, scadenze, consegne e decisioni, verifica le fonti professionali pertinenti e prepara rilievi proporzionati. La voce segue le evidenze effettive e le domande che possono cambiare il giudizio.",
+      "Apri il memo prodotto. Leggi prima la valutazione complessiva, poi un rilievo, la sua fonte e l’azione collegata. Distingui chi e quando sono proposti da impegni già accettati."
+    ],
+    "deliverables": [
+      "Memo con valutazione motivata, osservazioni, rilievi e piano di miglioramento.",
+      "Record collegato alle fonti che consente un riesame successivo e conserva le decisioni effettivamente espresse."
+    ],
+    "review": "Controlla la corrispondenza tra giudizio e prove, il perimetro, le aree non esaminate e la proporzione delle azioni. Un documento scritto o un ciclo riuscito non prova continuità; una lacuna documentale non dimostra da sola che il processo non funzioni.",
+    "checkpoints": [
+      "Prima dell’analisi, identifica il processo e un esempio di funzionamento disponibile.",
+      "Nel memo, collega un’azione al rilievo e alla fonte che la motivano."
+    ],
+    "practice": "Aggiungi update-it.md nello stesso dossier e chiedi il riesame al 30 aprile. Vera collega il record appena prodotto, rivaluta ogni azione precedente e conserva la prima versione. Spiega come le nuove evidenze cambiano il giudizio.",
+    "success": "Sai fornire documenti utili, richiedere la valutazione, usare il piano di azioni e chiedere un riesame basato su nuove evidenze.",
+    "repeat": "Descrivi impresa, finalità e perimetro della valutazione. Dai a Vera procedure, esempi operativi e precedenti pertinenti. Rivedi conclusioni e azioni prima di concordarle con l’impresa."
+  }
+}

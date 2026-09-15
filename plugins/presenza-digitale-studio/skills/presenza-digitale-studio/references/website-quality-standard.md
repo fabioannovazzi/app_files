@@ -47,4 +47,4 @@ The mechanical validator proves only what it measures. Visual quality,
 professional truth, information architecture, copy clarity and accessibility
 quality require explicit model-led and professional review of the rendered
 site. Bind each claimed desktop or phone review to a correctly sized full-page
-PNG so the review state cannot be created from viewport labels alone.
+PNG or JPEG so the review state cannot be created from viewport labels alone.

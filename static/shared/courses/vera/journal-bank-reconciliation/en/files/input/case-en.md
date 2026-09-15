@@ -1,0 +1,3 @@
+# Officina Arco
+
+All data are fictional. One bank account, EUR, ISO dates, decimal point, no thousands separator. Payments are negative in both bank and ledger exports. Reference is the bank transaction reference, Document the invoice number, Account 1000 the bank account. March includes DEMO-001 for EUR 1,220 and DEMO-002 for EUR 732, with references TRN-001 and TRN-002. The balance moves from EUR 6,000 to EUR 4,048. Cumulative April exports add DEMO-003 for EUR 488 on 4 April, reference TRN-003; closing balance EUR 3,560. No other movements or accounts are included. These facts do not constitute professional review.

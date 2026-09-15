@@ -5,6 +5,7 @@ import json
 import re
 import unicodedata
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -20,6 +21,8 @@ __all__ = [
     "build_attribute_table_frames",
     "build_attribute_tables_from_package",
     "write_attribute_table_artifacts",
+    "report_display_text",
+    "table_display_labels",
 ]
 
 ATTRIBUTE_TABLE_DIRNAME = "attribute_tables"
@@ -112,38 +115,6 @@ ATTRIBUTE_TABLE_TEMPLATES: tuple[AttributeTableTemplate, ...] = (
         ),
     ),
 )
-SPANISH_TEMPLATE_COPY = {
-    "attribute_bundle_comparison_table": {
-        "title": "Comparación de conjuntos de atributos",
-        "description": (
-            "Filas de conjuntos ordenadas que comparan la cohorte de interés con "
-            "su referencia mediante recuentos, cuotas, delta, índice y amplitud de "
-            "marcas."
-        ),
-    },
-    "attribute_bridge_table": {
-        "title": "Coincidencia entre más vendidos y productos recientes",
-        "description": (
-            "Presencia en las comparaciones de más vendidos y productos recientes. "
-            "Aparecer en ambas no demuestra la validez ni la relevancia comercial "
-            "de una señal."
-        ),
-    },
-    "rank_weighted_visibility_table": {
-        "title": "Visibilidad ponderada por posición",
-        "description": (
-            "Líneas de estantería digital con métricas brutas, incrementales y de "
-            "robustez según el supuesto central de ponderación por posición."
-        ),
-    },
-    "product_signal_evidence_table": {
-        "title": "Evidencia de señales de producto",
-        "description": (
-            "Ejemplos de productos vinculados a las filas de señales seleccionadas, "
-            "con campos de posición, reseñas, atributos, imagen y salvedades."
-        ),
-    },
-}
 
 
 def _empty_frame(columns: Sequence[str]) -> pl.DataFrame:
@@ -709,9 +680,11 @@ def _parse_example_product(value: str) -> tuple[str, str]:
     return text[: match.start()].strip(), match.group("rank")
 
 
-def _product_attribute_text(row: Mapping[str, Any]) -> str:
+def _product_attribute_text(
+    row: Mapping[str, Any], attribute_keys: Sequence[str] = ()
+) -> str:
     parts = []
-    for key in (
+    for key in attribute_keys or (
         "resolved_form",
         "form",
         "resolved_finish",
@@ -719,7 +692,7 @@ def _product_attribute_text(row: Mapping[str, Any]) -> str:
         "resolved_coverage",
         "coverage",
     ):
-        value = _safe_text(row.get(key))
+        value = _safe_text(row.get(f"resolved_{key.replace(' ', '_')}") or row.get(key))
         if value and value not in parts:
             parts.append(value)
     return CSV_LIST_SEPARATOR.join(parts[:4])
@@ -736,14 +709,14 @@ def _product_review_count(row: Mapping[str, Any]) -> str:
     return _format_count(row.get("review_count"))
 
 
-def _product_caveat(row: Mapping[str, Any]) -> str:
+def _product_caveat(row: Mapping[str, Any], attribute_keys: Sequence[str] = ()) -> str:
     caveats: list[str] = []
     if (
         _safe_float(row.get("rating")) is None
         and _safe_int(row.get("review_count")) is None
     ):
         caveats.append("No review metrics in package")
-    if not _product_attribute_text(row):
+    if not _product_attribute_text(row, attribute_keys):
         caveats.append("Sparse resolved attributes")
     if not _safe_text(row.get("pack_image_file")) and not _safe_text(
         row.get("pack_image_path")
@@ -805,6 +778,13 @@ def _product_signal_candidates(
 def _product_signal_table_row(candidate: Mapping[str, Any]) -> dict[str, Any]:
     signal_row = candidate["signal_row"]
     product_row = candidate["product_row"]
+    # The selected signal names the attributes explicitly. Read those exact
+    # columns from the product source; do not infer values from its label.
+    attribute_keys = tuple(
+        part.partition("=")[0].strip()
+        for part in _safe_text(signal_row.get("bundle_key")).split(" + ")
+        if "=" in part
+    )
     product_name = _safe_text(product_row.get("product_name")) or _safe_text(
         candidate.get("product_name")
     )
@@ -818,8 +798,8 @@ def _product_signal_table_row(candidate: Mapping[str, Any]) -> dict[str, Any]:
         "matched_signal": _bundle_display_name(signal_row),
         "rating": _product_rating(product_row),
         "reviews": _product_review_count(product_row),
-        "attributes": _product_attribute_text(product_row),
-        "caveat": _product_caveat(product_row),
+        "attributes": _product_attribute_text(product_row, attribute_keys),
+        "caveat": _product_caveat(product_row, attribute_keys),
         "image_file": _safe_text(product_row.get("pack_image_file")),
         "source_file": _safe_text(product_row.get("_source_file")),
     }
@@ -968,68 +948,6 @@ COLUMN_LABELS = {
     "cumulative": "Cumulative",
     "skus": "SKUs",
 }
-SPANISH_COLUMN_LABELS = {
-    "layer": "Capa",
-    "comparison": "Comparación",
-    "signal_bundle": "Conjunto de señales",
-    "focus_n": "n del foco",
-    "baseline_n": "n de referencia",
-    "focus_share": "Foco",
-    "baseline_share": "Referencia",
-    "delta": "Delta",
-    "index": "Índice",
-    "brands": "Marcas",
-    "alignment": "Alineación",
-    "current_n": "n actual",
-    "current_share": "Actual",
-    "current_delta": "Delta actual",
-    "current_index": "Índice actual",
-    "emerging_n": "n emergente",
-    "emerging_share": "Emergente",
-    "emerging_delta": "Delta emergente",
-    "emerging_index": "Índice emergente",
-    "current_brands": "Marcas actuales",
-    "recent_brands": "Marcas recientes",
-    "rank": "Posición",
-    "lane": "Línea",
-    "gross_weight": "Peso bruto",
-    "incremental": "Incremental",
-    "cumulative": "Acumulado",
-    "skus": "SKUs",
-    "robustness": "Robustez",
-    "cohort": "Cohorte",
-    "brand": "Marca",
-    "product": "Producto",
-    "matched_signal": "Señal coincidente",
-    "rating": "Valoración",
-    "reviews": "Reseñas",
-    "attributes": "Atributos",
-    "caveat": "Salvedad",
-}
-SPANISH_CELL_VALUES = {
-    "layer": {
-        "Top-seller comparison": "Comparación de más vendidos",
-        "Recent-product comparison": "Comparación de productos recientes",
-    },
-    "comparison": {
-        "Top sellers vs others": "Más vendidos frente al resto",
-        "Recent vs rest": "Recientes frente al resto",
-    },
-    "alignment": {
-        "Both comparisons": "Ambas comparaciones",
-        "Top-seller comparison only": "Solo comparación de más vendidos",
-        "Recent-product comparison only": "Solo comparación de productos recientes",
-    },
-    "cohort": {
-        "Top seller": "Más vendido",
-        "Recent": "Reciente",
-    },
-    "caveat": {
-        "No review metrics in package": "Sin métricas de reseñas en el paquete",
-        "Sparse resolved attributes": "Pocos atributos resueltos",
-        "No package image": "Sin imagen en el paquete",
-    },
-}
 
 NUMERIC_COLUMNS = {
     "rank",
@@ -1072,21 +990,60 @@ def _language_code(language: str) -> str:
     return normalized.split("-", maxsplit=1)[0]
 
 
+@lru_cache(maxsize=1)
+def _report_display_copy() -> dict[str, dict[str, str]]:
+    return json.loads(
+        Path(__file__)
+        .with_name("attribute_report_copy.json")
+        .read_text(encoding="utf-8")
+    )
+
+
+def report_display_text(text: str, language: str = "en") -> str:
+    """Translate fixed display copy only; preserve unknown source and authored text."""
+    copy = _report_display_copy().get(_language_code(language), {})
+    return copy.get(text, text)
+
+
+def table_display_labels(
+    table_key: str,
+    columns: Sequence[str],
+    rows: Sequence[Mapping[str, Any]],
+    language: str,
+) -> tuple[str, list[str], list[list[str]]]:
+    """Use registered display columns; preserve every source row and CSV byte."""
+    columns = [
+        column
+        for column in HTML_DISPLAY_COLUMNS.get(table_key, columns)
+        if column in columns
+    ]
+    title, _description = _template_display_copy(
+        _template_by_key()[table_key], language
+    )
+    return (
+        title,
+        [_display_column_label(column, language) for column in columns],
+        [
+            [
+                _display_cell_value(column, row.get(column), language)
+                for column in columns
+            ]
+            for row in rows
+        ],
+    )
+
+
 def _template_display_copy(
     template: AttributeTableTemplate, language: str
 ) -> tuple[str, str]:
-    if _language_code(language) == "es":
-        copy = SPANISH_TEMPLATE_COPY[template.table_key]
-        return copy["title"], copy["description"]
-    return template.title, template.description
+    return report_display_text(template.title, language), report_display_text(
+        template.description, language
+    )
 
 
 def _display_column_label(column: str, language: str = "en") -> str:
-    if _language_code(language) == "es":
-        return SPANISH_COLUMN_LABELS.get(
-            column, COLUMN_LABELS.get(column, column.replace("_", " ").title())
-        )
-    return COLUMN_LABELS.get(column, column.replace("_", " ").title())
+    label = COLUMN_LABELS.get(column, column.replace("_", " ").title())
+    return report_display_text(label, language)
 
 
 def _spanish_numeric_text(value: str) -> str:
@@ -1115,23 +1072,26 @@ def _display_cell_value(
     """Return a localized display value without changing canonical table data."""
 
     text = _safe_text(value)
-    if _language_code(language) != "es" or not text:
+    if not text:
         return text
     if column == "robustness":
         robustness_match = re.fullmatch(r"(\d+)/(\d+) alpha settings", text)
         if robustness_match:
-            return (
-                f"{robustness_match.group(1)}/{robustness_match.group(2)} "
-                "configuraciones de alfa"
-            )
+            return report_display_text(
+                "{matched}/{total} alpha settings", language
+            ).format(matched=robustness_match.group(1), total=robustness_match.group(2))
     if column == "caveat":
         return "; ".join(
-            SPANISH_CELL_VALUES["caveat"].get(part.strip(), part.strip())
+            report_display_text(part.strip(), language)
             for part in text.split(";")
             if part.strip()
         )
-    localized = SPANISH_CELL_VALUES.get(column, {}).get(text, text)
-    if column in NUMERIC_COLUMNS:
+    localized = (
+        report_display_text(text, language)
+        if column in {"layer", "comparison", "alignment", "cohort"}
+        else text
+    )
+    if column in NUMERIC_COLUMNS and _language_code(language) == "es":
         return _spanish_numeric_text(localized)
     return localized
 
@@ -1139,7 +1099,7 @@ def _display_cell_value(
 def _html_table(table_key: str, df: pl.DataFrame, language: str = "en") -> str:
     template = _template_by_key()[table_key]
     title, template_description = _template_display_copy(template, language)
-    spanish = _language_code(language) == "es"
+    display_language = _language_code(language)
     frame_columns, _schema = get_schema_and_column_names(df)
     preferred_columns = HTML_DISPLAY_COLUMNS.get(table_key, tuple(frame_columns))
     columns = [column for column in preferred_columns if column in frame_columns]
@@ -1147,9 +1107,11 @@ def _html_table(table_key: str, df: pl.DataFrame, language: str = "en") -> str:
         columns = frame_columns
     row_limit = _table_display_row_limit(table_key)
     description = (
-        f"{template_description} Se muestran hasta {row_limit} filas."
-        if spanish
-        else f"{template_description} Showing up to {row_limit} rows."
+        template_description
+        + " "
+        + report_display_text("Showing up to {count} rows.", language).format(
+            count=row_limit
+        )
     )
     header_parts = []
     for column in columns:
@@ -1181,11 +1143,11 @@ def _html_table(table_key: str, df: pl.DataFrame, language: str = "en") -> str:
     if not body_rows:
         body_rows.append(
             f'<tr><td colspan="{len(columns) or 1}" class="empty">'
-            f"{'No hay filas que cumplan los criterios.' if spanish else 'No qualifying rows.'}"
+            f"{html.escape(report_display_text('No qualifying rows.', language))}"
             "</td></tr>"
         )
     return f"""<!doctype html>
-<html lang="{'es' if spanish else 'en'}">
+<html lang="{html.escape(display_language)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

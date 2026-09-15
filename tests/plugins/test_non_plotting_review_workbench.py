@@ -14,6 +14,53 @@ from scripts import generate_non_plotting_review_widgets as widget_generator
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize(
+    "language,heading",
+    [
+        ("it", "Dati ricevuti"),
+        ("en", "Reported facts"),
+        ("fr", "Données reçues"),
+        ("de", "Erhaltene Angaben"),
+        ("es", "Datos recibidos"),
+    ],
+)
+def test_new_client_widget_displays_grouped_facts_and_escapes_values(language, heading):
+    """The actual detail renderer must not discard the grouped client records."""
+    widget = ROOT / "plugins/new-client/assets/new-client-review-widget.html"
+    program = r"""
+const fs = require('node:fs');
+const vm = require('node:vm');
+const html = fs.readFileSync(process.argv[1], 'utf8');
+const helpers = html.slice(html.indexOf('    const NEW_CLIENT_LABELS'), html.indexOf('    function reviewPayload()'));
+const renderer = html.slice(html.indexOf('    function workflowDetailHtml(item)'), html.indexOf('    function evidenceHtml(item)'));
+const escape = html.slice(html.indexOf('    function esc(value)'), html.indexOf('    const IT_METADATA_LABELS'));
+const context = {activeLanguage: () => process.argv[2], IT_METADATA_LABELS: {}, uiText: (key, fallback) => fallback};
+vm.createContext(context);
+const item = {title: 'Officina Arco', data: {party_facts: [
+  {fact_code: 'registered_identity', value: 'Officina Arco Srl', verification_status: 'reported'},
+  {fact_code: 'representative_reported', value: 'Elena <script>alert(1)</script>', verification_status: 'reported'},
+  {fact_code: 'custom_case_detail', value: null, verification_status: 'unknown'}
+], services: [{description: 'Bookkeeping 2026', assessment_status: 'proposed'}]}};
+context.item = item;
+const result = vm.runInContext(escape + helpers + renderer + '\nworkflowDetailHtml(item)', context);
+process.stdout.write(result);
+"""
+    result = subprocess.run(
+        [_bundled_node_or_skip(), "-e", program, str(widget), language],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=True,
+    ).stdout
+    assert heading in result
+    assert "Officina Arco Srl" in result
+    assert "Bookkeeping 2026" in result
+    assert "Custom Case Detail" in result
+    assert "&lt;script&gt;" in result
+    assert "<script>" not in result
+    assert "[object Object]" not in result
+
+
 def _bundled_node_or_skip() -> str:
     node = shutil.which("node")
     if node is not None:

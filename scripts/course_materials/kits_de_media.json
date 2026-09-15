@@ -1,0 +1,27 @@
+{
+  "clara/transcribe": {
+    "title": "Ein Transkript mit Clara importieren und prüfen",
+    "goal": "Lernen, ein Transkript einer Fallakte hinzuzufügen, Stimmen zuzuordnen und eine nutzbare Fassung mit Quellenbezug aufzubewahren.",
+    "scenario": "Sara hat eine kurze Notiz für das nächste Treffen mit Ciclo Arco vorbereitet. Aus einem heruntergeladenen Paket entsteht ein in der Fallakte registriertes Transkript.",
+    "scope": "Die Lektion führt den lokalen Import und die Prüfung aus. Das Paket ist vollständig fiktiv und enthält kein Audio. Neue Tonaufnahmen oder Transkriptionen erfordern einen separat gewählten Schritt über den gehosteten Dienst.",
+    "inputs": "Öffnen Sie context-de.md und case-notes-voice-input-de.json. Der Kontext erläutert Herkunft und bekannte Stimme. Nennen Sie Clara Paket und Zielakte; technische Felder müssen Sie nicht auswerten.",
+    "request": "Clara, importiere diese Notiz in die Übungsakte Ciclo Arco, bewahre das Original auf, prüfe die Stimmen und zeige das geprüfte Transkript. Füge keine Entscheidung über den Dienst hinzu.",
+    "steps": [
+      "Der Arbeitschat bereitet die Akte vor und importiert das Paket mit dem aktuellen Ablauf. Öffnen Sie das Originaltranskript und vergleichen Sie es mit der Kontextnotiz; der Sprachchat erklärt die Dateiablage.",
+      "Clara prüft Stimmenzuordnung und Wortlaut, ohne die Bedeutung zu ändern. Beobachten Sie, wie Sara erkannt wird und Preis und Route offene Fragen bleiben.",
+      "Der Ablauf registriert die geprüfte Fassung und ihre Quelle in der Akte. Öffnen Sie Text und Quellenverweis: Die Registrierung belegt den wiedergegebenen Wortlaut, nicht die Wahrheit aller Aussagen."
+    ],
+    "deliverables": [
+      "Originaltranskript und Paket in der lokalen Sitzung.",
+      "Geprüftes Transkript, Zuordnungsstatus und registrierte Quelle in der Akte."
+    ],
+    "review": "Prüfen Sie einen Abschnitt Wort für Wort, den Namen und den Satz, dass der Dienst noch nicht beschlossen ist. Da das Beispiel kein Audio enthält, ist kein Abgleich mit einer Aufnahme möglich.",
+    "checkpoints": [
+      "Benennen Sie vor dem Import Paket und Zielakte.",
+      "Finden Sie bei der Übergabe denselben Satz im Original und in der geprüften Fassung."
+    ],
+    "practice": "Importieren Sie das Übungspaket mit zwei Stimmen in dieselbe Akte. Clara soll Stimme 1 und Stimme 2 beibehalten, solange Namen nicht belegt sind. Vergleichen Sie einen Beitrag mit dem Original und behalten Sie die erste Notiz.",
+    "success": "Sie können eine neue Notiz importieren, beide Fassungen finden und unsichere Stimmenzuordnung erkennen, ohne Namen zu erfinden.",
+    "repeat": "Nennen Sie Aufnahme oder Paket, Sprache und Ziel. Für reine Ablage genügt ein gewöhnlicher Ordner; als Beleg einer Fallakte erfordert das Transkript auch Prüfung und Registrierung."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "vera/previdenza-inps": {
+    "title": "Einen INPS-Fall mit Vera prüfen",
+    "goal": "Lernen Sie, eine sozialversicherungsrechtliche Frage und Unterlagen bereitzustellen, Belege zu prüfen und die erstellte Akte fachlich zu nutzen.",
+    "scenario": "Marta möchte ihre Beitragsposition für einen Beschäftigungszeitraum verstehen. Vorhanden sind eine Arbeitgebererklärung und eine fiktive Übersicht der Zeiträume.",
+    "scope": "Ein italienischer Dokumentenfall zu privater abhängiger Beschäftigung. Der Ablauf umfasst Frage, Quellen, Chronologie, passende Recherche und Entwurf; keine Rentenberechnung oder Portalbedienung.",
+    "inputs": "Öffnen Sie case-de.md, employment-de.md, record-context-de.md und contribution-periods-de.csv. Bestimmen Sie Person, Zeitraum und Frage. Die Lehrübersicht ist fiktiv, kein offizieller Export.",
+    "request": "Vera, prüfe diesen INPS-Fall von Januar bis Juni 2025. Erkläre die Unterlagen, prüfe passende offizielle Quellen und erstelle einen Entwurf mit offenen Fragen und anzufordernden Dokumenten.",
+    "steps": [
+      "Im Arbeitschat liest Vera die Dateien und fasst Frage, Zeitraum und italienischen Rahmen zur Bestätigung zusammen. Die Stimme erklärt den Ablauf und trennt vorhandene Informationen von offenen Fragen.",
+      "Vera ordnet Fakten und Chronologie, verknüpft Fakten mit Dokumenten, recherchiert den passenden Rahmen und erstellt die Akte mit dem aktuellen Workflow. Die Stimme folgt tatsächlichen Belegen und Ergebnissen ohne vorweggenommene Schlussfolgerung.",
+      "Öffnen Sie Memo, Chronologie und Dokumentenanforderungen. Beginnen Sie mit der Antwort, verfolgen Sie einen Fakt zur Quelle und prüfen Sie offene fachliche Punkte."
+    ],
+    "deliverables": [
+      "Ein Memo in Word und Text, deutlich als Entwurf zur fachlichen Prüfung gekennzeichnet.",
+      "Chronologie, Belegübersicht und Dokumentenanforderungen zur weiteren Bearbeitung."
+    ],
+    "review": "Prüfen Sie Zeitraum, Person und zitierte Unterlagen. Beschäftigungserklärung und in einer Übersicht sichtbarer Zeitraum sind unterschiedliche Belege. Quellenumfang und fehlende Angaben vor Schlussfolgerungen oder Meldungen prüfen.",
+    "checkpoints": [
+      "Formulieren Sie vor der Analyse die Frage, die die Akte beantworten soll.",
+      "Finden Sie im Memo einen Fakt, seine Quelle und die nächste sinnvolle Rückfrage."
+    ],
+    "practice": "Wiederholen Sie die Anfrage mit den Übungsdateien und der aktualisierten Übersicht. Bewahren Sie die erste Akte auf und vergleichen Sie geänderte Beobachtungen und Anforderungen. Zeitpunkt oder Ursache einer Datenänderung ohne Beleg nicht ableiten.",
+    "success": "Sie können die Prüfung starten, Unterlagen liefern, Memo und Quellen lesen und neue Belege einarbeiten lassen.",
+    "repeat": "Nennen Sie Vera INPS-Frage, Zeitraum, Personen, Unterlagen und mögliche Fristen. Prüfen Sie Umfang und Belege und nutzen Sie den Entwurf im üblichen fachlichen Verfahren."
+  }
+}

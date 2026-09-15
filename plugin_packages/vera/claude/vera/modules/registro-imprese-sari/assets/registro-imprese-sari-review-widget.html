@@ -31,7 +31,9 @@
     button:focus-visible, input:focus-visible, textarea:focus-visible {
       outline: 2px solid var(--teal); outline-offset: 2px;
     }
-    .shell { min-height: 100vh; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; }
+    .shell { min-height: 100vh; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr) auto; }
+    .case-summary { margin: 0; padding: 16px clamp(18px, 3vw, 38px); border-bottom: 1px solid var(--line); max-width: 100%; }
+    .case-summary[hidden] { display: none; }
     .topbar {
       display: flex; align-items: center; justify-content: space-between; gap: 18px;
       padding: 17px clamp(18px, 3vw, 38px); border-bottom: 1px solid var(--line);
@@ -92,7 +94,7 @@
     .detail-head { display: flex; justify-content: space-between; gap: 22px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
     .type { margin: 0 0 4px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
     h3 { max-width: 35ch; margin: 0; font: 600 23px/1.22 var(--serif); }
-    .pill { flex: none; border: 1px solid #bcc9c5; border-radius: 999px; padding: 4px 8px; background: var(--paper); color: var(--muted); font-size: 10px; }
+    .pill { flex: none; align-self: flex-start; border: 1px solid #bcc9c5; border-radius: 999px; padding: 4px 8px; background: var(--paper); color: var(--muted); font-size: 10px; }
     .section { padding: 19px 0; border-bottom: 1px solid var(--line); }
     .section:last-child { border-bottom: 0; }
     .section h4 { margin: 0 0 10px; color: var(--muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
@@ -134,7 +136,7 @@
         <div class="mark" aria-hidden="true">RI</div>
         <div>
           <p class="eyebrow" id="eyebrow">Vera · carta di lavoro</p>
-          <h1>Registro Imprese e SARI</h1>
+          <h1 id="page-title">Registro Imprese e SARI</h1>
         </div>
       </div>
       <div class="actions">
@@ -152,6 +154,7 @@
       <div class="message" id="message">Nessun accesso, firma o invio è disponibile in questa revisione.</div>
     </section>
 
+    <p class="case-summary" id="case-summary" hidden></p>
     <section class="workspace">
       <aside class="queue">
         <div class="queue-head">
@@ -214,143 +217,453 @@
     };
 
     const UI_COPY = {
-      it: {
-        pageTitle: "Revisione Registro Imprese e SARI",
-        eyebrow: "Vera · carta di lavoro",
-        copyButton: "Copia decisioni",
-        saveButton: "Salva",
-        applyButton: "Applica alla carta",
-        summaryAria: "Riepilogo run",
-        runLabel: "Run",
-        statusLabel: "Stato",
-        itemsLabel: "Elementi",
-        decisionsLabel: "Decisioni",
-        boundary: "Nessun accesso, firma o invio è disponibile in questa revisione.",
-        queueTitle: "Coda di revisione",
-        searchPlaceholder: "Filtra per titolo o tipo",
-        searchAria: "Filtra la coda",
-        all: "Tutti",
-        reviewDefault: "da rivedere",
-        noFilterMatch: "Nessun elemento corrisponde al filtro.",
-        selectItem: "Seleziona un elemento.",
-        reviewDetails: "Dettagli di revisione",
-        decision: "Decisione",
-        reviewerNote: "Nota del revisore",
-        proposedEdit: "Testo corretto proposto",
-        requestedDocuments: "Documenti richiesti, uno per riga",
-        impact: "Le decisioni aggiornano soltanto la carta di lavoro. “Correggi” crea una richiesta di revisione e non modifica automaticamente il piano professionale.",
-        toolMissing: "Strumento di revisione non configurato",
-        mcpUnavailable: "Salvataggio MCP non disponibile; usa Copia decisioni",
-        copied: "Decisioni copiate negli appunti.",
-        saved: "Decisioni salvate nella cartella privata del run.",
-        applied: "Decisioni applicate alla carta di lavoro; nessuna azione su portali.",
-        localSource: "Fonte locale",
-        output: "Output",
-        types: {
-          case_fact: "Qualificazione",
-          practice_step: "Passaggio pratica",
-          official_source: "Fonte ufficiale",
-          missing_information: "Informazione mancante",
-          audit_check: "Controllo",
-          artifact: "Artefatto",
-        },
-        actions: {
-          accept: "Accetta", reject: "Rifiuta", edit: "Correggi",
-          mark_unclear: "Da chiarire", request_more_documents: "Chiedi documenti", skip: "Salta",
-        },
-        statuses: {
-          ready_for_professional_review: "Pronto per revisione professionale",
-          partial_review: "Revisione parziale",
-          draft_for_professional_review: "Bozza per revisione professionale",
-          passed: "Superato",
-          needs_review: "Da rivedere",
-          confirmed: "Confermato",
-          requires_professional_confirmation: "Da confermare dal professionista",
-          proposed: "Proposto",
-          blocked: "Bloccato",
-        },
-        fields: {
-          type: "Tipo", source_id: "ID fonte", publisher: "Editore",
-          territorial_applicability: "Applicabilità territoriale", source_date: "Data fonte",
-          official_url: "URL ufficiale", applicability_status: "Stato applicabilità",
-          record_id: "ID record", system: "Sistema", sequence: "Sequenza", detail: "Dettaglio",
-          proposed_value: "Valore proposto", document_quotes: "Citazioni documentali",
-          review_status: "Stato revisione", source_ids: "ID fonti", case_fact_ids: "ID fatti del caso",
-          confirmation: "Conferma", validation_status: "Stato validazione",
-          error_count: "Errori", blocker_count: "Blocchi",
-        },
-      },
-      es: {
-        pageTitle: "Revisión de Registro Imprese y SARI",
-        eyebrow: "Vera · documento de trabajo",
-        copyButton: "Copiar decisiones",
-        saveButton: "Guardar",
-        applyButton: "Aplicar al documento",
-        summaryAria: "Resumen de la ejecución",
-        runLabel: "Ejecución",
-        statusLabel: "Estado",
-        itemsLabel: "Elementos",
-        decisionsLabel: "Decisiones",
-        boundary: "En esta revisión no está disponible ningún acceso, firma ni presentación.",
-        queueTitle: "Cola de revisión",
-        searchPlaceholder: "Filtrar por título o tipo",
-        searchAria: "Filtrar la cola",
-        all: "Todos",
-        reviewDefault: "por revisar",
-        noFilterMatch: "Ningún elemento coincide con el filtro.",
-        selectItem: "Seleccione un elemento.",
-        reviewDetails: "Detalles de la revisión",
-        decision: "Decisión",
-        reviewerNote: "Nota del revisor",
-        proposedEdit: "Texto corregido propuesto",
-        requestedDocuments: "Documentos solicitados, uno por línea",
-        impact: "Las decisiones solo actualizan el documento de trabajo. «Corregir» crea una solicitud de revisión y no modifica automáticamente el plan profesional.",
-        toolMissing: "La herramienta de revisión no está configurada",
-        mcpUnavailable: "El guardado MCP no está disponible; use Copiar decisiones",
-        copied: "Decisiones copiadas al portapapeles.",
-        saved: "Decisiones guardadas en la carpeta privada de la ejecución.",
-        applied: "Decisiones aplicadas al documento de trabajo; no se ha realizado ninguna acción en portales.",
-        localSource: "Fuente local",
-        output: "Salida",
-        types: {
-          case_fact: "Calificación",
-          practice_step: "Paso de la práctica",
-          official_source: "Fuente oficial",
-          missing_information: "Información pendiente",
-          audit_check: "Control",
-          artifact: "Artefacto",
-        },
-        actions: {
-          accept: "Aceptar", reject: "Rechazar", edit: "Corregir",
-          mark_unclear: "Requiere aclaración", request_more_documents: "Solicitar documentos", skip: "Omitir",
-        },
-        statuses: {
-          ready_for_professional_review: "Listo para revisión profesional",
-          partial_review: "Revisión parcial",
-          draft_for_professional_review: "Borrador para revisión profesional",
-          passed: "Superado",
-          needs_review: "Por revisar",
-          confirmed: "Confirmado",
-          requires_professional_confirmation: "Requiere confirmación profesional",
-          proposed: "Propuesto",
-          blocked: "Bloqueado",
-        },
-        fields: {
-          type: "Tipo", source_id: "ID de la fuente", publisher: "Editor",
-          territorial_applicability: "Aplicabilidad territorial", source_date: "Fecha de la fuente",
-          official_url: "URL oficial", applicability_status: "Estado de aplicabilidad",
-          record_id: "ID del registro", system: "Sistema", sequence: "Secuencia", detail: "Detalle",
-          proposed_value: "Valor propuesto", document_quotes: "Citas documentales",
-          review_status: "Estado de la revisión", source_ids: "ID de las fuentes", case_fact_ids: "ID de los hechos del caso",
-          confirmation: "Confirmación", validation_status: "Estado de la validación",
-          error_count: "Errores", blocker_count: "Bloqueos",
-        },
-      },
-    };
+  "it": {
+    "pageTitle": "Revisione Registro Imprese e SARI",
+    "eyebrow": "Vera · carta di lavoro",
+    "copyButton": "Copia decisioni",
+    "saveButton": "Salva",
+    "applyButton": "Applica alla carta",
+    "summaryAria": "Riepilogo run",
+    "runLabel": "Run",
+    "statusLabel": "Stato",
+    "itemsLabel": "Elementi",
+    "decisionsLabel": "Decisioni",
+    "boundary": "Nessun accesso, firma o invio è disponibile in questa revisione.",
+    "queueTitle": "Coda di revisione",
+    "searchPlaceholder": "Filtra per titolo o tipo",
+    "searchAria": "Filtra la coda",
+    "all": "Tutti",
+    "reviewDefault": "da rivedere",
+    "noFilterMatch": "Nessun elemento corrisponde al filtro.",
+    "selectItem": "Seleziona un elemento.",
+    "reviewDetails": "Dettagli di revisione",
+    "decision": "Decisione",
+    "reviewerNote": "Nota del revisore",
+    "proposedEdit": "Testo corretto proposto",
+    "requestedDocuments": "Documenti richiesti, uno per riga",
+    "impact": "Le decisioni aggiornano soltanto la carta di lavoro. “Correggi” crea una richiesta di revisione e non modifica automaticamente il piano professionale.",
+    "toolMissing": "Strumento di revisione non configurato",
+    "mcpUnavailable": "Salvataggio MCP non disponibile; usa Copia decisioni",
+    "copied": "Decisioni copiate negli appunti.",
+    "saved": "Decisioni salvate nella cartella privata del run.",
+    "applied": "Decisioni applicate alla carta di lavoro; nessuna azione su portali.",
+    "localSource": "Fonte locale",
+    "output": "Output",
+    "types": {
+      "case_fact": "Qualificazione",
+      "practice_step": "Passaggio pratica",
+      "official_source": "Fonte ufficiale",
+      "missing_information": "Informazione mancante",
+      "audit_check": "Controllo",
+      "artifact": "Artefatto"
+    },
+    "actions": {
+      "accept": "Accetta",
+      "reject": "Rifiuta",
+      "edit": "Correggi",
+      "mark_unclear": "Da chiarire",
+      "request_more_documents": "Chiedi documenti",
+      "skip": "Salta"
+    },
+    "statuses": {
+      "ready_for_professional_review": "Pronto per revisione professionale",
+      "partial_review": "Revisione parziale",
+      "draft_for_professional_review": "Bozza per revisione professionale",
+      "passed": "Superato",
+      "needs_review": "Da rivedere",
+      "confirmed": "Confermato",
+      "requires_professional_confirmation": "Da confermare dal professionista",
+      "proposed": "Proposto",
+      "blocked": "Bloccato",
+      "passed_with_blockers": "Controlli superati; punti aperti",
+      "needs_professional_review": "Da rivedere dal professionista",
+      "not_selected": "Non selezionato",
+      "selected_requires_professional_applicability_review": "Fonte selezionata; applicabilità da confermare"
+    },
+    "fields": {
+      "type": "Tipo",
+      "source_id": "ID fonte",
+      "publisher": "Editore",
+      "territorial_applicability": "Applicabilità territoriale",
+      "source_date": "Data fonte",
+      "official_url": "URL ufficiale",
+      "applicability_status": "Stato applicabilità",
+      "record_id": "ID record",
+      "system": "Sistema",
+      "sequence": "Sequenza",
+      "detail": "Dettaglio",
+      "proposed_value": "Valore proposto",
+      "document_quotes": "Citazioni documentali",
+      "review_status": "Stato revisione",
+      "source_ids": "ID fonti",
+      "case_fact_ids": "ID fatti del caso",
+      "confirmation": "Conferma",
+      "validation_status": "Stato validazione",
+      "error_count": "Errori",
+      "blocker_count": "Blocchi",
+      "text": "Testo"
+    },
+    "technicalDetails": "Dettagli tecnici"
+  },
+  "es": {
+    "pageTitle": "Revisión de Registro Imprese y SARI",
+    "eyebrow": "Vera · documento de trabajo",
+    "copyButton": "Copiar decisiones",
+    "saveButton": "Guardar",
+    "applyButton": "Aplicar al documento",
+    "summaryAria": "Resumen de la ejecución",
+    "runLabel": "Ejecución",
+    "statusLabel": "Estado",
+    "itemsLabel": "Elementos",
+    "decisionsLabel": "Decisiones",
+    "boundary": "En esta revisión no está disponible ningún acceso, firma ni presentación.",
+    "queueTitle": "Cola de revisión",
+    "searchPlaceholder": "Filtrar por título o tipo",
+    "searchAria": "Filtrar la cola",
+    "all": "Todos",
+    "reviewDefault": "por revisar",
+    "noFilterMatch": "Ningún elemento coincide con el filtro.",
+    "selectItem": "Seleccione un elemento.",
+    "reviewDetails": "Detalles de la revisión",
+    "decision": "Decisión",
+    "reviewerNote": "Nota del revisor",
+    "proposedEdit": "Texto corregido propuesto",
+    "requestedDocuments": "Documentos solicitados, uno por línea",
+    "impact": "Las decisiones solo actualizan el documento de trabajo. «Corregir» crea una solicitud de revisión y no modifica automáticamente el plan profesional.",
+    "toolMissing": "La herramienta de revisión no está configurada",
+    "mcpUnavailable": "El guardado MCP no está disponible; use Copiar decisiones",
+    "copied": "Decisiones copiadas al portapapeles.",
+    "saved": "Decisiones guardadas en la carpeta privada de la ejecución.",
+    "applied": "Decisiones aplicadas al documento de trabajo; no se ha realizado ninguna acción en portales.",
+    "localSource": "Fuente local",
+    "output": "Salida",
+    "types": {
+      "case_fact": "Calificación",
+      "practice_step": "Paso de la práctica",
+      "official_source": "Fuente oficial",
+      "missing_information": "Información pendiente",
+      "audit_check": "Control",
+      "artifact": "Artefacto"
+    },
+    "actions": {
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "edit": "Corregir",
+      "mark_unclear": "Requiere aclaración",
+      "request_more_documents": "Solicitar documentos",
+      "skip": "Omitir"
+    },
+    "statuses": {
+      "ready_for_professional_review": "Listo para revisión profesional",
+      "partial_review": "Revisión parcial",
+      "draft_for_professional_review": "Borrador para revisión profesional",
+      "passed": "Superado",
+      "needs_review": "Por revisar",
+      "confirmed": "Confirmado",
+      "requires_professional_confirmation": "Requiere confirmación profesional",
+      "proposed": "Propuesto",
+      "blocked": "Bloqueado",
+      "passed_with_blockers": "Controles superados; quedan bloqueos",
+      "needs_professional_review": "Requiere revisión profesional",
+      "not_selected": "No seleccionado",
+      "selected_requires_professional_applicability_review": "Fuente seleccionada; aplicabilidad por confirmar"
+    },
+    "fields": {
+      "type": "Tipo",
+      "source_id": "ID de la fuente",
+      "publisher": "Editor",
+      "territorial_applicability": "Aplicabilidad territorial",
+      "source_date": "Fecha de la fuente",
+      "official_url": "URL oficial",
+      "applicability_status": "Estado de aplicabilidad",
+      "record_id": "ID del registro",
+      "system": "Sistema",
+      "sequence": "Secuencia",
+      "detail": "Detalle",
+      "proposed_value": "Valor propuesto",
+      "document_quotes": "Citas documentales",
+      "review_status": "Estado de la revisión",
+      "source_ids": "ID de las fuentes",
+      "case_fact_ids": "ID de los hechos del caso",
+      "confirmation": "Confirmación",
+      "validation_status": "Estado de la validación",
+      "error_count": "Errores",
+      "blocker_count": "Bloqueos",
+      "text": "Texto"
+    },
+    "technicalDetails": "Detalles técnicos"
+  },
+  "en": {
+    "pageTitle": "Registro Imprese and SARI review",
+    "eyebrow": "Vera · workpaper",
+    "copyButton": "Copy decisions",
+    "saveButton": "Save",
+    "applyButton": "Apply to workpaper",
+    "summaryAria": "Run summary",
+    "runLabel": "Run",
+    "statusLabel": "Status",
+    "itemsLabel": "Items",
+    "decisionsLabel": "Decisions",
+    "boundary": "This review provides no portal access, signature or submission.",
+    "queueTitle": "Review queue",
+    "searchPlaceholder": "Filter by title or type",
+    "searchAria": "Filter the queue",
+    "all": "All",
+    "reviewDefault": "To review",
+    "noFilterMatch": "No item matches the filter.",
+    "selectItem": "Select an item.",
+    "reviewDetails": "Review details",
+    "decision": "Decision",
+    "reviewerNote": "Reviewer note",
+    "proposedEdit": "Proposed corrected text",
+    "requestedDocuments": "Requested documents, one per line",
+    "impact": "Decisions update the workpaper only. “Edit” records a revision request and does not automatically change the professional plan.",
+    "toolMissing": "Review tool is not configured",
+    "mcpUnavailable": "MCP saving is unavailable; use Copy decisions",
+    "copied": "Decisions copied to the clipboard.",
+    "saved": "Decisions saved in the private run folder.",
+    "applied": "Decisions applied to the workpaper; no portal action.",
+    "localSource": "Local source",
+    "output": "Output",
+    "types": {
+      "case_fact": "Classification",
+      "practice_step": "Practice step",
+      "official_source": "Official source",
+      "missing_information": "Missing information",
+      "audit_check": "Check",
+      "artifact": "Artifact"
+    },
+    "actions": {
+      "accept": "Accept",
+      "reject": "Reject",
+      "edit": "Edit",
+      "mark_unclear": "Needs clarification",
+      "request_more_documents": "Request documents",
+      "skip": "Skip"
+    },
+    "statuses": {
+      "ready_for_professional_review": "Ready for professional review",
+      "partial_review": "Partial review",
+      "draft_for_professional_review": "Draft for professional review",
+      "passed": "Passed",
+      "needs_review": "To review",
+      "confirmed": "Confirmed",
+      "requires_professional_confirmation": "Needs professional confirmation",
+      "proposed": "Proposed",
+      "blocked": "Blocked",
+      "passed_with_blockers": "Checks passed; blockers remain",
+      "needs_professional_review": "Professional review needed",
+      "not_selected": "Not selected",
+      "selected_requires_professional_applicability_review": "Source selected; applicability needs confirmation"
+    },
+    "fields": {
+      "type": "Type",
+      "source_id": "Source ID",
+      "publisher": "Publisher",
+      "territorial_applicability": "Territorial applicability",
+      "source_date": "Source date",
+      "official_url": "Official URL",
+      "applicability_status": "Applicability status",
+      "record_id": "Record ID",
+      "system": "System",
+      "sequence": "Sequence",
+      "detail": "Detail",
+      "proposed_value": "Proposed value",
+      "document_quotes": "Document excerpts",
+      "review_status": "Review status",
+      "source_ids": "Source IDs",
+      "case_fact_ids": "Case-fact IDs",
+      "confirmation": "Confirmation",
+      "validation_status": "Validation status",
+      "error_count": "Errors",
+      "blocker_count": "Blockers",
+      "text": "Text"
+    },
+    "technicalDetails": "Technical details"
+  },
+  "fr": {
+    "pageTitle": "Révision Registro Imprese et SARI",
+    "eyebrow": "Vera · document de travail",
+    "copyButton": "Copier les décisions",
+    "saveButton": "Enregistrer",
+    "applyButton": "Appliquer au document",
+    "summaryAria": "Résumé de l’exécution",
+    "runLabel": "Exécution",
+    "statusLabel": "État",
+    "itemsLabel": "Éléments",
+    "decisionsLabel": "Décisions",
+    "boundary": "Cette révision ne permet aucun accès au portail, signature ou dépôt.",
+    "queueTitle": "Liste de révision",
+    "searchPlaceholder": "Filtrer par titre ou type",
+    "searchAria": "Filtrer la liste",
+    "all": "Tous",
+    "reviewDefault": "À revoir",
+    "noFilterMatch": "Aucun élément ne correspond au filtre.",
+    "selectItem": "Sélectionnez un élément.",
+    "reviewDetails": "Détails de la révision",
+    "decision": "Décision",
+    "reviewerNote": "Note du réviseur",
+    "proposedEdit": "Texte corrigé proposé",
+    "requestedDocuments": "Pièces demandées, une par ligne",
+    "impact": "Les décisions mettent à jour le document de travail uniquement. « Corriger » crée une demande de révision et ne modifie pas automatiquement le plan professionnel.",
+    "toolMissing": "L’outil de révision n’est pas configuré",
+    "mcpUnavailable": "Enregistrement MCP indisponible ; utilisez Copier les décisions",
+    "copied": "Décisions copiées dans le presse-papiers.",
+    "saved": "Décisions enregistrées dans le dossier privé de l’exécution.",
+    "applied": "Décisions appliquées au document de travail ; aucune action sur un portail.",
+    "localSource": "Source locale",
+    "output": "Résultat",
+    "types": {
+      "case_fact": "Qualification",
+      "practice_step": "Étape du dossier",
+      "official_source": "Source officielle",
+      "missing_information": "Information manquante",
+      "audit_check": "Contrôle",
+      "artifact": "Document"
+    },
+    "actions": {
+      "accept": "Accepter",
+      "reject": "Refuser",
+      "edit": "Corriger",
+      "mark_unclear": "À clarifier",
+      "request_more_documents": "Demander des pièces",
+      "skip": "Passer"
+    },
+    "statuses": {
+      "ready_for_professional_review": "Prêt pour révision professionnelle",
+      "partial_review": "Révision partielle",
+      "draft_for_professional_review": "Projet pour révision professionnelle",
+      "passed": "Réussi",
+      "needs_review": "À revoir",
+      "confirmed": "Confirmé",
+      "requires_professional_confirmation": "À confirmer par le professionnel",
+      "proposed": "Proposé",
+      "blocked": "Bloqué",
+      "passed_with_blockers": "Contrôles réussis ; points bloquants",
+      "needs_professional_review": "À revoir par le professionnel",
+      "not_selected": "Non sélectionné",
+      "selected_requires_professional_applicability_review": "Source sélectionnée ; applicabilité à confirmer"
+    },
+    "fields": {
+      "type": "Type",
+      "source_id": "ID de la source",
+      "publisher": "Éditeur",
+      "territorial_applicability": "Applicabilité territoriale",
+      "source_date": "Date de la source",
+      "official_url": "URL officielle",
+      "applicability_status": "État de l’applicabilité",
+      "record_id": "ID de l’enregistrement",
+      "system": "Système",
+      "sequence": "Séquence",
+      "detail": "Détail",
+      "proposed_value": "Valeur proposée",
+      "document_quotes": "Extraits des pièces",
+      "review_status": "État de la révision",
+      "source_ids": "ID des sources",
+      "case_fact_ids": "ID des faits du dossier",
+      "confirmation": "Confirmation",
+      "validation_status": "État de la validation",
+      "error_count": "Erreurs",
+      "blocker_count": "Points bloquants",
+      "text": "Texte"
+    },
+    "technicalDetails": "Détails techniques"
+  },
+  "de": {
+    "pageTitle": "Prüfung Registro Imprese und SARI",
+    "eyebrow": "Vera · Arbeitspapier",
+    "copyButton": "Entscheidungen kopieren",
+    "saveButton": "Speichern",
+    "applyButton": "Auf Arbeitspapier anwenden",
+    "summaryAria": "Zusammenfassung des Durchlaufs",
+    "runLabel": "Durchlauf",
+    "statusLabel": "Status",
+    "itemsLabel": "Einträge",
+    "decisionsLabel": "Entscheidungen",
+    "boundary": "Diese Prüfung ermöglicht keinen Portalzugang, keine Unterschrift und keine Einreichung.",
+    "queueTitle": "Prüfliste",
+    "searchPlaceholder": "Nach Titel oder Typ filtern",
+    "searchAria": "Prüfliste filtern",
+    "all": "Alle",
+    "reviewDefault": "Zu prüfen",
+    "noFilterMatch": "Kein Eintrag entspricht dem Filter.",
+    "selectItem": "Wählen Sie einen Eintrag.",
+    "reviewDetails": "Prüfdetails",
+    "decision": "Entscheidung",
+    "reviewerNote": "Prüfvermerk",
+    "proposedEdit": "Vorgeschlagener korrigierter Text",
+    "requestedDocuments": "Angeforderte Unterlagen, eine pro Zeile",
+    "impact": "Entscheidungen aktualisieren nur das Arbeitspapier. „Korrigieren“ erfasst einen Änderungsauftrag und ändert den fachlichen Plan nicht automatisch.",
+    "toolMissing": "Prüfwerkzeug ist nicht eingerichtet",
+    "mcpUnavailable": "MCP-Speicherung nicht verfügbar; nutzen Sie Entscheidungen kopieren",
+    "copied": "Entscheidungen in die Zwischenablage kopiert.",
+    "saved": "Entscheidungen im privaten Durchlaufordner gespeichert.",
+    "applied": "Entscheidungen auf das Arbeitspapier angewendet; keine Portalaktion.",
+    "localSource": "Lokale Quelle",
+    "output": "Ausgabe",
+    "types": {
+      "case_fact": "Einordnung",
+      "practice_step": "Verfahrensschritt",
+      "official_source": "Amtliche Quelle",
+      "missing_information": "Fehlende Information",
+      "audit_check": "Prüfung",
+      "artifact": "Dokument"
+    },
+    "actions": {
+      "accept": "Annehmen",
+      "reject": "Ablehnen",
+      "edit": "Korrigieren",
+      "mark_unclear": "Zu klären",
+      "request_more_documents": "Unterlagen anfordern",
+      "skip": "Überspringen"
+    },
+    "statuses": {
+      "ready_for_professional_review": "Bereit zur fachlichen Prüfung",
+      "partial_review": "Teilweise Prüfung",
+      "draft_for_professional_review": "Entwurf zur fachlichen Prüfung",
+      "passed": "Bestanden",
+      "needs_review": "Zu prüfen",
+      "confirmed": "Bestätigt",
+      "requires_professional_confirmation": "Fachlich zu bestätigen",
+      "proposed": "Vorgeschlagen",
+      "blocked": "Blockiert",
+      "passed_with_blockers": "Prüfungen bestanden; offene Punkte",
+      "needs_professional_review": "Fachlich zu prüfen",
+      "not_selected": "Nicht ausgewählt",
+      "selected_requires_professional_applicability_review": "Quelle ausgewählt; Anwendbarkeit zu bestätigen"
+    },
+    "fields": {
+      "type": "Typ",
+      "source_id": "Quellen-ID",
+      "publisher": "Herausgeber",
+      "territorial_applicability": "Räumliche Anwendbarkeit",
+      "source_date": "Quelldatum",
+      "official_url": "Amtliche URL",
+      "applicability_status": "Status der Anwendbarkeit",
+      "record_id": "Datensatz-ID",
+      "system": "System",
+      "sequence": "Reihenfolge",
+      "detail": "Einzelheit",
+      "proposed_value": "Vorgeschlagener Wert",
+      "document_quotes": "Dokumentauszüge",
+      "review_status": "Prüfstatus",
+      "source_ids": "Quellen-IDs",
+      "case_fact_ids": "Sachverhalts-IDs",
+      "confirmation": "Bestätigung",
+      "validation_status": "Validierungsstatus",
+      "error_count": "Fehler",
+      "blocker_count": "Offene Prüfpunkte",
+      "text": "Text"
+    },
+    "technicalDetails": "Technische Details"
+  }
+};
 
     function normalizeLanguage(value) {
       const language = String(value || "").trim().toLowerCase().replaceAll("_", "-");
-      return language === "es" || language.startsWith("es-") || language === "spa" ? "es" : "it";
+      const primary = language.split("-")[0];
+      const code = ({ ita: "it", eng: "en", fra: "fr", deu: "de", spa: "es" })[primary] || primary;
+      return Object.hasOwn(UI_COPY, code) ? code : "it";
     }
     function languageFor(payload) {
       return normalizeLanguage(
@@ -377,6 +690,7 @@
       const text = copy();
       document.documentElement.lang = languageFor(state.payload);
       document.title = text.pageTitle;
+      document.getElementById("page-title").textContent = text.pageTitle;
       document.getElementById("eyebrow").textContent = text.eyebrow;
       document.getElementById("copy").textContent = text.copyButton;
       document.getElementById("save").textContent = text.saveButton;
@@ -425,6 +739,9 @@
       node.className = `message ${kind}`.trim();
     }
     function renderMetrics() {
+      const summary = review().case_context?.case_summary;
+      document.getElementById("case-summary").textContent = typeof summary === "string" ? summary : "";
+      document.getElementById("case-summary").hidden = !summary;
       document.getElementById("run").textContent = review().run_id || "—";
       document.getElementById("status").textContent = localizedValue(review().status) || "—";
       document.getElementById("item-count").textContent = String(items().length);
@@ -455,15 +772,23 @@
       }).join("") : `<div class="empty">${esc(copy().noFilterMatch)}</div>`;
       renderDetail();
     }
+    function detailValue(value) {
+      if (Array.isArray(value)) return `<ul>${value.map(entry => `<li>${detailValue(entry)}</li>`).join("")}</ul>`;
+      if (value && typeof value === "object") return `<dl>${Object.entries(value).map(([key, entry]) => `<dt>${esc(copy().fields[key] || key.replaceAll("_", " "))}</dt><dd>${detailValue(entry)}</dd>`).join("")}</dl>`;
+      return esc(localizedValue(value));
+    }
     function detailFields(item) {
+      const fields = Object.entries(item.data || {});
+      const meaningful = fields.filter(([key]) => !key.startsWith("target_") && !["record_id", "case_fact_ids"].includes(key));
+      const technical = [["ID", item.id], ...fields.filter(([key]) => key.startsWith("target_") || ["record_id", "case_fact_ids"].includes(key))];
       const entries = [
-        ["ID", item.id],
         [copy().fields.type, copy().types[item.item_type] || item.item_type],
         [copy().localSource, item.source_path],
         [copy().output, item.output_path],
-        ...Object.entries(item.data || {}).map(([key, value]) => [copy().fields[key] || key.replaceAll("_", " "), Array.isArray(value) ? value.join(", ") : localizedValue(value)]),
-      ].filter(([, value]) => value !== null && value !== undefined && value !== "");
-      return `<dl>${entries.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value)}</dd>`).join("")}</dl>`;
+        ...meaningful.map(([key, value]) => [copy().fields[key] || key.replaceAll("_", " "), value]),
+      ].filter(([, value]) => value !== null && value !== undefined && value !== "" && (!Array.isArray(value) || value.length));
+      const render = values => `<dl>${values.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${detailValue(value)}</dd>`).join("")}</dl>`;
+      return render(entries) + `<details><summary>${esc(copy().technicalDetails)}</summary>${render(technical)}</details>`;
     }
     function renderDetail() {
       const item = items().find((candidate) => candidate.id === state.selectedId);

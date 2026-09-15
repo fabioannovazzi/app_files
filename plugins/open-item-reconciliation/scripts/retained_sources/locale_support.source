@@ -188,7 +188,7 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
         },
         "next_steps": {
             "probable_payment": "Review rows classified as probable_payment: a likely bank movement exists, but row/document allocation must be confirmed before treating it as definitively closed.",
-            "needs_evidence": "Obtain the evidence requested on rows classified as needs_evidence.",
+            "needs_evidence": "Obtain the requested supporting documents for the rows that need further evidence.",
             "unresolved": "Manually map unresolved rows to source documents or request additional ledger detail.",
             "complete": "Retain the Excel workbook and source documents as the audit workpaper.",
         },
@@ -291,8 +291,8 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
             "invoice": ("facture",),
         },
         "next_steps": {
-            "needs_evidence": "Obtenir les éléments probants indiqués sur les lignes classées needs_evidence.",
-            "unresolved": "Rattacher manuellement les lignes unresolved aux documents source ou demander un détail comptable complémentaire.",
+            "needs_evidence": "Obtenir les justificatifs complémentaires demandés pour les lignes concernées.",
+            "unresolved": "Rattacher les lignes non résolues aux documents sources ou demander un détail comptable complémentaire.",
             "complete": "Conserver le classeur Excel et les sources comme workpaper audit.",
         },
         "missing_evidence": {},
@@ -393,8 +393,8 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
             "invoice": ("rechnung",),
         },
         "next_steps": {
-            "needs_evidence": "Die in needs_evidence klassifizierten Zeilen mit den angeforderten Nachweisen belegen.",
-            "unresolved": "Unresolved-Zeilen manuell den Quelldokumenten zuordnen oder zusätzliche Buchhaltungsdetails anfordern.",
+            "needs_evidence": "Für die noch nicht ausreichend belegten Zeilen die angeforderten Nachweise beschaffen.",
+            "unresolved": "Ungeklärte Zeilen den Quelldokumenten zuordnen oder zusätzliche Buchhaltungsdetails anfordern.",
             "complete": "Excel-Arbeitsmappe und Quelldokumente als Audit-Workpaper aufbewahren.",
         },
         "missing_evidence": {
@@ -508,8 +508,8 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
         },
         "next_steps": {
             "probable_payment": "Revisar las líneas clasificadas como probable_payment: existe un movimiento bancario probable, pero debe confirmarse la asignación a la línea o documento antes de tratarlo como cierre definitivo.",
-            "needs_evidence": "Obtener las evidencias indicadas en las líneas clasificadas como needs_evidence.",
-            "unresolved": "Asignar manualmente las líneas unresolved a los documentos fuente o solicitar detalle contable adicional.",
+            "needs_evidence": "Obtener los justificantes adicionales solicitados para las líneas correspondientes.",
+            "unresolved": "Asignar las líneas no resueltas a los documentos fuente o solicitar detalle contable adicional.",
             "complete": "Conservar el libro Excel y los documentos fuente como papel de trabajo de auditoría.",
         },
         "missing_evidence": {
@@ -605,3 +605,699 @@ def any_keyword_in(text: object, keywords: list[str] | tuple[str, ...]) -> bool:
         and normalized in value
         for keyword in keywords
     )
+
+
+# Fixed presentation labels only; these do not classify or interpret evidence.
+WORD_OUTPUT_LABELS: dict[str, dict[str, str]] = {
+    "status": {
+        "it": "Esito",
+        "en": "Status",
+        "fr": "Résultat",
+        "de": "Ergebnis",
+        "es": "Estado",
+    },
+    "rows": {
+        "it": "Righe",
+        "en": "Rows",
+        "fr": "Lignes",
+        "de": "Zeilen",
+        "es": "Líneas",
+    },
+    "amount": {
+        "it": "Importo",
+        "en": "Amount",
+        "fr": "Montant",
+        "de": "Betrag",
+        "es": "Importe",
+    },
+    "amount_total": {
+        "it": "Importo totale",
+        "en": "Amount total",
+        "fr": "Montant total",
+        "de": "Gesamtbetrag",
+        "es": "Importe total",
+    },
+    "amount_abs_total": {
+        "it": "Importo assoluto",
+        "en": "Absolute amount",
+        "fr": "Montant absolu",
+        "de": "Absolutbetrag",
+        "es": "Importe absoluto",
+    },
+    "closed_amount": {
+        "it": "Importo chiuso",
+        "en": "Closed amount",
+        "fr": "Montant soldé",
+        "de": "Ausgeglichener Betrag",
+        "es": "Importe cerrado",
+    },
+    "probable_payment_amount": {
+        "it": "Importo con pagamento probabile",
+        "en": "Probable payment amount",
+        "fr": "Paiement probable",
+        "de": "Vermutlich bezahlt",
+        "es": "Pago probable",
+    },
+    "open_supported_amount": {
+        "it": "Importo aperto supportato",
+        "en": "Open supported amount",
+        "fr": "Montant ouvert justifié",
+        "de": "Belegter offener Betrag",
+        "es": "Importe abierto respaldado",
+    },
+    "needs_evidence_amount": {
+        "it": "Importo da documentare",
+        "en": "Needs evidence amount",
+        "fr": "Montant à justifier",
+        "de": "Zu belegender Betrag",
+        "es": "Importe por documentar",
+    },
+    "unresolved_amount": {
+        "it": "Importo non risolto",
+        "en": "Unresolved amount",
+        "fr": "Montant non résolu",
+        "de": "Ungeklärter Betrag",
+        "es": "Importe no resuelto",
+    },
+    "reference_date": {
+        "it": "Data di riferimento",
+        "en": "Reference date",
+        "fr": "Date de référence",
+        "de": "Stichtag",
+        "es": "Fecha de referencia",
+    },
+    "aging_bucket": {
+        "it": "Fascia aging",
+        "en": "Aging band",
+        "fr": "Tranche d’ancienneté",
+        "de": "Altersgruppe",
+        "es": "Tramo de antigüedad",
+    },
+    "min_age_days": {
+        "it": "Giorni minimi",
+        "en": "Minimum age in days",
+        "fr": "Ancienneté minimale (jours)",
+        "de": "Mindestalter (Tage)",
+        "es": "Antigüedad mínima (días)",
+    },
+    "max_age_days": {
+        "it": "Giorni massimi",
+        "en": "Maximum age in days",
+        "fr": "Ancienneté maximale (jours)",
+        "de": "Höchstalter (Tage)",
+        "es": "Antigüedad máxima (días)",
+    },
+    "external_category": {
+        "it": "Categoria evidenza esterna",
+        "en": "External category",
+        "fr": "Catégorie de preuve externe",
+        "de": "Externe Belegart",
+        "es": "Categoría de evidencia externa",
+    },
+    "cash_flow_signed_total": {
+        "it": "Flusso di cassa netto",
+        "en": "Net cash flow",
+        "fr": "Flux de trésorerie net",
+        "de": "Nettozahlungsfluss",
+        "es": "Flujo de caja neto",
+    },
+    "settlement_effect_signed_net_debit_minus_credit": {
+        "it": "Effetto sul saldo dare meno avere",
+        "en": "Settlement effect: debit less " "credit",
+        "fr": "Effet sur le solde débit moins " "crédit",
+        "de": "Saldoeffekt: Soll minus Haben",
+        "es": "Efecto en saldo: debe menos " "haber",
+    },
+    "reconciliation_status": {
+        "it": "Esito riconciliazione",
+        "en": "Reconciliation status",
+        "fr": "Résultat du rapprochement",
+        "de": "Abstimmungsergebnis",
+        "es": "Estado de conciliación",
+    },
+    "rule_applied": {
+        "it": "Regola applicata",
+        "en": "Rule applied",
+        "fr": "Règle appliquée",
+        "de": "Angewandte Regel",
+        "es": "Regla aplicada",
+    },
+    "closed": {
+        "it": "Chiusa da evidenza",
+        "en": "Cleared by evidence",
+        "fr": "Soldée sur justificatif",
+        "de": "Durch Beleg ausgeglichen",
+        "es": "Cerrada por evidencia",
+    },
+    "unresolved": {
+        "it": "Non risolta",
+        "en": "Unresolved",
+        "fr": "Non résolue",
+        "de": "Ungeklärt",
+        "es": "No resuelta",
+    },
+    "partially_paid": {
+        "it": "Pagata parzialmente",
+        "en": "Partially paid",
+        "fr": "Partiellement réglée",
+        "de": "Teilweise bezahlt",
+        "es": "Pagada parcialmente",
+    },
+    "needs_evidence": {
+        "it": "Serve evidenza aggiuntiva",
+        "en": "Additional evidence needed",
+        "fr": "Justificatif complémentaire requis",
+        "de": "Zusätzlicher Beleg erforderlich",
+        "es": "Requiere evidencia adicional",
+    },
+    "probable_payment": {
+        "it": "Pagamento probabile da verificare",
+        "en": "Probable payment to verify",
+        "fr": "Paiement probable à vérifier",
+        "de": "Vermutete Zahlung prüfen",
+        "es": "Pago probable pendiente de verificación",
+    },
+    "open_supported": {
+        "it": "Aperta ma supportata",
+        "en": "Open with supporting evidence",
+        "fr": "Ouverte avec justificatif",
+        "de": "Offen mit Beleg",
+        "es": "Abierta pero respaldada",
+    },
+    "out_of_scope": {
+        "it": "Fuori perimetro",
+        "en": "Outside scope",
+        "fr": "Hors périmètre",
+        "de": "Außerhalb des Umfangs",
+        "es": "Fuera de alcance",
+    },
+    "external_bank_match": {
+        "it": "Movimento bancario esterno abbinato",
+        "en": "Matched bank movement",
+        "fr": "Mouvement bancaire rapproché",
+        "de": "Zugeordnete Bankbewegung",
+        "es": "Movimiento bancario externo conciliado",
+    },
+    "counterparty_bank_other": {
+        "it": "Altri movimenti bancari della controparte",
+        "en": "Other counterparty bank movements",
+        "fr": "Autres mouvements bancaires de la contrepartie",
+        "de": "Sonstige Bankbewegungen der Gegenpartei",
+        "es": "Otros movimientos bancarios de la contraparte",
+    },
+    "TOTAL": {
+        "it": "Totale",
+        "en": "Total",
+        "fr": "Total",
+        "de": "Gesamt",
+        "es": "Total",
+    },
+    "source_role": {
+        "it": "Ruolo fonte",
+        "en": "Source role",
+        "fr": "Type de source",
+        "de": "Quellenart",
+        "es": "Tipo de fuente",
+    },
+    "files": {
+        "it": "File",
+        "en": "Files",
+        "fr": "Fichiers",
+        "de": "Dateien",
+        "es": "Archivos",
+    },
+    "bank_statement": {
+        "it": "Estratto conto bancario",
+        "en": "Bank statement",
+        "fr": "Relevé bancaire",
+        "de": "Kontoauszug",
+        "es": "Extracto bancario",
+    },
+    "open_items": {
+        "it": "Partite aperte",
+        "en": "Open items",
+        "fr": "Postes ouverts",
+        "de": "Offene Posten",
+        "es": "Partidas abiertas",
+    },
+    "evidence_type": {
+        "it": "Tipo evidenza",
+        "en": "Evidence type",
+        "fr": "Type de justificatif",
+        "de": "Belegart",
+        "es": "Tipo de evidencia",
+    },
+    "Bank": {"it": "Banca", "en": "Bank", "fr": "Banque", "de": "Bank", "es": "Banco"},
+    "No evidence": {
+        "it": "Nessuna evidenza",
+        "en": "No evidence",
+        "fr": "Aucun justificatif",
+        "de": "Kein Beleg",
+        "es": "Sin evidencia",
+    },
+    "share_of_abs_amount_percent": {
+        "it": "Peso %",
+        "en": "Share %",
+        "fr": "Part %",
+        "de": "Anteil %",
+        "es": "Peso %",
+    },
+    "Priority": {
+        "it": "Priorita",
+        "en": "Priority",
+        "fr": "Priorité",
+        "de": "Priorität",
+        "es": "Prioridad",
+    },
+    "Document": {
+        "it": "Documento",
+        "en": "Document",
+        "fr": "Document",
+        "de": "Beleg",
+        "es": "Documento",
+    },
+    "Days": {"it": "Giorni", "en": "Days", "fr": "Jours", "de": "Tage", "es": "Días"},
+    "Reason": {
+        "it": "Motivo",
+        "en": "Reason",
+        "fr": "Motif",
+        "de": "Grund",
+        "es": "Motivo",
+    },
+    "evidence_none": {
+        "it": "Nessuna evidenza collegata",
+        "en": "No linked evidence",
+        "fr": "Aucun justificatif lié",
+        "de": "Kein zugeordneter Beleg",
+        "es": "Sin evidencia vinculada",
+    },
+    "open_amount": {
+        "it": "Importo aperto",
+        "en": "Open amount",
+        "fr": "Montant ouvert",
+        "de": "Offener Betrag",
+        "es": "Importe abierto",
+    },
+    "open_rows": {
+        "it": "Righe aperte",
+        "en": "Open rows",
+        "fr": "Postes ouverts (lignes)",
+        "de": "Offene Zeilen",
+        "es": "Líneas abiertas",
+    },
+    "Ledger": {
+        "it": "Mastro",
+        "en": "Ledger",
+        "fr": "Grand livre",
+        "de": "Sachkonto",
+        "es": "Mayor",
+    },
+    "Journal": {
+        "it": "Giornale",
+        "en": "Journal",
+        "fr": "Journal",
+        "de": "Buchungsjournal",
+        "es": "Diario",
+    },
+    "Payment orders": {
+        "it": "Distinte",
+        "en": "Payment orders",
+        "fr": "Ordres de paiement",
+        "de": "Zahlungsaufträge",
+        "es": "Órdenes de pago",
+    },
+    "Factor": {
+        "it": "Factor",
+        "en": "Factor",
+        "fr": "Factor",
+        "de": "Factor",
+        "es": "Factor",
+    },
+    "Note": {"it": "Nota", "en": "Note", "fr": "Note", "de": "Hinweis", "es": "Nota"},
+    "Timing": {
+        "it": "Periodo",
+        "en": "Timing",
+        "fr": "Période",
+        "de": "Zeitraum",
+        "es": "Periodo",
+    },
+    "before_cutoff": {
+        "it": "Prima del cut-off",
+        "en": "Before cutoff",
+        "fr": "Avant la date de référence",
+        "de": "Vor dem Stichtag",
+        "es": "Antes de la fecha de corte",
+    },
+    "after_cutoff": {
+        "it": "Dopo il cut-off",
+        "en": "After cutoff",
+        "fr": "Après la date de référence",
+        "de": "Nach dem Stichtag",
+        "es": "Después de la fecha de corte",
+    },
+    "on_cutoff": {
+        "it": "Alla data di cut-off",
+        "en": "On cutoff",
+        "fr": "À la date de référence",
+        "de": "Am Stichtag",
+        "es": "En la fecha de corte",
+    },
+    "Record refs": {
+        "it": "Riferimenti alle righe",
+        "en": "Record refs",
+        "fr": "Références des lignes",
+        "de": "Zeilenverweise",
+        "es": "Referencias de líneas",
+    },
+    "check": {
+        "it": "Controllo",
+        "en": "Check",
+        "fr": "Contrôle",
+        "de": "Prüfung",
+        "es": "Control",
+    },
+    "checks": {
+        "it": "Controlli",
+        "en": "Checks",
+        "fr": "Contrôles",
+        "de": "Prüfungen",
+        "es": "Controles",
+    },
+    "expected": {
+        "it": "Atteso",
+        "en": "Expected",
+        "fr": "Attendu",
+        "de": "Erwartet",
+        "es": "Esperado",
+    },
+    "actual": {
+        "it": "Riscontrato",
+        "en": "Actual",
+        "fr": "Constaté",
+        "de": "Festgestellt",
+        "es": "Observado",
+    },
+    "notes": {
+        "it": "Note",
+        "en": "Notes",
+        "fr": "Notes",
+        "de": "Hinweise",
+        "es": "Notas",
+    },
+    "PASS": {
+        "it": "OK",
+        "en": "Pass",
+        "fr": "Conforme",
+        "de": "Bestanden",
+        "es": "Correcta",
+    },
+    "FAIL": {
+        "it": "Errore",
+        "en": "Fail",
+        "fr": "Échec",
+        "de": "Fehler",
+        "es": "Error",
+    },
+    "WARN": {
+        "it": "Avviso",
+        "en": "Warning",
+        "fr": "Avertissement",
+        "de": "Zu prüfender Hinweis",
+        "es": "Aviso",
+    },
+    "PENDING": {
+        "it": "Da completare",
+        "en": "Pending",
+        "fr": "À compléter",
+        "de": "Ausstehend",
+        "es": "Pendiente",
+    },
+    "review_status": {
+        "it": "Esito revisione",
+        "en": "Review status",
+        "fr": "État de la revue",
+        "de": "Prüfstatus",
+        "es": "Estado de revisión",
+    },
+    "codex_review_completed": {
+        "it": "Revisione delle righe completata",
+        "en": "Row review completed",
+        "fr": "Revue des lignes terminée",
+        "de": "Zeilenprüfung abgeschlossen",
+        "es": "Revisión de líneas completada",
+    },
+    "scope_year": {
+        "it": "Esercizio",
+        "en": "Scope year",
+        "fr": "Exercice",
+        "de": "Geschäftsjahr",
+        "es": "Ejercicio",
+    },
+    "cutoff_date": {
+        "it": "Data di cut-off",
+        "en": "Cutoff date",
+        "fr": "Date de référence",
+        "de": "Stichtag",
+        "es": "Fecha de corte",
+    },
+    "report_language": {
+        "it": "Lingua del rapporto",
+        "en": "Report language",
+        "fr": "Langue du rapport",
+        "de": "Berichtssprache",
+        "es": "Idioma del informe",
+    },
+    "document_language": {
+        "it": "Lingua dei documenti",
+        "en": "Document language",
+        "fr": "Langue des documents",
+        "de": "Dokumentsprache",
+        "es": "Idioma de los documentos",
+    },
+    "currency": {
+        "it": "Valuta",
+        "en": "Currency",
+        "fr": "Devise",
+        "de": "Währung",
+        "es": "Moneda",
+    },
+    "post_cutoff_events_excluded": {
+        "it": "Eventi post cut-off esclusi dalla chiusura",
+        "en": "Post-cutoff events excluded from clearing",
+        "fr": "Événements ultérieurs exclus du solde à la date de " "référence",
+        "de": "Spätere Ereignisse vom Ausgleich zum Stichtag " "ausgeschlossen",
+        "es": "Eventos posteriores excluidos del cierre",
+    },
+    "payment_orders_are_bank_evidence": {
+        "it": "Distinte trattate come evidenza bancaria",
+        "en": "Payment orders treated as bank evidence",
+        "fr": "Ordres de paiement traités comme justificatifs " "bancaires",
+        "de": "Zahlungsaufträge als Bankbeleg behandelt",
+        "es": "Órdenes de pago tratadas como evidencia " "bancaria",
+    },
+    "factoring_pro_soluto_closes_item": {
+        "it": "Factoring pro-soluto chiude con evidenza esterna " "allocata",
+        "en": "Non-recourse factoring clears with allocated " "external evidence",
+        "fr": "Affacturage sans recours soldé avec justificatif " "externe affecté",
+        "de": "Echtes Factoring gleicht mit zugeordnetem " "externem Beleg aus",
+        "es": "Factoring sin recurso cierra con evidencia " "externa asignada",
+    },
+    "compensation_requires_bank": {
+        "it": "Compensazione richiede evidenza bancaria",
+        "en": "Set-off requires bank evidence",
+        "fr": "Compensation nécessitant un justificatif bancaire",
+        "de": "Aufrechnung erfordert Bankbeleg",
+        "es": "La compensación requiere evidencia bancaria",
+    },
+    "assurance_run_date": {
+        "it": "Data dei controlli",
+        "en": "Check date",
+        "fr": "Date des contrôles",
+        "de": "Prüfdatum",
+        "es": "Fecha de controles",
+    },
+    "counterparty_keywords": {
+        "it": "Parole chiave della controparte",
+        "en": "Counterparty keywords",
+        "fr": "Mots-clés de la contrepartie",
+        "de": "Suchbegriffe der Gegenpartei",
+        "es": "Palabras clave de la contraparte",
+    },
+    "ocr_scanned": {
+        "it": "OCR su scansioni",
+        "en": "OCR for scans",
+        "fr": "OCR des scans",
+        "de": "OCR für Scans",
+        "es": "OCR de documentos escaneados",
+    },
+    "input_dir": {
+        "it": "Cartella delle fonti",
+        "en": "Source folder",
+        "fr": "Dossier des sources",
+        "de": "Quellenordner",
+        "es": "Carpeta de fuentes",
+    },
+    "client_id": {
+        "it": "Riferimento cliente",
+        "en": "Client reference",
+        "fr": "Référence client",
+        "de": "Mandantenreferenz",
+        "es": "Referencia del cliente",
+    },
+    "engagement_id": {
+        "it": "Riferimento incarico",
+        "en": "Engagement reference",
+        "fr": "Référence de mission",
+        "de": "Auftragsreferenz",
+        "es": "Referencia del encargo",
+    },
+    "run_id": {
+        "it": "Riferimento esecuzione",
+        "en": "Run reference",
+        "fr": "Référence d’exécution",
+        "de": "Laufreferenz",
+        "es": "Referencia de ejecución",
+    },
+    "Run Metadata": {
+        "it": "Metadati run",
+        "en": "Run Metadata",
+        "fr": "Références de l’exécution",
+        "de": "Angaben zum Lauf",
+        "es": "Metadatos de la ejecución",
+    },
+    "Rule Detail": {
+        "it": "Dettaglio regole",
+        "en": "Rule Detail",
+        "fr": "Détail des règles",
+        "de": "Angewandte Regeln",
+        "es": "Detalle de reglas",
+    },
+    "Deterministic reconciliation workpaper": {
+        "it": "Workpaper di riconciliazione " "deterministica",
+        "en": "Deterministic reconciliation workpaper",
+        "fr": "Dossier de rapprochement selon les règles " "appliquées",
+        "de": "Abstimmung nach den angewandten Regeln",
+        "es": "Papel de trabajo de conciliación " "determinista",
+    },
+    "Partial payments and outstanding balances": {
+        "it": "Pagamenti parziali e residui aperti",
+        "en": "Partial payments and outstanding " "balances",
+        "fr": "Paiements partiels et soldes ouverts",
+        "de": "Teilzahlungen und offene Restbeträge",
+        "es": "Pagos parciales y saldos pendientes",
+    },
+    "True": {"it": "Sì", "en": "Yes", "fr": "Oui", "de": "Ja", "es": "Sí"},
+    "False": {"it": "No", "en": "No", "fr": "Non", "de": "Nein", "es": "No"},
+}
+
+
+WORD_OUTPUT_LABELS.update(
+    {
+        "source_note_external": {
+            "it": "Documento presente anche in evidenza esterna.",
+            "en": "Document also present in external evidence.",
+            "fr": "Document également présent dans les justificatifs externes.",
+            "de": "Beleg auch in externen Nachweisen vorhanden.",
+            "es": "Documento también presente en evidencia externa.",
+        },
+        "source_note_bridge": {
+            "it": "Documento presente in distinta/compensazione: verificare supporto "
+            "di chiusura.",
+            "en": "Document present in a payment order or set-off: verify the clearing "
+            "evidence.",
+            "fr": "Document présent dans un ordre de paiement ou une compensation : "
+            "vérifier la preuve de règlement.",
+            "de": "Beleg in einem Zahlungsauftrag oder einer Aufrechnung vorhanden: "
+            "Ausgleichsnachweis prüfen.",
+            "es": "Documento presente en una orden de pago o compensación: verificar "
+            "la evidencia de cierre.",
+        },
+        "source_note_internal": {
+            "it": "Documento presente solo in evidenza interna.",
+            "en": "Document present only in internal evidence.",
+            "fr": "Document présent uniquement dans les justificatifs internes.",
+            "de": "Beleg nur in internen Nachweisen vorhanden.",
+            "es": "Documento presente solo en evidencia interna.",
+        },
+        "source_note_unlinked": {
+            "it": "Documento presente nelle partite aperte senza evidenza collegata.",
+            "en": "Document present in open items without linked evidence.",
+            "fr": "Document présent dans les postes ouverts sans justificatif lié.",
+            "de": "Beleg in den offenen Posten ohne zugeordneten Nachweis vorhanden.",
+            "es": "Documento presente en partidas abiertas sin evidencia vinculada.",
+        },
+        "source_note_evidence_only": {
+            "it": "Documento presente solo nelle evidenze, non nella "
+            "popolazione aperta.",
+            "en": "Document present only in evidence, outside the open-item "
+            "population.",
+            "fr": "Document présent uniquement dans les justificatifs, hors de "
+            "la population des postes ouverts.",
+            "de": "Beleg nur in den Nachweisen, außerhalb des Bestands offener "
+            "Posten vorhanden.",
+            "es": "Documento presente solo en la evidencia, fuera de la "
+            "población de partidas abiertas.",
+        },
+        "external_bank": {
+            "it": "Banca",
+            "en": "Bank",
+            "fr": "Banque",
+            "de": "Bank",
+            "es": "Banco",
+        },
+        "open_item": {
+            "it": "Partita aperta",
+            "en": "Open item",
+            "fr": "Poste ouvert",
+            "de": "Offener Posten",
+            "es": "Partida abierta",
+        },
+    }
+)
+
+
+WORD_OUTPUT_LABELS.update(
+    {
+        "Input folder": {
+            "it": "Cartella delle fonti",
+            "en": "Input folder",
+            "fr": "Dossier des sources",
+            "de": "Quellenordner",
+            "es": "Carpeta de fuentes",
+        },
+        "Studio client ID": {
+            "it": "Riferimento cliente dello studio",
+            "en": "Studio client ID",
+            "fr": "Référence client du cabinet",
+            "de": "Mandantenreferenz der Kanzlei",
+            "es": "Referencia del cliente del despacho",
+        },
+        "Run timestamp": {
+            "it": "Data e ora di esecuzione",
+            "en": "Run timestamp",
+            "fr": "Date et heure d’exécution",
+            "de": "Ausführungszeitpunkt",
+            "es": "Fecha y hora de ejecución",
+        },
+    }
+)
+
+
+def canonical_word_label(value: object) -> object:
+    """Resolve exact renderer-owned captions; leave source text untouched."""
+    if not isinstance(value, str):
+        return value
+    normalized = value.casefold().replace("_", " ")
+    for key, labels in WORD_OUTPUT_LABELS.items():
+        aliases = (key, *labels.values())
+        if any(normalized == alias.casefold().replace("_", " ") for alias in aliases):
+            return key
+    return value
+
+
+def word_output_label(value: object, language: str) -> object:
+    """Render one known caption without translating arbitrary evidence text."""
+    key = canonical_word_label(str(value) if isinstance(value, bool) else value)
+    if isinstance(key, str) and key in WORD_OUTPUT_LABELS:
+        return WORD_OUTPUT_LABELS[key].get(language, WORD_OUTPUT_LABELS[key]["en"])
+    return value

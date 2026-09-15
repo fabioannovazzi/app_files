@@ -1,0 +1,76 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "brand_profile": {
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "primary_color": "#153855",
+    "studio_name": "Studio Riva",
+    "text_color": "#1C2935"
+  },
+  "data_posture": {
+    "automatic_anonymization_before_selected_runtime": false,
+    "downstream_history_requires_complete_pseudonymized_documents": false,
+    "helper_scripts_call_models": false,
+    "helper_scripts_use_connectors": false,
+    "independent_derivative_privacy_review_required": false,
+    "local_identity_map_kept_out_of_model_context": false,
+    "mechanical_identifier_stripping_before_selected_runtime": false,
+    "mechanically_stripped_history_model_context_limited_to_one_pseudonymization_pass": false,
+    "raw_history_sent_to_model": false,
+    "selected_prior_communications_snapshotted_locally": 0,
+    "selected_source_files_snapshotted_locally": 1,
+    "transient_stripped_history_deleted_before_generation": false
+  },
+  "execution_trace": [
+    {
+      "command": "python scripts/prepare_run.py --workspace <workspace> --intake <intake>",
+      "execution_location": "local_codex_workspace",
+      "inputs": [
+        "/private/tmp/communication-teaching-check-02/vera-fr-practice-intake.json"
+      ],
+      "kind": "local_input_snapshot",
+      "outputs": [
+        "run_intake.json",
+        "source_register.json",
+        "model_task_packet.json"
+      ],
+      "status": "completed",
+      "step_id": "prepare-run"
+    }
+  ],
+  "external_routes": {
+    "creative_production": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "public_research": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  },
+  "input_digest": "ede90eee91b08f5650fec0c7dc4260d7aa0fe22cb7769f14b171e0271ff5c9cc",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "language": "fr",
+  "objective": "Le cabinet souhaite une courte FAQ pour ses petites entreprises clientes en Italie : comment reconnaître et organiser une demande d’accès aux données personnelles. Il s’agit d’une initiative d’information du cabinet, pas de l’annonce d’une nouvelle loi ni d’une réponse à une personne réelle. Les lecteurs gèrent l’administration et la relation client et doivent savoir quand solliciter le responsable de la protection des données. Utilise le guide officiel du CEPD sélectionné, en distinguant recommandations générales et appréciation du cas particulier. Aucune donnée client, demande réelle ou politique de confidentialité d’entreprise n’est fournie. Prépare le dossier pour revue interne, sans envoi ni publication. Rédige les documents finaux en français.\nAprès revue de la FAQ, prépare une nouvelle version du dossier comprenant aussi un bref courriel d’accompagnement aux clients. Explique à qui la FAQ s’adresse et comment l’utiliser. Conserve les sources, limites et première version. N’invente ni destinataires, ni pièces déjà envoyées, ni nouvelle obligation. Aucun envoi.",
+  "output_dir": "/private/tmp/communication-teaching-check-02/workspace/runs/vera-fr-practice",
+  "plugin": "comunicazione-professionale",
+  "prepared_at": "2026-09-14T11:08:04+00:00",
+  "profile_revision_required": true,
+  "reference_date": "2026-09-14",
+  "requested_channels": [
+    "faq",
+    "client_email"
+  ],
+  "run_id": "vera-fr-practice",
+  "schema_version": 1,
+  "studio_format_brief": "Studio Riva — experts-comptables. Aucun logo, coordonnées, communication antérieure ou format approuvé n’est fourni. Propose un format sobre bleu et blanc, avec une police lisible, des titres clairs et des sources identifiables. Le professionnel le reverra avant utilisation.",
+  "studio_profile": null,
+  "visual_requested": false,
+  "workflow": "comunicazione-professionale",
+  "workspace_id": "fictional-teaching-studio-riva",
+  "workspace_path": "/private/tmp/communication-teaching-check-02/workspace"
+}

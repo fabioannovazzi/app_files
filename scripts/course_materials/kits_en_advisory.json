@@ -1,0 +1,77 @@
+{
+  "clara/advisory-brief-planner": {
+    "title": "Plan an advisory assignment with Clara",
+    "goal": "Learn to turn a request into a clear assignment: the decision, evidence, deliverable and next work.",
+    "scenario": "Ciclo Arco is considering a bicycle collection service. Before producing advice, we need to establish what the owner wants and what the available notes can support.",
+    "scope": "An initial assignment plan using the supplied fictional notes. The lesson ends at the handoff; the service recommendation belongs to the next workflow.",
+    "inputs": "Open assignment-en.md and notes-en.md. The first specifies the decision, reader and limits; the second contains customer statements and operational information.",
+    "request": "Clara, plan this advisory assignment. Show what we need to decide, the proposed output, evidence we have, gaps and how the work should proceed.",
+    "steps": [
+      "Clara reads the request and selected notes, identifies any material clarification, and proposes the assignment in ordinary language.",
+      "Review the decision, scope, deliverable and missing evidence. Clara records the plan and checks it against the exact sources using the current planning workflow.",
+      "Read the summary and handoff. Identify the supported Clara workflow that would continue the assignment and what it must preserve."
+    ],
+    "deliverables": [
+      "Assignment contract and readable summary: what the work is for, its boundaries and intended output.",
+      "Validation report and handoff: whether the plan can proceed and what the next workflow should receive."
+    ],
+    "review": "Check that the plan keeps the owner as reader, compares the requested options and does not invent prices, demand or authority to contact people. A valid plan is not an executed recommendation.",
+    "checkpoints": [
+      "Before drafting, identify the decision and intended reader.",
+      "At delivery, explain what will be produced next and which evidence remains missing."
+    ],
+    "practice": "Use the practice files, including revised-assignment-en.md and update-en.md, to plan the owner’s narrower request: an action list for checking pilot feasibility. Keep the original plan.",
+    "success": "The new plan reflects the changed objective and deliverable. Name the output and one condition that must be checked before a pilot can run.",
+    "repeat": "Describe the decision, reader, desired output and available files. Review Clara’s scope and evidence plan before the selected workflow executes it."
+  },
+  "clara/advisory-case-director": {
+    "title": "Develop an advisory case with Clara",
+    "goal": "Learn to maintain an evidence-based working answer and update the next actions when new information arrives.",
+    "scenario": "Ciclo Arco needs an initial view on a bicycle collection service. Customer comments suggest possible interest; operating notes describe a limited way to test it.",
+    "scope": "One local advisory case using supplied notes. The output is a working assessment, not a financial forecast or authorization to launch.",
+    "inputs": "Open assignment-en.md and notes-en.md. They establish the decision, customer comments and vehicle availability. The working chat creates the case during the lesson.",
+    "request": "Clara, develop this case. Give me your current recommendation, the evidence and limits behind it, and the next work that would help the owner decide.",
+    "steps": [
+      "Clara establishes the assignment and creates a local case. It registers the supplied materials and states a provisional answer with its conditions.",
+      "The current workflow records the reasoning and evidence relationships, then saves the working assessment. The voice thread explains the recommendation and unresolved questions.",
+      "Open the current workpaper and evidence map. Follow a material conclusion to its source and discuss which next check could change the answer."
+    ],
+    "deliverables": [
+      "Current workpaper: recommendation, reasoning, important unknowns and proposed next actions.",
+      "Evidence map and case history: the sources behind conclusions and the changes made as the case develops."
+    ],
+    "review": "Customer interest is not a booking or proof of wider demand. Check what the vehicle note actually permits. Clara proposes a course of action; the owner decides whether to implement it.",
+    "checkpoints": [
+      "At the first answer, identify what is supported and what is conditional.",
+      "At delivery, locate the source behind a conclusion and the next useful check."
+    ],
+    "practice": "Add update-en.md to the same teaching case. Ask Clara how the unavailable vehicle changes the assessment and next actions. Open the revised workpaper and preserved earlier version.",
+    "success": "The case acknowledges the changed vehicle availability and does not treat a possible loan as agreed. Explain what changed in the recommendation or its conditions.",
+    "repeat": "Ask Clara to resume the case, supply new evidence and state the decision you need. Review its updated answer, reasons and proposed next work."
+  },
+  "clara/advisory-deliverable-validator": {
+    "title": "Review an advisory memo with Clara",
+    "goal": "Learn to check whether an advisory document answers its assignment and whether its recommendation follows from the available evidence.",
+    "scenario": "An external memo recommends launching Ciclo Arco’s daily collection service. We will review the whole short memo against the owner’s request and source notes.",
+    "scope": "A supplied Markdown memo and local evidence. Its original drafting history is unavailable, so the review matches claims to evidence now supplied.",
+    "inputs": "Open external-memo-en.md, assignment-en.md and notes-en.md. The memo is the document under review; the other files establish what was requested and what is known.",
+    "request": "Clara, review this memo against the assignment and supplied notes. Explain whether it is usable, what needs correction and which decisions remain with the owner.",
+    "steps": [
+      "Clara establishes the review contract, preserves the memo and prepares an inventory of its contents and the selected evidence.",
+      "The current review workflow examines scope, claims, reasoning, recommendation, limitations and readiness. The voice thread connects findings to the exact memo passages and source notes.",
+      "Open the review package. Read the overall delivery status, material findings and proposed corrections. The original stays intact; a revised memo requires its own review."
+    ],
+    "deliverables": [
+      "Readable review package: overall conclusion, source comparisons, corrections and remaining uncertainty.",
+      "Validation audit and inventories: what was reviewed and whether the review record is complete."
+    ],
+    "review": "Compare the daily-service recommendation with actual customer statements and vehicle availability. A complete review record does not itself approve the memo or prove its claims.",
+    "checkpoints": [
+      "Before reviewing, distinguish the deliverable from its supporting evidence.",
+      "At delivery, explain the readiness conclusion and find the passage and source behind a material finding."
+    ],
+    "practice": "Add update-en.md and request a new review of the unchanged external memo with the expanded evidence. Preserve the first review and compare their findings.",
+    "success": "The new review reflects the vehicle’s unavailability and makes its delivery consequence clear. State what must change before the memo can support the owner’s decision.",
+    "repeat": "Provide the document, its assignment and supporting sources. Read the overall review and material findings, then review any separate correction before using it."
+  }
+}

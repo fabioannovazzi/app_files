@@ -5,12 +5,42 @@ from __future__ import annotations
 import csv
 import html
 import json
+import textwrap
 from pathlib import Path
 from typing import Any
 
 from treasury_core import money, validate_record
 
 __all__ = ["render_html", "render_markdown", "write_artifacts"]
+
+STATUS_LABELS = {
+    "needs_review": "Richiede revisione",
+    "draft_for_review": "Bozza da rivedere",
+    "accepted": "Accettata dal professionista",
+}
+ORIGIN_LABELS = {
+    "source": "Fonte fornita",
+    "reviewed": "Data rivista",
+    "retained": "Revisione precedente",
+}
+COLUMN_LABELS = {
+    "date": "Data",
+    "net_cash": "Flusso netto EUR",
+    "closing_cash": "Cassa finale EUR",
+    "week_start": "Settimana dal",
+    "minimum_daily_cash": "Minimo giornaliero EUR",
+    "event_id": "Riferimento",
+    "description": "Descrizione",
+    "expected_date": "Data attesa",
+    "amount": "Importo EUR",
+    "cash_amount": "Flusso di cassa EUR",
+    "basis": "Base della previsione",
+    "decision_origin": "Origine della data",
+    "cash_change_in_common_period": "Variazione nel periodo comune EUR",
+    "kind": "Tipo",
+    "id": "Identificativo",
+    "detail": "Dettaglio",
+}
 
 STYLE = """
 :root { color-scheme: light; font-family: 'Instrument Sans', Arial, sans-serif; color:#122b45; background:#fff; }
@@ -42,7 +72,7 @@ def render_markdown(record: dict[str, Any]) -> str:
         "",
         f"Situazione al {record['as_of']} · Orizzonte al {record['horizon_end']}",
         "",
-        f"Stato: **{record['status']}**",
+        f"Stato: **{STATUS_LABELS[record['status']]}**",
         "",
         record["coverage"],
         "",
@@ -87,6 +117,20 @@ def render_markdown(record: dict[str, Any]) -> str:
             lines.append(
                 "Il periodo aggiunto dopo l'orizzonte precedente è esposto separatamente dal confronto."
             )
+    lines.extend(
+        [
+            "",
+            "## Saldi settimanali",
+            "",
+            "| Settimana dal | Flusso netto | Cassa finale | Minimo giornaliero |",
+            "| --- | ---: | ---: | ---: |",
+        ]
+    )
+    for week in record["weekly"]:
+        lines.append(
+            f"| {week['week_start']} | {_display(week['net_cash'])} | "
+            f"{_display(week['closing_cash'])} | {_display(week['minimum_daily_cash'])} |"
+        )
     lines.extend(["", "## Incassi e pagamenti attesi", ""])
     for event in record["events"]:
         lines.append(
@@ -130,7 +174,73 @@ def render_html(record: dict[str, Any]) -> str:
         f"<tr><td>{escape(row['description'])}<br><small>{escape(row['event_id'])}</small></td><td>{escape(row['expected_date'] or 'Da definire')}</td><td>{_display(row['cash_amount'])}</td><td>{escape(row['basis'])}</td></tr>"
         for row in record["events"]
     )
-    return f"<!doctype html><html lang='it'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Budget di tesoreria</title><style>{STYLE}</style><body><p class='label'>Vera · Budget di tesoreria</p><h1>{escape(record['company_name'])}</h1><p>{escape(record['as_of'])} — {escape(record['horizon_end'])} · {escape(record['status'])}</p><p>{escape(record['coverage'])}</p>{summary}<h2>Incassi e pagamenti attesi</h2><div class='scroll'><table><thead><tr><th>Voce</th><th>Data attesa</th><th>Flusso</th><th>Base della previsione</th></tr></thead><tbody>{rows}</tbody></table></div><h2>Prospetto e variazioni</h2><pre style='white-space:pre-wrap;font:inherit'>{escape(render_markdown(record))}</pre></body></html>"
+    weeks = "".join(
+        f"<tr><td>{escape(week['week_start'])}</td>"
+        f"<td>{_display(week['net_cash'])}</td>"
+        f"<td>{_display(week['closing_cash'])}</td>"
+        f"<td>{_display(week['minimum_daily_cash'])}</td></tr>"
+        for week in record["weekly"]
+    )
+    sections = [
+        "<h2>Saldi settimanali</h2><div class='scroll'><table><thead><tr>"
+        "<th>Settimana dal</th><th>Flusso netto</th><th>Cassa finale</th>"
+        f"<th>Minimo giornaliero</th></tr></thead><tbody>{weeks}</tbody></table></div>",
+        "<h2>Incassi e pagamenti attesi</h2><div class='scroll'><table><thead><tr>"
+        "<th>Voce</th><th>Data attesa</th><th>Flusso</th><th>Base della previsione</th>"
+        f"</tr></thead><tbody>{rows}</tbody></table></div>",
+    ]
+    comparison = record["comparison"]
+    if comparison:
+        sections.append(
+            "<h2>Variazioni rispetto alla previsione precedente</h2>"
+            f"<p>Confronto fino al {escape(comparison['through'])}: "
+            f"{_display(comparison['closing_variance'])}. Differenza tra cassa "
+            "effettiva iniziale e precedente previsione: "
+            f"{_display(comparison['opening_variance'])}.</p><ul>"
+        )
+        for change in comparison["changes"]:
+            before, after = change["previous"], change["current"]
+            old = (
+                f"{_display(before['cash_amount'])} il {before['expected_date']}"
+                if before
+                else "assente"
+            )
+            new = (
+                f"{_display(after['cash_amount'])} il {after['expected_date']}"
+                if after
+                else "non più previsto"
+            )
+            sections.append(
+                f"<li>{escape(change['event_id'])}: {escape(old)} → {escape(new)}.</li>"
+            )
+        sections.append("</ul>")
+        if comparison["horizon_extended"]:
+            sections.append(
+                "<p>Il periodo aggiunto dopo l'orizzonte precedente è esposto "
+                "separatamente dal confronto.</p>"
+            )
+    if record["issues"] or record["evidence_notes"]:
+        sections.append("<h2>Questioni e movimenti da esaminare</h2><ul>")
+        for issue in [*record["issues"], *record["evidence_notes"]]:
+            sections.append(
+                f"<li>{escape(issue.get('event_id', issue.get('id', '')))}: "
+                f"{escape(issue['detail'])}</li>"
+            )
+        sections.append("</ul>")
+    if record["review"]:
+        review = record["review"]
+        sections.append(
+            f"<h2>Decisione professionale</h2><p>{escape(review['conclusion'])}</p>"
+            f"<p>Revisore dichiarato: {escape(review['reviewer_ref'])} · "
+            f"{escape(review['reviewed_at'])}</p>"
+        )
+    sections.append(
+        "<p>I saldi sono chiusure giornaliere. Gli incassi attesi restano ipotesi; "
+        "il prospetto non garantisce liquidità infragiornaliera o completezza "
+        "delle informazioni fornite.</p>"
+        f"<p><small>Versione: {escape(record['record_sha256'])}</small></p>"
+    )
+    return f"<!doctype html><html lang='it'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Budget di tesoreria</title><style>{STYLE}</style><body><p class='label'>Vera · Budget di tesoreria</p><h1>{escape(record['company_name'])}</h1><p>{escape(record['as_of'])} — {escape(record['horizon_end'])} · {STATUS_LABELS[record['status']]}</p><p>{escape(record['coverage'])}</p>{summary}{''.join(sections)}</body></html>"
 
 
 def _csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> None:
@@ -159,7 +269,7 @@ def _csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> None:
 def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
     """Write an immutable version package using the canonical calculated values."""
     from openpyxl import Workbook
-    from openpyxl.styles import Font, PatternFill
+    from openpyxl.styles import Alignment, Font, PatternFill
 
     validate_record(record)
     directory.mkdir(parents=True, exist_ok=False)
@@ -200,7 +310,7 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
     summary = workbook.active
     summary.title = "Sintesi"
     summary.append(["Budget di tesoreria", record["company_name"]])
-    summary.append(["Stato", record["status"]])
+    summary.append(["Stato", STATUS_LABELS[record["status"]]])
     summary.append(["Data situazione", record["as_of"]])
     summary.append(["Orizzonte", record["horizon_end"]])
     summary.append(["Cassa iniziale EUR", money(record["opening_cash"])])
@@ -242,14 +352,18 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
     for name, (rows, columns) in tables.items():
         _csv(directory / f"{name.lower()}.csv", rows, columns)
         sheet = workbook.create_sheet(name)
-        sheet.append(columns)
+        sheet.append([COLUMN_LABELS[key] for key in columns])
         for row in rows:
             sheet.append(
                 [
                     (
                         money(row[key])
                         if key in numeric and row.get(key) not in {None, ""}
-                        else row.get(key, "")
+                        else (
+                            ORIGIN_LABELS.get(row.get(key, ""), row.get(key, ""))
+                            if key == "decision_origin"
+                            else row.get(key, "")
+                        )
                     )
                     for key in columns
                 ]
@@ -257,18 +371,41 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
         sheet.freeze_panes = "A2"
         sheet.auto_filter.ref = sheet.dimensions
     for sheet in workbook:
+        sheet.sheet_view.showGridLines = False
+        sheet.freeze_panes = "B2"
+        for column in sheet.columns:
+            label = column[0].value
+            width = {
+                "Descrizione": 42,
+                "Base della previsione": 68,
+                "Dettaglio": 68,
+                "Variazione nel periodo comune EUR": 32,
+            }.get(label, 24)
+            sheet.column_dimensions[column[0].column_letter].width = width
+        if sheet.title == "Sintesi":
+            sheet.column_dimensions["A"].width = 28
+            sheet.column_dimensions["B"].width = 85
         for row in sheet:
+            line_count = 1
             for cell in row:
                 if isinstance(cell.value, str):
                     cell.data_type = "s"
                 elif cell.value is not None:
                     cell.number_format = "#,##0.00;[Red](#,##0.00)"
                 cell.font = Font(name="Instrument Sans", size=11, color="122B45")
+                cell.alignment = Alignment(vertical="center", wrap_text=True)
+                width = int(sheet.column_dimensions[cell.column_letter].width) - 3
+                line_count = max(
+                    line_count,
+                    sum(
+                        max(1, len(textwrap.wrap(line, width=width)))
+                        for line in str(cell.value or "").split("\n")
+                    ),
+                )
+            sheet.row_dimensions[row[0].row].height = 16 * line_count + 8
         for cell in sheet[1]:
             cell.fill = PatternFill("solid", fgColor="002060")
             cell.font = Font(name="Instrument Sans", bold=True, color="FFFFFF")
-        for column in sheet.columns:
-            sheet.column_dimensions[column[0].column_letter].width = 26
     workbook.save(directory / "tesoreria.xlsx")
     workbook.close()
     return sorted(path.name for path in directory.iterdir())

@@ -1,0 +1,52 @@
+{
+  "vera/financial-report-builder": {
+    "title": "Prepare a financial report with Vera",
+    "goal": "Learn to turn accounting statements into a readable report with tables, commentary and references for checking the figures.",
+    "scenario": "Officina Arco supplies an income statement, balance sheet and cash-flow statement. The practice wants a first management report for the period.",
+    "scope": "One management report from available statements. This function organizes data and explanations into a document; sections without sources remain explicitly missing.",
+    "inputs": "Open january-february.xlsx and context-en.md. Look at the three sheets, period and currency. Tell Vera the audience, report type and language; you do not need to prepare slides or fill in technical configuration.",
+    "request": "Vera, prepare a management report for Officina Arco from the January and February statements. Help me review how you use the tables, then show me the Word document and points to review.",
+    "steps": [
+      "In the working chat, Vera inspects the sheets and proposes their report sections. Voice explains the structure and sources, helping you confirm company, period and amounts to report.",
+      "Vera records the reviewed mapping, prepares source-supported commentary and runs the current workflow. Voice follows actual results and explains sections where information is missing.",
+      "Open the Word document produced. Read the summary, a table and its commentary; trace a figure to its source sheet. Use report review to record corrections or clarification requests."
+    ],
+    "deliverables": [
+      "Word report and Markdown version with sections, tables and commentary.",
+      "Table workbook and data references for checking the document."
+    ],
+    "review": "Check period, currency, sheet assignments and fidelity of commentary. Do not count subtotals twice. Distinguish supported and missing sections and review the text before professional use.",
+    "checkpoints": [
+      "Before generation, identify the information that will enter the report.",
+      "In Word, find a figure and its source statement, then a point needing review."
+    ],
+    "practice": "Repeat with january-march.xlsx and request a new report through March, preserving the earlier one. Check that period, tables and commentary are updated; choose a correction to propose.",
+    "success": "You can supply statements, request the report, open the document, verify a source and repeat the task for a new period.",
+    "repeat": "Give Vera the client statements and specify period, audience, language and report type. Review structure, amounts and commentary, then use the document in the normal approval process."
+  },
+  "vera/financial-analysis": {
+    "title": "Prepare financial analysis with Vera",
+    "goal": "Learn to request a specific analysis, provide the data, review the choices and use financial results you can check.",
+    "scenario": "Officina Arco wants its net debt at the end of February. Its statement lists a loan, available cash and two other items to classify.",
+    "scope": "Financial Analysis prepares accounting analyses and due-diligence calculations from reviewed inputs. This complete first run calculates net debt at one date; other analyses need their own inputs and decisions.",
+    "inputs": "Open balances-february.csv and context-en.md. State company, date, EUR and the requested definition. The note explains the balances; Vera prepares technical structures after review, without asking you to program them.",
+    "request": "Vera, prepare Officina Arco’s net-debt analysis at 28 February using this statement and the definition in the note. Guide me through the choices and show the result, detail and controls.",
+    "steps": [
+      "In the working chat, Vera identifies the relevant analysis and proposes item classifications. Voice explains what is measured and helps you review amounts, date, inclusions and exclusions.",
+      "After the actual review, Vera records choices and runs the current calculation. Voice follows execution and distinguishes an arithmetic check from completeness of the supplied data.",
+      "Read the delivery summary and open the generated detail. Trace loan and cash to source rows, then find excluded items, calculation controls and questions still open."
+    ],
+    "deliverables": [
+      "Analysis result and included/excluded line items presented in the delivery.",
+      "Data package, controls and references to choices and sources for professional review."
+    ],
+    "review": "Check that the definition matches the request and all balances have the same date. Reproducible arithmetic alone does not establish completeness or accounting correctness. Review sources and conclusions before using the result.",
+    "checkpoints": [
+      "Before calculation, explain what you want to measure and which inputs it needs.",
+      "In the result, identify an included balance, an excluded balance and their reasons."
+    ],
+    "practice": "Use balances-march.csv for a new analysis at 31 March with the same definition. Preserve February and identify which balances and result change.",
+    "success": "You can select the analysis, supply the statement, review choices, find the result and detail and update the work to a new date.",
+    "repeat": "Describe the financial question, company, date or period and available data to Vera. Review the proposed analysis and substantive choices, then check the generated package before professional use."
+  }
+}

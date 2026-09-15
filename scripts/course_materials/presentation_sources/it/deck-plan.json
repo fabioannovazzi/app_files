@@ -1,0 +1,171 @@
+{
+  "schema_version": "clara.html_deck_plan.v1",
+  "allow_bespoke_html": false,
+  "slides": [
+    {
+      "id": "opening",
+      "layout_id": "editorial-cover",
+      "title": "Proposta per ricevere le richieste",
+      "chapter": "opening",
+      "chapter_label": "Proposta",
+      "tone": "dark",
+      "notes": "Proposta fittizia, ancora da discutere. Proposta per ricevere le richieste",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-opening"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussione interna",
+        "title": "Proposta per ricevere le richieste",
+        "source_note": "Proposta fittizia, ancora da discutere",
+        "subtitle": "Una scheda comune da provare con il personale",
+        "author": "Officina Arco"
+      }
+    },
+    {
+      "id": "request",
+      "layout_id": "paired-comparison",
+      "title": "La richiesta deve essere comprensibile",
+      "chapter": "request",
+      "chapter_label": "Richiesta",
+      "tone": "light",
+      "notes": "Proposta fittizia, ancora da discutere. La richiesta deve essere comprensibile",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-request"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussione interna",
+        "title": "La richiesta deve essere comprensibile",
+        "source_note": "Proposta fittizia, ancora da discutere",
+        "left_label": "Oggi",
+        "left_title": "Informazioni sparse",
+        "left_items": [
+          {
+            "label": "Contatto",
+            "body": "A volte manca un recapito."
+          },
+          {
+            "label": "Problema",
+            "body": "La descrizione può richiedere un chiarimento."
+          }
+        ],
+        "right_label": "Proposta",
+        "right_title": "Una scheda comune",
+        "right_items": [
+          {
+            "label": "Contatto",
+            "body": "Raccogliere recapito e modo per ricontattare il cliente."
+          },
+          {
+            "label": "Problema",
+            "body": "Descrivere ciò che il cliente segnala, senza diagnosi inventate."
+          }
+        ]
+      }
+    },
+    {
+      "id": "process",
+      "layout_id": "process-flow",
+      "title": "Chiarire la richiesta prima di procedere",
+      "chapter": "process",
+      "chapter_label": "Passaggi",
+      "tone": "light",
+      "notes": "Proposta fittizia, ancora da discutere. Chiarire la richiesta prima di procedere",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-process"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussione interna",
+        "title": "Chiarire la richiesta prima di procedere",
+        "source_note": "Proposta fittizia, ancora da discutere",
+        "steps": [
+          {
+            "label": "A",
+            "title": "Richiesta del cliente",
+            "body": "Registrare bicicletta, problema e recapito.",
+            "_fragment": 1
+          },
+          {
+            "label": "B",
+            "title": "Informazioni mancanti",
+            "body": "Chiedere cosa manca prima della valutazione.",
+            "_fragment": 2
+          },
+          {
+            "label": "C",
+            "title": "Valutazione di Paolo",
+            "body": "Valutare il lavoro e preparare il preventivo.",
+            "_fragment": 3
+          },
+          {
+            "label": "D",
+            "title": "Preventivo al cliente",
+            "body": "Attendere conferma prima del lavoro e delle aggiunte.",
+            "_fragment": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "responsibilities",
+      "layout_id": "assertion",
+      "title": "Concordare chi segue la richiesta",
+      "chapter": "responsibilities",
+      "chapter_label": "Responsabilità",
+      "tone": "dark",
+      "notes": "Proposta fittizia, ancora da discutere. Concordare chi segue la richiesta",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-responsibilities"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussione interna",
+        "title": "Concordare chi segue la richiesta",
+        "source_note": "Proposta fittizia, ancora da discutere",
+        "body": "Sara raccoglierebbe e chiarirebbe le richieste. Paolo valuterebbe il lavoro e preparerebbe il preventivo.",
+        "implication": "Ruoli proposti, da concordare prima della prova."
+      }
+    },
+    {
+      "id": "decision",
+      "layout_id": "closing-decision",
+      "title": "Decidere se provare la scheda",
+      "chapter": "decision",
+      "chapter_label": "Decisione",
+      "tone": "light",
+      "notes": "Proposta fittizia, ancora da discutere. Decidere se provare la scheda",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-decision"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussione interna",
+        "title": "Decidere se provare la scheda",
+        "source_note": "Proposta fittizia, ancora da discutere",
+        "actions": [
+          {
+            "verb": "Concordare",
+            "body": "Definire ruoli e condizioni prima della prova."
+          },
+          {
+            "verb": "Riesaminare",
+            "body": "Raccogliere i riscontri e correggere la scheda dopo la prova."
+          }
+        ],
+        "closing_line": "La riunione deve concordare chi raccoglierà i riscontri."
+      }
+    }
+  ]
+}

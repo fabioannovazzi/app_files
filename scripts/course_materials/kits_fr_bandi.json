@@ -1,0 +1,27 @@
+{
+  "vera/bandi-agevolazioni": {
+    "title": "Préparer un dossier de demande d’aide avec Vera",
+    "goal": "Apprendre à partir d’un appel sélectionné, fournir les documents de l’entreprise et relire le dossier préparé par Vera.",
+    "scenario": "Un cabinet examine le projet numérique d’une petite entreprise. Un appel entièrement fictif et des documents simulés permettent de suivre le travail des conditions au dossier, puis d’actualiser le devis.",
+    "scope": "Préparation après sélection d’un appel : sources, exigences, preuves, dépenses, documents, rédaction et révision. La recherche d’opportunités est l’autre étape de cette fonction ; l’appel est fourni ici. Ses conditions ne sont ni du droit ni un financement réels.",
+    "inputs": "Ouvrez avviso-fr.md, progetto-fr.md et preventivo-fr.csv : appel simulé, faits déclarés par l’entreprise et coûts proposés. Aucune évaluation d’éligibilité, classification de dépenses acceptée ou approbation n’est déjà fournie.",
+    "request": "Vera, prépare un dossier d’exercice à partir de cet appel et des documents de l’entreprise. Montre les exigences, leur rapprochement avec les preuves, les dépenses, les documents nécessaires et les points à relire.",
+    "steps": [
+      "Dans la fenêtre de travail, Vera ouvre le dossier et enregistre les documents. La conversation vocale explique la mission, les sources et le résultat. Vérifiez quels documents gouvernent l’exercice et lesquels décrivent l’entreprise.",
+      "Vera propose les exigences et leur rapprochement avec les faits, examine les dépenses et prépare la liste des pièces et le projet. Suivez un point de sa source à la proposition et effectuez les révisions prévues par le processus normal.",
+      "Ouvrez review_dossier.html : commencez par la synthèse, puis examinez dépenses, documents et projet de texte. Développez une condition pour lire son évaluation et l’extrait de la source. Vera explique les examens encore nécessaires et les étapes suivantes ; cet exercice n’utilise aucun portail et n’envoie rien."
+    ],
+    "deliverables": [
+      "Dossier local avec exigences, preuves, évaluations proposées, dépenses, pièces et rédaction préparatoire.",
+      "Contrôles et historique des révisions avec points ouverts et prochaines actions."
+    ],
+    "review": "Vérifiez le lien de chaque exigence à l’appel et de chaque fait au bon document. Distinguez présence des pièces, résultat proposé et décision de l’autorité : un dossier ne vaut pas attribution d’aide.",
+    "checkpoints": [
+      "Expliquez les fichiers et la demande nécessaires lorsqu’un appel est déjà sélectionné.",
+      "Ouvrez le dossier, reliez une proposition à sa source et identifiez la révision restante."
+    ],
+    "practice": "Fournissez le devis actualisé de l’exercice. Demandez un nouveau dossier en conservant le premier et examinez les changements de coûts, montant proposé et révisions nécessaires.",
+    "success": "Vous savez démarrer avec un appel sélectionné, relire le dossier et demander une mise à jour sans confondre proposition et approbation.",
+    "repeat": "Fournissez l’appel officiel sélectionné, ses annexes et les documents de l’entreprise, en précisant projet et date de référence. Vera prépare le dossier avec les révisions normales. Pour rechercher d’abord une opportunité, indiquez territoire et projet."
+  }
+}

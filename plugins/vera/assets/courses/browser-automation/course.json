@@ -21,6 +21,11 @@
   "language_basis": "product_conversation_language_and_workflow_narrative",
   "sources": [
     {
+      "path": "modules/browser-automation/assets/icon.svg",
+      "repository_path": "plugins/browser-automation/assets/icon.svg",
+      "sha256": "de9b1ea1fb9dbd8e6dbaf4137c90cfe2299c6a4f8c7be4c6104d38a2573cc722"
+    },
+    {
       "path": "modules/browser-automation/references/agenzia-download.md",
       "repository_path": "plugins/browser-automation/references/agenzia-download.md",
       "sha256": "affd27e1967ce61ae2bc173eeeddae09706465137fb855a7bdc17fde0549854a"
@@ -66,9 +71,19 @@
       "sha256": "a2a8ad3dcddb5c3169a3fb76f259f841a8526e7a4c6e6154af4f1da7aaf1d5e6"
     },
     {
+      "path": "modules/browser-automation/requirements.txt",
+      "repository_path": "plugins/browser-automation/requirements.txt",
+      "sha256": "d36b6c93da07433088beef4ef02f6d34dc9eba2ee88baa91f88720f1ccaf9366"
+    },
+    {
       "path": "modules/browser-automation/scripts/acceptance_fixture.py",
       "repository_path": "plugins/browser-automation/scripts/acceptance_fixture.py",
       "sha256": "e24928b0a984ed45fc3acb08439d7a4451bfc8d57be043efb601215f9481d13a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_download.mjs",
+      "repository_path": "plugins/browser-automation/scripts/agenzia_download.mjs",
+      "sha256": "2f760930a0246ffc962af626f42f40e6216610fb5c09fcde9376b826abe35567"
     },
     {
       "path": "modules/browser-automation/scripts/batch_review.py",
@@ -76,9 +91,19 @@
       "sha256": "1f1e348b1cdcbd2c0a56f67d74e27c527ada36c0b053f09c0c04fe9e42feb56e"
     },
     {
+      "path": "modules/browser-automation/scripts/browser_session.mjs",
+      "repository_path": "plugins/browser-automation/scripts/browser_session.mjs",
+      "sha256": "a919c4b3dc43236352fb4dc0783eba39ea26f6f877828acf3ca8130994fdc5fd"
+    },
+    {
       "path": "modules/browser-automation/scripts/capability_pipeline.py",
       "repository_path": "plugins/browser-automation/scripts/capability_pipeline.py",
       "sha256": "f859b8fdd1acf20e94105525a0a7c2533e674e4db04744d95cafc9e1c1a9b5b3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/capability_runtime.mjs",
+      "repository_path": "plugins/browser-automation/scripts/capability_runtime.mjs",
+      "sha256": "fe3052420fd1795f6f834a0928f7c7c6bf51478fb87acbe5896b4ecf67314a11"
     },
     {
       "path": "modules/browser-automation/scripts/check_dependencies.py",
@@ -101,6 +126,31 @@
       "sha256": "14060a623ec3b8a211379747d397084fb6a7fe938c9b40a30469f78acadc3544"
     },
     {
+      "path": "modules/browser-automation/scripts/discovery_runtime.mjs",
+      "repository_path": "plugins/browser-automation/scripts/discovery_runtime.mjs",
+      "sha256": "d0b57d2c373943f583e8e2c18ed3b77e8a9c784b3831efa3aca73e26c7c40c09"
+    },
+    {
+      "path": "modules/browser-automation/scripts/download_directory.mjs",
+      "repository_path": "plugins/browser-automation/scripts/download_directory.mjs",
+      "sha256": "e515c5c8985f861ed063c14de40aa8868cb0c1e6073338415ec16b305cd37f47"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_processing.mjs",
+      "repository_path": "plugins/browser-automation/scripts/econs_processing.mjs",
+      "sha256": "9115b543d05a83757d6efb54eaecf6282774cefe678db7b48916e7b70875ccc5"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_review.mjs",
+      "repository_path": "plugins/browser-automation/scripts/econs_review.mjs",
+      "sha256": "0e4e06e1966090ed7affa5613d33671870d1c6316d7c52a4ea548064fcf4d557"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_setup.mjs",
+      "repository_path": "plugins/browser-automation/scripts/econs_setup.mjs",
+      "sha256": "0a7362f8cc36fc2644ee86f4eb7717953d22022a52866daa7a1da37a6ead91df"
+    },
+    {
       "path": "modules/browser-automation/scripts/teaching_checkpoint.py",
       "repository_path": "plugins/browser-automation/scripts/teaching_checkpoint.py",
       "sha256": "25d266b4e1162b6df2e0e9e0e6f91fe63355d5f205d872f7002b018246ecf0da"
@@ -114,6 +164,141 @@
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
       "sha256": "32882e5ef1f46c968ad9a84bde07106e6f378d20efd71d9255ecfc52cb0d012c"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",
@@ -439,5 +624,9 @@
       "practice": "Ejecuta la prueba local, cambia el documento disponible y comprueba que el resultado vuelve a verificarse.",
       "next": "En un sitio real, empieza por una operación autorizada y un navegador y vía de acceso disponibles."
     }
+  },
+  "retained_from": {
+    "course_sha256": "de3c45ea506bf0e9779a02d6d6b6e9d2b16546a561fc5738c8168e1fe661381f",
+    "published_version": "0.1.257"
   }
 }

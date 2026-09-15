@@ -1,0 +1,27 @@
+{
+  "clara/transcribe": {
+    "title": "Importare e rivedere una trascrizione con Clara",
+    "goal": "Imparare a portare una trascrizione in un caso, controllare chi parla e conservare una versione utilizzabile con la sua fonte.",
+    "scenario": "Sara ha preparato una breve nota per il prossimo incontro di Ciclo Arco. Partiamo dal pacchetto scaricato e lo trasformiamo in una trascrizione registrata nel caso.",
+    "scope": "Si esegue il percorso locale di importazione e revisione. Il pacchetto è interamente fittizio e non contiene audio; registrare o trascrivere nuovo audio è un altro passaggio, che usa il servizio ospitato e richiede una scelta separata.",
+    "inputs": "Apri context-it.md e il pacchetto case-notes-voice-input-it.json. Il contesto spiega provenienza e voce nota. Non serve leggere i campi tecnici: indica a Clara il pacchetto e il caso di destinazione.",
+    "request": "Clara, importa questa nota nel caso didattico Ciclo Arco, conserva l’originale, controlla chi parla e mostrami la trascrizione rivista. Non aggiungere una decisione sul servizio.",
+    "steps": [
+      "La chat di lavoro prepara il caso e importa il pacchetto con il percorso corrente. Apri la trascrizione originale e confrontala con la nota di contesto; la chat vocale spiega dove sono conservati i file.",
+      "Clara rivede l’attribuzione della voce e il testo senza cambiare il significato. Guarda come identifica Sara e come conserva prezzo e percorso come domande ancora aperte.",
+      "Il flusso registra la versione rivista e la collega alla fonte nel caso. Apri il testo finale e il riferimento di origine; la registrazione prova quali parole sono riportate, non che ogni affermazione sia vera."
+    ],
+    "deliverables": [
+      "Trascrizione originale e pacchetto conservati nella sessione locale.",
+      "Trascrizione rivista, stato di attribuzione e registrazione della fonte nel caso."
+    ],
+    "review": "Controlla un passaggio parola per parola, il nome della voce e la frase che dice che il servizio non è ancora deciso. In questo esempio manca l’audio: non si può verificare il testo ascoltando una registrazione.",
+    "checkpoints": [
+      "Prima dell’importazione, indica il pacchetto e il caso.",
+      "Alla consegna, ritrova una frase nell’originale e nella versione rivista."
+    ],
+    "practice": "Importa il pacchetto di prova con due voci nello stesso caso. Chiedi a Clara di conservarle come Voce 1 e Voce 2 finché i nomi non sono documentati. Confronta una battuta con l’originale e conserva la prima nota.",
+    "success": "Sai importare una nuova nota, trovare originale e versione rivista e riconoscere un’attribuzione incerta senza inventare un nome.",
+    "repeat": "Indica registrazione o pacchetto, lingua e destinazione. Per conservare soltanto una trascrizione puoi scegliere una normale cartella; per usarla nel ragionamento di un caso servono anche revisione e registrazione."
+  }
+}

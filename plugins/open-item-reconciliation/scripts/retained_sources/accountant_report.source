@@ -695,6 +695,36 @@ def write_rows_sheet(
 def style_worksheet(worksheet, widths: dict[str, int]) -> None:
     """Apply filters, table style, widths and wrapping."""
 
+    # Bind widths to their fields: allocation/residual columns were added ahead
+    # of payment details, making the original letter-based widths misaligned.
+    field_widths = {
+        "Record refs": 42,
+        "id dettaglio": 16,
+        "partita": 23,
+        "data documento": 16,
+        "importo": 16,
+        "saldo": 16,
+        "importo attribuito": 22,
+        "residuo aperto": 20,
+        "data pagamento": 17,
+        "banca / fonte incasso": 48,
+        "modalita di pagamento": 28,
+        "compensazione": 20,
+        "non pagata": 34,
+        "non capita": 18,
+        "stato riscontro": 27,
+        "confidenza": 18,
+        "evidenza usata": 58,
+        "differenza importo": 20,
+        "azione richiesta": 58,
+        "riferimento fonte": 58,
+        "tipo evidenza": 26,
+        "data evidenza": 16,
+        "importo evidenza": 20,
+        "differenza": 18,
+        "fonte / banca": 48,
+        "descrizione evidenza": 58,
+    }
     for cell in worksheet[1]:
         cell.font = Font(bold=True, color="FFFFFF")
         cell.fill = PatternFill("solid", fgColor=HEADER_FILL)
@@ -716,9 +746,15 @@ def style_worksheet(worksheet, widths: dict[str, int]) -> None:
         worksheet.add_table(table)
     for col_idx in range(1, worksheet.max_column + 1):
         letter = get_column_letter(col_idx)
-        worksheet.column_dimensions[letter].width = widths.get(letter, 18)
+        header = str(worksheet.cell(1, col_idx).value or "")
+        worksheet.column_dimensions[letter].width = field_widths.get(
+            header, widths.get(letter, 18)
+        )
         for cell in worksheet[letter]:
             cell.alignment = Alignment(vertical="top", wrap_text=True)
+    if worksheet.cell(1, 1).value == "Record refs":
+        worksheet.column_dimensions["A"].hidden = True
+        worksheet.freeze_panes = "D2"
 
 
 def apply_main_confidence_fill(worksheet) -> None:

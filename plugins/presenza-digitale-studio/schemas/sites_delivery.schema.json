@@ -82,7 +82,7 @@
               "full_page_reviewed": {"const": true},
               "screenshot_path": {
                 "type": "string",
-                "pattern": "^reviews/sites/.+\\.png$"
+                "pattern": "^reviews/sites/.+\\.(png|jpe?g)$"
               },
               "screenshot_sha256": {
                 "type": "string",

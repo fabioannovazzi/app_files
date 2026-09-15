@@ -1,0 +1,50 @@
+DATI PER UNA SECONDA FATTURA FITTIZIA - SOLO ESERCITAZIONE
+
+Esercizio autonomo: preparare una seconda nuova bozza, conservando la prima.
+Questo documento contiene tutti i dati del secondo caso e non corregge DID-001.
+Non descrive una fattura reale. Non inviare il risultato a SdI, a un cliente
+o a un sistema contabile. Non esiste una precedente emissione o esportazione
+nel caso fittizio. I dati non sono un'approvazione dell'esportazione: rivedere
+l'anteprima di questa seconda versione prima di qualsiasi esportazione locale.
+
+FORNITORE FITTIZIO
+Denominazione: Officina Arco Srl - SOLO ESERCITAZIONE
+Partita IVA: IT01234567897 (identificativo didattico; non verificato in registri)
+Regime fiscale indicato nel caso: RF01
+Indirizzo: Via Esempio 1
+CAP: 00100
+Comune: Roma
+Nazione: IT
+
+CLIENTE FITTIZIO
+Denominazione: Studio Esempio Srl - SOLO ESERCITAZIONE
+Partita IVA: IT09876543217 (identificativo didattico; non verificato in registri)
+Indirizzo: Via Prova 2
+CAP: 20100
+Comune: Milano
+Nazione: IT
+
+DATI DELLA BOZZA
+Tipo documento: TD01
+Numero: DID-002
+Data: 2026-09-15
+Valuta: EUR
+Riga 1 - descrizione: Manutenzione biciclette - prestazione fittizia
+Quantità: 2.00
+Prezzo unitario: 100.00
+Totale riga e imponibile: 200.00
+Aliquota IVA indicata nel caso: 22.00%
+IVA indicata: 44.00
+Totale documento: 244.00
+Non sono previsti sconti, ritenute, contributi o bollo in questo caso.
+
+DATI DI PREPARAZIONE DEL FILE
+Soggetto trasmittente previsto dal caso: IT01234567897
+Progressivo tecnico del file: DID02
+Formato: FPR12
+Codice destinatario: 0000000
+Nessuna PEC è indicata. Non effettuare alcuna trasmissione.
+
+Numero, data, quantità e importi sono ipotesi esplicite di questo secondo caso.
+Confrontare il risultato con questo documento; non riutilizzare la revisione
+della prima fattura. Nessun dato dell'esercizio va copiato in una fattura reale.

@@ -243,22 +243,32 @@ def _load_json(path: Path) -> Any:
         raise AdvisoryValidationError(f"invalid JSON in {path}: {exc}") from exc
 
 
-def _lineage_module() -> Any:
-    """Load the shared Clara lineage helper without changing import paths."""
-
-    module_name = "clara_advisory_evidence_lineage"
+def _workflow_module(module_name: str, path: Path) -> Any:
+    """Load a packaged helper with its sibling imports, restoring the host path."""
     existing = sys.modules.get(module_name)
     if existing is not None:
         return existing
-    spec = importlib.util.spec_from_file_location(module_name, LINEAGE_SCRIPT_PATH)
+    spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None or spec.loader is None:
-        raise AdvisoryValidationError(
-            f"cannot load advisory evidence lineage helper: {LINEAGE_SCRIPT_PATH}"
-        )
+        raise AdvisoryValidationError(f"cannot load advisory helper: {path}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
-    spec.loader.exec_module(module)
+    previous_path = sys.path[:]
+    loaded = False
+    try:
+        sys.path.insert(0, str(path.parent))
+        spec.loader.exec_module(module)
+        loaded = True
+    finally:
+        sys.path[:] = previous_path
+        if not loaded:
+            sys.modules.pop(module_name, None)
     return module
+
+
+def _lineage_module() -> Any:
+    """Load the shared Clara lineage helper and its packaged dependencies."""
+    return _workflow_module("clara_advisory_evidence_lineage", LINEAGE_SCRIPT_PATH)
 
 
 def _is_non_empty_string(value: Any) -> bool:
@@ -1956,122 +1966,17 @@ def _render_package(
     inventory: dict[str, Any],
     review: dict[str, Any],
     audit: dict[str, Any],
+    source_inventory: dict[str, Any],
 ) -> str:
-    dimensions = review.get("dimension_reviews", {})
-    if not isinstance(dimensions, dict):
-        dimensions = {}
-    lines = [
-        "# Advisory deliverable validation",
-        "",
-        f"Original: {inventory.get('source_name', 'unknown')}",
-        f"Original SHA-256: {inventory.get('source_sha256', 'unknown')}",
-        f"Contract SHA-256: {inventory.get('advisory_contract_sha256', 'unknown')}",
-        f"Record complete: {'yes' if audit['record_complete'] else 'no'}",
-        f"Delivery readiness: {audit['effective_delivery_readiness']}",
-        "",
-        "## Review dimensions",
-        "",
-    ]
-    for dimension in REVIEW_DIMENSIONS:
-        record = dimensions.get(dimension, {})
-        if not isinstance(record, dict):
-            record = {}
-        lines.append(
-            f"- **{dimension.replace('_', ' ').title()}** — {record.get('status', 'missing')}: {record.get('analysis', 'No analysis recorded.')}"
-        )
-    lines.extend(["", "## Findings", ""])
-    findings = review.get("findings", [])
-    if not isinstance(findings, list):
-        findings = []
-    if findings:
-        for finding in findings:
-            if not isinstance(finding, dict):
-                continue
-            lines.append(
-                f"- **{finding.get('id', 'finding')}** ({finding.get('dimension', 'unknown')}): {finding.get('finding', '')}"
-            )
-    else:
-        lines.append("- No individual findings recorded.")
-    lines.extend(["", "## Claim and evidence chains", ""])
-    lineage_review = review.get("lineage_review", {})
-    if not isinstance(lineage_review, dict):
-        lineage_review = {}
-    lines.append(f"Provenance mode: {lineage_review.get('provenance_mode', 'missing')}")
-    chain_items: list[tuple[str, dict[str, Any]]] = []
-    for field, label in (
-        ("chain_assessments", "Tracked"),
-        ("untracked_material_claims", "Untracked"),
-    ):
-        values = lineage_review.get(field, [])
-        if isinstance(values, list):
-            chain_items.extend(
-                (label, item) for item in values if isinstance(item, dict)
-            )
-    if not chain_items:
-        lines.append("- No claim-chain assessment recorded.")
-    for label, item in chain_items:
-        item_id = item.get("claim_id") or item.get("id") or "claim"
-        recheck = item.get("recheck")
-        if not isinstance(recheck, dict):
-            recheck = {}
-        resolution = item.get("resolution")
-        if not isinstance(resolution, dict):
-            resolution = {}
-        lines.append(
-            f"- **{label} {item_id}** — support: {item.get('support_status', 'missing')}; "
-            f"reasoning: {item.get('reasoning_status', 'missing')}; "
-            f"recheck: {recheck.get('status', 'missing')}; "
-            f"resolution: {resolution.get('status', 'missing')}. "
-            f"{item.get('statement', '')}"
-        )
-    lines.extend(["", "## Format-specific checks", ""])
-    checks = review.get("format_specific_checks", [])
-    if not isinstance(checks, list):
-        checks = []
-    if checks:
-        for check in checks:
-            if not isinstance(check, dict):
-                continue
-            lines.append(
-                f"- **{check.get('workflow', 'unknown')}** — {check.get('status', 'missing')}: {check.get('analysis', '')}"
-            )
-    else:
-        lines.append("- No format-specific checks recorded.")
-    correction = review.get("correction", {})
-    if not isinstance(correction, dict):
-        correction = {}
-    lines.extend(
-        [
-            "",
-            "## Correction",
-            "",
-            f"Status: {correction.get('status', 'missing')}",
-            "",
-            str(correction.get("summary", "No correction summary recorded.")),
-            "",
-            "## Residual uncertainty and professional review",
-            "",
-        ]
+    renderer = _workflow_module(
+        "clara_advisory_review_render",
+        Path(__file__).with_name("advisory_review_render.py"),
     )
-    overall = review.get("overall_assessment", {})
-    if not isinstance(overall, dict):
-        overall = {}
-    residual_uncertainties = overall.get("residual_uncertainties", [])
-    if not isinstance(residual_uncertainties, list):
-        residual_uncertainties = []
-    professional_review_items = overall.get("professional_review_items", [])
-    if not isinstance(professional_review_items, list):
-        professional_review_items = []
-    for item in residual_uncertainties:
-        lines.append(f"- Residual uncertainty: {item}")
-    for item in professional_review_items:
-        lines.append(f"- Professional review: {item}")
-    if not residual_uncertainties and not professional_review_items:
-        lines.append("- None recorded.")
-    if audit["errors"]:
-        lines.extend(["", "## Mechanical audit errors", ""])
-        lines.extend(f"- {error}" for error in audit["errors"])
-    return "\n".join(lines).rstrip() + "\n"
+    return str(
+        renderer.render_package(
+            inventory, review, audit, source_inventory, REVIEW_DIMENSIONS
+        )
+    )
 
 
 def _load_preparation_context(
@@ -2619,7 +2524,7 @@ def package_validation(
     _write_json(paths["audit"], audit)
     _write_json(paths["recheck_tasks"], _recheck_tasks(review))
     paths["package"].write_text(
-        _render_package(inventory, review, audit), encoding="utf-8"
+        _render_package(inventory, review, audit, source_inventory), encoding="utf-8"
     )
     return paths, audit
 

@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "purchase-invoice-review",
+  "scenario": "Der fiktive Bestand enthält drei Eingangsrechnungen: eine mit passender Buchung, eine ohne gefundene Buchung und eine mit zwei mehrdeutigen Kandidaten. Periode und Buchungsbestand sind ausdrücklich abgegrenzt.",
+  "columns": [
+    "Fiktive Rechnung",
+    "Vorhandene Buchungsbelege",
+    "Frage"
+  ],
+  "rows": [
+    [
+      "PA-101 · EUR 1.220",
+      "Eine passende Buchung",
+      "Art und Behandlung prüfen"
+    ],
+    [
+      "PA-102 · EUR 610",
+      "Kein Kandidat in der Periode",
+      "Nachbeschaffen oder klären"
+    ],
+    [
+      "PA-103 · EUR 244",
+      "Zwei Kandidaten",
+      "Identität klären"
+    ]
+  ],
+  "scope": "Prüfung der gelieferten Rechnungen und Buchungen. Eine fehlende Verbindung in diesem Umfang beweist nicht, dass eine Rechnung nie gebucht wurde."
+}

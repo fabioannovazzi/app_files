@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-en-practice",
+  "reference_date": "2026-09-14",
+  "language": "en",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "objective": "The firm wants a short FAQ for its small business clients in Italy: how to recognise and organise a personal data access request. This is a firm-led information initiative, not news of a new law or a reply to a real person. Readers handle administration and customer relationships and need to know when to involve the person responsible for privacy. Use the selected official EDPB guide, distinguishing general guidance from individual case assessment. No client data, real requests or company privacy policy are supplied. Prepare the package for internal review; no sending or publishing. Write the final material in English.\nAfter reviewing the FAQ, prepare a new package version that also includes a short covering email to clients. Explain who the FAQ is for and how to use it. Preserve the sources, limitations and first version. Do not invent recipients, attachments already sent or a new obligation. Do not send anything.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "studio_format_brief": "Studio Riva — lawyers. No logo, contact details, previous communications or approved house style are supplied. Propose a restrained blue and white format with readable type, clear headings and identifiable sources. The professional will review it before use.",
+  "channels": [
+    "faq",
+    "client_email"
+  ],
+  "visual_requested": false,
+  "source_inputs": [
+    {
+      "id": "SRC-EDPB",
+      "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-en.md",
+      "title": "EDPB guide for small business: rights, handling requests and access",
+      "authority_role": "official_guidance",
+      "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en"
+    }
+  ],
+  "history_inputs": [],
+  "brand_profile": {
+    "studio_name": "Studio Riva",
+    "primary_color": "#153855",
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "text_color": "#1C2935"
+  },
+  "external_routes": {
+    "public_research": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "creative_production": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  }
+}

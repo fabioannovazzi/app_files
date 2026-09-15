@@ -1,0 +1,660 @@
+{
+  "channel_drafts": [
+    {
+      "audience_note": "Für Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien. Diese Informationsinitiative der Kanzlei hilft, die ersten Schritte nach Eingang einer Anfrage zu organisieren. Sie kündigt kein neues Gesetz an und entscheidet keinen Einzelfall.",
+      "body": "Übungsmaterial: Studio Riva und der Auftrag sind fiktiv; der EDSA-Leitfaden ist eine echte öffentliche Quelle.\n\nFür Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien. Diese Informationsinitiative der Kanzlei hilft, die ersten Schritte nach Eingang einer Anfrage zu organisieren. Sie kündigt kein neues Gesetz an und entscheidet keinen Einzelfall.\n\n**Woran erkenne ich eine solche Anfrage?**\nEine Person möchte wissen, ob Sie personenbezogene Daten über sie verarbeiten. Diese Person kann außerdem Auskunft über diese Daten oder eine Kopie verlangen. Dies gehört zu dem im EDSA-Leitfaden beschriebenen Auskunftsrecht. Ist unklar, was die Person verlangt, beziehen Sie die für Datenschutz zuständige Person ein. [Europäischer Datenschutzausschuss (EDSA)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n**Wer kümmert sich um die Antwort?**\nDer für die Verarbeitung Verantwortliche muss antworten und die Ausübung der Rechte erleichtern; der Auftragsverarbeiter unterstützt ihn dabei. Als ersten organisatorischen Schritt empfehlen wir die Weiterleitung an die für Datenschutz zuständige Person. Sie kann die Rolle des Unternehmens prüfen und die Antwort koordinieren. [Europäischer Datenschutzausschuss (EDSA)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n**Was sollten wir zuerst festhalten?**\nVorgeschlagenes Vorgehen: Anfrage und Eingangsdatum aufbewahren, die Bearbeitung zuordnen und weitere Schritte dokumentieren. Der Leitfaden empfiehlt interne Verfahren, geschultes Personal, Kenntnisse der Datenflüsse sowie die Dokumentation von Anfragen und Antworten. Diese Erinnerung ersetzt kein betriebliches Verfahren. [Europäischer Datenschutzausschuss (EDSA)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n**Wie viel Zeit bleibt?**\nDer Leitfaden nennt eine Antwort innerhalb eines Monats. Ist die Anfrage zu komplex und wird mehr Zeit benötigt, kann die Frist um zwei weitere Monate verlängert werden, sofern die Person innerhalb eines Monats nach Eingang informiert wird. Lassen Sie die konkrete Frist und die Voraussetzungen einer Verlängerung von der koordinierenden Person prüfen; drei Monate stehen nicht automatisch zur Verfügung. [Europäischer Datenschutzausschuss (EDSA)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n**Genügt es, ein Dokument zu senden?**\nDie Auskunft umfasst die Bestätigung der Verarbeitung und, wenn Daten verarbeitet werden, Zugang zu den Daten sowie Angaben etwa zu Zwecken, Kategorien, Empfängern und Aufbewahrung. Weitere erforderliche Angaben sind im Leitfaden aufgeführt. Vor Herausgabe einer Kopie müssen die Rechte und Freiheiten anderer geprüft werden: Ein Dokument kann Daten mehrerer Personen enthalten. Lassen Sie den vorgesehenen Inhalt vor dem Versand prüfen. [Europäischer Datenschutzausschuss (EDSA)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\n**Dürfen wir Gebühren verlangen oder ablehnen?**\nEine Kopie der eigenen Daten ist grundsätzlich kostenlos. Der Leitfaden beschreibt besondere Voraussetzungen für zusätzliche Kopien sowie nachweislich offensichtlich unbegründete oder unverhältnismäßige Anfragen. Eine wiederholte Anfrage sollte nicht automatisch abgelehnt werden. Bei Nichtgewährung müssen innerhalb eines Monats die Gründe sowie die Möglichkeit einer Beschwerde bei der nationalen Datenschutzbehörde und eines gerichtlichen Rechtsbehelfs mitgeteilt werden. Beziehen Sie vor einer Entscheidung über Gebühren oder Ablehnung die für Datenschutz zuständige Person ein. [Europäischer Datenschutzausschuss (EDSA)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de)\n\nAllgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor.",
+      "channel": "faq",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-006",
+        "CLAIM-007",
+        "CLAIM-008",
+        "CLAIM-009",
+        "CLAIM-010"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "Europäischer Datenschutzausschuss (EDSA), Datenschutzleitfaden für kleine Unternehmen, „Rechte des Einzelnen respektieren“, Abschnitte zur Bearbeitung von Anfragen und zum Auskunftsrecht. Auszug vom 14. September 2026; offizieller Leitfaden, keine Ankündigung eines neuen Gesetzes. https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de"
+        }
+      ],
+      "sections": [],
+      "title": "Eine Auskunftsanfrage zu Daten erhalten: sechs Fragen"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-001",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Das Auskunftsrecht umfasst die Bestätigung, ob personenbezogene Daten der betroffenen Person verarbeitet werden.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-002",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der für die Verarbeitung Verantwortliche muss Anfragen zur Ausübung von Rechten beantworten und deren Ausübung erleichtern; der Auftragsverarbeiter unterstützt ihn.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-003",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der Leitfaden empfiehlt interne Verfahren, Personalschulung, Kenntnisse der Datenflüsse und die Dokumentation von Anfragen und Antworten.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-004",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der Leitfaden nennt eine Antwortfrist von einem Monat.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-005",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Ist eine Anfrage zu komplex und wird mehr Zeit benötigt, erlaubt der Leitfaden zwei weitere Monate, sofern die Person innerhalb eines Monats nach Eingang informiert wird.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-006",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Werden Daten verarbeitet, umfasst die Auskunft personenbezogene Daten und Angaben zur Verarbeitung, etwa Zwecke, Kategorien, Empfänger und Aufbewahrung; diese Beispiele sind nicht die vollständige Liste des Leitfadens.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-007",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Vor Herausgabe einer Kopie personenbezogener Daten müssen die Rechte und Freiheiten anderer geprüft werden.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-008",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Die Person hat Anspruch auf eine kostenlose Kopie ihrer verarbeiteten Daten; für zusätzliche Kopien erlaubt der Leitfaden eine angemessene Gebühr auf Grundlage der Verwaltungskosten.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-009",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Der Leitfaden erlaubt eine angemessene Gebühr oder Nichtgewährung bei nachweislich offensichtlich unbegründeten oder unverhältnismäßigen Anfragen; Wiederholung allein macht diese Bewertung nicht automatisch.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    },
+    {
+      "id": "CLAIM-010",
+      "professional_judgment": "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Wird der Anfrage nicht stattgegeben, müssen innerhalb eines Monats nach Eingang die Gründe sowie die Möglichkeit einer Beschwerde bei der nationalen Datenschutzbehörde und eines gerichtlichen Rechtsbehelfs mitgeteilt werden.",
+      "temporal_qualification": "Bezug: 14. September 2026, Abrufdatum des ausgewählten Auszugs. Kein neues Inkrafttreten wird angekündigt.",
+      "uncertainty": "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor."
+    }
+  ],
+  "editorial_value": {
+    "audience_value": "Wer eine Nachricht erhält, kann relevante Punkte erkennen, zuständige Personen einbeziehen und prüfungsbedürftige Entscheidungen weitergeben.",
+    "banality_check": "Allgemeinplätze bleiben ein Risiko; sechs Fragen verbinden Rollen, Dokumentation, Fristen und Kopienprüfung mit einer konkreten Aufgabe.",
+    "decision_enabled": "Sie ermöglicht eine geordnete Bearbeitung und gezielte Rückfragen an die koordinierende Person, ohne Verlängerungen, Gebühren oder Ablehnungen allein zu entscheiden.",
+    "decision_limit": "Sie bestimmt nicht die Antwort im Einzelfall und belegt keine Datenschutzkonformität des Unternehmens.",
+    "distinct_angle": "Die FAQ folgt der Arbeit in Verwaltung und Kundenbetreuung vom Erkennen bis zur koordinierten Bearbeitung.",
+    "practical_use": "Sie kann zusammen mit dem betrieblichen Verfahren und der Datenschutzansprechperson als erste Erinnerung dienen.",
+    "publication_judgment": "Nützlicher Vorschlag zur internen Prüfung. Die redaktionelle Empfehlung erlaubt keinen Versand und keine Veröffentlichung.",
+    "reason_now": "Die Kanzlei hat ausdrücklich die Vorbereitung des Personals auf eingehende Anfragen gewählt; es gibt keinen behaupteten neuen Gesetzgebungsanlass.",
+    "repetition_check": "Keine früheren Mitteilungen ausgewählt: Wiederholung und bisheriger Hausstil können nicht beurteilt werden.",
+    "source_specific_information": "Monatsfrist, bedingte Verlängerung, Unterscheidung zwischen Verantwortlichem und Auftragsverarbeiter sowie Rechte anderer geben dem Text quellenbezogenen Gehalt."
+  },
+  "master_brief": {
+    "actions": [
+      "Vorgeschlagenes Vorgehen: Anfrage und Eingangsdatum aufbewahren, die Bearbeitung zuordnen und weitere Schritte dokumentieren. Der Leitfaden empfiehlt interne Verfahren, geschultes Personal, Kenntnisse der Datenflüsse sowie die Dokumentation von Anfragen und Antworten. Diese Erinnerung ersetzt kein betriebliches Verfahren.",
+      "Die organisatorischen Schritte sind anzupassende Vorschläge. Sie belegen weder ein freigegebenes Verfahren noch entscheiden sie einen Fall."
+    ],
+    "caveats": [
+      "Allgemeine Hinweise aus dem ausgewählten EDSA-Auszug. Unternehmensrolle, offenzulegende Daten, konkrete Frist, mögliche Gebühren und Ablehnungsgründe erfordern eine Einzelfallprüfung. Eine echte Anfrage und ein betriebliches Verfahren liegen nicht vor.",
+      "Nützlicher Vorschlag zur internen Prüfung. Die redaktionelle Empfehlung erlaubt keinen Versand und keine Veröffentlichung.",
+      "Übungsmaterial: Studio Riva und der Auftrag sind fiktiv; der EDSA-Leitfaden ist eine echte öffentliche Quelle."
+    ],
+    "effective_dates": [],
+    "practical_implications": [
+      "Der für die Verarbeitung Verantwortliche muss Anfragen zur Ausübung von Rechten beantworten und deren Ausübung erleichtern; der Auftragsverarbeiter unterstützt ihn.",
+      "Der Leitfaden nennt eine Antwortfrist von einem Monat.",
+      "Ist eine Anfrage zu komplex und wird mehr Zeit benötigt, erlaubt der Leitfaden zwei weitere Monate, sofern die Person innerhalb eines Monats nach Eingang informiert wird.",
+      "Vor Herausgabe einer Kopie personenbezogener Daten müssen die Rechte und Freiheiten anderer geprüft werden."
+    ],
+    "what_changed": "Für Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien. Diese Informationsinitiative der Kanzlei hilft, die ersten Schritte nach Eingang einer Anfrage zu organisieren. Sie kündigt kein neues Gesetz an und entscheidet keinen Einzelfall.",
+    "who_may_be_affected": "Nicht spezialisiertes Personal verständlich ansprechen. Für Verwaltung und Kundenbetreuung kleiner Unternehmen in Italien. Diese Informationsinitiative der Kanzlei hilft, die ersten Schritte nach Eingang einer Anfrage zu organisieren. Sie kündigt kein neues Gesetz an und entscheidet keinen Einzelfall."
+  },
+  "recommendation": "publish",
+  "recommendation_reason": "Nützlicher Vorschlag zur internen Prüfung. Die redaktionelle Empfehlung erlaubt keinen Versand und keine Veröffentlichung. Wer eine Nachricht erhält, kann relevante Punkte erkennen, zuständige Personen einbeziehen und prüfungsbedürftige Entscheidungen weitergeben.",
+  "run_id": "lucia-de-demo",
+  "schema_version": 1,
+  "source_assessments": [
+    {
+      "authority_assessment": "Europäischer Datenschutzausschuss (EDSA); Datenschutzleitfaden für kleine Unternehmen, „Rechte des Einzelnen respektieren“, Abschnitte zur Bearbeitung von Anfragen und zum Auskunftsrecht. Auszug vom 14. September 2026; offizieller Leitfaden, keine Ankündigung eines neuen Gesetzes.",
+      "limitations": "Ausgewählter offizieller Leitfaden, kein vollständiger Gesetzestext und kein Fallgutachten. Der deutsche Auszug enthält keinen Absatz zu Identitätszweifeln; daraus wird keine entsprechende Regel abgeleitet. Verlinkte Rechtstexte liegen nicht als gesonderte Quellen vor.",
+      "semantic_role": "clarifying",
+      "source_id": "SRC-EDPB"
+    }
+  ],
+  "studio_profile_proposal": {
+    "derived_from_history_ids": [],
+    "document": {
+      "circular_label": "Informationsblatt",
+      "closing": "Mit freundlichen Grüßen",
+      "contact_rail_lines": [],
+      "date_pattern": "Tag. Monat Jahr",
+      "font_family": "Helvetica",
+      "footer_pattern": "Studio Riva | Allgemeine Informationen",
+      "layout": {
+        "body_font_size_pt": 11,
+        "body_leading_pt": 15,
+        "bottom_margin_mm": 20,
+        "contact_rail_width_mm": 35,
+        "heading_font_size_pt": 12,
+        "left_margin_mm": 20,
+        "logo_height_mm": 12,
+        "logo_width_mm": 35,
+        "right_margin_mm": 20,
+        "rule_width_pt": 0.5,
+        "subject_font_size_pt": 16,
+        "top_margin_mm": 25
+      },
+      "numbering_pattern": "Jahr/fortlaufende Nummer, nach Prüfung zu vergeben",
+      "page_size": "A4",
+      "recipient_pattern": "An interessierte Kunden",
+      "section_style": "unnumbered",
+      "signature_lines": [
+        "Studio Riva — Rechtsberatung"
+      ],
+      "subject_prefix": "Betreff",
+      "use_contact_rail": false
+    },
+    "email": {
+      "attachment_note": "Einen Anhang nur nennen, wenn er tatsächlich im Paket enthalten ist.",
+      "closing": "Mit freundlichen Grüßen",
+      "salutation": "Sehr geehrte Kundinnen und Kunden",
+      "signature_lines": [
+        "Studio Riva — Rechtsberatung"
+      ],
+      "subject_pattern": "Studio Riva | {subject}"
+    },
+    "field_provenance": [
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.audience_stance"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.rhythm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.technical_density"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.formality"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.openings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.closings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ausdrücklich im Kanzleibrief vorgegebene Tatsache oder Präferenz; keine Ableitung aus früheren Mitteilungen.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formatting"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.avoid"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.page_size"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.font_family"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.left_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.right_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.top_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.bottom_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_height_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.contact_rail_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_leading_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.subject_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.heading_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.rule_width_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.recipient_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.circular_label"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.numbering_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.subject_prefix"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.section_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.use_contact_rail"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ausdrücklich im Kanzleibrief vorgegebene Tatsache oder Präferenz; keine Ableitung aus früheren Mitteilungen.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.contact_rail_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.footer_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ausdrücklich im Kanzleibrief vorgegebene Tatsache oder Präferenz; keine Ableitung aus früheren Mitteilungen.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.subject_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.salutation"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ausdrücklich im Kanzleibrief vorgegebene Tatsache oder Präferenz; keine Ableitung aus früheren Mitteilungen.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "email.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.attachment_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ausdrücklich im Kanzleibrief vorgegebene Tatsache oder Präferenz; keine Ableitung aus früheren Mitteilungen.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "website.byline_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.heading_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.source_heading"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.cta"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.show_update_date"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.preferred_format"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.opening_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.closing_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.hashtags"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.show_source_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Erster Modellvorschlag zur fachlichen Prüfung. Kein ausgewählter Verlauf oder freigegebener Hausstil belegt ihn; Maße für Logo und Kontaktspalte sind ungenutzte Reserven ohne bereitgestellte Inhalte.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.carousel_identity_placement"
+        ],
+        "history_ids": []
+      }
+    ],
+    "social": {
+      "carousel_identity_placement": "close_only",
+      "closing_style": "Eine klare Grenze und ein sinnvoller nächster Schritt.",
+      "hashtags": [],
+      "opening_style": "Eine konkrete Frage der Leser.",
+      "preferred_format": "text",
+      "show_source_note": true
+    },
+    "voice": {
+      "audience_stance": "Nicht spezialisiertes Personal verständlich ansprechen.",
+      "avoid": [
+        "Erfundene Dringlichkeit",
+        "Konformitätsversprechen",
+        "Nicht bereitgestellte Kundengeschichten"
+      ],
+      "closings": "Mit Nutzungsgrenze und Weiterleitung an die zuständige Person schließen.",
+      "formality": "Sachlich und zurückhaltend.",
+      "formatting": "Schlichtes blau-weißes Format, klare Überschriften und erkennbare Quellen wie gewünscht.",
+      "openings": "Mit dem praktischen Problem der Leser beginnen.",
+      "rhythm": "Kurze Sätze, eine Frage je Abschnitt.",
+      "technical_density": "Nötige Begriffe erklären und für Einzelheiten auf die Quelle verweisen."
+    },
+    "website": {
+      "byline_pattern": "Studio Riva — Rechtsberatung",
+      "cta": "Bei einem Einzelfall die für Datenschutz zuständige Person einbeziehen.",
+      "date_pattern": "Tag. Monat Jahr",
+      "heading_style": "question_led",
+      "show_update_date": true,
+      "source_heading": "Quellen"
+    }
+  },
+  "visual_story": {
+    "decision": "omit",
+    "decision_reason": "Fragen und Antworten bilden bereits eine kurze lesbare Folge; eine Grafik würde den Inhalt ohne zusätzlichen Nutzen wiederholen.",
+    "incremental_value": "",
+    "slides": [],
+    "title": ""
+  }
+}

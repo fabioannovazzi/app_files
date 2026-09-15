@@ -1,0 +1,374 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "dati-fiscali-strutturati",
+  "course_sha256": "7cd83465759b020cbeafc4314f56aff731735a2d18b73fba0fc8e8535cd7cb39",
+  "reviewer": "Codex: first-use teaching-kit editorial and native-output review",
+  "reviewed_at": "2026-09-14T16:28:02.654435+00:00",
+  "review_scope": "Prepared lesson, fictional sources, actual native extraction outputs and closed local execution records. This does not approve a professional case or establish human learner, native voice or two-window acceptance.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying readable tax documents and obtaining fields with sources, checking them and repeating the extraction. The purpose is document data preparation; no tax calculation or declaration is presented.",
+        "inputs_and_request": "The kit supplies readable fictional CU and F24 transcriptions and an ordinary request for the 2026 campaign. It clearly distinguishes Italian document formats from the language of the explanation and source year from campaign year.",
+        "execution_and_checkpoints": "Current native preparation and extraction run on the bound documents. The learner identifies the inputs before running, follows processing, then traces a value to its source. Candidate document classification and unreadable/unsupported-source review remain visible.",
+        "deliverable_and_next_action": "The native summary groups fields by source with localized labels and confidence; the CSV retains values, evidence and stable field codes. The extraction report and dispositions identify coverage. The learner checks income, withholding, F24 year/code/amount and source before reusing values.",
+        "practice_and_repeat": "Practice adds a separate F24 and preserves the initial documents/results. The resulting list keeps both payments and their distinct years, codes and source references. Repeat instructions specify readable files, country and campaign.",
+        "language_and_pacing": "Italian instructions identify the exact files and distinguish checking or extracting source data from bookkeeping and tax conclusions. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[it-demo-2]",
+        "result_review": "The actual summary and CSV contain 12 fields from the CU and first F24: employment income 28000.00, withholding 5000.00, code 4001, reference year 2025 and debit 1200.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "5a75cd64958383e1d1c3a2f30a3c7dc87d60ce4df2a2a305e5f5b1248dc21dd4"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "4d4d209faed0acd87c6f734fc3e4a3fb97c9884200861ec613d4a76799fb0182"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "41fafa265f81e6e514e1c3acd08a57e2c8c454c2540e479e270113286c12580e"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "df7b980d054ec161c243e649aaf16aeced6c7263f6de37a05e00fab6005a965f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[it-practice-3]",
+        "result_review": "The actual summary and CSV contain 18 fields from the same CU and two distinct F24s, preserving code 4001/year 2025/debit 1200.00 and adding code 4034/year 2026/debit 900.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "7023d727574a11519c947d2e0ad56be0c87b7c5c095e3ad214caca81a71694a6"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "ce08afbb838b5d631ebc0785335b9bb9004c3dc5aa070dfa4cf501c709b5cfd6"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "f93a1688123e9b5ef657b9c73449ae188539c07559a0634955f270bef6e2f1a6"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "e028157d4edb60894cdc128091eb5c366df729cd7369fb2ae1836f29e08b8bba"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying readable tax documents and obtaining fields with sources, checking them and repeating the extraction. The purpose is document data preparation; no tax calculation or declaration is presented.",
+        "inputs_and_request": "The kit supplies readable fictional CU and F24 transcriptions and an ordinary request for the 2026 campaign. It clearly distinguishes Italian document formats from the language of the explanation and source year from campaign year.",
+        "execution_and_checkpoints": "Current native preparation and extraction run on the bound documents. The learner identifies the inputs before running, follows processing, then traces a value to its source. Candidate document classification and unreadable/unsupported-source review remain visible.",
+        "deliverable_and_next_action": "The native summary groups fields by source with localized labels and confidence; the CSV retains values, evidence and stable field codes. The extraction report and dispositions identify coverage. The learner checks income, withholding, F24 year/code/amount and source before reusing values.",
+        "practice_and_repeat": "Practice adds a separate F24 and preserves the initial documents/results. The resulting list keeps both payments and their distinct years, codes and source references. Repeat instructions specify readable files, country and campaign.",
+        "language_and_pacing": "English instructions give a complete everyday request, identify the Italian source formats and explain how to trace the result back to a document. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[en-demo-2]",
+        "result_review": "The actual summary and CSV contain 12 fields from the CU and first F24: employment income 28000.00, withholding 5000.00, code 4001, reference year 2025 and debit 1200.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "321a318a2646467c564b90c90556a5920e3aceb3806dfb840482b02fbc72eabe"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "bc5657e1bc69a0be410d4a3d7a8ec6533f77ba47a626203cf2cefdc778f4bbc7"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "7b4b36d66b5a6ae859f78e5e86aa59faf3aca9138b9d88391a681e9f090b1161"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "7c215dc866296228209369e7841b14090575065247b174dff1a9e273e807d0e7"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[en-practice-3]",
+        "result_review": "The actual summary and CSV contain 18 fields from the same CU and two distinct F24s, preserving code 4001/year 2025/debit 1200.00 and adding code 4034/year 2026/debit 900.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "e75c4721fe6e4987eb83406ae1f0594be9b5bd66de51bdc927fe6b38b88bc23e"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "8ec2afbafddf092d58f4633060ee048989a817deeaa08fe822dde4a55466c122"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "abf6ebe29010fde7236ad08f8458632ea630353f8f6787d0dfd5a33b054ef4c5"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "2f3d41f13bddc7bd604d69aeee51449c558965eea4e62a761a192ed77ad27b1b"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying readable tax documents and obtaining fields with sources, checking them and repeating the extraction. The purpose is document data preparation; no tax calculation or declaration is presented.",
+        "inputs_and_request": "The kit supplies readable fictional CU and F24 transcriptions and an ordinary request for the 2026 campaign. It clearly distinguishes Italian document formats from the language of the explanation and source year from campaign year.",
+        "execution_and_checkpoints": "Current native preparation and extraction run on the bound documents. The learner identifies the inputs before running, follows processing, then traces a value to its source. Candidate document classification and unreadable/unsupported-source review remain visible.",
+        "deliverable_and_next_action": "The native summary groups fields by source with localized labels and confidence; the CSV retains values, evidence and stable field codes. The extraction report and dispositions identify coverage. The learner checks income, withholding, F24 year/code/amount and source before reusing values.",
+        "practice_and_repeat": "Practice adds a separate F24 and preserves the initial documents/results. The resulting list keeps both payments and their distinct years, codes and source references. Repeat instructions specify readable files, country and campaign.",
+        "language_and_pacing": "French instructions consistently use dossier, source and the named Italian document formats; the exercise adds a document without replacing the original. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[fr-demo-2]",
+        "result_review": "The actual summary and CSV contain 12 fields from the CU and first F24: employment income 28000.00, withholding 5000.00, code 4001, reference year 2025 and debit 1200.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "dde36514d2df1e319f05f5f4e6f4d24f4cf4a09c226984d30c602e80f31a1f5b"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "e4aca759cc575281c833f914dfc32c482520e21cb6ca7de915826a7299cd89c2"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "31f65016965e351112571c0cad0bb8d1f167aba35d5e15797815e30b17d90d32"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "0bceacb11b2b2d9f91f0a89ae2951cde3c8c4f051b3ca10364d9b067949cdc0b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[fr-practice-3]",
+        "result_review": "The actual summary and CSV contain 18 fields from the same CU and two distinct F24s, preserving code 4001/year 2025/debit 1200.00 and adding code 4034/year 2026/debit 900.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "261558ff552fe01d6fc8fecebf87a8c9a7c9bef1edebb4445aa82726e00db4f9"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "e4149f6250084643cfcc5edb9478a1ae1912c03dd0c50b415036ab568d82c918"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "4ca9c974c09147fd4f791cd37b24483491b23239c64b9a602ea103d5e468f6b8"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "99bb55c6bea5d4402dab35b51b03688a47fb2f2a9551fa2f45add17be07252c0"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying readable tax documents and obtaining fields with sources, checking them and repeating the extraction. The purpose is document data preparation; no tax calculation or declaration is presented.",
+        "inputs_and_request": "The kit supplies readable fictional CU and F24 transcriptions and an ordinary request for the 2026 campaign. It clearly distinguishes Italian document formats from the language of the explanation and source year from campaign year.",
+        "execution_and_checkpoints": "Current native preparation and extraction run on the bound documents. The learner identifies the inputs before running, follows processing, then traces a value to its source. Candidate document classification and unreadable/unsupported-source review remain visible.",
+        "deliverable_and_next_action": "The native summary groups fields by source with localized labels and confidence; the CSV retains values, evidence and stable field codes. The extraction report and dispositions identify coverage. The learner checks income, withholding, F24 year/code/amount and source before reusing values.",
+        "practice_and_repeat": "Practice adds a separate F24 and preserves the initial documents/results. The resulting list keeps both payments and their distinct years, codes and source references. Repeat instructions specify readable files, country and campaign.",
+        "language_and_pacing": "German instructions consistently distinguish the document and reporting period, identify the files, and ask the learner to find source evidence. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[de-demo-2]",
+        "result_review": "The actual summary and CSV contain 12 fields from the CU and first F24: employment income 28000.00, withholding 5000.00, code 4001, reference year 2025 and debit 1200.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "0f73f6c631c75cb871b4413458668b1d3ef15531d3205fde0e778c0300dc7cba"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "af6b888c13e71a95ce1e9c1b0a51f0e6bf02d81e352a1368c303c9fbbc2a1cb0"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "a122cb707257367bc4b340dffd7ff27d33069102455f1a86155fa4a313cc6b73"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "e66d143137dbd553467ebbc003f351f9c97ad04fc58922f5f7f2f8e2ab8f0fe5"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[de-practice-3]",
+        "result_review": "The actual summary and CSV contain 18 fields from the same CU and two distinct F24s, preserving code 4001/year 2025/debit 1200.00 and adding code 4034/year 2026/debit 900.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "02e8c2e1ae0104ccfefe8eaaa3112c0b4e72a3b0d2c47480045887528b9ecfd6"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "23e725233c4163f9401fc679a6a39039d90435d1c2c17ae20e375a01ed5de7fa"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "5bf2c30f1640682e31bb002ae8937c7be21a91cbdb721c440b12817155bffd55"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "8339bdd8fa31f37c31c0dca9e3ea51d1ad0c2b07495f067c5095451ba47eaed4"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The lesson teaches supplying readable tax documents and obtaining fields with sources, checking them and repeating the extraction. The purpose is document data preparation; no tax calculation or declaration is presented.",
+        "inputs_and_request": "The kit supplies readable fictional CU and F24 transcriptions and an ordinary request for the 2026 campaign. It clearly distinguishes Italian document formats from the language of the explanation and source year from campaign year.",
+        "execution_and_checkpoints": "Current native preparation and extraction run on the bound documents. The learner identifies the inputs before running, follows processing, then traces a value to its source. Candidate document classification and unreadable/unsupported-source review remain visible.",
+        "deliverable_and_next_action": "The native summary groups fields by source with localized labels and confidence; the CSV retains values, evidence and stable field codes. The extraction report and dispositions identify coverage. The learner checks income, withholding, F24 year/code/amount and source before reusing values.",
+        "practice_and_repeat": "Practice adds a separate F24 and preserves the initial documents/results. The resulting list keeps both payments and their distinct years, codes and source references. Repeat instructions specify readable files, country and campaign.",
+        "language_and_pacing": "Spanish instructions identify the files and explain checking the result and repeating the request; Italian source formats retain their proper names. The six outline sections total 390 seconds. Processing and questions may extend the session; human timing has not been observed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[es-demo-2]",
+        "result_review": "The actual summary and CSV contain 12 fields from the CU and first F24: employment income 28000.00, withholding 5000.00, code 4001, reference year 2025 and debit 1200.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "3b5acfa31cdd7419e6e1721f830cffc167b799a21be2556aec6871465e45acb2"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "4e49e750355b4385135cc1d1a0ceb4a845ef00c3a3811fe2a547e3c29c069c46"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "9bc31627290bd0cbe6d60757422627fc87ae78044c58ffd98b7efe6b015a3740"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "1b552f16e13ae7f60b1667e49bad6610c257c00d324085bb7f034918c2ee4078"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_fiscal_data_kit_runs_actual_preparation_and_extraction[es-practice-3]",
+        "result_review": "The actual summary and CSV contain 18 fields from the same CU and two distinct F24s, preserving code 4001/year 2025/debit 1200.00 and adding code 4034/year 2026/debit 900.00. All source documents are readable; candidates and field confidence remain visible. Reviewed labels follow the chosen language, while Italian field codes remain stable. The local ledger closes the actual output set without a professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "08_dati_fiscali_strutturati.md",
+            "sha256": "938f0da3e2bfc6c3b313896460517c46e93952dccda92b78a4a358b98901ae9f"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "structured_fiscal_fields.csv",
+            "sha256": "1f34081d44dc8c0d3f97b9a995edbea041763d7af86d2b13b46b0dfd1f5a9d01"
+          },
+          {
+            "name": "extraction_report.md",
+            "sha256": "afde470da204ad2bada24dd24d8c5043fe34779da5402ec5922753293ef1f508"
+          },
+          {
+            "name": "document_dispositions.json",
+            "sha256": "3d338825fd98179e7be2d10b6482956dd10326434a79cd6937577d9795fdf943"
+          }
+        ]
+      }
+    }
+  },
+  "source_refresh": "After integration of the released invoice workflow, the only changed bound execution source adds invoice-xml to the permitted workflow IDs. Lesson prose, prepared input bytes and extraction engines are unchanged. Twenty fresh extraction runs passed with the new registry. The previously inspected exact artifacts remain the output review evidence.",
+  "refresh_review": {
+    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
+    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals.",
+    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
+    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed."
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.171158+00:00",
+    "previous_course_sha256": "5e0a53c050c086c97f1ef4bdc98d92d8e16f3033c85e002a15d8a00a8859c93a",
+    "source_snapshot": "/private/tmp/teaching-library-refresh-02/test_fiscal_data_kit_runs_actu2/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.333453+00:00",
+    "previous_course_sha256": "085236dff7ed6b57cd32c8d7469b920de67ba7300f32474e363f022be3b92fdd",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/dati-fiscali-strutturati/SKILL.md",
+        "before": "bc2fc8b6409c0bcd57288098ca06cc380bd20a8b97743f2b8b96d8600ef95a3b",
+        "after": "85949239c975aa8e9f3ceb75700cd2bfe930e6578c163b56be81ce8f90cf2415"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

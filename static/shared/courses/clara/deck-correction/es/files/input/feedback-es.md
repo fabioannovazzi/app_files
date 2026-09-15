@@ -1,0 +1,1 @@
+Comentarios para corregir: en la diapositiva de responsabilidades, sustituir a Sara por Elena como persona propuesta para recoger y aclarar solicitudes. Paolo sigue evaluando el trabajo y preparando presupuestos. Conservar títulos, orden, estilo y otras diapositivas. Solo cambia la responsabilidad propuesta; no se aprueba el procedimiento.

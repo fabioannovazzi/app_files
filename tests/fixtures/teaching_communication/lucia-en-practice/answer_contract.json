@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-en-practice",
+  "question_domain": "compliance",
+  "document_type": "professional_communication_package",
+  "purpose": "The firm wants a short FAQ for its small business clients in Italy: how to recognise and organise a personal data access request. This is a firm-led information initiative, not news of a new law or a reply to a real person. Readers handle administration and customer relationships and need to know when to involve the person responsible for privacy. Use the selected official EDPB guide, distinguishing general guidance from individual case assessment. No client data, real requests or company privacy policy are supplied. Prepare the package for internal review; no sending or publishing. Write the final material in English.\nAfter reviewing the FAQ, prepare a new package version that also includes a short covering email to clients. Explain who the FAQ is for and how to use it. Preserve the sources, limitations and first version. Do not invent recipients, attachments already sent or a new obligation. Do not send anything.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "output_language": "en",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "jurisdiction_status": "confirmed",
+  "generation_route": "codex_direct",
+  "evidence_display": "inline_citations",
+  "validation_profile": "source_identity_support_reasoning_and_judgment",
+  "validation_scope": "all_material_claims",
+  "correction_policy": "correct_when_supported",
+  "judgment_policy": "flag_for_professional_review",
+  "generation_instructions": {
+    "source_hierarchy": [
+      "Selected EDPB official guidance; identify it as guidance, not legislation. No missing legal authority may be invented."
+    ],
+    "preserve": [
+      "Actor roles, conditions, uncertainty, qualifications and professional-review boundaries.",
+      "Fictional lesson material. The firm and assignment are invented. The attached EDPB guide is an authentic public source captured on 14 September 2026, not invented legislation.",
+      "Studio Riva — lawyers. No logo, contact details, previous communications or approved house style are supplied. Propose a restrained blue and white format with readable type, clear headings and identifiable sources. The professional will review it before use.",
+      "Run-selected draft visual values, not an approved house profile: {\"accent_color\": \"#197B9C\", \"background_color\": \"#FFFFFF\", \"primary_color\": \"#153855\", \"studio_name\": \"Studio Riva\", \"text_color\": \"#1C2935\"}"
+    ],
+    "must_distinguish": [
+      "The fictional firm-led initiative from a legislative change; general guidance from a real case decision.",
+      "Preserving factual conditions and qualifications in the candidate is an answer-contract check. Physical retention of the earlier package is a separate run/file check; never claim that such retention or professional approval has already been verified by claim assurance."
+    ],
+    "prohibited": [
+      "Invented clients, facts, regulations, urgency, professional approvals, sending or publishing."
+    ]
+  },
+  "contract_digest": "1a09afa0dd1cbd03bfa08ffc5a1f2a83cfdb1916b6f98985a66a6655f431bc08"
+}

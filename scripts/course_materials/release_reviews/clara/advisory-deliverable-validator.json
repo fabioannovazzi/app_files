@@ -1,0 +1,505 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "clara",
+  "workflow": "advisory-deliverable-validator",
+  "course_sha256": "43033728347af557b7f550cd8c20c96a3e32084e5834fc4202a488cc018c8e8c",
+  "reviewer": "Codex: five-language whole-memo lesson and native output review",
+  "reviewed_at": "2026-09-14T21:37:39.206080+00:00",
+  "review_scope": "Prepared material and native local execution review. Read the five localized lesson outlines and source sets, all ten artifact cards and run-review notes, five full practice review packages and the demo-specific changed passages. Final package/card text matches the inspected run after temporary-path normalization; the final clarified run notes were read separately. Eighty-eight native advisory and validator checks pass, including ten distinct phase/language review exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain unverified. The authored fictional review interpretations are regression fixtures outside shipped kits.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces reviewing an advisory memo. The learner selects the memo, assignment and supporting notes, sees the current pipeline examine the full short document, opens the review, follows a finding to its source and repeats with new evidence. It teaches how to use the whole workflow.",
+        "inputs_and_request": "The supplied Ciclo Arco memo recommends immediate daily collection, treats conditional client interest as proven demand and overstates vehicle capacity. Five substantive statements across two paragraphs are available for exact comparison. Assignment and operating notes distinguish the requested pilot comparison, customer preferences, missing bookings and limited Wednesday vehicle availability. The practice adds a later vehicle-unavailability note; no external research, contact or spending is requested.",
+        "execution_and_checkpoints": "Ten distinct native exercises prepare the actual review contract and inventories, retain the unchanged memo and package explicitly authored five-claim, ten-dimension reviews. The learner distinguishes the document from its evidence and traces one material finding to an exact passage and selected local source. Matched support is stated because original drafting provenance is unavailable. Mechanical completeness is kept separate from readiness and truth.",
+        "deliverable_and_next_action": "The concise artifact card leads with the memo not being ready and three useful corrections: compare launch options, accurately report customer statements and correct transport assumptions. It links the full readable review, unchanged original and native records. The full package covers all five substantive statements and gives concrete actions. The booking-sequence finding challenges committing before demand checks without claiming that later bookings are impossible. A separate corrected memo and its own review remain the next step, not an output falsely claimed as completed.",
+        "practice_and_repeat": "The unchanged memo is reviewed again with the additional vehicle note. The vehicle statement changes from partial support to contradiction; an unagreed neighbouring-workshop loan is not treated as available transport. Each practice preserves every file of its initial review byte-for-byte and provides a working link to that prior review. The learner explains what must change before the memo can support the owner decision.",
+        "language_and_pacing": "Language it. The outline, fictional sources, authored assessments, summary and fixed report navigation are localized. Six planned stages total 390 seconds. The short entry summary and one source comparison keep the first-use path focused while the complete review remains available. Actual elapsed lesson time and learner comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[demo-it]",
+        "result_review": "The actual initial review compares all five memo statements with the assignment and original notes. It identifies unsupported launch advice, overstated demand and limited Wednesday transport. The original is unchanged; the complete review record does not approve the memo.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "777b9fee60a6fdd072ffff1f68b49b5cbf0ab42f17206baa7fab07ffb81b4da0"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "5c3d3af01c4c7868d9ce2cba40b8be632cc9fb15ad41461eb11e58f7232a4167"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "a049adb653daabc2218a3a5f86150db715c45fda213d41e59afc03280d2282d0"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "52527e78d08b0d943bcfd8671f9e1164a97f698b25c9b87145fae891177a104f"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "08a97100e5eff85137f0beda288c046b3d37f572adac28155cb481acce1a1de0"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "58d3ba5059298fbf2b10a41b5b2dbd00fbee68677df732b6dc6adc0d8ba9b312"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[practice-it]",
+        "result_review": "A second actual review adds the vehicle-unavailability source to the same unchanged memo, updates the transport finding and keeps readiness not ready. All original-review files remain unchanged and linked. No corrected memo, professional approval, contact, booking or spending is claimed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "059bb88667c802765aa8cb3ea47bbb4a8e845fa230a0466f5bc7597aec32cf91"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "3778d387a7b65f42052b54d4263fbbc2d4d13a4804f3781cc1963c5dea77868c"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "6f21337d3736806b345fe2a22344dfe7f91ee1e6f018be2bbd6538f09246aa0b"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "60f910ac68e83d1bb409a9ef29fc9d8b58dc1abf44829111a994d2681e7b25de"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "d8f3ccdad381d85617d45fe17c238b6794517764a69d3dca502872265cb52577"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "6bd4035fa9464222ef361d4f76bca3833c122322c99f496e2db8b43c663225a6"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces reviewing an advisory memo. The learner selects the memo, assignment and supporting notes, sees the current pipeline examine the full short document, opens the review, follows a finding to its source and repeats with new evidence. It teaches how to use the whole workflow.",
+        "inputs_and_request": "The supplied Ciclo Arco memo recommends immediate daily collection, treats conditional client interest as proven demand and overstates vehicle capacity. Five substantive statements across two paragraphs are available for exact comparison. Assignment and operating notes distinguish the requested pilot comparison, customer preferences, missing bookings and limited Wednesday vehicle availability. The practice adds a later vehicle-unavailability note; no external research, contact or spending is requested.",
+        "execution_and_checkpoints": "Ten distinct native exercises prepare the actual review contract and inventories, retain the unchanged memo and package explicitly authored five-claim, ten-dimension reviews. The learner distinguishes the document from its evidence and traces one material finding to an exact passage and selected local source. Matched support is stated because original drafting provenance is unavailable. Mechanical completeness is kept separate from readiness and truth.",
+        "deliverable_and_next_action": "The concise artifact card leads with the memo not being ready and three useful corrections: compare launch options, accurately report customer statements and correct transport assumptions. It links the full readable review, unchanged original and native records. The full package covers all five substantive statements and gives concrete actions. The booking-sequence finding challenges committing before demand checks without claiming that later bookings are impossible. A separate corrected memo and its own review remain the next step, not an output falsely claimed as completed.",
+        "practice_and_repeat": "The unchanged memo is reviewed again with the additional vehicle note. The vehicle statement changes from partial support to contradiction; an unagreed neighbouring-workshop loan is not treated as available transport. Each practice preserves every file of its initial review byte-for-byte and provides a working link to that prior review. The learner explains what must change before the memo can support the owner decision.",
+        "language_and_pacing": "Language en. The outline, fictional sources, authored assessments, summary and fixed report navigation are localized. Six planned stages total 390 seconds. The short entry summary and one source comparison keep the first-use path focused while the complete review remains available. Actual elapsed lesson time and learner comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[demo-en]",
+        "result_review": "The actual initial review compares all five memo statements with the assignment and original notes. It identifies unsupported launch advice, overstated demand and limited Wednesday transport. The original is unchanged; the complete review record does not approve the memo.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "27d5b442ece1ca4d378785cb1accb76622c4f1c7b083039726ac7ed8c3998bcc"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "11c6d99794120caaf0c22dce8150d3a9ce207a9e21669baac86e6662036b31ba"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c0c4041b2ae47eaa9cafe31aba0fd30a431443e5ccc54e868d07cf5f82f10471"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "b818d09be46b4915ea49ff7ba0aa7212f834be53702d27587470050b52448006"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "98ba96543dec950a7224de9f9be10e22af2f2680fa9811ea207f8fa1f2e0cc54"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "028e4881c0398ca831fcc6586c72f1372eeb77f5fe835e1ea4b19eb6ad28189d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[practice-en]",
+        "result_review": "A second actual review adds the vehicle-unavailability source to the same unchanged memo, updates the transport finding and keeps readiness not ready. All original-review files remain unchanged and linked. No corrected memo, professional approval, contact, booking or spending is claimed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "91941ffd910d7e17dae1308b32174cb55fdc019f7d67d1f0d2618080fa966f23"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "19d78769a9cea821690b986afa442315e5f72c93ff17d857b06bf1694c031513"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "d23b8de4345f309dc8105e234bce4a585fb55c585c212f5a9facd3735bbd0cfb"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "82bb846c07bd032272ede846a0db79e12749104626e8bda8abee5a8a161108d0"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "b5f60b1045ccfc957943ef85c4d1937a3ec13f70cafa5f867d2a4c7ace1c7c0f"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "5baefb86754f2f2ab4b2a4722e8d09db909ac9ab97ee193382d0cff378927159"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces reviewing an advisory memo. The learner selects the memo, assignment and supporting notes, sees the current pipeline examine the full short document, opens the review, follows a finding to its source and repeats with new evidence. It teaches how to use the whole workflow.",
+        "inputs_and_request": "The supplied Ciclo Arco memo recommends immediate daily collection, treats conditional client interest as proven demand and overstates vehicle capacity. Five substantive statements across two paragraphs are available for exact comparison. Assignment and operating notes distinguish the requested pilot comparison, customer preferences, missing bookings and limited Wednesday vehicle availability. The practice adds a later vehicle-unavailability note; no external research, contact or spending is requested.",
+        "execution_and_checkpoints": "Ten distinct native exercises prepare the actual review contract and inventories, retain the unchanged memo and package explicitly authored five-claim, ten-dimension reviews. The learner distinguishes the document from its evidence and traces one material finding to an exact passage and selected local source. Matched support is stated because original drafting provenance is unavailable. Mechanical completeness is kept separate from readiness and truth.",
+        "deliverable_and_next_action": "The concise artifact card leads with the memo not being ready and three useful corrections: compare launch options, accurately report customer statements and correct transport assumptions. It links the full readable review, unchanged original and native records. The full package covers all five substantive statements and gives concrete actions. The booking-sequence finding challenges committing before demand checks without claiming that later bookings are impossible. A separate corrected memo and its own review remain the next step, not an output falsely claimed as completed.",
+        "practice_and_repeat": "The unchanged memo is reviewed again with the additional vehicle note. The vehicle statement changes from partial support to contradiction; an unagreed neighbouring-workshop loan is not treated as available transport. Each practice preserves every file of its initial review byte-for-byte and provides a working link to that prior review. The learner explains what must change before the memo can support the owner decision.",
+        "language_and_pacing": "Language fr. The outline, fictional sources, authored assessments, summary and fixed report navigation are localized. Six planned stages total 390 seconds. The short entry summary and one source comparison keep the first-use path focused while the complete review remains available. Actual elapsed lesson time and learner comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[demo-fr]",
+        "result_review": "The actual initial review compares all five memo statements with the assignment and original notes. It identifies unsupported launch advice, overstated demand and limited Wednesday transport. The original is unchanged; the complete review record does not approve the memo.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "b68e603cfd44b79e0eea9b86636dd8ed2fca828358d0af22c8a0130113a8a5b2"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "98d349dfda4541a70b146dd47e775713e9455a85bf6345bbf5f4b6846539cbe3"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c849d30e36be988e876d5c2557fb2ebcdbc7f11700de849ea986843efe085bd4"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "afb4f4272fefe8054b9e2d964600fe01abaf4cffc1076a2bde60ab12c2096366"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "faa882194b21b4c0c63882d7fe50c18ee868cf07936a2943a6326070b71bd18d"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "341adf8a1bc56da57ec48e6ed84707dc4940091c73bae75c1f36aeec082f0b4f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[practice-fr]",
+        "result_review": "A second actual review adds the vehicle-unavailability source to the same unchanged memo, updates the transport finding and keeps readiness not ready. All original-review files remain unchanged and linked. No corrected memo, professional approval, contact, booking or spending is claimed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "35807cc2bc234b49db932cedceb046b7aee8e221646e21e1bb1cea7a24070fd7"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "a9177af6f5bc12b29e88ceaabe3d7cf177e4c05a4cb599a76cc3a938c7493a48"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "90b3a573e7688d296d2b72a94469bb09d8d7b3d4594b302ffcb3aecb33123fad"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "7e249fe38a7696dc74af4f0061b69a898bc336e963912a643f175052a931d0f5"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "7cff73f368fa8b5d6c2c29d7919bad410fab9a60d5a1cb096ccf7547f2a860a3"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "14e4c35bfe8982ec507584b0e52b52275187e52967c911b78493023260e4b7ae"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces reviewing an advisory memo. The learner selects the memo, assignment and supporting notes, sees the current pipeline examine the full short document, opens the review, follows a finding to its source and repeats with new evidence. It teaches how to use the whole workflow.",
+        "inputs_and_request": "The supplied Ciclo Arco memo recommends immediate daily collection, treats conditional client interest as proven demand and overstates vehicle capacity. Five substantive statements across two paragraphs are available for exact comparison. Assignment and operating notes distinguish the requested pilot comparison, customer preferences, missing bookings and limited Wednesday vehicle availability. The practice adds a later vehicle-unavailability note; no external research, contact or spending is requested.",
+        "execution_and_checkpoints": "Ten distinct native exercises prepare the actual review contract and inventories, retain the unchanged memo and package explicitly authored five-claim, ten-dimension reviews. The learner distinguishes the document from its evidence and traces one material finding to an exact passage and selected local source. Matched support is stated because original drafting provenance is unavailable. Mechanical completeness is kept separate from readiness and truth.",
+        "deliverable_and_next_action": "The concise artifact card leads with the memo not being ready and three useful corrections: compare launch options, accurately report customer statements and correct transport assumptions. It links the full readable review, unchanged original and native records. The full package covers all five substantive statements and gives concrete actions. The booking-sequence finding challenges committing before demand checks without claiming that later bookings are impossible. A separate corrected memo and its own review remain the next step, not an output falsely claimed as completed.",
+        "practice_and_repeat": "The unchanged memo is reviewed again with the additional vehicle note. The vehicle statement changes from partial support to contradiction; an unagreed neighbouring-workshop loan is not treated as available transport. Each practice preserves every file of its initial review byte-for-byte and provides a working link to that prior review. The learner explains what must change before the memo can support the owner decision.",
+        "language_and_pacing": "Language de. The outline, fictional sources, authored assessments, summary and fixed report navigation are localized. Six planned stages total 390 seconds. The short entry summary and one source comparison keep the first-use path focused while the complete review remains available. Actual elapsed lesson time and learner comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[demo-de]",
+        "result_review": "The actual initial review compares all five memo statements with the assignment and original notes. It identifies unsupported launch advice, overstated demand and limited Wednesday transport. The original is unchanged; the complete review record does not approve the memo.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "00784b54e2327d74d081c710ebfcd2397a175e9d1be021b6a99a8a05d06702bb"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "c9dd2b3475cd1f647db986b4d6a9ffa16703a4dc408f1bda9d6c6f3e660c07aa"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5b0433f39e6eeef239020c1e21613779e95cc0171aa9f7f82732bf0ffc914de4"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "6a2face5cb12b122bcacf5e5359a5c3bdbedc4ac9613200dc8b2197bee036745"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "dbc8e3fb979973011dbeceeaad4fb94a8319410e9c783df7979d76a8de3c3ef9"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "b61bcde9f9de5b9f87d346e6eaa26453a6fd64f30689efdb3acd0392bc1859b4"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[practice-de]",
+        "result_review": "A second actual review adds the vehicle-unavailability source to the same unchanged memo, updates the transport finding and keeps readiness not ready. All original-review files remain unchanged and linked. No corrected memo, professional approval, contact, booking or spending is claimed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "3213bf44a6867ae655bc1c172c02d068a5a78ff9561fd5dce9cf9f8d5280e667"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "a6cf2e4170a25f2d4db2bfd1da06699241b245a2d00cf7f849a67379583e2de1"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c8bbc2df34fcf986719de6b5e62a6f1d87c1a31d977cc1231a09bdc119eea52f"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "71bf0f500907bd5bd56658b65f68bd1e0578ec4d49c32442c0b2165821df997f"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "a6a0197dd89d0e8cd9cfd645ad0b072fdc8e56c78fec7a83d56cd523cd7d462a"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "aefd6110bb4a236f6785b1d79c2b5d137ed1438b3d1672e079ca269c8ab8a0e1"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title introduces reviewing an advisory memo. The learner selects the memo, assignment and supporting notes, sees the current pipeline examine the full short document, opens the review, follows a finding to its source and repeats with new evidence. It teaches how to use the whole workflow.",
+        "inputs_and_request": "The supplied Ciclo Arco memo recommends immediate daily collection, treats conditional client interest as proven demand and overstates vehicle capacity. Five substantive statements across two paragraphs are available for exact comparison. Assignment and operating notes distinguish the requested pilot comparison, customer preferences, missing bookings and limited Wednesday vehicle availability. The practice adds a later vehicle-unavailability note; no external research, contact or spending is requested.",
+        "execution_and_checkpoints": "Ten distinct native exercises prepare the actual review contract and inventories, retain the unchanged memo and package explicitly authored five-claim, ten-dimension reviews. The learner distinguishes the document from its evidence and traces one material finding to an exact passage and selected local source. Matched support is stated because original drafting provenance is unavailable. Mechanical completeness is kept separate from readiness and truth.",
+        "deliverable_and_next_action": "The concise artifact card leads with the memo not being ready and three useful corrections: compare launch options, accurately report customer statements and correct transport assumptions. It links the full readable review, unchanged original and native records. The full package covers all five substantive statements and gives concrete actions. The booking-sequence finding challenges committing before demand checks without claiming that later bookings are impossible. A separate corrected memo and its own review remain the next step, not an output falsely claimed as completed.",
+        "practice_and_repeat": "The unchanged memo is reviewed again with the additional vehicle note. The vehicle statement changes from partial support to contradiction; an unagreed neighbouring-workshop loan is not treated as available transport. Each practice preserves every file of its initial review byte-for-byte and provides a working link to that prior review. The learner explains what must change before the memo can support the owner decision.",
+        "language_and_pacing": "Language es. The outline, fictional sources, authored assessments, summary and fixed report navigation are localized. Six planned stages total 390 seconds. The short entry summary and one source comparison keep the first-use path focused while the complete review remains available. Actual elapsed lesson time and learner comprehension have not been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[demo-es]",
+        "result_review": "The actual initial review compares all five memo statements with the assignment and original notes. It identifies unsupported launch advice, overstated demand and limited Wednesday transport. The original is unchanged; the complete review record does not approve the memo.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "fbb7b677e864737bc92cc1aa9a3bfcd7f0d44eed20662cd63f4a089e426d15f1"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "29dc7f9b810e403eda20c9243df101030a07b0f9194eefc96453c095613b4502"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "2b513e09199ad1bbe840c60b8922bb78f19281df452dc2a5f626c381a8fa1a17"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "27d70204fc3afcd2b1c2b0a5f82c72d4c6e7a5004af60591215c289f1ec38af1"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "7aadb31cc663ef46c6018b83605c7faa699443a77f14014bc8444be09c41f9d8"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "d293ad999c26d75553fd4645ec5c7d3e32ac7012bc0758f1fd168ab1763be092"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_advisory_execution::test_validator_kit_produces_source_bound_review_without_approval[practice-es]",
+        "result_review": "A second actual review adds the vehicle-unavailability source to the same unchanged memo, updates the transport finding and keeps readiness not ready. All original-review files remain unchanged and linked. No corrected memo, professional approval, contact, booking or spending is claimed.",
+        "reviewed_artifacts": [
+          {
+            "name": "advisory_validation_package.md",
+            "sha256": "2995c4a16b7d8bf0160462063142bc77f8e07b384be62b8b5923540f9fb99533"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "af71e56170c4aa86ea1578c0c6a995ed5cd4e0d04b9fdb8ee60046634936c9eb"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "e21e5233b11487c82df909663528e5256cfd49e926c0fb00b5bdd8b3ace87874"
+          },
+          {
+            "name": "advisory_validation_review.json",
+            "sha256": "d8dae135df2402bc4e92d9fa73c09d4235d85ff0eb0c97724480fb847ac20b08"
+          },
+          {
+            "name": "validation_audit.json",
+            "sha256": "bfae3ce508e7cee5659f5e743831847136e8ed918f98daf88a8191e844c762b6"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "e9e007807b99853f1ee299fcd1bea62c4acc59bb94c9b199ecf5f547b8e1b659"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.144843+00:00",
+    "previous_course_sha256": "c606c1d8f0422367967c9d5463b3443c7483c982d8b20dbd0b659eea408706b3",
+    "source_snapshot": "/private/tmp/advisory-teaching-release-06/test_validator_kit_produces_so3/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.549795+00:00",
+    "previous_course_sha256": "e3894c92337093021a9ad13cae20e555d7a359016370f1ab1ef89261ec71134f",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/clara/scripts/advisor_case_core.py",
+        "before": "f91c4cf808c1c80296121b80bbf87b4a16fe25d26080be2d6d4e2bba9e631a29",
+        "after": "1102874a9103ce3aa8efb16679b363fe5b25b2df53c92f0091d1815a4e942108"
+      },
+      {
+        "path": "plugins/clara/scripts/advisory_delivery.py",
+        "before": null,
+        "after": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8"
+      },
+      {
+        "path": "plugins/clara/scripts/advisory_evidence_lineage.py",
+        "before": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73",
+        "after": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
+      },
+      {
+        "path": "plugins/clara/scripts/bounded_process.py",
+        "before": null,
+        "after": "e409460e7df27d1fc89df5d2908c6ff3b438420d1c0bd1a1b4c9e4ce7de0ea3b"
+      },
+      {
+        "path": "plugins/clara/scripts/capture_advisory_web_evidence.py",
+        "before": "013ecd9429850df42968139ee76d6607365ec5919ca2bb608d11915fc88a8974",
+        "after": "4fa2abd98b581cc0fac46b77b158baa43dc1fdae03ad51fb24823e246a6eec08"
+      },
+      {
+        "path": "plugins/clara/scripts/case_exchange_safety.py",
+        "before": null,
+        "after": "8aaa910146d7accdcdb99ab793fb2c3e59585697d5d9284aab8946a2de7c35e3"
+      },
+      {
+        "path": "plugins/clara/scripts/case_store.py",
+        "before": null,
+        "after": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
+      },
+      {
+        "path": "plugins/clara/scripts/check_dependencies.py",
+        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
+        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      },
+      {
+        "path": "plugins/clara/scripts/decision_narrative.py",
+        "before": null,
+        "after": "d596dcb192db69e8ca32e511f99aba371328260ddd916e77c7b7d250b781daf2"
+      },
+      {
+        "path": "plugins/clara/scripts/html_deck_runtime.py",
+        "before": "3e41fb7921317c92153fcdab66e7cdc8e4078366c29f518093d8fb2a2eb84f27",
+        "after": "a4585f10b456bbc44513873c430c58bc3f40351a69646b2e255e14861ace6d21"
+      },
+      {
+        "path": "plugins/clara/scripts/public_http.py",
+        "before": null,
+        "after": "0320cf3b5407c0805c453f2f81918c29b1eb33c32d7384855d5b39d2ae09c073"
+      },
+      {
+        "path": "plugins/clara/scripts/verify_advisory_delivery.py",
+        "before": null,
+        "after": "1db20ac24cadf936821244631b51bf6187258efb269c745d61fc6c6261fe950a"
+      },
+      {
+        "path": "plugins/clara/scripts/verify_advisory_html_delivery.py",
+        "before": "35e1c0318355134821ea5393d93334c1c152c4e1c3cbef32c74dd98cd5d515f6",
+        "after": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
+      },
+      {
+        "path": "plugins/clara/skills/advisory-deliverable-validator/SKILL.md",
+        "before": "0d07935a6f62466714bf71c85f84eb7d1f51ff199e92661460be62f90a38ba05",
+        "after": "89ee64ddaa229a0f68118b6d9a2862b30df683ea11b5eb6ff9cf6a1074ac7be2"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "portability_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:08:05.057871+00:00",
+    "previous_course_sha256": "0123738e370b2950f11c3b5afbf68ca160119854ddbe3ca24e3f906847ec219a",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      }
+    ],
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
+  }
+}

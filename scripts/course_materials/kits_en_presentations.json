@@ -1,0 +1,52 @@
+{
+  "clara/html-deck": {
+    "title": "Create an HTML presentation with Clara",
+    "goal": "Learn to turn documents and a clear request into usable slides, check their message and present them in a browser.",
+    "scenario": "Officina Arco needs to explain a proposed intake process to staff. Start with the meeting notes.",
+    "scope": "An internal presentation based on the notes, with slides and speaker notes. The procedure remains a proposal; no undocumented results or charts are added.",
+    "inputs": "Open brief-en.md. State audience, purpose and meeting message: discuss the proposal, rather than announce an adopted procedure.",
+    "request": "Clara, make a short HTML presentation from these notes for the staff meeting. Explain the problem, proposal, roles and decision. Keep its proposed status visible and add speaker notes.",
+    "steps": [
+      "In the working chat Clara reads the notes and proposes the presentation sequence. Voice explains how to specify audience and purpose and helps you check the order of the messages.",
+      "Clara composes slides through the current workflow and checks readability, content and navigation. Voice follows actual results and answers questions while the presentation is prepared.",
+      "Open the generated presentation. Use the arrow keys, open speaker notes and compare a slide with the original document. Identify the proposal and requested decision."
+    ],
+    "deliverables": [
+      "A standalone HTML presentation with notes and navigation, ready to open in a browser.",
+      "The presentation package, editable materials and checks for the version produced."
+    ],
+    "review": "Check that slides reflect the notes, distinguish proposal from current practice and remain readable. Attractive layout does not justify invented results. Check the final slide and speaker notes too.",
+    "checkpoints": [
+      "Before creating slides, identify your audience and the decision they should make.",
+      "In the presentation, find a message and the note that supports it."
+    ],
+    "practice": "Add new-audience-en.md and request a new version for new colleagues with the incomplete-request example. Preserve the first and explain how audience and purpose changed the presentation.",
+    "success": "You can supply sources and an objective, read and present the result and request a version for another audience.",
+    "repeat": "Ask Clara for an HTML presentation, attach your materials and state audience, purpose, language and messages to preserve. You can also invoke deck correction for an existing presentation."
+  },
+  "clara/deck-correction": {
+    "title": "Correct a presentation with Clara",
+    "goal": "Learn to turn feedback into a verifiable slide change while retaining control of what changes.",
+    "scenario": "The Officina Arco proposal presentation already exists. Feedback updates the person proposed to gather requests.",
+    "scope": "A targeted correction to an existing HTML presentation: understand feedback, edit a copy and compare. The workflow does not recreate the whole presentation for every change.",
+    "inputs": "Open original-deck-en.html and feedback-en.md. The original-work-en.zip package contains editable materials for Clara. You identify the presentation and the change.",
+    "request": "Clara, correct this presentation using the attached feedback: Elena will gather and clarify requests instead of Sara. Paolo keeps his role. Preserve the original and show me the change.",
+    "steps": [
+      "In the working chat Clara reads the presentation and feedback and summarizes the intended change. Voice helps you check which slide and meaning will change.",
+      "Clara applies the request to a copy through the current workflow, preserves other slides and checks the revision. Voice follows actual progress and explains when ambiguous feedback needs clarification.",
+      "Open the original and corrected copy. Compare the responsibilities slide and then an unchanged slide. Check the visible result, notes and change summary."
+    ],
+    "deliverables": [
+      "A corrected presentation copy, with the original preserved.",
+      "The interpreted request, before/after comparison and checks of the corrected version."
+    ],
+    "review": "Check that the proposed person changes without changing Paolo’s role or declaring the procedure approved. Other slides should retain meaning, order and style. The result must reflect the feedback, beyond passing a technical check.",
+    "checkpoints": [
+      "Before the edit, explain what should change and what should stay the same.",
+      "Afterwards, find the requested change and something preserved."
+    ],
+    "practice": "Start again from the original with practice-feedback-en.md. Ask to collect staff questions first, replacing only the closing trial step. Preserve the copies and check that the conclusion matches the request.",
+    "success": "You can identify a presentation, give precise feedback and verify a revision without losing the original.",
+    "repeat": "Show Clara the presentation and describe the change, including by native voice conversation. Supply any new figures or wording. Clara resolves ambiguity and edits a copy; PPTX work also includes reviewing the change plan before application."
+  }
+}

@@ -161,7 +161,8 @@ def test_default_next_steps_uses_selected_language():
         language="en_US",
     )
 
-    assert any("Obtain the evidence" in step for step in steps)
+    assert any("Obtain the requested supporting documents" in step for step in steps)
+    assert all("needs_evidence" not in step for step in steps)
 
 
 def test_default_report_title_uses_spanish_language(tmp_path):

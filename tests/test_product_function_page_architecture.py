@@ -642,6 +642,8 @@ def test_bandi_page_explains_task_specific_private_model_context() -> None:
         "Ces contrôles s’exécutent dans le run Studio Archive lié",
         "Diese Kontrollen gelten im gebundenen Studio-Archive-Run",
         "Estos controles operan en la ejecución vinculada de Studio Archive",
+        "Le sezioni chiuse del report conservano i dati nel file",
+        "Collapsed report sections retain their data in the file",
     ):
         assert snippet in bandi_copy
 
@@ -873,7 +875,7 @@ def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> Non
         )
         assert len(values) == 5
         expected_paragraphs = {
-            "bandi-agevolazioni": 5,
+            "bandi-agevolazioni": 6,
             "quesito-legale-fiscale": 6,
             "business-planning": 5,
             "clara-business-planning": 5,

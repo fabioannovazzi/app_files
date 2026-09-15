@@ -1,0 +1,487 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-es-demo",
+  "assessed_contribution_digest": "89594ac54434b14d75eea3c58ce95fdeb7ec78cc7d7726b91e353ab1f62a4f8c",
+  "answer_contract_digest": "4525d2477d1507d787cc66e63e08f8beefbd3e1a4b58ec56558de82213ce7ed0",
+  "assessment_protocol": {
+    "method": "isolated_host_session_exact_artifact_review",
+    "assessor_session_id": "01a0a0b8-d623-7cd0-870c-ec3921855b09",
+    "assessment_template_version": "professional-communication-claim-assurance-v2",
+    "template_sha256": "c39b0c976a010ec84af96dd829717a2430099f2c414ddedbe9c0b852970e0f50",
+    "generation_transcript_seen": false,
+    "completed_at": "2026-09-14T16:41:40.785615+00:00"
+  },
+  "validation_method": "model_led_source_support_reasoning_and_judgment_review",
+  "coverage_review": {
+    "scope": "all_material_claims",
+    "reviewed_claim_ids": [
+      "CLAIM-001",
+      "CLAIM-002",
+      "CLAIM-003",
+      "CLAIM-004",
+      "CLAIM-005",
+      "CLAIM-006",
+      "CLAIM-007",
+      "CLAIM-008",
+      "CLAIM-009",
+      "CLAIM-010"
+    ],
+    "omitted_claim_ids": [],
+    "analysis": "The full exact contribution and answer contract were read with the registered Spanish source snapshot, phase prompt and output schema. Every registered claim was reviewed once across all its occurrences; contract review also covers teaching labels, context, organisational inferences, source limits, editorial reasoning and all proposed-profile fields. Lossless grouping of repeated values and exact differences between permitted current candidates aided reading; no prior contribution or review file was opened. All packet input hashes were reverified unchanged during this focused reassessment. I reconsidered every preservation instruction in the same allowed packets and corrected the classification of separate output checks; no original contribution, earlier assessment file, editorial review or generation transcript was opened for this follow-up. Operator-attested assessor model: GPT-6; the exact serving model identifier is unavailable. No API receipt is asserted. A collaboration session-identity lookup returned other agents' completion-status blurbs, but no prior claim verdict, benchmark artifact or generation transcript was opened or used."
+  },
+  "contract_review": {
+    "purpose": {
+      "status": "conforms",
+      "analysis": "The short faq explains recognition, initial recording and referral for small businesses in Italy. It presents a fictional firm-led information initiative and general guide-based material for internal review, with no new law or real-client decision. No extra channel is required by the contract."
+    },
+    "document_type": {
+      "status": "conforms",
+      "analysis": "The contribution is a professional communication package containing a master brief, source assessments, a readable six-question FAQ, a claim register and a proposed studio profile. A standalone visual is not mandated, and the omission decision gives a content-based reason."
+    },
+    "audience": {
+      "status": "conforms",
+      "analysis": "The audience is consistently administration and customer-service staff of small businesses in Italy. The text gives recognition and routing tasks and sends decisions about disclosure, timing and exceptions to the privacy contact; it does not assume specialist legal knowledge."
+    },
+    "output_language": {
+      "status": "conforms",
+      "analysis": "All reader-facing content in the short FAQ, the source notes, studio identity, captions and caveats is in Spanish. Schema keys and enum values do not change the requested output language."
+    },
+    "jurisdiction": {
+      "status": "conforms",
+      "analysis": "Italy / EU GDPR remains the confirmed context, expressly stated in the audience or caveat. A translated EDPB source and generic references to the national authority do not switch the jurisdiction to the language's country. No unsupported national rule is introduced."
+    },
+    "source_hierarchy": {
+      "status": "conforms",
+      "analysis": "Every source-linked material claim uses the sole selected official EDPB guidance snapshot. The authority assessment and source notes identify guidance, not new legislation. The contribution does not pretend that linked legal texts were separately inspected or invent a missing authority."
+    },
+    "preservation": {
+      "status": "conforms",
+      "analysis": "Conforms for the exact pre-render contribution. Actor roles, conditions, uncertainties and professional-review boundaries remain explicit. The master caveats and every drafted body identify Studio Riva and the assignment as fictional while distinguishing the authentic EDPB guide; source notes retain its 14 September 2026 capture date. The supplied studio identity and professional discipline are retained, with no invented contacts, logo or approved house style. The proposed font and heading structure meet the readable-draft instruction. The profile expressly proposes the requested blue-and-white style. The contract supplies #153855, #197B9C, #FFFFFF and #1C2935 as already selected draft visual inputs; it does not require their literals in the reader-facing prose. There is no source or content defect to correct. Actual reproduction of these inputs is a later packaged-output verification, for which this phase has no rendered artifacts. Its absence cannot establish a defect in this contribution. The earlier attention classification incorrectly attached that unperformed output check to contribution preservation; this review corrects that scope error, not the evidence threshold. "
+    },
+    "required_distinctions": {
+      "status": "conforms",
+      "analysis": "The fictional firm initiative is separated from legislative change; the authentic public guide is separated from the invented firm and assignment; general rules and proposed organisation are separated from individual decisions. The instruction about preserving qualifications is assessed in the candidate. Physical earlier-version retention and professional approval remain separate, unverified run checks."
+    },
+    "prohibited_content": {
+      "status": "conforms",
+      "analysis": "No client case, named recipient, actual request, regulation, artificial urgency, professional approval, completed sending or publication is invented. The internal recommendation enum publish is explicitly limited by recommendation_reason and editorial_value to a draft for review and is not an authorisation or assertion of release. The fictional identity is supplied by the contract and labelled as such."
+    },
+    "evidence_display": {
+      "status": "conforms",
+      "analysis": "Every substantive FAQ answer has an inline citation to the registered source URL, with an identifiable public source note and capture date. The titles and teaching labels do not masquerade as legal-source propositions."
+    },
+    "validation_scope": {
+      "status": "conforms",
+      "analysis": "All 10 registered material claims were individually assessed, including their uses in the body and master brief. Unnumbered context, teaching authenticity, organisational inferences, editorial reasoning and proposed profile provenance were also assessed against the contract and source. No required source topic is invented merely because other guide sections exist."
+    },
+    "correction_policy": {
+      "status": "conforms",
+      "analysis": "No material source-support, reasoning or contract-content correction remains in the exact candidate reviewed here. Acceptance is based on the text already present; it does not rely on a promised later rewrite. Output rendering and retained-version checks are explicitly not certified by claim assurance."
+    },
+    "judgment_policy": {
+      "status": "conforms",
+      "analysis": "The candidate keeps concrete role identification, disclosure content, deadline calculation, extension conditions, fees and refusal for professional or privacy review. General source statements are not treated as a completed case decision or a finding that the business is compliant."
+    },
+    "reviewer_action": "accept"
+  },
+  "claims": [
+    {
+      "claim_id": "CLAIM-001",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Right of access section: The snapshot expressly supports confirmation of whether the person's data are processed and access to the data if they are. The recognition examples in the FAQ stay within these elements; they do not prescribe a special form or decide the classification of a real message."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The snapshot expressly supports confirmation of whether the person's data are processed and access to the data if they are. The recognition examples in the FAQ stay within these elements; they do not prescribe a special form or decide the classification of a real message."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The recognition advice is a sound inference from the described contents of access. The candidate preserves the processing condition and directs ambiguity to the privacy contact. It does not infer that a real request or personal data population exists. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "Access includes confirmation of whether personal data are processed.",
+          "When processing exists, the person can access the relevant personal data."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "not_judgment_dependent",
+        "analysis": "The general proposition is supported. Reporting this general guidance does not depend on choosing an outcome for a particular client; the package still requires professional review before use.",
+        "professional_review_items": []
+      },
+      "issues": [],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-002",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Opening allocation of responsibilities and request-handling section: The registered source places response and facilitation duties on the controller and assistance on the processor. The candidate keeps that allocation. Referral to an internal privacy contact is an organisational step and does not make that person a different legal actor."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The registered source places response and facilitation duties on the controller and assistance on the processor. The candidate keeps that allocation. Referral to an internal privacy contact is an organisational step and does not make that person a different legal actor."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The source describes general actor responsibilities; the candidate does not assume the fictional client is controller rather than processor in an actual relationship. Coordinating a response is distinguished from deciding the business's legal role. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "The controller responds and facilitates rights.",
+          "The processor assists the controller."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Confirm the business's role for the actual processing and the internal response coordinator."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-003",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Preparation, data-flow and documentation checklist: The source recommends internal procedures, training, knowledge of data flows, and recording requests and answers. The contribution accurately describes the selected recommendations. Suggested recording of receipt and assignment of follow-up is presented as a practical arrangement rather than a separately enacted duty. This review also covers the unnumbered operational proposal to keep receipt information and allocate follow-up in the FAQ and master brief."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The source recommends internal procedures, training, knowledge of data flows, and recording requests and answers. The contribution accurately describes the selected recommendations. Suggested recording of receipt and assignment of follow-up is presented as a practical arrangement rather than a separately enacted duty. This review also covers the unnumbered operational proposal to keep receipt information and allocate follow-up in the FAQ and master brief."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "Keeping the request and receipt date and allocating follow-up plausibly implement preparation and documentation. The text states that this reminder is to be adapted and does not establish an adopted business procedure or a guarantee of compliance. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "The source recommends preparation and internal procedures.",
+          "The source recommends recording requests, responses and reasons for non-response."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "not_judgment_dependent",
+        "analysis": "The general proposition is supported. Reporting this general guidance does not depend on choosing an outcome for a particular client; the package still requires professional review before use.",
+        "professional_review_items": []
+      },
+      "issues": [],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-004",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "One-month response section and checklist: The snapshot states a one-month response period. The candidate states one month without converting it to 30 days or inventing an immediate case-specific date. Its neighbouring extension and refusal passages preserve the relevant qualifications."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The snapshot states a one-month response period. The candidate states one month without converting it to 30 days or inventing an immediate case-specific date. Its neighbouring extension and refusal passages preserve the relevant qualifications."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "A short statement of the general period follows the captured guide. No receipt date is supplied, so no actual deadline is calculated or certified. The candidate sends concrete timing decisions for review. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "The guide states a one-month response period.",
+          "The contribution frames the statement as general guidance from a captured source."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Determine receipt and the applicable concrete response deadline when a real request is available."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-005",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "One-month response section: The source permits two further months if complexity means more time is needed, provided the person is informed within one month of receipt. Both the FAQ and claim retain those conditions and the two-further-month duration."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The source permits two further months if complexity means more time is needed, provided the person is informed within one month of receipt. Both the FAQ and claim retain those conditions and the two-further-month duration."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The candidate does not turn permission into an automatic three-month period. It preserves the link between complexity, need for more time and timely notification; the documentary date is a capture date, not commencement of a new rule. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "The request is too complex and more time is needed.",
+          "The person must be informed within one month after receipt."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Assess actual complexity, the need for additional time and timely notification before using an extension."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-006",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Right of access information list: The snapshot lists purposes, data categories, recipients and the retention period or its criteria among access information. The FAQ expressly calls its selection examples and points to the fuller list; it does not claim these examples exhaust a complete response."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The snapshot lists purposes, data categories, recipients and the retention period or its criteria among access information. The FAQ expressly calls its selection examples and points to the fuller list; it does not claim these examples exhaust a complete response."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The abbreviated list is appropriate for this short intake FAQ. Read with the recognition claim, access to existing processed data remains conditional on processing. The candidate does not infer any actual processing purpose, recipient or retention period. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "The source enumerates information accompanying access to processed data.",
+          "The proposed examples are a subset and are labelled non-exhaustive."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Identify the actual personal data and check every applicable information item in the source before a real response."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-007",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Important note at the end of the access section: The source expressly requires checking that a copy will not affect rights and freedoms of others and gives the example of information on several people in one file. The contribution preserves the check before disclosure, without asserting that all third-party material must automatically be refused."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The source expressly requires checking that a copy will not affect rights and freedoms of others and gives the example of information on several people in one file. The contribution preserves the check before disclosure, without asserting that all third-party material must automatically be refused."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "Flagging a multi-person document for examination follows the source example. The contribution does not substitute a generic instruction for the concrete balancing and preparation of the actual copy. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "Providing a copy requires a check of others' rights and freedoms.",
+          "A shared document may concern more than one person."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Review proposed disclosures and the rights and freedoms of others before supplying a copy."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-008",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Copy and additional-copy paragraphs of the access section: The source supports a free copy of the person's processed data and a possible reasonable administrative-cost-based fee for additional copies. The claim states both limbs and the FAQ does not suggest that ordinary access is routinely charged."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The source supports a free copy of the person's processed data and a possible reasonable administrative-cost-based fee for additional copies. The claim states both limbs and the FAQ does not suggest that ordinary access is routinely charged."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The contribution preserves the difference between the initial copy and additional copies. Its references to individual review prevent a proposed fee being treated as predetermined. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "A copy of the person's processed data is free in the general position.",
+          "Additional copies may carry a reasonable administrative-cost-based fee."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Classify any additional-copy request and justify any proposed administrative-cost-based charge."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-009",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Fee and non-compliance passages; repetitive-request example: The source allows a fee or refusal for a demonstrably manifestly unfounded or excessive request. Its repetitive-request example depends on the particular facts, so the contribution rightly avoids automatic refusal merely because a request repeats or is inconvenient."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The source allows a fee or refusal for a demonstrably manifestly unfounded or excessive request. Its repetitive-request example depends on the particular facts, so the contribution rightly avoids automatic refusal merely because a request repeats or is inconvenient."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The candidate retains the evidential threshold and the permission rather than obligation to charge or refuse. It does not infer excessiveness from workload alone or apply the source's carpenter example to an invented client. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "The organisation must demonstrate that the request is manifestly unfounded or excessive.",
+          "The source presents charging or refusal as possible responses and gives a fact-dependent repeated-request example."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Establish and document the actual basis for any exceptional fee or refusal; do not rely solely on repetition or inconvenience."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    },
+    {
+      "claim_id": "CLAIM-010",
+      "source_checks": [
+        {
+          "source_id": "SRC-EDPB",
+          "identity_status": "matches_registered_source",
+          "identity_analysis": "SRC-EDPB matches the registered Spanish EDPB/CEPD/EDSA snapshot, Respetar los derechos de los interesados, captured on 14 September 2026. The public URL in the contribution matches the snapshot URL and its bytes match packet SHA-256 3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6. This is identity verification within the fixed captured-source packet, not a live website check.",
+          "support_analysis": "Non-compliance notification paragraph: The source requires notification within one month of receipt of reasons for not granting a request and the possibilities of complaint to the national data-protection authority and a judicial remedy. Both avenues and the period are retained."
+        }
+      ],
+      "support": {
+        "status": "supported",
+        "analysis": "The source requires notification within one month of receipt of reasons for not granting a request and the possibilities of complaint to the national data-protection authority and a judicial remedy. Both avenues and the period are retained."
+      },
+      "reasoning": {
+        "status": "sound",
+        "analysis": "The conditional statement concerns a decision not to comply and does not authorise refusal. General references to the national authority do not shift the confirmed Italy/EU jurisdiction or invent a particular complaint already filed. The 14 September 2026 reference remains a source-capture date and no new effective date is asserted.",
+        "supported_premises": [
+          "A decision not to grant the request triggers a reasons-and-remedies notice.",
+          "The source specifies one month after receipt and both complaint and judicial routes."
+        ],
+        "missing_premises": []
+      },
+      "professional_judgment": {
+        "status": "professional_judgment_required",
+        "analysis": "The general proposition is supported. Its application requires actual case facts, which were not supplied, and the candidate expressly routes those decisions for professional or privacy review.",
+        "professional_review_items": [
+          "Check the proposed reasons, notification date, relevant authority and judicial-remedy information for a real refusal."
+        ]
+      },
+      "issues": [
+        {
+          "type": "judgment_dependent",
+          "explanation": "The remaining case-specific evaluation is acknowledged in the contribution and is not a defect in this general teaching FAQ.",
+          "treatment": "professional_review"
+        }
+      ],
+      "disposition": "retain",
+      "reviewer_action": "accept"
+    }
+  ],
+  "overall_assessment": {
+    "outcome": "ready_for_professional_review",
+    "analysis": "The exact lucia-es-demo contribution supports the short FAQ under the fixed captured-source teaching contract. All material source propositions and their temporal, modal, reasoning and professional-judgment boundaries are acceptable as written. The fictional exercise label is already present in every reader-facing draft and the master caveats. No content revision is required. Preservation is assessed as conforming in the pre-render contribution: unavailable render and historical-file checks are not misclassified as contribution defects. This verdict permits progression to professional review only; it does not certify rendered appearance, retained versions, a real case outcome, professional approval, sending or publication.",
+    "residual_uncertainties": [
+      "Only the registered captured excerpt was assessed; current live-source changes and linked legal materials were not researched.",
+      "The actual rendered palette, layout and visual output were not available among the allowed inputs.",
+      "Professional approval has not been given or verified by this assessment."
+    ],
+    "professional_review_items": [
+      "Review the proposed communication and initial studio format before any actual use.",
+      "For a real request, establish receipt, actor roles, the applicable information to disclose, extension facts, other people's rights and any fee or refusal grounds.",
+      "Verify the rendered output against the contract's selected draft palette and readable layout."
+    ]
+  }
+}

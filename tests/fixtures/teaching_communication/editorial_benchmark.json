@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "provider": "OpenAI",
+  "model": "GPT-6 (exact serving model identifier unavailable)",
+  "assessment_template_version": "professional-communication-editorial-v4",
+  "template_sha256": "3674c84a1916d0ad2604a4321cd0253877e20ace02f2afea77cfea598b0091b6",
+  "assessor_session_id": "01a0a0b5-5b7d-7422-8d80-5992ef2bbc02",
+  "evaluated_at": "2026-09-14T16:18:41.996568+00:00",
+  "judgments": [
+    {
+      "case_id": "EQ-001",
+      "verdict": "revise",
+      "analysis": "The post gives the reader no usable information about the actual measure. Its importance, preparation advice and professional-referral language could accompany almost any announcement; neither the effective date nor the eligibility perimeter survives into the copy. Silence would lose no concrete verification or decision aid in this version. Replace the generic caution with the source-specific date, the eligibility boundary and one bounded check the reader can perform, while retaining an individual-applicability limit. No visual is proposed. The weakest element is the absence of any factual anchor or reader payoff."
+    },
+    {
+      "case_id": "EQ-002",
+      "verdict": "revise",
+      "analysis": "The maxim is sensible but commonplace, and the package does not explain how this particular measure changes a financing choice. The post omits the eligibility, timing, exclusions and guarantee conditions that could make it useful. Slides 1, 2, 3, 4 and 5 each fail the incremental-value test on the supplied description: repeating that spending requires care or an adviser does not create a decision tool. Rebuild the post around a concrete financing-route comparison or bounded verification grounded in the measure, and omit or replace every paraphrase slide. An investment-merit limit is appropriate, but here it substitutes for substantive expertise. The weakest element is the five-slide expansion of a generic maxim."
+    },
+    {
+      "case_id": "EQ-003",
+      "verdict": "revise",
+      "analysis": "The post already supplies the useful date, conditions and professional limit, but that does not justify the proposed carousel. Slide 1 is redundant; slide 2 is redundant; slide 3 is redundant; slide 4 is redundant; slide 5 is redundant; slide 6 is redundant, because each only redistributes the same sentences without adding a comparison, sequence, source detail or decision aid. A carousel request is not an editorial reason to render six weak slides. Omit the visual and retain the complete post, or redesign a shorter visual only if it provides a distinct reader task. The weakest element is the entire redundant visual; the package as proposed requires revision."
+    },
+    {
+      "case_id": "EQ-004",
+      "verdict": "ready",
+      "analysis": "The post has a useful practitioner thesis: distinguish the financing route from the investment decision, then use the restart date and eligibility warning to prevent a misleading reading of the headline percentage. The route-mapping slide provides comparison; the temporal-gate slide makes the six-month condition operational; the exclusions slide marks the perimeter; the threshold-obligation slide surfaces a consequential condition; the verification-questions slide converts the explanation into bounded next checks. Each therefore has an incremental function beyond the post, and each cites the public circular on the facts supplied. Silence would remove a useful route-and-condition map. The likely weakest element, the closing questions, remains justified because the questions are exact and source-bound rather than a generic adviser referral. The package does not infer individual eligibility or investment merit from the guarantee percentage."
+    },
+    {
+      "case_id": "EQ-005",
+      "verdict": "no_publish",
+      "analysis": "There is no current audience-specific reason for this email: the deadline has already been communicated, and the new item adds no amendment, interpretation or action. An empty publication slot is an internal scheduling fact, not a benefit for recipients. Silence would lose no new verification, changed instruction or source-specific insight. Rephrasing the reminder would not remedy that missing purpose. No visual is proposed. The weakest element is the communication premise itself; with the supplied facts, do not publish or send it."
+    },
+    {
+      "case_id": "EQ-006",
+      "verdict": "ready",
+      "analysis": "The alert enables a concrete verification that silence would remove: compare the old and new filing dates, establish whether the reader belongs to the affected cohort, then check the preserved exception against evidence. Separating the exception from the general change demonstrates professional judgment beyond announcement summary, and the explicit limit avoids asserting individual applicability. The timeline adds sequence through a deadline-change step and an exception checkpoint, so it has a distinct use rather than simply enlarging the prose. Its weakest element is the exception checkpoint, which must remain visible enough to prevent the new date being mistaken for a universal rule; the supplied description already isolates it. The described alert and timeline provide bounded reader value."
+    },
+    {
+      "case_id": "EQ-007",
+      "verdict": "revise",
+      "analysis": "The substantive comparison and cohort explanation may be strong, but the exact proposed public source note fails the evidence test. Every proposed slide has the same defect: the label Fonte: fonte ufficiale identifies neither the authority nor the instrument and gives the reader no route to retrieve it. The full source register cannot repair a note that will be all the published reader sees. Replace the generic note on each affected slide with the identifiable authority, instrument title or number, publication date and a usable public reference, using the available register accurately. Recheck the packaged notes for readability and retrieval. The weakest element is public traceability, so the package is not ready until the notes are corrected."
+    }
+  ]
+}

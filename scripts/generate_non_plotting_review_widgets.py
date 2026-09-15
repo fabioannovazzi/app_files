@@ -5305,8 +5305,10 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     }""",
         }
     if target["plugin"] == "archive-organization":
+        # Reuse the complete reviewer field and validation, not only its call site.
+        reviewer = _widget_snippets({**target, "plugin": "client-file-preparation"})
         return {
-            **legacy,
+            **reviewer,
             "tool_args_js": """    function saveToolArgs() {
       return {
         review_reference: state.payload.review_reference,
@@ -5771,11 +5773,25 @@ def render_target(target: dict[str, Any]) -> str:
         schema_version_json=json.dumps(target.get("schemaVersion", "1.0")),
         **_widget_snippets(target),
     )
+    if target["plugin"] == "archive-organization":
+        if __package__:
+            from scripts.archive_organization_review_widget import customize_review
+        else:
+            from archive_organization_review_widget import customize_review
+
+        return customize_review(html)
     if target["plugin"] == "open-item-reconciliation":
         if __package__:
             from scripts.open_item_review_widget import customize_review
         else:
             from open_item_review_widget import customize_review
+
+        return customize_review(html)
+    if target["plugin"] == "new-client":
+        if __package__:
+            from scripts.new_client_review_widget import customize_review
+        else:
+            from new_client_review_widget import customize_review
 
         return customize_review(html)
     return html

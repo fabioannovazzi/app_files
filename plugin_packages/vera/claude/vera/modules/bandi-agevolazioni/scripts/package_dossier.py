@@ -20,6 +20,7 @@ from case_core import (
     write_private_json,
     write_private_text,
 )
+from dossier_report import render_dossier_html
 
 __all__ = ["package_dossier", "main"]
 
@@ -601,6 +602,7 @@ def _package_dossier_locked(
     if workbench.get("dossier", {}).get("ready_to_file") is not False:
         raise ValueError("ready_to_file must remain false")
     markdown_path = output_dir / "review_dossier.md"
+    report_path = output_dir / "review_dossier.html"
     manifest_path = output_dir / "dossier_manifest.json"
     write_private_text(
         markdown_path,
@@ -610,6 +612,16 @@ def _package_dossier_locked(
             workbench=workbench,
             intelligence=intelligence,
             reviews=reviews,
+            audit=audit,
+        ),
+    )
+    write_private_text(
+        report_path,
+        render_dossier_html(
+            intake=intake,
+            sources=sources,
+            workbench=workbench,
+            run_state=run_state,
             audit=audit,
         ),
     )
@@ -640,6 +652,15 @@ def _package_dossier_locked(
         "artifact_hashes": current_hashes,
         "validation_audit_sha256": canonical_json_sha256(audit),
         "artifacts": [
+            {
+                "artifact_id": "deliverable.review_report",
+                "path": report_path.name,
+                "purpose": "Readable local dossier with source-linked recorded assessments",
+                "audience": "professional_review",
+                "media_type": "text/html",
+                "byte_count": report_path.stat().st_size,
+                "sha256": sha256_file(report_path),
+            },
             {
                 "artifact_id": "deliverable.review_dossier",
                 "path": markdown_path.name,
@@ -707,7 +728,7 @@ def _package_dossier_locked(
         ],
     }
     write_private_json(manifest_path, manifest)
-    return {"dossier": markdown_path, "manifest": manifest_path}
+    return {"report": report_path, "dossier": markdown_path, "manifest": manifest_path}
 
 
 def main(argv: list[str] | None = None) -> int:

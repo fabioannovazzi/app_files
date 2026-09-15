@@ -1,0 +1,27 @@
+{
+  "vera/purchase-invoice-review": {
+    "title": "Revisar facturas de compra con la contabilidad",
+    "goal": "Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos.",
+    "scenario": "Officina Arco aporta tres facturas XML y sus asientos de marzo. El despacho quiere identificar puntos que necesitan revisión.",
+    "scope": "Primer uso de la revisión de facturas de compra italianas. Vera lee facturas y contabilidad, las compara y evalúa la coherencia de las cuentas; no modifica asientos.",
+    "inputs": "Abre ledger-march.csv, la carpeta invoices y context-es.md. Aporta facturas y contabilidad real del mismo período. Vera comprueba las columnas y prepara su correspondencia para revisión antes de ejecutar.",
+    "request": "Vera, revisa estas facturas de compra frente a los asientos de marzo de Officina Arco. Muéstrame en el libro de excepciones qué debo comprobar y por qué.",
+    "steps": [
+      "La conversación de trabajo verifica lote y columnas contables. La voz explica identificación de factura, asiento y cuenta usada y ayuda a resolver ambigüedades relevantes.",
+      "El flujo actual relaciona facturas y asientos, comprueba importes y usa su revisor nativo para evaluar descripciones y cuentas. La voz sigue el avance real y distingue cálculo y juicio.",
+      "Abre primero el libro Excel de excepciones. Elige una línea, lee la razón del control y localiza descripción de factura y cuenta realmente utilizada. Revisa los avisos antes de concluir."
+    ],
+    "deliverables": [
+      "Libro Excel de excepciones con motivos y referencias para revisar.",
+      "Resumen del lote y trazabilidad de comparaciones hacia facturas y asientos."
+    ],
+    "review": "Comprueba cobertura del lote y documentos que respaldan cada aviso. «Ningún problema detectado» es un resultado de cribado, no una certificación. Los cambios de cuenta y correcciones siguen el proceso contable habitual.",
+    "checkpoints": [
+      "Antes de ejecutar, identifica los dos conjuntos de información comparados.",
+      "En el resultado, explica un aviso mediante su factura y asiento."
+    ],
+    "practice": "Repite con ledger-march-april.csv y las cuatro facturas de la práctica. Conserva el primer resultado. Comprueba el nuevo número de facturas y un aviso, pidiendo ayuda solo donde haga falta.",
+    "success": "Sabes aportar ambas entradas, iniciar la revisión, encontrar excepciones y comprobar sus motivos sin confundir cribado y aprobación.",
+    "repeat": "Pide a Vera revisar las facturas de compra de un cliente para un período concreto y aporta también la contabilidad registrada. Revisa correspondencia, cobertura y avisos en el expediente correcto."
+  }
+}

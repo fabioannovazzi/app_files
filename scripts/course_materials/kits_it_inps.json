@@ -1,0 +1,27 @@
+{
+  "vera/previdenza-inps": {
+    "title": "Esaminare un caso INPS con Vera",
+    "goal": "Imparare a fornire una domanda previdenziale e i documenti, controllare le evidenze e usare il dossier prodotto per la revisione professionale.",
+    "scenario": "Marta vuole capire cosa risulta della propria posizione contributiva nel periodo lavorato. Ha una dichiarazione del datore e una scheda didattica dei periodi.",
+    "scope": "Un caso documentale di lavoro dipendente privato in Italia. Seguiamo domanda, fonti, cronologia, ricerca pertinente e bozza; non calcoliamo la pensione né operiamo nel portale.",
+    "inputs": "Apri case-it.md, employment-it.md, record-context-it.md e contribution-periods-it.csv. Nota chi è interessato, il periodo e cosa chiede. La scheda è fittizia, non un export ufficiale.",
+    "request": "Vera, esamina questo caso INPS dal primo gennaio a fine giugno 2025. Spiegami cosa mostrano i documenti, verifica le fonti ufficiali pertinenti e prepara una bozza con punti da chiarire e documenti da chiedere.",
+    "steps": [
+      "Nel thread di lavoro Vera legge i file e riepiloga domanda, periodo e quadro italiano da confermare. La voce spiega il percorso e ti fa distinguere le informazioni disponibili dalle domande ancora aperte.",
+      "Vera organizza fatti e cronologia, collega ogni fatto al documento, ricerca il quadro pertinente e prepara il dossier con il workflow corrente. La voce segue le evidenze e i risultati effettivi, senza anticipare una conclusione.",
+      "Apri il memo generato, la cronologia e le richieste documentali. Parti dalla risposta alla domanda, segui un fatto alla sua fonte e controlla quali conclusioni restano da rivedere."
+    ],
+    "deliverables": [
+      "Memo di studio in Word e testo, marcato come bozza per revisione professionale.",
+      "Cronologia, quadro delle evidenze e richieste documentali per proseguire il caso."
+    ],
+    "review": "Verifica periodo, soggetto e documenti citati. Una dichiarazione di impiego e un periodo visibile in una scheda sono evidenze diverse. Controlla la portata delle fonti e le informazioni mancanti prima di qualsiasi conclusione o segnalazione.",
+    "checkpoints": [
+      "Prima dell’analisi, formula la domanda a cui deve rispondere il dossier.",
+      "Nel memo, trova un fatto, la sua fonte e il prossimo chiarimento utile."
+    ],
+    "practice": "Ripeti la richiesta con gli input di pratica, che includono una scheda aggiornata. Conserva il primo dossier e confronta quali osservazioni e richieste cambiano. Non dedurre quando o perché il dato è cambiato se i documenti non lo spiegano.",
+    "success": "Sai avviare la revisione, fornire i documenti, leggere memo e fonti e aggiornare il lavoro con nuove evidenze.",
+    "repeat": "Indica a Vera domanda INPS, periodo, soggetti e documenti disponibili, segnalando eventuali scadenze. Rivedi il perimetro e le evidenze e usa la bozza nel normale percorso professionale."
+  }
+}

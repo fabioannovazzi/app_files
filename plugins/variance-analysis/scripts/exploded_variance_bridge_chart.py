@@ -772,6 +772,7 @@ def _draw_bridge_panel(
     rows: list[dict[str, Any]],
     baseline_label: str,
     comparison_label: str,
+    recipe: dict[str, Any],
     selected_parent_row_numbers: set[int] | None = None,
 ) -> dict[int, tuple[int, int]]:
     font = _font()
@@ -787,11 +788,30 @@ def _draw_bridge_panel(
     header_y = y + 72
     label_x = x + 16
     value_left = x + int(width * 0.39)
-    value_width = int(width * 0.25)
-    delta_left = value_left + value_width + 34
-    delta_width = max(80, x + width - delta_left - 24)
-    draw.text((value_left, header_y - 28), "Value", fill=COLORS["muted"], font=font)
-    draw.text((delta_left, header_y - 28), "Delta", fill=COLORS["muted"], font=font)
+    value_width = int(width * 0.23)
+    delta_left = value_left + value_width + 28
+    percent_left = x + width - 72
+    delta_width = max(60, percent_left - delta_left - 16)
+    draw.text(
+        (value_left, header_y - 28),
+        f"{baseline_label} / {comparison_label}",
+        fill=COLORS["muted"],
+        font=font,
+    )
+    draw.text((delta_left, header_y - 28), "Δ", fill=COLORS["muted"], font=font)
+    draw.text((percent_left, header_y - 28), "Δ %", fill=COLORS["muted"], font=font)
+    baseline_is_plan = str(
+        (recipe.get("options") or {}).get("comparison_basis") or "scenario"
+    ) != "period" or baseline_label.upper() in {
+        "PL",
+        "PLAN",
+        "BUDGET",
+        "FORECAST",
+        "FC",
+        "FCST",
+    }
+    baseline_fill = COLORS["white"] if baseline_is_plan else COLORS["baseline_period"]
+    baseline_outline = COLORS["actual"] if baseline_is_plan else None
 
     baseline_total = sum(_safe_float(row.get("amount_baseline")) for row in rows)
     comparison_total = sum(_safe_float(row.get("amount_comparison")) for row in rows)
@@ -809,8 +829,11 @@ def _draw_bridge_panel(
         },
     ]
     low, high = _scale_bounds(all_rows)
+    deltas = [0.0, *(_safe_float(row.get("total_delta")) for row in rows)]
+    delta_padding = max((max(deltas) - min(deltas)) * 0.12, 1.0)
+    delta_low, delta_high = min(deltas) - delta_padding, max(deltas) + delta_padding
     value_zero_x = _x_position(0.0, low, high, value_left, value_width)
-    delta_zero_x = _x_position(0.0, low, high, delta_left, delta_width)
+    delta_zero_x = _x_position(0.0, delta_low, delta_high, delta_left, delta_width)
     draw.line(
         (value_zero_x, header_y, value_zero_x, y + height - 16), fill=COLORS["grid"]
     )
@@ -853,19 +876,23 @@ def _draw_bridge_panel(
         if row_type in {"baseline_total", "comparison_total"}:
             value = _safe_float(row.get("amount"))
             value_x = _x_position(value, low, high, value_left, value_width)
-            fill = (
-                COLORS["baseline_period"]
-                if row_type == "baseline_total"
-                else COLORS["actual"]
-            )
+            fill = baseline_fill if row_type == "baseline_total" else COLORS["actual"]
             _draw_bar(
                 draw,
                 _bar_box_from_zero(value_zero_x, value_x, center_y - 5, center_y + 5),
                 fill=fill,
+                outline=baseline_outline if row_type == "baseline_total" else None,
             )
+            value_text = _format_number(value, signed=False)
+            text_width = draw.textbbox((0, 0), value_text, font=bold_font)[2]
             draw.text(
-                (min(value_x + 8, value_left + value_width + 4), center_y - 12),
-                _format_number(value, signed=False),
+                (
+                    max(
+                        value_left, min(value_x, value_left + value_width - text_width)
+                    ),
+                    center_y - 26,
+                ),
+                value_text,
                 fill=COLORS["text"],
                 font=bold_font,
             )
@@ -880,7 +907,8 @@ def _draw_bridge_panel(
             _bar_box_from_zero(
                 value_zero_x, baseline_x, center_y - bar_height, center_y
             ),
-            fill=COLORS["baseline_period"],
+            fill=baseline_fill,
+            outline=baseline_outline,
         )
         _draw_bar(
             draw,
@@ -890,7 +918,9 @@ def _draw_bridge_panel(
             fill=COLORS["actual"],
         )
         delta_value = _safe_float(row.get("total_delta"))
-        delta_x = _x_position(delta_value, low, high, delta_left, delta_width)
+        delta_x = _x_position(
+            delta_value, delta_low, delta_high, delta_left, delta_width
+        )
         delta_color = COLORS["positive"] if delta_value >= 0 else COLORS["negative"]
         _draw_bar(
             draw,
@@ -899,17 +929,16 @@ def _draw_bridge_panel(
         )
         delta_label = _format_number(delta_value)
         label_width = draw.textbbox((0, 0), delta_label, font=bold_font)[2]
-        if delta_value >= 0:
-            label_x_pos = min(delta_x + 8, x + width - label_width - 8)
-        else:
-            label_x_pos = delta_x - label_width - 8
+        label_x_pos = max(
+            delta_left, min(delta_x - label_width / 2, percent_left - label_width - 8)
+        )
         draw.text(
-            (label_x_pos, center_y - 12), delta_label, fill=delta_color, font=bold_font
+            (label_x_pos, center_y - 26), delta_label, fill=delta_color, font=bold_font
         )
         percent_label = str(row.get("percent_label") or "")
         if percent_label:
             draw.text(
-                (x + width - 72, center_y - 12),
+                (percent_left, center_y - 12),
                 f"{percent_label}%",
                 fill=COLORS["muted"],
                 font=font,
@@ -951,14 +980,36 @@ def _write_png(
         child_dimension=child_dimension,
     )
     font = _font()
-    draw.rectangle((48, 850, 62, 862), fill=COLORS["baseline_period"])
+    language = str(recipe.get("language") or "en").split("-")[0]
+    labels = {
+        "it": ("Confronto complessivo", "Aumento", "Diminuzione"),
+        "en": ("Overall comparison", "Increase", "Decrease"),
+        "fr": ("Comparaison globale", "Hausse", "Baisse"),
+        "de": ("Gesamtvergleich", "Anstieg", "Rückgang"),
+        "es": ("Comparación global", "Aumento", "Disminución"),
+    }.get(language, ("Overall comparison", "Increase", "Decrease"))
+    plan = str(
+        (recipe.get("options") or {}).get("comparison_basis") or "scenario"
+    ) != "period" or baseline_label.upper() in {
+        "PL",
+        "PLAN",
+        "BUDGET",
+        "FORECAST",
+        "FC",
+        "FCST",
+    }
+    draw.rectangle(
+        (48, 850, 62, 862),
+        fill=COLORS["white"] if plan else COLORS["baseline_period"],
+        outline=COLORS["actual"] if plan else None,
+    )
     draw.text((70, 844), baseline_label, fill=COLORS["muted"], font=font)
     draw.rectangle((210, 850, 224, 862), fill=COLORS["actual"])
     draw.text((232, 844), comparison_label, fill=COLORS["muted"], font=font)
     draw.rectangle((412, 850, 426, 862), fill=COLORS["positive"])
-    draw.text((434, 844), "Positive delta", fill=COLORS["muted"], font=font)
+    draw.text((434, 844), labels[1], fill=COLORS["muted"], font=font)
     draw.rectangle((604, 850, 618, 862), fill=COLORS["negative"])
-    draw.text((626, 844), "Negative delta", fill=COLORS["muted"], font=font)
+    draw.text((626, 844), labels[2], fill=COLORS["muted"], font=font)
 
     selected_parent_rows = {
         int(child["parent_row_number"])
@@ -969,11 +1020,12 @@ def _write_png(
     parent_anchors = _draw_bridge_panel(
         draw,
         box=layout["parent_panel"],
-        title="Parent bridge",
+        title=labels[0],
         dimension=parent_dimension,
         rows=parent["rows"],
         baseline_label=baseline_label,
         comparison_label=comparison_label,
+        recipe=recipe,
         selected_parent_row_numbers=selected_parent_rows,
     )
     connector_specs: list[dict[str, Any]] = []
@@ -988,6 +1040,7 @@ def _write_png(
             rows=child["rows"],
             baseline_label=baseline_label,
             comparison_label=comparison_label,
+            recipe=recipe,
         )
         parent_row_number = int(child["parent_row_number"])
         start = parent_anchors.get(parent_row_number)

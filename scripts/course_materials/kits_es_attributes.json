@@ -1,0 +1,27 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Crear un informe del surtido con Clara",
+    "goal": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado.",
+    "scenario": "Un equipo de producto quiere entender el surtido antes de su próxima reunión. Parte de un paquete ficticio de prendas de punto, sigue la elaboración del informe y contrasta sus conclusiones con los productos originales. Repite con un paquete actualizado.",
+    "scope": "Primer informe completo a partir de un paquete local existente: recepción, comparación, interpretación, revisión independiente y entrega. La captura web, la clasificación central de atributos y Brand Fit son trabajos distintos y no se simulan aquí.",
+    "inputs": "Abre brief-es.md y aporta assortment-demo-es.zip. El archivo contiene productos ficticios, grupos explícitos de novedades y más vendidos, comparaciones calculadas y un control de integridad. No incluye un informe terminado, interpretaciones aprobadas ni un recibo del servidor.",
+    "request": "Clara, prepara con este paquete un informe del surtido para nuestro equipo de producto. Explica qué datos cubre, compara los más vendidos y las novedades con el resto, y muéstrame el informe y sus controles.",
+    "steps": [
+      "Confirma minorista, categoría, datos aportados y destinatarios. Clara abre el archivo y comprueba su integridad. La conversación de voz explica los productos originales y los grupos definidos por el minorista.",
+      "Clara prepara las tablas comparativas habituales y redacta el informe a partir de las evidencias. Sigue una comparación desde los productos hasta la tabla y la conclusión; distingue un rasgo del surtido de las cantidades vendidas o una explicación causal.",
+      "Una revisión independiente comprueba afirmaciones y legibilidad; los controles del navegador examinan el HTML. Abre el informe real, su dictamen y sus reservas. Localiza resumen, tablas, productos de apoyo y próxima pregunta para el equipo."
+    ],
+    "deliverables": [
+      "Informe HTML local con comparaciones, interpretación, referencias y un dictamen explícito de corrección.",
+      "Tablas de evidencia y registros de revisión que explican el dictamen y los límites pendientes."
+    ],
+    "review": "Comprueba los datos aportados, las definiciones de los grupos y el respaldo de una conclusión. Las novedades son el grupo designado por la fuente; una posición entre los más vendidos no aporta cantidades vendidas. Lee los motivos del dictamen antes de usar el informe.",
+    "checkpoints": [
+      "Identifica el paquete y la petición necesarios para empezar y explica qué producirá Clara.",
+      "Abre el informe y sigue una conclusión hasta sus evidencias y su estado de revisión."
+    ],
+    "practice": "Aporta assortment-practice-es.zip, que cambia el grupo ficticio de novedades. Solicita un nuevo informe para los mismos destinatarios. Conserva el primero y compara qué cambió en las evidencias y la interpretación.",
+    "success": "Sabes iniciar un informe, leer su resumen y evidencias, entender el dictamen y repetir el trabajo con otro paquete.",
+    "repeat": "Aporta un paquete con integridad verificada e indica destinatarios y pregunta. Clara prepara, revisa y entrega el HTML localmente. Los datos centrales actuales requieren una recepción autenticada distinta con el ámbito de datos declarado."
+  }
+}

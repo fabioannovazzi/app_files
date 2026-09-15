@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "quesito-legale-fiscale",
+  "scenario": "Ein fiktiver Mandant fragt nach der Abzugsfähigkeit eines Aufwands. Eine Rechnung beschreibt eine Leistung; Rechtsträger, Periode, steuerliche Regelung und tatsächliche Nutzung fehlen. Die Lektion grenzt die Frage ein, ohne ein Steuergutachten zu liefern.",
+  "columns": [
+    "Fiktives Element",
+    "Vorhanden",
+    "Zu klären"
+  ],
+  "rows": [
+    [
+      "Rechnung Q1",
+      "Leistungsbeschreibung und Betrag",
+      "Tatsächliche Nutzung"
+    ],
+    [
+      "Mandantenfrage",
+      "Interesse am Abzug",
+      "Rechtsträger, Regelung und Periode"
+    ],
+    [
+      "Rechtsquellen",
+      "Im kleinen Beispiel noch nicht ausgewählt",
+      "Einschlägiger Rahmen nach Klärung"
+    ]
+  ],
+  "scope": "Lehre zur Recherche- und Prüfmethode, keine materielle Steuerregel. Ein echter Fall benötigt aktuelle einschlägige Primärquellen."
+}

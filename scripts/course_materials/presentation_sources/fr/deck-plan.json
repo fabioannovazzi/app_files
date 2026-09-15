@@ -1,0 +1,171 @@
+{
+  "schema_version": "clara.html_deck_plan.v1",
+  "allow_bespoke_html": false,
+  "slides": [
+    {
+      "id": "opening",
+      "layout_id": "editorial-cover",
+      "title": "Une proposition pour recevoir les demandes",
+      "chapter": "opening",
+      "chapter_label": "Proposition",
+      "tone": "dark",
+      "notes": "Proposition fictive à discuter. Une proposition pour recevoir les demandes",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-opening"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussion interne",
+        "title": "Une proposition pour recevoir les demandes",
+        "source_note": "Proposition fictive à discuter",
+        "subtitle": "Une fiche commune à tester avec le personnel",
+        "author": "Officina Arco"
+      }
+    },
+    {
+      "id": "request",
+      "layout_id": "paired-comparison",
+      "title": "Rendre la demande compréhensible",
+      "chapter": "request",
+      "chapter_label": "Demande",
+      "tone": "light",
+      "notes": "Proposition fictive à discuter. Rendre la demande compréhensible",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-request"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussion interne",
+        "title": "Rendre la demande compréhensible",
+        "source_note": "Proposition fictive à discuter",
+        "left_label": "Aujourd’hui",
+        "left_title": "Des informations dispersées",
+        "left_items": [
+          {
+            "label": "Contact",
+            "body": "Il manque parfois un moyen de joindre le client."
+          },
+          {
+            "label": "Problème",
+            "body": "La description demande parfois une précision."
+          }
+        ],
+        "right_label": "Proposition",
+        "right_title": "Une fiche commune",
+        "right_items": [
+          {
+            "label": "Contact",
+            "body": "Noter les coordonnées et le moyen convenu pour répondre."
+          },
+          {
+            "label": "Problème",
+            "body": "Décrire ce que signale le client, sans inventer de diagnostic."
+          }
+        ]
+      }
+    },
+    {
+      "id": "process",
+      "layout_id": "process-flow",
+      "title": "Clarifier la demande avant d’agir",
+      "chapter": "process",
+      "chapter_label": "Étapes",
+      "tone": "light",
+      "notes": "Proposition fictive à discuter. Clarifier la demande avant d’agir",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-process"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussion interne",
+        "title": "Clarifier la demande avant d’agir",
+        "source_note": "Proposition fictive à discuter",
+        "steps": [
+          {
+            "label": "A",
+            "title": "Demande du client",
+            "body": "Noter vélo, problème et coordonnées.",
+            "_fragment": 1
+          },
+          {
+            "label": "B",
+            "title": "Informations manquantes",
+            "body": "Demander les précisions avant l’évaluation.",
+            "_fragment": 2
+          },
+          {
+            "label": "C",
+            "title": "Évaluation de Paolo",
+            "body": "Évaluer le travail et préparer le devis.",
+            "_fragment": 3
+          },
+          {
+            "label": "D",
+            "title": "Devis au client",
+            "body": "Attendre confirmation pour le travail et ses ajouts.",
+            "_fragment": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "responsibilities",
+      "layout_id": "assertion",
+      "title": "Convenir du suivi de la demande",
+      "chapter": "responsibilities",
+      "chapter_label": "Responsabilités",
+      "tone": "dark",
+      "notes": "Proposition fictive à discuter. Convenir du suivi de la demande",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-responsibilities"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussion interne",
+        "title": "Convenir du suivi de la demande",
+        "source_note": "Proposition fictive à discuter",
+        "body": "Sara recueillerait et clarifierait les demandes. Paolo évaluerait le travail et préparerait le devis.",
+        "implication": "Rôles proposés à convenir avant le test."
+      }
+    },
+    {
+      "id": "decision",
+      "layout_id": "closing-decision",
+      "title": "Décider s’il faut tester la fiche",
+      "chapter": "decision",
+      "chapter_label": "Décision",
+      "tone": "light",
+      "notes": "Proposition fictive à discuter. Décider s’il faut tester la fiche",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-decision"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Discussion interne",
+        "title": "Décider s’il faut tester la fiche",
+        "source_note": "Proposition fictive à discuter",
+        "actions": [
+          {
+            "verb": "Convenir",
+            "body": "Définir les rôles et conditions avant le test."
+          },
+          {
+            "verb": "Réexaminer",
+            "body": "Recueillir les retours et revoir la fiche après le test."
+          }
+        ],
+        "closing_line": "La réunion doit désigner qui recueillera les retours."
+      }
+    }
+  ]
+}

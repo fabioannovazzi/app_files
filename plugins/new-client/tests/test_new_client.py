@@ -12,6 +12,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+import jsonschema
 import pytest
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
@@ -208,6 +209,7 @@ def _complete_new_client_input(tmp_path: Path) -> dict[str, Any]:
         engagement_kind="ongoing",
         assessment_date="2026-01-31",
     )
+    payload["engagement"]["start_date"] = "2026-01-31"
     evidence_dir = tmp_path / "case-evidence"
     evidence_dir.mkdir(parents=True)
     identity_evidence_ids = (
@@ -986,6 +988,28 @@ def test_build_template_has_exact_aml_and_screening_contract() -> None:
         "country",
     }
     assert payload["language"] == "it"
+    assert payload["engagement"]["start_date"] is None
+
+
+@pytest.mark.parametrize("start_date", [None, "2026-02-01"])
+def test_missing_start_date_keeps_engagement_terms_open(
+    tmp_path: Path, start_date: str | None
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["engagement"]["start_date"] = start_date
+    validate_new_client_input(payload)
+    jsonschema.validate(
+        payload, load_json(PLUGIN_ROOT / "schemas/new_client_input.schema.json")
+    )
+    missing = new_client_core.build_missing_evidence(
+        payload,
+        calculate_aml(payload["aml"]),
+        generated_at="2026-01-31T10:00:00+00:00",
+        as_of=date(2026, 1, 31),
+    )
+    assert any(item["item_id"] == "engagement:terms" for item in missing["items"]) is (
+        start_date is None
+    )
 
 
 def test_new_client_input_rejects_unsupported_language() -> None:
@@ -1001,6 +1025,106 @@ def test_new_client_input_rejects_unsupported_language() -> None:
         ValidationError, match="language must be one of it, en, fr, de, es"
     ):
         validate_new_client_input(payload)
+
+
+def test_starter_does_not_invent_scores_or_a_low_risk_band() -> None:
+    payload = build_template(
+        "CASE-UNASSESSED",
+        client_type="company",
+        engagement_kind="ongoing",
+        assessment_date="2026-01-31",
+    )
+    validate_new_client_input(payload)
+    jsonschema.validate(
+        payload, load_json(PLUGIN_ROOT / "schemas/new_client_input.schema.json")
+    )
+    result = calculate_aml(payload["aml"])
+    assert result["missing_score_ids"] == ["RI", *AML_A_FACTOR_IDS, *AML_B_FACTOR_IDS]
+    assert result["status"] == "blocked_incomplete_scores"
+    assert result["inherent_risk"] is None
+    assert result["effective_risk"] is None
+    assert result["calculated_band"] is None
+    assert result["minimum_verification_mode_for_review"] is None
+
+
+@pytest.mark.parametrize("missing", ["RI", "A1", "B1"])
+def test_one_missing_score_keeps_risk_and_monitoring_unavailable(missing: str) -> None:
+    payload = build_template(
+        "CASE-PARTIAL-SCORES",
+        client_type="company",
+        engagement_kind="ongoing",
+        assessment_date="2026-01-31",
+    )
+    _set_aml_scores(payload, 2, status="proposed")
+    _confirm_table_1(payload)
+    _confirm_negative_triggers(payload)
+    if missing == "RI":
+        payload["aml"]["inherent_risk"] = None
+    else:
+        factor = next(
+            f
+            for f in [*payload["aml"]["factors_a"], *payload["aml"]["factors_b"]]
+            if f["factor_id"] == missing
+        )
+        factor["score"] = None
+    validate_new_client_input(payload)
+    jsonschema.validate(
+        payload, load_json(PLUGIN_ROOT / "schemas/new_client_input.schema.json")
+    )
+    result = calculate_aml(payload["aml"])
+    assert result["missing_score_ids"] == [missing]
+    assert result["specific_risk"] is None
+    assert result["effective_risk"] is None
+    assert result["calculated_band"] is None
+    assert result["baseline_verification_mode"] is None
+    monitoring = build_monitoring_plan(
+        payload, result, generated_at="2026-02-01T00:00:00+00:00"
+    )
+    assert monitoring["status"] == "blocked_incomplete_scores"
+    assert monitoring["next_review_date"] is None
+
+
+@pytest.mark.parametrize("missing", ["RI", "A1", "B1"])
+def test_missing_required_score_cannot_be_confirmed(missing: str) -> None:
+    payload = build_template(
+        "CASE-MISSING-CONFIRMED",
+        client_type="company",
+        engagement_kind="ongoing",
+        assessment_date="2026-01-31",
+    )
+    _set_aml_scores(payload, 2)
+    if missing == "RI":
+        payload["aml"]["inherent_risk"] = None
+    else:
+        factor = next(
+            f
+            for f in [*payload["aml"]["factors_a"], *payload["aml"]["factors_b"]]
+            if f["factor_id"] == missing
+        )
+        factor["score"] = None
+    with pytest.raises(ValidationError, match="required for confirmation"):
+        validate_new_client_input(payload)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(
+            payload, load_json(PLUGIN_ROOT / "schemas/new_client_input.schema.json")
+        )
+
+
+def test_missing_scores_do_not_remove_a_confirmed_enhanced_trigger() -> None:
+    payload = build_template(
+        "CASE-MISSING-WITH-TRIGGER",
+        client_type="company",
+        engagement_kind="ongoing",
+        assessment_date="2026-01-31",
+    )
+    payload["aml"]["mandatory_enhanced_triggers"][0].update(
+        status="yes",
+        review_status="confirmed",
+    )
+    result = calculate_aml(payload["aml"])
+    assert result["calculated_band"] is None
+    assert result["minimum_verification_mode_for_review"] == "enhanced"
+    assert result["status"] == "blocked_incomplete_scores"
 
 
 def test_initializer_cli_writes_supported_non_italian_language(
@@ -1136,6 +1260,7 @@ def test_validate_new_client_input_rejects_unattributed_confirmed_aml_factor() -
         engagement_kind="ongoing",
         assessment_date="2026-01-31",
     )
+    payload["aml"]["factors_a"][0]["score"] = 1
     payload["aml"]["factors_a"][0]["assessment_status"] = "confirmed"
 
     with pytest.raises(ValidationError, match="confirmed_by_role=professional"):
@@ -1185,6 +1310,7 @@ def test_validate_new_client_input_rejects_naive_professional_confirmation_times
         engagement_kind="ongoing",
         assessment_date="2026-01-31",
     )
+    payload["aml"]["factors_a"][0]["score"] = 1
     payload["aml"]["factors_a"][0].update(
         {
             "assessment_status": "confirmed",
@@ -1225,6 +1351,7 @@ def test_confirmed_mandatory_trigger_forces_enhanced_and_unknown_blocks() -> Non
     payload["aml"]["mandatory_enhanced_triggers"][0].update(
         {"status": "yes", "review_status": "confirmed"}
     )
+    _set_aml_scores(payload, 1)
     _confirm_table_1(payload)
 
     result = calculate_aml(payload["aml"])
@@ -1289,6 +1416,7 @@ def test_no_declassification_preserves_existing_enhanced_mode() -> None:
         assessment_date="2026-01-31",
     )
     _confirm_negative_triggers(payload)
+    _set_aml_scores(payload, 1)
     _confirm_table_1(payload)
     payload["aml"]["current_verification_mode"] = "enhanced"
 
@@ -1307,6 +1435,7 @@ def test_monitoring_schedule_clamps_dates_and_requires_enhanced_interval() -> No
         assessment_date="2024-02-29",
     )
     _confirm_negative_triggers(payload)
+    _set_aml_scores(payload, 1)
     _confirm_table_1(payload)
     payload["aml"]["current_verification_mode"] = "enhanced"
     aml_result = calculate_aml(payload["aml"])

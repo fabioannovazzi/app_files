@@ -2250,6 +2250,7 @@ def test_all_structured_sections_survive_and_email_has_no_false_attachment(
 ) -> None:
     contribution = _clone(_publish_contribution())
     email = contribution["channel_drafts"][0]
+    email["title"] = "Titolo di lavoro interno"
     email["sections"] = [
         {
             "heading": "Verifica preliminare",
@@ -2301,6 +2302,8 @@ def test_all_structured_sections_survive_and_email_has_no_false_attachment(
     assert "Verifica preliminare" in email_text
     assert "- Soggetto" in email_text
     assert "In allegato" not in email_text
+    assert "Titolo di lavoro interno" not in email_text
+    assert "Studio Aurora | Nuova misura: cosa verificare entro settembre" in email_text
     for channel in ("newsletter", "client_alert", "faq"):
         text = (run_dir / "drafts" / f"{channel}.md").read_text(encoding="utf-8")
         assert f"Introduzione {channel} da conservare." in text
@@ -3918,3 +3921,79 @@ def test_claim_assurance_must_review_every_answer_contract_dimension(
 
     assert completed.returncode == 1
     assert "source_hierarchy" in completed.stderr
+
+
+@pytest.mark.parametrize(
+    "issue_type,judgment_required,expected_error",
+    [
+        (None, False, None),
+        ("none", False, None),
+        ("source_identity", False, "unresolved defect"),
+        ("source_support", False, "unresolved defect"),
+        ("scope_or_qualification", False, "unresolved defect"),
+        ("temporal_or_modality", False, "unresolved defect"),
+        ("reasoning_gap", False, "unresolved defect"),
+        ("judgment_dependent", False, "unresolved defect"),
+        (None, True, "must route judgment to professional review"),
+    ],
+)
+def test_claim_issue_representation_preserves_defect_and_judgment_gates(
+    tmp_path: Path,
+    issue_type: str | None,
+    judgment_required: bool,
+    expected_error: str | None,
+) -> None:
+    contribution = _publish_contribution()
+    answer = _answer_contract(contribution)
+    assurance = _claim_assurance(contribution, answer)
+    claim = assurance["claims"][0]
+    if not judgment_required:
+        claim["professional_judgment"]["status"] = "not_judgment_dependent"
+        claim["professional_judgment"]["professional_review_items"] = []
+    claim["issues"] = (
+        []
+        if issue_type is None
+        else [
+            {
+                "type": issue_type,
+                "explanation": "Explicit synthetic regression issue representation.",
+                "treatment": "none" if issue_type == "none" else "blocked",
+            }
+        ]
+    )
+    payload = _write_json(
+        tmp_path / "claim-check.json",
+        {
+            "assurance": assurance,
+            "contribution": contribution,
+            "contract_digest": answer["contract_digest"],
+            "sources": {
+                "sources": [
+                    {"id": source} for source in contribution["claims"][0]["source_ids"]
+                ]
+            },
+        },
+    )
+    # A fresh process uses the real schema and native gate without sharing an
+    # imported workflow_core with any other plugin's regression tests.
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import json,sys; from workflow_core import validate_claim_assurance; "
+            "p=json.load(open(sys.argv[1])); "
+            "validate_claim_assurance(p['assurance'], contribution=p['contribution'], "
+            "answer_contract_digest=p['contract_digest'], source_register=p['sources'])",
+            str(payload),
+        ],
+        cwd=SCRIPTS,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    if expected_error is None:
+        assert completed.returncode == 0, completed.stderr
+    else:
+        assert completed.returncode != 0
+        assert expected_error in completed.stderr

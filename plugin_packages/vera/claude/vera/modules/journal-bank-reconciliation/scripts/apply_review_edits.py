@@ -90,6 +90,7 @@ for _vendor_candidate in _VENDOR_CANDIDATES:
 
 from journal_bank_core import (  # noqa: E402
     build_implementation_artifact_receipts,
+    format_workbook_sheet,
     implementation_artifact_roots,
     validate_exact_implementation_receipts,
 )
@@ -1035,6 +1036,7 @@ def _write_journal_bank_workbook(output_dir: Path, workbook_path: Path) -> int:
             )
         if sheet_name == "matches":
             matches_row_count = len(rows)
+        format_workbook_sheet(sheet)
     workbook_path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="journal-bank-workbook-") as temp_name:
         staged_workbook = Path(temp_name) / workbook_path.name

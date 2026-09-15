@@ -17,6 +17,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from courseware.policy import local_unavailability
+
 from .onboarding import (
     MARKER,
     OnboardingError,
@@ -190,6 +192,8 @@ class TeachingStore(Store):
                     "Resume or pause the active teaching session first"
                 )
             workflow = data.get("workflow_id")
+            if reason := local_unavailability(self.product, workflow):
+                raise OnboardingError(reason)
             if workflow not in eligible_workflows(self.plugin_root):
                 raise OnboardingError("Choose a supported operational workflow")
             previous = data.get("example_id")
@@ -256,6 +260,7 @@ class TeachingStore(Store):
             raise OnboardingError(
                 "Saved result changed; inspect and record the current result"
             )
+        self._verify_execution(evidence_state, phase)
 
     def change(
         self, action: str, revision: int, data: dict[str, Any]
@@ -326,6 +331,9 @@ class TeachingStore(Store):
                     and result["artifacts"] == state["demo"]["artifacts"]
                 ):
                     raise OnboardingError("Record the user's distinct attempt")
+                result["execution"] = self._execution(
+                    target, action, data, result["artifacts"], state["pair"]
+                )
                 state[action] = result
                 state.pop("focus", None)
                 if action == "demo":

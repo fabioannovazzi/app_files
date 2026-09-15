@@ -1,0 +1,52 @@
+{
+  "vera/studio-archive": {
+    "title": "Kundendokumente mit Vera finden",
+    "goal": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
+    "scenario": "Die Kanzlei möchte den vereinbarten Wartungsservice von Ciclo Arco und dessen angegebenes Ende finden. Das fiktive Archiv enthält auch einen anderen Kunden.",
+    "scope": "Suche in lokalen Dokumenten. Gmail, WhatsApp und Google Drive sind eigene Wege mit eigenen Verbindungen; sie werden hier nicht aktiviert.",
+    "inputs": "Öffnen Sie archive: Ciclo Arco und Delta haben jeweils ihre eigene Vereinbarung. Vera erstellt eine Übungskopie und einen getrennten lokalen Index; Ihre bestehenden Archiveinstellungen bleiben erhalten.",
+    "request": "Vera, finde die Vereinbarung von Ciclo Arco mit Tecnica Esempio. Welcher Service ist vorgesehen und bis wann? Zeige die Belegstellen für deine Antwort.",
+    "steps": [
+      "Im Arbeitschat bereitet Vera den Übungsordner vor, prüft den Zugriff und indexiert lesbare Dokumente. Falls eine Ordnerauswahl erforderlich ist, wählen Sie den Übungsordner.",
+      "Wählen Sie Ciclo Arco. Der aktuelle Ablauf sucht nur bei diesem Kunden und öffnet passende Quellen. Der Sprachchat erklärt den Weg vom Suchtreffer zum Dokument.",
+      "Lesen Sie die Antwort und öffnen Sie die Quellenverweise. Prüfen Sie Kunde, monatlichen Service und Zeitraum sowie mögliche Leselücken oder nicht indexierte Dokumente."
+    ],
+    "deliverables": [
+      "Antwort mit Quellenlinks: Service, Zeitraum und zugehörige Dokumentstellen.",
+      "Indexstatus und Suchverlauf: ausgewählter Kunde, geöffnete Quellen und Grenzen."
+    ],
+    "review": "Prüfen Sie den gewählten Kunden und lesen Sie die zitierte Stelle. Die Suche findet indexierte Inhalte; sie beweist weder die Vollständigkeit des Archivs noch die rechtliche Gültigkeit eines Dokuments.",
+    "checkpoints": [
+      "Identifizieren Sie vor der Suche den Ordner von Ciclo Arco.",
+      "Öffnen Sie bei der Antwort einen Quellenverweis und finden Sie die Information im Dokument."
+    ],
+    "practice": "Fügen Sie update-de.md aus den Übungsdateien zur Ciclo-Arco-Übungskopie hinzu, behalten Sie die Vereinbarung und lassen Sie den Index aktualisieren. Fragen Sie erneut nach dem Ende und öffnen Sie beide Quellen.",
+    "success": "Die Antwort berücksichtigt die Verlängerung bis zum 30. Juni 2027 und behält den Verweis auf die ursprüngliche Vereinbarung. Erklären Sie, wann der Index aktualisiert werden muss.",
+    "repeat": "Nennen Sie Kunde und konkrete Frage. Aktualisieren Sie nach neuen Dokumenten und öffnen Sie die verwendeten Quellen, bevor Sie die Antwort nutzen."
+  },
+  "vera/archive-organization": {
+    "title": "Einen Kundenordner mit Vera ordnen",
+    "goal": "Lernen, einen Ordnungsplan zu erhalten, Zielorte zu prüfen und genehmigte Änderungen anzuwenden.",
+    "scenario": "Der Ordner von Ciclo Arco enthält eine Vereinbarung, eine identische Kopie und eine interne Notiz in zwei Eingangsordnern. Wir erstellen einen verständlichen Plan und erproben ihn an einer Übungskopie.",
+    "scope": "Ein Kunde und fiktive lokale Dateien. Die Anwendung erfordert eine ausdrückliche Entscheidung; das echte Kanzleiarchiv bleibt unberührt.",
+    "inputs": "Öffnen Sie client und betrachten Sie Da archiviare und Download. Lesen Sie Vereinbarung und Notiz. Vera kopiert sie zu einem separaten Übungskunden und nutzt die Ordnungsrichtlinie des Ablaufs. Standardordner haben italienische Namen.",
+    "request": "Vera, schlage eine Ordnung für diesen Ciclo-Arco-Ordner vor. Zeige Dokumente, Zielorte und identische Kopien, bevor du etwas verschiebst.",
+    "steps": [
+      "Der Arbeitschat erstellt den Übungskunden und erfasst den Dateistand. Vera liest die nötigen Belege und schlägt Kategorien und Zielorte anhand des Inhalts vor.",
+      "Öffnen Sie die erzeugte Prüfseite. Prüfen Sie jeden Vorschlag, behalten oder ändern Sie den Zielort und entscheiden Sie über die identische Kopie. Bis zur Prüfung bleibt der Plan ein Vorschlag.",
+      "Danach fasst Vera die geplanten Verschiebungen zusammen und fragt gesondert nach ihrer Anwendung. Bei Ihrer Zustimmung für die Übungskopie führt sie den Plan aus und zeigt neue Ordner und Vorgangsprotokoll."
+    ],
+    "deliverables": [
+      "Prüfseite und Plan: Ausgangsdateien, Zielorte, Gründe und gespeicherte Entscheidungen.",
+      "Nach genehmigter Anwendung: geordneter Ordner und Protokoll zur Prüfung der Verschiebungen und einer möglichen Rücknahme."
+    ],
+    "review": "Verfolgen Sie ein Dokument vom Ausgangs- zum Zielort. Die identische Kopie bleibt im Prüfbereich für Duplikate erhalten und wird nicht gelöscht. Eine geprüfte Planung ist noch keine Genehmigung für Dateiverschiebungen.",
+    "checkpoints": [
+      "Identifizieren Sie vor der Planung Kunde und Übungsordner.",
+      "Erklären Sie vor der Anwendung einen gewählten Zielort und prüfen Sie die geplanten Verschiebungen."
+    ],
+    "practice": "Nutzen Sie die neue client-Kopie der Übungsdateien mit update-de.md. Fordern Sie einen weiteren Plan an, prüfen Sie die Ablage der Ergänzung bei der Vereinbarung und entscheiden Sie über die Anwendung. Bewahren Sie die Demonstration auf.",
+    "success": "Sie können den Plan lesen, einen Vorschlag ändern und Prüfung von Anwendung unterscheiden. Ohne Freigabe bleibt das Ergebnis ein prüfbarer Plan, kein bereits geordneter Ordner.",
+    "repeat": "Wählen Sie einen Kunden, fordern Sie einen Vorschlag an und prüfen Sie jede Änderung. Wenden Sie den Plan nach der ausdrücklichen Zusammenfassung an und behalten Sie das Protokoll."
+  }
+}

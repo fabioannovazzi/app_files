@@ -14,6 +14,7 @@ import html
 import io
 import json
 import re
+import textwrap
 import zipfile
 from calendar import monthrange
 from collections import defaultdict
@@ -24,6 +25,7 @@ from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path, PurePosixPath
 from typing import Any, Literal, overload
 
+from management_report_copy import localize_number, report_label, report_language
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
@@ -669,6 +671,10 @@ def _review_recipe(recipe: Mapping[str, Any], inventory_sha256: str) -> dict[str
     if audience not in {"internal", "client", "public_demo"}:
         raise PackContractError("audience must be internal, client or public_demo.")
     normalized["audience"] = audience
+    try:
+        normalized["language"] = report_language(recipe.get("language", "en"))
+    except ValueError as exc:
+        raise PackContractError(str(exc)) from exc
     return normalized
 
 
@@ -1590,9 +1596,7 @@ def build_management_pack(
         "status": status,
         "report_status": "draft_pending_professional_review",
         "entity": _text(recipe.get("entity"), label="entity", maximum=200),
-        "language": (
-            "it" if str(recipe.get("language", "en")).lower().startswith("it") else "en"
-        ),
+        "language": recipe["language"],
         "reporting_period": {
             key: recipe["reporting_period"][key].isoformat()
             for key in ("start", "end", "cutoff")
@@ -1756,231 +1760,259 @@ def _display_cell(row: Mapping[str, Any], column: str) -> str:
     return str(value)
 
 
-def _table_markdown(rows: Sequence[Mapping[str, Any]], columns: Sequence[str]) -> str:
+def _table_markdown(
+    rows: Sequence[Mapping[str, Any]], columns: Sequence[str], language: str = "en"
+) -> str:
+    """Present controlled field labels and numbers without exposing schema names."""
+
+    def cell(value: Any) -> str:
+        return str(value).replace("|", "\\|").replace("\n", " ")
+
+    def value(row: Mapping[str, Any], column: str) -> str:
+        if column not in row:
+            return "—"
+        raw = row.get(column)
+        if raw is None:
+            return cell(
+                _html_label(str(row.get(column + "_reason", "Unavailable")), language)
+            )
+        if column in {
+            "section",
+            "status",
+            "role",
+            "reason",
+            "metric",
+            "scenario",
+            "view",
+        }:
+            return cell(_html_label(str(raw), language))
+        if (
+            column not in {"period", "customer", "service", "bucket", "label", "unit"}
+            and raw != ""
+        ):
+            try:
+                number = Decimal(str(raw))
+            except InvalidOperation:
+                pass
+            else:
+                if number.is_finite():
+                    if not number:
+                        number = abs(number)
+                    percent = column in {"variance_pct", "share", "margin_rate"}
+                    if column in {"share", "margin_rate"}:
+                        number *= 100
+                    text = f"{number:,.1f}" if percent else f"{number:,.2f}"
+                    text = localize_number(text, language)
+                    return text + ("%" if percent else "")
+        return cell(raw)
+
     if not rows:
-        return "_No rows available._"
-    header = "| " + " | ".join(columns) + " |"
-    separator = "| " + " | ".join("---" for _ in columns) + " |"
-    body = [
-        "| " + " | ".join(_display_cell(row, column) for column in columns) + " |"
-        for row in rows
+        return "_" + _html_label("No rows available.", language) + "_"
+    headers = [
+        _html_label(
+            (
+                str(rows[0]["scenario"])
+                if column == "comparison" and rows and "scenario" in rows[0]
+                else column
+            ),
+            language,
+        )
+        for column in columns
     ]
-    return "\n".join((header, separator, *body))
+    return "\n".join(
+        [
+            "| " + " | ".join(cell(h) for h in headers) + " |",
+            "| " + " | ".join("---" for _ in columns) + " |",
+            *(
+                "| " + " | ".join(value(row, column) for column in columns) + " |"
+                for row in rows
+            ),
+        ]
+    )
 
 
 def render_markdown(
     pack: Mapping[str, Any], commentary: Mapping[str, Any] | None = None
 ) -> str:
-    """Render a compact, source-bound management report."""
+    """Lead with interpretation, then readable comparisons and source controls."""
+    from budget_presentation import COSTS, LINES
 
+    language = pack.get("language", "en")
+
+    def label(value: str) -> str:
+        return _html_label(value, language)
+
+    period = pack["reporting_period"]
     lines = [
-        f"# Management Control Pack — {pack['entity']}",
+        f"# {label('Management Control Pack')} — {pack['entity']}",
         "",
-        f"**Period:** {pack['reporting_period']['start']} to {pack['reporting_period']['end']}  ",
-        f"**Cutoff:** {pack['reporting_period']['cutoff']}  ",
-        f"**Currency:** {pack['currency']}  ",
-        f"**Pack status:** `{pack['status']}`  ",
-        f"**Review status:** `{pack['report_status']}`",
-        "",
-        "## Coverage",
-        "",
-        _table_markdown(pack["coverage"], ("section", "status", "reason")),
-        "",
-        "## Head metrics",
-        "",
-        _table_markdown(
-            list(pack["metrics"].values())[:30], ("metric_id", "label", "value", "unit")
-        ),
+        f"**{label('Period')}:** {period['start']} → {period['end']}  ",
+        f"**{label('Cutoff')}:** {period['cutoff']} · {pack['currency']}  ",
+        f"**{label('Review status')}:** {label(pack['report_status'])}  ",
+        f"**{label('Coverage')}:** {label(pack['status'])}",
         "",
     ]
-    detail_sections = (
+    if commentary:
+        for key, title in (
+            ("observations", "Calculated observations"),
+            ("questions", "Questions"),
+            ("hypotheses", "Hypotheses"),
+            ("limitations", "Limitations"),
+        ):
+            items = commentary.get(key, [])
+            if items:
+                lines.extend([f"## {label(title)}", ""])
+                lines.extend(f"- {item['text']}" for item in items)
+                lines.append("")
+    else:
+        lines.extend(
+            [label("Calculated facts; commentary has not yet been prepared."), ""]
+        )
+    lines.extend(
+        [
+            label(
+                "Results cover mapped categories only; missing categories do not establish zero balances or a complete net result."
+            ),
+            "",
+        ]
+    )
+    comparison = pack["sections"]["budget_variance"].get("comparison_rows", [])
+    if comparison:
+        lines.extend(
+            [
+                f"## {label('Budget comparisons')}",
+                "",
+                label(
+                    "Costs are displayed positive; lower costs are favourable. Amount and percentage variances compare scenario with budget."
+                ),
+                "",
+            ]
+        )
+        views = sorted(
+            {row["view"] for row in comparison},
+            key=lambda v: (v != "total", v == "forecast", v),
+        )
+        for view in views:
+            by_metric = {
+                row["metric"]: row for row in comparison if row["view"] == view
+            }
+            rows = []
+            for key, _, _ in LINES:
+                if key not in by_metric:
+                    continue
+                row = dict(by_metric[key])
+                row["metric"] = label(key)
+                for field in ("baseline", "comparison", "variance"):
+                    row[field] = str(Decimal(row[field]) * (-1 if key in COSTS else 1))
+                rows.append(row)
+            lines.extend(
+                [
+                    f"### {label(view)}",
+                    "",
+                    _table_markdown(
+                        rows,
+                        (
+                            "metric",
+                            "baseline",
+                            "comparison",
+                            "variance",
+                            "variance_pct",
+                        ),
+                        language,
+                    ),
+                    "",
+                ]
+            )
+    sections = (
         (
+            "monthly_pnl",
             "Monthly P&L",
-            pack["sections"]["monthly_pnl"].get("rows", []),
+            "rows",
             ("period", "revenue", "gross_profit", "ebitda", "net_result"),
         ),
+        ("receivables_aging", "Receivables aging", "buckets", ("bucket", "amount")),
+        ("payables_aging", "Payables aging", "buckets", ("bucket", "amount")),
         (
-            "Budget variance",
-            pack["sections"]["budget_variance"].get("rows", []),
-            ("period", "actual_ebitda", "budget_ebitda", "variance", "variance_pct"),
-        ),
-        (
-            "Receivables aging",
-            pack["sections"]["receivables_aging"].get("buckets", []),
-            ("bucket", "amount"),
-        ),
-        (
-            "Payables aging",
-            pack["sections"]["payables_aging"].get("buckets", []),
-            ("bucket", "amount"),
-        ),
-        (
+            "cash_movement",
             "Cash movement",
-            pack["sections"]["cash_movement"].get("rows", []),
+            "rows",
             ("period", "inflow", "outflow", "net"),
         ),
         (
+            "customer_concentration",
             "Customer concentration",
-            pack["sections"]["customer_concentration"].get("rows", []),
+            "rows",
             ("customer", "revenue", "share"),
         ),
         (
+            "service_profitability",
             "Service profitability",
-            pack["sections"]["service_profitability"].get("rows", []),
+            "rows",
             ("service", "revenue", "direct_cost", "margin", "margin_rate"),
         ),
     )
-    comparison_rows = pack["sections"]["budget_variance"].get("comparison_rows", [])
+    for key, title, row_key, columns in sections:
+        rows = pack["sections"][key].get(row_key, [])
+        if rows:
+            lines.extend(
+                [f"## {label(title)}", "", _table_markdown(rows, columns, language), ""]
+            )
     lines.extend(
-        (
-            "## Budget comparisons",
+        [
+            f"## {label('Coverage')}",
             "",
             _table_markdown(
-                comparison_rows,
-                (
-                    "view",
-                    "scenario",
-                    "metric",
-                    "baseline",
-                    "comparison",
-                    "variance",
-                    "variance_pct",
-                ),
+                pack["coverage"], ("section", "status", "reason"), language
             ),
             "",
-        )
+            f"## {label('Controls')}",
+            "",
+            _table_markdown(
+                pack["controls"],
+                ("role", "status", "actual", "expected", "difference"),
+                language,
+            ),
+            "",
+        ]
     )
-    for title, rows, columns in detail_sections:
-        lines.extend((f"## {title}", "", _table_markdown(rows, columns), ""))
+    # The coverage table already contains absent-source reasons. Preserve other limitations.
+    coverage_limits = {
+        f"{row['section']}: {row['reason']}"
+        for row in pack["coverage"]
+        if row.get("reason")
+    }
+    lines.extend(
+        f"- {label(item)}"
+        for item in pack["limitations"]
+        if item not in coverage_limits
+    )
+    lines.extend(["", f"> {label(pack['professional_boundary'])}", ""])
     if commentary:
-        labels = (
-            ("observations", "Calculated observations"),
-            ("hypotheses", "Hypotheses requiring evidence"),
-            ("questions", "Questions"),
-            ("limitations", "Limitations"),
-        )
-        for key, title in labels:
-            lines.extend((f"## {title}", ""))
-            items = commentary.get(key, [])
-            if not items:
-                lines.append("_None recorded._")
-            for item in items:
+        lines.extend([f"## {label('References for review')}", ""])
+        for key in ("observations", "questions", "hypotheses", "limitations"):
+            for index, item in enumerate(commentary.get(key, []), 1):
                 references = ", ".join(item.get("metric_ids", []))
-                suffix = f" (`{references}`)" if references else ""
-                lines.append(f"- {item['text']}{suffix}")
-            lines.append("")
-    lines.extend(
-        (
-            "## Controls and limitations",
-            "",
-            _table_markdown(
-                pack["controls"], ("role", "status", "actual", "expected", "difference")
-            ),
-            "",
-            *(f"- {item}" for item in pack["limitations"]),
-            "",
-            f"> {pack['professional_boundary']}",
-            "",
-        )
-    )
+                if references:
+                    lines.append(f"- {label(key)} {index}: `{references}`")
+        lines.append("")
     return "\n".join(lines)
 
 
-_HTML_IT = {
-    "Management Control Pack": "Controllo di gestione",
-    "draft_pending_professional_review": "Bozza da rivedere",
-    "Receivables export was not mapped.": "Export crediti non fornito o non mappato.",
-    "Payables export was not mapped.": "Export debiti non fornito o non mappato.",
-    "Bank export was not mapped.": "Export banca non fornito o non mappato.",
-    "Sales-line export was not mapped.": "Dettaglio vendite non fornito o non mappato.",
-    "Professional review": "Revisione professionale",
-    "Interpretation": "Interpretazione",
-    "Calculated observations": "Osservazioni sui risultati",
-    "Hypotheses": "Ipotesi",
-    "Questions": "Domande",
-    "Limitations": "Limiti",
-    "None recorded.": "Nessuna voce registrata.",
-    "No rows available.": "Nessun dato disponibile.",
-    "Head metrics": "Indicatori principali",
-    "Current picture": "Situazione attuale",
-    "Evidence coverage": "Copertura documentale",
-    "What this export supports": "Analisi supportate dai dati",
-    "Performance": "Andamento economico",
-    "Monthly P&L": "Conto economico mensile",
-    "Monthly P&amp;L": "Conto economico mensile",
-    "Budget": "Budget",
-    "EBITDA variance": "Scostamento EBITDA",
-    "Working capital": "Capitale circolante",
-    "Receivables aging": "Scadenzario crediti",
-    "Payables aging": "Scadenzario debiti",
-    "Liquidity": "Liquidità",
-    "Cash movement": "Movimenti di cassa",
-    "Concentration": "Concentrazione",
-    "Top customers": "Principali clienti",
-    "Profitability": "Redditività",
-    "Services": "Servizi",
-    "Cutoff": "Data di riferimento",
-    "period": "Periodo",
-    "revenue": "Ricavi",
-    "gross_profit": "Margine lordo",
-    "ebitda": "EBITDA",
-    "net_result": "Risultato netto",
-    "section": "Sezione",
-    "status": "Stato",
-    "reason": "Motivo",
-    "actual_ebitda": "EBITDA consuntivo",
-    "budget_ebitda": "EBITDA budget",
-    "variance": "Scostamento",
-    "bucket": "Fascia di scaduto",
-    "amount": "Importo",
-    "inflow": "Entrate",
-    "outflow": "Uscite",
-    "net": "Saldo netto",
-    "customer": "Cliente",
-    "share": "Quota",
-    "service": "Servizio",
-    "direct_cost": "Costi diretti",
-    "margin": "Margine",
-    "margin_rate": "Margine",
-    "ready_for_professional_review": "Pronto per revisione professionale",
-    "ready": "Disponibile",
-    "partial": "Parziale",
-    "blocked": "Bloccato",
-    "unavailable": "Non disponibile",
-    "available": "Disponibile",
-    "monthly_pnl": "Conto economico mensile",
-    "budget_variance": "Scostamento budget",
-    "receivables_aging": "Scadenzario crediti",
-    "payables_aging": "Scadenzario debiti",
-    "cash_movement": "Movimenti di cassa",
-    "customer_concentration": "Concentrazione clienti",
-    "service_profitability": "Redditività servizi",
-}
-
-_HTML_IT.update(
-    {
-        "Revenue": "Ricavi",
-        "Gross profit": "Margine lordo",
-        "Net result": "Risultato netto",
-        "Total Revenue": "Ricavi totali",
-        "Total Gross profit": "Margine lordo totale",
-        "Total EBITDA": "EBITDA totale",
-        "Total Net result": "Risultato netto totale",
-        "Latest reported cash balance": "Ultimo saldo di cassa riportato",
-        "Total overdue receivables": "Crediti scaduti totali",
-        "Calculated facts and schema closure do not establish accounting correctness, source completeness, business causation, or professional approval.": "I calcoli e la completezza dello schema non attestano la correttezza contabile, la completezza delle fonti, le cause economiche o l’approvazione professionale.",
-    }
-)
+def _metric_display_label(metric: Mapping[str, Any], language: str) -> str:
+    """Translate registered metric names; preserve unknown labels exactly."""
+    key = str(metric["metric_id"])
+    if key.startswith(("pnl.", "budget.")):
+        name = key.rsplit(".", 1)[-1]
+        variance = name.endswith("_variance")
+        name = name.removesuffix("_variance")
+        return (
+            _html_label("variance", language) + " · " if variance else ""
+        ) + _html_label(name, language)
+    return _html_label(str(metric["label"]), language)
 
 
 def _html_label(value: str, language: str) -> str:
-    if language == "it":
-        return _HTML_IT.get(value, value)
-    return (
-        "Draft pending professional review"
-        if value == "draft_pending_professional_review"
-        else value
-    )
+    return report_label(value, language)
 
 
 def _html_display_cell(row: Mapping[str, Any], column: str) -> str:
@@ -2003,7 +2035,7 @@ def _html_table(
             '<p class="empty">' + _html_label("No rows available.", language) + "</p>"
         )
     head = "".join(
-        f"<th>{html.escape((_HTML_IT.get(column, column.replace('_', ' ').title()) if language == 'it' else column.replace('_', ' ').title()) + (' (%)' if column in {'share', 'margin_rate'} else ''))}</th>"
+        f"<th>{html.escape((column.replace('_', ' ').title() if language == 'en' else _html_label(column, language)) + (' (%)' if column in {'share', 'margin_rate'} else ''))}</th>"
         for column in columns
     )
     body = "".join(
@@ -2045,7 +2077,7 @@ def render_html(
         if metric:
             cards.append(
                 f'<article class="metric"><span>{label(metric["label"])}</span>'
-                f'<strong>{html.escape(f"{Decimal(metric["value"]):,.0f}".replace(",", ".") if language == "it" else f"{Decimal(metric["value"]):,.0f}")}</strong><small>{html.escape(metric["unit"])}</small></article>'
+                f'<strong>{html.escape(localize_number(f"{Decimal(metric["value"]):,.0f}", language))}</strong><small>{html.escape(metric["unit"])}</small></article>'
             )
     commentary_html = ""
     if commentary:
@@ -2109,10 +2141,15 @@ def _append_sheet(
     title: str,
     rows: Sequence[Mapping[str, Any]],
     columns: Sequence[str],
+    language: str = "en",
 ) -> None:
-    worksheet = workbook.create_sheet(title=title[:31])
-    worksheet.append(list(columns))
+    worksheet = workbook.create_sheet(title=_html_label(title, language)[:31])
+    worksheet.append([_html_label(column, language) for column in columns])
     numeric_columns = {
+        "baseline",
+        "comparison",
+        "variance_pct",
+        "value",
         "actual",
         "actual_ebitda",
         "amount",
@@ -2136,11 +2173,23 @@ def _append_sheet(
         "tolerance",
         "variance",
     }
-    ratio_columns = {"margin_rate", "share"}
+    ratio_columns = {"margin_rate", "share", "variance_pct"}
     for row in rows:
         values = []
         for column in columns:
             value = row.get(column, "")
+            if column in {
+                "section",
+                "status",
+                "role",
+                "reason",
+                "metric",
+                "scenario",
+                "view",
+            } and isinstance(value, str):
+                value = _html_label(value, language)
+            if column == "label" and "metric_id" in row:
+                value = _metric_display_label(row, language)
             if isinstance(value, (dict, list, tuple)):
                 value = json.dumps(value, ensure_ascii=False, sort_keys=True)
             elif column in numeric_columns and isinstance(value, str) and value:
@@ -2149,6 +2198,8 @@ def _append_sheet(
                 except InvalidOperation:
                     pass
                 else:
+                    if column == "variance_pct":
+                        decimal_value /= 100
                     value = (
                         int(decimal_value)
                         if decimal_value == decimal_value.to_integral()
@@ -2160,7 +2211,9 @@ def _append_sheet(
     for cell in worksheet[1]:
         cell.fill = header_fill
         cell.font = Font(color="FFFFFF", bold=True)
-        cell.alignment = Alignment(horizontal="center")
+        cell.alignment = Alignment(
+            horizontal="center", vertical="center", wrap_text=True
+        )
     worksheet.freeze_panes = "A2"
     if worksheet.max_row > 1:
         worksheet.auto_filter.ref = worksheet.dimensions
@@ -2171,16 +2224,33 @@ def _append_sheet(
                 worksheet.cell(row=row_index, column=index).number_format = (
                     number_format
                 )
-        values = [
-            str(column),
-            *(
-                str(worksheet.cell(row=row, column=index).value or "")
-                for row in range(2, min(worksheet.max_row, 100) + 1)
-            ),
-        ]
+        # Size the displayed label and formatted numbers, not the internal key.
+        values = [str(worksheet.cell(row=1, column=index).value)]
+        for display_row in range(2, min(worksheet.max_row, 100) + 1):
+            value = worksheet.cell(row=display_row, column=index).value
+            values.append(
+                f"{value:,.5f}" if isinstance(value, (int, float)) else str(value or "")
+            )
         worksheet.column_dimensions[get_column_letter(index)].width = min(
-            max(len(value) for value in values) + 2, 34
+            max(14, max(len(value) for value in values) + 3), 34
         )
+    for row in worksheet.iter_rows():
+        lines = 1
+        for cell in row:
+            width = worksheet.column_dimensions[cell.column_letter].width
+            if isinstance(cell.value, str):
+                if cell.row > 1:
+                    cell.alignment = Alignment(vertical="center", wrap_text=True)
+                lines = max(
+                    lines,
+                    sum(
+                        max(1, len(textwrap.wrap(line, width=max(1, int(width) - 3))))
+                        for line in cell.value.splitlines()
+                    ),
+                )
+            else:
+                cell.alignment = Alignment(vertical="center", horizontal="right")
+        worksheet.row_dimensions[row[0].row].height = 15 * lines + 5
     worksheet.sheet_properties.pageSetUpPr.fitToPage = True
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.fitToWidth = 1
@@ -2204,7 +2274,8 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
 
     workbook = Workbook()
     summary = workbook.active
-    summary.title = "Summary"
+    language = pack.get("language", "en")
+    summary.title = _html_label("Summary", language)
     summary_rows = (
         ("Entity", pack["entity"]),
         ("Period start", pack["reporting_period"]["start"]),
@@ -2215,10 +2286,44 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
         ("Review status", pack["report_status"]),
     )
     for row in summary_rows:
-        summary.append(tuple(_excel_safe_value(value) for value in row))
-    summary.append(())
-    summary.append(("Metric ID", "Label", "Value", "Unit"))
-    for metric in pack["metrics"].values():
+        summary.append(
+            (
+                _html_label(row[0], language),
+                _excel_safe_value(
+                    _html_label(row[1], language)
+                    if row[0] in {"Pack status", "Review status"}
+                    else row[1]
+                ),
+            )
+        )
+    summary.append(
+        (
+            _html_label(
+                "Results cover mapped categories only; missing categories do not establish zero balances or a complete net result.",
+                language,
+            ),
+        )
+    )
+    summary.merge_cells("A8:D8")
+    summary["A8"].alignment = Alignment(wrap_text=True)
+    summary.row_dimensions[8].height = 34
+    summary.append(
+        tuple(
+            _html_label(v, language) for v in ("Indicator", "Period", "Value", "Unit")
+        )
+    )
+    head_ids = (
+        "pnl.total.revenue",
+        "pnl.total.gross_profit",
+        "pnl.total.ebitda",
+        "pnl.total.net_result",
+        "ar.total.overdue",
+        "cash.latest.reported_balance",
+    )
+    for key in head_ids:
+        metric = pack["metrics"].get(key)
+        if metric is None:
+            continue
         raw_value = Decimal(metric["value"])
         excel_value = (
             int(raw_value) if raw_value == raw_value.to_integral() else float(raw_value)
@@ -2227,8 +2332,8 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
             tuple(
                 _excel_safe_value(value)
                 for value in (
-                    metric["metric_id"],
-                    metric["label"],
+                    _metric_display_label(metric, language),
+                    _html_label(metric.get("period", "total"), language),
                     excel_value,
                     metric["unit"],
                 )
@@ -2263,6 +2368,14 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
             "variance",
             "variance_pct",
         ),
+        language,
+    )
+    _append_sheet(
+        workbook,
+        "Metrics",
+        list(pack["metrics"].values()),
+        ("metric_id", "label", "value", "unit"),
+        language,
     )
     section_specs = (
         (
@@ -2321,7 +2434,7 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
         ),
     )
     for title, rows, columns in section_specs:
-        _append_sheet(workbook, title, rows, columns)
+        _append_sheet(workbook, title, rows, columns, language)
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(path)
 

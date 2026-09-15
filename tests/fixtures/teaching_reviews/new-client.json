@@ -1,0 +1,117 @@
+{
+  "it": {
+    "activity": "Officina meccanica - caso fittizio",
+    "service": "Tenuta contabile mensile e preparazione del bilancio 2026.",
+    "contact_role": "solo scambio di documenti",
+    "title": "Dossier di nuovo cliente — Officina Arco",
+    "summary": "La scheda di primo contatto consente di preparare il dossier interno per la contabilità mensile e il bilancio 2026. Società, sede, rappresentante e partecipazioni sono dati dichiarati; le verifiche restano aperte.",
+    "questions_title": "Documenti e chiarimenti da richiedere",
+    "questions_intro": "Bozza per lo studio, basata sulla scheda di Officina Arco. Rivedere le richieste e indicare il canale di raccolta dello studio prima di utilizzarla.",
+    "questions": [
+      "Fornire una visura aggiornata di Officina Arco Srl e i riferimenti di codice fiscale e partita IVA, per verificare denominazione, sede e dati fiscali dichiarati.",
+      "Fornire il documento di identità di Elena Esempio e la documentazione dei suoi poteri per l’incarico; la sola indicazione nel colloquio non li verifica.",
+      "Confermare le partecipazioni dichiarate di Elena Esempio (60%) e Paolo Prova (40%), segnalare eventuali altri accordi di controllo e fornire la documentazione sulla titolarità effettiva richiesta dallo studio.",
+      "Precisare da quale data è richiesta la tenuta contabile mensile, quali registrazioni e documenti del 2026 sono già disponibili e chi può consegnarli. Compenso e condizioni saranno concordati con lo studio."
+    ],
+    "review_title": "Revisione dello studio e prossimo passo",
+    "review": "La fonte profile-it.md riporta un’officina con dodici dipendenti e un incarico continuativo. Paghe, invio di dichiarazioni e comunicazioni esterne sono esclusi dalla richiesta didattica. Non sono disponibili prove di identità, visura, conferme sulla titolarità effettiva o screening. La data di avvio e le condizioni non sono concordate. Lo studio deve verificare i soggetti, completare gli screening, valutare rischio e applicabilità, scegliere i propri modelli e definire le condizioni. Non vi è una valutazione del rischio calcolabile né una scadenza periodica confermata.\n\nLa richiesta è salvata come proposta; la revisione professionale non è completata né applicata. Il registro delle fonti richiede un nuovo controllo di attualità prima dell’applicazione delle decisioni.",
+    "practice": "L’aggiornamento contact-update-it.md aggiunge Sara Campione (sara@arco.example) come referente per i documenti. Elena resta la rappresentante indicata e le partecipazioni 60/40 restano invariate. Il dossier precedente è conservato nella stessa pratica; non sono attribuiti poteri a Sara.",
+    "next": "Rivedere le quattro richieste documentali, acquisire le risposte e riprendere questa pratica con i nuovi elementi. Il dossier è una bozza interna; il rapporto non è attivato e nessuna richiesta è stata inviata.",
+    "memo_link": "Dati del cliente e dossier",
+    "questions_link": "Richieste documentali proposte",
+    "review_link": "Revisione e prossimo passo",
+    "review_note": "Esercizio fittizio: occorrono documenti prima di verificare questi dati; nessuna approvazione professionale."
+  },
+  "en": {
+    "activity": "Mechanical workshop - fictional case",
+    "service": "Monthly bookkeeping and preparation of the 2026 financial statements.",
+    "contact_role": "document exchange only",
+    "title": "New-client dossier — Officina Arco",
+    "summary": "The first-contact form supports an internal dossier for monthly bookkeeping and the 2026 financial statements. The company, address, representative and holdings are reported information; verification remains open.",
+    "questions_title": "Documents and clarifications to request",
+    "questions_intro": "Draft for the firm, based on Officina Arco’s contact form. Review these requests and specify the firm’s collection channel before using them.",
+    "questions": [
+      "Provide a current company register extract for Officina Arco Srl and its codice fiscale and partita IVA, to verify the reported legal name, address and tax details.",
+      "Provide Elena Esempio’s identity document and evidence of her authority for this engagement; being named in the interview does not verify that authority.",
+      "Confirm the reported holdings of Elena Esempio (60%) and Paolo Prova (40%), identify any other control arrangements and provide the beneficial-ownership documentation requested by the firm.",
+      "Specify the requested start date for monthly bookkeeping, which 2026 records and documents are already available, and who can provide them. Fees and terms will be agreed with the firm."
+    ],
+    "review_title": "Firm review and next step",
+    "review": "The source profile-en.md describes a workshop with twelve employees and an ongoing engagement. Payroll, filing returns and external communications are outside the teaching request. Identity evidence, a register extract, beneficial-ownership confirmation and screening results are unavailable. The start date and terms are unagreed. The firm must verify the parties, complete screening, assess risk and applicability, choose its templates and agree the terms. No risk assessment can yet be calculated and no periodic review date is confirmed.\n\nThe request is saved as a proposal; professional review is neither complete nor applied. The source registry needs a new currentness check before decisions can be applied.",
+    "practice": "The contact-update-en.md source adds Sara Campione (sara@arco.example) as the document contact. Elena remains the reported representative and the 60/40 holdings are unchanged. The first dossier is retained in the same engagement; Sara receives no inferred authority.",
+    "next": "Review the four proposed document requests, obtain the responses and resume this engagement with the new evidence. The dossier is an internal draft; the relationship has not been activated and no request has been sent.",
+    "memo_link": "Client information and dossier",
+    "questions_link": "Proposed document requests",
+    "review_link": "Review and next step",
+    "review_note": "Fictional exercise: documents are needed before verifying these facts; no professional approval."
+  },
+  "fr": {
+    "activity": "Atelier mécanique - cas fictif",
+    "service": "Tenue comptable mensuelle et préparation des comptes annuels 2026.",
+    "contact_role": "échanges documentaires uniquement",
+    "title": "Dossier de nouveau client — Officina Arco",
+    "summary": "La fiche de premier contact permet de préparer le dossier interne pour la tenue comptable mensuelle et les comptes annuels 2026. Société, adresse, représentante et participations sont des informations déclarées ; les vérifications restent ouvertes.",
+    "questions_title": "Documents et précisions à demander",
+    "questions_intro": "Brouillon pour le cabinet, fondé sur la fiche d’Officina Arco. Revoir les demandes et préciser le canal de collecte du cabinet avant utilisation.",
+    "questions": [
+      "Fournir un extrait récent du registre d’Officina Arco Srl ainsi que son codice fiscale et sa partita IVA, afin de vérifier la dénomination, l’adresse et les données fiscales déclarées.",
+      "Fournir la pièce d’identité d’Elena Esempio et les justificatifs de ses pouvoirs pour la mission ; sa désignation lors de l’entretien ne les vérifie pas.",
+      "Confirmer les participations déclarées d’Elena Esempio (60 %) et de Paolo Prova (40 %), signaler tout autre accord de contrôle et fournir les documents sur les bénéficiaires effectifs demandés par le cabinet.",
+      "Préciser la date souhaitée de début de la tenue comptable mensuelle, les écritures et documents 2026 déjà disponibles et la personne pouvant les transmettre. Les honoraires et conditions seront convenus avec le cabinet."
+    ],
+    "review_title": "Revue du cabinet et prochaine étape",
+    "review": "La source profile-fr.md décrit un atelier de douze salariés et une mission continue. Paie, dépôt de déclarations et communications externes sont exclus de la demande pédagogique. Pièces d’identité, extrait du registre, confirmations des bénéficiaires effectifs et résultats de contrôle manquent. Date de début et conditions ne sont pas convenues. Le cabinet doit vérifier les parties, effectuer les contrôles, évaluer le risque et l’applicabilité, choisir ses modèles et définir les conditions. Aucun risque ne peut encore être calculé et aucune date de suivi périodique n’est confirmée.\n\nLa demande est enregistrée comme proposition ; la revue professionnelle n’est ni terminée ni appliquée. Le registre des sources nécessite un nouveau contrôle d’actualité avant l’application des décisions.",
+    "practice": "La source contact-update-fr.md ajoute Sara Campione (sara@arco.example) comme contact documentaire. Elena reste la représentante indiquée et les participations 60/40 sont inchangées. Le dossier précédent est conservé dans la même mission ; aucun pouvoir n’est attribué à Sara.",
+    "next": "Revoir les quatre demandes proposées, recueillir les réponses et reprendre cette mission avec les nouveaux éléments. Le dossier est un brouillon interne ; la relation n’est pas activée et aucune demande n’a été envoyée.",
+    "memo_link": "Informations client et dossier",
+    "questions_link": "Demandes documentaires proposées",
+    "review_link": "Revue et prochaine étape",
+    "review_note": "Exercice fictif : des justificatifs sont nécessaires avant de vérifier ces faits ; aucune approbation professionnelle."
+  },
+  "de": {
+    "activity": "Mechanische Werkstatt - fiktiver Fall",
+    "service": "Monatliche Buchführung und Vorbereitung des Jahresabschlusses 2026.",
+    "contact_role": "nur Dokumentenaustausch",
+    "title": "Neumandantendossier — Officina Arco",
+    "summary": "Der Erstkontaktbogen ermöglicht ein internes Dossier für die monatliche Buchführung und den Jahresabschluss 2026. Gesellschaft, Anschrift, Vertreterin und Beteiligungen wurden angegeben; die Prüfung steht noch aus.",
+    "questions_title": "Anzufordernde Unterlagen und Auskünfte",
+    "questions_intro": "Entwurf für die Kanzlei auf Grundlage des Kontaktbogens von Officina Arco. Anforderungen prüfen und vor Verwendung den Erhebungsweg der Kanzlei angeben.",
+    "questions": [
+      "Bitte einen aktuellen Registerauszug von Officina Arco Srl sowie codice fiscale und partita IVA bereitstellen, damit Firmenname, Anschrift und Steuerangaben geprüft werden können.",
+      "Bitte Elena Esempios Ausweisdokument und Nachweise ihrer Vertretungsmacht für das Mandat bereitstellen; die Nennung im Gespräch bestätigt diese Befugnisse nicht.",
+      "Bitte die angegebenen Beteiligungen von Elena Esempio (60 %) und Paolo Prova (40 %) bestätigen, weitere Kontrollvereinbarungen nennen und die von der Kanzlei angeforderten Unterlagen zu wirtschaftlich Berechtigten vorlegen.",
+      "Bitte den gewünschten Beginn der monatlichen Buchführung, bereits verfügbare Buchungen und Unterlagen für 2026 sowie deren Ansprechpartner angeben. Vergütung und Bedingungen werden mit der Kanzlei vereinbart."
+    ],
+    "review_title": "Kanzleiprüfung und nächster Schritt",
+    "review": "Die Quelle profile-de.md beschreibt eine Werkstatt mit zwölf Beschäftigten und ein laufendes Mandat. Lohnabrechnung, Einreichung von Erklärungen und externe Mitteilungen sind von der Übungsanfrage ausgeschlossen. Identitätsnachweise, Registerauszug, Bestätigungen wirtschaftlich Berechtigter und Screening-Ergebnisse fehlen. Beginn und Bedingungen sind nicht vereinbart. Die Kanzlei muss die Beteiligten prüfen, Screenings durchführen, Risiko und Anwendbarkeit beurteilen, eigene Vorlagen auswählen und Bedingungen vereinbaren. Ein Risiko ist noch nicht berechenbar; ein regelmäßiger Prüfungstermin ist nicht bestätigt.\n\nDie Anforderung ist als Vorschlag gespeichert; die fachliche Prüfung ist weder abgeschlossen noch angewendet. Vor der Anwendung von Entscheidungen muss die Aktualität des Quellenregisters erneut geprüft werden.",
+    "practice": "Die Quelle contact-update-de.md ergänzt Sara Campione (sara@arco.example) als Kontakt für Dokumente. Elena bleibt die genannte Vertreterin; die Beteiligungen 60/40 bleiben unverändert. Das erste Dossier bleibt im selben Mandat erhalten. Sara wird keine Vertretungsmacht zugeschrieben.",
+    "next": "Die vier vorgeschlagenen Anforderungen prüfen, Antworten einholen und das Mandat mit den neuen Nachweisen fortsetzen. Das Dossier ist ein interner Entwurf; das Mandat wurde nicht aktiviert und keine Anfrage versandt.",
+    "memo_link": "Mandantenangaben und Dossier",
+    "questions_link": "Vorgeschlagene Dokumentenanforderungen",
+    "review_link": "Prüfung und nächster Schritt",
+    "review_note": "Fiktive Übung: Vor der Prüfung dieser Angaben werden Nachweise benötigt; keine fachliche Freigabe."
+  },
+  "es": {
+    "activity": "Taller mecánico - caso ficticio",
+    "service": "Contabilidad mensual y preparación de las cuentas anuales de 2026.",
+    "contact_role": "solo intercambio de documentos",
+    "title": "Expediente de nuevo cliente — Officina Arco",
+    "summary": "La ficha de primer contacto permite preparar el expediente interno para la contabilidad mensual y las cuentas anuales de 2026. Sociedad, domicilio, representante y participaciones son datos declarados; su verificación sigue pendiente.",
+    "questions_title": "Documentos y aclaraciones que solicitar",
+    "questions_intro": "Borrador para el despacho, basado en la ficha de Officina Arco. Revisar las solicitudes e indicar el canal de recogida del despacho antes de utilizarlo.",
+    "questions": [
+      "Aportar una certificación registral reciente de Officina Arco Srl, su codice fiscale y su partita IVA, para verificar denominación, domicilio y datos fiscales declarados.",
+      "Aportar el documento de identidad de Elena Esempio y la documentación de sus poderes para el encargo; su mención en la entrevista no los verifica.",
+      "Confirmar las participaciones declaradas de Elena Esempio (60 %) y Paolo Prova (40 %), señalar otros acuerdos de control y aportar la documentación de titularidad real solicitada por el despacho.",
+      "Precisar la fecha solicitada de inicio de la contabilidad mensual, los asientos y documentos de 2026 ya disponibles y quién puede entregarlos. Honorarios y condiciones se acordarán con el despacho."
+    ],
+    "review_title": "Revisión del despacho y próximo paso",
+    "review": "La fuente profile-es.md describe un taller con doce empleados y un encargo continuado. Nóminas, presentación de declaraciones y comunicaciones externas están excluidas de la solicitud didáctica. Faltan pruebas de identidad, certificación registral, confirmaciones de titularidad real y resultados de comprobaciones. Inicio y condiciones no están acordados. El despacho debe verificar los sujetos, realizar las comprobaciones, valorar riesgo y aplicabilidad, seleccionar sus modelos y acordar las condiciones. Todavía no puede calcularse el riesgo ni hay una fecha de revisión periódica confirmada.\n\nLa solicitud queda guardada como propuesta; la revisión profesional no está completada ni aplicada. Debe comprobarse de nuevo la vigencia del registro de fuentes antes de aplicar decisiones.",
+    "practice": "La fuente contact-update-es.md añade a Sara Campione (sara@arco.example) como contacto documental. Elena sigue siendo la representante indicada y las participaciones 60/40 no cambian. El expediente anterior se conserva en el mismo encargo; no se atribuyen poderes a Sara.",
+    "next": "Revisar las cuatro solicitudes propuestas, obtener las respuestas y retomar este encargo con la nueva información. El expediente es un borrador interno; no se ha activado la relación ni enviado ninguna solicitud.",
+    "memo_link": "Datos del cliente y expediente",
+    "questions_link": "Solicitudes documentales propuestas",
+    "review_link": "Revisión y próximo paso",
+    "review_note": "Ejercicio ficticio: se necesitan documentos antes de verificar estos datos; no hay aprobación profesional."
+  }
+}

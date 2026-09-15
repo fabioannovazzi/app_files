@@ -1,0 +1,19 @@
+# Repository PDP tests import the application package and its hosted adapters.
+# These dependencies are for CI only, not added to any local plugin.
+beautifulsoup4==4.13.3
+fastapi>=0.115,<0.116
+deepdiff==8.4.2
+ftfy==6.3.1
+json_repair==0.40.0
+numpy>=1.24,<2.3
+openai>=1.100.0,<2
+pydantic>=2.5,<3
+plotly==6.5.2
+polars>=1.37.1
+psutil==7.0.0
+python_dateutil==2.9.0.post0
+rapidfuzz==3.13.0
+requests[security]==2.32.3
+scikit_learn==1.6.1
+scipy==1.15.2
+xlsxwriter==3.2.0

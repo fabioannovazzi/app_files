@@ -1,0 +1,52 @@
+{
+  "vera/comunicazione-professionale": {
+    "title": "Préparer une communication professionnelle avec Vera",
+    "goal": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+    "scenario": "Studio Riva souhaite aider ses petites entreprises clientes à s’orienter lorsqu’elles reçoivent une demande d’accès aux données. Nous préparons une courte FAQ à partir d’une source officielle sélectionnée.",
+    "scope": "Le parcours complet : objectif et public, sources, choix éditorial, brouillon, vérifications, revue et fichiers finaux. L’exemple juridique sert à essayer le workflow ; cette leçon n’est pas un cours sur le RGPD.",
+    "inputs": "Ouvre brief-fr.md pour la mission et le format demandé, puis source-fr.md pour consulter le guide officiel sélectionné. Le cabinet fictif commence sans communications antérieures.",
+    "request": "Vera, prépare une FAQ pour les petites entreprises clientes de Studio Riva sur le traitement des demandes d’accès aux données. Utilise ce brief et cette source. Fais-moi revoir contenu et format, puis prépare le dossier local sans l’envoyer ni le publier.",
+    "steps": [
+      "Dans le fil de travail, Vera précise public, objectif, langue et canal et prépare l’espace local du cabinet. Dans la conversation vocale, elle explique le résultat visé. Tu confirmes le périmètre et le lieu d’enregistrement.",
+      "Vera examine la source, choisit les informations utiles et rédige la FAQ et le format proposé. Le workflow actuel vérifie séparément les affirmations et la qualité éditoriale. L’explication vocale suit les résultats réels, y compris les corrections demandées.",
+      "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
+    ],
+    "deliverables": [
+      "FAQ en Markdown, à examiner et réutiliser après revue.",
+      "Base technique, références aux sources et traces des vérifications et décisions."
+    ],
+    "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",
+    "checkpoints": [
+      "Indique le public à atteindre, le contenu utile et le format souhaité.",
+      "Retrouve le texte utilisable et la source d’une affirmation dans le dossier ; explique les points à revoir avant usage."
+    ],
+    "practice": "Lis practice-fr.md et demande une nouvelle version avec un courriel d’accompagnement de la FAQ. Revois l’adaptation au canal, conserve le premier dossier et ouvre les nouveaux fichiers. N’envoie rien.",
+    "success": "Tu sais partir de sources sélectionnées, suivre les vérifications, revoir la communication et demander une version pour un autre canal.",
+    "repeat": "Indique à Vera le sujet, le public, les canaux et les sources disponibles. Tu peux ajouter des exemples précis du style du cabinet. Revois proposition, sources et dossier avant utilisation."
+  },
+  "lucia/comunicazione-professionale": {
+    "title": "Préparer une communication professionnelle avec Lucia",
+    "goal": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+    "scenario": "Studio Riva souhaite aider ses petites entreprises clientes à s’orienter lorsqu’elles reçoivent une demande d’accès aux données. Nous préparons une courte FAQ à partir d’une source officielle sélectionnée.",
+    "scope": "Le parcours complet : objectif et public, sources, choix éditorial, brouillon, vérifications, revue et fichiers finaux. L’exemple juridique sert à essayer le workflow ; cette leçon n’est pas un cours sur le RGPD.",
+    "inputs": "Ouvre brief-fr.md pour la mission et le format demandé, puis source-fr.md pour consulter le guide officiel sélectionné. Le cabinet fictif commence sans communications antérieures.",
+    "request": "Lucia, prépare une FAQ pour les petites entreprises clientes de Studio Riva sur le traitement des demandes d’accès aux données. Utilise ce brief et cette source. Fais-moi revoir contenu et format, puis prépare le dossier local sans l’envoyer ni le publier.",
+    "steps": [
+      "Dans le fil de travail, Lucia précise public, objectif, langue et canal et prépare l’espace local du cabinet. Dans la conversation vocale, elle explique le résultat visé. Tu confirmes le périmètre et le lieu d’enregistrement.",
+      "Lucia examine la source, choisit les informations utiles et rédige la FAQ et le format proposé. Le workflow actuel vérifie séparément les affirmations et la qualité éditoriale. L’explication vocale suit les résultats réels, y compris les corrections demandées.",
+      "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
+    ],
+    "deliverables": [
+      "FAQ en Markdown, à examiner et réutiliser après revue.",
+      "Base technique, références aux sources et traces des vérifications et décisions."
+    ],
+    "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",
+    "checkpoints": [
+      "Indique le public à atteindre, le contenu utile et le format souhaité.",
+      "Retrouve le texte utilisable et la source d’une affirmation dans le dossier ; explique les points à revoir avant usage."
+    ],
+    "practice": "Lis practice-fr.md et demande une nouvelle version avec un courriel d’accompagnement de la FAQ. Revois l’adaptation au canal, conserve le premier dossier et ouvre les nouveaux fichiers. N’envoie rien.",
+    "success": "Tu sais partir de sources sélectionnées, suivre les vérifications, revoir la communication et demander une version pour un autre canal.",
+    "repeat": "Indique à Lucia le sujet, le public, les canaux et les sources disponibles. Tu peux ajouter des exemples précis du style du cabinet. Revois proposition, sources et dossier avant utilisation."
+  }
+}

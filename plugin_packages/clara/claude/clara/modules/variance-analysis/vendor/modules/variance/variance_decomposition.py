@@ -986,8 +986,10 @@ def join_filtering_dataframe_and_rows_to_subtract(df, dfToSubtract, indexCols):
     return df
 
 
-def check_rows_for_negative(df: pl.DataFrame | pl.LazyFrame):
-    """Remove rows where units or amounts are non-positive."""
+def check_rows_for_negative(
+    df: pl.DataFrame | pl.LazyFrame, *, allow_signed_amounts: bool = False
+):
+    """Keep valid residuals; amount-only accounting bridges retain signed costs."""
 
     namingParams = get_naming_params()
     configParams = get_config_params()
@@ -1011,9 +1013,12 @@ def check_rows_for_negative(df: pl.DataFrame | pl.LazyFrame):
         ).filter((pl.col(unitsPeriodZero) > 0) | (pl.col(unitsPeriodOne) > 0))
 
     if amountPeriodZero in columns:
-        df_pl = df_pl.filter(
-            (pl.col(amountPeriodZero) >= 0) & (pl.col(amountPeriodOne) >= 0)
-        ).filter((pl.col(amountPeriodZero) > 0) | (pl.col(amountPeriodOne) > 0))
+        condition = (pl.col(amountPeriodZero) != 0) | (pl.col(amountPeriodOne) != 0)
+        if not allow_signed_amounts:
+            condition &= (pl.col(amountPeriodZero) >= 0) & (
+                pl.col(amountPeriodOne) >= 0
+            )
+        df_pl = df_pl.filter(condition)
 
     if isinstance(df, pl.LazyFrame):
         return df_pl.lazy()
@@ -1050,7 +1055,8 @@ def subtract_values(
     """
     we perform the actual subtraction from corresponding columns. In order to understand
     which column corresponds to which to subtract column we match their names
-    if after subtraction result value is negative we set it back to 0
+    amount-only accounting residuals may be negative; quantity-based analysis
+    retains its existing non-negative validity checks
     """
     namingParams = get_naming_params()
     toSubtractStem = namingParams["toSubtractStem"]
@@ -1085,7 +1091,9 @@ def subtract_values(
     )
 
     df_pl = drop_columns(df_pl, drop_cols + [workColumn])
-    df_pl = check_rows_for_negative(df_pl)
+    df_pl = check_rows_for_negative(
+        df_pl, allow_signed_amounts=not paramDict[namingParams["unitsColFound"]]
+    )
 
     df_first = df_pl.head(1)
     df_rest = df_pl.slice(1).sort(randomKey, nulls_last=True)

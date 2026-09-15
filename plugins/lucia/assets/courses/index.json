@@ -1,10 +1,10 @@
 {
-  "schema": "mparanza.course_catalog.v1",
+  "schema": "mparanza.teaching_catalog.v2",
   "product": "lucia",
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "c75b19ed2fde0a6410f4658815eca6a13872c88108fed03abada4ab1dccdf5ee",
+      "sha256": "e74a48254f7290779283f228408e67d631edfe91c5b015bd429d74262b8d25b1",
       "languages": [
         "it",
         "en",
@@ -13,17 +13,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Aprire il dossier non significa accettare l'incarico",
-        "en": "Preparing a matter file does not accept the engagement",
-        "fr": "Préparer le dossier n'accepte pas la mission",
-        "de": "Eine vorbereitete Akte ist noch keine Mandatsannahme",
-        "es": "Preparar el expediente no equivale a aceptar el encargo"
+        "it": "Preparare una nuova pratica con Lucia",
+        "en": "Prepare a new matter with Lucia",
+        "fr": "Préparer un nouveau dossier avec Lucia",
+        "de": "Eine neue Angelegenheit mit Lucia vorbereiten",
+        "es": "Preparar un nuevo expediente con Lucia"
+      },
+      "goals": {
+        "it": "Impara a partire dalla richiesta e dai documenti del cliente, ottenere un fascicolo da rivedere e capire cosa manca prima dell’apertura.",
+        "en": "Learn to start from a client request and documents, obtain a reviewable matter file and identify what is needed before opening.",
+        "fr": "Apprenez à partir de la demande et des documents du client, obtenir un dossier à revoir et identifier ce qui manque avant son ouverture.",
+        "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
+        "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
       }
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "228b9841090c907928dd12d0a54b3cfb24a51c499f651c55d10a88f1a713e02d",
+      "sha256": "be3df423a261e3700aff086c4009e3f43383ef7d19c403f0a6e31e1338ab4156",
       "languages": [
         "it",
         "en",
@@ -32,17 +41,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Una comunicazione che può dimostrare ciò che dice",
-        "en": "A professional message that can support its claims",
-        "fr": "Un message professionnel qui peut justifier ses affirmations",
-        "de": "Eine Kanzleimitteilung mit belegbaren Aussagen",
-        "es": "Un mensaje profesional que respalda sus afirmaciones"
+        "it": "Preparare una comunicazione professionale con Lucia",
+        "en": "Prepare a professional communication with Lucia",
+        "fr": "Préparer une communication professionnelle avec Lucia",
+        "de": "Eine professionelle Mitteilung mit Lucia erstellen",
+        "es": "Preparar una comunicación profesional con Lucia"
+      },
+      "goals": {
+        "it": "Imparare a partire da un argomento e dalle fonti, preparare una comunicazione per un pubblico preciso e rivedere il pacchetto prima di usarlo.",
+        "en": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+        "fr": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+        "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+        "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       }
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "2e7fce9fe43984b228de9fc3e36f80cf53760d3e71aed83b92adcb0f29bb567c",
+      "sha256": "9b0626d6a7b652446f1d305ceae52523c29d252fa1146651339f853b9bd01c87",
       "languages": [
         "it",
         "en",
@@ -51,17 +69,26 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
-        "it": "Un sito di studio che parte dai fatti",
-        "en": "A firm's website starts with verified facts",
-        "fr": "Le site du cabinet commence par des faits vérifiés",
-        "de": "Eine Kanzleiwebsite beginnt mit geprüften Fakten",
-        "es": "La web del despacho empieza por hechos verificados"
+        "it": "Preparare il sito dello studio con Lucia",
+        "en": "Prepare the firm’s website with Lucia",
+        "fr": "Préparer le site du cabinet avec Lucia",
+        "de": "Die Kanzleiwebsite mit Lucia vorbereiten",
+        "es": "Preparar el sitio del despacho con Lucia"
+      },
+      "goals": {
+        "it": "Imparare a partire dalle informazioni dello studio, ottenere un sito funzionante e rivederlo prima di scegliere la pubblicazione.",
+        "en": "Learn to start from firm information, obtain a working website and review it before choosing publication.",
+        "fr": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
+        "de": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
+        "es": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación."
       }
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "9e178814c8ba9d9137ea749002e61ab451533d54131282e62501f8be096e8a08",
+      "sha256": "28fce9176f5a5d36ce0ade67303c2fe280e928a435bb72cf358785fab40bcc9c",
       "languages": [
         "it",
         "en",
@@ -70,13 +97,23 @@
         "es"
       ],
       "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
       "titles": {
         "it": "Da una domanda generica a una risposta che si può verificare",
         "en": "From a broad question to a verifiable answer",
         "fr": "D'une question générale à une réponse vérifiable",
         "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
         "es": "De una pregunta general a una respuesta verificable"
-      }
+      },
+      "goals": {
+        "it": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
+        "en": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
+        "fr": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
+        "de": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
+        "es": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional."
+      },
+      "material": "retained"
     }
   }
 }

@@ -236,6 +236,14 @@ def _draft_required_text(draft: dict[str, Any]) -> list[str]:
     return [*_draft_content_required_text(draft), *_public_source_lines(draft)]
 
 
+def _client_email_subject(draft: dict[str, Any], profile: dict[str, Any]) -> str:
+    """Resolve the public subject from the reviewed email and Studio pattern."""
+
+    subject = draft.get("subject") or draft["title"]
+    pattern = profile["email"]["subject_pattern"] or "{subject}"
+    return pattern.replace("{subject}", subject).replace("{title}", draft["title"])
+
+
 def _client_email_text(
     draft: dict[str, Any],
     *,
@@ -244,11 +252,7 @@ def _client_email_text(
     language: str,
 ) -> str:
     email_profile = profile["email"]
-    subject = draft.get("subject") or draft["title"]
-    pattern = email_profile["subject_pattern"] or "{subject}"
-    subject_line = pattern.replace("{subject}", subject).replace(
-        "{title}", draft["title"]
-    )
+    subject_line = _client_email_subject(draft, profile)
     parts = [f"{LABELS[_language_key(language)]['subject']}: {subject_line}"]
     if email_profile["salutation"]:
         parts.append(email_profile["salutation"])
@@ -552,8 +556,12 @@ def _package_communications_locked(root: Path) -> Path:
                     language=intake["language"],
                 )
                 required_text = [
-                    f"{LABELS[_language_key(intake['language'])]['subject']}:",
-                    *_draft_required_text(draft),
+                    f"{LABELS[_language_key(intake['language'])]['subject']}: "
+                    + _client_email_subject(draft, profile),
+                    # The internal title need not appear when a separate subject
+                    # is used. Retain every body, section and public-source check.
+                    *_draft_content_required_text(draft)[1:],
+                    *_public_source_lines(draft),
                 ]
             elif channel == "linkedin":
                 content = _social_text(draft, profile=profile)

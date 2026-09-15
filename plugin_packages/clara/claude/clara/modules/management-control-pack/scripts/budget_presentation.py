@@ -9,6 +9,7 @@ from html import escape
 from pathlib import Path
 from typing import Any
 
+from management_report_copy import report_label
 from reporting_table import render_reporting_table
 
 __all__ = ["render_budget_comparisons"]
@@ -29,7 +30,11 @@ LINES = (
     ("interest", "Oneri finanziari", "Interest expense"),
     ("tax", "Imposte", "Tax"),
     ("other", "Altri proventi/oneri", "Other income/expense"),
-    ("net_result", "Risultato netto", "Net result"),
+    (
+        "net_result",
+        "Risultato netto sulle voci fornite",
+        "Net result on supplied categories",
+    ),
 )
 COSTS = {"cogs", "operating_expense", "depreciation_amortization", "interest", "tax"}
 TOTALS = {"gross_profit", "ebitda", "ebit", "net_result"}
@@ -39,13 +44,16 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
     """Select compiled views without changing numbers, signs, units or scales."""
     section = pack["sections"]["budget_variance"]
     language = pack.get("language", "en")
-    italian = language == "it"
+
+    def label(value: str) -> str:
+        return report_label(value, language)
+
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in section.get("comparison_rows", []):
         grouped[row["view"]].append(row)
     if not grouped:
         return ""
-    labels = {key: it if italian else en for key, it, en in LINES}
+    labels = {key: label(key) for key, _, _ in LINES}
     rendered_rows: dict[str, list[dict[str, Any]]] = {}
     for view, values in grouped.items():
         by_metric = {row["metric"]: row for row in values}
@@ -70,12 +78,8 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
         grouped, key=lambda view: (view != "total", view == "forecast", view)
     )
     titles = {
-        "total": (
-            "Progressivo al " + pack["reporting_period"]["cutoff"]
-            if italian
-            else "Actuals to " + pack["reporting_period"]["cutoff"]
-        ),
-        "forecast": "Previsione a fine periodo" if italian else "Full-period forecast",
+        "total": label("Actuals to ") + pack["reporting_period"]["cutoff"],
+        "forecast": label("Full-period forecast"),
     }
     buttons = []
     figures = []
@@ -86,20 +90,18 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
             f'<button type="button" data-budget-select="{escape(view)}" aria-controls="budget-{escape(view)}" aria-pressed="false">{escape(title)}</button>'
         )
         figure = render_reporting_table(
-            row_header="Voce" if italian else "Line item",
+            row_header=label("Line item"),
             rows=rendered_rows[view],
-            baseline_label="PL · Budget",
-            comparison_label="FC · Forecast" if scenario == "FC" else "AC · Actual",
+            baseline_label="PL · " + label("Budget"),
+            comparison_label=(
+                "FC · " + label("Forecast")
+                if scenario == "FC"
+                else "AC · " + label("AC")
+            ),
             entity_label=str(pack["entity"]),
             comparison_caption=title,
-            metric=("Conto economico" if italian else "Profit and loss")
-            + " · "
-            + pack["currency"],
-            source_label=(
-                "Export e mappatura verificati"
-                if italian
-                else "Reviewed exports and mapping"
-            ),
+            metric=label("Profit and loss") + " · " + pack["currency"],
+            source_label=label("Reviewed exports and mapping"),
             language=language,
             fragment=True,
             row_label_width=260,
@@ -110,21 +112,23 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
         figures.append(
             f'<div id="budget-{escape(view)}" data-budget-view="{escape(view)}">{figure}</div>'
         )
-    note = (
-        "Δ = scenario − budget. Costi esposti positivi; una riduzione è favorevole. Δ% = Δ / budget × 100; n/d con base zero o negativa. FC = consuntivi fino al cutoff + stime dei mesi successivi. Le selezioni mantengono unità e scale comuni."
-        if italian
-        else "Δ = scenario − budget. Costs are displayed positive; a reduction is favorable. Δ% = Δ / budget × 100; n/a for zero or negative bases. FC = actuals to cutoff + reviewed remaining-month estimates. Views share units and scales."
+    note = label(
+        "Δ = scenario − budget. Costs are displayed positive; a reduction is favorable. Δ% = Δ / budget × 100; n/a for zero or negative bases. Views share units and scales."
     )
     if "forecast" in grouped:
-        note += " " + section["forecast_basis"]
+        note += (
+            label(" FC = actuals to cutoff + reviewed remaining-month estimates. ")
+            + section["forecast_basis"]
+        )
     limitations = "".join(
         f"<li>{escape(reason)}</li>" for reason in section.get("limitations", [])
     )
     assets = Path(__file__).resolve().parent.parent / "assets"
     css = (assets / "budget-report.css").read_text(encoding="utf-8")
     script = (assets / "budget-report.js").read_text(encoding="utf-8")
-    heading = (
-        "Consuntivo, budget e forecast" if italian else "Actual, budget and forecast"
-    )
-    print_label = "Stampa / PDF" if italian else "Print / PDF"
-    return f'<section class="budget-report"><style>{css}</style><p class="eyebrow">PL · AC · FC</p><h2>{heading}</h2><p>{escape(note)}</p><div class="budget-controls" hidden>{"".join(buttons)}<button type="button" data-budget-print>{print_label}</button></div>{"".join(figures)}<ul>{limitations}</ul><script>{script}</script></section>'
+    heading = label("Actual and budget")
+    if "forecast" in grouped:
+        heading = label("Actual, budget and forecast")
+    print_label = label("Print / PDF")
+    scenarios = "PL · AC · FC" if "forecast" in grouped else "PL · AC"
+    return f'<section class="budget-report"><style>{css}</style><p class="eyebrow">{scenarios}</p><h2>{heading}</h2><p>{escape(note)}</p><div class="budget-controls" hidden>{"".join(buttons)}<button type="button" data-budget-print>{print_label}</button></div>{"".join(figures)}<ul>{limitations}</ul><script>{script}</script></section>'

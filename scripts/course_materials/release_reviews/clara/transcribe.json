@@ -1,0 +1,441 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "clara",
+  "workflow": "transcribe",
+  "course_sha256": "25c0cbd772c5e82aa23601fe9d79c9233271159ef239ea64b2d4f975701e311a",
+  "reviewer": "Codex: first-use outline, source and native transcript-output review",
+  "reviewed_at": "2026-09-14T21:09:24.778646+00:00",
+  "review_scope": "Local bundle import, text-only speaker review, source preservation and case registration only. Fixed regression interpretation is not a learner action, live voice test, recorded audio or hosted transcription. No advisory claims or approvals are created. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and ordinary note-import case teach the supported local transcript route from bundle and destination through reviewed text and source registration. The lesson explicitly separates new audio capture/transcription, which is not exercised.",
+        "inputs_and_request": "The two fictional authored-text bundles are valid native inputs with a localized provenance note. The natural request names the case, preservation, speaker review and final text, without requiring the beginner to understand JSON fields. No audio or hosted-service result is falsely represented as real.",
+        "execution_and_checkpoints": "The actual native importer and finalizer preserve originals, register the model-reviewed transcript and retain the first session when the second is added. Voice follows the working chat. Checkpoints identify the source/destination and compare one passage in both versions.",
+        "deliverable_and_next_action": "The finalizer registers a short readable Markdown transcript, with its current path and source hash in the actual material/evidence registries. Its words match the source; no service decision or advisory claim is added. The original importer attribution report is retained as import-time evidence; the current material record points to the final reviewed text.",
+        "practice_and_repeat": "The second bundle has two unverified speakers. The exercise preserves their localized numbered labels and the earlier note, then repeats source comparison. The closing guidance distinguishes ordinary-folder storage from case-evidence review and registration.",
+        "language_and_pacing": "The it outline, source note and final transcript were read in full. Final prose follows that language. Raw importer metadata and registry headings mostly remain English (Spanish import headings are localized); these are supporting source records, not a promised fully translated interface. The six-section explanation totals 390 seconds, a target rather than measured learner time."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[demo-it]",
+        "result_review": "Read the actual finalized transcript and its native registration. Sara is named from explicit self-identification and metadata; price, route and launch remain unresolved. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "77df2dc76f3756087335450ebf393cb25fa60f7fd4ba545aba108b13c4779d19"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "1a222d3c3d70223f54c64a2fd6d2b455482cd17ca80aba4e206879095fe401a4"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "65a378abda4767234a761f0b40b25a94b14028aefeeb08b9131fcc6ec74c6a6e"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "81efd77d52b54a95318186802f35aeee4adb9c152006f78291ad351aff92ab72"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[practice-it]",
+        "result_review": "Read the actual second transcript and its native registration. Both numbered speaker turns and the explicit absence of a service approval are preserved. The first session remains byte-identical. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "99df196c21338d18f112b5256e2b22854ef9c1dce980f46bae1ed6a885a7a1e6"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "cd9a588a015aea2babe482621e7680592eb0c7a5dd51454901cf010e4dd93f6c"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "503d7441cdcf0e1c08131cb5129d26d391cb9e8aa06b2db462e055a64f1764b9"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "7492276b6168792fab0d5e75052b4a0a1cb8d79626a8ad6e0c7314e12453f097"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and ordinary note-import case teach the supported local transcript route from bundle and destination through reviewed text and source registration. The lesson explicitly separates new audio capture/transcription, which is not exercised.",
+        "inputs_and_request": "The two fictional authored-text bundles are valid native inputs with a localized provenance note. The natural request names the case, preservation, speaker review and final text, without requiring the beginner to understand JSON fields. No audio or hosted-service result is falsely represented as real.",
+        "execution_and_checkpoints": "The actual native importer and finalizer preserve originals, register the model-reviewed transcript and retain the first session when the second is added. Voice follows the working chat. Checkpoints identify the source/destination and compare one passage in both versions.",
+        "deliverable_and_next_action": "The finalizer registers a short readable Markdown transcript, with its current path and source hash in the actual material/evidence registries. Its words match the source; no service decision or advisory claim is added. The original importer attribution report is retained as import-time evidence; the current material record points to the final reviewed text.",
+        "practice_and_repeat": "The second bundle has two unverified speakers. The exercise preserves their localized numbered labels and the earlier note, then repeats source comparison. The closing guidance distinguishes ordinary-folder storage from case-evidence review and registration.",
+        "language_and_pacing": "The en outline, source note and final transcript were read in full. Final prose follows that language. Raw importer metadata and registry headings mostly remain English (Spanish import headings are localized); these are supporting source records, not a promised fully translated interface. The six-section explanation totals 390 seconds, a target rather than measured learner time."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[demo-en]",
+        "result_review": "Read the actual finalized transcript and its native registration. Sara is named from explicit self-identification and metadata; price, route and launch remain unresolved. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "c88104deecd005ab3f7722ae2a1bfd80136510cd046417e3bbc2ca76f34dfc0d"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "6eb28a4c5deed5b1c9a23a43298772b2c3bbe0405b61ae41dcc884d3065f6766"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "082b0f2aac9841346cbc80b1fca1854166a55d3a6826381c3da10f1ac56bde40"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "909ab5ef952d459f451a7904b4d192633961cbde96d2c21c4e9d10224de34ef3"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[practice-en]",
+        "result_review": "Read the actual second transcript and its native registration. Both numbered speaker turns and the explicit absence of a service approval are preserved. The first session remains byte-identical. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "cad818d64065b72e66113e819f39bf859ea19f75d72cb5b019b6bab163c8ef64"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "548aa391deaac529601187a676c16568a5a262fc0e1bc360f7285801bebb4baa"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "ecddf368567d98e403f77d1dc1c4c80e1790ab8c40f001aa8f0fa65cac3b907c"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "198e42a7066f44393e2839afe9332639ae449c2b25decaa90ac8a3a6746ca2b6"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and ordinary note-import case teach the supported local transcript route from bundle and destination through reviewed text and source registration. The lesson explicitly separates new audio capture/transcription, which is not exercised.",
+        "inputs_and_request": "The two fictional authored-text bundles are valid native inputs with a localized provenance note. The natural request names the case, preservation, speaker review and final text, without requiring the beginner to understand JSON fields. No audio or hosted-service result is falsely represented as real.",
+        "execution_and_checkpoints": "The actual native importer and finalizer preserve originals, register the model-reviewed transcript and retain the first session when the second is added. Voice follows the working chat. Checkpoints identify the source/destination and compare one passage in both versions.",
+        "deliverable_and_next_action": "The finalizer registers a short readable Markdown transcript, with its current path and source hash in the actual material/evidence registries. Its words match the source; no service decision or advisory claim is added. The original importer attribution report is retained as import-time evidence; the current material record points to the final reviewed text.",
+        "practice_and_repeat": "The second bundle has two unverified speakers. The exercise preserves their localized numbered labels and the earlier note, then repeats source comparison. The closing guidance distinguishes ordinary-folder storage from case-evidence review and registration.",
+        "language_and_pacing": "The fr outline, source note and final transcript were read in full. Final prose follows that language. Raw importer metadata and registry headings mostly remain English (Spanish import headings are localized); these are supporting source records, not a promised fully translated interface. The six-section explanation totals 390 seconds, a target rather than measured learner time."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[demo-fr]",
+        "result_review": "Read the actual finalized transcript and its native registration. Sara is named from explicit self-identification and metadata; price, route and launch remain unresolved. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "6d5ff3accf02100407049fc5e750220dcc609ae80cb0644a63e8aa82e54028ff"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "87faa4ebbf8c6968e4d8f0108b6d893bafe2d7700f65c502b227395a17afac6d"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "e7a0d59cdf6bd41699cc180e544cdaa275c62137d9cbad2e526c16b5631459be"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "754a8961527fef5afab6d3ff714a11ca56f0403bc12e25cedafb20a49ea41314"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[practice-fr]",
+        "result_review": "Read the actual second transcript and its native registration. Both numbered speaker turns and the explicit absence of a service approval are preserved. The first session remains byte-identical. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "6af29f61e0fcc1e1f6122facbb82339ec9af27f0331412915c6b511a73caeaaa"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "7b2187f1481859fcb9fd9c491b0cc3a725f297a0f072568298e170c2437f7f34"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "6c084aa54f9b24df298b462295ac759b54116f8be8fe678f27a7337640fce04c"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "9eda5b286a7f17ca80293ddc3583e4d65d5c59e8620d695b0119f4ac9ed6beff"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and ordinary note-import case teach the supported local transcript route from bundle and destination through reviewed text and source registration. The lesson explicitly separates new audio capture/transcription, which is not exercised.",
+        "inputs_and_request": "The two fictional authored-text bundles are valid native inputs with a localized provenance note. The natural request names the case, preservation, speaker review and final text, without requiring the beginner to understand JSON fields. No audio or hosted-service result is falsely represented as real.",
+        "execution_and_checkpoints": "The actual native importer and finalizer preserve originals, register the model-reviewed transcript and retain the first session when the second is added. Voice follows the working chat. Checkpoints identify the source/destination and compare one passage in both versions.",
+        "deliverable_and_next_action": "The finalizer registers a short readable Markdown transcript, with its current path and source hash in the actual material/evidence registries. Its words match the source; no service decision or advisory claim is added. The original importer attribution report is retained as import-time evidence; the current material record points to the final reviewed text.",
+        "practice_and_repeat": "The second bundle has two unverified speakers. The exercise preserves their localized numbered labels and the earlier note, then repeats source comparison. The closing guidance distinguishes ordinary-folder storage from case-evidence review and registration.",
+        "language_and_pacing": "The de outline, source note and final transcript were read in full. Final prose follows that language. Raw importer metadata and registry headings mostly remain English (Spanish import headings are localized); these are supporting source records, not a promised fully translated interface. The six-section explanation totals 390 seconds, a target rather than measured learner time."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[demo-de]",
+        "result_review": "Read the actual finalized transcript and its native registration. Sara is named from explicit self-identification and metadata; price, route and launch remain unresolved. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "25857f0dfd3348a6612bbce61733f66c59b2219af8ca3241c07ce5395deaf8fb"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "1a045fc3dd4d4545c26b2b585fa3a47ef12a88034c8ca8f6eabb6be885718c1a"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "8a7aee23c37b41ee348dcfe67e1c7540c4b6c4bb52b3d7daae23fa36f40fd0b4"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "a2af3536ea01f4e723ed52f320a72f6aabd1a0026ca977d4c49538831615da1f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[practice-de]",
+        "result_review": "Read the actual second transcript and its native registration. Both numbered speaker turns and the explicit absence of a service approval are preserved. The first session remains byte-identical. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "fe8aec4fa874a7953e1e0b571e083d6ec6b3059e24da33b56f562c8ffcb3556e"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "e4331934730ac1e5608cfc1226147b465630e12f469cbc255d4e3ec8b55bf3cb"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "7efdb066ecb90082ccea41f5f1826ec9a99c564fe267da5dd7eea2592dafdb7e"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "d310638da41af35ca543fe5cb0a1aea0c6510213fbe39835a1e666aae765f6d8"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title and ordinary note-import case teach the supported local transcript route from bundle and destination through reviewed text and source registration. The lesson explicitly separates new audio capture/transcription, which is not exercised.",
+        "inputs_and_request": "The two fictional authored-text bundles are valid native inputs with a localized provenance note. The natural request names the case, preservation, speaker review and final text, without requiring the beginner to understand JSON fields. No audio or hosted-service result is falsely represented as real.",
+        "execution_and_checkpoints": "The actual native importer and finalizer preserve originals, register the model-reviewed transcript and retain the first session when the second is added. Voice follows the working chat. Checkpoints identify the source/destination and compare one passage in both versions.",
+        "deliverable_and_next_action": "The finalizer registers a short readable Markdown transcript, with its current path and source hash in the actual material/evidence registries. Its words match the source; no service decision or advisory claim is added. The original importer attribution report is retained as import-time evidence; the current material record points to the final reviewed text.",
+        "practice_and_repeat": "The second bundle has two unverified speakers. The exercise preserves their localized numbered labels and the earlier note, then repeats source comparison. The closing guidance distinguishes ordinary-folder storage from case-evidence review and registration.",
+        "language_and_pacing": "The es outline, source note and final transcript were read in full. Final prose follows that language. Raw importer metadata and registry headings mostly remain English (Spanish import headings are localized); these are supporting source records, not a promised fully translated interface. The six-section explanation totals 390 seconds, a target rather than measured learner time."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[demo-es]",
+        "result_review": "Read the actual finalized transcript and its native registration. Sara is named from explicit self-identification and metadata; price, route and launch remain unresolved. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "bf609adabeec47087dc43d3f37f72a94017fc55d62cc46161f8a87a594af5cb3"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "3b4d319d8b3dcc52ef88236164e9f20dc891152999baffa4b4a0f10f6a9f9eb7"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "8341325110af4443bd8547ad47896be3d6bc3a89a73665e8f75ff8bbb6d91df1"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "99b940b53308dc14dbd75390896743c4a30be0c5cfe3cc712d56d256c0d9b4ab"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_transcript_execution::test_transcript_kit_imports_reviews_and_registers_actual_case_sources[practice-es]",
+        "result_review": "Read the actual second transcript and its native registration. Both numbered speaker turns and the explicit absence of a service approval are preserved. The first session remains byte-identical. Native checks verify exact source preservation, the current registered output path, transcript hashes, a valid case and an empty judgement log. The fixed text review is a regression fixture, not a learner review. No audio, hosted capture, or external truth verification occurred.",
+        "reviewed_artifacts": [
+          {
+            "name": "kit-reviewed-transcript.md",
+            "sha256": "539c0f576cd0634ceab16ad0a69c626227c0f8d6b1be91036a78160f7b991a07"
+          },
+          {
+            "name": "raw_transcript_unattributed.md",
+            "sha256": "7f54b46ebe7ed9e05001777c8e0ed6d77f3c3e720f4cf986a1fa33d72083a714"
+          }
+        ],
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "material_registry.json",
+            "sha256": "63619219f7db8df46aa3c4162d7748082d8861ab3e53ac1c04ae4d27ffed8129"
+          },
+          {
+            "name": "advisory_evidence_register.json",
+            "sha256": "9ac204d9f1c9e26702b026698786cafc3b6050d00a436596f4a64c25e446b197"
+          }
+        ]
+      }
+    }
+  },
+  "refresh_review": {
+    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
+    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals.",
+    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
+    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed."
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.150932+00:00",
+    "previous_course_sha256": "81888399580cea37a5fb67fac43cba6930aa7fa37091c8a567b53a932d71ab1c",
+    "source_snapshot": "/private/tmp/clara-teaching-source-refresh-02/test_transcript_kit_ordinary_f0/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.580600+00:00",
+    "previous_course_sha256": "355a2ce2220f72cd8f7dc3c007b5e7de04961007042ce18e10e9c106e19c14ef",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/clara/scripts/advisor_case_core.py",
+        "before": "f91c4cf808c1c80296121b80bbf87b4a16fe25d26080be2d6d4e2bba9e631a29",
+        "after": "1102874a9103ce3aa8efb16679b363fe5b25b2df53c92f0091d1815a4e942108"
+      },
+      {
+        "path": "plugins/clara/scripts/advisory_evidence_lineage.py",
+        "before": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73",
+        "after": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
+      },
+      {
+        "path": "plugins/clara/scripts/bounded_process.py",
+        "before": null,
+        "after": "e409460e7df27d1fc89df5d2908c6ff3b438420d1c0bd1a1b4c9e4ce7de0ea3b"
+      },
+      {
+        "path": "plugins/clara/scripts/build_voice_feedback_timeline.py",
+        "before": "411efb9a66a51d2c64fdcf1d34cc8cc01805c67b2b839696e17385934d12c325",
+        "after": "9421c1e2cefe599a25a15490e1b792005220d69019b9cab327cf2c66e9a0619b"
+      },
+      {
+        "path": "plugins/clara/scripts/case_exchange_safety.py",
+        "before": null,
+        "after": "8aaa910146d7accdcdb99ab793fb2c3e59585697d5d9284aab8946a2de7c35e3"
+      },
+      {
+        "path": "plugins/clara/scripts/case_store.py",
+        "before": null,
+        "after": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
+      },
+      {
+        "path": "plugins/clara/scripts/check_dependencies.py",
+        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
+        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      },
+      {
+        "path": "plugins/clara/scripts/decision_narrative.py",
+        "before": null,
+        "after": "d596dcb192db69e8ca32e511f99aba371328260ddd916e77c7b7d250b781daf2"
+      },
+      {
+        "path": "plugins/clara/scripts/html_deck_runtime.py",
+        "before": "3e41fb7921317c92153fcdab66e7cdc8e4078366c29f518093d8fb2a2eb84f27",
+        "after": "a4585f10b456bbc44513873c430c58bc3f40351a69646b2e255e14861ace6d21"
+      },
+      {
+        "path": "plugins/clara/scripts/import_hosted_voice_bundle.py",
+        "before": "cec89bc124b742b7b7dadb19dc4f966bf2796a8a640b1ed6344f661824ede8b2",
+        "after": "77a707f2488ff2192bc7f673dbda14695f0caa81023304c010c7e9f812746886"
+      },
+      {
+        "path": "plugins/clara/scripts/match_feedback_frames_to_deck_slides.py",
+        "before": "6671a51e5a354d8ca71ceed75dab32d4fdea3df4bf292f4770d70e695cda68e6",
+        "after": "05bcb9f30b23e97b0b54907296943c72120040c2d95de422b5ac3b0440b96fda"
+      },
+      {
+        "path": "plugins/clara/skills/transcribe/SKILL.md",
+        "before": "40ccdc5e3303c9b011dc1641aa0cc888e22388b43029234fa8101b2b9e8a5b50",
+        "after": "316069f0907d2cd90dd1ad7d0ebf07bb4b08f19c5a017690e1c4d29e6a01ddeb"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "portability_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:08:05.101344+00:00",
+    "previous_course_sha256": "5c7f5a3cc2490d4a533b2cda223e5c86ae2c0b84efa8a899d31257b1a1c75dbe",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      }
+    ],
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
+  }
+}

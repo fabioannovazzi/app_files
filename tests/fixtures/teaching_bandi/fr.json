@@ -1,0 +1,36 @@
+{
+  "question": "Préparer le dossier du projet numérique à partir de l’appel fictif et des documents fournis.",
+  "title": "Prise de rendez-vous numérique",
+  "site": "Milan",
+  "summary": "Arco Servizi propose un logiciel et une formation pour quatre salariés. Le dossier relie les conditions de l’appel aux déclarations et au devis. Les interprétations et les documents restent à revoir.",
+  "fictional": "Source entièrement fictive ; aucun organisme ou financement réel.",
+  "fixture": "Interprétation synthétique pour tester le workflow ; aucune revue professionnelle réelle.",
+  "project": "Introduire la prise de rendez-vous numérique et former le personnel.",
+  "commitment": "Le devis n’est pas accepté ; aucune commande n’est signée et aucune dépense engagée.",
+  "requirement_evidence": "Documents du projet et devis à revoir pour cette condition.",
+  "clauses": [
+    "La déclaration indique un établissement opérationnel à Milan. Le critère territorial correspond aux informations déclarées, sous réserve de revue.",
+    "Quatre salariés sont déclarés, soit moins de dix. Ce chiffre provient de la déclaration de l’entreprise et reste à revoir.",
+    "Le projet déclaré comprend la prise de rendez-vous numérique et la formation du personnel, conformément à l’objet indiqué dans l’appel.",
+    "Q-001 décrit une nouvelle licence du logiciel prévu. Son inclusion dans les dépenses admissibles est proposée au titre du point 4 et reste à revoir.",
+    "Le poste Q-002 décrit la formation du personnel prévue dans le projet. Sa pertinence est proposée pour revue.",
+    "Le poste Q-003 est un ordinateur. La proposition l’exclut de la base admissible car l’appel exclut le matériel informatique ; il peut rester dans le coût total du projet.",
+    "Le taux de 50 % appliqué à la base admissible proposée de {eligible} EUR donne une demande hypothétique de {grant} EUR, sous réserve de revue des coûts.",
+    "La demande hypothétique de {grant} EUR ne dépasse pas le plafond de 5 000 EUR. Il ne s’agit pas d’un octroi d’aide.",
+    "Le document de projet contient la description demandée ; sa présence ne confirme pas à elle seule son contenu.",
+    "Le document de l’entreprise déclare l’établissement et quatre salariés ; cette déclaration reste à revoir.",
+    "Le devis distingue le logiciel, la formation et l’ordinateur avec des montants séparés. Les conditions commerciales restent à revoir.",
+    "La date du dossier, le 14 septembre 2026, est comprise dans la période fictive du 1er au 30 septembre. Cette comparaison ne confirme pas l’ouverture d’un appel réel.",
+    "L’entreprise déclare que le devis n’est pas accepté et qu’aucune commande ou dépense n’est engagée. La condition semble respectée sur cette base, sous réserve de revue."
+  ],
+  "documents": [
+    "Description du projet",
+    "Déclaration de l’établissement et de l’effectif",
+    "Devis détaillé"
+  ],
+  "document_reason": "Le document fourni est lié à la condition indiquée ; son contenu et sa fiabilité restent à revoir.",
+  "narrative": "Arco Servizi propose la prise de rendez-vous numérique sur son site déclaré à Milan et une formation pour ses quatre salariés. Le devis comprend une licence logicielle, une formation et un ordinateur. Aucun devis n’est accepté ni aucune commande signée. La base proposée pour l’aide comprend le logiciel et la formation, à l’exclusion de l’ordinateur. L’interprétation des coûts et les déclarations de l’entreprise restent à revoir.",
+  "budget": "Coût total proposé : {total} EUR ; base admissible proposée : {eligible} EUR ; matériel exclu : 3 000 EUR ; aide hypothétique : {grant} EUR. Le calcul utilise uniquement les conditions fictives des points 7 et 8.",
+  "consistency": "Vérifier la concordance du devis, de la base proposée et de la demande hypothétique.",
+  "issue": "Revoir les déclarations de l’entreprise, l’interprétation des conditions et les classifications de coûts avant de confirmer le dossier."
+}

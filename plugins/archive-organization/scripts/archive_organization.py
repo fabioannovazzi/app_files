@@ -731,14 +731,26 @@ def _source_identity(item: Mapping[str, Any], *, storage_kind: str) -> str:
     return f"drive-version:{item['file_id']}:{item['version']}"
 
 
+def _review_words(language: str) -> dict[str, Any]:
+    translations = _read_json(
+        Path(__file__).resolve().parents[1] / "references" / "review-labels.json",
+        label="review labels",
+    )
+    if language not in translations:
+        raise ArchiveOrganizationError("Unsupported review language.")
+    return translations[language]
+
+
 def build_review_package(
     client_engagement: Path,
     proposals_path: Path,
     *,
     policy_path: Path | None = None,
+    language: str = "it",
 ) -> dict[str, Any]:
     """Write the dry-run plan and persistent review package for one exact run."""
 
+    words = _review_words(language)
     context = _load_context(client_engagement)
     snapshot = _load_snapshot(context)
     policy = _load_policy(policy_path)
@@ -938,7 +950,7 @@ def build_review_package(
                     "target_id_field": "item_id",
                     "target_record_id": item["item_id"],
                     "target_field": "target_relative_path",
-                    "edit_hint": "Use a client-relative destination path. Apply will reject Vera/, absolute paths, traversal, collisions, symlinks, and overwrites.",
+                    "edit_hint": words["edit_hint"],
                 },
                 "evidence": [
                     {
@@ -956,6 +968,7 @@ def build_review_package(
         )
     review_payload_content = {
         "schema_version": "1.0",
+        "language": language,
         "plugin": WORKFLOW_ID,
         "workflow": WORKFLOW_ID,
         "run_id": context["run_id"],
@@ -1034,23 +1047,19 @@ def build_review_package(
             "decisions": [],
         },
     )
-    handoff = """# Review Handoff
-
-Review `review_payload.json` in the shared workbench. Decisions persist to
-`ui_decisions.json`; applying review decisions writes `applied_decisions.json`
-and `approved_plan.json`, while `final_artifacts.json` tracks the package.
-
-Use the tools in this order:
-
-1. `validate_archive_organization_review`
-2. `render_archive_organization_review`
-3. `save_archive_organization_decisions`
-4. `apply_archive_organization_decisions`
-
-The fourth tool compiles the reviewed plan only. It does not move client files.
-Local-filesystem or Google Drive API execution requires a separate explicit
-approval and the workflow CLI `apply --explicit-approval`.
-"""
+    handoff = (
+        f"# {words['title']}\n\n<!-- Review Handoff -->\n\n"
+        f"{words['lead']}\n\n{words['execution']}\n\n## {words['files']}\n\n"
+        f"- [{words['payload']}](review_payload.json)\n"
+        f"- [{words['decisions']}](ui_decisions.json)\n"
+        f"- [{words['applied']}](applied_decisions.json) · `approved_plan.json`\n"
+        f"- [{words['artifacts']}](final_artifacts.json)\n\n"
+        f"<details><summary>{words['technical']}</summary>\n\n"
+        "1. `validate_archive_organization_review`\n"
+        "2. `render_archive_organization_review`\n"
+        "3. `save_archive_organization_decisions`\n"
+        "4. `apply_archive_organization_decisions`\n\n</details>\n"
+    )
     (output_dir / "review_handoff.md").write_text(handoff, encoding="utf-8")
     created_at = _now_iso()
     _write_json(
@@ -1060,7 +1069,7 @@ approval and the workflow CLI `apply --explicit-approval`.
             "plugin": WORKFLOW_ID,
             "workflow": WORKFLOW_ID,
             "created_at": created_at,
-            "language": "it",
+            "language": language,
             "input_paths": [
                 binding["execution_relative_path"]
                 for binding in context["input_bindings"]
@@ -1138,7 +1147,7 @@ approval and the workflow CLI `apply --explicit-approval`.
             "run_id": context["run_id"],
             "outputs": output_records,
             "caveats": [
-                "No client file has moved; execution requires reviewed decisions and a separate explicit approval.",
+                words["prepare_caveat"],
                 *(
                     [
                         "Google Drive apply uses the restricted Drive OAuth scope and revalidates file ID, parent, name, version, and available checksums."
@@ -1147,9 +1156,7 @@ approval and the workflow CLI `apply --explicit-approval`.
                     else []
                 ),
             ],
-            "next_actions": [
-                "Review every proposed change and persist collaborator decisions."
-            ],
+            "next_actions": [words["review_next"]],
             "blockers": [],
             "status": "written_pending_review",
         },
@@ -1404,7 +1411,7 @@ def compile_approved_plan(
         )
     final_artifacts["status"] = "ready_for_review"
     final_artifacts["next_actions"] = [
-        "Summarize the approved changes and obtain a separate explicit storage apply approval."
+        _review_words(review_payload.get("language", "it"))["approve_next"]
     ]
     _write_json(final_artifacts_path, final_artifacts)
     return {
@@ -1456,10 +1463,15 @@ def _copy_exclusive_then_unlink(
             raise ArchiveOrganizationError(
                 "Copied target does not match the approved source hash."
             )
+        # Windows does not allow unlinking a file while this reader is open.
+        source_handle.close()
         shutil.copystat(source, target, follow_symlinks=False)
         if _sha256_file(target) != expected_sha256:
             target.unlink(missing_ok=True)
             raise ArchiveOrganizationError("Target hash changed before source removal.")
+        _ordinary_source(source, label="approved source")
+        if _sha256_file(source) != expected_sha256:
+            raise ArchiveOrganizationError("Source changed before removal.")
         source.unlink()
     except FileExistsError as exc:
         raise ArchiveOrganizationError(
@@ -2247,6 +2259,9 @@ def _parser() -> argparse.ArgumentParser:
     prepare = subparsers.add_parser("prepare-review", parents=[managed_context])
     prepare.add_argument("--proposals", type=Path, required=True)
     prepare.add_argument("--policy", type=Path)
+    prepare.add_argument(
+        "--language", choices=("it", "en", "fr", "de", "es"), default="it"
+    )
     approve = subparsers.add_parser("approve", parents=[managed_context])
     approve.add_argument("--decisions", type=Path, required=True)
     save = subparsers.add_parser("save-decisions", parents=[managed_context])
@@ -2277,6 +2292,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.client_engagement,
                 args.proposals,
                 policy_path=args.policy,
+                language=args.language,
             )
         elif args.command == "save-decisions":
             result = persist_review_decisions(args.client_engagement, args.decisions)
