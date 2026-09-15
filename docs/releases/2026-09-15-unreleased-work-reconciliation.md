@@ -67,3 +67,7 @@ gates. Native Cowork agent acceptance is not claimed.
 The repository-wide formatting checks expose legacy formatting/import-order
 debt outside this recovery; the changed source passes both checks. The existing
 configured src mypy check passes, and src Bandit has no medium/high findings.
+
+## Benchmark isolation repair
+
+Recognize the renamed legal-tax-answer-planner skill in the baseline isolation guard. The full benchmark file passes; the package, icon, update and benchmark regression selection passes 414 tests with 2 conditional skips. The prompt-optimizer component is 0.1.50; Vera 0.1.255 and Lucia 0.1.49 packages were rebuilt. All previously collected tests are accounted for with 11,226 passed and 41 skipped after the repair.
