@@ -110,7 +110,10 @@ def test_check_for_update_returns_message_for_new_published_version(
 
     assert result == (
         "Clara update available: installed 1.0.0, published 1.1.0. "
-        "Visit https://chatgpt.com/plugins/clara to get the latest published version."
+        "Visit https://chatgpt.com/plugins/clara to get the latest published version. "
+        "If you use a local or ZIP copy, verify the official installation before "
+        "disabling the old local copy, then start a fresh conversation. Installing "
+        "from the listing does not remove a local copy."
     )
 
 

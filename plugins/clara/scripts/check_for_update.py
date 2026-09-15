@@ -190,7 +190,9 @@ def check_for_update(
     return (
         f"{display_name} update available: installed {installed_version}, "
         f"published {published_version}. Visit {install_url} to get the latest "
-        "published version."
+        "published version. If you use a local or ZIP copy, verify the official "
+        "installation before disabling the old local copy, then start a fresh "
+        "conversation. Installing from the listing does not remove a local copy."
     )
 
 
