@@ -104,9 +104,10 @@ fingerprint and generated packages were refreshed; all package drift checks
 passed, followed by 67 focused publication/package tests (one unavailable-cache
 skip). The ledger preserves the exact uploaded hashes before this refresh.
 
-Vera 0.1.258 is deployed and packaged but is not claimed Published. Its final
-upload was blocked by automatic approval review of the browser upload controls;
-the requested narrow approval remains pending. The complete archive is retained
-at `/private/tmp/teaching-marketplace-final/vera-chatgpt-upload.zip`, SHA-256
+Vera 0.1.258 was directly verified Published on 2026-09-15 after all 39 skill
+scans passed and Fabio explicitly approved the four publisher declarations.
+The exact uploaded archive has SHA-256
 `79eb655c7b9ef7e3ccc4b4ee74cf826d76ef209eb2c13ebe190e54b1f239b36f`.
-The previous Vera 0.1.257 publication record remains unchanged.
+All three teaching releases are now Published. The shared registry advertises
+Vera 0.1.258 and Clara 0.1.208; deferred teaching-kit replacements remain for
+next week.
