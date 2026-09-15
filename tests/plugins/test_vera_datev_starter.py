@@ -115,7 +115,9 @@ def test_start_ships_known_procedure_and_saves_empty_truthful_progress(
     assert result["execution_verified"] is False
     assert result["client_reviews"] == []
     assert "Nessun profilo" in result["start_state"]
-    assert (tmp_path / "run/PROCEDURA.md").read_bytes() == helper.PROCEDURE.read_bytes()
+    assert (tmp_path / "run/PROCEDURA.md").read_text(
+        encoding="utf-8"
+    ) == helper.PROCEDURE.read_text(encoding="utf-8")
     assert Path(result["report_path"]).is_file()
 
 
