@@ -95,10 +95,12 @@ jobs:
     timeout-minutes: 30
     env:
       PYTHONDONTWRITEBYTECODE: "1"
-      TEACHING_TAXONOMY_CATALOGUE: ${{ runner.temp }}/teaching-bilancio-catalogue.json
-      TEACHING_TAXONOMY_PACKAGE: ${{ runner.temp }}/teaching-PCI-2018-11-04.zip
     steps:
       - uses: actions/checkout@v4
+      - name: Set local taxonomy fixture paths
+        run: |
+          echo "TEACHING_TAXONOMY_CATALOGUE=$RUNNER_TEMP/teaching-bilancio-catalogue.json" >> "$GITHUB_ENV"
+          echo "TEACHING_TAXONOMY_PACKAGE=$RUNNER_TEMP/teaching-PCI-2018-11-04.zip" >> "$GITHUB_ENV"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
