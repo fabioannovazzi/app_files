@@ -1,6 +1,6 @@
 ---
 name: browser-automation
-description: Use when an authorized operator or developer wants Vera to teach, discover, build, validate, or run a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through the operator's existing Chrome session, including when the developer cannot access the target system.
+description: Use when an authorized operator or developer wants Vera to teach, discover, build, validate, or repair a repeatable process on Agenzia delle Entrate, TeamSystem, Gmail, or another website through the operator's existing Chrome session, including when the developer cannot access the target system.
 ---
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
@@ -34,14 +34,16 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
-For generic development/testing, read the resolved module's
-`references/process-lifecycle.md`; for ordinary work, use its distinct
-`references/ordinary-use.md` flow. Recover the local process catalog in every new
-conversation and use current-model semantic selection. The accountant describes
-the desired work and business parameters; Vera resolves saved process/attempt
-identities, implementation paths, CR receipts, release and retest state. Never
-require an old conversation, CR number or technical package assembly. Start an
-attempt before work and deliver its readable report even after a partial failure.
+For development, teaching, testing and repair, read the module's
+`references/process-lifecycle.md`. Recover the development catalog and preserve
+process/attempt identities and actual CR evidence across conversations.
+For routine work, use the installed named operation skill. Do not select an
+ordinary-use procedure from the development catalog. If no released skill covers
+it, explain the missing operation; start development only within the user's scope.
+To turn a developed procedure into a release, follow `references/production-skills.md`.
+The named skill owns its inputs, result checks and exact executable binding;
+the browser module remains the shared runner. The following legacy specialist
+routes retain their existing startup and acceptance boundaries.
 
 For TeamSystem ECONS, start from a new conversation using the module reference's
 `New-conversation startup` section. Read the shipped invoice procedure and call

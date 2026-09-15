@@ -1,6 +1,8 @@
 # A process that survives the conversation
 
-Use this lifecycle for professional browser development, testing and later use.
+Use this lifecycle for professional browser development and testing.
+Ordinary use enters through a separately named operation skill; see
+`production-skills.md` for the reviewed release handoff.
 The accountant describes work and demonstrates an example. Vera owns the record,
 technical translation, file paths and submission assembly. Never ask the accountant
 for a process ID, CR number, capability JSON, archive, selector or previous chat.
@@ -22,7 +24,7 @@ Tutorials use an isolated tutorial root and must not sync, publish, submit CRs o
 mix tutorial attempts into professional qualification.
 
 The current model compares the request with the saved site, objective, exclusions,
-inputs and outcomes. This is semantic selection, not a keyword classifier. Two
+inputs and outcomes. This selects development work, not an ordinary-use operation. Two
 processes on Agenzia may do different work. "Agenzia" alone is insufficient;
 "download received invoice XMLs for this client and period" identifies work.
 If several processes fit, ask one professional question to distinguish them. If
@@ -142,7 +144,8 @@ beside the matching `capability.json` for the existing product package builder.
 This binding hash-links the process, source attempts and release metadata; it
 contains no run outputs, local paths, credentials or customer parameters.
 `sync-installed` imports these exact shipped bindings in a fresh conversation.
-It does not import another operator's qualification or silently execute code.
+It does not import another operator's qualification or create a public skill.
+For release as a named operation, follow `production-skills.md`.
 Legacy examples without a binding remain explicit development examples, not
 ordinary-use supported processes. The existing sealed capability verification
 remains required for separately transferred executable capability bundles.

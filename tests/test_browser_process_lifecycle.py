@@ -58,6 +58,20 @@ def release(cr_ids: list[str] | None = None) -> dict[str, Any]:
     }
 
 
+def named_skill_specification(name: str = "synthetic-record-search") -> dict[str, str]:
+    """Authored scope for a fixture-only skill, never a public supported operation."""
+    return {
+        "name": name,
+        "description": f"Find synthetic records using {name}; exclude invoice posting and unrelated searches.",
+        "display_name": f"Fixture operation {name}",
+        "short_description": f"Retrieve and check synthetic records with {name}",
+        "default_prompt": f"Use ${name} to retrieve the synthetic records for my query.",
+        "instructions": f"Vera runs {name} against the synthetic fixture and checks the exact records before delivering the result.",
+        "result_checks": "Check both fixture record identities and fields against the expected records. Report missing or unexpected records.",
+        "model_data": "Only synthetic query and result fields are read by the model. Fixture records stay in the local test output and are never sent to the feedback service.",
+    }
+
+
 def checkpoint() -> dict[str, Any]:
     process = description()
     return {
@@ -812,8 +826,10 @@ def test_user_visible_routes_and_reports_never_require_technical_user_inputs():
     assert "references/ordinary-use.md" in skill
     assert "references/process-lifecycle.md" in wrapper
     assert "accountant never writes automation rules" in lifecycle_reference
-    assert "current model" in ordinary_reference
-    assert "never ask the operator to resume an old chat" in ordinary_reference
+    assert "named operation skill" in ordinary_reference
+    assert "never ask the operator to resume an old chat" in " ".join(
+        ordinary_reference.split()
+    )
     assert "zip_uploaded: false" in lifecycle_reference
     assert "missing_reasons" in lifecycle_reference
     assert "Load exactly one explicitly named" not in skill
@@ -862,3 +878,264 @@ def test_tutorial_feedback_cannot_leave_its_local_directory(lifecycle, tmp_path)
         )
 
     assert store.resume(process)["cr_ids"] == []
+
+
+def test_named_skill_runs_its_exact_process_among_same_site_jobs(lifecycle, tmp_path):
+    store, process = registered(lifecycle, tmp_path)
+    attempts = reviewed_live_schema_pair(store, process)
+    store.qualify(process, [a["attempt_id"] for a in attempts], 30_000)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    other = description()
+    other["process"] = {
+        **other["process"],
+        "name": "Other job on the same website",
+        "objective": "Review a different synthetic population",
+    }
+    other_id = store.create(other)["process_id"]
+    host_path = tmp_path / "host.json"
+    host_path.write_text(json.dumps(host("live_connected_chrome")), encoding="utf-8")
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPTS / "process_skills.py"),
+            "begin",
+            "--root",
+            str(store.root),
+            "--skill",
+            str(skill),
+            "--input",
+            str(host_path),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    attempt = json.loads(completed.stderr)
+    executed = run_fixture(attempt, host("live_connected_chrome"))
+
+    assert attempt["process_id"] == process
+    assert attempt["process_id"] != other_id
+    assert attempt["blocked_reason"] is None
+    assert executed["result"] == "passed"
+    assert executed["summary"]["outputs"][0]["record_count"] == 2
+    assert store.resume(other_id)["attempts"] == []
+
+
+def test_named_skill_does_not_use_newer_unreleased_local_version(lifecycle, tmp_path):
+    store, process = registered(lifecycle, tmp_path)
+    attempts = reviewed_live_schema_pair(store, process)
+    store.qualify(process, [a["attempt_id"] for a in attempts], 30_000)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    revised = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    revised["version"] = "0.1.1"
+    changed = tmp_path / "revised.json"
+    changed.write_text(json.dumps(revised), encoding="utf-8")
+    store.add_version(process, changed, release())
+
+    attempt = skills.begin_skill(store, skill, host("live_connected_chrome"))
+
+    assert attempt["procedure_version"] == "0.1.0"
+    assert attempt["blocked_reason"] is None
+    assert (
+        store.inspect(attempt["attempt_id"])["plan"]["implementation"]["version"]
+        == "0.1.0"
+    )
+
+
+def test_named_skill_rejects_substituted_procedure_before_attempt(lifecycle, tmp_path):
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    capability = json.loads((skill / "capability.json").read_text(encoding="utf-8"))
+    capability["process"]["objective"] = "Different work"
+    (skill / "capability.json").write_text(json.dumps(capability), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="binding does not match"):
+        skills.begin_skill(store, skill, host())
+    assert store.resume(process)["attempts"] == []
+
+
+def test_named_skill_fresh_install_keeps_qualification_local(lifecycle, tmp_path):
+    store, process = registered(lifecycle, tmp_path)
+    attempts = reviewed_live_schema_pair(store, process)
+    store.qualify(process, [a["attempt_id"] for a in attempts], 30_000)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    recipient = lifecycle.ProcessStore(tmp_path / "recipient")
+
+    attempt = skills.begin_skill(recipient, skill, host("live_connected_chrome"))
+
+    assert attempt["process_id"] == process
+    assert attempt["blocked_reason"] == "qualification_required"
+    assert recipient.resume(process)["qualification"] is None
+    assert Path(attempt["report_path"]).is_file()
+
+
+def test_named_skill_export_cannot_overwrite_existing_operation(lifecycle, tmp_path):
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    directory = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    original = (directory / "SKILL.md").read_bytes()
+
+    with pytest.raises(FileExistsError):
+        skills.export_skill(
+            store, process, named_skill_specification(), tmp_path / "skills"
+        )
+    assert (directory / "SKILL.md").read_bytes() == original
+
+
+def test_named_skill_is_discoverable_and_bound_in_chatgpt_package(
+    lifecycle, tmp_path, monkeypatch
+):
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    builder = importlib.import_module("build_codex_plugin_zip")
+    target = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
+    entries = builder.expected_zip_entries(target)
+    prefix = f"{target.package_root}/plugins/vera/"
+    for path in skill.rglob("*"):
+        if path.is_file():
+            entries[
+                prefix
+                + "skills/"
+                + skill.name
+                + "/"
+                + path.relative_to(skill).as_posix()
+            ] = path.read_bytes()
+    monkeypatch.setattr(builder, "expected_zip_entries", lambda _target: entries)
+
+    packaged = builder.chatgpt_upload_entries(target)
+
+    entry = f"skills/{skill.name}/"
+    assert json.loads(packaged[entry + "process.json"])["process_id"] == process
+    assert (
+        packaged[entry + "capability.json"] == (skill / "capability.json").read_bytes()
+    )
+    assert f"${skill.name}" in packaged[entry + "agents/openai.yaml"].decode()
+    assert (
+        f"../../skills/{skill.name}/SKILL.md"
+        in packaged["skills/vera/SKILL.md"].decode()
+    )
+    assert "process_skills.py begin" in packaged[entry + "SKILL.md"].decode()
+
+
+def test_named_skill_package_rejects_broken_binding(lifecycle, tmp_path, monkeypatch):
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    builder = importlib.import_module("build_codex_plugin_zip")
+    prefix = "plugins/vera/"
+    entries = {
+        prefix
+        + "skills/"
+        + skill.name
+        + "/"
+        + path.relative_to(skill).as_posix(): path.read_bytes()
+        for path in skill.rglob("*")
+        if path.is_file()
+    }
+    entries[prefix + "skills/" + skill.name + "/capability.json"] = b"{}"
+
+    with pytest.raises(ValueError, match="procedure hash differs"):
+        builder.named_browser_skill_cards(entries, prefix)
+
+
+def test_named_skill_cli_exports_and_prepares_exact_operation(
+    lifecycle, tmp_path, caplog
+):
+    import logging
+
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    specification = tmp_path / "specification.json"
+    specification.write_text(json.dumps(named_skill_specification()), encoding="utf-8")
+    host_path = tmp_path / "host.json"
+    host_path.write_text(json.dumps(host()), encoding="utf-8")
+    caplog.set_level(logging.INFO)
+
+    status = skills.main(
+        [
+            "export",
+            "--root",
+            str(store.root),
+            "--process",
+            process,
+            "--input",
+            str(specification),
+            "--output",
+            str(tmp_path / "skills"),
+        ]
+    )
+
+    assert status == 0
+    exported = json.loads(caplog.records[-1].message)
+    assert Path(exported["skill_directory"], "SKILL.md").is_file()
+
+
+def test_named_skill_cli_begin_returns_persistent_block_report(
+    lifecycle, tmp_path, caplog
+):
+    import logging
+
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    skill = skills.export_skill(
+        store, process, named_skill_specification(), tmp_path / "skills"
+    )
+    host_path = tmp_path / "host.json"
+    host_path.write_text(json.dumps(host()), encoding="utf-8")
+    caplog.set_level(logging.INFO)
+
+    status = skills.main(
+        [
+            "begin",
+            "--root",
+            str(store.root),
+            "--skill",
+            str(skill),
+            "--input",
+            str(host_path),
+        ]
+    )
+
+    assert status == 0
+    attempt = json.loads(caplog.records[-1].message)
+    assert attempt["process_id"] == process
+    assert attempt["blocked_reason"] == "qualification_required"
+    assert Path(attempt["report_path"]).is_file()
+
+
+def test_named_skill_cli_missing_identity_fails_without_creating_an_attempt(
+    lifecycle, tmp_path
+):
+    store, process = registered(lifecycle, tmp_path)
+    skills = importlib.import_module("process_skills")
+    host_path = tmp_path / "host.json"
+    host_path.write_text(json.dumps(host()), encoding="utf-8")
+
+    status = skills.main(
+        ["begin", "--root", str(store.root), "--input", str(host_path)]
+    )
+
+    assert status == 1
+    assert store.resume(process)["attempts"] == []

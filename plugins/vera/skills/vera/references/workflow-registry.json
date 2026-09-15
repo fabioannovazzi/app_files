@@ -445,6 +445,7 @@
         "modules/browser-automation/scripts/development_request.py",
         "modules/browser-automation/scripts/discovery_pack.py",
         "modules/browser-automation/scripts/process_lifecycle.py",
+        "modules/browser-automation/scripts/process_skills.py",
         "modules/browser-automation/scripts/teaching_checkpoint.py"
       ]
     },

@@ -1,15 +1,17 @@
 ---
 name: browser-automation
-description: "Use when an authorized operator or developer wants Vera to learn, teach, discover, build, validate, or run a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
+description: "Use when an authorized operator or developer wants Vera to learn, teach, discover, build, validate, or repair a repeatable process on a website through their existing Chrome session. The workflow is site-generic and process-specific: it uses model-led exploration plus Playwright mechanics to produce portable capabilities for Agenzia delle Entrate, TeamSystem, Gmail, or another browser-based gestionale. Do not use it for ordinary web research, credential handling, or desktop-only application automation."
 ---
 
 # Automazione web
 
-Develop, test and use an exact professional browser process. Read
-`references/process-lifecycle.md` before selecting the operation. On every new
+Develop, test and repair an exact professional browser process. Read
+`references/process-lifecycle.md` before selecting the development process. On every new
 conversation, recover the scoped local process catalog and shipped bindings;
 the current model selects by the user's professional objective and exclusions.
-For ordinary execution, follow the separate `references/ordinary-use.md` workflow.
+For ordinary execution, use the installed named operation skill. This generic
+skill is the development entry point. Read `references/production-skills.md`
+when preparing a developed process for release as its own skill.
 The operator supplies ordinary work requests and examples, never capability
 names, CR numbers, technical JSON, internal paths or an old conversation.
 Teaching checkpoints, attempts, reviewed evidence, actual CR receipts, versions
@@ -279,12 +281,12 @@ references. The model chooses workflow meaning and recovery; validators do not.
 
 ### Run an existing capability
 
-For ordinary work, follow `references/ordinary-use.md`: semantically select one
-supported process from the persistent catalog, obtain missing business inputs,
-and start a qualified `use` attempt. Vera resolves its exact registered
-`browser-capability/v2` file. An explicitly supplied capability folder remains
-a development/import route; validate and bind it before testing, without asking
-ordinary users for that path. Do not scan unrelated folders. Confirm that the
+For a development test, recover the exact process from the development catalog
+and create a `test` attempt. Routine execution starts in the installed named
+operation skill and follows `references/ordinary-use.md`; do not use this generic
+skill to choose a saved local procedure for ordinary work. An explicitly supplied
+capability folder remains a development/import route; validate and bind it before
+testing, without asking ordinary users for that path. Do not scan unrelated folders. Confirm that the
 requested process, allowed origins, typed inputs, structured
 outputs, and side effects match the operator's request. A `scaffold` or `draft`
 is not executable. A `discovered` capability may be tested but is not a proven

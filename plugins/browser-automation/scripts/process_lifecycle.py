@@ -432,56 +432,58 @@ class ProcessStore:
         )
         return record
 
-    def sync_installed(self, module_root: Path) -> list[dict[str, Any]]:
-        """Import exact shipped bindings; receiving environments remain unqualified."""
-        imported = []
-        for binding_path in sorted(
-            _safe(module_root / "capabilities").glob("*/process.json")
+    def sync_binding(self, binding_path: Path) -> dict[str, Any]:
+        """Import the exact process shipped by a named skill without catalog matching."""
+        binding = _read(binding_path)
+        if (
+            set(binding)
+            != {
+                "schema_version",
+                "process_id",
+                "description",
+                "capability_sha256",
+                "release",
+                "source_attempt_ids",
+            }
+            or binding["schema_version"] != "browser-process-binding/v1"
         ):
-            binding = _read(binding_path)
-            if (
-                set(binding)
-                != {
-                    "schema_version",
-                    "process_id",
-                    "description",
-                    "capability_sha256",
-                    "release",
-                    "source_attempt_ids",
-                }
-                or binding["schema_version"] != "browser-process-binding/v1"
-            ):
-                raise ValueError("invalid installed process binding")
-            if not isinstance(binding["source_attempt_ids"], list) or any(
-                not re.fullmatch(r"attempt-[a-f0-9]{32}", str(a))
-                for a in binding["source_attempt_ids"]
-            ):
-                raise ValueError("invalid development attempt lineage")
-            cr_ids = binding["release"]["cr_ids"]
-            if not isinstance(cr_ids, list) or any(
-                not re.fullmatch(r"CR-[1-9]\d*", str(c)) for c in cr_ids
-            ):
-                raise ValueError("invalid declared release CR lineage")
-            capability_path = binding_path.with_name("capability.json")
-            capability = _read(capability_path)
-            if sha256_payload(capability) != binding["capability_sha256"]:
-                raise ValueError("installed binding does not match capability bytes")
-            process_id = self.create(
-                binding["description"], process_id=binding["process_id"]
-            )["process_id"]
-            try:
-                self._put(
-                    "installed-binding:" + sha256_payload(binding),
-                    process_id,
-                    "installed_binding",
-                    binding,
-                )
-            except sqlite3.IntegrityError:
-                pass
-            imported.append(
-                self.add_version(process_id, capability_path, binding["release"])
+            raise ValueError("invalid installed process binding")
+        if not isinstance(binding["source_attempt_ids"], list) or any(
+            not re.fullmatch(r"attempt-[a-f0-9]{32}", str(a))
+            for a in binding["source_attempt_ids"]
+        ):
+            raise ValueError("invalid development attempt lineage")
+        cr_ids = binding["release"]["cr_ids"]
+        if not isinstance(cr_ids, list) or any(
+            not re.fullmatch(r"CR-[1-9]\d*", str(c)) for c in cr_ids
+        ):
+            raise ValueError("invalid declared release CR lineage")
+        capability_path = binding_path.with_name("capability.json")
+        capability = _read(capability_path)
+        if sha256_payload(capability) != binding["capability_sha256"]:
+            raise ValueError("installed binding does not match capability bytes")
+        process_id = self.create(
+            binding["description"], process_id=binding["process_id"]
+        )["process_id"]
+        try:
+            self._put(
+                "installed-binding:" + sha256_payload(binding),
+                process_id,
+                "installed_binding",
+                binding,
             )
-        return imported
+        except sqlite3.IntegrityError:
+            pass
+        return self.add_version(process_id, capability_path, binding["release"])
+
+    def sync_installed(self, module_root: Path) -> list[dict[str, Any]]:
+        """Import development bindings; receiving environments remain unqualified."""
+        return [
+            self.sync_binding(path)
+            for path in sorted(
+                _safe(module_root / "capabilities").glob("*/process.json")
+            )
+        ]
 
     def export_binding(self, process_id: str, output: Path) -> Path:
         """Write source metadata for the existing builder; exclude all run outputs."""
@@ -579,6 +581,7 @@ class ProcessStore:
         host: dict[str, Any],
         *,
         version: str | None = None,
+        pinned_version: bool = False,
     ) -> dict[str, Any]:
         """Create the durable report before browser or teaching work can fail."""
         process = self.process(process_id)
@@ -600,7 +603,7 @@ class ProcessStore:
             ):
                 blocked = "host_capabilities_unavailable"
             elif kind == "use" and not self._qualified(
-                process_id, implementation, host
+                process_id, implementation, host, pinned_version=pinned_version
             ):
                 blocked = "qualification_required"
         attempt_id = "attempt-" + uuid4().hex
@@ -985,8 +988,18 @@ class ProcessStore:
         self._put("qualification-" + uuid4().hex, process_id, "qualification", record)
         return record
 
-    def _qualified(self, process_id: str, version: Any, host: Any) -> bool:
+    def _qualified(
+        self, process_id: str, version: Any, host: Any, *, pinned_version: bool = False
+    ) -> bool:
         qualifications = self._rows(process_id, "qualification")
+        if pinned_version:
+            # A named released operation retains its tested version while a
+            # different version is being developed in the same local register.
+            qualifications = [
+                q
+                for q in qualifications
+                if q["version"] == version and q["host"] == host
+            ]
         if not qualifications:
             return False
         record = qualifications[-1]
@@ -995,7 +1008,7 @@ class ProcessStore:
             or record["host"] != host
             or host["execution_mode"] != "live_connected_chrome"
             or record["host_fingerprint"] != _machine_fingerprint()
-            or version != self._version(process_id)
+            or (not pinned_version and version != self._version(process_id))
         ):
             return False
         for plan in self._rows(process_id, "attempt"):
