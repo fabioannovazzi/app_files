@@ -40,7 +40,7 @@ def host(mode: str = "simulated", **overrides: Any) -> dict[str, Any]:
 
 
 def description() -> dict[str, Any]:
-    capability = json.loads(FIXTURE.read_text())
+    capability = json.loads(FIXTURE.read_text(encoding="utf-8"))
     return {
         "site": capability["site"]["name"],
         "process": capability["process"],
@@ -253,7 +253,7 @@ def test_teaching_partial_failure_feedback_release_and_retest_survive_new_contex
     assert "synthetic-token-kept-local" not in json.dumps(receipt)
     assert str(store.root) not in wire
     assert "Browser execution" in wire
-    assert "CR-847" in Path(failed["report_path"]).read_text()
+    assert "CR-847" in Path(failed["report_path"]).read_text(encoding="utf-8")
     assert (
         restarted.submit_feedback(prepared["feedback_id"], VERA, **options) == receipt
     )
@@ -266,7 +266,7 @@ def test_teaching_partial_failure_feedback_release_and_retest_survive_new_contex
     imported = developer.import_feedback(Path(receipt["archive_path"]))
     assert imported["process_id"] == process
 
-    capability = json.loads(FIXTURE.read_text())
+    capability = json.loads(FIXTURE.read_text(encoding="utf-8"))
     capability["version"] = "0.1.1"
     revised = tmp_path / "revised.json"
     revised.write_text(json.dumps(capability))
@@ -278,7 +278,7 @@ def test_teaching_partial_failure_feedback_release_and_retest_survive_new_contex
     assert restarted.inspect(retry["attempt_id"])["plan"]["implementation"]["release"][
         "cr_ids"
     ] == ["CR-847"]
-    assert "test simulati" in Path(completed["report_path"]).read_text()
+    assert "test simulati" in Path(completed["report_path"]).read_text(encoding="utf-8")
 
 
 def test_two_simulated_runs_and_correct_reviews_cannot_qualify_real_use(
@@ -329,7 +329,7 @@ def test_pre_receipt_failures_always_have_persistent_useful_reports(
     )
     assert result["missing_reason"] == expected
     assert store.inspect(attempt["attempt_id"])["evidence"]["receipt_sha256"] is None
-    assert expected in Path(result["report_path"]).read_text()
+    assert expected in Path(result["report_path"]).read_text(encoding="utf-8")
 
 
 def test_pending_attempt_is_discoverable_without_old_chat_or_path(lifecycle, tmp_path):
@@ -349,7 +349,7 @@ def test_process_boundary_version_identity_and_receipt_integrity_fail_closed(
     store, process = registered(lifecycle, tmp_path)
     with pytest.raises(ValueError, match="exact site"):
         store.create({"site": "Agenzia"})
-    changed = json.loads(FIXTURE.read_text())
+    changed = json.loads(FIXTURE.read_text(encoding="utf-8"))
     changed["version"] = "0.1.1"
     changed["process"]["objective"] = "Another professional process"
     path = tmp_path / "changed.json"
@@ -369,10 +369,9 @@ def test_process_boundary_version_identity_and_receipt_integrity_fail_closed(
     prepared = store.prepare_feedback(
         attempt["attempt_id"], development(), problem=problem()
     )
-    assert (
-        "saved_evidence_invalid_or_unavailable"
-        in (Path(prepared["directory"]) / "cr-request.json").read_text()
-    )
+    assert "saved_evidence_invalid_or_unavailable" in (
+        Path(prepared["directory"]) / "cr-request.json"
+    ).read_text(encoding="utf-8")
 
 
 def test_transmission_requires_exact_review_and_retains_unsent_request(
@@ -435,7 +434,9 @@ def test_qualification_fresh_context_ordinary_use_and_regression_loop_contract(
     attempts = reviewed_live_schema_pair(store, process)
     qualification = store.qualify(process, [a["attempt_id"] for a in attempts], 30_000)
     assert (
-        json.loads(Path(qualification["capability_path"]).read_text())["status"]
+        json.loads(Path(qualification["capability_path"]).read_text(encoding="utf-8"))[
+            "status"
+        ]
         == "validated_local"
     )
     # A new process has neither the old conversation nor Python module state.
@@ -490,7 +491,7 @@ def test_qualification_fresh_context_ordinary_use_and_regression_loop_contract(
         process, "use", host("live_connected_chrome")
     )
     assert blocked["blocked_reason"] == "qualification_required"
-    assert "CR-847" in Path(regression["report_path"]).read_text()
+    assert "CR-847" in Path(regression["report_path"]).read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize(
@@ -543,7 +544,7 @@ def test_new_contract_and_changed_result_review_suspend_qualification(
         },
     )
     assert store.catalog()[0]["available_in_qualified_environment"] is False
-    revised = json.loads(FIXTURE.read_text())
+    revised = json.loads(FIXTURE.read_text(encoding="utf-8"))
     revised["version"] = "0.1.1"
     path = tmp_path / "revision.json"
     path.write_text(json.dumps(revised))
@@ -796,10 +797,14 @@ def test_unavailable_host_or_implementation_preserves_attempt_and_feedback(
 def test_user_visible_routes_and_reports_never_require_technical_user_inputs():
     lifecycle_reference = (
         SCRIPTS.parent / "references/process-lifecycle.md"
-    ).read_text()
-    ordinary_reference = (SCRIPTS.parent / "references/ordinary-use.md").read_text()
-    skill = (SCRIPTS.parent / "skills/browser-automation/SKILL.md").read_text()
-    wrapper = (VERA / "skills/browser-automation/SKILL.md").read_text()
+    ).read_text(encoding="utf-8")
+    ordinary_reference = (SCRIPTS.parent / "references/ordinary-use.md").read_text(
+        encoding="utf-8"
+    )
+    skill = (SCRIPTS.parent / "skills/browser-automation/SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    wrapper = (VERA / "skills/browser-automation/SKILL.md").read_text(encoding="utf-8")
     assert "references/ordinary-use.md" in skill
     assert "references/process-lifecycle.md" in wrapper
     assert "accountant never writes automation rules" in lifecycle_reference
@@ -825,7 +830,7 @@ def test_available_host_measurements_remain_in_the_readable_report(lifecycle, tm
         },
     )
 
-    report = store.report(attempt["attempt_id"]).read_text()
+    report = store.report(attempt["attempt_id"]).read_text(encoding="utf-8")
 
     assert "input_tokens: 23" in report
     assert "synthetic host usage fixture scoped to this attempt" in report

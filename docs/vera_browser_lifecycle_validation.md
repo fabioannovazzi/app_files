@@ -56,6 +56,10 @@ site, account, population or UI variant works.
   module was not in the strict runtime gate; its existing regression tests pass.
 - Vera privacy workstream/service reviews validate as current. Generated course
   materials and the workflow registry match their sources.
+- Clara's shared CR-service privacy record was also reviewed and refreshed:
+  the server accepts explicitly explained partial reports while Clara's existing
+  client still requires complete diagnostics. Its privacy suite passes (13 tests),
+  and its packages were regenerated at the existing version for source parity.
 - The standard product builders produced Codex, ChatGPT-upload and Cowork
   packages at 0.1.259; source drift, manifest versions, public Cowork ZIP parity
   and packaged MCP initialization checks pass.

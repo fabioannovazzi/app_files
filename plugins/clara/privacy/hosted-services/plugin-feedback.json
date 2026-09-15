@@ -28,7 +28,7 @@
     {
       "id": "approved-text-request",
       "when": "After explicit consent to transmit one sanitized problem or suggestion",
-      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. Problem reports must include occurred time, runtime, operation, reproduction, and at least one bounded diagnostic evidence string. The helper enforces that mechanical shape but does not detect personal data, judge semantic sufficiency, or anonymize the file. Clara's host-specific instructions require the assistant to show, sanitize, and obtain consent for the exact request."
+      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. Problem reports must include occurred time, runtime, operation, reproduction, and at least one bounded diagnostic evidence string. The helper enforces that mechanical shape but does not detect personal data, judge semantic sufficiency, or anonymize the file. Clara's host-specific instructions require the assistant to show, sanitize, and obtain consent for the exact request. The shared API also admits partial diagnostics when every missing time/runtime/operation or reproduction value has an explicit reason and bounded evidence remains. Clara's existing client still requires its complete diagnostic shape; the broader server admission does not expand what that client submits."
     },
     {
       "id": "automatic-client-context",
@@ -90,13 +90,13 @@
     },
     {
       "id": "bounded-diagnostic-contract",
-      "control": "The client and service reject problem reports missing the versioned diagnostic shape, and token-authorized follow-up evidence is bounded and idempotent."
+      "control": "Clara's client rejects incomplete problem diagnostics. The shared service accepts complete diagnostics or explicitly explained missing values with bounded evidence; it rejects unexplained or contradictory missing fields. Token-authorized follow-up evidence remains bounded and idempotent."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "dfb455f8fcdc9e152e445fe804a7241a99f5613108a20780dcd88c769ab8d9d3"
+    "source_fingerprint": "e08c27ae13796a95a878a238cb48a63b6686f2e0349d2af216a11cb551020fc6"
   }
 }
