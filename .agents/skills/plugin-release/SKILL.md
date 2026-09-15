@@ -34,6 +34,15 @@ templates and must not declare a separate version. Bump the canonical patch
 version for a release on either host, then rebuild every affected host package.
 Do not maintain independent Codex and Cowork version sequences.
 
+Before reserving a patch version, inspect the current canonical version and the
+product manifest changes in other open release PRs. Choose a version above all
+those candidates; do not let independent worktrees publish different packages
+with the same version. Immediately before publication, check the authoritative
+Published version again. Never publish a lower version over a newer release
+unless the user explicitly requests that rollback. If main has advanced, integrate
+its source, rebuild and rerun checks before publishing; do not drop the intervening
+release or reuse an already-uploaded archive after source changes.
+
 ## Required Workflow
 
 1. Finish source edits under `plugins/<plugin-name>`.
