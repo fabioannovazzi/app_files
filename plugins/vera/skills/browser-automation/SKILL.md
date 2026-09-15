@@ -19,6 +19,12 @@ Current user requests take precedence over saved preferences.
 
 # Automazione web
 
+<!-- VERA_OPENAI_DATEV_BEGIN -->
+For DATEV installed as a native Windows application, route instead to
+`../datev-invoice-start/SKILL.md` before any browser setup. That explicit native
+route reuses the known invoice procedure and local reports, not this executor.
+<!-- VERA_OPENAI_DATEV_END -->
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 In Codex Desktop, resolve `../../modules/browser-automation` from this skill

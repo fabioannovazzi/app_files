@@ -2769,6 +2769,17 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "skills/adversarial-opinion/SKILL.md" in normalized_skill_text
                 assert "Plugin Improvement Feedback" in normalized_skill_text
                 continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "datev-invoice-start"
+            ):
+                assert (
+                    "references/passive-invoice-procedure.md" in normalized_skill_text
+                )
+                assert "scripts/datev_starter.py" in normalized_skill_text
+                assert "not make DATEV a browser application" in normalized_skill_text
+                assert "references/batch-review.md" in normalized_skill_text
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
