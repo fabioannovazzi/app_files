@@ -9,6 +9,8 @@ from pathlib import Path
 from types import ModuleType
 from zipfile import ZIP_DEFLATED, ZipFile
 
+from tests._plugin_cli import workflow_cli
+
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 
@@ -116,7 +118,7 @@ def test_extracted_clara_variance_runner_imports_packaged_vendor(
     work_dir.mkdir()
 
     result = subprocess.run(
-        [sys.executable, str(component_root / "scripts" / "run_variance.py"), "--help"],
+        [*workflow_cli(component_root / "scripts" / "run_variance.py"), "--help"],
         cwd=work_dir,
         env=_isolated_environment(tmp_path),
         capture_output=True,
@@ -172,8 +174,7 @@ def test_extracted_clara_variance_runner_completes_data_only_run(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(component_root / "scripts" / "run_variance.py"),
+            *workflow_cli(component_root / "scripts" / "run_variance.py"),
             str(input_path),
             "--output-dir",
             str(output_dir),
@@ -204,8 +205,7 @@ def test_extracted_vera_variance_runner_rejects_unmanaged_execution(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(component_root / "scripts" / "run_variance.py"),
+            *workflow_cli(component_root / "scripts" / "run_variance.py"),
             str(input_path),
             "--output-dir",
             str(work_dir / "output"),
@@ -240,8 +240,7 @@ def test_extracted_vera_chatgpt_upload_rejects_unmanaged_inspection(
 
     result = subprocess.run(
         [
-            sys.executable,
-            str(component_root / "scripts" / "inspect_inputs.py"),
+            *workflow_cli(component_root / "scripts" / "inspect_inputs.py"),
             str(input_path),
             "--output-dir",
             str(work_dir / "inspection"),
