@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 from build_catalog import ROOT, _eligible, build
+from course_start import add_course_start
 
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 from courseware.library import CourseLibrary  # noqa: E402
@@ -44,6 +45,9 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         "OFL.txt",
     ):
         shutil.copyfile(assets / name, destination / name)
+    if public:
+        for name in ("course-start.css", "course-start.js"):
+            shutil.copyfile(Path(__file__).parent / name, destination / name)
     sections = []
     for product in ("vera", "clara", "lucia"):
         product_root = ROOT / "plugins" / product
@@ -83,7 +87,12 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
                     )
                     page = folder / "course.html"
                     page.write_text(
-                        page.read_text(encoding="utf-8").replace(
+                        add_course_start(
+                            page.read_text(encoding="utf-8"),
+                            product,
+                            entry["titles"][language],
+                            language,
+                        ).replace(
                             "<main>",
                             '<main><p><a href="../../../index.html#'
                             + product
@@ -155,6 +164,12 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         '<div class="hero"><h1>Lezioni per usare i flussi di lavoro</h1>'
         '<p class="lead">Per ogni funzione: i file da fornire, una richiesta di esempio, i passaggi, '
         "il risultato da aprire e una breve prova da fare.</p>" + notice + "</div>"
+        '<section id="come-iniziare"><h2>Come avviare una lezione</h2>'
+        "<p>Scegli qui sotto una funzione e apri la lezione nella tua lingua. "
+        "All’inizio della pagina trovi <strong>Avvia questa lezione</strong>: copia la richiesta, "
+        "apri Codex sul computer con il plugin indicato installato, seleziona @Vera, @Clara o @Lucia "
+        "e invia la richiesta nella chat. Attiva la voce; l’assistente ti guiderà ad aprire "
+        "la seconda chat di lavoro in un’altra finestra. I file fittizi sono inclusi nel plugin.</p></section>"
         '<div class="paired"><strong>Due chat durante la lezione</strong>'
         "<p>Nella chat di lavoro il flusso corrente usa i file fittizi e produce il risultato. "
         "Nella chat vocale l’assistente spiega ciò che sta avvenendo, apre i risultati effettivi e risponde alle domande. "

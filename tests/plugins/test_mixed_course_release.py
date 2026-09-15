@@ -29,8 +29,10 @@ RETAINED = [
 
 @pytest.mark.parametrize("product,workflow,language", RETAINED)
 def test_retained_published_lesson_preserves_content_and_renders(
-    tmp_path, product, workflow, language
+    tmp_path, monkeypatch, product, workflow, language
 ):
+    # The suite removes vendor paths between tests; restore for lazy imports.
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     key = f"{product}/{workflow}"
     original_path = ROOT / f"scripts/course_materials/published/{key}/course.json"
     original = json.loads(original_path.read_text())

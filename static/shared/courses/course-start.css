@@ -1,0 +1,5 @@
+.course-start{border-top:2px solid #0757a6;border-bottom:1px solid #cedce6;padding:28px 0;margin:0 0 36px;max-width:900px;color:#112c48}
+.course-start h2{margin:0 0 18px;font-size:1.7rem}.course-start ol{padding-left:24px}.course-start li{margin:12px 0;line-height:1.6}
+.course-start label{display:block;font-weight:600;margin:24px 0 10px}.course-start textarea{display:block;box-sizing:border-box;width:100%;padding:16px;border:1px solid #8ba3b7;border-radius:4px;background:#fff;color:#112c48;font:inherit;font-size:1rem;line-height:1.6;resize:vertical}
+.course-start button{margin-top:14px;padding:12px 22px;background:#0757a6;color:white;border:0;border-radius:4px;font:inherit;font-weight:600;cursor:pointer}.course-start button:focus-visible,.course-start textarea:focus-visible{outline:3px solid #078c9d;outline-offset:3px}
+.course-start-note,#course-start-status{font-size:.95rem;line-height:1.6}.course-start-note{color:#496277}#course-start-status:empty{display:none}@media print{.course-start button,#course-start-status{display:none}}
