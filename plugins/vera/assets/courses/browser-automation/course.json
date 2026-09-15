@@ -53,7 +53,7 @@
     {
       "path": "modules/browser-automation/references/econs-review.md",
       "repository_path": "plugins/browser-automation/references/econs-review.md",
-      "sha256": "5efdf340592371e33cd9b5830b19dd472400d2cd0832458bd47a7c757f6504e2"
+      "sha256": "a7fd383e362ca8eb70f40e7208aeeb1036339f5d699e14eef1176cea25da57cf"
     },
     {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
@@ -108,12 +108,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "870e3604b44aadffde934b7435ff681c32bc80e5ac295173843e6c635b4a6626"
+      "sha256": "d0fef0fde90234aabbf69a247328acf43c575d4cd32c79085a7cf50e1ca135c7"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "652579dd866fadb806a321630b08335971c131f392e544512ed911c86de7fff7"
+      "sha256": "b6147f86ca84e5cf90c8b88a62e1fa57023909235795a32d3db65bb22e765bd6"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",
