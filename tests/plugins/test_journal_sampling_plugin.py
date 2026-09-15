@@ -3655,7 +3655,9 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_save",
         run_id: "forged-run",
@@ -3665,7 +3667,8 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
         ui_decisions_path: "/private/client/forged-ui.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _journal_transaction_call(
@@ -3692,7 +3695,9 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_apply",
         run_id: "forged-run",
@@ -3711,7 +3716,8 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
         run_intake_path: "/private/client/forged-intake.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _journal_transaction_call(

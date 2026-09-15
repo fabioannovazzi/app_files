@@ -243,7 +243,7 @@ def repair_vendor_bytecode() -> int:
                 directory.name == "__pycache__"
                 and entry.name.endswith(".pyc")
                 and entry.is_file(follow_symlinks=False)
-                and entry.stat(follow_symlinks=False).st_nlink == 1
+                and _os.lstat(entry.path).st_nlink == 1
             ):
                 Path(entry.path).unlink()
                 removed += 1

@@ -5331,7 +5331,16 @@ def _write_sample_output_set(
     }
     manifest = {**content, "content_sha256": canonical_json_sha256(content)}
     write_json(output_dir / SAMPLE_OUTPUT_SET_PATH, manifest)
-    (output_dir / SAMPLE_OUTPUT_SET_PATH).chmod(SAMPLE_OUTPUT_SET_MODE)
+    bootstrap_path = output_dir / SAMPLE_OUTPUT_SET_PATH
+    bootstrap_path.chmod(SAMPLE_OUTPUT_SET_MODE)
+    # Record the mode the filesystem actually exposes. Windows chmod controls
+    # the read-only attribute and does not expose POSIX owner/group permissions.
+    observed_mode = f"{stat.S_IMODE(bootstrap_path.lstat().st_mode):04o}"
+    if observed_mode != content["bootstrap_mode"]:
+        content["bootstrap_mode"] = observed_mode
+        manifest = {**content, "content_sha256": canonical_json_sha256(content)}
+        write_json(bootstrap_path, manifest)
+        bootstrap_path.chmod(SAMPLE_OUTPUT_SET_MODE)
     return validate_sample_output_set(output_dir)
 
 

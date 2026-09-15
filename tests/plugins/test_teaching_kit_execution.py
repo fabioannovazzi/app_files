@@ -947,7 +947,7 @@ def test_business_plan_kit_runs_and_revises_the_owning_product_case(
         (workspace / ".clara-onboarding-local-only").write_text(
             "Fictional local lesson\n"
         )
-    for current_phase in (("demo",) if phase == "demo" else ("demo", "practice")):
+    for current_phase in ("demo",) if phase == "demo" else ("demo", "practice"):
         if product == "vera":
             output = Path(run["output_dir"])
             source_root = Path(run["context"]["run_root"]) / "inputs"

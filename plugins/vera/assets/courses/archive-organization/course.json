@@ -70,7 +70,7 @@
     {
       "path": "modules/archive-organization/scripts/archive_organization.py",
       "repository_path": "plugins/archive-organization/scripts/archive_organization.py",
-      "sha256": "d822d3b54d79ba08b3afe45ca10c43d1a2bddb80abac7369f2d6666f150f0f45"
+      "sha256": "c113b6ad9f82f16424c2a509c8eb8806b39293394299f4ae8c7d868deefd2fa6"
     },
     {
       "path": "modules/archive-organization/scripts/check_dependencies.py",

@@ -143,6 +143,7 @@ def test_confirmed_profile_replaces_temporary_notes_and_is_shared_across_process
         cwd=store.root.parent,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=True,
     )
     assert json.loads(result.stdout) == accepted
@@ -208,9 +209,9 @@ def test_corrupt_state_is_preserved_and_recovery_checks_identity(store, tmp_path
     store.path.write_text("{")
     with pytest.raises(ValueError, match="invalid local JSON"):
         store.status()
-    assert store.path.read_text() == "{"
+    assert store.path.read_text(encoding="utf-8") == "{"
     store.path.rename(store.root / "profile.damaged.json")
-    wrong = json.loads(backup.read_text())
+    wrong = json.loads(backup.read_text(encoding="utf-8"))
     wrong["onboarding_id"] = "a-different-professional"
     other = tmp_path / "other.json"
     other.write_text(json.dumps(wrong))
@@ -218,7 +219,7 @@ def test_corrupt_state_is_preserved_and_recovery_checks_identity(store, tmp_path
         store.recover(other)
     restored = store.recover(backup)
     assert restored["phase"] == "interview"
-    assert (store.root / "profile.damaged.json").read_text() == "{"
+    assert (store.root / "profile.damaged.json").read_text(encoding="utf-8") == "{"
 
 
 def test_read_permission_error_does_not_trigger_enrollment(store, monkeypatch):
@@ -487,6 +488,7 @@ def test_built_codex_and_local_work_load_the_same_profile_and_cowork_omits_featu
             [sys.executable, str(script), "--state-root", str(store.root), "status"],
             cwd=script.parent,
             text=True,
+            encoding="utf-8",
             capture_output=True,
             check=True,
             timeout=10,
@@ -543,6 +545,7 @@ def test_tutorial_case_runs_actual_xml_workflow_against_its_managed_inputs(
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         timeout=30,
     )
     assert run.returncode == 0, run.stderr
@@ -565,7 +568,7 @@ def test_tutorial_case_runs_actual_xml_workflow_against_its_managed_inputs(
 )
 def test_invalid_persisted_state_does_not_silently_pass_gate(store, mutation):
     store.begin()
-    state = json.loads(store.path.read_text())
+    state = json.loads(store.path.read_text(encoding="utf-8"))
     state.update(mutation)
     store.path.write_text(json.dumps(state))
     with pytest.raises(ValueError):
@@ -574,7 +577,7 @@ def test_invalid_persisted_state_does_not_silently_pass_gate(store, mutation):
 
 def test_path_in_a_corrupted_lesson_id_cannot_escape_the_profile(store):
     prepare(store)
-    state = json.loads(store.path.read_text())
+    state = json.loads(store.path.read_text(encoding="utf-8"))
     state["lessons"][0]["workflow_id"] = "../../elsewhere"
     store.path.write_text(json.dumps(state))
     with pytest.raises(ValueError, match="workflow ID"):
@@ -921,6 +924,7 @@ def _organization_mcp_review(context_path, payload, decisions, output):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
         env={
             **os.environ,
             "VIRTUAL_ENV": sys.prefix if sys.prefix != sys.base_prefix else "",
@@ -964,6 +968,7 @@ def _organization_mcp_review(context_path, payload, decisions, output):
             ),
             capture_output=True,
             text=True,
+            encoding="utf-8",
             timeout=30,
             check=False,
         )
@@ -1018,7 +1023,9 @@ def _run_organization_teaching_case(
     dataset = "source_files" if phase == "demo" else "practice_files"
     expected_count = 3 if phase == "demo" else 4
     words = json.loads(
-        (ROOT / "tests/fixtures/teaching_archive/organization.json").read_text()
+        (ROOT / "tests/fixtures/teaching_archive/organization.json").read_text(
+            encoding="utf-8"
+        )
     )[language]
     sources = [Path(path) for path in kit[dataset]]
     source_root = kit_root / (
@@ -1043,7 +1050,9 @@ def _run_organization_teaching_case(
     context = run["context"]
     output = Path(run["output_dir"])
     assert len(context["input_bindings"]) == 1
-    snapshot = json.loads(Path(context["input_bindings"][0]["path"]).read_text())
+    snapshot = json.loads(
+        Path(context["input_bindings"][0]["path"]).read_text(encoding="utf-8")
+    )
     assert snapshot["file_count"] == expected_count
     assert all(
         not row["relative_path"].startswith("Vera/") for row in snapshot["files"]
@@ -1136,9 +1145,14 @@ def _run_organization_teaching_case(
     assert {
         relative: (case / relative).read_bytes() for relative in original
     } == original
-    payload = json.loads(Path(review["review_payload_path"]).read_text())
+    payload = json.loads(
+        Path(review["review_payload_path"]).read_text(encoding="utf-8")
+    )
     assert payload["language"] == language
-    assert json.loads((output / "run_intake.json").read_text())["language"] == language
+    assert (
+        json.loads((output / "run_intake.json").read_text(encoding="utf-8"))["language"]
+        == language
+    )
     edited_target = (
         "Documenti societari/2026/Riunioni/2026-03-10_verbale-interno_Ciclo-Arco.md"
     )
@@ -1173,7 +1187,9 @@ def _run_organization_teaching_case(
         quarantine[0].read_bytes()
         == original[f"Download/maintenance-copy-{language}.md"]
     )
-    approved_plan = json.loads((output / "approved_plan.json").read_text())
+    approved_plan = json.loads(
+        (output / "approved_plan.json").read_text(encoding="utf-8")
+    )
     assert (case / f"Contratti/maintenance-{language}.md").read_bytes() == original[
         f"Da archiviare/maintenance-{language}.md"
     ]
@@ -1537,6 +1553,7 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
                 ],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
                 timeout=60,
                 check=False,
             )
@@ -1556,7 +1573,9 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
             assert f"{row['source_file']}, {row['source_row']}" in notes
             assert Path(row["matched_support"]).name in notes
             assert row["review_notes"] in notes
-        audit = json.loads((check_output / "checks/check_audit.json").read_text())
+        audit = json.loads(
+            (check_output / "checks/check_audit.json").read_text(encoding="utf-8")
+        )
         assert audit["invoice_count"] == 3
         assert audit["invoice_error_count"] == 0
         check_run = check_context["run_id"]

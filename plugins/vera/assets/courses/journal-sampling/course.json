@@ -59,7 +59,7 @@
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "5af27ddddfa06e6b5e6cc3a8db99dcb4edbe021277aa2728f2819650c4cfc68f"
+      "sha256": "6d4c3337bedf0a352805622f8aebe562f6b39bde5c2e219b8ee0a5b432de81d6"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
@@ -69,7 +69,7 @@
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
       "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "6681bb695ec1d830d4e3ad1c9f3c01ec366c3e1b3708620330feb0beb00f308d"
+      "sha256": "38002e7b53cc6c4382ee0f20253e1de93439e678b34942617ae521499883f0de"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",

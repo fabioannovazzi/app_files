@@ -60,7 +60,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "bb56d153f481a8123a63ac525e4076ab1a178cb4ac96741191284104b9cf848e",
+      "sha256": "5eaa7357c439e891cd5779c2c0e56ac3d267a658c5a172e4df39bfadd1a6428e",
       "languages": [
         "it",
         "en",
@@ -482,7 +482,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "9bf44123d6e01fb97cbfa5912eb514e16b21615119e55cf9f4c7f89cac654f9a",
+      "sha256": "820fee910eec904811c08e8b128d856490495fa427a884cb68484e5fbf4a45ee",
       "languages": [
         "it",
         "en",
@@ -828,7 +828,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "6e01d552b20ad810fbaad12365cc137a3533c5893ddb5a4b11fc82f7b25e617b",
+      "sha256": "8278e2cbfe637d958d804eba40906370ae38da42e88c36ed2af0ff7b0c88c649",
       "languages": [
         "it",
         "en",

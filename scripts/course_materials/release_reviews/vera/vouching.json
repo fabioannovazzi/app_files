@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "vouching",
-  "course_sha256": "6e01d552b20ad810fbaad12365cc137a3533c5893ddb5a4b11fc82f7b25e617b",
+  "course_sha256": "8278e2cbfe637d958d804eba40906370ae38da42e88c36ed2af0ff7b0c88c649",
   "reviewer": "Codex: first-use material, source-to-sample handoff and actual output review",
   "reviewed_at": "2026-09-14T18:25:17.746640+00:00",
   "review_scope": "Read all five lesson outlines and contexts, the nine-line journal and the three fictional XML invoice facts. Ten distinct locale/phase native checks execute the current teaching adapter, Journal Sampling prerequisite, Studio Archive handoff and Vouching run, within 29 passing focused checks. Reviewed the localized Markdown notes and eighteen native Excel views: five horizontal views of each distinct phase, plus the localized review-note columns for the other eight cases. All other CSV fields match within each phase; document receipt references vary by run and were traced separately. Canonical spreadsheet columns remain English. The samples and outputs are generated during execution; learner decisions, professional conclusions, voice, two-window behavior and browser widget interaction are not attested.",
@@ -303,5 +303,18 @@
     "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
     "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
     "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "windows_workflow_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:27:33.403891+00:00",
+    "previous_course_sha256": "6e01d552b20ad810fbaad12365cc137a3533c5893ddb5a4b11fc82f7b25e617b",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/implementation_bootstrap.py",
+        "before": "4ac2e3a16f09af539d54f3d0c418f4245b5c5e134066043bae5e16ba743da837",
+        "after": "134993676b211553c0ca76eedb0628d7138d7f69ab4e09fb6014c272e80bd29a"
+      }
+    ],
+    "scope": "Authored lessons and inputs are unchanged. Archive Organization closes its source reader before unlinking on Windows and rechecks the approved source hash. Journal Sampling records the filesystem-observed bootstrap mode and still verifies exact mode/hash closure. Journal Sampling and Vouching obtain real link counts through lstat. These are local execution corrections; they add no transmission and do not establish Windows ACL privacy. Original named editorial and artifact reviews remain preserved. Current native execution is established separately by the release verifier using the actual supplied JUnit records."
   }
 }

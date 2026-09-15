@@ -1463,10 +1463,15 @@ def _copy_exclusive_then_unlink(
             raise ArchiveOrganizationError(
                 "Copied target does not match the approved source hash."
             )
+        # Windows does not allow unlinking a file while this reader is open.
+        source_handle.close()
         shutil.copystat(source, target, follow_symlinks=False)
         if _sha256_file(target) != expected_sha256:
             target.unlink(missing_ok=True)
             raise ArchiveOrganizationError("Target hash changed before source removal.")
+        _ordinary_source(source, label="approved source")
+        if _sha256_file(source) != expected_sha256:
+            raise ArchiveOrganizationError("Source changed before removal.")
         source.unlink()
     except FileExistsError as exc:
         raise ArchiveOrganizationError(

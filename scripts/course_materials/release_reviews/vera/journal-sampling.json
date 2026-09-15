@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-sampling",
-  "course_sha256": "9bf44123d6e01fb97cbfa5912eb514e16b21615119e55cf9f4c7f89cac654f9a",
+  "course_sha256": "820fee910eec904811c08e8b128d856490495fa427a884cb68484e5fbf4a45ee",
   "reviewer": "Codex: first-use lesson, fictional inputs and current native sample review",
   "reviewed_at": "2026-09-14T18:13:05.890693+00:00",
   "review_scope": "Read all five localized outlines and context notes and both source journals. Current native inspection, normalization, random sampling and Studio Archive finalization pass in ten locale/phase checks within a 186-case regression. Visually inspected both complete unique sample worksheets in two horizontal views each; compared every cell value, type, style, column width, row height and freeze setting across the other eight locale workbooks. The worksheet name varies by locale; canonical column names intentionally remain English. No learner comprehension, voice, browser widget or two-window acceptance is claimed. Professional review decisions remain pending.",
@@ -356,5 +356,23 @@
       }
     ],
     "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
+  },
+  "windows_workflow_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:27:33.380583+00:00",
+    "previous_course_sha256": "9bf44123d6e01fb97cbfa5912eb514e16b21615119e55cf9f4c7f89cac654f9a",
+    "source_changes": [
+      {
+        "path": "plugins/journal-sampling/scripts/implementation_bootstrap.py",
+        "before": "5af27ddddfa06e6b5e6cc3a8db99dcb4edbe021277aa2728f2819650c4cfc68f",
+        "after": "6d4c3337bedf0a352805622f8aebe562f6b39bde5c2e219b8ee0a5b432de81d6"
+      },
+      {
+        "path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
+        "before": "6681bb695ec1d830d4e3ad1c9f3c01ec366c3e1b3708620330feb0beb00f308d",
+        "after": "38002e7b53cc6c4382ee0f20253e1de93439e678b34942617ae521499883f0de"
+      }
+    ],
+    "scope": "Authored lessons and inputs are unchanged. Archive Organization closes its source reader before unlinking on Windows and rechecks the approved source hash. Journal Sampling records the filesystem-observed bootstrap mode and still verifies exact mode/hash closure. Journal Sampling and Vouching obtain real link counts through lstat. These are local execution corrections; they add no transmission and do not establish Windows ACL privacy. Original named editorial and artifact reviews remain preserved. Current native execution is established separately by the release verifier using the actual supplied JUnit records."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "archive-organization",
-  "course_sha256": "bb56d153f481a8123a63ac525e4076ab1a178cb4ac96741191284104b9cf848e",
+  "course_sha256": "5eaa7357c439e891cd5779c2c0e56ac3d267a658c5a172e4df39bfadd1a6428e",
   "reviewer": "Codex: five-language archive organisation material, execution and browser presentation review",
   "reviewed_at": "2026-09-14T22:54:42.105288+00:00",
   "review_scope": "Reviewed all five full lesson outlines, fifteen unique fictional source documents and ten final artifact cards with actual approved destinations and operation-journal states. The current widget was rendered in a loopback-only browser harness using actual MCP render responses; all five language views were inspected, and the Italian destination edit and reviewer fields were exercised. The final compact list layout was checked in all five languages. Read-only browser geometry confirmed separate filename/control bounds in Italian and no horizontal overflow or overlapping rows in English at the desktop viewport. The complete shipped widget script generates the requests used by ten current MCP/pipeline regressions, with real local persistence and separately authorized fictional filesystem execution. These regression reviewers and semantic fixtures are not real learner approvals. Native in-chat widget hosting, native voice, two-window interaction, human elapsed time and comprehension remain unverified.",
@@ -263,5 +263,18 @@
     "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
     "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
     "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "windows_workflow_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:27:33.365513+00:00",
+    "previous_course_sha256": "bb56d153f481a8123a63ac525e4076ab1a178cb4ac96741191284104b9cf848e",
+    "source_changes": [
+      {
+        "path": "plugins/archive-organization/scripts/archive_organization.py",
+        "before": "d822d3b54d79ba08b3afe45ca10c43d1a2bddb80abac7369f2d6666f150f0f45",
+        "after": "c113b6ad9f82f16424c2a509c8eb8806b39293394299f4ae8c7d868deefd2fa6"
+      }
+    ],
+    "scope": "Authored lessons and inputs are unchanged. Archive Organization closes its source reader before unlinking on Windows and rechecks the approved source hash. Journal Sampling records the filesystem-observed bootstrap mode and still verifies exact mode/hash closure. Journal Sampling and Vouching obtain real link counts through lstat. These are local execution corrections; they add no transmission and do not establish Windows ACL privacy. Original named editorial and artifact reviews remain preserved. Current native execution is established separately by the release verifier using the actual supplied JUnit records."
   }
 }

@@ -70,7 +70,7 @@
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
-      "sha256": "4ac2e3a16f09af539d54f3d0c418f4245b5c5e134066043bae5e16ba743da837"
+      "sha256": "134993676b211553c0ca76eedb0628d7138d7f69ab4e09fb6014c272e80bd29a"
     },
     {
       "path": "modules/check-entries/scripts/implementation_contract.py",
