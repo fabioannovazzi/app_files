@@ -1,0 +1,6 @@
+[run]
+branch = True
+include = */plugins/vera/scripts/datev_starter.py
+[report]
+fail_under = 80
+show_missing = True

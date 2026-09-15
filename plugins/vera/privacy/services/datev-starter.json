@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "service_id": "datev-starter",
+  "display_name": "DATEV native Windows invoice starter",
+  "governed_paths": [
+    "scripts/datev_starter.py",
+    "skills/datev-invoice-start",
+    "skills/vera/SKILL.md",
+    "skills/vera/references/workflow-catalog.md",
+    "marketplace_skill_instructions.json"
+  ],
+  "governed_repository_paths": [
+    "plugins/browser-automation/references/passive-invoice-procedure.md",
+    "plugins/browser-automation/scripts/teaching_checkpoint.py",
+    "plugins/browser-automation/scripts/batch_review.py",
+    "plugins/browser-automation/scripts/development_request.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "external_boundaries": [
+    {
+      "id": "reviewed-datev-capability-request",
+      "kind": "send_or_publish",
+      "destination": "Mparanza's fixed HTTPS change-request intake",
+      "purpose": "Submit the exact reviewed sanitized DATEV native adaptation request through the existing capability API",
+      "content": "Agent-selected and reviewed browser-development-request/v1 structured technical text, including attributed host-tool or operator reports, unknowns and acceptance checks, plus the existing Vera version, OS and request-client metadata. No ZIP, raw checkpoint, client report, native screenshot, accessibility tree, credential, private path or session is automatically attached. A real CR-N receipt is required before claiming receipt.",
+      "retention": "Mparanza stores the submitted change request and status receipt as a service record. The plugin does not promise an automatic deletion period.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Vera must show the exact proposed request and obtain separate explicit transmission consent before invoking the submission command.",
+        "Vera's workflow instructs Codex to exclude client or customer material, source documents, run or case details, credentials, secrets, personal data, and identifying details; the client does not verify that semantic condition.",
+        "The initial request URL is restricted to Mparanza HTTPS, local request and wire sizes are capped, and the receipt is stored in a mode-0600 local state file."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "revision-and-provenance-boundary",
+      "control": "Reuse verified immutable checkpoint and client-review chains. Native events require explicit source type/reference and cannot contain browser captures or claim an observed browser receipt. Stale writes, changed client scope, symlink/Git output and duplicate step IDs fail. The recorder never certifies native replay. Only the separately supplied sanitized request is projected for transfer; case reports are not copied.",
+      "implemented_by": [
+        "scripts/datev_starter.py"
+      ],
+      "on_violation": "Reject invalid or stale local state, preserve prior revisions and do not claim a save, replay or submission."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-09-15",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "bce9afc19645b449121d832299b2de20defb8604492739c911bf1b366a80ae8e"
+  }
+}

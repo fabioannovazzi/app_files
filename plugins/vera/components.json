@@ -37,7 +37,8 @@
     "plugin-update-check",
     "plugin-feedback",
     "run-receipt-stamping",
-    "local-onboarding"
+    "local-onboarding",
+    "datev-starter"
   ],
   "workflow_roles": {
     "new-client": {
