@@ -1017,7 +1017,7 @@ def _captured_recipe(path: Path | None) -> tuple[dict[str, Any], bytes]:
         or observed_path.st_nlink != 1
     ):
         raise ValueError("Check Entries recipe must be an ordinary single-link file.")
-    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0)
     descriptor = os.open(candidate, flags)
     try:
         before = os.fstat(descriptor)
@@ -1359,7 +1359,7 @@ def _stable_regular_bytes(
         or observed.st_nlink != 1
     ):
         raise ValueError(f"{label} must be an ordinary single-link file.")
-    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0)
     descriptor = os.open(path, flags)
     try:
         before = os.fstat(descriptor)

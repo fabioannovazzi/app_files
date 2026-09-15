@@ -318,6 +318,26 @@ def load_apply_review_edits() -> Any:
     return module
 
 
+def test_exact_file_read_preserves_windows_line_endings_and_control_z(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    payload = b"account,description\r\n4000,before\x1aafter\r\n"
+    source = tmp_path / "normalized.csv"
+    source.write_bytes(payload)
+
+    assert core._stable_regular_bytes(source, label="Journal") == payload
+
+
+def test_recipe_capture_preserves_windows_line_endings(tmp_path: Path) -> None:
+    core = load_core()
+    payload = b'{\r\n  "description": "reviewed"\r\n}\r\n'
+    source = tmp_path / "recipe.json"
+    source.write_bytes(payload)
+
+    assert core._captured_recipe(source) == ({"description": "reviewed"}, payload)
+
+
 def load_studio_archive_core() -> Any:
     """Load the local Studio Archive implementation for integration tests."""
 
