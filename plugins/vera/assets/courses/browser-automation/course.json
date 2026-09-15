@@ -53,7 +53,7 @@
     {
       "path": "modules/browser-automation/references/development-request.md",
       "repository_path": "plugins/browser-automation/references/development-request.md",
-      "sha256": "3d9e59a8a78905d3d3d45331324ffbc6c78191eafbf3a4e2b28d3878e20a6391"
+      "sha256": "7df951e379b9d170da9bb62a5c962288211d1f084963a097f8e12094217b85ad"
     },
     {
       "path": "modules/browser-automation/references/discovery-playbook.md",
@@ -66,9 +66,24 @@
       "sha256": "38695555c377722a9fd6768823243797d89a58b9d4aa7c21d4280755161acb9f"
     },
     {
+      "path": "modules/browser-automation/references/ordinary-use.md",
+      "repository_path": "plugins/browser-automation/references/ordinary-use.md",
+      "sha256": "09a82f41be6ee5356c574f72d35c40289c5d738759ad66845e90600ee4aa8ffb"
+    },
+    {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
       "repository_path": "plugins/browser-automation/references/passive-invoice-procedure.md",
       "sha256": "ac4e805ce23f2b407ea45898f0c32cad489055d655a739e73e0dd2f30c85fb37"
+    },
+    {
+      "path": "modules/browser-automation/references/process-lifecycle.md",
+      "repository_path": "plugins/browser-automation/references/process-lifecycle.md",
+      "sha256": "716650879d5a6b16ef09bcdbd5124a24d8c31d7f9d645df98dd90d7b388ef22b"
+    },
+    {
+      "path": "modules/browser-automation/references/production-skills.md",
+      "repository_path": "plugins/browser-automation/references/production-skills.md",
+      "sha256": "f1790d17d948df503442eed5c2fb1d7af06505235d64696612a32498de09a292"
     },
     {
       "path": "modules/browser-automation/references/teaching-checkpoint.md",
@@ -113,7 +128,7 @@
     {
       "path": "modules/browser-automation/scripts/capability_pipeline.py",
       "repository_path": "plugins/browser-automation/scripts/capability_pipeline.py",
-      "sha256": "f859b8fdd1acf20e94105525a0a7c2533e674e4db04744d95cafc9e1c1a9b5b3"
+      "sha256": "13906be8a42923dacb0e501434bc86e0d9fe81a902fb0b2c974fe110656f855a"
     },
     {
       "path": "modules/browser-automation/scripts/capability_runtime.mjs",
@@ -128,12 +143,12 @@
     {
       "path": "modules/browser-automation/scripts/check_installation.py",
       "repository_path": "plugins/browser-automation/scripts/check_installation.py",
-      "sha256": "1290938bd31da15d7d2f4b9b0237903c7afa7755b1c8ddbfedef61355795c4cd"
+      "sha256": "5692e46244d6999f860fdb1aa3907d1a7a95dc6363038d07176acaee9ad63ded"
     },
     {
       "path": "modules/browser-automation/scripts/development_request.py",
       "repository_path": "plugins/browser-automation/scripts/development_request.py",
-      "sha256": "d55445aefc7037579b01e242574f6ba99a07265098c7e7844d7289cab48fa73e"
+      "sha256": "c7dbbe2e707b9b0892e3ad6fcb2c514461c296776268e79e83d5095b1f6dc418"
     },
     {
       "path": "modules/browser-automation/scripts/discovery_pack.py",
@@ -166,6 +181,21 @@
       "sha256": "0a7362f8cc36fc2644ee86f4eb7717953d22022a52866daa7a1da37a6ead91df"
     },
     {
+      "path": "modules/browser-automation/scripts/process_lifecycle.py",
+      "repository_path": "plugins/browser-automation/scripts/process_lifecycle.py",
+      "sha256": "49483cbeaf4a00bf78c132e3de2131e7be82fd208f870240bbf421dc833e08c3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_runtime.mjs",
+      "repository_path": "plugins/browser-automation/scripts/process_runtime.mjs",
+      "sha256": "eb3185effa0f068676f2c15bf13cd86a9ec18192dbebe6c88724c70258b57553"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_skills.py",
+      "repository_path": "plugins/browser-automation/scripts/process_skills.py",
+      "sha256": "b7465fd97cef25824b186e16a4930c1da3feb919739a1c405be7ce34bfa604cd"
+    },
+    {
       "path": "modules/browser-automation/scripts/teaching_checkpoint.py",
       "repository_path": "plugins/browser-automation/scripts/teaching_checkpoint.py",
       "sha256": "25d266b4e1162b6df2e0e9e0e6f91fe63355d5f205d872f7002b018246ecf0da"
@@ -173,12 +203,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "ccefd9bc242ff8d0923d0f4897d3cec8165c3a89b26e4554e5662dfeb2b50db0"
+      "sha256": "67b74ea7b1cd3a26f9c0c34fae8f83e42d3fc1ffe2b74222a2b46ade30eda3f7"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "2455d4e28d0d2cc0d836f94131185268ba7034bf17cc27a3f87aa63757a4163f"
+      "sha256": "3fd96ad64218593c3fa3dcb3b3adfc664d3349b29018bb65caecce7f54d3037a"
     },
     {
       "path": "vendor/modules/__init__.py",

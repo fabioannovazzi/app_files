@@ -1,5 +1,12 @@
 # Automazione web
 
+Sviluppo e uso ordinario conservano la stessa identità di processo anche in una
+nuova conversazione. Il [ciclo di sviluppo](references/process-lifecycle.md)
+collega insegnamento, tentativi, prove revisionate, CR effettivamente ricevuti,
+versioni e collaudi. L'[uso ordinario](references/ordinary-use.md) seleziona il
+processo qualificato dalla richiesta professionale e raccoglie i parametri mancanti.
+Vera gestisce registri e file tecnici. I test simulati non qualificano il sito reale.
+
 Strumento Vera per insegnare un processo web a cui lo sviluppatore non può
 accedere direttamente. L'operatore usa la propria sessione Chrome autenticata,
 descrive la funzione e sceglie `guided`, `autonomous` oppure `hybrid`: può

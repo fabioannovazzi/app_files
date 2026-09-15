@@ -210,6 +210,60 @@ def test_problem_intake_requires_non_identifying_client_context(tmp_path: Path) 
     assert response.status_code == 422
 
 
+def test_partial_problem_is_stored_with_unknown_time_and_attributed_evidence(
+    tmp_path: Path,
+) -> None:
+    client, store = _client(tmp_path)
+    payload = _payload()
+    payload["request"]["reproduction"] = []
+    diagnostics = payload["request"]["diagnostics"]
+    diagnostics.update(
+        occurred_at=None,
+        runtime=None,
+        evidence=[
+            "Operator reports the result download stopped; original receipt unavailable"
+        ],
+        missing_reasons={
+            "occurred_at": "Original time was not captured",
+            "runtime": "Original host was not recorded",
+            "reproduction": "Only an attributed partial report is available",
+        },
+    )
+
+    response = client.post("/api/change-requests", json=payload)
+
+    assert response.status_code == 201
+    assert response.json()["change_request_id"] == "CR-1"
+    assert store.get("CR-1").request["request"]["diagnostics"]["occurred_at"] is None
+
+
+@pytest.mark.parametrize("missing", [{}, {"occurred_at": ""}, {"unknown": "Reason"}])
+def test_partial_problem_rejects_unexplained_or_invalid_missing_diagnostics(
+    tmp_path: Path, missing: dict[str, str]
+) -> None:
+    client, _store = _client(tmp_path)
+    payload = _payload()
+    payload["request"]["diagnostics"].update(occurred_at=None, missing_reasons=missing)
+
+    response = client.post("/api/change-requests", json=payload)
+
+    assert response.status_code == 422
+
+
+def test_problem_rejects_value_and_missing_reason_for_same_diagnostic(
+    tmp_path: Path,
+) -> None:
+    client, _store = _client(tmp_path)
+    payload = _payload()
+    payload["request"]["diagnostics"]["missing_reasons"] = {
+        "occurred_at": "Not recorded"
+    }
+
+    response = client.post("/api/change-requests", json=payload)
+
+    assert response.status_code == 422
+
+
 def test_needs_info_question_accepts_token_authorized_evidence(tmp_path: Path) -> None:
     client, store = _client(tmp_path)
     receipt = client.post("/api/change-requests", json=_payload()).json()

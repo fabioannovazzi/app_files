@@ -36,6 +36,7 @@ __all__ = [
     "validate_run_lock",
     "validate_run_receipt",
     "verify_bundle",
+    "verify_clean_run",
 ]
 
 LOGGER = logging.getLogger(__name__)
@@ -2510,6 +2511,20 @@ def _require_consistent_clean_receipts(
     runtime_versions = {receipt[0]["runtime_version"] for receipt in receipts}
     if len(runtime_versions) != 1:
         raise ValueError("clean validation receipts must use the same runtime version")
+
+
+def verify_clean_run(capability_path: Path, receipt_path: Path) -> dict[str, Any]:
+    """Verify one current clean live execution without changing qualification."""
+    capability = _load_json(capability_path)
+    _raise_errors(validate_capability(capability))
+    receipt, digest, _lock, _lock_digest = _verified_receipt(
+        receipt_path, capability, execution_contract_sha256(capability)
+    )
+    return {
+        "run_id": receipt["run_id"],
+        "receipt_sha256": digest,
+        "result": receipt["result"],
+    }
 
 
 def finalize_capability(

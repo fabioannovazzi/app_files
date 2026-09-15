@@ -165,7 +165,7 @@
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "b9f3d7c73fee859af92506d891b48df30208a687e7949645d485154ab2c1fdda",
+      "sha256": "ef744af3bbaaf3da18ec929dd421f7c6beaecb55d8be52f2e48958249db9f7e4",
       "languages": [
         "it",
         "en",
