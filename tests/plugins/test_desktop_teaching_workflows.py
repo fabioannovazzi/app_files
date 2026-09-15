@@ -7,7 +7,14 @@ import json
 import sys
 from pathlib import Path
 
-from test_desktop_teaching import ROOT, WORKFLOWS, cases, change, prepare, store
+from tests.plugins.test_desktop_teaching import (
+    ROOT,
+    WORKFLOWS,
+    cases,
+    change,
+    prepare,
+    store,
+)
 
 
 def _load(name, path):

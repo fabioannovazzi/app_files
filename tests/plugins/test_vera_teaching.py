@@ -9,7 +9,15 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
-from test_vera_local_onboarding import ROOT, SCRIPTS, change, finish, load, prepare
+
+from tests.plugins.test_vera_local_onboarding import (
+    ROOT,
+    SCRIPTS,
+    change,
+    finish,
+    load,
+    prepare,
+)
 
 
 @pytest.fixture
