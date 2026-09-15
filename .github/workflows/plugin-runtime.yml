@@ -168,7 +168,9 @@ jobs:
       # the dedicated cold-start matrix still verifies first-time installation.
       - name: Prepare the declared managed workflow runtime
         timeout-minutes: 10
-        run: python plugins/clara/scripts/check_dependencies.py --module variance-analysis
+        run: |
+          python plugins/clara/scripts/check_dependencies.py --module variance-analysis
+          python plugins/vera/scripts/check_dependencies.py --module concordato-plan-review
       - name: Verify teaching-kit languages, real executions and native packages
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
