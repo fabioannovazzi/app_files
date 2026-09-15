@@ -66,6 +66,8 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     catalogued_skills = set(
         re.findall(r"^- `([a-z0-9-]+)`:", catalog, flags=re.MULTILINE)
     )
+    # Installation adaptations have an explicit skill link outside the lesson list.
+    catalogued_skills.update(re.findall(r"\.\./\.\./([a-z0-9-]+)/SKILL\.md", catalog))
 
     assert catalogued_skills == expected_skills
 
