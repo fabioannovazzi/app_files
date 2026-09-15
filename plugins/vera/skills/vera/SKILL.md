@@ -66,6 +66,16 @@ step also applies when server stamping is pending and in local tutorials.
 Follow the tutorial's local-only receipt boundary. Details and later retrieval
 are in `references/model-data-report-contract.md`.
 
+<!-- VERA_OPENAI_DATEV_BEGIN -->
+## DATEV native invoice starter
+
+For a first real DATEV Windows trial or its continuation, route directly to
+`../datev-invoice-start/SKILL.md` before generic teaching/onboarding or browser
+routing. Reuse the shipped ECONS professional procedure; verify this operator's
+native host and only the missing DATEV bindings. This is a supported real-work
+starter with retained partial evidence, not an unattended executor or a tutorial.
+<!-- VERA_OPENAI_DATEV_END -->
+
 ## Invocation and scope contract
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->

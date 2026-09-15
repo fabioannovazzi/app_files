@@ -18,6 +18,15 @@ plugin's skill stays outside this teaching route; explain the scope and offer
 relevant Vera workflows without silently substituting or teaching the other plugin.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
+<!-- VERA_OPENAI_DATEV_BEGIN -->
+## DATEV installation trial
+
+- `datev-invoice-start`: a real Windows DATEV trial with the shipped passive-invoice
+  procedure, native host verification, saved partial progress and per-client review.
+  Read `../../datev-invoice-start/SKILL.md` before generic teaching or browser setup.
+  This is an installation adaptation route, not an unattended executor or a course.
+<!-- VERA_OPENAI_DATEV_END -->
+
 ## Professional workflows
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos

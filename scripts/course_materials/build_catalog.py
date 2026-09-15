@@ -24,6 +24,7 @@ EXCLUDED = {
     "legal-tax-answer-review",
     "adversarial-opinion",
     "privacy-surface-review",
+    "datev-invoice-start",
     "learn-with-vera",
     "learn-with-clara",
     "learn-with-lucia",
