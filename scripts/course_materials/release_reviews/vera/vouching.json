@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "vouching",
-  "course_sha256": "d8d8390508498232aff8c9a7edebbb515f7aa51b696c5808fd4d75c18387f992",
+  "course_sha256": "47732ab90b426237cb4e9cffed52ee65f310fe82e02e81d0b23b07f7a4dbae5a",
   "reviewer": "Codex: first-use material, source-to-sample handoff and actual output review",
   "reviewed_at": "2026-09-14T18:25:17.746640+00:00",
   "review_scope": "Read all five lesson outlines and contexts, the nine-line journal and the three fictional XML invoice facts. Ten distinct locale/phase native checks execute the current teaching adapter, Journal Sampling prerequisite, Studio Archive handoff and Vouching run, within 29 passing focused checks. Reviewed the localized Markdown notes and eighteen native Excel views: five horizontal views of each distinct phase, plus the localized review-note columns for the other eight cases. All other CSV fields match within each phase; document receipt references vary by run and were traced separately. Canonical spreadsheet columns remain English. The samples and outputs are generated during execution; learner decisions, professional conclusions, voice, two-window behavior and browser widget interaction are not attested.",
@@ -342,5 +342,43 @@
       }
     ],
     "scope": "Authored lessons and inputs unchanged. CPython 3.12 Windows pathname stat aliases ctime to birthtime while descriptor stat reports change time. Cross-API comparison retains device, inode, mode, link count, size and mtime. Full ctime checks remain within before/after descriptor observations and within before/after pathname observations. Exact bytes and final-path checks remain required. No transmission or new model context. Original editorial reviews remain preserved; native execution evidence is verified separately."
+  },
+  "remaining_file_api_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T11:14:35.066176+00:00",
+    "previous_course_sha256": "d8d8390508498232aff8c9a7edebbb515f7aa51b696c5808fd4d75c18387f992",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/check_entries_core.py",
+        "before": "7935ffdf687e031b6720a11aa8973a7710a00664fca980d4be6d7d51957d2091",
+        "after": "c4218b1b3f684126c899dcf30d5b7358f10c4a7c25504ee356d62c9d8098f651"
+      },
+      {
+        "path": "plugins/check-entries/scripts/physical_output_set.py",
+        "before": "db7476ac9b3ac97101f4f8f27478b74735698403201af73535b5c54e4f07a745",
+        "after": "0870043ab7ac3171cc73d951d6915e80ec4ab67219eec4362c05550bccdd5107"
+      },
+      {
+        "path": "plugins/check-entries/scripts/check_dependencies.py",
+        "before": "f09811af1b143aa055c7fa131aaf2e82a3aa4ebcdb8783ad9599e4c711c69acd",
+        "after": "84bb7bb504ba4b17d80edd6234af4395c445d03ce54ec191a7d9384744ac67a0"
+      },
+      {
+        "path": "plugins/check-entries/scripts/inspect_entries.py",
+        "before": "bf47b59b303955aeebea6f05b5af94370646d6052adc99c2c04fcf1e734d4810",
+        "after": "9a84ce790b4d6763c07610c03b93a85cb34830c734162fd8d528ed84d98a6090"
+      },
+      {
+        "path": "plugins/check-entries/scripts/run_checks.py",
+        "before": "829d99a3b5ef67ac4ddacc76c1e73d7e21d62b0bc307bf179a67fa5b4c90e419",
+        "after": "66168e82f9b60e46e1a36c07be05735e4eb401b9f3206cb9881ac3ff618ee91a"
+      },
+      {
+        "path": "plugins/check-entries/scripts/apply_review_edits.py",
+        "before": "4937b9bdc916177eac603c60a733f9d4790c85771fc2025e2206ffe8011f739e",
+        "after": "6d88b150f32fbc627d2090debb536cfa49c3f51de6728fc469d5488dff9fac5e"
+      }
+    ],
+    "scope": "Authored lessons and inputs unchanged. All three remaining Vouching directory scans obtain actual link counts with lstat. The four command entrypoint snapshots and reviewed-successor byte capture now compare ctime only within the same API, preserving before/after and final-path checks, and explicitly use binary reads. Symlink, hardlink, size, exact-byte and replacement rejection remain in place. No transmission or new model context. Original editorial and artifact reviews are preserved; actual native execution is checked separately."
   }
 }

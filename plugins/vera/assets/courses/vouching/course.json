@@ -55,17 +55,17 @@
     {
       "path": "modules/check-entries/scripts/apply_review_edits.py",
       "repository_path": "plugins/check-entries/scripts/apply_review_edits.py",
-      "sha256": "4937b9bdc916177eac603c60a733f9d4790c85771fc2025e2206ffe8011f739e"
+      "sha256": "6d88b150f32fbc627d2090debb536cfa49c3f51de6728fc469d5488dff9fac5e"
     },
     {
       "path": "modules/check-entries/scripts/check_dependencies.py",
       "repository_path": "plugins/check-entries/scripts/check_dependencies.py",
-      "sha256": "f09811af1b143aa055c7fa131aaf2e82a3aa4ebcdb8783ad9599e4c711c69acd"
+      "sha256": "84bb7bb504ba4b17d80edd6234af4395c445d03ce54ec191a7d9384744ac67a0"
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "7935ffdf687e031b6720a11aa8973a7710a00664fca980d4be6d7d51957d2091"
+      "sha256": "c4218b1b3f684126c899dcf30d5b7358f10c4a7c25504ee356d62c9d8098f651"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -80,7 +80,7 @@
     {
       "path": "modules/check-entries/scripts/inspect_entries.py",
       "repository_path": "plugins/check-entries/scripts/inspect_entries.py",
-      "sha256": "bf47b59b303955aeebea6f05b5af94370646d6052adc99c2c04fcf1e734d4810"
+      "sha256": "9a84ce790b4d6763c07610c03b93a85cb34830c734162fd8d528ed84d98a6090"
     },
     {
       "path": "modules/check-entries/scripts/invoice_support.py",
@@ -90,7 +90,7 @@
     {
       "path": "modules/check-entries/scripts/physical_output_set.py",
       "repository_path": "plugins/check-entries/scripts/physical_output_set.py",
-      "sha256": "db7476ac9b3ac97101f4f8f27478b74735698403201af73535b5c54e4f07a745"
+      "sha256": "0870043ab7ac3171cc73d951d6915e80ec4ab67219eec4362c05550bccdd5107"
     },
     {
       "path": "modules/check-entries/scripts/review_session.py",
@@ -100,7 +100,7 @@
     {
       "path": "modules/check-entries/scripts/run_checks.py",
       "repository_path": "plugins/check-entries/scripts/run_checks.py",
-      "sha256": "829d99a3b5ef67ac4ddacc76c1e73d7e21d62b0bc307bf179a67fa5b4c90e419"
+      "sha256": "66168e82f9b60e46e1a36c07be05735e4eb401b9f3206cb9881ac3ff618ee91a"
     },
     {
       "path": "modules/check-entries/scripts/stable_ooxml.py",

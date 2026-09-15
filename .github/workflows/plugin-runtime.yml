@@ -66,6 +66,10 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_check_entries_plugin.py
           -k "file_capture or exact_file_read or recipe_capture"
+      - name: Verify Journal Sampling to Vouching handoff
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          "tests/plugins/test_vera_local_onboarding.py::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-it]"
       - name: Verify local profiles, native lesson handoffs and transmission suppression
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

@@ -29,6 +29,7 @@ if _bootstrap_lstat.st_mode & 0o170000 != 0o100000 or _bootstrap_lstat.st_nlink 
 _bootstrap_flags = _bootstrap_os.O_RDONLY
 _bootstrap_flags |= getattr(_bootstrap_os, "O_NOFOLLOW", 0)
 _bootstrap_flags |= getattr(_bootstrap_os, "O_NONBLOCK", 0)
+_bootstrap_flags |= getattr(_bootstrap_os, "O_BINARY", 0)
 _bootstrap_fd = _bootstrap_os.open(_BOOTSTRAP_PATH, _bootstrap_flags)
 try:
     _bootstrap_before = _bootstrap_os.fstat(_bootstrap_fd)
@@ -41,7 +42,7 @@ try:
         _bootstrap_before.st_mtime_ns,
         _bootstrap_before.st_ctime_ns,
     )
-    if _bootstrap_identity != (
+    _bootstrap_path_identity = (
         _bootstrap_lstat.st_dev,
         _bootstrap_lstat.st_ino,
         _bootstrap_lstat.st_mode,
@@ -49,7 +50,9 @@ try:
         _bootstrap_lstat.st_size,
         _bootstrap_lstat.st_mtime_ns,
         _bootstrap_lstat.st_ctime_ns,
-    ):
+    )
+    # Windows path and descriptor ctime have different meanings.
+    if _bootstrap_identity[:-1] != _bootstrap_path_identity[:-1]:
         raise RuntimeError("implementation bootstrap changed before open")
     _bootstrap_chunks = []
     _bootstrap_remaining = _bootstrap_before.st_size
@@ -76,7 +79,7 @@ try:
 finally:
     _bootstrap_os.close(_bootstrap_fd)
 _bootstrap_path_after = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
-if _bootstrap_identity != (
+if _bootstrap_path_identity != (
     _bootstrap_path_after.st_dev,
     _bootstrap_path_after.st_ino,
     _bootstrap_path_after.st_mode,
@@ -93,7 +96,7 @@ exec(  # nosec B102
 )
 _BOOTSTRAP_ROOTS = _BOOTSTRAP_NAMESPACE["activate_implementation_boundary"]()
 _bootstrap_path_final = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
-if _bootstrap_identity != (
+if _bootstrap_path_identity != (
     _bootstrap_path_final.st_dev,
     _bootstrap_path_final.st_ino,
     _bootstrap_path_final.st_mode,

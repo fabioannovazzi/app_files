@@ -1242,7 +1242,7 @@ def _validate_journal_sampling_implementation_tree(
             with os.scandir(current) as iterator:
                 entries = sorted(iterator, key=lambda entry: entry.name)
             for entry in entries:
-                observed = entry.stat(follow_symlinks=False)
+                observed = os.lstat(entry.path)
                 relative = Path(entry.path).relative_to(root).as_posix()
                 if stat.S_ISLNK(observed.st_mode):
                     raise ValueError(

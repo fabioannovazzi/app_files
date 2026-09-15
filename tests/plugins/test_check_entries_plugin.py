@@ -339,11 +339,13 @@ def test_recipe_capture_preserves_windows_line_endings(tmp_path: Path) -> None:
     assert core._captured_recipe(source) == ({"description": "reviewed"}, payload)
 
 
-@pytest.mark.parametrize("reader", ["_stable_regular_bytes", "_captured_recipe"])
+@pytest.mark.parametrize(
+    "reader", ["_stable_regular_bytes", "_captured_recipe", "_successor"]
+)
 def test_file_capture_accepts_distinct_path_and_descriptor_ctime(
     tmp_path: Path, monkeypatch: Any, reader: str
 ) -> None:
-    core = load_core()
+    core = load_apply_review_edits() if reader == "_successor" else load_core()
     source = tmp_path / "source.json"
     source.write_bytes(b'{"reviewed": true}\r\n')
     original_fstat = os.fstat
@@ -357,19 +359,21 @@ def test_file_capture_accepts_distinct_path_and_descriptor_ctime(
         return SimpleNamespace(**fields)
 
     monkeypatch.setattr(core.os, "fstat", windows_fstat)
-    if reader == "_stable_regular_bytes":
+    if reader in {"_stable_regular_bytes", "_successor"}:
         result = core._stable_regular_bytes(source, label="Journal")
     else:
         _, result = core._captured_recipe(source)
     assert result == source.read_bytes()
 
 
-@pytest.mark.parametrize("reader", ["_stable_regular_bytes", "_captured_recipe"])
+@pytest.mark.parametrize(
+    "reader", ["_stable_regular_bytes", "_captured_recipe", "_successor"]
+)
 @pytest.mark.parametrize("field", ["st_ctime_ns", "st_ino", "st_nlink", "st_size"])
 def test_file_capture_rejects_changed_descriptor_metadata(
     tmp_path: Path, monkeypatch: Any, reader: str, field: str
 ) -> None:
-    core = load_core()
+    core = load_apply_review_edits() if reader == "_successor" else load_core()
     source = tmp_path / "source.json"
     source.write_bytes(b'{"reviewed": true}\r\n')
     original_fstat = os.fstat
@@ -387,18 +391,20 @@ def test_file_capture_rejects_changed_descriptor_metadata(
         return SimpleNamespace(**fields)
 
     monkeypatch.setattr(core.os, "fstat", changed_fstat)
-    with pytest.raises(ValueError, match="changed while"):
-        if reader == "_stable_regular_bytes":
+    with pytest.raises(ValueError, match="changed (while|during)"):
+        if reader in {"_stable_regular_bytes", "_successor"}:
             core._stable_regular_bytes(source, label="Journal")
         else:
             core._captured_recipe(source)
 
 
-@pytest.mark.parametrize("reader", ["_stable_regular_bytes", "_captured_recipe"])
+@pytest.mark.parametrize(
+    "reader", ["_stable_regular_bytes", "_captured_recipe", "_successor"]
+)
 def test_file_capture_rejects_changed_path_ctime(
     tmp_path: Path, monkeypatch: Any, reader: str
 ) -> None:
-    core = load_core()
+    core = load_apply_review_edits() if reader == "_successor" else load_core()
     source = tmp_path / "source.json"
     source.write_bytes(b'{"reviewed": true}\r\n')
     original_lstat = Path.lstat
@@ -418,11 +424,47 @@ def test_file_capture_rejects_changed_path_ctime(
         return SimpleNamespace(**fields)
 
     monkeypatch.setattr(Path, "lstat", changed_lstat)
-    with pytest.raises(ValueError, match="path changed while"):
-        if reader == "_stable_regular_bytes":
+    with pytest.raises(ValueError, match="path changed (while|during)"):
+        if reader in {"_stable_regular_bytes", "_successor"}:
             core._stable_regular_bytes(source, label="Journal")
         else:
             core._captured_recipe(source)
+
+
+def test_file_capture_physical_tree_accepts_regular_file(tmp_path: Path) -> None:
+    load_core()
+    physical = importlib.import_module("physical_output_set")
+    (tmp_path / "result.csv").write_bytes(b"amount\r\n12\r\n")
+
+    assert physical._physical_tree(tmp_path) == ({"result.csv"}, set())
+
+
+def test_file_capture_physical_tree_rejects_hardlink(tmp_path: Path) -> None:
+    load_core()
+    physical = importlib.import_module("physical_output_set")
+    source = tmp_path / "result.csv"
+    source.write_bytes(b"amount\r\n12\r\n")
+    os.link(source, tmp_path / "alias.csv")
+
+    with pytest.raises(ValueError, match="hardlinks"):
+        physical._physical_tree(tmp_path)
+
+
+def test_file_capture_review_tree_accepts_regular_file(tmp_path: Path) -> None:
+    review = load_apply_review_edits()
+    (tmp_path / "result.csv").write_bytes(b"amount\r\n12\r\n")
+
+    assert review._validate_output_tree(tmp_path) == tmp_path
+
+
+def test_file_capture_review_tree_rejects_hardlink(tmp_path: Path) -> None:
+    review = load_apply_review_edits()
+    source = tmp_path / "result.csv"
+    source.write_bytes(b"amount\r\n12\r\n")
+    os.link(source, tmp_path / "alias.csv")
+
+    with pytest.raises(ValueError, match="hardlink aliases"):
+        review._validate_output_tree(tmp_path)
 
 
 def load_studio_archive_core() -> Any:
