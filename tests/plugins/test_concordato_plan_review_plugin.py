@@ -77,7 +77,9 @@ def _call_mcp_server(
         capture_output=True,
         text=True,
         check=True,
-        timeout=10,
+        # A functional request can launch Python children and render documents.
+        # Keep it bounded without treating shared-runner scheduling as a 10s SLA.
+        timeout=60,
         env={**os.environ, "VERA_COMPONENT_HOST": "1", **(env or {})},
     )
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
