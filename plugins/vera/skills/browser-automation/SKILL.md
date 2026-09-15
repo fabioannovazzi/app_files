@@ -34,6 +34,15 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
+For generic development/testing, read the resolved module's
+`references/process-lifecycle.md`; for ordinary work, use its distinct
+`references/ordinary-use.md` flow. Recover the local process catalog in every new
+conversation and use current-model semantic selection. The accountant describes
+the desired work and business parameters; Vera resolves saved process/attempt
+identities, implementation paths, CR receipts, release and retest state. Never
+require an old conversation, CR number or technical package assembly. Start an
+attempt before work and deliver its readable report even after a partial failure.
+
 For TeamSystem ECONS, start from a new conversation using the module reference's
 `New-conversation startup` section. Read the shipped invoice procedure and call
 `loadEconsSetup` in the existing host Node runtime before Python setup or browser
@@ -46,8 +55,10 @@ Registration requests select the processing route and its model callbacks.
 Read-only review is a separate user intent, not a fallback for missing setup.
 
 When learning is requested, follow the module's start-recording protocol before
-acting: `teaching_checkpoint.py start`, verified resume, incremental saves and a
-linked `report` at completion or interruption. Do not substitute a CR or a chat
+acting: create/recover the persistent process, start a teaching attempt and use
+`process_lifecycle.py teach` for the existing `teaching_checkpoint.py` start/save
+implementation, verified resume and a linked report at completion or interruption.
+Do not substitute a CR or a chat
 recap for recorded teaching. The checkpoint format serves different processes;
 keep the actual process boundary and provenance explicit. For an older unrecorded
 conversation, prepare the partial development request from available attributed
@@ -64,7 +75,7 @@ one unresolved process question at a time. A template is not working extraction;
 a checked example is not a validated replay. Follow the module's acquisition
 loop and persist a precise next step.
 
-This is a generic capability factory with process-specific outputs. The
+This connects generic process development with separately qualified ordinary use. The
 model leads one example, interprets each demonstrated step and saves a resumable
 teaching checkpoint before continuing. It announces when observation stops;
 unexplained button changes are not a learned procedure. A paused checkpoint is
@@ -118,9 +129,11 @@ a connected-Chrome `goto` timeout as a terminal fixture failure.
 Authentication is always performed by the operator; never request, inspect,
 enter, retain, or transfer login secrets or reusable browser state.
 
-On a surface without compatible Chrome control, review or edit a supplied
-capability if useful, but state that live discovery and validation require Codex
-Desktop with the connected Chrome extension.
+Detect compatible browser control, persistent Node and local files from actual
+callable host tools. On a surface without them, preserve useful reported evidence
+and state which operation is unavailable; never claim that a local helper ran or
+that a saved record exists without evidence. The host product name alone does
+not establish browser support or explain an earlier failure.
 
 For invoice batches, follow the module’s `references/batch-review.md` and use
 `scripts/batch_review.py`. Save a durable local report for review after processing,

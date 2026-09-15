@@ -43,7 +43,7 @@
     {
       "path": "modules/browser-automation/references/development-request.md",
       "repository_path": "plugins/browser-automation/references/development-request.md",
-      "sha256": "3d9e59a8a78905d3d3d45331324ffbc6c78191eafbf3a4e2b28d3878e20a6391"
+      "sha256": "7df951e379b9d170da9bb62a5c962288211d1f084963a097f8e12094217b85ad"
     },
     {
       "path": "modules/browser-automation/references/discovery-playbook.md",
@@ -56,9 +56,19 @@
       "sha256": "38695555c377722a9fd6768823243797d89a58b9d4aa7c21d4280755161acb9f"
     },
     {
+      "path": "modules/browser-automation/references/ordinary-use.md",
+      "repository_path": "plugins/browser-automation/references/ordinary-use.md",
+      "sha256": "377e64ff0cbc35dc384f4f3c74f60132993e69ebc39529f761ea4d06e41faaf2"
+    },
+    {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
       "repository_path": "plugins/browser-automation/references/passive-invoice-procedure.md",
       "sha256": "ac4e805ce23f2b407ea45898f0c32cad489055d655a739e73e0dd2f30c85fb37"
+    },
+    {
+      "path": "modules/browser-automation/references/process-lifecycle.md",
+      "repository_path": "plugins/browser-automation/references/process-lifecycle.md",
+      "sha256": "3a9ea152d4273f9d5b09e1918ac44392c85df59e83bcd558138c2acc5d7be555"
     },
     {
       "path": "modules/browser-automation/references/teaching-checkpoint.md",
@@ -78,7 +88,7 @@
     {
       "path": "modules/browser-automation/scripts/capability_pipeline.py",
       "repository_path": "plugins/browser-automation/scripts/capability_pipeline.py",
-      "sha256": "f859b8fdd1acf20e94105525a0a7c2533e674e4db04744d95cafc9e1c1a9b5b3"
+      "sha256": "13906be8a42923dacb0e501434bc86e0d9fe81a902fb0b2c974fe110656f855a"
     },
     {
       "path": "modules/browser-automation/scripts/check_dependencies.py",
@@ -88,17 +98,22 @@
     {
       "path": "modules/browser-automation/scripts/check_installation.py",
       "repository_path": "plugins/browser-automation/scripts/check_installation.py",
-      "sha256": "09e69649196837fe2b3d4dd9ae36b547096df637ad5f9065558e55b8115cacfd"
+      "sha256": "f16afdb578d94b810bd437f751e39967f64f91639f543ac1b7273362ebdb7724"
     },
     {
       "path": "modules/browser-automation/scripts/development_request.py",
       "repository_path": "plugins/browser-automation/scripts/development_request.py",
-      "sha256": "d55445aefc7037579b01e242574f6ba99a07265098c7e7844d7289cab48fa73e"
+      "sha256": "c7dbbe2e707b9b0892e3ad6fcb2c514461c296776268e79e83d5095b1f6dc418"
     },
     {
       "path": "modules/browser-automation/scripts/discovery_pack.py",
       "repository_path": "plugins/browser-automation/scripts/discovery_pack.py",
       "sha256": "14060a623ec3b8a211379747d397084fb6a7fe938c9b40a30469f78acadc3544"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_lifecycle.py",
+      "repository_path": "plugins/browser-automation/scripts/process_lifecycle.py",
+      "sha256": "c5ef112a3d46e2a821d8b67caf27edf356c1844aae14190ef5c8131c11ce6303"
     },
     {
       "path": "modules/browser-automation/scripts/teaching_checkpoint.py",
@@ -108,12 +123,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "8a11fc11ff461989d23abcdde4c41a98c6e0a85464405aaff7961c439dbce44e"
+      "sha256": "c229e60a7a59f4ed2e35b0258341d1358cf8ca27b81fc6e281b24ba5f5fa3227"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "32882e5ef1f46c968ad9a84bde07106e6f378d20efd71d9255ecfc52cb0d012c"
+      "sha256": "ab11967624f97b46729ce24694ce9d6bd4546fd733901d966ff56fe32d0b4ee4"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

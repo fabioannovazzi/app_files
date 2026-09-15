@@ -25,6 +25,7 @@ from teaching_checkpoint import read_checkpoint
 __all__ = ["prepare_request", "export_request", "verify_archive", "main"]
 LOG = logging.getLogger(__name__)
 SCHEMA = "browser-development-request/v1"
+LIFECYCLE_SCHEMA = "browser-development-request/v2"
 MAX_BYTES = 32 * 1024 * 1024
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 TEXT_KEYS = {"request_id", "title", "process", "objective", "source_version"}
@@ -36,15 +37,40 @@ def _text(value: Any) -> bool:
 
 
 def _validate(payload: Any) -> None:
-    if not isinstance(payload, dict) or set(payload) != TEXT_KEYS | LIST_KEYS | {
-        "schema_version",
-        "findings",
-    }:
+    lifecycle_keys = (
+        {"browser_lifecycle"}
+        if isinstance(payload, dict)
+        and payload.get("schema_version") == LIFECYCLE_SCHEMA
+        else set()
+    )
+    if (
+        not isinstance(payload, dict)
+        or set(payload)
+        != TEXT_KEYS
+        | LIST_KEYS
+        | {
+            "schema_version",
+            "findings",
+        }
+        | lifecycle_keys
+    ):
         raise ValueError("invalid development request fields")
-    if payload["schema_version"] != SCHEMA or not all(
+    if payload["schema_version"] not in {SCHEMA, LIFECYCLE_SCHEMA} or not all(
         _text(payload[k]) for k in TEXT_KEYS
     ):
         raise ValueError("request identity and purpose are required")
+    if lifecycle_keys:
+        lineage = payload["browser_lifecycle"]
+        if (
+            not isinstance(lineage, dict)
+            or not re.fullmatch(
+                r"process-[a-f0-9]{32}", str(lineage.get("process_id", ""))
+            )
+            or not re.fullmatch(
+                r"attempt-[a-f0-9]{32}", str(lineage.get("attempt_id", ""))
+            )
+        ):
+            raise ValueError("persistent process and attempt identity are required")
     if not SLUG.fullmatch(payload["request_id"]):
         raise ValueError("request_id must be a local slug, not an invented CR number")
     for key in LIST_KEYS:
@@ -142,6 +168,7 @@ def prepare_request(
     *,
     checkpoint: Path | None = None,
     developer_pack: Path | None = None,
+    cr_body: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Prepare local files only. No raw checkpoint or business review is copied."""
     _validate(payload)
@@ -174,6 +201,12 @@ def prepare_request(
         "request.json": canonical_json_bytes(payload),
         "sources.json": canonical_json_bytes(sources),
     }
+    if cr_body is not None:
+        if payload["schema_version"] != LIFECYCLE_SCHEMA:
+            raise ValueError("CR body requires persisted lifecycle identity")
+        if len(canonical_json_bytes(cr_body)) > 48 * 1024:
+            raise ValueError("CR body exceeds submission size limit")
+        files["cr-request.json"] = canonical_json_bytes(cr_body)
     if developer_pack is not None:
         errors = verify_developer_pack(developer_pack)
         if errors:
@@ -216,6 +249,15 @@ def prepare_request(
     lines += [
         f"- {labels[f['basis']]}: {f['summary']}" for f in payload["findings"]
     ] or ["- Nessun risultato documentato."]
+    if payload["schema_version"] == LIFECYCLE_SCHEMA:
+        lineage = payload["browser_lifecycle"]
+        lines += [
+            "",
+            "## Processo e tentativo persistenti",
+            f"Processo: {lineage['process_id']}",
+            f"Tentativo: {lineage['attempt_id']}",
+            "Le prove tecniche selezionate sono incluse nel corpo CR revisionabile; i file ZIP non vengono caricati dal servizio CR.",
+        ]
     for key, label in [
         ("requested_work", "Lavoro richiesto"),
         ("acceptance_checks", "Come verificheremo il risultato"),

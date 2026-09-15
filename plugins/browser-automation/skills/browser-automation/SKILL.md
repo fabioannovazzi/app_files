@@ -5,14 +5,16 @@ description: "Use when an authorized operator or developer wants Vera to learn, 
 
 # Automazione web
 
-Run a generic capability factory on an authorized operator's computer, then
-turn the observed process into a portable, intelligent capability that another
-operator can run in their own Chrome session. This exists specifically for the
-case where the developer cannot access the target system: the operator can
-demonstrate the process, let the model explore it, or combine both. The first
-deliverable is a sanitized reviewed developer pack; the final deliverable is a
-working process-specific capability. Neither deliverable is a browser session,
-macro, video recording, or credential transfer.
+Develop, test and use an exact professional browser process. Read
+`references/process-lifecycle.md` before selecting the operation. On every new
+conversation, recover the scoped local process catalog and shipped bindings;
+the current model selects by the user's professional objective and exclusions.
+For ordinary execution, follow the separate `references/ordinary-use.md` workflow.
+The operator supplies ordinary work requests and examples, never capability
+names, CR numbers, technical JSON, internal paths or an old conversation.
+Teaching checkpoints, attempts, reviewed evidence, actual CR receipts, versions
+and qualification remain linked to the same process identity. The developer
+can work from reviewed evidence without access to the operator's system.
 
 Read `references/capability-contract.md` completely before building, changing,
 validating, or running a capability. For a new or changed process, also read
@@ -147,10 +149,12 @@ Do not restart teaching or ask the operator to find code or assemble files.
 intent route here even when the operator also asks to perform the work now.
 Interpret intent in context; these are examples, not a keyword classifier.
 Before the first demonstration or exploratory action, read
-`references/teaching-checkpoint.md`, create the initial checkpoint with
-`teaching_checkpoint.py start`, and verify it with `resume --summary`.
-Use the already known private case/run location and put its exact path in the
-conversation. The operator does not select a recorder or manage technical files.
+`references/teaching-checkpoint.md`, select/create the persistent process and
+start a teaching attempt using `process_lifecycle.py begin`. Use its `teach`
+command to call the existing `teaching_checkpoint.py` implementation for the
+initial empty checkpoint and every later revision. This binds the checkpoint
+to the exact process and makes it recoverable in a new conversation. Show its
+report link. The operator does not select a recorder or manage technical files.
 If saving fails, disclose that recording has not started and resolve the allowed
 local persistence problem before continuing teaching. Do not bypass a host denial.
 
@@ -275,23 +279,25 @@ references. The model chooses workflow meaning and recovery; validators do not.
 
 ### Run an existing capability
 
-Load exactly one explicitly named `browser-capability/v2` capability from
-either:
-
-- `capabilities/<capability-id>/capability.json` in this module; or
-- a capability folder path supplied by the operator.
-
-Do not scan unrelated folders for capabilities. Validate the file before using
-it. Confirm that the requested process, allowed origins, typed inputs, structured
+For ordinary work, follow `references/ordinary-use.md`: semantically select one
+supported process from the persistent catalog, obtain missing business inputs,
+and start a qualified `use` attempt. Vera resolves its exact registered
+`browser-capability/v2` file. An explicitly supplied capability folder remains
+a development/import route; validate and bind it before testing, without asking
+ordinary users for that path. Do not scan unrelated folders. Confirm that the
+requested process, allowed origins, typed inputs, structured
 outputs, and side effects match the operator's request. A `scaffold` or `draft`
 is not executable. A `discovered` capability may be tested but is not a proven
 handoff. A `validated_local` capability was proven only in its recorded
 environment and must still verify every current milestone.
 
-Import `scripts/capability_runtime.mjs` in the same persistent Node runtime that
-holds the connected Chrome `tab`; load the exact JSON and call
-`executeCapability({tab, capability, inputs, runDirectory, runId,
-approvedConsequentialActions, recoveryHandler, environment})`. The current model
+For a persisted test or use attempt, import `scripts/process_runtime.mjs` in the
+same documented persistent Node runtime as the connected Chrome `tab` and call
+`executeProcess({attemptDirectory, tab, inputs, currentHost,
+approvedConsequentialActions, recoveryHandler})`. It calls the existing
+`executeCapability` and records failures even before a runtime receipt exists.
+The underlying `scripts/capability_runtime.mjs` remains the mechanical runner
+for component/specialist execution. The current model
 supplies `recoveryHandler` only for a retry after it has interpreted a sanitized
 recovery request; do not configure an OpenAI API key or a second model service.
 Never copy dispatch logic into the chat and never substitute a manually
@@ -372,6 +378,11 @@ and the surrounding single-page application has settled for a short bounded
 interval. Do not replace readiness checks with a long blind delay.
 
 ### Validate and hand off
+
+For promotion into ordinary use, follow `process-lifecycle.md`'s qualification
+step after reviewing the professional result and accepted performance bound.
+It reuses the existing finalizer below. Publication and another operator's
+qualification never qualify the current environment automatically.
 
 A capability becomes `validated_local` only when
 `scripts/capability_pipeline.py finalize` verifies two distinct passed
@@ -504,8 +515,10 @@ capabilities in this module are source code, not run outputs.
 
 ## Plugin Improvement Feedback
 
-Keep the improvement note local to chat or run artifacts. Do not transmit it,
-include account or portal data in it, or turn a workflow result into feedback.
+Keep the improvement note local to chat or run artifacts. For an authorized technical problem
+or development handoff, follow the reviewed `process-lifecycle.md` submission
+route and retain its actual server receipt. Never include account/portal data,
+turn a business result into a support upload or infer consent from a saved file.
 
 ## Complete ECONS mappings and registrations
 

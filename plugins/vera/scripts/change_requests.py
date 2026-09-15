@@ -31,6 +31,7 @@ __all__ = [
     "ChangeRequestError",
     "check_fixed_requests",
     "main",
+    "lookup_requests",
     "reserve_suggestion_prompt",
     "start_interview",
     "submit_evidence",
@@ -565,12 +566,6 @@ def _validate_problem_request(payload: Mapping[str, Any]) -> None:
         value = payload.get(field)
         if not isinstance(value, str) or not value.strip() or len(value) > max_chars:
             raise ChangeRequestError(f"Problem report {field} is missing or too long.")
-    _validate_string_list(
-        payload.get("reproduction"),
-        field="Problem report reproduction",
-        max_items=20,
-        max_chars=1_000,
-    )
     diagnostics = payload.get("diagnostics")
     if not isinstance(diagnostics, dict):
         raise ChangeRequestError("Problem report diagnostics are required.")
@@ -580,16 +575,51 @@ def _validate_problem_request(payload: Mapping[str, Any]) -> None:
         "operation",
         "evidence",
         "correlation_ids",
+        "missing_reasons",
     }
     if set(diagnostics) - diagnostic_allowed:
         raise ChangeRequestError("Problem report diagnostics contain unknown fields.")
-    _parse_aware_timestamp(
-        diagnostics.get("occurred_at"), field="diagnostics.occurred_at"
-    )
+    missing = diagnostics.get("missing_reasons", {})
+    if (
+        not isinstance(missing, dict)
+        or set(missing) - {"occurred_at", "runtime", "operation", "reproduction"}
+        or any(
+            not isinstance(reason, str) or not reason.strip() or len(reason) > 512
+            for reason in missing.values()
+        )
+    ):
+        raise ChangeRequestError(
+            "Missing diagnostics require bounded explicit reasons."
+        )
+    if payload.get("reproduction") != [] or "reproduction" not in missing:
+        _validate_string_list(
+            payload.get("reproduction"),
+            field="Problem report reproduction",
+            max_items=20,
+            max_chars=1_000,
+        )
+    # Unknown is admissible with provenance; inventing a timestamp is not.
+    if diagnostics.get("occurred_at") is None:
+        if "occurred_at" not in missing:
+            raise ChangeRequestError("Missing occurred_at requires a reason.")
+    else:
+        _parse_aware_timestamp(
+            diagnostics["occurred_at"], field="diagnostics.occurred_at"
+        )
     for field, max_chars in (("runtime", 256), ("operation", 512)):
         value = diagnostics.get(field)
+        if value is None and field in missing:
+            continue
         if not isinstance(value, str) or not value.strip() or len(value) > max_chars:
             raise ChangeRequestError(f"diagnostics.{field} is missing or too long.")
+    for field in missing:
+        present = (
+            payload.get(field) if field == "reproduction" else diagnostics.get(field)
+        )
+        if present is not None and present != []:
+            raise ChangeRequestError(
+                "A present diagnostic cannot also be marked missing."
+            )
     _validate_string_list(
         diagnostics.get("evidence"),
         field="diagnostics.evidence",
@@ -830,6 +860,19 @@ def _find_or_create_entry(
 ) -> tuple[dict[str, Any], bool]:
     fingerprint_payload = dict(request_without_id)
     fingerprint_payload.pop("client_context", None)
+    request = fingerprint_payload.get("request", {})
+    diagnostics = request.get("diagnostics")
+    correlations = (
+        diagnostics.get("correlation_ids", []) if isinstance(diagnostics, dict) else []
+    )
+    if not isinstance(correlations, list):
+        correlations = []
+    if request.get("schema_version") == "browser-development-request/v2" or any(
+        re.fullmatch(r"attempt-[a-f0-9]{32}", str(item)) for item in correlations
+    ):
+        # The frozen attempt already identifies its tested release. Updating the
+        # client must not duplicate an uncertain submission from that attempt.
+        fingerprint_payload.pop("plugin_version", None)
     fingerprint = _payload_hash(fingerprint_payload)
     for entry in state["requests"]:
         if entry.get("kind") == kind and entry.get("payload_hash") == fingerprint:
@@ -959,7 +1002,7 @@ def reserve_suggestion_prompt(
     try:
         with _locked_state(plugin_name, plugin_data) as state_directories:
             state = _load_state(plugin_name, state_directories)
-            reserved_at = state.get(PROMPT_RESERVED_AT_FIELD)
+            reserved_at: Any = state.get(PROMPT_RESERVED_AT_FIELD)
             ask = (
                 reserved_at is None
                 or checked_at - float(reserved_at) >= PROMPT_COOLDOWN_SECONDS
@@ -1330,6 +1373,55 @@ def _status_rows(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
     return parsed
 
 
+def lookup_requests(
+    plugin_root: Path,
+    request_ids: list[str],
+    *,
+    plugin_data: Path | None = None,
+    opener: Callable[..., Any] | None = None,
+    base_url: str = DEFAULT_BASE_URL,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> list[dict[str, Any]]:
+    """Look up locally receipted CRs without exposing their status tokens."""
+    if not request_ids:
+        return []
+    if len(request_ids) > MAX_STATUS_BATCH or any(
+        _CHANGE_REQUEST_ID.fullmatch(value) is None for value in request_ids
+    ):
+        raise ChangeRequestError("Invalid bounded request status lookup.")
+    plugin_name, _version = _read_plugin_identity(plugin_root)
+    with _locked_state(plugin_name, plugin_data) as directories:
+        state = _load_state(plugin_name, directories)
+        entries = {
+            entry["change_request_id"]: entry
+            for entry in state["requests"]
+            if _entry_has_receipt(entry)
+        }
+    if any(value not in entries for value in request_ids):
+        raise ChangeRequestError("No local receipt exists for a requested status.")
+    response = _post_json(
+        base_url,
+        "/api/change-requests/status",
+        {
+            "requests": [
+                {
+                    "change_request_id": value,
+                    "status_token": entries[value]["status_token"],
+                }
+                for value in request_ids
+            ]
+        },
+        opener=opener,
+        timeout_seconds=timeout_seconds,
+    )
+    rows = _status_rows(response)
+    if {row["change_request_id"] for row in rows} != set(request_ids) or len(
+        rows
+    ) != len(set(request_ids)):
+        raise ChangeRequestError("Status response does not match the requested CRs.")
+    return rows
+
+
 def check_fixed_requests(
     plugin_root: Path,
     plugin_data: Path | None,
@@ -1357,6 +1449,7 @@ def check_fixed_requests(
             return None
         checked_at = time.time() if now is None else now
         updates_by_id: dict[str, dict[str, Any]] = {}
+        row: dict[str, Any] | None
         for start in range(0, len(pending), MAX_STATUS_BATCH):
             batch = pending[start : start + MAX_STATUS_BATCH]
             response = _post_json(

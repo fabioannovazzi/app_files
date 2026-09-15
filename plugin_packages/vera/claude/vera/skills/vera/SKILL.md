@@ -153,6 +153,12 @@ are in `references/model-data-report-contract.md`.
 
 ## Invocation and scope contract
 
+A request to teach Vera a real browser procedure, develop it, retest a correction,
+or use that procedure for professional work routes to
+`../browser-automation/SKILL.md`. Distinguish this from a tutorial that teaches the
+user how to use Vera. The professional browser lifecycle needs no tutorial,
+onboarding profile, old conversation, or user-supplied technical identifier.
+
 An explicit host invocation of Vera, including `@vera`, always activates this
 router. Treat the host invocation as an exact routing signal; do not depend on
 keyword matching in the message text. Invocation selects Vera, but it does not
