@@ -17,4 +17,3 @@ export function syntheticSignedP7m(xml) {
   const signedData = tlv(0x30, tlv(0x02, Buffer.from([1])), tlv(0x31), encapsulated);
   return tlv(0x30, signedDataOid, tlv(0xa0, signedData));
 }
-
