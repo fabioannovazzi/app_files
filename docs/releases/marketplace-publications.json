@@ -11,12 +11,12 @@
       "package_sha256": "7f43515dce735a3ca631d960360f672f19203d331941cf5aecf38bd3ca5f8750"
     },
     "vera": {
-      "version": "0.1.255",
+      "version": "0.1.256",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
       "observed_at": "2026-09-15",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa8f12c08dc8191b781144c1cc4c48c",
-      "basis": "OpenAI Platform authoritative version list directly showed 0.1.255 Published on 2026-09-15. All 38 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh.",
-      "package_sha256": "0397a937b8efb5183b06415af125d0f81a6f93775a4d001575d63b5422741191"
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa8f567341c8191b9e146253a8fc61f",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.256 Published on 2026-09-15. All 39 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive containing the DATEV starter and the verified PR635 recovery source. Synthetic tests do not establish live DATEV Windows acceptance.",
+      "package_sha256": "cc6e9cd3ccb5703b7c5f3a8b6d0f21de480fad3c9b6ea912a6c167a78482c07e"
     },
     "lucia": {
       "version": "0.1.49",
