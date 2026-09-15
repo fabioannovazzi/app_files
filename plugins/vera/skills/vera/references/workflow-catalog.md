@@ -18,6 +18,16 @@ plugin's skill stays outside this teaching route; explain the scope and offer
 relevant Vera workflows without silently substituting or teaching the other plugin.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
+<!-- VERA_OPENAI_DATEV_BEGIN -->
+## DATEV installation trial
+
+For a real Windows DATEV installation trial, use `datev-invoice-start` with the
+shipped passive-invoice procedure, native host verification, saved partial progress
+and per-client review. Read `../../datev-invoice-start/SKILL.md` before generic
+teaching or browser setup. This installation adaptation is separate from the
+professional course catalog below; it does not provide an unattended executor.
+<!-- VERA_OPENAI_DATEV_END -->
+
 ## Professional workflows
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
@@ -192,6 +202,10 @@ requirement with its registered in-workstream equivalent because it cannot be
 stored in a single client's Studio Archive engagement.
 
 ## Run-wide model-data evidence
+
+Showing or explaining an existing privacy/model-data report is supported artifact
+retrieval. Follow **Show an existing report** in `model-data-report-contract.md`
+without selecting a new professional workflow or starting another run.
 
 Every substantive professional workflow follows
 `model-data-report-contract.md` after its model-visible phases. The report is a

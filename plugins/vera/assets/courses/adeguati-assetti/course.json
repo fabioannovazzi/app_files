@@ -115,7 +115,7 @@
     {
       "path": "skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
-      "sha256": "295332691d871c1b4b99419fedaf8a4873039f235fcdf0025fec58ea43a4a698"
+      "sha256": "3979b63d8ad3058c4747b70947599efb4f989e8a4e65c5ac98d36c25795bcf20"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -153,14 +153,29 @@
       "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

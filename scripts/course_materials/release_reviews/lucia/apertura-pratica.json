@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "8bcc09a4ef3d8e7ebcb9617695bb3ab8cf383aad0671e12f15056e28a32d8431",
+  "course_sha256": "135881611d8f4eb05dd940c59a08574630b1327c24681f0e3ab1f2befc2e94b7",
   "reviewer": "Codex: five-language first-use matter-opening material and native output review",
   "reviewed_at": "2026-09-15T00:53:48.479006+00:00",
   "review_scope": "Reviewed the complete five-language outlines, fictional requests, supply summaries, three-row register and practice correspondence. Reviewed native memos, grouped information requests, handoffs, final cards and the practice changes. Actual MCP rendering, saved synthetic return decisions, native Apply/Validate, manifest consistency and normal archive completion are exercised in ten successful runs. This accepts the prepared lesson material and its native execution, not a real lawyer or learner decision. The local workbench layout was inspected in five languages under matter-visual-11, including French conflict review; a synthetic Italian save was exercised under matter-visual-10. The current generated widget passes all five whole-script rendering tests. Those views do not attest native voice, actual paired-window learner interaction, human comprehension or measured lesson timing.",
@@ -381,5 +381,47 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.591960+00:00",
+    "previous_course_sha256": "8bcc09a4ef3d8e7ebcb9617695bb3ab8cf383aad0671e12f15056e28a32d8431",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
+        "before": "5aa4ec589857fecec2963e3cb8b6c4e5a95024164fb57d11ddd5a100e036316c",
+        "after": "c99832c981d9d080cd25061ec4ad48ff04818e59a327d76eaab8b6b7c5ac9092"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

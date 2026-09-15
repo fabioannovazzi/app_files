@@ -26,7 +26,7 @@ LANGUAGE_NAMES = {
 }
 
 
-def render(destination: Path, *, preview: bool = False) -> Path:
+def render(destination: Path, *, preview: bool = False, public: bool = False) -> Path:
     """Build a fresh local review surface; never execute or approve a lesson."""
     destination = destination.expanduser().absolute()
     if destination.exists() or destination.is_symlink():
@@ -38,6 +38,7 @@ def render(destination: Path, *, preview: bool = False) -> Path:
     assets = ROOT / "plugins/_shared/vendor/modules/courseware/assets"
     for name in (
         "course.css",
+        "legacy-course.css",
         "InstrumentSans-Regular.ttf",
         "InstrumentSans-SemiBold.ttf",
         "OFL.txt",
@@ -59,6 +60,57 @@ def render(destination: Path, *, preview: bool = False) -> Path:
             for language in entry["languages"]:
                 folder = destination / product / workflow / language
                 library.render(workflow, language, folder)
+                if public:
+                    # Public guides contain fictional material, never local session paths.
+                    (folder / "execution-request.json").unlink(missing_ok=True)
+                    (folder / "course-provenance.json").write_text(
+                        json.dumps(
+                            {
+                                "product": product,
+                                "workflow": workflow,
+                                "language": language,
+                                "prepared_material_only": True,
+                                "execution_receipt": False,
+                                "understanding_confirmed": False,
+                                "course": "course.html",
+                                "teacher": "teacher.md",
+                            },
+                            ensure_ascii=False,
+                            indent=2,
+                        )
+                        + "\n",
+                        encoding="utf-8",
+                    )
+                    page = folder / "course.html"
+                    page.write_text(
+                        page.read_text(encoding="utf-8").replace(
+                            "<main>",
+                            '<main><p><a href="../../../index.html#'
+                            + product
+                            + '">← Vera · Clara · Lucia</a></p>',
+                            1,
+                        ),
+                        encoding="utf-8",
+                    )
+                    stylesheet = (
+                        "legacy-course.css"
+                        if entry.get("material") == "retained"
+                        else "course.css"
+                    )
+                    for document in folder.glob("*.html"):
+                        document.write_text(
+                            document.read_text(encoding="utf-8").replace(
+                                "href='course.css'", f"href='../../../{stylesheet}'"
+                            ),
+                            encoding="utf-8",
+                        )
+                    for shared in (
+                        "course.css",
+                        "InstrumentSans-Regular.ttf",
+                        "InstrumentSans-SemiBold.ttf",
+                        "OFL.txt",
+                    ):
+                        (folder / shared).unlink()
                 target = (folder / "course.html").relative_to(destination).as_posix()
                 links.append(
                     f'<a href="{html.escape(target, quote=True)}" lang="{language}">{LANGUAGE_NAMES[language]}</a>'
@@ -123,8 +175,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--authoring-preview", action="store_true")
+    parser.add_argument("--public", action="store_true")
     args = parser.parse_args()
-    print(render(args.output_dir, preview=args.authoring_preview))
+    print(render(args.output_dir, preview=args.authoring_preview, public=args.public))
     return 0
 
 

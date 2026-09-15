@@ -63,10 +63,13 @@ defines the population and exact Decimal totals agree. Overlapping possible
 groups stay unmatched. Amount/date singleton waves follow; source row order
 never breaks a collision.
 
-Generic text-PDF movement extraction is deliberately disabled. PDF inspection
-can still retain narrowly classified balance, total, scalare, and conditions
-lines for review, but reconciliation remains blocked with
-`unsupported_source_layout` until a tested source-family adapter exists. A
+Labelled text-PDF tables are supported through `journal_bank.pdf_table.v1`.
+The adapter preserves physical page/table/row lineage and emits zero movements
+until a current source-bound receipt approves the recovered header, monetary
+roles, sign convention, and exclusions such as a running balance. Generic PDF
+text, inconsistent page tables, and OCR-only input remain blocked with
+`unsupported_source_layout`; inspection may still retain narrowly classified
+balance, total, scalare, and conditions lines for review. A
 supplied sample that is empty, invalid, or selects no journal movements also
 blocks the run instead of silently falling back to the full journal.
 

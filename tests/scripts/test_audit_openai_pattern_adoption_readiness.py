@@ -515,6 +515,7 @@ def test_write_customer_validation_template_defaults_to_workbench_plugins(
         "journal-bank-reconciliation",
         "journal-sampling",
         "new-client",
+        "open-item-reconciliation",
         "prompt-optimizer",
         "report-builder",
     }

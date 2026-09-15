@@ -164,6 +164,32 @@ def verify(*, root: Path, reviews: Path, junit: Path) -> dict[str, int]:
             ):
                 raise ValueError(f"Stale or foreign compiled kit: {key}")
             review_path = reviews / product / f"{workflow}.json"
+            if course.get("schema") == "mparanza.course.v1":
+                plan = _read(root / "scripts/course_materials/release_plan.json", root)
+                retained = plan["retained"].get(key)
+                if not isinstance(retained, dict):
+                    raise ValueError(f"Unlisted retained lesson: {key}")
+                original_path = (
+                    root
+                    / "scripts/course_materials/published"
+                    / product
+                    / workflow
+                    / "course.json"
+                )
+                original = _read(original_path, root)
+                if (
+                    retained != course.get("retained_from")
+                    or hashlib.sha256(original_path.read_bytes()).hexdigest()
+                    != retained["course_sha256"]
+                    or {
+                        k: v
+                        for k, v in course.items()
+                        if k not in {"sources", "retained_from"}
+                    }
+                    != {k: v for k, v in original.items() if k != "sources"}
+                ):
+                    raise ValueError(f"Retained published lesson changed: {key}")
+                continue
             expected_reviews.add(review_path.resolve())
             review = _read(review_path, reviews)
             if (

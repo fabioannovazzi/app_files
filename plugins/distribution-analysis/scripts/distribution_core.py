@@ -89,6 +89,7 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 SCHEMA_VERSION = "1.0"
 DEFAULT_DATE = datetime(2026, 1, 1, tzinfo=timezone.utc).date()
+ALL_RECORDS_PERIOD = "ALL"
 DEFAULT_ROLLING_WINDOW_MONTHS = 12
 ROLLING_PERIOD_SYMBOL = "~"
 ARTIFACT_MODE_DATA_ONLY = "data_only"
@@ -615,6 +616,21 @@ def _selected_periods_for_recipe(
     """Return selected periods and an audit for period-bucket inference."""
 
     requested_periods = _selected_periods_from_options(options)
+    # This exact control denotes the reviewed whole population, not a bucket
+    # named all_data; it must also bypass automatic rolling-window selection.
+    if "all_data" in requested_periods:
+        if requested_periods != ["all_data"]:
+            raise ValueError("all_data cannot be combined with selected period labels")
+        return [], {
+            "status": "explicit_all_data",
+            "reason": "caller_selected_complete_population",
+            "selected_periods": [],
+            "adapter_placeholders": {
+                "Date": str(DEFAULT_DATE) if date_column is None else None,
+                "Period": ALL_RECORDS_PERIOD if period_column is None else None,
+            },
+            "boundary": "Unmapped Date/Period values are adapter placeholders, not source time coverage.",
+        }
     if period_column:
         inferred = _period_values(frame, period_column)
         contract = period_contract_options(options)
@@ -800,13 +816,39 @@ def build_recipe(
     date_column = _date_column(columns, schema)
     period_column = _period_column(columns)
     mappings = dict((existing_recipe or {}).get("mappings") or {})
+    # Binding names are a mechanical contract. Silently dropping an unknown
+    # binding (for example a weight) changes the requested calculation.
+    supported_mappings = {
+        "metric_column",
+        "distribution_dimension",
+        "small_multiples_dimension",
+        "date_column",
+        "period_column",
+        "dimensions",
+    }
+    unsupported_mappings = set(mappings) - supported_mappings
+    if unsupported_mappings:
+        raise ValueError(
+            "Unsupported distribution mappings: "
+            + ", ".join(sorted(unsupported_mappings))
+            + ". This workflow supports unweighted observations only; "
+            "do not discard requested bindings to bypass this error."
+        )
     options = dict((existing_recipe or {}).get("options") or {})
     metric_column = _coalesce_mapping(
         mappings,
         "metric_column",
         _first_matching_column(
             numeric_columns,
-            ["sales", "revenue", "amount", "value", "price", "units", "quantity"],
+            [
+                "sales",
+                "revenue",
+                "amount",
+                "value",
+                "price",
+                "units",
+                "quantity",
+            ],
         )
         or numeric_columns[0],
     )
@@ -950,7 +992,15 @@ def prepare_canonical_frame(
             pl.col(str(period_column)).cast(pl.Utf8).alias(CANONICAL_PERIOD)
         )
     else:
-        expressions.append(pl.lit(CURRENT_PERIOD).alias(CANONICAL_PERIOD))
+        all_records = (
+            recipe.get("options", {}).get("period_bucketing_audit", {}).get("status")
+            == "explicit_all_data"
+        )
+        expressions.append(
+            pl.lit(ALL_RECORDS_PERIOD if all_records else CURRENT_PERIOD).alias(
+                CANONICAL_PERIOD
+            )
+        )
     expressions.extend(
         pl.col(column).cast(pl.Utf8).alias(column) for column in base_dimensions
     )
@@ -1107,6 +1157,20 @@ def _summary_markdown(
             summary_frame.write_csv().strip(),
         ]
     )
+    if (
+        recipe.get("options", {}).get("period_bucketing_audit", {}).get("status")
+        == "explicit_all_data"
+    ):
+        lines.extend(
+            [
+                "",
+                (
+                    "Alcance: todas las observaciones suministradas. No se infiere una ventana temporal. Cuando no hay periodo de origen, ALL identifica la población completa."
+                    if spanish
+                    else "Scope: all supplied observations. No time window is inferred. Where no source period exists, ALL denotes the complete population."
+                ),
+            ]
+        )
     if failed:
         lines.extend(
             [

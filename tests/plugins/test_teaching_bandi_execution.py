@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 from tests.plugins.test_bandi_agevolazioni_plugin import _scripts
 from tests.plugins.test_bandi_dossier_report import assert_local_report_links
 from tests.plugins.test_teaching_kit_execution import (
@@ -92,6 +92,7 @@ def _apply_fixture(scripts, args, task, collection, payloads, prose, session_pre
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("vera/bandi-agevolazioni")
 def test_selected_call_kit_produces_native_review_dossier(
     tmp_path, monkeypatch, language, phase, record_property
 ):

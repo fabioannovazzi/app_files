@@ -18,8 +18,7 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "plugins/treasury-forecast/scripts")
 )
 
-import run_treasury
-import treasury_session
+import treasury_session as treasury_session_module
 from treasury_core import TreasuryError, build_forecast
 from treasury_inputs import HEADERS, load_inputs, read_json, safe_path, write_templates
 from treasury_report import write_artifacts
@@ -282,7 +281,7 @@ def test_failed_render_keeps_previous_version_current(tmp_path, monkeypatch):
     def fail(*args):
         raise OSError("Synthetic disk failure")
 
-    monkeypatch.setattr(treasury_session, "write_artifacts", fail)
+    monkeypatch.setattr(treasury_session_module, "write_artifacts", fail)
     with pytest.raises(OSError, match="disk failure"):
         review_session(
             output,
@@ -510,7 +509,12 @@ def test_reused_bank_evidence_id_is_rejected_across_updates():
         build_forecast(data, previous=previous)
 
 
-def test_cli_review_context_scenario_and_templates_use_bound_outputs(tmp_path):
+def test_cli_review_context_scenario_and_templates_use_bound_outputs(
+    tmp_path, monkeypatch
+):
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+    import run_treasury
+
     workspace = archived_case(tmp_path)
     context = workspace["context"]
     bound = ["--client-engagement", str(workspace["context_path"])]

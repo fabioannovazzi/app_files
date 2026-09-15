@@ -89,6 +89,15 @@ class CourseLibrary:
         if _digest(manifest) != entry["sha256"]:
             raise CourseError("Course content changed; rebuild the reviewed catalog")
         course = _read(manifest)
+        if course.get("schema") == "mparanza.course.v1":
+            from . import legacy
+
+            try:
+                return legacy.CourseLibrary(self.root, self.eligible).load(
+                    workflow, language
+                )
+            except legacy.CourseError as exc:
+                raise CourseError(str(exc)) from exc
         if (
             course.get("schema") != "mparanza.teaching_kit.v2"
             or course.get("product") != self.product
@@ -172,6 +181,15 @@ class CourseLibrary:
     def render(self, workflow: str, language: str, destination: Path) -> dict[str, Any]:
         """Materialize prepared content in a fresh local directory; record no lesson."""
         course = self.load(workflow, language)
+        if course["schema"] == "mparanza.course.v1":
+            from . import legacy
+
+            try:
+                return legacy.CourseLibrary(self.root, self.eligible).render(
+                    workflow, language, destination
+                )
+            except legacy.CourseError as exc:
+                raise CourseError(str(exc)) from exc
         destination = destination.expanduser().absolute()
         if any(path.is_symlink() for path in (destination, *destination.parents)):
             raise CourseError("Use an ordinary local destination, not a symlink")

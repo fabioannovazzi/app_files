@@ -30,7 +30,11 @@ def test_vera_router_frontmatter_triggers_for_explicit_invocation() -> None:
 
     assert "whenever Vera is explicitly invoked" in frontmatter
     assert "including through @vera" in frontmatter
-    assert "stop without answering when no specialist workflow matches" in frontmatter
+    assert (
+        "stop without answering when no specialist workflow or saved-report request matches"
+        in frontmatter
+    )
+    assert "show or reopen the privacy report of a Vera run" in frontmatter
     assert "capability gap" not in frontmatter
     assert "out of scope" not in frontmatter
 
@@ -62,6 +66,8 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     catalogued_skills = set(
         re.findall(r"^- `([a-z0-9-]+)`:", catalog, flags=re.MULTILINE)
     )
+    # Installation adaptations have an explicit skill link outside the lesson list.
+    catalogued_skills.update(re.findall(r"\.\./\.\./([a-z0-9-]+)/SKILL\.md", catalog))
 
     assert catalogued_skills == expected_skills
 
@@ -167,7 +173,9 @@ def test_vera_journal_bank_card_keeps_unsupported_pdfs_blocked() -> None:
     payload = json.loads(_read_text(MARKETPLACE_CARDS_PATH))
     instructions = payload["skills"]["journal-bank-reconciliation"]["instructions"]
 
-    assert "Un PDF generico resta bloccato con zero movimenti" in instructions
+    assert "PDF testuale con colonne riconoscibili" in instructions
+    assert "approvare intestazioni, segni, colonne entrate/uscite" in instructions
+    assert "Un PDF generico, incoerente o solo OCR resta bloccato" in instructions
     assert "non passa a estrazione generica o script ad hoc" in instructions
     assert "dichiara il workflow" in instructions
 

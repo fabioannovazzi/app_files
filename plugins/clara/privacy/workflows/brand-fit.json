@@ -5,7 +5,12 @@
   "governed_paths": [
     "skills/brand-fit/SKILL.md",
     "modules/attribute-reporting/skills/brand-fit/SKILL.md",
-    "modules/attribute-reporting/scripts"
+    "modules/attribute-reporting/scripts",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -71,6 +76,20 @@
         "The image hydrator validates public address, redirect, byte-size, and hash constraints.",
         "Retailer and owned-catalogue image scopes remain separated."
       ]
+    },
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
     }
   ],
   "security_controls": [
@@ -84,9 +103,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-22",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0347222f825b6b93531608c22c6378b38a62a9497bf0aa25bc0500e3efe35a44"
+    "source_fingerprint": "01e045db1a1b7351d939821448946b977cd4a598151f9a194606cf88b81861e9"
   }
 }

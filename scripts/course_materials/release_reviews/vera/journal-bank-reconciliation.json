@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "817c5cf742c9a425e9b65bcf6c5e87448f096d7d74fe719648a92aed666b281c",
+  "course_sha256": "25570a2b9294d44d8f56ccef8a019ad1cfb7b50afa3fcacd46fe7f0c427d7789",
   "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
   "reviewed_at": "2026-09-14T16:32:17.532432+00:00",
   "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested.",
@@ -226,5 +226,57 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.402666+00:00",
+    "previous_course_sha256": "817c5cf742c9a425e9b65bcf6c5e87448f096d7d74fe719648a92aed666b281c",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/journal-bank-reconciliation/references/workflow-reference.md",
+        "before": "b97fc61eaeb552354174d5a6dc26af6630e4c7f41480f95a8f6baac67dc3ba7b",
+        "after": "2b11e97bcecb31f82d2d6ba974a67f0d9a0a5f36f763a832910dfffc2db5b937"
+      },
+      {
+        "path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+        "before": "e836e7efeb2a5df8cbf51fa29798ac2b3100c85bca59de678b73a1a5a9010777",
+        "after": "9033a34d72b5a950afd5eb7281098b4cdeda15eaf8f06d73839493a82baab12a"
+      },
+      {
+        "path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+        "before": "72f5dd311a1ecac3a6076562567b559f4ce662c43325c18cd64ba8ace8565236",
+        "after": "39cb75e89d63cce7818fc9b89ecc9a6c9bb9aae485d06e5bcf8088b9bbf00282"
+      },
+      {
+        "path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+        "before": "9debf852d7d1a3ac98d19997426db28ae63cf9de7604aa4652014c7746564d86",
+        "after": "b471d0d6351cdc97fa0a980a0fd7ce1ec938067ec2ba8be9128b23f5ef418c47"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

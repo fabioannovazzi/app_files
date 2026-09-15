@@ -13,7 +13,7 @@ from typing import Any
 import pytest
 from openpyxl import load_workbook
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 from tests.plugins.test_teaching_kit_execution import ROOT, _read, _run, _write
 from tests.plugins.test_teaching_management_execution import _recipe
 
@@ -113,6 +113,7 @@ def _execute_clara_budget(
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("clara/reporting-engine")
 def test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version(
     tmp_path, monkeypatch, record_property, language, phase
 ):

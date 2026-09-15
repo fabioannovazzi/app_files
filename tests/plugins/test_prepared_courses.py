@@ -26,9 +26,11 @@ COURSES = [
     for product in ("vera", "clara", "lucia")
     for workflow in sorted(builder._eligible(product))
 ]
+RELEASE = json.loads((ROOT / "scripts/course_materials/release_plan.json").read_text())
+PREPARED = [(p, w) for p, w in COURSES if f"{p}/{w}" in RELEASE["prepared"]]
 LOCALIZED = [
     (product, workflow, language)
-    for product, workflow in COURSES
+    for product, workflow in PREPARED
     for language in builder.LIMITED_LANGUAGES.get(
         f"{product}/{workflow}", builder.LANGUAGES
     )
@@ -99,11 +101,15 @@ def test_every_installed_workflow_has_a_source_current_course(product, workflow)
     assert course["workflow"] == workflow
     assert sum(course["seconds"]) == 390
     assert course["sources"]
-    assert course["schema"] == "mparanza.teaching_kit.v2"
-    assert {f["role"] for f in course["files"]} == {"source", "practice"}
+    expected_schema = (
+        "mparanza.teaching_kit.v2"
+        if (product, workflow) in PREPARED
+        else "mparanza.course.v1"
+    )
+    assert course["schema"] == expected_schema
 
 
-@pytest.mark.parametrize("product,workflow", COURSES)
+@pytest.mark.parametrize("product,workflow", PREPARED)
 def test_each_kit_explains_first_use_and_supplies_actual_inputs(product, workflow):
     course = CourseLibrary(ROOT / "plugins" / product, builder._eligible(product)).load(
         workflow, "it"
@@ -301,7 +307,7 @@ def test_changed_attached_example_is_rejected(isolated):
     "product,workflow",
     [
         ("vera", "fatture-xml-check"),
-        ("clara", "reporting-engine"),
+        ("clara", "html-deck"),
         ("lucia", "apertura-pratica"),
     ],
 )
@@ -439,7 +445,20 @@ def test_complete_compiled_catalog_matches_authoring_and_current_sources(
     monkeypatch.setattr(Path, "read_text", read_with_host_default)
     assert builder.build(check=True) == {
         "workflow_kits": len(COURSES),
-        "localized_kits": len(LOCALIZED),
+        "localized_kits": len(LOCALIZED)
+        + sum(
+            len(
+                json.loads(
+                    (
+                        ROOT
+                        / "scripts/course_materials/published"
+                        / key
+                        / "course.json"
+                    ).read_text()
+                )["locales"]
+            )
+            for key in RELEASE["retained"]
+        ),
         "missing_translations": [],
     }
 
@@ -497,6 +516,10 @@ def test_compiler_rejects_cross_language_file_collision_before_changing_kit(
                 ]
             }
         },
+    )
+    write_json(
+        authoring / "release_plan.json",
+        {"prepared": ["vera/previdenza-inps"], "retained": {}},
     )
     kit = tmp_path / "plugins/vera/assets/courses/previdenza-inps"
     kit.mkdir(parents=True)

@@ -209,11 +209,11 @@ def test_clara_hosted_records_use_source_backed_retention_and_cleanup() -> None:
     research_video_voice = manifests["research-video-voice"]
     assert research_video_voice["retention"]["status"] == "partially_documented"
     assert (
-        "does not write narration requests or audio"
+        "without writing narration requests or audio"
         in research_video_voice["retention"]["statement"]
     )
     assert (
-        "not established by the plugin source"
+        "not established by the inspected application source"
         in research_video_voice["retention"]["statement"]
     )
 
@@ -323,6 +323,16 @@ def test_clara_privacy_validator_detects_changed_governed_source(
         manifest_dir / "claim-basis-map.json",
     )
     (clara_root / "privacy" / "hosted-services").mkdir(parents=True)
+    # Include the shared launcher dependencies now governed by this workflow.
+    manifest = json.loads(
+        (manifest_dir / "claim-basis-map.json").read_text(encoding="utf-8")
+    )
+    for logical_path, source in validator._governed_files(
+        CLARA_ROOT, manifest["governed_paths"]
+    ):
+        destination = clara_root / logical_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
     governed_script = skill_target / "scripts" / "render_claim_basis_map.py"
     governed_script.write_text(
         governed_script.read_text(encoding="utf-8") + "\n# reviewed boundary changed\n",

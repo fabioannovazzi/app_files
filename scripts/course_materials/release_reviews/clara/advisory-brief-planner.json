@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-brief-planner",
-  "course_sha256": "84692ee7e3a22b12880320a9591a2b1ff90de10dd4014df7a2253cfc76a87845",
+  "course_sha256": "043ae2a9a8c60b71e079080fb05194ff650909bbc48c534ee2ce0e7f00357bfa",
   "reviewer": "Codex: five-language first-use planning material and actual native contract review",
   "reviewed_at": "2026-09-14T20:43:47.929955+00:00",
   "review_scope": "Read every localized lesson outline and the fictional assignment, customer/operating notes, revised assignment and vehicle update. Read all ten delivered readable plans and reviewed their source statements, constraints and changed objectives against those inputs. Verified all local source, canonical contract, validation and review-note links. The current native packager checks the actual contracts and exact source anchors. All 25 advisory regression cases pass; ten distinct planner cases bind this kit and its five languages. Each practice retains the initial plan and creates a separate revised plan. These are Markdown and JSON material checks, not proof of live voice, learner understanding, native GUI presentation or professional approval. The authored regression interpretations are outside the shipped kits.",
@@ -301,5 +301,52 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.529132+00:00",
+    "previous_course_sha256": "84692ee7e3a22b12880320a9591a2b1ff90de10dd4014df7a2253cfc76a87845",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/clara/scripts/check_dependencies.py",
+        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
+        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      },
+      {
+        "path": "plugins/clara/skills/advisory-brief-planner/SKILL.md",
+        "before": "6a27354520fd86740b97550c0d3df13f0a30497f2efbbb56c9217fc58fce601a",
+        "after": "73f9096e1b4377b326683af07960a61a8d23c3ee346dfe5d4eb245207ae88824"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

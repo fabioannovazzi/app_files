@@ -75,7 +75,7 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_desktop_teaching.py tests/plugins/test_desktop_teaching_packages.py
           tests/plugins/test_teaching_execution_evidence.py
-          tests/plugins/test_teaching_product_scope.py
+          tests/plugins/test_teaching_product_scope.py tests/plugins/test_optional_onboarding.py
           --cov=desktop_teaching --cov-fail-under=80
       - name: Check shared teaching code quality
         run: |
@@ -155,7 +155,7 @@ jobs:
       - name: Verify teaching-kit languages, real executions and native packages
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
+          tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
           tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
           tests/plugins/test_teaching_attribute_execution.py
           tests/plugins/test_teaching_bandi_execution.py
@@ -199,6 +199,7 @@ jobs:
       - name: Check course runtime and compiler
         run: |
           python scripts/course_materials/build_catalog.py --check
+          python scripts/course_materials/build_public_catalog.py --check
           python scripts/build_matter_review_assets.py --check
           python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
           python scripts/course_materials/build_presentation_baselines.py --check
@@ -232,8 +233,8 @@ jobs:
           python -m isort --check-only scripts/course_materials/finalize_workbook_dimensions.py tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_inps_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
           python -m mypy --follow-imports=skip scripts/course_materials/finalize_workbook_dimensions.py
           python -m bandit -q scripts/course_materials/finalize_workbook_dimensions.py
-          python -m black --check plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
-          python -m isort --check-only plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
+          python -m black --check plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
+          python -m isort --check-only plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
           python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/courseware/policy.py plugins/_shared/vendor/modules/courseware/library.py plugins/_shared/vendor/modules/courseware/execution.py scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
           python -m bandit -qr plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
           python -m black --check plugins/new-client/scripts plugins/new-client/tests scripts/new_client_review_widget.py scripts/generate_non_plotting_review_widgets.py tests/plugins/_new_client_teaching.py tests/plugins/test_non_plotting_review_workbench.py

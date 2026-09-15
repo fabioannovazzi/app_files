@@ -1,6 +1,6 @@
 ---
 name: research-video
-description: Turn a user-approved ordered set of research scene images into a source-faithful 16:9 narrated MP4 with restrained motion, synchronized narration in English, Italian, French, German, or Spanish, captions, a reviewable narration script, and mechanical media validation. Use for a research explainer, executive briefing video, client education video, or narrated visual short. Do not use for filming, avatar video, generative scene invention, or revising an existing video.
+description: Prepare source-faithful research narration and render an MP4 locally from approved scene images and a supplied matching voice bundle. Hosted voice generation is unavailable in Cowork; without the bundle, deliver the preparation and identify the missing input.
 ---
 
 ## Cowork execution contract
@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 # Research Video
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
@@ -39,9 +46,12 @@ claim, statistic, map feature, figure label, visual object, or source basis.
 
 ## Runtime and output boundary
 
-The complete workflow uses the authenticated Mparanza Research Video voice
-page to generate one audio artifact per approved scene, plus a local Clara
-runtime with Python and FFmpeg to build the MP4. No user API key is required.
+Cowork prepares the scene plan and narration locally. Rendering requires a
+supplied voice bundle matching the exact approved plan and narration.
+Hosted voice generation is unavailable here; do not offer or invoke that
+route. Without the bundle, retain the preparation and report the missing
+input rather than claiming a completed video. Local rendering uses Python
+and FFmpeg and requires no user API key.
 Mparanza holds the provider credential; the packaged renderer contains no
 provider credential and makes no direct speech-provider call.
 
@@ -106,7 +116,7 @@ video was requested. Finish the applicable Vera workflow first; if no Vera
 workflow covers the professional task, stop rather than using the video plan as
 an assurance substitute.
 
-## Hosted-Voice Run UX
+## Research Video Run UX
 
 Before write-heavy work, show a compact Run Intake table with source files,
 approved scene images, audience, target duration, language, work folder, output
@@ -119,7 +129,7 @@ visual-layer availability, selected motion, narration status, approval hash,
 and render status. These are facts to verify, not choices to propose after the
 user has already requested a complete narrated video.
 
-Before voice generation, show one execution checkpoint naming the run folder,
+Before attaching supplied voice, show one execution checkpoint naming the run folder,
 exact approved plan, scene count, Mparanza/an external model provider voice policy, and expected
 artifacts. State that no user API key is involved. Default output policy: keep
 the canonical plan, intake, narration, Mparanza voice request,
@@ -192,8 +202,8 @@ label, qualification, or visual meaning is material. Compare each narration
 scene with its source basis and image. Remove unsupported language rather than
 softening it into an untraceable claim.
 
-Show the narration script and explain that Mparanza will send the exact approved
-narration to an external model provider. Images, source-basis notes, Vera artifacts, and local paths
+Show the narration script and explain that Cowork cannot generate voice.
+A supplied voice bundle must bind to this exact approved narration. Images, source-basis notes, Vera artifacts, and local paths
 are not part of the hosted request. No user API key is used. The exact narration
 still requires approval because it becomes a professional-facing spoken
 artifact. The review packet also shows the localized AI-voice disclosure that
@@ -214,15 +224,20 @@ invalidates the approval and requires preparation and approval again.
 Approval writes `narration_approval.json` and the minimal,
 hash-bound `mparanza_voice_request.json`.
 
-### 4. Generate and attach hosted voice
+### 4. Attach a supplied approved voice bundle
 
-Open `https://mparanza.com/case-notes/research-video/voice`, sign in to
-Mparanza, upload `mparanza_voice_request.json`, and download the returned ZIP.
+Use a voice ZIP already supplied in the connected folder. Do not open a
+voice-generation page, upload the request, or invoke a hosted service.
+The bundle must match this run's approved request; arbitrary audio is not
+a substitute. If no matching bundle is supplied, stop after preparation
+and approval and state that rendering is blocked by the missing bundle.
+The internal `approved_for_hosted_voice` status is not permission to
+invoke hosted voice in Cowork.
 The service uses the server-held provider credential and the fixed policy in
 `scripts/video_voice_policy.py`; never request or accept a user API key. The ZIP
 manifest follows `references/hosted-voice-bundle.schema.json`.
 
-Attach and normalize the downloaded bundle locally:
+Attach and normalize the supplied bundle locally:
 
 ```bash
 python scripts/managed_python_runtime.py run \
@@ -234,7 +249,7 @@ python scripts/managed_python_runtime.py run \
 The attachment step rejects path traversal, symlinks, duplicate or undeclared
 ZIP entries, unexpected fields, changed request/approval hashes, wrong provider
 policy, incomplete scene order, stale WAV metadata, and changed audio bytes. If
-the hosted service cannot return the bundle, leave the run
+a matching supplied bundle is unavailable, leave the run
 `approved_for_hosted_voice`; do not request an API key or substitute another
 voice.
 
@@ -286,6 +301,12 @@ copies directly; rebuild them from plugin source.
 
 ### 6. Final semantic review
 
+The render report records measured video and decoded audio duration, frame rate,
+dimensions, codec checks, tool versions, and caption timing against both streams.
+Cues are also checked against the approved scene speech durations before output
+publication. These checks establish timing and media integrity; they do not
+review the meaning of captions or narration.
+
 Watch the complete MP4 and inspect the poster, captions, narration script,
 render report, and final artifact manifest. Mechanical validation proves media
 shape and byte integrity, not scientific fidelity or editorial quality. Check:
@@ -301,3 +322,31 @@ shape and byte integrity, not scientific fidelity or editorial quality. Check:
 If any issue is material, revise the scene plan, prepare again, obtain a new
 approval, and rerender. Deliver only when the final review is complete. State
 plainly when a flat-image run has no true parallax.
+
+Render attempts are serialized per run directory. Inspect `render_attempt.json`
+before relying on a saved render report: only `completed` describes a completed
+current invocation; `running` is unfinished and `failed_or_interrupted` is a
+failed attempt. Retained `.render-attempts/<attempt-id>/` directories contain
+stage media, streamed process logs, the attempt record, and previous report /
+manifest evidence. A retry preserves these diagnostics. On failure, top-level
+render and artifact reports explicitly lose their successful status. Recheck
+approved input bytes and final output hashes before delivery; an old report or
+an existing MP4 alone is insufficient evidence of current success.
+
+After rendering, verify the publication before reviewing or handing it off:
+
+```bash
+python scripts/managed_python_runtime.py run \
+  skills/research-video/scripts/research_video.py verify \
+  <project-output-folder>/research-video
+```
+
+`current_render.json` is the authoritative publication pointer. A successful
+pointer references the complete `published/` snapshot inside its retained
+attempt directory. Use the verified `generation_directory` and its manifest for
+handoff. Top-level media files are convenient working copies and may be replaced
+during a retry. The pointer commits only after every snapshot artifact matches
+its declared hash. Verification rechecks snapshot bytes and current approved
+visual/narration/voice inputs; semantic, voice-content and visual review are still
+required. A failed or unfinished current pointer must not be replaced by an old
+successful report when describing the current run.

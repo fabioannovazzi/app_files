@@ -5,6 +5,7 @@ import json
 import subprocess
 import tomllib
 from pathlib import Path
+from zipfile import ZipFile
 
 ROOT = Path(__file__).resolve().parents[2]
 SECRET_FILE = Path(".secrets/secrets.toml")

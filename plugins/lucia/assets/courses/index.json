@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "8bcc09a4ef3d8e7ebcb9617695bb3ab8cf383aad0671e12f15056e28a32d8431",
+      "sha256": "135881611d8f4eb05dd940c59a08574630b1327c24681f0e3ab1f2befc2e94b7",
       "languages": [
         "it",
         "en",
@@ -32,7 +32,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "e17277e717934e88f26666a650d6bce64ec1ded58855a497faa1997f2629a267",
+      "sha256": "9b05f441e9b356fa6bb06cfa818d34c736337ab6af2e2a5071723b853cb990d8",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "db4d857dd72740e64ce457811511e8e24fcb550d9a07aa611b650fa283723042",
+      "sha256": "6aec8acf84155a39f2df5ea8be6bc3745fdbf9905a8913ae45a9adcd33833a07",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "c3ce00415dd600837c63e38a382046e93c3719e2855d0c65321fad3cde5707f4",
+      "sha256": "5f5de1faf8aa22e8b8348ae4ef5f94309fbd11165c4a74015b4942923088fa8a",
       "languages": [
         "it",
         "en",
@@ -100,19 +100,20 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Ottenere una risposta verificata con Lucia",
-        "en": "Get a checked answer with Lucia",
-        "fr": "Obtenir une réponse vérifiée avec Lucia",
-        "de": "Eine geprüfte Antwort mit Lucia erhalten",
-        "es": "Obtener una respuesta verificada con Lucia"
+        "it": "Da una domanda generica a una risposta che si può verificare",
+        "en": "From a broad question to a verifiable answer",
+        "fr": "D'une question générale à une réponse vérifiable",
+        "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
+        "es": "De una pregunta general a una respuesta verificable"
       },
       "goals": {
-        "it": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
-        "en": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
-        "fr": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
-        "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
-        "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
-      }
+        "it": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
+        "en": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
+        "fr": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
+        "de": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
+        "es": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional."
+      },
+      "material": "retained"
     }
   }
 }

@@ -197,6 +197,32 @@ def test_running_python_prevents_package_update(tmp_path):
         assert (path / module.RECEIPT).is_file()
 
 
+def test_managed_workflow_can_launch_another_managed_reader(tmp_path):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    env = dict(os.environ)
+    env.pop(module.INSTALLING, None)
+    env.pop("PYTHONPATH", None)
+    script = (
+        "import subprocess,sys; "
+        "subprocess.run([sys.executable, '-c', \"print('nested reader ready')\"], "
+        "check=True, timeout=15)"
+    )
+
+    result = subprocess.run(
+        [str(api.runtime_python(path)), "-c", script],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=20,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout.strip() == "nested reader ready"
+
+
 def test_unready_interpreter_refuses_workflow_execution(tmp_path):
     module, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")

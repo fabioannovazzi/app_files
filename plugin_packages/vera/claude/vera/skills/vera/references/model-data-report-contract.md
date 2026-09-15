@@ -55,6 +55,54 @@ created, and use `host_attested` rather than claiming exact payload evidence.
 The report is not a consent banner, privacy score, network monitor, provider
 attestation, DPIA, legal opinion, or GDPR certification.
 
+## Deliver the report by default
+
+`build` returns `display_markdown` alongside the saved paths and receipt status.
+Show this readable report directly in the final response, after the professional
+result, and link `model_data_report.md`. Do not leave the report inside tool
+output, show JSON to the user, or only say that it was saved. Preserve the actual
+phase measurements, reasons, evidence basis and limitations. A long report may
+use a compact per-phase table plus the full report link; do not collapse unlike
+units into a single total or omit unknown exposure.
+
+When stamping succeeds, also link the receipt HTML and its verification URL.
+When stamping is pending, still show the report and say only that the server
+receipt is pending. The generic local helper also returns `display_markdown`;
+show it while preserving its local-only receipt status. If files cannot be
+created, show the report directly in chat using the evidence available there.
+
+## Show an existing report
+
+Interpret the requested run from the conversation and the user's named client
+or engagement. For a managed client run, use Studio Archive's saved engagement
+and run listing to resolve its exact output folder. For a studio-wide run, use
+its recorded workspace. When several runs fit, list their dates and work labels
+and ask which one; never silently select a different client's report. If the
+current conversation already identifies one run, retrieve it without asking
+the user to locate files or name technical identifiers.
+
+Run from the Vera root with its resolved Python runtime:
+
+```bash
+python scripts/model_data_report.py show \
+  --report /absolute/run/output/model_data_report.json
+```
+
+This read-only command prints the readable report from the saved JSON. It checks
+the report's recorded hashes, changes no files, reads no source documents, and
+makes no network or stamping request. It can show a report even when source
+files or its Markdown copy are no longer present. It does not revalidate current
+source availability or prove transmission. Present the returned Markdown as
+normal content in the answer, not a code block. Link existing saved artifacts
+using the current host's supported file links. Open the report in a document or
+browser panel when the user asks to open it and that host has such a tool.
+
+If this was a chat-only run, show its existing report from the conversation. If
+the report is missing, say so explicitly. Do not rerun the professional work,
+invent measurements, or create a new report and present it as the original.
+Retrieving or explaining this saved report is not a new substantive run and does
+not require a report about that retrieval or a new server receipt.
+
 ## Automatic server-stamped proof
 
 The server receives exactly schema version `1`, a random receipt UUID created

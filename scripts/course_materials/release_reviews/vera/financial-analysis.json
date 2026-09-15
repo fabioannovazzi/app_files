@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "financial-analysis",
-  "course_sha256": "f02f5b144d46468f592cd15d106fffb42d5858acc41a9198056d084d454e12aa",
+  "course_sha256": "5226ad8a26d10e10177b98113bc5e9aa8f1a6cc9b50473fdaaff209f77556da1",
   "reviewer": "Codex: first-use material, native financial result and localized delivery-note review",
   "reviewed_at": "2026-09-14T18:31:25.025430+00:00",
   "review_scope": "Read both fictional four-balance statements and all five localized contexts and lesson outlines. Ten current registered net-debt executions pass and finalize their source-bound runs. Reviewed the actual prepared result, metrics and line items; those native files are byte-identical across languages within each phase. Read all five February delivery notes and verified that every March note differs only in the actual date, loan, cash, excluded payable and result values. The notes exercise the skill's ordinary Codex delivery stage through a test-only authored interpretation; they are not shipped answers or a deterministic engine report. No browser presentation, learner understanding, voice or two-window acceptance is claimed.",
@@ -306,5 +306,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.368890+00:00",
+    "previous_course_sha256": "f02f5b144d46468f592cd15d106fffb42d5858acc41a9198056d084d454e12aa",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/financial-analysis/SKILL.md",
+        "before": "da9554bb2becc7ea67eda8be5b234eb44aea2c3d48da2fb0c622e51335f1df65",
+        "after": "859629fe6c5d9bf48be94001b464275d5738b3c4a4069c2feb594458960f96a1"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

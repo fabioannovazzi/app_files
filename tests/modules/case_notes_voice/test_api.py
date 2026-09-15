@@ -12,7 +12,7 @@ import pytest
 from fastapi import BackgroundTasks, HTTPException
 
 from modules.auth.session import AuthenticatedUser
-from modules.case_notes_voice import api
+from modules.case_notes_voice import api, transcription_service, transcription_transport
 from modules.openai_realtime import RealtimeCallResult
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -332,7 +332,7 @@ def test_expired_launch_token_metadata_is_deleted(
         now=issued_at,
     )
 
-    with pytest.raises(api.VoiceSessionError, match="has expired"):
+    with pytest.raises(transcription_service.VoiceSessionError, match="has expired"):
         api.verify_voice_launch_token(
             token=token,
             user=user,
@@ -514,8 +514,10 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
             {"text": "Facilitator apre davvero la riunione. Reviewer risponde bene."}
         )
 
-    monkeypatch.setattr(api.urllib.request, "urlopen", fake_urlopen)
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 12.0)
+    monkeypatch.setattr(transcription_transport.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 12.0
+    )
 
     result = api.create_audio_transcription(
         api_key="sk-test",
@@ -555,7 +557,9 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
     assert b"- ExampleCo" in upload_body
     assert b"Useful case vocabulary and context follows" in upload_body
     assert b"Cliente: ExampleCo" in upload_body
-    expected_timeout = str(api.OPENAI_UPLOAD_TRANSCRIPTION_TIMEOUT_SECONDS)
+    expected_timeout = str(
+        transcription_service.OPENAI_UPLOAD_TRANSCRIPTION_TIMEOUT_SECONDS
+    )
     assert captured[0]["timeout"] == expected_timeout
 
 
@@ -564,13 +568,13 @@ def test_create_single_audio_transcription_rejects_openai_oversized_payload(
 ) -> None:
     oversized_audio = b"audio-at-request-limit"
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES",
         len(oversized_audio),
     )
 
-    with pytest.raises(api.VoiceSessionError, match="25 MB"):
-        api._create_single_audio_transcription(
+    with pytest.raises(transcription_service.VoiceSessionError, match="25 MB"):
+        transcription_service._create_single_audio_transcription(
             api_key="sk-test",
             audio_bytes=oversized_audio,
             filename="note.wav",
@@ -584,10 +588,12 @@ def test_create_single_audio_transcription_wraps_socket_timeout(monkeypatch) -> 
     def fake_urlopen(_request, timeout):
         raise TimeoutError("The read operation timed out")
 
-    monkeypatch.setattr(api.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(transcription_transport.urllib.request, "urlopen", fake_urlopen)
 
-    with pytest.raises(api.VoiceSessionError, match="Audio transcription timed out"):
-        api._create_single_audio_transcription(
+    with pytest.raises(
+        transcription_service.VoiceSessionError, match="Audio transcription timed out"
+    ):
+        transcription_service._create_single_audio_transcription(
             api_key="sk-test",
             audio_bytes=b"small-audio",
             filename="note.wav",
@@ -600,11 +606,15 @@ def test_create_single_audio_transcription_wraps_socket_timeout(monkeypatch) -> 
 def test_parse_ffmpeg_duration_output() -> None:
     output = "Input #0, mov,mp4,m4a: Duration: 00:59:12.19, start: 0.000000"
 
-    assert api._parse_ffmpeg_duration(output) == pytest.approx(3552.19)
+    assert transcription_service._parse_ffmpeg_duration(output) == pytest.approx(
+        3552.19
+    )
 
 
 def test_chunk_time_windows_overlap_without_gaps() -> None:
-    windows = api._chunk_time_windows(1850, chunk_seconds=900, overlap_seconds=30)
+    windows = transcription_service._chunk_time_windows(
+        1850, chunk_seconds=900, overlap_seconds=30
+    )
 
     assert windows == [
         (0.0, 900.0, 0.0),
@@ -619,7 +629,7 @@ def test_join_chunk_transcripts_removes_exact_boundary_duplicate() -> None:
         "Alex e Jordan con stili diversi potremmo entrare a parlare"
     )
 
-    transcript = api._join_chunk_transcripts(
+    transcript = transcription_service._join_chunk_transcripts(
         [
             f"Prima parte. {overlap}",
             f"{overlap} e poi continuiamo con la parte nuova.",
@@ -649,7 +659,7 @@ def test_join_chunk_transcripts_removes_fuzzy_boundary_duplicate() -> None:
         "Questo è testo nuovo."
     )
 
-    transcript = api._join_chunk_transcripts([first, second])
+    transcript = transcription_service._join_chunk_transcripts([first, second])
 
     assert transcript.endswith("Questo è testo nuovo.")
     assert transcript.count("Questo è testo nuovo.") == 1
@@ -671,7 +681,7 @@ def test_join_chunk_transcripts_prefers_later_overlap_wording() -> None:
         "il patrimonio è largo."
     )
 
-    transcript = api._join_chunk_transcripts([first, second])
+    transcript = transcription_service._join_chunk_transcripts([first, second])
 
     assert "5-6 mila" not in transcript
     assert "5-6 miliardi" in transcript
@@ -679,7 +689,7 @@ def test_join_chunk_transcripts_prefers_later_overlap_wording() -> None:
 
 
 def test_chunk_transcription_note_does_not_delegate_overlap_deduplication() -> None:
-    chunk = api.AudioTranscriptionChunk(
+    chunk = transcription_service.AudioTranscriptionChunk(
         index=2,
         filename="chunk-0001.m4a",
         content_type="audio/mp4",
@@ -689,7 +699,7 @@ def test_chunk_transcription_note_does_not_delegate_overlap_deduplication() -> N
         overlap_seconds=30,
     )
 
-    note = api._chunk_transcription_note(chunk, 7)
+    note = transcription_service._chunk_transcription_note(chunk, 7)
 
     assert "Transcribe the entire chunk verbatim" in note
     assert "including the overlapping opening speech" in note
@@ -700,17 +710,19 @@ def test_chunk_transcription_note_does_not_delegate_overlap_deduplication() -> N
 def test_transcription_stream_copy_windows_use_duration_and_api_byte_limits() -> None:
     audio_bytes = 59_385_733
 
-    windows = api._transcription_stream_copy_windows(
+    windows = transcription_service._transcription_stream_copy_windows(
         duration_seconds=3552.23,
         audio_bytes=audio_bytes,
     )
 
-    assert api._transcription_stream_copy_target_bytes() == (
-        api.MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES
+    assert transcription_service._transcription_stream_copy_target_bytes() == (
+        transcription_service.MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES
     )
-    assert api._transcription_stream_copy_chunk_count(audio_bytes) == 3
     assert (
-        api._transcription_stream_copy_min_chunk_count(
+        transcription_service._transcription_stream_copy_chunk_count(audio_bytes) == 3
+    )
+    assert (
+        transcription_service._transcription_stream_copy_min_chunk_count(
             duration_seconds=3552.23,
             audio_bytes=audio_bytes,
         )
@@ -733,17 +745,23 @@ def test_audio_splitters_keep_generated_chunks_on_disk(
         output_path = Path(command[-1])
         output_path.write_bytes(f"audio:{output_path.name}".encode("utf-8"))
 
-    monkeypatch.setattr(api, "_ffmpeg_binary", lambda: "ffmpeg")
-    monkeypatch.setattr(api, "_run_ffmpeg_audio_preparation", fake_run_ffmpeg)
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 10.0)
+    monkeypatch.setattr(transcription_service, "_ffmpeg_binary", lambda: "ffmpeg")
+    monkeypatch.setattr(
+        transcription_service, "_run_ffmpeg_audio_preparation", fake_run_ffmpeg
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 10.0
+    )
 
-    transcription_chunks = api._split_audio_for_transcription_stream_copy(
-        input_path=source_path,
-        output_dir=tmp_path / "transcription",
-        input_duration_seconds=20.0,
-        input_audio_bytes=20_000,
-        filename="source.m4a",
-        content_type="audio/mp4",
+    transcription_chunks = (
+        transcription_service._split_audio_for_transcription_stream_copy(
+            input_path=source_path,
+            output_dir=tmp_path / "transcription",
+            input_duration_seconds=20.0,
+            input_audio_bytes=20_000,
+            filename="source.m4a",
+            content_type="audio/mp4",
+        )
     )
 
     assert transcription_chunks
@@ -752,7 +770,9 @@ def test_audio_splitters_keep_generated_chunks_on_disk(
         chunk.path is not None and chunk.path.exists() for chunk in transcription_chunks
     )
     assert (
-        api._audio_transcription_chunk_content(transcription_chunks[0])
+        transcription_service._audio_transcription_chunk_content(
+            transcription_chunks[0]
+        )
         == b"audio:chunk-0000.m4a"
     )
 
@@ -761,8 +781,12 @@ def test_create_audio_transcription_stream_splits_oversized_audio_by_bytes(
     monkeypatch,
 ) -> None:
     source_audio = b"long-audio"
-    monkeypatch.setattr(api, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio))
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 120.0)
+    monkeypatch.setattr(
+        transcription_service, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio)
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 120.0
+    )
 
     split_inputs: list[tuple[bytes, int, bool]] = []
 
@@ -775,7 +799,7 @@ def test_create_audio_transcription_stream_splits_oversized_audio_by_bytes(
             )
         )
         return [
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=1,
                 filename="chunk-0000.m4a",
                 content_type="audio/mp4",
@@ -784,7 +808,7 @@ def test_create_audio_transcription_stream_splits_oversized_audio_by_bytes(
                 duration_seconds=60,
                 overlap_seconds=0,
             ),
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=2,
                 filename="chunk-0001.m4a",
                 content_type="audio/mp4",
@@ -805,17 +829,19 @@ def test_create_audio_transcription_stream_splits_oversized_audio_by_bytes(
                 kwargs["audio_bytes"],
             )
         )
-        return api.AudioTranscriptionResponse(
+        return transcription_service.AudioTranscriptionResponse(
             text=f"Trascrizione completa del segmento numero {len(captured)}."
         )
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
     monkeypatch.setattr(
-        api, "_create_single_audio_transcription", fake_single_transcription
+        transcription_service,
+        "_create_single_audio_transcription",
+        fake_single_transcription,
     )
 
     result = api.create_audio_transcription(
@@ -851,7 +877,9 @@ def test_create_audio_transcription_splits_decimal_limit_live_recording(
     recorded_audio_bytes = 25_271_670
     source_path = tmp_path / "case-notes-live-20260703.webm"
     source_path.write_bytes(b"local-webm-placeholder")
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 204.25)
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 204.25
+    )
 
     split_inputs: list[tuple[int, str, str]] = []
 
@@ -864,7 +892,7 @@ def test_create_audio_transcription_splits_decimal_limit_live_recording(
             )
         )
         return [
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=1,
                 filename="chunk-0000.webm",
                 content_type="audio/webm",
@@ -873,7 +901,7 @@ def test_create_audio_transcription_splits_decimal_limit_live_recording(
                 duration_seconds=102.0,
                 overlap_seconds=0,
             ),
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=2,
                 filename="chunk-0001.webm",
                 content_type="audio/webm",
@@ -888,17 +916,19 @@ def test_create_audio_transcription_splits_decimal_limit_live_recording(
 
     def fake_single_transcription(**kwargs):
         captured.append((kwargs["filename"], kwargs["audio_bytes"]))
-        return api.AudioTranscriptionResponse(
+        return transcription_service.AudioTranscriptionResponse(
             text=f"Trascrizione segmento {len(captured)}."
         )
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
     monkeypatch.setattr(
-        api, "_create_single_audio_transcription", fake_single_transcription
+        transcription_service,
+        "_create_single_audio_transcription",
+        fake_single_transcription,
     )
 
     result = api.create_audio_transcription(
@@ -915,7 +945,10 @@ def test_create_audio_transcription_splits_decimal_limit_live_recording(
 
     assert recorded_audio_bytes > 25_000_000
     assert recorded_audio_bytes < 25 * 1024 * 1024
-    assert recorded_audio_bytes >= api.MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES
+    assert (
+        recorded_audio_bytes
+        >= transcription_service.MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES
+    )
     assert split_inputs == [(recorded_audio_bytes, source_path.name, "audio/webm")]
     assert captured == [
         ("chunk-0000.webm", b"chunk-one"),
@@ -930,12 +963,16 @@ def test_create_audio_transcription_retries_implausibly_short_chunk(
     monkeypatch,
 ) -> None:
     source_audio = b"long-audio"
-    monkeypatch.setattr(api, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio))
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 600.0)
+    monkeypatch.setattr(
+        transcription_service, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio)
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 600.0
+    )
 
     def fake_split_audio_for_transcription_stream_copy(**_kwargs):
         return [
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=1,
                 filename="chunk-0000.m4a",
                 content_type="audio/mp4",
@@ -952,16 +989,18 @@ def test_create_audio_transcription_retries_implausibly_short_chunk(
     def fake_single_transcription(**kwargs):
         captured_identifiers.append(kwargs["safety_identifier"])
         if len(captured_identifiers) == 1:
-            return api.AudioTranscriptionResponse(text="troppo breve")
-        return api.AudioTranscriptionResponse(text=long_transcript)
+            return transcription_service.AudioTranscriptionResponse(text="troppo breve")
+        return transcription_service.AudioTranscriptionResponse(text=long_transcript)
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
     monkeypatch.setattr(
-        api, "_create_single_audio_transcription", fake_single_transcription
+        transcription_service,
+        "_create_single_audio_transcription",
+        fake_single_transcription,
     )
 
     result = api.create_audio_transcription(
@@ -988,13 +1027,20 @@ def test_create_audio_transcription_repairs_after_invalid_chunk_retries(
     monkeypatch,
 ) -> None:
     source_audio = b"long-audio"
-    monkeypatch.setattr(api, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio))
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 600.0)
+    monkeypatch.setattr(
+        transcription_service, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio)
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 600.0
+    )
 
     def fake_split_audio_for_transcription_stream_copy(**kwargs):
-        if kwargs.get("chunk_seconds") == api.UPLOAD_TRANSCRIPTION_REPAIR_CHUNK_SECONDS:
+        if (
+            kwargs.get("chunk_seconds")
+            == transcription_service.UPLOAD_TRANSCRIPTION_REPAIR_CHUNK_SECONDS
+        ):
             return [
-                api.AudioTranscriptionChunk(
+                transcription_service.AudioTranscriptionChunk(
                     index=1,
                     filename="repair-0000.m4a",
                     content_type="audio/mp4",
@@ -1003,7 +1049,7 @@ def test_create_audio_transcription_repairs_after_invalid_chunk_retries(
                     duration_seconds=120,
                     overlap_seconds=0,
                 ),
-                api.AudioTranscriptionChunk(
+                transcription_service.AudioTranscriptionChunk(
                     index=2,
                     filename="repair-0001.m4a",
                     content_type="audio/mp4",
@@ -1014,7 +1060,7 @@ def test_create_audio_transcription_repairs_after_invalid_chunk_retries(
                 ),
             ]
         return [
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=1,
                 filename="chunk-0000.m4a",
                 content_type="audio/mp4",
@@ -1035,18 +1081,22 @@ def test_create_audio_transcription_repairs_after_invalid_chunk_retries(
     def fake_single_transcription(**kwargs):
         captured_identifiers.append(kwargs["safety_identifier"])
         if "-repair-1-" in kwargs["safety_identifier"]:
-            return api.AudioTranscriptionResponse(text=repair_one)
+            return transcription_service.AudioTranscriptionResponse(text=repair_one)
         if "-repair-2-" in kwargs["safety_identifier"]:
-            return api.AudioTranscriptionResponse(text=repair_two)
-        return api.AudioTranscriptionResponse(text=repeated_phrase_loop)
+            return transcription_service.AudioTranscriptionResponse(text=repair_two)
+        return transcription_service.AudioTranscriptionResponse(
+            text=repeated_phrase_loop
+        )
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
     monkeypatch.setattr(
-        api, "_create_single_audio_transcription", fake_single_transcription
+        transcription_service,
+        "_create_single_audio_transcription",
+        fake_single_transcription,
     )
 
     result = api.create_audio_transcription(
@@ -1085,14 +1135,16 @@ def test_create_audio_transcription_stream_splits_long_audio_below_api_limit(
     monkeypatch,
 ) -> None:
     source_audio = b"long-but-small-audio"
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 601.0)
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 601.0
+    )
 
     split_inputs: list[int] = []
 
     def fake_split_audio_for_transcription_stream_copy(**kwargs):
         split_inputs.append(kwargs["input_audio_bytes"])
         return [
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=1,
                 filename="chunk-0000.m4a",
                 content_type="audio/mp4",
@@ -1101,7 +1153,7 @@ def test_create_audio_transcription_stream_splits_long_audio_below_api_limit(
                 duration_seconds=600,
                 overlap_seconds=0,
             ),
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=2,
                 filename="chunk-0001.m4a",
                 content_type="audio/mp4",
@@ -1114,18 +1166,22 @@ def test_create_audio_transcription_stream_splits_long_audio_below_api_limit(
 
     def fake_single_transcription(**kwargs):
         if kwargs["filename"] == "chunk-0000.m4a":
-            return api.AudioTranscriptionResponse(
+            return transcription_service.AudioTranscriptionResponse(
                 text=" ".join(f"prima{index}" for index in range(160)) + "."
             )
-        return api.AudioTranscriptionResponse(text=f"Testo {kwargs['filename']}.")
+        return transcription_service.AudioTranscriptionResponse(
+            text=f"Testo {kwargs['filename']}."
+        )
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
     monkeypatch.setattr(
-        api, "_create_single_audio_transcription", fake_single_transcription
+        transcription_service,
+        "_create_single_audio_transcription",
+        fake_single_transcription,
     )
 
     result = api.create_audio_transcription(
@@ -1150,22 +1206,28 @@ def test_create_audio_transcription_rejects_when_stream_split_cannot_fit_api_lim
     monkeypatch,
 ) -> None:
     source_audio = b"high-bitrate-wav-audio"
-    monkeypatch.setattr(api, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio))
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 12.0)
+    monkeypatch.setattr(
+        transcription_service, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio)
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 12.0
+    )
 
     def fake_split_audio_for_transcription_stream_copy(**_kwargs):
-        raise api.VoiceSessionError(
+        raise transcription_service.VoiceSessionError(
             "Uploaded audio cannot be split into API-safe transcription chunks "
             "without re-encoding."
         )
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
 
-    with pytest.raises(api.VoiceSessionError, match="without re-encoding"):
+    with pytest.raises(
+        transcription_service.VoiceSessionError, match="without re-encoding"
+    ):
         api.create_audio_transcription(
             api_key="sk-test",
             audio_bytes=source_audio,
@@ -1180,11 +1242,15 @@ def test_create_audio_transcription_needs_ffmpeg_for_oversized_short_audio(
     monkeypatch,
 ) -> None:
     source_audio = b"high-bitrate-wav-audio"
-    monkeypatch.setattr(api, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio))
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 12.0)
-    monkeypatch.setattr(api, "_ffmpeg_binary", lambda: None)
+    monkeypatch.setattr(
+        transcription_service, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio)
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 12.0
+    )
+    monkeypatch.setattr(transcription_service, "_ffmpeg_binary", lambda: None)
 
-    with pytest.raises(api.VoiceSessionError, match="ffmpeg"):
+    with pytest.raises(transcription_service.VoiceSessionError, match="ffmpeg"):
         api.create_audio_transcription(
             api_key="sk-test",
             audio_bytes=source_audio,
@@ -1231,10 +1297,14 @@ def test_create_audio_transcription_normalizes_unknown_duration_audio(
     def fake_run_ffmpeg(command: list[str]) -> None:
         Path(command[-1]).write_bytes(b"duration-bearing-wav")
 
-    monkeypatch.setattr(api.urllib.request, "urlopen", fake_urlopen)
-    monkeypatch.setattr(api, "_audio_duration_seconds", fake_audio_duration)
-    monkeypatch.setattr(api, "_ffmpeg_binary", lambda: "ffmpeg")
-    monkeypatch.setattr(api, "_run_ffmpeg_audio_preparation", fake_run_ffmpeg)
+    monkeypatch.setattr(transcription_transport.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", fake_audio_duration
+    )
+    monkeypatch.setattr(transcription_service, "_ffmpeg_binary", lambda: "ffmpeg")
+    monkeypatch.setattr(
+        transcription_service, "_run_ffmpeg_audio_preparation", fake_run_ffmpeg
+    )
 
     result = api.create_audio_transcription(
         api_key="sk-test",
@@ -1263,10 +1333,14 @@ def test_create_audio_transcription_normalizes_unknown_duration_audio(
 def test_create_audio_transcription_requires_ffmpeg_when_duration_is_unknown(
     monkeypatch,
 ) -> None:
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: None)
-    monkeypatch.setattr(api, "_ffmpeg_binary", lambda: None)
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: None
+    )
+    monkeypatch.setattr(transcription_service, "_ffmpeg_binary", lambda: None)
 
-    with pytest.raises(api.VoiceSessionError, match="normalization requires ffmpeg"):
+    with pytest.raises(
+        transcription_service.VoiceSessionError, match="normalization requires ffmpeg"
+    ):
         api.create_audio_transcription(
             api_key="sk-test",
             audio_bytes=b"long-audio",
@@ -1281,12 +1355,16 @@ def test_create_audio_transcription_warns_on_suspicious_final_chunk(
     monkeypatch,
 ) -> None:
     source_audio = b"long-audio"
-    monkeypatch.setattr(api, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio))
-    monkeypatch.setattr(api, "_audio_duration_seconds", lambda _path: 3552.23)
+    monkeypatch.setattr(
+        transcription_service, "MAX_OPENAI_AUDIO_TRANSCRIPTION_BYTES", len(source_audio)
+    )
+    monkeypatch.setattr(
+        transcription_service, "_audio_duration_seconds", lambda _path: 3552.23
+    )
 
     def fake_split_audio_for_transcription_stream_copy(**_kwargs):
         return [
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=1,
                 filename="chunk-0000.m4a",
                 content_type="audio/mp4",
@@ -1295,7 +1373,7 @@ def test_create_audio_transcription_warns_on_suspicious_final_chunk(
                 duration_seconds=900,
                 overlap_seconds=0,
             ),
-            api.AudioTranscriptionChunk(
+            transcription_service.AudioTranscriptionChunk(
                 index=2,
                 filename="chunk-0001.m4a",
                 content_type="audio/mp4",
@@ -1308,20 +1386,22 @@ def test_create_audio_transcription_warns_on_suspicious_final_chunk(
 
     def fake_single_transcription(**kwargs):
         if kwargs["filename"] == "chunk-0000.m4a":
-            return api.AudioTranscriptionResponse(
+            return transcription_service.AudioTranscriptionResponse(
                 text=" ".join(f"prima{index}" for index in range(240)) + "."
             )
-        return api.AudioTranscriptionResponse(
+        return transcription_service.AudioTranscriptionResponse(
             text=" ".join(f"ultima{index}" for index in range(150))
         )
 
     monkeypatch.setattr(
-        api,
+        transcription_service,
         "_split_audio_for_transcription_stream_copy",
         fake_split_audio_for_transcription_stream_copy,
     )
     monkeypatch.setattr(
-        api, "_create_single_audio_transcription", fake_single_transcription
+        transcription_service,
+        "_create_single_audio_transcription",
+        fake_single_transcription,
     )
 
     result = api.create_audio_transcription(
@@ -1343,11 +1423,11 @@ def test_create_audio_transcription_warns_on_suspicious_final_chunk(
 
 def test_audio_upload_metadata_rejects_oversized_file(monkeypatch) -> None:
     monkeypatch.setenv("CASE_NOTES_VOICE_MAX_AUDIO_UPLOAD_BYTES", "10")
-    api._validate_audio_upload_metadata("meeting.wav", 10)
-    with pytest.raises(api.VoiceSessionError, match="too large"):
-        api._validate_audio_upload_metadata("meeting.wav", 11)
-    with pytest.raises(api.VoiceSessionError, match="empty"):
-        api._validate_audio_upload_metadata("meeting.wav", 0)
+    transcription_service._validate_audio_upload_metadata("meeting.wav", 10)
+    with pytest.raises(transcription_service.VoiceSessionError, match="too large"):
+        transcription_service._validate_audio_upload_metadata("meeting.wav", 11)
+    with pytest.raises(transcription_service.VoiceSessionError, match="empty"):
+        transcription_service._validate_audio_upload_metadata("meeting.wav", 0)
 
 
 def test_write_upload_file_to_path_rejects_oversized_stream(tmp_path: Path) -> None:
@@ -1362,7 +1442,7 @@ def test_write_upload_file_to_path_rejects_oversized_stream(tmp_path: Path) -> N
 
     output_path = tmp_path / "meeting.wav"
 
-    with pytest.raises(api.VoiceSessionError, match="too large"):
+    with pytest.raises(transcription_service.VoiceSessionError, match="too large"):
         asyncio.run(
             api._write_upload_file_to_path(
                 FakeUpload(),
@@ -1530,8 +1610,8 @@ def test_chunked_audio_upload_route_returns_background_job(
                 user=user,
             )
         )
-    assert duplicate_error.value.status_code == 400
-    assert "already received" in str(duplicate_error.value.detail)
+    assert duplicate_error.value.status_code == 409
+    assert "different audio bytes" in str(duplicate_error.value.detail)
     second_chunk_response = asyncio.run(
         api.upload_audio_chunk(
             upload_id=upload_id,
@@ -1604,7 +1684,9 @@ def test_finish_chunked_audio_upload_does_not_queue_when_chunk_removal_fails(
 
     def fail_chunk_directory_removal(path: Path, *, strict: bool = False) -> bool:
         if path == upload_dir:
-            raise api.VoiceSessionError("Chunk upload could not be deleted.")
+            raise transcription_service.VoiceSessionError(
+                "Chunk upload could not be deleted."
+            )
         return original_remove_voice_directory(path, strict=strict)
 
     monkeypatch.setattr(
@@ -1756,7 +1838,7 @@ def test_uploaded_audio_job_writes_bundle(tmp_path: Path, monkeypatch) -> None:
         captured["transcription_context"] = kwargs["case_context"]
         captured["filename"] = kwargs["filename"]
         captured["temporary_root"] = kwargs["temporary_root"]
-        return api.AudioTranscriptionResult(
+        return transcription_service.AudioTranscriptionResult(
             text="Il passaggio richiede un mandato AD scritto.",
             metadata={
                 "schema_version": 1,
@@ -1891,7 +1973,7 @@ def test_uploaded_audio_job_writes_warning_metadata_bundle_when_coverage_complet
     user = AuthenticatedUser(email="advisor@example.com")
 
     def fake_transcribe(**_kwargs):
-        return api.AudioTranscriptionResult(
+        return transcription_service.AudioTranscriptionResult(
             text="Ultima frase senza chiusura",
             metadata={
                 "schema_version": 1,
@@ -1944,7 +2026,7 @@ def test_uploaded_audio_job_does_not_write_bundle_when_coverage_is_incomplete(
     user = AuthenticatedUser(email="advisor@example.com")
 
     def fake_transcribe(**_kwargs):
-        return api.AudioTranscriptionResult(
+        return transcription_service.AudioTranscriptionResult(
             text="Trascrizione parziale.",
             metadata={
                 "schema_version": 1,
@@ -1999,7 +2081,7 @@ def test_uploaded_audio_job_blocks_bundle_when_initial_cleanup_fails(
     audio_path.write_bytes(b"sensitive-audio")
 
     def fake_transcribe(**_kwargs):
-        return api.AudioTranscriptionResult(
+        return transcription_service.AudioTranscriptionResult(
             text="Sensitive transcript.",
             metadata={
                 "status": "complete",
@@ -2015,7 +2097,9 @@ def test_uploaded_audio_job_blocks_bundle_when_initial_cleanup_fails(
         nonlocal cleanup_failed
         if path == audio_path.parent and strict and not cleanup_failed:
             cleanup_failed = True
-            raise api.VoiceSessionError("Temporary audio could not be deleted.")
+            raise transcription_service.VoiceSessionError(
+                "Temporary audio could not be deleted."
+            )
         return original_remove_voice_directory(path, strict=strict)
 
     monkeypatch.setattr(api, "create_audio_transcription", fake_transcribe)
@@ -2202,12 +2286,14 @@ def test_delete_upload_job_keeps_terminal_state_when_raw_audio_cannot_be_deleted
 
     def fail_source_deletion(path: Path, *, strict: bool = False) -> bool:
         if path == source_dir:
-            raise api.VoiceSessionError("Raw audio could not be deleted.")
+            raise transcription_service.VoiceSessionError(
+                "Raw audio could not be deleted."
+            )
         return original_remove_voice_directory(path, strict=strict)
 
     monkeypatch.setattr(api, "_remove_voice_directory", fail_source_deletion)
 
-    with pytest.raises(api.VoiceSessionError, match="Raw audio"):
+    with pytest.raises(transcription_service.VoiceSessionError, match="Raw audio"):
         api._delete_upload_job(job_id, strict=True)
 
     assert source_dir.exists()
@@ -2234,7 +2320,9 @@ def test_get_upload_audio_job_fails_closed_when_terminal_cleanup_fails(
 
     def fail_cleanup(cleanup_job_id: str, *, strict: bool = False) -> bool:
         cleanup_calls.append((cleanup_job_id, strict))
-        raise api.VoiceSessionError("Hosted Voice temporary data could not be deleted.")
+        raise transcription_service.VoiceSessionError(
+            "Hosted Voice temporary data could not be deleted."
+        )
 
     monkeypatch.setattr(api, "_delete_upload_job", fail_cleanup)
 
@@ -2642,9 +2730,9 @@ def test_launch_token_rejects_wrong_or_expired_user(
 
     token = api.issue_voice_launch_token(user=user, now=now)
 
-    with pytest.raises(api.VoiceSessionError):
+    with pytest.raises(transcription_service.VoiceSessionError):
         api.verify_voice_launch_token(token=token, user=other_user, now=now)
-    with pytest.raises(api.VoiceSessionError):
+    with pytest.raises(transcription_service.VoiceSessionError):
         api.verify_voice_launch_token(
             token=token,
             user=user,
@@ -2964,3 +3052,292 @@ def test_clara_permission_covers_server_workflows_but_not_downloads() -> None:
     assert "/case-notes/api/voice" in structure["clara"]
     assert "/case-notes/api/attribute-reporting" not in structure["clara"]
     assert "/case-notes/api/attribute-reporting" in structure["attribute_reporting"]
+
+
+def _synthetic_chunk_upload(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> tuple[str, AuthenticatedUser]:
+    _patch_voice_retention_roots(tmp_path, monkeypatch)
+    user = AuthenticatedUser(email="advisor@example.com")
+    upload_id = "retry-case"
+    api._write_chunked_upload_metadata(
+        upload_id,
+        {
+            "status": "uploading",
+            "email": user.email,
+            "filename": "meeting.wav",
+            "content_type": "audio/wav",
+            "total_bytes": 10,
+            "total_chunks": 2,
+            "chunk_size": 5,
+            "expected_chunk_bytes": [5, 5],
+            "received_chunks": [],
+            "chunk_bytes": {},
+            "chunk_sha256": {},
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        },
+    )
+    return upload_id, user
+
+
+class _YieldingChunk:
+    def __init__(self, content: bytes) -> None:
+        self.content = content
+
+    async def read(self, size: int = -1) -> bytes:
+        await asyncio.sleep(0.01)
+        value, self.content = self.content, b""
+        return value
+
+
+def test_identical_concurrent_chunk_retries_are_idempotent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    upload_id, user = _synthetic_chunk_upload(tmp_path, monkeypatch)
+
+    async def upload_twice():
+        return await asyncio.gather(
+            api.upload_audio_chunk(upload_id, 0, _YieldingChunk(b"first"), user),
+            api.upload_audio_chunk(upload_id, 0, _YieldingChunk(b"first"), user),
+        )
+
+    responses = asyncio.run(upload_twice())
+
+    assert sorted(
+        json.loads(response.body)["already_received"] for response in responses
+    ) == [False, True]
+    assert api._read_chunked_upload_metadata(upload_id, user)["received_chunks"] == [0]
+    assert api._chunked_upload_chunk_path(upload_id, 0).read_bytes() == b"first"
+
+
+def test_concurrent_distinct_chunks_preserve_both_indexes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    upload_id, user = _synthetic_chunk_upload(tmp_path, monkeypatch)
+
+    async def upload_both():
+        return await asyncio.gather(
+            api.upload_audio_chunk(upload_id, 0, _YieldingChunk(b"first"), user),
+            api.upload_audio_chunk(upload_id, 1, _YieldingChunk(b"other"), user),
+        )
+
+    responses = asyncio.run(upload_both())
+
+    assert [response.status_code for response in responses] == [200, 200]
+    assert api._read_chunked_upload_metadata(upload_id, user)["received_chunks"] == [
+        0,
+        1,
+    ]
+    assert api._chunked_upload_chunk_path(upload_id, 1).read_bytes() == b"other"
+
+
+def test_upload_resume_state_rejects_another_owner(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    upload_id, _ = _synthetic_chunk_upload(tmp_path, monkeypatch)
+
+    with pytest.raises(HTTPException, match="does not belong"):
+        asyncio.run(
+            api.inspect_chunked_audio_upload(
+                upload_id, AuthenticatedUser(email="other@example.com")
+            )
+        )
+
+
+def test_cancelled_partial_chunk_can_resume_without_acknowledging_partial_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    upload_id, user = _synthetic_chunk_upload(tmp_path, monkeypatch)
+
+    async def cancel_then_resume():
+        partial_written = asyncio.Event()
+        never_complete = asyncio.Event()
+
+        class InterruptedChunk:
+            first_read = True
+
+            async def read(self, size: int = -1) -> bytes:
+                if self.first_read:
+                    self.first_read = False
+                    return b"ab"
+                partial_written.set()
+                await never_complete.wait()
+                return b""
+
+        task = asyncio.create_task(
+            api.upload_audio_chunk(upload_id, 0, InterruptedChunk(), user)
+        )
+        await partial_written.wait()
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+        state = await api.inspect_chunked_audio_upload(upload_id, user)
+        chunk_path = api._chunked_upload_chunk_path(upload_id, 0)
+        partial_files = list(chunk_path.parent.glob(".retry-*.part"))
+        chunk_existed = chunk_path.exists()
+        resumed = await api.upload_audio_chunk(
+            upload_id, 0, _YieldingChunk(b"abcde"), user
+        )
+        final_state = await api.inspect_chunked_audio_upload(upload_id, user)
+        return state, partial_files, chunk_existed, resumed, final_state
+
+    state, partial_files, chunk_existed, resumed, final_state = asyncio.run(
+        cancel_then_resume()
+    )
+
+    assert json.loads(state.body)["received_indexes"] == []
+    assert partial_files == []
+    assert chunk_existed is False
+    assert json.loads(resumed.body)["already_received"] is False
+    assert json.loads(final_state.body)["received_indexes"] == [0]
+    assert api._chunked_upload_chunk_path(upload_id, 0).read_bytes() == b"abcde"
+
+
+@pytest.mark.parametrize("job_status", ["queued", "running"])
+def test_dead_upload_worker_returns_explicit_failure_and_deletes_audio(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    job_status: str,
+) -> None:
+    import subprocess
+    import sys
+
+    _patch_voice_retention_roots(tmp_path, monkeypatch)
+    user = AuthenticatedUser(email="advisor@example.com")
+    with subprocess.Popen([sys.executable, "-c", "pass"]) as child:
+        child.wait(timeout=10)
+        dead_pid = child.pid
+    job_id = "dead-worker"
+    api._write_upload_job(
+        job_id,
+        {
+            "status": job_status,
+            "email": user.email,
+            "owner_pid": dead_pid,
+            "retention_lock_version": api.VOICE_RETENTION_LOCK_VERSION,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        },
+    )
+    source = api._uploaded_audio_source_dir(job_id)
+    source.mkdir()
+    (source / "upload.wav").write_bytes(b"synthetic audio")
+
+    response = api.get_upload_audio_job(job_id, user)
+
+    assert json.loads(response.body)["status"] == "error"
+    assert "interrupted" in json.loads(response.body)["message"]
+    assert not source.exists()
+
+
+def test_finish_waits_for_pending_chunk_before_assembly(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    upload_id, user = _synthetic_chunk_upload(tmp_path, monkeypatch)
+    metadata = api._read_chunked_upload_metadata(upload_id, user)
+    metadata["language"] = "en"
+    api._write_chunked_upload_metadata(upload_id, metadata)
+    monkeypatch.setattr(api, "_resolve_openai_api_key", lambda: "sk-test")
+    asyncio.run(api.upload_audio_chunk(upload_id, 0, _YieldingChunk(b"first"), user))
+
+    async def finish_while_uploading():
+        started, release = asyncio.Event(), asyncio.Event()
+
+        class PendingChunk(_YieldingChunk):
+            async def read(self, size: int = -1) -> bytes:
+                started.set()
+                await release.wait()
+                return await super().read(size)
+
+        upload = asyncio.create_task(
+            api.upload_audio_chunk(upload_id, 1, PendingChunk(b"other"), user)
+        )
+        await started.wait()
+        finish = asyncio.create_task(
+            api.finish_chunked_audio_upload(upload_id, BackgroundTasks(), user)
+        )
+        await asyncio.sleep(0)
+        release.set()
+        await upload
+        return await finish
+
+    response = asyncio.run(finish_while_uploading())
+
+    assert response.status_code == 202
+    body = json.loads(response.body)
+    assert (
+        api._uploaded_audio_source_path(body["job_id"], "meeting.wav").read_bytes()
+        == b"firstother"
+    )
+
+
+@pytest.mark.parametrize(
+    "checkpoint,expected_status,expected_transcript",
+    [
+        ("during_transcription", "error", None),
+        ("before_retrieval", "done", "Synthetic retained transcript."),
+    ],
+)
+def test_public_upload_status_after_actual_worker_exit_preserves_terminal_outcome(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    checkpoint: str,
+    expected_status: str,
+    expected_transcript: str | None,
+) -> None:
+    import subprocess
+    import sys
+
+    _patch_voice_retention_roots(tmp_path, monkeypatch)
+    marker = tmp_path / "provider_calls.txt"
+    script = """
+import os, sys
+from pathlib import Path
+from modules.case_notes_voice import api, transcription_service
+checkpoint, marker = sys.argv[1], Path(sys.argv[2])
+root = Path(sys.argv[3])
+api._voice_launch_token_root = lambda: root / 'voice-tokens'
+api._upload_job_root = lambda: root / 'voice-jobs'
+api._uploaded_audio_source_root = lambda: root / 'voice-sources'
+api._chunked_upload_root = lambda: root / 'voice-chunks'
+api._voice_work_root = lambda: root / 'voice-work'
+api._voice_lock_root = lambda: root / 'voice-locks'
+def provider(**kwargs):
+    marker.write_text('called once')
+    if checkpoint == 'during_transcription':
+        os._exit(23)
+    return transcription_service.AudioTranscriptionResult(
+        text='Synthetic retained transcript.',
+        raw_transcription_text='Synthetic retained transcript.',
+        metadata={'status':'complete', 'coverage_complete':True, 'chunks':[], 'warnings':[]},
+    )
+api.create_audio_transcription = provider
+audio = api._uploaded_audio_source_path('restart-acceptance', 'fixture.wav')
+audio.parent.mkdir(parents=True, exist_ok=True)
+audio.write_bytes(b'synthetic')
+api._process_uploaded_audio_job(
+    job_id='restart-acceptance', email='advisor@example.com', api_key='sk-test',
+    audio_path=audio, audio_size_bytes=audio.stat().st_size, filename='fixture.wav',
+    content_type='audio/wav', language='en', source_metadata={}, case_context='',
+    safety_identifier='synthetic-restart-acceptance',
+)
+os._exit(23)
+"""
+    exited = subprocess.run(
+        [sys.executable, "-c", script, checkpoint, str(marker), str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert exited.returncode == 23, exited.stderr
+
+    response = api.get_upload_audio_job(
+        "restart-acceptance", AuthenticatedUser(email="advisor@example.com")
+    )
+
+    payload = json.loads(response.body)
+    assert payload["status"] == expected_status
+    assert marker.read_text() == "called once"
+    assert not api._uploaded_audio_source_dir("restart-acceptance").exists()
+    assert payload.get("bundle", {}).get("user_transcript") == expected_transcript
+    assert not api._upload_job_path("restart-acceptance").exists()

@@ -29,6 +29,7 @@ ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
 CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
+    "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
     "open-item-reconciliation",
@@ -39,6 +40,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "check-entries",
     "journal-bank-reconciliation",
     "passive-invoice-audit",
+    "invoice-xml",
     "sales-plan",
     "business-planning",
     "variance-analysis",

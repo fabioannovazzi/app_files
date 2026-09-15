@@ -522,7 +522,7 @@
       <aside class="hero-card" aria-label="Problema risolto" data-accessibility-label="problem">
           <div class="label" data-i18n="hero.cardLabel">Cosa dai / cosa ottieni</div>
         <ul class="hero-list" id="hero-list">
-          <li>Fornisci file giornale Excel, CSV o PDF testuali.</li>
+          <li>Fornisci file giornale Excel o CSV.</li>
           <li>Conferma i campi contabili rimasti ambigui.</li>
           <li>Ottieni popolazione normalizzata, file campione e parametri di revisione.</li>
         </ul>
@@ -535,7 +535,7 @@
         <p data-journey="overview.copy">Vera qualifica il layout con il professionista, poi mette ordine nella popolazione, conserva le scelte di campionamento e prepara il controllo delle scritture.</p>
       </div>
       <div class="journey-flow">
-        <article><h3 data-journey="flow.provide.title">Fornisci</h3><p data-journey="flow.provide.copy">Il giornale in Excel, CSV o PDF leggibile e il criterio di campionamento.</p></article>
+        <article><h3 data-journey="flow.provide.title">Fornisci</h3><p data-journey="flow.provide.copy">Il giornale in Excel o CSV e il criterio di campionamento.</p></article>
         <article><h3 data-journey="flow.prepare.title">Vera prepara</h3><p data-journey="flow.prepare.copy">Una popolazione coerente, i filtri applicati e una selezione ripetibile.</p></article>
         <article><h3 data-journey="flow.receive.title">Ricevi</h3><p data-journey="flow.receive.copy">Il campione in Excel e CSV, con parametri e traccia pronti per la verifica.</p></article>
       </div>
@@ -560,14 +560,14 @@
           <p class="eyebrow" data-i18n="what.eyebrow">What it does</p>
           <h2 data-i18n="what.title">From mixed journals to a reviewable sample</h2>
         </div>
-        <p data-i18n="what.copy">Use it when a journal is readable but not standardized: good Excel, CSV, print-style Excel exported from PDF, or text PDF. Codex proposes a preparation recipe; the professional confirms the field roles before deterministic sampling begins. Unsupported layouts stop instead of producing plausible data.</p>
+        <p data-i18n="what.copy">Use it when a journal is readable but not standardized: Excel, CSV or supported print-style Excel. Codex proposes a preparation recipe; the professional confirms the field roles before deterministic sampling begins. Unsupported layouts stop instead of producing plausible data.</p>
       </div>
 
       <div class="split">
         <pre><code id="input-tree">input/
   journal.xlsx
   print_export_from_pdf.xlsx
-  general_journal.pdf</code></pre>
+  general_journal.csv</code></pre>
 
         <pre><code id="result-tree">out/
   inspection.json
@@ -587,7 +587,7 @@
           <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
           <h2 data-i18n="inputs.title">What it reads</h2>
         </div>
-        <p data-i18n="inputs.copy">Works with files already available in the firm's Codex workspace. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.</p>
+        <p data-i18n="inputs.copy">Works with files already available in the firm's Codex workspace. Text and scanned PDFs cannot supply sampling rows: provide an Excel or CSV export with reviewed mappings.</p>
       </div>
       <div class="grid four" id="input-cards"></div>
     </section>
@@ -685,7 +685,7 @@
           secondary: "Come funziona",
           cardLabel: "Cosa dai / cosa ottieni",
           bullets: [
-            "Dagli file giornale Excel, CSV o PDF testuali.",
+            "Dagli file giornale Excel o CSV.",
             "Conferma i pochi campi contabili rimasti ambigui.",
             "Ottieni popolazione normalizzata, file campione e parametri di revisione."
           ]
@@ -693,16 +693,16 @@
         what: {
           eyebrow: "A cosa serve",
           title: "Da giornale variabile a campione rivedibile",
-          copy: "Serve quando il giornale è leggibile ma non standardizzato: Excel, CSV, esportazioni da stampa PDF o PDF testuali. Codex chiede solo le scelte sui campi che non si possono ricavare con sicurezza."
+          copy: "Serve quando il giornale è leggibile ma non standardizzato: Excel, CSV o Excel con un layout di stampa supportato. Codex chiede solo le scelte sui campi che non si possono ricavare con sicurezza."
         },
         inputs: {
           eyebrow: "File letti",
           title: "Che cosa legge",
-          copy: "Lavora sui file già disponibili nel workspace Codex dello studio. I PDF solo scansionati vengono segnalati per gestione manuale, non trattati come giornali leggibili.",
+          copy: "Lavora sui file già disponibili nel workspace Codex dello studio. I PDF testuali e scansionati non possono alimentare il campione: occorre un export Excel o CSV con mappatura verificata.",
           cards: [
             ["Excel e CSV", "Giornali esportati con intestazioni leggibili e righe contabili."],
             ["Excel da stampa PDF", "Fogli con intestazioni ripetute, colonne larghe e righe di dettaglio."],
-            ["PDF testuali", "PDF da cui il testo delle righe è estraibile senza OCR."],
+            ["PDF testuali", "Non supportati per normalizzazione e campionamento, anche quando il testo è estraibile."],
             ["Parametri del campione", "Metodo, seed, filtri e dimensione del campione da conservare nella traccia di revisione."]
           ]
         },
@@ -730,7 +730,7 @@
           title: "Prepara il campione dalla cartella di lavoro",
           copy: "Apri la cartella in Codex, conferma le scelte essenziali sui campi e genera il pacchetto campione.",
           steps: [
-            ["Prepara", "Metti file Excel, CSV o PDF testuali in una cartella lavoro."],
+            ["Prepara", "Metti file Excel o CSV in una cartella lavoro."],
             ["Ispeziona", "Rivedi inspection.json e suggested_recipe.json."],
             ["Conferma", "Se serve, conferma riga di intestazione o colonne essenziali."],
             ["Esegui", "Genera normalized_journal.csv, file campione e sampling_audit.json."]
@@ -765,7 +765,7 @@
           secondary: "How it works",
           cardLabel: "Give it / get back",
           bullets: [
-            "Give it Excel, CSV or text-PDF journal files.",
+            "Give it Excel or CSV journal files.",
             "Confirm the few accounting fields that remain ambiguous.",
             "Get back the normalized population, sample files and audit parameters."
           ]
@@ -773,16 +773,16 @@
         what: {
           eyebrow: "What it does",
           title: "From mixed journals to a reviewable sample",
-          copy: "Use it when a journal is readable but not standardized: good Excel, CSV, print-style Excel exported from PDF, or text PDF. Codex asks only for the few field choices that cannot be inferred safely."
+          copy: "Use it when a journal is readable but not standardized: Excel, CSV or supported print-style Excel. Codex asks only for the few field choices that cannot be inferred safely."
         },
         inputs: {
           eyebrow: "Inputs",
           title: "What it reads",
-          copy: "Works with files already available in the firm's Codex workspace. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.",
+          copy: "Works with files already available in the firm's Codex workspace. Text and scanned PDFs cannot supply sampling rows: provide an Excel or CSV export with reviewed mappings.",
           cards: [
             ["Excel and CSV", "Exported journals with readable headers and accounting rows."],
             ["Print-style Excel", "Sheets with repeated headers, wide columns and detail rows."],
-            ["Text PDFs", "PDFs where journal-line text can be extracted without OCR."],
+            ["Text PDFs", "Unsupported for normalization and sampling, even when text is extractable."],
             ["Sample parameters", "Method, seed, filters and sample size documented in the review trail."]
           ]
         },
@@ -810,7 +810,7 @@
           title: "Create the sample from the work folder",
           copy: "Open the work folder, confirm the essential field choices and generate the sample package.",
           steps: [
-            ["Prepare", "Put Excel, CSV or text PDF files in one work folder."],
+            ["Prepare", "Put Excel or CSV files in one work folder."],
             ["Inspect", "Review inspection.json and suggested_recipe.json."],
             ["Resolve", "If needed, confirm the header row or essential columns."],
             ["Create", "Generate normalized_journal.csv, sample files and sampling_audit.json."]
@@ -845,7 +845,7 @@
           secondary: "Comment l'utiliser",
           cardLabel: "Données / résultat",
           bullets: [
-            "Donnez des fichiers journal Excel, CSV ou PDF texte.",
+            "Donnez des fichiers journal Excel ou CSV.",
             "Confirmez les quelques champs comptables restés ambigus.",
             "Recevez population normalisée, fichiers échantillon et paramètres de revue."
           ]
@@ -853,16 +853,16 @@
         what: {
           eyebrow: "Ce qu'il fait",
           title: "Des journaux mixtes vers un échantillon révisable",
-          copy: "À utiliser quand le journal est lisible mais non standardisé : bon Excel, CSV, Excel type impression issu d'un PDF, ou PDF textuel. Codex demande seulement les quelques choix de champs qui ne peuvent pas être inférés sûrement."
+          copy: "À utiliser quand le journal est lisible mais non standardisé : Excel, CSV ou Excel avec une mise en page d’impression prise en charge. Codex demande seulement les quelques choix de champs qui ne peuvent pas être inférés sûrement."
         },
         inputs: {
           eyebrow: "Entrées",
           title: "Ce qu'il lit",
-          copy: "Le contrôle travaille sur les fichiers déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF uniquement scannés/OCR sont signalés pour traitement manuel plutôt que considérés comme lisibles.",
+          copy: "Le contrôle travaille sur les fichiers déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF textuels et numérisés ne peuvent pas alimenter l’échantillon : fournissez un export Excel ou CSV avec une correspondance des champs vérifiée.",
           cards: [
             ["Excel et CSV", "Journaux exportés avec en-têtes lisibles et lignes comptables."],
             ["Excel type impression", "Feuilles avec en-têtes répétés, colonnes larges et lignes de détail."],
-            ["PDF textuels", "PDF dont le texte des lignes de journal peut être extrait sans OCR."],
+            ["PDF textuels", "Non pris en charge pour la normalisation et l’échantillonnage, même si le texte est extractible."],
             ["Paramètres d'échantillon", "Méthode, seed, filtres et taille d'échantillon documentés dans la trace de revue."]
           ]
         },
@@ -890,7 +890,7 @@
           title: "Exécuter l'échantillon depuis le dossier de travail",
           copy: "Ouvrez le dossier de travail, confirmez les choix essentiels de champs et générez le paquet d'échantillon.",
           steps: [
-            ["Préparer", "Placez les fichiers Excel, CSV ou PDF textuels dans un dossier de travail."],
+            ["Préparer", "Placez les fichiers Excel ou CSV dans un dossier de travail."],
             ["Inspecter", "Revoyez inspection.json et suggested_recipe.json."],
             ["Résoudre", "Si nécessaire, confirmez la ligne d'en-tête ou les colonnes essentielles."],
             ["Exécuter", "Générez normalized_journal.csv, fichiers d'échantillon et sampling_audit.json."]
@@ -925,7 +925,7 @@
           secondary: "Cómo funciona",
           cardLabel: "Lo que proporciona / lo que recibe",
           bullets: [
-            "Proporcione archivos de diario en Excel, CSV o PDF con texto.",
+            "Proporcione archivos de diario en Excel o CSV.",
             "Confirme los pocos campos contables que sigan siendo ambiguos.",
             "Reciba la población normalizada, los archivos de la muestra y los parámetros de auditoría."
           ]
@@ -933,16 +933,16 @@
         what: {
           eyebrow: "Qué hace",
           title: "De diarios heterogéneos a una muestra revisable",
-          copy: "Úselo cuando un diario sea legible pero no esté normalizado: Excel, CSV, Excel con formato de impresión exportado desde PDF o PDF con texto. Codex solo pregunta por las decisiones de campo que no pueden inferirse con seguridad."
+          copy: "Úselo cuando un diario sea legible pero no esté normalizado: Excel, CSV o Excel con un formato de impresión compatible. Codex solo pregunta por las decisiones de campo que no pueden inferirse con seguridad."
         },
         inputs: {
           eyebrow: "Entradas",
           title: "Qué lee",
-          copy: "Trabaja con archivos ya disponibles en el espacio de trabajo Codex del despacho. Los PDF escaneados que solo admiten OCR se señalan para tratamiento manual y no se consideran una entrada legible.",
+          copy: "Trabaja con archivos ya disponibles en el espacio de trabajo Codex del despacho. Los PDF con texto y escaneados no pueden aportar filas a la muestra: proporcione una exportación Excel o CSV con un mapeo revisado.",
           cards: [
             ["Excel y CSV", "Diarios exportados con encabezados legibles y líneas contables."],
             ["Excel con formato de impresión", "Hojas con encabezados repetidos, columnas anchas y líneas de detalle."],
-            ["PDF con texto", "PDF cuyo texto de las líneas del diario puede extraerse sin OCR."],
+            ["PDF con texto", "No compatibles con la normalización ni el muestreo, aunque pueda extraerse el texto."],
             ["Parámetros de la muestra", "Método, semilla, filtros y tamaño de la muestra documentados en la trazabilidad de revisión."]
           ]
         },
@@ -970,7 +970,7 @@
           title: "Cree la muestra desde la carpeta de trabajo",
           copy: "Abra la carpeta de trabajo, confirme las decisiones esenciales sobre los campos y genere el paquete de la muestra.",
           steps: [
-            ["Preparar", "Coloque los archivos Excel, CSV o PDF con texto en una carpeta de trabajo."],
+            ["Preparar", "Coloque los archivos Excel o CSV en una carpeta de trabajo."],
             ["Examinar", "Revise inspection.json y suggested_recipe.json."],
             ["Resolver", "Si es necesario, confirme la fila de encabezado o las columnas esenciales."],
             ["Crear", "Genere normalized_journal.csv, los archivos de muestra y sampling_audit.json."]
@@ -1005,7 +1005,7 @@
           secondary: "Wie es funktioniert",
           cardLabel: "Eingabe / Ergebnis",
           bullets: [
-            "Geben Sie Journaldateien in Excel, CSV oder Text-PDF an.",
+            "Geben Sie Journaldateien in Excel oder CSV an.",
             "Bestätigen Sie die wenigen noch unklaren Buchhaltungsfelder.",
             "Zurück kommen normalisierte Population, Stichprobendateien und Prüfparameter."
           ]
@@ -1013,16 +1013,16 @@
         what: {
           eyebrow: "Was es tut",
           title: "Von gemischten Journalen zur prüfbaren Stichprobe",
-          copy: "Nutzen Sie es, wenn ein Journal lesbar, aber nicht standardisiert ist: gutes Excel, CSV, Druck-Excel aus PDF oder Text-PDF. Codex fragt nur die wenigen Feldentscheidungen ab, die nicht sicher ableitbar sind."
+          copy: "Nutzen Sie es, wenn ein Journal lesbar, aber nicht standardisiert ist: Excel, CSV oder Excel mit unterstütztem Drucklayout. Codex fragt nur die wenigen Feldentscheidungen ab, die nicht sicher ableitbar sind."
         },
         inputs: {
           eyebrow: "Eingaben",
           title: "Was es liest",
-          copy: "Arbeitet mit Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Reine Scan-/OCR-PDFs werden zur manuellen Bearbeitung markiert und nicht als lesbarer Input behandelt.",
+          copy: "Arbeitet mit Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Text- und Scan-PDFs können keine Stichprobenzeilen liefern: Erforderlich ist ein Excel- oder CSV-Export mit geprüfter Feldzuordnung.",
           cards: [
             ["Excel und CSV", "Exportierte Journale mit lesbaren Kopfzeilen und Buchungszeilen."],
             ["Druck-Excel", "Blätter mit wiederholten Kopfzeilen, breiten Spalten und Detailzeilen."],
-            ["Text-PDFs", "PDFs, deren Journalzeilen ohne OCR als Text extrahierbar sind."],
+            ["Text-PDFs", "Für Normalisierung und Stichproben nicht unterstützt, auch bei extrahierbarem Text."],
             ["Stichprobenparameter", "Methode, Seed, Filter und Stichprobengröße in den Prüfdateien dokumentiert."]
           ]
         },
@@ -1050,7 +1050,7 @@
           title: "Stichprobe aus dem Arbeitsordner starten",
           copy: "Öffnen Sie den Arbeitsordner, bestätigen Sie die wesentlichen Feldentscheidungen und erzeugen Sie das Stichprobenpaket.",
           steps: [
-            ["Vorbereiten", "Excel-, CSV- oder Text-PDF-Dateien in einen Arbeitsordner legen."],
+            ["Vorbereiten", "Excel- oder CSV-Dateien in einen Arbeitsordner legen."],
             ["Prüfen", "Öffnen Sie inspection.json und suggested_recipe.json."],
             ["Klären", "Falls nötig Kopfzeile oder essenzielle Spalten bestätigen."],
             ["Ausführen", "normalized_journal.csv, Stichprobendateien und sampling_audit.json erzeugen."]
@@ -1194,7 +1194,7 @@
           "nav.overview": "Sintesi", "nav.workflow": "Passaggi", "nav.proof": "Video", "nav.next": "Verifica documentale", "nav.prompt": "Prompt",
           "breadcrumb.vera": "Vera", "breadcrumb.area": "Controlli contabili", "breadcrumb.module": "Campionamento del giornale",
           "overview.eyebrow": "Il lavoro in breve", "overview.title": "Dal giornale ricevuto a un campione che si può ripercorrere.", "overview.copy": "Vera mette ordine nella popolazione, conserva le scelte di campionamento e prepara il passaggio al controllo delle scritture.",
-          "flow.provide.title": "Fornisci", "flow.provide.copy": "Il giornale in Excel, CSV o PDF leggibile e il criterio di campionamento.", "flow.prepare.title": "Vera prepara", "flow.prepare.copy": "Una popolazione coerente, i filtri applicati e una selezione ripetibile.", "flow.receive.title": "Ricevi", "flow.receive.copy": "Il campione in Excel e CSV, con parametri e traccia pronti per la verifica.",
+          "flow.provide.title": "Fornisci", "flow.provide.copy": "Il giornale in Excel o CSV e il criterio di campionamento.", "flow.prepare.title": "Vera prepara", "flow.prepare.copy": "Una popolazione coerente, i filtri applicati e una selezione ripetibile.", "flow.receive.title": "Ricevi", "flow.receive.copy": "Il campione in Excel e CSV, con parametri e traccia pronti per la verifica.",
           "workflow.eyebrow": "Percorso", "workflow.title": "Quattro passaggi, dalla popolazione alla selezione.", "workflow.copy": "Le scelte che cambiano il campione restano visibili nel lavoro.",
           "workflow.one.title": "Legge il giornale", "workflow.one.copy": "Individua struttura, intestazioni e campi contabili utili.", "workflow.two.title": "Rende coerente la popolazione", "workflow.two.copy": "Uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione.", "workflow.three.title": "Applica il metodo", "workflow.three.copy": "Usa metodo, filtri, seed e dimensione concordati per selezionare il campione.", "workflow.four.title": "Prepara il controllo", "workflow.four.copy": "Consegna le righe selezionate e il contesto necessario al controllo dei supporti.",
           "spec.summary": "Specifiche tecniche, input e file prodotti",
@@ -1211,7 +1211,7 @@
           "nav.overview": "Summary", "nav.workflow": "Steps", "nav.proof": "Video", "nav.next": "Vouching", "nav.prompt": "Prompt",
           "breadcrumb.vera": "Vera", "breadcrumb.area": "Accounting controls", "breadcrumb.module": "Journal sampling",
           "overview.eyebrow": "The work at a glance", "overview.title": "From the journal received to a sample anyone can retrace.", "overview.copy": "Vera brings order to the population, preserves the sampling choices and prepares the handoff to entry testing.",
-          "flow.provide.title": "Provide", "flow.provide.copy": "The journal in Excel, CSV or readable PDF, plus the sampling approach.", "flow.prepare.title": "Vera prepares", "flow.prepare.copy": "A consistent population, the applied filters and a reproducible selection.", "flow.receive.title": "Receive", "flow.receive.copy": "The sample in Excel and CSV, with parameters and a trail ready for review.",
+          "flow.provide.title": "Provide", "flow.provide.copy": "The journal in Excel or CSV, plus the sampling approach.", "flow.prepare.title": "Vera prepares", "flow.prepare.copy": "A consistent population, the applied filters and a reproducible selection.", "flow.receive.title": "Receive", "flow.receive.copy": "The sample in Excel and CSV, with parameters and a trail ready for review.",
           "workflow.eyebrow": "Workflow", "workflow.title": "Four steps from population to selection.", "workflow.copy": "Every choice that changes the sample stays visible in the work.",
           "workflow.one.title": "Read the journal", "workflow.one.copy": "Identify its structure, headers and useful accounting fields.", "workflow.two.title": "Make the population consistent", "workflow.two.copy": "Align columns and values while keeping attention rows visible.", "workflow.three.title": "Apply the method", "workflow.three.copy": "Use the agreed method, filters, seed and size to select the sample.", "workflow.four.title": "Prepare the test", "workflow.four.copy": "Deliver the selected rows and the context needed to check their support.",
           "spec.summary": "Technical specification, inputs and produced files",
@@ -1228,7 +1228,7 @@
           "nav.overview": "Synthèse", "nav.workflow": "Étapes", "nav.proof": "Vidéo", "nav.next": "Contrôle sur pièces", "nav.prompt": "Prompt",
           "breadcrumb.vera": "Vera", "breadcrumb.area": "Contrôles comptables", "breadcrumb.module": "Échantillonnage du journal",
           "overview.eyebrow": "Le travail en bref", "overview.title": "Du journal reçu à un échantillon que l'on peut retracer.", "overview.copy": "Vera ordonne la population, conserve les choix d'échantillonnage et prépare le passage au contrôle des écritures.",
-          "flow.provide.title": "Vous fournissez", "flow.provide.copy": "Le journal en Excel, CSV ou PDF lisible et la méthode d'échantillonnage.", "flow.prepare.title": "Vera prépare", "flow.prepare.copy": "Une population cohérente, les filtres appliqués et une sélection reproductible.", "flow.receive.title": "Vous recevez", "flow.receive.copy": "L'échantillon en Excel et CSV, avec paramètres et piste prêts pour la revue.",
+          "flow.provide.title": "Vous fournissez", "flow.provide.copy": "Le journal en Excel ou CSV et la méthode d'échantillonnage.", "flow.prepare.title": "Vera prépare", "flow.prepare.copy": "Une population cohérente, les filtres appliqués et une sélection reproductible.", "flow.receive.title": "Vous recevez", "flow.receive.copy": "L'échantillon en Excel et CSV, avec paramètres et piste prêts pour la revue.",
           "workflow.eyebrow": "Parcours", "workflow.title": "Quatre étapes, de la population à la sélection.", "workflow.copy": "Chaque choix qui modifie l'échantillon reste visible dans le travail.",
           "workflow.one.title": "Lire le journal", "workflow.one.copy": "Identifier sa structure, ses en-têtes et les champs comptables utiles.", "workflow.two.title": "Rendre la population cohérente", "workflow.two.copy": "Aligner colonnes et valeurs tout en gardant visibles les lignes à examiner.", "workflow.three.title": "Appliquer la méthode", "workflow.three.copy": "Utiliser méthode, filtres, graine et taille convenus pour sélectionner l'échantillon.", "workflow.four.title": "Préparer le contrôle", "workflow.four.copy": "Livrer les lignes retenues et le contexte nécessaire au contrôle des justificatifs.",
           "spec.summary": "Spécifications techniques, entrées et fichiers produits",
@@ -1245,7 +1245,7 @@
           "nav.overview": "Resumen", "nav.workflow": "Pasos", "nav.proof": "Vídeo", "nav.next": "Verificación documental", "nav.prompt": "Prompt",
           "breadcrumb.vera": "Vera", "breadcrumb.area": "Controles contables", "breadcrumb.module": "Muestreo del diario",
           "overview.eyebrow": "El trabajo de un vistazo", "overview.title": "Del diario recibido a una muestra que puede reconstruirse.", "overview.copy": "Vera ordena la población, conserva las decisiones de muestreo y prepara la entrega para comprobar los asientos.",
-          "flow.provide.title": "Proporcione", "flow.provide.copy": "El diario en Excel, CSV o PDF legible y el método de muestreo.", "flow.prepare.title": "Vera prepara", "flow.prepare.copy": "Una población coherente, los filtros aplicados y una selección reproducible.", "flow.receive.title": "Reciba", "flow.receive.copy": "La muestra en Excel y CSV, con los parámetros y la trazabilidad listos para revisar.",
+          "flow.provide.title": "Proporcione", "flow.provide.copy": "El diario en Excel o CSV y el método de muestreo.", "flow.prepare.title": "Vera prepara", "flow.prepare.copy": "Una población coherente, los filtros aplicados y una selección reproducible.", "flow.receive.title": "Reciba", "flow.receive.copy": "La muestra en Excel y CSV, con los parámetros y la trazabilidad listos para revisar.",
           "workflow.eyebrow": "Recorrido", "workflow.title": "Cuatro pasos de la población a la selección.", "workflow.copy": "Cada decisión que cambia la muestra permanece visible en el trabajo.",
           "workflow.one.title": "Leer el diario", "workflow.one.copy": "Identificar su estructura, los encabezados y los campos contables útiles.", "workflow.two.title": "Hacer coherente la población", "workflow.two.copy": "Alinear columnas y valores manteniendo visibles las líneas que requieren atención.", "workflow.three.title": "Aplicar el método", "workflow.three.copy": "Usar el método, los filtros, la semilla y el tamaño acordados para seleccionar la muestra.", "workflow.four.title": "Preparar la comprobación", "workflow.four.copy": "Entregar las líneas seleccionadas y el contexto necesario para comprobar sus justificantes.",
           "spec.summary": "Especificaciones técnicas, entradas y archivos generados",
@@ -1262,7 +1262,7 @@
           "nav.overview": "Zusammenfassung", "nav.workflow": "Schritte", "nav.proof": "Video", "nav.next": "Belegprüfung", "nav.prompt": "Prompt",
           "breadcrumb.vera": "Vera", "breadcrumb.area": "Buchhaltungskontrollen", "breadcrumb.module": "Journalstichprobe",
           "overview.eyebrow": "Die Arbeit im Überblick", "overview.title": "Vom erhaltenen Journal zur nachvollziehbaren Stichprobe.", "overview.copy": "Vera ordnet die Grundgesamtheit, bewahrt die Stichprobenentscheidungen und bereitet die Buchungsprüfung vor.",
-          "flow.provide.title": "Sie liefern", "flow.provide.copy": "Das Journal als Excel, CSV oder lesbare PDF sowie das Stichprobenverfahren.", "flow.prepare.title": "Vera bereitet vor", "flow.prepare.copy": "Eine konsistente Grundgesamtheit, die Filter und eine reproduzierbare Auswahl.", "flow.receive.title": "Sie erhalten", "flow.receive.copy": "Die Stichprobe in Excel und CSV samt Parametern und prüfbarer Spur.",
+          "flow.provide.title": "Sie liefern", "flow.provide.copy": "Das Journal als Excel oder CSV sowie das Stichprobenverfahren.", "flow.prepare.title": "Vera bereitet vor", "flow.prepare.copy": "Eine konsistente Grundgesamtheit, die Filter und eine reproduzierbare Auswahl.", "flow.receive.title": "Sie erhalten", "flow.receive.copy": "Die Stichprobe in Excel und CSV samt Parametern und prüfbarer Spur.",
           "workflow.eyebrow": "Ablauf", "workflow.title": "Vier Schritte von der Grundgesamtheit zur Auswahl.", "workflow.copy": "Jede Entscheidung, die die Stichprobe verändert, bleibt sichtbar.",
           "workflow.one.title": "Journal lesen", "workflow.one.copy": "Struktur, Überschriften und relevante Buchungsfelder erkennen.", "workflow.two.title": "Grundgesamtheit vereinheitlichen", "workflow.two.copy": "Spalten und Werte angleichen und auffällige Zeilen sichtbar halten.", "workflow.three.title": "Verfahren anwenden", "workflow.three.copy": "Mit vereinbartem Verfahren, Filtern, Seed und Umfang die Stichprobe ziehen.", "workflow.four.title": "Prüfung vorbereiten", "workflow.four.copy": "Ausgewählte Zeilen und den nötigen Kontext für die Belegprüfung bereitstellen.",
           "spec.summary": "Technische Spezifikation, Eingaben und erzeugte Dateien",

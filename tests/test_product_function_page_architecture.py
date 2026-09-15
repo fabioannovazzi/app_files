@@ -466,7 +466,7 @@ def test_all_product_directories_distinguish_area_headings_from_function_links()
     assert "font-size: clamp(1.05rem, 1.8vw, 1.2rem)" in clara_css
 
 
-def test_product_roots_stop_after_the_function_directory() -> None:
+def test_product_roots_keep_function_explanations_out_of_overview() -> None:
     for product, page_path in PRODUCT_PAGES.items():
         page = page_path.read_text(encoding="utf-8")
         expected_section_count = 4 if product == "vera" else 2

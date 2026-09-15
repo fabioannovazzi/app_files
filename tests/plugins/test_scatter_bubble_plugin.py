@@ -1091,3 +1091,145 @@ def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
     )
 
     assert recipe["options"]["currency"] == currency
+
+
+@pytest.mark.parametrize(
+    ("y_metric", "expected_period_title"),
+    [("Units", "AC"), ("Sales Growth Rate", "AC vs PY")],
+)
+def test_bubble_export_title_matches_rendered_period_scope(
+    tmp_path: Path, monkeypatch: Any, y_metric: str, expected_period_title: str
+) -> None:
+    """Keep single-period and derived-growth export titles faithful to scope."""
+    input_path = tmp_path / "sales.csv"
+    pl.DataFrame(
+        {
+            "Company": ["A", "A", "B", "B"],
+            "Channel": ["Retail", "Retail", "Online", "Online"],
+            "Period": ["PY", "AC", "PY", "AC"],
+            "Sales": [100.0, 120.0, 200.0, 250.0],
+            "Units": [10.0, 10.0, 20.0, 25.0],
+        }
+    ).write_csv(input_path)
+    recipe = {
+        "schema_version": "1.0",
+        "mappings": {
+            "x_metric_column": "Unit Price",
+            "y_metric_column": y_metric,
+            "bubble_size_metric_column": "Sales",
+            "dimensions": ["Company", "Channel"],
+            "dot_dimension": "Company",
+            "color_dimension": "Channel",
+            "small_multiples_dimension": None,
+            "period_column": "Period",
+            "date_column": None,
+        },
+        "options": {"charts": ["bubble"], "small_multiples": False, "currency": "EUR"},
+    }
+    recipe_path = tmp_path / "recipe.json"
+    recipe_path.write_text(json.dumps(recipe), encoding="utf-8")
+    captured_titles = []
+    captured_legends = []
+    patch_plotly_export(monkeypatch)
+    stub_export = legacy_charting._write_legacy_figure
+
+    def capture_export(fig: Any, path: Path) -> tuple[list[Path], dict[str, Any]]:
+        captured_titles.append(str(fig.layout.title.text))
+        captured_legends.append(fig.layout.legend.title.text)
+        return stub_export(fig, path)
+
+    monkeypatch.setattr(legacy_charting, "_write_legacy_figure", capture_export)
+
+    core.run_scatter_bubble(input_path, tmp_path / "output", recipe_path)
+
+    assert len(captured_titles) == 1
+    assert captured_titles[0].split("<br>")[-1] == expected_period_title
+    assert captured_legends == ["Channel"]
+
+
+@pytest.mark.parametrize("sizes", [[30.0, 0.0], [30.0, -20.0], [30.0, 0.0, -20.0]])
+def test_public_bubble_discloses_nonpositive_sizes_and_preserves_source(
+    tmp_path: Path, sizes: list[float]
+) -> None:
+    source = tmp_path / "sizes.csv"
+    recipe_path = tmp_path / "recipe.json"
+    pl.DataFrame(
+        {
+            "Horizontal": list(range(len(sizes))),
+            "Vertical": [4.0] * len(sizes),
+            "Area": sizes,
+            "Entity": [f"Item {i}" for i in range(len(sizes))],
+            "Period": ["AC"] * len(sizes),
+        }
+    ).write_csv(source)
+    recipe_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "mappings": {
+                    "x_metric_column": "Horizontal",
+                    "y_metric_column": "Vertical",
+                    "bubble_size_metric_column": "Area",
+                    "dimensions": ["Entity"],
+                    "dot_dimension": "Entity",
+                    "color_dimension": None,
+                    "small_multiples_dimension": None,
+                    "period_column": "Period",
+                    "date_column": None,
+                },
+                "options": {"charts": ["bubble"], "small_multiples": False},
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+
+    core.run_scatter_bubble(source, output, recipe_path, artifact_mode="data_only")
+
+    canonical = pl.read_csv(output / "scatter_bubble_canonical.csv")
+    chart = pl.read_csv(output / "bubble_chart_data.csv")
+    context = json.loads((output / "bubble_chart_context.json").read_text())
+    audit = json.loads((output / "scatter_bubble_audit.json").read_text())
+    assert canonical["Area"].to_list() == sizes
+    assert chart["Area"].to_list() == [30.0]
+    assert "zero or negative" in json.dumps(context["legacy_messages"])
+    assert "zero or negative" in json.dumps(audit)
+
+
+@pytest.mark.parametrize(
+    ("language", "expected", "heading"),
+    [
+        ("en", "zero or negative", "Largest Source Values"),
+        ("es", "cero o negativos", "Valores de origen principales"),
+    ],
+)
+def test_bubble_client_report_explains_nonpositive_source_values(
+    tmp_path: Path, language: str, expected: str, heading: str
+) -> None:
+    from docx import Document
+
+    recipe = {
+        "language": language,
+        "mappings": {
+            "dot_dimension": "Entity",
+            "bubble_size_metric_column": "Area",
+            "x_metric_column": "X",
+            "y_metric_column": "Y",
+        },
+        "options": {"charts": ["bubble"]},
+    }
+    summary = pl.DataFrame({"Entity": ["Zero", "Negative"], "Area": [0.0, -20.0]})
+
+    core.write_client_report(recipe, summary, [], tmp_path)
+
+    markdown = (tmp_path / "scatter_bubble_client_report.md").read_text()
+    word = "\n".join(
+        p.text
+        for p in Document(tmp_path / "scatter_bubble_client_report.docx").paragraphs
+    )
+    assert expected in markdown
+    assert expected in word
+    assert heading in markdown
+    assert heading in word
+    assert "-20.00" in markdown
+    assert "-20.00" in word

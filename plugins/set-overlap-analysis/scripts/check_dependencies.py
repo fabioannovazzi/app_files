@@ -16,6 +16,10 @@ from pathlib import Path
 __all__ = ["main"]
 
 REQUIRED_MODULES = (
+    "xlsxwriter",
+    "numpy",
+    "psutil",
+    "dateutil",
     "polars",
     "plotly",
     "kaleido",
@@ -24,6 +28,7 @@ REQUIRED_MODULES = (
     "openpyxl",
 )
 PACKAGE_IMPORTS = {
+    "python-dateutil": "dateutil",
     "matplotlib-venn": "matplotlib_venn",
 }
 

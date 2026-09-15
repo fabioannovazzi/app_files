@@ -23,7 +23,15 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "scripts/case_store.py",
+    "scripts/case_exchange_safety.py",
+    "scripts/decision_narrative.py",
+    "scripts/commit_decision_narrative.py",
+    "scripts/verify_decision_pack.py",
+    "scripts/advisory_delivery.py",
+    "scripts/verify_advisory_delivery.py",
+    "scripts/bounded_process.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -42,6 +50,16 @@
         "id": "working-deliverable-round-trip",
         "purpose": "Keep milestone outputs consistent with the living case direction",
         "content": "Working deck, memo, brief, storyline, partner feedback, semantic revisions, residual uncertainty, and the decision to create or revise an output"
+      },
+      {
+        "id": "authored-narrative-and-current-delivery",
+        "purpose": "Review the same case answer and qualifications across Markdown, Word and HTML",
+        "content": "Committed narrative paragraphs, claim IDs, reviewer identity and status, current case and workpaper bindings, per-format artifacts and visual-review records, output paths and hashes, readiness receipts and mismatch errors. Local transaction recovery files can temporarily contain prior case bytes; source history and bound output artifacts remain separately retained. No automatic anonymisation or extra model service is introduced by these helpers."
+      },
+      {
+        "id": "shared-case-normalization-attempts",
+        "purpose": "Inspect case presentation imports and any normalization diagnostics used by this workflow",
+        "content": "When a presentation is imported through the shared case helper and requires normalization, local attempt directories retain converted presentation files and converter stdout/stderr logs. They may contain source document content, metadata and local paths, including after failure or cancellation. Reading them supplies their contents to model context. This conditional import path does not mean every workflow execution converts a presentation or sends these files to a hosted service. Retained attempt files remain until separately removed."
       }
     ]
   },
@@ -112,16 +130,11 @@
       ]
     }
   ],
-  "security_controls": [
-    {
-      "id": "cumulative-case-history",
-      "control": "Preserve prior evidence, claim states, partner judgement, immutable case-direction return receipts, and materially different workpaper versions; bind branch and validator returns plus the current workpaper checkpoint to exact bytes and current semantic lineage; do not replace the cumulative case record with only the newest contribution."
-    }
-  ],
+  "security_controls": [],
   "review": {
-    "reviewed_at": "2026-08-19",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "792aba62b48308a549a111ca5dc47ed2da147f8f8c93d4c875dbb58ac787e6e7"
+    "source_fingerprint": "c39501781df6c3ad908b94afffbdc430c9124e01d09dd5d901b5dfe33cc74142"
   }
 }

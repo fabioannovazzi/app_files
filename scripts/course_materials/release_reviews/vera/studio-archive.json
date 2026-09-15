@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "9d09c3773104a2455712c0ae247094a891eab60a257971ee0d5762d4cec23a1f",
+  "course_sha256": "7e113e8b9393a52c9159b19685608f821ba197ca1a4d0cca130eab2381ce8094",
   "reviewer": "Codex: five-language local archive lesson and delivered answer review",
   "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
   "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson.",
@@ -226,5 +226,52 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.486273+00:00",
+    "previous_course_sha256": "9d09c3773104a2455712c0ae247094a891eab60a257971ee0d5762d4cec23a1f",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/scripts/model_data_report.py",
+        "before": "6fa2e2270f1ce48b4435681c7c67b073f09bf451cea256c61df13daa5faf98c4",
+        "after": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+      },
+      {
+        "path": "plugins/vera/skills/studio-archive/SKILL.md",
+        "before": "3a75ff7bdb875bfc7e37a60aa8bbf33a7b96f1dddbba5d8c074b87a74a7009db",
+        "after": "306a444e741de64feb191115c4192b519833d200e0f5c4ffa3afbb7647f5dc76"
+      },
+      {
+        "path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
+        "before": "2df60735c2926dd06da32c5cab5df244c10702cf23c7fb0a929b230ce4121937",
+        "after": "5f197764fb302393d549f49b16d6ce7301291356208f31ac1f9affcc9216c03c"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

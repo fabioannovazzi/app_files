@@ -182,7 +182,7 @@ def test_audit_detects_missing_workflow_identity_fields(
     assert "workflow_panels_too_shallow" in codes
 
 
-def test_audit_detects_duplicate_workflow_detail_modes(tmp_path: Path) -> None:
+def test_audit_allows_shared_css_detail_mode(tmp_path: Path) -> None:
     first = _valid_adapter(plugin="first-review")
     second = _valid_adapter(plugin="second-review")
     assert isinstance(first, dict)
@@ -195,11 +195,8 @@ def test_audit_detects_duplicate_workflow_detail_modes(tmp_path: Path) -> None:
     reports = audit.audit_adapters(tmp_path)
 
     assert {report.plugin for report in reports} == {"first-review", "second-review"}
-    assert all(report.status == "needs_attention" for report in reports)
-    assert all(
-        "workflow_detail_mode_duplicate" in {issue.code for issue in report.issues}
-        for report in reports
-    )
+    assert all(report.status == "ok" for report in reports)
+    assert all(not report.issues for report in reports)
 
 
 def test_audit_detects_demo_values_rejected_by_mcp_contract(tmp_path: Path) -> None:

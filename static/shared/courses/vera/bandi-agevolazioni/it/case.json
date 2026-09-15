@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "bandi-agevolazioni",
+  "scenario": "Un avviso interamente fittizio finanzia macchinari per imprese manifatturiere di una regione. Arco produce componenti e propone un investimento di 80.000 EUR. Mancano le prove sulla sede dell'unità produttiva e sulla data di avvio della spesa.",
+  "columns": [
+    "Fonte fittizia",
+    "Condizione o dato",
+    "Evidenza"
+  ],
+  "rows": [
+    [
+      "B1 · avviso DEMO, § 2",
+      "Unità produttiva nella regione del bando",
+      "Sede operativa non documentata"
+    ],
+    [
+      "B1 · § 4",
+      "Spese avviate dopo la domanda",
+      "Data ordine non fornita"
+    ],
+    [
+      "C1 · progetto Arco",
+      "Macchinario: 80.000 EUR",
+      "Preventivo disponibile"
+    ]
+  ],
+  "scope": "Il bando DEMO non esiste e non è candidabile. Il caso insegna a leggere una fonte e preparare l'istruttoria; i bandi reali richiedono fonti ufficiali correnti."
+}

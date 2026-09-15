@@ -14,6 +14,8 @@ Claude writes `review_input.json` in the exact running archive output folder.
 Narrative fields follow the user's language. Source paths are relative to the
 run's hydrated `inputs` directory and must identify exact imported files.
 
+Set `language` to `it`, `en`, `fr`, `de` or `es` to match the narrative and memo headings. If omitted, the memo headings default to Italian. This selects presentation only; the jurisdiction remains Italian.
+
 Required fields:
 
 ```json

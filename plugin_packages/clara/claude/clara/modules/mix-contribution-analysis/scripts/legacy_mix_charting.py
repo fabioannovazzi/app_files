@@ -13,8 +13,8 @@ import sys
 import traceback
 import warnings
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from datetime import date, datetime, timedelta
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable, Sequence
@@ -65,19 +65,19 @@ _prepare_legacy_import_parent(
     if (SHARED_VENDOR_ROOT / "modules" / "__init__.py").exists()
     else VENDOR_ROOT
 )
-from modules.charting.static_export import (  # noqa: E402
-    normalize_plotly_figure_for_static_export,
-)
-from modules.charting.chart_primitives import (  # noqa: E402
-    FOCUS_ITEM_HIGHLIGHT_COLOR,
-    FOCUS_ITEM_HIGHLIGHT_MAX_ITEMS,
-)
 from modules.chart_harness import (  # noqa: E402
     is_scenario_label,
     plain_plotly_title_text,
     plotly_title_lines,
     reporting_period_line_from_recipe,
     reporting_title_html,
+)
+from modules.charting.chart_primitives import (  # noqa: E402
+    FOCUS_ITEM_HIGHLIGHT_COLOR,
+    FOCUS_ITEM_HIGHLIGHT_MAX_ITEMS,
+)
+from modules.charting.static_export import (  # noqa: E402
+    normalize_plotly_figure_for_static_export,
 )
 
 CANONICAL_DATE = "Date"
@@ -2273,6 +2273,7 @@ def _apply_legacy_period_grain_selection(
     period_selection = str(
         (recipe.get("options") or {}).get("period_selection") or ""
     ).strip()
+    explicit_all_periods = period_selection in {"all", "all_data", "all_available"}
     if (
         not period_grain
         and period_selection in {"", "infer_current_or_all"}
@@ -2281,7 +2282,11 @@ def _apply_legacy_period_grain_selection(
         period_grain = "year"
         chart[names["periodChoice"]] = names["yearName"]
         chart[names["datePeriodName"]] = names["yearName"]
-    if period_grain == "year" and CANONICAL_DATE in canonical.columns:
+    if (
+        period_grain == "year"
+        and not explicit_all_periods
+        and CANONICAL_DATE in canonical.columns
+    ):
         safe_selection = _safe_year_period_window_selection(
             canonical,
             names,
@@ -2328,7 +2333,7 @@ def _apply_legacy_period_grain_selection(
             {"status": "skipped", "reason": f"legacy_period_import_failed:{exc}"},
         )
 
-    if period_grain == "year":
+    if period_grain == "year" and not explicit_all_periods:
         safe_selection = _safe_year_period_window_selection(
             canonical,
             names,
@@ -2365,9 +2370,16 @@ def _apply_legacy_period_grain_selection(
 
     try:
         periodized, param = convert_date_to_period(canonical.lazy(), param, chart)
-        filtered, _period_frame, _all_periods, param, chart = (
-            filter_out_useless_periods(periodized, param, chart)
-        )
+        if explicit_all_periods:
+            # Explicit all-period scope must not inherit the legacy current-year filter.
+            filtered = _collect_lazyframe(periodized)
+            all_periods = _period_values_from_frame(filtered, CANONICAL_PERIOD)
+            chart[names["selectedPeriods"]] = all_periods
+            param[names["selectedPeriods"]] = all_periods
+        else:
+            filtered, _period_frame, _all_periods, param, chart = (
+                filter_out_useless_periods(periodized, param, chart)
+            )
     except (
         KeyError,
         TypeError,
@@ -2978,23 +2990,36 @@ def _series_rows_by_dimension(
             y_values = _sequence(getattr(trace, "y", None))
             text_values = _sequence(getattr(trace, "text", None))
             item = _strip_legacy_by_prefix(getattr(trace, "name", ""))
+            horizontal_bar = (
+                getattr(trace, "type", None) == "bar"
+                and getattr(trace, "orientation", None) == "h"
+            )
             for point_index, (x_value, y_value) in enumerate(zip(x_values, y_values)):
                 if y_value is None:
                     continue
-                try:
-                    position = int(x_value)
-                except (TypeError, ValueError):
-                    continue
-                axis_label = tick_labels.get(float(position))
-                dimension = (
-                    axis_label
-                    if axis_label is not None
-                    else (
-                        dimensions[position]
-                        if 0 <= position < len(dimensions)
-                        else str(x_value)
+                if horizontal_bar:
+                    # Plotly's explicit orientation binds x to values and y to
+                    # categories; never infer this from the signs or label text.
+                    position = point_index
+                    axis_label = str(y_value)
+                    dimension = axis_label
+                    value = x_value
+                else:
+                    try:
+                        position = int(x_value)
+                    except (TypeError, ValueError):
+                        continue
+                    axis_label = tick_labels.get(float(position))
+                    dimension = (
+                        axis_label
+                        if axis_label is not None
+                        else (
+                            dimensions[position]
+                            if 0 <= position < len(dimensions)
+                            else str(x_value)
+                        )
                     )
-                )
+                    value = y_value
                 rows.append(
                     {
                         "figure_index": figure_index,
@@ -3003,7 +3028,7 @@ def _series_rows_by_dimension(
                         "source_dimension": dimensions[0] if dimensions else None,
                         "axis_label": axis_label,
                         "item": item,
-                        "value": _json_safe(y_value),
+                        "value": _json_safe(value),
                         "text": _json_safe(
                             text_values[point_index]
                             if point_index < len(text_values)
@@ -6017,13 +6042,14 @@ def write_legacy_mix_chart(
     _ensure_legacy_import_path()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        from modules.charting import draw_charts_utils, draw_width_and_stacked_plots
+        from modules.chart_harness import apply_legacy_filter_title_metadata
+        from modules.charting import draw_charts_utils
         from modules.charting import draw_timeline as draw_timeline_module
+        from modules.charting import draw_width_and_stacked_plots
         from modules.charting import plot_charts as plot_charts_module
         from modules.charting import prepare_charts as prepare_charts_module
         from modules.charting.chart_primitives import get_color_dictionary
         from modules.charting.run_charting import run_charting
-        from modules.chart_harness import apply_legacy_filter_title_metadata
         from modules.data import misc_charts_data_prep
         from modules.data import multidimensional_charts_prep as stacked_column_prep
         from modules.utilities.config import get_naming_params

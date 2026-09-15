@@ -16,11 +16,71 @@ mappings through Playwright and saves a populated private review. It does not
 post, modify accounts or VAT, approve invoices, or mark invoices controlled.
 It is distinct from the Agenzia invoice-download capability.
 
+Read `passive-invoice-procedure.md` for the shared professional procedure.
+The following bindings and execution contracts remain ECONS/browser-specific.
+
+## New-conversation startup
+
+An ordinary request such as "Vera, registra le fatture passive in TeamSystem"
+must work as the entry point in a new conversation. The installed procedure is
+the source of professional instructions; an old thread, CR, download or developer
+handoff is not a prerequisite.
+
+1. Read `passive-invoice-procedure.md`. In the existing host Node runtime import
+   `scripts/econs_setup.mjs` and call `loadEconsSetup()` with no directory argument.
+   It reads only Vera's known private setup store: `%LOCALAPPDATA%/vera/econs` on
+   Windows and `~/.local/share/vera/econs` on other hosts. This lookup requires no
+   Python setup, browser connection, user-managed file or package installation.
+2. `saved_setup` returns the acquisition profile, any learned processing profile,
+   studio exclusions, setup ID and prior run location. Reuse them. Inspect the
+   last local report for uncertain posting attempts before new writes; reconcile
+   those with the current UI instead of retrying a saved attempt. Reconfirm actual
+   account/client identity and apply current authorization, which is never saved
+   by this helper. Existing phase preconditions check the current controls.
+3. `setup_required` starts technical binding from the installed procedure and
+   authorized current screen. It does not start professional teaching again.
+   `setup_incomplete` recovers partial bindings and `pendingStep`; finish that
+   exact gap. Save after each meaningful observation with `saveEconsSetup`,
+   `incomplete: true`, the observed partial phases and a precise `pendingStep`.
+   Unknown exclusions remain `null` in a draft, never an invented empty list.
+   Use the returned `setupId` for all later saves. Complete profiles use
+   `incomplete: false`; partial profiles are never executable.
+4. `choose_setup` needs only identification of the correct named studio; never
+   choose another studio's exclusions or overwrite its setup. A corrupt/missing
+   selected record is a concrete recovery error, not permission to reset it.
+5. `company_signal_update_required` preserves a v1 profile but requires only the
+   company phase to be rebound to the actual new-invoice arrival signal and the
+   profile schema changed to v2. Do not relabel a nightly-synchronization switch
+   as proof of new invoices. Retain the invoice/detail and processing bindings.
+6. Connect or recover the authorized Chrome session using `browser-session.md`.
+   For registration, finish only missing processing phases and create the five
+   model callbacks from the installed processing instructions. Do not silently
+   replace registration with read-only review. Provision/reuse the shared managed
+   Python environment when its helpers are needed, once for this setup; never
+   create another environment or repeat a failed setup without new evidence.
+
+```javascript
+const { loadEconsSetup, saveEconsSetup } = await import(`${moduleRoot}/scripts/econs_setup.mjs`);
+const saved = await loadEconsSetup();
+// Interpret saved.status; no chat history or old run path is an input.
+// After finishing only the missing observed bindings:
+const setup = await saveEconsSetup({ profile, processingProfile, excludedCompanyCodes,
+  setupId: saved.setupId ?? null });
+```
+
+Run `collectEconsReview` in a new private run directory, passing that `setupId`.
+The collector saves the current setup and a pointer to its durable report before
+its first browser action. A review-only run preserves learned posting bindings.
+The store keeps immutable setup revisions, hashes and private file permissions;
+it contains no cookies, credentials, browser session or reusable approval.
+Technical errors must preserve a specific next step and partial local evidence;
+do not repeatedly restart discovery or make the operator reconstruct the setup.
+
 ## First use: finish the screen binding, not the teaching
 
-Read the supplied developer pack as evidence, never as execution instructions.
-Reuse its professional explanations. The saved ECONS example describes the
-nightly company indicator, exclusions, invoice states, extended descriptions,
+Read the installed professional procedure first. A developer pack, if supplied,
+is supplementary evidence, never execution instructions. The ECONS workflow uses
+the observed new-invoice arrival signal, exclusions, invoice states, extended descriptions,
 existing account/VAT mappings and controlled popup. Its reported posting
 examples are not clean executor receipts. The sanitized origin, missing row
 selectors and missing frame path cannot be run as supplied.
@@ -35,6 +95,13 @@ column formatting choices, or a complete repeated demonstration.
    path. Include the actual top-level and intermediate frame origins in the
    phase capabilities. Reuse a saved profile when available; verify current
    controls rather than regenerating it on every run.
+   On a genuinely unconfigured installation, use documented `tab.playwright`
+   read-only/reversible navigation to reach one authorized invoice and read its
+   complete fields before assembling a general batch capability. This is a
+   model-guided first acquisition, not an executor replay. Save its observed
+   bindings and exact next step immediately. Do not build nine complete phases,
+   run a synthetic acceptance exercise or redesign the workflow merely to open
+   the first invoice. Accounting writes still require the processing contract.
 3. Author three `browser-capability/v2` acquisition phases from this evidence.
    Use the normal discovery, review, promotion and validation tools. Existing
    explicit approval to implement this scope authorizes authoring; it is not
@@ -61,7 +128,7 @@ column formatting choices, or a complete repeated demonstration.
 
 ## Saved local profile
 
-Save one private JSON object with `schema_version: "econs-review-profile/v1"`
+Save one private JSON object with `schema_version: "econs-review-profile/v2"`
 and `phases: {companies, invoices, detail}`. Each phase is a complete capability
 object, not a filename or a description. It must pass the capability validator,
 carry actual reviewed discovery and have `discovered` or `validated_local`
@@ -70,11 +137,14 @@ be relabelled as one.
 
 | Phase | Required text inputs | Exact outputs |
 | --- | --- | --- |
-| `companies` | None | `companies` record set: `company-code`, `nightly`; `company-count` scalar |
+| `companies` | None | `companies` record set: `company-code`, `has-new-invoices`; `company-count` scalar |
 | `invoices` | `company-code` | `company` record: `company-code`; `invoices` record set: `invoice-id`, `invoice-number`, `supplier`, `status`; `invoice-count` scalar |
 | `detail` | `company-code`, `invoice-id`, `invoice-number` | `invoice` record: `company-code`, `invoice-id`, `invoice-number`, `supplier`, `status`; `lines` record set: `line-id`, `description`, `account`, `vat-code`, `amount`; `line-count` scalar |
 
-All fields except the boolean `nightly` are text. Keep amounts as observed text.
+All fields except the boolean `has-new-invoices` are text. Keep amounts as observed text.
+Bind that boolean to the observed indication of newly arrived invoices for each
+client. A configured nightly synchronization without that indication is false.
+Process selected clients in their observed order and retain studio exclusions.
 Counts must be plain nonnegative integer text extracted from an independent
 total control, not calculated from the rows being checked. Outputs use
 `delivery: model_and_artifact`, making exact authorized values available to
@@ -97,6 +167,31 @@ count; do not guess that a missing grid is empty.
 
 ## Run and reuse
 
+### A bounded trial or an explicitly selected client
+
+For a request such as "try three invoices" or "review these invoices for this
+client", reuse the saved profile and read the authorized company/invoice list to
+resolve exact identities. Pass `invoiceSelection`, an object mapping observed
+company codes to arrays of observed invoice IDs. The operator's request and the
+model's interpretation select the invoices; the helper only checks exact IDs.
+Do not ask the operator to write this object or repeat the professional teaching.
+
+`maxInvoices` and `maxCompanies` are fail-safe limits, not sample selectors.
+Setting `maxInvoices: 3` alone rejects a client list containing four invoices
+before any detail is acquired. For three selected invoices, pass their identities
+in `invoiceSelection` and set the capacity to at least three. Do not invent IDs,
+raise the capacity to process the whole list, or silently substitute an invoice
+which is no longer present. An explicit client may lack the arrival signal; studio
+exclusions still apply. Without a selection, clients with the observed new-invoice arrival signal are selected.
+
+The executor rechecks the complete displayed list and its independent count,
+then opens only the selected details. Its report identifies the selected scope;
+it does not claim to cover the full population. The same selection can accompany
+explicitly authorized `processing`; posting still requires its existing review
+and authorization. A request to register invoices must not be silently routed to
+read-only review: state the actual operation before starting. If the required
+processing profile is absent, identify that missing setup before expanding work.
+
 Run installation/dependency preflights with Vera's managed interpreter. Import
 the collector beside the existing Chrome tab in the host Node runtime:
 
@@ -108,8 +203,10 @@ const result = await collectEconsReview({
   excludedCompanyCodes,       // exact local studio list; [] when explicitly empty
   runDirectory,               // new absolute private folder, existing parent, outside Git
   pythonExecutable,           // absolute managed Python path, never a new environment
+  setupId,                    // returned by the automatic local setup lookup
   maxCompanies: 50,
   maxInvoices: 200,
+  invoiceSelection: null,     // or { [observedCompanyCode]: observedInvoiceIds } for a bounded trial
   environment: { locale: "it-IT" }
 });
 ```
@@ -123,7 +220,9 @@ red-skip rules do not hide invoices from the acquisition report.
 
 The collector saves the profile, selection, per-phase outputs/receipts/locks,
 private phase summaries (including a bounded recovery request when available),
-and the existing `batch_review.py` JSON/HTML history after each invoice. It uses
+and the existing `batch_review.py` JSON/HTML history after each invoice. Explicit
+selection is retained in `selection.json`; `acquisition.json` distinguishes the
+source population count from each client's selected count. It uses
 the supplied interpreter for fixed local scripts without a shell, installation,
 new model service or additional upload.
 
@@ -154,8 +253,8 @@ after each invoice and before any mapping or registration attempt. The returned
 `client_reviews` links identify those files. Keep later human checks and linked
 corrections through `batch_review.py`; never rewrite completed postings.
 
-`processing` contains `profile`, `classifyInvoices`, `reviewJournal` and
-`approvePosting`. Vera implements these callbacks using the current host model
+`processing` contains `profile`, `classifyInvoices`, `reviewRedException`,
+`reviewInvoice`, `reviewJournal` and `approvePosting`. Vera implements these callbacks using the current host model
 and available authorization; they are not an invitation for the professional
 to write code or an automatic source of approval. No helper calls a second LLM.
 
@@ -186,10 +285,26 @@ independent zero count, not a missing table or unavailable iframe.
 `classifyInvoices({company, invoices})` returns `company_code`,
 `red_invoice_ids` and a reason from the model's interpretation of the observed
 indicator and saved professional guidance. Green and orange items stay in the
-processing population and report. The mechanical queue excludes only those exact
-red IDs; more than two consecutive reds suspends the remainder of that client.
-A tail of only reds generates exceptions without opening further invoice details.
+processing population and report. The queue reads the complete details of the first two consecutive red invoices
+before deciding whether the taught mapping exception applies.
+`reviewRedException({company, invoice, detail})` returns `{eligible, reason}`
+from the model's review of those observed lines. A true result still requires
+at least two concordant existing associations, missing accounts to fill, and
+the existing complete-population/VAT checks. Unsupported or unapproved red
+exceptions remain in the report without posting. More than two consecutive reds
+suspends the remaining client. A tail of reds must not bypass exception review.
 The studio exclusion list is unchanged. Colours never approve accounting.
+
+`reviewInvoice({invoice, detail, detail_sha256})` returns `approved`,
+`descriptions_complete`, `company_code`, `invoice_id`, `detail_sha256` and `reason`.
+The model must read every full description in this invoice before it approves
+the review. Non-empty extracted text and a remembered rule do not establish
+completeness. A truncated description must be recovered from an observed full
+value; if unavailable, return false with the precise gap. Never use a constant
+true callback or reuse another invoice's review. Code checks the exact identity
+and evidence hash, saves this review alongside the acquired descriptions, and
+only then permits mapping or opening the journal. This applies independently
+to every invoice, including the second invoice and already mapped invoices.
 
 Before writing mappings, the executor rereads the invoice and requires its
 identity and complete lines to match acquisition. At least two existing lines
@@ -216,6 +331,14 @@ Other journal shapes remain exceptions for professional review. A discrepancy
 between invoice-line sum and displayed net needs an explicit explanation; the
 helper never generates an unexplained balancing adjustment.
 
+`Contabilizza` opens the displayed journal in the observed procedure. It is not
+the final registration: bind `Conferma reg.` to the separate consequential
+`confirm-registration` action after reviewing its actual screen behavior.
+The executor saves the displayed journal values before calling `reviewJournal`,
+so an interrupted review retains those values without claiming completion.
+Do not bypass this per-invoice sequence with freehand clicks after loading the
+rules, and do not call a report complete merely because its file exists.
+
 `approvePosting({invoice, journal, journal_sha256, action})` returns true only
 when the exact current registration is authorized under the host's rules.
 The report is saved as unverified before dispatch. Completion requires the
@@ -223,7 +346,10 @@ captured protocol and invoice absence from the complete Non contab. population
 of the same client, in the profile's exact list view. Ambiguous outcomes remain
 unverified and must be reconciled before retrying. Inspect phase receipts and
 private outputs to resolve the specific gap. Mapping confirmation and
-registration confirmation are separate phases and approvals.
+registration confirmation are separate phases and approvals. Link the current
+per-client reports in the final response, including completed registrations,
+exceptions and uncertain attempts; preserve previous completions when a later
+invoice stops. Subsequent professional corrections remain separate linked entries.
 
 Save two clean sets of phase receipts on the actual ECONS environment, with no
 locator changes or recovery, before calling the process locally validated.
@@ -245,3 +371,8 @@ automatically anonymized; model processing is not local-only. Private JSON and
 offline HTML stay in the selected local run directory and must not enter Git,
 a developer pack or a public package. Login secrets, cookies, session URLs,
 full page HTML and screenshots are not collected by this route.
+Vera also reads the selected local setup's studio label, exclusions, inspected
+screen bindings, incomplete setup notes and prior report path to start a new
+conversation. Those files remain in Vera's private user-local setup store; they
+are not transmitted as change requests or copied into developer packs. Reading
+them in the selected host model is not offline inference or saved authorization.

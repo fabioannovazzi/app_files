@@ -254,11 +254,58 @@ def _generated_files(folder: Path, expected: set[str], *, check: bool = False) -
                 directory.rmdir()
 
 
+def _retained_course(
+    product: str, workflow: str, record: dict[str, Any], *, check: bool
+) -> dict[str, Any]:
+    """Keep published lesson content and files; bind it to the assembled package."""
+    source = AUTHORING / "published" / product / workflow
+    if _sha(source / "course.json") != record["course_sha256"]:
+        raise ValueError(f"Published lesson snapshot changed: {product}/{workflow}")
+    course = _json(source / "course.json")
+    if (
+        course.get("schema") != "mparanza.course.v1"
+        or course.get("product") != product
+        or course.get("workflow") != workflow
+    ):
+        raise ValueError("Invalid retained lesson identity")
+    target = ROOT / "plugins" / product / "assets/courses" / workflow
+    _generated_files(
+        target,
+        {"course.json", *(f["path"] for f in course.get("files", []))},
+        check=check,
+    )
+    for asset in course.get("files", []):
+        relative = Path(asset["path"])
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("Published inputs must be contained in their lesson")
+        original = source / relative
+        if original.is_symlink() or _sha(original) != asset["sha256"]:
+            raise ValueError("Published lesson input changed")
+        destination = target / relative
+        if check:
+            if not destination.is_file() or _sha(destination) != asset["sha256"]:
+                raise ValueError("Retained lesson input is stale")
+        else:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(original, destination)
+    course["sources"] = _source_records(product, workflow)
+    course["retained_from"] = record
+    _write(target / "course.json", course, check=check)
+    return course
+
+
 def build(*, require_complete: bool = True, check: bool = False) -> dict[str, Any]:
     """Compile reviewed kits with exact input files; never author outputs."""
     locales = _locales()
     definitions = _json(AUTHORING / "kits.json")
     expected = {f"{p}/{w}" for p in ("vera", "clara", "lucia") for w in _eligible(p)}
+    release = _json(AUTHORING / "release_plan.json")
+    prepared = set(release["prepared"])
+    retained = release["retained"]
+    if prepared & set(retained) or prepared | set(retained) != expected:
+        raise ValueError(
+            "Mixed release must select each eligible workflow exactly once"
+        )
     if set(definitions) != expected:
         raise ValueError(
             f"Kit inventory differs from current teaching scope: {set(definitions) ^ expected}"
@@ -276,6 +323,28 @@ def build(*, require_complete: bool = True, check: bool = False) -> dict[str, An
         }
         for workflow in sorted(_eligible(product)):
             key = f"{product}/{workflow}"
+            if key in retained:
+                course = _retained_course(product, workflow, retained[key], check=check)
+                path = assets / workflow / "course.json"
+                definition = definitions[key]
+                index["courses"][workflow] = {
+                    "path": path.relative_to(assets).as_posix(),
+                    "sha256": _sha(path),
+                    "languages": course["supported_languages"],
+                    "duration_seconds": sum(course["seconds"]),
+                    "group": definition["group"],
+                    "parent_workflow": definition.get("parent_workflow"),
+                    "titles": {
+                        lang: value["title"]
+                        for lang, value in course["locales"].items()
+                    },
+                    "goals": {
+                        lang: value["goal"] for lang, value in course["locales"].items()
+                    },
+                    "material": "retained",
+                }
+                count += len(course["locales"])
+                continue
             supported = LIMITED_LANGUAGES.get(key, LANGUAGES)
             absent = set(supported) - set(locales.get(key, {}))
             if absent:

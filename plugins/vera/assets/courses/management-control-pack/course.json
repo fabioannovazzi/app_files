@@ -1,27 +1,21 @@
 {
-  "schema": "mparanza.teaching_kit.v2",
+  "schema": "mparanza.course.v1",
   "product": "vera",
   "workflow": "management-control-pack",
-  "revision": "2026-09-14.2",
+  "revision": "2026-09-14.1",
   "seconds": [
     45,
     60,
-    105,
     75,
-    45,
-    60
+    90,
+    75,
+    45
   ],
   "supported_languages": [
     "it",
     "en"
   ],
   "language_basis": "workflow_output_contract",
-  "group": "workflow",
-  "parent_workflow": null,
-  "execution": {
-    "mode": "current_native_workflow",
-    "local_tutorial": true
-  },
   "sources": [
     {
       "path": "modules/management-control-pack/assets/budget-report.css",
@@ -161,7 +155,7 @@
     {
       "path": "skills/management-control-pack/SKILL.md",
       "repository_path": "plugins/vera/skills/management-control-pack/SKILL.md",
-      "sha256": "1563c5ed0d0630694398c9b61e9e67bb3a0f9786f0de0f1b646a71889012b4c9"
+      "sha256": "7fb8a6ab84851546e91d357f0923faf36e2589b7d08e7b509b3c57e48b839ccf"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -199,14 +193,29 @@
       "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -284,110 +293,140 @@
       "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "files": [
-    {
-      "path": "files/input/actual-budget.xlsx",
-      "sha256": "5540ffaa5d8dad4b30de5899f15ccef6c83100b2c673acfeaef6a209b7aba8f0",
-      "languages": [
-        "it",
-        "en"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/input/facts-it.md",
-      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
-      "languages": [
-        "it"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/input/facts-en.md",
-      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
-      "languages": [
-        "en"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/actual-budget-march.xlsx",
-      "sha256": "526cea3fe0d3befacee14153e4edf63c78cd7e2b9c13a2e2fcca791f64d7a675",
-      "languages": [
-        "it",
-        "en"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/practice/facts-it.md",
-      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
-      "languages": [
-        "it"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/practice/facts-en.md",
-      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
-      "languages": [
-        "en"
-      ],
-      "role": "practice"
-    }
-  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
   "locales": {
     "it": {
-      "goal": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
-      "scenario": "Arco ha preparato i dati economici di gennaio e febbraio e il budget degli stessi mesi. Il responsabile vuole capire il risultato operativo e quali categorie spiegano la differenza dal piano, prima della riunione mensile.",
-      "scope": "Il caso comprende ricavi, costo del venduto e costi operativi in euro. Il report distingue i dati osservati dalle spiegazioni che richiedono informazioni dell’azienda.",
-      "inputs": "Apri actual-budget.xlsx e facts-it.md. Il foglio GL contiene movimenti mensili per conto e categoria; Budget contiene il piano comparabile. I ricavi sono positivi e i costi negativi. Il caso indica periodo, significati e totali di controllo: consuntivo EUR 53.000 e budget EUR 47.000.",
-      "steps": [
-        "Vera importa i dati nel caso didattico collegato al cliente. Il pacchetto di controllo di gestione può includere anche altri export; qui impariamo il percorso completo del confronto economico con il budget.",
-        "L’assistente esamina i fogli e propone quali colonne rappresentano date, categorie e importi. Conferma il periodo gennaio–febbraio e la convenzione dei segni prima del calcolo.",
-        "Il workflow applica la mappatura verificata, confronta consuntivo e budget e controlla i totali. La chat vocale spiega il passaggio effettivo e le eventuali informazioni richieste.",
-        "Vera prepara un breve commento collegato ai numeri e una domanda da discutere in riunione. Apri report, cruscotto e workbook nella chat di lavoro: leggi la sintesi del periodo, passa al confronto mensile e trova il dettaglio delle categorie."
+      "title": "Actual e Budget: leggere importi e percentuali",
+      "goal": "Interpretare un report di controllo di gestione a partire da periodo, segni e categorie rivedute.",
+      "scenario": "Arco confronta gennaio e febbraio. I ricavi Actual sono 150.000 EUR contro 140.000 a Budget; i costi inclusi sono 60.000 contro 59.000. Non sono forniti scadenzari o previsioni per i mesi successivi.",
+      "request": "Vera, mostrami dove il risultato si discosta dal Budget nei due mesi chiusi.",
+      "scope": "Confronto del margine sulle categorie fornite. Le sezioni senza fonti restano indisponibili; il caso non inventa scadenzari, forecast o mesi futuri.",
+      "input_columns": [
+        "Voce · gennaio–febbraio",
+        "Actual",
+        "Budget"
       ],
-      "deliverables": [
-        "Cruscotto: mostra risultato del periodo e scostamenti assoluti e percentuali dove significativi. Usalo per scegliere quali voci approfondire.",
-        "Workbook e report: conservano prospetti, controlli e collegamenti ai dati. La sintesi distingue la misura dello scostamento dalla sua causa da verificare."
+      "input_rows": [
+        [
+          "Ricavi",
+          "150.000 EUR",
+          "140.000 EUR"
+        ],
+        [
+          "Costi inclusi",
+          "60.000 EUR",
+          "59.000 EUR"
+        ],
+        [
+          "Margine sulle voci incluse",
+          "90.000 EUR",
+          "81.000 EUR"
+        ]
       ],
-      "review": "Controlla che i due fogli coprano gli stessi mesi e che i costi abbiano il segno previsto. Collega una differenza alla categoria e al mese di origine. Chiedi spiegazioni all’azienda quando i numeri non documentano la causa.",
-      "checkpoints": [
-        "Prima del calcolo: trova i due fogli e conferma il periodo del report.",
-        "Sul risultato: indica il confronto complessivo e poi una categoria che approfondiresti."
+      "basis": "M1 e M2 rappresentano gli export sintetici dei medesimi due mesi completi. Le categorie e il segno dei costi sono riveduti prima del confronto.",
+      "method": [
+        "Ispeziona gli export e rivedi ruoli, colonne, categorie, segni, valuta, periodo e cutoff; conferma i totali di controllo.",
+        "Esegui il pacchetto locale e leggi metriche e limiti. Mostra scostamento assoluto e percentuale; una base nulla o negativa non genera una percentuale fuorviante.",
+        "Spiega i principali contributi distinguendo osservazioni e ipotesi. Le sezioni opzionali compaiono solo quando esistono dati sufficienti e il commento resta rivedibile."
       ],
-      "practice": "Usa actual-budget-march.xlsx per chiedere un aggiornamento fino a marzo. Formula la richiesta, conferma il nuovo periodo e confronta il risultato con il report precedente.",
-      "success": "Il nuovo report deve includere marzo e conservare il precedente. Sai trovare il confronto con il budget e risalire ai dati di una categoria.",
-      "repeat": "Per rifarlo, fornisci consuntivo e piano con periodi comparabili, indica il periodo e lo scopo della riunione, rivedi la lettura dei dati e apri il report generato.",
-      "title": "Preparare il controllo di gestione con Vera",
-      "request": "Vera, prepara il report consuntivo–budget di Arco per gennaio e febbraio 2026 da questo workbook. Mostrami risultato operativo, scostamenti e dettaglio per categoria."
+      "result_title": "Margine superiore al Budget di 9.000 EUR",
+      "conclusion": "I ricavi aggiungono 10.000 EUR; i maggiori costi ne assorbono 1.000. Il margine sulle voci fornite cresce da 81.000 a 90.000 EUR, pari a +11,11%.",
+      "output_columns": [
+        "Voce",
+        "Δ EUR",
+        "Δ % sulla base Budget"
+      ],
+      "output_rows": [
+        [
+          "Ricavi",
+          "+10.000",
+          "+7,14%"
+        ],
+        [
+          "Costi",
+          "+1.000",
+          "+1,69% · sfavorevole"
+        ],
+        [
+          "Margine",
+          "+9.000",
+          "+11,11%"
+        ]
+      ],
+      "check": "Un aumento dei costi non diventa favorevole perché il segno è positivo. Prima di spiegare una causa commerciale, verifica che periodi e categorie siano confrontabili.",
+      "question": "Se il Budget di una voce è zero, quale informazione manteniamo?",
+      "answer": "Manteniamo lo scostamento in EUR e segnaliamo la percentuale come non disponibile. Non mostriamo infinito né una percentuale inventata.",
+      "practice": "Aggiungi un mese completo a entrambi gli export e riesegui il confronto con il nuovo cutoff.",
+      "next": "Seleziona contabilità e Budget coerenti. Aggiungi scadenzari o forecast solo quando fanno parte dell'incarico e sono disponibili."
     },
     "en": {
-      "goal": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review.",
-      "scenario": "Arco has prepared January and February management accounts and a budget for the same months. The manager wants to understand operating performance and which categories explain the difference from plan before the monthly meeting.",
-      "scope": "The case includes revenue, cost of goods sold and operating expenses in EUR. The report separates observed figures from explanations requiring company evidence.",
-      "inputs": "Open actual-budget.xlsx and facts-en.md. GL contains monthly movements by account and category; Budget contains the comparable plan. Revenue is positive and costs are negative. The case declares periods, meanings and control totals: actual EUR 53,000 and budget EUR 47,000.",
-      "steps": [
-        "Vera imports the data into the client-bound teaching case. The management-control pack also accepts other exports; here we learn the complete actual-versus-budget reporting journey.",
-        "The assistant inspects the sheets and proposes which columns contain dates, categories and amounts. Confirm January–February and the sign convention before calculation.",
-        "The workflow applies the reviewed mapping, compares actual with budget and checks totals. The voice chat explains the actual step and any requested information.",
-        "Vera prepares a short commentary tied to the figures and a question for the meeting. Open the report, dashboard and workbook in the working chat: read the period summary, switch to the monthly comparison and find the category detail."
+      "title": "Actual versus Budget: read amounts and percentages",
+      "goal": "Interpret a management report using reviewed periods, signs and categories.",
+      "scenario": "Fictional Arco compares January and February. Actual revenue is EUR 150,000 versus Budget 140,000; included costs are 60,000 versus 59,000. No open-item schedules or later-month forecasts are supplied.",
+      "request": "Vera, show where the result differs from Budget in the two closed months.",
+      "scope": "A margin comparison on supplied categories. Unsupported sections remain unavailable; no forecast, aging schedule or future months are invented.",
+      "input_columns": [
+        "January–February item",
+        "Actual",
+        "Budget"
       ],
-      "deliverables": [
-        "Dashboard: shows period performance and absolute and percentage variances where meaningful. Use it to decide which categories to investigate.",
-        "Workbook and report: retain tables, controls and links to the data. The summary distinguishes the measured variance from its cause, which may need investigation."
+      "input_rows": [
+        [
+          "Revenue",
+          "EUR 150,000",
+          "EUR 140,000"
+        ],
+        [
+          "Included costs",
+          "EUR 60,000",
+          "EUR 59,000"
+        ],
+        [
+          "Margin on included items",
+          "EUR 90,000",
+          "EUR 81,000"
+        ]
       ],
-      "review": "Check that both sheets cover the same months and that costs use the expected sign. Trace one difference to its source category and month. Ask the company for explanations when the figures do not establish a cause.",
-      "checkpoints": [
-        "Before calculation: find the two sheets and confirm the reporting period.",
-        "At the result: locate the overall comparison and one category you would investigate."
+      "basis": "M1 and M2 describe the same two complete months. Category meaning and cost signs are reviewed before comparison.",
+      "method": [
+        "Inspect exports and review roles, columns, categories, signs, currency, period and cutoff. Confirm control totals.",
+        "Run the local pack and read metrics and limitations. Show absolute and percentage changes, withholding misleading percentages on zero or negative bases.",
+        "Explain the main contributions while separating observations from hypotheses. Optional sections require adequate inputs and commentary remains reviewable."
       ],
-      "practice": "Use actual-budget-march.xlsx to request an update through March. Formulate the request, confirm the new period and compare the result with the preceding report.",
-      "success": "The new report must include March and preserve the preceding version. You can find the budget comparison and trace one category to its data.",
-      "repeat": "To repeat at work, supply actuals and plan for comparable periods, specify the period and meeting purpose, review the interpretation of the inputs and open the generated report.",
-      "title": "Prepare a management-control report with Vera",
-      "request": "Vera, prepare Arco’s actual-versus-budget report for January and February 2026 from this workbook. Show operating performance, variances and category detail."
+      "result_title": "Margin exceeds Budget by EUR 9,000",
+      "conclusion": "Extra revenue adds EUR 10,000 and higher costs absorb EUR 1,000. Margin rises from EUR 81,000 to EUR 90,000: +11.11%.",
+      "output_columns": [
+        "Item",
+        "Δ EUR",
+        "Δ % on Budget"
+      ],
+      "output_rows": [
+        [
+          "Revenue",
+          "+10,000",
+          "+7.14%"
+        ],
+        [
+          "Costs",
+          "+1,000",
+          "+1.69% · unfavorable"
+        ],
+        [
+          "Margin",
+          "+9,000",
+          "+11.11%"
+        ]
+      ],
+      "check": "A positive cost change is not favorable. Check comparable periods and categories before explaining a commercial cause.",
+      "question": "What do we retain when an item's Budget is zero?",
+      "answer": "Retain the EUR difference and mark the percentage unavailable. Do not display infinity or an invented percentage.",
+      "practice": "Add a complete month to both exports and rerun with the new cutoff.",
+      "next": "Select coherent accounting and Budget exports. Add aging or forecast inputs when they belong to the assignment and are available."
     }
+  },
+  "retained_from": {
+    "course_sha256": "a4bd63f91c3b5dffe9c534742e64d4269597998c5e6d6de91b1cebc44357ece8",
+    "published_version": "0.1.257"
   }
 }

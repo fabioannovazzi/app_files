@@ -97,7 +97,7 @@
     "it": {
       "name": "Impara con Clara",
       "summary": "Parli con Clara in una finestra; nell’altra vedi l’esempio che sta eseguendo. Puoi fermarla, fare domande e provare insieme.",
-      "useWhen": "Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate. La spiegazione e una breve prova richiedono circa 5–8 minuti; elaborazione e domande possono prolungare la sessione. Si usa una lingua supportata dalla funzione scelta.",
+      "useWhen": "L’introduzione è facoltativa: puoi saltarla o interromperla e usare subito Vera, anche se il tutorial non funziona. Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate. La spiegazione e una breve prova richiedono circa 5–8 minuti; elaborazione e domande possono prolungare la sessione. Si usa una lingua supportata dalla funzione scelta.",
       "input": "Racconta di che cosa ti occupi e che cosa vorresti fare oggi. Per iniziare trovi file fittizi già preparati, una guida breve e un esercizio. Non occorrono documenti di clienti.",
       "work": "La prima volta Clara ti fa qualche domanda e sceglie con te 3–4 flussi utili. Ogni lezione parte dal suo scopo, mostra i file e la richiesta da usare, esegue il flusso corrente e ti accompagna nella lettura del risultato. Poi provi tu. Puoi tornare quando vuoi per una singola funzione, senza rifare l’intervista.",
       "output": "Sul computer restano la guida, i file di esempio, i risultati realmente prodotti e i progressi. Puoi riprendere la prova o ripeterla con altri dati. Il percorso spiega come rifare il lavoro con i documenti che sceglierai.",
@@ -120,7 +120,7 @@
     "en": {
       "name": "Learn with Clara",
       "summary": "Talk to Clara in one window and watch the example she is running in the other. You can stop her, ask questions and try it together.",
-      "useWhen": "For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows. Explanation and a short attempt take about 5–8 minutes; processing and questions may extend the session. Use a language supported by the chosen function.",
+      "useWhen": "The introduction is optional: you can skip or leave it and use Vera immediately, even if the tutorial fails. For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows. Explanation and a short attempt take about 5–8 minutes; processing and questions may extend the session. Use a language supported by the chosen function.",
       "input": "Describe your work and what you would like to do today. Start with prepared fictional files, a short guide and an exercise. You do not need client documents.",
       "work": "The first time, Clara asks a few questions and helps you choose 3–4 useful workflows. Each lesson explains its purpose, shows the files and request to use, runs the current workflow and walks you through the result. Then you try it. Return anytime for one function without repeating the interview.",
       "output": "The guide, example files, results actually produced and your progress stay on your computer. Resume the exercise or repeat it with different data. The lesson explains how to repeat the work with documents you choose.",
@@ -143,7 +143,7 @@
     "fr": {
       "name": "Apprendre avec Clara",
       "summary": "Tu parles avec Clara dans une fenêtre et tu regardes l’exemple qu’elle réalise dans l’autre. Tu peux l’arrêter, poser des questions et essayer avec elle.",
-      "useWhen": "Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte. Les explications et un court essai prennent environ 5–8 minutes ; le traitement et les questions peuvent prolonger la séance. La langue doit être prise en charge par la fonction choisie.",
+      "useWhen": "La présentation est facultative : tu peux la passer ou l’arrêter et utiliser Vera immédiatement, même si le tutoriel ne fonctionne pas. Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte. Les explications et un court essai prennent environ 5–8 minutes ; le traitement et les questions peuvent prolonger la séance. La langue doit être prise en charge par la fonction choisie.",
       "input": "Décris ton travail et ce que tu aimerais faire aujourd’hui. Tu disposes de fichiers fictifs préparés, d’un guide court et d’un exercice. Aucun document client n’est nécessaire.",
       "work": "La première fois, Clara pose quelques questions et choisit avec toi 3–4 processus utiles. Chaque leçon explique son objectif, montre les fichiers et la demande à utiliser, exécute le processus actuel et accompagne la lecture du résultat. Ensuite, tu essaies. Reviens quand tu veux pour une fonction, sans refaire l’entretien.",
       "output": "Le guide, les fichiers d’exemple, les résultats réellement produits et ta progression restent sur ton ordinateur. Reprends l’exercice ou refais-le avec d’autres données. La leçon explique comment répéter le travail avec les documents que tu choisis.",
@@ -166,7 +166,7 @@
     "de": {
       "name": "Mit Clara lernen",
       "summary": "Du sprichst mit Clara in einem Fenster und siehst im anderen, wie sie ein Beispiel ausführt. Du kannst sie unterbrechen, Fragen stellen und es gemeinsam ausprobieren.",
-      "useWhen": "Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern. Erklärung und ein kurzer Versuch dauern etwa 5–8 Minuten; Verarbeitung und Fragen können die Sitzung verlängern. Verwende eine von der gewählten Funktion unterstützte Sprache.",
+      "useWhen": "Die Einführung ist freiwillig: Du kannst sie überspringen oder abbrechen und Vera sofort nutzen, auch wenn das Tutorial nicht funktioniert. Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern. Erklärung und ein kurzer Versuch dauern etwa 5–8 Minuten; Verarbeitung und Fragen können die Sitzung verlängern. Verwende eine von der gewählten Funktion unterstützte Sprache.",
       "input": "Beschreibe deine Arbeit und was du heute tun möchtest. Vorbereitete fiktive Dateien, eine kurze Anleitung und eine Übung stehen bereit. Du brauchst keine Mandantendokumente.",
       "work": "Beim ersten Mal stellt Clara einige Fragen und wählt mit dir 3–4 passende Abläufe aus. Jede Lektion erklärt den Zweck, zeigt die benötigten Dateien und die passende Anfrage, führt den aktuellen Ablauf aus und hilft beim Lesen des Ergebnisses. Danach probierst du es selbst. Du kannst jederzeit eine einzelne Funktion lernen, ohne das Einstiegsgespräch zu wiederholen.",
       "output": "Anleitung, Beispieldateien, tatsächlich erzeugte Ergebnisse und dein Fortschritt bleiben auf deinem Computer. Setze die Übung fort oder wiederhole sie mit anderen Daten. Die Lektion erklärt, wie du die Arbeit mit selbst gewählten Dokumenten wiederholst.",
@@ -189,7 +189,7 @@
     "es": {
       "name": "Aprende con Clara",
       "summary": "Hablas con Clara en una ventana y ves el ejemplo que está realizando en la otra. Puedes detenerla, hacer preguntas y probar juntos.",
-      "useWhen": "Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas. La explicación y una breve prueba duran unos 5–8 minutos; el procesamiento y las preguntas pueden alargar la sesión. Utiliza un idioma admitido por la función elegida.",
+      "useWhen": "La introducción es opcional: puedes omitirla o interrumpirla y usar Vera de inmediato, incluso si el tutorial falla. Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas. La explicación y una breve prueba duran unos 5–8 minutos; el procesamiento y las preguntas pueden alargar la sesión. Utiliza un idioma admitido por la función elegida.",
       "input": "Describe tu trabajo y qué te gustaría hacer hoy. Dispones de archivos ficticios preparados, una guía breve y un ejercicio. No necesitas documentos de clientes.",
       "work": "La primera vez, Clara hace unas preguntas y elige contigo 3–4 procesos útiles. Cada lección explica su finalidad, muestra los archivos y la petición necesarios, ejecuta el proceso actual y te ayuda a leer el resultado. Después lo intentas tú. Vuelve cuando quieras para aprender una función sin repetir la entrevista.",
       "output": "La guía, los archivos de ejemplo, los resultados realmente producidos y tu progreso permanecen en el ordenador. Retoma el ejercicio o repítelo con otros datos. La lección explica cómo repetir el trabajo con los documentos que elijas.",
@@ -218,7 +218,7 @@
     "it": {
       "name": "Impara con Lucia",
       "summary": "Parli con Lucia in una finestra; nell’altra vedi l’esempio che sta eseguendo. Puoi fermarla, fare domande e provare insieme.",
-      "useWhen": "Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate. La spiegazione e una breve prova richiedono circa 5–8 minuti; elaborazione e domande possono prolungare la sessione. Si usa una lingua supportata dalla funzione scelta.",
+      "useWhen": "L’introduzione è facoltativa: puoi saltarla o interromperla e usare subito Clara, anche se il tutorial non funziona. Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate. La spiegazione e una breve prova richiedono circa 5–8 minuti; elaborazione e domande possono prolungare la sessione. Si usa una lingua supportata dalla funzione scelta.",
       "input": "Racconta di che cosa ti occupi e che cosa vorresti fare oggi. Per iniziare trovi file fittizi già preparati, una guida breve e un esercizio. Non occorrono documenti di clienti.",
       "work": "La prima volta Lucia ti fa qualche domanda e sceglie con te 3–4 flussi utili. Ogni lezione parte dal suo scopo, mostra i file e la richiesta da usare, esegue il flusso corrente e ti accompagna nella lettura del risultato. Poi provi tu. Puoi tornare quando vuoi per una singola funzione, senza rifare l’intervista.",
       "output": "Sul computer restano la guida, i file di esempio, i risultati realmente prodotti e i progressi. Puoi riprendere la prova o ripeterla con altri dati. Il percorso spiega come rifare il lavoro con i documenti che sceglierai.",
@@ -241,7 +241,7 @@
     "en": {
       "name": "Learn with Lucia",
       "summary": "Talk to Lucia in one window and watch the example she is running in the other. You can stop her, ask questions and try it together.",
-      "useWhen": "For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows. Explanation and a short attempt take about 5–8 minutes; processing and questions may extend the session. Use a language supported by the chosen function.",
+      "useWhen": "The introduction is optional: you can skip or leave it and use Clara immediately, even if the tutorial fails. For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows. Explanation and a short attempt take about 5–8 minutes; processing and questions may extend the session. Use a language supported by the chosen function.",
       "input": "Describe your work and what you would like to do today. Start with prepared fictional files, a short guide and an exercise. You do not need client documents.",
       "work": "The first time, Lucia asks a few questions and helps you choose 3–4 useful workflows. Each lesson explains its purpose, shows the files and request to use, runs the current workflow and walks you through the result. Then you try it. Return anytime for one function without repeating the interview.",
       "output": "The guide, example files, results actually produced and your progress stay on your computer. Resume the exercise or repeat it with different data. The lesson explains how to repeat the work with documents you choose.",
@@ -264,7 +264,7 @@
     "fr": {
       "name": "Apprendre avec Lucia",
       "summary": "Tu parles avec Lucia dans une fenêtre et tu regardes l’exemple qu’elle réalise dans l’autre. Tu peux l’arrêter, poser des questions et essayer avec elle.",
-      "useWhen": "Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte. Les explications et un court essai prennent environ 5–8 minutes ; le traitement et les questions peuvent prolonger la séance. La langue doit être prise en charge par la fonction choisie.",
+      "useWhen": "La présentation est facultative : tu peux la passer ou l’arrêter et utiliser Clara immédiatement, même si le tutoriel ne fonctionne pas. Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte. Les explications et un court essai prennent environ 5–8 minutes ; le traitement et les questions peuvent prolonger la séance. La langue doit être prise en charge par la fonction choisie.",
       "input": "Décris ton travail et ce que tu aimerais faire aujourd’hui. Tu disposes de fichiers fictifs préparés, d’un guide court et d’un exercice. Aucun document client n’est nécessaire.",
       "work": "La première fois, Lucia pose quelques questions et choisit avec toi 3–4 processus utiles. Chaque leçon explique son objectif, montre les fichiers et la demande à utiliser, exécute le processus actuel et accompagne la lecture du résultat. Ensuite, tu essaies. Reviens quand tu veux pour une fonction, sans refaire l’entretien.",
       "output": "Le guide, les fichiers d’exemple, les résultats réellement produits et ta progression restent sur ton ordinateur. Reprends l’exercice ou refais-le avec d’autres données. La leçon explique comment répéter le travail avec les documents que tu choisis.",
@@ -287,7 +287,7 @@
     "de": {
       "name": "Mit Lucia lernen",
       "summary": "Du sprichst mit Lucia in einem Fenster und siehst im anderen, wie sie ein Beispiel ausführt. Du kannst sie unterbrechen, Fragen stellen und es gemeinsam ausprobieren.",
-      "useWhen": "Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern. Erklärung und ein kurzer Versuch dauern etwa 5–8 Minuten; Verarbeitung und Fragen können die Sitzung verlängern. Verwende eine von der gewählten Funktion unterstützte Sprache.",
+      "useWhen": "Die Einführung ist freiwillig: Du kannst sie überspringen oder abbrechen und Clara sofort nutzen, auch wenn das Tutorial nicht funktioniert. Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern. Erklärung und ein kurzer Versuch dauern etwa 5–8 Minuten; Verarbeitung und Fragen können die Sitzung verlängern. Verwende eine von der gewählten Funktion unterstützte Sprache.",
       "input": "Beschreibe deine Arbeit und was du heute tun möchtest. Vorbereitete fiktive Dateien, eine kurze Anleitung und eine Übung stehen bereit. Du brauchst keine Mandantendokumente.",
       "work": "Beim ersten Mal stellt Lucia einige Fragen und wählt mit dir 3–4 passende Abläufe aus. Jede Lektion erklärt den Zweck, zeigt die benötigten Dateien und die passende Anfrage, führt den aktuellen Ablauf aus und hilft beim Lesen des Ergebnisses. Danach probierst du es selbst. Du kannst jederzeit eine einzelne Funktion lernen, ohne das Einstiegsgespräch zu wiederholen.",
       "output": "Anleitung, Beispieldateien, tatsächlich erzeugte Ergebnisse und dein Fortschritt bleiben auf deinem Computer. Setze die Übung fort oder wiederhole sie mit anderen Daten. Die Lektion erklärt, wie du die Arbeit mit selbst gewählten Dokumenten wiederholst.",
@@ -310,7 +310,7 @@
     "es": {
       "name": "Aprende con Lucia",
       "summary": "Hablas con Lucia en una ventana y ves el ejemplo que está realizando en la otra. Puedes detenerla, hacer preguntas y probar juntos.",
-      "useWhen": "Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas. La explicación y una breve prueba duran unos 5–8 minutos; el procesamiento y las preguntas pueden alargar la sesión. Utiliza un idioma admitido por la función elegida.",
+      "useWhen": "La introducción es opcional: puedes omitirla o interrumpirla y usar Clara de inmediato, incluso si el tutorial falla. Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas. La explicación y una breve prueba duran unos 5–8 minutos; el procesamiento y las preguntas pueden alargar la sesión. Utiliza un idioma admitido por la función elegida.",
       "input": "Describe tu trabajo y qué te gustaría hacer hoy. Dispones de archivos ficticios preparados, una guía breve y un ejercicio. No necesitas documentos de clientes.",
       "work": "La primera vez, Lucia hace unas preguntas y elige contigo 3–4 procesos útiles. Cada lección explica su finalidad, muestra los archivos y la petición necesarios, ejecuta el proceso actual y te ayuda a leer el resultado. Después lo intentas tú. Vuelve cuando quieras para aprender una función sin repetir la entrevista.",
       "output": "La guía, los archivos de ejemplo, los resultados realmente producidos y tu progreso permanecen en el ordenador. Retoma el ejercicio o repítelo con otros datos. La lección explica cómo repetir el trabajo con los documentos que elijas.",
@@ -339,7 +339,7 @@
     "it": {
       "name": "Impara con Vera",
       "summary": "Parli con Vera in una finestra; nell’altra vedi l’esempio che sta eseguendo. Puoi fermarla, fare domande e provare insieme.",
-      "useWhen": "Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate. La spiegazione e una breve prova richiedono circa 5–8 minuti; elaborazione e domande possono prolungare la sessione. Si usa una lingua supportata dalla funzione scelta.",
+      "useWhen": "L’introduzione è facoltativa: puoi saltarla o interromperla e usare subito Lucia, anche se il tutorial non funziona. Per imparare al primo accesso o quando vuoi provare qualcosa di nuovo. Si usa in Codex sul computer, con la voce dell’app e due chat in finestre affiancate. La spiegazione e una breve prova richiedono circa 5–8 minuti; elaborazione e domande possono prolungare la sessione. Si usa una lingua supportata dalla funzione scelta.",
       "input": "Racconta di che cosa ti occupi e che cosa vorresti fare oggi. Per iniziare trovi file fittizi già preparati, una guida breve e un esercizio. Non occorrono documenti di clienti.",
       "work": "La prima volta Vera ti fa qualche domanda e sceglie con te 3–4 flussi utili. Ogni lezione parte dal suo scopo, mostra i file e la richiesta da usare, esegue il flusso corrente e ti accompagna nella lettura del risultato. Poi provi tu. Puoi tornare quando vuoi per una singola funzione, senza rifare l’intervista.",
       "output": "Sul computer restano la guida, i file di esempio, i risultati realmente prodotti e i progressi. Puoi riprendere la prova o ripeterla con altri dati. Il percorso spiega come rifare il lavoro con i documenti che sceglierai.",
@@ -362,7 +362,7 @@
     "en": {
       "name": "Learn with Vera",
       "summary": "Talk to Vera in one window and watch the example she is running in the other. You can stop her, ask questions and try it together.",
-      "useWhen": "For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows. Explanation and a short attempt take about 5–8 minutes; processing and questions may extend the session. Use a language supported by the chosen function.",
+      "useWhen": "The introduction is optional: you can skip or leave it and use Lucia immediately, even if the tutorial fails. For your first visit or whenever you want to try something new. Use Codex on your computer, with the app’s voice feature and two chats in side-by-side windows. Explanation and a short attempt take about 5–8 minutes; processing and questions may extend the session. Use a language supported by the chosen function.",
       "input": "Describe your work and what you would like to do today. Start with prepared fictional files, a short guide and an exercise. You do not need client documents.",
       "work": "The first time, Vera asks a few questions and helps you choose 3–4 useful workflows. Each lesson explains its purpose, shows the files and request to use, runs the current workflow and walks you through the result. Then you try it. Return anytime for one function without repeating the interview.",
       "output": "The guide, example files, results actually produced and your progress stay on your computer. Resume the exercise or repeat it with different data. The lesson explains how to repeat the work with documents you choose.",
@@ -385,7 +385,7 @@
     "fr": {
       "name": "Apprendre avec Vera",
       "summary": "Tu parles avec Vera dans une fenêtre et tu regardes l’exemple qu’elle réalise dans l’autre. Tu peux l’arrêter, poser des questions et essayer avec elle.",
-      "useWhen": "Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte. Les explications et un court essai prennent environ 5–8 minutes ; le traitement et les questions peuvent prolonger la séance. La langue doit être prise en charge par la fonction choisie.",
+      "useWhen": "La présentation est facultative : tu peux la passer ou l’arrêter et utiliser Lucia immédiatement, même si le tutoriel ne fonctionne pas. Pour commencer ou lorsque tu veux essayer quelque chose de nouveau. Utilise Codex sur ordinateur, avec la voix de l’application et deux conversations dans des fenêtres côte à côte. Les explications et un court essai prennent environ 5–8 minutes ; le traitement et les questions peuvent prolonger la séance. La langue doit être prise en charge par la fonction choisie.",
       "input": "Décris ton travail et ce que tu aimerais faire aujourd’hui. Tu disposes de fichiers fictifs préparés, d’un guide court et d’un exercice. Aucun document client n’est nécessaire.",
       "work": "La première fois, Vera pose quelques questions et choisit avec toi 3–4 processus utiles. Chaque leçon explique son objectif, montre les fichiers et la demande à utiliser, exécute le processus actuel et accompagne la lecture du résultat. Ensuite, tu essaies. Reviens quand tu veux pour une fonction, sans refaire l’entretien.",
       "output": "Le guide, les fichiers d’exemple, les résultats réellement produits et ta progression restent sur ton ordinateur. Reprends l’exercice ou refais-le avec d’autres données. La leçon explique comment répéter le travail avec les documents que tu choisis.",
@@ -408,7 +408,7 @@
     "de": {
       "name": "Mit Vera lernen",
       "summary": "Du sprichst mit Vera in einem Fenster und siehst im anderen, wie sie ein Beispiel ausführt. Du kannst sie unterbrechen, Fragen stellen und es gemeinsam ausprobieren.",
-      "useWhen": "Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern. Erklärung und ein kurzer Versuch dauern etwa 5–8 Minuten; Verarbeitung und Fragen können die Sitzung verlängern. Verwende eine von der gewählten Funktion unterstützte Sprache.",
+      "useWhen": "Die Einführung ist freiwillig: Du kannst sie überspringen oder abbrechen und Lucia sofort nutzen, auch wenn das Tutorial nicht funktioniert. Für den Einstieg oder wenn du etwas Neues ausprobieren möchtest. Nutze Codex auf deinem Computer mit der Sprachfunktion der App und zwei Chats in nebeneinanderliegenden Fenstern. Erklärung und ein kurzer Versuch dauern etwa 5–8 Minuten; Verarbeitung und Fragen können die Sitzung verlängern. Verwende eine von der gewählten Funktion unterstützte Sprache.",
       "input": "Beschreibe deine Arbeit und was du heute tun möchtest. Vorbereitete fiktive Dateien, eine kurze Anleitung und eine Übung stehen bereit. Du brauchst keine Mandantendokumente.",
       "work": "Beim ersten Mal stellt Vera einige Fragen und wählt mit dir 3–4 passende Abläufe aus. Jede Lektion erklärt den Zweck, zeigt die benötigten Dateien und die passende Anfrage, führt den aktuellen Ablauf aus und hilft beim Lesen des Ergebnisses. Danach probierst du es selbst. Du kannst jederzeit eine einzelne Funktion lernen, ohne das Einstiegsgespräch zu wiederholen.",
       "output": "Anleitung, Beispieldateien, tatsächlich erzeugte Ergebnisse und dein Fortschritt bleiben auf deinem Computer. Setze die Übung fort oder wiederhole sie mit anderen Daten. Die Lektion erklärt, wie du die Arbeit mit selbst gewählten Dokumenten wiederholst.",
@@ -431,7 +431,7 @@
     "es": {
       "name": "Aprende con Vera",
       "summary": "Hablas con Vera en una ventana y ves el ejemplo que está realizando en la otra. Puedes detenerla, hacer preguntas y probar juntos.",
-      "useWhen": "Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas. La explicación y una breve prueba duran unos 5–8 minutos; el procesamiento y las preguntas pueden alargar la sesión. Utiliza un idioma admitido por la función elegida.",
+      "useWhen": "La introducción es opcional: puedes omitirla o interrumpirla y usar Lucia de inmediato, incluso si el tutorial falla. Para empezar o cuando quieras probar algo nuevo. Usa Codex en tu ordenador, con la voz de la aplicación y dos chats en ventanas contiguas. La explicación y una breve prueba duran unos 5–8 minutos; el procesamiento y las preguntas pueden alargar la sesión. Utiliza un idioma admitido por la función elegida.",
       "input": "Describe tu trabajo y qué te gustaría hacer hoy. Dispones de archivos ficticios preparados, una guía breve y un ejercicio. No necesitas documentos de clientes.",
       "work": "La primera vez, Vera hace unas preguntas y elige contigo 3–4 procesos útiles. Cada lección explica su finalidad, muestra los archivos y la petición necesarios, ejecuta el proceso actual y te ayuda a leer el resultado. Después lo intentas tú. Vuelve cuando quieras para aprender una función sin repetir la entrevista.",
       "output": "La guía, los archivos de ejemplo, los resultados realmente producidos y tu progreso permanecen en el ordenador. Retoma el ejercicio o repítelo con otros datos. La lección explica cómo repetir el trabajo con los documentos que elijas.",
@@ -2527,4 +2527,47 @@
       window.MPARANZA_FUNCTION_PAGES[page].copy[language].name = name;
     });
   });
+})();
+
+// Prepared guides are public; tutorial profiles and progress remain local.
+(() => {
+  const catalogueCopy = {
+  "it": [
+    "Lezioni",
+    "Catalogo delle lezioni",
+    "Scegli una funzione e una lingua. Apri la guida, scarica i file di esempio e chiedi una lezione nel plugin.",
+    "Apri il catalogo delle lezioni →"
+  ],
+  "en": [
+    "Lessons",
+    "Lesson catalogue",
+    "Choose a workflow and language. Open the guide, download the example files and ask for a lesson in the plugin.",
+    "Open the lesson catalogue →"
+  ],
+  "fr": [
+    "Leçons",
+    "Catalogue des leçons",
+    "Choisissez une fonction et une langue. Ouvrez le guide, téléchargez les fichiers exemples et demandez une leçon dans le plugin.",
+    "Ouvrir le catalogue des leçons →"
+  ],
+  "de": [
+    "Lektionen",
+    "Lektionskatalog",
+    "Wählen Sie einen Ablauf und eine Sprache. Öffnen Sie die Anleitung, laden Sie die Beispieldateien herunter und bitten Sie im Plugin um eine Lektion.",
+    "Lektionskatalog öffnen →"
+  ],
+  "es": [
+    "Lecciones",
+    "Catálogo de lecciones",
+    "Elige una función y un idioma. Abre la guía, descarga los archivos de ejemplo y pide una lección en el plugin.",
+    "Abrir el catálogo de lecciones →"
+  ]
+};
+  for (const product of ["vera", "clara", "lucia"]) {
+    const page = window.MPARANZA_FUNCTION_PAGES[`learn-with-${product}`];
+    page.publicExampleHref = `../courses/index.html#${product}`;
+    for (const [language, values] of Object.entries(catalogueCopy)) {
+      Object.assign(page.copy[language], {publicExampleLabel: values[0], publicExampleTitle: values[1], publicExampleSummary: values[2], publicExampleLinkLabel: values[3]});
+    }
+  }
 })();

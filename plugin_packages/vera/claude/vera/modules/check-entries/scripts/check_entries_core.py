@@ -95,7 +95,11 @@ from implementation_contract import (
     validate_implementation_contract,
 )
 from physical_output_set import validate_initial_output_set
-from review_session import write_review_session_artifacts, write_run_intake
+from review_session import (
+    review_notes_copy,
+    write_review_session_artifacts,
+    write_run_intake,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -515,6 +519,7 @@ __all__ = [
     "load_client_engagement_context",
     "normalize_language",
     "run_entry_checks",
+    "write_result_workbook",
     "write_json",
 ]
 
@@ -2883,11 +2888,34 @@ def _implementation_receipts() -> list[dict[str, Any]]:
     return build_implementation_receipts()
 
 
-def _write_stable_result_workbook(frame: pl.DataFrame, path: Path) -> None:
+def write_result_workbook(frame: pl.DataFrame, path: Path) -> None:
     """Write a receiptable workbook after two-run OOXML equality."""
 
     def writer(candidate: Path) -> None:
-        frame.write_excel(candidate)
+        frame.write_excel(
+            candidate,
+            autofit=True,
+            freeze_panes=(1, 4),
+            hide_gridlines=True,
+            hidden_columns=[
+                name
+                for name in (
+                    "prepared_entry_id",
+                    "source_qualification_id",
+                    "support_artifact_id",
+                    "evidence_facts",
+                )
+                if name in frame.collect_schema()
+            ],
+            header_format={
+                "bold": True,
+                "font_color": "#FFFFFF",
+                "bg_color": "#183B56",
+                "text_wrap": True,
+                "valign": "vcenter",
+            },
+            row_heights={0: 36},
+        )
 
     write_stable_xlsx(path, writer)
 
@@ -4542,27 +4570,27 @@ def _xml_review_note(language: str, outcome: str) -> str:
     copy = {
         "en": {
             "matched": "Matched a unique FatturaPA XML using the invoice number and at least one corroborating field.",
-            "direction": "Matched the FatturaPA XML, but a source-bound reviewed journal-direction decision is required.",
+            "direction": "The XML invoice is matched. Confirm whether this journal entry records a debit or a credit before closing the amount comparison.",
             "mismatch": "Matched a FatturaPA XML, but required fields or the reviewed party perimeter are missing or differ.",
         },
         "it": {
             "matched": "Individuato un unico XML FatturaPA tramite il numero di fattura e almeno un altro campo coerente.",
-            "direction": "Individuato l’XML FatturaPA, ma occorre una decisione revisionata e collegata alla fonte sulla direzione Dare/Avere della scrittura.",
+            "direction": "La fattura XML è abbinata. Conferma se la registrazione rileva un importo in Dare o in Avere prima di chiudere il confronto degli importi.",
             "mismatch": "Individuato un XML FatturaPA, ma alcuni campi richiesti o il perimetro delle controparti revisionato sono mancanti o non coincidono.",
         },
         "fr": {
             "matched": "Un XML FatturaPA unique a été identifié par le numéro de facture et au moins un autre champ concordant.",
-            "direction": "Le XML FatturaPA a été identifié, mais une décision revue et liée à la source sur le sens débit/crédit de l’écriture est requise.",
+            "direction": "La facture XML est rapprochée. Confirmez si l’écriture constate un débit ou un crédit avant de conclure la comparaison des montants.",
             "mismatch": "Un XML FatturaPA a été identifié, mais des champs requis ou le périmètre des contreparties revu sont absents ou différents.",
         },
         "de": {
             "matched": "Eine eindeutige FatturaPA-XML wurde anhand der Rechnungsnummer und mindestens eines weiteren übereinstimmenden Feldes zugeordnet.",
-            "direction": "Die FatturaPA-XML wurde zugeordnet; eine geprüfte, quellengebundene Entscheidung zur Soll-/Haben-Richtung der Buchung fehlt jedoch.",
+            "direction": "Die XML-Rechnung ist zugeordnet. Bestätigen Sie, ob diese Buchungszeile einen Soll- oder Habenbetrag erfasst, bevor Sie den Betragsvergleich abschließen.",
             "mismatch": "Eine FatturaPA-XML wurde zugeordnet; erforderliche Felder oder der geprüfte Gegenparteienumfang fehlen jedoch oder weichen ab.",
         },
         "es": {
             "matched": "Se encontró un único XML FatturaPA mediante el número de factura y al menos un campo corroborante.",
-            "direction": "Se encontró el XML FatturaPA, pero se requiere una decisión revisada y vinculada a la fuente sobre la dirección contable.",
+            "direction": "La factura XML está asociada. Confirma si el asiento registra un importe al debe o al haber antes de cerrar la comparación de importes.",
             "mismatch": "Se encontró un XML FatturaPA, pero faltan o no coinciden campos obligatorios o el perímetro de partes.",
         },
     }
@@ -4938,61 +4966,54 @@ def _status_counts(frame: pl.DataFrame) -> dict[str, int]:
     return {str(item["status"]): int(item["count"]) for item in counts}
 
 
-def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
-    if audit.get("language") == "es":
-        lines = [
-            "# Notas de revisión de la comprobación de asientos",
-            "",
-            f"- Idioma: {audit['language']}",
-            f"- Asientos del diario: {audit['journal_row_count']}",
-            f"- PDF justificativos: {audit['pdf_count']}",
-            f"- XML FatturaPA: {audit['invoice_count']}",
-            f"- Filas de resultados: {audit['result_row_count']}",
-            "",
-            "## Recuento por estado",
-        ]
-        counts = audit.get("status_counts", {})
-        if counts:
-            for status, count in sorted(counts.items()):
-                lines.append(f"- {status}: {count}")
-        else:
-            lines.append("- ninguno")
-        lines.extend(
-            [
-                "",
-                "## Política de revisión",
-                "Los scripts solo comparan evidencias deterministas. Claude debe explicar los casos no resueltos, inspeccionar los justificantes cuando sea necesario y mantener explícito el juicio profesional.",
-                "",
-            ]
-        )
-        path.write_text("\n".join(lines), encoding="utf-8")
-        return
-
+def _write_review_notes(
+    path: Path, audit: dict[str, Any], results: pl.DataFrame
+) -> None:
+    """Explain actual sampled results in the selected working language."""
+    copy = review_notes_copy(str(audit.get("language", "en")))
     lines = [
-        "# Vouching Review Notes",
+        f"# {copy['title']}",
         "",
-        f"- Language: {audit['language']}",
-        f"- Journal rows: {audit['journal_row_count']}",
-        f"- Support PDFs: {audit['pdf_count']}",
-        f"- FatturaPA XMLs: {audit['invoice_count']}",
-        f"- Result rows: {audit['result_row_count']}",
+        f"- {copy['language']}: {audit['language']}",
+        f"- {copy['rows']}: {audit['journal_row_count']}",
+        f"- {copy['pdfs']}: {audit['pdf_count']}",
+        f"- {copy['xmls']}: {audit['invoice_count']}",
         "",
-        "## Status Counts",
+        f"## {copy['counts']}",
     ]
-    counts = audit.get("status_counts", {})
-    if counts:
-        for status, count in sorted(counts.items()):
-            lines.append(f"- {status}: {count}")
-    else:
-        lines.append("- none")
-    lines.extend(
-        [
-            "",
-            "## Review Policy",
-            "The scripts only compare deterministic evidence. Claude must explain unresolved cases, inspect support where needed, and keep professional judgment explicit.",
-            "",
+    for status, count in sorted(audit.get("status_counts", {}).items()):
+        lines.append(f"- {copy.get(status, status)}: {count}")
+    lines.extend(["", f"## {copy['policy']}", "", copy["next"], ""])
+    for row in results.to_dicts():
+        identity = str(row.get("movement_number") or row["source_row"])
+        line = str(row.get("line_number") or row["source_row"])
+        currency = str(row.get("currency") or "")
+        lines.extend([f"## {copy['entry']} {identity} / {line}", ""])
+        fields = [
+            ("date", row.get("entry_date")),
+            ("account", row.get("account")),
+            ("amount", f"{row['amount_signed']} {currency}"),
+            ("document_amount", row.get("amount_found")),
+            ("source", f"{row['source_file']}, {row['source_row']}"),
+            (
+                "document",
+                (
+                    Path(str(row["matched_support"])).name
+                    if row.get("matched_support")
+                    else None
+                ),
+            ),
+            ("status", copy.get(str(row["status"]), str(row["status"]))),
+            ("note", row.get("review_notes")),
         ]
-    )
+        for label, value in fields:
+            if value not in (None, ""):
+                lines.append(f"- {copy[label]}: {value}")
+        if "party_perimeter_requires_review" in str(row.get("mismatches", "")).split(
+            ","
+        ):
+            lines.append(f"- {copy['note']}: {copy['party']}")
+        lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -5114,7 +5135,7 @@ def _build_entry_checks_run(
     support_facts = _prepared_support_facts(records)
     support_facts.write_csv(support_facts_path)
     try:
-        _write_stable_result_workbook(result_frame, xlsx_path)
+        write_result_workbook(result_frame, xlsx_path)
     except (ImportError, ModuleNotFoundError, RuntimeError, ValueError) as exc:
         raise ValueError(
             "Check Entries requires a reproducible XLSX workpaper."
@@ -5622,7 +5643,7 @@ def _build_entry_checks_run(
     }
     audit["content_sha256"] = canonical_json_sha256(audit)
     write_json(audit_path, audit)
-    _write_review_notes(review_notes_path, audit)
+    _write_review_notes(review_notes_path, audit, result_frame)
     write_review_session_artifacts(
         output_dir,
         Path(recorded_journal_path),

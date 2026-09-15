@@ -101,7 +101,7 @@ def test_repeated_examples_keep_completed_onboarding_and_reload_latest_profile(
     assert len(store.status()["examples"]) == 5
 
 
-def test_onboarding_stays_mandatory_and_repeated_teaching_does_not_enroll(
+def test_repeated_tutorial_requires_introduction_without_automatically_enrolling(
     teaching, tmp_path
 ):
     module, _, profile = teaching

@@ -179,13 +179,13 @@ class TeachingStore(Store):
         data = data or {}
         if self._profile()["phase"] != "complete":
             raise OnboardingError(
-                "Resume mandatory onboarding and its 3–4 lessons first"
+                "Repeated tutorial sessions need the completed introduction; ordinary workflows remain available"
             )
         with self._lock():
             current = self.status()
             if current["onboarding_phase"] != "complete":
                 raise OnboardingError(
-                    "Resume mandatory onboarding and its 3–4 lessons first"
+                    "Repeated tutorial sessions need the completed introduction; ordinary workflows remain available"
                 )
             if current["active_session"]:
                 raise OnboardingError(
@@ -239,7 +239,9 @@ class TeachingStore(Store):
         if not self.session_id:
             raise OnboardingError("Select --session from the local teaching library")
         if self._profile()["phase"] != "complete":
-            raise OnboardingError("Resume mandatory onboarding first")
+            raise OnboardingError(
+                "Resume the optional introduction for this tutorial; ordinary workflows remain available"
+            )
         return self._load(self.session_id, self._profile())
 
     def _verify_phase(self, state: dict[str, Any], phase: str) -> None:

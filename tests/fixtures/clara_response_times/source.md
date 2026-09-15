@@ -1,0 +1,1 @@
+Synthetic response-time fixture: five independent request durations in milliseconds, 25, 50, 75, 100 and 125. One row per request; no dates, weights or financial measures. Inspect the observation distribution, not a sum of durations or a sales analysis. These values establish only this synthetic sample, not production service performance.

@@ -36,10 +36,24 @@ from advisor_case_core import CaseWorkspaceError, validate_case_workspace
 from deck_revision_text_match import target_text_matches
 
 __all__ = [
+    "verification_ready_for_output_review",
     "DeckRevisionVerificationResult",
     "verify_deck_revision_output",
     "main",
 ]
+
+
+def verification_ready_for_output_review(report: dict[str, Any]) -> bool:
+    """Separate passed mechanical checks from criteria requiring reviewer judgment."""
+    summary = report["summary"]
+    return (
+        summary["status"] in {"verified", "manual_review_required"}
+        and summary["failed_patches"] == 0
+        and summary["manual_review_patches"] == 0
+        and summary["failed_success_criteria"] == 0
+        and summary["passed_patches"] + summary["passed_success_criteria"] > 0
+    )
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -130,9 +144,9 @@ def _shape_text(shape: Any) -> str:
     text = str(getattr(shape, "text", "") or "")
     if text:
         return text
-    table = getattr(shape, "table", None)
-    if table is None:
+    if not bool(getattr(shape, "has_table", False)):
         return ""
+    table = shape.table
     values: list[str] = []
     for row in getattr(table, "rows", []):
         for cell in getattr(row, "cells", []):

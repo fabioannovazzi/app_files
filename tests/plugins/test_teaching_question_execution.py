@@ -12,6 +12,7 @@ from pathlib import Path
 import fitz
 import pytest
 
+from tests.plugins._teaching_release import prepared_kit
 from tests.plugins.test_teaching_kit_execution import (
     _bound_case,
     _complete_teaching_case,
@@ -139,6 +140,7 @@ def _review(contract, phase):
 @pytest.mark.parametrize("product", ["vera", "lucia"])
 @pytest.mark.parametrize("language", LANGUAGES)
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("vera/quesito-legale-fiscale", "lucia/quesito-legale-fiscale")
 def test_question_kit_preserves_request_and_scope_in_native_planning(
     tmp_path, monkeypatch, product, language, phase
 ):

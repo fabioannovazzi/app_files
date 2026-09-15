@@ -4,12 +4,17 @@ description: Use when Clara must validate a completed advisory memo, report, ana
 ---
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../clara/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../clara/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- CLARA_OPENAI_ONBOARDING_END -->
 
 # Validate an advisory deliverable
@@ -160,6 +165,12 @@ This direct local fetch is opt-in. It checks public-network destinations and
 redirects, preserves the response and normalized text under
 `source_materials/web/`, and verifies source identity. It does not infer the
 observation or certify its completeness or truth.
+
+The transport shares one elapsed-time budget across connection attempts,
+redirects and response reads, including slowly trickled headers or bodies.
+An expired response is not saved as evidence. System DNS lookups are synchronous
+and cannot be interrupted by this transport; the timeout is not a guaranteed
+wall-clock limit for the entire capture command.
 
 ## Advisory contract
 
@@ -408,6 +419,30 @@ python scripts/managed_python_runtime.py run \
    deliver or publish. It binds the current workpaper checkpoint, registers,
    hash-bound direct claim appearances, HTML checks, and this model-led review;
    it does not add a second semantic assessment.
+
+
+13. Apply the same current-case gate to Markdown and Word after their individual
+    model-led reviews:
+
+```bash
+python scripts/verify_advisory_delivery.py \
+  <case-dir> <final-document.md-or-docx> <validation_audit.json>
+```
+
+    Markdown does not require browser QA. Word requires a visual review of the
+    final rendered pages: inspect them, then record JSON with `result: "pass"`,
+    `reviewed_by`, and `input.sha256` for the DOCX inspected. Include this record
+    under workflow `clara:document-visual-review` in the contract's required
+    format checks and in the review's artifact references. The validator binds
+    the record; the shared gate rechecks its bytes and document hash. Never
+    write a passing visual record without inspecting the pages.
+
+    For generated decision packs, first run `verify_decision_pack.py` against
+    the output directory. Review Markdown and Word separately against the same
+    committed case answer and authored narrative, including qualifications and
+    material contradictions. Any disagreement requires correction and fresh
+    review. The shared gate checks current evidence and declared review, not
+    semantic equivalence between formats.
 
 ## Codex and Cowork
 

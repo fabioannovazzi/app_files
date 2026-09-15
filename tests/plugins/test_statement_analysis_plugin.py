@@ -334,3 +334,22 @@ def test_dependency_checker_accepts_explicit_requirements() -> None:
     checker = load_dependency_checker()
 
     assert checker.main(["--requirements", "requirements.txt"]) == 0
+
+
+@pytest.mark.parametrize("duplicate_value", [100, 7])
+def test_statement_rejects_duplicate_source_coordinate(
+    tmp_path: Path, duplicate_value: int
+) -> None:
+    core = load_core()
+    source = tmp_path / "values.csv"
+    _write_statement_fixture(source)
+    with source.open("a", encoding="utf-8") as stream:
+        stream.write(f"product_revenue,2025,PL,{duplicate_value}\n")
+    recipe = tmp_path / "recipe.json"
+    _write_recipe(recipe)
+    output = tmp_path / "output"
+
+    with pytest.raises(ValueError, match="Duplicate statement value"):
+        core.run_statement_analysis(source, output, recipe)
+
+    assert not (output / "artifact_manifest.json").exists()

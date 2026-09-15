@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.teaching_kit.v2",
+  "schema": "mparanza.course.v1",
   "product": "vera",
   "workflow": "purchase-invoice-review",
-  "revision": "2026-09-14.2",
+  "revision": "2026-09-14.1",
   "seconds": [
     45,
     60,
-    105,
     75,
-    45,
-    60
+    90,
+    75,
+    45
   ],
   "supported_languages": [
     "it",
@@ -19,13 +19,6 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
-  "group": "workflow",
-  "parent_workflow": null,
-  "execution": {
-    "mode": "current_native_workflow",
-    "local_tutorial": true,
-    "route": "review_mapping_then_native_invoice_audit"
-  },
   "sources": [
     {
       "path": "modules/passive-invoice-audit/assets/icon.svg",
@@ -130,7 +123,7 @@
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
       "repository_path": "plugins/vera/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "08611c4efdf9b4045c0791c3cc9dc8aef4c122b56308127f90c735346c740181"
+      "sha256": "bcbeb9a1c412bb81a9e84e9292b700dd4089815fdae64a373f7a2d3ac3d96c7b"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -168,14 +161,29 @@
       "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -253,321 +261,332 @@
       "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "files": [
-    {
-      "path": "files/input/ledger-march.csv",
-      "sha256": "dbcd4fe0597094de340e09924a680669fca7bdbf9dd62de6468ff2aca5ac0588",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/input/invoices/invoice-01.xml",
-      "sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/input/invoices/invoice-02.xml",
-      "sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/input/invoices/invoice-03.xml",
-      "sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/ledger-march-april.csv",
-      "sha256": "c6f40663e54a87afd00136ac434d156ae6c5cd82cdeda4efee7504b901027e57",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/practice/invoices/invoice-01.xml",
-      "sha256": "35a6da42ada430646d4faee2a19c9dc6ed9ac5cbd232cbe990cacac9c775a8d0",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/practice/invoices/invoice-02.xml",
-      "sha256": "d179d754cb4adefb9dcdf4dd521dc4d4587bcec4e6e19a1173f05aa8cdca9059",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/practice/invoices/invoice-03.xml",
-      "sha256": "f6b8b9cfc39c7b04ee160987bae64b5c3f53991a50bd5844ee4774142d125e7d",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/practice/invoices/invoice-04.xml",
-      "sha256": "60f7795a684bacad0d4c6e1429a6a870432c534d2e590bf198f51973b49924bb",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/input/context-it.md",
-      "sha256": "d34dc44c49ed300b347167c199d98ad938fffac81ae9305315f22037e06627f7",
-      "languages": [
-        "it"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/context-it.md",
-      "sha256": "d34dc44c49ed300b347167c199d98ad938fffac81ae9305315f22037e06627f7",
-      "languages": [
-        "it"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/input/context-en.md",
-      "sha256": "833ca9692ba45cf7cff14764f7a2882626bdbc128752ba17a58cdf7eaf262f3e",
-      "languages": [
-        "en"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/context-en.md",
-      "sha256": "833ca9692ba45cf7cff14764f7a2882626bdbc128752ba17a58cdf7eaf262f3e",
-      "languages": [
-        "en"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/input/context-fr.md",
-      "sha256": "7b8df2f355232fab593cd43f0c429faa04b593a08987b414cec0abb7214a578d",
-      "languages": [
-        "fr"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/context-fr.md",
-      "sha256": "7b8df2f355232fab593cd43f0c429faa04b593a08987b414cec0abb7214a578d",
-      "languages": [
-        "fr"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/input/context-de.md",
-      "sha256": "40b06fac9df33f6b2d635ab43aa24a61cc2ea454223b4dc9c836b98c7fb5f197",
-      "languages": [
-        "de"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/context-de.md",
-      "sha256": "40b06fac9df33f6b2d635ab43aa24a61cc2ea454223b4dc9c836b98c7fb5f197",
-      "languages": [
-        "de"
-      ],
-      "role": "practice"
-    },
-    {
-      "path": "files/input/context-es.md",
-      "sha256": "cba5f434922ee3416431ff85e84aca15e96d55d24c405d7cc309b88b842f1a8c",
-      "languages": [
-        "es"
-      ],
-      "role": "source"
-    },
-    {
-      "path": "files/practice/context-es.md",
-      "sha256": "cba5f434922ee3416431ff85e84aca15e96d55d24c405d7cc309b88b842f1a8c",
-      "languages": [
-        "es"
-      ],
-      "role": "practice"
-    }
-  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
   "locales": {
     "it": {
-      "title": "Rivedere le fatture di acquisto con la contabilità",
-      "goal": "Imparare a confrontare un lotto di fatture con le registrazioni già effettuate e usare il foglio delle eccezioni per la revisione.",
-      "scenario": "Officina Arco consegna tre fatture XML e le corrispondenti registrazioni di marzo. Lo studio vuole sapere quali punti richiedono un controllo.",
-      "scope": "Primo utilizzo della revisione delle fatture di acquisto italiane. Vera legge fatture e contabilità, esegue i confronti e valuta la coerenza dei conti; non modifica le registrazioni.",
-      "inputs": "Apri ledger-march.csv, la cartella invoices e context-it.md. Servono fatture e contabilità effettiva dello stesso periodo. Vera controlla le colonne e prepara la mappatura da rivedere prima di avviare il lavoro.",
-      "request": "Vera, rivedi queste fatture di acquisto confrontandole con le registrazioni di marzo di Officina Arco. Mostrami nel foglio delle eccezioni ciò che devo controllare e perché.",
-      "steps": [
-        "La chat di lavoro verifica il lotto e le colonne della contabilità. La voce spiega come identificare fattura, movimento e conto registrato; conferma con te le eventuali ambiguità.",
-        "Il flusso corrente abbina fatture e movimenti, controlla gli importi e usa il proprio revisore nativo per valutare descrizioni e conti. La voce segue lo stato reale del lavoro e distingue calcoli e valutazioni.",
-        "Apri prima il foglio Excel delle eccezioni. Scegli una riga, leggi la ragione del controllo e ritrova descrizione della fattura e conto effettivamente usato. Rivedi le segnalazioni prima di trarre conclusioni."
+      "title": "Fatture passive: collegare ogni documento alla registrazione",
+      "goal": "Leggere la copertura di una popolazione di fatture passive e riconoscere i casi che richiedono revisione contabile.",
+      "scenario": "Il lotto fittizio contiene tre fatture passive: una collegata a una registrazione, una senza registrazione trovata e una con due candidati ambigui. Il periodo e la popolazione contabile sono esplicitamente delimitati.",
+      "request": "Vera, controlla come questo lotto di fatture passive si collega alla contabilità effettiva.",
+      "scope": "Revisione della popolazione passiva e delle registrazioni fornite. Un mancato collegamento nel perimetro non prova da solo che una fattura non sia mai stata contabilizzata.",
+      "input_columns": [
+        "Fattura fittizia",
+        "Supporto contabile disponibile",
+        "Questione"
       ],
-      "deliverables": [
-        "Foglio Excel delle eccezioni, con motivi e riferimenti da esaminare.",
-        "Riepilogo del lotto e traccia dei confronti per risalire alle fatture e alle registrazioni."
+      "input_rows": [
+        [
+          "PA-101 · 1.220 EUR",
+          "Una registrazione coerente",
+          "Controllare natura e trattamento"
+        ],
+        [
+          "PA-102 · 610 EUR",
+          "Nessun candidato nel periodo",
+          "Recuperare o chiarire"
+        ],
+        [
+          "PA-103 · 244 EUR",
+          "Due candidati",
+          "Identità da risolvere"
+        ]
       ],
-      "review": "Controlla che il lotto sia completo e che ogni segnalazione sia sostenuta dai documenti. “Nessun problema rilevato” è un esito di screening, non una certificazione. Un cambio di conto o una correzione si decide e si esegue nel normale lavoro contabile.",
-      "checkpoints": [
-        "Prima dell’esecuzione, indica quali due insiemi di documenti stai confrontando.",
-        "Sul risultato, spiega una segnalazione usando fattura e registrazione."
+      "basis": "P1 è il lotto XML e G1 l'export delle registrazioni del periodo. Le conclusioni restano legate a entrambi i perimetri; nessuna registrazione viene inventata.",
+      "method": [
+        "Importa la popolazione XML e le registrazioni effettive; qualifica periodo, conti, identità e totale del lotto.",
+        "Esegui il metodo corrente di abbinamento e revisione, comprese le capacità native richieste. Se una capacità manca, mantieni il passaggio pendente senza simularne l'esecuzione.",
+        "Leggi copertura, ambiguità e proposte di revisione. Il professionista valuta natura della spesa e trattamento; le proposte non diventano registrazioni o approvazioni automatiche."
       ],
-      "practice": "Ripeti con ledger-march-april.csv e le quattro fatture della prova. Conserva il primo risultato. Controlla il nuovo numero di fatture e una segnalazione, chiedendo a Vera aiuto solo dove serve.",
-      "success": "Sai fornire entrambi gli input, avviare la revisione, trovare le eccezioni e verificarne le ragioni senza confondere screening e approvazione.",
-      "repeat": "Chiedi a Vera di rivedere le fatture di acquisto di un cliente per un periodo preciso e fornisci anche la contabilità registrata. Rivedi mappatura, copertura e segnalazioni nel fascicolo corretto."
+      "result_title": "Tre fatture, tre stati distinti",
+      "conclusion": "Un collegamento è disponibile, uno manca nel perimetro e uno è ambiguo. La revisione deve preservare queste differenze.",
+      "output_columns": [
+        "Documento",
+        "Stato illustrato",
+        "Passo utile"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Collegamento disponibile",
+          "Rivedere il trattamento sulla fonte"
+        ],
+        [
+          "PA-102",
+          "Non trovato nel perimetro",
+          "Controllare periodo ed export"
+        ],
+        [
+          "PA-103",
+          "Ambiguo",
+          "Risolvere i candidati con evidenza"
+        ]
+      ],
+      "check": "Copertura dell'abbinamento e correttezza contabile sono verifiche diverse. Un'esecuzione tecnica riuscita non approva deducibilità o IVA.",
+      "question": "PA-102 non compare: possiamo scrivere 'fattura non registrata' senza limiti?",
+      "answer": "La conclusione sostenuta è 'registrazione non trovata nel perimetro esaminato'. Prima di una conclusione più ampia occorre verificare completezza e periodo dell'export.",
+      "practice": "Aggiungi la registrazione di PA-102 e confronta la copertura della nuova esecuzione senza cancellare il risultato precedente.",
+      "next": "Seleziona lotto passivo e registrazioni effettive del periodo; verifica le capacità native richieste dal workflow installato."
     },
     "en": {
-      "title": "Review purchase invoices against the ledger",
-      "goal": "Learn to compare an invoice batch with existing postings and use the exception workbook for review.",
-      "scenario": "Officina Arco supplies three XML invoices and their March postings. The practice wants to identify points requiring examination.",
-      "scope": "First use of Italian purchase-invoice review. Vera reads invoices and ledger, compares them and assesses account consistency; it does not change postings.",
-      "inputs": "Open ledger-march.csv, the invoices folder and context-en.md. Supply invoices and actual ledger entries for the same period. Vera checks the columns and prepares their mapping for review before execution.",
-      "request": "Vera, review these purchase invoices against Officina Arco’s March postings. Show me what needs attention in the exception workbook and explain why.",
-      "steps": [
-        "The working chat checks the batch and ledger columns. Voice explains invoice, movement and booked account identity and helps resolve material ambiguities.",
-        "The current workflow matches invoices to movements, checks amounts and uses its native reviewer to assess descriptions and accounts. Voice follows actual progress and distinguishes calculation from judgement.",
-        "Open the Excel exception workbook first. Choose a row, read the reason for review and trace it to the invoice description and account actually used. Review findings before drawing conclusions."
+      "title": "Connect each purchase invoice to the actual posting",
+      "goal": "Read population coverage and identify invoices needing accounting review.",
+      "scenario": "The fictional purchase batch has three invoices: one with a consistent posting, one with no posting found and one with two ambiguous candidates. Both the period and accounting population are explicitly bounded.",
+      "request": "Vera, check how this purchase-invoice batch connects to the actual accounting entries.",
+      "scope": "Review of supplied purchase invoices and postings. A missing link in this perimeter does not prove an invoice was never booked.",
+      "input_columns": [
+        "Fictional invoice",
+        "Available accounting support",
+        "Question"
       ],
-      "deliverables": [
-        "Excel exception workbook with reasons and references to examine.",
-        "Batch summary and comparison trail back to invoices and ledger entries."
+      "input_rows": [
+        [
+          "PA-101 · EUR 1,220",
+          "One consistent entry",
+          "Review nature and treatment"
+        ],
+        [
+          "PA-102 · EUR 610",
+          "No candidate in the period",
+          "Recover or clarify"
+        ],
+        [
+          "PA-103 · EUR 244",
+          "Two candidates",
+          "Resolve identity"
+        ]
       ],
-      "review": "Check batch coverage and whether documents support each finding. “No issue detected” is a screening outcome, not certification. Decisions to change accounts or correct entries follow the normal accounting process.",
-      "checkpoints": [
-        "Before execution, identify the two sets of evidence being compared.",
-        "In the result, explain a finding using its invoice and posting."
+      "basis": "P1 is the XML batch and G1 the period's posting export. Findings stay bound to both perimeters; no missing posting is invented.",
+      "method": [
+        "Import the invoice population and actual postings; qualify period, accounts, identities and batch totals.",
+        "Run the current matching and review method, including its required native capabilities. Leave unavailable stages pending instead of simulating them.",
+        "Read coverage, ambiguities and review proposals. The professional assesses expense nature and treatment; proposals do not become automatic postings or approvals."
       ],
-      "practice": "Repeat with ledger-march-april.csv and the four practice invoices. Keep the first result. Check the new invoice count and a finding, asking Vera for help where needed.",
-      "success": "You can provide both inputs, start review, find exceptions and check their reasons without confusing screening with approval.",
-      "repeat": "Ask Vera to review a client’s purchase invoices for a specified period and supply the actual ledger too. Review mapping, coverage and findings in the correct case."
+      "result_title": "Three invoices, three distinct states",
+      "conclusion": "One link is available, one is absent within scope and one is ambiguous. Preserve those distinctions through review.",
+      "output_columns": [
+        "Document",
+        "Illustrated state",
+        "Useful next step"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Link available",
+          "Review treatment against evidence"
+        ],
+        [
+          "PA-102",
+          "Not found within scope",
+          "Check period and export"
+        ],
+        [
+          "PA-103",
+          "Ambiguous",
+          "Resolve candidates with evidence"
+        ]
+      ],
+      "check": "Matching coverage differs from accounting correctness. A successful technical run does not approve deductibility or VAT treatment.",
+      "question": "Can we state 'invoice not booked' without qualification for PA-102?",
+      "answer": "The supported finding is 'posting not found in the examined perimeter'. Check export completeness and period before a broader conclusion.",
+      "practice": "Add PA-102's posting and compare a fresh run without deleting the previous result.",
+      "next": "Select the purchase batch and actual period postings, and verify the installed workflow's required native capabilities."
     },
     "fr": {
-      "title": "Revoir les factures d’achat avec la comptabilité",
-      "goal": "Apprendre à comparer un lot de factures aux écritures existantes et à utiliser le classeur des exceptions.",
-      "scenario": "Officina Arco fournit trois factures XML et leurs écritures de mars. Le cabinet veut repérer les points à examiner.",
-      "scope": "Première utilisation de la revue des factures d’achat italiennes. Vera lit factures et comptabilité, les compare et évalue la cohérence des comptes ; elle ne modifie pas les écritures.",
-      "inputs": "Ouvrez ledger-march.csv, le dossier invoices et context-fr.md. Fournissez factures et écritures réelles de la même période. Vera vérifie les colonnes et prépare leur correspondance à revoir avant exécution.",
-      "request": "Vera, revois ces factures d’achat en les comparant aux écritures de mars d’Officina Arco. Montre dans le classeur des exceptions les points à contrôler et explique pourquoi.",
-      "steps": [
-        "La conversation de travail vérifie le lot et les colonnes comptables. La voix explique identification de facture, écriture et compte utilisé, puis aide à résoudre les ambiguïtés importantes.",
-        "Le flux courant rapproche factures et écritures, contrôle les montants et utilise son réviseur natif pour évaluer descriptions et comptes. La voix suit l’avancement réel et distingue calcul et jugement.",
-        "Ouvrez d’abord le classeur Excel des exceptions. Choisissez une ligne, lisez le motif du contrôle et retrouvez description de facture et compte utilisé. Revoyez les constats avant toute conclusion."
+      "title": "Relier chaque facture fournisseur à l'écriture réelle",
+      "goal": "Lire la couverture d'une population de factures et repérer les cas nécessitant une revue comptable.",
+      "scenario": "Le lot fictif contient trois factures : une avec écriture cohérente, une sans écriture trouvée et une avec deux candidats ambigus. Période et population comptable sont explicitement délimitées.",
+      "request": "Vera, vérifie le lien entre ce lot fournisseur et les écritures réellement fournies.",
+      "scope": "Revue du lot et de la comptabilité sélectionnés. Un lien manquant dans ce périmètre ne prouve pas qu'une facture n'a jamais été enregistrée.",
+      "input_columns": [
+        "Facture fictive",
+        "Support comptable disponible",
+        "Question"
       ],
-      "deliverables": [
-        "Classeur Excel des exceptions avec motifs et références à examiner.",
-        "Récapitulatif du lot et trace des comparaisons vers factures et écritures."
+      "input_rows": [
+        [
+          "PA-101 · 1 220 EUR",
+          "Une écriture cohérente",
+          "Nature et traitement à revoir"
+        ],
+        [
+          "PA-102 · 610 EUR",
+          "Aucun candidat dans la période",
+          "À récupérer ou clarifier"
+        ],
+        [
+          "PA-103 · 244 EUR",
+          "Deux candidats",
+          "Identité à résoudre"
+        ]
       ],
-      "review": "Vérifiez la couverture du lot et les pièces justifiant chaque signalement. « Aucun problème détecté » est un résultat de sélection, pas une certification. Changer un compte ou corriger une écriture relève du processus comptable habituel.",
-      "checkpoints": [
-        "Avant l’exécution, identifiez les deux ensembles de pièces comparés.",
-        "Dans le résultat, expliquez un constat avec sa facture et son écriture."
+      "basis": "P1 est le lot XML et G1 l'export de la période. Les constats restent liés aux deux périmètres ; aucune écriture absente n'est inventée.",
+      "method": [
+        "Importe factures et écritures effectives ; qualifie période, comptes, identités et totaux du lot.",
+        "Exécute la méthode actuelle et ses capacités natives requises. Une étape indisponible reste en attente au lieu d'être simulée.",
+        "Lis couverture, ambiguïtés et propositions. Le professionnel apprécie nature et traitement ; les propositions ne deviennent ni écritures ni approbations automatiques."
       ],
-      "practice": "Recommencez avec ledger-march-april.csv et les quatre factures de la pratique. Conservez le premier résultat. Vérifiez le nouveau nombre de factures et un constat, avec aide seulement si nécessaire.",
-      "success": "Vous savez fournir les deux entrées, lancer la revue, retrouver les exceptions et vérifier leurs motifs sans confondre sélection et approbation.",
-      "repeat": "Demandez à Vera de revoir les factures d’achat d’un client sur une période précise et fournissez également la comptabilité enregistrée. Revoyez correspondance, couverture et constats dans le bon dossier."
+      "result_title": "Trois factures, trois états distincts",
+      "conclusion": "Un lien existe, un manque dans le périmètre et un reste ambigu. La revue doit préserver ces différences.",
+      "output_columns": [
+        "Document",
+        "État illustré",
+        "Suite utile"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Lien disponible",
+          "Revoir le traitement sur pièce"
+        ],
+        [
+          "PA-102",
+          "Non trouvé dans le périmètre",
+          "Vérifier période et export"
+        ],
+        [
+          "PA-103",
+          "Ambigu",
+          "Départager les candidats par les preuves"
+        ]
+      ],
+      "check": "Couverture du rapprochement et exactitude comptable sont distinctes. Une réussite technique n'approuve pas déductibilité ou TVA.",
+      "question": "Peut-on écrire sans réserve 'facture non enregistrée' pour PA-102 ?",
+      "answer": "Le constat étayé est 'écriture non trouvée dans le périmètre examiné'. Vérifie période et exhaustivité avant de conclure plus largement.",
+      "practice": "Ajoute l'écriture de PA-102 et compare une nouvelle exécution sans supprimer l'ancien résultat.",
+      "next": "Sélectionne factures et écritures de la période et vérifie les capacités natives requises par le workflow installé."
     },
     "de": {
-      "title": "Eingangsrechnungen mit der Buchhaltung prüfen",
-      "goal": "Lernen, Rechnungen mit vorhandenen Buchungen zu vergleichen und die Ausnahmeliste für die Prüfung zu nutzen.",
-      "scenario": "Officina Arco liefert drei XML-Rechnungen und die zugehörigen Märzbuchungen. Die Kanzlei möchte prüfungsbedürftige Punkte finden.",
-      "scope": "Erster Einsatz der Prüfung italienischer Eingangsrechnungen. Vera liest Rechnungen und Buchhaltung, vergleicht sie und beurteilt die Kontenzuordnung; Buchungen werden nicht geändert.",
-      "inputs": "Öffnen Sie ledger-march.csv, den Ordner invoices und context-de.md. Benötigt werden Rechnungen und tatsächliche Buchungen derselben Periode. Vera prüft die Spalten und bereitet die Zuordnung zur Prüfung vor.",
-      "request": "Vera, prüfe diese Eingangsrechnungen anhand der Märzbuchungen von Officina Arco. Zeige mir in der Ausnahmeliste, was ich prüfen sollte, und erkläre warum.",
-      "steps": [
-        "Der Arbeitschat prüft Paket und Buchhaltungsspalten. Die Stimme erklärt Rechnungskennung, Buchung und verwendetes Konto und hilft, wesentliche Unklarheiten zu lösen.",
-        "Der aktuelle Ablauf ordnet Rechnungen Buchungen zu, kontrolliert Beträge und nutzt seinen nativen Prüfer für Beschreibungen und Konten. Die Stimme folgt dem tatsächlichen Fortschritt und unterscheidet Berechnung und Beurteilung.",
-        "Öffnen Sie zuerst die Excel-Ausnahmeliste. Wählen Sie eine Zeile, lesen Sie den Prüfgrund und finden Sie Rechnungsbeschreibung und tatsächlich verwendetes Konto. Prüfen Sie Hinweise vor einer Schlussfolgerung."
+      "title": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
+      "goal": "Die Abdeckung eines Rechnungsbestands lesen und buchhalterischen Prüfbedarf erkennen.",
+      "scenario": "Der fiktive Bestand enthält drei Eingangsrechnungen: eine mit passender Buchung, eine ohne gefundene Buchung und eine mit zwei mehrdeutigen Kandidaten. Periode und Buchungsbestand sind ausdrücklich abgegrenzt.",
+      "request": "Vera, prüfe die Verknüpfung dieser Eingangsrechnungen mit den tatsächlichen Buchungen.",
+      "scope": "Prüfung der gelieferten Rechnungen und Buchungen. Eine fehlende Verbindung in diesem Umfang beweist nicht, dass eine Rechnung nie gebucht wurde.",
+      "input_columns": [
+        "Fiktive Rechnung",
+        "Vorhandene Buchungsbelege",
+        "Frage"
       ],
-      "deliverables": [
-        "Excel-Ausnahmeliste mit Gründen und Quellenverweisen zur Prüfung.",
-        "Paketübersicht und Vergleichsnachweise zu Rechnungen und Buchungen."
+      "input_rows": [
+        [
+          "PA-101 · EUR 1.220",
+          "Eine passende Buchung",
+          "Art und Behandlung prüfen"
+        ],
+        [
+          "PA-102 · EUR 610",
+          "Kein Kandidat in der Periode",
+          "Nachbeschaffen oder klären"
+        ],
+        [
+          "PA-103 · EUR 244",
+          "Zwei Kandidaten",
+          "Identität klären"
+        ]
       ],
-      "review": "Prüfen Sie Vollständigkeit und Beleggrundlage jeder Meldung. „Kein Problem erkannt“ ist ein Screening-Ergebnis, keine Bestätigung korrekter Buchführung. Kontowechsel und Korrekturen erfolgen im üblichen Buchhaltungsprozess.",
-      "checkpoints": [
-        "Benennen Sie vor der Ausführung die zwei verglichenen Datenbestände.",
-        "Erklären Sie im Ergebnis einen Hinweis anhand von Rechnung und Buchung."
+      "basis": "P1 ist der XML-Bestand, G1 der Buchungsexport der Periode. Feststellungen bleiben an beide Umfänge gebunden; fehlende Buchungen werden nicht erfunden.",
+      "method": [
+        "Importiere Rechnungsbestand und tatsächliche Buchungen. Qualifiziere Periode, Konten, Identitäten und Kontrollsummen.",
+        "Führe die aktuelle Zuordnungs- und Prüfmethode mit den benötigten nativen Fähigkeiten aus. Nicht verfügbare Stufen bleiben offen statt simuliert.",
+        "Lies Abdeckung, Mehrdeutigkeiten und Vorschläge. Die Fachperson beurteilt Aufwandsart und Behandlung; Vorschläge sind keine automatischen Buchungen oder Freigaben."
       ],
-      "practice": "Wiederholen Sie mit ledger-march-april.csv und den vier Übungsrechnungen. Bewahren Sie das erste Ergebnis auf. Prüfen Sie neue Rechnungsanzahl und einen Hinweis; fragen Sie nur bei Bedarf nach Hilfe.",
-      "success": "Sie können beide Eingaben liefern, die Prüfung starten, Ausnahmen finden und ihre Gründe prüfen, ohne Screening und Freigabe gleichzusetzen.",
-      "repeat": "Bitten Sie Vera um Prüfung der Eingangsrechnungen eines Mandanten für einen genauen Zeitraum und liefern Sie die tatsächliche Buchhaltung mit. Prüfen Sie Zuordnung, Abdeckung und Hinweise in der richtigen Akte."
+      "result_title": "Drei Rechnungen, drei verschiedene Zustände",
+      "conclusion": "Eine Verbindung ist vorhanden, eine im geprüften Umfang nicht gefunden und eine mehrdeutig. Diese Zustände bleiben während der Prüfung getrennt.",
+      "output_columns": [
+        "Dokument",
+        "Beispielstatus",
+        "Nützlicher nächster Schritt"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Verbindung vorhanden",
+          "Behandlung anhand der Belege prüfen"
+        ],
+        [
+          "PA-102",
+          "Im Umfang nicht gefunden",
+          "Periode und Export prüfen"
+        ],
+        [
+          "PA-103",
+          "Mehrdeutig",
+          "Kandidaten mit Belegen klären"
+        ]
+      ],
+      "check": "Zuordnungsabdeckung ist nicht Buchhaltungsrichtigkeit. Ein erfolgreicher technischer Lauf bestätigt weder Abzugsfähigkeit noch Umsatzsteuerbehandlung.",
+      "question": "Dürfen wir PA-102 ohne Einschränkung als 'nicht gebucht' bezeichnen?",
+      "answer": "Belegt ist: 'Buchung im untersuchten Umfang nicht gefunden'. Prüfe Vollständigkeit und Periode des Exports vor einer weitergehenden Aussage.",
+      "practice": "Ergänze die Buchung zu PA-102 und vergleiche einen neuen Lauf, ohne das vorherige Ergebnis zu löschen.",
+      "next": "Wähle Rechnungsbestand und tatsächliche Periodenbuchungen und prüfe die benötigten nativen Fähigkeiten des installierten Workflows."
     },
     "es": {
-      "title": "Revisar facturas de compra con la contabilidad",
-      "goal": "Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos.",
-      "scenario": "Officina Arco aporta tres facturas XML y sus asientos de marzo. El despacho quiere identificar puntos que necesitan revisión.",
-      "scope": "Primer uso de la revisión de facturas de compra italianas. Vera lee facturas y contabilidad, las compara y evalúa la coherencia de las cuentas; no modifica asientos.",
-      "inputs": "Abre ledger-march.csv, la carpeta invoices y context-es.md. Aporta facturas y contabilidad real del mismo período. Vera comprueba las columnas y prepara su correspondencia para revisión antes de ejecutar.",
-      "request": "Vera, revisa estas facturas de compra frente a los asientos de marzo de Officina Arco. Muéstrame en el libro de excepciones qué debo comprobar y por qué.",
-      "steps": [
-        "La conversación de trabajo verifica lote y columnas contables. La voz explica identificación de factura, asiento y cuenta usada y ayuda a resolver ambigüedades relevantes.",
-        "El flujo actual relaciona facturas y asientos, comprueba importes y usa su revisor nativo para evaluar descripciones y cuentas. La voz sigue el avance real y distingue cálculo y juicio.",
-        "Abre primero el libro Excel de excepciones. Elige una línea, lee la razón del control y localiza descripción de factura y cuenta realmente utilizada. Revisa los avisos antes de concluir."
+      "title": "Vincular cada factura de compra con el asiento real",
+      "goal": "Leer la cobertura de una población e identificar facturas que requieren revisión contable.",
+      "scenario": "El lote ficticio tiene tres facturas: una con asiento coherente, otra sin asiento encontrado y otra con dos candidatos ambiguos. Periodo y población contable están delimitados expresamente.",
+      "request": "Vera, comprueba la relación entre este lote de facturas de compra y los asientos reales.",
+      "scope": "Revisión de facturas y asientos entregados. Un vínculo ausente en este alcance no demuestra que la factura nunca se contabilizara.",
+      "input_columns": [
+        "Factura ficticia",
+        "Soporte contable disponible",
+        "Pregunta"
       ],
-      "deliverables": [
-        "Libro Excel de excepciones con motivos y referencias para revisar.",
-        "Resumen del lote y trazabilidad de comparaciones hacia facturas y asientos."
+      "input_rows": [
+        [
+          "PA-101 · EUR 1.220",
+          "Un asiento coherente",
+          "Revisar naturaleza y tratamiento"
+        ],
+        [
+          "PA-102 · EUR 610",
+          "Ningún candidato en el periodo",
+          "Recuperar o aclarar"
+        ],
+        [
+          "PA-103 · EUR 244",
+          "Dos candidatos",
+          "Resolver identidad"
+        ]
       ],
-      "review": "Comprueba cobertura del lote y documentos que respaldan cada aviso. «Ningún problema detectado» es un resultado de cribado, no una certificación. Los cambios de cuenta y correcciones siguen el proceso contable habitual.",
-      "checkpoints": [
-        "Antes de ejecutar, identifica los dos conjuntos de información comparados.",
-        "En el resultado, explica un aviso mediante su factura y asiento."
+      "basis": "P1 es el lote XML y G1 el export contable del periodo. Los hallazgos quedan vinculados a ambos alcances; no se inventa ningún asiento ausente.",
+      "method": [
+        "Importa facturas y asientos reales y cualifica periodo, cuentas, identidades y totales de lote.",
+        "Ejecuta el método actual de asociación y revisión con sus capacidades nativas requeridas. Deja pendientes las etapas no disponibles en lugar de simularlas.",
+        "Lee cobertura, ambigüedades y propuestas. El profesional evalúa naturaleza y tratamiento del gasto; las propuestas no se convierten en asientos o aprobaciones automáticas."
       ],
-      "practice": "Repite con ledger-march-april.csv y las cuatro facturas de la práctica. Conserva el primer resultado. Comprueba el nuevo número de facturas y un aviso, pidiendo ayuda solo donde haga falta.",
-      "success": "Sabes aportar ambas entradas, iniciar la revisión, encontrar excepciones y comprobar sus motivos sin confundir cribado y aprobación.",
-      "repeat": "Pide a Vera revisar las facturas de compra de un cliente para un período concreto y aporta también la contabilidad registrada. Revisa correspondencia, cobertura y avisos en el expediente correcto."
+      "result_title": "Tres facturas, tres estados distintos",
+      "conclusion": "Hay un vínculo disponible, otro no encontrado dentro del alcance y otro ambiguo. Conserva esas diferencias durante la revisión.",
+      "output_columns": [
+        "Documento",
+        "Estado ilustrado",
+        "Próximo paso útil"
+      ],
+      "output_rows": [
+        [
+          "PA-101",
+          "Vínculo disponible",
+          "Revisar tratamiento contra pruebas"
+        ],
+        [
+          "PA-102",
+          "No encontrado dentro del alcance",
+          "Comprobar periodo y export"
+        ],
+        [
+          "PA-103",
+          "Ambiguo",
+          "Resolver candidatos con evidencia"
+        ]
+      ],
+      "check": "Cobertura de asociaciones no equivale a corrección contable. Una ejecución técnica satisfactoria no aprueba deducibilidad ni IVA.",
+      "question": "¿Podemos afirmar sin matices 'factura no contabilizada' para PA-102?",
+      "answer": "Lo respaldado es 'asiento no encontrado en el alcance examinado'. Comprueba integridad y periodo del export antes de concluir más ampliamente.",
+      "practice": "Añade el asiento de PA-102 y compara una nueva ejecución sin borrar el resultado anterior.",
+      "next": "Selecciona lote y asientos reales del periodo y comprueba las capacidades nativas requeridas por el workflow instalado."
     }
+  },
+  "retained_from": {
+    "course_sha256": "1ba782ae454688d5ce323d92dcd88d2c13b12ed7ae45c4ce180f63c0ee2dfda8",
+    "published_version": "0.1.257"
   }
 }

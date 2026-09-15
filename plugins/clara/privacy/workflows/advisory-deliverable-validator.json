@@ -33,7 +33,17 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "scripts/case_store.py",
+    "scripts/case_exchange_safety.py",
+    "scripts/decision_narrative.py",
+    "scripts/commit_decision_narrative.py",
+    "scripts/verify_decision_pack.py",
+    "scripts/advisory_delivery.py",
+    "scripts/verify_advisory_delivery.py",
+    "scripts/public_http.py",
+    "scripts/bounded_process.py",
+    "scripts/advisory_lineage_labels.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -41,7 +51,7 @@
       {
         "id": "deliverable-contract-and-selected-evidence",
         "purpose": "Validate the completed advisory deliverable against its declared contract and available evidence",
-        "content": "The complete selected deliverable text or visible slide content; for HTML, extracted text and links excluding script, style, and template blocks while the full file bytes remain covered by the local hash; advisory_contract.json; selected source files or model-requested excerpts; filenames and local paths; citations, links, figures, calculations, data provenance, assumptions, contradictions, missing evidence, recommendations, decision context, audience, scope, and professional-judgement policy"
+        "content": "The complete selected deliverable text or visible slide content; for HTML, extracted text and links excluding script, style, and template blocks while the full file bytes remain covered by the local hash; advisory_contract.json; selected source files or model-requested excerpts; filenames and local paths; citations, links, figures, calculations, data provenance, assumptions, contradictions, missing evidence, recommendations, decision context, audience, scope, and professional-judgement policy The readable local review includes selected source names and clickable source paths, recorded corrections, claim-evidence relationships and exact review statuses; those paths and report contents may enter context when read."
       },
       {
         "id": "format-check-and-review-artifacts",
@@ -52,6 +62,21 @@
         "id": "advisory-claim-and-evidence-lineage",
         "purpose": "Preserve and review the evidence, dependencies, derivations and output appearances of advisory claims",
         "content": "advisory_evidence_register.json and advisory_claim_register.json; source observations and limitations; management and interview assertions; public capture URLs and normalized text; exact transcript, calculation input/output/verification and output-appearance paths, hashes and byte counts; claim statements, evidence relationships, dependency and supersession graphs, reasoning, uncertainty, judgement boundaries, model-selected chain assessments, coverage units and targeted recheck decisions"
+      },
+      {
+        "id": "authored-narrative-and-current-delivery",
+        "purpose": "Review the same case answer and qualifications across Markdown, Word and HTML",
+        "content": "Committed narrative paragraphs, claim IDs, reviewer identity and status, current case and workpaper bindings, per-format artifacts and visual-review records, output paths and hashes, readiness receipts and mismatch errors. Local transaction recovery files can temporarily contain prior case bytes; source history and bound output artifacts remain separately retained. No automatic anonymisation or extra model service is introduced by these helpers."
+      },
+      {
+        "id": "complete-current-text-navigation",
+        "purpose": "Expose text omitted by untracked-claim heuristics for active-model review",
+        "content": "The current-deck audit retains every supplied extracted text item, including short headlines, numeric labels and footnotes, with source slide/shape metadata. Explicit coverage metadata states that semantic review has not been performed and non-text visual meaning requires separate inspection. This expands review visibility, not automatic materiality classification or anonymisation."
+      },
+      {
+        "id": "shared-case-normalization-attempts",
+        "purpose": "Inspect case presentation imports and any normalization diagnostics used by this workflow",
+        "content": "When a presentation is imported through the shared case helper and requires normalization, local attempt directories retain converted presentation files and converter stdout/stderr logs. They may contain source document content, metadata and local paths, including after failure or cancellation. Reading them supplies their contents to model context. This conditional import path does not mean every workflow execution converts a presentation or sends these files to a hosted service. Retained attempt files remain until separately removed."
       }
     ]
   },
@@ -124,12 +149,20 @@
     {
       "id": "lineage-artifact-binding",
       "control": "Evidence artifacts, lineage inventories, the deliverable, contract, HTML static and browser-QA results, validator return, workpaper checkpoint, and corrected output are bound by local paths, byte counts and SHA-256; deterministic checks validate references, register currency, and dependency closure without making semantic support decisions."
+    },
+    {
+      "id": "public-address-pinning",
+      "control": "The public capture transport validates destination addresses and redirects, connects to a vetted numeric address while preserving the original TLS hostname, and does not use environment proxy settings. This prevents DNS re-resolution from silently changing the approved destination; it does not certify source content."
+    },
+    {
+      "id": "public-response-deadline",
+      "control": "Pinned public capture shares an elapsed-time budget across address attempts, redirects and HTTP header/body reads. A deadline watchdog shuts down the owned socket; expired partial responses are rejected before capture artifacts or lineage records are written. Synchronous system DNS lookups cannot be interrupted here, including the capture helper’s pre/post validation, so this is not a total wall-clock guarantee for the capture command. No additional recipient, payload, log or retained file is introduced."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-18",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "766c84660ec7a015fea957a3b4ca1b68fc389c91d4ca3e779cc19f1550592617"
+    "source_fingerprint": "42787ef6d31b33dbf4f5034444cf2b4814352ff3ad99c571256f2fb9a572a9b9"
   }
 }

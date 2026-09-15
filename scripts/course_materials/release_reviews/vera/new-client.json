@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "new-client",
-  "course_sha256": "73652da0cc2fb28ffdc154815fbd77e0393dd7a0284d600d98d4109e3130de26",
+  "course_sha256": "eef2e45cb356c468fcea177f5b5299afa8b56d3fdbc8be9a23d96375de096aac",
   "reviewer": "Codex: five-language first-use material and actual New Client draft-dossier review",
   "reviewed_at": "2026-09-15T00:09:04.432157+00:00",
   "review_scope": "Reviewed all five lesson outlines, fictional profile/contact sources, actual localized document requests, final cards, studio notes and memo facts/services. Inspected the current review widget in five loopback browser views, including the client facts and English engagement details. This accepts the prepared first use: produce and inspect an internal draft dossier, save a proposed request and revise from new contact evidence. It does not attest completed professional review, client acceptance, signing or sending. Native MCP validate/render/save, mandatory model-data disclosure, sealed delivery and Studio Archive completion are exercised. Apply is not part of the completed lesson evidence: the registry review date has expired, and a real attempted Apply correctly stopped. Source refresh is still required before decisions can be applied. Native voice, actual paired-window learner interaction and human timing/comprehension remain unverified.",
@@ -306,5 +306,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.423903+00:00",
+    "previous_course_sha256": "73652da0cc2fb28ffdc154815fbd77e0393dd7a0284d600d98d4109e3130de26",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/new-client/SKILL.md",
+        "before": "eae0bd9f696be94cf1d19943a5a64f6b8e37d159bd9dbb2cf617c32bc463a19f",
+        "after": "4e283f6c6144a9e48dc2ecebc3255a1ab6e4deb5088c846b7cd6d51e70d8b5db"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

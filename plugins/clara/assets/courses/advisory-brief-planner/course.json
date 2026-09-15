@@ -34,7 +34,7 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/clara/scripts/check_dependencies.py",
-      "sha256": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c"
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
     },
     {
       "path": "scripts/managed_ocr_runtime.py",
@@ -54,7 +54,7 @@
     {
       "path": "skills/advisory-brief-planner/SKILL.md",
       "repository_path": "plugins/clara/skills/advisory-brief-planner/SKILL.md",
-      "sha256": "6a27354520fd86740b97550c0d3df13f0a30497f2efbbb56c9217fc58fce601a"
+      "sha256": "73f9096e1b4377b326683af07960a61a8d23c3ee346dfe5d4eb245207ae88824"
     },
     {
       "path": "skills/advisory-brief-planner/references/advisory-contract.md",
@@ -97,14 +97,29 @@
       "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -129,7 +144,7 @@
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
+      "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
     }
   ],
   "files": [

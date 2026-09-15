@@ -1,0 +1,358 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "bilancio-oic",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en"
+  ],
+  "language_basis": "workflow_output_contract",
+  "sources": [
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/access_control.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/access_control.py",
+      "sha256": "54a4edef94be0d42c12db7dcea115b436f7984d0683cc50c1aa4254ca25d7e66"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/artifact_delivery.py",
+      "sha256": "ca6fc5a66f8e1dc1c2a9a28cd8e46865b1fdf1447030161b6839a5af956a946f"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/audit_schedule_taxonomy.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/audit_schedule_taxonomy.py",
+      "sha256": "fdd2600156675ca603ab707bb58ff8c91a40c3a290707e032d53755bb0d8ecc1"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/audit_statutory_presentation.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/audit_statutory_presentation.py",
+      "sha256": "f2d0f8d937feee6befd4dcbf24dff59115c71bf0b6c251c40ec167073467b299"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/benchmark_performance.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/benchmark_performance.py",
+      "sha256": "7493967a8fa125206907c81654a2b714bef765a1d361bb318280d16fdd44e442"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/build_taxonomy_catalogue.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/build_taxonomy_catalogue.py",
+      "sha256": "cd04908a9fb1eb3cfed5aa704ea033cbde4abba135cb8690a66e6db5561bff46"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/case_service.py",
+      "sha256": "684119a771b286afd447a7c6c19ea8b4d6774231baa9fdbdcb2a13126fef0603"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/check_dependencies.py",
+      "sha256": "ee11588e017b8b08da2b22183ff858cb8593632d214fd6fd6d1c10f0f068d8f2"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/check_review_invariants.py",
+      "sha256": "84a6e2bbc71ca8c6c4e45454aeb9d6cd717462abf8cc30d6b952dccc3f1391d2"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/client_history.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/client_history.py",
+      "sha256": "44577069791d4cefe0d2b2b6b2812f081ce963843c4434f8a2e8fe16a11f9a60"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/disclosure_engine.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/disclosure_engine.py",
+      "sha256": "8d5563caf5094e5205420b69f24aa3d1aa7660c2767b1305a5089e3f36252f48"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+      "sha256": "41d0a6d643736eaf5b43733ebacaea4f2fcb254e64d9cde6ba54582169f12a67"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/external_validation.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/external_validation.py",
+      "sha256": "9ca430dbbc87883876799ae7a7f51380067d79c25de4fb03b19bc33eb38725d1"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/file_security.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/file_security.py",
+      "sha256": "5c912217c2c4e7fa8c89c74b056b5da48dfe867dbb135dad20c77c15bee467cc"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/http_api.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/http_api.py",
+      "sha256": "d913c5e8d39e991642b97e3b2b94697341edd36f0bb75a05a443d62cb3ac9604"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/intelligence_contract.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/intelligence_contract.py",
+      "sha256": "b51e335025e68e7ace102fd223d7bda0dee93245fedd3f02704bdb7f636d39b6"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/intelligence_runner.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/intelligence_runner.py",
+      "sha256": "4a3c33e9d0bbade046bd570fa82b7f615ce78884db4019dec10a64940e54b416"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
+      "sha256": "52216b53d3501ebe79b537a5d671ae989731a874d8a7a272307c6b1443f7c42c"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/mapping_memory.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/mapping_memory.py",
+      "sha256": "0e24fc16436a6433c01598d33ec195d173d3b15e5d6355c3e74f3072f3f422e8"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/pdf_trial_balance.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/pdf_trial_balance.py",
+      "sha256": "9ace19c3cfe82da6282623687267779c82b7c4ac9d4eeed43ffc319d6ed100d4"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/prior_xbrl.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/prior_xbrl.py",
+      "sha256": "222a87638fdf62607db37fb69bdd8be5acb9c670074c8a7a01649cd00d227a51"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/review_views.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/review_views.py",
+      "sha256": "ac817c27964b56ed4f70b2ca206692e93b478701af2585d7bcd860353536a77c"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/run_background_job.py",
+      "sha256": "b07506c54157247aacbd360add7c76868b668b565b8c38dabdb14f50ec0dd224"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/run_golden_cases.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/run_golden_cases.py",
+      "sha256": "b421f3576aaf66b153d81e646814638ccf68e3a2ec3827ed9839db3768411ac4"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/run_xbrl_conformance.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/run_xbrl_conformance.py",
+      "sha256": "7291ff6e1392e7e5c8fdd5423e14343b813c46abcd541b73f3355d26fa45ba25"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/schedule_engine.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/schedule_engine.py",
+      "sha256": "860fe2e0a06ce99f6c720d7a5efcece29e0022d39d144811e6e545892b4ee20d"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/schedule_taxonomy_adapter.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/schedule_taxonomy_adapter.py",
+      "sha256": "369d8a385424a22d626fb6e0cc1b30ea74cb11e960574253444637cab4ba9e08"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/service_bridge.py",
+      "sha256": "895e8e35d212617f7c0bf1b47c4db2bceeeea38e25869b178687ed9960430d30"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/statutory_presentation.py",
+      "sha256": "95849bd91501a034bb3eb530213a48d63daa3352d17b4fb9e32c9c351f30a1bc"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/validate_xbrl.py",
+      "sha256": "63ca86dd240de7d99a3026596564fb9b68a8aff380b8f53498c907b276d07b83"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/xbrl_case.py",
+      "sha256": "f1edb04e2b51f097a8c1fff3767d8eb0c2a62c0cfb4ab72d7495ce46fe4432a5"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
+      "sha256": "c2149c2ae0103b8bb109c9e1cb724e9b3b55e365885449a5d15e143cce836701"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
+      "sha256": "ae6b9595ae69d322875c333c99b0d983f4917976f1cac6f91a656694f052bbb9"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
+      "sha256": "b526676fc62d970a033e5969266e81ca3f7f3e520c36f333d0b3183574071e65"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
+      "sha256": "c14bfd6947e143f3ccca2a0ef9b66f7daf9ac2daac4221d6e6ebe0886d17344d"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/performance-evidence.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/performance-evidence.md",
+      "sha256": "ac55916319438ecc8c336b874651980884c9106ddedee571fb5361ece983400d"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/product-thesis.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/product-thesis.md",
+      "sha256": "7623ba2eb372a2763b3b712f41ed653197aaac0ff306ebd12c069c21e54a5a2b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/taxonomy-spike.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/taxonomy-spike.md",
+      "sha256": "d0460ab13f5817e7f1c7afc2095f1abc676e7ec313811884c4aaef10bcdc0e47"
+    },
+    {
+      "path": "skills/bilancio-oic/SKILL.md",
+      "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
+      "sha256": "26038579e71b919a0a0b2f92dd7a998ebc6cbf39b3f36d58c7f36b275244abd7"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Dal prospetto contabile alla bozza di bilancio",
+      "goal": "Capire come lettura dei saldi, mappatura e controlli accompagnano la preparazione di un bilancio OIC/XBRL da rivedere.",
+      "scenario": "Arco consegna un prospetto con attività di 250.000 EUR, passività di 180.000 EUR e patrimonio netto di 70.000 EUR. La voce 'crediti diversi' comprende 8.000 EUR senza dettaglio. I numeri quadrano, ma la classificazione di quel saldo rimane da chiarire.",
+      "request": "Vera, mostrami la mappatura e i punti da chiarire prima di produrre la bozza di bilancio.",
+      "scope": "Microcaso di lettura e mappatura; non è un bilancio depositabile. Tassonomia, forma del bilancio, comparativi e note richiedono il normale percorso completo.",
+      "input_columns": [
+        "Voce del prospetto fittizio",
+        "EUR",
+        "Riferimento"
+      ],
+      "input_rows": [
+        [
+          "Attività totali",
+          "250.000",
+          "S1 · riga 10"
+        ],
+        [
+          "Passività",
+          "180.000",
+          "S1 · riga 20"
+        ],
+        [
+          "Patrimonio netto",
+          "70.000",
+          "S1 · riga 30"
+        ],
+        [
+          "Crediti diversi, inclusi nelle attività",
+          "8.000",
+          "S1 · riga 7; dettaglio assente"
+        ]
+      ],
+      "basis": "Il prospetto S1 supporta soltanto saldi e quadratura. Non spiega la natura degli 8.000 EUR, né fornisce comparativi o informazioni integrative.",
+      "method": [
+        "Conferma esercizio, forma del bilancio, principi e lingua; ispeziona le fonti e conserva i localizzatori di ogni saldo.",
+        "Proponi la mappatura motivata. Raccogli chiarimenti sulle voci ambigue e lascia visibili le decisioni da rivedere.",
+        "Esegui controlli e generazione solo con il contratto e la tassonomia correnti. Presenta bozze e diagnostica con lo stato di revisione, senza dichiarare un deposito."
+      ],
+      "result_title": "Quadratura presente, classificazione aperta",
+      "conclusion": "250.000 − 180.000 − 70.000 = 0 EUR. La quadratura non risolve la natura dei crediti diversi.",
+      "output_columns": [
+        "Controllo",
+        "Risultato",
+        "Conseguenza"
+      ],
+      "output_rows": [
+        [
+          "Equilibrio patrimoniale",
+          "0 EUR di differenza",
+          "Controllo aritmetico soddisfatto"
+        ],
+        [
+          "Crediti diversi · 8.000 EUR",
+          "Natura non documentata",
+          "Richiedere dettaglio prima della mappatura definitiva"
+        ],
+        [
+          "Comparativi e note",
+          "Non forniti nel microcaso",
+          "Perimetro incompleto"
+        ]
+      ],
+      "check": "Una quadratura numerica non certifica classificazione, completezza o conformità. L'istanza e le bozze conservano i propri limiti e la revisione professionale.",
+      "question": "Possiamo assegnare tutti i crediti diversi a una voce solo per chiudere la mappatura?",
+      "answer": "No. La natura del credito deve essere sostenuta dal dettaglio. Il punto resta aperto e il professionista rivede la proposta.",
+      "practice": "Aggiungi il dettaglio degli 8.000 EUR e rivedi la mappatura senza cambiare i totali.",
+      "next": "Nel tuo fascicolo prepara prospetti completi, comparativi e documenti integrativi; indica esercizio e forma del bilancio."
+    },
+    "en": {
+      "title": "From accounting balances to a draft financial statement",
+      "goal": "Understand how source reading, mapping and checks support a reviewable OIC statement and XBRL output.",
+      "scenario": "Fictional Arco supplies assets of EUR 250,000, liabilities of EUR 180,000 and equity of EUR 70,000. Other receivables include EUR 8,000 without detail. The totals balance, but that classification remains unresolved.",
+      "request": "Vera, show the mapping and questions to resolve before preparing the draft statement.",
+      "scope": "A small reading and mapping case, not a filing-ready statement. Taxonomy, statement form, comparatives and notes need the complete normal workflow.",
+      "input_columns": [
+        "Fictional statement item",
+        "EUR",
+        "Reference"
+      ],
+      "input_rows": [
+        [
+          "Total assets",
+          "250,000",
+          "S1 · row 10"
+        ],
+        [
+          "Liabilities",
+          "180,000",
+          "S1 · row 20"
+        ],
+        [
+          "Equity",
+          "70,000",
+          "S1 · row 30"
+        ],
+        [
+          "Other receivables within assets",
+          "8,000",
+          "S1 · row 7; no breakdown"
+        ]
+      ],
+      "basis": "S1 supports the balances and arithmetic. It does not explain the receivables or provide comparatives and disclosures.",
+      "method": [
+        "Confirm year, statement form, principles and language. Inspect sources and preserve each balance's locator.",
+        "Propose a reasoned mapping and resolve ambiguous items. Keep decisions awaiting review visible.",
+        "Use the current contract and taxonomy for checks and generation. Deliver drafts and diagnostics with their review status, without claiming filing."
+      ],
+      "result_title": "Balanced totals, unresolved classification",
+      "conclusion": "250,000 − 180,000 − 70,000 = EUR 0. Balance does not resolve the nature of other receivables.",
+      "output_columns": [
+        "Check",
+        "Result",
+        "Consequence"
+      ],
+      "output_rows": [
+        [
+          "Balance-sheet equation",
+          "EUR 0 difference",
+          "Arithmetic closes"
+        ],
+        [
+          "Other receivables · EUR 8,000",
+          "Nature undocumented",
+          "Obtain detail before final mapping"
+        ],
+        [
+          "Comparatives and notes",
+          "Not supplied in this small case",
+          "Incomplete scope"
+        ]
+      ],
+      "check": "Balanced totals do not certify classification, completeness or compliance. Drafts retain their limitations and professional-review requirement.",
+      "question": "Can we assign all other receivables to one category just to finish mapping?",
+      "answer": "No. The nature of the balance needs supporting detail. Keep the point open and submit the proposal for professional review.",
+      "practice": "Add the EUR 8,000 breakdown and reconsider mapping without changing the totals.",
+      "next": "Prepare complete balances, comparatives and supporting documents; identify the year and statement form."
+    }
+  }
+}

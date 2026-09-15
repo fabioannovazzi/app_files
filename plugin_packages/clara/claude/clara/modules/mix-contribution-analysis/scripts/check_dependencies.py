@@ -13,8 +13,20 @@ from pathlib import Path
 
 __all__ = ["main"]
 
-REQUIRED_MODULES = ("polars", "plotly", "kaleido", "PIL", "docx", "openpyxl")
+REQUIRED_MODULES = (
+    "xlsxwriter",
+    "numpy",
+    "psutil",
+    "dateutil",
+    "polars",
+    "plotly",
+    "kaleido",
+    "PIL",
+    "docx",
+    "openpyxl",
+)
 PACKAGE_IMPORTS = {
+    "python-dateutil": "dateutil",
     "pillow": "PIL",
     "python-docx": "docx",
 }

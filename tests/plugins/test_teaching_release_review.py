@@ -95,6 +95,81 @@ def test_exact_reviews_and_successful_native_runs_are_accepted(evidence):
     assert release.verify(**evidence) == {"reviewed_kits": 3, "reviewed_locales": 3}
 
 
+@pytest.fixture
+def retained_evidence(evidence):
+    root = evidence["root"]
+    original = {
+        "schema": "mparanza.course.v1",
+        "product": "vera",
+        "workflow": "example",
+        "supported_languages": ["it"],
+        "locales": {"it": {"title": "Published fixture"}},
+        "sources": [],
+    }
+    snapshot = root / "scripts/course_materials/published/vera/example/course.json"
+    write_json(snapshot, original)
+    retained = {
+        "course_sha256": hashlib.sha256(snapshot.read_bytes()).hexdigest(),
+        "published_version": "0.1.1",
+    }
+    write_json(
+        root / "scripts/course_materials/release_plan.json",
+        {"retained": {"vera/example": retained}},
+    )
+    current = {
+        **original,
+        "sources": [{"path": "current.py"}],
+        "retained_from": retained,
+    }
+    course = root / "plugins/vera/assets/courses/example/course.json"
+    write_json(course, current)
+    write_json(
+        course.parent.parent / "index.json",
+        {
+            "product": "vera",
+            "courses": {
+                "example": {"sha256": hashlib.sha256(course.read_bytes()).hexdigest()}
+            },
+        },
+    )
+    (evidence["reviews"] / "vera/example.json").unlink()
+    return evidence, course, snapshot
+
+
+def test_retained_lesson_keeps_published_content_without_new_review(retained_evidence):
+    evidence, _, _ = retained_evidence
+    assert release.verify(**evidence) == {"reviewed_kits": 2, "reviewed_locales": 2}
+
+
+@pytest.mark.parametrize("change", ["course", "snapshot", "unlisted"])
+def test_retained_lesson_rejects_changed_or_unlisted_content(retained_evidence, change):
+    evidence, course, snapshot = retained_evidence
+    if change == "unlisted":
+        write_json(
+            evidence["root"] / "scripts/course_materials/release_plan.json",
+            {"retained": {}},
+        )
+    else:
+        target = course if change == "course" else snapshot
+        payload = json.loads(target.read_text())
+        payload["locales"]["it"]["title"] = "Changed fixture"
+        write_json(target, payload)
+        if change == "course":
+            write_json(
+                course.parent.parent / "index.json",
+                {
+                    "product": "vera",
+                    "courses": {
+                        "example": {
+                            "sha256": hashlib.sha256(course.read_bytes()).hexdigest()
+                        }
+                    },
+                },
+            )
+    with pytest.raises(ValueError, match="[Rr]etained"):
+        release.verify(**evidence)
+
+
 def test_refreshing_compiled_hash_does_not_refresh_editorial_review(evidence):
     assets = evidence["root"] / "plugins/vera/assets/courses"
     path = assets / "example/course.json"

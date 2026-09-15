@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "open-item-reconciliation",
-  "course_sha256": "38a6afece594593f3db63f85a4e4b1cb03c6e063efa406c4c64678562be251dd",
+  "course_sha256": "bf51ae59605514f9e76956d7c5a8b36d872cc14af6b1d8866234c3ff8737a1f2",
   "reviewer": "Codex: source, first-use outline and actual native document/workbook review",
   "reviewed_at": "2026-09-14T17:59:18.652300+00:00",
   "review_scope": "Prepared full-payment matching example and cumulative April practice. All 51 Word pages from native run 07 and 34 summary/request worksheet views were visually inspected. All three operational sheets were also checked through a native LibreOffice conversion, which disproved the excessive row heights in the secondary preview renderer. Run 08 re-executes the final corrected outlines with unchanged inputs and production method: full Word body XML and both operational/request workbook cell values and styles match run 07 after exact managed-source and run-metadata substitutions. The local HTML review page could not be opened because of browser URL security policy; visual browser interaction, learner understanding, native voice and two-window behavior are not attested. Row review remains pending; this is not professional case approval.",
@@ -266,5 +266,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.434147+00:00",
+    "previous_course_sha256": "38a6afece594593f3db63f85a4e4b1cb03c6e063efa406c4c64678562be251dd",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+        "before": "f06bf381da336ab5c5ce014c7ebabb150f4492afe1ec5386a0902f8caaf674e7",
+        "after": "31527f2b5a6774a22adac211fe7e96bf8ad1f1298e0450d05d33266a96b353b9"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

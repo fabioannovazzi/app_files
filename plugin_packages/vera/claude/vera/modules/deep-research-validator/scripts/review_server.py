@@ -643,6 +643,8 @@ def _mcp_tool_result(
     *,
     browser_payload: bool = False,
 ) -> dict[str, Any]:
+    if browser_payload and name != _render_tool_name(_adapter(workbench)):
+        raise ValueError("component metadata is only available to browser rendering")
     message = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -692,6 +694,21 @@ def _mcp_tool_result(
     if not isinstance(result, dict):
         raise ValueError("MCP tools/call result must be a JSON object")
     structured = result.get("structuredContent")
+    if (
+        browser_payload
+        and isinstance(structured, dict)
+        and structured.get("ok") is True
+    ):
+        metadata = result.get("_meta")
+        private = (
+            metadata.get("private_review_payload")
+            if isinstance(metadata, dict)
+            else None
+        )
+        if isinstance(private, dict):
+            # Component-only metadata stays in the local browser session. The
+            # normal MCP caller continues to receive only structuredContent.
+            return private
     if isinstance(structured, dict):
         if (
             browser_payload

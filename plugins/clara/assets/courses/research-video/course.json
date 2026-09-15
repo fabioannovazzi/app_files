@@ -23,12 +23,12 @@
     {
       "path": "skills/research-video/SKILL.md",
       "repository_path": "plugins/clara/skills/research-video/SKILL.md",
-      "sha256": "8cba891baa046a13ae47cf60f4e9dba06bb91128349260cceb6cbde39f69cc88"
+      "sha256": "ad2b89cce199c6d12f83f2b8c9f9a211b47d526192defb25914f0b9fca115f7d"
     },
     {
       "path": "skills/research-video/scripts/research_video.py",
       "repository_path": "plugins/clara/skills/research-video/scripts/research_video.py",
-      "sha256": "7e76005502796684c00e2743e6c935badd12cdec0a28c1396a7d119c3e098164"
+      "sha256": "b3e1703353f6150c9503708de6cfe738ef3c2b513c46d442a074846b4b35a675"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

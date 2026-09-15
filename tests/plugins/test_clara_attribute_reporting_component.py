@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -68,6 +69,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
+    assert re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", manifest["version"])
     assert "retail-attribute-reporting" in manifest["keywords"]
     assert "Retailer Signals" in manifest["interface"]["longDescription"]
     assert "references/workflow-catalog.md" in router

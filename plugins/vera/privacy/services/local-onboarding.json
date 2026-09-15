@@ -33,7 +33,7 @@
         "scripts/local_teaching.py",
         "skills/learn-with-vera/SKILL.md"
       ],
-      "on_violation": "Permission errors, corrupt profiles and missing enrolled records require local recovery; no server fallback or automatic reset."
+      "on_violation": "Permission errors, corrupt profiles and missing enrolled records require recovery only to resume the optional tutorial. Ordinary work continues without a profile check, server fallback, automatic reset or manufactured completion."
     },
     {
       "id": "onboarding-transmission-suppression",
@@ -57,7 +57,7 @@
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local stdlib course loader verifies exact own-product workflow identity, supported authored language, source fingerprints and attachment hashes before reuse. It renders escaped local HTML into a fresh ordinary directory, with no network or model client, external assets or executable script. Rendering does not change profiles, record understanding or create execution receipts. Authored specimens and actual supplementary starter outputs have distinct provenance. The native OpenAI host may read the selected course for conversation; this is not offline inference.",
+      "control": "The local stdlib loader supports both new teaching kits and explicitly retained published lessons. It verifies own-product identity, authored language, current source fingerprints and attachment hashes, then renders escaped HTML in a fresh ordinary directory without network or model calls. Both formats enumerate prepared artifact hashes; local progress checks reject those bytes even when copied or renamed. The working host must attest actual input, native-run and output files in the paired lesson. Hash and thread checks do not authenticate a host or prove semantic quality. Rendering performs no profile, understanding or execution-completion write. The static public catalogue contains prepared fictional materials and relative-only provenance, with no local execution requests, profile or progress files. Native OpenAI conversation is ordinary model processing, not offline inference.",
       "implemented_by": [
         "scripts/local_courses.py",
         "skills/learn-with-vera/references/prepared-courses.md"
@@ -69,12 +69,13 @@
     "reviewed_at": "2026-09-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "97e49b15710c06b5e16dba052aea50909fe944a96ef571afdbfc6741b14e8fcf"
+    "source_fingerprint": "5f75c8b47eaf3be95344ec99ff1233fe11165e222afdaf2b0ee4ad0245cfd2b0"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",
     "static/shared/product-function-pages.js",
     "plugins/_shared/vendor/modules/courseware",
-    "scripts/course_materials"
+    "scripts/course_materials",
+    "static/shared/courses"
   ]
 }

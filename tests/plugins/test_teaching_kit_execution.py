@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -905,6 +905,7 @@ def test_financial_report_kit_builds_current_source_bound_document(
 @pytest.mark.parametrize("product", ["vera", "clara"])
 @pytest.mark.parametrize("language", ["it", "en"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("vera/business-planning", "clara/business-planning")
 def test_business_plan_kit_runs_and_revises_the_owning_product_case(
     tmp_path, monkeypatch, record_property, product, language, phase
 ):
@@ -1591,6 +1592,7 @@ def _sample_teaching_journal(
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase,count", [("demo", 3), ("practice", 4)])
+@prepared_kit("vera/purchase-invoice-review")
 def test_purchase_invoice_kit_inputs_match_actual_bookings(
     tmp_path, monkeypatch, language, phase, count
 ):
@@ -1951,6 +1953,7 @@ def test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files(
         ("practice", "2026-03-31", "85000", "77000", "8000"),
     ],
 )
+@prepared_kit("vera/management-control-pack", "clara/reporting-engine")
 def test_budget_kits_run_the_owning_product_report_pipeline(
     tmp_path,
     monkeypatch,

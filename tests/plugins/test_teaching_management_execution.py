@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 from openpyxl import load_workbook
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 from tests.plugins.test_teaching_kit_execution import (
     ROOT,
     _bound_case,
@@ -209,6 +209,7 @@ def _execute(run, client_root, language, phase, prior=None):
 
 @pytest.mark.parametrize("language", ["it", "en"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("vera/management-control-pack")
 def test_management_kit_delivers_commentary_and_retains_previous_period(
     tmp_path, monkeypatch, record_property, language, phase
 ):

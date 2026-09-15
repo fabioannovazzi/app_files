@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "variance-analysis",
-  "course_sha256": "b0a85074c3a44cd143b6134087fc0e79e38a9d84ce996859ba8e79d74d4852a9",
+  "course_sha256": "836d99d8ab3ba006e22c2e8b31b6f8d3052f0ad4b3ac308bb417041b6f03ca20",
   "reviewer": "Codex: first-use lesson and current native variance outputs",
   "reviewed_at": "2026-09-14T19:41:43.894547+00:00",
   "review_scope": "Read both fictional monthly input populations, all five localized contexts and first-use outlines, and the current calculation and interpretation outputs. Ten current native exercises pass within 92 component/native checks, without failures or skips. Visually inspected all 55 pages of the ten native Word reports, both distinct workbooks, and the four main chart families for every locale/phase. Final chart bytes match the previously inspected revision except the Spanish practice monthly chart, which was inspected separately. Workbook cells, styles and visibility match within each phase after resolving shared strings and equal-magnitude row order. Alternative sequences were reviewed through their native rows, reconciliation and authored interpretation; no visual inspection of every alternative PNG is claimed. Reports retain technical appendices, spacious chart pages and wrapped long German labels. This accepts prepared materials and their demonstrated current output, not learner understanding, voice interaction or professional approval.",
@@ -466,5 +466,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.507449+00:00",
+    "previous_course_sha256": "b0a85074c3a44cd143b6134087fc0e79e38a9d84ce996859ba8e79d74d4852a9",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/variance-analysis/SKILL.md",
+        "before": "fcbbd189b9f4eb8fa0d40e003f822a38e2fa4604d5ecb1836cf90bbe83684392",
+        "after": "f05dd16e267bd6411c18ffc7cf8ad474659aea83447b2dce53331cb21dffcff8"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

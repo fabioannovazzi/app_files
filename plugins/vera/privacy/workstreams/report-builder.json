@@ -24,7 +24,7 @@
       {
         "id": "financial-report-evidence",
         "purpose": "Map source tables, write the report narrative, and review the generated report",
-        "content": "User instructions; a bounded inspection packet with source file and sheet names, table identifiers, row and column counts, header candidates, numeric-candidate row positions, extraction diagnostics, and at most eight preview rows per table with numeric values redacted; when the preview is insufficient, one purpose-labelled expansion containing one exact table, at most 16 selected columns and at most 100 selected source rows with cell text, number formats, formula/cache status and source coordinates; selected mappings; the editable narrative recipe; generated report diagnostics, drafts, artifacts and review decisions. The complete cell inventory is not model-visible by default and remains in private deterministic control state.",
+        "content": "User instructions; a bounded inspection packet with source file and sheet names, table identifiers, row and column counts, header candidates, numeric-candidate row positions, extraction diagnostics, and at most eight preview rows per table with numeric values redacted; when the preview is insufficient, one purpose-labelled expansion containing one exact table, at most 16 selected columns and at most 100 selected source rows with cell text, number formats, formula/cache status and source coordinates; selected mappings; the editable narrative recipe; generated report diagnostics, drafts, artifacts and review decisions. The complete cell inventory is not model-visible by default and remains in private deterministic control state. After a valid source-bound numeric-measure review, generated report previews may also include the exact included literal measures, their physical source coordinates and explicit exclusions, capped at eight rows and six displayed columns. This affects reviewed report evidence, not the default raw-cell inspection boundary.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -95,6 +95,6 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a17ca3e0b6f230770ce484599f5e58bd03a07cb340842d0948738a17e6898f65"
+    "source_fingerprint": "6ff8db7a0466b6712168d4b5a2cf54d448d9d6c030a3e365b6ff862988bd175a"
   }
 }

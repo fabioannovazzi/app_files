@@ -74,10 +74,10 @@ ATTRIBUTE_TABLE_TEMPLATES: tuple[AttributeTableTemplate, ...] = (
     ),
     AttributeTableTemplate(
         table_key="attribute_bridge_table",
-        title="Winner and Emerging Signal Bridge",
+        title="Top-seller and recent-product overlap",
         description=(
-            "Side-by-side table showing whether a bundle appears as a current "
-            "top-seller signal, an emerging recent-product signal, or both."
+            "Side-by-side comparison membership; presence in both sources does not "
+            "establish signal eligibility or commercial significance."
         ),
         source_files=(
             "top_seller_pairs.csv",
@@ -388,8 +388,8 @@ def _build_attribute_bundle_comparison_table(
     ]
     table_rows: list[dict[str, Any]] = []
     layer_specs = [
-        ("winning_now", "Winning now", "Top sellers vs others"),
-        ("innovation", "Emerging signal", "Recent vs rest"),
+        ("winning_now", "Top-seller comparison", "Top sellers vs others"),
+        ("innovation", "Recent-product comparison", "Recent vs rest"),
     ]
     base_layer_limit = DEFAULT_MAX_ROWS // len(layer_specs)
     extra_layer_rows = DEFAULT_MAX_ROWS % len(layer_specs)
@@ -463,18 +463,19 @@ def _bridge_alignment(
     top_row: Mapping[str, Any] | None,
     innovation_row: Mapping[str, Any] | None,
 ) -> str:
+    # Exact row presence is mechanical; eligibility and significance are separate.
     if top_row is not None and innovation_row is not None:
-        return "Bridge"
+        return "Both comparisons"
     if top_row is not None:
-        return "Winning-now only"
-    return "Emerging only"
+        return "Top-seller comparison only"
+    return "Recent-product comparison only"
 
 
 def _bridge_sort_key(row: Mapping[str, Any]) -> tuple[Any, ...]:
     alignment_rank = {
-        "Bridge": 0,
-        "Winning-now only": 1,
-        "Emerging only": 2,
+        "Both comparisons": 0,
+        "Top-seller comparison only": 1,
+        "Recent-product comparison only": 2,
     }.get(_safe_text(row.get("alignment")), 3)
     return (
         alignment_rank,

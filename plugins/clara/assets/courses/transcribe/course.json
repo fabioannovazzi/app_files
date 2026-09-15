@@ -30,12 +30,12 @@
     {
       "path": "scripts/advisor_case_core.py",
       "repository_path": "plugins/clara/scripts/advisor_case_core.py",
-      "sha256": "f91c4cf808c1c80296121b80bbf87b4a16fe25d26080be2d6d4e2bba9e631a29"
+      "sha256": "1102874a9103ce3aa8efb16679b363fe5b25b2df53c92f0091d1815a4e942108"
     },
     {
       "path": "scripts/advisory_evidence_lineage.py",
       "repository_path": "plugins/clara/scripts/advisory_evidence_lineage.py",
-      "sha256": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73"
+      "sha256": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
     },
     {
       "path": "scripts/advisory_lineage_labels.py",
@@ -48,14 +48,34 @@
       "sha256": "1bd1a85dd8f64e7be9f698bcf3f9df290e4c9135482c090a936a105276fa3566"
     },
     {
+      "path": "scripts/bounded_process.py",
+      "repository_path": "plugins/clara/scripts/bounded_process.py",
+      "sha256": "e409460e7df27d1fc89df5d2908c6ff3b438420d1c0bd1a1b4c9e4ce7de0ea3b"
+    },
+    {
       "path": "scripts/build_voice_feedback_timeline.py",
       "repository_path": "plugins/clara/scripts/build_voice_feedback_timeline.py",
-      "sha256": "411efb9a66a51d2c64fdcf1d34cc8cc01805c67b2b839696e17385934d12c325"
+      "sha256": "9421c1e2cefe599a25a15490e1b792005220d69019b9cab327cf2c66e9a0619b"
+    },
+    {
+      "path": "scripts/case_exchange_safety.py",
+      "repository_path": "plugins/clara/scripts/case_exchange_safety.py",
+      "sha256": "8aaa910146d7accdcdb99ab793fb2c3e59585697d5d9284aab8946a2de7c35e3"
+    },
+    {
+      "path": "scripts/case_store.py",
+      "repository_path": "plugins/clara/scripts/case_store.py",
+      "sha256": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
     },
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/clara/scripts/check_dependencies.py",
-      "sha256": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c"
+      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+    },
+    {
+      "path": "scripts/decision_narrative.py",
+      "repository_path": "plugins/clara/scripts/decision_narrative.py",
+      "sha256": "d596dcb192db69e8ca32e511f99aba371328260ddd916e77c7b7d250b781daf2"
     },
     {
       "path": "scripts/finalize_hosted_transcript.py",
@@ -65,12 +85,12 @@
     {
       "path": "scripts/html_deck_runtime.py",
       "repository_path": "plugins/clara/scripts/html_deck_runtime.py",
-      "sha256": "3e41fb7921317c92153fcdab66e7cdc8e4078366c29f518093d8fb2a2eb84f27"
+      "sha256": "a4585f10b456bbc44513873c430c58bc3f40351a69646b2e255e14861ace6d21"
     },
     {
       "path": "scripts/import_hosted_voice_bundle.py",
       "repository_path": "plugins/clara/scripts/import_hosted_voice_bundle.py",
-      "sha256": "cec89bc124b742b7b7dadb19dc4f966bf2796a8a640b1ed6344f661824ede8b2"
+      "sha256": "77a707f2488ff2192bc7f673dbda14695f0caa81023304c010c7e9f812746886"
     },
     {
       "path": "scripts/import_hosted_voice_bundle_to_folder.py",
@@ -105,7 +125,7 @@
     {
       "path": "scripts/match_feedback_frames_to_deck_slides.py",
       "repository_path": "plugins/clara/scripts/match_feedback_frames_to_deck_slides.py",
-      "sha256": "6671a51e5a354d8ca71ceed75dab32d4fdea3df4bf292f4770d70e695cda68e6"
+      "sha256": "05bcb9f30b23e97b0b54907296943c72120040c2d95de422b5ac3b0440b96fda"
     },
     {
       "path": "scripts/prepare_voice_deck_revision.py",
@@ -125,7 +145,7 @@
     {
       "path": "skills/transcribe/SKILL.md",
       "repository_path": "plugins/clara/skills/transcribe/SKILL.md",
-      "sha256": "40ccdc5e3303c9b011dc1641aa0cc888e22388b43029234fa8101b2b9e8a5b50"
+      "sha256": "316069f0907d2cd90dd1ad7d0ebf07bb4b08f19c5a017690e1c4d29e6a01ddeb"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -163,14 +183,29 @@
       "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -195,7 +230,7 @@
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e"
+      "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
     }
   ],
   "files": [

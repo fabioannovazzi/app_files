@@ -7,7 +7,18 @@
     "skills/html-deck/assets",
     "skills/html-deck/references",
     "skills/html-deck/scripts",
-    "scripts/verify_advisory_html_delivery.py"
+    "scripts/verify_advisory_html_delivery.py",
+    "scripts/advisory_delivery.py",
+    "scripts/advisor_case_core.py",
+    "scripts/advisory_evidence_lineage.py",
+    "scripts/case_store.py",
+    "scripts/bounded_process.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json",
+    "scripts/advisory_lineage_labels.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -21,6 +32,16 @@
         "id": "deck-work",
         "purpose": "Plan, compose, revise, and review the presentation",
         "content": "Storyline, claims, stable claim and evidence receipt identifiers, dependency edges, evidence bundle and binding records, source hashes, resolved values, slide titles and text, speaker notes, layout choices, content and evidence ledgers, exact hash-bound output appearances written to the shared advisory claim register, workpaper and delivery checkpoints, HTML/CSS, screenshots, and QA findings"
+      },
+      {
+        "id": "embedded-and-retained-deck-artifacts",
+        "purpose": "Review what the deck contains and preserve exact evidence across revisions",
+        "content": "Editable plans and full source ledgers, resolved evidence values, source labels and hashes, speaker notes, final embedded ledgers, ZIPs, previous content-addressed builds, revision maps, screenshots, print-preview PDFs and browser console diagnostics may enter model context. The publication content ledger omits source locators unless publish_locator is true, but retains source labels, IDs, hashes and slide records; this is field filtering, not automatic anonymisation. Hidden notes and JSON remain readable in the HTML. Bound previous builds are retained until separately removed; the cleanup checker does not enforce filesystem access. A hashed directory and noindex metadata provide neither authentication nor a deletion guarantee."
+      },
+      {
+        "id": "shared-case-normalization-attempts",
+        "purpose": "Inspect case presentation imports and any normalization diagnostics used by this workflow",
+        "content": "When a presentation is imported through the shared case helper and requires normalization, local attempt directories retain converted presentation files and converter stdout/stderr logs. They may contain source document content, metadata and local paths, including after failure or cancellation. Reading them supplies their contents to model context. This conditional import path does not mean every workflow execution converts a presentation or sends these files to a hosted service. Retained attempt files remain until separately removed."
       }
     ]
   },
@@ -44,17 +65,36 @@
     "per_case_record_required": false
   },
   "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the declared Python dependencies before running a documented workflow CLI",
+      "content": "Published package requirements and ordinary package-index request metadata. Existing workflow arguments are forwarded to a local Python child; they are not included in the pip install command.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The direct CLI selects published core or registered component requirements before importing workflow modules.",
+        "The launcher preserves the working directory and arguments in the local child process; this does not redact arguments or change the workflow data boundary.",
+        "An existing matching runtime is reused. Setup installs into a fingerprinted user-scoped environment and propagates failure; it does not install into the case folder."
+      ]
+    }
+  ],
   "security_controls": [
     {
-      "id": "self-contained-output",
-      "control": "The production HTML is dependency-free and rejects required remote scripts, web fonts, analytics, tracking, and network requests."
+      "id": "static-resource-and-markup-checks",
+      "control": "Static validation rejects detected remote resource references, external CSS URLs/imports, executable attributes and named dynamic-network/evaluation patterns. These finite syntax checks do not prove that arbitrary JavaScript cannot make network requests. Current browser QA opens a fresh context without a request-interception policy; it is not a network sandbox."
+    },
+    {
+      "id": "publication-source-locator-filter",
+      "control": "The embedded content-ledger projection excludes each source locator unless its explicit publish_locator flag is true. It retains source labels, hashes and slide records and does not detect confidential content in those fields."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-22",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "289fc3bae5770c154b99567e84835d66a8203e129c4f7490c6f801d2688ccfb3"
+    "source_fingerprint": "1ab5ce48ad09a90d18c96d4a30fce51c22f8d25fe27273364b92fbd39f216aaa"
   }
 }

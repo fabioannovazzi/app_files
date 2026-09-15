@@ -1428,6 +1428,20 @@ def _resolve_period_rule(
     if rule.get("status") not in {"defined", "conditional"}:
         base["reason"] = "period_rule_not_reviewed"
         return base
+    # An explicitly reviewed whole-population scope needs no invented date.
+    if (
+        rule.get("period_id") is None
+        and rule.get("rule_type") == "all_available"
+        and rule.get("scope_type") == "all_available"
+    ):
+        base["resolution_status"] = "resolved"
+        base["coverage_check"]["status"] = "not_applicable"
+        base["resolved_scope"] = {
+            "scope_type": "all_available",
+            "period_column": None,
+            "windows": [],
+        }
+        return base
     if period is None or period.get("status") not in {"defined", "conditional"}:
         base["reason"] = "period_concept_not_available"
         return base
@@ -2288,7 +2302,15 @@ def validate_semantic_layer(
             errors=errors,
             warnings=warnings,
         )
-        if period_rule.get("period_id") not in period_index:
+        period_free_all_data = (
+            period_rule.get("period_id") is None
+            and rule_type == "all_available"
+            and scope_type == "all_available"
+        )
+        if (
+            period_rule.get("period_id") not in period_index
+            and not period_free_all_data
+        ):
             _issue(
                 errors,
                 "unknown_period",
@@ -2325,7 +2347,11 @@ def validate_semantic_layer(
                 f"{path}.parameters.requires_runtime_bounds",
                 "A caller-bounded rule must require runtime bounds.",
             )
-        elif rule_type != "caller_bounded" and requires_runtime_bounds is not False:
+        elif (
+            rule_type != "caller_bounded"
+            and not period_free_all_data
+            and requires_runtime_bounds is not False
+        ):
             _issue(
                 errors,
                 "unexpected_runtime_bounds_requirement",
@@ -2494,6 +2520,14 @@ def validate_semantic_layer(
                 wrong_scope_type = (
                     period_rule_index[period_rule_id].get("scope_type")
                     != "comparison_pair"
+                )
+            if (
+                period_rule_id in period_rule_index
+                and period_rule_index[period_rule_id].get("period_id") is None
+            ):
+                wrong_scope_type = wrong_scope_type or bool(
+                    scope_contract.get("period_column_required")
+                    or not scope_contract.get("explicit_all_data_allowed")
                 )
             semantic_mismatches = list(policy_semantic_mismatches)
             for role_contract in required_role_contracts:

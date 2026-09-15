@@ -639,6 +639,15 @@ def _write_plotly_html(fig: Any, path: Path, width: int, height: int) -> Path:
         default_width=f"{width}px",
         default_height=f"{height}px",
     )
+    # The screenshot viewport matches the figure size; browser page margins
+    # otherwise clip the bottom axis title and right-side legend.
+    html_document = html_path.read_text(encoding="utf-8")
+    html_path.write_text(
+        html_document.replace(
+            "<head>", "<head><style>html,body{margin:0;padding:0}</style>", 1
+        ),
+        encoding="utf-8",
+    )
     return html_path
 
 
@@ -1099,6 +1108,36 @@ def write_legacy_distribution_chart(
         outputs = _select_outputs(
             list(notifier.chart_outputs), str(spec.get("capture_figure") or "all")
         )
+        # Preserve each population's density instead of normalizing across
+        # periods again at each bin, which obscures distribution shape.
+        for output in outputs:
+            figure = output.figure
+            histograms = [trace for trace in figure.data if trace.type == "histogram"]
+            if histograms:
+                figure.update_layout(barnorm="")
+                for trace in histograms:
+                    axis = trace.yaxis or "y"
+                    axis_key = "yaxis" + axis[1:]
+                    label = (
+                        "Cumulative probability"
+                        if trace.cumulative.enabled
+                        else "Probability density"
+                    )
+                    figure.update_layout(
+                        **{
+                            axis_key: {
+                                "visible": True,
+                                "showticklabels": True,
+                                "rangemode": "tozero",
+                                "automargin": True,
+                                "title": {
+                                    "text": label,
+                                    "font": {"size": figure.layout.font.size},
+                                },
+                                "tickfont": {"size": figure.layout.font.size},
+                            }
+                        }
+                    )
         paths: list[str] = []
         exports: list[dict[str, Any]] = []
         if render:

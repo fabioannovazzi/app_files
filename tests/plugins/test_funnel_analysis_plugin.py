@@ -152,7 +152,7 @@ def test_funnel_stage_table_run_writes_deterministic_artifacts(
     assert context["table_key"] == "funnel_stage_table"
     assert context["metric_label"] == "Embudo de preparación de leads"
     assert context["chart_title_lines"] == [
-        "Extracto del CRM de ejemplo",
+        "leads.csv",
         "Embudo de preparación de leads en registros",
         "Etapas secuenciales",
     ]
@@ -235,3 +235,45 @@ def test_dependency_checker_accepts_explicit_requirements() -> None:
     checker = load_dependency_checker()
 
     assert checker.main(["--requirements", "requirements.txt"]) == 0
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_note"),
+    [
+        ("en", "All records entering this stage."),
+        ("es", "Todos los registros que llegan a esta etapa."),
+    ],
+)
+def test_custom_funnel_uses_source_title_and_current_cohort_note(
+    tmp_path: Path, language: str, expected_note: str
+) -> None:
+    core = load_core()
+    source = tmp_path / "reviewed.csv"
+    source.write_text("Qualified\nyes\nno\n")
+    recipe = tmp_path / "recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {
+                "stage_definitions": [
+                    {
+                        "stage": "Qualified",
+                        "predicate": {
+                            "type": "equals",
+                            "column": "Qualified",
+                            "value": "yes",
+                        },
+                    },
+                    {"stage": "Retained", "predicate": {"type": "all"}},
+                ]
+            }
+        )
+    )
+
+    result = core.run_funnel_analysis(
+        source, tmp_path / "output", recipe, language=language
+    )
+
+    assert result.context["chart_title_lines"][0] == "reviewed.csv"
+    assert result.rows[-1]["note"] == expected_note
+    assert result.rows[-1]["start_count"] == 1
+    assert result.rows[-1]["pass_count"] == 1

@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 # Business Planning
 
 Help the user decide whether a business is worth pursuing, how it could work,

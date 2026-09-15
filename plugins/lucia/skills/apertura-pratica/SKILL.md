@@ -4,12 +4,17 @@ description: Use when Lucia must open a new client matter or a new matter for an
 ---
 
 <!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../lucia/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../lucia/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- LUCIA_OPENAI_ONBOARDING_END -->
 
 # Fascicolo nuova pratica
@@ -26,3 +31,9 @@ This is Lucia's native legal-matter-opening contract. It reuses Studio Archive
 only for private client, engagement, input and run lifecycle. It does not use
 Legal/Tax Answer Review as its completion gate and does not inherit Vera's
 accounting intake semantics.
+
+Before finalizing a durable Studio Archive run, follow that component's model-data
+report contract. Its `scripts/build_model_data_report.py` builds and validates
+local disclosure artifacts without requesting a server attestation. Record the
+actual model-context evidence or its limits; local report generation does not
+mean that the matter's professional analysis ran without a model.

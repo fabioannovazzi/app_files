@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 from tests.plugins.test_teaching_kit_execution import (
     _bound_case,
     _complete_teaching_case,
@@ -45,6 +45,7 @@ def _native(monkeypatch):
 
 @pytest.mark.parametrize("language", ["it", "en"])
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("vera/bilancio-oic")
 def test_oic_kit_prepares_reviewable_accounts_and_retains_prior_version(
     tmp_path, monkeypatch, language, phase, record_property
 ):

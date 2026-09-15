@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "browser-automation",
+  "scenario": "Ein fiktives lokales Portal zeigt ein Dokument und eine Download-Schaltfläche. Wiederholt werden soll genau dieser Download. Die Übungsseite enthält keine Zugangsdaten, Zahlungen oder Mandantenunterlagen.",
+  "columns": [
+    "Fiktives Seitenelement",
+    "Beobachtbarer Beleg",
+    "Grenze"
+  ],
+  "rows": [
+    [
+      "Dokumentenliste",
+      "Ein Dokument namens DEMO-01",
+      "Synthetischer Inhalt"
+    ],
+    [
+      "Download-Schaltfläche",
+      "synthetic-download.txt",
+      "Ein vorgesehener Vorgang"
+    ],
+    [
+      "Erwartete Datei",
+      "Kennzeichnender Text des Beispiels",
+      "Öffnen und prüfen"
+    ]
+  ],
+  "scope": "Lokale fiktive Website und ein Lese-/Downloadvorgang. Ein Zugang zu einem echten Buchhaltungssystem wird nicht vorgetäuscht."
+}

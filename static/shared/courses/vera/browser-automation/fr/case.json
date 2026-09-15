@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "browser-automation",
+  "scenario": "Un portail fictif local présente un document et un bouton de téléchargement. Nous voulons répéter uniquement ce téléchargement. Le site pédagogique ne contient ni identifiants, ni paiements, ni données de clients.",
+  "columns": [
+    "Élément fictif",
+    "Preuve observable",
+    "Limite"
+  ],
+  "rows": [
+    [
+      "Liste de documents",
+      "Un document DEMO-01",
+      "Contenu synthétique"
+    ],
+    [
+      "Bouton Télécharger",
+      "synthetic-download.txt",
+      "Une opération prévue"
+    ],
+    [
+      "Fichier attendu",
+      "Texte identifiant le cas",
+      "À ouvrir et vérifier"
+    ]
+  ],
+  "scope": "Site local fictif, lecture et téléchargement. Aucun accès à un logiciel comptable réel n'est simulé."
+}

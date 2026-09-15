@@ -13,7 +13,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 
 | Capability | Selection emphasis | Period | Metrics | Dimensions | Primary cue |
 | --- | --- | --- | --- | --- | --- |
-| `statement.pnl_table` | `structured_statement_values` | `axis_or_table` | `statement_value` | required `statement_line_item` | Question asks for structured P&L or statement line-item values. |
+| `statement.pnl_table` | `structured_statement_values` | `axis_or_table` | `statement_value` | required `statement_line_item`, `statement_scenario`, `statement_structure` | Question asks for structured P&L or statement line-item values. |
 
 ## High-Overlap Pairs
 
@@ -34,7 +34,7 @@ Generated from `selection_manifest.json`. This is a manifest-side review documen
 - Forbidden question focus: `time_trend`, `distribution_shape`, `variance_bridge`
 - Period role: `axis_or_table`
 - Metric roles: `statement_value`
-- Dimension roles: required `statement_line_item`
+- Dimension roles: required `statement_line_item`, `statement_scenario`, `statement_structure`
 - Close competitors: `none`
 - Positive question: Build a P&L line-item table.
 - Ambiguous question: Show the supporting evidence table.

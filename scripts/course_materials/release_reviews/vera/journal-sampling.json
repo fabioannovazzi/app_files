@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-sampling",
-  "course_sha256": "e2083d8d5c1a5ed5ba753a3cb0ade8ec5f0ce41c137a2d596963da327e7ee999",
+  "course_sha256": "43f2cb93eacbe5688778a54b9c53ea55d63e6ce8fe86132dcb34311e82d5ac78",
   "reviewer": "Codex: first-use lesson, fictional inputs and current native sample review",
   "reviewed_at": "2026-09-14T18:13:05.890693+00:00",
   "review_scope": "Read all five localized outlines and context notes and both source journals. Current native inspection, normalization, random sampling and Studio Archive finalization pass in ten locale/phase checks within a 186-case regression. Visually inspected both complete unique sample worksheets in two horizontal views each; compared every cell value, type, style, column width, row height and freeze setting across the other eight locale workbooks. The worksheet name varies by locale; canonical column names intentionally remain English. No learner comprehension, voice, browser widget or two-window acceptance is claimed. Professional review decisions remain pending.",
@@ -306,5 +306,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.413232+00:00",
+    "previous_course_sha256": "e2083d8d5c1a5ed5ba753a3cb0ade8ec5f0ce41c137a2d596963da327e7ee999",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/journal-sampling/SKILL.md",
+        "before": "f2cf8fc43a6de0fbafbcd110431fd4ad405a0c271d526268cd9ad77fd45124a7",
+        "after": "e5f21cad5b41df588cc3df48d304bbff39c8aa56e2d6a6876169a0e959d173d5"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

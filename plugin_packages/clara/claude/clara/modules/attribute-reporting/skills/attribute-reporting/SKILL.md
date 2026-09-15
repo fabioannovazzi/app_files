@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. Put each user run in a private local output directory outside every Git repository. Product images remain on the local machine. Reports, claim ledgers, report semantic-review artifacts, browser QA, and correctness-verdict artifacts are stored locally and are never uploaded to Mparanza. The four explicitly approved mapping artifacts, including the independent mapping review, may cross the authenticated mapping boundary described below.

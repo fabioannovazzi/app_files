@@ -32,6 +32,7 @@ REQUIRED_COMPONENT_PATHS = (
     "scripts/teaching_checkpoint.py",
     "scripts/batch_review.py",
     "scripts/econs_review.mjs",
+    "scripts/econs_setup.mjs",
     "references/econs-review.md",
     "scripts/development_request.py",
     "references/development-request.md",

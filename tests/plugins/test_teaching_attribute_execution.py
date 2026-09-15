@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/attribute-reporting/scripts"
@@ -117,6 +117,7 @@ def _load(path, name, monkeypatch):
 
 @pytest.mark.parametrize("language", TEXT)
 @pytest.mark.parametrize("phase", ["demo", "practice"])
+@prepared_kit("clara/attribute-reporting")
 def test_assortment_kit_renders_native_comparisons_and_requires_independent_review(
     tmp_path, monkeypatch, language, phase, record_property
 ):

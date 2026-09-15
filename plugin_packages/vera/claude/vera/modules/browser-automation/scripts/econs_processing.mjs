@@ -76,6 +76,15 @@ export function planEconsMapping(detail) {
     lineIds: lines.map((line) => line['line-id']), needsMapping: missing.length > 0 };
 }
 
+/** Check the taught two-anchor exception without classifying invoice meaning. */
+export function hasEconsMappingException(detail) {
+  try { return planEconsMapping(detail).needsMapping; }
+  catch (error) {
+    if (error instanceof EconsProcessingError) return false;
+    throw error;
+  }
+}
+
 function identity(record, expected) {
   need(record && ['company-code', 'invoice-id', 'invoice-number', 'supplier'].every((key) => record[key] === expected[key]), 'wrong_company_or_invoice');
 }
@@ -102,7 +111,7 @@ export function verifyEconsJournal(journal, invoice, detail, plan, review) {
  * An exception after posting is unverified and is never automatically retried.
  */
 export async function processEconsInvoice({ tab, profile, invoice, detail, entry, readDetail,
-  phaseDirectory, save, reviewJournal, approvePosting, environment = {} }) {
+  phaseDirectory, save, reviewInvoice, reviewJournal, approvePosting, environment = {} }) {
   validateEconsProcessingProfile(profile);
   let dispatched = false;
   let phaseIndex = 0;
@@ -123,7 +132,17 @@ export async function processEconsInvoice({ tab, profile, invoice, detail, entry
     identity(current.invoice, invoice);
     need(canonicalJson(current) === canonicalJson(detail), 'invoice_changed_since_acquisition');
     const plan = planEconsMapping(current);
+    // Non-empty text cannot establish that a description is complete. The host
+    // model reviews the observed full values; code binds that review to this
+    // exact invoice and persists it before mapping or opening the journal.
+    const detailHash = sha256Text(canonicalJson(current));
+    const invoiceReview = await reviewInvoice(structuredClone({ invoice, detail: current, detail_sha256: detailHash }));
+    if (text(invoiceReview?.reason)) entry.evidence.push({ label: 'Revisione descrizioni complete', value: invoiceReview.reason, source: `Revisione del modello sulla fattura · ${detailHash}` });
+    need(invoiceReview?.approved === true && invoiceReview.descriptions_complete === true &&
+      invoiceReview.company_code === invoice['company-code'] && invoiceReview.invoice_id === invoice['invoice-id'] &&
+      invoiceReview.detail_sha256 === detailHash && text(invoiceReview.reason), 'complete_invoice_review_required');
     entry.proposed = [{ label: 'Conto e IVA', value: `${plan.account} · ${plan.vat}`, source: 'Righe concordanti della fattura completa' }];
+    await save();
     if (plan.needsMapping) {
       entry.status = 'unverified'; entry.question = 'Verificare il risultato della mappatura prima di ripeterla.';
       entry.outcome = 'Associazione preparata; invio ed esito non ancora confermati.';
@@ -141,12 +160,17 @@ export async function processEconsInvoice({ tab, profile, invoice, detail, entry
     }
     const output = await phase('journal', values);
     const journal = output.journal;
+    identity(journal, invoice);
+    entry.proposed.push(...['account', 'net', 'cost', 'vat', 'total', 'debit', 'credit'].map((key) => ({ label: key, value: journal[key], source: 'Prima nota ECONS prima della registrazione' })));
+    entry.evidence.push({ label: 'Contabilizza', value: 'Prima nota aperta; Conferma reg. non ancora eseguita.', source: 'Fase journal completata; nessun protocollo di registrazione' });
+    entry.outcome = 'Prima nota acquisita e salvata; revisione e Conferma reg. ancora da eseguire.';
+    await save();
     const review = await reviewJournal(structuredClone({ invoice, detail, journal }));
     verifyEconsJournal(journal, invoice, detail, plan, review);
     entry.reason = review.reason;
     entry.evidence.push({ label: 'Trattamento IVA della ditta', value: `${review.vat_nondeductible_percent}% indetraibile · ${review.reason}`, source: review.treatment_source });
     if (review.rounding_explanation) entry.evidence.push({ label: 'Arrotondamento', value: review.rounding_explanation, source: 'Revisione professionale della differenza righe / imponibile' });
-    entry.proposed.push(...['account', 'net', 'cost', 'vat', 'total', 'debit', 'credit'].map((key) => ({ label: key, value: journal[key], source: 'Prima nota ECONS prima della registrazione' })));
+    await save();
     // Bind host approval to the exact current journal; callbacks cannot mutate it.
     need(await approvePosting(structuredClone({ invoice, journal, journal_sha256: sha256Text(canonicalJson(journal)), action: 'confirm-registration' })) === true, 'posting_not_approved');
     const currentJournal = (await phase('journal', values)).journal;

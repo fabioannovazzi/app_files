@@ -2507,7 +2507,9 @@ def test_apply_validated_mappings_rejects_invalid_receipt_before_database_write(
     apply_module = _load_apply_module(reporting)
     store_paths: list[Path] = []
     atomic_calls: list[tuple[list[Any], list[Any]]] = []
-    invalid_receipt_path = ROOT / "tests" / f".{tmp_path.name}-mapping-receipt.json"
+    git_workspace = tmp_path / "git-workspace"
+    (git_workspace / ".git").mkdir(parents=True)
+    invalid_receipt_path = git_workspace / "mapping-receipt.json"
     _install_fake_apply_modules(
         monkeypatch,
         taxonomy=case["taxonomy"],
@@ -2666,6 +2668,81 @@ def test_finalize_report_lists_generated_attribute_table_artifacts(
         assert csv_output["artifact_role"] == "attribute_table"
         assert html_output["table_key"] == table_key
         assert html_output["artifact_role"] == "attribute_table"
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_report_renders_pinned_tables_and_rejects_changed_rows(
+    tmp_path: Path, reporting: Any, language: str
+) -> None:
+    """The delivered report preserves source values and rejects changed evidence."""
+    _package_dir, output_dir = _write_report_artifacts(tmp_path)
+    catalog_path = output_dir / "evidence_catalog.json"
+    catalog = json.loads(catalog_path.read_text())
+    table_key = TABLE_KEYS[0]
+    table_dir = output_dir / "evidence" / "attribute_tables"
+    table_dir.mkdir(parents=True)
+    csv_path = table_dir / "comparison.csv"
+    csv_path.write_text("bundle_key,focus_count,baseline_count\nDewy <Vegan>,3,5\n")
+    table = {
+        "table_key": table_key,
+        "csv": "attribute_tables/comparison.csv",
+        "csv_sha256": _sha256(csv_path),
+        "row_count": 1,
+        "source_files": ["products.csv"],
+    }
+    catalog["attribute_tables"][0] = table
+    catalog["language"] = language
+    _write_json(catalog_path, catalog)
+    model_path = output_dir / "report_model.json"
+    model = json.loads(model_path.read_text())
+    model["language"] = language
+    model["sections"][0]["table_keys"] = [table_key]
+    _write_json(model_path, model)
+
+    rendered = reporting.render_report(output_dir)
+    _write_supported_review(output_dir, rendered)
+    verdict = reporting.finalize_report(output_dir)
+    assert verdict["verdict"] == "correct"
+
+    report_html = (output_dir / "report.html").read_text()
+    assert f'data-table-sha256="{_sha256(csv_path)}"' in report_html
+    assert "products.csv" in report_html
+    assert "Dewy <Vegan>" not in report_html
+    assert csv_path.read_text().endswith("Dewy <Vegan>,3,5\n")
+    csv_path.write_text(csv_path.read_text() + "Matte,7,9\n")
+    verdict = reporting.finalize_report(output_dir)
+    assert verdict["verdict"] == "incorrect"
+    assert "table_sha256_mismatch" in json.dumps(verdict["mechanical_findings"])
+    with pytest.raises(reporting.ContractError, match="changed after preparation"):
+        reporting.render_report(output_dir)
+    table["csv_sha256"] = _sha256(csv_path)
+    _write_json(catalog_path, catalog)
+    with pytest.raises(reporting.ContractError, match="row count changed"):
+        reporting.render_report(output_dir)
+
+
+@pytest.mark.parametrize(
+    ("table_record", "finding"),
+    [
+        (None, "table_manifest_invalid"),
+        ({"csv": "../outside.csv"}, "table_path_invalid"),
+        ({"csv": "missing.csv", "sha256": "a" * 64}, "table_sha256_mismatch"),
+    ],
+)
+def test_final_report_rejects_invalid_rendered_table_receipts(
+    tmp_path: Path, reporting: Any, table_record: Any, finding: str
+) -> None:
+    """A review cannot make malformed or missing table evidence acceptable."""
+    _package_dir, output_dir = _write_report_artifacts(tmp_path)
+    rendered = reporting.render_report(output_dir)
+    rendered["rendered_tables"] = [table_record]
+    _write_json(output_dir / "render_manifest.json", rendered)
+    _write_supported_review(output_dir, rendered)
+
+    verdict = reporting.finalize_report(output_dir)
+
+    assert verdict["verdict"] == "incorrect"
+    assert finding in json.dumps(verdict["mechanical_findings"])
 
 
 def test_finalize_report_rechecks_pinned_transport_receipt_copies(
@@ -3803,3 +3880,28 @@ def test_store_atomic_attribute_write_does_not_commit_when_audit_insert_fails() 
     assert "INSERT INTO pdp_attribute_audit" in inserted_sql[1]
     assert connection.commit_count == 0
     assert connection.transaction_replay_disabled is True
+
+
+@pytest.mark.parametrize(
+    ("name", "header", "accepted"),
+    [
+        ("source.jpg", b"\xff\xd8\xff\xe0", True),
+        ("source.gif", b"GIF89a", True),
+        ("source.webp", b"RIFF0000WEBP", True),
+        ("source.avif", b"0000ftypavif", True),
+        ("source.svg", b"<svg></svg>", False),
+        ("source.jpg", b"<script>alert(1)</script>", False),
+        ("source.webp", b"not a raster", False),
+    ],
+)
+def test_product_evidence_requires_matching_raster_headers(
+    tmp_path: Path, reporting: Any, name: str, header: bytes, accepted: bool
+) -> None:
+    """Renaming active content must not make it accepted product-image evidence."""
+    path = tmp_path / name
+    path.write_bytes(header)
+    assert reporting._is_supported_local_image(path) is accepted
+
+
+def test_missing_product_image_is_unavailable(tmp_path: Path, reporting: Any) -> None:
+    assert not reporting._is_supported_local_image(tmp_path / "missing.jpg")

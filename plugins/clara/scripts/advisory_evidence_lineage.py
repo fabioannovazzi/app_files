@@ -28,7 +28,6 @@ import argparse
 import hashlib
 import json
 import logging
-import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -53,6 +52,8 @@ __all__ = [
     "validate_lineage_payloads",
 ]
 
+from case_store import atomic_text, case_operation, case_reader
+
 LOGGER = logging.getLogger(__name__)
 
 CLARA_ROOT = Path(__file__).resolve().parents[1]
@@ -76,25 +77,7 @@ def _read_json(path: Path) -> Any:
 
 
 def _write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-    temporary_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as handle:
-            handle.write(serialized)
-            handle.flush()
-            temporary_path = Path(handle.name)
-        temporary_path.replace(path)
-    finally:
-        if temporary_path is not None:
-            temporary_path.unlink(missing_ok=True)
+    atomic_text(path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
 
 def _sha256(path: Path) -> str:
@@ -221,6 +204,7 @@ def _duplicate_values(values: Iterable[str]) -> set[str]:
     return duplicates
 
 
+@case_reader
 def validate_lineage(
     case_dir: Path,
     *,
@@ -653,6 +637,7 @@ def validate_lineage_payloads(
     }
 
 
+@case_operation
 def initialize_lineage(case_dir: Path, *, overwrite: bool = False) -> dict[str, Path]:
     """Create empty lineage registers without changing existing records."""
 
@@ -717,6 +702,7 @@ def _append_immutable(
     return added
 
 
+@case_operation
 def record_evidence(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
     """Append immutable model-authored evidence receipts and validate the result."""
 
@@ -738,6 +724,7 @@ def record_evidence(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int
     return added
 
 
+@case_operation
 def record_claims(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
     """Append immutable model-authored claims and supersede declared predecessors."""
 
@@ -764,6 +751,7 @@ def record_claims(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
     return added
 
 
+@case_operation
 def add_claim_appearances(
     case_dir: Path,
     appearances: Sequence[Mapping[str, Any]],
@@ -804,6 +792,7 @@ def add_claim_appearances(
     return added
 
 
+@case_operation
 def bind_claim_appearances(
     case_dir: Path,
     artifact: Path,
@@ -846,6 +835,7 @@ def bind_claim_appearances(
     return add_claim_appearances(case_dir, records)
 
 
+@case_reader
 def check_safe_to_delete(case_dir: Path, target: Path) -> list[str]:
     """Return claims referencing a path or its descendants in this case only.
 
@@ -873,6 +863,7 @@ def check_safe_to_delete(case_dir: Path, target: Path) -> list[str]:
     return sorted(bound)
 
 
+@case_operation
 def render_evidence_map(case_dir: Path) -> Path:
     """Render a readable control view without making semantic judgments."""
 
@@ -1008,7 +999,7 @@ def render_evidence_map(case_dir: Path) -> Path:
                 )
         lines.append("")
     output = case_dir / EVIDENCE_MAP_FILENAME
-    output.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    atomic_text(output, "\n".join(lines).rstrip() + "\n", encoding="utf-8")
     return output
 
 

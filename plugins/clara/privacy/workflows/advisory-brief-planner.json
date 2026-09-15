@@ -17,7 +17,8 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "skills/clara/references/workflow-catalog.md"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -36,6 +37,11 @@
         "id": "downstream-workflow-handoff",
         "purpose": "Give an existing Clara workflow the reviewed generation contract",
         "content": "The complete advisory_contract.json, including source facts, questions, input references, expected outputs, and the selected workflow's objective and instructions"
+      },
+      {
+        "id": "local-validation-and-recovery",
+        "purpose": "Inspect packaging failures and recover an earlier assignment contract",
+        "content": "Source filenames, byte counts and hashes; observational literal inventories containing source dates, numbers, URLs and questions; errors and prior canonical contracts retained at content-hashed recovery paths after a failed attempt. These local artifacts may contain professional information and have no automatic deletion policy in this helper."
       }
     ]
   },
@@ -92,9 +98,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-08-16",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ae433399f2d0b2343b18a19ad37cc1964336364438d7a966c247589efedd5790"
+    "source_fingerprint": "54518ca408599e92db02374c92b49eb82f4bbe1a4732704eb666af98c74c32ba"
   }
 }

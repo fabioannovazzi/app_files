@@ -8,11 +8,14 @@ import math
 import re
 import shutil
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+
+from bounded_process import run_process
 
 __all__ = [
     "FeedbackTimelineError",
@@ -417,18 +420,35 @@ def _extract_frame(
         "2",
         str(frame_path),
     ]
+    stdout_path = frame_path.with_suffix(".stdout.log")
+    stderr_path = frame_path.with_suffix(".stderr.log")
     try:
-        result = subprocess.run(
-            command,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
+        with (
+            stdout_path.open("w", encoding="utf-8") as stdout,
+            stderr_path.open("w", encoding="utf-8") as stderr,
+        ):
+            result = run_process(
+                command,
+                check=False,
+                text=True,
+                timeout=30,
+                stdout=stdout,
+                stderr=stderr,
+            )
+    except InterruptedError:
+        raise
     except (OSError, subprocess.TimeoutExpired) as error:
-        return False, str(error)
+        return False, f"{error}; converter logs: {frame_path.parent}"
     if result.returncode != 0:
-        return False, (result.stderr or result.stdout or "ffmpeg failed").strip()
+        with stderr_path.open(encoding="utf-8", errors="replace") as stream:
+            message = stream.read(800).strip()
+        if not message:
+            with stdout_path.open(encoding="utf-8", errors="replace") as stream:
+                message = stream.read(800).strip()
+        return (
+            False,
+            f"{message or 'ffmpeg failed'}; converter logs: {frame_path.parent}",
+        )
     if not frame_path.is_file():
         return False, "ffmpeg did not write a frame"
     return True, ""
@@ -614,6 +634,8 @@ def build_feedback_timeline_payload(
     frames_dir = (output_path.parent if output_path else Path.cwd()) / "frames"
     resolved_ffmpeg = _resolve_ffmpeg_path(ffmpeg_path)
     if extract_frames and video_path is not None and video_path.is_file():
+        frames_dir.mkdir(parents=True, exist_ok=True)
+        frames_dir = Path(tempfile.mkdtemp(prefix="attempt-", dir=frames_dir))
         for entry in entries:
             _extract_frames_for_entry(
                 entry=entry,

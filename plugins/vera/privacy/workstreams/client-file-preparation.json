@@ -24,7 +24,7 @@
       {
         "id": "client-file-evidence",
         "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
-        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task. Applying a complete reviewed client-email replacement returns the full replacement text in applied decisions and final-artifact required_text QA metadata; path sanitization does not remove this text or its identifiers.",
+        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -80,12 +80,16 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "local-browser-private-review-payload",
+      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7e004421299d9d4235c2e1eca0fab4e0a57e7144015576253cd0a70ca8cd0d0e"
+    "source_fingerprint": "fcbd4a703b182fbeda17c24170de53037ec722eed3ed9f8cdfb859899845ee32"
   }
 }

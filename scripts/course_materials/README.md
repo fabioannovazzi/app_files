@@ -1,5 +1,31 @@
 # Prepared teaching kits
 
+## Interim release: 34 new kits and 11 retained lessons
+
+`release_plan.json` freezes the owner's selected mixed release. Its 34 prepared
+entries use the reviewed new-kit authoring sources. The other 11 retain the
+published course content and attachment bytes under `published/`, pinned to
+commit `07689c38e04036109b8867a0c297372abb19698b`. The compiler verifies those
+snapshots and binds their installed workflow sources to the assembled package.
+It does not certify the retained lessons as newly rebuilt or newly reviewed.
+The unfinished replacements remain in authoring files for next week's work.
+
+Both formats load through `local_courses.py`. Native execution remains required;
+legacy specimens are prepared materials, not a session result. Conditional
+replacement-test marks follow the explicit release plan. Separate tests render
+all 43 retained language versions and verify their original content. The new
+kit gate requires current demo/practice checks and the existing editorial
+reviews for all 34 kits and 162 languages. There are 45 owning-product entries
+and 205 language versions in total, including supporting tasks.
+
+Build the public catalogue with `python scripts/course_materials/build_public_catalog.py`
+and verify it with `--check`. It owns `static/shared/courses/`, removes local
+execution requests and paths, and publishes only prepared fictional material.
+The three Impara pages link to the corresponding product section. Catalogue
+files and links are checked; browser visual inspection remains unverified.
+
+## New-kit teaching objective
+
 Teach the complete first use of a real product workflow: what it does, when to
 use it, which files to supply, what to ask, how execution proceeds, what is
 delivered, what to review and how to repeat it. Use plain function names. The

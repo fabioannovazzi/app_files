@@ -17,6 +17,7 @@ import polars as pl
 import pytest
 
 from scripts.validate_plugin_review_contract import validate_contract
+from tests._plugin_cli import workflow_cli
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "variance-analysis" / "scripts"
@@ -840,8 +841,7 @@ def test_variance_model_use_keeps_full_calculation_and_targets_source_drilldown(
 
     completed = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_DIR / "model_use.py"),
+            *workflow_cli(SCRIPT_DIR / "model_use.py"),
             "--manifest",
             str(output_dir / "model_use_manifest.json"),
             "--input",
@@ -880,8 +880,7 @@ def test_variance_model_use_keeps_full_calculation_and_targets_source_drilldown(
     changed_recipe_path.write_text(json.dumps(changed_recipe), encoding="utf-8")
     rejected = subprocess.run(
         [
-            sys.executable,
-            str(SCRIPT_DIR / "model_use.py"),
+            *workflow_cli(SCRIPT_DIR / "model_use.py"),
             "--manifest",
             str(output_dir / "model_use_manifest.json"),
             "--input",

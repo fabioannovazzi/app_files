@@ -28,11 +28,12 @@ import argparse
 import hashlib
 import json
 import logging
-import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
+from urllib.parse import quote
 
+from advisory_lineage_labels import lineage_labels
 from jsonschema import Draft202012Validator
 
 __all__ = [
@@ -50,6 +51,8 @@ __all__ = [
     "validate_lineage",
     "validate_lineage_payloads",
 ]
+
+from case_store import atomic_text, case_operation, case_reader
 
 LOGGER = logging.getLogger(__name__)
 
@@ -74,25 +77,7 @@ def _read_json(path: Path) -> Any:
 
 
 def _write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-    temporary_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as handle:
-            handle.write(serialized)
-            handle.flush()
-            temporary_path = Path(handle.name)
-        temporary_path.replace(path)
-    finally:
-        if temporary_path is not None:
-            temporary_path.unlink(missing_ok=True)
+    atomic_text(path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
 
 def _sha256(path: Path) -> str:
@@ -219,6 +204,7 @@ def _duplicate_values(values: Iterable[str]) -> set[str]:
     return duplicates
 
 
+@case_reader
 def validate_lineage(
     case_dir: Path,
     *,
@@ -651,6 +637,7 @@ def validate_lineage_payloads(
     }
 
 
+@case_operation
 def initialize_lineage(case_dir: Path, *, overwrite: bool = False) -> dict[str, Path]:
     """Create empty lineage registers without changing existing records."""
 
@@ -715,6 +702,7 @@ def _append_immutable(
     return added
 
 
+@case_operation
 def record_evidence(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
     """Append immutable model-authored evidence receipts and validate the result."""
 
@@ -736,6 +724,7 @@ def record_evidence(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int
     return added
 
 
+@case_operation
 def record_claims(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
     """Append immutable model-authored claims and supersede declared predecessors."""
 
@@ -762,6 +751,7 @@ def record_claims(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
     return added
 
 
+@case_operation
 def add_claim_appearances(
     case_dir: Path,
     appearances: Sequence[Mapping[str, Any]],
@@ -802,6 +792,7 @@ def add_claim_appearances(
     return added
 
 
+@case_operation
 def bind_claim_appearances(
     case_dir: Path,
     artifact: Path,
@@ -844,6 +835,7 @@ def bind_claim_appearances(
     return add_claim_appearances(case_dir, records)
 
 
+@case_reader
 def check_safe_to_delete(case_dir: Path, target: Path) -> list[str]:
     """Return claims referencing a path or its descendants in this case only.
 
@@ -871,6 +863,7 @@ def check_safe_to_delete(case_dir: Path, target: Path) -> list[str]:
     return sorted(bound)
 
 
+@case_operation
 def render_evidence_map(case_dir: Path) -> Path:
     """Render a readable control view without making semantic judgments."""
 
@@ -886,17 +879,41 @@ def render_evidence_map(case_dir: Path) -> Path:
         evidence = []
     if not isinstance(claims, list):
         claims = []
+    manifest_path = case_dir / "case_manifest.json"
+    manifest = _read_json(manifest_path) if manifest_path.is_file() else {}
+    copy = lineage_labels(str(manifest.get("output_language", "en")))
+
+    def label(value: Any) -> str:
+        return copy.get(str(value), str(value))
+
+    def recorded(value: Any) -> str:
+        return str(value) if value else copy["not_recorded"]
+
+    def source_links(source: Mapping[str, Any]) -> str:
+        links = []
+        for ref in source.get("artifact_refs", []):
+            if not isinstance(ref, dict) or not ref.get("path"):
+                continue
+            path = _resolve_artifact(case_dir, ref)
+            target = (
+                path.relative_to(case_dir.resolve()).as_posix()
+                if path.is_relative_to(case_dir.resolve())
+                else path.as_posix()
+            )
+            name = path.name.replace("[", r"\[").replace("]", r"\]")
+            links.append(f"[{name}]({quote(target, safe='/:')})")
+        return ", ".join(links) or copy["not_recorded"]
 
     lines = [
-        "# Advisory evidence map",
+        f"# {copy['title']}",
         "",
-        "This is a readable view of the structured evidence and claim registers. It records declared provenance; it does not prove that a claim is correct.",
+        copy["intro"],
         "",
-        "## Evidence",
+        f"## {copy['evidence']}",
         "",
     ]
     if not evidence:
-        lines.append("- No evidence receipts recorded.")
+        lines.append(f"- {copy['no_evidence']}")
     for item in evidence:
         if not isinstance(item, dict):
             continue
@@ -908,20 +925,21 @@ def render_evidence_map(case_dir: Path) -> Path:
         )
         lines.extend(
             [
-                f"### {item.get('id', 'evidence')} — {item.get('evidence_type', 'other')}",
+                f"### {item.get('id', 'evidence')} — {label(item.get('evidence_type', 'other'))}",
                 "",
-                f"- Observation: {item.get('observation', '')}",
-                f"- Source: {source.get('locator', '')}",
-                f"- Capture: {item.get('capture_status', '')}",
-                f"- Verification: {verification.get('status', '')}",
-                f"- Scope: {item.get('scope', '')}",
-                f"- Limitations: {'; '.join(item.get('limitations', [])) or 'none recorded'}",
+                f"- {copy['observation_label']}: {item.get('observation', '')}",
+                f"- {copy['source']}: {source.get('locator', '')}",
+                f"- {copy['source_files']}: {source_links(source)}",
+                f"- {copy['capture']}: {label(item.get('capture_status', ''))}",
+                f"- {copy['verification']}: {label(verification.get('status', ''))}",
+                f"- {copy['scope']}: {item.get('scope', '')}",
+                f"- {copy['limitations']}: {recorded('; '.join(item.get('limitations', [])))}",
                 "",
             ]
         )
-    lines.extend(["## Claims", ""])
+    lines.extend([f"## {copy['claims']}", ""])
     if not claims:
-        lines.append("- No claims recorded.")
+        lines.append(f"- {copy['no_claims']}")
     for item in claims:
         if not isinstance(item, dict):
             continue
@@ -930,43 +948,47 @@ def render_evidence_map(case_dir: Path) -> Path:
         )
         lines.extend(
             [
-                f"### {item.get('id', 'claim')} — {item.get('claim_type', 'assertion')}",
+                f"### {item.get('id', 'claim')} — {label(item.get('claim_type', 'assertion'))}",
                 "",
-                f"- Statement: {item.get('statement', '')}",
-                f"- Decision use: {item.get('decision_use', '')}",
-                f"- Depends on ({dependency.get('mode', 'none')}): {', '.join(dependency.get('claim_ids', [])) or 'none'}",
-                f"- Derivation: {dependency.get('derivation_type', '')} — {dependency.get('explanation', '')}",
-                f"- Decision implication: {item.get('decision_implication', '') or 'not recorded'}",
-                f"- Evidence that would change the position: {item.get('missing_evidence_that_would_change_position', '') or 'not recorded'}",
-                f"- Uncertainty: {'; '.join(item.get('uncertainty', [])) or 'none recorded'}",
-                f"- State: {item.get('state', '')}",
+                f"- {copy['statement']}: {item.get('statement', '')}",
+                f"- {copy['decision_use']}: {label(item.get('decision_use', ''))}",
+                f"- {copy['depends_on']} ({label(dependency.get('mode', 'none'))}): {', '.join(dependency.get('claim_ids', [])) or copy['none']}",
+                f"- {copy['derivation']}: {label(dependency.get('derivation_type', ''))} — {dependency.get('explanation', '')}",
+                f"- {copy['decision_implication']}: {recorded(item.get('decision_implication'))}",
+                f"- {copy['missing_evidence']}: {recorded(item.get('missing_evidence_that_would_change_position'))}",
+                f"- {copy['uncertainty']}: {recorded('; '.join(item.get('uncertainty', [])))}",
+                f"- {copy['state']}: {label(item.get('state', ''))}",
                 "",
             ]
         )
+        if item.get("supersedes_claim_id"):
+            lines.extend([f"- {copy['supersedes']}: {item['supersedes_claim_id']}", ""])
         links = item.get("evidence_links", [])
         if isinstance(links, list) and links:
-            lines.extend(["#### Evidence relationships", ""])
+            lines.extend([f"#### {copy['relationships']}", ""])
             for link in links:
                 if not isinstance(link, dict):
                     continue
                 lines.extend(
                     [
-                        f"- {link.get('evidence_id', '')} — {link.get('relationship', '')}",
-                        f"  - Analysis: {link.get('analysis', '')}",
-                        f"  - Proves: {link.get('proves', '')}",
-                        f"  - Does not prove: {link.get('does_not_prove', '')}",
-                        f"  - Directness: {link.get('directness', 'not recorded')}",
-                        f"  - Reliability: {link.get('reliability', 'not recorded')}",
-                        f"  - Corroboration: {link.get('corroboration', 'not recorded')}",
-                        f"  - Bias or limitation: {link.get('bias_or_limitation', '') or 'not recorded'}",
+                        f"- {link.get('evidence_id', '')} — {label(link.get('relationship', ''))}",
+                        f"  - {copy['analysis']}: {link.get('analysis', '')}",
+                        f"  - {copy['proves']}: {link.get('proves', '')}",
+                        f"  - {copy['does_not_prove']}: {link.get('does_not_prove', '')}",
+                        f"  - {copy['directness']}: {label(link.get('directness', 'not_recorded'))}",
+                        f"  - {copy['reliability']}: {label(link.get('reliability', 'not_recorded'))}",
+                        f"  - {copy['corroboration']}: {label(link.get('corroboration', 'not_recorded'))}",
+                        f"  - {copy['bias']}: {recorded(link.get('bias_or_limitation'))}",
                     ]
                 )
         else:
-            lines.extend(["#### Evidence relationships", "", "- None recorded."])
+            lines.extend(
+                [f"#### {copy['relationships']}", "", f"- {copy['none_recorded']}"]
+            )
         appearances = item.get("appearances", [])
-        lines.extend(["", "#### Output appearances", ""])
+        lines.extend(["", f"#### {copy['appearances']}", ""])
         if not isinstance(appearances, list) or not appearances:
-            lines.append("- None recorded.")
+            lines.append(f"- {copy['none_recorded']}")
         else:
             for appearance in appearances:
                 if not isinstance(appearance, dict):
@@ -977,7 +999,7 @@ def render_evidence_map(case_dir: Path) -> Path:
                 )
         lines.append("")
     output = case_dir / EVIDENCE_MAP_FILENAME
-    output.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    atomic_text(output, "\n".join(lines).rstrip() + "\n", encoding="utf-8")
     return output
 
 

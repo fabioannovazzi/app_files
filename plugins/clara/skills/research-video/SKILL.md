@@ -4,12 +4,17 @@ description: Turn a user-approved ordered set of research scene images into a so
 ---
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../clara/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../clara/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- CLARA_OPENAI_ONBOARDING_END -->
 
 # Research Video
@@ -270,6 +275,12 @@ copies directly; rebuild them from plugin source.
 
 ### 6. Final semantic review
 
+The render report records measured video and decoded audio duration, frame rate,
+dimensions, codec checks, tool versions, and caption timing against both streams.
+Cues are also checked against the approved scene speech durations before output
+publication. These checks establish timing and media integrity; they do not
+review the meaning of captions or narration.
+
 Watch the complete MP4 and inspect the poster, captions, narration script,
 render report, and final artifact manifest. Mechanical validation proves media
 shape and byte integrity, not scientific fidelity or editorial quality. Check:
@@ -285,3 +296,31 @@ shape and byte integrity, not scientific fidelity or editorial quality. Check:
 If any issue is material, revise the scene plan, prepare again, obtain a new
 approval, and rerender. Deliver only when the final review is complete. State
 plainly when a flat-image run has no true parallax.
+
+Render attempts are serialized per run directory. Inspect `render_attempt.json`
+before relying on a saved render report: only `completed` describes a completed
+current invocation; `running` is unfinished and `failed_or_interrupted` is a
+failed attempt. Retained `.render-attempts/<attempt-id>/` directories contain
+stage media, streamed process logs, the attempt record, and previous report /
+manifest evidence. A retry preserves these diagnostics. On failure, top-level
+render and artifact reports explicitly lose their successful status. Recheck
+approved input bytes and final output hashes before delivery; an old report or
+an existing MP4 alone is insufficient evidence of current success.
+
+After rendering, verify the publication before reviewing or handing it off:
+
+```bash
+python scripts/managed_python_runtime.py run \
+  skills/research-video/scripts/research_video.py verify \
+  <project-output-folder>/research-video
+```
+
+`current_render.json` is the authoritative publication pointer. A successful
+pointer references the complete `published/` snapshot inside its retained
+attempt directory. Use the verified `generation_directory` and its manifest for
+handoff. Top-level media files are convenient working copies and may be replaced
+during a retry. The pointer commits only after every snapshot artifact matches
+its declared hash. Verification rechecks snapshot bytes and current approved
+visual/narration/voice inputs; semantic, voice-content and visual review are still
+required. A failed or unfinished current pointer must not be replaced by an old
+successful report when describing the current run.

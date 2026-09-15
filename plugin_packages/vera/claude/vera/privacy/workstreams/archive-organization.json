@@ -97,12 +97,16 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "local-browser-private-review-payload",
+      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "268d73029e21c3a6e7cd8ef052caec75efdb9c24b6d24a2a108119381e9a5f93"
+    "source_fingerprint": "bb50fd93fc12f2a4866cd685c7e1c80df06b699574f100b269e2fede02dee7e7"
   }
 }

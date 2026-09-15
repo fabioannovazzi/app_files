@@ -90,12 +90,12 @@
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
       "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
-      "sha256": "2df60735c2926dd06da32c5cab5df244c10702cf23c7fb0a929b230ce4121937"
+      "sha256": "5f197764fb302393d549f49b16d6ce7301291356208f31ac1f9affcc9216c03c"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "6fa2e2270f1ce48b4435681c7c67b073f09bf451cea256c61df13daa5faf98c4"
+      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/__init__.py",
@@ -145,7 +145,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "3a75ff7bdb875bfc7e37a60aa8bbf33a7b96f1dddbba5d8c074b87a74a7009db"
+      "sha256": "306a444e741de64feb191115c4192b519833d200e0f5c4ffa3afbb7647f5dc76"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",
@@ -193,14 +193,29 @@
       "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
     },
     {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272"
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inject the local onboarding gate before any optional hosted update check."""
+"""Expose optional tutorial status without gating ordinary professional work."""
 
 from __future__ import annotations
 
@@ -19,11 +19,13 @@ def main() -> int:
     except (OnboardingError, OSError):
         phase = "recovery_required"
     message = (
-        f"Vera local onboarding: {phase}. When Vera is invoked, read "
-        "skills/vera/references/local-onboarding.md before routing professional work. "
-        "Load the shared local profile explicitly. For teaching requests use "
-        "skills/learn-with-vera/SKILL.md and local_teaching.py status. "
-        "Do not run onboarding for other plugins. "
+        f"Vera local tutorial status: {phase}. Onboarding is optional. "
+        "Continue ordinary work without onboarding, even if its profile is missing, "
+        "unfinished, inaccessible or corrupt, or tutorial setup fails. "
+        "Only start or resume a tutorial when the user asks; do not repeatedly offer it. "
+        "For that tutorial read skills/vera/references/local-onboarding.md and "
+        "skills/learn-with-vera/SKILL.md. Preserve saved progress and validate "
+        "native lesson worker handoffs. Do not run onboarding for other plugins. "
         "Do not transmit onboarding/profile/lesson feedback to Mparanza."
     )
     sys.stdout.write(

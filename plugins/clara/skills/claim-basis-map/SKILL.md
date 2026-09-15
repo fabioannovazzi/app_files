@@ -4,12 +4,17 @@ description: "Use when Clara or Codex generates, revises, or audits a clean PPTX
 ---
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../clara/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../clara/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- CLARA_OPENAI_ONBOARDING_END -->
 
 # Claim Basis Map
@@ -211,6 +216,14 @@ Check statuses:
 Do not use deterministic code to decide whether a new or edited claim is
 semantically supported. Re-run the model-led generation/matching step for those
 claims, then emit an updated `deck.claims.json`.
+
+Read every item in the audit's `current_text_inventory`, including short
+headlines, numeric labels and footnotes. The untracked-text heuristic omits
+some of these; an empty issue list is not complete materiality review. Compare
+the inventory with every rendered slide and inspect chart/image meaning
+separately. Record material claims through model-led review even when no
+heuristic flagged them. The inventory's coverage metadata does not attest that
+this review occurred.
 
 ## Markdown Output
 

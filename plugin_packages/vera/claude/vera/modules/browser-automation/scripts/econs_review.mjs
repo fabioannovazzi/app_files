@@ -12,13 +12,14 @@ import { promisify } from "node:util";
 
 import { canonicalJson, executeCapability, sha256Text } from "./capability_runtime.mjs";
 
-import { processEconsInvoice, validateEconsProcessingProfile } from "./econs_processing.mjs";
+import { hasEconsMappingException, processEconsInvoice, validateEconsProcessingProfile } from "./econs_processing.mjs";
+import { defaultEconsSetupDirectory, saveEconsSetup } from "./econs_setup.mjs";
 
 const runFile = promisify(execFile);
 const scripts = dirname(fileURLToPath(import.meta.url));
 const PHASES = ["companies", "invoices", "detail"];
 const FIELDS = {
-  companies: ["company-code", "nightly"],
+  companies: ["company-code", "has-new-invoices"],
   company: ["company-code"],
   invoices: ["invoice-id", "invoice-number", "supplier", "status"],
   invoice: ["company-code", "invoice-id", "invoice-number", "supplier", "status"],
@@ -44,8 +45,9 @@ function sameKeys(value, keys) {
 
 /** Check only executable shape; the host model must verify the actual UI binding. */
 export function validateEconsProfile(profile) {
+  requireCondition(profile?.schema_version !== "econs-review-profile/v1", "company_new_invoice_signal_required");
   requireCondition(sameKeys(profile, ["schema_version", "phases"]) &&
-    profile.schema_version === "econs-review-profile/v1" && sameKeys(profile.phases, PHASES), "invalid_econs_profile");
+    profile.schema_version === "econs-review-profile/v2" && sameKeys(profile.phases, PHASES), "invalid_econs_profile");
   let origins;
   for (const name of PHASES) {
     const phase = profile.phases[name];
@@ -78,7 +80,7 @@ function records(value, fields, identity) {
   for (const item of value) {
     requireCondition(sameKeys(item, fields), "unexpected_record_fields");
     for (const field of fields) {
-      requireCondition(field === "nightly" ? typeof item[field] === "boolean" : (typeof item[field] === "string" || (fields === FIELDS.lines && field !== identity && item[field] === null)), "invalid_record_value");
+      requireCondition(field === "has-new-invoices" ? typeof item[field] === "boolean" : (typeof item[field] === "string" || (fields === FIELDS.lines && field !== identity && item[field] === null)), "invalid_record_value");
       requireCondition(typeof item[field] !== "string" || item[field].length <= 10000, "field_exceeds_review_capacity");
     }
     requireCondition(item[identity].trim() && !seen.has(item[identity]), "missing_or_duplicate_identity");
@@ -131,7 +133,8 @@ function reviewEntry(company, item, id) {
  * pythonExecutable is the explicit managed interpreter, never PATH/default Python.
  */
 export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
-  runDirectory, pythonExecutable, maxCompanies = 50, maxInvoices = 200, environment = {}, processing = null }) {
+  runDirectory, pythonExecutable, maxCompanies = 50, maxInvoices = 200, invoiceSelection = null,
+  environment = {}, processing = null, setupDirectory = defaultEconsSetupDirectory(), setupId = null }) {
   profile = structuredClone(profile);
   validateEconsProfile(profile);
   if (processing) {
@@ -139,13 +142,25 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     validateEconsProcessingProfile(processing.profile);
     requireCondition(canonicalJson([...processing.profile.phases.post.site.allowed_origins].sort()) ===
       canonicalJson([...profile.phases.detail.site.allowed_origins].sort()), "processing_acquisition_origins_must_match");
-    requireCondition([processing.classifyInvoices, processing.reviewJournal, processing.approvePosting].every((callback) => typeof callback === "function"), "model_review_callbacks_required");
+    requireCondition([processing.classifyInvoices, processing.reviewRedException, processing.reviewInvoice, processing.reviewJournal, processing.approvePosting].every((callback) => typeof callback === "function"), "model_review_callbacks_required");
   }
   requireCondition(Array.isArray(excludedCompanyCodes) && excludedCompanyCodes.every((code) => typeof code === "string" && code.trim()), "explicit_exclusion_list_required");
   excludedCompanyCodes = [...excludedCompanyCodes];
   requireCondition(isAbsolute(pythonExecutable ?? ""), "managed_python_required");
   requireCondition(Number.isInteger(maxCompanies) && maxCompanies > 0 && maxCompanies <= 500 &&
     Number.isInteger(maxInvoices) && maxInvoices > 0 && maxInvoices <= 1000, "invalid_batch_limits");
+  if (invoiceSelection !== null) {
+    // Explicit identities bound a trial mechanically; the model/operator chooses
+    // its invoices from observed evidence, never a guessed accounting classifier.
+    requireCondition(typeof invoiceSelection === "object" && !Array.isArray(invoiceSelection) &&
+      Object.keys(invoiceSelection).length > 0 && Object.entries(invoiceSelection).every(([company, ids]) =>
+        company.trim() && !excludedCompanyCodes.includes(company) && Array.isArray(ids) && ids.length > 0 &&
+        ids.every((id) => typeof id === "string" && id.trim()) && new Set(ids).size === ids.length), "invalid_invoice_selection");
+    invoiceSelection = structuredClone(invoiceSelection);
+    requireCondition(Object.keys(invoiceSelection).length <= maxCompanies &&
+      Object.values(invoiceSelection).reduce((count, ids) => count + ids.length, 0) <= maxInvoices,
+      "selection_exceeds_batch_limits");
+  }
   requireCondition(typeof runDirectory === "string" && isAbsolute(runDirectory), "absolute_private_directory_required");
   const directory = await privateDirectory(runDirectory);
   let revision = 0;
@@ -159,9 +174,15 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   const review = {
     schema_version: "browser-batch-review/v1", batch_id: "econs-review",
     title: processing ? "Fatture passive ECONS elaborate" : "Fatture passive ECONS da rivedere",
-    scope: (processing ? "Elaborazione con revisione del modello e autorizzazione alla registrazione. " : "") + "Ditte con sincronizzazione notturna, escluse quelle nella lista locale. Acquisizione completa e rapporto persistente per cliente. Il totale resta sconosciuto finché la raccolta non è completa.",
+    scope: (processing ? "Elaborazione con revisione del modello e autorizzazione alla registrazione. " : "") + "Ditte con segnale osservato di nuove fatture arrivate, escluse quelle nella lista locale. Acquisizione completa e rapporto persistente per cliente. Il totale resta sconosciuto finché la raccolta non è completa.",
     status: "paused", expected_items: null, entries: [], reviews: [],
   };
+  if (invoiceSelection) {
+    const count = Object.values(invoiceSelection).reduce((total, ids) => total + ids.length, 0);
+    review.scope = `Selezione esplicita di ${count} ${count === 1 ? "fattura" : "fatture"} per la prova richiesta. ` +
+      "Il rapporto riguarda soltanto queste fatture; non attesta la revisione dell'intera popolazione. " +
+      (processing ? "Elaborazione con revisione del modello e autorizzazione alla registrazione." : "Acquisizione senza contabilizzazione.");
+  }
   async function python(script, args) {
     // Fixed local scripts and argv; no shell, package installation or external API.
     await runFile(pythonExecutable, [join(scripts, script), ...args], { maxBuffer: 1024 * 1024 });
@@ -196,7 +217,8 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     return result.delivered_outputs;
   }
   await writePrivate(join(directory, "profile.json"), profile);
-  await writePrivate(join(directory, "selection.json"), { excluded_company_codes: excludedCompanyCodes, max_companies: maxCompanies, max_invoices: maxInvoices });
+  await writePrivate(join(directory, "selection.json"), { excluded_company_codes: excludedCompanyCodes,
+    max_companies: maxCompanies, max_invoices: maxInvoices, invoice_selection: invoiceSelection });
   // Validate every phase before the first browser operation, not halfway through.
   await python("check_installation.py", []);
   await python("check_dependencies.py", []);
@@ -214,20 +236,27 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
     }
   }
   await save();
+  const setup = await saveEconsSetup({ directory: setupDirectory, setupId, profile,
+    processingProfile: processing?.profile ?? null, excludedCompanyCodes, lastRunDirectory: directory });
   try {
     const companyOutput = await phase("companies", {});
     const companies = records(companyOutput.companies, FIELDS.companies, "company-code");
     exactPopulation(companies, companyOutput["company-count"]);
     const excluded = new Set(excludedCompanyCodes);
-    const selected = companies.filter((company) => company.nightly && !excluded.has(company["company-code"]));
+    const selected = companies.filter((company) => !excluded.has(company["company-code"]) &&
+      (invoiceSelection ? Object.hasOwn(invoiceSelection, company["company-code"]) : company["has-new-invoices"]));
+    if (invoiceSelection) requireCondition(selected.length === Object.keys(invoiceSelection).length, "selected_company_missing");
     requireCondition(selected.length <= maxCompanies, "company_limit_exceeded");
     for (const company of selected) {
       const output = await phase("invoices", { "company-code": company["company-code"] });
       requireCondition(sameKeys(output.company, FIELDS.company) && output.company["company-code"] === company["company-code"], "wrong_company");
-      const invoices = records(output.invoices, FIELDS.invoices, "invoice-id");
-      exactPopulation(invoices, output["invoice-count"]);
+      const population = records(output.invoices, FIELDS.invoices, "invoice-id");
+      exactPopulation(population, output["invoice-count"]);
+      const requested = invoiceSelection ? new Set(invoiceSelection[company["company-code"]]) : null;
+      const invoices = requested ? population.filter((item) => requested.has(item["invoice-id"])) : population;
+      if (requested) requireCondition(invoices.length === requested.size, "selected_invoice_missing");
       requireCondition(review.entries.length + invoices.length <= maxInvoices, "invoice_limit_exceeded");
-      selection.push({ company_code: company["company-code"], invoice_count: invoices.length });
+      selection.push({ company_code: company["company-code"], invoice_count: population.length, selected_invoice_count: invoices.length });
       const pending = invoices.map((invoice) => {
         const id = `invoice-${sha256Text(canonicalJson([company["company-code"], invoice["invoice-id"]])).slice(0, 24)}`;
         const entry = reviewEntry(company["company-code"], invoice, id);
@@ -249,11 +278,11 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
       let consecutiveRed = 0;
       let stopCompany = false;
       for (const { invoice, entry } of pending) {
+        const red = processing && redIds.has(invoice["invoice-id"]);
         if (processing) {
-          const red = redIds.has(invoice["invoice-id"]);
           consecutiveRed = red ? consecutiveRed + 1 : 0;
           stopCompany ||= consecutiveRed > 2;
-          if (red || stopCompany) {
+          if (stopCompany) {
             entry.status = "set_aside";
             entry.outcome = stopCompany ? "Ditta sospesa dopo oltre due rossi consecutivi." : "Fattura rossa esclusa dalla registrazione secondo la classificazione del modello.";
             entry.question = "Rivedere la fattura e riprendere il cliente dopo aver risolto le eccezioni.";
@@ -283,12 +312,29 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
         }
         acquired += 1;
         await save();
+        if (red) {
+          // The model interprets the exception from complete observed lines.
+          // The taught two-anchor condition is then checked by exact values.
+          const decision = await processing.reviewRedException(structuredClone({ company, invoice, detail }));
+          requireCondition(sameKeys(decision, ["eligible", "reason"]) && typeof decision.eligible === "boolean" &&
+            typeof decision.reason === "string" && decision.reason.trim(), "invalid_red_exception_review");
+          entry.evidence.push({ label: "Eccezione alla fattura rossa", value: decision.reason, source: "Revisione del modello sulle righe complete" });
+          const eligible = decision.eligible && hasEconsMappingException(detail);
+          if (!eligible) {
+            entry.status = "set_aside";
+            entry.outcome = "Fattura rossa lasciata da parte: eccezione delle due associazioni concordanti non verificata.";
+            entry.question = "Verificare l'eccezione e le associazioni senza registrare automaticamente il documento.";
+            await save();
+            activeEntry = null;
+            continue;
+          }
+        }
         if (processing) {
           await processEconsInvoice({ tab, profile: processing.profile,
             invoice: { "company-code": company["company-code"], ...invoice }, detail, entry,
             readDetail: () => phase("detail", { "company-code": company["company-code"], "invoice-id": invoice["invoice-id"], "invoice-number": invoice["invoice-number"] }),
             phaseDirectory: async (name) => join(directory, `process-${entry.id}-${name}`),
-            save, reviewJournal: processing.reviewJournal, approvePosting: processing.approvePosting, environment });
+            save, reviewInvoice: processing.reviewInvoice, reviewJournal: processing.reviewJournal, approvePosting: processing.approvePosting, environment });
         }
         activeEntry = null;
       }
@@ -306,6 +352,8 @@ export async function collectEconsReview({ tab, profile, excludedCompanyCodes,
   const summary = {
     schema_version: "econs-review-acquisition/v1", status: failure ? "partial" : processing ? "processed" : "acquired",
     profile_sha256: sha256Text(canonicalJson(profile)), acquired_invoices: acquired,
+    setup_id: setup.setupId, setup_path: setup.setupPath,
+    selection_mode: invoiceSelection ? "explicit_invoices" : "eligible_population",
     pending_review: review.entries.filter((entry) => entry.status === "pending").length,
     exceptions: review.entries.filter((entry) => entry.status !== "pending").length,
     expected_items: review.expected_items,

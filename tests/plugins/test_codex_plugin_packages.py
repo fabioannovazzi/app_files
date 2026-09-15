@@ -785,6 +785,16 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             assert builder.CODEX_DOWNLOAD_URL not in body, name
             assert not body.startswith("#"), name
     if plugin_name == "clara":
+        router = card_bodies["skills/clara/SKILL.md"]
+        assert "## Invocation and scope contract" in router
+        assert "references/workflow-catalog.md" in router
+        catalog = "skills/clara/references/workflow-catalog.md"
+        assert entries[catalog] == (ROOT / "plugins" / "clara" / catalog).read_bytes()
+        html_builder = "skills/html-deck/scripts/build_html_deck.py"
+        assert (
+            entries[html_builder]
+            == (ROOT / "plugins" / "clara" / html_builder).read_bytes()
+        )
         deck_correction = card_bodies["skills/deck-correction/SKILL.md"]
         assert "# Deck Correction" in deck_correction
         assert "Keep the original untouched and edit a copy" in deck_correction
@@ -2759,6 +2769,17 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "skills/adversarial-opinion/SKILL.md" in normalized_skill_text
                 assert "Plugin Improvement Feedback" in normalized_skill_text
                 continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "datev-invoice-start"
+            ):
+                assert (
+                    "references/passive-invoice-procedure.md" in normalized_skill_text
+                )
+                assert "scripts/datev_starter.py" in normalized_skill_text
+                assert "not make DATEV a browser application" in normalized_skill_text
+                assert "references/batch-review.md" in normalized_skill_text
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
@@ -2780,6 +2801,12 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "working directory" in normalized_skill_text
                 continue
             for snippet in required_snippets:
+                if (
+                    plugin_root.name == "new-client"
+                    and snippet == "codex_run_review.md"
+                ):
+                    assert "`run_review.md` beside the package" in normalized_skill_text
+                    continue
                 if (
                     plugin_root.name == "browser-automation"
                     and snippet == "generated ZIPs"

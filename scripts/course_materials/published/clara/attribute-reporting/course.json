@@ -1,0 +1,462 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "clara",
+  "workflow": "attribute-reporting",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/attribute-reporting/scripts/apply_validated_mappings.py",
+      "repository_path": "plugins/attribute-reporting/scripts/apply_validated_mappings.py",
+      "sha256": "1dcc9ab6bf2e622dcfa78d4dc3fa178f32fa6d87f696f4f12a65b1b3914098fe"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
+      "repository_path": "plugins/attribute-reporting/scripts/attribute_reporting.py",
+      "sha256": "e722c1bd91d0f802b02851d24b6b98083a8592cc8512110db97646e635a2eef1"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",
+      "repository_path": "plugins/attribute-reporting/scripts/bind_mapping_images.py",
+      "sha256": "e984adecac352d2281f34b741570be03b6727c1598a0cccc14655f37abbc3f82"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/brand_fit.py",
+      "repository_path": "plugins/attribute-reporting/scripts/brand_fit.py",
+      "sha256": "c81792ff92a0f5b6e9e2db435acb5a6a234d013f3cff25e4d9006d1c4a8698a4"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/browser_qa.py",
+      "repository_path": "plugins/attribute-reporting/scripts/browser_qa.py",
+      "sha256": "4d57596687f210359858e3a48c5205df63512f18de7a09c60400593d194a9a3b"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_brand_fit_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/check_brand_fit_report.py",
+      "sha256": "5cfc4465060ceeed8053c5248856c11399fc278266fc982d9d9475c71554abbb"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_dependencies.py",
+      "repository_path": "plugins/attribute-reporting/scripts/check_dependencies.py",
+      "sha256": "f1ae4013ca0e4c709dd412bf3a71d490b67d9a22610d27a571ea8fe9c4a3b762"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/check_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/check_report.py",
+      "sha256": "a1faa5ddbf2ae31d97eb143dabd1c7483a56d2e8476953ebc529fc16b83782b6"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/create_mapping_tasks.py",
+      "repository_path": "plugins/attribute-reporting/scripts/create_mapping_tasks.py",
+      "sha256": "3b244f3f99b704ed361b6586d881c329c6c8f293dafe92cdac244656660d63f8"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/hydrate_images.py",
+      "repository_path": "plugins/attribute-reporting/scripts/hydrate_images.py",
+      "sha256": "b88fa51362b4f7f686e735c7ff869618cadd93f5c8d5fc349a5481932f6fb874"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/mapping_shards.py",
+      "repository_path": "plugins/attribute-reporting/scripts/mapping_shards.py",
+      "sha256": "c7ea065fa5d28c08e2eb23b08bc80218fe4fd2df216d54544e133acd46eac453"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_brand_fit_run.py",
+      "repository_path": "plugins/attribute-reporting/scripts/prepare_brand_fit_run.py",
+      "sha256": "1b2d148c9e6ecdc102da0fbf2ebbcc6cbd5c2ed73591660aef48c2040f9b7d85"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_mapping_review.py",
+      "repository_path": "plugins/attribute-reporting/scripts/prepare_mapping_review.py",
+      "sha256": "cc2b8084b757a51124e2172c9b2427c6ded15ff2b95747264f46d4fe00ae1bcf"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/prepare_run.py",
+      "repository_path": "plugins/attribute-reporting/scripts/prepare_run.py",
+      "sha256": "e39a6d64b15886f90542b534419849ba4353e966344763868e4e24a5dade37e9"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/project_pipeline.py",
+      "repository_path": "plugins/attribute-reporting/scripts/project_pipeline.py",
+      "sha256": "c5ad8e78591e2304371ff7ade9dbb8a302305bfea956a4ec2e5e50730459f023"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/render_brand_fit_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/render_brand_fit_report.py",
+      "sha256": "9de5c11b392e33094ae4af8ac702d6dbe3d43c2be33ac33cd7fcc5bf207f3c0c"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/render_report.py",
+      "repository_path": "plugins/attribute-reporting/scripts/render_report.py",
+      "sha256": "51e198ac847156d978815a2e34dd3307caba827fb0b5bb5a4c89b214fbc27b9e"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/run_state.py",
+      "repository_path": "plugins/attribute-reporting/scripts/run_state.py",
+      "sha256": "1ce28986e52c0efa18560afc01024fdce03ad6b6ef49ac25b7d4eaabac7d5308"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/server_bridge_client.py",
+      "repository_path": "plugins/attribute-reporting/scripts/server_bridge_client.py",
+      "sha256": "d9ca2aa1ff6ecf7679eb835e40c1f0c56bdc72f1618b82d0cf2671704c5ae1f5"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/validate_mapping_decisions.py",
+      "repository_path": "plugins/attribute-reporting/scripts/validate_mapping_decisions.py",
+      "sha256": "8a90b8ac2b42cb273c11a3b86bf0a0c661c45740936105cc9bec114b0ea6e2d1"
+    },
+    {
+      "path": "modules/attribute-reporting/scripts/validate_mapping_review.py",
+      "repository_path": "plugins/attribute-reporting/scripts/validate_mapping_review.py",
+      "sha256": "0457715ca2895eab228a854aa58374ec81d3db27872a0b4fbd534f35a93f32d0"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/attribute-reporting/SKILL.md",
+      "repository_path": "plugins/attribute-reporting/skills/attribute-reporting/SKILL.md",
+      "sha256": "936411e8d0f4aefb76e32fe74b968cb82782f5f1703b0e611178f8c75bee83fd"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/attribute-reporting/references/server-boundary.md",
+      "repository_path": "plugins/attribute-reporting/skills/attribute-reporting/references/server-boundary.md",
+      "sha256": "c6c0476aaffd73e547a8801573598988c177afa1b96fd099fd6d00cd9609f769"
+    },
+    {
+      "path": "modules/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
+      "repository_path": "plugins/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
+      "sha256": "04a25c1781d5afe40ff08d922d6faef27abc8774d79a7dcc2fd54a479629ae7e"
+    },
+    {
+      "path": "skills/attribute-reporting/SKILL.md",
+      "repository_path": "plugins/clara/skills/attribute-reporting/SKILL.md",
+      "sha256": "f0ab8d8bc2c9a8fb48dffdd2991638be1176aad22886aa7d16c439c938c3ac78"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un segnale di assortimento non è una quota di mercato",
+      "goal": "Leggere un confronto Retailer Signals mantenendo coorti, denominatori e limiti del campione.",
+      "scenario": "Un pacchetto fittizio del retailer Nord contiene 20 prodotti nuovi, di cui 12 con ricarica, e 80 prodotti nel resto dell'assortimento, di cui 24 con ricarica. Il pacchetto è uno snapshot: non riporta vendite né quote di mercato.",
+      "request": "Clara, mostrami se la ricarica è più presente tra i prodotti nuovi e come leggere il segnale.",
+      "scope": "Confronto new-versus-rest su un pacchetto didattico locale. Nessuna acquisizione dal server o nuova scansione del retailer durante la lezione.",
+      "input_columns": [
+        "Coorte fittizia",
+        "Prodotti con ricarica",
+        "Totale prodotti"
+      ],
+      "input_rows": [
+        [
+          "Nuovi",
+          "12",
+          "20"
+        ],
+        [
+          "Resto",
+          "24",
+          "80"
+        ]
+      ],
+      "basis": "A1 definisce le due coorti e l'attributo del caso. I denominatori sono diversi: confrontare 12 con 24 senza normalizzare sarebbe fuorviante.",
+      "method": [
+        "Parti da un pacchetto coerente e controllato; rivedi gli attributi contro i prodotti e conserva i confronti e le soglie del contratto.",
+        "Interpreta le tabelle senza promuovere una corrispondenza di attributo a giudizio automatico. Collega evidenze e immagini ai prodotti del pacchetto.",
+        "Autora il report locale e completa la revisione semantica indipendente, la verifica browser e i controlli correnti. Dichiara il verdetto e i limiti effettivi."
+      ],
+      "result_title": "Ricarica: 60% nei nuovi, 30% nel resto",
+      "conclusion": "La presenza dell'attributo è doppia nella coorte dei nuovi prodotti. È un segnale dell'assortimento osservato, non una misura di domanda o vendite.",
+      "output_columns": [
+        "Coorte",
+        "Calcolo",
+        "Presenza attributo"
+      ],
+      "output_rows": [
+        [
+          "Nuovi",
+          "12 / 20",
+          "60%"
+        ],
+        [
+          "Resto",
+          "24 / 80",
+          "30%"
+        ],
+        [
+          "Confronto illustrato",
+          "60% / 30%",
+          "2×"
+        ]
+      ],
+      "check": "Mantieni denominatori e data dello snapshot. I nomi dei prodotti e un singolo attributo non provano opportunità commerciale o successo sul mercato.",
+      "question": "Il 60% significa che i prodotti con ricarica fanno il 60% delle vendite?",
+      "answer": "No. È la percentuale di prodotti nuovi con quell'attributo nel pacchetto. Non abbiamo dati sulle vendite.",
+      "practice": "Aggiungi due nuovi prodotti senza ricarica e ricalcola la quota usando il nuovo denominatore.",
+      "next": "Per il lavoro reale seleziona retailer, categoria e confronto supportato; verifica se la fonte è uno snapshot o una nuova acquisizione."
+    },
+    "en": {
+      "title": "An assortment signal is not market share",
+      "goal": "Read Retailer Signals while preserving cohorts, denominators and snapshot limitations.",
+      "scenario": "A fictional North retailer package contains 20 new products, 12 refillable, and 80 products in the rest cohort, 24 refillable. The snapshot has no sales or market-share measures.",
+      "request": "Clara, show whether refillability is more common among new products and how to interpret it.",
+      "scope": "New-versus-rest comparison on a local teaching package. No server acquisition or fresh retailer scrape occurs during the lesson.",
+      "input_columns": [
+        "Fictional cohort",
+        "Refillable products",
+        "Total products"
+      ],
+      "input_rows": [
+        [
+          "New",
+          "12",
+          "20"
+        ],
+        [
+          "Rest",
+          "24",
+          "80"
+        ]
+      ],
+      "basis": "A1 defines cohorts and the case attribute. Comparing 12 with 24 without their different denominators would mislead.",
+      "method": [
+        "Start from a coherent checked package, review attributes against products and preserve the contracted comparisons and thresholds.",
+        "Interpret tables without promoting an attribute match to automatic judgment. Link product evidence and images to the package.",
+        "Author the local report and complete independent semantic review, browser QA and current correctness checks. State the actual verdict and limitations."
+      ],
+      "result_title": "Refillability: 60% of new products, 30% of the rest",
+      "conclusion": "The attribute is twice as prevalent in the new cohort. This describes the observed assortment, not demand or sales.",
+      "output_columns": [
+        "Cohort",
+        "Calculation",
+        "Attribute prevalence"
+      ],
+      "output_rows": [
+        [
+          "New",
+          "12 / 20",
+          "60%"
+        ],
+        [
+          "Rest",
+          "24 / 80",
+          "30%"
+        ],
+        [
+          "Illustrated comparison",
+          "60% / 30%",
+          "2×"
+        ]
+      ],
+      "check": "Retain denominators and snapshot date. A product name or single attribute does not establish market success.",
+      "question": "Does 60% mean refillable products generate 60% of sales?",
+      "answer": "No. It is the share of new products with that attribute in the package. No sales measure is supplied.",
+      "practice": "Add two non-refillable new products and recalculate with the changed denominator.",
+      "next": "Select the retailer, category and supported comparison; verify whether the evidence is a snapshot or a new acquisition."
+    },
+    "fr": {
+      "title": "Un signal d'assortiment n'est pas une part de marché",
+      "goal": "Lire Retailer Signals en conservant cohortes, dénominateurs et limites du relevé.",
+      "scenario": "Le paquet fictif du distributeur Nord contient 20 nouveautés, dont 12 rechargeables, et 80 produits dans le reste de l'assortiment, dont 24 rechargeables. Ce relevé ne mesure ni ventes ni parts de marché.",
+      "request": "Clara, montre si la recharge est plus fréquente parmi les nouveautés et comment lire le signal.",
+      "scope": "Comparaison new-versus-rest sur un paquet pédagogique local, sans acquisition serveur ni nouvelle collecte du site.",
+      "input_columns": [
+        "Cohorte fictive",
+        "Produits rechargeables",
+        "Total"
+      ],
+      "input_rows": [
+        [
+          "Nouveautés",
+          "12",
+          "20"
+        ],
+        [
+          "Reste",
+          "24",
+          "80"
+        ]
+      ],
+      "basis": "A1 définit cohortes et attribut. Comparer 12 à 24 sans tenir compte des dénominateurs serait trompeur.",
+      "method": [
+        "Pars d'un paquet cohérent et vérifié ; revois les attributs sur les produits et préserve comparaisons et seuils du contrat.",
+        "Interprète les tableaux sans transformer une correspondance d'attribut en jugement automatique. Relie preuves et images aux produits exacts.",
+        "Rédige le rapport local et termine revue sémantique indépendante, contrôle navigateur et vérifications courantes. Donne le verdict réel et les limites."
+      ],
+      "result_title": "Recharge : 60 % des nouveautés, 30 % du reste",
+      "conclusion": "L'attribut est deux fois plus fréquent parmi les nouveautés. Cela décrit l'assortiment observé, pas la demande ou les ventes.",
+      "output_columns": [
+        "Cohorte",
+        "Calcul",
+        "Présence de l'attribut"
+      ],
+      "output_rows": [
+        [
+          "Nouveautés",
+          "12 / 20",
+          "60 %"
+        ],
+        [
+          "Reste",
+          "24 / 80",
+          "30 %"
+        ],
+        [
+          "Comparaison illustrée",
+          "60 % / 30 %",
+          "2×"
+        ]
+      ],
+      "check": "Conserve dénominateurs et date du relevé. Nom d'un produit et attribut isolé ne démontrent pas sa réussite commerciale.",
+      "question": "Les 60 % représentent-ils la part des ventes des produits rechargeables ?",
+      "answer": "Non. C'est la proportion de nouveautés portant l'attribut dans le paquet. Aucune donnée de vente n'est fournie.",
+      "practice": "Ajoute deux nouveautés non rechargeables et recalcule avec le nouveau dénominateur.",
+      "next": "Sélectionne distributeur, catégorie et comparaison supportée ; distingue relevé existant et nouvelle acquisition."
+    },
+    "de": {
+      "title": "Ein Sortimentssignal ist kein Marktanteil",
+      "goal": "Retailer Signals mit klaren Gruppen, Bezugsgrößen und Grenzen der Momentaufnahme lesen.",
+      "scenario": "Das fiktive Händlerpaket North enthält 20 neue Produkte, davon 12 nachfüllbar, sowie 80 übrige Produkte, davon 24 nachfüllbar. Verkaufs- oder Marktanteilsdaten fehlen.",
+      "request": "Clara, zeige, ob Nachfüllbarkeit bei neuen Produkten häufiger ist und was das bedeutet.",
+      "scope": "Vergleich neuer und übriger Produkte in einem lokalen Lehrpaket. Während der Lektion erfolgen keine Serverbeschaffung und keine neue Händlerabfrage.",
+      "input_columns": [
+        "Fiktive Gruppe",
+        "Nachfüllbare Produkte",
+        "Produkte insgesamt"
+      ],
+      "input_rows": [
+        [
+          "Neu",
+          "12",
+          "20"
+        ],
+        [
+          "Übrige",
+          "24",
+          "80"
+        ]
+      ],
+      "basis": "A1 definiert Gruppen und Merkmal. Ein Vergleich von 12 mit 24 ohne ihre unterschiedlichen Bezugsgrößen wäre irreführend.",
+      "method": [
+        "Beginne mit einem konsistenten geprüften Paket, prüfe Merkmale anhand der Produkte und erhalte vorgeschriebene Vergleiche und Schwellen.",
+        "Interpretiere Tabellen ohne automatische Wertung aus einem Merkmaltreffer. Verknüpfe Produktbelege und Bilder mit dem Paket.",
+        "Erstelle den lokalen Bericht und führe unabhängige inhaltliche Prüfung, Browserkontrolle und aktuelle Richtigkeitsprüfungen aus. Nenne tatsächliches Urteil und Grenzen."
+      ],
+      "result_title": "Nachfüllbar: 60 % der neuen, 30 % der übrigen Produkte",
+      "conclusion": "Das Merkmal ist in der neuen Gruppe doppelt so häufig. Das beschreibt das beobachtete Sortiment, nicht Nachfrage oder Verkäufe.",
+      "output_columns": [
+        "Gruppe",
+        "Berechnung",
+        "Merkmalsanteil"
+      ],
+      "output_rows": [
+        [
+          "Neu",
+          "12 / 20",
+          "60 %"
+        ],
+        [
+          "Übrige",
+          "24 / 80",
+          "30 %"
+        ],
+        [
+          "Beispielvergleich",
+          "60 % / 30 %",
+          "2×"
+        ]
+      ],
+      "check": "Erhalte Bezugsgrößen und Datum der Momentaufnahme. Produktname oder einzelnes Merkmal belegen keinen Markterfolg.",
+      "question": "Bedeutet 60 %, dass nachfüllbare Produkte 60 % des Umsatzes erzeugen?",
+      "answer": "Nein. Es ist der Anteil neuer Produkte mit diesem Merkmal im Paket. Umsatzdaten liegen nicht vor.",
+      "practice": "Ergänze zwei neue nicht nachfüllbare Produkte und berechne den Anteil mit verändertem Nenner.",
+      "next": "Wähle Händler, Kategorie und unterstützten Vergleich; kläre, ob die Evidenz eine Momentaufnahme oder neue Beschaffung ist."
+    },
+    "es": {
+      "title": "Una señal de surtido no es cuota de mercado",
+      "goal": "Leer Retailer Signals conservando grupos, denominadores y límites de la instantánea.",
+      "scenario": "El paquete ficticio del distribuidor North contiene 20 productos nuevos, 12 recargables, y 80 restantes, 24 recargables. No aporta ventas ni cuotas de mercado.",
+      "request": "Clara, muestra si la recarga es más frecuente en los productos nuevos y cómo interpretarlo.",
+      "scope": "Comparación nuevos-resto sobre un paquete didáctico local. No se realiza adquisición de servidor ni una nueva consulta al distribuidor.",
+      "input_columns": [
+        "Grupo ficticio",
+        "Productos recargables",
+        "Productos totales"
+      ],
+      "input_rows": [
+        [
+          "Nuevos",
+          "12",
+          "20"
+        ],
+        [
+          "Resto",
+          "24",
+          "80"
+        ]
+      ],
+      "basis": "A1 define grupos y atributo. Comparar 12 con 24 sin sus distintos denominadores induciría a error.",
+      "method": [
+        "Parte de un paquete coherente comprobado, revisa atributos contra productos y conserva comparaciones y umbrales del contrato.",
+        "Interpreta tablas sin convertir una coincidencia de atributo en juicio automático. Vincula pruebas e imágenes de productos con el paquete.",
+        "Redacta el informe local y completa revisión semántica independiente, comprobación en navegador y controles actuales de corrección. Indica veredicto real y límites."
+      ],
+      "result_title": "Recargables: 60 % de los nuevos, 30 % del resto",
+      "conclusion": "El atributo es dos veces más frecuente en el grupo nuevo. Describe el surtido observado, no demanda ni ventas.",
+      "output_columns": [
+        "Grupo",
+        "Cálculo",
+        "Prevalencia del atributo"
+      ],
+      "output_rows": [
+        [
+          "Nuevos",
+          "12 / 20",
+          "60 %"
+        ],
+        [
+          "Resto",
+          "24 / 80",
+          "30 %"
+        ],
+        [
+          "Comparación ilustrada",
+          "60 % / 30 %",
+          "2×"
+        ]
+      ],
+      "check": "Conserva denominadores y fecha de la instantánea. Un nombre de producto o atributo aislado no demuestra éxito comercial.",
+      "question": "¿60 % significa que los recargables generan el 60 % de las ventas?",
+      "answer": "No. Es la proporción de productos nuevos del paquete con ese atributo. No se aporta ninguna medida de ventas.",
+      "practice": "Añade dos productos nuevos no recargables y recalcula con el denominador modificado.",
+      "next": "Selecciona distribuidor, categoría y comparación compatible y verifica si la evidencia es una instantánea o una nueva adquisición."
+    }
+  },
+  "visual": {
+    "column": 2,
+    "maximum": 100,
+    "bars": [
+      [
+        0,
+        60
+      ],
+      [
+        1,
+        30
+      ]
+    ]
+  }
+}

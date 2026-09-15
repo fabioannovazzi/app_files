@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "vouching",
-  "course_sha256": "bd9e233a9500028f5f893283caf741e4850b7ebc9498311e7abaddc9b3ce02d6",
+  "course_sha256": "6e01d552b20ad810fbaad12365cc137a3533c5893ddb5a4b11fc82f7b25e617b",
   "reviewer": "Codex: first-use material, source-to-sample handoff and actual output review",
   "reviewed_at": "2026-09-14T18:25:17.746640+00:00",
   "review_scope": "Read all five lesson outlines and contexts, the nine-line journal and the three fictional XML invoice facts. Ten distinct locale/phase native checks execute the current teaching adapter, Journal Sampling prerequisite, Studio Archive handoff and Vouching run, within 29 passing focused checks. Reviewed the localized Markdown notes and eighteen native Excel views: five horizontal views of each distinct phase, plus the localized review-note columns for the other eight cases. All other CSV fields match within each phase; document receipt references vary by run and were traced separately. Canonical spreadsheet columns remain English. The samples and outputs are generated during execution; learner decisions, professional conclusions, voice, two-window behavior and browser widget interaction are not attested.",
@@ -266,5 +266,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.518066+00:00",
+    "previous_course_sha256": "bd9e233a9500028f5f893283caf741e4850b7ebc9498311e7abaddc9b3ce02d6",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/vouching/SKILL.md",
+        "before": "548deff72f83d7db825a68bc0526a3301c1d9f19f666aa2be7eec878b3f95515",
+        "after": "125f9120dcd760b06b19d38b670a0058635fca5d7202f883e28b927bd9f6660e"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

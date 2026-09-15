@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "html-deck",
-  "course_sha256": "264927335b3dbca4dd0c67147f1b8741688a1bc8f77f2bba49d5534bf83bfab2",
+  "course_sha256": "fb0cf19a15919ac341279adb0865ec133379192bef14c25238b996dab3b50dc4",
   "reviewer": "Codex: first-use teaching-kit editorial review",
   "reviewed_at": "2026-09-14T21:09:24.777351+00:00",
   "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
@@ -327,5 +327,77 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.570507+00:00",
+    "previous_course_sha256": "264927335b3dbca4dd0c67147f1b8741688a1bc8f77f2bba49d5534bf83bfab2",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/clara/scripts/advisory_delivery.py",
+        "before": null,
+        "after": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8"
+      },
+      {
+        "path": "plugins/clara/scripts/advisory_evidence_lineage.py",
+        "before": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73",
+        "after": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
+      },
+      {
+        "path": "plugins/clara/scripts/case_store.py",
+        "before": null,
+        "after": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
+      },
+      {
+        "path": "plugins/clara/scripts/check_dependencies.py",
+        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
+        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      },
+      {
+        "path": "plugins/clara/scripts/verify_advisory_html_delivery.py",
+        "before": "35e1c0318355134821ea5393d93334c1c152c4e1c3cbef32c74dd98cd5d515f6",
+        "after": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
+      },
+      {
+        "path": "plugins/clara/skills/html-deck/SKILL.md",
+        "before": "c9400e5f22ef351d2e0ebac2dc976d292b4a89e1dd71bb220d6595972dbbdfa3",
+        "after": "a5a618bede89c5f161f84a1731e8265e4640c9ddd94ccde154cce01de4c5c5a1"
+      },
+      {
+        "path": "plugins/clara/skills/html-deck/scripts/build_html_deck.py",
+        "before": "4f8277943aeb3261d3ea199cded967edf3d58741d671fc5b5e195d4529e402e6",
+        "after": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

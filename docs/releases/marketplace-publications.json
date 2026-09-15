@@ -3,28 +3,28 @@
   "basis": "Version directly confirmed as Published in OpenAI Platform; not inferred from a local candidate or installed cache.",
   "plugins": {
     "clara": {
-      "version": "0.1.197",
+      "version": "0.1.207",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara",
-      "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa7142447748191b61fc0de9b3c922d",
-      "basis": "OpenAI Platform directly showed Clara 0.1.197 Published after all 16 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.197.",
-      "package_sha256": "201c69c6aba00f308360bd0b49d9cb145ff9a922d8aff2d30715ef7a8c939678"
+      "observed_at": "2026-09-15",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a/submissions/appsub_6aa8e015579881919febea45db4068a5",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.207 Published on 2026-09-15. All 16 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh.",
+      "package_sha256": "7f43515dce735a3ca631d960360f672f19203d331941cf5aecf38bd3ca5f8750"
     },
     "vera": {
-      "version": "0.1.250",
+      "version": "0.1.257",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
-      "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa7c44930ec8191a69e673a34527e94",
-      "basis": "OpenAI Platform directly showed Vera 0.1.250 Published after all 37 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.250.",
-      "package_sha256": "ad4f9a4bcc466c6a78f3ac1b17163edad46ea886059405d579b7f171592411e6"
+      "observed_at": "2026-09-15",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d/submissions/appsub_6aa8fa8a2334819193579dc0aabb76c0",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.257 Published on 2026-09-15. All 39 skill scans passed. Fabio approved deployment, publication and the presented publisher declarations. This hash identifies the uploaded archive containing fresh-conversation ECONS startup and per-invoice procedure checks. Synthetic tests do not establish live ECONS acceptance or observed usage savings.",
+      "package_sha256": "290ce0c267d1d2b930ae2c1faed65cfdb7605b29f656adb6d57f8cd0e381a9e0"
     },
     "lucia": {
-      "version": "0.1.45",
+      "version": "0.1.49",
       "listing_url": "https://chatgpt.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae",
-      "observed_at": "2026-09-14",
-      "verification_record": "https://platform.openai.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae/submissions/appsub_6aa7149b0a6c81918c601025b4ddc03b",
-      "basis": "OpenAI Platform directly showed Lucia 0.1.45 Published after all 10 skill checks passed, the user confirmed the four terms and publisher declarations, and Publish Version completed on 2026-09-14. The public directory independently displayed Version 0.1.45.",
-      "package_sha256": "3b8345de5e1c2680648136096e026a3b20d6db505647b061695dd3c54b6c6b95"
+      "observed_at": "2026-09-15",
+      "verification_record": "https://platform.openai.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae/submissions/appsub_6aa8f2f98e0c8191b1facef39ade437e",
+      "basis": "OpenAI Platform authoritative version list directly showed 0.1.49 Published on 2026-09-15. All 10 skill scans passed. The publisher declarations were explicitly confirmed by Fabio. This hash identifies the uploaded archive before the post-publication registry privacy-fingerprint refresh.",
+      "package_sha256": "1a657e85a85eb99ebbd6f742a6be91872186a3bcae6e47d393d361a631f9f301"
     }
   }
 }

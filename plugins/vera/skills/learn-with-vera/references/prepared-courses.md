@@ -1,5 +1,20 @@
 # Prepared teaching kits for Vera
 
+## Read the installed lesson format first
+
+This interim release combines new prepared teaching kits with retained published
+lessons. The workflow-specific notes below describe the new kit format only.
+Check `show` before using them: `mparanza.teaching_kit.v2` supplies the new
+demonstration and practice files; `mparanza.course.v1` supplies its original
+`teacher.md`, `case.json`, `input.csv`, `source.md` and optional supporting files.
+For a retained lesson, follow its actual outline and inputs with the current
+own-product workflow. Do not refer to absent new-kit files or exercises. Its
+`example.html` is a prepared specimen, never evidence of the current execution.
+Both formats require live execution in the working chat and explanation in the
+paired voice chat. Neither rendering nor a specimen completes the lesson.
+
+## New kit instructions
+
 The `browser-automation` kit uses the component's shipped
 `scripts/acceptance_fixture.py`, started with `--port 0`; keep the process alive
 and use the exact loopback URL from its ready record. The source brief provides

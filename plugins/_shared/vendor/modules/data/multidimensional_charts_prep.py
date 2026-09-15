@@ -837,8 +837,10 @@ def prepare_data_for_stacked_bar_one_dimension(
         lf, xColumn, valueCols, chartDict, paramDict, 0
     )
     lf = (
-        lf.filter((pl.col(metricToPlot) >= 0.001) | (pl.col(metricToPlot) <= -0.001))
-        .filter((pl.col(xColumn) != nothingThereString) & (pl.col(metricToPlot) != 0))
+        # Zero and small signed values belong to the reviewed population and
+        # its arithmetic average; rendering precision must not remove them.
+        lf.filter(pl.col(metricToPlot).is_not_null())
+        .filter(pl.col(xColumn) != nothingThereString)
         .pipe(drop_columns, [periodName])
         .select([xColumn, metricToPlot])
         .with_columns(pl.col(metricToPlot).fill_null(0).cast(pl.Float64))
@@ -1471,11 +1473,11 @@ def prepare_data_for_stacked_bar_two_dimensions(
     lf = lf.filter(pl.col(periodName) == toPlotPeriod)
     lf = drop_columns(lf, [periodName])
     lf = lf.select([xColumn, yColumn, metricToPlot])
-    lf = lf.filter((pl.col(metricToPlot) >= 0.001) | (pl.col(metricToPlot) <= -0.001))
     lf = lf.filter(
         (pl.col(xColumn) != nothingThereString)
         & (pl.col(yColumn) != nothingThereString)
-        & (pl.col(metricToPlot) != 0)
+        # Rendering precision must not remove valid zero or small signed values.
+        & pl.col(metricToPlot).is_not_null()
     )
     lf, expandedSortedItems, sortedItems, aggregateOtherItemsName = (
         sort_data_stacked_bar_data_two_dimensions(

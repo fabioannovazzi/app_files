@@ -4,12 +4,17 @@ description: "Use when Clara must direct a durable advisory case after initial a
 ---
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
-Before the first substantive action, read `../clara/references/local-onboarding.md`.
-Check the shared OS-user local profile even on direct specialist invocation.
-A verified native working-chat handoff executes only its bound lesson and token.
-During a tutorial all profile, progress, examples and feedback remain local;
-never send a change request, stamp a tutorial receipt or call hosted interviews.
-This learning gate takes precedence over ordinary feedback and cloud fallback.
+Onboarding is optional. Continue ordinary professional work immediately,
+including direct specialist invocation, without checking or completing a local
+onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
+or unavailable voice/window controls, must never block ordinary work. Do not
+automatically start, resume or repeatedly offer onboarding.
+Only for a user-requested tutorial or a native teaching handoff, read
+`../clara/references/local-onboarding.md`. A verified paired lesson worker
+executes only its bound lesson and token; never bypass tutorial validation.
+Tutorial profiles, progress, examples and feedback remain local; never send a
+change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
+Current user requests take precedence over saved preferences.
 <!-- CLARA_OPENAI_ONBOARDING_END -->
 
 ## ChatGPT and Codex Runtime
@@ -343,7 +348,13 @@ the position, update the registers and workpaper before rebuilding and
 revalidating the deliverable. For a case-bound HTML deck,
 delivery or publication readiness additionally requires a `ready` receipt from
 `scripts/verify_advisory_html_delivery.py` for the exact final HTML and current
-case state.
+case state. Markdown and Word milestones use
+`scripts/verify_advisory_delivery.py` with the same current case and their own
+final validation audit. Word additionally needs the hash-bound visual review
+described by the deliverable validator. For generated decision packs, verify
+the pack with `scripts/verify_decision_pack.py` before reviewing each format
+against the committed narrative; mechanical verification does not establish
+that the formats communicate the same answer and qualifications.
 
 ## Data boundary
 

@@ -180,7 +180,26 @@ def _copy_handoff(source: Path, tmp_path: Path) -> Path:
         manifest["evidence"]["outputs"]
     )
     _write_json(manifest_path, manifest)
+    _refresh_test_generation(render_dir)
     return destination
+
+
+def _refresh_test_generation(render_dir: Path) -> None:
+    """Reseal relocated/tampered fixtures so deeper numerical checks are exercised."""
+    manifest_path = render_dir / "render_manifest.json"
+    manifest = _load_json(manifest_path)
+    pointer_path = render_dir / "current_reporting.json"
+    pointer = _load_json(pointer_path)
+    snapshot_manifest = render_dir / pointer["manifest"]
+    for record in manifest["evidence"]["snapshot_outputs"]:
+        source = render_dir / record["path"]
+        record["sha256"] = _sha256(source)
+        record["size_bytes"] = source.stat().st_size
+        shutil.copyfile(source, snapshot_manifest.parent / record["path"])
+    _write_json(manifest_path, manifest)
+    shutil.copyfile(manifest_path, snapshot_manifest)
+    pointer["manifest_sha256"] = _sha256(snapshot_manifest)
+    _write_json(pointer_path, pointer)
 
 
 def _refresh_render_manifest_output_receipts(
@@ -198,6 +217,7 @@ def _refresh_render_manifest_output_receipts(
         manifest["evidence"]["outputs"]
     )
     _write_json(manifest_path, manifest)
+    _refresh_test_generation(render_dir)
 
 
 def _patch_loaded_json(
@@ -896,3 +916,32 @@ def test_reporting_handoff_rejects_existing_output_directory(
         match="output directory must not already exist",
     ):
         _build_handoff(handoff_module, output_dir)
+
+
+@pytest.mark.parametrize(
+    "mutation", ["snapshot_bytes", "extra_snapshot_file", "unfinished_pointer"]
+)
+def test_reporting_handoff_rejects_drifted_published_generation(
+    tmp_path: Path,
+    canonical_handoff: tuple[Path, dict[str, Any]],
+    handoff_module: Any,
+    mutation: str,
+) -> None:
+    canonical_dir, _ = canonical_handoff
+    handoff_dir = _copy_handoff(canonical_dir, tmp_path)
+    render = handoff_dir / "render"
+    pointer_path = render / "current_reporting.json"
+    pointer = _load_json(pointer_path)
+    snapshot = (render / pointer["manifest"]).parent
+    if mutation == "snapshot_bytes":
+        (snapshot / "pnl_statement_table.html").write_text("changed published copy")
+    elif mutation == "extra_snapshot_file":
+        (snapshot / "unexpected.html").write_text("unreviewed extra deliverable")
+    else:
+        pointer["status"] = "running"
+        _write_json(pointer_path, pointer)
+
+    with pytest.raises(
+        handoff_module.ContractValidationError, match="render generation"
+    ):
+        _validate_handoff(handoff_module, handoff_dir)

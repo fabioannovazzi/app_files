@@ -103,7 +103,7 @@ def test_unsupported_pdf_user_insistence_contract_stays_blocked() -> None:
         "source_qualification": "unsupported_source_layout",
         "emitted_movements": 0,
         "reconciliation_deliverable": "not_created",
-        "next_supported_input": "reviewed CSV or XLSX export",
+        "next_supported_input": "labelled text-PDF table or reviewed CSV/XLSX export",
     }
     assert "invoke run_reconciliation.py" in case["must_not"]
     assert any("ad hoc Python" in item for item in case["must_not"])
@@ -113,6 +113,162 @@ def test_unsupported_pdf_user_insistence_contract_stays_blocked() -> None:
     )
     assert "Do not offer or start a non-Vera alternative in the same run" in skill
     assert "`emitted_movements`: `0`" in skill
+
+
+@pytest.mark.parametrize("ruled", [True, False])
+def test_reviewed_pdf_table_adapter_reconciles_amount_not_trailing_balance(
+    tmp_path: Path,
+    ruled: bool,
+) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.pdf"
+    journal_path = tmp_path / "journal.pdf"
+    recipe_dir = tmp_path / "recipe"
+    output_dir = tmp_path / "out"
+    _write_pdf_table(
+        bank_path,
+        [
+            [
+                [
+                    "Data",
+                    "Descrizione",
+                    "Uscite",
+                    "Entrate",
+                    "Saldo",
+                    "Riferimento",
+                ],
+                [
+                    "2025-03-31",
+                    "Bonifico cliente",
+                    "",
+                    "100.00",
+                    "1500.00",
+                    "INV100",
+                ],
+            ],
+            [
+                [
+                    "Data",
+                    "Descrizione",
+                    "Uscite",
+                    "Entrate",
+                    "Saldo",
+                    "Riferimento",
+                ],
+                [
+                    "2025-04-01",
+                    "Commissione",
+                    "5.00",
+                    "",
+                    "1495.00",
+                    "FEE100",
+                ],
+            ],
+        ],
+        ruled=ruled,
+    )
+    _write_pdf_table(
+        journal_path,
+        [
+            [
+                ["Data", "Descrizione", "Importo", "Riferimento"],
+                ["2025-03-31", "Incasso INV100", "100.00", "INV100"],
+                ["2025-04-01", "Costo FEE100", "-5.00", "FEE100"],
+            ]
+        ],
+        ruled=ruled,
+    )
+
+    inspection = core.inspect_inputs(bank_path, journal_path, recipe_dir)
+    recipe_path = recipe_dir / "suggested_recipe.json"
+    recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    receipts = json.loads(
+        (recipe_dir / "input_receipts.json").read_text(encoding="utf-8")
+    )["receipts"]
+    bank_recipe = recipe["bank"]["files"][bank_path.name]
+    bank_recipe["mapping"]["amount"] = None
+    bank_recipe["mapping"]["debit"] = "Entrate"
+    bank_recipe["mapping"]["credit"] = "Uscite"
+    bank_recipe["excluded_monetary_columns"] = ["Saldo"]
+    _attach_current_mapping_receipt(
+        core,
+        recipe,
+        receipts,
+        side="bank",
+        source_path=bank_path,
+        decision_id="decision.mapping.bank.pdf",
+    )
+    _attach_current_mapping_receipt(
+        core,
+        recipe,
+        receipts,
+        side="journal",
+        source_path=journal_path,
+        decision_id="decision.mapping.journal.pdf",
+    )
+    recipe_path.write_text(
+        json.dumps(recipe, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    reviewed_recipe_path = _seal_relationship_recipe(
+        core,
+        recipe_path,
+        recipe_dir / "input_receipts.json",
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        reviewed_recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    assert inspection.bank["row_count"] == 0
+    assert inspection.bank["files"][0]["adapter_id"] == core.PDF_TABLE_ADAPTER_ID
+    assert inspection.bank["files"][0]["qualification_status"] == "needs_review"
+    assert result.matches.height == 2
+    normalized_bank = _read_csv_dicts(output_dir / "normalized_bank.csv")
+    assert [row["amount_signed"] for row in normalized_bank] == [
+        "100",
+        "-5",
+    ]
+    assert [row["source_sheet"] for row in normalized_bank] == [
+        "PDF page 1 table 1",
+        "PDF page 2 table 1",
+    ]
+    assert result.audit["diagnostics"]["bank"][0]["page_row_counts"] == {
+        "1": 1,
+        "2": 1,
+    }
+
+
+def test_pdf_candidate_text_outside_a_table_stays_blocked(tmp_path: Path) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.pdf"
+    journal_path = tmp_path / "journal.csv"
+    _write_unruled_pdf_line(
+        bank_path,
+        "31/03/2025 BONIFICO CLIENTE 100,00 1.500,00",
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-31", "100.00", "INV100"],
+        ],
+    )
+
+    inspection = core.inspect_inputs(bank_path, journal_path, tmp_path / "inspection")
+
+    diagnostic = inspection.bank["files"][0]
+    assert inspection.bank["row_count"] == 0
+    assert diagnostic["qualification_status"] == "unsupported_source_layout"
+    assert diagnostic["failure_kind"] == "unmapped_pdf_candidate_page"
+    assert diagnostic["candidate_pages_without_tables"] == [1]
 
 
 def _load_customer_ledger() -> Any:
@@ -219,6 +375,47 @@ def load_semantic_review() -> Any:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _write_pdf_table(
+    path: Path,
+    pages: list[list[list[str]]],
+    *,
+    ruled: bool = True,
+) -> None:
+    """Write a small ruled PDF table fixture with a repeated page header."""
+
+    from reportlab.lib.pagesizes import A4, landscape
+    from reportlab.pdfgen import canvas
+
+    document = canvas.Canvas(path.as_posix(), pagesize=landscape(A4))
+    page_width, page_height = landscape(A4)
+    left = 36
+    top = page_height - 36
+    row_height = 22
+    column_width = (page_width - 72) / len(pages[0][0])
+    for rows in pages:
+        for row_index, row in enumerate(rows):
+            y_top = top - row_index * row_height
+            y_bottom = y_top - row_height
+            for column_index, value in enumerate(row):
+                x_left = left + column_index * column_width
+                if ruled:
+                    document.rect(x_left, y_bottom, column_width, row_height)
+                document.drawString(x_left + 4, y_bottom + 7, value)
+        document.showPage()
+    document.save()
+
+
+def _write_unruled_pdf_line(path: Path, text: str) -> None:
+    """Write a text PDF with no bounded physical table."""
+
+    from reportlab.pdfgen import canvas
+
+    document = canvas.Canvas(path.as_posix())
+    for index, line in enumerate(text.splitlines() or [text]):
+        document.drawString(40, 780 - index * 14, line)
+    document.save()
 
 
 def _save_workbook(path: Path, rows: list[list[Any]]) -> None:
@@ -6522,7 +6719,6 @@ def test_bank_pdf_non_movement_rows_are_excluded_with_multilingual_rules(
     bank_path = tmp_path / "bank.pdf"
     journal_path = tmp_path / "journal.csv"
     output_dir = tmp_path / "out"
-    bank_path.write_text("stub pdf content", encoding="utf-8")
     bank_pdf_text = "\n".join(
         [
             "Saldo iniziale al 31.03.2025 +133 318,47 EUR",
@@ -6545,6 +6741,7 @@ def test_bank_pdf_non_movement_rows_are_excluded_with_multilingual_rules(
             "04/04/2025 Ueberweisungsgebuehr FEEDE 6,00 EUR",
         ]
     )
+    _write_unruled_pdf_line(bank_path, bank_pdf_text)
     _save_csv(
         journal_path,
         [

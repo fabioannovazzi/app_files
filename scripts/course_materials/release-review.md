@@ -1,5 +1,25 @@
 # Teaching-kit release review
 
+## Current release decision — 15 September 2026
+
+The owner requested an interim mixed release: 34 completed new kits plus the
+published material for 11 deferred replacements, with a public HTML catalogue
+linked from all three Impara pages. `release_plan.json` is the release selection;
+older progress notes below describe earlier stages, not the current scope.
+The 11 replacement drafts are preserved for next week. The three hosted Clara
+lessons remain unavailable locally. No goal or scheduled continuation was created.
+
+The retained 11 course texts and files match the pinned published baseline;
+only installed source bindings and explicit retention provenance are added.
+The shared loader supports both formats. Prepared-file fingerprints prevent a
+copied or renamed older specimen from completing an execution checkpoint.
+All 205 public course pages and relative links have been checked from files.
+Browser policy blocked the catalogue preview, so visual inspection is unverified.
+Deployment and Marketplace publication are tracked separately in the release
+record; this decision does not itself claim either has happened.
+
+## Earlier implementation and review history
+
 This is a working release record, not approval of a professional case or proof
 that a learner understands a lesson. The library is incomplete and not ready
 for release. The full compiler and package checks must pass before publication.

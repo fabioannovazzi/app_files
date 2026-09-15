@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "aml-review",
-  "course_sha256": "e518f3d28c8dfccbeb41b2cab9230a3da380f70fdf7cb7a9d7f36c218e596014",
+  "course_sha256": "ea7e794a216122b5ebec927dc79e61cf8c3ee9330ac1c5e938c09efe4531e33e",
   "reviewer": "Codex: localized teaching materials and actual native draft/follow-up evidence review",
   "reviewed_at": "2026-09-14T20:09:40.719846+00:00",
   "review_scope": "All five lesson outlines and original fictional documents were read. Reviewed all unique semantic content of the twenty native memos across these two workflows and both phases, actual output structure, local source links, saved record identity/status/predecessor and delivery/source-challenge companions. Final output comparison confirms only the intended empty-evidence-label removal after the semantic review; exact current artifact hashes are recorded. The 113 focused tests have no failures or skips. These are Markdown/JSON outputs; no browser, native GUI rendering, live voice, learner comprehension or independent professional acceptance is claimed. CNDCEC source indices were checked as research starting points, without claiming article-level legal analysis. Fixture narratives exercise the normal Codex-authored stage and are not shipped as predetermined lesson answers.",
@@ -306,5 +306,42 @@
     "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
     "prior_artifact_reviews_preserved": true,
     "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.260148+00:00",
+    "previous_course_sha256": "e518f3d28c8dfccbeb41b2cab9230a3da380f70fdf7cb7a9d7f36c218e596014",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/aml-review/SKILL.md",
+        "before": "d0950dac3b19af6dc845d3866bb75d066262c71036d6ba6c9a7f70e7c35efc26",
+        "after": "354905ff8eb6cf1dbbdd6006547c9e73b7cfa70fcfcde4b689fa8e6365aef76f"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
   }
 }

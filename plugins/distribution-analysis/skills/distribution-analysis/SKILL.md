@@ -13,6 +13,12 @@ Use this skill when a dataset needs distribution charting: histograms,
 boxplots, stripplots, ECDF plots, kernel-density plots, period comparisons, and
 small multiples where the legacy chart supports them.
 
+This workflow uses unweighted observations. Weighted distributions are not
+supported; keep a requested weighting requirement visible and report the
+capability gap. Do not drop weights or relabel an unweighted output as weighted.
+Recipes reject unsupported mapping keys, including `weight_column`. A source
+column that is not bound is not automatically used as a weight.
+
 ## Codex-Native Run UX
 
 Ask only material choices that cannot be inferred from the actual input:

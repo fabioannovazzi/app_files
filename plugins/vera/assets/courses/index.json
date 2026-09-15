@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "e3e28f78b72e29b984a87b6f00dc2315e1d752d206e6e77b5b317144f1e35c93",
+      "sha256": "47fda948d8397212cd03a8d8423b24b89493a4a2b9330ae3e2bed4db9d37057a",
       "languages": [
         "it",
         "en",
@@ -32,7 +32,7 @@
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "e518f3d28c8dfccbeb41b2cab9230a3da380f70fdf7cb7a9d7f36c218e596014",
+      "sha256": "ea7e794a216122b5ebec927dc79e61cf8c3ee9330ac1c5e938c09efe4531e33e",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "f5b81d6b8cf222cb72af360a9f5fdec0c83a83ee5355d35e8ce26cf6831aeed8",
+      "sha256": "bb56d153f481a8123a63ac525e4076ab1a178cb4ac96741191284104b9cf848e",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "85f41d63162edbfeb7a7d9e2ed11f1b54be7e0fec60c1a64e645a832a98611ae",
+      "sha256": "8740a59ddee69ec6e5aed06ad2052585dec096d86e19661165d2bae34c3dbc52",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "eae91e897ec3ceac5946fafe1d7d3e9630288316fbbb7b231cfe3559f3eb4b79",
+      "sha256": "ab6b0fa236b5c7b11e96a8ec5b342545eb90428734c5c8c17d33eb9ecde953c5",
       "languages": [
         "it",
         "en",
@@ -128,23 +128,24 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Preparare un dossier per un bando con Vera",
-        "en": "Prepare a grant-application dossier with Vera",
-        "fr": "Préparer un dossier de demande d’aide avec Vera",
-        "de": "Mit Vera einen Förderantrag vorbereiten",
-        "es": "Preparar un expediente de ayudas con Vera"
+        "it": "Un'opportunità interessante è già candidabile?",
+        "en": "An interesting opportunity is not yet an eligible application",
+        "fr": "Une opportunité pertinente est-elle déjà recevable ?",
+        "de": "Eine passende Förderung ist noch kein belegter Anspruch",
+        "es": "Una oportunidad interesante no acredita la elegibilidad"
       },
       "goals": {
-        "it": "Imparare a partire da un bando selezionato, fornire i documenti dell’impresa e rivedere il dossier preparato da Vera.",
-        "en": "Learn to start from a selected call, supply company documents and review the dossier Vera prepares.",
-        "fr": "Apprendre à partir d’un appel sélectionné, fournir les documents de l’entreprise et relire le dossier préparé par Vera.",
-        "de": "Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.",
-        "es": "Aprender a empezar con una convocatoria seleccionada, aportar documentos de la empresa y revisar el expediente preparado por Vera."
-      }
+        "it": "Separare la scoperta di un bando dall'istruttoria documentale per un'impresa concreta.",
+        "en": "Separate grant discovery from evidence-based preparation for a specific enterprise.",
+        "fr": "Distinguer découverte d'une aide et préparation documentée pour une entreprise précise.",
+        "de": "Fördersuche und beleggestützte Vorbereitung für ein bestimmtes Unternehmen unterscheiden.",
+        "es": "Distinguir la búsqueda de ayudas de la preparación documentada para una empresa concreta."
+      },
+      "material": "retained"
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "b10a224e9b294f93f99077006967581d370cad935ab8d85b0716c6ea8fd8a164",
+      "sha256": "69664ee067dff092e65ce8d0870e326a520d485c226c4556a3c4ffd87a109db7",
       "languages": [
         "it",
         "en"
@@ -153,17 +154,18 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Preparare una bozza di bilancio con Vera",
-        "en": "Prepare draft annual accounts with Vera"
+        "it": "Dal prospetto contabile alla bozza di bilancio",
+        "en": "From accounting balances to a draft financial statement"
       },
       "goals": {
-        "it": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
-        "en": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks."
-      }
+        "it": "Capire come lettura dei saldi, mappatura e controlli accompagnano la preparazione di un bilancio OIC/XBRL da rivedere.",
+        "en": "Understand how source reading, mapping and checks support a reviewable OIC statement and XBRL output."
+      },
+      "material": "retained"
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "a52a7e381666a8c9a344f317fd7883fcf662282e1ee7313ee1bddf1408318035",
+      "sha256": "da3741631df993623682539b6195aa97305b86a62a0b3b7216e330d536f8e42b",
       "languages": [
         "it",
         "en",
@@ -175,23 +177,24 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Insegnare a Vera una procedura nel browser",
-        "en": "Teach Vera a browser procedure",
-        "fr": "Apprendre à Vera une procédure dans le navigateur",
-        "de": "Vera einen Ablauf im Browser beibringen",
-        "es": "Enseñar a Vera un procedimiento en el navegador"
+        "it": "Insegnare un passaggio ripetibile nel browser",
+        "en": "Teach a repeatable browser step",
+        "fr": "Apprendre un geste répétable dans le navigateur",
+        "de": "Einen wiederholbaren Browserschritt beibringen",
+        "es": "Enseñar un paso repetible en el navegador"
       },
       "goals": {
-        "it": "Imparare a mostrare a Vera un lavoro ripetitivo nel browser, rivedere la procedura salvata e capire come diventa un’automazione verificata.",
-        "en": "Learn to show Vera a repeatable browser task, review the saved procedure and understand how it becomes tested automation.",
-        "fr": "Apprendre à montrer une tâche répétitive à Vera, relire la procédure enregistrée et comprendre comment elle devient une automatisation vérifiée.",
-        "de": "Lernen, Vera eine wiederkehrende Browseraufgabe zu zeigen, den gespeicherten Ablauf zu prüfen und den Weg zur getesteten Automatisierung zu verstehen.",
-        "es": "Aprender a mostrar a Vera una tarea repetitiva, revisar el procedimiento guardado y comprender cómo se convierte en una automatización comprobada."
-      }
+        "it": "Comprendere come una procedura osservata diventa una capacità locale verificabile, con limiti e arresti espliciti.",
+        "en": "Turn an observed procedure into a locally verifiable capability with explicit stopping conditions.",
+        "fr": "Transformer une procédure observée en capacité locale vérifiable, avec des conditions d'arrêt explicites.",
+        "de": "Aus einem beobachteten Ablauf eine lokal prüfbare Fähigkeit mit klaren Abbruchbedingungen entwickeln.",
+        "es": "Transformar un procedimiento observado en una capacidad verificable localmente y con condiciones de parada."
+      },
+      "material": "retained"
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "cfe49ab8f19af108c1cfcde10a14268347135d17e1ea283f53b713e10a65c1cf",
+      "sha256": "7f8bbfa0c9560d075071d6456065e09af5484caaa14ecbdbcb501d86f8d6f69a",
       "languages": [
         "it",
         "en"
@@ -200,17 +203,18 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Preparare un business plan con Vera",
-        "en": "Prepare a business plan with Vera"
+        "it": "Un investimento, due ipotesi da verificare",
+        "en": "One investment, two assumptions to test"
       },
       "goals": {
-        "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
-        "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
-      }
+        "it": "Collegare una decisione d'investimento a evidenze commerciali, ipotesi esplicite e risultati di piano.",
+        "en": "Connect an investment decision to commercial evidence, explicit assumptions and plan outcomes."
+      },
+      "material": "retained"
     },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "4c05d643ce648f79f4c57e0c2298bf3c59401b09aedd15e35040c1d6c93ef0ca",
+      "sha256": "e421c5c5fa909727cd668ab648a42afcdae24511bec258d5e7c2529710367844",
       "languages": [
         "it"
       ],
@@ -226,7 +230,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "e7f09cdf64c24daee9e248d20918ca4222a719f3b71cf3adae4ff6563d2b9e33",
+      "sha256": "673a57580e0b55bf4936dbf1aedbddc08f9ae11411c283a01dd9378ced539f76",
       "languages": [
         "it",
         "en",
@@ -254,7 +258,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "204a947e32c198a1f349e785c26b32017f2c5f2a86e0d548016c8f04e8529987",
+      "sha256": "9f2fbe0e898c8a8784086e42a3203c9e4557731d0fc0d72dd5e2c2e3db3ad48b",
       "languages": [
         "it",
         "en",
@@ -282,7 +286,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "085236dff7ed6b57cd32c8d7469b920de67ba7300f32474e363f022be3b92fdd",
+      "sha256": "7cd83465759b020cbeafc4314f56aff731735a2d18b73fba0fc8e8535cd7cb39",
       "languages": [
         "it",
         "en",
@@ -310,7 +314,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "b3a2c13966fe21a90cbb02284a87cc32cc1c5626fe6613927d37c9de5a5a94fd",
+      "sha256": "2ba25d56a504d9fb8b9e708fa23fb6fe20e34d77cce186aae870ec7c7066c97a",
       "languages": [
         "it",
         "en",
@@ -338,7 +342,7 @@
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "ce537d66eb0f672e8152b8b248b071c698dc32017a0d2903e4b99ed69b69ba63",
+      "sha256": "80ac1c409bb6d93f20c68d2a199f9a10cc6db250281fa405d5e2e1109037b94a",
       "languages": [
         "it",
         "en",
@@ -366,7 +370,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "f02f5b144d46468f592cd15d106fffb42d5858acc41a9198056d084d454e12aa",
+      "sha256": "5226ad8a26d10e10177b98113bc5e9aa8f1a6cc9b50473fdaaff209f77556da1",
       "languages": [
         "it",
         "en",
@@ -394,7 +398,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "a632c9469eb8febb2bd4190af140764b1628a609ded45aeb3d81c52f9c665b04",
+      "sha256": "1fd8a2f8f298ac7473e531712e95ea91238981bade40475aed73a66c247d00f4",
       "languages": [
         "it",
         "en",
@@ -422,7 +426,7 @@
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "23bc0f7b084fb893477c7ea9f67da084014a217a4e378b2f731aa5692fd8a2c2",
+      "sha256": "97cc07f46a4a071b6e98dd4189ee479088e5cd6241faf9c9f87689f610e3cf47",
       "languages": [
         "it",
         "en",
@@ -450,7 +454,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "817c5cf742c9a425e9b65bcf6c5e87448f096d7d74fe719648a92aed666b281c",
+      "sha256": "25570a2b9294d44d8f56ccef8a019ad1cfb7b50afa3fcacd46fe7f0c427d7789",
       "languages": [
         "it",
         "en",
@@ -478,7 +482,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "e2083d8d5c1a5ed5ba753a3cb0ade8ec5f0ce41c137a2d596963da327e7ee999",
+      "sha256": "43f2cb93eacbe5688778a54b9c53ea55d63e6ce8fe86132dcb34311e82d5ac78",
       "languages": [
         "it",
         "en",
@@ -506,7 +510,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "c5f55caf615af6a6bfd34b396fc58ab56f9603084c14abe1041ce2a77a5f7a7e",
+      "sha256": "78bc4da6c314d34338608812b0fc35a77b80fbb122a4c6a488ef8d959165b112",
       "languages": [
         "it",
         "en"
@@ -515,17 +519,18 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Preparare il controllo di gestione con Vera",
-        "en": "Prepare a management-control report with Vera"
+        "it": "Actual e Budget: leggere importi e percentuali",
+        "en": "Actual versus Budget: read amounts and percentages"
       },
       "goals": {
-        "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
-        "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review."
-      }
+        "it": "Interpretare un report di controllo di gestione a partire da periodo, segni e categorie rivedute.",
+        "en": "Interpret a management report using reviewed periods, signs and categories."
+      },
+      "material": "retained"
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "73652da0cc2fb28ffdc154815fbd77e0393dd7a0284d600d98d4109e3130de26",
+      "sha256": "eef2e45cb356c468fcea177f5b5299afa8b56d3fdbc8be9a23d96375de096aac",
       "languages": [
         "it",
         "en",
@@ -553,7 +558,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "38a6afece594593f3db63f85a4e4b1cb03c6e063efa406c4c64678562be251dd",
+      "sha256": "bf51ae59605514f9e76956d7c5a8b36d872cc14af6b1d8866234c3ff8737a1f2",
       "languages": [
         "it",
         "en",
@@ -581,7 +586,7 @@
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "5306f1f2d842b790aa309fd01671709272136c0c6750c78f49d4d2117e060d87",
+      "sha256": "69759250d37c9d4f5480050e1b1692246efdc73bbc65e4a7cbf37c361d1cadc3",
       "languages": [
         "it",
         "en",
@@ -609,7 +614,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "990408e63fe8cf342e917d9cccc806188740ae109aad22ff878ab3683b135f0d",
+      "sha256": "e4f08c8b5f223c2e5a38b8a68c7b163d3d9df444101f805ae5b5d0990c51675c",
       "languages": [
         "it",
         "en",
@@ -637,7 +642,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "36b2feaab2ee100b146231008a642d0a2cd167e33ddaef1c854f40092da4a065",
+      "sha256": "6ea5a410da97272bd29586227b3ca1cc79d098e6377cfe36484ff4a4d188a098",
       "languages": [
         "it",
         "en",
@@ -649,23 +654,24 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Rivedere le fatture di acquisto con la contabilità",
-        "en": "Review purchase invoices against the ledger",
-        "fr": "Revoir les factures d’achat avec la comptabilité",
-        "de": "Eingangsrechnungen mit der Buchhaltung prüfen",
-        "es": "Revisar facturas de compra con la contabilidad"
+        "it": "Fatture passive: collegare ogni documento alla registrazione",
+        "en": "Connect each purchase invoice to the actual posting",
+        "fr": "Relier chaque facture fournisseur à l'écriture réelle",
+        "de": "Jede Eingangsrechnung mit der tatsächlichen Buchung verbinden",
+        "es": "Vincular cada factura de compra con el asiento real"
       },
       "goals": {
-        "it": "Imparare a confrontare un lotto di fatture con le registrazioni già effettuate e usare il foglio delle eccezioni per la revisione.",
-        "en": "Learn to compare an invoice batch with existing postings and use the exception workbook for review.",
-        "fr": "Apprendre à comparer un lot de factures aux écritures existantes et à utiliser le classeur des exceptions.",
-        "de": "Lernen, Rechnungen mit vorhandenen Buchungen zu vergleichen und die Ausnahmeliste für die Prüfung zu nutzen.",
-        "es": "Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos."
-      }
+        "it": "Leggere la copertura di una popolazione di fatture passive e riconoscere i casi che richiedono revisione contabile.",
+        "en": "Read population coverage and identify invoices needing accounting review.",
+        "fr": "Lire la couverture d'une population de factures et repérer les cas nécessitant une revue comptable.",
+        "de": "Die Abdeckung eines Rechnungsbestands lesen und buchhalterischen Prüfbedarf erkennen.",
+        "es": "Leer la cobertura de una población e identificar facturas que requieren revisión contable."
+      },
+      "material": "retained"
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "1b8195f2f4cc2d8025c7a158682afeafd1d53ed2fe1dbefa91b3c8e86a54dd8a",
+      "sha256": "434b24361361e9cef0196da1542499181e8bf0e582e032a629821bba270b655e",
       "languages": [
         "it",
         "en",
@@ -677,23 +683,24 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Ottenere una risposta verificata con Vera",
-        "en": "Get a checked answer with Vera",
-        "fr": "Obtenir une réponse vérifiée avec Vera",
-        "de": "Eine geprüfte Antwort mit Vera erhalten",
-        "es": "Obtener una respuesta verificada con Vera"
+        "it": "Da una domanda generica a una risposta che si può verificare",
+        "en": "From a broad question to a verifiable answer",
+        "fr": "D'une question générale à une réponse vérifiable",
+        "de": "Von einer allgemeinen Frage zu einer prüfbaren Antwort",
+        "es": "De una pregunta general a una respuesta verificable"
       },
       "goals": {
-        "it": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
-        "en": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
-        "fr": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
-        "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
-        "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
-      }
+        "it": "Capire come fatti, fonti, alternative e revisione formano un unico percorso di risposta professionale.",
+        "en": "Understand how facts, sources, alternatives and review form one professional answer workflow.",
+        "fr": "Comprendre comment faits, sources, alternatives et revue forment un parcours professionnel unique.",
+        "de": "Verstehen, wie Fakten, Quellen, Alternativen und Prüfung einen fachlichen Antwortprozess bilden.",
+        "es": "Entender cómo hechos, fuentes, alternativas y revisión forman un único proceso de respuesta profesional."
+      },
+      "material": "retained"
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "3f6e145eaae3c614fbc1eaf3bdf556f39c1acb5c415ee5241b4d9a7867208bc0",
+      "sha256": "3389a8ccfffc7dd464754b151a49183a9193d30fd2d173dbea1aaa49d56b1558",
       "languages": [
         "it",
         "en",
@@ -721,7 +728,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "878c0684eff02abd6264fd6636fa8fe0a22ad286b7c6a7676309768c4d2c6307",
+      "sha256": "3f79d8186a6d426b276351f31fff18be1302208a3fa8d0ffe7a28512fc50f261",
       "languages": [
         "it",
         "en",
@@ -749,7 +756,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "9d09c3773104a2455712c0ae247094a891eab60a257971ee0d5762d4cec23a1f",
+      "sha256": "7e113e8b9393a52c9159b19685608f821ba197ca1a4d0cca130eab2381ce8094",
       "languages": [
         "it",
         "en",
@@ -777,7 +784,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "6ebcf97027c1ff9a689f49e6cfd3ca14077403afe7ec573ab34cb2b09923a858",
+      "sha256": "a0461f6feb563d83d14827daafd2f9236ab84e25a891eedf376e68df789f1306",
       "languages": [
         "it"
       ],
@@ -793,7 +800,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "b0a85074c3a44cd143b6134087fc0e79e38a9d84ce996859ba8e79d74d4852a9",
+      "sha256": "836d99d8ab3ba006e22c2e8b31b6f8d3052f0ad4b3ac308bb417041b6f03ca20",
       "languages": [
         "it",
         "en",
@@ -821,7 +828,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "bd9e233a9500028f5f893283caf741e4850b7ebc9498311e7abaddc9b3ce02d6",
+      "sha256": "6e01d552b20ad810fbaad12365cc137a3533c5893ddb5a4b11fc82f7b25e617b",
       "languages": [
         "it",
         "en",

@@ -311,6 +311,11 @@
         {% if completion %}
           <section>
             <h2>{{ copy["quality_review"] }}</h2>
+            {% if post_completion and post_completion.get("status") in ["interrupted", "failed"] %}
+              <p role="status">{{ copy["post_processing_interrupted"] }}</p>
+            {% elif post_completion and post_completion.get("status") in ["queued", "running"] %}
+              <p role="status">{{ copy["post_processing_pending"] }}</p>
+            {% endif %}
             {% if review %}
               <div class="review-grid">
                 <article class="review-block">

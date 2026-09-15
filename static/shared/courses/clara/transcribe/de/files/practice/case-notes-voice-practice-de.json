@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "source": "case_notes_hosted_voice",
+  "captured_at": "2026-03-11T10:00:00+00:00",
+  "language": "de",
+  "capture_source": "fictional_teaching_fixture",
+  "model": "none-fictional-authored-text",
+  "user_transcript": "Stimme 1: Wir können den Abholpreis beim nächsten Treffen besprechen.\nStimme 2: Zuerst möchte ich wissen, wie lange die Route dauert. Ich habe den Dienst noch nicht genehmigt.",
+  "assistant_transcript": "",
+  "source_metadata": {
+    "source_type": "fictional teaching transcript",
+    "recording_type": "authored text; no audio",
+    "title": "Ciclo Arco — fictional teaching input",
+    "participants": "",
+    "notes": "Fiktives Paket zum Erlernen des Imports. Der Text wurde für die Lektion geschrieben: Es wurde kein Audio aufgenommen oder durch einen Dienst transkribiert. Die erste Notiz enthält eine Stimme, die sich als Sara Campione vorstellt. Die Identitäten im zweiten Austausch sind nicht belegt; Stimme 1 und Stimme 2 beibehalten. Keine Urteile oder Entscheidungen in die Fallakte aufnehmen."
+  },
+  "extraction_json": {
+    "cleaned_notes_markdown": "",
+    "entries": [],
+    "open_questions": []
+  }
+}

@@ -34,10 +34,12 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from advisor_case_core import CaseWorkspaceError, validate_case_workspace
+from verify_deck_revision_output import verification_ready_for_output_review
 
 __all__ = [
     "DeckRevisionOutputReviewCompletion",
     "complete_deck_revision_output_review",
+    "verify_deck_revision_output_review",
     "main",
 ]
 
@@ -150,6 +152,96 @@ def _render_markdown(payload: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _verified_output_review(case_dir: Path, review_path: Path) -> Path:
+    """Verify the execution bytes behind a pending output review."""
+    output_review = _read_json(review_path)
+    # A prior verification label is meaningful only for its exact input bytes.
+    # This check binds mechanical execution, not the reviewer's semantic judgment.
+    inputs = output_review.get("execution_inputs")
+    if (
+        output_review.get("approved_execution") is not True
+        or not isinstance(inputs, dict)
+        or set(inputs)
+        != {
+            "corrected_deck",
+            "plan",
+            "source_deck",
+            "verification",
+            "approval",
+            "understanding",
+        }
+    ):
+        raise CaseWorkspaceError(
+            "output review lacks approved execution identity; rerun approved application"
+        )
+    for role, item in inputs.items():
+        if not isinstance(item, dict):
+            raise CaseWorkspaceError("output review has malformed execution identity")
+        path = _resolve_case_file(
+            case_dir, str(item.get("path") or ""), label="review execution input"
+        )
+        if role in {"corrected_deck", "plan"} and path != _resolve_case_file(
+            case_dir, str(output_review.get(f"{role}_path") or ""), label=role
+        ):
+            raise CaseWorkspaceError(
+                "output review execution identity points to another artifact"
+            )
+        if _sha256(path) != item.get("sha256"):
+            raise CaseWorkspaceError(
+                "output review execution input changed; rerun application and review"
+            )
+    corrected_deck_path = _resolve_case_file(
+        case_dir,
+        str(output_review.get("corrected_deck_path") or ""),
+        label="corrected deck",
+    )
+    verification_status = str(output_review.get("verification_status") or "")
+    verification = _read_json(
+        _resolve_case_file(
+            case_dir, inputs["verification"]["path"], label="verification"
+        )
+    )
+    if verification_status != verification["summary"][
+        "status"
+    ] or not verification_ready_for_output_review(verification):
+        raise CaseWorkspaceError(
+            f"mechanical verification is not verified: {verification_status or 'missing'}"
+        )
+
+    return corrected_deck_path
+
+
+def _check_criterion_reviews(
+    case_dir: Path, review_path: Path, reviews: Mapping[str, Any]
+) -> None:
+    review = _read_json(review_path)
+    verification = _read_json(
+        _resolve_case_file(
+            case_dir,
+            review["execution_inputs"]["verification"]["path"],
+            label="verification",
+        )
+    )
+    required = {
+        criterion["criterion_id"]
+        for change in verification["changes"]
+        for criterion in change["success_criteria"]
+        if criterion.get("review_required")
+    }
+    if not isinstance(reviews, dict) or set(reviews) != required:
+        raise CaseWorkspaceError(
+            "criterion reviews must cover exactly the pending criteria"
+        )
+    for criterion_id, item in reviews.items():
+        if (
+            not isinstance(item, dict)
+            or item.get("reviewed") is not True
+            or not isinstance(item.get("note"), str)
+            or not item["note"].strip()
+        ):
+            raise CaseWorkspaceError(f"criterion review is incomplete: {criterion_id}")
+
+
 def complete_deck_revision_output_review(
     case_dir: Path,
     *,
@@ -162,6 +254,7 @@ def complete_deck_revision_output_review(
     requested_structure_reviewed: bool = False,
     semantic_evidence_fit_reviewed: bool = False,
     visual_render_reviewed: bool = False,
+    criterion_reviews: dict[str, Any] | None = None,
     now: datetime | None = None,
 ) -> DeckRevisionOutputReviewCompletion:
     """Mark the final corrected deck review loop complete after Codex review."""
@@ -201,17 +294,8 @@ def complete_deck_revision_output_review(
         raise CaseWorkspaceError(
             f"deck revision output review is missing: {review_path}; run apply_deck_revision_plan.py first"
         )
-    output_review = _read_json(review_path)
-    corrected_deck_path = _resolve_case_file(
-        case_dir,
-        str(output_review.get("corrected_deck_path") or ""),
-        label="corrected deck",
-    )
-    verification_status = str(output_review.get("verification_status") or "")
-    if verification_status != "verified":
-        raise CaseWorkspaceError(
-            f"mechanical verification is not verified: {verification_status or 'missing'}"
-        )
+    corrected_deck_path = _verified_output_review(case_dir, review_path)
+    _check_criterion_reviews(case_dir, review_path, criterion_reviews or {})
 
     payload: dict[str, Any] = {
         "schema_version": 1,
@@ -225,6 +309,7 @@ def complete_deck_revision_output_review(
         "corrected_deck_path": _relative_path(case_dir, corrected_deck_path),
         "corrected_deck_sha256": _sha256(corrected_deck_path),
         "confirmations": confirmations,
+        "criterion_reviews": criterion_reviews or {},
         "summary": {
             "status": "complete",
             "final_delivery_allowed": True,
@@ -241,6 +326,42 @@ def complete_deck_revision_output_review(
     )
 
 
+def verify_deck_revision_output_review(
+    case_dir: Path, *, voice_session: Path
+) -> dict[str, Any]:
+    """Check current byte bindings and declared final-review confirmations without writing."""
+    case_dir = case_dir.resolve()
+    session = _resolve_voice_session_dir(case_dir, voice_session)
+    review_path = session / "deck_revision_output_review.json"
+    deck = _verified_output_review(case_dir, review_path)
+    completion = _read_json(session / "deck_revision_output_review_completion.json")
+    _check_criterion_reviews(
+        case_dir, review_path, completion.get("criterion_reviews", {})
+    )
+    if (
+        completion.get("output_review_sha256") != _sha256(review_path)
+        or completion.get("corrected_deck_sha256") != _sha256(deck)
+        or _resolve_case_file(
+            case_dir, completion.get("output_review_path", ""), label="output review"
+        )
+        != review_path.resolve()
+        or _resolve_case_file(
+            case_dir, completion.get("corrected_deck_path", ""), label="corrected deck"
+        )
+        != deck
+        or completion.get("summary", {}).get("status") != "complete"
+        or completion.get("summary", {}).get("final_delivery_allowed") is not True
+        or any(
+            completion.get("confirmations", {}).get(key) is not True
+            for key in REQUIRED_CONFIRMATIONS
+        )
+    ):
+        raise CaseWorkspaceError(
+            "final review is stale or lacks required confirmations"
+        )
+    return completion
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Complete Clara's final semantic review loop for a corrected deck.",
@@ -248,6 +369,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("case_dir", type=Path)
     parser.add_argument("--reviewer", required=True)
     parser.add_argument("--note", default="")
+    parser.add_argument("--criterion-reviews", type=Path, default=None)
     parser.add_argument(
         "--voice-session",
         type=Path,
@@ -274,6 +396,9 @@ def main(argv: list[str] | None = None) -> int:
         output_review_path=args.output_review,
         reviewer=args.reviewer,
         note=args.note,
+        criterion_reviews=(
+            _read_json(args.criterion_reviews) if args.criterion_reviews else None
+        ),
         audience_copy_reviewed=args.audience_copy_reviewed,
         process_language_reviewed=args.process_language_reviewed,
         requested_structure_reviewed=args.requested_structure_reviewed,

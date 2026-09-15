@@ -28,6 +28,13 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
+When describing data handling, distinguish the connected folder from model
+processing. Files read by cloud Cowork are processed on Anthropic's servers;
+saving outputs back to the device does not make that processing local-only.
+Do not say that nothing left the device. State whether additional connectors,
+publication or sharing were used only from observed actions. Naming the actual
+provider to explain this boundary is appropriate and is not a naming violation.
+
 # Claim Basis Map
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
@@ -227,6 +234,14 @@ Check statuses:
 Do not use deterministic code to decide whether a new or edited claim is
 semantically supported. Re-run the model-led generation/matching step for those
 claims, then emit an updated `deck.claims.json`.
+
+Read every item in the audit's `current_text_inventory`, including short
+headlines, numeric labels and footnotes. The untracked-text heuristic omits
+some of these; an empty issue list is not complete materiality review. Compare
+the inventory with every rendered slide and inspect chart/image meaning
+separately. Record material claims through model-led review even when no
+heuristic flagged them. The inventory's coverage metadata does not attest that
+this review occurred.
 
 ## Markdown Output
 

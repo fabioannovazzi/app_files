@@ -919,3 +919,134 @@ def test_deletion_preflight_cli_exits_nonzero_for_bound_directory(
     )
     assert lineage.main() == expected_exit
     assert memo.read_text() == "Premise A"
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "ftp://example.test/file",
+        "https://example.test:8443/file",
+        "https://user:password@example.test/file",
+    ],
+)
+def test_web_capture_rejects_unsupported_target_before_opening(tmp_path, url):
+    capture = _load(WEB_CAPTURE_PATH, "clara_capture_target_test")
+    opener = _Opener()
+    with pytest.raises(capture.UnsafePublicUrlError):
+        capture.capture_web_evidence(
+            tmp_path,
+            url=url,
+            evidence_id="ev-target",
+            observation="Observation",
+            scope="Page",
+            opener=opener,
+        )
+    assert opener.called is False
+    assert not (tmp_path / "source_materials").exists()
+
+
+def test_web_capture_rejects_mixed_dns_addresses_before_opening(tmp_path, monkeypatch):
+    capture = _load(WEB_CAPTURE_PATH, "clara_capture_mixed_test")
+    monkeypatch.setattr(
+        capture.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [
+            (2, 1, 6, "", ("93.184.216.34", 443)),
+            (2, 1, 6, "", ("127.0.0.1", 443)),
+        ],
+    )
+    opener = _Opener()
+    with pytest.raises(capture.UnsafePublicUrlError, match="non-public"):
+        capture.capture_web_evidence(
+            tmp_path,
+            url="https://example.test/file",
+            evidence_id="ev-mixed",
+            observation="Observation",
+            scope="Page",
+            opener=opener,
+        )
+    assert opener.called is False
+    assert not (tmp_path / "source_materials").exists()
+
+
+def test_web_capture_bounds_oversized_response_and_records_truncation(
+    tmp_path, monkeypatch
+):
+    capture = _load(WEB_CAPTURE_PATH, "clara_capture_size_test")
+    _lineage().initialize_lineage(tmp_path)
+    monkeypatch.setattr(
+        capture.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [(2, 1, 6, "", ("93.184.216.34", 443))],
+    )
+    limits = []
+
+    class OversizedResponse(_Response):
+        def read(self, limit):
+            limits.append(limit)
+            return b"x" * limit
+
+    class OversizedOpener:
+        def open(self, request, *, timeout):
+            return OversizedResponse()
+
+    receipt = capture.capture_web_evidence(
+        tmp_path,
+        url="https://example.test/inventory",
+        evidence_id="ev-large",
+        observation="Partial captured text",
+        scope="Captured prefix only",
+        opener=OversizedOpener(),
+    )
+    assert limits == [capture.MAX_CAPTURE_BYTES + 1]
+    assert (
+        tmp_path / "source_materials/web/ev-large/response.bin"
+    ).stat().st_size == capture.MAX_CAPTURE_BYTES
+    assert receipt["limitations"] == [
+        f"Capture was truncated after {capture.MAX_CAPTURE_BYTES} response bytes."
+    ]
+
+
+def test_web_capture_timeout_preserves_case_without_partial_evidence(
+    tmp_path, monkeypatch
+):
+    capture = _load(WEB_CAPTURE_PATH, "clara_web_capture_timeout_test")
+    _lineage().initialize_lineage(tmp_path)
+    before = {
+        p.relative_to(tmp_path): p.read_bytes()
+        for p in tmp_path.rglob("*")
+        if p.is_file()
+    }
+    monkeypatch.setattr(
+        capture.socket,
+        "getaddrinfo",
+        lambda *_args, **_kwargs: [(2, 1, 6, "", ("93.184.216.34", 443))],
+    )
+
+    class ExpiredResponse(_Response):
+        def read(self, _limit):
+            raise TimeoutError(
+                "Public evidence request exceeded its elapsed-time budget"
+            )
+
+    class ExpiredOpener:
+        def open(self, request, *, timeout):
+            return ExpiredResponse()
+
+    with pytest.raises(TimeoutError, match="elapsed-time budget"):
+        capture.capture_web_evidence(
+            tmp_path,
+            url="https://example.test/inventory",
+            evidence_id="ev-expired",
+            observation="No complete response received.",
+            scope="Synthetic timeout",
+            opener=ExpiredOpener(),
+        )
+
+    after = {
+        p.relative_to(tmp_path): p.read_bytes()
+        for p in tmp_path.rglob("*")
+        if p.is_file()
+    }
+    assert after == before
+    assert not (tmp_path / "source_materials/web/ev-expired").exists()
