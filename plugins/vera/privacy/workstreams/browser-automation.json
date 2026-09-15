@@ -90,7 +90,7 @@
       {
         "id": "econs-mapping-and-registration-review",
         "purpose": "Review and execute the authorized client-specific ECONS mapping and registration procedure",
-        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used. Red invoices are read within the consecutive-red bound so the model can review the taught exception against complete observed lines; an eligible model decision still requires the exact two-concordant-association and VAT checks before mapping.",
+        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used. Red invoices are read within the consecutive-red bound so the model can review the taught exception against complete observed lines; an eligible model decision still requires the exact two-concordant-association and VAT checks before mapping. The current model separately reviews whether every invoice description is complete before the journal opens; its invoice-bound reason and evidence hash are saved locally. Displayed journal values are saved before journal review, including when that review is interrupted. Contabilizza and final Conferma reg. remain separate stages; a click alone does not establish a completed posting.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -211,7 +211,7 @@
     },
     {
       "id": "econs-verified-processing-and-durable-attempts",
-      "control": "Processing validates reviewed phase profiles before actions; requires matching origins, current invoice identity and complete independent row counts; sets association checkboxes true; rereads mappings; verifies displayed journal arithmetic and per-client treatment review; and saves an unverified report before registration. Completion requires a protocol and absence from the same client Non contab. population. Exceptions exit through a reviewed reversible phase; failed exit stops the batch. Exact checks do not certify accounting meaning, live selectors or professional approval. Two clean target-system runs remain necessary."
+      "control": "Processing validates reviewed phase profiles before actions; requires matching origins, current invoice identity and complete independent row counts; sets association checkboxes true; rereads mappings; verifies displayed journal arithmetic and per-client treatment review; and saves an unverified report before registration. Completion requires a protocol and absence from the same client Non contab. population. Exceptions exit through a reviewed reversible phase; failed exit stops the batch. Exact checks do not certify accounting meaning, live selectors or professional approval. Two clean target-system runs remain necessary. Exact invoice identity and the current detail hash bind the model completeness review before mapping or journal navigation. Non-empty descriptions do not prove full text. Descriptions, review reason and displayed journal values are persisted before the following action or review can fail."
     },
     {
       "id": "turn-scoped-browser-handoff-and-same-tab-recovery",
@@ -226,6 +226,6 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "38bcaa8858fede4f562b6290bd9182dc301c48a4d3cab9c41171466f4b0f2899"
+    "source_fingerprint": "e2e2d2a7060ba5646a4f05f30defabaa1d80c200d5535ed0f6f5967540f52cba"
   }
 }

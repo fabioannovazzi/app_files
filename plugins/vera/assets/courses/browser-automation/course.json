@@ -53,12 +53,12 @@
     {
       "path": "modules/browser-automation/references/econs-review.md",
       "repository_path": "plugins/browser-automation/references/econs-review.md",
-      "sha256": "e22a0c8cbf958ce5921ae8c991d55633d8383b20201fa032b70a015b7ba9850d"
+      "sha256": "38695555c377722a9fd6768823243797d89a58b9d4aa7c21d4280755161acb9f"
     },
     {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
       "repository_path": "plugins/browser-automation/references/passive-invoice-procedure.md",
-      "sha256": "40263d9bdbaae0cfd34ae24e7bd73ddebd2bf01de75b9058844def22961a79cd"
+      "sha256": "ac4e805ce23f2b407ea45898f0c32cad489055d655a739e73e0dd2f30c85fb37"
     },
     {
       "path": "modules/browser-automation/references/teaching-checkpoint.md",
@@ -108,12 +108,12 @@
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
       "repository_path": "plugins/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "3fbd9c304ec28e2df35f35e3af99b29cbb856b6d51fc261a02d6a6a64b7df9a4"
+      "sha256": "8a11fc11ff461989d23abcdde4c41a98c6e0a85464405aaff7961c439dbce44e"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "d56213f14a9d11e5f1dc0a7e35a574d9976f88a8813fe396c944ada041483728"
+      "sha256": "32882e5ef1f46c968ad9a84bde07106e6f378d20efd71d9255ecfc52cb0d012c"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",

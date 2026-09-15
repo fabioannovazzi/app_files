@@ -32,6 +32,10 @@ conversazioni, i file, le credenziali o i profili del precedente Francesco.
    complete, riconciliando i conteggi con totali indipendenti. Pagine visibili,
    griglie virtualizzate e descrizioni troncate non dimostrano completezza.
    Il limite del collector ECONS è 90 righe per fattura: non è una proprietà DATEV.
+   Per ogni fattura salva descrizioni e relativa revisione prima di aprire la
+   prima nota. Testo non vuoto non significa descrizione completa: se rimane
+   troncata, recupera il valore esteso oppure sospendi quella fattura indicando
+   il dato mancante. Aver recuperato le regole non prova di averle applicate.
 4. Mantieni nel report tutti gli stati. Prima di escludere una fattura rossa,
    leggi le righe e valuta l'eccezione delle due associazioni concordanti del
    punto 6. Se l'eccezione non è confermata, lasciala da parte. Più di due rossi
@@ -70,6 +74,10 @@ conversazioni, i file, le credenziali o i profili del precedente Francesco.
    delle conferme dell'host. Salva prima dell'azione uno stato non verificato:
    invio/esito ancora da confermare. Se la prima nota cambia, rivaluta anche
    l'autorizzazione. Il report non concede autorità a contabilizzare.
+   Nel percorso ECONS osservato, «Contabilizza» apre la prima nota e «Conferma
+   reg.» esegue la conferma definitiva. Salva i valori della prima nota prima
+   della revisione, anche se la registrazione verrà sospesa. Questi due passaggi
+   devono restare distinti per ogni fattura.
 10. Verifica il protocollo e l'assenza della fattura dalla popolazione completa
     delle non contabilizzate dello stesso cliente, nella vista corretta. Zero
     elementi richiede uno zero effettivo, non una griglia assente. In caso di

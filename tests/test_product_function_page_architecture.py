@@ -626,9 +626,7 @@ def test_professional_communication_page_explains_exact_phase_boundaries() -> No
 
 def test_bandi_page_explains_task_specific_private_model_context() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
-    bandi_copy = function_copy.split('"bandi-agevolazioni":', 1)[1].split(
-        '"quesito-legale-fiscale":', 1
-    )[0]
+    bandi_copy = _function_page_copy(function_copy, "bandi-agevolazioni")
 
     assert bandi_copy.count('modelDataStatus: "relevant"') == 5
     for snippet in (
@@ -874,20 +872,12 @@ def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> Non
             _function_page_copy(function_copy, page_name), "modelData"
         )
         assert len(values) == 5
-        expected_paragraphs = (
-            5
-            if page_name == "bandi-agevolazioni"
-            else (
-                4
-                if page_name
-                in {
-                    "bandi-agevolazioni",
-                    "business-planning",
-                    "clara-business-planning",
-                }
-                else 3
-            )
-        )
+        expected_paragraphs = {
+            "bandi-agevolazioni": 5,
+            "quesito-legale-fiscale": 6,
+            "business-planning": 5,
+            "clara-business-planning": 5,
+        }.get(page_name, 3)
         assert all(len(value.split("\n\n")) == expected_paragraphs for value in values)
 
     for page_name in (
@@ -901,7 +891,8 @@ def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> Non
         page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
         values = _javascript_string_values(page, '"model.copy"')
         assert len(values) == 5
-        assert all(len(value.split("\n\n")) == 3 for value in values)
+        expected_paragraphs = 4 if page_name == "prompt-optimizer" else 3
+        assert all(len(value.split("\n\n")) == expected_paragraphs for value in values)
 
     assert "modelDataParagraphs.map" in renderer
     assert 'class="function-model-data__copy"' in renderer
