@@ -95,6 +95,17 @@ the saved files. Preserve partial results on interruption. Every result remains
 a prototype until target-site validation. Simulated tests and earlier manual
 downloads do not validate this module; declare the actual execution mode.
 
+For CR-49 category/year acquisition, follow the module's
+`references/agenzia-acquisition.md` and use `scripts/agenzia_acquisition.mjs`.
+Vera reviews the explicit category plan against current authorized portal
+evidence, preserves XML/P7M originals, extracts and hash-links encapsulated
+FatturaPA XML without claiming signature validation, records unavailable formats,
+and resumes only after verifying retained state and artifact hashes. Print to
+PDF is an operator-owned `native_gap`; it is verified from the saved bytes but
+does not count as a clean browser replay. Do not close CR-49 from simulated runs
+or publication alone; the exact released version still needs two clean target
+repetitions meeting the request's count, page, category, and resume criteria.
+
 Local filesystem verification of browser downloads in the normal Downloads
 folder is part of the runtime, like writing receipts; it is not desktop control.
 The runtime handles it automatically without a documented download `path()` API.
