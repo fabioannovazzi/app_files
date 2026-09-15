@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "archive-organization",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,29 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "local_client_folder_snapshot"
+  },
   "sources": [
+    {
+      "path": "modules/archive-organization/assets/archive-organization-review-widget.html",
+      "repository_path": "plugins/archive-organization/assets/archive-organization-review-widget.html",
+      "sha256": "9a13d527e93d12b3bc8a3804198508cc6f3af8e7310b92f11545877f7843b0fd"
+    },
+    {
+      "path": "modules/archive-organization/assets/icon.svg",
+      "repository_path": "plugins/archive-organization/assets/icon.svg",
+      "sha256": "6c8f137906d2cad2c149a5e043dc859cfc3e811c711e72aba12b288aae380e64"
+    },
+    {
+      "path": "modules/archive-organization/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/archive-organization/assets/review-workbench-adapter.json",
+      "sha256": "63024ad9099127bec391d9555786ce901319da4b6482ff1d0f5db9fdffd0f759"
+    },
     {
       "path": "modules/archive-organization/references/default-archive-policy.json",
       "repository_path": "plugins/archive-organization/references/default-archive-policy.json",
@@ -36,9 +58,19 @@
       "sha256": "ce1d2bf3eb180f619e866b909b11b47d6ebd410c49e1bcba41f36010e7a5a30e"
     },
     {
+      "path": "modules/archive-organization/references/review-labels.json",
+      "repository_path": "plugins/archive-organization/references/review-labels.json",
+      "sha256": "ce1464a869f5823b9260336bc28e4c2f0d3cfba982650cb2c92e9a31feff776a"
+    },
+    {
+      "path": "modules/archive-organization/requirements.txt",
+      "repository_path": "plugins/archive-organization/requirements.txt",
+      "sha256": "92d149988edc1c9aa15a3db3942db281f906d7af04f714abf90ebad12b90304e"
+    },
+    {
       "path": "modules/archive-organization/scripts/archive_organization.py",
       "repository_path": "plugins/archive-organization/scripts/archive_organization.py",
-      "sha256": "068700d5f80701e39ca12dae346ae3d6c0983755e12626683a0e83e9819615d0"
+      "sha256": "c113b6ad9f82f16424c2a509c8eb8806b39293394299f4ae8c7d868deefd2fa6"
     },
     {
       "path": "modules/archive-organization/scripts/check_dependencies.py",
@@ -48,361 +80,606 @@
     {
       "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
       "repository_path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
-      "sha256": "0f0662cfa7da30fe0c2b77726c836c4652ff82f2cb18c664078f9ff96e0edf46"
+      "sha256": "fc5f82995bd87abadb9ccf9ccdab19adad62bd2d0b8a924246c036a76fb1dcea"
+    },
+    {
+      "path": "modules/archive-organization/skills/archive-organization/agents/openai.yaml",
+      "repository_path": "plugins/archive-organization/skills/archive-organization/agents/openai.yaml",
+      "sha256": "a23c1b5ef7425f17ca70e23a43923cf160690f8cdb632112a4e70c701cec283c"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/archive-organization/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
     },
     {
       "path": "skills/archive-organization/SKILL.md",
       "repository_path": "plugins/vera/skills/archive-organization/SKILL.md",
       "sha256": "c96310cf87ddc54d340beef57202f20881bdb2f89b1c7e1dfc90c17f82776f6f"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/client/Da archiviare/maintenance-it.md",
+      "sha256": "410643b1f5d232e4746b83b22e52a655e60e0178366b0b84486d79a5f99d43fa",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/maintenance-copy-it.md",
+      "sha256": "410643b1f5d232e4746b83b22e52a655e60e0178366b0b84486d79a5f99d43fa",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/meeting-it.md",
+      "sha256": "90e5131841831aaad3915d17805d22e981cc7fc0624778c34ca4c6e94cf02ab8",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client/Da archiviare/maintenance-it.md",
+      "sha256": "410643b1f5d232e4746b83b22e52a655e60e0178366b0b84486d79a5f99d43fa",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/maintenance-copy-it.md",
+      "sha256": "410643b1f5d232e4746b83b22e52a655e60e0178366b0b84486d79a5f99d43fa",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/meeting-it.md",
+      "sha256": "90e5131841831aaad3915d17805d22e981cc7fc0624778c34ca4c6e94cf02ab8",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/update-it.md",
+      "sha256": "7c91194aa58f01caa7799571302147e5c44ca883064f8a2da2f4af4ac594d018",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client/Da archiviare/maintenance-en.md",
+      "sha256": "fe65e8d3c060dfcb34831b86ff980227218053f65fa4203ad5052bd4a0de8942",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/maintenance-copy-en.md",
+      "sha256": "fe65e8d3c060dfcb34831b86ff980227218053f65fa4203ad5052bd4a0de8942",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/meeting-en.md",
+      "sha256": "d4f2b64ee574769926523e28d53fb36e58849e1ac7f37ae2472a245eea1a4899",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client/Da archiviare/maintenance-en.md",
+      "sha256": "fe65e8d3c060dfcb34831b86ff980227218053f65fa4203ad5052bd4a0de8942",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/maintenance-copy-en.md",
+      "sha256": "fe65e8d3c060dfcb34831b86ff980227218053f65fa4203ad5052bd4a0de8942",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/meeting-en.md",
+      "sha256": "d4f2b64ee574769926523e28d53fb36e58849e1ac7f37ae2472a245eea1a4899",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/update-en.md",
+      "sha256": "dc654fa057bf7e565cfe11628ad53d7193e7d99bfc52e7bbe64e5916a1c60765",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client/Da archiviare/maintenance-fr.md",
+      "sha256": "d0022e32041e4652c1e3dca82a263fcf608715016e8ac610ebee87c1544445d2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/maintenance-copy-fr.md",
+      "sha256": "d0022e32041e4652c1e3dca82a263fcf608715016e8ac610ebee87c1544445d2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/meeting-fr.md",
+      "sha256": "4570eec00b21025be9c034ca64bbd103ba119d10aace193018576d418aabc78f",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client/Da archiviare/maintenance-fr.md",
+      "sha256": "d0022e32041e4652c1e3dca82a263fcf608715016e8ac610ebee87c1544445d2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/maintenance-copy-fr.md",
+      "sha256": "d0022e32041e4652c1e3dca82a263fcf608715016e8ac610ebee87c1544445d2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/meeting-fr.md",
+      "sha256": "4570eec00b21025be9c034ca64bbd103ba119d10aace193018576d418aabc78f",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/update-fr.md",
+      "sha256": "fed8b3e611e758b102bcc6ce21e5e0ffc3369b2ff24a469f9556cba7c8b2aec2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client/Da archiviare/maintenance-de.md",
+      "sha256": "1d8a8c63da6b9d6ec8674ecb880338cdcfe87c93db5e81eba3dc5f1bdb038bbc",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/maintenance-copy-de.md",
+      "sha256": "1d8a8c63da6b9d6ec8674ecb880338cdcfe87c93db5e81eba3dc5f1bdb038bbc",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/meeting-de.md",
+      "sha256": "054bc64d9563b4749624f43c87e4c1bc3f602fbaf3334ff07cc1c11470bc8048",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client/Da archiviare/maintenance-de.md",
+      "sha256": "1d8a8c63da6b9d6ec8674ecb880338cdcfe87c93db5e81eba3dc5f1bdb038bbc",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/maintenance-copy-de.md",
+      "sha256": "1d8a8c63da6b9d6ec8674ecb880338cdcfe87c93db5e81eba3dc5f1bdb038bbc",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/meeting-de.md",
+      "sha256": "054bc64d9563b4749624f43c87e4c1bc3f602fbaf3334ff07cc1c11470bc8048",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/update-de.md",
+      "sha256": "4b0f60fe028a8693001e98ed2ee033145234492b3b51ddc7b7d888c221f566a8",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/client/Da archiviare/maintenance-es.md",
+      "sha256": "b6a644fbbe0ccb34571ac50862d72192cc3008efac4106a39584a1301cd811d3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/maintenance-copy-es.md",
+      "sha256": "b6a644fbbe0ccb34571ac50862d72192cc3008efac4106a39584a1301cd811d3",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/client/Download/meeting-es.md",
+      "sha256": "0c2f9deb13cbfe74a430e14ff2dc90a69b276ab36a952a125df71b56e0fb2e83",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/client/Da archiviare/maintenance-es.md",
+      "sha256": "b6a644fbbe0ccb34571ac50862d72192cc3008efac4106a39584a1301cd811d3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/maintenance-copy-es.md",
+      "sha256": "b6a644fbbe0ccb34571ac50862d72192cc3008efac4106a39584a1301cd811d3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/meeting-es.md",
+      "sha256": "0c2f9deb13cbfe74a430e14ff2dc90a69b276ab36a952a125df71b56e0fb2e83",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/client/Download/update-es.md",
+      "sha256": "908bcda5d09f2f8b1005b25affaf5ad8726ae6cf2a1489485cb8fadcd15032e3",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Riordinare senza perdere le versioni",
-      "goal": "Passare da una cartella disordinata a un piano di spostamenti verificabile, prima di cambiare i file.",
-      "scenario": "Una cartella contiene due copie identiche di una fattura e due versioni diverse di un contratto. I nomi sono poco chiari. Il caso mostra il piano a secco: nessun file è stato spostato.",
-      "request": "Vera, proponimi come riordinare questa cartella cliente e fammi vedere cosa cambierebbe.",
-      "scope": "Un solo cliente e una cartella selezionata. La lezione arriva al piano di revisione; l'applicazione richiede la conferma specifica degli spostamenti.",
-      "input_columns": [
-        "File fittizio",
-        "Contenuto",
-        "Identità"
+      "title": "Riordinare la cartella di un cliente con Vera",
+      "goal": "Imparare a ottenere una proposta di riordino, rivedere le destinazioni e applicare le modifiche approvate a una cartella.",
+      "scenario": "La cartella di Ciclo Arco contiene un accordo, una sua copia e un verbale interno in due cartelle di arrivo. Prepariamo un riordino leggibile e lo proviamo sulla copia didattica.",
+      "scope": "Un solo cliente e file locali fittizi. L’applicazione richiede una scelta esplicita; la lezione non modifica l’archivio reale dello studio.",
+      "inputs": "Apri client e osserva Da archiviare e Download. Leggi accordo e verbale. Vera copia questi file in un cliente didattico separato e usa la politica di cartelle dello studio prevista dal flusso.",
+      "request": "Vera, proponi il riordino di questa cartella di Ciclo Arco. Fammi vedere documenti, destinazioni e copie duplicate prima di spostare qualcosa.",
+      "steps": [
+        "La chat di lavoro crea il cliente didattico e acquisisce una fotografia dei file. Vera legge gli elementi necessari e propone categorie e destinazioni sulla base del contenuto.",
+        "Apri la pagina di revisione generata. Esamina ogni proposta, conserva o correggi la destinazione e scegli come trattare la copia esatta. Il piano resta una proposta finché non viene approvato.",
+        "Dopo le decisioni, Vera mostra gli spostamenti previsti e chiede separatamente se applicarli. Se approvi sulla copia didattica, esegue il piano e mostra cartelle risultanti e registro delle operazioni."
       ],
-      "input_rows": [
-        [
-          "scan-a.pdf",
-          "Fattura INV-07 del 10 giugno",
-          "Stessi byte di copia.pdf"
-        ],
-        [
-          "copia.pdf",
-          "Fattura INV-07 del 10 giugno",
-          "Stessi byte di scan-a.pdf"
-        ],
-        [
-          "accordo.docx",
-          "Bozza di contratto",
-          "Byte diversi dal firmato"
-        ],
-        [
-          "accordo-firmato.pdf",
-          "Contratto con firma visibile",
-          "Versione distinta"
-        ]
+      "deliverables": [
+        "Pagina di revisione e piano: file di partenza, destinazioni proposte, motivi e decisioni salvate.",
+        "Dopo l’applicazione autorizzata: cartella riordinata e registro che permette di verificare gli spostamenti e valutare il ripristino."
       ],
-      "basis": "Il confronto degli hash prova soltanto l'identità delle due fatture. Il contenuto dei contratti richiede lettura: nomi simili e dimensioni simili non ne provano la duplicazione.",
-      "method": [
-        "Crea uno snapshot della cartella selezionata e leggi le evidenze necessarie per classificare ogni riga.",
-        "Prepara destinazioni secondo la policy dello studio e un piano a secco. Le copie identiche diventano candidate alla quarantena; le versioni diverse restano distinte.",
-        "Salva le decisioni del revisore. Mostra conteggio e destinazioni prima dell'approvazione separata all'applicazione; conserva il giornale per l'eventuale ripristino."
+      "review": "Segui un documento dalla posizione iniziale alla destinazione. La copia esatta viene conservata nell’area di verifica dei duplicati, non eliminata. Una decisione sulla proposta non equivale all’autorizzazione a spostare i file.",
+      "checkpoints": [
+        "Prima del piano, identifica il cliente e la cartella didattica.",
+        "Prima dell’applicazione, spiega una destinazione scelta e verifica l’elenco degli spostamenti."
       ],
-      "result_title": "Piano di riordino · nessuna modifica applicata",
-      "conclusion": "Una copia può essere proposta per la quarantena. Bozza e contratto firmato vanno conservati come versioni diverse.",
-      "output_columns": [
-        "Origine",
-        "Proposta",
-        "Revisione"
-      ],
-      "output_rows": [
-        [
-          "scan-a.pdf",
-          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
-          "Da confermare"
-        ],
-        [
-          "copia.pdf",
-          "Da_verificare/Duplicati_esatti/…",
-          "Quarantena proposta"
-        ],
-        [
-          "accordo.docx + accordo-firmato.pdf",
-          "Conservare entrambi in Contratti/2026",
-          "Versioni da descrivere"
-        ]
-      ],
-      "check": "Applicare le decisioni nella scheda di revisione prepara il piano approvato; non esegue gli spostamenti. I file devono essere ancora identici allo snapshot al momento dell'esecuzione.",
-      "question": "Il firmato ha quasi lo stesso nome della bozza: possiamo eliminarne uno?",
-      "answer": "No. Sono versioni diverse, non duplicati esatti. Il piano conserva entrambi; una destinazione diversa richiede una decisione motivata.",
-      "practice": "Cambia la destinazione di una proposta e verifica se entra in conflitto con un file esistente.",
-      "next": "Per la prova usa una piccola cartella fittizia. Sul tuo archivio seleziona prima il cliente registrato e la policy applicabile."
+      "practice": "Usa la nuova copia client dei file di prova, che aggiunge update-it.md. Chiedi un altro riordino, rivedi dove conservare l’aggiornamento insieme all’accordo e decidi se applicare il nuovo piano. Conserva la dimostrazione.",
+      "success": "Sai leggere il piano, intervenire su una proposta e distinguere revisione e applicazione. Se non autorizzi gli spostamenti, il risultato resta un piano pronto da rivedere, non una cartella già riordinata.",
+      "repeat": "Seleziona un cliente, chiedi una proposta e rivedi ogni modifica. Applica solo dopo il riepilogo esplicito e conserva il registro."
     },
     "en": {
-      "title": "Organize a folder while preserving versions",
-      "goal": "Turn a disordered folder into a reviewable movement plan before changing files.",
-      "scenario": "A fictional folder contains two byte-identical invoice copies and two different contract versions. Their names are unclear. This example shows a dry-run plan; no file has been moved.",
-      "request": "Vera, propose how to organize this client folder and show what would change.",
-      "scope": "One selected client folder. The lesson reaches plan review; applying file movements requires its separate explicit confirmation.",
-      "input_columns": [
-        "Fictional file",
-        "Content",
-        "Identity"
+      "title": "Organise a client folder with Vera",
+      "goal": "Learn to obtain an organisation plan, review destinations and apply approved changes to a folder.",
+      "scenario": "Ciclo Arco’s folder contains an agreement, an exact copy and an internal meeting note in two intake folders. We will prepare a readable plan and try it on a teaching copy.",
+      "scope": "One client and fictional local files. Applying changes requires an explicit choice; the lesson does not change the real studio archive.",
+      "inputs": "Open client and inspect Da archiviare and Download. Read the agreement and meeting note. Vera copies them into a separate teaching client and uses the workflow’s studio folder policy. Default folder labels are Italian.",
+      "request": "Vera, propose how to organise this Ciclo Arco folder. Show documents, destinations and duplicate copies before moving anything.",
+      "steps": [
+        "The working chat creates the teaching client and captures its file snapshot. Vera reads the necessary evidence and proposes categories and destinations from the contents.",
+        "Open the generated review page. Inspect every proposal, keep or edit the destination and decide how to handle the exact copy. The plan remains proposed until reviewed.",
+        "After those decisions, Vera summarises planned moves and separately asks whether to apply them. If you approve the teaching-copy changes, it executes the plan and shows the resulting folders and operation journal."
       ],
-      "input_rows": [
-        [
-          "scan-a.pdf",
-          "Invoice INV-07, 10 June",
-          "Same bytes as copy.pdf"
-        ],
-        [
-          "copy.pdf",
-          "Invoice INV-07, 10 June",
-          "Same bytes as scan-a.pdf"
-        ],
-        [
-          "agreement.docx",
-          "Draft contract",
-          "Different bytes from signed version"
-        ],
-        [
-          "agreement-signed.pdf",
-          "Contract with visible signature",
-          "Distinct version"
-        ]
+      "deliverables": [
+        "Review page and plan: starting files, proposed destinations, reasons and saved decisions.",
+        "After authorized application: organised folder and journal for checking moves and considering rollback."
       ],
-      "basis": "Matching hashes establish identical invoice bytes. The contracts require reading: similar names and sizes do not establish duplication.",
-      "method": [
-        "Snapshot the selected folder and inspect enough evidence to classify every inventory row.",
-        "Prepare destinations under the firm's policy and a dry run. Exact copies become quarantine candidates; distinct versions remain separate.",
-        "Persist reviewer decisions. Show counts and destinations before the separate execution approval, and retain the journal for possible rollback."
+      "review": "Follow a document from its original location to its destination. The exact copy is retained in the duplicate-review area rather than deleted. Reviewing a proposal is separate from authorizing file moves.",
+      "checkpoints": [
+        "Before the plan, identify the client and teaching folder.",
+        "Before application, explain one chosen destination and check the planned moves."
       ],
-      "result_title": "Organization plan · no changes applied",
-      "conclusion": "One copy can be proposed for quarantine. The draft and signed contract should remain distinct versions.",
-      "output_columns": [
-        "Source",
-        "Proposal",
-        "Review"
-      ],
-      "output_rows": [
-        [
-          "scan-a.pdf",
-          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
-          "Confirm destination"
-        ],
-        [
-          "copy.pdf",
-          "Da_verificare/Duplicati_esatti/…",
-          "Proposed quarantine"
-        ],
-        [
-          "Both contract versions",
-          "Retain in Contratti/2026",
-          "Describe the versions"
-        ]
-      ],
-      "check": "Applying review decisions compiles the approved plan; it does not move files. Sources must still match the snapshot at execution.",
-      "question": "The signed contract has almost the same name as the draft. Can we delete one?",
-      "answer": "No. They are different versions, not exact duplicates. Keep both unless a separately reviewed action establishes another destination.",
-      "practice": "Change a proposed destination and check whether it conflicts with an existing file.",
-      "next": "Practice on a small fictional folder. For real work, first select the registered client and applicable policy."
+      "practice": "Use the new client copy in the practice files, which adds update-en.md. Request another plan, review where the update belongs with its agreement and decide whether to apply it. Preserve the demonstration.",
+      "success": "You can read the plan, change a proposal and distinguish review from application. If you do not authorize moves, the result remains a plan to review, not an already organised folder.",
+      "repeat": "Select a client, request a proposal and review every change. Apply after the explicit summary and retain the journal."
     },
     "fr": {
-      "title": "Ranger le dossier en conservant les versions",
-      "goal": "Préparer un plan de déplacement vérifiable avant de modifier les fichiers.",
-      "scenario": "Un dossier fictif contient deux copies identiques d'une facture et deux versions différentes d'un contrat. Leurs noms sont peu clairs. L'exemple présente un plan à blanc ; aucun fichier n'a été déplacé.",
-      "request": "Vera, propose un rangement pour ce dossier client et montre ce qui changerait.",
-      "scope": "Un client et un dossier sélectionnés. La leçon s'arrête à la revue du plan ; son exécution demande une confirmation explicite distincte.",
-      "input_columns": [
-        "Fichier fictif",
-        "Contenu",
-        "Identité"
+      "title": "Ranger le dossier d’un client avec Vera",
+      "goal": "Apprendre à obtenir un plan de classement, revoir les destinations et appliquer les modifications approuvées.",
+      "scenario": "Le dossier de Ciclo Arco contient un accord, sa copie exacte et une note interne dans deux dossiers d’arrivée. Nous préparons un plan lisible à essayer sur une copie pédagogique.",
+      "scope": "Un client et des fichiers locaux fictifs. L’application nécessite un choix explicite ; l’archive réelle du cabinet n’est pas modifiée.",
+      "inputs": "Ouvrez client et observez Da archiviare et Download. Lisez accord et note. Vera les copie dans un client pédagogique séparé et utilise la politique de classement du flux. Les dossiers par défaut portent des noms italiens.",
+      "request": "Vera, propose le rangement de ce dossier de Ciclo Arco. Montre documents, destinations et doublons avant de déplacer quoi que ce soit.",
+      "steps": [
+        "La conversation de travail crée le client pédagogique et capture l’état des fichiers. Vera lit les éléments nécessaires et propose catégories et destinations selon le contenu.",
+        "Ouvrez la page de revue générée. Examinez chaque proposition, conservez ou corrigez la destination et décidez du traitement de la copie exacte. Le plan reste proposé jusqu’à sa revue.",
+        "Après ces décisions, Vera résume les déplacements et demande séparément s’il faut les appliquer. Si vous approuvez sur la copie pédagogique, elle exécute le plan et montre dossiers obtenus et journal."
       ],
-      "input_rows": [
-        [
-          "scan-a.pdf",
-          "Facture INV-07 du 10 juin",
-          "Octets identiques à copie.pdf"
-        ],
-        [
-          "copie.pdf",
-          "Facture INV-07 du 10 juin",
-          "Octets identiques à scan-a.pdf"
-        ],
-        [
-          "accord.docx",
-          "Projet de contrat",
-          "Différent de la version signée"
-        ],
-        [
-          "accord-signe.pdf",
-          "Contrat avec signature visible",
-          "Version distincte"
-        ]
+      "deliverables": [
+        "Page de revue et plan : fichiers initiaux, destinations, motifs et décisions enregistrées.",
+        "Après application autorisée : dossier rangé et journal pour vérifier les déplacements et envisager leur annulation."
       ],
-      "basis": "Les empreintes identiques prouvent l'identité des copies de facture. Les contrats doivent être lus : noms et tailles similaires ne prouvent pas un doublon.",
-      "method": [
-        "Crée l'inventaire figé du dossier et lis les éléments nécessaires pour classer chaque ligne.",
-        "Propose des destinations conformes à la politique du cabinet. Les copies exactes deviennent candidates à la quarantaine ; les versions distinctes restent séparées.",
-        "Enregistre les décisions du réviseur. Présente nombres et destinations avant l'approbation d'exécution et conserve le journal pour un éventuel retour arrière."
+      "review": "Suivez un document de sa position initiale à sa destination. La copie exacte est conservée dans la zone de revue des doublons, pas supprimée. Revoir une proposition ne donne pas l’autorisation de déplacer les fichiers.",
+      "checkpoints": [
+        "Avant le plan, identifiez client et dossier pédagogique.",
+        "Avant application, expliquez une destination choisie et vérifiez les déplacements prévus."
       ],
-      "result_title": "Plan de rangement · aucune modification appliquée",
-      "conclusion": "Une copie peut être proposée pour la quarantaine. Projet et contrat signé restent deux versions à conserver.",
-      "output_columns": [
-        "Origine",
-        "Proposition",
-        "Revue"
-      ],
-      "output_rows": [
-        [
-          "scan-a.pdf",
-          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
-          "Destination à confirmer"
-        ],
-        [
-          "copie.pdf",
-          "Da_verificare/Duplicati_esatti/…",
-          "Quarantaine proposée"
-        ],
-        [
-          "Deux versions du contrat",
-          "Conserver dans Contratti/2026",
-          "Décrire les versions"
-        ]
-      ],
-      "check": "Appliquer les décisions de revue prépare le plan approuvé sans déplacer les fichiers. Les sources doivent encore correspondre à l'inventaire lors de l'exécution.",
-      "question": "Le contrat signé porte presque le même nom que le projet. Peut-on en supprimer un ?",
-      "answer": "Non. Ce sont des versions différentes. Le plan conserve les deux ; une autre destination demande une décision motivée.",
-      "practice": "Change une destination proposée et vérifie si elle entre en conflit avec un fichier existant.",
-      "next": "Utilise un petit dossier fictif pour essayer. Pour le vrai travail, sélectionne le client enregistré et la politique applicable."
+      "practice": "Utilisez la nouvelle copie client des fichiers d’exercice, qui ajoute update-fr.md. Demandez un autre plan, revoyez où conserver cette mise à jour avec l’accord et décidez de l’appliquer ou non. Préservez la démonstration.",
+      "success": "Vous savez lire le plan, modifier une proposition et distinguer revue et application. Sans autorisation de déplacement, le résultat reste un plan à revoir, pas un dossier déjà rangé.",
+      "repeat": "Sélectionnez un client, demandez une proposition et revoyez chaque modification. Appliquez après le résumé explicite et conservez le journal."
     },
     "de": {
-      "title": "Einen Ordner ordnen und Versionen erhalten",
-      "goal": "Einen prüfbaren Verschiebeplan erstellen, bevor Dateien verändert werden.",
-      "scenario": "Ein fiktiver Ordner enthält zwei bytegleiche Rechnungskopien und zwei unterschiedliche Vertragsversionen mit unklaren Namen. Das Beispiel zeigt einen Probelauf; keine Datei wurde verschoben.",
-      "request": "Vera, schlage eine Ordnung für diesen Mandantenordner vor und zeige die geplanten Änderungen.",
-      "scope": "Ein ausgewählter Ordner bis zur Planprüfung. Die tatsächliche Ausführung erfordert eine separate ausdrückliche Bestätigung.",
-      "input_columns": [
-        "Fiktive Datei",
-        "Inhalt",
-        "Identität"
+      "title": "Einen Kundenordner mit Vera ordnen",
+      "goal": "Lernen, einen Ordnungsplan zu erhalten, Zielorte zu prüfen und genehmigte Änderungen anzuwenden.",
+      "scenario": "Der Ordner von Ciclo Arco enthält eine Vereinbarung, eine identische Kopie und eine interne Notiz in zwei Eingangsordnern. Wir erstellen einen verständlichen Plan und erproben ihn an einer Übungskopie.",
+      "scope": "Ein Kunde und fiktive lokale Dateien. Die Anwendung erfordert eine ausdrückliche Entscheidung; das echte Kanzleiarchiv bleibt unberührt.",
+      "inputs": "Öffnen Sie client und betrachten Sie Da archiviare und Download. Lesen Sie Vereinbarung und Notiz. Vera kopiert sie zu einem separaten Übungskunden und nutzt die Ordnungsrichtlinie des Ablaufs. Standardordner haben italienische Namen.",
+      "request": "Vera, schlage eine Ordnung für diesen Ciclo-Arco-Ordner vor. Zeige Dokumente, Zielorte und identische Kopien, bevor du etwas verschiebst.",
+      "steps": [
+        "Der Arbeitschat erstellt den Übungskunden und erfasst den Dateistand. Vera liest die nötigen Belege und schlägt Kategorien und Zielorte anhand des Inhalts vor.",
+        "Öffnen Sie die erzeugte Prüfseite. Prüfen Sie jeden Vorschlag, behalten oder ändern Sie den Zielort und entscheiden Sie über die identische Kopie. Bis zur Prüfung bleibt der Plan ein Vorschlag.",
+        "Danach fasst Vera die geplanten Verschiebungen zusammen und fragt gesondert nach ihrer Anwendung. Bei Ihrer Zustimmung für die Übungskopie führt sie den Plan aus und zeigt neue Ordner und Vorgangsprotokoll."
       ],
-      "input_rows": [
-        [
-          "scan-a.pdf",
-          "Rechnung INV-07, 10. Juni",
-          "Bytegleich mit copy.pdf"
-        ],
-        [
-          "copy.pdf",
-          "Rechnung INV-07, 10. Juni",
-          "Bytegleich mit scan-a.pdf"
-        ],
-        [
-          "agreement.docx",
-          "Vertragsentwurf",
-          "Andere Bytes als unterschriebene Fassung"
-        ],
-        [
-          "agreement-signed.pdf",
-          "Vertrag mit sichtbarer Unterschrift",
-          "Eigenständige Version"
-        ]
+      "deliverables": [
+        "Prüfseite und Plan: Ausgangsdateien, Zielorte, Gründe und gespeicherte Entscheidungen.",
+        "Nach genehmigter Anwendung: geordneter Ordner und Protokoll zur Prüfung der Verschiebungen und einer möglichen Rücknahme."
       ],
-      "basis": "Übereinstimmende Prüfsummen belegen identische Rechnungsdateien. Die Verträge müssen gelesen werden; ähnliche Namen und Größen belegen keine Dublette.",
-      "method": [
-        "Erstelle eine Bestandsaufnahme und prüfe genug Inhalt, um jede Datei einzuordnen.",
-        "Plane Ziele gemäß Kanzleiregeln und führe einen Probelauf aus. Identische Kopien können zur Quarantäne vorgeschlagen werden; unterschiedliche Versionen bleiben erhalten.",
-        "Speichere Prüfentscheidungen. Zeige Anzahl und Ziele vor der separaten Ausführungsfreigabe und bewahre das Änderungsjournal für eine mögliche Rücknahme auf."
+      "review": "Verfolgen Sie ein Dokument vom Ausgangs- zum Zielort. Die identische Kopie bleibt im Prüfbereich für Duplikate erhalten und wird nicht gelöscht. Eine geprüfte Planung ist noch keine Genehmigung für Dateiverschiebungen.",
+      "checkpoints": [
+        "Identifizieren Sie vor der Planung Kunde und Übungsordner.",
+        "Erklären Sie vor der Anwendung einen gewählten Zielort und prüfen Sie die geplanten Verschiebungen."
       ],
-      "result_title": "Ordnungsplan · noch nichts ausgeführt",
-      "conclusion": "Eine Rechnungskopie kann für die Quarantäne vorgeschlagen werden. Vertragsentwurf und unterschriebene Fassung bleiben getrennte Versionen.",
-      "output_columns": [
-        "Quelle",
-        "Vorschlag",
-        "Prüfung"
-      ],
-      "output_rows": [
-        [
-          "scan-a.pdf",
-          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
-          "Ziel bestätigen"
-        ],
-        [
-          "copy.pdf",
-          "Da_verificare/Duplicati_esatti/…",
-          "Quarantäne vorgeschlagen"
-        ],
-        [
-          "Beide Vertragsversionen",
-          "In Contratti/2026 erhalten",
-          "Versionen beschreiben"
-        ]
-      ],
-      "check": "Gespeicherte Prüfentscheidungen erstellen den freigegebenen Plan; sie verschieben noch keine Dateien. Bei Ausführung müssen die Quellen weiterhin zur Bestandsaufnahme passen.",
-      "question": "Der unterschriebene Vertrag heißt fast wie der Entwurf. Können wir einen löschen?",
-      "answer": "Nein. Es sind verschiedene Versionen, keine exakten Dubletten. Beide bleiben erhalten, sofern keine gesondert geprüfte Maßnahme etwas anderes vorsieht.",
-      "practice": "Ändere ein vorgeschlagenes Ziel und prüfe einen möglichen Konflikt mit vorhandenen Dateien.",
-      "next": "Übe mit einem kleinen fiktiven Ordner. Wähle für echte Arbeit zuerst den registrierten Mandanten und die geltenden Regeln."
+      "practice": "Nutzen Sie die neue client-Kopie der Übungsdateien mit update-de.md. Fordern Sie einen weiteren Plan an, prüfen Sie die Ablage der Ergänzung bei der Vereinbarung und entscheiden Sie über die Anwendung. Bewahren Sie die Demonstration auf.",
+      "success": "Sie können den Plan lesen, einen Vorschlag ändern und Prüfung von Anwendung unterscheiden. Ohne Freigabe bleibt das Ergebnis ein prüfbarer Plan, kein bereits geordneter Ordner.",
+      "repeat": "Wählen Sie einen Kunden, fordern Sie einen Vorschlag an und prüfen Sie jede Änderung. Wenden Sie den Plan nach der ausdrücklichen Zusammenfassung an und behalten Sie das Protokoll."
     },
     "es": {
-      "title": "Ordenar una carpeta conservando sus versiones",
-      "goal": "Convertir una carpeta desordenada en un plan de movimientos revisable antes de modificar archivos.",
-      "scenario": "Una carpeta ficticia contiene dos copias de factura con bytes idénticos y dos versiones distintas de un contrato con nombres poco claros. El ejemplo muestra un ensayo del plan; no se ha movido ningún archivo.",
-      "request": "Vera, propón cómo ordenar esta carpeta y muestra qué cambiaría.",
-      "scope": "Una carpeta seleccionada hasta la revisión del plan. Ejecutar los movimientos requiere una confirmación expresa independiente.",
-      "input_columns": [
-        "Archivo ficticio",
-        "Contenido",
-        "Identidad"
+      "title": "Ordenar la carpeta de un cliente con Vera",
+      "goal": "Aprender a obtener un plan de organización, revisar destinos y aplicar los cambios aprobados.",
+      "scenario": "La carpeta de Ciclo Arco contiene un acuerdo, una copia exacta y un acta interna en dos carpetas de entrada. Prepararemos un plan legible y lo probaremos en una copia didáctica.",
+      "scope": "Un cliente y archivos locales ficticios. Aplicar cambios requiere una decisión explícita; no se modifica el archivo real del despacho.",
+      "inputs": "Abre client y observa Da archiviare y Download. Lee acuerdo y acta. Vera los copia a un cliente didáctico separado y usa la política de carpetas del flujo. Las carpetas predeterminadas tienen nombres italianos.",
+      "request": "Vera, propón cómo ordenar esta carpeta de Ciclo Arco. Muéstrame documentos, destinos y copias duplicadas antes de mover nada.",
+      "steps": [
+        "La conversación de trabajo crea el cliente didáctico y registra el estado de sus archivos. Vera lee las pruebas necesarias y propone categorías y destinos según el contenido.",
+        "Abre la página de revisión generada. Examina cada propuesta, conserva o cambia el destino y decide qué hacer con la copia exacta. El plan sigue siendo una propuesta hasta su revisión.",
+        "Tras esas decisiones, Vera resume los movimientos y pregunta por separado si debe aplicarlos. Si apruebas los cambios en la copia didáctica, ejecuta el plan y muestra carpetas resultantes y registro."
       ],
-      "input_rows": [
-        [
-          "scan-a.pdf",
-          "Factura INV-07, 10 de junio",
-          "Mismos bytes que copy.pdf"
-        ],
-        [
-          "copy.pdf",
-          "Factura INV-07, 10 de junio",
-          "Mismos bytes que scan-a.pdf"
-        ],
-        [
-          "agreement.docx",
-          "Borrador de contrato",
-          "Distinto de la versión firmada"
-        ],
-        [
-          "agreement-signed.pdf",
-          "Contrato con firma visible",
-          "Versión independiente"
-        ]
+      "deliverables": [
+        "Página de revisión y plan: archivos iniciales, destinos, motivos y decisiones guardadas.",
+        "Tras la aplicación autorizada: carpeta ordenada y registro para comprobar movimientos y valorar su reversión."
       ],
-      "basis": "Las huellas coincidentes acreditan archivos de factura idénticos. Los contratos necesitan lectura: nombres y tamaños parecidos no prueban duplicación.",
-      "method": [
-        "Captura el inventario de la carpeta y examina evidencia suficiente para clasificar cada archivo.",
-        "Propón destinos según la política del despacho y prepara un ensayo. Las copias exactas pueden proponerse para cuarentena; las versiones distintas se conservan separadas.",
-        "Guarda las decisiones de revisión. Muestra cantidades y destinos antes de la autorización de ejecución y conserva el registro para una posible reversión."
+      "review": "Sigue un documento desde su ubicación inicial hasta el destino. La copia exacta se conserva en la zona de revisión de duplicados, no se elimina. Revisar una propuesta no autoriza por sí solo a mover archivos.",
+      "checkpoints": [
+        "Antes del plan, identifica cliente y carpeta didáctica.",
+        "Antes de aplicar, explica un destino elegido y comprueba los movimientos previstos."
       ],
-      "result_title": "Plan de organización · sin cambios ejecutados",
-      "conclusion": "Una copia puede proponerse para cuarentena. El borrador y el contrato firmado deben mantenerse como versiones distintas.",
-      "output_columns": [
-        "Origen",
-        "Propuesta",
-        "Revisión"
-      ],
-      "output_rows": [
-        [
-          "scan-a.pdf",
-          "Contabilita/2026/2026-06-10_Fattura_INV-07.pdf",
-          "Confirmar destino"
-        ],
-        [
-          "copy.pdf",
-          "Da_verificare/Duplicati_esatti/…",
-          "Cuarentena propuesta"
-        ],
-        [
-          "Ambas versiones del contrato",
-          "Conservar en Contratti/2026",
-          "Describir las versiones"
-        ]
-      ],
-      "check": "Aplicar decisiones compila el plan aprobado, pero no mueve archivos. Al ejecutarlo, las fuentes deben seguir coincidiendo con el inventario.",
-      "question": "El contrato firmado se llama casi igual que el borrador. ¿Podemos borrar uno?",
-      "answer": "No. Son versiones distintas, no duplicados exactos. Conserva ambas salvo que otra actuación revisada determine un destino diferente.",
-      "practice": "Cambia un destino propuesto y comprueba si entra en conflicto con un archivo existente.",
-      "next": "Practica con una carpeta ficticia pequeña. Para trabajo real, selecciona primero cliente registrado y política aplicable."
+      "practice": "Usa la nueva copia client de los archivos de práctica, que añade update-es.md. Pide otro plan, revisa dónde guardar la actualización junto al acuerdo y decide si aplicarlo. Conserva la demostración.",
+      "success": "Sabes leer el plan, cambiar una propuesta y distinguir revisión y aplicación. Si no autorizas movimientos, el resultado sigue siendo un plan para revisar, no una carpeta ya ordenada.",
+      "repeat": "Selecciona un cliente, pide una propuesta y revisa cada cambio. Aplica tras el resumen explícito y conserva el registro."
     }
   }
 }

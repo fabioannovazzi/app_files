@@ -1,0 +1,27 @@
+{
+  "clara/attribute-reporting": {
+    "title": "Mit Clara einen Sortimentsbericht erstellen",
+    "goal": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
+    "scenario": "Ein Produktteam möchte das Sortiment vor seiner nächsten Besprechung verstehen. Beginnen Sie mit einem fiktiven Strickwarenpaket, verfolgen Sie die Berichtserstellung und prüfen Sie Aussagen anhand der Ausgangsprodukte. Wiederholen Sie den Ablauf mit einem aktualisierten Paket.",
+    "scope": "Ein vollständiger erster Bericht aus einem vorhandenen lokalen Datenpaket: Übernahme, Vergleich, Interpretation, unabhängige Prüfung und Übergabe. Website-Erhebung, zentrale Attributzuordnung und Brand Fit sind eigene Aufgaben und werden hier nicht simuliert.",
+    "inputs": "Öffnen Sie brief-de.md und stellen Sie assortment-demo-de.zip bereit. Das Archiv enthält fiktive Produkte, ausdrücklich zugewiesene Neuheiten- und Bestsellergruppen, berechnete Vergleiche und eine Integritätsprüfung. Fertiger Bericht, freigegebene Interpretation und Serverbestätigung sind nicht enthalten.",
+    "request": "Clara, erstelle aus diesem Paket einen Sortimentsbericht für unser Produktteam. Erkläre die Datenabdeckung, vergleiche Bestseller und Neuheiten mit dem übrigen Sortiment und zeige den Bericht mit seinen Prüfungen.",
+    "steps": [
+      "Bestätigen Sie Händler, Kategorie, bereitgestellten Datenstand und Zielgruppe. Clara öffnet das Archiv und prüft seine Integrität. Im Sprachchat erklärt Clara die Ausgangsprodukte und die vom Händler definierten Gruppen.",
+      "Clara erstellt die üblichen Vergleichstabellen und verfasst den Bericht aus den Belegen. Verfolgen Sie einen Vergleich vom Produkt über die Tabelle bis zur Aussage; unterscheiden Sie Sortimentsmerkmale von Absatzmengen und kausalen Erklärungen.",
+      "Eine unabhängige Prüfung bewertet Aussagen und Lesbarkeit; Browserprüfungen untersuchen das HTML. Öffnen Sie den tatsächlichen Bericht, sein Urteil und die Einschränkungen. Finden Sie Zusammenfassung, Tabellen, Produktbelege und nächste Frage für das Team."
+    ],
+    "deliverables": [
+      "Lokaler HTML-Bericht mit Vergleichen, Interpretation, Quellenverweisen und ausdrücklichem Korrektheitsurteil.",
+      "Belegtabellen und Prüfunterlagen, die Urteil und verbleibende Grenzen erläutern."
+    ],
+    "review": "Prüfen Sie Datenstand, Gruppendefinitionen und Belege einer Aussage. Neuheiten sind die in der Quelle festgelegte Gruppe; eine Bestsellerposition liefert keine Absatzmenge. Lesen Sie die Gründe des Urteils vor der Nutzung.",
+    "checkpoints": [
+      "Benennen Sie das benötigte Paket und die Anfrage und erklären Sie Claras Ergebnis.",
+      "Öffnen Sie den Bericht und verfolgen Sie eine Aussage bis zu den Belegen und ihrem Prüfstatus."
+    ],
+    "practice": "Stellen Sie assortment-practice-de.zip mit einer geänderten fiktiven Neuheitengruppe bereit. Fordern Sie einen neuen Bericht für dieselbe Zielgruppe an. Bewahren Sie den ersten auf und vergleichen Sie Änderungen in Belegen und Interpretation.",
+    "success": "Sie können einen Bericht starten, Zusammenfassung und Belege lesen, das Urteil verstehen und den Ablauf mit einem anderen Paket wiederholen.",
+    "repeat": "Stellen Sie ein auf Integrität geprüftes Paket bereit und nennen Sie Zielgruppe und Frage. Clara erstellt, prüft und liefert das HTML lokal. Aktuelle zentrale Daten erfordern einen eigenen authentifizierten Abruf mit den angegebenen Datengrenzen."
+  }
+}

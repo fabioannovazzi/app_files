@@ -1,0 +1,508 @@
+{
+  "schema": "mparanza.course.v1",
+  "product": "vera",
+  "workflow": "bandi-agevolazioni",
+  "revision": "2026-09-14.1",
+  "seconds": [
+    45,
+    60,
+    75,
+    90,
+    75,
+    45
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "sources": [
+    {
+      "path": "modules/bandi-agevolazioni/schemas/application_workbench.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/application_workbench.schema.json",
+      "sha256": "34009ea04a75d93c004cd56c393856e309486151f38b47d87a2fc97607601664"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/case_intake.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/case_intake.schema.json",
+      "sha256": "2dc8b0f94c5eed14724b1710b798a8c2a9f34c6b3ec039349bd7bf1ae64cc3ee"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/intelligence_register.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/intelligence_register.schema.json",
+      "sha256": "1bfeacc7b13b0ced4d61c6756574e12d87f56fb3291a5914896251445d54b543"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/opportunity_handoff.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/opportunity_handoff.schema.json",
+      "sha256": "4f071e9f53bc08ad25cf90339096e1a8243666c4099fd70d80574d6b1b0a70f8"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/opportunity_radar.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/opportunity_radar.schema.json",
+      "sha256": "2ca02d9928336baa048bce408689a535b5894f1e2c72bc2e59003ca19dbdc0aa"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/review_log.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/review_log.schema.json",
+      "sha256": "cb416f6b9c50f97e53b7dffb84bb74898295d0721d0742e7a8efcd575a01b62c"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/run_state.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/run_state.schema.json",
+      "sha256": "7a5014ec410606f93789b17cbed2cba940dc1eefe2d6fce95c69e4953519dd6d"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/schemas/source_register.schema.json",
+      "repository_path": "plugins/bandi-agevolazioni/schemas/source_register.schema.json",
+      "sha256": "c17fa31da08a603e56a50a723e564689f9ab72c2f3fcdd4dabfeb1e68b85c86d"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/case_core.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/case_core.py",
+      "sha256": "9b7641848303a418138355394fac0e15c8a43f98e97bcd0f316acc20ac403f5d"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/check_dependencies.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/check_dependencies.py",
+      "sha256": "0085587722513664dbc4862702c0ccfdd71cfdb6fe9dd4554ddf6f2538348acb"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/deterministic_rules.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/deterministic_rules.py",
+      "sha256": "8182a888c1ac1300d43e17e0f7ff18df0c68b7df5481c4a8efc555ddbf4ebbc7"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/evaluate_intelligence.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/evaluate_intelligence.py",
+      "sha256": "656df2914d94cd7761697c0fa4501a5244ea2eb7c64d311bce598d28bbe466c0"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/initialize_case.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/initialize_case.py",
+      "sha256": "86b95366a38e76349689ace1a49398bfa31c3bc6cf67e05b9977fa9337ee7264"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/intelligence_contract.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/intelligence_contract.py",
+      "sha256": "734ebafbee8841e1c1ceac756ebe3b18604d86abc1bc6301b5a25adfe201e9d3"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/intelligence_workflow.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/intelligence_workflow.py",
+      "sha256": "80a8cb8fab0d8fe66914a4aae4cb2c99a0fb5b3c5c7d83c93484d488ccf4c9ca"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/link_sources.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/link_sources.py",
+      "sha256": "27e20cf001d23308298238e19c6287963ddc13a7ef87ebca8e3c789b538a8594"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/opportunity_radar.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/opportunity_radar.py",
+      "sha256": "8a91f28ab7a7173216c2e60991ed46542887f2958b7aab4ecc094ee1657d749c"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/package_dossier.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/package_dossier.py",
+      "sha256": "ab740143b7079b26a175b926350989723905179405e37bb66650de5f84f3818b"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/record_review.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/record_review.py",
+      "sha256": "e6b3630db6ed69d8b1d644f4b7622e8aa21ae4e47035126026a0224e9007ff9c"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/register_source.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/register_source.py",
+      "sha256": "8bb39b98807489202ae59061cddcde03588363b13697782a83a931b76b0a2d86"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/schema_validation.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/schema_validation.py",
+      "sha256": "962b9ef627c2c3f4116396c7fa001ceac2e303412c4bbde57c1f89ed54582ed9"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/scripts/validate_application.py",
+      "repository_path": "plugins/bandi-agevolazioni/scripts/validate_application.py",
+      "sha256": "9c7f2c8f8411d28f37d0074913b23faed069e605aae0a9e1d88e67e319fe0fd1"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
+      "sha256": "9f3faaf0ae5fc3551851b4bc720fb2e17a4d36221659917c5a62b24ca6201194"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
+      "sha256": "1a3e105a8a83aabe98c6189028e2e598a12784d35ea07afcec38c64dfb96e1fa"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/implementation-status.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/implementation-status.md",
+      "sha256": "85aa449a0b5adee9f1d4caeb36821d96a8a0a4c2750196ab60d14897e352ce5a"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/institutional-discovery.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/institutional-discovery.md",
+      "sha256": "861ff8a070c64a5808aec54fe509a82efd9b35539b7b1e1653adc7f99fecb060"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/opportunity-radar.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/opportunity-radar.md",
+      "sha256": "2d7b73effe79e3656a22611fbce548422b934a06111232a47710b9873aad7e4b"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md",
+      "sha256": "20de5f13f16284125bced3a0b3e12382c56199a0a63ebc0135c9f9b96105d58b"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/product-thesis.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/product-thesis.md",
+      "sha256": "6079d82565bb516f232ad1010d25a6e1af3ec84677470ed9ff5348cc7d7f1696"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/source-first-discovery.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/source-first-discovery.md",
+      "sha256": "bbac3c0bffcaa44ac4d77b6c06be87dc937becad8cb02d06423a6178c35e4d86"
+    },
+    {
+      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/workflow-method.md",
+      "repository_path": "plugins/bandi-agevolazioni/skills/bandi-agevolazioni/references/workflow-method.md",
+      "sha256": "42cb768396007bee5e482461e7ccd4ba8a85adcdeac5052cd3c406a9e7053c8d"
+    },
+    {
+      "path": "skills/bandi-agevolazioni/SKILL.md",
+      "repository_path": "plugins/vera/skills/bandi-agevolazioni/SKILL.md",
+      "sha256": "ff850fd4589a2bc5ed79eee3890f201b5dff36d47b132f36bebf9818ebb9d134"
+    }
+  ],
+  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
+  "files": [],
+  "locales": {
+    "it": {
+      "title": "Un'opportunità interessante è già candidabile?",
+      "goal": "Separare la scoperta di un bando dall'istruttoria documentale per un'impresa concreta.",
+      "scenario": "Un avviso interamente fittizio finanzia macchinari per imprese manifatturiere di una regione. Arco produce componenti e propone un investimento di 80.000 EUR. Mancano le prove sulla sede dell'unità produttiva e sulla data di avvio della spesa.",
+      "request": "Vera, mostrami come passiamo da un bando trovato alla lista delle verifiche per l'impresa.",
+      "scope": "Il bando DEMO non esiste e non è candidabile. Il caso insegna a leggere una fonte e preparare l'istruttoria; i bandi reali richiedono fonti ufficiali correnti.",
+      "input_columns": [
+        "Fonte fittizia",
+        "Condizione o dato",
+        "Evidenza"
+      ],
+      "input_rows": [
+        [
+          "B1 · avviso DEMO, § 2",
+          "Unità produttiva nella regione del bando",
+          "Sede operativa non documentata"
+        ],
+        [
+          "B1 · § 4",
+          "Spese avviate dopo la domanda",
+          "Data ordine non fornita"
+        ],
+        [
+          "C1 · progetto Arco",
+          "Macchinario: 80.000 EUR",
+          "Preventivo disponibile"
+        ]
+      ],
+      "basis": "Le condizioni del solo esempio sono riportate in B1. C1 documenta un progetto, non il possesso di tutti i requisiti. Nessuna percentuale di contributo viene inventata.",
+      "method": [
+        "Nella fase di scoperta definisci l'obiettivo e rivedi le fonti pertinenti. Ogni opportunità resta legata alla fonte e alla sua versione.",
+        "Per l'impresa selezionata apri l'istruttoria: confronta ogni requisito con evidenze aziendali e individua i documenti mancanti.",
+        "Prepara scheda, checklist e dossier rivedibile. Mantieni separati opportunità pertinente, requisito verificato e domanda pronta; non inviare la candidatura."
+      ],
+      "result_title": "DEMO · istruttoria ancora aperta",
+      "conclusion": "Il progetto appare pertinente al tema dell'avviso. Due requisiti decisivi non sono ancora documentati.",
+      "output_columns": [
+        "Verifica",
+        "Esito nel caso",
+        "Prossima evidenza"
+      ],
+      "output_rows": [
+        [
+          "Investimento coerente · B1/C1",
+          "Macchinario descritto",
+          "Confronto tecnico completo"
+        ],
+        [
+          "Localizzazione · B1 § 2",
+          "Non verificata",
+          "Documento dell'unità produttiva"
+        ],
+        [
+          "Avvio spesa · B1 § 4",
+          "Non verificato",
+          "Ordine e cronologia delle spese"
+        ]
+      ],
+      "check": "La pertinenza di un bando non dimostra l'ammissibilità dell'impresa. Una scheda sintetica non sostituisce gli allegati e la versione ufficiale dell'avviso.",
+      "question": "Il preventivo è perfetto: possiamo scrivere che Arco è ammissibile?",
+      "answer": "No. Restano da verificare sede operativa, cronologia e gli altri requisiti della fonte completa. Il risultato corretto è un'istruttoria con punti aperti.",
+      "practice": "Aggiungi un ordine precedente alla domanda nell'esempio: come cambia la verifica del requisito temporale?",
+      "next": "Per un incarico reale scegli l'opportunità e l'impresa; controlla la fonte ufficiale aggiornata prima di promettere un beneficio."
+    },
+    "en": {
+      "title": "An interesting opportunity is not yet an eligible application",
+      "goal": "Separate grant discovery from evidence-based preparation for a specific enterprise.",
+      "scenario": "A wholly fictional call funds machinery for manufacturing businesses in one region. Arco proposes an EUR 80,000 investment. Evidence of the operating location and the date the expenditure started is missing.",
+      "request": "Vera, show how a discovered call becomes a set of checks for this business.",
+      "scope": "The DEMO call does not exist and cannot receive applications. Real opportunities require current official sources.",
+      "input_columns": [
+        "Fictional source",
+        "Condition or fact",
+        "Evidence"
+      ],
+      "input_rows": [
+        [
+          "B1 · DEMO call § 2",
+          "Operating unit in the call's region",
+          "Location not documented"
+        ],
+        [
+          "B1 · § 4",
+          "Expenditure starts after application",
+          "Order date missing"
+        ],
+        [
+          "C1 · Arco project",
+          "Machinery: EUR 80,000",
+          "Quotation supplied"
+        ]
+      ],
+      "basis": "B1 defines only the example's conditions. C1 establishes a project, not satisfaction of every requirement. No grant percentage is invented.",
+      "method": [
+        "Define the discovery objective and review relevant sources. Bind each opportunity to its exact source and version.",
+        "For the selected business, compare every requirement with company evidence and identify missing documents.",
+        "Prepare the opportunity sheet, checklist and reviewable dossier. Distinguish relevance, verified requirements and documentary readiness; do not submit the application."
+      ],
+      "result_title": "DEMO · preparation remains open",
+      "conclusion": "The project is relevant to the call's subject. Two decisive conditions remain undocumented.",
+      "output_columns": [
+        "Check",
+        "Case finding",
+        "Next evidence"
+      ],
+      "output_rows": [
+        [
+          "Investment fit · B1/C1",
+          "Machinery described",
+          "Complete technical comparison"
+        ],
+        [
+          "Location · B1 § 2",
+          "Not verified",
+          "Operating-unit document"
+        ],
+        [
+          "Expenditure start · B1 § 4",
+          "Not verified",
+          "Order and expenditure chronology"
+        ]
+      ],
+      "check": "Relevance does not establish eligibility. A summary sheet does not replace the official call and attachments.",
+      "question": "The quotation is an ideal match. Can we state that Arco is eligible?",
+      "answer": "No. Location, timing and the other conditions in the complete source still require assessment. Deliver the open preparation checks.",
+      "practice": "Add a fictional order dated before the application and reconsider the timing condition.",
+      "next": "Select a real opportunity and enterprise; verify the current official source before promising a benefit."
+    },
+    "fr": {
+      "title": "Une opportunité pertinente est-elle déjà recevable ?",
+      "goal": "Distinguer découverte d'une aide et préparation documentée pour une entreprise précise.",
+      "scenario": "Un appel entièrement fictif finance des machines pour les industriels d'une région. Arco propose 80 000 EUR d'investissement. L'implantation de l'unité et la date de début des dépenses ne sont pas documentées.",
+      "request": "Vera, montre comment passer d'un appel repéré aux vérifications pour cette entreprise.",
+      "scope": "L'appel DEMO n'existe pas et ne reçoit aucune candidature. Les opportunités réelles nécessitent des sources officielles à jour.",
+      "input_columns": [
+        "Source fictive",
+        "Condition ou donnée",
+        "Preuve"
+      ],
+      "input_rows": [
+        [
+          "B1 · appel DEMO § 2",
+          "Unité dans la région concernée",
+          "Implantation non documentée"
+        ],
+        [
+          "B1 · § 4",
+          "Dépenses engagées après la demande",
+          "Date de commande absente"
+        ],
+        [
+          "C1 · projet Arco",
+          "Machine : 80 000 EUR",
+          "Devis fourni"
+        ]
+      ],
+      "basis": "B1 définit les conditions du seul exemple. C1 prouve un projet, pas tous ses critères d'éligibilité. Aucun taux d'aide n'est inventé.",
+      "method": [
+        "Définis l'objectif de recherche et revois les sources pertinentes. Relie chaque opportunité à sa version exacte.",
+        "Pour l'entreprise sélectionnée, confronte les exigences aux pièces et identifie ce qui manque.",
+        "Prépare fiche, vérifications et dossier à revoir. Sépare pertinence, critères vérifiés et préparation documentaire ; ne soumets pas la candidature."
+      ],
+      "result_title": "DEMO · préparation encore ouverte",
+      "conclusion": "Le projet correspond au thème de l'appel. Deux conditions déterminantes restent sans preuve.",
+      "output_columns": [
+        "Vérification",
+        "Constat du cas",
+        "Pièce suivante"
+      ],
+      "output_rows": [
+        [
+          "Investissement · B1/C1",
+          "Machine décrite",
+          "Comparaison technique complète"
+        ],
+        [
+          "Localisation · B1 § 2",
+          "Non vérifiée",
+          "Document de l'unité productive"
+        ],
+        [
+          "Début des dépenses · B1 § 4",
+          "Non vérifié",
+          "Commande et chronologie"
+        ]
+      ],
+      "check": "Pertinence ne signifie pas éligibilité. La fiche ne remplace pas l'appel officiel et ses annexes.",
+      "question": "Le devis correspond parfaitement. Peut-on déclarer Arco éligible ?",
+      "answer": "Non. Implantation, chronologie et autres critères de la source complète restent à vérifier. Le résultat est un dossier avec points ouverts.",
+      "practice": "Ajoute une commande fictive antérieure à la demande et revois le critère temporel.",
+      "next": "Sélectionne l'opportunité et l'entreprise réelles ; vérifie la source officielle actuelle avant de promettre un avantage."
+    },
+    "de": {
+      "title": "Eine passende Förderung ist noch kein belegter Anspruch",
+      "goal": "Fördersuche und beleggestützte Vorbereitung für ein bestimmtes Unternehmen unterscheiden.",
+      "scenario": "Ein vollständig fiktiver Aufruf fördert Maschinen produzierender Unternehmen in einer bestimmten Region. Arco plant EUR 80.000 Investition. Nachweise zum Betriebsstandort und Beginn der Ausgaben fehlen.",
+      "request": "Vera, zeige, wie aus einem gefundenen Förderaufruf konkrete Prüfungen für dieses Unternehmen werden.",
+      "scope": "Der DEMO-Aufruf existiert nicht und nimmt keine Anträge an. Echte Förderungen benötigen aktuelle amtliche Quellen.",
+      "input_columns": [
+        "Fiktive Quelle",
+        "Bedingung oder Fakt",
+        "Beleg"
+      ],
+      "input_rows": [
+        [
+          "B1 · DEMO-Aufruf § 2",
+          "Betriebsstätte in der Förderregion",
+          "Standort nicht dokumentiert"
+        ],
+        [
+          "B1 · § 4",
+          "Ausgabenbeginn nach Antragstellung",
+          "Bestelldatum fehlt"
+        ],
+        [
+          "C1 · Arco-Projekt",
+          "Maschinen: EUR 80.000",
+          "Angebot vorhanden"
+        ]
+      ],
+      "basis": "B1 definiert nur die Bedingungen des Beispiels. C1 belegt ein Vorhaben, nicht die Erfüllung aller Voraussetzungen. Eine Förderquote wird nicht erfunden.",
+      "method": [
+        "Bestimme das Suchziel und prüfe relevante Quellen. Verknüpfe jede Gelegenheit mit ihrer genauen Quelle und Version.",
+        "Vergleiche jede Voraussetzung mit den Unternehmensbelegen und benenne fehlende Unterlagen.",
+        "Erstelle Förderübersicht, Prüfliste und prüfbares Dossier. Unterscheide Relevanz, belegte Voraussetzungen und Dokumentenstand; stelle keinen Antrag."
+      ],
+      "result_title": "DEMO · Vorbereitung noch offen",
+      "conclusion": "Das Vorhaben passt zum Gegenstand des Aufrufs. Zwei entscheidende Bedingungen sind noch nicht belegt.",
+      "output_columns": [
+        "Prüfung",
+        "Befund",
+        "Nächster Beleg"
+      ],
+      "output_rows": [
+        [
+          "Investitionsbezug · B1/C1",
+          "Maschinen beschrieben",
+          "Technischen Vergleich vervollständigen"
+        ],
+        [
+          "Standort · B1 § 2",
+          "Nicht geprüft",
+          "Betriebsstättennachweis"
+        ],
+        [
+          "Ausgabenbeginn · B1 § 4",
+          "Nicht geprüft",
+          "Bestellung und Ausgabenchronologie"
+        ]
+      ],
+      "check": "Relevanz beweist keine Förderfähigkeit. Eine Übersicht ersetzt nicht den amtlichen Aufruf mit Anlagen.",
+      "question": "Das Angebot passt perfekt. Können wir Arco als förderfähig bezeichnen?",
+      "answer": "Nein. Standort, Zeitpunkt und alle weiteren Bedingungen der vollständigen Quelle müssen geprüft werden. Liefere die offenen Vorbereitungspunkte.",
+      "practice": "Ergänze eine fiktive Bestellung vor der Antragstellung und prüfe die zeitliche Bedingung erneut.",
+      "next": "Wähle eine echte Förderung und ein Unternehmen; prüfe die aktuelle amtliche Quelle vor jeder Zusage."
+    },
+    "es": {
+      "title": "Una oportunidad interesante no acredita la elegibilidad",
+      "goal": "Distinguir la búsqueda de ayudas de la preparación documentada para una empresa concreta.",
+      "scenario": "Una convocatoria totalmente ficticia financia maquinaria para fabricantes de una región. Arco propone invertir EUR 80.000. Faltan pruebas del establecimiento y de la fecha de inicio del gasto.",
+      "request": "Vera, muestra cómo una convocatoria encontrada se convierte en comprobaciones para esta empresa.",
+      "scope": "La convocatoria DEMO no existe y no admite solicitudes. Las oportunidades reales requieren fuentes oficiales actuales.",
+      "input_columns": [
+        "Fuente ficticia",
+        "Condición o hecho",
+        "Prueba"
+      ],
+      "input_rows": [
+        [
+          "B1 · convocatoria DEMO § 2",
+          "Establecimiento en la región convocante",
+          "Ubicación sin documentar"
+        ],
+        [
+          "B1 · § 4",
+          "Gasto iniciado después de solicitar",
+          "Falta fecha del pedido"
+        ],
+        [
+          "C1 · proyecto Arco",
+          "Maquinaria: EUR 80.000",
+          "Presupuesto entregado"
+        ]
+      ],
+      "basis": "B1 define solo las condiciones del ejemplo. C1 acredita un proyecto, no el cumplimiento de todos los requisitos. No se inventa un porcentaje de ayuda.",
+      "method": [
+        "Define el objetivo de búsqueda y revisa fuentes pertinentes. Vincula cada oportunidad con fuente y versión exactas.",
+        "Compara cada requisito con las pruebas de la empresa seleccionada e identifica documentos pendientes.",
+        "Prepara ficha, lista de comprobación y dossier revisable. Distingue pertinencia, requisitos verificados y preparación documental; no presentes la solicitud."
+      ],
+      "result_title": "DEMO · preparación todavía abierta",
+      "conclusion": "El proyecto encaja con el objeto de la convocatoria. Dos condiciones decisivas siguen sin documentar.",
+      "output_columns": [
+        "Comprobación",
+        "Resultado del caso",
+        "Próxima prueba"
+      ],
+      "output_rows": [
+        [
+          "Encaje de inversión · B1/C1",
+          "Maquinaria descrita",
+          "Completar comparación técnica"
+        ],
+        [
+          "Ubicación · B1 § 2",
+          "No verificada",
+          "Documento del establecimiento"
+        ],
+        [
+          "Inicio del gasto · B1 § 4",
+          "No verificado",
+          "Pedido y cronología del gasto"
+        ]
+      ],
+      "check": "La pertinencia no demuestra elegibilidad. Una ficha no sustituye la convocatoria oficial y sus anexos.",
+      "question": "El presupuesto encaja perfectamente. ¿Podemos afirmar que Arco es elegible?",
+      "answer": "No. Ubicación, momento y demás condiciones de la fuente completa necesitan evaluación. Entrega las comprobaciones abiertas.",
+      "practice": "Añade un pedido ficticio anterior a la solicitud y reconsidera la condición temporal.",
+      "next": "Selecciona oportunidad y empresa reales y verifica la fuente oficial vigente antes de prometer una ayuda."
+    }
+  }
+}

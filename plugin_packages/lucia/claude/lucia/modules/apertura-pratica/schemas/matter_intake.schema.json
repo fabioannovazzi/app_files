@@ -546,6 +546,7 @@
           "enum": ["fact", "document", "identity", "decision", "register", "other"]
         },
         "description": {"type": "string", "minLength": 1, "maxLength": 5000},
+        "requested_from": {"enum": ["client", "firm", "to_confirm"]},
         "blocking": {"type": "boolean"},
         "status": {"enum": ["open", "resolved", "waived_by_lawyer"]},
         "evidence_ids": {"$ref": "#/$defs/evidence_ids"}

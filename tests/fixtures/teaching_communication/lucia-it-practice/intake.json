@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-it-practice",
+  "reference_date": "2026-09-14",
+  "language": "it",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "objective": "Lo studio vuole preparare una FAQ breve per le piccole imprese clienti in Italia: come riconoscere e organizzare una richiesta di accesso ai dati personali. È un’iniziativa informativa dello studio, non l’annuncio di una nuova legge né una risposta a una persona reale. I lettori gestiscono amministrazione e rapporti con i clienti e devono capire quando coinvolgere chi segue la privacy. Usa la guida ufficiale EDPB selezionata, distinguendo indicazioni generali e valutazioni sul singolo caso. Non sono forniti dati di clienti, richieste reali o una politica privacy aziendale. Prepara il pacchetto per la revisione interna; nessun invio o pubblicazione. Il testo finale deve essere in italiano.\nDopo aver esaminato la FAQ, prepara una nuova versione del pacchetto che comprenda anche una breve email di accompagnamento ai clienti. L’email deve spiegare a chi serve la FAQ e come usarla. Conserva fonti, limiti e prima versione. Non inventare destinatari, allegati già spediti o un nuovo obbligo. Nessun invio.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "studio_format_brief": "Studio Riva — avvocati. Non ci sono logo, recapiti, precedenti comunicazioni o un formato già approvato. Proponi un formato sobrio blu e bianco, con font leggibile, titoli chiari e fonti identificabili. Il professionista lo rivedrà prima dell’uso.",
+  "channels": [
+    "faq",
+    "client_email"
+  ],
+  "visual_requested": false,
+  "source_inputs": [
+    {
+      "id": "SRC-EDPB",
+      "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-it.md",
+      "title": "EDPB guide for small business: rights, handling requests and access",
+      "authority_role": "official_guidance",
+      "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_it"
+    }
+  ],
+  "history_inputs": [],
+  "brand_profile": {
+    "studio_name": "Studio Riva",
+    "primary_color": "#153855",
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "text_color": "#1C2935"
+  },
+  "external_routes": {
+    "public_research": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "creative_production": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  }
+}

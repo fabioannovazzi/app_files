@@ -1,0 +1,5 @@
+# Ciclo Arco
+
+Caso interamente fittizio: Ciclo Arco vende biciclette urbane e da trekking. actual-sales.csv contiene il consuntivo mensile di gennaio e febbraio 2026, in EUR; unità, vendite lorde, sconti e costo del venduto sono disponibili. Importi positivi, punto decimale senza separatori delle migliaia; FX pari a uno. Preparare gennaio e febbraio 2027 a partire dagli stessi mesi del 2026. Ipotesi per la dimostrazione: unità +10% per entrambi i prodotti; prezzi unitari invariati, sconti e costo del venduto proporzionali alle vendite. Nessuna conversione, nessuna sovrapposizione di ipotesi e nessuna stima dei mesi non presenti. Questa è una richiesta di scenario da leggere e confermare durante la lezione, non prova di domanda futura né una conferma professionale precompilata.
+
+Prova: usa lo stesso consuntivo e gli stessi mesi obiettivo, ma cambia l’ipotesi di unità da +10% a +5% per entrambi i prodotti. Prezzi, regole di sconto/costo e valuta restano quelli della dimostrazione. Richiedi un nuovo scenario separato e confronta i riepiloghi; non modificare il primo risultato.

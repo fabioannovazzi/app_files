@@ -1,0 +1,684 @@
+{
+  "channel_drafts": [
+    {
+      "audience_note": "For administration and customer service staff in small businesses in Italy. This information initiative helps organise the first steps after a request arrives. It does not announce a new law or decide an individual case.",
+      "body": "Teaching exercise: Studio Riva and the assignment are fictional; the EDPB guide is an authentic public source.\n\nFor administration and customer service staff in small businesses in Italy. This information initiative helps organise the first steps after a request arrives. It does not announce a new law or decide an individual case.\n\n**How do I recognise one?**\nA person may ask whether you process personal data about them. They may also ask to access those data or receive a copy. These are elements of the access right described in the EDPB guide. If the request’s meaning is unclear, involve the person who handles privacy. [European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n**Who handles the response?**\nThe data controller must respond and facilitate the exercise of rights; the data processor assists the controller. As an organisational first step, refer the request to the person who handles privacy so they can check the business’s role and coordinate the response. [European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n**What should we record first?**\nSuggested approach: retain the request and its receipt date, identify who is taking it forward, and record subsequent steps. The guide recommends internal procedures, staff training, knowledge of data flows and a record of requests and replies. This reminder does not replace your business’s procedure. [European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n**How much time is available?**\nThe guide states a response period of one month. If the request is too complex and more time is needed, the period may be extended by two further months, provided the person is informed within one month of receipt. Ask whoever coordinates the response to check the actual deadline and any extension; do not assume three months are always available. [European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n**Is sending a document enough?**\nAccess covers confirmation of processing and, where data are processed, access to the data and information such as purposes, categories, recipients and retention. The guide lists further required information. Before supplying a copy, check the rights and freedoms of others: a document may contain data about several people. Have the proposed disclosure reviewed before sending it. [European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\n**Can we charge or refuse?**\nA copy of the person’s own data is normally free. The guide describes particular conditions for additional copies or demonstrably manifestly unfounded or excessive requests. A repeated request should not automatically be refused. If a request is not granted, the person must be told within one month why, and about the possibility of complaining to the national authority and seeking a judicial remedy. Involve whoever handles privacy before deciding on fees or refusal. [European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)\n\nGeneral information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available.",
+      "channel": "faq",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-006",
+        "CLAIM-007",
+        "CLAIM-008",
+        "CLAIM-009",
+        "CLAIM-010"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "European Data Protection Board (EDPB), data protection guide for small business, “Respect individuals’ rights”, sections on handling requests and access. Extract captured on 14 September 2026; official guidance, not a new legislative instrument. https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en"
+        }
+      ],
+      "sections": [],
+      "title": "Receiving a personal data access request: six questions"
+    },
+    {
+      "audience_note": "For administration and customer service staff in small businesses in Italy. This information initiative helps organise the first steps after a request arrives. It does not announce a new law or decide an individual case.",
+      "body": "Teaching exercise: Studio Riva and the assignment are fictional; the EDPB guide is an authentic public source.\n\n“Receiving a personal data access request: six questions” is for administration and customer service staff in small businesses in Italy. Use the FAQ to recognise a request, record its receipt and involve the person who handles privacy.\n\nIts guidance on response periods and checks before disclosure draws on the official EDPB guide. It helps organise the first steps; it does not replace your business’s procedure or assessment of an individual request. It does not announce a new obligation.\n\n[European Data Protection Board (EDPB)](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en)",
+      "channel": "client_email",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-007"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "European Data Protection Board (EDPB), data protection guide for small business, “Respect individuals’ rights”, sections on handling requests and access. Extract captured on 14 September 2026; official guidance, not a new legislative instrument. https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en"
+        }
+      ],
+      "sections": [],
+      "subject": "How to use the personal data access FAQ",
+      "title": "How to use the personal data access FAQ"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-001",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The right of access includes confirmation of whether the person’s personal data are being processed.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-002",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The data controller must respond to rights requests and facilitate their exercise; the data processor assists the controller.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-003",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The guide recommends internal procedures, staff training, knowledge of data flows, and recording requests and responses.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-004",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The guide states a response period of one month.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-005",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "If a request is too complex and more time is needed, the guide allows two further months provided the person is informed within one month of receipt.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-006",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Where data are processed, access includes personal data and information about processing, including purposes, categories, recipients and retention; these examples do not exhaust the guide’s list.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-007",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Before providing a copy of personal data, the rights and freedoms of others must be checked.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-008",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The person is entitled to a free copy of their processed personal data; the guide allows a reasonable administrative-cost-based fee for additional copies.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-009",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "The guide permits a reasonable fee or refusal for a demonstrably manifestly unfounded or excessive request; repetition alone does not make that conclusion automatic.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    },
+    {
+      "id": "CLAIM-010",
+      "professional_judgment": "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "If a request is not granted, within one month of receipt the person must be informed of the reasons, the possibility of a complaint to the national authority and a judicial remedy.",
+      "temporal_qualification": "Reference: 14 September 2026, the selected extract’s capture date. No new commencement date is announced.",
+      "uncertainty": "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available."
+    }
+  ],
+  "editorial_value": {
+    "audience_value": "The person receiving a message can identify what to flag, whom to involve and which decisions need review.",
+    "banality_check": "Genericity is a risk; the six questions reduce it by connecting roles, records, timing and copy checks to a concrete task.",
+    "decision_enabled": "It enables staff to organise a request and refer the relevant questions to the response coordinator, without deciding extensions, fees or refusal alone.",
+    "decision_limit": "It cannot determine the answer owed to an individual or establish business compliance.",
+    "distinct_angle": "The FAQ follows administration and customer service work from recognition to coordinated handling.",
+    "practical_use": "It can serve as an initial reminder alongside the business’s procedure and its privacy contact.",
+    "publication_judgment": "A useful proposal for internal review. The editorial recommendation does not authorise sending or publication.",
+    "reason_now": "The firm has explicitly chosen to prepare staff for incoming requests; there is no new legislative event.",
+    "repetition_check": "No previous communication was selected, so repetition and established house conventions cannot be assessed.",
+    "source_specific_information": "The one-month period, conditional extension, controller/processor distinction and check on others’ rights give the communication source-specific substance."
+  },
+  "master_brief": {
+    "actions": [
+      "Suggested approach: retain the request and its receipt date, identify who is taking it forward, and record subsequent steps. The guide recommends internal procedures, staff training, knowledge of data flows and a record of requests and replies. This reminder does not replace your business’s procedure.",
+      "The organisational steps are proposed working practices to adapt. They do not attest an approved procedure or resolve a case."
+    ],
+    "caveats": [
+      "General information from the selected EDPB extract. The business’s role, data to disclose, actual deadline, possible fees and refusal grounds require individual assessment. No real request or business procedure is available.",
+      "A useful proposal for internal review. The editorial recommendation does not authorise sending or publication.",
+      "Teaching exercise: Studio Riva and the assignment are fictional; the EDPB guide is an authentic public source."
+    ],
+    "effective_dates": [],
+    "practical_implications": [
+      "The data controller must respond to rights requests and facilitate their exercise; the data processor assists the controller.",
+      "The guide states a response period of one month.",
+      "If a request is too complex and more time is needed, the guide allows two further months provided the person is informed within one month of receipt.",
+      "Before providing a copy of personal data, the rights and freedoms of others must be checked."
+    ],
+    "what_changed": "For administration and customer service staff in small businesses in Italy. This information initiative helps organise the first steps after a request arrives. It does not announce a new law or decide an individual case.",
+    "who_may_be_affected": "Address non-specialist staff clearly. For administration and customer service staff in small businesses in Italy. This information initiative helps organise the first steps after a request arrives. It does not announce a new law or decide an individual case."
+  },
+  "recommendation": "publish",
+  "recommendation_reason": "A useful proposal for internal review. The editorial recommendation does not authorise sending or publication. The person receiving a message can identify what to flag, whom to involve and which decisions need review.",
+  "run_id": "lucia-en-practice",
+  "schema_version": 1,
+  "source_assessments": [
+    {
+      "authority_assessment": "European Data Protection Board (EDPB); data protection guide for small business, “Respect individuals’ rights”, sections on handling requests and access. Extract captured on 14 September 2026; official guidance, not a new legislative instrument.",
+      "limitations": "Selected official guidance, not the complete legislation or an opinion on a matter. Only the supplied extract supports this contribution; linked legal texts were not supplied as separate evidence.",
+      "semantic_role": "clarifying",
+      "source_id": "SRC-EDPB"
+    }
+  ],
+  "studio_profile_proposal": {
+    "derived_from_history_ids": [],
+    "document": {
+      "circular_label": "Information note",
+      "closing": "Kind regards",
+      "contact_rail_lines": [],
+      "date_pattern": "day month year",
+      "font_family": "Helvetica",
+      "footer_pattern": "Studio Riva | General information",
+      "layout": {
+        "body_font_size_pt": 11,
+        "body_leading_pt": 15,
+        "bottom_margin_mm": 20,
+        "contact_rail_width_mm": 35,
+        "heading_font_size_pt": 12,
+        "left_margin_mm": 20,
+        "logo_height_mm": 12,
+        "logo_width_mm": 35,
+        "right_margin_mm": 20,
+        "rule_width_pt": 0.5,
+        "subject_font_size_pt": 16,
+        "top_margin_mm": 25
+      },
+      "numbering_pattern": "year/sequential number, assigned after review",
+      "page_size": "A4",
+      "recipient_pattern": "For interested clients",
+      "section_style": "unnumbered",
+      "signature_lines": [
+        "Studio Riva — lawyers"
+      ],
+      "subject_prefix": "Subject",
+      "use_contact_rail": false
+    },
+    "email": {
+      "attachment_note": "Mention an attachment only when it is actually present in the package.",
+      "closing": "Kind regards",
+      "salutation": "Dear clients",
+      "signature_lines": [
+        "Studio Riva — lawyers"
+      ],
+      "subject_pattern": "Studio Riva | {subject}"
+    },
+    "field_provenance": [
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.audience_stance"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.rhythm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.technical_density"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.formality"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.openings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.closings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Fact or preference explicitly supplied in the firm brief; no inference from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formatting"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.avoid"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.page_size"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.font_family"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.left_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.right_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.top_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.bottom_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_height_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.contact_rail_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_leading_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.subject_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.heading_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.rule_width_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.recipient_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.circular_label"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.numbering_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.subject_prefix"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.section_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.use_contact_rail"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Fact or preference explicitly supplied in the firm brief; no inference from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.contact_rail_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.footer_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Fact or preference explicitly supplied in the firm brief; no inference from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.subject_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.salutation"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Fact or preference explicitly supplied in the firm brief; no inference from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "email.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.attachment_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Fact or preference explicitly supplied in the firm brief; no inference from previous communications.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "website.byline_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.heading_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.source_heading"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.cta"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.show_update_date"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.preferred_format"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.opening_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.closing_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.hashtags"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.show_source_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Initial model proposal for professional review. No selected history or approved format supports it; logo and contact-column dimensions are unused reserves while no assets or contacts are supplied.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.carousel_identity_placement"
+        ],
+        "history_ids": []
+      }
+    ],
+    "social": {
+      "carousel_identity_placement": "close_only",
+      "closing_style": "A clear limit and a useful next step.",
+      "hashtags": [],
+      "opening_style": "A concrete reader question.",
+      "preferred_format": "text",
+      "show_source_note": true
+    },
+    "voice": {
+      "audience_stance": "Address non-specialist staff clearly.",
+      "avoid": [
+        "Invented urgency",
+        "Compliance promises",
+        "Unsupplied client stories"
+      ],
+      "closings": "Close with the use limit and referral to the appropriate person.",
+      "formality": "Professional and measured.",
+      "formatting": "Restrained blue and white format, clear headings and identifiable sources, as requested.",
+      "openings": "Open with the reader’s practical problem.",
+      "rhythm": "Short sentences, one question per section.",
+      "technical_density": "Explain necessary terms and point to the source for detail."
+    },
+    "website": {
+      "byline_pattern": "Studio Riva — lawyers",
+      "cta": "Involve the person who handles privacy for an individual case.",
+      "date_pattern": "day month year",
+      "heading_style": "question_led",
+      "show_update_date": true,
+      "source_heading": "Sources"
+    }
+  },
+  "visual_story": {
+    "decision": "omit",
+    "decision_reason": "The questions and answers already provide a short, readable sequence; a visual would repeat the material without additional usefulness.",
+    "incremental_value": "",
+    "slides": [],
+    "title": ""
+  }
+}

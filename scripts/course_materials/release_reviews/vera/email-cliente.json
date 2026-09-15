@@ -1,0 +1,267 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "email-cliente",
+  "course_sha256": "2ba25d56a504d9fb8b9e708fa23fb6fe20e34d77cce186aae870ec7c7066c97a",
+  "reviewer": "Codex: five lesson outlines, fictional source documents, reviewed request records and ten actual native drafts",
+  "reviewed_at": "2026-09-14T16:37:52.454006+00:00",
+  "review_scope": "Prepared local draft lesson only. Every generated Markdown draft was read in full. The normal source-file package remains blocked by unresolved evidence and rejected out-of-scope requests; its generated client email is explicitly a draft. Native review and replacement calls and output hashes are verified. Fixed test decisions do not attest a real professional approval, learner action, sending, voice or two-window acceptance.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches a complete small task: provide a client file, select the document confirmations actually needed, prepare the email, review it and update it after a reply. The learner is not asked to name an internal helper or design automation.",
+        "inputs_and_request": "Read the fictional CU and F24 transcriptions, the localized case context and the client reply. The source forms keep Italian field names and explicitly invented figures; the context limits the task to two document confirmations for the Italian 2026 campaign. The natural-language request states those questions and asks to review them before drafting.",
+        "execution_and_checkpoints": "The actual current client-file pipeline imports the sources. Native review tools save and apply the selected requests before the drafting input contains email_request records. The working chat performs that work while voice explains the available documents and missing confirmations. The checkpoints ask the learner to name the needed confirmation and trace each final question to its reviewed request.",
+        "deliverable_and_next_action": "Read both actual short Markdown drafts in full. Each has a localized subject, CLIENT-001 greeting, one or two precise requests and a concise closing. Questions ask whether further CUs exist or the F24 set is complete, rather than requesting the already supplied files again. The broader file remains blocked by unresolved evidence; the learner reviews and uses the draft through the practice usual email channel after checking the recipient.",
+        "practice_and_repeat": "The new fictional reply confirms all F24s were supplied while leaving the CU question open. The separate current practice execution writes only the CU question. Every native draft replacement retains the original local preview and records its new hash; these isolated tests do not claim a human completed a same-session exercise. The outline explicitly asks to keep the first lesson version and explains how to resume a real file.",
+        "language_and_pacing": "Read the it outline, localized context and client reply, and both actual drafts. The prose is short and usable in the selected language. CU/F24 remain the original Italian document names, explained by the case. The six teaching stages total 390 seconds; processing and questions can extend the session, and no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[demo-it]",
+        "result_review": "The draft asks both whether more CUs exist and whether all campaign F24s were supplied. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "bef1d42893f10125c4e1247f99f6655208c9bc7c8fc8411ccd16e720465c98d1"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "4cb3e418193b885a211aa6b1fbc590eefe091aeec2512d23e398b4cb649ec16a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[practice-it]",
+        "result_review": "The draft asks only about other CUs after the new client reply; the resolved F24 request is absent. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "cf4d8a0565e9e6470519d2861afa4cc7d71f03c4d7166e0202204da99371990c"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "2d44eb9f7d5cf9d8a403ea4f0f982810697f8ce668990ba6a23da8969652794e"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches a complete small task: provide a client file, select the document confirmations actually needed, prepare the email, review it and update it after a reply. The learner is not asked to name an internal helper or design automation.",
+        "inputs_and_request": "Read the fictional CU and F24 transcriptions, the localized case context and the client reply. The source forms keep Italian field names and explicitly invented figures; the context limits the task to two document confirmations for the Italian 2026 campaign. The natural-language request states those questions and asks to review them before drafting.",
+        "execution_and_checkpoints": "The actual current client-file pipeline imports the sources. Native review tools save and apply the selected requests before the drafting input contains email_request records. The working chat performs that work while voice explains the available documents and missing confirmations. The checkpoints ask the learner to name the needed confirmation and trace each final question to its reviewed request.",
+        "deliverable_and_next_action": "Read both actual short Markdown drafts in full. Each has a localized subject, CLIENT-001 greeting, one or two precise requests and a concise closing. Questions ask whether further CUs exist or the F24 set is complete, rather than requesting the already supplied files again. The broader file remains blocked by unresolved evidence; the learner reviews and uses the draft through the practice usual email channel after checking the recipient.",
+        "practice_and_repeat": "The new fictional reply confirms all F24s were supplied while leaving the CU question open. The separate current practice execution writes only the CU question. Every native draft replacement retains the original local preview and records its new hash; these isolated tests do not claim a human completed a same-session exercise. The outline explicitly asks to keep the first lesson version and explains how to resume a real file.",
+        "language_and_pacing": "Read the en outline, localized context and client reply, and both actual drafts. The prose is short and usable in the selected language. CU/F24 remain the original Italian document names, explained by the case. The six teaching stages total 390 seconds; processing and questions can extend the session, and no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[demo-en]",
+        "result_review": "The draft asks both whether more CUs exist and whether all campaign F24s were supplied. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "b0ef1f1fd1d2ebd73c34a4dbd75c43c3192cd25657801aed10d90580dd72f650"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "396c1742ff878292e6badbeaa00f735b4d2c2d2e3bf0d4f21ee95b033475060d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[practice-en]",
+        "result_review": "The draft asks only about other CUs after the new client reply; the resolved F24 request is absent. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "6c33539f2c443f327edad57204a9d9fc352f03874c087268368863503072f36f"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "cad4fb4e088584676d8a11a85bf5cefa3ab163d314f687203d5054896ef2bb11"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches a complete small task: provide a client file, select the document confirmations actually needed, prepare the email, review it and update it after a reply. The learner is not asked to name an internal helper or design automation.",
+        "inputs_and_request": "Read the fictional CU and F24 transcriptions, the localized case context and the client reply. The source forms keep Italian field names and explicitly invented figures; the context limits the task to two document confirmations for the Italian 2026 campaign. The natural-language request states those questions and asks to review them before drafting.",
+        "execution_and_checkpoints": "The actual current client-file pipeline imports the sources. Native review tools save and apply the selected requests before the drafting input contains email_request records. The working chat performs that work while voice explains the available documents and missing confirmations. The checkpoints ask the learner to name the needed confirmation and trace each final question to its reviewed request.",
+        "deliverable_and_next_action": "Read both actual short Markdown drafts in full. Each has a localized subject, CLIENT-001 greeting, one or two precise requests and a concise closing. Questions ask whether further CUs exist or the F24 set is complete, rather than requesting the already supplied files again. The broader file remains blocked by unresolved evidence; the learner reviews and uses the draft through the practice usual email channel after checking the recipient.",
+        "practice_and_repeat": "The new fictional reply confirms all F24s were supplied while leaving the CU question open. The separate current practice execution writes only the CU question. Every native draft replacement retains the original local preview and records its new hash; these isolated tests do not claim a human completed a same-session exercise. The outline explicitly asks to keep the first lesson version and explains how to resume a real file.",
+        "language_and_pacing": "Read the fr outline, localized context and client reply, and both actual drafts. The prose is short and usable in the selected language. CU/F24 remain the original Italian document names, explained by the case. The six teaching stages total 390 seconds; processing and questions can extend the session, and no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[demo-fr]",
+        "result_review": "The draft asks both whether more CUs exist and whether all campaign F24s were supplied. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "e15c60af0dbfd308a80cde82bf6cf8a0870b60b2ec8d963862e1e6304c3c3f29"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "fbcaece13590d0efe2c31ce4497d625138dbd7ab69e3b66956040ee874207a58"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[practice-fr]",
+        "result_review": "The draft asks only about other CUs after the new client reply; the resolved F24 request is absent. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "34fec1d7b15513204717f0903d3979e5645143cde9e6aa63f4592fece794ffc8"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "e8ae3a0f395a26c482f1b873815535fbb1757a8fdcdf23a799160827541026b5"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches a complete small task: provide a client file, select the document confirmations actually needed, prepare the email, review it and update it after a reply. The learner is not asked to name an internal helper or design automation.",
+        "inputs_and_request": "Read the fictional CU and F24 transcriptions, the localized case context and the client reply. The source forms keep Italian field names and explicitly invented figures; the context limits the task to two document confirmations for the Italian 2026 campaign. The natural-language request states those questions and asks to review them before drafting.",
+        "execution_and_checkpoints": "The actual current client-file pipeline imports the sources. Native review tools save and apply the selected requests before the drafting input contains email_request records. The working chat performs that work while voice explains the available documents and missing confirmations. The checkpoints ask the learner to name the needed confirmation and trace each final question to its reviewed request.",
+        "deliverable_and_next_action": "Read both actual short Markdown drafts in full. Each has a localized subject, CLIENT-001 greeting, one or two precise requests and a concise closing. Questions ask whether further CUs exist or the F24 set is complete, rather than requesting the already supplied files again. The broader file remains blocked by unresolved evidence; the learner reviews and uses the draft through the practice usual email channel after checking the recipient.",
+        "practice_and_repeat": "The new fictional reply confirms all F24s were supplied while leaving the CU question open. The separate current practice execution writes only the CU question. Every native draft replacement retains the original local preview and records its new hash; these isolated tests do not claim a human completed a same-session exercise. The outline explicitly asks to keep the first lesson version and explains how to resume a real file.",
+        "language_and_pacing": "Read the de outline, localized context and client reply, and both actual drafts. The prose is short and usable in the selected language. CU/F24 remain the original Italian document names, explained by the case. The six teaching stages total 390 seconds; processing and questions can extend the session, and no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[demo-de]",
+        "result_review": "The draft asks both whether more CUs exist and whether all campaign F24s were supplied. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "a6e5da97c045e5eaee09b6d2a9988ba5dcfd471958b34bc3013575da8235c4a4"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "18c01a06f2a6e3dec4f671ab1cabdfb77083ff22d0b2c65fcb83a02e31aa32a0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[practice-de]",
+        "result_review": "The draft asks only about other CUs after the new client reply; the resolved F24 request is absent. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "cf08f8eb01516b102f4fb9deae0ec3d6c265a070fadd25d9875bdf9eda253c51"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "d50f6a8bf93d68e2d8cd1d8561a3ce8c9f969d6b68ec067d2f09fa75c57919dd"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches a complete small task: provide a client file, select the document confirmations actually needed, prepare the email, review it and update it after a reply. The learner is not asked to name an internal helper or design automation.",
+        "inputs_and_request": "Read the fictional CU and F24 transcriptions, the localized case context and the client reply. The source forms keep Italian field names and explicitly invented figures; the context limits the task to two document confirmations for the Italian 2026 campaign. The natural-language request states those questions and asks to review them before drafting.",
+        "execution_and_checkpoints": "The actual current client-file pipeline imports the sources. Native review tools save and apply the selected requests before the drafting input contains email_request records. The working chat performs that work while voice explains the available documents and missing confirmations. The checkpoints ask the learner to name the needed confirmation and trace each final question to its reviewed request.",
+        "deliverable_and_next_action": "Read both actual short Markdown drafts in full. Each has a localized subject, CLIENT-001 greeting, one or two precise requests and a concise closing. Questions ask whether further CUs exist or the F24 set is complete, rather than requesting the already supplied files again. The broader file remains blocked by unresolved evidence; the learner reviews and uses the draft through the practice usual email channel after checking the recipient.",
+        "practice_and_repeat": "The new fictional reply confirms all F24s were supplied while leaving the CU question open. The separate current practice execution writes only the CU question. Every native draft replacement retains the original local preview and records its new hash; these isolated tests do not claim a human completed a same-session exercise. The outline explicitly asks to keep the first lesson version and explains how to resume a real file.",
+        "language_and_pacing": "Read the es outline, localized context and client reply, and both actual drafts. The prose is short and usable in the selected language. CU/F24 remain the original Italian document names, explained by the case. The six teaching stages total 390 seconds; processing and questions can extend the session, and no measured learner duration is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[demo-es]",
+        "result_review": "The draft asks both whether more CUs exist and whether all campaign F24s were supplied. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "9601a79efc5620d08f1eb43264b1ec2f227ec1e2368d5cb4a2724fdf662fda0b"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "b5ccca59151f6da385638c2eeac1f556a2e9733a9d847200ebf6101425e5c764"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_client_email_kit_runs_intake_review_and_sealed_draft_replacement[practice-es]",
+        "result_review": "The draft asks only about other CUs after the new client reply; the resolved F24 request is absent. The exact draft is saved through the native reviewed-replacement tool, registered by hash, and its original preview remains available. Each question matches the reviewed handoff item. The file package remains blocked by unresolved/rejected requests, and no sending or learner approval is recorded.",
+        "reviewed_artifacts": [
+          {
+            "name": "04_bozza_email_cliente.md",
+            "sha256": "f113430130f641772b9fd8a3a897b91b5000965f763caae57b81fcaea501745f"
+          },
+          {
+            "name": "applied_decisions.json",
+            "sha256": "338b5837e333bc967324d7ca238d86590ab234b0f52d1206090fbc46f1ec0ca5"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.153146+00:00",
+    "previous_course_sha256": "7b9a555724aa0a967ba6858de11b72bce642955d0563370b8050030d61c71e2e",
+    "source_snapshot": "/private/tmp/client-email-teaching-refresh-02/test_client_email_kit_runs_int6/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/reporting_table.py",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.346146+00:00",
+    "previous_course_sha256": "b3a2c13966fe21a90cbb02284a87cc32cc1c5626fe6613927d37c9de5a5a94fd",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/vera/skills/email-cliente/SKILL.md",
+        "before": "9c75cbfaeecb5cd1e3310abc2c17ae6eb7b2e36fa2c52de218bac7ca37e1c0d2",
+        "after": "5a1abf9e8c28aed45ea7ccf31742798546a8175f3c5ecffce0405eab2069978a"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  }
+}

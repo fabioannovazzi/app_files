@@ -1,0 +1,3 @@
+# Unternehmen und Auftrag
+
+Vollständig fiktiver Fall: Officina Arco, italienisches Unternehmen, ein Standort, zwölf Beschäftigte, Fahrzeugreparaturen für lokale Kunden. Elena Bianchi leitet den Betrieb und genehmigt Zahlungen; Paolo Neri koordiniert die Werkstatt; Sara Rossi verwaltet Unterlagen und Fälligkeiten. Die externe Kanzlei bucht und erstellt die Monatsübersicht, übernimmt aber keinen Forderungseinzug. Der Auftrag betrifft Zuständigkeiten, Monatsabschluss und Nutzung von Informationen für Zahlungseingänge zum 31. März 2026, nicht alle Unternehmensprozesse. Eine Verfahrensbeschreibung und ein Betriebsbeispiel für Februar liegen vor; Liquiditätsvorschau und weitere Abschlusszyklen fehlen.

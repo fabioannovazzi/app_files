@@ -1179,7 +1179,7 @@ def test_statement_output_records_complete_reproducibility_context(
     assert context["filing_campaign_year"] == 2026
     assert context["taxonomy_checksum"] == case["taxonomy_checksum"]
     assert context["model_version"] is None
-    assert context["template_version"] == "statement-engine-v1"
+    assert context["template_version"] == "statement-engine-v2"
 
 
 def test_apply_mapping_decisions_unbalanced_split_is_rejected(tmp_path: Path) -> None:
@@ -1295,6 +1295,56 @@ def test_reviewed_presentation_adjustment_preserves_precision_and_exposes_roundi
     assert cash["derivation"]["adjustment_refs"] == ["reclass_receivable_1"]
     assert rounding["amount"] == "-1.00"
     assert rounding["repairs_substantive_imbalance"] is False
+
+
+@pytest.mark.parametrize(("current", "prior"), [("10", "-5"), ("-10", "5")])
+def test_reviewed_result_in_equity_is_included_once_in_balance_sheet_total(
+    tmp_path: Path, current: str, prior: str
+) -> None:
+    case = _prepared_case(tmp_path)
+    case = xbrl_case.record_adjustments(
+        case,
+        [
+            {
+                "adjustment_id": "result_reclassification",
+                "reason": "Reviewed reclassification within equity for the arithmetic test",
+                "lines": [
+                    {
+                        "canonical_line": "SP.PASSIVO.DEBITI",
+                        "statement_section": "LIABILITIES_EQUITY",
+                        "xbrl_concept": "itcc:LiabilitiesEquity",
+                        "xbrl_sign_multiplier": "-1",
+                        "current_amount": current,
+                        "prior_amount": prior,
+                    },
+                    {
+                        "canonical_line": "Result in equity",
+                        "statement_section": "EQUITY_RESULT",
+                        "current_amount": str(-Decimal(current)),
+                        "prior_amount": str(-Decimal(prior)),
+                    },
+                ],
+            }
+        ],
+        "reviewer_1",
+        case["revision_id"],
+    )
+
+    result = xbrl_case.build_statements(case, "preparer_1", case["revision_id"])
+
+    assert result["statements"]["section_totals"]["LIABILITIES_EQUITY"] == {
+        "current": "-100.00",
+        "prior": "-90.00",
+    }
+    assert result["statements"]["rounding_adjustments"] == []
+    assert sum(
+        Decimal(fact["current_value"])
+        for fact in result["statements"]["facts"]
+        if fact["statement_section"] == "EQUITY_RESULT"
+    ) == -Decimal(current)
+    # Arithmetic grouping must not create a profit or approve its treatment.
+    assert "INCOME_RESULT" not in result["statements"]["section_totals"]
+    assert result["approval"] is None
 
 
 def test_unbalanced_presentation_adjustment_is_rejected(tmp_path: Path) -> None:
@@ -4112,11 +4162,12 @@ def test_preview_has_keyboard_and_screen_reader_table_structure(
     assert root.xpath('//a[@class="skip-link" and @href="#main-content"]')
     assert root.xpath('//main[@id="main-content" and @tabindex="-1"]')
     tables = root.xpath("//table")
-    assert len(tables) == 6
+    assert len(tables) == 1  # Only the populated statements need a table.
+    assert not root.xpath("//table[not(tbody/tr)]")
     assert all(table.find("caption") is not None for table in tables)
     assert all(header.get("scope") == "col" for header in root.xpath("//th"))
     regions = root.xpath('//div[@role="region"]')
-    assert len(regions) == 6
+    assert len(regions) == 1
     assert all(region.get("tabindex") == "0" for region in regions)
 
 

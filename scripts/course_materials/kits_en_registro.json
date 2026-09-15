@@ -1,0 +1,27 @@
+{
+  "vera/registro-imprese-sari": {
+    "title": "Prepare a Registro Imprese practice with Vera",
+    "goal": "Learn to provide the case, follow source checks and use the practice plan and document checklist for review.",
+    "scenario": "A company asks to update its registered PEC address. Prepare the professional’s work from the request and available facts through to the plan for review.",
+    "scope": "The complete preparation process in a simple case: facts, sources, proposal, checks and review. SARI helps locate guidance; Vera produces a professional-review package without filing.",
+    "inputs": "Open company-en.md for the request, company, chamber, addresses and stated date. sources-en.md lists public pages to verify. No credentials or technical instructions are needed.",
+    "request": "Vera, prepare the Registro Imprese practice described in this file. Check relevant sources and show me the plan, documents to request and proposals to review. Do not access portals or submit the filing.",
+    "steps": [
+      "In the working chat, Vera opens the case and reads the documents. In the voice chat, it explains the practice being prepared and missing facts. Review the chamber, operation and proposed data.",
+      "Vera checks current official sources and links proposals to case facts. If a SARI card must be selected, it shows relevant choices and waits for yours. Voice explains the current step.",
+      "Open studio_checklist.md and the generated plan. Follow one fact from the request to a proposed field and its source. Review lets you accept, request documents or ask for a change; a requested change still needs to be carried out."
+    ],
+    "deliverables": [
+      "Practice plan with fields, documents, checks and sources.",
+      "Studio checklist, any question drafted for SARI and review handoff with open points."
+    ],
+    "review": "Check that the plan matches the request. Find a fact requiring confirmation and the evidence to obtain. This is a professional draft: accepted review is neither filing nor portal access.",
+    "checkpoints": [
+      "Explain what you give Vera and which result you expect.",
+      "Find a proposed field, its supporting document and the professional’s next check."
+    ],
+    "practice": "Read update-en.md and request the new version. Check that address and date match the updated request, missing evidence remains visible and the first version is preserved.",
+    "success": "You can start preparation, navigate the plan and sources, review proposals and update the case after a changed request.",
+    "repeat": "Provide the client’s request, available documents, chamber and known dates. Ask Vera for the plan and checks, then review proposals and gaps before the normal professional filing process."
+  }
+}

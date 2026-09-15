@@ -269,6 +269,17 @@ partita IVA remain separate facts. Blank values never overwrite verified
 facts. Multiple representatives and beneficial owners remain separate stable
 records.
 
+The assessment date does not establish when the engagement begins. Keep
+`engagement.start_date` null until it is supplied; an unknown start date leaves
+engagement terms incomplete.
+
+Unassessed AML scores are `null`, never a default score of 1. Keep missing
+inherent risk and included A/B factor scores proposed. The dossier can be
+prepared while these are unresolved, but it has no calculated risk band,
+baseline treatment or periodic review date. Supply actual assessed scores
+before requesting a calculation; a missing score cannot be confirmed. An
+existing enhanced-verification requirement is preserved while inputs are missing.
+
 ### 2. Bind evidence and current sources
 
 Prefer a reviewed `client-file-preparation` run. Verify the supplied run ID, exact
@@ -383,6 +394,18 @@ the current hash binding. Validation must fail until the package is regenerated
 and reviewed at a new revision. Preserve review history and use a new run
 directory for regenerated domain artifacts.
 
+Before delivery, read the actual case and author a concise `client_questions.md`
+with specific requests for documents or clarifications, their case basis, and
+the studio's collection method when supplied. The generated
+`client_missing_information_draft.md` is a mechanical checklist; do not deliver
+its generic labels as a finished client request. Keep professional decisions
+about screening, risk scores, privacy and legal applicability in `run_review.md`.
+Do not ask the client to approve those decisions. The review must state the
+requested service, what the evidence establishes, what is still unverified,
+the current outcome, and the next step. Link the memo, client questions and
+review in the final Artifact Card. These are drafts for the studio; no message
+is sent by this workflow.
+
 After adding any assistant-authored review summary, client questions, or copied
 source-evidence files to the delivered dossier, seal the complete final folder:
 
@@ -395,9 +418,13 @@ python scripts/delivery_manifest.py seal \
 Run this only after the last package rebuild, after the final copy to the
 delivery folder, and after applying owner-only modes. It validates the packaged
 New Client contract, requires `0700` on every directory and `0600` on every
-file, rejects host/provider names in assistant-authored user-facing text,
+file, rejects host/provider names in ordinary assistant-authored dossier text,
 rejects supplemental run IDs that differ from `final_artifacts.json`, and
 writes `delivery_manifest.json` with receipts for every other delivered file.
+Build and validate the native `model_data_report.json` and
+`model_data_report.md` before sealing and finalizing the run. These two exact
+root files may name the actual host because their purpose is to disclose model
+processing; identity, permissions and receipt checks still apply to both.
 Validate that exact delivered path independently after sealing:
 
 ```bash

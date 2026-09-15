@@ -1,0 +1,27 @@
+{
+  "vera/registro-imprese-sari": {
+    "title": "Preparar un trámite Registro Imprese con Vera",
+    "goal": "Aprender a proporcionar el caso, seguir la comprobación de fuentes y usar el plan del trámite y la lista de documentos para revisión.",
+    "scenario": "Una sociedad quiere cambiar su dirección PEC inscrita. Preparamos el trabajo del despacho desde el encargo y los datos disponibles hasta el plan que revisar.",
+    "scope": "Todo el proceso de preparación en un caso sencillo: datos, fuentes, propuesta, controles y revisión. SARI ayuda a localizar indicaciones; Vera entrega un paquete para el profesional, sin presentación registral.",
+    "inputs": "Abre company-es.md: encargo, sociedad, cámara, direcciones y fecha declarada. sources-es.md indica las páginas públicas que comprobar. No hacen falta credenciales ni instrucciones técnicas.",
+    "request": "Vera, prepara el trámite Registro Imprese descrito en este archivo. Verifica las fuentes pertinentes y muéstrame el plan, documentos que solicitar y propuestas que revisar. No accedas a portales ni presentes el trámite.",
+    "steps": [
+      "En el hilo de trabajo, Vera abre el caso y lee los documentos. En el hilo de voz explica qué preparará y qué datos faltan. Revisa cámara, operación y datos propuestos.",
+      "Vera consulta fuentes oficiales actuales y relaciona las propuestas con los hechos. Si hace falta seleccionar una ficha SARI, muestra las opciones pertinentes y espera tu elección. La voz explica el paso actual.",
+      "Abre studio_checklist.md y el plan generado. Sigue un dato desde el encargo hasta el campo propuesto y su fuente. Puedes aceptar, pedir documentos o solicitar un cambio; el cambio solicitado aún debe ejecutarse."
+    ],
+    "deliverables": [
+      "Plan del trámite con campos, documentos, controles y fuentes.",
+      "Lista de comprobación del despacho, posibles preguntas preparadas para SARI y ficha de revisión con puntos abiertos."
+    ],
+    "review": "Comprueba que el plan corresponde al encargo. Localiza un dato que confirmar y su prueba pendiente. El paquete es un borrador profesional: aceptar la revisión no equivale a presentar el trámite ni acceder al portal.",
+    "checkpoints": [
+      "Explica qué proporcionas a Vera y qué resultado esperas.",
+      "Encuentra un campo propuesto, su documento de apoyo y la siguiente comprobación del profesional."
+    ],
+    "practice": "Lee update-es.md y pide la nueva versión. Comprueba dirección y fecha, las pruebas que siguen faltando y la conservación de la primera versión.",
+    "success": "Sabes iniciar la preparación, leer el plan y las fuentes, revisar propuestas y actualizar el caso después de un nuevo encargo.",
+    "repeat": "Proporciona encargo, documentos disponibles, cámara y fechas conocidas. Pide a Vera el plan y los controles y revisa propuestas y lagunas antes de la presentación profesional habitual."
+  }
+}

@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 import fitz
 import jsonschema
@@ -684,6 +685,124 @@ def test_package_accepts_a_complete_model_led_review(tmp_path: Path) -> None:
     assert "Delivery readiness: ready" in package_paths["package"].read_text(
         encoding="utf-8"
     )
+
+
+def test_validator_loads_its_helpers_in_a_fresh_isolated_process() -> None:
+    program = """
+import importlib.util, sys
+from pathlib import Path
+path = Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location('isolated_validator', path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+before = sys.path[:]
+lineage = module._lineage_module()
+assert callable(lineage.render_evidence_map)
+renderer = module._workflow_module('isolated_review_renderer', path.with_name('advisory_review_render.py'))
+assert callable(renderer.render_package)
+assert sys.path == before
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", program, str(SCRIPT_PATH)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "language,title,ready,blocked,source_heading",
+    [
+        (
+            "en",
+            "Advisory document review",
+            "Delivery readiness: ready",
+            "Delivery readiness: blocked",
+            "Selected sources",
+        ),
+        (
+            "it",
+            "Revisione del documento di consulenza",
+            "Utilizzabilità del documento: pronto",
+            "Utilizzabilità del documento: bloccato",
+            "Fonti selezionate",
+        ),
+        (
+            "fr",
+            "Revue du document de conseil",
+            "État de préparation du document: prêt",
+            "État de préparation du document: bloqué",
+            "Sources sélectionnées",
+        ),
+        (
+            "de",
+            "Prüfung des Beratungsdokuments",
+            "Verwendbarkeit des Dokuments: bereit",
+            "Verwendbarkeit des Dokuments: blockiert",
+            "Ausgewählte Quellen",
+        ),
+        (
+            "es",
+            "Revisión del documento de consultoría",
+            "Estado de uso del documento: listo",
+            "Estado de uso del documento: bloqueado",
+            "Fuentes seleccionadas",
+        ),
+    ],
+)
+@pytest.mark.parametrize("approval_missing", [False, True])
+def test_native_package_localizes_navigation_preserves_judgments_and_links_sources(
+    tmp_path: Path,
+    language: str,
+    title: str,
+    ready: str,
+    blocked: str,
+    source_heading: str,
+    approval_missing: bool,
+) -> None:
+    validator = _validator_module()
+    memo = tmp_path / "memo #1 (review).md"
+    source = tmp_path / "notes [selected].txt"
+    _write_deliverable(memo)
+    source.write_text(
+        "Reviewed support for the bounded-pilot recommendation.", encoding="utf-8"
+    )
+    originals = {p: p.read_bytes() for p in (memo, source)}
+    contract = _contract()
+    contract["output_language"] = language
+    contract_path = tmp_path / "advisory_contract.json"
+    contract_path.write_text(json.dumps(contract), encoding="utf-8")
+    output = tmp_path / "validation"
+    prepared = validator.prepare_validation(
+        memo, contract_path, output, source_files=[source]
+    )
+    inventory = json.loads(prepared["deliverable_inventory"].read_text())
+    review = _review(inventory)
+    review["language"] = language
+    if approval_missing:
+        review["approvals"]["professional_judgement"] = {
+            "status": "pending",
+            "approved_by": "",
+            "evidence_refs": [],
+        }
+    draft = tmp_path / "draft.json"
+    draft.write_text(json.dumps(review), encoding="utf-8")
+
+    packaged, audit = validator.package_validation(
+        prepared["deliverable_inventory"], draft, contract_path, output
+    )
+
+    text = packaged["package"].read_text(encoding="utf-8")
+    assert text.startswith(f"# {title}\n\n**{blocked if approval_missing else ready}**")
+    assert f"## {source_heading}" in text
+    assert f"]({quote(str(memo), safe='/:')})" in text
+    assert f"]({quote(str(source), safe='/:')})" in text
+    assert "Proceed with a bounded pilot." in text
+    assert review["overall_assessment"]["analysis"] in text
+    assert json.loads(packaged["review"].read_text()) == review
+    assert audit["record_complete"] is not approval_missing
+    assert all(p.read_bytes() == original for p, original in originals.items())
 
 
 def test_ready_review_requires_explicit_professional_judgement_approval(

@@ -1,0 +1,52 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "Preparare il sito dello studio con Vera",
+    "goal": "Imparare a partire dalle informazioni dello studio, ottenere un sito funzionante e rivederlo prima di scegliere la pubblicazione.",
+    "scenario": "Studio Arco non ha un sito. Costruiamo una pagina che presenti lo studio, le attività fornite e il modo di contattarlo, usando soltanto il profilo fittizio.",
+    "scope": "Primo sito informativo di uno studio italiano. La dimostrazione arriva a una versione locale da rivedere; la pubblicazione richiede in seguito destinazione e approvazioni sul sito esatto.",
+    "inputs": "Apri vera-studio-it.md. Contiene destinatari, attività, contatto e orari. Scegli questo file per la lezione e una cartella didattica. Logo e fotografie non sono necessari; i dati assenti restano assenti.",
+    "request": "Vera, prepara il primo sito di Studio Arco da queste informazioni: presentazione, attività e contatti in una pagina leggibile da computer e telefono. Mostrami una versione locale da rivedere.",
+    "steps": [
+      "La chat di lavoro registra il materiale scelto e prepara il progetto. Vera riassume quali fatti userà e propone ordine dei contenuti, caratteri e colori; la chat vocale collega queste scelte alle informazioni che un visitatore cerca.",
+      "Il flusso realizza la pagina HTML con i suoi stili e controlla file e collegamenti. Apri il sito funzionante e percorri presentazione, attività e contatti, osservando cosa è stato scritto dalle fonti.",
+      "Rivedi la pagina a larghezza desktop e telefono, con le immagini di verifica. Controlla identità e testi, leggibilità e collegamenti. Vera mostra stato dei controlli e ciò che manca prima di una pubblicazione reale."
+    ],
+    "deliverables": [
+      "Sito locale funzionante e file modificabili: il risultato da aprire e usare per la revisione.",
+      "Sintesi delle fonti e delle scelte, controlli tecnici, immagini desktop e telefono e stato delle revisioni."
+    ],
+    "review": "Confronta attività, contatto e orari con il profilo. Non devono comparire titoli, risultati o recapiti inventati. Nel caso di Vera, la revisione professionale resta in capo allo studio; un sito locale verificato non è un sito già pubblicato.",
+    "checkpoints": [
+      "Prima di costruire, indica chi visiterà la pagina e dove deve trovare il contatto.",
+      "Alla revisione, apri la sezione contatti sul telefono e controlla orari e leggibilità."
+    ],
+    "practice": "Usa vera-update-it.md per aggiungere l’orario del venerdì a una nuova versione. Chiedi di conservare le informazioni precedenti. Riapri il risultato sui due formati e verifica che l’aggiunta compaia senza sostituire gli altri orari.",
+    "success": "Sai fornire il materiale, chiedere il sito, trovare la versione funzionante e controllare una modifica. Sai che anteprima esterna e pubblicazione finale sono scelte successive, legate ai file approvati.",
+    "repeat": "Per il tuo studio indica sito esistente o primo sito, materiali destinati al pubblico e obiettivo. Dopo la revisione scegli la destinazione; il flusso prepara e pubblica solo il pacchetto esatto autorizzato."
+  },
+  "lucia/presenza-digitale-studio": {
+    "title": "Preparare il sito dello studio con Lucia",
+    "goal": "Imparare a partire dalle informazioni dello studio, ottenere un sito funzionante e rivederlo prima di scegliere la pubblicazione.",
+    "scenario": "Studio Arco non ha un sito. Costruiamo una pagina che presenti lo studio, le attività fornite e il modo di contattarlo, usando soltanto il profilo fittizio.",
+    "scope": "Primo sito informativo di uno studio italiano. La dimostrazione arriva a una versione locale da rivedere; la pubblicazione richiede in seguito destinazione e approvazioni sul sito esatto.",
+    "inputs": "Apri lucia-studio-it.md. Contiene destinatari, attività, contatto e orari. Scegli questo file per la lezione e una cartella didattica. Logo e fotografie non sono necessari; i dati assenti restano assenti.",
+    "request": "Lucia, prepara il primo sito di Studio Arco da queste informazioni: presentazione, attività e contatti in una pagina leggibile da computer e telefono. Mostrami una versione locale da rivedere.",
+    "steps": [
+      "La chat di lavoro registra il materiale scelto e prepara il progetto. Lucia riassume quali fatti userà e propone ordine dei contenuti, caratteri e colori; la chat vocale collega queste scelte alle informazioni che un visitatore cerca.",
+      "Il flusso realizza la pagina HTML con i suoi stili e controlla file e collegamenti. Apri il sito funzionante e percorri presentazione, attività e contatti, osservando cosa è stato scritto dalle fonti.",
+      "Rivedi la pagina a larghezza desktop e telefono, con le immagini di verifica. Controlla identità e testi, leggibilità e collegamenti. Lucia mostra stato dei controlli e ciò che manca prima di una pubblicazione reale."
+    ],
+    "deliverables": [
+      "Sito locale funzionante e file modificabili: il risultato da aprire e usare per la revisione.",
+      "Sintesi delle fonti e delle scelte, controlli tecnici, immagini desktop e telefono e stato delle revisioni."
+    ],
+    "review": "Confronta attività, contatto e orari con il profilo. Non devono comparire titoli, risultati o recapiti inventati. Nel caso di Lucia, la revisione professionale resta in capo allo studio; un sito locale verificato non è un sito già pubblicato.",
+    "checkpoints": [
+      "Prima di costruire, indica chi visiterà la pagina e dove deve trovare il contatto.",
+      "Alla revisione, apri la sezione contatti sul telefono e controlla orari e leggibilità."
+    ],
+    "practice": "Usa lucia-update-it.md per aggiungere l’orario del venerdì a una nuova versione. Chiedi di conservare le informazioni precedenti. Riapri il risultato sui due formati e verifica che l’aggiunta compaia senza sostituire gli altri orari.",
+    "success": "Sai fornire il materiale, chiedere il sito, trovare la versione funzionante e controllare una modifica. Sai che anteprima esterna e pubblicazione finale sono scelte successive, legate ai file approvati.",
+    "repeat": "Per il tuo studio indica sito esistente o primo sito, materiali destinati al pubblico e obiettivo. Dopo la revisione scegli la destinazione; il flusso prepara e pubblica solo il pacchetto esatto autorizzato."
+  }
+}

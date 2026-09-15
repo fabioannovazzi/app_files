@@ -1,0 +1,27 @@
+{
+  "vera/registro-imprese-sari": {
+    "title": "Préparer un dossier Registro Imprese avec Vera",
+    "goal": "Apprendre à fournir le cas, suivre la vérification des sources et utiliser le plan du dossier et la liste des pièces à revoir.",
+    "scenario": "Une société souhaite modifier son adresse PEC inscrite au registre. Préparons le travail du cabinet à partir de la demande et des faits disponibles, jusqu’au plan à revoir.",
+    "scope": "Tout le parcours de préparation sur un cas simple : faits, sources, proposition, contrôles et révision. SARI aide à trouver les indications ; Vera produit un dossier pour le professionnel, sans dépôt.",
+    "inputs": "Ouvrez company-fr.md : demande, société, chambre, adresses et date déclarée. sources-fr.md indique les pages publiques à vérifier. Aucun identifiant de connexion ni consigne technique n’est nécessaire.",
+    "request": "Vera, prépare le dossier Registro Imprese décrit dans ce fichier. Vérifie les sources pertinentes et montre-moi le plan, les pièces à demander et les propositions à revoir. Ne te connecte pas aux portails et ne transmets rien.",
+    "steps": [
+      "Dans le fil de travail, Vera ouvre le dossier et lit les documents. Dans le fil vocal, elle explique la démarche préparée et les faits manquants. Revoyez la chambre, l’opération et les données proposées.",
+      "Vera consulte les sources officielles actuelles et relie les propositions aux faits. Si une fiche SARI doit être choisie, elle présente les choix pertinents et attend le vôtre. La voix explique l’étape en cours.",
+      "Ouvrez studio_checklist.md et le plan produit. Suivez une donnée de la demande jusqu’au champ proposé et à sa source. La révision permet d’accepter, de demander des pièces ou une modification ; celle-ci reste à effectuer."
+    ],
+    "deliverables": [
+      "Plan du dossier avec champs, pièces, contrôles et sources.",
+      "Liste de contrôle du cabinet, éventuelle question préparée pour SARI et fiche de révision avec points ouverts."
+    ],
+    "review": "Vérifiez que le plan répond à la demande. Identifiez un fait à confirmer et la preuve à obtenir. Le dossier reste un projet professionnel : une révision acceptée ne vaut ni dépôt ni accès à un portail.",
+    "checkpoints": [
+      "Expliquez ce que vous fournissez à Vera et le résultat attendu.",
+      "Retrouvez un champ proposé, la pièce qui le justifie et le prochain contrôle du professionnel."
+    ],
+    "practice": "Lisez update-fr.md et demandez la nouvelle version. Vérifiez les nouvelles adresse et date, le maintien des preuves manquantes et la conservation de la première version.",
+    "success": "Vous savez lancer la préparation, lire le plan et les sources, revoir les propositions et actualiser le dossier après une nouvelle demande.",
+    "repeat": "Fournissez la demande du client, les pièces disponibles, la chambre et les dates connues. Demandez le plan et les contrôles, puis revoyez propositions et lacunes avant le dépôt professionnel habituel."
+  }
+}

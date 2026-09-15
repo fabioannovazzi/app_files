@@ -1,0 +1,52 @@
+{
+  "vera/quesito-legale-fiscale": {
+    "title": "Get a checked answer with Vera",
+    "goal": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
+    "scenario": "Imprese Arco asks the professional for a short briefing on EU late-payment rules. We start with the written request and initial sources, then produce an actual answer through the workflow.",
+    "scope": "The complete journey from question to checked answer. An informational briefing is a straightforward example for learning the process; an opinion on a concrete position may also require an opposing examination.",
+    "inputs": "Open question-en.md for the request, audience, scope and format. sources-en.md introduces the attached guidance and official text. You do not need to write technical instructions or choose internal stages.",
+    "request": "Vera, answer Imprese Arco’s question in this file. Prepare the requested short briefing, check the sources and answer, and show me the document and matters requiring review.",
+    "steps": [
+      "In the working thread, Vera reads the question and prepares its objective, source plan, language and legal framework. The voice chat explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.",
+      "Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The working thread researches and drafts the answer. The voice explanation follows real progress and takes your questions.",
+      "Vera checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use."
+    ],
+    "deliverables": [
+      "Word briefing and checked answer text, with sources and limitations.",
+      "Review package showing how claims were checked and what still requires review."
+    ],
+    "review": "Check that the briefing answers the question in the requested scope and language. Open a source and compare it with one claim. Distinguish a general rule from its application to a client; checks do not replace professional judgment.",
+    "checkpoints": [
+      "Explain the question, intended reader and legal framework.",
+      "Find a conclusion, its source and a limitation or remaining check."
+    ],
+    "practice": "Read practice-en.md and request a new version for the meeting that now includes suppliers to public authorities. Preserve the first version, follow the new research and checks, and explain how to use the resulting comparison.",
+    "success": "You can frame a complete question, choose the research route, navigate the answer and its checks, and update the work when the request changes.",
+    "repeat": "Give Vera the question, available facts, country or legal framework, intended reader and required result. Review scope, sources, conclusions and unresolved points in the resulting document."
+  },
+  "lucia/quesito-legale-fiscale": {
+    "title": "Get a checked answer with Lucia",
+    "goal": "Learn to ask a professional question, follow research and checks, and use the answer with its sources and unresolved points.",
+    "scenario": "Imprese Arco asks the professional for a short briefing on EU late-payment rules. We start with the written request and initial sources, then produce an actual answer through the workflow.",
+    "scope": "The complete journey from question to checked answer. An informational briefing is a straightforward example for learning the process; an opinion on a concrete position may also require an opposing examination.",
+    "inputs": "Open question-en.md for the request, audience, scope and format. sources-en.md introduces the attached guidance and official text. You do not need to write technical instructions or choose internal stages.",
+    "request": "Lucia, answer Imprese Arco’s question in this file. Prepare the requested short briefing, check the sources and answer, and show me the document and matters requiring review.",
+    "steps": [
+      "In the working thread, Lucia reads the question and prepares its objective, source plan, language and legal framework. The voice chat explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.",
+      "Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The working thread researches and drafts the answer. The voice explanation follows real progress and takes your questions.",
+      "Lucia checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use."
+    ],
+    "deliverables": [
+      "Word briefing and checked answer text, with sources and limitations.",
+      "Review package showing how claims were checked and what still requires review."
+    ],
+    "review": "Check that the briefing answers the question in the requested scope and language. Open a source and compare it with one claim. Distinguish a general rule from its application to a client; checks do not replace professional judgment.",
+    "checkpoints": [
+      "Explain the question, intended reader and legal framework.",
+      "Find a conclusion, its source and a limitation or remaining check."
+    ],
+    "practice": "Read practice-en.md and request a new version for the meeting that now includes suppliers to public authorities. Preserve the first version, follow the new research and checks, and explain how to use the resulting comparison.",
+    "success": "You can frame a complete question, choose the research route, navigate the answer and its checks, and update the work when the request changes.",
+    "repeat": "Give Lucia the question, available facts, country or legal framework, intended reader and required result. Review scope, sources, conclusions and unresolved points in the resulting document."
+  }
+}

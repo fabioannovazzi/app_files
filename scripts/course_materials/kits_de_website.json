@@ -1,0 +1,52 @@
+{
+  "vera/presenza-digitale-studio": {
+    "title": "Die Kanzleiwebsite mit Vera vorbereiten",
+    "goal": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
+    "scenario": "Studio Arco hat keine Website. Aus dem fiktiven Profil erstellen wir eine Seite mit Vorstellung, angegebenen Tätigkeiten und Kontakt.",
+    "scope": "Erste Informationswebsite einer italienischen Kanzlei. Die Demonstration erstellt eine lokal prüfbare Fassung; eine spätere Veröffentlichung braucht Ziel und Freigaben für die genaue Website.",
+    "inputs": "Öffnen Sie vera-studio-de.md mit Zielgruppe, Tätigkeiten, Kontakt und Zeiten. Wählen Sie die Datei für die Lektion und einen Übungsordner. Logo und Fotos sind nicht erforderlich; fehlende Angaben bleiben offen.",
+    "request": "Vera, erstelle aus diesen Angaben die erste Website von Studio Arco: Vorstellung, Tätigkeiten und Kontakt auf einer am Computer und Telefon lesbaren Seite. Zeige eine lokale Fassung zur Prüfung.",
+    "steps": [
+      "Der Arbeitschat erfasst das ausgewählte Material und bereitet das Projekt vor. Vera fasst Fakten zusammen und schlägt Reihenfolge, Schrift und Farben vor; der Sprachchat erklärt den Bezug zu den Besucherfragen.",
+      "Der Ablauf erstellt HTML und Gestaltung und prüft Dateien und Links. Öffnen Sie die funktionierende Seite und vergleichen Sie Vorstellung, Tätigkeiten und Kontakt mit den Quellen.",
+      "Prüfen Sie die Seite in Desktop- und Telefonbreite anhand der Aufnahmen. Kontrollieren Sie Identität, Aussagen, Lesbarkeit und Links. Vera zeigt Prüfstatus und offene Punkte vor einer echten Veröffentlichung."
+    ],
+    "deliverables": [
+      "Funktionierende lokale Website und bearbeitbare Dateien zum Öffnen und Prüfen.",
+      "Quellen- und Gestaltungsübersicht, technische Prüfungen, Desktop- und Telefonaufnahmen sowie Prüfstatus."
+    ],
+    "review": "Vergleichen Sie Tätigkeiten, Kontakt und Zeiten mit dem Profil. Qualifikationen, Ergebnisse oder Kontaktdaten dürfen nicht erfunden sein. Die fachliche Prüfung liegt bei der Kanzlei; eine geprüfte lokale Website ist noch nicht veröffentlicht.",
+    "checkpoints": [
+      "Benennen Sie vor dem Aufbau Besucher und Ort der Kontaktangaben.",
+      "Öffnen Sie bei der Prüfung den Kontaktbereich in Telefonbreite und prüfen Sie Zeiten und Lesbarkeit."
+    ],
+    "practice": "Ergänzen Sie mit vera-update-de.md die Freitagszeiten in einer neuen Fassung und behalten Sie bisherige Angaben bei. Öffnen Sie beide Formate erneut und prüfen Sie, dass die Ergänzung die anderen Zeiten nicht ersetzt.",
+    "success": "Sie können Material liefern, die Website anfordern, die funktionierende Fassung finden und Änderungen prüfen. Externe Vorschau und endgültige Veröffentlichung sind spätere Entscheidungen zu freigegebenen Dateien.",
+    "repeat": "Nennen Sie für Ihre Kanzlei bestehende oder erste Website, für die Öffentlichkeit bestimmte Unterlagen und Ziel. Wählen Sie nach der Prüfung den Veröffentlichungsort; nur die genaue genehmigte Fassung wird paketiert und veröffentlicht."
+  },
+  "lucia/presenza-digitale-studio": {
+    "title": "Die Kanzleiwebsite mit Lucia vorbereiten",
+    "goal": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
+    "scenario": "Studio Arco hat keine Website. Aus dem fiktiven Profil erstellen wir eine Seite mit Vorstellung, angegebenen Tätigkeiten und Kontakt.",
+    "scope": "Erste Informationswebsite einer italienischen Kanzlei. Die Demonstration erstellt eine lokal prüfbare Fassung; eine spätere Veröffentlichung braucht Ziel und Freigaben für die genaue Website.",
+    "inputs": "Öffnen Sie lucia-studio-de.md mit Zielgruppe, Tätigkeiten, Kontakt und Zeiten. Wählen Sie die Datei für die Lektion und einen Übungsordner. Logo und Fotos sind nicht erforderlich; fehlende Angaben bleiben offen.",
+    "request": "Lucia, erstelle aus diesen Angaben die erste Website von Studio Arco: Vorstellung, Tätigkeiten und Kontakt auf einer am Computer und Telefon lesbaren Seite. Zeige eine lokale Fassung zur Prüfung.",
+    "steps": [
+      "Der Arbeitschat erfasst das ausgewählte Material und bereitet das Projekt vor. Lucia fasst Fakten zusammen und schlägt Reihenfolge, Schrift und Farben vor; der Sprachchat erklärt den Bezug zu den Besucherfragen.",
+      "Der Ablauf erstellt HTML und Gestaltung und prüft Dateien und Links. Öffnen Sie die funktionierende Seite und vergleichen Sie Vorstellung, Tätigkeiten und Kontakt mit den Quellen.",
+      "Prüfen Sie die Seite in Desktop- und Telefonbreite anhand der Aufnahmen. Kontrollieren Sie Identität, Aussagen, Lesbarkeit und Links. Lucia zeigt Prüfstatus und offene Punkte vor einer echten Veröffentlichung."
+    ],
+    "deliverables": [
+      "Funktionierende lokale Website und bearbeitbare Dateien zum Öffnen und Prüfen.",
+      "Quellen- und Gestaltungsübersicht, technische Prüfungen, Desktop- und Telefonaufnahmen sowie Prüfstatus."
+    ],
+    "review": "Vergleichen Sie Tätigkeiten, Kontakt und Zeiten mit dem Profil. Qualifikationen, Ergebnisse oder Kontaktdaten dürfen nicht erfunden sein. Die fachliche Prüfung liegt bei der Kanzlei; eine geprüfte lokale Website ist noch nicht veröffentlicht.",
+    "checkpoints": [
+      "Benennen Sie vor dem Aufbau Besucher und Ort der Kontaktangaben.",
+      "Öffnen Sie bei der Prüfung den Kontaktbereich in Telefonbreite und prüfen Sie Zeiten und Lesbarkeit."
+    ],
+    "practice": "Ergänzen Sie mit lucia-update-de.md die Freitagszeiten in einer neuen Fassung und behalten Sie bisherige Angaben bei. Öffnen Sie beide Formate erneut und prüfen Sie, dass die Ergänzung die anderen Zeiten nicht ersetzt.",
+    "success": "Sie können Material liefern, die Website anfordern, die funktionierende Fassung finden und Änderungen prüfen. Externe Vorschau und endgültige Veröffentlichung sind spätere Entscheidungen zu freigegebenen Dateien.",
+    "repeat": "Nennen Sie für Ihre Kanzlei bestehende oder erste Website, für die Öffentlichkeit bestimmte Unterlagen und Ziel. Wählen Sie nach der Prüfung den Veröffentlichungsort; nur die genaue genehmigte Fassung wird paketiert und veröffentlicht."
+  }
+}

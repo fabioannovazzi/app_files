@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "run_id": "lucia-fr-practice",
+  "reference_date": "2026-09-14",
+  "language": "fr",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "objective": "Le cabinet souhaite une courte FAQ pour ses petites entreprises clientes en Italie : comment reconnaître et organiser une demande d’accès aux données personnelles. Il s’agit d’une initiative d’information du cabinet, pas de l’annonce d’une nouvelle loi ni d’une réponse à une personne réelle. Les lecteurs gèrent l’administration et la relation client et doivent savoir quand solliciter le responsable de la protection des données. Utilise le guide officiel du CEPD sélectionné, en distinguant recommandations générales et appréciation du cas particulier. Aucune donnée client, demande réelle ou politique de confidentialité d’entreprise n’est fournie. Prépare le dossier pour revue interne, sans envoi ni publication. Rédige les documents finaux en français.\nAprès revue de la FAQ, prépare une nouvelle version du dossier comprenant aussi un bref courriel d’accompagnement aux clients. Explique à qui la FAQ s’adresse et comment l’utiliser. Conserve les sources, limites et première version. N’invente ni destinataires, ni pièces déjà envoyées, ni nouvelle obligation. Aucun envoi.",
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "studio_format_brief": "Studio Riva — avocats. Aucun logo, coordonnées, communication antérieure ou format approuvé n’est fourni. Propose un format sobre bleu et blanc, avec une police lisible, des titres clairs et des sources identifiables. Le professionnel le reverra avant utilisation.",
+  "channels": [
+    "faq",
+    "client_email"
+  ],
+  "visual_requested": false,
+  "source_inputs": [
+    {
+      "id": "SRC-EDPB",
+      "path": "plugins/lucia/assets/courses/comunicazione-professionale/files/practice/source-fr.md",
+      "title": "EDPB guide for small business: rights, handling requests and access",
+      "authority_role": "official_guidance",
+      "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr"
+    }
+  ],
+  "history_inputs": [],
+  "brand_profile": {
+    "studio_name": "Studio Riva",
+    "primary_color": "#153855",
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "text_color": "#1C2935"
+  },
+  "external_routes": {
+    "public_research": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "creative_production": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  }
+}

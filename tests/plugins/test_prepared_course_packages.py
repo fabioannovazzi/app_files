@@ -69,7 +69,7 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
     assert (root / "vendor/modules/courseware/library.py").read_bytes() == (
         ROOT / "plugins/_shared/vendor/modules/courseware/library.py"
     ).read_bytes()
-    assert "Prepared courses" in (
+    assert "Prepared teaching kits" in (
         root / f"skills/learn-with-{product}/SKILL.md"
     ).read_text(encoding="utf-8")
 

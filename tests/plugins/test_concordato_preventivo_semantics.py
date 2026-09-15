@@ -506,9 +506,12 @@ def test_semantic_run_leads_with_creditors_liquidity_and_issues(
     assert gates["gates"]["semantic_review"]["status"] == "passed"
     assert gates["gates"]["reporting"]["status"] == "passed"
     assert gates["gates"]["reconciliation"]["status"] == "not_applicable"
-    assert "Creditors" in workbook.sheetnames
-    assert "Liquidity" in workbook.sheetnames
-    assert "Numeric Tie-Out" in workbook.sheetnames
+    assert "Creditori" in workbook.sheetnames
+    assert "Liquidità" in workbook.sheetnames
+    assert "Confronto importi" in workbook.sheetnames
+    report = (output_dir / "concordato_semantic_review.md").read_text()
+    assert "Il confronto opzionale degli importi non è stato eseguito" in report
+    assert "Corrispondenze di importo da verificare: 0" not in report
     assert (output_dir / "concordato_preventivo_review_summary.docx").exists()
     replay = importlib.import_module("replay_assurance").replay_assurance(output_dir)
     assert replay["ok"] is True
@@ -555,6 +558,8 @@ def test_semantic_review_and_numeric_appendix_keep_independent_authority(
         "calculation_formula_authority",
         "semantic_review",
     }
+    report = (output_dir / "concordato_semantic_review.md").read_text()
+    assert "Il confronto opzionale degli importi non è stato eseguito" not in report
 
 
 @pytest.mark.parametrize(
@@ -573,9 +578,10 @@ def test_primary_semantic_report_contract_is_localized(
     title: str,
 ) -> None:
     core, semantic, input_dir, inspection = _inspection(tmp_path)
+    model = _reviewed_case_model(semantic, inspection.inventory)
     semantic_recipe = semantic.review_concordato_case_model(
         inspection.inventory,
-        _reviewed_case_model(semantic, inspection.inventory),
+        model,
         reviewer_ref="qualified-reviewer",
         reviewed_on="2026-07-26",
         reference_date="2026-03-31",
@@ -609,6 +615,54 @@ def test_primary_semantic_report_contract_is_localized(
     assert markdown.startswith(f"# {title}\n")
     assert title in document_text
     assert summary_output["required_text"][0] == title
+    # The full questions and follow-up remain readable paragraphs instead of
+    # being squeezed into four or five narrow table columns.
+    assert len(document.tables) == 2
+    assert "feasibility_liquidity" not in document_text
+    assert "creditor_count" not in "\n".join(
+        cell.text
+        for table in document.tables
+        for row in table.rows
+        for cell in row.cells
+    )
+    for question in model["review_questions"]:
+        assert question["question"] in document_text
+        assert question["judgment_basis"] in document_text
+        assert question["judgment_basis"] in markdown
+        for evidence in question["evidence_refs"]:
+            assert evidence["locator"] in document_text
+            assert evidence["locator"] in markdown
+        if question["follow_up"]:
+            assert question["follow_up"] in document_text
+    assert "case_material_a.xlsx" in document_text
+    workbook = openpyxl.load_workbook(output_dir / "concordato_review_workpaper.xlsx")
+    names = {
+        "it": ("Riepilogo", "Creditori", "Indicatore", "Credito", "Ammesso"),
+        "en": ("Overview", "Creditors", "Measure", "Claim", "Admitted"),
+        "fr": ("Synthèse", "Créanciers", "Indicateur", "Créance", "Admise"),
+        "de": ("Übersicht", "Gläubiger", "Kennzahl", "Forderung", "Zugelassen"),
+        "es": ("Resumen", "Acreedores", "Indicador", "Crédito", "Admitido"),
+    }
+    overview, creditors, measure, claim, asserted = names[language[:2]]
+    assert workbook[overview]["A1"].value == measure
+    assert workbook[creditors]["C1"].value == claim
+    assert workbook[creditors]["D2"].value == asserted
+    assert "EUR" in {str(cell.value) for row in workbook[overview] for cell in row}
+    note_sheet = {
+        "it": "Riferimenti",
+        "en": "Source notes",
+        "fr": "Notes sources",
+        "de": "Quellennotizen",
+        "es": "Notas de fuentes",
+    }[language[:2]]
+    assert workbook[creditors]["R2"].hyperlink.target == f"#'{note_sheet}'!A2"
+    assert (
+        workbook[note_sheet]["D2"].value
+        == model["creditor_population"]["creditors"][0]["judgment_basis"]
+    )
+    assert workbook[note_sheet]["D2"].alignment.wrap_text
+    assert workbook[creditors].row_dimensions[2].height < 60
+    workbook.close()
 
 
 def test_mechanical_checks_expose_funding_and_cash_bridge_differences(

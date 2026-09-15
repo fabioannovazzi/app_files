@@ -1,0 +1,127 @@
+{
+  "vera/journal-bank-reconciliation": {
+    "title": "Rapprocher un relevé bancaire avec Vera",
+    "goal": "Apprendre à comparer les mouvements bancaires au grand livre et à utiliser le rapprochement pour la clôture mensuelle.",
+    "scenario": "Officina Arco clôture mars. Son relevé bancaire et son compte de banque devraient retracer les mêmes paiements. Nous les comparons puis examinons les documents produits.",
+    "scope": "Un compte bancaire en EUR, mars 2026. Le cas utilise des références exactes et des paiements individuels. Les autres comptes et périodes restent hors périmètre.",
+    "inputs": "Ouvrez bank-march.csv, bank-ledger-march.csv et case-fr.md. Le relevé fournit les mouvements bancaires ; le grand livre fournit les écritures à comparer. Les dates sont au format ISO et les décaissements sont négatifs dans les deux fichiers.",
+    "request": "Vera, rapproche le relevé bancaire de mars d’Arco avec son compte de banque. Montre les paiements rapprochés, les mouvements non rapprochés et les contrôles à examiner.",
+    "steps": [
+      "Vera importe les exports dans le dossier pédagogique et examine leur structure. Confirmez le compte, les dates, les signes des montants et les colonnes de références.",
+      "Examinez les règles proposées : paiements individuels, références et montants exacts, sans réutiliser un mouvement. La procédure actuelle réalise le rapprochement localement.",
+      "Ouvrez le classeur et les notes produits. Suivez un paiement du relevé jusqu’à sa référence comptable, puis trouvez les listes de mouvements non rapprochés et les contrôles."
+    ],
+    "deliverables": [
+      "Classeur de rapprochement et tableaux détaillés : permettent d’examiner les correspondances et les mouvements restant à expliquer.",
+      "Notes de revue et contrôles : précisent la couverture, les règles appliquées et les éléments nécessitant des justificatifs."
+    ],
+    "review": "Vérifiez que les fichiers concernent le même compte et la même période. Retrouvez les deux lignes sources d’un rapprochement. Un paiement rapproché ne détermine pas le traitement fiscal de la facture.",
+    "checkpoints": [
+      "Avant l’exécution, identifiez le fichier bancaire et le fichier comptable.",
+      "À la livraison, retrouvez un paiement rapproché et l’emplacement des mouvements non rapprochés."
+    ],
+    "practice": "Avec bank-april.csv et bank-ledger-april.csv, demandez un nouveau rapprochement jusqu’au 4 avril. Ces fichiers cumulés ajoutent le paiement de la troisième facture ; conservez le résultat de mars.",
+    "success": "La nouvelle exécution comprend le mouvement d’avril. Expliquez comment rechercher un mouvement bancaire absent du grand livre.",
+    "repeat": "Fournissez des exports comparables, indiquez le compte et la période, vérifiez leur interprétation et utilisez le rapprochement pour résoudre les écarts."
+  },
+  "vera/open-item-reconciliation": {
+    "title": "Vérifier les postes ouverts avec Vera",
+    "goal": "Apprendre à vérifier une liste d’impayés et distinguer les factures disposant d’une preuve de paiement de celles restant à clarifier à une date donnée.",
+    "scenario": "Une ancienne liste fournisseurs d’Arco présente encore trois factures ouvertes. Les mouvements bancaires permettent de vérifier leur situation au 31 mars.",
+    "scope": "Trois factures fournisseurs en EUR. La revue de mars exclut les paiements postérieurs à la date d’arrêté ; l’exercice actualise cette date.",
+    "inputs": "Ouvrez open-items-fr.pdf et bank-march-fr.pdf. Le premier document est la population à vérifier ; le second présente les décaissements. Ces exports pédagogiques sont fictifs. Les montants suivent la convention italienne avec virgule décimale, les dates le format jour/mois/année.",
+    "request": "Vera, vérifie ces postes fournisseurs au 31 mars 2026. Utilise les preuves de paiement bancaire pour montrer ce qui est payé, ce qui reste ouvert et ce qui demande une revue.",
+    "steps": [
+      "Vera importe les fichiers, identifie la population initiale et propose le rôle et le sens des montants de chaque source. Confirmez la date d’arrêté et le traitement des paiements ultérieurs.",
+      "La procédure actuelle relie factures et preuves de paiement, distingue les postes soldés des postes non résolus et prépare le dossier de revue. La conversation vocale explique l’avancement et les justificatifs manquants.",
+      "Ouvrez la page locale de revue et les documents de travail. Suivez une facture depuis le montant déclaré ouvert jusqu’au justificatif de paiement et au résultat proposé. Les décisions restent en attente tant qu’elles ne sont pas réellement prises."
+    ],
+    "deliverables": [
+      "Documents Excel et fiche opérationnelle : présentent les montants initiaux, les paiements associés, les résultats proposés et les exceptions.",
+      "Rapport Word et page locale de revue : expliquent les conclusions et permettent au professionnel d’examiner les postes et de demander des documents."
+    ],
+    "review": "Vérifiez d’abord la population et la date. Les preuves de mars justifient le règlement des deux premières factures ; la troisième reste non résolue avec ces documents. Examinez dates et sources avant d’accepter une conclusion.",
+    "checkpoints": [
+      "Avant l’exécution, distinguez la liste à vérifier des justificatifs utilisés.",
+      "À la livraison, trouvez la facture restante, son montant et le justificatif encore nécessaire pour la résoudre."
+    ],
+    "practice": "Gardez open-items-fr.pdf et utilisez bank-april-fr.pdf pour demander une nouvelle revue au 30 avril. Le document bancaire cumulé comprend le troisième paiement. Conservez les documents de mars.",
+    "success": "La nouvelle revue tient compte du troisième paiement. Expliquez pourquoi les conclusions diffèrent entre mars et avril et où enregistrer une décision de revue.",
+    "repeat": "Fournissez la liste des postes ouverts, la date d’arrêté et les justificatifs. Examinez les résultats proposés et les points non résolus avant d’utiliser les conclusions."
+  },
+  "vera/variance-analysis": {
+    "title": "Comparer le réalisé au budget avec Vera",
+    "goal": "Apprendre quels fichiers fournir, comment lancer la comparaison et lire un rapport montrant le montant et les composantes des écarts au budget.",
+    "scenario": "Officina Arco veut comparer son résultat opérationnel de janvier et février au budget. Elle dispose des produits et charges mensuels et d’une note expliquant les chiffres.",
+    "scope": "Première utilisation de l’analyse des écarts : une entreprise, deux mois, EUR. Nous comparons des montants ; le fichier ne fournit ni quantités ni preuves de causes commerciales.",
+    "inputs": "Ouvrez january-february.csv et context-fr.md. Repérez Scenario (PL budget, AC réalisé), Month, Category et Amount. La note explique signes et totaux de contrôle. Vera prépare une copie dans le dossier pédagogique.",
+    "request": "Vera, compare le résultat opérationnel réel d’Officina Arco de janvier et février 2026 au budget, en euros. Montre-moi le rapport et explique les rubriques qui contribuent à l’écart.",
+    "steps": [
+      "Dans la conversation de travail, Vera lit le fichier et propose la comparaison. La voix vous aide à vérifier mois, budget de départ, réalisé, devise et signe négatif des charges avant le calcul.",
+      "La procédure courante calcule les écarts et produit tableaux, graphiques et brouillon du rapport. Pendant l’exécution, la voix explique le parcours et répond sans anticiper des résultats non encore produits.",
+      "Ouvrez le rapport et le graphique principal effectivement créés. Commencez par le résultat global, puis les contributions des produits et charges et un détail mensuel. Vera relie ses commentaires aux données calculées et enregistre les décisions de revue effectives."
+    ],
+    "deliverables": [
+      "Brouillon Word du rapport et graphiques montrant le passage du budget au réalisé.",
+      "Tableaux des écarts et contrôles de rapprochement pour retrouver les montants sources."
+    ],
+    "review": "Vérifiez périmètre et mois, totaux de départ et d’arrivée, variation en EUR et en pourcentage lorsque pertinente. Interprétez le signe négatif des charges. Le calcul identifie des contributions sans prouver les causes commerciales. Le rapport reste un brouillon jusqu’à la revue professionnelle habituelle.",
+    "checkpoints": [
+      "Avant le calcul, indiquez quelles valeurs sont comparées.",
+      "Dans le résultat, trouvez une rubrique contributrice et le chiffre qui la justifie."
+    ],
+    "practice": "Utilisez january-march.csv pour refaire la comparaison de janvier à mars. Demandez un nouveau résultat en conservant la version sur deux mois. Repérez ce qui change dans le total et une rubrique ; demandez de l’aide seulement si nécessaire.",
+    "success": "Vous savez choisir fichier et comparaison, retrouver le rapport, lire un écart et refaire l’analyse à l’arrivée d’un nouveau mois.",
+    "repeat": "Avec votre fichier, indiquez entreprise, période, budget ou autre base de comparaison et devise. Vera clarifie les colonnes ambiguës, produit les résultats et accompagne la revue."
+  },
+  "vera/journal-sampling": {
+    "title": "Extraire un échantillon du journal comptable",
+    "goal": "Apprendre à fournir un journal, vérifier sa lecture et obtenir les lignes sélectionnées pour un contrôle ultérieur.",
+    "scenario": "Le cabinet doit sélectionner des lignes du journal d’Officina Arco à examiner. Un petit fichier fictif permet de suivre chaque étape.",
+    "scope": "Première exécution de Journal Sampling : 5 lignes aléatoires, graine 42. La leçon enseigne l’utilisation ; le plan d’audit réel détermine méthode et taille.",
+    "inputs": "Ouvrez journal-march.csv et context-fr.md. Repérez date, écriture, ligne, compte, débit et crédit. L’original reste conservé dans le dossier pédagogique.",
+    "request": "Vera, sélectionne 5 lignes aléatoires du journal de mars d’Officina Arco, avec la graine 42. Fais-moi d’abord vérifier les colonnes, puis montre l’échantillon et les contrôles de préparation.",
+    "steps": [
+      "Vera ouvre le journal dans la conversation de travail. La voix accompagne la vérification des colonnes, de la période et des montants ; Vera enregistre la correspondance effectivement revue.",
+      "La procédure prépare le journal et vérifie la conservation des lignes et montants. Si la préparation échoue, résolvez le problème avant la sélection.",
+      "Vera exécute le tirage et ouvre le résultat Excel. Retrouvez une ligne choisie dans le journal ; vérifiez ensemble population, méthode et nombre de lignes sélectionnées."
+    ],
+    "deliverables": [
+      "Échantillon Excel et CSV avec références aux lignes originales.",
+      "Journal préparé, contrôles et choix de tirage pour reproduire la sélection."
+    ],
+    "review": "Vérifiez période, comptes et nombre de lignes attendu. Les contrôles de préparation ne certifient ni les écritures ni la suffisance de l’échantillon. Le Contrôle sur pièces permet ensuite de vérifier les justificatifs.",
+    "checkpoints": [
+      "Avant le tirage, expliquez quelle population est échantillonnée.",
+      "Dans le résultat, retrouvez une ligne sélectionnée dans la source."
+    ],
+    "practice": "Recommencez avec journal-april.csv, qui ajoute un paiement d’avril. Gardez 5 lignes aléatoires et conservez le premier résultat. Vérifiez la nouvelle population et repérez une ligne du nouvel échantillon.",
+    "success": "Vous savez formuler la demande, retrouver l’échantillon et relier une ligne au journal sans remplacer manuellement les lignes tirées.",
+    "repeat": "Indiquez client, journal, période, filtres éventuels, méthode et taille prévues par le plan d’audit. Demandez un Contrôle sur pièces pour comparer l’échantillon aux justificatifs."
+  },
+  "vera/vouching": {
+    "title": "Contrôler les écritures échantillonnées avec les factures",
+    "goal": "Apprendre à relier un échantillon aux factures, lire les résultats et revoir les points nécessitant un jugement professionnel.",
+    "scenario": "Le cabinet possède les écritures de trois factures et leurs XML. Il veut comparer deux lignes échantillonnées aux pièces originales.",
+    "scope": "Contrôle sur pièces d’un échantillon. Vera crée d’abord celui-ci avec Journal Sampling dans le même dossier pédagogique, puis exécute le contrôle. Le journal entier n’est pas examiné.",
+    "inputs": "Ouvrez invoice-journal.csv, context-fr.md et les trois factures XML. La note précise le compte 2100 et un échantillon pédagogique de deux lignes. Vera gère le passage aux pièces ; aucun fichier technique interne à choisir.",
+    "request": "Vera, crée un échantillon aléatoire de deux lignes du compte fournisseur 2100, graine 42, puis contrôle-les avec ces factures XML. Montre les résultats et accompagne ma revue.",
+    "steps": [
+      "La conversation de travail produit réellement l’échantillon. La voix explique quelles lignes seront contrôlées et aide à confirmer le périmètre avant les factures.",
+      "Vera relie l’échantillon produit aux trois factures sélectionnées et lance le Contrôle sur pièces. La voix explique la comparaison à partir de l’avancement effectif.",
+      "Ouvrez le classeur des résultats et une ligne avec sa pièce liée. Vérifiez référence, date, montant et partie, puis les demandes de clarification. Vera conserve décisions effectives et liens aux sources."
+    ],
+    "deliverables": [
+      "Résultats Excel et CSV des contrôles de l’échantillon, avec pièces liées et constats.",
+      "Notes de revue et dossier de contrôle pour retrouver échantillon et sources."
+    ],
+    "review": "Vérifiez que seules les lignes échantillonnées sont examinées. Un rapprochement ne vaut pas conclusion sur l’écriture : partie, sens comptable et conclusion nécessitent la revue prévue. Une pièce absente ou ambiguë reste à clarifier.",
+    "checkpoints": [
+      "Avant le contrôle, identifiez les lignes et pièces retenues.",
+      "Dans le résultat, expliquez le constat d’une ligne avec son écriture et sa facture."
+    ],
+    "practice": "Demandez un nouvel échantillon de trois lignes du compte 2100 et recommencez avec les mêmes factures. Conservez le premier résultat et vérifiez que le nouveau contrôle suit le nouvel échantillon.",
+    "success": "Vous savez lancer le contrôle, ouvrir son résultat, retrouver la pièce et distinguer vérification mécanique et conclusion professionnelle.",
+    "repeat": "Dans un vrai dossier, choisissez l’exécution Journal Sampling correcte et fournissez le lot de pièces. Vera reprend ce lien et contrôle uniquement les lignes sélectionnées."
+  }
+}

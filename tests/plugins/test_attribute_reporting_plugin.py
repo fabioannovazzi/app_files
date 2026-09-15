@@ -637,6 +637,91 @@ def _write_preliminary_sanitization_receipt(package_dir: Path) -> Path:
     return receipt_path
 
 
+def _write_mapping_image_sidecar(package_dir: Path) -> dict[str, Any]:
+    image_path = package_dir / "images" / "local" / "product.png"
+    image_path.parent.mkdir(parents=True)
+    image_path.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\0" * 64)
+    with (package_dir / "product_filter_matrix.csv").open(newline="") as handle:
+        row = next(csv.DictReader(handle))
+    sidecar = {
+        "schema_version": "attribute_reporting.local_image_manifest.v1",
+        "package_dir": str(package_dir.resolve()),
+        "products": [
+            {
+                "product_id": row["parent_product_id"],
+                "status": "downloaded",
+                "source_rows": {"product_filter_matrix.csv": _canonical_sha256(row)},
+                "image_path": "images/local/product.png",
+                "sha256": _sha256(image_path),
+            }
+        ],
+    }
+    _write_json(package_dir / "local_image_manifest.json", sidecar)
+    return sidecar
+
+
+def test_mapping_tasks_bind_hydrated_image_bytes_to_current_product(
+    tmp_path: Path, reporting: Any
+) -> None:
+    package_dir = _write_mapping_task_package(tmp_path)
+    sidecar = _write_mapping_image_sidecar(package_dir)
+
+    tasks = reporting.create_mapping_tasks(
+        package_dir, _central_taxonomy(), tmp_path / "tasks.json"
+    )
+
+    expected_images = [
+        {
+            "path": "images/local/product.png",
+            "sha256": sidecar["products"][0]["sha256"],
+        }
+    ]
+    assert len(tasks["tasks"]) == 2
+    assert all(
+        task["product"]["local_images"] == expected_images for task in tasks["tasks"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("mutate_sidecar", "message"),
+    [
+        pytest.param(
+            lambda value: value.update(package_dir="/unrelated-package"),
+            "belongs to another package",
+            id="wrong-package",
+        ),
+        pytest.param(
+            lambda value: value["products"][0].update(
+                source_rows={"product_filter_matrix.csv": "0" * 64}
+            ),
+            "stale for product",
+            id="changed-product",
+        ),
+        pytest.param(
+            lambda value: value["products"][0].update(sha256="0" * 64),
+            "hash changed",
+            id="changed-image",
+        ),
+    ],
+)
+def test_mapping_tasks_reject_stale_hydrated_image_evidence(
+    tmp_path: Path,
+    reporting: Any,
+    mutate_sidecar: Callable[[dict[str, Any]], Any],
+    message: str,
+) -> None:
+    package_dir = _write_mapping_task_package(tmp_path)
+    sidecar = _write_mapping_image_sidecar(package_dir)
+    mutate_sidecar(sidecar)
+    _write_json(package_dir / "local_image_manifest.json", sidecar)
+    output = tmp_path / "tasks.json"
+
+    with pytest.raises(reporting.ContractError, match=message):
+        reporting.create_mapping_tasks(package_dir, _central_taxonomy(), output)
+
+    assert not output.exists()
+
+
 def _mapping_decisions(
     tasks: dict[str, Any],
     *,
@@ -2585,6 +2670,81 @@ def test_finalize_report_lists_generated_attribute_table_artifacts(
         assert html_output["artifact_role"] == "attribute_table"
 
 
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_report_renders_pinned_tables_and_rejects_changed_rows(
+    tmp_path: Path, reporting: Any, language: str
+) -> None:
+    """The delivered report preserves source values and rejects changed evidence."""
+    _package_dir, output_dir = _write_report_artifacts(tmp_path)
+    catalog_path = output_dir / "evidence_catalog.json"
+    catalog = json.loads(catalog_path.read_text())
+    table_key = TABLE_KEYS[0]
+    table_dir = output_dir / "evidence" / "attribute_tables"
+    table_dir.mkdir(parents=True)
+    csv_path = table_dir / "comparison.csv"
+    csv_path.write_text("bundle_key,focus_count,baseline_count\nDewy <Vegan>,3,5\n")
+    table = {
+        "table_key": table_key,
+        "csv": "attribute_tables/comparison.csv",
+        "csv_sha256": _sha256(csv_path),
+        "row_count": 1,
+        "source_files": ["products.csv"],
+    }
+    catalog["attribute_tables"][0] = table
+    catalog["language"] = language
+    _write_json(catalog_path, catalog)
+    model_path = output_dir / "report_model.json"
+    model = json.loads(model_path.read_text())
+    model["language"] = language
+    model["sections"][0]["table_keys"] = [table_key]
+    _write_json(model_path, model)
+
+    rendered = reporting.render_report(output_dir)
+    _write_supported_review(output_dir, rendered)
+    verdict = reporting.finalize_report(output_dir)
+    assert verdict["verdict"] == "correct"
+
+    report_html = (output_dir / "report.html").read_text()
+    assert f'data-table-sha256="{_sha256(csv_path)}"' in report_html
+    assert "products.csv" in report_html
+    assert "Dewy <Vegan>" not in report_html
+    assert csv_path.read_text().endswith("Dewy <Vegan>,3,5\n")
+    csv_path.write_text(csv_path.read_text() + "Matte,7,9\n")
+    verdict = reporting.finalize_report(output_dir)
+    assert verdict["verdict"] == "incorrect"
+    assert "table_sha256_mismatch" in json.dumps(verdict["mechanical_findings"])
+    with pytest.raises(reporting.ContractError, match="changed after preparation"):
+        reporting.render_report(output_dir)
+    table["csv_sha256"] = _sha256(csv_path)
+    _write_json(catalog_path, catalog)
+    with pytest.raises(reporting.ContractError, match="row count changed"):
+        reporting.render_report(output_dir)
+
+
+@pytest.mark.parametrize(
+    ("table_record", "finding"),
+    [
+        (None, "table_manifest_invalid"),
+        ({"csv": "../outside.csv"}, "table_path_invalid"),
+        ({"csv": "missing.csv", "sha256": "a" * 64}, "table_sha256_mismatch"),
+    ],
+)
+def test_final_report_rejects_invalid_rendered_table_receipts(
+    tmp_path: Path, reporting: Any, table_record: Any, finding: str
+) -> None:
+    """A review cannot make malformed or missing table evidence acceptable."""
+    _package_dir, output_dir = _write_report_artifacts(tmp_path)
+    rendered = reporting.render_report(output_dir)
+    rendered["rendered_tables"] = [table_record]
+    _write_json(output_dir / "render_manifest.json", rendered)
+    _write_supported_review(output_dir, rendered)
+
+    verdict = reporting.finalize_report(output_dir)
+
+    assert verdict["verdict"] == "incorrect"
+    assert finding in json.dumps(verdict["mechanical_findings"])
+
+
 def test_finalize_report_rechecks_pinned_transport_receipt_copies(
     tmp_path: Path, reporting: Any
 ) -> None:
@@ -3036,6 +3196,98 @@ def test_finalize_report_no_work_uses_not_applicable_review_with_visible_basis(
     assert "6 pre-existing resolved attribute cells" in report_html
     assert "mapping review is not applicable" in report_html
     assert "2 variant-level attribute cells" in report_html
+
+
+@pytest.mark.parametrize(
+    ("mutate_provenance", "expected_basis", "expected_code"),
+    [
+        pytest.param(
+            lambda value: None,
+            "correct_with_caveats",
+            "mapping_not_server_accepted",
+            id="intact-local-review-retains-caveat",
+        ),
+        pytest.param(
+            lambda value: value.update(artifacts=None),
+            "unable_to_determine",
+            "mapping_review_provenance_invalid",
+            id="missing-review-pins",
+        ),
+        pytest.param(
+            lambda value: value.pop("server_acceptance"),
+            "unable_to_determine",
+            "mapping_server_acceptance_invalid",
+            id="missing-acceptance-contract",
+        ),
+        pytest.param(
+            lambda value: value["server_acceptance"].update(status="unverified"),
+            "unable_to_determine",
+            "mapping_server_acceptance_invalid",
+            id="unverified-acceptance",
+        ),
+        pytest.param(
+            lambda value: value["server_acceptance"].update(artifacts=None),
+            "unable_to_determine",
+            "mapping_server_acceptance_invalid",
+            id="invalid-server-pins",
+        ),
+        pytest.param(
+            lambda value: value["server_acceptance"]["artifacts"].update(
+                {"mapping_submission_receipt.json": "a" * 64}
+            ),
+            "unable_to_determine",
+            "mapping_server_acceptance_changed",
+            id="local-review-cannot-claim-server-receipt",
+        ),
+        pytest.param(
+            lambda value: value["artifacts"].update({"mapping_tasks.json": "0" * 64}),
+            "unable_to_determine",
+            "mapping_review_provenance_changed",
+            id="stale-task-pin",
+        ),
+        pytest.param(
+            lambda value: value["artifacts"].pop("mapping_review.json"),
+            "unable_to_determine",
+            "mapping_review_provenance_changed",
+            id="omitted-review-pin",
+        ),
+    ],
+)
+def test_finalize_report_checks_intake_pins_even_with_complete_review_files(
+    tmp_path: Path,
+    reporting: Any,
+    mutate_provenance: Callable[[dict[str, Any]], Any],
+    expected_basis: str,
+    expected_code: str,
+) -> None:
+    _package_dir, output_dir = _write_report_artifacts(tmp_path)
+    case = _prepare_apply_case(tmp_path, reporting)
+    _copy_mapping_provenance(output_dir, case)
+    provenance = {
+        "artifacts": {
+            name: _sha256(output_dir / name)
+            for name in (
+                "mapping_tasks.json",
+                "mapping_decisions.json",
+                "validated_mappings.json",
+                "mapping_review.json",
+            )
+        },
+        "server_acceptance": {"status": "local_review_only", "artifacts": {}},
+    }
+    mutate_provenance(provenance)
+    _write_json(
+        output_dir / "run_intake.json",
+        {"inputs": {"mapping_provenance": provenance}},
+    )
+    render_manifest = reporting.render_report(output_dir)
+    _write_supported_review(output_dir, render_manifest)
+
+    verdict = reporting.finalize_report(output_dir)
+
+    assert verdict["basis"]["mapping_review"] == expected_basis
+    assert verdict["verdict"] == expected_basis
+    assert expected_code in {finding["code"] for finding in verdict["mapping_findings"]}
 
 
 def test_finalize_report_cannot_ignore_deleted_intake_pinned_mapping_provenance(
@@ -3628,3 +3880,28 @@ def test_store_atomic_attribute_write_does_not_commit_when_audit_insert_fails() 
     assert "INSERT INTO pdp_attribute_audit" in inserted_sql[1]
     assert connection.commit_count == 0
     assert connection.transaction_replay_disabled is True
+
+
+@pytest.mark.parametrize(
+    ("name", "header", "accepted"),
+    [
+        ("source.jpg", b"\xff\xd8\xff\xe0", True),
+        ("source.gif", b"GIF89a", True),
+        ("source.webp", b"RIFF0000WEBP", True),
+        ("source.avif", b"0000ftypavif", True),
+        ("source.svg", b"<svg></svg>", False),
+        ("source.jpg", b"<script>alert(1)</script>", False),
+        ("source.webp", b"not a raster", False),
+    ],
+)
+def test_product_evidence_requires_matching_raster_headers(
+    tmp_path: Path, reporting: Any, name: str, header: bytes, accepted: bool
+) -> None:
+    """Renaming active content must not make it accepted product-image evidence."""
+    path = tmp_path / name
+    path.write_bytes(header)
+    assert reporting._is_supported_local_image(path) is accepted
+
+
+def test_missing_product_image_is_unavailable(tmp_path: Path, reporting: Any) -> None:
+    assert not reporting._is_supported_local_image(tmp_path / "missing.jpg")

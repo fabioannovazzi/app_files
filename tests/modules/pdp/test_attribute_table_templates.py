@@ -283,7 +283,7 @@ def test_write_attribute_table_artifacts_persists_manifest_and_html(
     html_text = (
         tmp_path / "attribute_tables" / "attribute_bundle_comparison_table.html"
     ).read_text(encoding="utf-8")
-    assert "Attribute Bundle Comparison" in html_text
+    assert "Attribute combination comparison" in html_text
     assert "Showing up to 5 rows." in html_text
     assert "IBCS" not in html_text
 
@@ -337,15 +337,15 @@ def test_build_attribute_tables_from_package_localizes_spanish_html_and_manifest
     table = result["tables"][0]
     assert result["table_keys"] == ["attribute_bridge_table"]
     assert table["table_key"] == "attribute_bridge_table"
-    assert table["title"] == "Coincidencia entre más vendidos y productos recientes"
+    assert table["title"] == "Combinaciones entre más vendidos y novedades"
     assert table["columns"][:2] == ["signal_bundle", "alignment"]
     assert manifest["tables"][0]["table_key"] == "attribute_bridge_table"
     assert manifest["tables"][0]["columns"] == table["columns"]
     assert '<html lang="es">' in html_text
-    assert "Coincidencia entre más vendidos y productos recientes" in html_text
+    assert "Combinaciones entre más vendidos y novedades" in html_text
     assert "Se muestran hasta 5 filas." in html_text
-    assert "Conjunto de señales" in html_text
-    assert "Alineación" in html_text
+    assert "Combinación de atributos" in html_text
+    assert "Presencia en ambos grupos" in html_text
     assert "No hay filas que cumplan los criterios." in html_text
     assert "Top-seller and recent-product overlap" not in html_text
     assert "Showing up to" not in html_text
@@ -377,11 +377,11 @@ def test_spanish_attribute_html_localizes_populated_values_and_numbers(
         encoding="utf-8"
     )
     bridge_csv = (table_dir / "attribute_bridge_table.csv").read_text(encoding="utf-8")
-    assert "Comparación de más vendidos" in bundle_html
+    assert "Señales entre los más vendidos" in bundle_html
     assert "Más vendidos frente al resto" in bundle_html
-    assert "Comparación de productos recientes" in bundle_html
-    assert "Recientes frente al resto" in bundle_html
-    assert "Ambas comparaciones" in bridge_html
+    assert "Señales entre las novedades" in bundle_html
+    assert "Novedades frente al resto" in bundle_html
+    assert "Ambos grupos" in bridge_html
     assert "50,0%" in bridge_html
     assert "40,0%" in bridge_html
     assert "Top-seller comparison" not in bundle_html
@@ -423,9 +423,39 @@ def test_spanish_attribute_html_localizes_caveats_and_large_numbers(
     assert "Más vendido" in html_text
     assert "4,8" in html_text
     assert "1.234" in html_text
-    assert "Sin métricas de reseñas en el paquete" in html_text
-    assert "Pocos atributos resueltos" in html_text
+    assert "Sin datos de reseñas en el paquete" in html_text
+    assert "Pocos atributos clasificados" in html_text
     assert "Sin imagen en el paquete" in html_text
+
+
+@pytest.mark.parametrize(
+    "column,expected",
+    [
+        ("coverage", "Actual source value"),
+        ("resolved_coverage", "Actual source value"),
+        ("unrelated", ""),
+    ],
+)
+def test_product_attributes_follow_source_columns_not_bundle_values(
+    tmp_path, column, expected
+):
+    package = tmp_path / "package"
+    _write_minimal_attribute_package(package)
+    pl.DataFrame(
+        [
+            {
+                "product_name": "Powder A",
+                "brand": "Example",
+                column: "Actual source value",
+            }
+        ]
+    ).write_csv(package / "top_seller_products.csv")
+    build_attribute_tables_from_package(package, output_dir=tmp_path / "out")
+    table = pl.read_csv(
+        tmp_path / "out/attribute_tables/product_signal_evidence_table.csv"
+    )
+    row = table.filter(pl.col("product") == "Powder A").row(0, named=True)
+    assert (row["attributes"] or "") == expected
 
 
 def test_build_attribute_tables_from_package_rejects_invalid_request(

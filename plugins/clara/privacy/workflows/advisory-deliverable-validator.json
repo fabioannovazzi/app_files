@@ -42,7 +42,8 @@
     "scripts/advisory_delivery.py",
     "scripts/verify_advisory_delivery.py",
     "scripts/public_http.py",
-    "scripts/bounded_process.py"
+    "scripts/bounded_process.py",
+    "scripts/advisory_lineage_labels.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -50,7 +51,7 @@
       {
         "id": "deliverable-contract-and-selected-evidence",
         "purpose": "Validate the completed advisory deliverable against its declared contract and available evidence",
-        "content": "The complete selected deliverable text or visible slide content; for HTML, extracted text and links excluding script, style, and template blocks while the full file bytes remain covered by the local hash; advisory_contract.json; selected source files or model-requested excerpts; filenames and local paths; citations, links, figures, calculations, data provenance, assumptions, contradictions, missing evidence, recommendations, decision context, audience, scope, and professional-judgement policy"
+        "content": "The complete selected deliverable text or visible slide content; for HTML, extracted text and links excluding script, style, and template blocks while the full file bytes remain covered by the local hash; advisory_contract.json; selected source files or model-requested excerpts; filenames and local paths; citations, links, figures, calculations, data provenance, assumptions, contradictions, missing evidence, recommendations, decision context, audience, scope, and professional-judgement policy The readable local review includes selected source names and clickable source paths, recorded corrections, claim-evidence relationships and exact review statuses; those paths and report contents may enter context when read."
       },
       {
         "id": "format-check-and-review-artifacts",
@@ -162,6 +163,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3286123307c3caef2213801fb3a0765a3b2af195bf878fe585047dd79388dce9"
+    "source_fingerprint": "42787ef6d31b33dbf4f5034444cf2b4814352ff3ad99c571256f2fb9a572a9b9"
   }
 }

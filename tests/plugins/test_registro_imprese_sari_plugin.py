@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -109,11 +111,15 @@ def _load_script(module_name: str) -> ModuleType:
     """Load a component script without leaking its generic case_core import."""
 
     previous_core = sys.modules.get("case_core")
+    previous_display = sys.modules.get("registry_display")
     unique_prefix = f"registro_imprese_sari_test_{module_name}"
     core = _module_from_path(
         f"{unique_prefix}_case_core", SCRIPTS_ROOT / "case_core.py"
     )
     sys.modules["case_core"] = core
+    sys.modules["registry_display"] = _module_from_path(
+        f"{unique_prefix}_display", SCRIPTS_ROOT / "registry_display.py"
+    )
     try:
         return _module_from_path(unique_prefix, SCRIPTS_ROOT / f"{module_name}.py")
     finally:
@@ -121,6 +127,10 @@ def _load_script(module_name: str) -> ModuleType:
             sys.modules.pop("case_core", None)
         else:
             sys.modules["case_core"] = previous_core
+        if previous_display is None:
+            sys.modules.pop("registry_display", None)
+        else:
+            sys.modules["registry_display"] = previous_display
 
 
 def _load_archive_core() -> ModuleType:
@@ -1107,6 +1117,119 @@ process.stdout.write(JSON.stringify(context.result));
         "queue": "Cola de revisión",
         "save": "Guardar",
     }
+
+
+@pytest.mark.parametrize(
+    "language,heading,question_title,handoff_title",
+    [
+        (
+            "en",
+            "## Selected official sources",
+            "# Question for SARI support",
+            "# Practice review",
+        ),
+        (
+            "fr",
+            "## Sources officielles sélectionnées",
+            "# Question au support SARI",
+            "# Révision du dossier",
+        ),
+        (
+            "de",
+            "## Ausgewählte amtliche Quellen",
+            "# Frage an den SARI-Support",
+            "# Prüfung des Vorgangs",
+        ),
+    ],
+)
+def test_other_supported_languages_keep_case_content_in_localized_package(
+    tmp_path: Path, language: str, heading: str, question_title: str, handoff_title: str
+) -> None:
+    output, audit = _prepare_case(tmp_path, language=language)
+    checklist = (output / "studio_checklist.md").read_text()
+    question = (output / "sari_question_draft.md").read_text()
+    handoff_text = (output / "review_handoff.md").read_text()
+    final = _read_json(output / "final_artifacts.json")
+
+    assert audit["status"] == "passed"
+    assert heading in checklist and "## Fonti ufficiali selezionate" not in checklist
+    assert question.startswith(question_title)
+    assert handoff_text.startswith(handoff_title)
+    assert PRIVATE_CASE_SUMMARY in checklist
+    assert PRIVATE_PROPOSED_VALUE in checklist
+    assert PRIVATE_SARI_QUESTION in question
+    assert final["ready_to_file"] is False
+    for artifact in final["outputs"]:
+        assert (
+            hashlib.sha256((output / artifact["path"]).read_bytes()).hexdigest()
+            == artifact["sha256"]
+        )
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_whole_registry_widget_localizes_and_preserves_structured_evidence(
+    language: str,
+) -> None:
+    widget = (
+        PLUGIN_ROOT / "assets/registro-imprese-sari-review-widget.html"
+    ).read_text()
+    script = re.search(r"<script>([\s\S]*)</script>", widget).group(1)
+    payload = {
+        "review_payload": {
+            "run_id": "fixture",
+            "case_context": {"case_summary": "Officina Riva requests a PEC change"},
+            "language": language + "-IT",
+            "status": "partial_review",
+            "items": [
+                {
+                    "id": "field-pec",
+                    "title": "PEC <script>unsafe</script>",
+                    "item_type": "practice_step",
+                    "allowed_actions": ["accept", "request_more_documents"],
+                    "recommended_action": "mark_unclear",
+                    "data": {
+                        "proposed_value": "segreteria@example.invalid",
+                        "document_quotes": [{"text": "Preserve <b>source text</b>"}],
+                        "target_artifact": "plan.json",
+                    },
+                }
+            ],
+        },
+    }
+    program = r"""
+const fs=require('node:fs'),vm=require('node:vm');
+const input=JSON.parse(fs.readFileSync(0,'utf8')),nodes={};
+const document={documentElement:{},getElementById:id=>(nodes[id]??={addEventListener(){},setAttribute(){}})};
+const context={document,window:{openai:{toolOutput:input.payload}}};
+vm.createContext(context);vm.runInContext(input.script,context);
+process.stdout.write(JSON.stringify({language:document.documentElement.lang,detail:nodes.detail.innerHTML,summary:nodes["case-summary"].textContent,save:nodes.save.textContent}));
+"""
+    result = subprocess.run(
+        [_node_or_skip(), "-e", program],
+        input=json.dumps({"script": script, "payload": payload}),
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    )
+    actual = json.loads(result.stdout)
+    assert actual["language"] == language
+    assert actual["summary"] == "Officina Riva requests a PEC change"
+    assert (
+        actual["save"]
+        == {
+            "it": "Salva",
+            "en": "Save",
+            "fr": "Enregistrer",
+            "de": "Speichern",
+            "es": "Guardar",
+        }[language]
+    )
+    assert "segreteria@example.invalid" in actual["detail"]
+    assert "Preserve &lt;b&gt;source text&lt;/b&gt;" in actual["detail"]
+    assert "[object Object]" not in actual["detail"]
+    assert "<script>unsafe</script>" not in actual["detail"]
+    assert "plan.json" in actual["detail"].split("<details>", 1)[1]
 
 
 @pytest.mark.parametrize("secret_field", ["credentials", "cookie", "token", "session"])

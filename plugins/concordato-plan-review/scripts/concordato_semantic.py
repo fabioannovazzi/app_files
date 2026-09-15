@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import re
 import sys
 from collections import defaultdict
@@ -20,7 +21,11 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import openpyxl
+from concordato_labels import display_label
 from docx import Document
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Inches, Pt, RGBColor
 from openpyxl.styles import Alignment, Font, PatternFill
 
 
@@ -151,14 +156,14 @@ HTTP_URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 TEXT = {
     "it": {
         "title": "Revisione del concordato preventivo",
-        "status": "Stato del modello semantico",
-        "withheld": "Modello semantico non ancora riesaminato",
-        "reviewed": "Modello semantico riesaminato",
+        "status": "Stato della revisione",
+        "withheld": "Analisi dei documenti ancora da rivedere",
+        "reviewed": "Analisi dei documenti riesaminata",
         "procedure": "Procedura",
-        "deterministic": "Riepilogo aritmetico",
+        "deterministic": "Riepilogo del piano",
         "questions": "Domande di revisione",
         "issues": "Questioni aperte",
-        "numeric_appendix": "Appendice di tie-out numerico",
+        "numeric_appendix": "Confronto degli importi",
         "limitation": (
             "Il documento organizza evidenze e controlli aritmetici; non costituisce "
             "parere legale né attestazione del piano."
@@ -167,14 +172,14 @@ TEXT = {
     },
     "en": {
         "title": "Concordato Preventivo Review",
-        "status": "Semantic model status",
-        "withheld": "Semantic model not yet reviewed",
-        "reviewed": "Semantic model reviewed",
+        "status": "Review status",
+        "withheld": "Document analysis awaiting review",
+        "reviewed": "Document analysis reviewed",
         "procedure": "Procedure",
-        "deterministic": "Arithmetic summary",
+        "deterministic": "Plan summary",
         "questions": "Review questions",
         "issues": "Open issues",
-        "numeric_appendix": "Numerical tie-out appendix",
+        "numeric_appendix": "Amount comparison",
         "limitation": (
             "This document organizes evidence and arithmetic controls; it is not a "
             "legal opinion or plan attestation."
@@ -183,14 +188,14 @@ TEXT = {
     },
     "fr": {
         "title": "Revue du concordato preventivo",
-        "status": "Statut du modèle sémantique",
-        "withheld": "Modèle sémantique non encore revu",
-        "reviewed": "Modèle sémantique revu",
+        "status": "État de la revue",
+        "withheld": "Analyse des documents à revoir",
+        "reviewed": "Analyse des documents revue",
         "procedure": "Procédure",
-        "deterministic": "Synthèse arithmétique",
+        "deterministic": "Synthèse du plan",
         "questions": "Questions de revue",
         "issues": "Points ouverts",
-        "numeric_appendix": "Annexe de rapprochement numérique",
+        "numeric_appendix": "Rapprochement des montants",
         "limitation": (
             "Ce document organise les éléments probants et les contrôles "
             "arithmétiques; il ne constitue ni un avis juridique ni une attestation."
@@ -199,14 +204,14 @@ TEXT = {
     },
     "de": {
         "title": "Prüfung des Concordato Preventivo",
-        "status": "Status des semantischen Modells",
-        "withheld": "Semantisches Modell noch nicht geprüft",
-        "reviewed": "Semantisches Modell geprüft",
+        "status": "Prüfungsstand",
+        "withheld": "Dokumentenanalyse noch zu prüfen",
+        "reviewed": "Dokumentenanalyse geprüft",
         "procedure": "Verfahren",
-        "deterministic": "Arithmetische Übersicht",
+        "deterministic": "Planübersicht",
         "questions": "Prüffragen",
         "issues": "Offene Punkte",
-        "numeric_appendix": "Anhang zum Zahlenabgleich",
+        "numeric_appendix": "Betragsvergleich",
         "limitation": (
             "Dieses Dokument strukturiert Nachweise und Rechenkontrollen; es ist "
             "weder ein Rechtsgutachten noch eine Planbescheinigung."
@@ -215,14 +220,14 @@ TEXT = {
     },
     "es": {
         "title": "Revisión del concordato preventivo",
-        "status": "Estado del modelo semántico",
-        "withheld": "Modelo semántico aún no revisado",
-        "reviewed": "Modelo semántico revisado",
+        "status": "Estado de la revisión",
+        "withheld": "Análisis documental pendiente de revisión",
+        "reviewed": "Análisis documental revisado",
         "procedure": "Procedimiento",
-        "deterministic": "Resumen aritmético",
+        "deterministic": "Resumen del plan",
         "questions": "Preguntas de revisión",
         "issues": "Cuestiones abiertas",
-        "numeric_appendix": "Anexo de conciliación numérica",
+        "numeric_appendix": "Comparación de importes",
         "limitation": (
             "Este documento organiza evidencias y controles aritméticos; no es un "
             "dictamen jurídico ni una atestación del plan."
@@ -1912,6 +1917,42 @@ def _cell_value(value: object) -> object:
     return value
 
 
+def _display_cell(header: str, value: object, language: str) -> object:
+    """Render declared fields without translating names or authored reasoning."""
+    if header == "evidence_refs" and isinstance(value, list):
+        return "\n".join(
+            f"{Path(str(ref.get('relative_path', ref['source_artifact_ref']))).name}: {ref['locator']}"
+            for ref in value
+        )
+    if header in {"roles", "authoritative_for"} and isinstance(value, list):
+        return "; ".join(display_label(item, language) for item in value)
+    if (
+        header
+        in {
+            "metric",
+            "status",
+            "area",
+            "claim_status",
+            "priority",
+            "treatment_form",
+            "voting_treatment",
+            "assessment",
+            "severity",
+            "side",
+            "match_status",
+            "check_id",
+            "observation",
+            "mechanical_scope",
+            "limitation",
+        }
+        and value
+    ):
+        return display_label(value, language)
+    if isinstance(value, bool):
+        return display_label("true" if value else "false", language)
+    return _cell_value(value)
+
+
 def _add_sheet(
     workbook: openpyxl.Workbook,
     *,
@@ -1919,12 +1960,18 @@ def _add_sheet(
     rows: Sequence[Mapping[str, Any]],
     headers: Sequence[str],
     no_rows: str,
+    language: str,
 ) -> None:
-    sheet = workbook.create_sheet(title=title)
-    sheet.append(list(headers))
+    sheet = workbook.create_sheet(title=display_label(title, language))
+    sheet.append([display_label(header, language) for header in headers])
     if rows:
         for row in rows:
-            sheet.append([_cell_value(row.get(header, "")) for header in headers])
+            sheet.append(
+                [
+                    _display_cell(header, row.get(header, ""), language)
+                    for header in headers
+                ]
+            )
     else:
         sheet.append([no_rows, *("" for _ in headers[1:])])
     for cell in sheet[1]:
@@ -1936,8 +1983,64 @@ def _add_sheet(
         sheet.column_dimensions[column[0].column_letter].width = min(
             max(max_length + 2, 12), 48
         )
+    for row in sheet:
+        lines = max(
+            sum(
+                max(
+                    1,
+                    math.ceil(
+                        len(part)
+                        / max(1, sheet.column_dimensions[cell.column_letter].width - 3)
+                    ),
+                )
+                for part in str(cell.value or "").split("\n")
+            )
+            for cell in row
+        )
+        sheet.row_dimensions[row[0].row].height = min(409, max(30, lines * 15 + 10))
+        for cell in row:
+            cell.alignment = Alignment(vertical="top", wrap_text=True)
+    sheet.sheet_view.showGridLines = False
     sheet.freeze_panes = "A2"
     sheet.auto_filter.ref = sheet.dimensions
+    if "note_ref" in headers and title != "Source Notes":
+        column_index = list(headers).index("note_ref") + 1
+        target = display_label("Source Notes", language).replace("'", "''")
+        for row_number, row in enumerate(rows, start=2):
+            reference = row.get("note_ref")
+            if reference:
+                cell = sheet.cell(row_number, column_index)
+                cell.hyperlink = f"#'{target}'!A{int(str(reference)[1:]) + 1}"
+                cell.font = Font(color="0563C1", underline="single")
+
+
+def _schedule_rows(
+    rows: Sequence[Mapping[str, Any]],
+    source_rows: Sequence[Mapping[str, Any]],
+    notes: list[dict[str, Any]],
+    *,
+    title: str,
+    identity: str,
+    language: str,
+) -> list[dict[str, Any]]:
+    """Keep schedules compact and link their complete reasoning and evidence."""
+    sources = {row[identity]: row for row in source_rows}
+    display_rows = []
+    for row in rows:
+        result = dict(row)
+        reference = f"N{len(notes) + 1}"
+        notes.append(
+            {
+                "note_ref": reference,
+                "schedule": display_label(title, language),
+                "record_id": row[identity],
+                "judgment_basis": row["judgment_basis"],
+                "evidence_refs": sources[row[identity]]["evidence_refs"],
+            }
+        )
+        result["note_ref"] = reference
+        display_rows.append(result)
+    return display_rows
 
 
 def _write_workbook(
@@ -1948,13 +2051,40 @@ def _write_workbook(
     derived: Mapping[str, Any],
     matches: Sequence[Mapping[str, Any]],
     language: str,
+    numeric_comparison_executed: bool,
 ) -> None:
     text = TEXT[_language(language)]
     workbook = openpyxl.Workbook()
     workbook.remove(workbook.active)
+    notes: list[dict[str, Any]] = []
+    creditor_rows = _schedule_rows(
+        derived.get("creditors", []),
+        case_model["creditor_population"]["creditors"] if case_model else [],
+        notes,
+        title="Creditors",
+        identity="creditor_id",
+        language=language,
+    )
+    source_use_rows = _schedule_rows(
+        derived.get("sources_and_uses", []),
+        case_model["sources_and_uses"]["items"] if case_model else [],
+        notes,
+        title="Sources Uses",
+        identity="item_id",
+        language=language,
+    )
+    liquidity_rows = _schedule_rows(
+        derived.get("liquidity", []),
+        case_model["liquidity"]["periods"] if case_model else [],
+        notes,
+        title="Liquidity",
+        identity="period_id",
+        language=language,
+    )
     overview = (
         [
             {"metric": "semantic_model_status", "value": status},
+            {"metric": "currency", "value": derived["currency"]},
             *[
                 {"metric": key, "value": value}
                 for key, value in derived.get("summary", {}).items()
@@ -1963,12 +2093,14 @@ def _write_workbook(
         if case_model is not None
         else [{"metric": "semantic_model_status", "value": status}]
     )
+    overview[0]["value"] = display_label(status, language)
     _add_sheet(
         workbook,
         title="Overview",
         rows=overview,
         headers=("metric", "value"),
         no_rows=text["no_rows"],
+        language=language,
     )
     documents = (
         case_model["document_perimeter"]["documents"] if case_model is not None else []
@@ -1986,11 +2118,12 @@ def _write_workbook(
             "source_artifact_ref",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
         title="Creditors",
-        rows=derived.get("creditors", []),
+        rows=creditor_rows,
         headers=(
             "creditor_id",
             "creditor_name",
@@ -2009,10 +2142,11 @@ def _write_workbook(
             "payment_start",
             "payment_end",
             "voting_treatment",
-            "judgment_basis",
+            "note_ref",
             "evidence_ref_count",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
@@ -2032,11 +2166,12 @@ def _write_workbook(
             "plan_vs_liquidation_delta",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
         title="Sources Uses",
-        rows=derived.get("sources_and_uses", []),
+        rows=source_use_rows,
         headers=(
             "item_id",
             "side",
@@ -2045,15 +2180,15 @@ def _write_workbook(
             "amount",
             "period",
             "currency",
-            "judgment_basis",
-            "evidence_refs",
+            "note_ref",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
         title="Liquidity",
-        rows=derived.get("liquidity", []),
+        rows=liquidity_rows,
         headers=(
             "period_id",
             "period",
@@ -2064,10 +2199,25 @@ def _write_workbook(
             "calculated_closing_cash",
             "bridge_difference",
             "bridge_within_tolerance",
-            "judgment_basis",
+            "note_ref",
             "evidence_ref_count",
         ),
         no_rows=text["no_rows"],
+        language=language,
+    )
+    _add_sheet(
+        workbook,
+        title="Source Notes",
+        rows=notes,
+        headers=(
+            "note_ref",
+            "schedule",
+            "record_id",
+            "judgment_basis",
+            "evidence_refs",
+        ),
+        no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
@@ -2083,6 +2233,7 @@ def _write_workbook(
             "evidence_refs",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
@@ -2100,11 +2251,12 @@ def _write_workbook(
             "evidence_refs",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
         title="Mechanical Checks",
-        rows=derived.get("checks", []),
+        rows=_display_checks(case_model, derived, language),
         headers=(
             "check_id",
             "status",
@@ -2113,6 +2265,7 @@ def _write_workbook(
             "limitation",
         ),
         no_rows=text["no_rows"],
+        language=language,
     )
     _add_sheet(
         workbook,
@@ -2128,9 +2281,57 @@ def _write_workbook(
             "difference",
             "match_status",
         ),
-        no_rows=text["no_rows"],
+        no_rows=(
+            text["no_rows"]
+            if numeric_comparison_executed
+            else display_label("numeric_not_executed", language)
+        ),
+        language=language,
     )
     workbook.save(path)
+
+
+def _display_checks(
+    case_model: Mapping[str, Any] | None,
+    derived: Mapping[str, Any],
+    language: str,
+) -> list[dict[str, Any]]:
+    """Localize existing mechanical observations; retain every stored status."""
+    rows = [dict(row) for row in derived.get("checks", [])]
+    if case_model is None:
+        return rows
+    observations = {
+        "review_question_coverage": display_label("areas_count", language).format(
+            count=len({row["area"] for row in case_model["review_questions"]}),
+            required=len(REQUIRED_REVIEW_AREAS),
+        ),
+        "liquidity_bridge": display_label("outside_tolerance_count", language).format(
+            count=sum(
+                1 for row in derived["liquidity"] if not row["bridge_within_tolerance"]
+            )
+        ),
+        "open_material_issues": display_label("material_issue_count", language).format(
+            count=derived["summary"]["open_critical_high_issue_count"]
+        ),
+    }
+    for row in rows:
+        if row["check_id"] in observations:
+            row["observation"] = observations[row["check_id"]]
+    return rows
+
+
+def _review_evidence_text(
+    row: Mapping[str, Any], documents: Sequence[Mapping[str, Any]]
+) -> str:
+    """Show source filenames and locators, retaining paths for duplicate names."""
+    names = [Path(str(item["relative_path"])).name for item in documents]
+    locations = []
+    for ref in row["evidence_refs"]:
+        relative_path = str(ref["relative_path"])
+        name = Path(relative_path).name
+        label = relative_path if names.count(name) > 1 else name
+        locations.append(f"{label}: {ref['locator']}" if ref["locator"] else label)
+    return "; ".join(dict.fromkeys(locations))
 
 
 def _write_markdown(
@@ -2141,6 +2342,7 @@ def _write_markdown(
     derived: Mapping[str, Any],
     language: str,
     match_count: int,
+    numeric_comparison_executed: bool,
 ) -> None:
     text = TEXT[_language(language)]
     lines = [
@@ -2158,26 +2360,39 @@ def _write_markdown(
                 "",
                 f"## {text['procedure']}",
                 "",
-                f"- Debtor: {procedure['debtor_name'] or '—'}",
-                f"- Court: {procedure['court'] or '—'}",
-                f"- Procedure reference: {procedure['procedure_reference'] or '—'}",
-                f"- Stage: `{procedure['stage']}`",
-                f"- Plan type: `{procedure['plan_type']}`",
-                f"- Reference date: `{procedure['reference_date']}`",
+                f"- {display_label('debtor', language)}: {procedure['debtor_name'] or '—'}",
+                f"- {display_label('court', language)}: {procedure['court'] or '—'}",
+                f"- {display_label('procedure_reference', language)}: {procedure['procedure_reference'] or '—'}",
+                f"- {display_label('stage', language)}: {display_label(procedure['stage'], language)}",
+                f"- {display_label('plan_type', language)}: {display_label(procedure['plan_type'], language)}",
+                f"- {display_label('reference_date', language)}: {procedure['reference_date']}",
+                f"- {display_label('currency', language)}: {procedure['currency']}",
                 "",
                 f"## {text['deterministic']}",
                 "",
             ]
         )
         for key, value in derived["summary"].items():
-            lines.append(f"- `{key}`: {value}")
+            lines.append(f"- {display_label(key, language)}: {value}")
         lines.extend(["", f"## {text['questions']}", ""])
         for row in case_model["review_questions"]:
             lines.append(
-                f"- **{row['area']} — {row['assessment']}**: {row['question']}"
+                f"- **{display_label(row['area'], language)} — {display_label(row['assessment'], language)}**: {row['question']}"
             )
+            lines.append(
+                f"  - {display_label('judgment_basis', language)}: {row['judgment_basis']}"
+            )
+            evidence = _review_evidence_text(
+                row, case_model["document_perimeter"]["documents"]
+            )
+            if evidence:
+                lines.append(
+                    f"  - {display_label('evidence_refs', language)}: {evidence}"
+                )
             if row["follow_up"]:
-                lines.append(f"  - Follow-up: {row['follow_up']}")
+                lines.append(
+                    f"  - {display_label('follow_up', language)}: {row['follow_up']}"
+                )
         lines.extend(["", f"## {text['issues']}", ""])
         open_issues = [
             row for row in case_model["issues"] if row["status"] != "resolved"
@@ -2185,7 +2400,7 @@ def _write_markdown(
         if open_issues:
             for row in open_issues:
                 lines.append(
-                    f"- **{row['severity']} · {row['area']}**: {row['statement']}"
+                    f"- **{display_label(row['severity'], language)} · {display_label(row['area'], language)}**: {row['statement']}"
                 )
         else:
             lines.append(f"- {text['no_rows']}")
@@ -2194,8 +2409,12 @@ def _write_markdown(
             "",
             f"## {text['numeric_appendix']}",
             "",
-            f"- Candidate amount matches: {match_count}",
-            "- Equal amounts remain candidate evidence and require contextual review.",
+            (
+                f"- {display_label('match_count', language)}: {match_count}"
+                if numeric_comparison_executed
+                else f"- {display_label('numeric_not_executed', language)}"
+            ),
+            f"- {display_label('numeric_limit', language)}",
             "",
         ]
     )
@@ -2211,78 +2430,134 @@ def _write_summary_docx(
     language: str,
     candidate_count: int,
     match_count: int,
+    numeric_comparison_executed: bool,
 ) -> None:
     text = TEXT[_language(language)]
     document = Document()
+    document.styles["Normal"].font.name = "Arial"
+    document.styles["Normal"].font.size = Pt(11)
+    document.styles["Normal"].paragraph_format.space_after = Pt(6)
+    for name in ("Title", "Heading 1", "Heading 2", "Heading 3"):
+        style = document.styles[name]
+        style.font.name = "Arial"
+        style.font.color.rgb = RGBColor(0, 0, 0)
+        for border in style.element.xpath("./w:pPr/w:pBdr"):
+            border.getparent().remove(border)
+    for section in document.sections:
+        section.top_margin = section.bottom_margin = Inches(0.7)
+        section.left_margin = section.right_margin = Inches(0.75)
     document.add_heading(text["title"], level=0)
     document.add_paragraph(text["limitation"])
     document.add_heading(text["status"], level=1)
     document.add_paragraph(
         text["reviewed"] if status == "reviewed" else text["withheld"]
     )
+    summary_table = None
     if case_model is not None:
         procedure = case_model["procedure"]
         document.add_heading(text["procedure"], level=1)
         procedure_table = document.add_table(rows=0, cols=2)
         procedure_table.style = "Table Grid"
         for label, value in (
-            ("Debtor", procedure["debtor_name"]),
-            ("Court", procedure["court"]),
-            ("Procedure reference", procedure["procedure_reference"]),
-            ("Stage", procedure["stage"]),
-            ("Plan type", procedure["plan_type"]),
-            ("Reference date", procedure["reference_date"]),
+            ("debtor", procedure["debtor_name"]),
+            ("court", procedure["court"]),
+            ("procedure_reference", procedure["procedure_reference"]),
+            ("stage", display_label(procedure["stage"], language)),
+            ("plan_type", display_label(procedure["plan_type"], language)),
+            ("reference_date", procedure["reference_date"]),
+            ("currency", procedure["currency"]),
         ):
             cells = procedure_table.add_row().cells
-            cells[0].text = label
+            cells[0].text = display_label(label, language)
             cells[1].text = str(value or "—")
         document.add_heading(text["deterministic"], level=1)
         summary_table = document.add_table(rows=1, cols=2)
         summary_table.style = "Table Grid"
-        summary_table.rows[0].cells[0].text = "Metric"
-        summary_table.rows[0].cells[1].text = "Value"
+        summary_table.rows[0].cells[0].text = display_label("metric", language)
+        summary_table.rows[0].cells[1].text = display_label("value", language)
         for key, value in derived["summary"].items():
             cells = summary_table.add_row().cells
-            cells[0].text = key
+            cells[0].text = display_label(key, language)
             cells[1].text = str(value)
         document.add_heading(text["questions"], level=1)
-        question_table = document.add_table(rows=1, cols=4)
-        question_table.style = "Table Grid"
-        for cell, value in zip(
-            question_table.rows[0].cells,
-            ("Area", "Assessment", "Question", "Follow-up"),
-            strict=True,
-        ):
-            cell.text = value
         for row in case_model["review_questions"]:
-            cells = question_table.add_row().cells
-            cells[0].text = row["area"]
-            cells[1].text = row["assessment"]
-            cells[2].text = row["question"]
-            cells[3].text = row["follow_up"]
+            document.add_heading(display_label(row["area"], language), level=2)
+            question = document.add_paragraph(row["question"])
+            question.paragraph_format.keep_with_next = True
+            assessment = document.add_paragraph(
+                f"{display_label('assessment', language)}: {display_label(row['assessment'], language)}"
+            )
+            assessment.paragraph_format.keep_with_next = True
+            document.add_paragraph(
+                f"{display_label('judgment_basis', language)}: {row['judgment_basis']}"
+            )
+            evidence = _review_evidence_text(
+                row, case_model["document_perimeter"]["documents"]
+            )
+            if evidence:
+                document.add_paragraph(
+                    f"{display_label('evidence_refs', language)}: {evidence}"
+                )
+            if row["follow_up"]:
+                document.add_paragraph(
+                    f"{display_label('follow_up', language)}: {row['follow_up']}"
+                )
         document.add_heading(text["issues"], level=1)
-        issue_table = document.add_table(rows=1, cols=5)
-        issue_table.style = "Table Grid"
-        for cell, value in zip(
-            issue_table.rows[0].cells,
-            ("Severity", "Area", "Status", "Issue", "Next action"),
-            strict=True,
-        ):
-            cell.text = value
         for row in case_model["issues"]:
-            cells = issue_table.add_row().cells
-            cells[0].text = row["severity"]
-            cells[1].text = row["area"]
-            cells[2].text = row["status"]
-            cells[3].text = row["statement"]
-            cells[4].text = row["next_action"]
+            document.add_heading(display_label(row["area"], language), level=2)
+            issue_status = document.add_paragraph(
+                f"{display_label('severity', language)}: {display_label(row['severity'], language)} · "
+                f"{display_label('status', language)}: {display_label(row['status'], language)}"
+            )
+            issue_status.paragraph_format.keep_with_next = True
+            statement = document.add_paragraph(row["statement"])
+            statement.paragraph_format.keep_with_next = bool(row["next_action"])
+            if row["next_action"]:
+                document.add_paragraph(
+                    f"{display_label('next_action', language)}: {row['next_action']}"
+                )
+        if not case_model["issues"]:
+            document.add_paragraph(text["no_rows"])
     document.add_heading(text["numeric_appendix"], level=1)
-    document.add_paragraph(f"Candidate plan amounts: {candidate_count}")
-    document.add_paragraph(f"Candidate amount matches: {match_count}")
-    document.add_paragraph(
-        "Equal amounts are candidate evidence only; contextual support remains "
-        "professional judgment."
-    )
+    if numeric_comparison_executed:
+        document.add_paragraph(
+            f"{display_label('candidate_count', language)}: {candidate_count}"
+        )
+        document.add_paragraph(
+            f"{display_label('match_count', language)}: {match_count}"
+        )
+    else:
+        document.add_paragraph(display_label("numeric_not_executed", language))
+    document.add_paragraph(display_label("numeric_limit", language))
+    for table in document.tables:
+        table.autofit = False
+        table.columns[0].width = Inches(4.6)
+        table.columns[1].width = Inches(2.4)
+        borders = OxmlElement("w:tblBorders")
+        for side in ("top", "left", "bottom", "right", "insideH", "insideV"):
+            edge = OxmlElement(f"w:{side}")
+            edge.set(qn("w:val"), "single")
+            edge.set(qn("w:sz"), "4")
+            edge.set(qn("w:color"), "D9D9D9")
+            borders.append(edge)
+        table._tbl.tblPr.append(borders)
+        for row in table.rows:
+            row.cells[0].width = Inches(4.6)
+            row.cells[1].width = Inches(2.4)
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    paragraph.paragraph_format.space_after = Pt(3)
+                    paragraph.paragraph_format.space_before = Pt(3)
+        if summary_table is not None and table._tbl is summary_table._tbl:
+            header = table.rows[0]
+            repeat = OxmlElement("w:tblHeader")
+            header._tr.get_or_add_trPr().append(repeat)
+            for cell in header.cells:
+                shading = OxmlElement("w:shd")
+                shading.set(qn("w:fill"), "E8EDF1")
+                cell._tc.get_or_add_tcPr().append(shading)
+                for run in cell.paragraphs[0].runs:
+                    run.bold = True
     document.save(path)
 
 
@@ -2296,6 +2571,7 @@ def write_semantic_artifacts(
     language: str,
     matches: Sequence[Mapping[str, Any]],
     candidate_count: int,
+    numeric_comparison_executed: bool,
     error: str | None = None,
 ) -> SemanticArtifacts:
     """Write primary semantic outputs and the subordinate numeric appendix."""
@@ -2455,6 +2731,7 @@ def write_semantic_artifacts(
         derived=derived,
         matches=matches,
         language=language,
+        numeric_comparison_executed=numeric_comparison_executed,
     )
     _write_markdown(
         output_dir / "concordato_semantic_review.md",
@@ -2463,6 +2740,7 @@ def write_semantic_artifacts(
         derived=derived,
         language=language,
         match_count=len(matches),
+        numeric_comparison_executed=numeric_comparison_executed,
     )
     _write_summary_docx(
         output_dir / "concordato_preventivo_review_summary.docx",
@@ -2472,6 +2750,7 @@ def write_semantic_artifacts(
         language=language,
         candidate_count=candidate_count,
         match_count=len(matches),
+        numeric_comparison_executed=numeric_comparison_executed,
     )
     artifact_paths = (
         "suggested_concordato_case_model.json",

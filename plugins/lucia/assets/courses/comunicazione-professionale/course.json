@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,7 +19,44 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "prepare_sources_then_review_communication_package"
+  },
   "sources": [
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Bold.ttf",
+      "repository_path": "plugins/comunicazione-professionale/assets/fonts/InstrumentSans-Bold.ttf",
+      "sha256": "735badeb8b2046cee6f5e1226412ab6c29db04accbca413af03d70e991dce10d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/comunicazione-professionale/assets/fonts/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/comunicazione-professionale/assets/fonts/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/fonts/OFL.txt",
+      "repository_path": "plugins/comunicazione-professionale/assets/fonts/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/icon.svg",
+      "repository_path": "plugins/comunicazione-professionale/assets/icon.svg",
+      "sha256": "9cad267791094a6a9b20ff3a4c7e44d730bc7e05de4d40e7865931392e7803b4"
+    },
+    {
+      "path": "modules/comunicazione-professionale/requirements.txt",
+      "repository_path": "plugins/comunicazione-professionale/requirements.txt",
+      "sha256": "4376e39d90f829be0b643d59c8df0c2ac265409071947ee64265207daae4c2e7"
+    },
     {
       "path": "modules/comunicazione-professionale/schemas/answer_contract.schema.json",
       "repository_path": "plugins/comunicazione-professionale/schemas/answer_contract.schema.json",
@@ -108,7 +145,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/package_communications.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/package_communications.py",
-      "sha256": "ca6e6eb5454d61babb1b47262ebb7ece9dd8bc7e4e61de4b04934253a42485f2"
+      "sha256": "15f877e32d62c99849d798dab0602014953a434d15950b4621e24cada117994a"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
@@ -183,12 +220,17 @@
     {
       "path": "modules/comunicazione-professionale/scripts/workflow_core.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/workflow_core.py",
-      "sha256": "3c49f44bcd2fcdf88062a1052542e9763eeab29a3bae5622127cda70b1b13548"
+      "sha256": "e7fb34cd0b443b0fab6e4afd1cc0ccedb05d0c8dcb9e7befb157e732bede3831"
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
       "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
       "sha256": "d2a78b6e80bc9d5882903a68b7bb551741476ca1d76288e72e032e1f7efab4ed"
+    },
+    {
+      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
+      "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
+      "sha256": "1f89631cf95b1e7954a0430a0a64725ec0c729f9b37996641ddd4ac7ec365252"
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/model-contribution-contract.md",
@@ -224,330 +266,500 @@
       "path": "skills/comunicazione-professionale/references/lucia-lawyer-profile.md",
       "repository_path": "plugins/lucia/skills/comunicazione-professionale/references/lucia-lawyer-profile.md",
       "sha256": "01d296705858ad9ffbdc4d1d76a7ff5eaa3ae107928def3e4088ffde277b2d2f"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/__init__.py",
+      "sha256": "361dab625f1122781bef9bc5fa04c7d62cf31e6fc55a10433e818a96f4bc4309"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/cases.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/cases.py",
+      "sha256": "faf8ca6bbd59f16f679796a057b027b2efbcccfc4798dfc6c5e356d3239cb602"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/onboarding.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+      "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+    },
+    {
+      "path": "vendor/modules/desktop_teaching/teaching.py",
+      "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+      "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/brief-it.md",
+      "sha256": "537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-it.md",
+      "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-it-provenance.json",
+      "sha256": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-it.md",
+      "sha256": "537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-it.md",
+      "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-it-provenance.json",
+      "sha256": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-it.md",
+      "sha256": "dc77bac707b4e559ef8a7c2eefdfbec49a9af3584b13e3ec5793d5fbff902e57",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-en.md",
+      "sha256": "f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-en.md",
+      "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-en-provenance.json",
+      "sha256": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-en.md",
+      "sha256": "f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-en.md",
+      "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-en-provenance.json",
+      "sha256": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-en.md",
+      "sha256": "1ac855a62ab75e8b1dfda2721c1a58d704ed048eb58aef6db3651baf3ac197a7",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-fr.md",
+      "sha256": "ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-fr.md",
+      "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-fr-provenance.json",
+      "sha256": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-fr.md",
+      "sha256": "ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-fr.md",
+      "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-fr-provenance.json",
+      "sha256": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-fr.md",
+      "sha256": "2a3b50913467d3a7e60b8f8d4f6e82a4e8b3eb5a01bcad88d7ebc90bd6256435",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-de.md",
+      "sha256": "e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-de.md",
+      "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-de-provenance.json",
+      "sha256": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-de.md",
+      "sha256": "e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-de.md",
+      "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-de-provenance.json",
+      "sha256": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-de.md",
+      "sha256": "2bba3c1f2b3c6f36bb4f0875b08b5aef3fefabe936dfd15f457ee2e5499e4159",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/brief-es.md",
+      "sha256": "9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-es.md",
+      "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/source-es-provenance.json",
+      "sha256": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/brief-es.md",
+      "sha256": "9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-es.md",
+      "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/source-es-provenance.json",
+      "sha256": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice-es.md",
+      "sha256": "829466f9c59c8b99aecb00534a622e5c3800ae121f0bb51a742345e07e775fdc",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Una comunicazione che può dimostrare ciò che dice",
-      "goal": "Trasformare informazioni verificate in un messaggio utile, conservando il legame tra ogni affermazione e la sua fonte.",
-      "scenario": "Lo studio Arco vuole informare i clienti che dal 1° ottobre riceverà i documenti tramite una cartella concordata. Una nota interna approvata descrive il nuovo canale e il contatto di assistenza. Nessuna fonte promette risparmi di tempo misurati.",
-      "request": "Lucia, prepara un breve avviso ai clienti sul nuovo modo di consegnare i documenti.",
-      "scope": "Comunicazione organizzativa fittizia, senza consigli fiscali o promesse commerciali. Il testo rimane una bozza locale da rivedere e non viene inviato.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Fatto disponibile",
-        "Utilizzabile nel messaggio"
+      "title": "Preparare una comunicazione professionale con Lucia",
+      "goal": "Imparare a partire da un argomento e dalle fonti, preparare una comunicazione per un pubblico preciso e rivedere il pacchetto prima di usarlo.",
+      "scenario": "Studio Riva vuole spiegare alle piccole imprese clienti come orientarsi quando ricevono una richiesta di accesso ai dati. Prepariamo una FAQ breve usando una fonte ufficiale selezionata.",
+      "scope": "Il percorso completo della comunicazione: obiettivo e destinatari, fonti, scelta di che cosa dire, bozza, verifiche, revisione e file finali. Il contenuto giuridico dell’esempio serve a provare il workflow; la lezione non è un corso sul GDPR.",
+      "inputs": "Apri brief-it.md per leggere l’incarico e il formato richiesto. Apri source-it.md per vedere la guida ufficiale selezionata. Lo studio è fittizio e parte senza comunicazioni precedenti.",
+      "request": "Lucia, prepara una FAQ per le piccole imprese clienti di Studio Riva sulla gestione delle richieste di accesso ai dati. Usa questo brief e questa fonte. Fammi rivedere contenuti e formato, poi prepara il pacchetto locale senza inviarlo o pubblicarlo.",
+      "steps": [
+        "Nel thread di lavoro Lucia chiarisce pubblico, obiettivo, lingua e canale e prepara lo spazio locale dello studio. Nella chat vocale spiega che cosa produrremo. Confermi il perimetro e il luogo in cui salvare il lavoro.",
+        "Lucia esamina la fonte, decide quali informazioni sono utili e prepara la FAQ e il formato proposto. Il workflow corrente verifica separatamente affermazioni e qualità editoriale. La voce ti accompagna attraverso i risultati effettivi; se una verifica richiede correzioni, vedi la revisione.",
+        "Rivedi la comunicazione, le fonti e il formato. Dopo le conferme previste dal workflow, apri il pacchetto realmente generato e controlla come usarne i file. Un eventuale invio o pubblicazione è un’azione successiva, separata."
       ],
-      "input_rows": [
-        [
-          "C1 · nota interna, § 1",
-          "Nuovo canale dal 1° ottobre 2026",
-          "Sì"
-        ],
-        [
-          "C1 · § 2",
-          "Assistenza tramite il referente dello studio",
-          "Sì"
-        ],
-        [
-          "Nessuna fonte",
-          "50% di tempo risparmiato",
-          "No"
-        ]
+      "deliverables": [
+        "FAQ in Markdown, pronta da esaminare e riutilizzare dopo la revisione.",
+        "Base tecnica, riferimenti alle fonti e registrazioni delle verifiche e delle decisioni."
       ],
-      "basis": "C1 sostiene data, canale e assistenza. La percentuale di risparmio è un esempio di affermazione priva di base da eliminare.",
-      "method": [
-        "Decidi se c'è un'informazione utile per i destinatari e definisci scopo, canale e fonti.",
-        "Prepara il messaggio e collega le affermazioni alle evidenze. Rivedi contenuto, tono e limiti; elimina le promesse non sostenute.",
-        "Produci il pacchetto naturale del canale con fonti e controlli. Mostra la bozza al professionista prima del normale percorso di invio o pubblicazione."
+      "review": "Leggi la FAQ come un cliente: destinatario e utilità devono essere chiari. Controlla che le affermazioni corrispondano alla fonte, che i limiti restino visibili e che il formato sia quello accettato. Il workflow può chiedere una correzione o motivare perché non comunicare.",
+      "checkpoints": [
+        "Indica quale pubblico vuoi raggiungere, con quale contenuto e in quale formato.",
+        "Trova nel pacchetto il testo da usare e la fonte di una sua affermazione; spiega che cosa devi rivedere prima dell’uso."
       ],
-      "result_title": "Una consegna documenti più chiara",
-      "conclusion": "Dal 1° ottobre 2026 vi chiediamo di utilizzare la cartella concordata con lo studio per consegnare i documenti. Per l'accesso e le prime indicazioni, contattate il vostro referente.",
-      "output_columns": [
-        "Affermazione",
-        "Base",
-        "Revisione"
-      ],
-      "output_rows": [
-        [
-          "Nuovo canale dal 1° ottobre",
-          "C1 § 1",
-          "Confrontare data e modalità"
-        ],
-        [
-          "Contattare il referente",
-          "C1 § 2",
-          "Verificare che l'assistenza sia disponibile"
-        ],
-        [
-          "Risparmio del 50%",
-          "Assente",
-          "Escluso dalla bozza"
-        ]
-      ],
-      "check": "Una comunicazione attraente non deve aggiungere risultati, obblighi o promesse che le fonti non sostengono.",
-      "question": "Possiamo aggiungere 'nessun documento andrà più perso'?",
-      "answer": "No. La nota descrive un canale di consegna, non garantisce l'assenza di perdite. Una promessa assoluta richiederebbe una base che qui manca.",
-      "practice": "Adatta la stessa informazione a un breve post, mantenendo data, canale e limiti della fonte.",
-      "next": "Per una novità professionale reale seleziona le fonti correnti; per una comunicazione dello studio fornisci i fatti organizzativi verificati."
+      "practice": "Leggi practice-it.md e chiedi una nuova versione che includa un’email di accompagnamento alla FAQ. Rivedi come cambia il testo per il canale, conserva il primo pacchetto e apri i nuovi file. Non inviare nulla.",
+      "success": "Sai avviare una comunicazione da fonti selezionate, seguire le verifiche, rivedere il risultato e chiedere una nuova versione per un altro canale.",
+      "repeat": "Indica a Lucia argomento, pubblico, canali e fonti disponibili. Puoi aggiungere esempi precisi dello stile dello studio. Rivedi proposta, fonti e pacchetto prima di utilizzarlo."
     },
     "en": {
-      "title": "A professional message that can support its claims",
-      "goal": "Turn verified information into a useful message with a source for every material assertion.",
-      "scenario": "Fictional Arco firm will receive documents through an agreed folder from 1 October. An approved internal note describes the channel and support contact. No source establishes a measured time saving.",
-      "request": "Lucia, draft a short client notice about the new document-delivery method.",
-      "scope": "Fictional operational communication, without tax advice or commercial promises. The draft stays local and is not sent.",
-      "input_columns": [
-        "Fictional source",
-        "Available fact",
-        "Use in the message"
+      "title": "Prepare a professional communication with Lucia",
+      "goal": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+      "scenario": "Studio Riva wants to help its small business clients understand how to handle a data access request. We will prepare a short FAQ using a selected official source.",
+      "scope": "The complete communication workflow: objective and audience, sources, editorial decision, draft, checks, review and final files. The legal example lets you try the workflow; this lesson is not a GDPR course.",
+      "inputs": "Open brief-en.md for the assignment and requested format. Open source-en.md to inspect the selected official guide. The fictional firm starts without previous communications.",
+      "request": "Lucia, prepare a FAQ for Studio Riva’s small business clients about handling data access requests. Use this brief and source. Let me review the content and format, then prepare the local package without sending or publishing it.",
+      "steps": [
+        "In the working thread, Lucia establishes the audience, objective, language and channel and prepares the firm’s local workspace. In the voice chat, it explains what we will produce. You confirm the scope and where the work will be saved.",
+        "Lucia examines the source, decides what is useful and drafts the FAQ and proposed format. The current workflow checks claims and editorial quality separately. The voice explanation follows actual results, including any revision a check requires.",
+        "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
       ],
-      "input_rows": [
-        [
-          "C1 · internal note § 1",
-          "New channel from 1 October 2026",
-          "Supported"
-        ],
-        [
-          "C1 · § 2",
-          "Help from the firm's contact person",
-          "Supported"
-        ],
-        [
-          "No source",
-          "50% time saving",
-          "Unsupported"
-        ]
+      "deliverables": [
+        "FAQ in Markdown, for inspection and reuse after review.",
+        "Technical basis, source references and records of checks and decisions."
       ],
-      "basis": "C1 supports the date, channel and assistance. The saving percentage is an example of a claim to remove.",
-      "method": [
-        "Establish whether the information is useful for the audience and define purpose, channel and sources.",
-        "Draft the message and connect claims to evidence. Review tone and limitations, removing unsupported promises.",
-        "Prepare the channel's normal output package with source checks. Present the draft before the ordinary sending or publication process."
+      "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",
+      "checkpoints": [
+        "State the audience you want to reach, the content they need and the format you want.",
+        "Find the usable text and the source of one claim in the package; explain what you need to review before use."
       ],
-      "result_title": "A clearer way to deliver documents",
-      "conclusion": "From 1 October 2026, please use the folder agreed with the firm to deliver documents. For access and initial guidance, contact your usual firm representative.",
-      "output_columns": [
-        "Statement",
-        "Basis",
-        "Review"
-      ],
-      "output_rows": [
-        [
-          "New channel from 1 October",
-          "C1 § 1",
-          "Check date and method"
-        ],
-        [
-          "Contact the representative",
-          "C1 § 2",
-          "Confirm assistance is available"
-        ],
-        [
-          "50% saving",
-          "None",
-          "Excluded"
-        ]
-      ],
-      "check": "Attractive communication must not add outcomes, obligations or promises that the sources do not support.",
-      "question": "Can we add 'no document will ever be lost again'?",
-      "answer": "No. The note describes a delivery channel, not a guarantee against loss. The absolute promise has no supporting evidence.",
-      "practice": "Adapt the information into a short post while retaining its date, channel and limits.",
-      "next": "For professional news, select current sources; for firm announcements, supply verified operational facts."
+      "practice": "Read practice-en.md and request a new version including a covering email for the FAQ. Review the channel adaptation, preserve the first package and open the new files. Do not send anything.",
+      "success": "You can start from selected sources, follow checks, review the communication and request a new version for another channel.",
+      "repeat": "Tell Lucia the topic, audience, channels and available sources. You can add exact examples of the firm’s style. Review the proposal, sources and package before using it."
     },
     "fr": {
-      "title": "Un message professionnel qui peut justifier ses affirmations",
-      "goal": "Transformer des informations vérifiées en communication utile, avec une source pour chaque affirmation importante.",
-      "scenario": "Le cabinet fictif Arco recevra les documents dans un dossier convenu à partir du 1er octobre. Une note interne approuvée décrit le canal et l'assistance. Aucune source ne mesure un gain de temps.",
-      "request": "Lucia, prépare un bref avis aux clients sur cette nouvelle remise des documents.",
-      "scope": "Communication d'organisation fictive, sans conseil fiscal ni promesse commerciale. Le brouillon reste local et n'est pas envoyé.",
-      "input_columns": [
-        "Source fictive",
-        "Fait disponible",
-        "Utilisable"
+      "title": "Préparer une communication professionnelle avec Lucia",
+      "goal": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
+      "scenario": "Studio Riva souhaite aider ses petites entreprises clientes à s’orienter lorsqu’elles reçoivent une demande d’accès aux données. Nous préparons une courte FAQ à partir d’une source officielle sélectionnée.",
+      "scope": "Le parcours complet : objectif et public, sources, choix éditorial, brouillon, vérifications, revue et fichiers finaux. L’exemple juridique sert à essayer le workflow ; cette leçon n’est pas un cours sur le RGPD.",
+      "inputs": "Ouvre brief-fr.md pour la mission et le format demandé, puis source-fr.md pour consulter le guide officiel sélectionné. Le cabinet fictif commence sans communications antérieures.",
+      "request": "Lucia, prépare une FAQ pour les petites entreprises clientes de Studio Riva sur le traitement des demandes d’accès aux données. Utilise ce brief et cette source. Fais-moi revoir contenu et format, puis prépare le dossier local sans l’envoyer ni le publier.",
+      "steps": [
+        "Dans le fil de travail, Lucia précise public, objectif, langue et canal et prépare l’espace local du cabinet. Dans la conversation vocale, elle explique le résultat visé. Tu confirmes le périmètre et le lieu d’enregistrement.",
+        "Lucia examine la source, choisit les informations utiles et rédige la FAQ et le format proposé. Le workflow actuel vérifie séparément les affirmations et la qualité éditoriale. L’explication vocale suit les résultats réels, y compris les corrections demandées.",
+        "Revois la communication, les sources et le format. Après les confirmations prévues, ouvre le dossier effectivement généré et repère comment utiliser ses fichiers. Un envoi ou une publication constitue une action ultérieure distincte."
       ],
-      "input_rows": [
-        [
-          "C1 · note § 1",
-          "Nouveau canal au 1er octobre 2026",
-          "Oui"
-        ],
-        [
-          "C1 · § 2",
-          "Assistance du contact habituel",
-          "Oui"
-        ],
-        [
-          "Aucune source",
-          "50 % de temps gagné",
-          "Non"
-        ]
+      "deliverables": [
+        "FAQ en Markdown, à examiner et réutiliser après revue.",
+        "Base technique, références aux sources et traces des vérifications et décisions."
       ],
-      "basis": "C1 étaye date, canal et assistance. Le gain de temps illustre une affirmation sans fondement à retirer.",
-      "method": [
-        "Détermine l'utilité de l'information pour les destinataires et précise objectif, canal et sources.",
-        "Rédige le message en reliant les affirmations aux preuves. Revois ton et limites, puis retire les promesses non étayées.",
-        "Prépare les livrables habituels du canal et les vérifications. Présente le brouillon avant le parcours normal d'envoi ou de publication."
+      "review": "Lis la FAQ comme un client : public et utilité doivent être clairs. Vérifie que les affirmations correspondent à la source, que les limites sont visibles et que le format est celui accepté. Le workflow peut demander une correction ou expliquer pourquoi ne pas communiquer.",
+      "checkpoints": [
+        "Indique le public à atteindre, le contenu utile et le format souhaité.",
+        "Retrouve le texte utilisable et la source d’une affirmation dans le dossier ; explique les points à revoir avant usage."
       ],
-      "result_title": "Une remise des documents plus claire",
-      "conclusion": "À partir du 1er octobre 2026, merci d'utiliser le dossier convenu avec le cabinet pour transmettre vos documents. Pour l'accès et les premières indications, contactez votre interlocuteur habituel.",
-      "output_columns": [
-        "Affirmation",
-        "Base",
-        "Revue"
-      ],
-      "output_rows": [
-        [
-          "Nouveau canal au 1er octobre",
-          "C1 § 1",
-          "Vérifier date et modalités"
-        ],
-        [
-          "Contacter l'interlocuteur",
-          "C1 § 2",
-          "Confirmer l'assistance disponible"
-        ],
-        [
-          "Gain de 50 %",
-          "Aucune",
-          "Exclu"
-        ]
-      ],
-      "check": "Une communication soignée n'ajoute pas de résultat, d'obligation ou de promesse absent des sources.",
-      "question": "Peut-on ajouter qu'aucun document ne sera plus jamais perdu ?",
-      "answer": "Non. La note décrit un canal de remise, pas une garantie absolue contre les pertes. La preuve manque.",
-      "practice": "Adapte l'information à une courte publication en conservant date, canal et limites.",
-      "next": "Pour une actualité professionnelle, sélectionne les sources courantes ; pour une annonce du cabinet, fournis les faits organisationnels vérifiés."
+      "practice": "Lis practice-fr.md et demande une nouvelle version avec un courriel d’accompagnement de la FAQ. Revois l’adaptation au canal, conserve le premier dossier et ouvre les nouveaux fichiers. N’envoie rien.",
+      "success": "Tu sais partir de sources sélectionnées, suivre les vérifications, revoir la communication et demander une version pour un autre canal.",
+      "repeat": "Indique à Lucia le sujet, le public, les canaux et les sources disponibles. Tu peux ajouter des exemples précis du style du cabinet. Revois proposition, sources et dossier avant utilisation."
     },
     "de": {
-      "title": "Eine Kanzleimitteilung mit belegbaren Aussagen",
-      "goal": "Geprüfte Informationen in eine nützliche Mitteilung mit Quellen für wesentliche Aussagen umsetzen.",
-      "scenario": "Die fiktive Kanzlei Arco nimmt ab 1. Oktober Dokumente über einen vereinbarten Ordner entgegen. Eine freigegebene interne Notiz beschreibt den Kanal und die Ansprechperson. Eine gemessene Zeitersparnis ist nicht belegt.",
-      "request": "Lucia, entwirf eine kurze Mandantenmitteilung zum neuen Weg der Dokumentenübergabe.",
-      "scope": "Fiktive organisatorische Mitteilung ohne steuerliche Beratung oder Leistungsversprechen. Der Entwurf bleibt lokal und wird nicht versendet.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Vorhandener Fakt",
-        "Verwendung"
+      "title": "Eine professionelle Mitteilung mit Lucia erstellen",
+      "goal": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
+      "scenario": "Studio Riva möchte seinen kleinen Unternehmenskunden den Umgang mit Auskunftsanfragen erleichtern. Wir erstellen anhand einer ausgewählten offiziellen Quelle eine kurze FAQ.",
+      "scope": "Der vollständige Ablauf: Ziel und Zielgruppe, Quellen, redaktionelle Entscheidung, Entwurf, Kontrollen, Prüfung und fertige Dateien. Das rechtliche Beispiel dient zum Erproben des Workflows; die Lektion ist kein DSGVO-Kurs.",
+      "inputs": "Öffne brief-de.md für Auftrag und Formatwünsche sowie source-de.md für den ausgewählten offiziellen Leitfaden. Die fiktive Kanzlei startet ohne frühere Mitteilungen.",
+      "request": "Lucia, erstelle eine FAQ zum Umgang mit Auskunftsanfragen für die kleinen Unternehmenskunden von Studio Riva. Nutze diesen Auftrag und diese Quelle. Lass mich Inhalt und Format prüfen und erstelle das lokale Paket ohne Versand oder Veröffentlichung.",
+      "steps": [
+        "Im Arbeitsthread klärt Lucia Zielgruppe, Ziel, Sprache und Kanal und bereitet den lokalen Arbeitsbereich der Kanzlei vor. Im Sprachchat erklärt sie das geplante Ergebnis. Du bestätigst Umfang und Speicherort.",
+        "Lucia prüft die Quelle, wählt nützliche Inhalte und entwirft FAQ und Format. Der aktuelle Workflow kontrolliert Aussagen und redaktionelle Qualität getrennt. Die Spracherklärung folgt den tatsächlichen Ergebnissen und nötigen Überarbeitungen.",
+        "Prüfe Mitteilung, Quellen und Format. Öffne nach den vorgesehenen Bestätigungen das tatsächlich erzeugte Paket und orientiere dich in den verwendbaren Dateien. Versand oder Veröffentlichung sind spätere, separate Schritte."
       ],
-      "input_rows": [
-        [
-          "C1 · interne Notiz § 1",
-          "Neuer Kanal ab 1. Oktober 2026",
-          "Belegt"
-        ],
-        [
-          "C1 · § 2",
-          "Unterstützung durch die Ansprechperson",
-          "Belegt"
-        ],
-        [
-          "Keine Quelle",
-          "50 % Zeitersparnis",
-          "Unbelegt"
-        ]
+      "deliverables": [
+        "FAQ als Markdown, zur Prüfung und anschließenden Verwendung.",
+        "Fachliche Grundlage, Quellenverweise sowie Nachweise der Kontrollen und Entscheidungen."
       ],
-      "basis": "C1 belegt Datum, Kanal und Unterstützung. Die Prozentangabe ist ein Beispiel für eine zu streichende Behauptung.",
-      "method": [
-        "Bestimme Nutzen für die Zielgruppe, Zweck, Kanal und Quellen.",
-        "Entwirf die Mitteilung und verknüpfe Aussagen mit Belegen. Prüfe Ton und Grenzen und streiche unbelegte Versprechen.",
-        "Bereite das reguläre Ausgabepaket des Kanals mit Quellenprüfung vor. Zeige den Entwurf vor dem normalen Versand- oder Veröffentlichungsprozess."
+      "review": "Lies die FAQ aus Kundensicht: Zielgruppe und Nutzen müssen klar sein. Prüfe Quellenbezug, sichtbare Grenzen und das bestätigte Format. Der Workflow kann eine Überarbeitung verlangen oder begründen, weshalb keine Mitteilung sinnvoll ist.",
+      "checkpoints": [
+        "Benenne Zielgruppe, benötigten Inhalt und gewünschtes Format.",
+        "Finde im Paket den verwendbaren Text und die Quelle einer Aussage; erkläre, was du vor der Verwendung prüfen musst."
       ],
-      "result_title": "Dokumente künftig einfacher übergeben",
-      "conclusion": "Bitte nutzen Sie ab 1. Oktober 2026 den mit unserer Kanzlei vereinbarten Ordner zur Dokumentenübergabe. Bei Fragen zum Zugang und zu den ersten Schritten hilft Ihnen Ihre gewohnte Ansprechperson.",
-      "output_columns": [
-        "Aussage",
-        "Grundlage",
-        "Prüfung"
-      ],
-      "output_rows": [
-        [
-          "Neuer Kanal ab 1. Oktober",
-          "C1 § 1",
-          "Datum und Vorgehen prüfen"
-        ],
-        [
-          "Ansprechperson kontaktieren",
-          "C1 § 2",
-          "Unterstützung bestätigen"
-        ],
-        [
-          "50 % Ersparnis",
-          "Keine",
-          "Ausgeschlossen"
-        ]
-      ],
-      "check": "Ansprechende Kommunikation darf keine Ergebnisse, Pflichten oder Versprechen ergänzen, die ihre Quellen nicht tragen.",
-      "question": "Dürfen wir ergänzen: 'Nie wieder geht ein Dokument verloren'?",
-      "answer": "Nein. Die Notiz beschreibt einen Übergabekanal, keine Verlustgarantie. Für das absolute Versprechen fehlt ein Beleg.",
-      "practice": "Formuliere daraus einen kurzen Beitrag und erhalte Datum, Kanal und Grenzen.",
-      "next": "Nutze aktuelle Quellen für Fachnachrichten und geprüfte organisatorische Fakten für Kanzleimitteilungen."
+      "practice": "Lies practice-de.md und fordere eine neue Version mit einer Begleit-E-Mail zur FAQ an. Prüfe die Anpassung an den Kanal, bewahre das erste Paket und öffne die neuen Dateien. Nichts versenden.",
+      "success": "Du kannst mit ausgewählten Quellen beginnen, Kontrollen verfolgen, die Mitteilung prüfen und eine neue Version für einen anderen Kanal anfordern.",
+      "repeat": "Nenne Lucia Thema, Zielgruppe, Kanäle und verfügbare Quellen. Du kannst konkrete Stilbeispiele der Kanzlei ergänzen. Prüfe Vorschlag, Quellen und Paket vor der Verwendung."
     },
     "es": {
-      "title": "Un mensaje profesional que respalda sus afirmaciones",
-      "goal": "Transformar información verificada en una comunicación útil con fuente para cada afirmación relevante.",
-      "scenario": "El despacho ficticio Arco recibirá documentos mediante una carpeta acordada desde el 1 de octubre. Una nota interna aprobada describe el canal y el contacto de ayuda. No existe evidencia de ahorro de tiempo medido.",
-      "request": "Lucia, redacta un aviso breve a clientes sobre el nuevo sistema de entrega documental.",
-      "scope": "Comunicación operativa ficticia sin asesoramiento fiscal ni promesas comerciales. El borrador permanece local y no se envía.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Hecho disponible",
-        "Uso en el mensaje"
+      "title": "Preparar una comunicación profesional con Lucia",
+      "goal": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo.",
+      "scenario": "Studio Riva quiere orientar a sus pequeñas empresas clientes cuando reciben una solicitud de acceso a datos. Preparamos una FAQ breve con una fuente oficial seleccionada.",
+      "scope": "El proceso completo: objetivo y público, fuentes, decisión editorial, borrador, comprobaciones, revisión y archivos finales. El ejemplo jurídico sirve para probar el workflow; esta lección no es un curso sobre el RGPD.",
+      "inputs": "Abre brief-es.md para conocer el encargo y formato solicitado, y source-es.md para consultar la guía oficial seleccionada. El despacho ficticio empieza sin comunicaciones anteriores.",
+      "request": "Lucia, prepara una FAQ sobre la gestión de solicitudes de acceso a datos para las pequeñas empresas clientes de Studio Riva. Usa este brief y esta fuente. Déjame revisar contenido y formato; después prepara el paquete local sin enviarlo ni publicarlo.",
+      "steps": [
+        "En el hilo de trabajo, Lucia concreta público, objetivo, idioma y canal y prepara el espacio local del despacho. En la conversación de voz explica qué produciremos. Confirmas el alcance y dónde guardar el trabajo.",
+        "Lucia examina la fuente, selecciona la información útil y prepara la FAQ y el formato propuesto. El workflow actual comprueba por separado las afirmaciones y la calidad editorial. La voz sigue los resultados reales y las correcciones necesarias.",
+        "Revisa comunicación, fuentes y formato. Tras las confirmaciones previstas, abre el paquete realmente generado y aprende a utilizar sus archivos. Enviarlo o publicarlo es una acción posterior independiente."
       ],
-      "input_rows": [
-        [
-          "C1 · nota interna § 1",
-          "Nuevo canal desde el 1 de octubre de 2026",
-          "Respaldado"
-        ],
-        [
-          "C1 · § 2",
-          "Ayuda de la persona de contacto",
-          "Respaldado"
-        ],
-        [
-          "Ninguna fuente",
-          "50 % de ahorro de tiempo",
-          "Sin respaldo"
-        ]
+      "deliverables": [
+        "FAQ en Markdown, para revisar y reutilizar después de la revisión.",
+        "Base técnica, referencias a las fuentes y registros de comprobaciones y decisiones."
       ],
-      "basis": "C1 respalda fecha, canal y asistencia. El porcentaje de ahorro ejemplifica una afirmación que debe eliminarse.",
-      "method": [
-        "Determina la utilidad para la audiencia y define propósito, canal y fuentes.",
-        "Redacta y vincula afirmaciones con pruebas. Revisa tono y límites y elimina promesas sin respaldo.",
-        "Prepara el paquete habitual del canal con sus comprobaciones de fuentes. Presenta el borrador antes del proceso ordinario de envío o publicación."
+      "review": "Lee la FAQ como un cliente: público y utilidad deben estar claros. Comprueba que las afirmaciones corresponden a la fuente, los límites siguen visibles y el formato es el aceptado. El workflow puede pedir cambios o explicar por qué no conviene comunicar.",
+      "checkpoints": [
+        "Indica a qué público quieres llegar, qué contenido necesita y qué formato deseas.",
+        "Encuentra el texto utilizable y la fuente de una afirmación en el paquete; explica qué debes revisar antes de usarlo."
       ],
-      "result_title": "Una forma más clara de entregar documentos",
-      "conclusion": "Desde el 1 de octubre de 2026, utilice la carpeta acordada con el despacho para entregar documentos. Para acceder y recibir orientación inicial, contacte con su interlocutor habitual.",
-      "output_columns": [
-        "Afirmación",
-        "Base",
-        "Revisión"
-      ],
-      "output_rows": [
-        [
-          "Nuevo canal desde el 1 de octubre",
-          "C1 § 1",
-          "Comprobar fecha y método"
-        ],
-        [
-          "Contactar con el interlocutor",
-          "C1 § 2",
-          "Confirmar asistencia disponible"
-        ],
-        [
-          "50 % de ahorro",
-          "Ninguna",
-          "Excluido"
-        ]
-      ],
-      "check": "Una comunicación atractiva no debe añadir resultados, obligaciones o promesas que las fuentes no acreditan.",
-      "question": "¿Podemos añadir 'nunca volverá a perderse un documento'?",
-      "answer": "No. La nota describe un canal, no una garantía contra pérdidas. La promesa absoluta carece de prueba.",
-      "practice": "Adapta la información a una publicación breve conservando fecha, canal y límites.",
-      "next": "Selecciona fuentes actuales para novedades profesionales y hechos operativos verificados para anuncios del despacho."
+      "practice": "Lee practice-es.md y solicita una nueva versión con un correo de presentación de la FAQ. Revisa la adaptación al canal, conserva el primer paquete y abre los archivos nuevos. No envíes nada.",
+      "success": "Sabes empezar con fuentes seleccionadas, seguir las comprobaciones, revisar la comunicación y pedir una versión para otro canal.",
+      "repeat": "Indica a Lucia tema, público, canales y fuentes disponibles. Puedes añadir ejemplos concretos del estilo del despacho. Revisa propuesta, fuentes y paquete antes de utilizarlo."
     }
   }
 }

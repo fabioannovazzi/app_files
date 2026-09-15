@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 
+from tests.plugins._teaching_execution import execution_record
 from tests.plugins.test_desktop_teaching import (
     ROOT,
     WORKFLOWS,
@@ -51,6 +52,7 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             store.plugin_root / "modules/reporting-engine/scripts/budget_report.py",
         )
         bound = Path(case["inputs"][0]["path"])
+        selected_inputs = [Path(item["path"]) for item in case["inputs"]]
         output = Path(case["output_dir"])
         inspection_dir = output / "inspection"
         assert (
@@ -137,6 +139,7 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             report / "management_control_pack.json",
             report / "model_context.json",
         ]
+        native_records = [inspection_dir / "inspection.json", path]
     else:
         monkeypatch.syspath_prepend(str(ROOT / "plugins/apertura-pratica/scripts"))
         core = _load(
@@ -151,6 +154,9 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
             matter_reference="synthetic-supply",
             language="it",
         )
+        selected_inputs = [
+            Path(item["path"]) for item in case["context"]["input_bindings"]
+        ]
         # Managed initialization imports the actual ledger-bound selected input.
         intake_path = output / "matter_intake.json"
         intake = json.loads(intake_path.read_text(encoding="utf-8"))
@@ -169,11 +175,21 @@ def test_actual_product_workflow_from_the_bound_tutorial_case(store, monkeypatch
         assert "Beta Laboratorio" in memo.read_text(encoding="utf-8")
         assert (output / "review_payload.json").is_file()
         artifacts = [memo, output / "validation_report.json"]
+        native_records = [intake_path, output / "review_payload.json"]
     change(
         store,
         "demo",
         workflow_id=wf,
         artifacts=[str(p) for p in artifacts],
+        execution_record=execution_record(
+            store,
+            "demo",
+            artifacts[0],
+            wf,
+            inputs=selected_inputs,
+            native=native_records,
+            outputs=artifacts,
+        ),
         prompt="Show the actual workflow",
         review="Actual source-bound output checked; professional review and user practice remain pending",
     )

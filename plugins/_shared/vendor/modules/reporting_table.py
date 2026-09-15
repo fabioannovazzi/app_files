@@ -13,6 +13,13 @@ from typing import Any
 
 __all__ = ["render_reporting_table", "write_reporting_table"]
 TOLERANCE = 0.000001
+DISPLAY_LABELS = {
+    "en": ("Scenario", "Change", "% change", "n/a"),
+    "it": ("Confronto", "Scostamento", "Δ %", "n/d"),
+    "fr": ("Scénario", "Écart", "Écart %", "n.d."),
+    "de": ("Szenario", "Abweichung", "Abweichung %", "k. A."),
+    "es": ("Escenario", "Variación", "% variación", "n/d"),
+}
 
 
 def _table_value_scale(rows: list[dict[str, Any]]) -> tuple[float, str]:
@@ -41,20 +48,20 @@ def _format_scaled_value(
         scaled = 0.0
     prefix = "+" if signed and scaled > 0 else ""
     text = f"{prefix}{scaled:,.0f}" if scale == 1.0 else f"{prefix}{scaled:,.1f}"
-    return (
-        text.translate(str.maketrans({",": ".", ".": ","}))
-        if language == "it"
-        else text
-    )
+    if language == "fr":
+        return text.translate(str.maketrans({",": "\u202f", ".": ","}))
+    if language in {"it", "de", "es"}:
+        return text.translate(str.maketrans({",": ".", ".": ","}))
+    return text
 
 
 def _format_relative_percent(value: float | None, language: str = "en") -> str:
     """Format a signed relative variance."""
 
     if value is None or math.isnan(value):
-        return "n/d" if language == "it" else "n/a"
+        return DISPLAY_LABELS.get(language, DISPLAY_LABELS["en"])[3]
     text = f"{value:+.1f}%" if value else "0.0%"
-    return text.replace(".", ",") if language == "it" else text
+    return text.replace(".", ",") if language in {"it", "fr", "de", "es"} else text
 
 
 def _variance_marker_html(
@@ -161,7 +168,11 @@ def render_reporting_table(
         else (
             (" × 1.000" if scale_label == "k" else " × 1.000.000")
             if language == "it"
-            else f" en {scale_label}" if language == "es" else f" in {scale_label}"
+            else (
+                f" en {scale_label}"
+                if language in {"es", "fr"}
+                else f" in {scale_label}"
+            )
         )
     )
     max_abs_absolute = max(
@@ -454,15 +465,15 @@ def render_reporting_table(
       <thead>
         <tr class="group">
           <th></th>
-          <th colspan="2">{'Confronto' if language == 'it' else 'Escenario' if language == 'es' else 'Scenario'}</th>
-          <th class="group-start" colspan="2">{'Scostamento' if language == 'it' else 'Variación' if language == 'es' else 'Change'}</th>
+          <th colspan="2">{DISPLAY_LABELS.get(language, DISPLAY_LABELS['en'])[0]}</th>
+          <th class="group-start" colspan="2">{DISPLAY_LABELS.get(language, DISPLAY_LABELS['en'])[1]}</th>
         </tr>
         <tr class="labels">
           <th>{escape(row_header)}</th>
           <th>{escape(baseline_label)}</th>
           <th>{escape(comparison_label)}</th>
           <th class="group-start">Δ</th>
-          <th>{'Δ %' if language == 'it' else '% variación' if language == 'es' else '% change'}</th>
+          <th>{DISPLAY_LABELS.get(language, DISPLAY_LABELS['en'])[2]}</th>
         </tr>
       </thead>
       <tbody>

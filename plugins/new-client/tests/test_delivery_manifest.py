@@ -108,6 +108,43 @@ def test_seal_delivery_binds_every_delivered_file(delivery_dir: Path) -> None:
     assert str(delivery_dir) not in json.dumps(manifest)
 
 
+def test_seal_delivery_includes_native_model_data_disclosure(
+    delivery_dir: Path,
+) -> None:
+    from tests.model_data_helpers import write_no_model_report
+
+    write_no_model_report(delivery_dir, "new-client", RUN_ID)
+    for path in delivery_dir.glob("model_data_report.*"):
+        path.chmod(0o600)
+    seal_delivery(delivery_dir)
+    manifest = json.loads((delivery_dir / "delivery_manifest.json").read_text())
+    assert {"model_data_report.json", "model_data_report.md"} <= {
+        item["path"] for item in manifest["artifacts"]
+    }
+    report = delivery_dir / "model_data_report.md"
+    assert "openai-codex" in report.read_text()
+    _write_private(report, report.read_text() + "Changed disclosure.\n")
+    with pytest.raises(DeliveryValidationError):
+        validate_delivery(delivery_dir)
+
+
+def test_disclosure_still_rejects_a_foreign_run(delivery_dir: Path) -> None:
+    _write_private(
+        delivery_dir / "model_data_report.md",
+        f"Runtime: openai-codex\nRun: {STALE_RUN_ID}\n",
+    )
+    with pytest.raises(DeliveryValidationError, match="run IDs"):
+        seal_delivery(delivery_dir)
+
+
+def test_disclosure_exception_does_not_cover_other_paths(delivery_dir: Path) -> None:
+    folder = delivery_dir / "notes"
+    folder.mkdir(mode=0o700)
+    _write_private(folder / "model_data_report.md", "OpenAI wrote this memo.\n")
+    with pytest.raises(DeliveryValidationError, match="forbidden host/provider"):
+        seal_delivery(delivery_dir)
+
+
 def test_seal_delivery_binds_nested_file_named_like_manifest(
     delivery_dir: Path,
 ) -> None:

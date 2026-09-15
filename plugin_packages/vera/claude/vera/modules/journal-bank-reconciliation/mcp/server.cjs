@@ -4521,7 +4521,7 @@ function sharedStringValues(xml) {
   return values;
 }
 
-function worksheetCellValues(xml, sharedStrings) {
+function worksheetCellValues(xml, sharedStrings, expectedStyles) {
   const worksheetRoot = xml.match(
     /^(?:\uFEFF)?(?:<\?xml\b[^?]*\?>)?\s*<worksheet\b([^>]*)>/,
   );
@@ -4558,8 +4558,8 @@ function worksheetCellValues(xml, sharedStrings) {
     if (!reference || !/^[A-Z]+[1-9]\d*$/.test(reference)) {
       throw new Error("workbook cell reference is invalid");
     }
-    if (style !== null && style !== "0") {
-      throw new Error("workbook cell styles are not permitted");
+    if ((style ?? "0") !== (expectedStyles[reference] ?? "0")) {
+      throw new Error("workbook cell style differs from the trusted original");
     }
     const body = match[2];
     let value = "";
@@ -4721,7 +4721,20 @@ function workbookStaticEntryDigests(packageData) {
 
 function captureWorkbookPresentationContract(workbookPath) {
   const packageData = xlsxXmlEntries(workbookPath);
+  // The parent captures the receipt-verified original before the child runs.
+  // Global styles remain byte-bound; each cell must retain its own style index.
+  const worksheetStyles = {};
+  for (const [name, xml] of packageData.xmlEntries) {
+    if (!/^xl\/worksheets\/[^/]+\.xml$/.test(name)) continue;
+    worksheetStyles[name] = Object.fromEntries(
+      Array.from(xml.matchAll(/<c\b([^>]*)>/g), (match) => [
+        xmlAttribute(match[1], "r"),
+        xmlAttribute(match[1], "s") ?? "0",
+      ]),
+    );
+  }
   return {
+    worksheetStyles,
     entryNames: packageData.entryNames,
     staticEntryDigests: workbookStaticEntryDigests(packageData),
     presentationDigests: workbookPresentationDigests(
@@ -4807,7 +4820,11 @@ function validateJournalBankWorkbook(
     }
     const sheetXml = entries.get(entryName);
     if (!sheetXml) throw new Error("workbook sheet XML is missing");
-    const actualCells = worksheetCellValues(sheetXml, sharedStrings);
+    const actualCells = worksheetCellValues(
+      sheetXml,
+      sharedStrings,
+      expectedPresentation.worksheetStyles[entryName] ?? {},
+    );
     const csvRows = parseCsv(
       fs.readFileSync(
         path.join(outputDir, JOURNAL_BANK_WORKBOOK_SHEETS[sheetName]),

@@ -37,6 +37,7 @@ except ImportError:  # Python 3.10 in Cowork
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+from accounts_preview import render_accounts_preview
 from client_history import (
     client_history_suggestions,
     remember_approved_client_history,
@@ -4709,9 +4710,16 @@ def build_statements(
                 "rule_pack": case["rule_pack_versions"]["statutory_rule_pack"],
             }
         )
+    # EQUITY_RESULT is a reviewed component of liabilities/equity. Include its
+    # exact amount in the parent total without copying facts or deriving a
+    # profit decision. Reuse the same membership for presentation rounding.
+    section_groups: dict[str, list[dict[str, Any]]] = {}
+    for fact in facts:
+        section_groups.setdefault(fact["statement_section"], []).append(fact)
+        if fact["statement_section"] == "EQUITY_RESULT":
+            section_groups.setdefault("LIABILITIES_EQUITY", []).append(fact)
     totals: dict[str, dict[str, str]] = {}
-    for section in sorted({fact["statement_section"] for fact in facts}):
-        selected = [fact for fact in facts if fact["statement_section"] == section]
+    for section, selected in sorted(section_groups.items()):
         totals[section] = {
             "current": _decimal_text(
                 sum(Decimal(fact["current_value"]) for fact in selected)
@@ -4742,7 +4750,7 @@ def build_statements(
     presentation_lookup = {item["fact_id"]: item for item in presentation_facts}
     rounding_adjustments: list[dict[str, Any]] = []
     for section, exact in totals.items():
-        section_facts = [fact for fact in facts if fact["statement_section"] == section]
+        section_facts = section_groups[section]
         period_fields = [("current", "current_value")]
         if comparative_required:
             period_fields.append(("prior", "prior_value"))
@@ -4782,7 +4790,7 @@ def build_statements(
             "PRESENT" if comparative_required else "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR"
         ),
         "computed_at": _now(),
-        "computation_context": _computation_context(case, "statement-engine-v1"),
+        "computation_context": _computation_context(case, "statement-engine-v2"),
     }
     case["statutory_presentation"] = None
     case["state"] = CaseState.STATEMENT_REVIEW
@@ -5508,113 +5516,9 @@ def record_intelligence_suggestion(
 
 
 def render_preview_html(case: Mapping[str, Any]) -> bytes:
-    """Render a safe review preview from structured case data only."""
+    """Render native accounts using language-matched review navigation."""
 
-    statements = case.get("statements") or {}
-    facts = statements.get("facts", [])
-    first_year = (case.get("entity") or {}).get("first_financial_year") is True
-    statement_caption = (
-        "Valori del primo esercizio" if first_year else "Valori correnti e comparativi"
-    )
-    schedules = case.get("schedules", [])
-    questions = case.get("questionnaire", [])
-    narratives = case.get("narrative_blocks", [])
-    taxonomy_facts = [
-        *case.get("taxonomy_facts", []),
-        *case.get("schedule_taxonomy_facts", []),
-    ]
-    statutory_presentation = case.get("statutory_presentation") or {}
-    presentation_summary = statutory_presentation.get("summary") or {}
-    micro_reporting = case.get("micro_reporting") or {}
-    issues = (case.get("validation") or {}).get("issues", [])
-    output_language = str(case.get("output_language", "it"))
-
-    def cell(value: Any) -> str:
-        return html.escape("" if value is None else str(value))
-
-    statement_rows = "".join(
-        "<tr>"
-        f"<td>{cell(fact.get('statement_section'))}</td>"
-        f"<td>{cell(fact.get('key'))}</td>"
-        f"<td>{cell(fact.get('current_value'))}</td>"
-        + ("" if first_year else f"<td>{cell(fact.get('prior_value'))}</td>")
-        + "</tr>"
-        for fact in facts
-    )
-    statement_value_headers = '<th scope="col">Corrente</th>'
-    if not first_year:
-        statement_value_headers += '<th scope="col">Comparativo</th>'
-    schedule_rows = "".join(
-        "<tr>"
-        f"<td>{cell(item.get('schedule_type'))}</td>"
-        f"<td>{cell(item.get('schedule_id'))}</td>"
-        f"<td>{cell(item.get('status'))}</td>"
-        f"<td>{cell(len(item.get('issues', [])))}</td>"
-        "</tr>"
-        for item in schedules
-    )
-    question_rows = "".join(
-        "<tr>"
-        f"<td>{cell(item.get('question_id'))}</td>"
-        f"<td>{cell(item.get('title'))}</td>"
-        f"<td>{cell(item.get('state'))}</td>"
-        f"<td>{cell(item.get('reason'))}</td>"
-        "</tr>"
-        for item in questions
-        if item.get("state") != "NOT_TRIGGERED"
-    )
-    note_blocks = "".join(
-        f'<article lang="{cell(block.get("language") or output_language)}">'
-        f"<h3>{cell(block.get('section_id'))}</h3>"
-        f"<p>{cell(block.get('text'))}</p>"
-        f"<small>{cell(block.get('status'))}</small></article>"
-        for block in narratives
-    )
-    taxonomy_rows = "".join(
-        "<tr>"
-        f"<td>{cell(item.get('xbrl_concept'))}</td>"
-        f"<td>{cell(item.get('fact_type'))}</td>"
-        f"<td>{cell(item.get('period'))}</td>"
-        f"<td>{cell(item.get('value'))}</td>"
-        f"<td>{cell(item.get('dimensions'))}</td>"
-        "</tr>"
-        for item in taxonomy_facts
-    )
-    micro_footer_rows = "".join(
-        "<tr>"
-        f"<td>{cell(item.get('key'))}</td>"
-        f"<td>{cell(item.get('status'))}</td>"
-        f"<td>{cell(item.get('value'))}</td>"
-        f"<td>{cell(item.get('reason'))}</td>"
-        "</tr>"
-        for item in micro_reporting.get("footer_items", [])
-    )
-    issue_rows = "".join(
-        "<tr>"
-        f"<td>{cell(item.get('severity'))}</td>"
-        f"<td>{cell(item.get('rule_id'))}</td>"
-        f"<td>{cell(item.get('message'))}</td>"
-        f"<td>{cell(item.get('review_status'))}</td>"
-        "</tr>"
-        for item in issues
-    )
-    document = f"""<!doctype html>
-<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
-<title>Anteprima bilancio {cell(case.get('case_id'))}</title>
-<style>body{{font-family:"Instrument Sans",Arial,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;color:#171816;background:#fff}}.skip-link{{position:absolute;left:-9999px}}.skip-link:focus{{left:1rem;top:1rem;background:#fff;color:#002060;padding:.75rem;z-index:2}}:focus-visible{{outline:3px solid #00b0f0;outline-offset:3px}}.table-scroll{{overflow-x:auto;margin-bottom:2rem}}table{{border-collapse:collapse;width:100%}}caption{{text-align:left;font-weight:600;padding:.4rem 0}}th,td{{border-bottom:1px solid #d9d9d9;padding:.55rem;text-align:left;vertical-align:top}}h1,h2{{color:#002060}}article{{border-left:3px solid #0070c0;padding:.25rem 1rem;margin:1rem 0}}</style>
-</head><body><a class="skip-link" href="#main-content">Vai al contenuto principale</a><main id="main-content" tabindex="-1" data-output-language="{cell(output_language)}"><h1>Anteprima bilancio civilistico e XBRL</h1>
-<p>Caso {cell(case.get('case_id'))} · revisione {cell(case.get('revision_id'))} · forma {cell(case.get('selected_form'))}</p>
-<section aria-labelledby="presentation-heading"><h2 id="presentation-heading">Copertura dei prospetti civilistici</h2><p>Stato: <strong>{cell(statutory_presentation.get('status', 'NON_REVISIONATA'))}</strong> · voci richieste {cell(presentation_summary.get('required_leaf_concepts', 0))} · decisioni esplicite {cell(presentation_summary.get('explicit_decisions', 0))} · decisioni mancanti {cell(presentation_summary.get('missing_period_decisions', 0))} · problemi aritmetici {cell(presentation_summary.get('issues', 0))}.</p></section>
-<section aria-labelledby="statements-heading"><h2 id="statements-heading">Prospetti</h2><div class="table-scroll" role="region" aria-labelledby="statements-heading" tabindex="0"><table><caption>{cell(statement_caption)}</caption><thead><tr><th scope="col">Sezione</th><th scope="col">Voce</th>{statement_value_headers}</tr></thead><tbody>{statement_rows}</tbody></table></div></section>
-<section aria-labelledby="schedules-heading"><h2 id="schedules-heading">Prospetti di dettaglio</h2><div class="table-scroll" role="region" aria-labelledby="schedules-heading" tabindex="0"><table><caption>Stato delle riconciliazioni di dettaglio</caption><thead><tr><th scope="col">Tipo</th><th scope="col">ID</th><th scope="col">Stato</th><th scope="col">Problemi</th></tr></thead><tbody>{schedule_rows}</tbody></table></div></section>
-<section aria-labelledby="questions-heading"><h2 id="questions-heading">Questionario</h2><div class="table-scroll" role="region" aria-labelledby="questions-heading" tabindex="0"><table><caption>Domande contestuali e motivazioni</caption><thead><tr><th scope="col">ID</th><th scope="col">Domanda</th><th scope="col">Stato</th><th scope="col">Motivo</th></tr></thead><tbody>{question_rows}</tbody></table></div></section>
-<section aria-labelledby="notes-heading"><h2 id="notes-heading">Nota integrativa</h2>{note_blocks}</section>
-<section aria-labelledby="micro-heading"><h2 id="micro-heading">Informazioni in calce micro-imprese</h2><div class="table-scroll" role="region" aria-labelledby="micro-heading" tabindex="0"><table><caption>Informazioni statutarie in calce</caption><thead><tr><th scope="col">Voce</th><th scope="col">Stato</th><th scope="col">Contenuto</th><th scope="col">Motivo</th></tr></thead><tbody>{micro_footer_rows}</tbody></table></div></section>
-<section aria-labelledby="taxonomy-heading"><h2 id="taxonomy-heading">Fatti tassonomici aggiuntivi</h2><div class="table-scroll" role="region" aria-labelledby="taxonomy-heading" tabindex="0"><table><caption>Fatti aggiuntivi sottoposti a revisione</caption><thead><tr><th scope="col">Concetto</th><th scope="col">Tipo</th><th scope="col">Periodo</th><th scope="col">Valore</th><th scope="col">Dimensioni</th></tr></thead><tbody>{taxonomy_rows}</tbody></table></div></section>
-<section aria-labelledby="issues-heading"><h2 id="issues-heading">Validazioni</h2><div class="table-scroll" role="region" aria-labelledby="issues-heading" tabindex="0"><table><caption>Problemi, gravità e stato di revisione</caption><thead><tr><th scope="col">Gravità</th><th scope="col">Regola</th><th scope="col">Messaggio</th><th scope="col">Revisione</th></tr></thead><tbody>{issue_rows}</tbody></table></div></section>
-<p><strong>Confine:</strong> Vera prepara una bozza rivedibile; non approva il bilancio, non firma e non deposita.</p></main>
-</body></html>"""
-    return document.encode("utf-8")
+    return render_accounts_preview(case)
 
 
 def create_preview(
@@ -5635,7 +5539,24 @@ def create_preview(
     if output_path.parent.is_symlink():
         raise ValueError("Preview directory must not be a symbolic link")
     _mutate(case, actor, "preview_rendered")
-    preview = render_preview_html(case)
+    # Recompute content checks on a copy rather than embedding stale validation.
+    # Preview-integrity checks belong to the subsequent final validation: the
+    # previous preview is being replaced by the exact bytes rendered here.
+    preview_case = deepcopy(case)
+    checks = validate_case(preview_case)
+    checks["issues"] = [
+        issue
+        for issue in checks["issues"]
+        if issue["rule_id"]
+        not in {
+            "REVIEW.PREVIEW_REQUIRED",
+            "REVIEW.PREVIEW_STALE",
+            "REVIEW.PREVIEW_INTEGRITY",
+        }
+    ]
+    preview_case["validation"] = checks
+    preview_case["preview_checks_recalculated"] = True
+    preview = render_preview_html(preview_case)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_bytes(preview)
     case["preview"] = {

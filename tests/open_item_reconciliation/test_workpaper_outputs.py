@@ -623,3 +623,95 @@ def test_word_report_keeps_source_control_receipts_out_of_financial_prose(tmp_pa
         ]
         == "0.01"
     )
+
+
+def test_word_report_leads_with_results_and_keeps_wide_evidence_readable(tmp_path):
+    outputs = load_outputs()
+    path = tmp_path / "report.docx"
+    outputs.write_word_report(
+        path,
+        title="Riconciliazione — esercitazione",
+        metadata={"input_dir": "/local/workspace/fictional-inputs"},
+        summary_rows=[
+            {"reconciliation_status": "closed", "rows": 2, "amount": "1952.00"},
+            {"reconciliation_status": "unresolved", "rows": 1, "amount": "488.00"},
+        ],
+        assumptions={"cutoff_date": "2026-03-31"},
+        next_steps=["Verificare la fattura 26FF01/000003."],
+        document_source_map=[
+            {
+                "document_no_examples": "26FF01/000003",
+                "open_amount_total": "488.00",
+                "open_item_rows": 1,
+                "ledger_rows": 2,
+                "journal_rows": 3,
+                "bank_rows": 4,
+                "payment_order_rows": 5,
+                "factoring_rows": 6,
+                "review_note": "Nota completa da conservare nel rapporto.",
+            }
+        ],
+        cutoff_window_movements=[
+            {
+                "record_id": "open:imports/fictional-inputs/open-items.pdf:p1:l17",
+                "cutoff_window_timing": "before_cutoff",
+                "evidence_type": "open_item",
+                "amount": "488.00",
+            }
+        ],
+    )
+
+    document = Document(path)
+    first_table = document.tables[0]
+    assert [cell.text for cell in first_table.rows[1].cells] == [
+        "Chiusa da evidenza",
+        "2",
+        "1.952,00",
+    ]
+    assert [cell.text for cell in first_table.rows[2].cells] == [
+        "Non risolta",
+        "1",
+        "488,00",
+    ]
+    paragraphs = [paragraph.text for paragraph in document.paragraphs]
+    assert paragraphs.index("Prossimi passi") < paragraphs.index("Perimetro e metodo")
+    assert paragraphs.index("Metadati run") > paragraphs.index("Rinvio al file Excel")
+    evidence_tables = [
+        table for table in document.tables if table.rows[0].cells[0].text == "Documento"
+    ]
+    assert len(evidence_tables) == 2
+    evidence = {}
+    for table in evidence_tables:
+        assert table.rows[1].cells[0].text == "26FF01/000003"
+        evidence.update(
+            zip(
+                [cell.text for cell in table.rows[0].cells],
+                [cell.text for cell in table.rows[1].cells],
+            )
+        )
+        assert len(table.columns) <= 6
+        assert table.rows[0]._tr.xpath("./w:trPr/w:tblHeader")
+        assert [column.width for column in table.columns] == [
+            cell.width for cell in table.rows[0].cells
+        ]
+    assert evidence == {
+        "Documento": "26FF01/000003",
+        "Importo aperto": "488,00",
+        "Righe aperte": "1",
+        "Mastro": "2",
+        "Giornale": "3",
+        "Banca": "4",
+        "Distinte": "5",
+        "Factor": "6",
+        "Nota": "Nota completa da conservare nel rapporto.",
+    }
+
+    references = next(
+        table
+        for table in document.tables
+        if table.rows[0].cells[-1].text == "Riferimenti alle righe"
+    )
+    assert references.columns[-1].width.inches >= 2.0
+    assert references.rows[1].cells[-1].text == (
+        "open:imports/fictional-inputs/open-items.pdf:p1:l17"
+    )

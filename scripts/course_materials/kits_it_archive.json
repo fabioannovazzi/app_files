@@ -1,0 +1,52 @@
+{
+  "vera/studio-archive": {
+    "title": "Cercare documenti di un cliente con Vera",
+    "goal": "Imparare a collegare una cartella di studio, cercare nel cliente corretto e ottenere una risposta con riferimenti ai documenti.",
+    "scenario": "Lo studio vuole ritrovare il servizio di manutenzione concordato da Ciclo Arco e il termine indicato nell’accordo. L’archivio fittizio contiene anche un altro cliente.",
+    "scope": "Ricerca nei documenti locali. Gmail, WhatsApp e Google Drive sono altri percorsi della funzione e richiedono le rispettive connessioni; non vengono attivati in questa lezione.",
+    "inputs": "Apri la cartella archive: contiene Ciclo Arco e Delta, ciascuno con il proprio accordo. Vera prepara una copia didattica e un indice locale separato; le impostazioni del tuo archivio di studio restano quelle esistenti.",
+    "request": "Vera, cerca nei documenti di Ciclo Arco l’accordo con Tecnica Esempio. Quale servizio è previsto e fino a quando? Mostrami i passaggi che sostengono la risposta.",
+    "steps": [
+      "Nella chat di lavoro Vera prepara la cartella didattica, ne verifica l’accesso e indicizza i documenti leggibili. Se serve la scelta della cartella, seleziona quella dell’esercizio.",
+      "Seleziona Ciclo Arco. Il flusso corrente cerca nell’ambito di quel cliente e apre le fonti pertinenti; la voce spiega come passare dai risultati di ricerca al documento.",
+      "Leggi la risposta e apri le citazioni. Verifica che riportino cliente, servizio mensile e periodo dell’accordo. Individua anche eventuali limiti di lettura o documenti non indicizzati."
+    ],
+    "deliverables": [
+      "Risposta con citazioni apribili: servizio, periodo e passaggi dei documenti che li descrivono.",
+      "Stato dell’indice e traccia della ricerca: cliente selezionato, fonti aperte e limiti incontrati."
+    ],
+    "review": "Controlla il cliente selezionato e leggi il passaggio citato. La ricerca trova ciò che è nei file indicizzati; non dimostra che l’archivio contenga tutti gli accordi o che un documento sia giuridicamente valido.",
+    "checkpoints": [
+      "Prima della ricerca, identifica la cartella di Ciclo Arco.",
+      "Alla risposta, apri una citazione e ritrova il dato nel documento."
+    ],
+    "practice": "Aggiungi update-it.md dai file di prova alla copia didattica di Ciclo Arco, conserva l’accordo e chiedi di aggiornare l’indice. Ripeti la domanda sul termine del servizio e apri entrambe le fonti.",
+    "success": "La risposta tiene conto dell’aggiornamento fino al 30 giugno 2027 e conserva il riferimento all’accordo iniziale. Spiega quando serve aggiornare l’indice.",
+    "repeat": "Indica cliente e domanda concreta. Dopo nuovi documenti chiedi di aggiornare l’archivio; apri le fonti usate prima di affidarti alla risposta."
+  },
+  "vera/archive-organization": {
+    "title": "Riordinare la cartella di un cliente con Vera",
+    "goal": "Imparare a ottenere una proposta di riordino, rivedere le destinazioni e applicare le modifiche approvate a una cartella.",
+    "scenario": "La cartella di Ciclo Arco contiene un accordo, una sua copia e un verbale interno in due cartelle di arrivo. Prepariamo un riordino leggibile e lo proviamo sulla copia didattica.",
+    "scope": "Un solo cliente e file locali fittizi. L’applicazione richiede una scelta esplicita; la lezione non modifica l’archivio reale dello studio.",
+    "inputs": "Apri client e osserva Da archiviare e Download. Leggi accordo e verbale. Vera copia questi file in un cliente didattico separato e usa la politica di cartelle dello studio prevista dal flusso.",
+    "request": "Vera, proponi il riordino di questa cartella di Ciclo Arco. Fammi vedere documenti, destinazioni e copie duplicate prima di spostare qualcosa.",
+    "steps": [
+      "La chat di lavoro crea il cliente didattico e acquisisce una fotografia dei file. Vera legge gli elementi necessari e propone categorie e destinazioni sulla base del contenuto.",
+      "Apri la pagina di revisione generata. Esamina ogni proposta, conserva o correggi la destinazione e scegli come trattare la copia esatta. Il piano resta una proposta finché non viene approvato.",
+      "Dopo le decisioni, Vera mostra gli spostamenti previsti e chiede separatamente se applicarli. Se approvi sulla copia didattica, esegue il piano e mostra cartelle risultanti e registro delle operazioni."
+    ],
+    "deliverables": [
+      "Pagina di revisione e piano: file di partenza, destinazioni proposte, motivi e decisioni salvate.",
+      "Dopo l’applicazione autorizzata: cartella riordinata e registro che permette di verificare gli spostamenti e valutare il ripristino."
+    ],
+    "review": "Segui un documento dalla posizione iniziale alla destinazione. La copia esatta viene conservata nell’area di verifica dei duplicati, non eliminata. Una decisione sulla proposta non equivale all’autorizzazione a spostare i file.",
+    "checkpoints": [
+      "Prima del piano, identifica il cliente e la cartella didattica.",
+      "Prima dell’applicazione, spiega una destinazione scelta e verifica l’elenco degli spostamenti."
+    ],
+    "practice": "Usa la nuova copia client dei file di prova, che aggiunge update-it.md. Chiedi un altro riordino, rivedi dove conservare l’aggiornamento insieme all’accordo e decidi se applicare il nuovo piano. Conserva la dimostrazione.",
+    "success": "Sai leggere il piano, intervenire su una proposta e distinguere revisione e applicazione. Se non autorizzi gli spostamenti, il risultato resta un piano pronto da rivedere, non una cartella già riordinata.",
+    "repeat": "Seleziona un cliente, chiedi una proposta e rivedi ogni modifica. Applica solo dopo il riepilogo esplicito e conserva il registro."
+  }
+}

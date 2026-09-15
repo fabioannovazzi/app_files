@@ -319,6 +319,43 @@ def test_report_escapes_supplied_markup_and_excel_formula_text(tmp_path):
     workbook.close()
 
 
+def test_delivery_exposes_weekly_cash_and_readable_date_assumptions(tmp_path):
+    data = first()
+    basis = (
+        "Prospetto della direzione: pagamento delle retribuzioni previsto "
+        "il 30 settembre, inclusi i conguagli indicati nella distinta allegata."
+    )
+    data["planned_flows"][0]["basis"] = basis
+    record = build_forecast(data)
+
+    write_artifacts(tmp_path / "version", record)
+
+    html = (tmp_path / "version/report.html").read_text()
+    assert "Bozza da rivedere" in html
+    assert "<h2>Saldi settimanali</h2>" in html
+    assert "<td>2026-09-28</td>" in html
+    assert "<td>€ 15.000,00</td>" in html
+    assert basis in html
+    assert "<pre" not in html
+    assert read_json(tmp_path / "version/forecast.json") == record
+    workbook = load_workbook(tmp_path / "version/tesoreria.xlsx")
+    assert workbook["Sintesi"]["B2"].value == "Bozza da rivedere"
+    assert workbook["Settimane"]["C1"].value == "Cassa finale EUR"
+    assert workbook["Settimane"]["C5"].value == 15000
+    flows = workbook["Flussi"]
+    assert flows["F5"].value == basis
+    assert flows["F5"].alignment.wrap_text
+    assert flows.row_dimensions[5].height > 30
+    assert flows.freeze_panes == "B2"
+    assert (
+        (tmp_path / "version/flussi.csv")
+        .read_text()
+        .splitlines()[0]
+        .endswith(",basis,decision_origin")
+    )
+    workbook.close()
+
+
 def test_http_review_requires_token_origin_and_recalculates(tmp_path):
     output, record, _ = session(tmp_path)
     server, token = make_server(output, lambda: None)

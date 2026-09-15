@@ -1,0 +1,75 @@
+{
+  "audience": "Small business clients in Italy; administration and customer service staff",
+  "brand_profile": {
+    "accent_color": "#197B9C",
+    "background_color": "#FFFFFF",
+    "primary_color": "#153855",
+    "studio_name": "Studio Riva",
+    "text_color": "#1C2935"
+  },
+  "data_posture": {
+    "automatic_anonymization_before_selected_runtime": false,
+    "downstream_history_requires_complete_pseudonymized_documents": false,
+    "helper_scripts_call_models": false,
+    "helper_scripts_use_connectors": false,
+    "independent_derivative_privacy_review_required": false,
+    "local_identity_map_kept_out_of_model_context": false,
+    "mechanical_identifier_stripping_before_selected_runtime": false,
+    "mechanically_stripped_history_model_context_limited_to_one_pseudonymization_pass": false,
+    "raw_history_sent_to_model": false,
+    "selected_prior_communications_snapshotted_locally": 0,
+    "selected_source_files_snapshotted_locally": 1,
+    "transient_stripped_history_deleted_before_generation": false
+  },
+  "execution_trace": [
+    {
+      "command": "python scripts/prepare_run.py --workspace <workspace> --intake <intake>",
+      "execution_location": "local_codex_workspace",
+      "inputs": [
+        "/private/tmp/communication-teaching-check-02/lucia-es-demo-intake.json"
+      ],
+      "kind": "local_input_snapshot",
+      "outputs": [
+        "run_intake.json",
+        "source_register.json",
+        "model_task_packet.json"
+      ],
+      "status": "completed",
+      "step_id": "prepare-run"
+    }
+  ],
+  "external_routes": {
+    "creative_production": {
+      "selected": false
+    },
+    "history_connector": {
+      "selected": false
+    },
+    "public_research": {
+      "selected": false
+    },
+    "send_or_publish": {
+      "selected": false
+    }
+  },
+  "input_digest": "7f44794543a242da7636dc0aae8b70d95df90a38c4b02bd03f8494ed68c7ba9a",
+  "jurisdiction": "Italy / EU GDPR; language does not change jurisdiction",
+  "language": "es",
+  "objective": "El despacho quiere una FAQ breve para sus pequeñas empresas clientes en Italia: cómo reconocer y organizar una solicitud de acceso a datos personales. Es una iniciativa informativa del despacho, no el anuncio de una nueva ley ni la respuesta a una persona real. Los lectores gestionan administración y relaciones con clientes y necesitan saber cuándo implicar a la persona responsable de privacidad. Utiliza la guía oficial seleccionada del CEPD, distinguiendo orientaciones generales y valoración del caso particular. No se aportan datos de clientes, solicitudes reales ni una política de privacidad empresarial. Prepara el paquete para revisión interna, sin enviarlo ni publicarlo. Redacta los documentos finales en español.",
+  "output_dir": "/private/tmp/communication-teaching-check-02/workspace/runs/lucia-es-demo",
+  "plugin": "comunicazione-professionale",
+  "prepared_at": "2026-09-14T11:08:04+00:00",
+  "profile_revision_required": true,
+  "reference_date": "2026-09-14",
+  "requested_channels": [
+    "faq"
+  ],
+  "run_id": "lucia-es-demo",
+  "schema_version": 1,
+  "studio_format_brief": "Studio Riva — abogados. No se proporcionan logotipo, datos de contacto, comunicaciones anteriores ni un formato aprobado. Propón un formato sobrio azul y blanco, con letra legible, títulos claros y fuentes identificables. El profesional lo revisará antes de usarlo.",
+  "studio_profile": null,
+  "visual_requested": false,
+  "workflow": "comunicazione-professionale",
+  "workspace_id": "fictional-teaching-studio-riva",
+  "workspace_path": "/private/tmp/communication-teaching-check-02/workspace"
+}

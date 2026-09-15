@@ -1,0 +1,52 @@
+{
+  "vera/comunicazione-professionale": {
+    "title": "Prepare a professional communication with Vera",
+    "goal": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+    "scenario": "Studio Riva wants to help its small business clients understand how to handle a data access request. We will prepare a short FAQ using a selected official source.",
+    "scope": "The complete communication workflow: objective and audience, sources, editorial decision, draft, checks, review and final files. The legal example lets you try the workflow; this lesson is not a GDPR course.",
+    "inputs": "Open brief-en.md for the assignment and requested format. Open source-en.md to inspect the selected official guide. The fictional firm starts without previous communications.",
+    "request": "Vera, prepare a FAQ for Studio Riva’s small business clients about handling data access requests. Use this brief and source. Let me review the content and format, then prepare the local package without sending or publishing it.",
+    "steps": [
+      "In the working thread, Vera establishes the audience, objective, language and channel and prepares the firm’s local workspace. In the voice chat, it explains what we will produce. You confirm the scope and where the work will be saved.",
+      "Vera examines the source, decides what is useful and drafts the FAQ and proposed format. The current workflow checks claims and editorial quality separately. The voice explanation follows actual results, including any revision a check requires.",
+      "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
+    ],
+    "deliverables": [
+      "FAQ in Markdown, for inspection and reuse after review.",
+      "Technical basis, source references and records of checks and decisions."
+    ],
+    "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",
+    "checkpoints": [
+      "State the audience you want to reach, the content they need and the format you want.",
+      "Find the usable text and the source of one claim in the package; explain what you need to review before use."
+    ],
+    "practice": "Read practice-en.md and request a new version including a covering email for the FAQ. Review the channel adaptation, preserve the first package and open the new files. Do not send anything.",
+    "success": "You can start from selected sources, follow checks, review the communication and request a new version for another channel.",
+    "repeat": "Tell Vera the topic, audience, channels and available sources. You can add exact examples of the firm’s style. Review the proposal, sources and package before using it."
+  },
+  "lucia/comunicazione-professionale": {
+    "title": "Prepare a professional communication with Lucia",
+    "goal": "Learn to turn a topic and selected sources into a communication for a defined audience, then review the package before using it.",
+    "scenario": "Studio Riva wants to help its small business clients understand how to handle a data access request. We will prepare a short FAQ using a selected official source.",
+    "scope": "The complete communication workflow: objective and audience, sources, editorial decision, draft, checks, review and final files. The legal example lets you try the workflow; this lesson is not a GDPR course.",
+    "inputs": "Open brief-en.md for the assignment and requested format. Open source-en.md to inspect the selected official guide. The fictional firm starts without previous communications.",
+    "request": "Lucia, prepare a FAQ for Studio Riva’s small business clients about handling data access requests. Use this brief and source. Let me review the content and format, then prepare the local package without sending or publishing it.",
+    "steps": [
+      "In the working thread, Lucia establishes the audience, objective, language and channel and prepares the firm’s local workspace. In the voice chat, it explains what we will produce. You confirm the scope and where the work will be saved.",
+      "Lucia examines the source, decides what is useful and drafts the FAQ and proposed format. The current workflow checks claims and editorial quality separately. The voice explanation follows actual results, including any revision a check requires.",
+      "Review the communication, sources and format. After the confirmations required by the workflow, open the actual generated package and find out how to use its files. Sending or publishing is a separate subsequent action."
+    ],
+    "deliverables": [
+      "FAQ in Markdown, for inspection and reuse after review.",
+      "Technical basis, source references and records of checks and decisions."
+    ],
+    "review": "Read the FAQ as a client: its audience and practical use should be clear. Check that claims match the source, limits remain visible and the format is the one accepted. The workflow may require revision or explain why no communication is warranted.",
+    "checkpoints": [
+      "State the audience you want to reach, the content they need and the format you want.",
+      "Find the usable text and the source of one claim in the package; explain what you need to review before use."
+    ],
+    "practice": "Read practice-en.md and request a new version including a covering email for the FAQ. Review the channel adaptation, preserve the first package and open the new files. Do not send anything.",
+    "success": "You can start from selected sources, follow checks, review the communication and request a new version for another channel.",
+    "repeat": "Tell Lucia the topic, audience, channels and available sources. You can add exact examples of the firm’s style. Review the proposal, sources and package before using it."
+  }
+}

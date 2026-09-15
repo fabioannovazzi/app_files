@@ -1,0 +1,27 @@
+{
+  "vera/sales-plan": {
+    "title": "Preparar un plan de ventas con Vera",
+    "goal": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué.",
+    "scenario": "Ciclo Arco quiere planificar enero y febrero del próximo año. Hay datos de esos mismos meses y una hipótesis de más unidades vendidas.",
+    "scope": "Un plan de dos productos y dos meses. El flujo aplica hipótesis revisadas; no demuestra demanda futura ni completa un plan de negocio.",
+    "inputs": "Abre actual-sales.csv y assumptions-es.md. Identifica meses, productos, unidades, ventas, descuentos y costes. La nota pide los mismos meses del año siguiente y más unidades, no precios mayores.",
+    "request": "Vera, planifica enero y febrero de 2027 para Ciclo Arco con estos datos y unidades un 10 % mayores. Resume primero las hipótesis para confirmar y muestra después plan y comparación con la base.",
+    "steps": [
+      "En la conversación de trabajo, Vera inspecciona datos y presenta una tabla breve de hipótesis. La voz explica meses y productos afectados y ayuda a confirmar el significado de la petición.",
+      "Con hipótesis realmente confirmadas, Vera ejecuta el plan actual y los controles. La voz sigue la creación sin confundir escenario y demanda futura probada.",
+      "Abre el resumen y detalle generados. Compara base y plan y sigue un producto por unidades, ventas, descuentos, costes e hipótesis aplicada."
+    ],
+    "deliverables": [
+      "Escenario de ventas CSV y resumen para revisar importes planificados.",
+      "Registro de hipótesis aplicadas y controles para entender y repetir el cálculo."
+    ],
+    "review": "Comprueba significado de hipótesis, meses comparables y factores sin cambio. Lee variaciones absolutas y porcentuales con sus bases. Plan e hipótesis requieren la revisión profesional habitual.",
+    "checkpoints": [
+      "Antes del cálculo, explica si cambian unidades o precios.",
+      "En el resultado, encuentra una fila y la hipótesis que determina su valor."
+    ],
+    "practice": "Con los archivos de práctica pide otro escenario con unidades +5 %, conservando el de +10 %. Confirma la nueva hipótesis, compara resúmenes y explica la diferencia.",
+    "success": "Sabes aportar datos, precisar y confirmar hipótesis, leer plan y controles y comparar una alternativa.",
+    "repeat": "Indica a Vera datos de partida, meses objetivo, moneda e hipótesis. Revisa la interpretación antes del cálculo y usa el resultado como escenario condicionado."
+  }
+}

@@ -127,7 +127,7 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
 def _driver_percent_delta(value: float, amount_baseline: float) -> float | None:
     """Return row-level percent change for a root-cause driver."""
 
-    if abs(amount_baseline) <= TOLERANCE:
+    if amount_baseline <= TOLERANCE:
         return None
     percent = (value / amount_baseline) * 100
     return percent if math.isfinite(percent) else None
@@ -223,6 +223,7 @@ def _display_labels(recipe: dict[str, Any]) -> dict[str, str]:
     )
     return {
         "it": {
+            "Total variance": "Scostamento totale",
             "Price & volume & mix": "Prezzo, Volume e Mix",
             "Price & units & mix": "Prezzo, Unità e Mix",
             "Units & mix": "Unità e Mix",
@@ -234,6 +235,7 @@ def _display_labels(recipe: dict[str, Any]) -> dict[str, str]:
             "Mix": "Mix",
         },
         "es": {
+            "Total variance": "Variación total",
             "Price & volume & mix": "Precio, Volumen y Mix",
             "Price & units & mix": "Precio, Unidades y Mix",
             "Units & mix": "Unidades y Mix",
@@ -245,6 +247,7 @@ def _display_labels(recipe: dict[str, Any]) -> dict[str, str]:
             "Mix": "Mix",
         },
         "fr": {
+            "Total variance": "Écart total",
             "Price & volume & mix": "Prix, Volume et Mix",
             "Price & units & mix": "Prix, Unités et Mix",
             "Units & mix": "Unités et Mix",
@@ -256,6 +259,7 @@ def _display_labels(recipe: dict[str, Any]) -> dict[str, str]:
             "Mix": "Mix",
         },
         "de": {
+            "Total variance": "Gesamtabweichung",
             "Price & volume & mix": "Preis, Volumen und Mix",
             "Price & units & mix": "Preis, Menge und Mix",
             "Units & mix": "Menge und Mix",

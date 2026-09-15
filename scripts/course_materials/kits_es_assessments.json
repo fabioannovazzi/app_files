@@ -1,0 +1,52 @@
+{
+  "vera/aml-review": {
+    "title": "Preparar una revisión antiblanqueo con Vera",
+    "goal": "Aprender a revisar un expediente cliente, reconstruir hechos y obtener una evaluación razonada con pruebas y cuestiones para revisar.",
+    "scenario": "El despacho revisa Officina Arco: documentos ficticios describen actividad, socios, representante y préstamo de socio.",
+    "scope": "Una revisión antiblanqueo para un despacho contable italiano. Vera prepara el análisis; el profesional decide medidas, aceptación y cualquier comunicación.",
+    "inputs": "Abre client-es.md, ownership-es.md y loan-es.md. Indica cliente, encargo y fecha: 31 de agosto de 2026. Los documentos son declaraciones y referencias del caso, no comprobaciones terminadas.",
+    "request": "Vera, prepara una revisión antiblanqueo de Officina Arco al 31 de agosto con estos documentos. Muéstrame hechos respaldados, puntos por aclarar y evaluación propuesta para revisar.",
+    "steps": [
+      "En la conversación de trabajo, Vera lee documentos y reconstruye personas, propiedad, actividad y operación. La voz explica la finalidad y distingue declaraciones, corroboración e información ausente.",
+      "Vera compara pruebas, verifica fuentes profesionales actuales pertinentes y plantea preguntas concretas. La voz sigue las cuestiones reales sin inventar sospechas ni resultados de cribado.",
+      "Abre el memo generado y un enlace a fuente. Lee evaluación, motivos y pruebas pendientes. El registro conserva la propuesta; las decisiones profesionales se guardan solo cuando se expresan realmente."
+    ],
+    "deliverables": [
+      "Memo legible con evaluación propuesta, hechos, fuentes, límites y preguntas concretas.",
+      "Versión guardada en el expediente para enlazar revisiones posteriores sin perder la anterior."
+    ],
+    "review": "Comprueba quién declaró cada hecho, qué lo corrobora y qué verificaciones faltan. Un cálculo o archivo guardado no aprueba al cliente. El memo es interno; no enviarlo automáticamente al cliente.",
+    "checkpoints": [
+      "Antes del análisis, identifica cliente, encargo y documentos aportados.",
+      "En el memo, encuentra un hecho documentado, una declaración y una cuestión pendiente."
+    ],
+    "practice": "Añade ownership-update-es.md al mismo expediente y pide revisión al 10 de septiembre. Vera enlaza el registro recién generado y compara la nueva propiedad con la anterior. Identifica cambio y prueba faltante.",
+    "success": "Sabes iniciar la revisión, usar el memo, distinguir propuesta y decisión y actualizar el expediente con hechos nuevos.",
+    "repeat": "Pide a Vera revisar un cliente por un motivo concreto, aportando documentos y evaluación anterior si existe. Examina pruebas y registra las decisiones profesionales reales."
+  },
+  "vera/adeguati-assetti": {
+    "title": "Evaluar la organización de la empresa con Vera",
+    "goal": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas.",
+    "scenario": "Officina Arco revisa responsabilidades, cierre mensual e información de cobros. El caso ficticio aporta perfil, procedimiento y un ejemplo operativo.",
+    "scope": "Una primera evaluación concreta de mecanismos organizativos, administrativos y contables de una empresa italiana. El alcance sigue los documentos; no es certificación de toda la empresa.",
+    "inputs": "Abre company-es.md, procedure-es.md y operation-es.md. Indica empresa, encargo y fecha: 31 de marzo de 2026. Aporta ejemplos operativos junto a procedimientos escritos.",
+    "request": "Vera, evalúa los mecanismos de Officina Arco para responsabilidades, cierre mensual e información de cobros. Usa estos documentos y muestra evaluación, límites y acciones que discutir.",
+    "steps": [
+      "En la conversación de trabajo, Vera reconstruye el funcionamiento y propone alcance. La voz explica por qué son útiles tanto procedimiento como ejemplo de aplicación.",
+      "Vera compara responsabilidades, plazos, entregas y decisiones, verifica fuentes profesionales pertinentes y prepara hallazgos proporcionados. La voz sigue pruebas reales y preguntas que pueden cambiar la evaluación.",
+      "Abre el memo generado. Lee primero la evaluación global, después un hallazgo, su fuente y acción vinculada. Distingue responsables y fechas propuestos de compromisos aceptados."
+    ],
+    "deliverables": [
+      "Memo con evaluación razonada, observaciones, hallazgos y plan de mejora.",
+      "Versión vinculada a fuentes para revisiones posteriores y decisiones realmente expresadas."
+    ],
+    "review": "Comprueba relación entre juicio y pruebas, alcance, áreas no examinadas y proporción de acciones. Un procedimiento o ciclo correcto no prueba continuidad; una carencia documental no demuestra por sí sola fallo del proceso.",
+    "checkpoints": [
+      "Antes del análisis, identifica proceso y ejemplo operativo disponible.",
+      "En el memo, relaciona una acción con el hallazgo y su fuente."
+    ],
+    "practice": "Añade update-es.md al mismo expediente y pide revisión al 30 de abril. Vera enlaza la versión generada, reevalúa cada acción anterior y conserva la primera. Explica cómo cambian la evaluación las nuevas pruebas.",
+    "success": "Sabes aportar documentos útiles, pedir la evaluación, usar el plan de acciones y solicitar revisión con nuevas pruebas.",
+    "repeat": "Describe empresa, finalidad y alcance. Da a Vera procedimientos, ejemplos y revisiones anteriores pertinentes. Revisa conclusiones y acciones antes de acordarlas con la empresa."
+  }
+}

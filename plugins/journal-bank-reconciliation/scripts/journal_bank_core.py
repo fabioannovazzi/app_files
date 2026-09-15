@@ -30,6 +30,8 @@ from implementation_bootstrap import (
     implementation_contract,
     validate_implementation_tree,
 )
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 from openpyxl.utils.exceptions import InvalidFileException
 
 _COMPONENT_ROOT = Path(__file__).resolve().parents[1]
@@ -76,6 +78,7 @@ try:
         FINAL_ARTIFACT_EXCLUDED_NAMES,
         refresh_final_artifacts,
         refresh_review_execution_trace,
+        review_notes_copy,
         write_review_session_artifacts,
         write_run_intake,
     )
@@ -93,6 +96,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
     sys.modules[_review_session_spec.name] = _review_session
     _review_session_spec.loader.exec_module(_review_session)
     FINAL_ARTIFACT_EXCLUDED_NAMES = _review_session.FINAL_ARTIFACT_EXCLUDED_NAMES
+    review_notes_copy = _review_session.review_notes_copy
     refresh_final_artifacts = _review_session.refresh_final_artifacts
     refresh_review_execution_trace = _review_session.refresh_review_execution_trace
     write_review_session_artifacts = _review_session.write_review_session_artifacts
@@ -806,6 +810,7 @@ __all__ = [
     "build_relationship_review_receipt",
     "configure_logging",
     "excel_safe_value",
+    "format_workbook_sheet",
     "inspect_inputs",
     "implementation_artifact_roots",
     "normalize_language",
@@ -5958,6 +5963,33 @@ def _stabilize_ooxml_package(path: Path) -> None:
         temporary_path.unlink(missing_ok=True)
 
 
+def format_workbook_sheet(sheet: Any) -> None:
+    """Apply the native readable layout without changing cells or sheet structure."""
+    sheet.sheet_view.showGridLines = False
+    sheet.freeze_panes = "B2"
+    sheet.auto_filter.ref = sheet.dimensions
+    for column in sheet.columns:
+        width = min(52, max(16, max(len(str(cell.value or "")) for cell in column) + 2))
+        sheet.column_dimensions[get_column_letter(column[0].column)].width = width
+    for row in sheet:
+        lines = 1
+        for cell in row:
+            content_width = int(sheet.column_dimensions[cell.column_letter].width) - 2
+            text = str(cell.value if cell.value is not None else "")
+            lines = max(
+                lines,
+                max(
+                    (len(line) + content_width - 1) // content_width
+                    for line in text.split("\n")
+                ),
+            )
+            cell.font = Font(name="Arial", size=11, bold=cell.row == 1, color="1C2935")
+            cell.alignment = Alignment(vertical="center", wrap_text=True)
+            if cell.row == 1:
+                cell.fill = PatternFill("solid", fgColor="E8EEF5")
+        sheet.row_dimensions[row[0].row].height = max(24, 16 * lines + 8)
+
+
 def _write_workbook(path: Path, sheets: dict[str, pl.DataFrame]) -> None:
     workbook = openpyxl.Workbook()
     default = workbook.active
@@ -5967,68 +5999,32 @@ def _write_workbook(path: Path, sheets: dict[str, pl.DataFrame]) -> None:
         sheet.append([excel_safe_value(value) for value in frame.columns])
         for row in frame.iter_rows():
             sheet.append([excel_safe_value(value) for value in row])
+        format_workbook_sheet(sheet)
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(path)
     _stabilize_ooxml_package(path)
 
 
 def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
-    if audit.get("language") == "es":
-        lines = [
-            "# Notas de revisión de la conciliación entre diario y banco",
-            "",
-            f"- Idioma: {audit['language']}",
-            f"- Movimientos bancarios: {audit['bank_row_count']}",
-            f"- Asientos del diario: {audit['journal_row_count']}",
-            f"- Filas conciliadas: {audit['matched_count']}",
-            f"- Movimientos bancarios sin conciliar: {audit['unmatched_bank_count']}",
-            f"- Asientos del diario sin conciliar: {audit['unmatched_journal_count']}",
-            "",
-            "## Recuento por etapa",
-        ]
-        counts = audit.get("stage_counts", {})
-        if counts:
-            for stage, count in sorted(counts.items()):
-                lines.append(f"- {stage}: {count}")
-        else:
-            lines.append("- ninguno")
-        lines.extend(
-            [
-                "",
-                "## Política de revisión",
-                "Los scripts solo concilian evidencias deterministas. Codex debe explicar los casos no resueltos, inspeccionar las filas de origen cuando sea necesario y mantener explícito el juicio profesional.",
-                "",
-            ]
-        )
-        path.write_text("\n".join(lines), encoding="utf-8")
-        return
-
-    lines = [
-        "# Journal-Bank Reconciliation Review Notes",
-        "",
-        f"- Language: {audit['language']}",
-        f"- Bank rows: {audit['bank_row_count']}",
-        f"- Journal rows: {audit['journal_row_count']}",
-        f"- Matched rows: {audit['matched_count']}",
-        f"- Unmatched bank rows: {audit['unmatched_bank_count']}",
-        f"- Unmatched journal rows: {audit['unmatched_journal_count']}",
-        "",
-        "## Stage Counts",
-    ]
+    words = review_notes_copy(audit.get("language"))
+    lines = [f"# {words['title']}", ""]
+    for key in (
+        "language",
+        "bank_row_count",
+        "journal_row_count",
+        "matched_count",
+        "unmatched_bank_count",
+        "unmatched_journal_count",
+    ):
+        lines.append(f"- {words[key]}: {audit[key]}")
+    lines.extend(["", f"## {words['stages']}"])
     counts = audit.get("stage_counts", {})
     if counts:
         for stage, count in sorted(counts.items()):
             lines.append(f"- {stage}: {count}")
     else:
-        lines.append("- none")
-    lines.extend(
-        [
-            "",
-            "## Review Policy",
-            "The scripts only reconcile deterministic evidence. Codex must explain unresolved cases, inspect source rows where needed, and keep professional judgment explicit.",
-            "",
-        ]
-    )
+        lines.append(f"- {words['none']}")
+    lines.extend(["", f"## {words['review']}", words["guidance"], ""])
     path.write_text("\n".join(lines), encoding="utf-8")
 
 

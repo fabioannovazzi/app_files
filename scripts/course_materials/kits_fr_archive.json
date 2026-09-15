@@ -1,0 +1,52 @@
+{
+  "vera/studio-archive": {
+    "title": "Retrouver les documents d’un client avec Vera",
+    "goal": "Apprendre à connecter un dossier de cabinet, chercher chez le bon client et obtenir une réponse reliée aux documents sources.",
+    "scenario": "Le cabinet veut retrouver le service de maintenance convenu par Ciclo Arco et la fin indiquée dans l’accord. L’archive fictive contient aussi un autre client.",
+    "scope": "Recherche dans des documents locaux. Gmail, WhatsApp et Google Drive sont des parcours distincts avec leurs propres connexions ; ils ne sont pas activés ici.",
+    "inputs": "Ouvrez archive : Ciclo Arco et Delta ont chacun leur accord. Vera prépare une copie pédagogique et un index local séparé, en conservant les paramètres de votre archive habituelle.",
+    "request": "Vera, retrouve l’accord de Ciclo Arco avec Tecnica Esempio. Quel service est prévu et jusqu’à quand ? Montre les passages qui étayent la réponse.",
+    "steps": [
+      "Dans la conversation de travail, Vera prépare le dossier pédagogique, vérifie l’accès et indexe les documents lisibles. Si un dossier doit être choisi, sélectionnez celui de l’exercice.",
+      "Sélectionnez Ciclo Arco. Le flux actuel cherche dans ce client et ouvre les sources pertinentes ; la conversation vocale explique le passage du résultat de recherche au document.",
+      "Lisez la réponse et ouvrez les citations. Vérifiez client, service mensuel et période indiquée. Repérez les limites de lecture ou documents non indexés."
+    ],
+    "deliverables": [
+      "Réponse avec liens : service, période et passages des documents qui les décrivent.",
+      "État de l’index et trace de recherche : client choisi, sources ouvertes et limites rencontrées."
+    ],
+    "review": "Vérifiez le client sélectionné et lisez le passage cité. La recherche trouve les contenus indexés ; elle ne prouve ni l’exhaustivité des accords ni leur validité juridique.",
+    "checkpoints": [
+      "Avant la recherche, identifiez le dossier de Ciclo Arco.",
+      "À la remise, ouvrez une citation et retrouvez l’information dans le document."
+    ],
+    "practice": "Ajoutez update-fr.md depuis les fichiers d’exercice à la copie pédagogique de Ciclo Arco, conservez l’accord et demandez d’actualiser l’index. Répétez la question sur la fin du service et ouvrez les deux sources.",
+    "success": "La réponse tient compte de la prolongation au 30 juin 2027 et garde la référence à l’accord initial. Expliquez quand actualiser l’index.",
+    "repeat": "Indiquez client et question concrète. Actualisez après l’arrivée de nouveaux documents et ouvrez les sources avant d’utiliser la réponse."
+  },
+  "vera/archive-organization": {
+    "title": "Ranger le dossier d’un client avec Vera",
+    "goal": "Apprendre à obtenir un plan de classement, revoir les destinations et appliquer les modifications approuvées.",
+    "scenario": "Le dossier de Ciclo Arco contient un accord, sa copie exacte et une note interne dans deux dossiers d’arrivée. Nous préparons un plan lisible à essayer sur une copie pédagogique.",
+    "scope": "Un client et des fichiers locaux fictifs. L’application nécessite un choix explicite ; l’archive réelle du cabinet n’est pas modifiée.",
+    "inputs": "Ouvrez client et observez Da archiviare et Download. Lisez accord et note. Vera les copie dans un client pédagogique séparé et utilise la politique de classement du flux. Les dossiers par défaut portent des noms italiens.",
+    "request": "Vera, propose le rangement de ce dossier de Ciclo Arco. Montre documents, destinations et doublons avant de déplacer quoi que ce soit.",
+    "steps": [
+      "La conversation de travail crée le client pédagogique et capture l’état des fichiers. Vera lit les éléments nécessaires et propose catégories et destinations selon le contenu.",
+      "Ouvrez la page de revue générée. Examinez chaque proposition, conservez ou corrigez la destination et décidez du traitement de la copie exacte. Le plan reste proposé jusqu’à sa revue.",
+      "Après ces décisions, Vera résume les déplacements et demande séparément s’il faut les appliquer. Si vous approuvez sur la copie pédagogique, elle exécute le plan et montre dossiers obtenus et journal."
+    ],
+    "deliverables": [
+      "Page de revue et plan : fichiers initiaux, destinations, motifs et décisions enregistrées.",
+      "Après application autorisée : dossier rangé et journal pour vérifier les déplacements et envisager leur annulation."
+    ],
+    "review": "Suivez un document de sa position initiale à sa destination. La copie exacte est conservée dans la zone de revue des doublons, pas supprimée. Revoir une proposition ne donne pas l’autorisation de déplacer les fichiers.",
+    "checkpoints": [
+      "Avant le plan, identifiez client et dossier pédagogique.",
+      "Avant application, expliquez une destination choisie et vérifiez les déplacements prévus."
+    ],
+    "practice": "Utilisez la nouvelle copie client des fichiers d’exercice, qui ajoute update-fr.md. Demandez un autre plan, revoyez où conserver cette mise à jour avec l’accord et décidez de l’appliquer ou non. Préservez la démonstration.",
+    "success": "Vous savez lire le plan, modifier une proposition et distinguer revue et application. Sans autorisation de déplacement, le résultat reste un plan à revoir, pas un dossier déjà rangé.",
+    "repeat": "Sélectionnez un client, demandez une proposition et revoyez chaque modification. Appliquez après le résumé explicite et conservez le journal."
+  }
+}

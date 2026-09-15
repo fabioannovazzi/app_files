@@ -16,7 +16,7 @@ import zipfile
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, BinaryIO
 from urllib.parse import unquote, urlparse
 
 from jsonschema import Draft202012Validator, FormatChecker
@@ -950,18 +950,70 @@ def _verified_validation(run_dir: Path) -> dict[str, Any]:
     return validation
 
 
-def _png_dimensions(path: Path) -> tuple[int, int]:
-    """Read PNG dimensions because viewport evidence is a mechanical contract."""
+def _jpeg_dimensions(handle: BinaryIO) -> tuple[int, int]:
+    """Read bounded JPEG segments to the frame header, without decoding pixels."""
+
+    frame_markers = {
+        0xC0,
+        0xC1,
+        0xC2,
+        0xC3,
+        0xC5,
+        0xC6,
+        0xC7,
+        0xC9,
+        0xCA,
+        0xCB,
+        0xCD,
+        0xCE,
+        0xCF,
+    }
+    while handle.read(1) == b"\xff":
+        marker = handle.read(1)
+        while marker == b"\xff":
+            marker = handle.read(1)
+        if not marker or marker[0] in {0x00, 0xD8, 0xD9, 0xDA}:
+            break
+        raw_length = handle.read(2)
+        if len(raw_length) != 2:
+            break
+        length = int.from_bytes(raw_length, "big")
+        if length < 2:
+            break
+        segment = handle.read(length - 2)
+        if len(segment) != length - 2:
+            break
+        if marker[0] in frame_markers:
+            if len(segment) < 6 or not segment[5] or length != 8 + 3 * segment[5]:
+                break
+            height, width = struct.unpack(">HH", segment[1:5])
+            return width, height
+    raise ValueError("Browser evidence has an invalid JPEG frame header")
+
+
+def _image_dimensions(path: Path) -> tuple[int, int]:
+    """Check native PNG/JPEG headers: pixel dimensions are mechanically verifiable.
+
+    Preserve browser bytes rather than transcoding evidence. This checks format
+    and dimensions; it cannot establish that a screenshot depicts the site.
+    """
 
     with path.open("rb") as handle:
         header = handle.read(24)
-    if (
-        len(header) != 24
-        or header[:8] != b"\x89PNG\r\n\x1a\n"
-        or header[12:16] != b"IHDR"
-    ):
-        raise ValueError(f"Browser evidence must be a valid PNG: {path}")
-    width, height = struct.unpack(">II", header[16:24])
+        if (
+            path.suffix == ".png"
+            and len(header) == 24
+            and header[:8] == b"\x89PNG\r\n\x1a\n"
+            and header[12:16] == b"IHDR"
+        ):
+            width, height = struct.unpack(">II", header[16:24])
+        elif path.suffix in {".jpg", ".jpeg"} and header[:2] == b"\xff\xd8":
+            handle.seek(2)
+            width, height = _jpeg_dimensions(handle)
+        else:
+            raise ValueError(
+                f"Browser evidence must match its PNG or JPEG extension: {path}"
+            )
     if width < 1 or height < 1:
         raise ValueError(f"Browser evidence has invalid dimensions: {path}")
     return width, height
@@ -973,7 +1025,7 @@ def _verify_viewport_evidence(
     *,
     prefix: str,
 ) -> None:
-    """Bind claimed viewport reviews to exact, correctly sized PNG evidence."""
+    """Bind viewport reviews to exact, correctly sized browser image evidence."""
 
     seen_paths: set[str] = set()
     for viewport in viewports:
@@ -988,7 +1040,7 @@ def _verify_viewport_evidence(
             raise ValueError(f"Viewport screenshot is missing or unsafe: {relative}")
         if _sha256_file(screenshot) != viewport["screenshot_sha256"]:
             raise ValueError(f"Viewport screenshot hash is stale: {relative}")
-        image_width, image_height = _png_dimensions(screenshot)
+        image_width, image_height = _image_dimensions(screenshot)
         if image_width != viewport["width"] or image_height < viewport["height"]:
             raise ValueError(
                 f"Viewport screenshot dimensions do not cover the claimed review: {relative}"

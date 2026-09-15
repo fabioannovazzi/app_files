@@ -1,0 +1,1 @@
+Übung: eine neue Fassung für neue Teammitglieder erstellen. Als unvollständige Anfrage ergänzen: „Das Fahrrad macht Geräusche.“ Zeigen, was gefragt werden sollte: Kontaktdaten, wann das Geräusch auftritt und welcher Fahrradteil betroffen scheint. Keine Fehlerdiagnose stellen. Vorschlagsstatus und erste Präsentation erhalten.

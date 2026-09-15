@@ -1,0 +1,10 @@
+Mese,Intermediario,Categoria,Durata originaria,Durata residua,Accordato,Operativo,Utilizzato,Garanzia,Garantito,Pregiudizievole
+2026-01,Banca Aurora,A revoca,Fino a 1 anno,Fino a 1 anno,50000,50000,30000,,0,
+2026-01,Banca Levante,A scadenza,Oltre 5 anni,Oltre 1 anno,90000,90000,86000,Reale,60000,
+2026-01,Banca Aurora,Autoliquidante,Fino a 1 anno,Fino a 1 anno,30000,30000,12000,,0,
+2026-02,Banca Aurora,A revoca,Fino a 1 anno,Fino a 1 anno,50000,50000,34000,,0,
+2026-02,Banca Levante,A scadenza,Oltre 5 anni,Oltre 1 anno,90000,90000,84000,Reale,60000,
+2026-02,Banca Aurora,Autoliquidante,Fino a 1 anno,Fino a 1 anno,30000,30000,10000,,0,
+2026-03,Banca Aurora,A revoca,Fino a 1 anno,Fino a 1 anno,50000,50000,28000,,0,
+2026-03,Banca Levante,A scadenza,Oltre 5 anni,Oltre 1 anno,90000,90000,82000,Reale,60000,
+2026-03,Banca Aurora,Autoliquidante,Fino a 1 anno,Fino a 1 anno,30000,30000,9000,,0,

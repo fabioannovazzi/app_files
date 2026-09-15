@@ -668,6 +668,7 @@ def test_calculation_receipt_binds_formula_sign_period_sources_and_candidates(
         ("implementation", "mcp/server.cjs"),
         ("implementation", "scripts/apply_review_edits.py"),
         ("implementation", "scripts/check_dependencies.py"),
+        ("implementation", "scripts/concordato_labels.py"),
         ("implementation", "scripts/concordato_plan_core.py"),
         ("implementation", "scripts/concordato_semantic.py"),
         ("implementation", "scripts/finalize_output_closure.py"),
@@ -3946,7 +3947,9 @@ def test_concordato_review_transaction_rejects_forged_save_response_contract(
     faulted = _concordato_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_save",
         run_id: "forged-run",
@@ -3956,7 +3959,8 @@ def test_concordato_review_transaction_rejects_forged_save_response_contract(
         ui_decisions_path: "/private/client/forged-ui.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _concordato_transaction_call(
@@ -3982,7 +3986,9 @@ def test_concordato_review_transaction_rejects_forged_apply_response_contract(
     faulted = _concordato_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_apply",
         run_id: "forged-run",
@@ -4001,7 +4007,8 @@ def test_concordato_review_transaction_rejects_forged_apply_response_contract(
         run_intake_path: "/private/client/forged-intake.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _concordato_transaction_call(

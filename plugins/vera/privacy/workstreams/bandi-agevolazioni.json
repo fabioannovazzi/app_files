@@ -60,6 +60,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "readable-local-dossier",
+        "purpose": "Review the generated application dossier against its bound evidence",
+        "content": "The generated local HTML dossier displays the selected intake, source links, recorded requirements, facts, assessments, expenses, form and narrative material, consistency and authority-simulation checks. Reading that complete report supplies its visible case content to the selected model; it is separate from the bounded task-packet interface. The renderer performs no network request or publication.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -160,6 +169,6 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "76ade1dc311b6a904d9c7cef6402bc54ec50a470aa647bcc4738aea1f317a494"
+    "source_fingerprint": "93e13656551851deb61e4ff415d4d4dcd2ef416f4b9bb8dd587f87760def2120"
   }
 }

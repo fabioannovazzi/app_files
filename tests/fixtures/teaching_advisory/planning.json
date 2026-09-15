@@ -1,0 +1,347 @@
+{
+  "en": {
+    "decision_demo": "Compare an appointment-based collection pilot with immediate daily service for Ciclo Arco.",
+    "decision_practice": "Define the checks needed to establish feasibility of an appointment-based pilot; do not give a launch recommendation.",
+    "deliverable_demo": "Short owner memo with recommendation, reasons, limitations and next step.",
+    "deliverable_practice": "Short action list for the owner covering vehicle, route, price and willingness to book.",
+    "purpose": "Help the owner decide what can responsibly be assessed from the supplied notes and what must be checked next.",
+    "audience": "Owner of Ciclo Arco",
+    "included": "Customer comments, operational availability and evidence gaps that could change the decision.",
+    "excluded": "Financial forecast, wider demand estimate, customer contact, external research, spending and launch commitments.",
+    "input_labels": {
+      "assignment": "Original assignment",
+      "notes": "Customer conversations and operational note",
+      "revised-assignment": "Revised assignment, replacing the original objective and output",
+      "update": "Updated vehicle availability",
+      "external-memo": "External memo to be reviewed"
+    },
+    "requirement_current": "Use the assignment and supplied customer and operational notes.",
+    "rationale_current": "They define the owner's question, constraints and limited evidence available.",
+    "requirement_missing": "Check vehicle availability, route, capacity, price, costs and actual willingness to book before implementation.",
+    "rationale_missing": "Conditional interest and a provisional vehicle arrangement do not establish demand or feasibility.",
+    "method": "Compare the requested options with the attributed customer statements and operational limits; identify what would change the assessment.",
+    "question": "What vehicle arrangement, route, capacity, price, costs and booking interest would support a pilot?",
+    "question_reason": "These are conditions for implementation. Their absence does not prevent planning a bounded assessment or a feasibility checklist.",
+    "criteria": [
+      "Preserve the owner's current objective, audience and scope.",
+      "Separate customer statements from demand evidence and operating proposals from agreed capacity.",
+      "State the next checks without invented figures or authority to act."
+    ],
+    "coverage": "Entire short memo or action list",
+    "limitation": "Supplied fictional notes only; no representative market survey or financial model.",
+    "owner": "Owner and consulting professional",
+    "model_role": "Assess the supplied evidence and propose bounded advice; do not authorize implementation.",
+    "instructions": [
+      "Read the current Clara case-management procedure before continuing.",
+      "Preserve the supplied facts and limitations; any revised assignment controls the objective, and the latest note controls vehicle availability.",
+      "Do not contact anyone, commit spending or treat the plan as approval to launch."
+    ],
+    "basis_demo": "Anna would want to know the price before booking; Carla would try an appointment if she could choose a time window. Bruno prefers bringing his bicycle. No bookings or agreed prices are documented. The owner describes a shop vehicle on Wednesday evenings and says she can handle the first deliveries. This is enough to frame the comparison, not to establish demand or a daily operating model.",
+    "basis_practice": "The revised assignment replaces the recommendation memo with a feasibility action list. The latest note withdraws the shop vehicle for the intended trial period. A neighbouring workshop is willing to discuss a loan; its terms, availability and costs are not agreed. The customer comments remain unchanged. The initial objective and vehicle note stay in the record as history.",
+    "steps_demo": [
+      "Compare the small appointment-based pilot and immediate daily service against the supplied customer and operating evidence.",
+      "Identify missing price, route, capacity, cost and booking evidence, and explain which conclusions depend on it.",
+      "Prepare the short memo with a conditional recommendation, reasons, limitations and the next check for the owner."
+    ],
+    "steps_practice": [
+      "List the vehicle availability, terms and cost information needed before scheduling any trial.",
+      "List the route, capacity, price and willingness-to-book checks still required for an appointment-based pilot.",
+      "Prepare the owner's concise feasibility action list, with unresolved conditions. Do not give the launch recommendation requested in the earlier assignment."
+    ],
+    "next_demo": "The assignment is ready to pass to Clara's case-management workflow, which will develop the assessment. The recommendation memo has not yet been written. The plan does not authorize contacts, spending or launch.",
+    "next_practice": "The revised assignment is ready to pass to Clara's case-management workflow for the feasibility action list. Keep the original plan. Resolving the vehicle arrangement is now an early task, and no launch recommendation is requested.",
+    "headings": {
+      "title": "Ciclo Arco: assignment plan",
+      "decision": "Decision and requested output",
+      "basis": "What the supplied notes establish",
+      "scope": "Scope",
+      "included": "Included",
+      "excluded": "Excluded",
+      "sources": "Selected sources",
+      "work": "Work to carry out",
+      "question": "Information to obtain",
+      "next": "Status and next step",
+      "records": "Plan and checks",
+      "contract": "Assignment contract",
+      "validation": "Source and contract checks",
+      "review": "Review note"
+    },
+    "review_note": "Checked the current objective, audience, source statements, exclusions, evidence gaps and handoff against every supplied note. The local validation passes for structure and exact source anchors. This does not complete the downstream advice or establish demand, feasibility or professional approval. The readable plan and canonical contract describe the same assignment."
+  },
+  "it": {
+    "decision_demo": "Confrontare un pilota di ritiro su prenotazione con l'avvio immediato di un servizio quotidiano per Ciclo Arco.",
+    "decision_practice": "Definire le verifiche necessarie per valutare la fattibilità di un pilota su prenotazione; non formulare una raccomandazione di avvio.",
+    "deliverable_demo": "Breve memo per la titolare con raccomandazione, motivi, limiti e prossimo passo.",
+    "deliverable_practice": "Breve lista di azioni per la titolare su mezzo, percorso, prezzo e disponibilità a prenotare.",
+    "purpose": "Aiutare la titolare a distinguere ciò che si può valutare dalle note fornite da ciò che occorre verificare prima di procedere.",
+    "audience": "Titolare di Ciclo Arco",
+    "included": "Commenti dei clienti, disponibilità operative e informazioni mancanti che possono cambiare la decisione.",
+    "excluded": "Previsione economica, stima della domanda complessiva, contatti con clienti, ricerche esterne, spese e impegni di avvio.",
+    "input_labels": {
+      "assignment": "Incarico iniziale",
+      "notes": "Conversazioni con i clienti e nota operativa",
+      "revised-assignment": "Incarico modificato, che sostituisce obiettivo e risultato iniziali",
+      "update": "Aggiornamento sulla disponibilità del mezzo",
+      "external-memo": "Memo esterno da rivedere"
+    },
+    "requirement_current": "Usare l'incarico e le note fornite sui clienti e sull'operatività.",
+    "rationale_current": "Definiscono la domanda della titolare, i vincoli e le informazioni limitate disponibili.",
+    "requirement_missing": "Verificare mezzo, percorso, capacità, prezzo, costi ed effettiva disponibilità a prenotare prima dell'attuazione.",
+    "rationale_missing": "L'interesse condizionato e una disponibilità provvisoria del mezzo non dimostrano domanda o fattibilità.",
+    "method": "Confrontare le opzioni richieste con le dichiarazioni attribuite ai clienti e i limiti operativi; individuare ciò che cambierebbe la valutazione.",
+    "question": "Quali accordi sul mezzo, percorso, capacità, prezzo, costi e disponibilità a prenotare consentirebbero un pilota?",
+    "question_reason": "Sono condizioni per l'attuazione. La loro assenza non impedisce di impostare una valutazione circoscritta o una lista di verifiche di fattibilità.",
+    "criteria": [
+      "Mantenere obiettivo corrente, destinataria e perimetro richiesti dalla titolare.",
+      "Distinguere le dichiarazioni dei clienti dalle prove della domanda e le proposte operative dalla capacità concordata.",
+      "Indicare le prossime verifiche senza inventare cifre o autorizzazioni ad agire."
+    ],
+    "coverage": "Intero breve memo o lista di azioni",
+    "limitation": "Solo note fittizie fornite; nessuna indagine rappresentativa del mercato né modello economico.",
+    "owner": "Titolare e professionista incaricato",
+    "model_role": "Valutare le fonti fornite e proporre un parere circoscritto; non autorizzare l'attuazione.",
+    "instructions": [
+      "Leggere la procedura corrente di Clara per sviluppare il caso prima di proseguire.",
+      "Mantenere fatti e limiti forniti; un eventuale incarico modificato determina il nuovo obiettivo e l'ultima nota operativa fornita determina la disponibilità del mezzo.",
+      "Non contattare persone, impegnare spese o considerare il piano un'approvazione dell'avvio."
+    ],
+    "basis_demo": "Anna vuole conoscere il prezzo prima di prenotare; Carla proverebbe il ritiro su prenotazione potendo scegliere una fascia oraria. Bruno preferisce portare la bicicletta. Non risultano prenotazioni o prezzi concordati. La titolare indica un mezzo del negozio disponibile il mercoledì sera e la propria disponibilità per le prime consegne. Questi elementi consentono di impostare il confronto, senza dimostrare domanda o organizzazione di un servizio quotidiano.",
+    "basis_practice": "L'incarico modificato sostituisce il memo con raccomandazione con una lista di azioni per verificare la fattibilità. La nota più recente ritira il mezzo del negozio nel periodo previsto. Un'officina vicina è disponibile a discutere un prestito; condizioni, disponibilità e costi non sono concordati. I commenti dei clienti non cambiano. Obiettivo iniziale e precedente nota sul mezzo restano nello storico.",
+    "steps_demo": [
+      "Confrontare il piccolo pilota su prenotazione e il servizio quotidiano immediato con le informazioni fornite sui clienti e sull'operatività.",
+      "Individuare le informazioni mancanti su prezzo, percorso, capacità, costi e prenotazioni, spiegando quali conclusioni ne dipendono.",
+      "Preparare il breve memo con raccomandazione condizionata, motivi, limiti e prossima verifica per la titolare."
+    ],
+    "steps_practice": [
+      "Elencare le informazioni su disponibilità, condizioni e costi del mezzo da ottenere prima di programmare una prova.",
+      "Elencare le verifiche ancora necessarie su percorso, capacità, prezzo e disponibilità a prenotare per il pilota.",
+      "Preparare la breve lista di azioni per la titolare con le condizioni irrisolte. Non formulare la raccomandazione di avvio richiesta nell'incarico precedente."
+    ],
+    "next_demo": "L'incarico può passare al flusso di Clara che sviluppa il caso e la valutazione. Il memo con la raccomandazione non è ancora stato scritto. Il piano non autorizza contatti, spese o avvio.",
+    "next_practice": "L'incarico modificato può passare al flusso di Clara che sviluppa il caso per produrre la lista di verifiche. Conservare il piano iniziale. Chiarire la soluzione di trasporto è ora una delle prime attività; non è richiesta una raccomandazione di avvio.",
+    "headings": {
+      "title": "Ciclo Arco: piano dell'incarico",
+      "decision": "Decisione e risultato richiesto",
+      "basis": "Che cosa emerge dalle note fornite",
+      "scope": "Perimetro",
+      "included": "Incluso",
+      "excluded": "Escluso",
+      "sources": "Fonti selezionate",
+      "work": "Lavoro da svolgere",
+      "question": "Informazioni da ottenere",
+      "next": "Stato e prossimo passo",
+      "records": "Piano e verifiche",
+      "contract": "Definizione dell'incarico",
+      "validation": "Verifica delle fonti e del piano",
+      "review": "Nota di riesame"
+    },
+    "review_note": "Confrontati obiettivo corrente, destinataria, dichiarazioni, esclusioni, lacune e consegne con tutte le note fornite. La verifica locale di struttura e riferimenti testuali passa. Questo non completa la consulenza successiva e non dimostra domanda, fattibilità o approvazione professionale. Riepilogo leggibile e definizione strutturata descrivono lo stesso incarico."
+  },
+  "fr": {
+    "decision_demo": "Comparer un pilote de collecte sur rendez-vous avec le lancement immédiat d'un service quotidien pour Ciclo Arco.",
+    "decision_practice": "Définir les vérifications nécessaires pour établir la faisabilité d'un pilote sur rendez-vous, sans recommander son lancement.",
+    "deliverable_demo": "Courte note à la dirigeante avec recommandation, motifs, limites et prochaine étape.",
+    "deliverable_practice": "Courte liste d'actions pour la dirigeante portant sur le véhicule, le trajet, le prix et la disposition à réserver.",
+    "purpose": "Aider la dirigeante à distinguer ce que les notes fournies permettent d'évaluer de ce qui doit être vérifié ensuite.",
+    "audience": "Dirigeante de Ciclo Arco",
+    "included": "Commentaires des clients, disponibilités opérationnelles et informations manquantes susceptibles de changer la décision.",
+    "excluded": "Prévision financière, estimation de la demande globale, contacts clients, recherche externe, dépenses et engagements de lancement.",
+    "input_labels": {
+      "assignment": "Mission initiale",
+      "notes": "Conversations clients et note opérationnelle",
+      "revised-assignment": "Mission révisée remplaçant l'objectif et le livrable initiaux",
+      "update": "Disponibilité actualisée du véhicule",
+      "external-memo": "Note externe à examiner"
+    },
+    "requirement_current": "Utiliser la mission et les notes clients et opérationnelles fournies.",
+    "rationale_current": "Elles définissent la question de la dirigeante, les contraintes et les informations limitées disponibles.",
+    "requirement_missing": "Vérifier véhicule, trajet, capacité, prix, coûts et disposition réelle à réserver avant la mise en œuvre.",
+    "rationale_missing": "Un intérêt conditionnel et une disponibilité provisoire du véhicule ne démontrent ni demande ni faisabilité.",
+    "method": "Comparer les options demandées aux déclarations attribuées aux clients et aux contraintes opérationnelles, puis identifier ce qui modifierait l'évaluation.",
+    "question": "Quels accords sur le véhicule, trajet, capacité, prix, coûts et intérêt pour la réservation permettraient un pilote ?",
+    "question_reason": "Ce sont des conditions de mise en œuvre. Leur absence n'empêche pas de définir une évaluation limitée ou une liste de vérifications de faisabilité.",
+    "criteria": [
+      "Respecter l'objectif actuel, la destinataire et le périmètre demandés par la dirigeante.",
+      "Distinguer déclarations clients et preuves de demande, propositions opérationnelles et capacité convenue.",
+      "Indiquer les prochaines vérifications sans inventer de chiffres ni d'autorisation d'agir."
+    ],
+    "coverage": "Intégralité de la courte note ou liste d'actions",
+    "limitation": "Notes fictives fournies uniquement ; ni enquête représentative du marché ni modèle financier.",
+    "owner": "Dirigeante et professionnel chargé de la mission",
+    "model_role": "Évaluer les sources fournies et proposer un avis limité, sans autoriser la mise en œuvre.",
+    "instructions": [
+      "Lire la procédure actuelle de Clara pour développer le dossier avant de poursuivre.",
+      "Conserver les faits et limites fournis ; une éventuelle mission révisée détermine le nouvel objectif et la dernière note opérationnelle fournie détermine la disponibilité du véhicule.",
+      "Ne contacter personne, engager aucune dépense ni considérer le plan comme une approbation du lancement."
+    ],
+    "basis_demo": "Anna souhaite connaître le prix avant de réserver ; Carla essaierait une collecte sur rendez-vous si elle pouvait choisir un créneau. Bruno préfère apporter son vélo. Aucune réservation ni aucun prix convenu ne sont documentés. La dirigeante indique un véhicule disponible le mercredi soir et sa propre disponibilité pour les premières livraisons. Cela permet de cadrer la comparaison, sans établir la demande ni l'organisation d'un service quotidien.",
+    "basis_practice": "La mission révisée remplace la note de recommandation par une liste d'actions pour vérifier la faisabilité. La dernière note retire le véhicule du magasin pour la période prévue. Un atelier voisin accepte de discuter d'un prêt ; conditions, disponibilité et coûts ne sont pas convenus. Les commentaires clients ne changent pas. L'objectif initial et l'ancienne note sur le véhicule restent dans l'historique.",
+    "steps_demo": [
+      "Comparer le petit pilote sur rendez-vous et le service quotidien immédiat aux informations clients et opérationnelles fournies.",
+      "Identifier les informations manquantes sur prix, trajet, capacité, coûts et réservations, en précisant les conclusions qui en dépendent.",
+      "Préparer la courte note avec une recommandation conditionnelle, ses motifs, ses limites et la prochaine vérification pour la dirigeante."
+    ],
+    "steps_practice": [
+      "Lister les informations sur disponibilité, conditions et coûts du véhicule à obtenir avant de programmer un essai.",
+      "Lister les vérifications encore nécessaires sur trajet, capacité, prix et disposition à réserver pour le pilote.",
+      "Préparer la courte liste d'actions de la dirigeante avec les conditions non résolues. Ne pas formuler la recommandation de lancement demandée dans la mission précédente."
+    ],
+    "next_demo": "La mission peut être transmise au workflow Clara de développement du dossier et de l'évaluation. La note de recommandation n'est pas encore rédigée. Le plan n'autorise ni contacts, ni dépenses, ni lancement.",
+    "next_practice": "La mission révisée peut être transmise au workflow Clara de développement du dossier pour produire la liste de vérifications. Conserver le plan initial. Clarifier la solution de transport devient une première tâche ; aucune recommandation de lancement n'est demandée.",
+    "headings": {
+      "title": "Ciclo Arco : plan de mission",
+      "decision": "Décision et livrable demandé",
+      "basis": "Ce que montrent les notes fournies",
+      "scope": "Périmètre",
+      "included": "Inclus",
+      "excluded": "Exclus",
+      "sources": "Sources sélectionnées",
+      "work": "Travail à effectuer",
+      "question": "Informations à obtenir",
+      "next": "État et prochaine étape",
+      "records": "Plan et vérifications",
+      "contract": "Définition de la mission",
+      "validation": "Vérification des sources et du plan",
+      "review": "Note de revue"
+    },
+    "review_note": "Objectif actuel, destinataire, déclarations, exclusions, lacunes et consignes ont été comparés à toutes les notes fournies. La vérification locale de structure et des extraits exacts réussit. Elle ne termine pas la consultation suivante et ne démontre ni demande, ni faisabilité, ni approbation professionnelle. Le résumé lisible et la définition structurée décrivent la même mission."
+  },
+  "de": {
+    "decision_demo": "Für Ciclo Arco einen Abholpilot nach Terminvereinbarung mit dem sofortigen Start eines täglichen Dienstes vergleichen.",
+    "decision_practice": "Die nötigen Prüfungen für die Machbarkeit eines Piloten nach Terminvereinbarung festlegen, ohne eine Startempfehlung abzugeben.",
+    "deliverable_demo": "Kurzes Memo für die Inhaberin mit Empfehlung, Begründung, Grenzen und nächstem Schritt.",
+    "deliverable_practice": "Kurze Maßnahmenliste für die Inhaberin zu Fahrzeug, Route, Preis und Buchungsbereitschaft.",
+    "purpose": "Der Inhaberin zeigen, was sich anhand der vorliegenden Notizen beurteilen lässt und was anschließend geprüft werden muss.",
+    "audience": "Inhaberin von Ciclo Arco",
+    "included": "Kundenaussagen, betriebliche Verfügbarkeit und fehlende Informationen, die die Entscheidung verändern könnten.",
+    "excluded": "Finanzprognose, Schätzung der Gesamtnachfrage, Kundenkontakte, externe Recherche, Ausgaben und Startzusagen.",
+    "input_labels": {
+      "assignment": "Ursprünglicher Auftrag",
+      "notes": "Kundengespräche und betriebliche Notiz",
+      "revised-assignment": "Geänderter Auftrag, der ursprüngliches Ziel und Ergebnis ersetzt",
+      "update": "Aktualisierte Fahrzeugverfügbarkeit",
+      "external-memo": "Zu prüfendes externes Memo"
+    },
+    "requirement_current": "Den Auftrag sowie die vorliegenden Kunden- und Betriebsnotizen verwenden.",
+    "rationale_current": "Sie bestimmen die Frage der Inhaberin, die Grenzen und die begrenzte Informationslage.",
+    "requirement_missing": "Vor der Umsetzung Fahrzeug, Route, Kapazität, Preis, Kosten und tatsächliche Buchungsbereitschaft prüfen.",
+    "rationale_missing": "Bedingtes Interesse und eine vorläufige Fahrzeugplanung belegen weder Nachfrage noch Machbarkeit.",
+    "method": "Die gewünschten Optionen anhand der zugeordneten Kundenaussagen und betrieblichen Grenzen vergleichen und benennen, was die Bewertung verändern würde.",
+    "question": "Welche Fahrzeugvereinbarung, Route, Kapazität, Preise, Kosten und Buchungsbereitschaft würden einen Piloten ermöglichen?",
+    "question_reason": "Dies sind Umsetzungsvoraussetzungen. Ihr Fehlen verhindert nicht, eine begrenzte Bewertung oder Machbarkeitsprüfung zu planen.",
+    "criteria": [
+      "Aktuelles Ziel, Adressatin und Umfang des Auftrags der Inhaberin beibehalten.",
+      "Kundenaussagen von Nachfragebelegen und betriebliche Vorschläge von vereinbarter Kapazität trennen.",
+      "Nächste Prüfungen nennen, ohne Zahlen oder Handlungsbefugnisse zu erfinden."
+    ],
+    "coverage": "Gesamtes kurzes Memo oder gesamte Maßnahmenliste",
+    "limitation": "Nur die bereitgestellten fiktiven Notizen; keine repräsentative Marktstudie und kein Finanzmodell.",
+    "owner": "Inhaberin und beauftragte Beratungsperson",
+    "model_role": "Die vorliegenden Quellen bewerten und einen begrenzten Rat vorschlagen, ohne die Umsetzung zu genehmigen.",
+    "instructions": [
+      "Vor der Fortsetzung Claras aktuelles Verfahren zur Bearbeitung des Beratungsfalls lesen.",
+      "Vorliegende Fakten und Grenzen erhalten; ein gegebenenfalls geänderter Auftrag bestimmt das neue Ziel und die letzte vorliegende Betriebsnotiz die Fahrzeugverfügbarkeit.",
+      "Niemanden kontaktieren, keine Ausgaben zusagen und den Plan nicht als Startgenehmigung behandeln."
+    ],
+    "basis_demo": "Anna möchte vor einer Buchung den Preis kennen; Carla würde eine Abholung mit Termin und wählbarem Zeitfenster ausprobieren. Bruno bringt sein Fahrrad lieber selbst. Buchungen oder vereinbarte Preise sind nicht dokumentiert. Die Inhaberin nennt ein mittwochabends verfügbares Fahrzeug und ihre eigene Mitarbeit bei den ersten Lieferungen. Damit lässt sich der Vergleich planen, aber weder Nachfrage noch der Betrieb eines täglichen Dienstes belegen.",
+    "basis_practice": "Der geänderte Auftrag ersetzt das Empfehlungsmemo durch eine Maßnahmenliste zur Machbarkeitsprüfung. Laut neuester Notiz steht das Ladenfahrzeug im geplanten Zeitraum nicht zur Verfügung. Eine benachbarte Werkstatt ist bereit, über eine Ausleihe zu sprechen; Bedingungen, Verfügbarkeit und Kosten sind nicht vereinbart. Die Kundenaussagen bleiben unverändert. Ursprüngliches Ziel und frühere Fahrzeugnotiz bleiben in der Historie.",
+    "steps_demo": [
+      "Den kleinen Piloten nach Terminvereinbarung und den sofortigen täglichen Dienst anhand der vorliegenden Kunden- und Betriebsinformationen vergleichen.",
+      "Fehlende Angaben zu Preis, Route, Kapazität, Kosten und Buchungen sowie die davon abhängigen Schlussfolgerungen benennen.",
+      "Das kurze Memo mit bedingter Empfehlung, Begründung, Grenzen und nächster Prüfung für die Inhaberin erstellen."
+    ],
+    "steps_practice": [
+      "Die vor einer Terminierung benötigten Angaben zu Fahrzeugverfügbarkeit, Bedingungen und Kosten auflisten.",
+      "Die noch erforderlichen Prüfungen zu Route, Kapazität, Preis und Buchungsbereitschaft für den Piloten auflisten.",
+      "Die kurze Maßnahmenliste mit offenen Voraussetzungen erstellen. Keine im früheren Auftrag verlangte Startempfehlung abgeben."
+    ],
+    "next_demo": "Der Auftrag kann an Claras Fallbearbeitung zur Entwicklung der Bewertung übergeben werden. Das Empfehlungsmemo ist noch nicht geschrieben. Der Plan genehmigt weder Kontakte noch Ausgaben oder einen Start.",
+    "next_practice": "Der geänderte Auftrag kann an Claras Fallbearbeitung zur Erstellung der Prüfliste übergeben werden. Den ursprünglichen Plan behalten. Die Transportlösung ist nun früh zu klären; eine Startempfehlung ist nicht mehr gefragt.",
+    "headings": {
+      "title": "Ciclo Arco: Auftragsplan",
+      "decision": "Entscheidung und gewünschtes Ergebnis",
+      "basis": "Aussage der vorliegenden Notizen",
+      "scope": "Umfang",
+      "included": "Enthalten",
+      "excluded": "Ausgeschlossen",
+      "sources": "Ausgewählte Quellen",
+      "work": "Anstehende Arbeit",
+      "question": "Benötigte Informationen",
+      "next": "Stand und nächster Schritt",
+      "records": "Plan und Prüfungen",
+      "contract": "Auftragsdefinition",
+      "validation": "Quellen- und Planprüfung",
+      "review": "Prüfnotiz"
+    },
+    "review_note": "Aktuelles Ziel, Adressatin, Aussagen, Ausschlüsse, Lücken und Übergabe wurden mit sämtlichen vorliegenden Notizen abgeglichen. Die lokale Prüfung von Struktur und wörtlichen Quellenankern besteht. Das schließt die anschließende Beratung nicht ab und belegt weder Nachfrage noch Machbarkeit oder fachliche Freigabe. Lesbarer Plan und strukturierte Auftragsdefinition beschreiben denselben Auftrag."
+  },
+  "es": {
+    "decision_demo": "Comparar un piloto de recogida con cita previa con el lanzamiento inmediato de un servicio diario para Ciclo Arco.",
+    "decision_practice": "Definir las comprobaciones necesarias para establecer la viabilidad de un piloto con cita previa, sin recomendar su lanzamiento.",
+    "deliverable_demo": "Breve memo para la propietaria con recomendación, motivos, límites y siguiente paso.",
+    "deliverable_practice": "Breve lista de acciones para la propietaria sobre vehículo, ruta, precio y disposición a reservar.",
+    "purpose": "Ayudar a la propietaria a distinguir lo que puede evaluarse con las notas aportadas de lo que debe comprobarse después.",
+    "audience": "Propietaria de Ciclo Arco",
+    "included": "Comentarios de clientes, disponibilidad operativa e información pendiente que podría cambiar la decisión.",
+    "excluded": "Previsión financiera, estimación de demanda general, contactos con clientes, investigación externa, gastos y compromisos de lanzamiento.",
+    "input_labels": {
+      "assignment": "Encargo inicial",
+      "notes": "Conversaciones con clientes y nota operativa",
+      "revised-assignment": "Encargo revisado que sustituye el objetivo y el entregable iniciales",
+      "update": "Disponibilidad actualizada del vehículo",
+      "external-memo": "Memo externo que debe revisarse"
+    },
+    "requirement_current": "Usar el encargo y las notas de clientes y operativas aportadas.",
+    "rationale_current": "Definen la pregunta de la propietaria, las restricciones y la información limitada disponible.",
+    "requirement_missing": "Comprobar vehículo, ruta, capacidad, precio, costes y disposición real a reservar antes de la ejecución.",
+    "rationale_missing": "El interés condicionado y una disponibilidad provisional del vehículo no demuestran demanda ni viabilidad.",
+    "method": "Comparar las opciones solicitadas con las declaraciones atribuidas a los clientes y los límites operativos, e identificar qué cambiaría la evaluación.",
+    "question": "¿Qué acuerdos sobre vehículo, ruta, capacidad, precio, costes y disposición a reservar permitirían un piloto?",
+    "question_reason": "Son condiciones de ejecución. Su ausencia no impide planificar una evaluación acotada o una lista de comprobaciones de viabilidad.",
+    "criteria": [
+      "Mantener el objetivo actual, la destinataria y el alcance solicitado por la propietaria.",
+      "Distinguir las declaraciones de clientes de las pruebas de demanda y las propuestas operativas de la capacidad acordada.",
+      "Indicar las próximas comprobaciones sin inventar cifras ni autoridad para actuar."
+    ],
+    "coverage": "Todo el breve memo o lista de acciones",
+    "limitation": "Solo las notas ficticias aportadas; ninguna encuesta representativa del mercado ni modelo financiero.",
+    "owner": "Propietaria y profesional encargado",
+    "model_role": "Evaluar las fuentes aportadas y proponer asesoramiento acotado, sin autorizar la ejecución.",
+    "instructions": [
+      "Leer el procedimiento actual de Clara para desarrollar el caso antes de continuar.",
+      "Conservar los hechos y límites aportados; un encargo revisado, si existe, determina el nuevo objetivo y la última nota operativa aportada determina la disponibilidad del vehículo.",
+      "No contactar con nadie, comprometer gastos ni considerar el plan una aprobación del lanzamiento."
+    ],
+    "basis_demo": "Anna quiere conocer el precio antes de reservar; Carla probaría la recogida con cita si pudiera elegir una franja horaria. Bruno prefiere llevar su bicicleta. No hay reservas ni precios acordados documentados. La propietaria señala un vehículo disponible los miércoles por la tarde y su propia disponibilidad para las primeras entregas. Esto permite plantear la comparación, sin demostrar demanda ni la organización de un servicio diario.",
+    "basis_practice": "El encargo revisado sustituye el memo con recomendación por una lista de acciones para comprobar la viabilidad. La última nota retira el vehículo de la tienda durante el periodo previsto. Un taller vecino está dispuesto a hablar de un préstamo; las condiciones, disponibilidad y costes no están acordados. Los comentarios de clientes no cambian. El objetivo inicial y la nota anterior del vehículo permanecen en el historial.",
+    "steps_demo": [
+      "Comparar el pequeño piloto con cita y el servicio diario inmediato con la información aportada sobre clientes y operativa.",
+      "Identificar la información pendiente sobre precio, ruta, capacidad, costes y reservas, explicando qué conclusiones dependen de ella.",
+      "Preparar el breve memo con recomendación condicionada, motivos, límites y siguiente comprobación para la propietaria."
+    ],
+    "steps_practice": [
+      "Enumerar la información sobre disponibilidad, condiciones y costes del vehículo que se necesita antes de programar una prueba.",
+      "Enumerar las comprobaciones pendientes sobre ruta, capacidad, precio y disposición a reservar para el piloto.",
+      "Preparar la breve lista de acciones de la propietaria con las condiciones sin resolver. No formular la recomendación de lanzamiento del encargo anterior."
+    ],
+    "next_demo": "El encargo puede pasar al flujo de Clara que desarrolla el caso y la evaluación. El memo con la recomendación aún no está escrito. El plan no autoriza contactos, gastos ni lanzamiento.",
+    "next_practice": "El encargo revisado puede pasar al flujo de Clara que desarrolla el caso para producir la lista de comprobaciones. Conservar el plan inicial. Aclarar la solución de transporte es ahora una tarea inicial; no se solicita una recomendación de lanzamiento.",
+    "headings": {
+      "title": "Ciclo Arco: plan del encargo",
+      "decision": "Decisión y resultado solicitado",
+      "basis": "Qué muestran las notas aportadas",
+      "scope": "Alcance",
+      "included": "Incluido",
+      "excluded": "Excluido",
+      "sources": "Fuentes seleccionadas",
+      "work": "Trabajo por realizar",
+      "question": "Información por obtener",
+      "next": "Estado y siguiente paso",
+      "records": "Plan y comprobaciones",
+      "contract": "Definición del encargo",
+      "validation": "Comprobación de fuentes y plan",
+      "review": "Nota de revisión"
+    },
+    "review_note": "Se han contrastado el objetivo actual, la destinataria, las declaraciones, las exclusiones, las lagunas y las instrucciones con todas las notas aportadas. La comprobación local de estructura y citas textuales exactas pasa. Esto no completa el asesoramiento posterior ni demuestra demanda, viabilidad o aprobación profesional. El plan legible y la definición estructurada describen el mismo encargo."
+  }
+}

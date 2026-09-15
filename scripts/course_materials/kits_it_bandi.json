@@ -1,0 +1,27 @@
+{
+  "vera/bandi-agevolazioni": {
+    "title": "Preparare un dossier per un bando con Vera",
+    "goal": "Imparare a partire da un bando selezionato, fornire i documenti dell’impresa e rivedere il dossier preparato da Vera.",
+    "scenario": "Uno studio valuta un progetto digitale per una piccola impresa. Usa un avviso interamente fittizio e documenti simulati per seguire il lavoro dalle condizioni del bando al dossier, poi aggiorna il preventivo.",
+    "scope": "Preparazione del dossier dopo la selezione di un bando: fonti, requisiti, evidenze, spese, documenti, bozza e revisione. La ricerca di opportunità è l’altra fase della funzione; qui il bando è già fornito. Le condizioni dell’esercizio non sono norme o agevolazioni reali.",
+    "inputs": "Apri avviso-it.md, progetto-it.md e preventivo-it.csv. Sono l’avviso simulato, i fatti dichiarati dell’impresa e i costi proposti. Non contengono valutazioni di ammissibilità, classificazioni di spesa o approvazioni già eseguite.",
+    "request": "Vera, prepara un dossier di esercitazione da questo avviso e dai documenti dell’impresa. Mostrami requisiti, confronto con le evidenze, spese, documenti necessari e punti che devo rivedere.",
+    "steps": [
+      "Nella finestra di lavoro Vera apre la pratica e registra i documenti. La conversazione vocale spiega incarico, fonti e risultato. Rivedi quali documenti governano l’esercizio e quali descrivono l’impresa.",
+      "Vera propone requisiti e confronti con i fatti, esamina le spese e prepara elenco documenti e bozza. Segui un passaggio dalla fonte alla proposta e rivedi le decisioni richieste dal normale procedimento.",
+      "Apri review_dossier.html: parti dalla sintesi, poi rivedi spese, documenti e bozza del progetto. Apri una condizione per leggere valutazione e passaggio della fonte. Vera spiega la revisione ancora necessaria e i passi successivi; l’esercizio non usa portali e non invia nulla."
+    ],
+    "deliverables": [
+      "Dossier locale con requisiti, evidenze, valutazioni proposte, spese, documenti e bozza.",
+      "Controlli e registro delle revisioni con punti aperti e prossime azioni."
+    ],
+    "review": "Verifica che ogni requisito rimandi all’avviso e ogni fatto al documento corretto. Distingui disponibilità dei documenti, esito proposto e decisione dell’ente: il dossier non concede un’agevolazione.",
+    "checkpoints": [
+      "Spiega quali file e quale richiesta servono quando un bando è già selezionato.",
+      "Apri il dossier, collega una proposta alla fonte e individua ciò che resta da rivedere."
+    ],
+    "practice": "Fornisci il preventivo aggiornato dell’esercizio. Chiedi un nuovo dossier, conservando il primo, e controlla come cambiano costi, importo proposto e revisioni necessarie.",
+    "success": "Sai avviare il lavoro da un bando, rivedere il dossier e richiedere un aggiornamento senza confondere una proposta con un’approvazione.",
+    "repeat": "Fornisci bando ufficiale selezionato, allegati e documenti dell’impresa, indicando progetto e data di riferimento. Vera prepara il dossier con le normali revisioni. Se cerchi prima un’opportunità, chiedi la ricerca specificando territorio e progetto."
+  }
+}

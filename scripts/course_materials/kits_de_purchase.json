@@ -1,0 +1,27 @@
+{
+  "vera/purchase-invoice-review": {
+    "title": "Eingangsrechnungen mit der Buchhaltung prüfen",
+    "goal": "Lernen, Rechnungen mit vorhandenen Buchungen zu vergleichen und die Ausnahmeliste für die Prüfung zu nutzen.",
+    "scenario": "Officina Arco liefert drei XML-Rechnungen und die zugehörigen Märzbuchungen. Die Kanzlei möchte prüfungsbedürftige Punkte finden.",
+    "scope": "Erster Einsatz der Prüfung italienischer Eingangsrechnungen. Vera liest Rechnungen und Buchhaltung, vergleicht sie und beurteilt die Kontenzuordnung; Buchungen werden nicht geändert.",
+    "inputs": "Öffnen Sie ledger-march.csv, den Ordner invoices und context-de.md. Benötigt werden Rechnungen und tatsächliche Buchungen derselben Periode. Vera prüft die Spalten und bereitet die Zuordnung zur Prüfung vor.",
+    "request": "Vera, prüfe diese Eingangsrechnungen anhand der Märzbuchungen von Officina Arco. Zeige mir in der Ausnahmeliste, was ich prüfen sollte, und erkläre warum.",
+    "steps": [
+      "Der Arbeitschat prüft Paket und Buchhaltungsspalten. Die Stimme erklärt Rechnungskennung, Buchung und verwendetes Konto und hilft, wesentliche Unklarheiten zu lösen.",
+      "Der aktuelle Ablauf ordnet Rechnungen Buchungen zu, kontrolliert Beträge und nutzt seinen nativen Prüfer für Beschreibungen und Konten. Die Stimme folgt dem tatsächlichen Fortschritt und unterscheidet Berechnung und Beurteilung.",
+      "Öffnen Sie zuerst die Excel-Ausnahmeliste. Wählen Sie eine Zeile, lesen Sie den Prüfgrund und finden Sie Rechnungsbeschreibung und tatsächlich verwendetes Konto. Prüfen Sie Hinweise vor einer Schlussfolgerung."
+    ],
+    "deliverables": [
+      "Excel-Ausnahmeliste mit Gründen und Quellenverweisen zur Prüfung.",
+      "Paketübersicht und Vergleichsnachweise zu Rechnungen und Buchungen."
+    ],
+    "review": "Prüfen Sie Vollständigkeit und Beleggrundlage jeder Meldung. „Kein Problem erkannt“ ist ein Screening-Ergebnis, keine Bestätigung korrekter Buchführung. Kontowechsel und Korrekturen erfolgen im üblichen Buchhaltungsprozess.",
+    "checkpoints": [
+      "Benennen Sie vor der Ausführung die zwei verglichenen Datenbestände.",
+      "Erklären Sie im Ergebnis einen Hinweis anhand von Rechnung und Buchung."
+    ],
+    "practice": "Wiederholen Sie mit ledger-march-april.csv und den vier Übungsrechnungen. Bewahren Sie das erste Ergebnis auf. Prüfen Sie neue Rechnungsanzahl und einen Hinweis; fragen Sie nur bei Bedarf nach Hilfe.",
+    "success": "Sie können beide Eingaben liefern, die Prüfung starten, Ausnahmen finden und ihre Gründe prüfen, ohne Screening und Freigabe gleichzusetzen.",
+    "repeat": "Bitten Sie Vera um Prüfung der Eingangsrechnungen eines Mandanten für einen genauen Zeitraum und liefern Sie die tatsächliche Buchhaltung mit. Prüfen Sie Zuordnung, Abdeckung und Hinweise in der richtigen Akte."
+  }
+}

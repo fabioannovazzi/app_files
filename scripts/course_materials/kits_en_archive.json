@@ -1,0 +1,52 @@
+{
+  "vera/studio-archive": {
+    "title": "Find a client’s documents with Vera",
+    "goal": "Learn to connect a studio folder, search the right client and obtain an answer linked to its source documents.",
+    "scenario": "The studio wants to find Ciclo Arco’s agreed maintenance service and the end date stated in its agreement. The fictional archive also contains another client.",
+    "scope": "Local document search. Gmail, WhatsApp and Google Drive are separate routes requiring their own connections; this lesson does not activate them.",
+    "inputs": "Open archive: it contains Ciclo Arco and Delta, each with its own agreement. Vera prepares a teaching copy and separate local index while retaining your existing studio archive settings.",
+    "request": "Vera, find Ciclo Arco’s agreement with Tecnica Esempio. What service is provided and until when? Show the passages supporting your answer.",
+    "steps": [
+      "In the working chat, Vera prepares the teaching folder, checks access and indexes readable documents. If a folder selection is needed, choose the exercise folder.",
+      "Select Ciclo Arco. The current workflow searches within that client and opens relevant sources; the voice chat explains the move from a search result to its document.",
+      "Read the answer and open its citations. Check the client, monthly service and stated period. Locate any extraction limits or documents that were not indexed."
+    ],
+    "deliverables": [
+      "Answer with source links: service, period and the document passages describing them.",
+      "Index status and search trail: selected client, opened sources and encountered limits."
+    ],
+    "review": "Check the selected client and read the cited passage. Search finds content in indexed files; it does not prove that all agreements are present or that a document is legally valid.",
+    "checkpoints": [
+      "Before searching, identify Ciclo Arco’s folder.",
+      "At delivery, open a citation and find the stated fact in its document."
+    ],
+    "practice": "Add update-en.md from the practice files to the Ciclo Arco teaching copy, keep the agreement and ask Vera to refresh the index. Repeat the end-date question and open both sources.",
+    "success": "The answer reflects the extension to 30 June 2027 and retains the original agreement reference. Explain when the index needs refreshing.",
+    "repeat": "Name the client and a concrete question. Refresh after new documents arrive and open the sources before relying on the answer."
+  },
+  "vera/archive-organization": {
+    "title": "Organise a client folder with Vera",
+    "goal": "Learn to obtain an organisation plan, review destinations and apply approved changes to a folder.",
+    "scenario": "Ciclo Arco’s folder contains an agreement, an exact copy and an internal meeting note in two intake folders. We will prepare a readable plan and try it on a teaching copy.",
+    "scope": "One client and fictional local files. Applying changes requires an explicit choice; the lesson does not change the real studio archive.",
+    "inputs": "Open client and inspect Da archiviare and Download. Read the agreement and meeting note. Vera copies them into a separate teaching client and uses the workflow’s studio folder policy. Default folder labels are Italian.",
+    "request": "Vera, propose how to organise this Ciclo Arco folder. Show documents, destinations and duplicate copies before moving anything.",
+    "steps": [
+      "The working chat creates the teaching client and captures its file snapshot. Vera reads the necessary evidence and proposes categories and destinations from the contents.",
+      "Open the generated review page. Inspect every proposal, keep or edit the destination and decide how to handle the exact copy. The plan remains proposed until reviewed.",
+      "After those decisions, Vera summarises planned moves and separately asks whether to apply them. If you approve the teaching-copy changes, it executes the plan and shows the resulting folders and operation journal."
+    ],
+    "deliverables": [
+      "Review page and plan: starting files, proposed destinations, reasons and saved decisions.",
+      "After authorized application: organised folder and journal for checking moves and considering rollback."
+    ],
+    "review": "Follow a document from its original location to its destination. The exact copy is retained in the duplicate-review area rather than deleted. Reviewing a proposal is separate from authorizing file moves.",
+    "checkpoints": [
+      "Before the plan, identify the client and teaching folder.",
+      "Before application, explain one chosen destination and check the planned moves."
+    ],
+    "practice": "Use the new client copy in the practice files, which adds update-en.md. Request another plan, review where the update belongs with its agreement and decide whether to apply it. Preserve the demonstration.",
+    "success": "You can read the plan, change a proposal and distinguish review from application. If you do not authorize moves, the result remains a plan to review, not an already organised folder.",
+    "repeat": "Select a client, request a proposal and review every change. Apply after the explicit summary and retain the journal."
+  }
+}

@@ -45,6 +45,7 @@
         "pdp/attribute_table_catalog.json",
         "pdp/attribute_table_catalog.py",
         "pdp/attribute_table_templates.py",
+        "pdp/attribute_report_copy.json",
         "utilities/utils.py"
       ]
     },

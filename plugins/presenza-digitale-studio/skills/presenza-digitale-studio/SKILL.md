@@ -188,8 +188,9 @@ website run.
    copy quality, accessibility conformance or professional truth.
 9. Render the exact site in a browser at desktop and phone widths. Inspect the
    full page, interaction state, overflow, navigation, images, typography,
-   hierarchy and console errors. Save the exact full-page PNG for each claimed
-   viewport below `reviews/browser/`, record its run-relative path and SHA-256
+   hierarchy and console errors. Save the exact full-page PNG or JPEG for each claimed
+   viewport below `reviews/browser/`, preserving the original bytes and matching
+   `.png`, `.jpg` or `.jpeg` extension. Record its run-relative path and SHA-256
    in `quality_assessment.json`, then record it:
 
    ```bash
@@ -236,7 +237,7 @@ website run.
     When the selected provider is Sites, do not use the generic delivery
     recorder. Follow `references/sites-handoff.md`, place the current binding
     and the exact approved-site payload inside the deployment archive, capture
-    desktop and phone PNG evidence from the succeeded deployed URL, and record
+    desktop and phone PNG or JPEG evidence from the succeeded deployed URL, and record
     the Sites receipt with `record_sites_delivery.py`.
 
 ## Completion

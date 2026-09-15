@@ -268,6 +268,20 @@ def test_full_pack_calculates_exact_supported_sections(tmp_path: Path) -> None:
     assert {control["status"] for control in pack["controls"]} == {"passed"}
 
 
+@pytest.mark.parametrize("language", ["pt", "", None])
+def test_report_rejects_unsupported_language_instead_of_silently_using_english(
+    tmp_path: Path, language: str | None
+) -> None:
+    source = tmp_path / "management.xlsx"
+    _write_workbook(source)
+    tables, inspection = _inspection_for(source)
+    recipe = _reviewed_recipe(inspection)
+    recipe["language"] = language
+
+    with pytest.raises(PackContractError, match="Report language must"):
+        build_management_pack(tables, recipe)
+
+
 def test_cash_uses_reporting_window_and_balance_cutoff(tmp_path: Path) -> None:
     source = tmp_path / "management.xlsx"
     _write_workbook(source)
@@ -1221,6 +1235,88 @@ def test_clara_budget_entrypoint_uses_shared_reviewed_core(tmp_path, action, fil
 
     assert result == 0
     assert (output / filename).is_file()
+
+
+def _clara_commentary_case(tmp_path):
+    """Prepare a normal local Clara run and host-authored narrative input."""
+    source, _, recipe = _budget_forecast_case(tmp_path)
+    recipe_path = tmp_path / "recipe.json"
+    recipe_path.write_text(json.dumps(recipe))
+    script = ROOT / "plugins/clara/modules/reporting-engine/scripts/budget_report.py"
+    spec = importlib.util.spec_from_file_location("clara_commentary_entrypoint", script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    args = ["run", "--input", str(source), "--recipe", str(recipe_path)]
+    first = tmp_path / "calculated"
+    assert module.main([*args, "--output-dir", str(first)]) == 0
+    commentary = json.loads((first / "commentary_template.json").read_text())
+    commentary["observations"] = [
+        {
+            "text": "This local explanation accompanies the calculated EBITDA.",
+            "metric_ids": ["pnl.total.ebitda"],
+        }
+    ]
+    return module, args, first, commentary
+
+
+def test_clara_local_report_delivers_bound_commentary_and_preserves_first_run(tmp_path):
+    module, args, first, commentary = _clara_commentary_case(tmp_path)
+    prior = {p.name: p.read_bytes() for p in first.iterdir() if p.is_file()}
+    commentary_path = tmp_path / "commentary.json"
+    commentary_path.write_text(json.dumps(commentary))
+    output = tmp_path / "explained"
+
+    assert (
+        module.main(
+            [*args, "--commentary", str(commentary_path), "--output-dir", str(output)]
+        )
+        == 0
+    )
+
+    text = commentary["observations"][0]["text"]
+    assert text in (output / "management_control_report.md").read_text()
+    assert text in (output / "management_control_dashboard.html").read_text()
+    assert text not in (output / "management_control_facts.md").read_text()
+    saved = json.loads((output / "management_commentary.json").read_text())
+    assert saved["status"] == "draft_pending_professional_review"
+    assert saved["pack_sha256"] == commentary["pack_sha256"]
+    receipt = json.loads((output / "execution_receipt.json").read_text())
+    assert (
+        receipt["commentary_source"]["sha256"]
+        == hashlib.sha256(commentary_path.read_bytes()).hexdigest()
+    )
+    assert (
+        "professional approval were not assigned"
+        in receipt["commentary_source"]["validation_boundary"]
+    )
+    assert {p.name: p.read_bytes() for p in first.iterdir() if p.is_file()} == prior
+    for item in receipt["outputs"]:
+        assert (
+            hashlib.sha256((output / item["path"]).read_bytes()).hexdigest()
+            == item["sha256"]
+        )
+
+
+@pytest.mark.parametrize("invalid_target", ["pack", "metric"])
+def test_clara_rejects_stale_or_unsupported_commentary_before_writing(
+    tmp_path, invalid_target
+):
+    module, args, _, commentary = _clara_commentary_case(tmp_path)
+    if invalid_target == "pack":
+        commentary["pack_sha256"] = "0" * 64
+    else:
+        commentary["observations"][0]["metric_ids"] = ["missing.metric"]
+    commentary_path = tmp_path / "commentary.json"
+    commentary_path.write_text(json.dumps(commentary))
+    output = tmp_path / "invalid-report"
+
+    with pytest.raises(SystemExit) as raised:
+        module.main(
+            [*args, "--commentary", str(commentary_path), "--output-dir", str(output)]
+        )
+
+    assert raised.value.code == 2
+    assert not output.exists()
 
 
 def test_budget_full_currency_values_remain_readable_above_one_million(tmp_path):

@@ -144,6 +144,12 @@ session URLs, and raw local paths remain outside the review payload.
 The CNDCEC 2026 operational guidance describes four client factors (section A)
 and six service factors (section B), each scored 1–4 by the professional. The
 script checks exact factor sets and arithmetic; it does not select scores.
+An unassessed required score is null and remains proposed. The initial dossier
+keeps all such scores empty. If inherent risk or an included A/B score is absent,
+the calculation records `blocked_incomplete_scores`, the missing score IDs and
+null risk totals/band. No baseline treatment or monitoring date is inferred.
+Confirmed enhanced triggers and an existing stronger review mode remain visible.
+The confirmed Section B exclusion continues to omit its six null scores.
 
 - Included B: `RS = (A + B) / 10`.
 - Professionally confirmed excluded B: `RS = A / 4`.

@@ -1,0 +1,1 @@
+Independent correction practice: start from the original presentation. On the closing slide, replace the trial proposal with a request to first collect staff questions about the form. Do not start or announce a trial. Preserve everything else and keep both corrected copies.

@@ -1,0 +1,1 @@
+Practice: create a new version for new colleagues. Add an incomplete-request example: “The bike makes a noise.” Show what to ask: contact details, when the noise occurs and which part of the bike seems involved. Do not diagnose the fault. Keep the proposed status explicit and preserve the first presentation.

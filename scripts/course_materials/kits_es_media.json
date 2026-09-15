@@ -1,0 +1,27 @@
+{
+  "clara/transcribe": {
+    "title": "Importar y revisar una transcripción con Clara",
+    "goal": "Aprender a incorporar una transcripción a un expediente, comprobar quién habla y conservar una versión utilizable vinculada a su fuente.",
+    "scenario": "Sara ha preparado una nota breve para la próxima reunión de Ciclo Arco. Partimos del paquete descargado y obtenemos una transcripción registrada en el expediente.",
+    "scope": "Se ejecuta la importación y revisión local. El paquete es completamente ficticio y no contiene audio. Grabar o transcribir audio nuevo es un paso alojado distinto que requiere una elección separada.",
+    "inputs": "Abre context-es.md y case-notes-voice-input-es.json. El contexto explica procedencia y persona conocida. Basta con indicar a Clara paquete y expediente de destino; no necesitas interpretar campos técnicos.",
+    "request": "Clara, importa esta nota al expediente didáctico Ciclo Arco, conserva el original, comprueba quién habla y muestra la transcripción revisada. No añadas una decisión sobre el servicio.",
+    "steps": [
+      "La conversación de trabajo prepara el expediente e importa el paquete mediante el flujo actual. Abre la transcripción original y compárala con el contexto; la conversación de voz explica dónde se guardan los archivos.",
+      "Clara revisa atribución y texto sin cambiar el sentido. Observa cómo identifica a Sara y mantiene precio y ruta como preguntas abiertas.",
+      "El flujo registra la versión revisada y su fuente en el expediente. Abre el texto final y su referencia: el registro acredita las palabras recogidas, no la verdad de cada afirmación."
+    ],
+    "deliverables": [
+      "Transcripción original y paquete conservados en la sesión local.",
+      "Transcripción revisada, estado de atribución y fuente registrada en el expediente."
+    ],
+    "review": "Compara un pasaje palabra por palabra, el nombre y la frase que indica que el servicio aún no se ha decidido. Este ejemplo no contiene audio, por lo que no puede contrastarse con una grabación.",
+    "checkpoints": [
+      "Antes de importar, identifica paquete y expediente.",
+      "En la entrega, encuentra una frase en las versiones original y revisada."
+    ],
+    "practice": "Importa el paquete de práctica con dos voces al mismo expediente. Pide conservar Voz 1 y Voz 2 mientras sus nombres no estén documentados. Compara una intervención con el original y conserva la primera nota.",
+    "success": "Sabes importar una nueva nota, encontrar ambas versiones y reconocer una atribución incierta sin inventar nombres.",
+    "repeat": "Indica grabación o paquete, idioma y destino. Una carpeta ordinaria sirve para conservar una transcripción; usarla como prueba del expediente requiere también revisión y registro."
+  }
+}

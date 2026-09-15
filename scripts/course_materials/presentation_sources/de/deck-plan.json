@@ -1,0 +1,171 @@
+{
+  "schema_version": "clara.html_deck_plan.v1",
+  "allow_bespoke_html": false,
+  "slides": [
+    {
+      "id": "opening",
+      "layout_id": "editorial-cover",
+      "title": "Vorschlag zur Annahme von Anfragen",
+      "chapter": "opening",
+      "chapter_label": "Vorschlag",
+      "tone": "dark",
+      "notes": "Fiktiver Vorschlag zur Diskussion. Vorschlag zur Annahme von Anfragen",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-opening"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Interne Besprechung",
+        "title": "Vorschlag zur Annahme von Anfragen",
+        "source_note": "Fiktiver Vorschlag zur Diskussion",
+        "subtitle": "Ein gemeinsames Formular mit dem Team erproben",
+        "author": "Officina Arco"
+      }
+    },
+    {
+      "id": "request",
+      "layout_id": "paired-comparison",
+      "title": "Die Anfrage verständlich machen",
+      "chapter": "request",
+      "chapter_label": "Anfrage",
+      "tone": "light",
+      "notes": "Fiktiver Vorschlag zur Diskussion. Die Anfrage verständlich machen",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-request"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Interne Besprechung",
+        "title": "Die Anfrage verständlich machen",
+        "source_note": "Fiktiver Vorschlag zur Diskussion",
+        "left_label": "Heute",
+        "left_title": "Verteilte Informationen",
+        "left_items": [
+          {
+            "label": "Kontakt",
+            "body": "Manchmal fehlen Kontaktdaten."
+          },
+          {
+            "label": "Problem",
+            "body": "Die Beschreibung muss gelegentlich geklärt werden."
+          }
+        ],
+        "right_label": "Vorschlag",
+        "right_title": "Ein gemeinsames Formular",
+        "right_items": [
+          {
+            "label": "Kontakt",
+            "body": "Kontaktdaten und vereinbarten Rückmeldeweg festhalten."
+          },
+          {
+            "label": "Problem",
+            "body": "Die Kundenbeschreibung aufnehmen, keine Diagnose erfinden."
+          }
+        ]
+      }
+    },
+    {
+      "id": "process",
+      "layout_id": "process-flow",
+      "title": "Die Anfrage vor Arbeitsbeginn klären",
+      "chapter": "process",
+      "chapter_label": "Ablauf",
+      "tone": "light",
+      "notes": "Fiktiver Vorschlag zur Diskussion. Die Anfrage vor Arbeitsbeginn klären",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-process"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Interne Besprechung",
+        "title": "Die Anfrage vor Arbeitsbeginn klären",
+        "source_note": "Fiktiver Vorschlag zur Diskussion",
+        "steps": [
+          {
+            "label": "A",
+            "title": "Kundenanfrage",
+            "body": "Fahrrad, Problem und Kontaktdaten aufnehmen.",
+            "_fragment": 1
+          },
+          {
+            "label": "B",
+            "title": "Fehlende Angaben",
+            "body": "Fehlende Angaben vor der Beurteilung erfragen.",
+            "_fragment": 2
+          },
+          {
+            "label": "C",
+            "title": "Paolos Beurteilung",
+            "body": "Arbeit beurteilen und Kostenvoranschlag erstellen.",
+            "_fragment": 3
+          },
+          {
+            "label": "D",
+            "title": "Kostenvoranschlag",
+            "body": "Bestätigung vor Arbeiten und Ergänzungen abwarten.",
+            "_fragment": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "responsibilities",
+      "layout_id": "assertion",
+      "title": "Die Zuständigkeiten vereinbaren",
+      "chapter": "responsibilities",
+      "chapter_label": "Zuständigkeiten",
+      "tone": "dark",
+      "notes": "Fiktiver Vorschlag zur Diskussion. Die Zuständigkeiten vereinbaren",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-responsibilities"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Interne Besprechung",
+        "title": "Die Zuständigkeiten vereinbaren",
+        "source_note": "Fiktiver Vorschlag zur Diskussion",
+        "body": "Sara soll Anfragen aufnehmen und klären. Paolo soll die Arbeit beurteilen und den Kostenvoranschlag erstellen.",
+        "implication": "Vorgeschlagene Rollen vor dem Versuch vereinbaren."
+      }
+    },
+    {
+      "id": "decision",
+      "layout_id": "closing-decision",
+      "title": "Über einen Formularversuch entscheiden",
+      "chapter": "decision",
+      "chapter_label": "Entscheidung",
+      "tone": "light",
+      "notes": "Fiktiver Vorschlag zur Diskussion. Über einen Formularversuch entscheiden",
+      "source_refs": [
+        "brief"
+      ],
+      "claim_refs": [
+        "claim-decision"
+      ],
+      "slots": {
+        "eyebrow": "Officina Arco · Interne Besprechung",
+        "title": "Über einen Formularversuch entscheiden",
+        "source_note": "Fiktiver Vorschlag zur Diskussion",
+        "actions": [
+          {
+            "verb": "Vereinbaren",
+            "body": "Rollen und Bedingungen vor dem Versuch festlegen."
+          },
+          {
+            "verb": "Prüfen",
+            "body": "Rückmeldungen sammeln und das Formular danach überarbeiten."
+          }
+        ],
+        "closing_line": "In der Besprechung festlegen, wer Rückmeldungen sammelt."
+      }
+    }
+  ]
+}

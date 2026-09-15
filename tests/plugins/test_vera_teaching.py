@@ -10,6 +10,7 @@ from zipfile import ZipFile
 
 import pytest
 
+from tests.plugins._teaching_execution import execution_record
 from tests.plugins.test_vera_local_onboarding import (
     ROOT,
     SCRIPTS,
@@ -58,6 +59,7 @@ def output(store, phase="demo", **extra):
         store,
         phase,
         artifacts=[result.name],
+        execution_record=execution_record(store, phase, result),
         prompt="Controlla le fatture",
         review="Totale confrontato con l'input; nessuna certificazione fiscale",
         **extra,
@@ -262,6 +264,7 @@ def test_selected_user_files_switch_scope_and_real_result_is_preserved(
         store,
         "application",
         artifacts=[str(reviewed)],
+        execution_record=execution_record(store, "application", reviewed),
         prompt="Il mio controllo",
         review="Fonti e conclusioni riviste",
     )
@@ -340,6 +343,13 @@ def test_teaching_worker_executes_real_managed_xml_pipeline(teaching):
         store,
         "demo",
         artifacts=[str(destination / "fatture_summary.csv")],
+        execution_record=execution_record(
+            store,
+            "demo",
+            destination / "fatture_summary.csv",
+            inputs=list(Path(case["context"]["input_dir"]).rglob("*.xml")),
+            native=[destination / "formal_anomalies.md"],
+        ),
         prompt="Controlla questa fattura",
         review="1.000 imponibile + 220 IVA = 1.220; verifica documentale ancora professionale",
     )

@@ -1,7 +1,8 @@
 # Vera browser lifecycle: implementation and validation
 
 Candidate: Vera **0.1.259**, browser-automation **0.5.22**.
-Base: `07689c38`. Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
+Initial base: `07689c38`; integrated the subsequently merged course release
+`306101b5`. Implementation plan: [vera_browser_lifecycle_plan.md](vera_browser_lifecycle_plan.md).
 
 ## Result
 
@@ -24,7 +25,7 @@ they are not automatically promoted into qualified generic capabilities.
 | Teaching | An attempt and readable report exist before browser work; interpreted checkpoints retain exact process boundaries and immutable revisions. |
 | Partial failure | Missing host support, unknown historical metadata, interrupted work and invalid saved evidence retain an attributed, useful report. |
 | CR delivery | The exact reviewed structured body reaches the real API through an in-process HTTP test transport and SQLite store. A lost reply after server commit retries the same submission and returns the original actual CR. No ZIP upload is claimed. |
-| Development and release | Reviewed handoff import, immutable revisions, package bindings and actual returned CR status preserve process/attempt lineage across fresh interpreter contexts. A fixed or published version does not qualify a local process. |
+| Development and release | Reviewed handoff import, the existing CR administration export, immutable revisions, package bindings and actual returned CR status preserve process/attempt lineage across separate operator/developer contexts. The developer can ship the CR-linked revision without the operator's private register. A fixed or published version does not qualify a local process. |
 | Qualification | Two distinct clean exact-contract runs need checked correct outputs, unchanged environment and an accepted measured time bound. Simulation, missing reviews, recovery, changed source, missing receipts and unaccepted performance fail. |
 | Ordinary use | A fresh context recovers the qualified process and typed inputs; a later incomplete, failed, incorrect, recovered or slow run suspends use and returns evidence to the same development loop. |
 | Reports and privacy | Reports contain output/receipt links, counts/hashes, actual available measurements and explicit missing reasons. The reviewed external projection excludes input/output values, local paths and status tokens. Tutorial markers prevent submission. |
@@ -37,10 +38,11 @@ site, account, population or UI variant works.
 ## Local validation
 
 - Connected lifecycle, API integration and existing pipeline/development-request
-  regressions: **112 passed**, new coordinator coverage **88.39%** (80% gate).
+  regressions: **112 passed**, new coordinator coverage **88.34%** (80% gate).
 - Existing JavaScript browser suites, including Agenzia and ECONS: **148 passed**.
-- Public model-data copy, Vera routing and website journeys: **198 passed**.
-- Optional onboarding, prepared courses and product teaching scope: **419 passed**.
+- After integrating current main, public model-data copy, Vera routing, website
+  journeys, optional onboarding, prepared courses, product teaching scope and
+  CR API/store/client regressions: **646 passed**.
 - Package integrity, version notifications, icons, privacy and release alignment:
   **447 passed**, one expected skip because the curated Marketplace cache is
   unavailable. This skip provides no publication evidence.

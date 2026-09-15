@@ -1,0 +1,27 @@
+{
+  "vera/invoice-xml": {
+    "title": "Preparare una fattura XML con Vera",
+    "goal": "Imparare a fornire i dati della fattura, rivedere la bozza e ottenere il file XML locale dopo aver approvato la versione esatta.",
+    "scenario": "Officina Arco deve preparare il file di una fattura italiana ordinaria. Usiamo una breve scheda fittizia per seguire tutto il percorso: richiesta, anteprima, revisione ed esportazione locale.",
+    "scope": "Una fattura italiana fittizia in EUR. La lezione parte da dati già forniti; lo stesso workflow accetta anche PDF e fotografie leggibili. Non firma né trasmette il file a SdI.",
+    "inputs": "Fornisci invoice-data.txt. La scheda contiene fornitore, cliente, prestazione, numero, data, importi e dati di recapito del file, tutti fittizi. Indica anche che si tratta di una nuova bozza e che nel caso didattico non esistono emissioni o esportazioni precedenti.",
+    "request": "Vera, prepara una bozza di fattura XML da questa scheda fittizia. Mostrami anteprima, fonti e controlli. Fammi rivedere la versione esatta prima di esportare il file sul computer.",
+    "steps": [
+      "Nella chat di lavoro Vera legge la fonte scelta, registra lo scopo e individua i dati della fattura. La chat vocale mostra quali informazioni occorre fornire e risponde alle domande durante la lettura.",
+      "Il workflow corrente prepara la bozza e apre la sua anteprima effettiva. Confronta fornitore, cliente, numero, data, prestazione, IVA e totale con la scheda. Chiedi di correggere ciò che non corrisponde: una correzione produce una nuova versione.",
+      "Rivedi la versione mostrata. Solo dopo la tua approvazione esplicita di quella versione Vera esegue i controlli di esportazione e crea l’XML locale. Apri il rapporto di esportazione e trova il file XML. Se non approvi, la bozza resta disponibile senza esportazione."
+    ],
+    "deliverables": [
+      "Anteprima della bozza effettiva, con campi collegati alle fonti e controlli per la revisione.",
+      "Dopo approvazione e controlli superati, file XML e rapporto di esportazione, accanto alla versione rivista."
+    ],
+    "review": "Confronta dati, scopo e trattamento fiscale con le informazioni fornite. Anteprima leggibile e controllo dello schema non dimostrano correttezza fiscale o accettazione SdI. Identificativi e importi dell’esercizio non vanno riutilizzati in una fattura reale.",
+    "checkpoints": [
+      "Prima di partire, indica la fonte e chiarisci se prepari una nuova bozza o ricostruisci una fattura esistente.",
+      "Nell’anteprima trova prestazione e totale, poi spiega che cosa stai approvando e dove verrà salvato l’XML."
+    ],
+    "practice": "Fornisci practice-invoice-data.txt e chiedi una seconda fattura con lo stesso percorso. Ha numero, data e quantità propri. Conserva il primo risultato, rivedi la nuova anteprima e decidi separatamente se esportarla.",
+    "success": "Sai avviare il workflow, controllare l’anteprima, approvare o sospendere l’esportazione e ripetere il lavoro su una seconda fattura senza perdere la prima.",
+    "repeat": "Fornisci i documenti della fattura o i dati confermati, spiegando lo scopo e l’eventuale emissione precedente. Vera prepara la bozza, chiarisce i fatti mancanti ed esporta soltanto la versione approvata. Invio e contabilizzazione seguono il percorso distinto dello studio."
+  }
+}

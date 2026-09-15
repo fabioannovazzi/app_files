@@ -1,15 +1,15 @@
 {
-  "schema": "mparanza.course.v1",
+  "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "vouching",
-  "revision": "2026-09-14.1",
+  "revision": "2026-09-14.2",
   "seconds": [
     45,
     60,
+    105,
     75,
-    90,
-    75,
-    45
+    45,
+    60
   ],
   "supported_languages": [
     "it",
@@ -19,31 +19,58 @@
     "es"
   ],
   "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "live_journal_sample_then_support_checks"
+  },
   "sources": [
+    {
+      "path": "modules/check-entries/assets/check-entries-review-widget.html",
+      "repository_path": "plugins/check-entries/assets/check-entries-review-widget.html",
+      "sha256": "781dde24ba528d38192a54a2fd4a4d1db98c7fb1d6711cd7d6280334e7406d06"
+    },
+    {
+      "path": "modules/check-entries/assets/icon.svg",
+      "repository_path": "plugins/check-entries/assets/icon.svg",
+      "sha256": "be0e2ac5a79667a820d4a1bc9a4c1bd2a9c05bdc449de73d71074106f58b96f2"
+    },
+    {
+      "path": "modules/check-entries/assets/review-workbench-adapter.json",
+      "repository_path": "plugins/check-entries/assets/review-workbench-adapter.json",
+      "sha256": "7f36af5bb0275704d739c73eae7700ab81371d2273b53c58c0c2f3f40de72ba9"
+    },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
       "repository_path": "plugins/check-entries/references/workflow-reference.md",
       "sha256": "5ea38167f0c0cbf3daa6f9a81fb36dea600eebef04c473b30381bfc1637cb228"
     },
     {
+      "path": "modules/check-entries/requirements.txt",
+      "repository_path": "plugins/check-entries/requirements.txt",
+      "sha256": "25e8f14e4f988c97ac50ac90f5dbacfff665f81de45a56599eaa78997aec7e03"
+    },
+    {
       "path": "modules/check-entries/scripts/apply_review_edits.py",
       "repository_path": "plugins/check-entries/scripts/apply_review_edits.py",
-      "sha256": "83e5e3955336e68b3d803be86a8ff235e769b72cf1a7dc7ef371ef4890ec2187"
+      "sha256": "6d88b150f32fbc627d2090debb536cfa49c3f51de6728fc469d5488dff9fac5e"
     },
     {
       "path": "modules/check-entries/scripts/check_dependencies.py",
       "repository_path": "plugins/check-entries/scripts/check_dependencies.py",
-      "sha256": "f09811af1b143aa055c7fa131aaf2e82a3aa4ebcdb8783ad9599e4c711c69acd"
+      "sha256": "84bb7bb504ba4b17d80edd6234af4395c445d03ce54ec191a7d9384744ac67a0"
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "309fa8456ff74fa16a368126bd4928c1a8aeea1fa8e7514764ba7f208ed0fbc9"
+      "sha256": "c4218b1b3f684126c899dcf30d5b7358f10c4a7c25504ee356d62c9d8098f651"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
-      "sha256": "4ac2e3a16f09af539d54f3d0c418f4245b5c5e134066043bae5e16ba743da837"
+      "sha256": "134993676b211553c0ca76eedb0628d7138d7f69ab4e09fb6014c272e80bd29a"
     },
     {
       "path": "modules/check-entries/scripts/implementation_contract.py",
@@ -53,7 +80,7 @@
     {
       "path": "modules/check-entries/scripts/inspect_entries.py",
       "repository_path": "plugins/check-entries/scripts/inspect_entries.py",
-      "sha256": "bf47b59b303955aeebea6f05b5af94370646d6052adc99c2c04fcf1e734d4810"
+      "sha256": "9a84ce790b4d6763c07610c03b93a85cb34830c734162fd8d528ed84d98a6090"
     },
     {
       "path": "modules/check-entries/scripts/invoice_support.py",
@@ -63,17 +90,17 @@
     {
       "path": "modules/check-entries/scripts/physical_output_set.py",
       "repository_path": "plugins/check-entries/scripts/physical_output_set.py",
-      "sha256": "db7476ac9b3ac97101f4f8f27478b74735698403201af73535b5c54e4f07a745"
+      "sha256": "0870043ab7ac3171cc73d951d6915e80ec4ab67219eec4362c05550bccdd5107"
     },
     {
       "path": "modules/check-entries/scripts/review_session.py",
       "repository_path": "plugins/check-entries/scripts/review_session.py",
-      "sha256": "c72368bbda7be5f90c58b76689538bc7d8441f8f2560d8d40b7f78d5daf51f7d"
+      "sha256": "eda372310a15de4aeca0c548ac08920c6fcd07271d6e7596f026dfb2c0700e02"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
       "repository_path": "plugins/check-entries/scripts/run_checks.py",
-      "sha256": "829d99a3b5ef67ac4ddacc76c1e73d7e21d62b0bc307bf179a67fa5b4c90e419"
+      "sha256": "66168e82f9b60e46e1a36c07be05735e4eb401b9f3206cb9881ac3ff618ee91a"
     },
     {
       "path": "modules/check-entries/scripts/stable_ooxml.py",
@@ -86,308 +113,494 @@
       "sha256": "c3697473608f24f0c7ed171b29c9bb05c3d5820b36122ea608f64a9f436768f1"
     },
     {
+      "path": "modules/check-entries/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
       "path": "skills/vouching/SKILL.md",
       "repository_path": "plugins/vera/skills/vouching/SKILL.md",
       "sha256": "125f9120dcd760b06b19d38b670a0058635fca5d7202f883e28b927bd9f6660e"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
-  "example_kind": "authored_synthetic_specimen_not_execution_receipt",
-  "files": [],
+  "files": [
+    {
+      "path": "files/input/invoice-journal.csv",
+      "sha256": "85c46bc1f226ac7bb5b4458ad4fc1f520fd3f1e82c3d946f0e94d78437c23a78",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/invoice-01.xml",
+      "sha256": "d4ca9ae523f4787e494d3905217e4345fc998e54c6fcf9ba6f1624f1d7386df0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/invoice-02.xml",
+      "sha256": "607d489ce5c54ff28f23da3e1bb83a44b8e49e6d966055686961fbddafdb8722",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/invoice-03.xml",
+      "sha256": "84dd0c14ffa4de5044f711792293ad79470430580e157c8d27507b9fbdff4df1",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/invoice-journal.csv",
+      "sha256": "85c46bc1f226ac7bb5b4458ad4fc1f520fd3f1e82c3d946f0e94d78437c23a78",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/invoice-01.xml",
+      "sha256": "d4ca9ae523f4787e494d3905217e4345fc998e54c6fcf9ba6f1624f1d7386df0",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/invoice-02.xml",
+      "sha256": "607d489ce5c54ff28f23da3e1bb83a44b8e49e6d966055686961fbddafdb8722",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/invoice-03.xml",
+      "sha256": "84dd0c14ffa4de5044f711792293ad79470430580e157c8d27507b9fbdff4df1",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-it.md",
+      "sha256": "d3ada48bdb37f175423fa232b0d73654c823f7b63fad0f61006804e15dc1e5ce",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-it.md",
+      "sha256": "d3ada48bdb37f175423fa232b0d73654c823f7b63fad0f61006804e15dc1e5ce",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-en.md",
+      "sha256": "4d62c068e854d65a1c8c8d57e9d94ffd1c060eb4c48cedfb2999a8fea9445382",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-en.md",
+      "sha256": "4d62c068e854d65a1c8c8d57e9d94ffd1c060eb4c48cedfb2999a8fea9445382",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-fr.md",
+      "sha256": "25ddc64409639b1e5d78ab78956ce6901463bb177736f1ca8f20fe43f853f098",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-fr.md",
+      "sha256": "25ddc64409639b1e5d78ab78956ce6901463bb177736f1ca8f20fe43f853f098",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-de.md",
+      "sha256": "a540fb43af2c49b0d28a2cfff6f36b6b7b65ce19010d09071c85ea54cf77791d",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-de.md",
+      "sha256": "a540fb43af2c49b0d28a2cfff6f36b6b7b65ce19010d09071c85ea54cf77791d",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/context-es.md",
+      "sha256": "4972277a5cf4c803fd5e002c14e2062e2f38890b33fff219f0541002868a3734",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/context-es.md",
+      "sha256": "4972277a5cf4c803fd5e002c14e2062e2f38890b33fff219f0541002868a3734",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
   "locales": {
     "it": {
-      "title": "Dal campione al documento giusto",
-      "goal": "Verificare una scrittura campionata senza confondere la coincidenza di un importo con l'identità del documento.",
-      "scenario": "Il campione qualificato contiene la scrittura MOV-104, relativa a INV-104 per 1.220 EUR. Nel lotto di supporto ci sono due fatture da 1.220 EUR: INV-104 e INV-205. Il caso confronta solo la riga campionata.",
-      "request": "Vera, verifica il documento di supporto di questa scrittura del campione.",
-      "scope": "Il workflow parte dal passaggio chiuso di Journal Sampling, inclusi gli allegati di qualificazione. Una tabella grezza o questo caso didattico non sostituiscono quel passaggio.",
-      "input_columns": [
-        "Fonte fittizia",
-        "Identità",
-        "Importo"
+      "title": "Verificare le registrazioni campionate con le fatture",
+      "goal": "Imparare a collegare un campione alle fatture, leggere gli esiti e rivedere i punti che richiedono giudizio professionale.",
+      "scenario": "Lo studio ha le registrazioni di tre fatture e i relativi XML. Vuole confrontare due righe campionate con i documenti originali.",
+      "scope": "Verifica documentale di un campione. Vera prepara prima il campione con Journal Sampling nello stesso fascicolo didattico, poi esegue la verifica effettiva. Non è un controllo dell’intero giornale.",
+      "inputs": "Apri invoice-journal.csv, context-it.md e le tre fatture XML. La nota indica il conto 2100 e il campione didattico di due righe. Vera gestisce il passaggio dal campione ai documenti; non devi scegliere file tecnici interni.",
+      "request": "Vera, prepara un campione casuale di due righe del conto fornitori 2100, con seme 42, e verifica le righe con queste fatture XML. Mostrami i risultati e aiutami a rivederli.",
+      "steps": [
+        "La chat di lavoro prepara davvero il campione. La voce spiega quali righe verranno controllate e ti fa verificare il perimetro prima di passare alle fatture.",
+        "Vera collega il campione appena prodotto alle tre fatture selezionate e avvia Verifica documentale. La voce spiega il confronto fra registrazione e documento seguendo l’avanzamento reale.",
+        "Apri il foglio dei risultati e una riga con il documento collegato. Controlla riferimento, data, importo e soggetto; rivedi le richieste di chiarimento. Vera conserva le decisioni effettive e i collegamenti alle fonti."
       ],
-      "input_rows": [
-        [
-          "Campione S1 · riga 4",
-          "MOV-104 / INV-104",
-          "1.220 EUR"
-        ],
-        [
-          "XML X1",
-          "INV-104; controparte coerente",
-          "1.220 EUR"
-        ],
-        [
-          "XML X2",
-          "INV-205; altra fattura",
-          "1.220 EUR"
-        ]
+      "deliverables": [
+        "Foglio Excel e CSV dei controlli sul campione, con documenti collegati ed esiti.",
+        "Note di revisione e fascicolo dei controlli per ritrovare campione e fonti."
       ],
-      "basis": "S1 definisce la selezione da controllare. X1 contiene il riferimento distintivo INV-104; l'importo di X2 coincide, ma non ne stabilisce l'identità.",
-      "method": [
-        "Riprendi il campione qualificato dello stesso cliente e incarico; acquisisci un lotto esplicito di supporti e verifica la chiusura delle fonti.",
-        "Controlla identità, controparte, valuta, segno, importo e data secondo la ricetta riveduta. Non correggere la preparazione del giornale dentro la verifica documentale.",
-        "Leggi esiti, copertura, differenze e righe manuali. Consegna la traccia fra riga campionata e documento, lasciando il giudizio di sufficienza al professionista."
+      "review": "Verifica che siano state esaminate soltanto le righe del campione. Distingui un abbinamento dal giudizio sulla registrazione: soggetto, segno contabile e conclusione richiedono la revisione prevista. Un documento mancante o ambiguo deve restare da chiarire.",
+      "checkpoints": [
+        "Prima della verifica, indica quali righe e quali documenti fanno parte del controllo.",
+        "Sul risultato, spiega l’esito di una riga usando la registrazione e la fattura."
       ],
-      "result_title": "INV-104 è il supporto pertinente",
-      "conclusion": "L'identità distingue i due documenti con lo stesso importo. La coincidenza numerica da sola non consentirebbe un abbinamento.",
-      "output_columns": [
-        "Candidato",
-        "Evidenza d'identità",
-        "Interpretazione didattica"
-      ],
-      "output_rows": [
-        [
-          "X1 · INV-104",
-          "Riferimento distintivo coerente",
-          "Controllare gli altri requisiti"
-        ],
-        [
-          "X2 · INV-205",
-          "Riferimento diverso",
-          "Non usare la sola coincidenza di importo"
-        ]
-      ],
-      "check": "Un esito meccanico favorevole non certifica la natura contabile o la sufficienza della prova. Non si estende la conclusione alle righe non campionate.",
-      "question": "Se togliamo il riferimento fattura dalla scrittura, possiamo scegliere X1 perché è il primo file?",
-      "answer": "No. L'identità diventa irrisolta e richiede la prova o il collegamento riveduto previsto dal contratto; l'ordine dei file non è un criterio.",
-      "practice": "Modifica l'importo di X1 a 1.200 EUR e osserva la differenza senza cambiare il documento abbinato.",
-      "next": "Seleziona il campione già finalizzato e il lotto di XML o PDF pertinente; Vera risolve i riferimenti tecnici del passaggio."
+      "practice": "Chiedi un nuovo campione di tre righe del conto 2100 e ripeti il controllo con le stesse fatture. Conserva il primo risultato e verifica che il nuovo controllo segua il nuovo campione.",
+      "success": "Sai avviare la verifica, aprire il risultato, risalire al documento e distinguere controllo meccanico e conclusione professionale.",
+      "repeat": "Nel lavoro reale, scegli il campione di Journal Sampling nel fascicolo corretto e fornisci il lotto di documenti. Vera riprende il collegamento e controlla solo le righe selezionate."
     },
     "en": {
-      "title": "From a sampled entry to the right document",
-      "goal": "Verify a sampled posting without mistaking a matching amount for document identity.",
-      "scenario": "The fictional qualified sample contains MOV-104 for invoice INV-104, EUR 1,220. The evidence batch has two invoices for that amount: INV-104 and INV-205. Only the selected sampled entry is in scope.",
-      "request": "Vera, verify the supporting document for this sampled entry.",
-      "scope": "Vouching starts from the closed Journal Sampling handoff, including qualification companions. A raw table or this teaching preview is not that handoff.",
-      "input_columns": [
-        "Fictional source",
-        "Identity",
-        "Amount"
+      "title": "Check sampled journal entries against invoices",
+      "goal": "Learn to connect a sample to invoices, read the results and review points requiring professional judgement.",
+      "scenario": "The practice has postings for three invoices and their XML files. It wants to compare two sampled rows with the original documents.",
+      "scope": "Vouching of a sample. Vera first creates the sample with Journal Sampling in the same teaching case, then runs the actual checks. This does not examine the whole journal.",
+      "inputs": "Open invoice-journal.csv, context-en.md and the three XML invoices. The note specifies account 2100 and a two-row teaching sample. Vera handles the sample-to-document handoff; you do not select internal technical files.",
+      "request": "Vera, create a random sample of two rows from supplier account 2100 with seed 42, then check them against these XML invoices. Show me the results and help me review them.",
+      "steps": [
+        "The working chat produces the actual sample. Voice explains which rows will be checked and helps confirm scope before moving to invoices.",
+        "Vera connects the newly produced sample to the three selected invoices and starts Vouching. Voice explains the entry-to-document comparison from actual progress.",
+        "Open the results workbook and a row with its linked document. Check reference, date, amount and party, then review clarification requests. Vera preserves actual decisions and source links."
       ],
-      "input_rows": [
-        [
-          "Sample S1 · row 4",
-          "MOV-104 / INV-104",
-          "EUR 1,220"
-        ],
-        [
-          "XML X1",
-          "INV-104; consistent party",
-          "EUR 1,220"
-        ],
-        [
-          "XML X2",
-          "INV-205; another invoice",
-          "EUR 1,220"
-        ]
+      "deliverables": [
+        "Excel and CSV check results for the sample, with linked documents and outcomes.",
+        "Review notes and check records for retrieving the sample and sources."
       ],
-      "basis": "S1 defines the selection. X1 has the distinctive INV-104 reference; X2's equal amount does not establish identity.",
-      "method": [
-        "Resume the qualified sample in the same client engagement, bind an explicit support batch and verify the source closure.",
-        "Check identity, party, currency, sign, amount and date under the reviewed recipe. Do not repair journal preparation inside Vouching.",
-        "Read coverage, mismatches and manual-review rows. Deliver entry-to-document lineage and leave evidence sufficiency to professional judgment."
+      "review": "Confirm that only sampled rows were examined. A match is distinct from a conclusion about the posting: party, accounting direction and conclusions require the workflow’s review. Missing or ambiguous evidence remains unresolved.",
+      "checkpoints": [
+        "Before checking, identify the selected rows and documents.",
+        "In the result, explain one row’s outcome using its posting and invoice."
       ],
-      "result_title": "INV-104 is the relevant support",
-      "conclusion": "Identity distinguishes documents with the same amount. Numeric coincidence alone would not justify a match.",
-      "output_columns": [
-        "Candidate",
-        "Identity evidence",
-        "Teaching interpretation"
-      ],
-      "output_rows": [
-        [
-          "X1 · INV-104",
-          "Consistent distinctive reference",
-          "Check the remaining requirements"
-        ],
-        [
-          "X2 · INV-205",
-          "Different reference",
-          "Equal amount is insufficient"
-        ]
-      ],
-      "check": "A mechanical pass does not certify accounting treatment or evidence sufficiency. Do not extend the result to unsampled entries.",
-      "question": "If the posting has no invoice reference, can we choose X1 because it is the first file?",
-      "answer": "No. Identity remains unresolved and needs the evidence or reviewed relationship required by the contract. File order proves nothing.",
-      "practice": "Change X1 to EUR 1,200 and inspect the difference without switching the matched document.",
-      "next": "Select the finalized sample and the relevant XML or PDF batch; Vera resolves the technical handoff references."
+      "practice": "Request a new sample of three account-2100 rows and repeat the checks with the same invoices. Keep the first result and verify that the new checks follow the new sample.",
+      "success": "You can start Vouching, open its result, trace a document and distinguish mechanical checks from professional conclusions.",
+      "repeat": "For real work, select the Journal Sampling run in the correct case and provide the document batch. Vera resumes that handoff and checks only the selected rows."
     },
     "fr": {
-      "title": "De l'écriture échantillonnée à la bonne pièce",
-      "goal": "Vérifier une écriture sans confondre montant identique et identité documentaire.",
-      "scenario": "L'échantillon fictif qualifié contient MOV-104 pour INV-104, soit 1 220 EUR. Le lot justificatif comporte deux factures de ce montant : INV-104 et INV-205. Seule l'écriture sélectionnée est contrôlée.",
-      "request": "Vera, vérifie la pièce justificative de cette écriture de l'échantillon.",
-      "scope": "Le workflow utilise le passage clôturé de Journal Sampling et ses pièces de qualification. Une table brute ou cet aperçu ne le remplace pas.",
-      "input_columns": [
-        "Source fictive",
-        "Identité",
-        "Montant"
+      "title": "Contrôler les écritures échantillonnées avec les factures",
+      "goal": "Apprendre à relier un échantillon aux factures, lire les résultats et revoir les points nécessitant un jugement professionnel.",
+      "scenario": "Le cabinet possède les écritures de trois factures et leurs XML. Il veut comparer deux lignes échantillonnées aux pièces originales.",
+      "scope": "Contrôle sur pièces d’un échantillon. Vera crée d’abord celui-ci avec Journal Sampling dans le même dossier pédagogique, puis exécute le contrôle. Le journal entier n’est pas examiné.",
+      "inputs": "Ouvrez invoice-journal.csv, context-fr.md et les trois factures XML. La note précise le compte 2100 et un échantillon pédagogique de deux lignes. Vera gère le passage aux pièces ; aucun fichier technique interne à choisir.",
+      "request": "Vera, crée un échantillon aléatoire de deux lignes du compte fournisseur 2100, graine 42, puis contrôle-les avec ces factures XML. Montre les résultats et accompagne ma revue.",
+      "steps": [
+        "La conversation de travail produit réellement l’échantillon. La voix explique quelles lignes seront contrôlées et aide à confirmer le périmètre avant les factures.",
+        "Vera relie l’échantillon produit aux trois factures sélectionnées et lance le Contrôle sur pièces. La voix explique la comparaison à partir de l’avancement effectif.",
+        "Ouvrez le classeur des résultats et une ligne avec sa pièce liée. Vérifiez référence, date, montant et partie, puis les demandes de clarification. Vera conserve décisions effectives et liens aux sources."
       ],
-      "input_rows": [
-        [
-          "Échantillon S1 · ligne 4",
-          "MOV-104 / INV-104",
-          "1 220 EUR"
-        ],
-        [
-          "XML X1",
-          "INV-104 ; contrepartie cohérente",
-          "1 220 EUR"
-        ],
-        [
-          "XML X2",
-          "INV-205 ; autre facture",
-          "1 220 EUR"
-        ]
+      "deliverables": [
+        "Résultats Excel et CSV des contrôles de l’échantillon, avec pièces liées et constats.",
+        "Notes de revue et dossier de contrôle pour retrouver échantillon et sources."
       ],
-      "basis": "S1 définit la sélection. X1 porte la référence distinctive INV-104 ; le montant identique de X2 n'établit pas son identité.",
-      "method": [
-        "Reprends l'échantillon qualifié du même dossier, sélectionne le lot justificatif et vérifie la clôture des sources.",
-        "Contrôle identité, contrepartie, devise, sens, montant et date selon la recette revue. Ne corrige pas la préparation du journal dans Vouching.",
-        "Lis couverture, écarts et lignes à revoir manuellement. Livre le lien écriture-pièce ; le professionnel apprécie la suffisance de la preuve."
+      "review": "Vérifiez que seules les lignes échantillonnées sont examinées. Un rapprochement ne vaut pas conclusion sur l’écriture : partie, sens comptable et conclusion nécessitent la revue prévue. Une pièce absente ou ambiguë reste à clarifier.",
+      "checkpoints": [
+        "Avant le contrôle, identifiez les lignes et pièces retenues.",
+        "Dans le résultat, expliquez le constat d’une ligne avec son écriture et sa facture."
       ],
-      "result_title": "INV-104 est la pièce pertinente",
-      "conclusion": "L'identité distingue les deux factures de même montant. La seule coïncidence numérique ne justifierait pas le rapprochement.",
-      "output_columns": [
-        "Candidat",
-        "Preuve d'identité",
-        "Lecture pédagogique"
-      ],
-      "output_rows": [
-        [
-          "X1 · INV-104",
-          "Référence distinctive cohérente",
-          "Vérifier les autres conditions"
-        ],
-        [
-          "X2 · INV-205",
-          "Référence différente",
-          "Montant identique insuffisant"
-        ]
-      ],
-      "check": "Un contrôle mécanique favorable ne certifie ni traitement comptable ni suffisance des justificatifs. Ne généralise pas aux écritures hors échantillon.",
-      "question": "Sans référence facture dans l'écriture, peut-on choisir X1 parce qu'il est le premier fichier ?",
-      "answer": "Non. L'identité reste indéterminée et nécessite la preuve ou le lien revu prévu au contrat. L'ordre des fichiers ne prouve rien.",
-      "practice": "Ramène X1 à 1 200 EUR et examine l'écart sans changer de document rapproché.",
-      "next": "Sélectionne l'échantillon finalisé et le lot XML ou PDF pertinent ; Vera résout les références techniques du passage."
+      "practice": "Demandez un nouvel échantillon de trois lignes du compte 2100 et recommencez avec les mêmes factures. Conservez le premier résultat et vérifiez que le nouveau contrôle suit le nouvel échantillon.",
+      "success": "Vous savez lancer le contrôle, ouvrir son résultat, retrouver la pièce et distinguer vérification mécanique et conclusion professionnelle.",
+      "repeat": "Dans un vrai dossier, choisissez l’exécution Journal Sampling correcte et fournissez le lot de pièces. Vera reprend ce lien et contrôle uniquement les lignes sélectionnées."
     },
     "de": {
-      "title": "Von der Stichprobenbuchung zum richtigen Beleg",
-      "goal": "Eine ausgewählte Buchung prüfen, ohne einen gleichen Betrag mit Belegidentität zu verwechseln.",
-      "scenario": "Die fiktive qualifizierte Stichprobe enthält MOV-104 zur Rechnung INV-104 über EUR 1.220. Zwei XML-Rechnungen haben diesen Betrag: INV-104 und INV-205. Nur die ausgewählte Buchung gehört zum Prüfungsumfang.",
-      "request": "Vera, prüfe den Beleg zu dieser Stichprobenbuchung.",
-      "scope": "Vouching setzt die abgeschlossene Übergabe aus Journal Sampling einschließlich Qualifizierungsunterlagen voraus. Eine Rohdatentabelle oder diese Lehrvorschau ersetzt sie nicht.",
-      "input_columns": [
-        "Fiktive Quelle",
-        "Identität",
-        "Betrag"
+      "title": "Gezogene Buchungszeilen mit Rechnungen prüfen",
+      "goal": "Lernen, eine Stichprobe mit Rechnungen zu verbinden, Ergebnisse zu lesen und fachlich zu beurteilende Punkte zu prüfen.",
+      "scenario": "Die Kanzlei hat Buchungen zu drei Rechnungen und deren XML-Dateien. Zwei gezogene Zeilen sollen mit den Originalbelegen verglichen werden.",
+      "scope": "Belegprüfung einer Stichprobe. Vera erstellt diese zuerst mit Journal Sampling in derselben Übungsakte und führt dann die Prüfung aus. Das gesamte Journal wird nicht geprüft.",
+      "inputs": "Öffnen Sie invoice-journal.csv, context-de.md und die drei XML-Rechnungen. Die Notiz nennt Konto 2100 und eine Übungsstichprobe von zwei Zeilen. Vera übernimmt die Übergabe; interne technische Dateien müssen Sie nicht auswählen.",
+      "request": "Vera, ziehe zwei zufällige Zeilen aus Lieferantenkonto 2100 mit Startwert 42 und prüfe sie anhand dieser XML-Rechnungen. Zeige mir die Ergebnisse und begleite die Prüfung.",
+      "steps": [
+        "Der Arbeitschat erzeugt die tatsächliche Stichprobe. Die Stimme erklärt die zu prüfenden Zeilen und hilft, den Umfang vor dem Belegvergleich zu bestätigen.",
+        "Vera verbindet die neue Stichprobe mit den drei ausgewählten Rechnungen und startet die Belegprüfung. Die Stimme erklärt den Vergleich anhand des tatsächlichen Fortschritts.",
+        "Öffnen Sie die Ergebnismappe und eine Zeile mit verknüpftem Beleg. Prüfen Sie Referenz, Datum, Betrag und Partei sowie offene Rückfragen. Vera erhält tatsächliche Entscheidungen und Quellenverknüpfungen."
       ],
-      "input_rows": [
-        [
-          "Stichprobe S1 · Zeile 4",
-          "MOV-104 / INV-104",
-          "EUR 1.220"
-        ],
-        [
-          "XML X1",
-          "INV-104; passende Gegenpartei",
-          "EUR 1.220"
-        ],
-        [
-          "XML X2",
-          "INV-205; andere Rechnung",
-          "EUR 1.220"
-        ]
+      "deliverables": [
+        "Excel- und CSV-Prüfergebnisse zur Stichprobe mit Belegen und Feststellungen.",
+        "Prüfnotizen und Nachweise zum Wiederfinden von Stichprobe und Quellen."
       ],
-      "basis": "S1 definiert die Auswahl. X1 trägt die unterscheidende Referenz INV-104; der gleiche Betrag von X2 beweist keine Identität.",
-      "method": [
-        "Übernimm die qualifizierte Stichprobe im selben Mandat, binde einen bestimmten Belegbestand und prüfe die abgeschlossene Quellenbasis.",
-        "Prüfe Identität, Gegenpartei, Währung, Vorzeichen, Betrag und Datum anhand der geprüften Konfiguration. Repariere die Journalaufbereitung nicht innerhalb von Vouching.",
-        "Lies Abdeckung, Abweichungen und manuell zu prüfende Zeilen. Liefere den Weg von Buchung zu Beleg; die Belegausreichendheit bleibt fachliches Urteil."
+      "review": "Prüfen Sie, dass nur gezogene Zeilen untersucht wurden. Eine Zuordnung ist noch kein Urteil über die Buchung: Partei, Buchungsrichtung und Schlussfolgerung benötigen die vorgesehene Prüfung. Fehlende oder mehrdeutige Belege bleiben offen.",
+      "checkpoints": [
+        "Benennen Sie vor der Prüfung ausgewählte Zeilen und Belege.",
+        "Erklären Sie im Ergebnis eine Feststellung anhand von Buchung und Rechnung."
       ],
-      "result_title": "INV-104 ist der einschlägige Beleg",
-      "conclusion": "Die Identität unterscheidet Belege mit gleichem Betrag. Eine bloße Zahlengleichheit rechtfertigt keine Zuordnung.",
-      "output_columns": [
-        "Kandidat",
-        "Identitätsbeleg",
-        "Einordnung im Beispiel"
-      ],
-      "output_rows": [
-        [
-          "X1 · INV-104",
-          "Passende eindeutige Referenz",
-          "Weitere Anforderungen prüfen"
-        ],
-        [
-          "X2 · INV-205",
-          "Andere Referenz",
-          "Gleicher Betrag reicht nicht"
-        ]
-      ],
-      "check": "Ein mechanisch bestandener Check bestätigt weder die Bilanzierung noch die Belegausreichendheit. Übertrage das Ergebnis nicht auf ungeprüfte Buchungen.",
-      "question": "Die Buchung enthält keine Rechnungsreferenz. Können wir X1 nehmen, weil die Datei zuerst kommt?",
-      "answer": "Nein. Die Identität bleibt offen und braucht die vertraglich geforderte Evidenz oder geprüfte Beziehung. Die Dateireihenfolge beweist nichts.",
-      "practice": "Ändere X1 auf EUR 1.200 und prüfe die Differenz, ohne den zugeordneten Beleg zu wechseln.",
-      "next": "Wähle die abgeschlossene Stichprobe und den passenden XML- oder PDF-Bestand; Vera löst die technischen Übergabeverweise auf."
+      "practice": "Fordern Sie eine neue Stichprobe mit drei Zeilen aus Konto 2100 an und wiederholen Sie die Prüfung mit denselben Rechnungen. Bewahren Sie das erste Ergebnis auf und prüfen Sie, dass der neue Lauf der neuen Stichprobe folgt.",
+      "success": "Sie können die Belegprüfung starten, das Ergebnis öffnen, einen Beleg zurückverfolgen und mechanische Kontrollen von fachlichen Schlussfolgerungen unterscheiden.",
+      "repeat": "Wählen Sie im echten Auftrag den Journal-Sampling-Lauf der richtigen Akte und liefern Sie das Belegpaket. Vera übernimmt die Verbindung und prüft nur die ausgewählten Zeilen."
     },
     "es": {
-      "title": "Del asiento seleccionado al justificante correcto",
-      "goal": "Verificar un asiento de la muestra sin confundir igualdad de importe con identidad documental.",
-      "scenario": "La muestra ficticia cualificada contiene MOV-104, correspondiente a INV-104 por EUR 1.220. El lote incluye dos facturas por ese importe: INV-104 e INV-205. Solo el asiento seleccionado está dentro del alcance.",
-      "request": "Vera, verifica el justificante de este asiento de la muestra.",
-      "scope": "Vouching parte de la entrega cerrada de Journal Sampling con sus documentos de cualificación. Una tabla en bruto o esta vista didáctica no la sustituyen.",
-      "input_columns": [
-        "Fuente ficticia",
-        "Identidad",
-        "Importe"
+      "title": "Verificar los asientos seleccionados con las facturas",
+      "goal": "Aprender a relacionar una muestra con sus facturas, leer resultados y revisar los puntos que requieren juicio profesional.",
+      "scenario": "El despacho tiene los asientos de tres facturas y sus XML. Quiere comparar dos líneas de la muestra con los documentos originales.",
+      "scope": "Verificación documental de una muestra. Vera la crea primero con Journal Sampling en el mismo expediente didáctico y después ejecuta los controles. No se examina todo el diario.",
+      "inputs": "Abre invoice-journal.csv, context-es.md y las tres facturas XML. La nota indica la cuenta 2100 y una muestra didáctica de dos líneas. Vera gestiona la conexión; no tienes que elegir archivos técnicos internos.",
+      "request": "Vera, crea una muestra aleatoria de dos líneas de la cuenta de proveedores 2100, semilla 42, y verifícalas con estas facturas XML. Muéstrame los resultados y acompaña mi revisión.",
+      "steps": [
+        "La conversación de trabajo produce la muestra real. La voz explica qué líneas se comprobarán y ayuda a confirmar el alcance antes de pasar a las facturas.",
+        "Vera conecta la muestra generada con las tres facturas seleccionadas e inicia la Verificación documental. La voz explica la comparación según el avance real.",
+        "Abre el libro de resultados y una línea con su documento asociado. Comprueba referencia, fecha, importe y parte, y revisa las aclaraciones pendientes. Vera conserva decisiones reales y vínculos a las fuentes."
       ],
-      "input_rows": [
-        [
-          "Muestra S1 · fila 4",
-          "MOV-104 / INV-104",
-          "EUR 1.220"
-        ],
-        [
-          "XML X1",
-          "INV-104; contraparte coherente",
-          "EUR 1.220"
-        ],
-        [
-          "XML X2",
-          "INV-205; otra factura",
-          "EUR 1.220"
-        ]
+      "deliverables": [
+        "Resultados Excel y CSV del control de la muestra, con documentos asociados y estados.",
+        "Notas de revisión y expediente de controles para recuperar muestra y fuentes."
       ],
-      "basis": "S1 define la selección. X1 contiene la referencia distintiva INV-104; el importe igual de X2 no acredita identidad.",
-      "method": [
-        "Retoma la muestra cualificada en el mismo encargo, vincula un lote de justificantes explícito y verifica el cierre de fuentes.",
-        "Comprueba identidad, contraparte, moneda, signo, importe y fecha conforme a la configuración revisada. No repares la preparación del diario dentro de Vouching.",
-        "Lee cobertura, diferencias y filas de revisión manual. Entrega la trazabilidad asiento-documento y deja la suficiencia probatoria al juicio profesional."
+      "review": "Comprueba que solo se examinaron las líneas seleccionadas. Una coincidencia no equivale a una conclusión sobre el asiento: parte, signo contable y conclusión requieren la revisión prevista. Los documentos ausentes o ambiguos permanecen pendientes.",
+      "checkpoints": [
+        "Antes del control, identifica las líneas y documentos seleccionados.",
+        "En el resultado, explica el estado de una línea mediante asiento y factura."
       ],
-      "result_title": "INV-104 es el justificante pertinente",
-      "conclusion": "La identidad distingue documentos con el mismo importe. La coincidencia numérica por sí sola no justificaría una asociación.",
-      "output_columns": [
-        "Candidato",
-        "Prueba de identidad",
-        "Interpretación didáctica"
-      ],
-      "output_rows": [
-        [
-          "X1 · INV-104",
-          "Referencia distintiva coherente",
-          "Comprobar los demás requisitos"
-        ],
-        [
-          "X2 · INV-205",
-          "Referencia diferente",
-          "El importe igual no basta"
-        ]
-      ],
-      "check": "Superar un control mecánico no certifica el tratamiento contable ni la suficiencia del justificante. No extiendas el resultado a asientos fuera de la muestra.",
-      "question": "Si el asiento no incluye referencia de factura, ¿podemos elegir X1 por ser el primer archivo?",
-      "answer": "No. La identidad queda pendiente y necesita las pruebas o la relación revisada que exige el contrato. El orden de archivos no demuestra nada.",
-      "practice": "Cambia X1 a EUR 1.200 y examina la diferencia sin sustituir el documento asociado.",
-      "next": "Selecciona la muestra finalizada y el lote XML o PDF pertinente; Vera resuelve las referencias técnicas de la entrega."
+      "practice": "Pide una nueva muestra de tres líneas de la cuenta 2100 y repite los controles con las mismas facturas. Conserva el primer resultado y comprueba que la nueva revisión sigue la nueva muestra.",
+      "success": "Sabes iniciar la verificación, abrir el resultado, rastrear un documento y distinguir controles mecánicos de conclusiones profesionales.",
+      "repeat": "En un caso real, selecciona la ejecución Journal Sampling del expediente correcto y aporta el lote documental. Vera retoma la conexión y comprueba solo las líneas seleccionadas."
     }
   }
 }

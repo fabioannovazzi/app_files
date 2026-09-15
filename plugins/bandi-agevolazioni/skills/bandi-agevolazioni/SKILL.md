@@ -93,6 +93,14 @@ inside the already selected run do not require a separate confirmation.
 
 Default output policy: produce the ordinary private JSON, audit, and Markdown
 review package when the tooling can do so. These are not choices to propose.
+Open the package's `review_dossier.html` first: it presents the recorded case
+summary, costs, documents, proposed assessments and project draft in the run's
+language, with links to source excerpts and detailed records. It is generated
+by the native packager from the same validated snapshot and included in the
+manifest. Keep `review_dossier.md` and the JSON/audit files as detailed working
+records. The report does not infer new eligibility conclusions or review
+decisions. Check the recorded action section before describing portal activity,
+signatures or submission.
 When useful, save the visible run summary as `codex_run_review.md` beside the
 package. Never edit plugin source or generated ZIPs during a customer case run.
 

@@ -152,6 +152,7 @@ def test_clara_package_entries_embed_attribute_reporting_and_vendor_runtime() ->
         f"{component_root}/vendor/modules/pdp/attribute_table_templates.py" in entries
     )
     assert f"{component_root}/vendor/modules/utilities/utils.py" in entries
+    assert f"{component_root}/vendor/modules/pdp/attribute_report_copy.json" in entries
 
 
 def test_selecting_attribute_reporting_rebuilds_clara_package_only() -> None:

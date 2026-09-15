@@ -1,0 +1,709 @@
+{
+  "channel_drafts": [
+    {
+      "audience_note": "Personnel administratif et chargé de la relation client des petites entreprises en Italie.",
+      "body": "Exercice pédagogique : Studio Riva et la mission sont fictifs ; le guide du CEPD est une source publique authentique.\n\nCette FAQ aide à reconnaître une demande d’accès et à organiser son traitement avec la personne chargée de la protection des données. Il s’agit d’une initiative d’information de Studio Riva fondée sur le guide général du CEPD, sans annonce d’une nouvelle loi.\n\n### Comment reconnaître une demande d’accès ?\n\nUne personne peut vouloir savoir si l’entreprise traite des données personnelles la concernant, accéder à ces données ou en recevoir une copie. Ce sont des éléments du droit d’accès décrit par le guide du CEPD. Si une demande porte sur ces éléments, sollicitez votre référent en protection des données pour l’examiner. [Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)\n\n### Que faire à sa réception ?\n\nComme organisation proposée, notez la date de réception, le canal et le contenu de la demande, puis transmettez-la rapidement au référent désigné par l’entreprise. Le guide recommande des procédures internes et la conservation d’une trace des demandes et des réponses. Le responsable du traitement doit répondre ; le sous-traitant l’assiste. Le référent interne coordonne le travail sans se substituer à ces rôles. [Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)\n\n### Quel est le délai de réponse ?\n\nLe guide indique un délai d’un mois. Si la demande est trop complexe et nécessite davantage de temps, le délai peut être prolongé de deux mois supplémentaires, à condition d’en informer la personne dans le mois suivant la réception. La prolongation n’est pas automatique : signalez rapidement les difficultés à votre référent pour une appréciation du cas particulier. [Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)\n\n### Que faut-il préparer ?\n\nLa réponse comprend les données personnelles et des informations sur le traitement : par exemple ses finalités, les catégories de données, les destinataires et la durée de conservation ou les critères permettant de la déterminer. Ces exemples ne constituent pas une liste exhaustive. Le référent doit vérifier toutes les rubriques de la section du guide consacrée à l’accès et identifier les données pertinentes ; cette FAQ n’est pas un modèle complet de réponse. [Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)\n\n### Peut-on transmettre directement tout le dossier ?\n\nAvant de fournir une copie des données, il faut vérifier que les droits et libertés de tiers ne seront pas affectés, notamment lorsqu’un même document contient des informations sur plusieurs personnes. Signalez ces documents au référent avant leur transmission. Le guide prévoit une copie gratuite des données personnelles ; les copies supplémentaires appellent un examen distinct. [Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)\n\n### Quand faut-il une appréciation spécifique ?\n\nSollicitez le référent si la demande est ambiguë, le travail complexe, des données de tiers concernées, ou si des frais ou un refus sont envisagés. Le guide admet des frais raisonnables ou un refus pour une demande dont le caractère manifestement infondé ou excessif peut être démontré ; une simple gêne de gestion ne suffit pas à l’établir. En cas de refus, les motifs et les possibilités de réclamation auprès de l’autorité nationale et de recours juridictionnel doivent être communiqués dans le mois. Ces décisions exigent un examen individuel. [Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)\n\nIndications générales pour les entreprises en Italie. Cette FAQ ne détermine pas la réponse à une demande réelle et ne remplace pas les procédures de l’entreprise. Avant utilisation, le professionnel doit revoir le texte et l’entreprise doit identifier son référent en protection des données.",
+      "channel": "faq",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-003",
+        "CLAIM-004",
+        "CLAIM-005",
+        "CLAIM-006",
+        "CLAIM-007",
+        "CLAIM-008",
+        "CLAIM-009",
+        "CLAIM-010",
+        "CLAIM-011",
+        "CLAIM-012"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "Comité européen de la protection des données (CEPD), guide de protection des données pour les petites entreprises, « Respecter les droits des individus », sections sur le traitement des demandes et le droit d’accès ; extrait recueilli le 14 septembre 2026. Guide officiel, non texte législatif."
+        }
+      ],
+      "sections": [],
+      "title": "Demandes d’accès aux données personnelles : les premiers gestes en entreprise"
+    },
+    {
+      "audience_note": "Personnel administratif et chargé de la relation client des petites entreprises en Italie.",
+      "body": "Exercice pédagogique : Studio Riva et la mission sont fictifs ; le guide du CEPD est une source publique authentique.\n\nLa FAQ « Demandes d’accès aux données personnelles : les premiers gestes en entreprise » s’adresse aux équipes administratives et de relation client des petites entreprises en Italie. Utilisez-la pour reconnaître le contenu d’une demande, noter sa réception et solliciter votre référent en protection des données.\n\nLe guide du CEPD recommande des procédures internes et la traçabilité des demandes. La FAQ aide à préparer cette transmission ; elle ne décide ni des données à communiquer ni des exceptions à appliquer. Cette initiative d’information du cabinet n’annonce aucune nouvelle obligation. Les demandes réelles nécessitent une appréciation spécifique.\n\n[Guide du CEPD : droits des individus](https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr)",
+      "channel": "client_email",
+      "claim_ids": [
+        "CLAIM-001",
+        "CLAIM-002",
+        "CLAIM-012"
+      ],
+      "public_source_notes": [
+        {
+          "public_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_fr",
+          "source_ids": [
+            "SRC-EDPB"
+          ],
+          "text": "Comité européen de la protection des données (CEPD), guide de protection des données pour les petites entreprises, « Respecter les droits des individus », sections sur le traitement des demandes et le droit d’accès ; extrait recueilli le 14 septembre 2026. Guide officiel, non texte législatif."
+        }
+      ],
+      "sections": [],
+      "subject": "Accès aux données personnelles : utiliser la FAQ en entreprise",
+      "title": "Courriel d’accompagnement de la FAQ"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLAIM-001",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Le droit d’accès comprend la confirmation du traitement ou non des données personnelles et, si elles sont traitées, l’accès à ces données.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-002",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Le guide recommande des procédures internes et la conservation d’une trace des demandes et des réponses.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-003",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Le responsable du traitement doit répondre aux demandes d’exercice des droits ; le sous-traitant doit l’assister.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-004",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Le guide indique un délai d’un mois pour répondre à une demande d’exercice des droits.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-005",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Si la demande est trop complexe et nécessite davantage de temps, le délai peut être prolongé de deux mois supplémentaires si la personne en est informée dans le mois suivant la réception.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-006",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Les informations à fournir au titre de l’accès comprennent finalités, catégories de données, destinataires et durée de conservation ou critères permettant de la déterminer.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-007",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Avant de fournir une copie des données personnelles, il faut vérifier les droits et libertés de tiers.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-008",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "La personne a le droit de recevoir gratuitement une copie de ses données personnelles traitées.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-009",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Pour des copies supplémentaires, le guide envisage des frais raisonnables fondés sur les coûts administratifs de réalisation.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-010",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "Pour une demande dont le caractère manifestement infondé ou excessif est démontré, le guide envisage des frais raisonnables ou un refus de donner suite.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-011",
+      "professional_judgment": "Le professionnel et le référent doivent vérifier les rôles, la pertinence et l’application au cas particulier.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "En cas de refus, les motifs et les possibilités de réclamation auprès de l’autorité nationale et de recours juridictionnel doivent être communiqués dans le mois suivant la réception.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    },
+    {
+      "id": "CLAIM-012",
+      "professional_judgment": "Organisation proposée à partir des recommandations du guide sur les procédures et la documentation, sans nouvelle prescription ni procédure d’entreprise déjà adoptée.",
+      "source_ids": [
+        "SRC-EDPB"
+      ],
+      "statement": "À titre d’organisation proposée, noter la date, le canal et le contenu de la demande et solliciter rapidement le référent aide à préparer le traitement interne recommandé par le guide.",
+      "temporal_qualification": "Guide sélectionné recueilli le 14 septembre 2026 ; aucune nouvelle entrée en vigueur annoncée.",
+      "uncertainty": "L’application dépend des faits et du rôle de l’entreprise, qui ne sont pas fournis."
+    }
+  ],
+  "editorial_value": {
+    "audience_value": "Le personnel peut reconnaître le contenu d’une demande et préparer une transmission interne utile.",
+    "banality_check": "La FAQ dépasse un appel général à la prudence : elle précise les éléments à noter, les délais et les décisions à examiner. L’organisation proposée est identifiée comme telle.",
+    "decision_enabled": "Permet d’engager le traitement interne et de reconnaître les points nécessitant une appréciation par le référent.",
+    "decision_limit": "Indications générales pour les entreprises en Italie. Cette FAQ ne détermine pas la réponse à une demande réelle et ne remplace pas les procédures de l’entreprise. Avant utilisation, le professionnel doit revoir le texte et l’entreprise doit identifier son référent en protection des données.",
+    "distinct_angle": "Du premier contact à l’examen par le référent, en distinguant collecte des informations et décisions sur la réponse.",
+    "practical_use": "Noter réception et contenu, identifier le référent et signaler complexité ou données de tiers avant la réponse.",
+    "publication_judgment": "Utile comme projet d’information bref, soumis à revue professionnelle ; aucune autorisation de diffusion n’en découle.",
+    "reason_now": "Initiative d’information demandée par le cabinet ; aucune nouveauté législative ou échéance exceptionnelle n’a été fournie.",
+    "repetition_check": "Aucun historique sélectionné : les répétitions avec des communications antérieures ne peuvent être évaluées.",
+    "source_specific_information": "Le guide relie les procédures internes au délai d’un mois, à la prolongation conditionnelle et au contrôle des droits des tiers avant de fournir une copie."
+  },
+  "master_brief": {
+    "actions": [
+      "À titre d’organisation proposée, noter la date, le canal et le contenu de la demande et solliciter rapidement le référent aide à préparer le traitement interne recommandé par le guide.",
+      "Le guide recommande des procédures internes et la conservation d’une trace des demandes et des réponses."
+    ],
+    "caveats": [
+      "Indications générales pour les entreprises en Italie. Cette FAQ ne détermine pas la réponse à une demande réelle et ne remplace pas les procédures de l’entreprise. Avant utilisation, le professionnel doit revoir le texte et l’entreprise doit identifier son référent en protection des données.",
+      "Organisation proposée à partir des recommandations du guide sur les procédures et la documentation, sans nouvelle prescription ni procédure d’entreprise déjà adoptée.",
+      "Exercice pédagogique : Studio Riva et la mission sont fictifs ; le guide du CEPD est une source publique authentique."
+    ],
+    "effective_dates": [
+      "Aucune nouvelle date d’effet ; référence documentaire au 14 septembre 2026."
+    ],
+    "practical_implications": [
+      "Le droit d’accès comprend la confirmation du traitement ou non des données personnelles et, si elles sont traitées, l’accès à ces données.",
+      "Le guide indique un délai d’un mois pour répondre à une demande d’exercice des droits.",
+      "Si la demande est trop complexe et nécessite davantage de temps, le délai peut être prolongé de deux mois supplémentaires si la personne en est informée dans le mois suivant la réception.",
+      "Avant de fournir une copie des données personnelles, il faut vérifier les droits et libertés de tiers."
+    ],
+    "what_changed": "Aucune modification législative annoncée. Le cabinet propose une FAQ sur les indications générales du guide du CEPD pour reconnaître et organiser une demande d’accès.",
+    "who_may_be_affected": "Personnel administratif et chargé de la relation client des petites entreprises en Italie."
+  },
+  "recommendation": "publish",
+  "recommendation_reason": "L’initiative explicite du cabinet justifie une FAQ pratique : les équipes peuvent reconnaître une demande d’accès et la transmettre au référent avec des informations utiles. La recommandation porte sur un projet à revoir, sans envoi ni publication.",
+  "run_id": "vera-fr-practice",
+  "schema_version": 1,
+  "source_assessments": [
+    {
+      "authority_assessment": "Guide officiel pertinent du CEPD sur l’exercice des droits et l’accès. Il apporte une orientation générale, sans constituer un nouvel acte législatif.",
+      "limitations": "Extrait sélectionné recueilli le 14 septembre 2026. Aucun fait propre à une entreprise ni examen de toutes les sources applicables à un cas réel. Les textes juridiques liés n’ont pas été fournis comme pièces examinées.",
+      "semantic_role": "clarifying",
+      "source_id": "SRC-EDPB"
+    }
+  ],
+  "studio_profile_proposal": {
+    "derived_from_history_ids": [],
+    "document": {
+      "circular_label": "Circulaire",
+      "closing": "Cordialement,",
+      "contact_rail_lines": [],
+      "date_pattern": "{date}",
+      "font_family": "Helvetica",
+      "footer_pattern": "Studio Riva",
+      "layout": {
+        "body_font_size_pt": 11,
+        "body_leading_pt": 15,
+        "bottom_margin_mm": 20,
+        "contact_rail_width_mm": 30,
+        "heading_font_size_pt": 12,
+        "left_margin_mm": 22,
+        "logo_height_mm": 12,
+        "logo_width_mm": 32,
+        "right_margin_mm": 22,
+        "rule_width_pt": 0.6,
+        "subject_font_size_pt": 15,
+        "top_margin_mm": 24
+      },
+      "numbering_pattern": "",
+      "page_size": "A4",
+      "recipient_pattern": "Aux petites entreprises clientes concernées",
+      "section_style": "unnumbered",
+      "signature_lines": [
+        "Studio Riva",
+        "experts-comptables"
+      ],
+      "subject_prefix": "Objet :",
+      "use_contact_rail": false
+    },
+    "email": {
+      "attachment_note": "FAQ de référence, à joindre uniquement après revue du dossier.",
+      "closing": "Cordialement,",
+      "salutation": "Chers clients,",
+      "signature_lines": [
+        "Studio Riva",
+        "experts-comptables"
+      ],
+      "subject_pattern": "{subject}"
+    },
+    "field_provenance": [
+      {
+        "analysis": "Ce champ reprend l’identité, le public ou la préférence de clarté et de sobriété explicitement fournis dans la demande ; il ne provient pas de communications antérieures.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.audience_stance"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.rhythm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.technical_density"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ce champ reprend l’identité, le public ou la préférence de clarté et de sobriété explicitement fournis dans la demande ; il ne provient pas de communications antérieures.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formality"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.openings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.closings"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ce champ reprend l’identité, le public ou la préférence de clarté et de sobriété explicitement fournis dans la demande ; il ne provient pas de communications antérieures.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "voice.formatting"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "voice.avoid"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.page_size"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.font_family"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.left_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.right_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.top_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.bottom_margin_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.logo_height_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.contact_rail_width_mm"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.body_leading_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.subject_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.heading_font_size_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.layout.rule_width_pt"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.recipient_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.circular_label"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.numbering_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.subject_prefix"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.section_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.use_contact_rail"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Aucune coordonnée n’a été fournie. Le champ reste vide, sans ajout d’adresses ni de contacts inventés.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.contact_rail_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.footer_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "document.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ce champ reprend l’identité, le public ou la préférence de clarté et de sobriété explicitement fournis dans la demande ; il ne provient pas de communications antérieures.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "document.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.subject_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.salutation"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.closing"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Ce champ reprend l’identité, le public ou la préférence de clarté et de sobriété explicitement fournis dans la demande ; il ne provient pas de communications antérieures.",
+        "basis": "user_supplied",
+        "field_paths": [
+          "email.signature_lines"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "email.attachment_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.byline_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.date_pattern"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.heading_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.source_heading"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.cta"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "website.show_update_date"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.preferred_format"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.opening_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.closing_style"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.hashtags"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.show_source_note"
+        ],
+        "history_ids": []
+      },
+      {
+        "analysis": "Proposition initiale de Vera pour un format sobre et lisible. Aucune communication antérieure n’a été sélectionnée ; cette convention n’est ni observée ni approuvée.",
+        "basis": "vera_default_proposal",
+        "field_paths": [
+          "social.carousel_identity_placement"
+        ],
+        "history_ids": []
+      }
+    ],
+    "social": {
+      "carousel_identity_placement": "close_only",
+      "closing_style": "Terminer par l’utilisation possible du texte et ses limites.",
+      "hashtags": [],
+      "opening_style": "Commencer par le problème pratique du lecteur.",
+      "preferred_format": "text",
+      "show_source_note": true
+    },
+    "voice": {
+      "audience_stance": "S’adresser clairement au personnel administratif et chargé de la relation client des petites entreprises en Italie.",
+      "avoid": [
+        "Urgence inventée",
+        "Garanties de conformité",
+        "Histoires de clients non fournies",
+        "Ton promotionnel"
+      ],
+      "closings": "Terminer par l’utilisation possible du texte et ses limites.",
+      "formality": "Sobre et professionnel.",
+      "formatting": "Titres clairs et sources identifiables.",
+      "openings": "Commencer par le problème pratique du lecteur.",
+      "rhythm": "Phrases courtes, une question pratique à la fois.",
+      "technical_density": "Expliquer les termes nécessaires et distinguer indications générales, organisation proposée et appréciation individuelle."
+    },
+    "website": {
+      "byline_pattern": "Studio Riva",
+      "cta": "Identifiez votre référent en protection des données avant d’utiliser ce guide dans votre procédure.",
+      "date_pattern": "Mis à jour le {date}",
+      "heading_style": "question_led",
+      "show_update_date": true,
+      "source_heading": "Sources"
+    }
+  },
+  "visual_story": {
+    "decision": "omit",
+    "decision_reason": "La FAQ courte permet déjà de suivre le passage de la réception à l’appréciation. Une image répéterait les éléments sans ajouter une décision utile.",
+    "incremental_value": "",
+    "slides": [],
+    "title": ""
+  }
+}

@@ -21,6 +21,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from courseware.execution import ExecutionError, collect_execution, verify_execution
+from courseware.policy import local_unavailability, unavailable_local_workflows
+
 __all__ = ["OnboardingError", "Store", "default_root", "main"]
 
 # Retain the legacy marker recognized by existing shared receipt clients.
@@ -147,21 +150,22 @@ def eligible_workflows(plugin_root: Path) -> set[str]:
     plugin_root = plugin_root.resolve()
     product = _read(plugin_root / ".codex-plugin/plugin.json")["name"]
     catalog = plugin_root / f"skills/{product}/references/workflow-catalog.md"
-    registered = set(
-        re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
-    ) - {
-        "legal-tax-answer-planner",
-        "legal-tax-answer-review",
-        "adversarial-opinion",
-        "privacy-surface-review",
-        "learn-with-clara",
-        "learn-with-lucia",
-        "advisory-brief-planner",
-        "advisory-case-director",
-        "advisory-deliverable-validator",
-        "claim-basis-map",
-        "studio-archive",
-    }
+    registered = (
+        set(
+            re.findall(r"^- `([a-z0-9-]+)`:", catalog.read_text(encoding="utf-8"), re.M)
+        )
+        - {
+            "legal-tax-answer-planner",
+            "legal-tax-answer-review",
+            "adversarial-opinion",
+            "privacy-surface-review",
+            "learn-with-clara",
+            "learn-with-lucia",
+            "claim-basis-map",
+            "studio-archive",
+        }
+        - unavailable_local_workflows(product)
+    )
     return {
         workflow
         for workflow in registered
@@ -177,6 +181,8 @@ def teaching_contract(plugin_root: Path, workflow: str) -> dict[str, str]:
     """
     plugin_root = plugin_root.resolve()
     product = _read(plugin_root / ".codex-plugin/plugin.json")["name"]
+    if reason := local_unavailability(product, workflow):
+        raise OnboardingError(reason)
     if workflow not in eligible_workflows(plugin_root):
         raise OnboardingError(
             f"Teaching supports only installed {product.title()} workflows"
@@ -324,7 +330,9 @@ class Store:
                 for chunk in iter(lambda: stream.read(1024 * 1024), b""):
                     digestor.update(chunk)
             digest = digestor.hexdigest()
-            records.append({"path": str(path.relative_to(root)), "sha256": digest})
+            records.append(
+                {"path": path.relative_to(root).as_posix(), "sha256": digest}
+            )
         return {
             "artifacts": records,
             "prompt": _text(data.get("prompt"), "the user's natural request"),
@@ -333,6 +341,42 @@ class Store:
             ),
             "recorded_at": _now(),
         }
+
+    def _execution(
+        self,
+        lesson: dict[str, Any],
+        phase: str,
+        data: dict[str, Any],
+        artifacts: list[dict[str, str]],
+        pair: dict[str, str],
+    ) -> dict[str, Any]:
+        try:
+            return collect_execution(
+                root=self.lesson_root(lesson),
+                plugin_root=self.plugin_root,
+                product=self.product,
+                workflow=lesson["workflow_id"],
+                phase=phase,
+                worker_thread_id=pair["worker_thread_id"],
+                record_path=data.get("execution_record"),
+                artifacts=artifacts,
+            )
+        except ExecutionError as exc:
+            raise OnboardingError(str(exc)) from exc
+
+    def _verify_execution(self, lesson: dict[str, Any], phase: str) -> None:
+        try:
+            verify_execution(
+                root=self.lesson_root(lesson),
+                plugin_root=self.plugin_root,
+                product=self.product,
+                workflow=lesson["workflow_id"],
+                phase=phase,
+                recorded=lesson[phase].get("execution"),
+                artifacts=lesson[phase]["artifacts"],
+            )
+        except ExecutionError as exc:
+            raise OnboardingError(str(exc)) from exc
 
     def change(
         self, action: str, revision: int, data: dict[str, Any]
@@ -387,6 +431,12 @@ class Store:
                 eligible = eligible_workflows(self.plugin_root)
                 selected = []
                 for lesson in lessons:
+                    if isinstance(lesson, dict) and (
+                        reason := local_unavailability(
+                            self.product, lesson.get("workflow_id", "")
+                        )
+                    ):
+                        raise OnboardingError(reason)
                     if (
                         not isinstance(lesson, dict)
                         or lesson.get("workflow_id") not in eligible
@@ -476,6 +526,9 @@ class Store:
                         raise OnboardingError(
                             "Record the user's own attempt, not the demonstration again"
                         )
+                    evidence["execution"] = self._execution(
+                        lesson, action, data, evidence["artifacts"], state["pair"]
+                    )
                     lesson[action] = evidence
                     lesson.pop("understanding", None)
                     if action == "demo":
@@ -524,6 +577,7 @@ class Store:
                 raise OnboardingError(
                     "Lesson artifacts changed; review and record the actual results again"
                 )
+            self._verify_execution(lesson, phase)
 
     def worker(self, thread_id: str, workflow: str, token: str) -> dict[str, Any]:
         """Authorize only the active lesson handoff, never a general onboarding bypass.

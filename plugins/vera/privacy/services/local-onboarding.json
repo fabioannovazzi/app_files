@@ -57,7 +57,7 @@
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local stdlib course loader verifies exact own-product workflow identity, supported authored language, source fingerprints and attachment hashes before reuse. It renders escaped local HTML into a fresh ordinary directory, with no network or model client, external assets or executable script. Rendering does not change profiles, record understanding or create execution receipts. Authored specimens and actual supplementary starter outputs have distinct provenance. The native OpenAI host may read the selected course for conversation; this is not offline inference.",
+      "control": "The local stdlib loader supports both new teaching kits and explicitly retained published lessons. It verifies own-product identity, authored language, current source fingerprints and attachment hashes, then renders escaped HTML in a fresh ordinary directory without network or model calls. Both formats enumerate prepared artifact hashes; local progress checks reject those bytes even when copied or renamed. The working host must attest actual input, native-run and output files in the paired lesson. Hash and thread checks do not authenticate a host or prove semantic quality. Rendering performs no profile, understanding or execution-completion write. The static public catalogue contains prepared fictional materials and relative-only provenance, with no local execution requests, profile or progress files. Native OpenAI conversation is ordinary model processing, not offline inference.",
       "implemented_by": [
         "scripts/local_courses.py",
         "skills/learn-with-vera/references/prepared-courses.md"
@@ -69,12 +69,13 @@
     "reviewed_at": "2026-09-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "a4b824be1de701cf4879023fb95390016eadd8d65758bd005c5b8e76a98ae2d0"
+    "source_fingerprint": "1192ebfa2eb705c99672046da5d3975bfd6b138de1b8ba5a175b3b5b7e38a112"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",
     "static/shared/product-function-pages.js",
     "plugins/_shared/vendor/modules/courseware",
-    "scripts/course_materials"
+    "scripts/course_materials",
+    "static/shared/courses"
   ]
 }

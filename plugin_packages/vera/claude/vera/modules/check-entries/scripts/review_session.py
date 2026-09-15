@@ -15,6 +15,7 @@ __all__ = [
     "RunIntakeResult",
     "write_review_session_artifacts",
     "write_run_intake",
+    "review_notes_copy",
 ]
 
 SCHEMA_VERSION = "2.0"
@@ -22,6 +23,133 @@ PLUGIN_NAME = "check-entries"
 WORKFLOW_NAME = "check-entries"
 MAX_RESULT_ITEMS = 1500
 MAX_PDF_ITEMS = 500
+
+
+def review_notes_copy(language: str) -> dict[str, str]:
+    """Share exact localized report wording with its output contract."""
+    copies = {
+        "en": {
+            "title": "Vouching Review Notes",
+            "counts": "Status Counts",
+            "policy": "Review Policy",
+            "language": "Language",
+            "rows": "Sampled journal rows",
+            "pdfs": "Supporting PDFs",
+            "xmls": "FatturaPA XMLs",
+            "entry": "Entry",
+            "date": "Date",
+            "account": "Account",
+            "amount": "Journal amount",
+            "document_amount": "Document amount",
+            "source": "Journal source and row",
+            "document": "Supporting document",
+            "status": "Result",
+            "note": "To review",
+            "manual_review": "Needs review",
+            "missing_support": "Supporting document missing",
+            "mismatch": "Difference or required evidence unresolved",
+            "ok": "Mechanical checks passed",
+            "party": "Confirm the expected supplier or customer for this entry against the document.",
+            "next": "Open check_results.xlsx and follow a selected entry back to its journal row and supporting document. Check the reference, date and amount, resolve the listed questions, and ask Vera to record the decisions you have actually made. A matched document does not approve the posting; professional conclusions remain pending until reviewed.",
+        },
+        "it": {
+            "title": "Note di verifica documentale",
+            "counts": "Riepilogo degli esiti",
+            "policy": "Come rivedere il risultato",
+            "language": "Lingua",
+            "rows": "Righe campionate del giornale",
+            "pdfs": "PDF di supporto",
+            "xmls": "XML FatturaPA",
+            "entry": "Registrazione",
+            "date": "Data",
+            "account": "Conto",
+            "amount": "Importo nel giornale",
+            "document_amount": "Importo nel documento",
+            "source": "Giornale e riga di origine",
+            "document": "Documento di supporto",
+            "status": "Esito",
+            "note": "Da rivedere",
+            "manual_review": "Da rivedere",
+            "missing_support": "Documento di supporto mancante",
+            "mismatch": "Differenza o evidenza richiesta da chiarire",
+            "ok": "Controlli meccanici superati",
+            "party": "Conferma il fornitore o cliente atteso per questa registrazione confrontandolo con il documento.",
+            "next": "Apri check_results.xlsx e risali da una registrazione selezionata alla riga del giornale e al documento di supporto. Controlla riferimento, data e importo, chiarisci i punti indicati e chiedi a Vera di registrare le decisioni effettivamente prese. Un documento abbinato non approva la registrazione: la conclusione professionale resta da rivedere.",
+        },
+        "fr": {
+            "title": "Notes de contrôle sur pièces",
+            "counts": "Récapitulatif des résultats",
+            "policy": "Comment revoir le résultat",
+            "language": "Langue",
+            "rows": "Lignes échantillonnées du journal",
+            "pdfs": "PDF justificatifs",
+            "xmls": "XML FatturaPA",
+            "entry": "Écriture",
+            "date": "Date",
+            "account": "Compte",
+            "amount": "Montant dans le journal",
+            "document_amount": "Montant dans la pièce",
+            "source": "Journal et ligne source",
+            "document": "Pièce justificative",
+            "status": "Résultat",
+            "note": "À revoir",
+            "manual_review": "À revoir",
+            "missing_support": "Pièce justificative manquante",
+            "mismatch": "Écart ou élément requis à clarifier",
+            "ok": "Contrôles mécaniques réussis",
+            "party": "Confirmez le fournisseur ou client attendu pour cette écriture en le comparant à la pièce.",
+            "next": "Ouvrez check_results.xlsx et retrouvez la ligne du journal et la pièce d’une écriture sélectionnée. Vérifiez référence, date et montant, clarifiez les points indiqués et demandez à Vera d’enregistrer les décisions effectivement prises. Une pièce rapprochée ne valide pas l’écriture : la conclusion professionnelle reste à revoir.",
+        },
+        "de": {
+            "title": "Notizen zur Belegprüfung",
+            "counts": "Ergebnisübersicht",
+            "policy": "So prüfen Sie das Ergebnis",
+            "language": "Sprache",
+            "rows": "Ausgewählte Journalzeilen",
+            "pdfs": "PDF-Belege",
+            "xmls": "FatturaPA-XMLs",
+            "entry": "Buchung",
+            "date": "Datum",
+            "account": "Konto",
+            "amount": "Journalbetrag",
+            "document_amount": "Belegbetrag",
+            "source": "Journaldatei und Quellzeile",
+            "document": "Beleg",
+            "status": "Ergebnis",
+            "note": "Zu prüfen",
+            "manual_review": "Zu prüfen",
+            "missing_support": "Beleg fehlt",
+            "mismatch": "Abweichung oder erforderlicher Nachweis ungeklärt",
+            "ok": "Mechanische Prüfungen bestanden",
+            "party": "Bestätigen Sie den erwarteten Lieferanten oder Kunden dieser Buchung anhand des Belegs.",
+            "next": "Öffnen Sie check_results.xlsx und verfolgen Sie eine ausgewählte Buchung zur Journalzeile und zum Beleg zurück. Prüfen Sie Referenz, Datum und Betrag, klären Sie die genannten Fragen und lassen Sie Vera tatsächlich getroffene Entscheidungen speichern. Ein zugeordneter Beleg bestätigt die Buchung noch nicht; die fachliche Schlussfolgerung bleibt zu prüfen.",
+        },
+        "es": {
+            "title": "Notas de revisión de la comprobación de asientos",
+            "counts": "Recuento por estado",
+            "policy": "Política de revisión",
+            "language": "Idioma",
+            "rows": "Líneas seleccionadas del diario",
+            "pdfs": "PDF justificativos",
+            "xmls": "XML FatturaPA",
+            "entry": "Asiento",
+            "date": "Fecha",
+            "account": "Cuenta",
+            "amount": "Importe en el diario",
+            "document_amount": "Importe en el documento",
+            "source": "Diario y línea de origen",
+            "document": "Documento justificativo",
+            "status": "Resultado",
+            "note": "Por revisar",
+            "manual_review": "Por revisar",
+            "missing_support": "Falta el justificante",
+            "mismatch": "Diferencia o evidencia requerida por aclarar",
+            "ok": "Controles mecánicos superados",
+            "party": "Confirma el proveedor o cliente esperado para este asiento comparándolo con el documento.",
+            "next": "Abre check_results.xlsx y sigue un asiento seleccionado hasta su línea del diario y justificante. Comprueba referencia, fecha e importe, aclara los puntos indicados y pide a Vera que registre las decisiones realmente tomadas. Un documento asociado no aprueba el asiento; la conclusión profesional permanece pendiente de revisión.",
+        },
+    }
+    return copies.get(language, copies["en"])
 
 
 @dataclass(frozen=True)
@@ -824,19 +952,12 @@ def _output_records(
                 "required_cells",
             ]
         elif relative == "review_notes.md":
-            output["required_text"] = (
-                [
-                    "# Notas de revisión de la comprobación de asientos",
-                    "## Recuento por estado",
-                    "## Política de revisión",
-                ]
-                if audit.get("language") == "es"
-                else [
-                    "# Vouching Review Notes",
-                    "## Status Counts",
-                    "## Review Policy",
-                ]
-            )
+            copy = review_notes_copy(str(audit.get("language", "en")))
+            output["required_text"] = [
+                f"# {copy['title']}",
+                f"## {copy['counts']}",
+                f"## {copy['policy']}",
+            ]
             output["qa_checks"] = ["nonempty_text", "required_text"]
         outputs.append(output)
     return outputs

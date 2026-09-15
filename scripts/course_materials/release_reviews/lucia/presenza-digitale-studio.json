@@ -1,0 +1,520 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "lucia",
+  "workflow": "presenza-digitale-studio",
+  "course_sha256": "9b0626d6a7b652446f1d305ceae52523c29d252fa1146651339f853b9bd01c87",
+  "reviewer": "Codex: five-language first-use website material, native execution and rendered output review",
+  "reviewed_at": "2026-09-15T01:19:06.371245+00:00",
+  "review_scope": "Read the complete five-language outlines, fictional studio profiles and hours updates. Reviewed all 20 exact demonstration/practice pages for Vera and Lucia through actual full-page desktop and phone browser captures, with observed navigation, widths and console state. The browser returned JPEG bytes: their original bytes were preserved and filenames corrected, and the current workflow now accepts PNG or JPEG evidence with matching headers, dimensions and hashes. Each reviewed run has a real recorded quality assessment and valid quality_ready state. Fresh native preparation/implementation/mechanical checks in website-teaching-release-04 reproduce every reviewed site digest after that repair. Those tests use explicitly authored fictional briefs and HTML, not simulated browser acceptance. This accepts prepared local teaching material; it does not attest a professional publication decision, human lesson timing/comprehension or live native voice and paired-window learner interaction.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches making a first informational website from studio material. The learner chooses a supplied profile, requests an introduction/activities/contact page, finds the real local output and checks it on computer and phone. The website itself is the lesson outcome; the hours update is a small practice task after the complete first-use sequence.",
+        "inputs_and_request": "Read lucia-studio-it.md and lucia-update-it.md. The fictional Studio Arco profile supplies the small-Italian-business audience, commercial-contract review and out-of-court debt recovery, the reserved reception email and Monday–Thursday 09:00–12:00. The Friday 14:00–16:00 update expressly preserves the original facts. Missing real identity, registrations, address and notices are not invented. Sources explicitly select only a local teaching website.",
+        "execution_and_checkpoints": "The current native workflow initializes a private workspace, snapshots selected source bytes, records an explicitly authored source-bound brief and validates the actual HTML/CSS and bundled fonts. Design uses the mapped brief. The learner first identifies the visitor and contact location, then follows actual implementation and opens the contact section at phone width. All 20 pages were reviewed in a browser at 1280 and 390 pixels, with full-page captures, Enter navigation to the contact anchor, no horizontal overflow and no reported console warnings/errors. The recorded assessment binds that evidence to unchanged current site and validation hashes.",
+        "deliverable_and_next_action": "Reviewed the it working page, source/design summary and final card with descriptive links to editable files, both browser views and current validation. The page clearly presents commercial-contract review and out-of-court debt recovery, the supplied contact and exact hours with a restrained readable design. Local quality review is complete; the next learner action is to locate and compare those facts. No professional acceptance, preview package, release package, hosted URL or publication is represented as completed.",
+        "practice_and_repeat": "The second native run adds Friday 14:00–16:00 and preserves Monday–Thursday, services and email. Regression checks preserve every predecessor file byte. The practice handoff links its own preceding version and the changed page. Both changed layouts were actually reviewed. The repeat instruction explains how to supply public-facing firm material, choose first-site versus refresh, review the result and only then select an authorized publication destination.",
+        "language_and_pacing": "Read the complete it outline, mapped profile/update, rendered content and localized human handoffs. The supported language changes teaching and presentation; the fictional professional context remains Italian. Six planned stages total 390 seconds, using one short profile, one page, two useful checkpoints and one additive change. Processing and questions may extend the target. No measured learner time, comprehension or live voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[demo-it-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. The first page shows only the supplied Monday–Thursday hours.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "0c9ed48b8a8b9e2ec4bebcbf5ac1f3b7cc54818826993786340ce86e86ef1664"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "229786449fe37af335b3fc8a70ea16d5f1836b73cf9251933773eca06151cf45"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "47591c9d8f30f992c3cb51572299f3d71794215ad164dc3f1b07a625bb841082"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "9c4a9be11cf372a8c87a8ff714777360a28cc143f8d948fcf9431717745b98f8"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "ea1cd0fe156b4a43fdc25f3b6b8a2a2fd234aa28b90758f6eb281e50a12a780f"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "3df5412b1bdc340ba47c532a57c0da06e9c305ee9b4fa29065d49a9b880c4a63"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "ba6ee527e7efa4c94848826a8bacba698d78c14573aab51d0ab507d59c17b092"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[practice-it-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. Practice adds Friday and the current test preserves every predecessor byte; the handoff links the preceding version.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "e432725d92d8afacff4193df400195fdf67269725944e9d360239bc6cc5d0313"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "6b73773eab7316b863c018d9ae5486c708401954ad875dfcf09ad085140a35be"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "30f6d99c36532f5bc3f055e457c49da0184827c2bf7356f11321b0cee37bc08b"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "0f3ee7024f1de0b9f0ad318435e5c9aaef504203c738660f0495ac6d8e5d7089"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "28c23a7acf2e2b52ba52f1ca3546d75c98a858c7317734fe0442b5ee5abd3a84"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "8c2b756a70855e05998711259be2666f05cbf32242701b08254e783cb05d704a"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "37a9b7ddd28a7826755d14769a3ac04e82bf6d90b6e23a9fd0e12065e65d4ef4"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches making a first informational website from studio material. The learner chooses a supplied profile, requests an introduction/activities/contact page, finds the real local output and checks it on computer and phone. The website itself is the lesson outcome; the hours update is a small practice task after the complete first-use sequence.",
+        "inputs_and_request": "Read lucia-studio-en.md and lucia-update-en.md. The fictional Studio Arco profile supplies the small-Italian-business audience, commercial-contract review and out-of-court debt recovery, the reserved reception email and Monday–Thursday 09:00–12:00. The Friday 14:00–16:00 update expressly preserves the original facts. Missing real identity, registrations, address and notices are not invented. Sources explicitly select only a local teaching website.",
+        "execution_and_checkpoints": "The current native workflow initializes a private workspace, snapshots selected source bytes, records an explicitly authored source-bound brief and validates the actual HTML/CSS and bundled fonts. Design uses the mapped brief. The learner first identifies the visitor and contact location, then follows actual implementation and opens the contact section at phone width. All 20 pages were reviewed in a browser at 1280 and 390 pixels, with full-page captures, Enter navigation to the contact anchor, no horizontal overflow and no reported console warnings/errors. The recorded assessment binds that evidence to unchanged current site and validation hashes.",
+        "deliverable_and_next_action": "Reviewed the en working page, source/design summary and final card with descriptive links to editable files, both browser views and current validation. The page clearly presents commercial-contract review and out-of-court debt recovery, the supplied contact and exact hours with a restrained readable design. Local quality review is complete; the next learner action is to locate and compare those facts. No professional acceptance, preview package, release package, hosted URL or publication is represented as completed.",
+        "practice_and_repeat": "The second native run adds Friday 14:00–16:00 and preserves Monday–Thursday, services and email. Regression checks preserve every predecessor file byte. The practice handoff links its own preceding version and the changed page. Both changed layouts were actually reviewed. The repeat instruction explains how to supply public-facing firm material, choose first-site versus refresh, review the result and only then select an authorized publication destination.",
+        "language_and_pacing": "Read the complete en outline, mapped profile/update, rendered content and localized human handoffs. The supported language changes teaching and presentation; the fictional professional context remains Italian. Six planned stages total 390 seconds, using one short profile, one page, two useful checkpoints and one additive change. Processing and questions may extend the target. No measured learner time, comprehension or live voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[demo-en-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. The first page shows only the supplied Monday–Thursday hours.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "535127c3619d566421962d780abee55ddcf86e99041788a919f35a2f3ecd7d80"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "842c68b25140b2ca800f59254d5ea184cd816d8c0c0dc7cb7af8327ec59cbf55"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "e5a1e38c1a73989dc7ad084c81e55cc4978af2ef51d21d962930042e098cef94"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "cec81c9f302f18316f0b76ed81d8bf873fd13eb4b31c0b852bcdbe757915904c"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "92e23c7e95fc7d3e7c3a5ae2bcd3446fb34e45bde410c747ad7c3cf1b16916f0"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "6700ff2318007899d3a500125dbfc190bd911255ef683296c605a5ec3dc48107"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "52df06a67a1dd303a1cb3a47b31e43c3502d44f7ce9fcf4c7544eb7d611922f8"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[practice-en-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. Practice adds Friday and the current test preserves every predecessor byte; the handoff links the preceding version.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "3862fec880f93c05e44a9465cd1b24f8bc8a54a72684cf7012d422b99dabac3d"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "534bbe144d96f2d846387e22b92e6029a131c15e479f300388e07618172a37e9"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "beeca2fd4bba32b44bf4f92c35700bf8a5c1fa5004b67ee08a558405d4d39ee8"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "8aac1927946676770a2ac4bfd9f5dd4734cd9013b09af032f09ab3c53514eba6"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "bdccaf8470fbbb3c1ff87faaa46b740ce9e29f1a52bfb766816b4d23c4c2516b"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "07ae33be8a70a50370209b7f6e47eb6aac1d7f2efaca2d1c27203b2792df5322"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "d7d5b58ebad820377df0945319bd8f191c3ff51c50a45ea323bffe0c1aa5baf0"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches making a first informational website from studio material. The learner chooses a supplied profile, requests an introduction/activities/contact page, finds the real local output and checks it on computer and phone. The website itself is the lesson outcome; the hours update is a small practice task after the complete first-use sequence.",
+        "inputs_and_request": "Read lucia-studio-fr.md and lucia-update-fr.md. The fictional Studio Arco profile supplies the small-Italian-business audience, commercial-contract review and out-of-court debt recovery, the reserved reception email and Monday–Thursday 09:00–12:00. The Friday 14:00–16:00 update expressly preserves the original facts. Missing real identity, registrations, address and notices are not invented. Sources explicitly select only a local teaching website.",
+        "execution_and_checkpoints": "The current native workflow initializes a private workspace, snapshots selected source bytes, records an explicitly authored source-bound brief and validates the actual HTML/CSS and bundled fonts. Design uses the mapped brief. The learner first identifies the visitor and contact location, then follows actual implementation and opens the contact section at phone width. All 20 pages were reviewed in a browser at 1280 and 390 pixels, with full-page captures, Enter navigation to the contact anchor, no horizontal overflow and no reported console warnings/errors. The recorded assessment binds that evidence to unchanged current site and validation hashes.",
+        "deliverable_and_next_action": "Reviewed the fr working page, source/design summary and final card with descriptive links to editable files, both browser views and current validation. The page clearly presents commercial-contract review and out-of-court debt recovery, the supplied contact and exact hours with a restrained readable design. Local quality review is complete; the next learner action is to locate and compare those facts. No professional acceptance, preview package, release package, hosted URL or publication is represented as completed.",
+        "practice_and_repeat": "The second native run adds Friday 14:00–16:00 and preserves Monday–Thursday, services and email. Regression checks preserve every predecessor file byte. The practice handoff links its own preceding version and the changed page. Both changed layouts were actually reviewed. The repeat instruction explains how to supply public-facing firm material, choose first-site versus refresh, review the result and only then select an authorized publication destination.",
+        "language_and_pacing": "Read the complete fr outline, mapped profile/update, rendered content and localized human handoffs. The supported language changes teaching and presentation; the fictional professional context remains Italian. Six planned stages total 390 seconds, using one short profile, one page, two useful checkpoints and one additive change. Processing and questions may extend the target. No measured learner time, comprehension or live voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[demo-fr-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. The first page shows only the supplied Monday–Thursday hours.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "2fa409221787b9cfb6981d50ba5804d870152d9447b37496faefc6003c6bceef"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "fc7e3b7aed4343680bd09c17d45db041620e5f9d63cbf84896c6ec374255ea87"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "b658168a8478528650cf70b332348904c1274f4608d901269583d0a104706c71"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "1ff83b3c3d26bfcfe07bcba7c148762eaa134f224325354f77e07c4a7219194a"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "497a03173b16142c11935fa188592c4cd494ca302e2ee6afc5a7aa686f90213e"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "3884132a2c98c28d4a64fdba8c4ab5e9edae5bb8c633d0baf8679557a8dc6783"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "7d8dc288088cdfe458efedb8984c290f8e1bdf186655cdce36b25daf5b54e22a"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[practice-fr-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. Practice adds Friday and the current test preserves every predecessor byte; the handoff links the preceding version.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "29babb8039326dfd0641d1fe7d2e85da0d8d12469a3e6528efe2deba7f3f7480"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "a9a3a67652a1b575b4c29895c1625e27f70b5ba9354285abb035102403342fb6"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "36d930aa7dd897e2c401fba84b94eb7253ecbeb63e2b8af97fd2cfa57ebe5764"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "0969fa5f068d61617037fafad62f484619c00cdbb44f0e6c6bac407eead5f473"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "1c2c04ee41010e08c25686ea7710a4054f67f3a32ce104a5ee06f0f8a49fc376"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "5e10cf35ce55339cbf3c0df428c59b3c92a9c2a17d7bad2b6713caae602ca8ea"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "3d55b621067570079b4df1977b53911f4c167066af8aac8c19827a46e6ebb11e"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches making a first informational website from studio material. The learner chooses a supplied profile, requests an introduction/activities/contact page, finds the real local output and checks it on computer and phone. The website itself is the lesson outcome; the hours update is a small practice task after the complete first-use sequence.",
+        "inputs_and_request": "Read lucia-studio-de.md and lucia-update-de.md. The fictional Studio Arco profile supplies the small-Italian-business audience, commercial-contract review and out-of-court debt recovery, the reserved reception email and Monday–Thursday 09:00–12:00. The Friday 14:00–16:00 update expressly preserves the original facts. Missing real identity, registrations, address and notices are not invented. Sources explicitly select only a local teaching website.",
+        "execution_and_checkpoints": "The current native workflow initializes a private workspace, snapshots selected source bytes, records an explicitly authored source-bound brief and validates the actual HTML/CSS and bundled fonts. Design uses the mapped brief. The learner first identifies the visitor and contact location, then follows actual implementation and opens the contact section at phone width. All 20 pages were reviewed in a browser at 1280 and 390 pixels, with full-page captures, Enter navigation to the contact anchor, no horizontal overflow and no reported console warnings/errors. The recorded assessment binds that evidence to unchanged current site and validation hashes.",
+        "deliverable_and_next_action": "Reviewed the de working page, source/design summary and final card with descriptive links to editable files, both browser views and current validation. The page clearly presents commercial-contract review and out-of-court debt recovery, the supplied contact and exact hours with a restrained readable design. Local quality review is complete; the next learner action is to locate and compare those facts. No professional acceptance, preview package, release package, hosted URL or publication is represented as completed.",
+        "practice_and_repeat": "The second native run adds Friday 14:00–16:00 and preserves Monday–Thursday, services and email. Regression checks preserve every predecessor file byte. The practice handoff links its own preceding version and the changed page. Both changed layouts were actually reviewed. The repeat instruction explains how to supply public-facing firm material, choose first-site versus refresh, review the result and only then select an authorized publication destination.",
+        "language_and_pacing": "Read the complete de outline, mapped profile/update, rendered content and localized human handoffs. The supported language changes teaching and presentation; the fictional professional context remains Italian. Six planned stages total 390 seconds, using one short profile, one page, two useful checkpoints and one additive change. Processing and questions may extend the target. No measured learner time, comprehension or live voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[demo-de-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. The first page shows only the supplied Monday–Thursday hours.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "1bfd24a02d6d8e269c6d88f7015a2ef46df46fecd0c685f3a94a95238110a3cf"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "aceef50b4ea5f7751e7602dd1bf3d3a043e1ef15eee347f4b6e35c0eabca8baa"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "e6f9338a4dc30b84c70b476ee48250183a5844f356b72533bcd45d4ffca1636a"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "ceac421263ba1b64ee57d97b7c2249e15ad8added7b17f0a5d8520ace64a386b"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "768fdf79b78f2f195244ae332463bc8d0fc69ce417d62d82a9d24eb341063f02"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "dc6a3e65eb37fd562264926196abff174cc550f00147e3921864637425beab3f"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "6cd275d96a833e4367b86ee33f066741f0117f55da04d752acd183d9a5dda5f9"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[practice-de-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. Practice adds Friday and the current test preserves every predecessor byte; the handoff links the preceding version.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "043c5adc8c1a858e6954c0ddf172e35dc803ee38b50e8ebea7514a7e43fc15f8"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "f28b630e42301405c7050e259c430b18e365ccca3bac27793532053ae48df5f1"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "5f05a816c2b6c4cc1ba8680d8fc143dab39327500f1839d4fb28344b6ed8bd03"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "a26b399d9d1ae6822210eff3be9b06b7f85e2845c7a9d4a3a2ab4d13f4131c79"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "b72eaa05c3bf39c25475e19c9d2ed8c52a3f5b86096a6faa8e09843cebcaf5ab"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "de7586c7506af8b85b278762e366f33ce083593d2c2657906e6910009ac82063"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "01d994c9336b3740269bb905d8b2fde1bb18becd0a18e7be8fac2177d8455a64"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The plain title teaches making a first informational website from studio material. The learner chooses a supplied profile, requests an introduction/activities/contact page, finds the real local output and checks it on computer and phone. The website itself is the lesson outcome; the hours update is a small practice task after the complete first-use sequence.",
+        "inputs_and_request": "Read lucia-studio-es.md and lucia-update-es.md. The fictional Studio Arco profile supplies the small-Italian-business audience, commercial-contract review and out-of-court debt recovery, the reserved reception email and Monday–Thursday 09:00–12:00. The Friday 14:00–16:00 update expressly preserves the original facts. Missing real identity, registrations, address and notices are not invented. Sources explicitly select only a local teaching website.",
+        "execution_and_checkpoints": "The current native workflow initializes a private workspace, snapshots selected source bytes, records an explicitly authored source-bound brief and validates the actual HTML/CSS and bundled fonts. Design uses the mapped brief. The learner first identifies the visitor and contact location, then follows actual implementation and opens the contact section at phone width. All 20 pages were reviewed in a browser at 1280 and 390 pixels, with full-page captures, Enter navigation to the contact anchor, no horizontal overflow and no reported console warnings/errors. The recorded assessment binds that evidence to unchanged current site and validation hashes.",
+        "deliverable_and_next_action": "Reviewed the es working page, source/design summary and final card with descriptive links to editable files, both browser views and current validation. The page clearly presents commercial-contract review and out-of-court debt recovery, the supplied contact and exact hours with a restrained readable design. Local quality review is complete; the next learner action is to locate and compare those facts. No professional acceptance, preview package, release package, hosted URL or publication is represented as completed.",
+        "practice_and_repeat": "The second native run adds Friday 14:00–16:00 and preserves Monday–Thursday, services and email. Regression checks preserve every predecessor file byte. The practice handoff links its own preceding version and the changed page. Both changed layouts were actually reviewed. The repeat instruction explains how to supply public-facing firm material, choose first-site versus refresh, review the result and only then select an authorized publication destination.",
+        "language_and_pacing": "Read the complete es outline, mapped profile/update, rendered content and localized human handoffs. The supported language changes teaching and presentation; the fictional professional context remains Italian. Six planned stages total 390 seconds, using one short profile, one page, two useful checkpoints and one additive change. Processing and questions may extend the target. No measured learner time, comprehension or live voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[demo-es-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. The first page shows only the supplied Monday–Thursday hours.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "2101a6b737e7b34aa3d91b4e1a03fd6f55394be8e339a5c0d00ce7699a6144e1"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "52190551651daa14ec4284fddd1e9917f1de7afa7956d9d02509fdcb3caae79e"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "75a053339af7c2b1afcd749420860d4c3e606701a9da5754e1b44cf299e75a51"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "afb547f39f84f124b4008182260e9b3dc5e39c85c34820b9711923eee230fc81"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "b6e9df86350fe98eb7e7e8fbcc30d1f66e08b266a206ad88029c929b0b101c84"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "9ca44f26f922dda3eaeae4c5d042690bb30bb749eda0c516fe44348e0b16d4c4"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "317a8ecc42779867c08dea77e019834b9b59515e67ce2aad6c6f3709e70ac1ec"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_kit_website_execution::test_website_kit_builds_bound_local_page_and_preserves_predecessor[practice-es-lucia]",
+        "result_review": "Fresh native tests cover exact source snapshots, the authored brief, local site generation and mechanical validation. The separately inspected original site has the same digest as the fresh execution. Actual desktop/phone capture records now validate against the current workflow and its final status is quality_ready. Practice adds Friday and the current test preserves every predecessor byte; the handoff links the preceding version.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "ee5a13bb171425cda36a69b366659028ed035f3889fe19bc9c747b2e64a2c5a5"
+          },
+          {
+            "name": "site.css",
+            "sha256": "c0c558aa2ea74843b3a06cd0df84f21e467d87c349c781e6077427cc8b364034"
+          },
+          {
+            "name": "website_review.md",
+            "sha256": "77f2d2c6cd6d338ce4bf1df30d08107e513e60f45251bc47eee529a44f829f37"
+          },
+          {
+            "name": "artifact_card.md",
+            "sha256": "aaac605c64291cacae0e6d577a9d44153c18b689e476331e8d7d384d7a76ecac"
+          },
+          {
+            "name": "quality_assessment_record.json",
+            "sha256": "a42ecd55e4a87c06b1f176ab1416cb34df3038e815c819a666bd0dc7ec0870cb"
+          },
+          {
+            "name": "desktop.jpg",
+            "sha256": "26be5ae8975263f2a611e07d2852ccfb70303bece027f731dea5ce352f138600"
+          },
+          {
+            "name": "phone.jpg",
+            "sha256": "e3f962ace1d512406cf28a0064f068e8071f8b550f2d5060d8fa109166efa062"
+          },
+          {
+            "name": "final_validation.json",
+            "sha256": "30914432926327427286839d8ae6b035564edc395dab189749dd88cf51bf49c2"
+          }
+        ]
+      }
+    }
+  },
+  "freshness_review": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T07:45:34.174192+00:00",
+    "previous_course_sha256": "96af757f241b7b8944bf3cd92da3a3892f3eae17092927f8d864dff0391dc2d9",
+    "source_snapshot": "/private/tmp/website-teaching-release-04/test_website_kit_builds_bound_9/kit/course-provenance.json",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      }
+    ],
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "prior_artifact_reviews_preserved": true,
+    "voice_or_learner_completion_claimed": false
+  },
+  "interim_release_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T09:39:25.612301+00:00",
+    "previous_course_sha256": "db4d857dd72740e64ce457811511e8e24fcb550d9a07aa611b650fa283723042",
+    "previous_source_commit": "312b51de",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "before": null,
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "before": null,
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "before": null,
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+      },
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      },
+      {
+        "path": "plugins/lucia/skills/presenza-digitale-studio/SKILL.md",
+        "before": "668d705d1a447830a6c132a228f937105ff6cd5ec2da01ee16ccd582c02f8fa5",
+        "after": "d3d382b78a44901653ccbbd4f23cad175525f90cb7d242240dc0d2c48acb4ab6"
+      }
+    ],
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+  },
+  "portability_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:08:05.149271+00:00",
+    "previous_course_sha256": "6aec8acf84155a39f2df5ea8be6bc3745fdbf9905a8913ae45a9adcd33833a07",
+    "source_changes": [
+      {
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      }
+    ],
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
+  }
+}

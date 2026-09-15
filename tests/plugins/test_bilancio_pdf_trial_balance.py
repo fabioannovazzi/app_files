@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -525,6 +526,11 @@ def test_image_only_pdf_with_ocr_disabled_requests_setup(tmp_path: Path) -> None
 def _install_managed_ocr_test_runtime(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> tuple[Path, Any]:
+    # Activation mutates sys.path in place. Keep its fake packages local to this
+    # test so later native validator subprocesses cannot inherit the fake PIL.
+    monkeypatch.setattr(sys, "path", list(sys.path))
+    for name in ("PYTHONPATH", "PADDLE_PDX_CACHE_HOME"):
+        monkeypatch.setenv(name, os.environ.get(name, ""))
     requirements = tmp_path / "requirements-ocr.txt"
     requirements.write_text("paddleocr==3.5.0\npaddlepaddle==3.3.1\n", encoding="utf-8")
     environment = tmp_path / "runtime/venv"

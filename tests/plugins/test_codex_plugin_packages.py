@@ -2806,6 +2806,12 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 continue
             for snippet in required_snippets:
                 if (
+                    plugin_root.name == "new-client"
+                    and snippet == "codex_run_review.md"
+                ):
+                    assert "`run_review.md` beside the package" in normalized_skill_text
+                    continue
+                if (
                     plugin_root.name == "browser-automation"
                     and snippet == "generated ZIPs"
                 ):

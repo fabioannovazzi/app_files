@@ -595,7 +595,7 @@ def _normalize_legacy_output(
             amount1.alias("amount_comparison"),
             (amount1 - amount0).alias("amount_delta"),
             total_delta.alias("total_delta"),
-            pl.when(amount0 == 0)
+            pl.when(amount0 <= 0)
             .then(None)
             .otherwise((amount1 - amount0) / amount0 * 100)
             .alias("amount_pct_change"),
@@ -716,6 +716,7 @@ def _normalize_legacy_bridge_output(
     names: dict[str, str],
     *,
     sort_by_variance: bool = True,
+    has_units: bool = True,
 ) -> pl.DataFrame:
     """Map legacy variable-dimension bridge rows to a stable plugin schema."""
 
@@ -754,7 +755,12 @@ def _normalize_legacy_bridge_output(
     else:
         expressions.append(pl.lit("total").alias("bridge_dimensions"))
     if variance_type in schema:
-        expressions.append(pl.col(variance_type).cast(pl.Utf8).alias("variance_type"))
+        type_expression = pl.col(variance_type).cast(pl.Utf8)
+        if not has_units:
+            type_expression = type_expression.replace(
+                {names["totalVariance"]: "Total variance"}
+            )
+        expressions.append(type_expression.alias("variance_type"))
     if variance_amount in schema:
         expressions.append(
             pl.col(variance_amount)
@@ -887,6 +893,7 @@ def _run_legacy_bridge_sequence(
         bridge_dimensions,
         names,
         sort_by_variance=sort_by_variance,
+        has_units=bool(param[names["unitsColFound"]]),
     )
     return LegacyVariableBridgeSequence(
         frame=normalized,
@@ -1015,7 +1022,13 @@ def _bridge_row_filter_dict(
             filter_dict[dimension] = value
     variance_type = row.get("variance_type")
     if variance_type is not None and str(variance_type):
-        filter_dict[names["varianceTypeName"]] = variance_type
+        # Normalized amount-only labels must map back to the unchanged legacy
+        # calculation key when a reviewed drilldown row is inserted.
+        filter_dict[names["varianceTypeName"]] = (
+            names["totalVariance"]
+            if variance_type == "Total variance"
+            else variance_type
+        )
     return filter_dict
 
 
@@ -1415,6 +1428,7 @@ def _prepare_legacy_variable_bridge_context(
         candidate_legacy_frame,
         bridge_dimensions,
         names,
+        has_units=bool(recipe["mappings"].get("units_column")),
     )
     return _LegacyVariableBridgeContext(
         imports=imports,

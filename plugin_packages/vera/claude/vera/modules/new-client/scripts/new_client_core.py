@@ -607,8 +607,10 @@ def _validate_factor_group(
         found_ids.append(factor_id)
         score = factor.get("score")
         if score is None:
-            if not allow_null_scores:
-                raise ValidationError(f"{field}[{index}].score is required.")
+            if not allow_null_scores and factor.get("assessment_status") != "proposed":
+                raise ValidationError(
+                    f"{field}[{index}].score is required for confirmation."
+                )
         else:
             _decimal_score(score, f"{field}[{index}].score")
         status = factor.get("assessment_status")
@@ -1416,7 +1418,10 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
     engagement = _require_object(data.get("engagement"), "engagement")
     if engagement.get("kind") not in {"ongoing", "one_off"}:
         raise ValidationError("engagement.kind must be ongoing or one_off.")
-    _parse_date(engagement.get("start_date"), "engagement.start_date")
+    if "start_date" not in engagement:
+        raise ValidationError("engagement.start_date is required; use null if unknown.")
+    if engagement["start_date"] is not None:
+        _parse_date(engagement["start_date"], "engagement.start_date")
     services = _require_list(engagement.get("services"), "engagement.services")
     if not services:
         raise ValidationError("engagement.services must contain at least one service.")
@@ -1926,7 +1931,10 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
 
     aml = _require_object(data.get("aml"), "aml")
     _parse_date(aml.get("assessment_date"), "aml.assessment_date")
-    _decimal_score(aml.get("inherent_risk"), "aml.inherent_risk")
+    if aml.get("inherent_risk") is not None:
+        _decimal_score(aml["inherent_risk"], "aml.inherent_risk")
+    elif aml.get("inherent_risk_status") != "proposed":
+        raise ValidationError("aml.inherent_risk is required for confirmation.")
     if aml.get("inherent_risk_status") not in {"proposed", "confirmed"}:
         raise ValidationError("aml.inherent_risk_status must be proposed or confirmed.")
     mode = aml.get("section_b_mode")
@@ -3312,25 +3320,8 @@ def _risk_band(score: Decimal) -> dict[str, str]:
 def calculate_aml(aml: Mapping[str, Any]) -> dict[str, Any]:
     """Calculate the CNDCEC-style arithmetic while preserving human review."""
 
-    ri = _decimal_score(aml.get("inherent_risk"), "aml.inherent_risk")
-    a_scores = [
-        _decimal_score(factor.get("score"), f"aml.factors_a.{factor.get('factor_id')}")
-        for factor in aml["factors_a"]
-    ]
-    a_total = sum(a_scores, Decimal("0"))
     section_b_mode = aml["section_b_mode"]
-    b_scores: list[Decimal] = []
-    if section_b_mode == "full":
-        b_scores = [
-            _decimal_score(
-                factor.get("score"), f"aml.factors_b.{factor.get('factor_id')}"
-            )
-            for factor in aml["factors_b"]
-        ]
-        b_total = sum(b_scores, Decimal("0"))
-        specific_risk = (a_total + b_total) / Decimal("10")
-        specific_formula = "RS = (sum(A1..A4) + sum(B1..B6)) / 10"
-    else:
+    if section_b_mode != "full":
         confirmation = aml.get("section_b_exclusion_confirmation")
         if (
             not isinstance(confirmation, dict)
@@ -3339,11 +3330,51 @@ def calculate_aml(aml: Mapping[str, Any]) -> dict[str, Any]:
             raise ValidationError(
                 "Section B exclusion is not effective without explicit confirmation."
             )
-        b_total = None
-        specific_risk = a_total / Decimal("4")
-        specific_formula = "RS = sum(A1..A4) / 4 (Section B exclusion confirmed)"
-    effective_risk = (ri * Decimal("0.30")) + (specific_risk * Decimal("0.70"))
-    band = _risk_band(effective_risk)
+    # Presence is mechanically checkable. Never choose professional scores or
+    # substitute starter values to manufacture a risk band from absent inputs.
+    required_factors = list(aml["factors_a"])
+    if section_b_mode == "full":
+        required_factors.extend(aml["factors_b"])
+    missing_scores = (["RI"] if aml.get("inherent_risk") is None else []) + [
+        factor["factor_id"]
+        for factor in required_factors
+        if factor.get("score") is None
+    ]
+    ri = (
+        _decimal_score(aml["inherent_risk"], "aml.inherent_risk")
+        if aml.get("inherent_risk") is not None
+        else None
+    )
+    a_total = b_total = specific_risk = effective_risk = None
+    band = None
+    specific_formula = (
+        "RS = (sum(A1..A4) + sum(B1..B6)) / 10"
+        if section_b_mode == "full"
+        else "RS = sum(A1..A4) / 4 (Section B exclusion confirmed)"
+    )
+    if not missing_scores:
+        if ri is None:
+            raise ValidationError("Cannot calculate AML without inherent risk.")
+        a_total = sum(
+            (
+                _decimal_score(f["score"], f"aml.factors_a.{f['factor_id']}")
+                for f in aml["factors_a"]
+            ),
+            Decimal("0"),
+        )
+        if section_b_mode == "full":
+            b_total = sum(
+                (
+                    _decimal_score(f["score"], f"aml.factors_b.{f['factor_id']}")
+                    for f in aml["factors_b"]
+                ),
+                Decimal("0"),
+            )
+            specific_risk = (a_total + b_total) / Decimal("10")
+        else:
+            specific_risk = a_total / Decimal("4")
+        effective_risk = (ri * Decimal("0.30")) + (specific_risk * Decimal("0.70"))
+        band = _risk_band(effective_risk)
 
     triggers = list(aml["mandatory_enhanced_triggers"])
     unknown_trigger_ids = [
@@ -3365,7 +3396,7 @@ def calculate_aml(aml: Mapping[str, Any]) -> dict[str, Any]:
         table_1["status"] in {"yes", "no"} and table_1["review_status"] == "confirmed"
     )
     baseline_mode: str | None = None
-    if table_1_resolved:
+    if table_1_resolved and band is not None:
         if band["code"] == "not_significant":
             baseline_mode = (
                 "conduct_rule" if table_1["status"] == "yes" else "simplified"
@@ -3388,7 +3419,9 @@ def calculate_aml(aml: Mapping[str, Any]) -> dict[str, Any]:
         no_declassification_applied = baseline_mode is not None
     if confirmed_positive_ids and minimum_mode != "enhanced":
         minimum_mode = "enhanced"
-    if not table_1_resolved:
+    if missing_scores:
+        decision_status = "blocked_incomplete_scores"
+    elif not table_1_resolved:
         decision_status = "blocked_unresolved_table_1"
     elif unknown_trigger_ids:
         decision_status = "blocked_unknown_mandatory_trigger"
@@ -3414,17 +3447,20 @@ def calculate_aml(aml: Mapping[str, Any]) -> dict[str, Any]:
             "findings, and the final professional conclusion remain reviewer-owned."
         ),
         "uses_proposed_inputs": proposed_inputs,
-        "inherent_risk": _as_number(ri),
+        "missing_score_ids": missing_scores,
+        "inherent_risk": None if ri is None else _as_number(ri),
         "inherent_risk_weight": 0.30,
-        "factor_a_total": _as_number(a_total),
+        "factor_a_total": None if a_total is None else _as_number(a_total),
         "factor_a_count": 4,
         "factor_b_total": None if b_total is None else _as_number(b_total),
         "factor_b_count": 6,
         "section_b_mode": section_b_mode,
-        "specific_risk": _as_number(specific_risk),
+        "specific_risk": None if specific_risk is None else _as_number(specific_risk),
         "specific_risk_formula": specific_formula,
         "specific_risk_weight": 0.70,
-        "effective_risk": _as_number(effective_risk),
+        "effective_risk": (
+            None if effective_risk is None else _as_number(effective_risk)
+        ),
         "effective_risk_formula": "RE = (RI * 30%) + (RS * 70%)",
         "calculated_band": band,
         "table_1_assessment": table_1,
@@ -3525,6 +3561,15 @@ def build_missing_evidence(
 
     evidence_status = _evidence_status_by_id(intake)
     items: list[dict[str, Any]] = []
+    if aml_result["missing_score_ids"]:
+        items.append(
+            {
+                "item_id": "aml_assessment:missing_scores",
+                "item_type": "aml_assessment",
+                "reference": ", ".join(aml_result["missing_score_ids"]),
+                "reason": "aml_scores_missing",
+            }
+        )
 
     def add_unverified_support(
         *,
@@ -3879,7 +3924,10 @@ def build_missing_evidence(
                 "reason": "positive_trigger_requires_confirmation",
             }
         )
-    if intake["engagement"]["terms"]["review_status"] == "incomplete":
+    if (
+        intake["engagement"]["terms"]["review_status"] == "incomplete"
+        or intake["engagement"]["start_date"] is None
+    ):
         items.append(
             {
                 "item_id": "engagement:terms",
@@ -4117,7 +4165,13 @@ def build_monitoring_plan(
             "professional_review_required": True,
         }
     mode = aml_result["minimum_verification_mode_for_review"]
-    if not aml_result["table_1_resolved"]:
+    if aml_result["missing_score_ids"]:
+        interval = None
+        status = "blocked_incomplete_scores"
+        schedule_basis = (
+            "No cadence is proposed while required risk scores are missing."
+        )
+    elif not aml_result["table_1_resolved"]:
         interval = None
         status = "blocked_table_1_assessment"
         schedule_basis = (
@@ -5139,6 +5193,16 @@ def build_review_payload(
         )
     review_language = str(intake["language"])
     items = _localize_review_items(items, language=review_language)
+    # Fixed display order follows intake, requested work and missing evidence;
+    # it changes no recommendation, review state or professional decision.
+    first_types = ("party_profile", "engagement", "party_structure", "missing_evidence")
+    items.sort(
+        key=lambda item: (
+            first_types.index(item["item_type"])
+            if item["item_type"] in first_types
+            else len(first_types)
+        )
+    )
     case_facts_value = case_facts_artifact or build_case_facts(
         intake,
         generated_at=generated_at,
@@ -5268,6 +5332,22 @@ def _assert_no_forbidden_statuses(payload: Any, artifact_name: str) -> None:
 
 
 def _validate_aml_audit(payload: Mapping[str, Any]) -> None:
+    if payload.get("missing_score_ids"):
+        if payload.get("status") != "blocked_incomplete_scores" or any(
+            payload.get(key) is not None
+            for key in (
+                "specific_risk",
+                "effective_risk",
+                "factor_a_total",
+                "factor_b_total",
+                "calculated_band",
+                "baseline_verification_mode",
+            )
+        ):
+            raise ValidationError(
+                "Incomplete AML scores cannot produce a risk band or totals."
+            )
+        return
     try:
         ri = Decimal(str(payload["inherent_risk"]))
         rs = Decimal(str(payload["specific_risk"]))

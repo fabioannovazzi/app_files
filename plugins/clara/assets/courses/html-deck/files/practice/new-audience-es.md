@@ -1,0 +1,1 @@
+Ejercicio: crear una nueva versión para compañeros recién incorporados. Añadir una solicitud incompleta: «La bicicleta hace ruido». Mostrar qué preguntar: contacto, cuándo aparece el ruido y qué parte parece afectada. No diagnosticar la avería. Mantener el carácter de propuesta y conservar la primera presentación.

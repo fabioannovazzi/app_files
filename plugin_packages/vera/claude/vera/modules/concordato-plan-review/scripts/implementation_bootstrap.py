@@ -36,6 +36,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "mcp/server.cjs"),
     ("plugin", "scripts/apply_review_edits.py"),
     ("plugin", "scripts/check_dependencies.py"),
+    ("plugin", "scripts/concordato_labels.py"),
     ("plugin", "scripts/concordato_plan_core.py"),
     ("plugin", "scripts/concordato_semantic.py"),
     ("plugin", "scripts/finalize_output_closure.py"),

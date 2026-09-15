@@ -1,0 +1,52 @@
+{
+  "vera/quesito-legale-fiscale": {
+    "title": "Ottenere una risposta verificata con Vera",
+    "goal": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
+    "scenario": "Imprese Arco chiede al professionista una breve nota sulle regole UE per i ritardi di pagamento. Partiamo dalla richiesta scritta e dalle fonti iniziali, poi produciamo una risposta vera attraverso il workflow.",
+    "scope": "Il percorso completo dal quesito alla risposta verificata. La nota informativa è un esempio semplice per imparare il processo; un parere su una posizione concreta può richiedere anche l’esame della tesi contraria.",
+    "inputs": "Apri question-it.md per leggere richiesta, pubblico, perimetro e formato. sources-it.md presenta la guida e il testo ufficiale allegati. Non devi preparare istruzioni tecniche né scegliere i passaggi interni.",
+    "request": "Vera, rispondi al quesito di Imprese Arco in questo file. Prepara la breve nota richiesta, verifica le fonti e la risposta e mostrami il documento e le questioni da rivedere.",
+    "steps": [
+      "Nel thread di lavoro Vera legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. La voce spiega che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.",
+      "Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. Il thread di lavoro ricerca e redige la risposta. La voce spiega il progresso effettivo e risponde alle tue domande.",
+      "Vera verifica la risposta rispetto al quesito, alle fonti e al ragionamento, correggendo quanto necessario. Apri la nota Word, osserva come sono esposte le conclusioni e rintraccia una fonte. Rivedi limiti e questioni aperte prima di utilizzarla."
+    ],
+    "deliverables": [
+      "Nota Word e testo della risposta verificata, con fonti e limiti.",
+      "Pacchetto di verifica che permette di ricostruire come sono state controllate le affermazioni e che cosa resta da rivedere."
+    ],
+    "review": "Controlla che la nota risponda al quesito nel perimetro e nella lingua richiesti. Apri una fonte e confrontala con un’affermazione. Distingui una regola generale dalla sua applicazione al cliente; le verifiche non sostituiscono il giudizio professionale.",
+    "checkpoints": [
+      "Spiega che cosa stai chiedendo, a chi servirà la risposta e quale quadro giuridico riguarda.",
+      "Trova una conclusione, la sua fonte e un limite o una verifica ancora necessaria."
+    ],
+    "practice": "Leggi practice-it.md e chiedi una nuova versione della nota per l’incontro che comprende anche fornitori della pubblica amministrazione. Conserva la prima versione, segui la nuova ricerca e verifica e spiega come usare il confronto prodotto.",
+    "success": "Sai porre un quesito completo, scegliere il percorso di ricerca, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.",
+    "repeat": "Fornisci a Vera la domanda, i fatti disponibili, il paese o quadro giuridico, il destinatario e il risultato che ti serve. Rivedi perimetro, fonti, conclusioni e questioni aperte nel documento prodotto."
+  },
+  "lucia/quesito-legale-fiscale": {
+    "title": "Ottenere una risposta verificata con Lucia",
+    "goal": "Imparare a porre un quesito professionale, seguire ricerca e verifiche e utilizzare la risposta con le sue fonti e i punti ancora aperti.",
+    "scenario": "Imprese Arco chiede al professionista una breve nota sulle regole UE per i ritardi di pagamento. Partiamo dalla richiesta scritta e dalle fonti iniziali, poi produciamo una risposta vera attraverso il workflow.",
+    "scope": "Il percorso completo dal quesito alla risposta verificata. La nota informativa è un esempio semplice per imparare il processo; un parere su una posizione concreta può richiedere anche l’esame della tesi contraria.",
+    "inputs": "Apri question-it.md per leggere richiesta, pubblico, perimetro e formato. sources-it.md presenta la guida e il testo ufficiale allegati. Non devi preparare istruzioni tecniche né scegliere i passaggi interni.",
+    "request": "Lucia, rispondi al quesito di Imprese Arco in questo file. Prepara la breve nota richiesta, verifica le fonti e la risposta e mostrami il documento e le questioni da rivedere.",
+    "steps": [
+      "Nel thread di lavoro Lucia legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. La voce spiega che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.",
+      "Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. Il thread di lavoro ricerca e redige la risposta. La voce spiega il progresso effettivo e risponde alle tue domande.",
+      "Lucia verifica la risposta rispetto al quesito, alle fonti e al ragionamento, correggendo quanto necessario. Apri la nota Word, osserva come sono esposte le conclusioni e rintraccia una fonte. Rivedi limiti e questioni aperte prima di utilizzarla."
+    ],
+    "deliverables": [
+      "Nota Word e testo della risposta verificata, con fonti e limiti.",
+      "Pacchetto di verifica che permette di ricostruire come sono state controllate le affermazioni e che cosa resta da rivedere."
+    ],
+    "review": "Controlla che la nota risponda al quesito nel perimetro e nella lingua richiesti. Apri una fonte e confrontala con un’affermazione. Distingui una regola generale dalla sua applicazione al cliente; le verifiche non sostituiscono il giudizio professionale.",
+    "checkpoints": [
+      "Spiega che cosa stai chiedendo, a chi servirà la risposta e quale quadro giuridico riguarda.",
+      "Trova una conclusione, la sua fonte e un limite o una verifica ancora necessaria."
+    ],
+    "practice": "Leggi practice-it.md e chiedi una nuova versione della nota per l’incontro che comprende anche fornitori della pubblica amministrazione. Conserva la prima versione, segui la nuova ricerca e verifica e spiega come usare il confronto prodotto.",
+    "success": "Sai porre un quesito completo, scegliere il percorso di ricerca, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.",
+    "repeat": "Fornisci a Lucia la domanda, i fatti disponibili, il paese o quadro giuridico, il destinatario e il risultato che ti serve. Rivedi perimetro, fonti, conclusioni e questioni aperte nel documento prodotto."
+  }
+}

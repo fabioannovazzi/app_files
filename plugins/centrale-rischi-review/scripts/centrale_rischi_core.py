@@ -2071,6 +2071,94 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         "source_row",
         "source_region",
         "source_document_sha256",
+        "Metric ID",
+    }
+    header_labels = {
+        "Metric ID": "Codice metrica",
+        "reference_month": "Mese",
+        "intermediary": "Intermediario",
+        "risk_category": "Categoria di rischio",
+        "category": "Categoria",
+        "exposure_family": "Famiglia esposizione",
+        "original_duration": "Durata originaria nella fonte",
+        "original_term": "Classe durata originaria",
+        "residual_duration": "Durata residua nella fonte",
+        "residual_term": "Classe durata residua",
+        "granted": "Accordato",
+        "operational_granted": "Accordato operativo",
+        "used": "Utilizzato",
+        "available": "Margine CR calcolato",
+        "overrun": "Sconfinamento",
+        "utilization_pct": "Utilizzo %",
+        "guarantee_type": "Tipo garanzia",
+        "guaranteed_amount": "Importo garantito",
+        "guarantee_value": "Valore garanzia",
+        "guaranteed_party": "Soggetto garantito",
+        "guarantor": "Garante",
+        "ceded_debtor": "Debitore ceduto",
+        "nominal_value": "Valore nominale",
+        "prejudicial_event": "Evidenza pregiudizievole",
+        "reporting_type": "Tipo segnalazione",
+        "relationship_status": "Stato rapporto nella fonte",
+        "record_status": "Versione segnalazione",
+        "valid_from": "Valido dal",
+        "valid_to": "Valido al",
+        "source_row": "Riga fonte",
+        "source_page": "Pagina fonte",
+        "source_region": "Area fonte",
+        "source_row_locator": "Riferimento riga fonte",
+        "source_document_sha256": "Impronta documento fonte",
+        "extraction_confidence": "Affidabilità estrazione",
+        "location": "Localizzazione",
+        "currency": "Valuta",
+        "activity_type": "Tipo attività",
+        "amount": "Importo",
+        "intrinsic_value": "Valore intrinseco",
+        "average_balance": "Saldo medio",
+        "summary_category": "Categoria prospetto",
+        "event_date": "Data evento",
+        "event_type": "Tipo evento",
+        "event_cancelled": "Evento cancellato",
+        "request_date": "Data richiesta",
+        "requested_period": "Periodo richiesto",
+        "request_type": "Tipo richiesta",
+        "request_reason_code": "Codice causale richiesta",
+        "request_reason": "Causale richiesta",
+        "validity_period": "Periodo di validità",
+        "notes": "Note",
+        "control_id": "Codice controllo",
+        "expected": "Atteso",
+        "actual": "Calcolato",
+        "difference": "Differenza",
+        "status": "Esito",
+        "presence": "Presenza nei periodi",
+        "prior_reference_month": "Mese precedente",
+        "latest_reference_month": "Mese recente",
+    }
+    for field in ("granted", "operational_granted", "used", "available", "overrun"):
+        label = header_labels[field]
+        header_labels[f"prior_{field}"] = f"{label} precedente"
+        header_labels[f"latest_{field}"] = f"{label} recente"
+        header_labels[f"{field}_change"] = f"Variazione {label.lower()}"
+    value_labels = {
+        "exposure_family": {
+            "performing": "in bonis",
+            "suffering": "sofferenze",
+            "other": "altre esposizioni",
+        },
+        "record_status": {"current": "corrente", "previous": "precedente"},
+        "status": {"passed": "Superato", "failed": "Non superato"},
+    }
+    empty_coverage = {
+        "Garanzie": "guarantees_on_exposures",
+        "Garanzie ricevute": "guarantees_received",
+        "Garanti intestatario": "guarantors",
+        "Debitori ceduti": "ceded_debtors",
+        "Altre informazioni": "other_risk_information",
+        "Prospetto sintetico": "summary_totals",
+        "Eventi inframensili": "inframonthly_events",
+        "Richieste informazioni": "information_requests",
+        "Pregiudizievoli": "pregiudizievoli",
     }
 
     def project_rows(
@@ -2175,7 +2263,10 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
                     ]
                 )
         else:
-            sheet.append(("Stato", "Nessun dato disponibile"))
+            sheet.append(("Copertura",))
+            sheet.append(
+                (_empty_population_message(analysis, empty_coverage.get(title)),)
+            )
 
     navy_fill = PatternFill("solid", fgColor="002060")
     alternate_fill = PatternFill("solid", fgColor="F3F6FA")
@@ -2184,7 +2275,7 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
         sheet.sheet_view.showGridLines = False
         sheet.freeze_panes = "D2" if sheet.max_column > 10 else "A2"
         sheet.auto_filter.ref = sheet.dimensions
-        sheet.row_dimensions[1].height = 30
+        sheet.row_dimensions[1].height = 45
         for cell in sheet[1]:
             cell.font = Font(bold=True, color="FFFFFF")
             cell.fill = navy_fill
@@ -2234,12 +2325,46 @@ def write_excel(path: Path, analysis: Mapping[str, Any]) -> None:
                     cell[0].number_format = "0.00"
         for column_cells in sheet.columns:
             header = str(column_cells[0].value or "")
+            # Translate presentation only, after formatting by canonical field.
+            # Source text and the analysis payload remain unchanged.
+            column_cells[0].value = header_labels.get(header, header)
+            for cell in column_cells[1:]:
+                if header in {"original_term", "residual_term"}:
+                    cell.value = _term_label(str(cell.value))
+                elif header == "presence":
+                    cell.value = _movement_label(str(cell.value))
+                elif header in value_labels:
+                    cell.value = value_labels[header].get(cell.value, cell.value)
+                elif sheet.title == "KPI" and header == "Unità":
+                    cell.value = _unit_label(str(cell.value))
+                elif sheet.title == "KPI" and header == "Disponibilità":
+                    cell.value = _availability_label(str(cell.value))
             width = min(
-                48 if sheet.title == "KPI" and header in {"Metrica", "Motivo"} else 28,
+                (
+                    48
+                    if (sheet.title == "KPI" and header in {"Metrica", "Motivo"})
+                    or header == "Copertura"
+                    else 28
+                ),
                 max(10, max(len(str(cell.value or "")) for cell in column_cells) + 2),
             )
             column = sheet.column_dimensions[column_cells[0].column_letter]
             column.width = width
             if header in hidden_audit_fields:
                 column.hidden = True
+        # Fit wrapped explanations at the actual column widths.
+        for row in sheet.iter_rows(min_row=2):
+            lines = max(
+                (
+                    len(str(cell.value or ""))
+                    // max(
+                        1, int(sheet.column_dimensions[cell.column_letter].width) - 2
+                    )
+                    + 1
+                    for cell in row
+                    if not sheet.column_dimensions[cell.column_letter].hidden
+                ),
+                default=1,
+            )
+            sheet.row_dimensions[row[0].row].height = max(30, 15 * lines)
     workbook.save(path)

@@ -1,0 +1,28 @@
+{
+  "kind": "authored_synthetic_teaching_case",
+  "workflow": "reporting-engine",
+  "scenario": "Le dataset fictif indique 40 000 EUR de ventes nettes en janvier et 50 000 en février. Il n'a pas de champ Discount séparé. Les notes confirment que Sales comprend déjà les remises : les retrancher encore serait erroné.",
+  "columns": [
+    "Période fictive",
+    "Sales",
+    "Note source"
+  ],
+  "rows": [
+    [
+      "2026-01",
+      "40 000 EUR",
+      "Ventes nettes"
+    ],
+    [
+      "2026-02",
+      "50 000 EUR",
+      "Ventes nettes"
+    ],
+    [
+      "Discount séparé",
+      "Absent",
+      "Déjà compris dans Sales"
+    ]
+  ],
+  "scope": "Intake, sens des métriques et comparaison temporelle. Une mesure absente n'est pas zéro ; cette capacité de Clara n'est pas présentée comme celle de Vera."
+}

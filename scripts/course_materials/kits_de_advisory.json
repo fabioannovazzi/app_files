@@ -1,0 +1,77 @@
+{
+  "clara/advisory-brief-planner": {
+    "title": "Einen Beratungsauftrag mit Clara planen",
+    "goal": "Lernen, aus einer Anfrage einen klaren Auftrag mit Entscheidung, Quellen, Ergebnis und nächsten Arbeitsschritten zu machen.",
+    "scenario": "Ciclo Arco erwägt einen Fahrrad-Abholservice. Vor der Beratung klären wir den Wunsch der Inhaberin und welche Einschätzung die vorliegenden Notizen erlauben.",
+    "scope": "Erste Auftragsplanung anhand der fiktiven Notizen. Die Lektion endet bei der Übergabe; die Empfehlung zum Service entsteht im anschließenden Arbeitsablauf.",
+    "inputs": "Öffnen Sie assignment-de.md und notes-de.md. Die erste Datei nennt Entscheidung, Adressatin und Grenzen; die zweite enthält Kundenaussagen und Betriebsinformationen.",
+    "request": "Clara, plane diesen Beratungsauftrag. Zeige die zu unterstützende Entscheidung, das geplante Ergebnis, vorhandene Quellen, Lücken und das weitere Vorgehen.",
+    "steps": [
+      "Clara liest Anfrage und Notizen, erkennt wesentliche Rückfragen und schlägt den Auftrag in verständlicher Sprache vor.",
+      "Prüfen Sie Entscheidung, Umfang, Ergebnis und fehlende Informationen. Clara dokumentiert den Plan und prüft ihn im aktuellen Ablauf anhand der genauen Quellen.",
+      "Lesen Sie Zusammenfassung und Übergabe. Erkennen Sie den verfügbaren Clara-Arbeitsablauf für die Fortsetzung und die Vorgaben, die er beibehalten muss."
+    ],
+    "deliverables": [
+      "Auftragsdefinition und lesbare Zusammenfassung: Zweck, Grenzen und erwartetes Ergebnis.",
+      "Prüfbericht und Übergabe: ob die Arbeit fortgesetzt werden kann und was der nächste Ablauf erhält."
+    ],
+    "review": "Prüfen Sie, ob die Inhaberin Adressatin bleibt und die gewünschten Optionen verglichen werden. Preise, Nachfrage und Kontaktbefugnisse dürfen nicht erfunden werden. Ein gültiger Plan ist noch keine ausgearbeitete Empfehlung.",
+    "checkpoints": [
+      "Benennen Sie vor dem Entwurf Entscheidung und Adressatin.",
+      "Erklären Sie bei der Übergabe das nächste Ergebnis und die fehlenden Informationen."
+    ],
+    "practice": "Planen Sie mit den Übungsdateien einschließlich revised-assignment-de.md und update-de.md den enger gefassten neuen Auftrag: eine Aufgabenliste zur Prüfung der Pilotmachbarkeit. Bewahren Sie den ersten Plan auf.",
+    "success": "Der neue Plan berücksichtigt das geänderte Ziel und Ergebnis. Benennen Sie das Ergebnis und eine Voraussetzung, die vor dem Pilotstart geprüft werden muss.",
+    "repeat": "Beschreiben Sie Entscheidung, Adressat, gewünschtes Ergebnis und vorhandene Dateien. Prüfen Sie Umfang und Quellenplan vor der Ausführung des ausgewählten Ablaufs."
+  },
+  "clara/advisory-case-director": {
+    "title": "Einen Beratungsfall mit Clara entwickeln",
+    "goal": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
+    "scenario": "Ciclo Arco bewertet einen Fahrrad-Abholservice. Kundenkommentare zeigen mögliches Interesse; Betriebsnotizen beschreiben eine begrenzte Erprobungsmöglichkeit.",
+    "scope": "Ein lokaler Beratungsfall mit den bereitgestellten Notizen. Das Ergebnis ist eine Arbeitseinschätzung, keine Finanzprognose oder Startfreigabe.",
+    "inputs": "Öffnen Sie assignment-de.md und notes-de.md: Entscheidung, Kundenkommentare und Fahrzeugverfügbarkeit. Der Arbeitschat legt den Fall während der Lektion an.",
+    "request": "Clara, entwickle diesen Fall. Nenne deine aktuelle Empfehlung, ihre Quellen und Grenzen sowie die nächste Arbeit, die der Inhaberin bei der Entscheidung hilft.",
+    "steps": [
+      "Clara klärt den Auftrag und legt einen lokalen Fall an. Sie registriert die Unterlagen und formuliert eine erste Antwort mit Bedingungen.",
+      "Der aktuelle Ablauf dokumentiert Begründung und Quellenbeziehungen und speichert die Einschätzung. Der Sprachchat erklärt Empfehlung und offene Fragen.",
+      "Öffnen Sie Arbeitspapier und Quellenübersicht. Verfolgen Sie eine Schlussfolgerung bis zur Quelle und besprechen Sie, welche Prüfung die Antwort ändern könnte."
+    ],
+    "deliverables": [
+      "Aktuelles Arbeitspapier: Empfehlung, Gründe, wichtige Unbekannte und vorgeschlagene Schritte.",
+      "Quellenübersicht und Fallhistorie: Belege für Schlussfolgerungen und Änderungen im Verlauf."
+    ],
+    "review": "Geäußertes Interesse ist keine Buchung und kein Nachweis der Gesamtnachfrage. Prüfen Sie, was die Fahrzeugnotiz tatsächlich ermöglicht. Clara schlägt vor; die Inhaberin entscheidet über die Umsetzung.",
+    "checkpoints": [
+      "Unterscheiden Sie bei der ersten Antwort Belegtes und noch zu prüfende Bedingungen.",
+      "Finden Sie bei der Übergabe die Quelle einer Schlussfolgerung und den nächsten sinnvollen Prüfschritt."
+    ],
+    "practice": "Fügen Sie update-de.md demselben Übungsfall hinzu. Fragen Sie, wie das fehlende Fahrzeug Einschätzung und nächste Schritte verändert. Öffnen Sie das aktualisierte Arbeitspapier und die aufbewahrte Vorversion.",
+    "success": "Der Fall berücksichtigt die neue Verfügbarkeit und behandelt eine mögliche Ausleihe nicht als vereinbart. Erklären Sie die Änderung der Empfehlung oder ihrer Bedingungen.",
+    "repeat": "Bitten Sie Clara, den Fall fortzusetzen, liefern Sie neue Quellen und nennen Sie die Entscheidung. Prüfen Sie aktualisierte Antwort, Gründe und nächste Arbeit."
+  },
+  "clara/advisory-deliverable-validator": {
+    "title": "Ein Beratungsmemo mit Clara prüfen",
+    "goal": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
+    "scenario": "Ein externes Memo empfiehlt Ciclo Arco einen täglichen Abholservice. Wir prüfen das gesamte kurze Memo anhand des Auftrags und der Ausgangsnotizen.",
+    "scope": "Ein bereitgestelltes Markdown-Memo und lokale Quellen. Die Entstehungsgeschichte fehlt; die Prüfung gleicht Aussagen mit den jetzt vorliegenden Belegen ab.",
+    "inputs": "Öffnen Sie external-memo-de.md, assignment-de.md und notes-de.md. Das Memo wird geprüft; die übrigen Dateien beschreiben Auftrag und bekannten Sachstand.",
+    "request": "Clara, prüfe dieses Memo anhand des Auftrags und der Notizen. Erkläre, ob es verwendbar ist, was korrigiert werden muss und welche Entscheidungen bei der Inhaberin bleiben.",
+    "steps": [
+      "Clara legt den Prüfauftrag fest, bewahrt das Memo unverändert auf und erstellt ein Inventar seiner Inhalte und der ausgewählten Quellen.",
+      "Der aktuelle Ablauf prüft Umfang, Aussagen, Begründung, Empfehlung, Grenzen und Auslieferungsstatus. Der Sprachchat verbindet Befunde mit den genauen Stellen im Memo und in den Notizen.",
+      "Öffnen Sie das Prüfungspaket. Lesen Sie Gesamtstatus, wesentliche Befunde und Korrekturvorschläge. Das Original bleibt erhalten; ein korrigiertes Memo benötigt eine eigene Prüfung."
+    ],
+    "deliverables": [
+      "Lesbares Prüfungspaket: Gesamtergebnis, Quellenabgleich, Korrekturen und verbleibende Unsicherheit.",
+      "Prüfaudit und Inventare: untersuchte Inhalte und formale Vollständigkeit der Prüfaufzeichnung."
+    ],
+    "review": "Vergleichen Sie die tägliche Serviceempfehlung mit tatsächlichen Kundenaussagen und Fahrzeugverfügbarkeit. Eine vollständige Prüfaufzeichnung genehmigt weder das Memo noch beweist sie seine Aussagen.",
+    "checkpoints": [
+      "Unterscheiden Sie vor der Prüfung das Dokument von seinen Belegen.",
+      "Erklären Sie bei der Übergabe den Status und finden Sie Textstelle und Quelle eines wesentlichen Befunds."
+    ],
+    "practice": "Fügen Sie update-de.md hinzu und lassen Sie das unveränderte externe Memo mit den ergänzten Quellen erneut prüfen. Bewahren Sie die erste Prüfung auf und vergleichen Sie die Befunde.",
+    "success": "Die neue Prüfung berücksichtigt das fehlende Fahrzeug und erläutert die Folge für die Verwendbarkeit. Benennen Sie, was sich ändern muss, damit das Memo die Entscheidung unterstützt.",
+    "repeat": "Liefern Sie Dokument, Auftrag und Quellen. Lesen Sie Gesamtergebnis und wesentliche Befunde und prüfen Sie eine separate Korrektur vor ihrer Verwendung erneut."
+  }
+}

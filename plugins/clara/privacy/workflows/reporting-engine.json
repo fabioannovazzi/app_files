@@ -35,7 +35,8 @@
     "modules/reporting-engine/catalog",
     "repository/plugins/distribution-analysis/scripts/distribution_core.py",
     "repository/plugins/distribution-analysis/skills/distribution-analysis/SKILL.md",
-    "repository/plugins/distribution-analysis/.codex-plugin/plugin.json"
+    "repository/plugins/distribution-analysis/.codex-plugin/plugin.json",
+    "repository/plugins/management-control-pack/assets/management-report-copy.json"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -148,6 +149,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c29813b04bc0fe0f27f5e246f17850cc82f783e865b5d44b901f473c0dc233f8"
+    "source_fingerprint": "f8c36385ebdc58684feb514d977e19e925690148d646aa99e87907c8d4419fff"
   }
 }

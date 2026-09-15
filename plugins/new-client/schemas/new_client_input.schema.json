@@ -667,7 +667,7 @@
           "enum": ["ongoing", "one_off"]
         },
         "start_date": {
-          "type": "string",
+          "type": ["string", "null"],
           "format": "date"
         },
         "services": {
@@ -878,7 +878,7 @@
           "enum": ["A1", "A2", "A3", "A4"]
         },
         "score": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 1,
           "maximum": 4
         },
@@ -909,6 +909,7 @@
           "then": {
             "required": ["confirmed_by_role", "confirmed_at"],
             "properties": {
+              "score": {"type": "number"},
               "confirmed_by_role": {"const": "professional"},
               "confirmed_at": {"type": "string", "format": "date-time"}
             }
@@ -1161,7 +1162,7 @@
           "format": "date"
         },
         "inherent_risk": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 1,
           "maximum": 4
         },
@@ -1217,6 +1218,10 @@
       },
       "allOf": [
         {
+          "if": {"properties": {"inherent_risk_status": {"const": "confirmed"}}},
+          "then": {"properties": {"inherent_risk": {"type": "number"}}}
+        },
+        {
           "if": {
             "properties": {
               "section_b_mode": {
@@ -1231,9 +1236,11 @@
               },
               "factors_b": {
                 "items": {
+                  "if": {"properties": {"assessment_status": {"const": "confirmed"}}},
+                  "then": {"properties": {"score": {"type": "number"}}},
                   "properties": {
                     "score": {
-                      "type": "number",
+                      "type": ["number", "null"],
                       "minimum": 1,
                       "maximum": 4
                     }

@@ -248,7 +248,7 @@ def _delta_percent_label(
 ) -> str:
     """Return the legacy-style total movement percent label."""
 
-    if abs(baseline_total) <= TOLERANCE:
+    if baseline_total <= TOLERANCE:
         return ""
     percent_change = ((comparison_total - baseline_total) / baseline_total) * 100
     if not math.isfinite(percent_change):
@@ -546,7 +546,9 @@ def _waterfall_arrays(
 def _component_columns(recipe: dict[str, Any]) -> list[tuple[str, str]]:
     """Return plugin result columns in legacy display order."""
 
-    volume_label = "Units" if recipe["mappings"].get("units_column") else "Volume"
+    if not recipe["mappings"].get("units_column"):
+        return [("Total variance", "total_delta")]
+    volume_label = "Units"
     return [
         ("Price", "price_variance"),
         (volume_label, "volume_variance"),
@@ -766,8 +768,15 @@ def _draw_fallback_trace(
             width=style["width"],
         )
         text = _format_number(value)
-        text_x = x1 + 6 if value >= 0 else x0 - 64
-        draw.text((text_x, y_mid - 7), text, fill=COLORS["black"], font=label_font)
+        # Keep signed amounts out of the reserved row-label column. This also
+        # makes negative accounting balances readable in compact panels.
+        text_x = x1 + 6
+        text_y = y_mid - 7
+        text_width = draw.textbbox((0, 0), text, font=label_font)[2]
+        if text_x + text_width > right:
+            text_x = right - text_width
+            text_y = y_mid - 26
+        draw.text((text_x, text_y), text, fill=COLORS["black"], font=label_font)
         if measure == "total" and delta_percent_label:
             draw.text(
                 (text_x, y_mid + 9),
@@ -1537,8 +1546,8 @@ def _legacy_delta_annotation(
         ) * 100
         percent_text = (
             f"<i>({int(round(percent_change, 0))}%)</i>"
-            if math.isfinite(percent_change)
-            else "<i>(nan)</i>"
+            if period_zero_value > 0 and math.isfinite(percent_change)
+            else ""
         )
         change_value = f"{names['deltaName']} {difference} {percent_text}"
     else:

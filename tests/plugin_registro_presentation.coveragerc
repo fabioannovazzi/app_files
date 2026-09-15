@@ -1,0 +1,9 @@
+[run]
+include =
+    */plugins/registro-imprese-sari/scripts/package_practice.py
+    */plugins/registro-imprese-sari/scripts/initialize_case.py
+    */plugins/registro-imprese-sari/scripts/registry_display.py
+
+[report]
+show_missing = True
+fail_under = 80

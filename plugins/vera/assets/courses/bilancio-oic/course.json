@@ -18,9 +18,74 @@
   "language_basis": "workflow_output_contract",
   "sources": [
     {
+      "path": "modules/bilancio-xbrl-it/assets/icon.svg",
+      "repository_path": "plugins/bilancio-xbrl-it/assets/icon.svg",
+      "sha256": "2e30e45c5c10c485d2fac9f51917ca2f39611ddc0b2afde7ef1525e04543ead7"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/requirements.txt",
+      "repository_path": "plugins/bilancio-xbrl-it/requirements.txt",
+      "sha256": "2200117061197f175771c6e43ce38f3dfbdf4321590bb0c889a728591ec1d051"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/disclosures-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/disclosures-2026.1.json",
+      "sha256": "953bf9a81a72c6e246362428248d5e2bfb903c46b022f074e07e8d9c55dacfcf"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/filing-instructions-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/filing-instructions-2026.1.json",
+      "sha256": "25654ebba9663f5906cc14ff90543111d9fe6bc8ae5d92db0a8971453256a577"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/oic-2016-2023.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/oic-2016-2023.1.json",
+      "sha256": "5723f8d42405dfbd67eff8b00e7f7ec53b3ffb764f6693a3f7dbdec2502199d2"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/oic-2024-2025.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/oic-2024-2025.1.json",
+      "sha256": "fbfdd7f0fce393179e9b42203387b795be364ab0dee7fe3a4c276d3dfed3e052"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/oic-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/oic-2026.1.json",
+      "sha256": "70dd926e175ff1c50874cbd6b856eabfdeab9308d2e27674a9c4d46cb493084b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/schedule-taxonomy-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/schedule-taxonomy-2026.1.json",
+      "sha256": "030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/statutory-forms-2016.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/statutory-forms-2016.1.json",
+      "sha256": "70a790eb4386cbe0f4a29760648699109202bf2b77fd4451a279540ad7393cf7"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/statutory-forms-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/statutory-forms-2026.1.json",
+      "sha256": "fa95e4d5e45e124a40f1345609615808ba95565da7a202ed0ee4476f04f8ad35"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/statutory-presentation-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/statutory-presentation-2026.1.json",
+      "sha256": "d7d8b189b36a5177c24954a1956253b89f9b14d2d39fbd0174b9a5df4a73b857"
+    },
+    {
       "path": "modules/bilancio-xbrl-it/scripts/access_control.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/access_control.py",
       "sha256": "54a4edef94be0d42c12db7dcea115b436f7984d0683cc50c1aa4254ca25d7e66"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/accounts_preview.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/accounts_preview.py",
+      "sha256": "c8eaea824538c8614460819495984fece5c578b877a37df4cec7b55bb4ab155b"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/accounts_preview_text.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py",
+      "sha256": "8e8fe0cb8142e464404fb818dd0bebdfd15776545c39abb79d78798eaae90e03"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
@@ -170,12 +235,17 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/xbrl_case.py",
-      "sha256": "f1edb04e2b51f097a8c1fff3767d8eb0c2a62c0cfb4ab72d7495ce46fe4432a5"
+      "sha256": "fa35555b918f80358085dc9e955a2304745d800a904753584d4365b3069f863b"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
       "sha256": "c2149c2ae0103b8bb109c9e1cb724e9b3b55e365885449a5d15e143cce836701"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
+      "sha256": "cde9b4f80adceba6c596c6954649291c44fcd4e71980bc8e41b7cd97deb5e966"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
@@ -208,9 +278,164 @@
       "sha256": "d0460ab13f5817e7f1c7afc2095f1abc676e7ec313811884c4aaef10bcdc0e47"
     },
     {
+      "path": "modules/bilancio-xbrl-it/taxonomy/PCI_2018-11-04.registry.json",
+      "repository_path": "plugins/bilancio-xbrl-it/taxonomy/PCI_2018-11-04.registry.json",
+      "sha256": "7c23343a0644363b5b171df8d2731c2c51e0df259052770055684e3511eba6ba"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/taxonomy/XBRL_2.1_CONFORMANCE_2025-07-16.registry.json",
+      "repository_path": "plugins/bilancio-xbrl-it/taxonomy/XBRL_2.1_CONFORMANCE_2025-07-16.registry.json",
+      "sha256": "cc4dd4be40839c02ae686f303ff71dbb064aefa7b0aaf2e2bcd28d1a8a7fb6f5"
+    },
+    {
+      "path": "scripts/check_dependencies.py",
+      "repository_path": "plugins/vera/scripts/check_dependencies.py",
+      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+    },
+    {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
       "sha256": "26038579e71b919a0a0b2f92dd7a998ebc6cbf39b3f36d58c7f36b275244abd7"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     }
   ],
   "example_kind": "authored_synthetic_specimen_not_execution_receipt",
@@ -354,5 +579,9 @@
       "practice": "Add the EUR 8,000 breakdown and reconsider mapping without changing the totals.",
       "next": "Prepare complete balances, comparatives and supporting documents; identify the year and statement form."
     }
+  },
+  "retained_from": {
+    "course_sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
+    "published_version": "0.1.257"
   }
 }

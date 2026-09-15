@@ -42,7 +42,7 @@
           "full_page_reviewed": {"const": true},
           "screenshot_path": {
             "type": "string",
-            "pattern": "^reviews/browser/.+\\.png$"
+            "pattern": "^reviews/browser/.+\\.(png|jpe?g)$"
           },
           "screenshot_sha256": {
             "type": "string",

@@ -1,0 +1,102 @@
+{
+  "vera/dati-fiscali-strutturati": {
+    "title": "Extract tax data from documents with Vera",
+    "goal": "Learn to turn readable tax documents into a field list that you can verify against its sources.",
+    "scenario": "The practice is preparing Marco Prova’s data. It has a fictional Italian CU income certificate and F24 payment form and wants to read their values without manually retyping them.",
+    "scope": "Italian source documents, explained in the chosen language. Extracted values describe the documents; they are not a tax return or a tax calculation.",
+    "inputs": "Open CU-income.md and F24-first.md. These are readable teaching transcriptions with invented income, withholding and payment fields. Specify the 2026 filing campaign and distinguish document year from tax period.",
+    "request": "Vera, extract the tax data from Marco Prova’s documents for the 2026 filing campaign. Show the fields, each value’s source and what I need to check.",
+    "steps": [
+      "Vera imports the documents into the teaching case and runs current preparation and extraction. Follow which files it can read and how their document types are identified.",
+      "The workflow produces structured fields and a summary. If a document type is uncertain, Vera checks its content and records its interpretation through the normal review process.",
+      "Open the new summary and CSV. Find income and withholding in the CU, then year, code and amount in the F24, tracing them back to the source text."
+    ],
+    "deliverables": [
+      "Tax-data summary: groups fields by document and states limitations.",
+      "Field CSV and extraction report: let you check values, sources and documents that were not processed."
+    ],
+    "review": "Compare values with both sources, including year and currency. Also inspect documents with no extracted fields: an empty result does not establish that the document contains no useful information.",
+    "checkpoints": [
+      "Before starting, identify the two documents and filing campaign.",
+      "At delivery, trace one extracted value to its source and find any extraction limitations."
+    ],
+    "practice": "Add F24-second.md to the two initial documents and request a fresh extraction. The second F24 is additional; retain the preceding result and original document.",
+    "success": "The new list distinguishes both F24 documents and their sources. You can find the year and amount before reusing a value.",
+    "repeat": "Supply readable documents, specify country and filing campaign, request extraction and verify fields against their sources before professional use."
+  },
+  "vera/avviso-intake": {
+    "title": "Prepare a first reading of a tax notice with Vera",
+    "goal": "Learn to supply a tax communication and obtain an operational note with references, missing information and checks to perform.",
+    "scenario": "Marco Prova brings the practice a request for documents. We need to understand what it says, what to collect and which dates to verify before deciding how to proceed.",
+    "scope": "Fictional Italian case. First intake organizes document facts; legal assessment and a response follow the normal professional process.",
+    "inputs": "Open avviso.md, an Italian teaching transcription of communication DEMO-NOTICE-01. It states the addressee, period, requested documents and a response date; evidence of receipt is missing.",
+    "request": "Vera, prepare a first-intake note for Marco Prova’s communication. Summarize the request, references, dates to verify and documents to collect.",
+    "steps": [
+      "Vera imports the communication into the teaching case and runs reading and extraction. Check that the text is readable and its classification fits the contents.",
+      "The workflow prepares the intake note and reference list. The voice chat explains which elements come from the letter and which information remains missing.",
+      "Open the results and compare them with the communication. Locate the document request, reference number, stated dates and next checks."
+    ],
+    "deliverables": [
+      "First-intake note: helps the practice understand the request and organize document collection.",
+      "Dates, amounts and references table: helps locate source evidence; a detected date is not automatically a verified legal deadline."
+    ],
+    "review": "Verify reference number, period and request against the text. The letter does not quantify a debt. Distinguish its stated response date from the missing evidence of receipt.",
+    "checkpoints": [
+      "Before starting, identify the communication and the purpose of the intake.",
+      "At delivery, show what is requested and what is needed before a response."
+    ],
+    "practice": "Add client-update.md and request a new note. The client reports when he found the communication and which documents he recovered; the practice has not yet received them.",
+    "success": "The updated note distinguishes the client’s statement from evidence of receipt and keeps outstanding documents visible.",
+    "repeat": "Supply the full communication and available receipt evidence, request first intake and check the note before deciding on a response and further analysis."
+  },
+  "vera/new-client": {
+    "title": "Prepare a new client with Vera",
+    "goal": "Learn to turn first-contact information into a client-startup dossier for the practice to review and complete.",
+    "scenario": "Officina Arco requests ongoing accounting support. Starting from the interview form, we prepare a dossier covering parties, requested services, documents to obtain and decisions still needed.",
+    "scope": "Onboarding an Italian client. The result is an internal professional-review dossier, including document and monitoring plans. Signing and activating the relationship follow the practice’s normal process.",
+    "inputs": "Open profile-en.md. It records reported facts about the company, representative, ownership and services. It is already organized and does not come from an approved document-preparation run; Vera must record it as direct evidence.",
+    "request": "Vera, prepare Officina Arco’s new-client dossier from this form. Organize the facts, proposed engagement, checks to perform and documents to request.",
+    "steps": [
+      "Vera opens the teaching case and links the form to the new client. When starting from an unorganized folder, the same function also includes document preparation.",
+      "The current workflow organizes parties and services, prepares proposals and missing-information requests, and compiles the dossier. The voice chat follows these steps and distinguishes reported facts, checks and decisions.",
+      "Open the dossier’s review page. Start with client facts and the engagement, then documents to obtain and decisions to complete. The memo and other attachments retain the supporting checks."
+    ],
+    "deliverables": [
+      "Review page and case facts: give the practice an organized basis for the interview, with client, engagement and sources.",
+      "Missing-information request, document plan and monitoring plan: identify subsequent work and matters still requiring confirmation."
+    ],
+    "review": "Compare parties, ownership and services with the form. Identity, AML, privacy and terms require normal professional checks; reported facts are not already verified.",
+    "checkpoints": [
+      "Before starting, identify the client and requested services.",
+      "At delivery, find a source, a document to obtain and a decision still needed."
+    ],
+    "practice": "Add contact-update-en.md and request a new dossier version. Sara becomes the administrative document contact; Elena remains the named representative.",
+    "success": "The new dossier includes the contact and update source, preserves the preceding version and does not grant representation powers that were not reported.",
+    "repeat": "Supply the new client’s information and documents, state the requested services and use the dossier to complete checks, terms and review before starting the relationship."
+  },
+  "vera/email-cliente": {
+    "title": "Prepare a client email requesting documents",
+    "goal": "Learn to turn a file’s document requests into a short, precise email for the practice to review.",
+    "scenario": "The client supplied one CU and one F24. The practice needs to know whether there are other CUs and whether all campaign F24s are present. We prepare that request together.",
+    "scope": "Supporting task within client file preparation, Italian 2026 campaign. The lesson produces a local draft; sending and tax advice are outside its scope.",
+    "inputs": "Open context-en.md, CU-income.md and F24-first.md. The context names the two confirmations sought. Vera prepares the teaching file and reads the documents through the current workflow; no pre-approved request list is needed.",
+    "request": "Vera, prepare an email asking whether the client has other CUs and has supplied all F24s for the campaign. First let me review the requests against this file.",
+    "steps": [
+      "The working chat prepares the file and shows received documents and proposed questions. The voice chat explains what is already available and which confirmations are needed.",
+      "On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.",
+      "Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions."
+    ],
+    "deliverables": [
+      "Local email draft to review and use as the practice’s message text.",
+      "Reviewed document requests and supporting file, showing the basis of each question."
+    ],
+    "review": "Every question should match a selected request. Do not ask again for files already received: ask whether others exist or the set is complete. The draft uses the workflow’s client reference; check recipient and sending details in normal professional work.",
+    "checkpoints": [
+      "Before drafting, name the confirmation you want from the client.",
+      "At delivery, connect each question to its reviewed request."
+    ],
+    "practice": "Start a new pass with client-reply-en.md and the same documents. The client confirms that F24s are complete. Review the requests and produce a new draft limited to the remaining CU confirmation; retain the first version.",
+    "success": "You can find the draft, explain every question and update it after a reply without repeating a resolved request.",
+    "repeat": "Ask Vera to resume the file and draft from reviewed requests. Check questions, recipient and attachments before sending through the practice’s usual channel."
+  }
+}

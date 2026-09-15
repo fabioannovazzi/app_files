@@ -1,0 +1,52 @@
+{
+  "clara/html-deck": {
+    "title": "Creare una presentazione HTML con Clara",
+    "goal": "Imparare a trasformare documenti e una richiesta in slide utilizzabili, controllare ciò che viene detto e presentarle dal browser.",
+    "scenario": "Officina Arco deve spiegare al personale una proposta di accoglienza delle richieste. Partiamo dalle note della riunione.",
+    "scope": "Una presentazione interna basata sulle note, con slide e note del relatore. La procedura resta una proposta; non aggiungiamo risultati o grafici non documentati.",
+    "inputs": "Apri brief-it.md. Indica pubblico, scopo e messaggio della riunione: discutere la proposta, non annunciare una procedura già adottata.",
+    "request": "Clara, prepara una breve presentazione HTML da queste note per la riunione del personale. Spiega problema, proposta, ruoli e decisione da prendere. Tieni visibile che è una proposta e aggiungi note per chi presenta.",
+    "steps": [
+      "Nel thread di lavoro Clara legge le note e propone il filo della presentazione. La voce spiega come chiarire pubblico e obiettivo e ti fa controllare l’ordine dei messaggi.",
+      "Clara compone le slide con il workflow corrente e verifica leggibilità, contenuto e navigazione. La voce segue i risultati effettivi e risponde mentre la presentazione viene preparata.",
+      "Apri la presentazione generata. Scorri con le frecce, apri le note del relatore e confronta una slide con il documento iniziale. Individua la proposta e la decisione richiesta."
+    ],
+    "deliverables": [
+      "Presentazione HTML autonoma da aprire nel browser, con note e navigazione.",
+      "Pacchetto della presentazione, materiali modificabili e verifiche della versione prodotta."
+    ],
+    "review": "Controlla che le slide rappresentino le note, distinguano proposta e realtà e siano leggibili. Una buona impaginazione non autorizza a inventare risultati. Verifica anche la slide finale e le note.",
+    "checkpoints": [
+      "Prima di creare le slide, indica a chi parli e cosa deve decidere.",
+      "Nella presentazione, trova un messaggio e la nota da cui proviene."
+    ],
+    "practice": "Aggiungi new-audience-it.md e chiedi una nuova versione per i nuovi colleghi con l’esempio di richiesta incompleta. Conserva la prima e spiega come pubblico e scopo hanno cambiato la presentazione.",
+    "success": "Sai fornire fonti e obiettivo, leggere e presentare il risultato e chiedere una versione adatta a un altro pubblico.",
+    "repeat": "Chiedi a Clara una presentazione HTML, allega i materiali e indica pubblico, obiettivo, lingua e messaggi da conservare. Per cambiare una presentazione esistente puoi invocare anche la correzione delle slide."
+  },
+  "clara/deck-correction": {
+    "title": "Correggere una presentazione con Clara",
+    "goal": "Imparare a trasformare un commento sulle slide in una modifica verificabile, mantenendo il controllo su ciò che cambia.",
+    "scenario": "La presentazione della proposta di Officina Arco è già pronta. Un commento aggiorna la persona che dovrebbe raccogliere le richieste.",
+    "scope": "Una correzione mirata di una presentazione HTML esistente. Il percorso comprende lettura del commento, modifica di una copia e confronto; non ricrea ogni volta la presentazione.",
+    "inputs": "Apri original-deck-it.html e feedback-it.md. Il pacchetto original-work-it.zip contiene i materiali modificabili che Clara usa. Tu indichi quale presentazione correggere e cosa cambiare.",
+    "request": "Clara, correggi questa presentazione secondo il commento allegato: Elena raccoglierà e chiarirà le richieste al posto di Sara. Paolo mantiene il suo ruolo. Conserva l’originale e mostrami la modifica.",
+    "steps": [
+      "Nel thread di lavoro Clara legge la presentazione e il commento e riepiloga il cambiamento previsto. La voce ti aiuta a verificare quale slide e quale significato saranno modificati.",
+      "Clara applica la richiesta a una copia con il workflow corrente, mantenendo le altre slide, e controlla la revisione. La voce segue l’avanzamento effettivo e spiega quando occorre chiarire un commento ambiguo.",
+      "Apri originale e copia corretta. Confronta la slide sulle responsabilità, poi una slide rimasta uguale. Controlla il risultato visibile, le note e il riepilogo delle modifiche."
+    ],
+    "deliverables": [
+      "Una copia corretta della presentazione, con l’originale conservato.",
+      "Riepilogo della richiesta, confronto prima/dopo e verifiche della versione corretta."
+    ],
+    "review": "Controlla che cambi la persona proposta, senza spostare il ruolo di Paolo o dichiarare approvata la procedura. Verifica che le altre slide conservino significato, ordine e stile. Il risultato deve riflettere il commento, non solo aver superato un controllo tecnico.",
+    "checkpoints": [
+      "Prima dell’intervento, spiega quale cambiamento ti aspetti e cosa deve restare uguale.",
+      "Dopo, trova il cambiamento nella slide e una parte rimasta invariata."
+    ],
+    "practice": "Riparti dall’originale con practice-feedback-it.md. Chiedi di raccogliere prima i dubbi del personale, sostituendo soltanto il passo conclusivo sulla prova. Conserva le copie e controlla che la nuova conclusione corrisponda alla richiesta.",
+    "success": "Sai indicare una presentazione, formulare un commento preciso e verificare una revisione senza perdere l’originale.",
+    "repeat": "Mostra a Clara la presentazione e descrivi il cambiamento, anche a voce nel dialogo nativo. Allega eventuali nuovi dati o testi. Clara chiarisce i dubbi e modifica una copia; per PPTX il percorso include la revisione del piano di modifica prima dell’applicazione."
+  }
+}
