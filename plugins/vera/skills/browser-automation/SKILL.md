@@ -34,6 +34,17 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
+For TeamSystem ECONS, start from a new conversation using the module reference's
+`New-conversation startup` section. Read the shipped invoice procedure and call
+`loadEconsSetup` in the existing host Node runtime before Python setup or browser
+discovery. The operator supplies an ordinary work request, not a CR number,
+previous conversation, saved-profile path or instruction to continue. Reuse the
+automatically found setup; when absent, bind the current screen from the installed
+procedure and save partial bindings with their next step. Never require the
+operator to reteach the procedure or manually assemble its technical inputs.
+Registration requests select the processing route and its model callbacks.
+Read-only review is a separate user intent, not a fallback for missing setup.
+
 When learning is requested, follow the module's start-recording protocol before
 acting: `teaching_checkpoint.py start`, verified resume, incremental saves and a
 linked `report` at completion or interruption. Do not substitute a CR or a chat
@@ -142,7 +153,7 @@ When authorized to process ECONS purchase invoices, read the processing section
 of `references/econs-review.md` in the resolved browser-automation module. Reuse
 the acquisition profile and add the reviewed processing phases. Run
 `collectEconsReview` with its `processing` option. Vera supplies the model-led
-queue classification, journal review and posting-approval callbacks in the host
+queue classification, red-exception review, journal review and posting-approval callbacks in the host
 Node session; no separate model API is configured. Preserve the exact client's
 tax treatment and complete report, including green and orange invoices. A
 missing binding is a local setup gap to resolve from the actual screen, not a

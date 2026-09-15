@@ -76,6 +76,15 @@ export function planEconsMapping(detail) {
     lineIds: lines.map((line) => line['line-id']), needsMapping: missing.length > 0 };
 }
 
+/** Check the taught two-anchor exception without classifying invoice meaning. */
+export function hasEconsMappingException(detail) {
+  try { return planEconsMapping(detail).needsMapping; }
+  catch (error) {
+    if (error instanceof EconsProcessingError) return false;
+    throw error;
+  }
+}
+
 function identity(record, expected) {
   need(record && ['company-code', 'invoice-id', 'invoice-number', 'supplier'].every((key) => record[key] === expected[key]), 'wrong_company_or_invoice');
 }

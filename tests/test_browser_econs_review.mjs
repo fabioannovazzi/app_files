@@ -1,18 +1,22 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, stat } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, realpath, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
+import { loadEconsSetup, saveEconsSetup } from "../plugins/browser-automation/scripts/econs_setup.mjs";
 
 import { collectEconsReview, validateEconsProfile } from "../plugins/browser-automation/scripts/econs_review.mjs";
 
 const base = JSON.parse(await readFile(new URL("./fixtures/browser_automation_runtime/capability.json", import.meta.url), "utf8"));
 const pythonExecutable = process.env.ECONS_TEST_PYTHON;
+const privateTmp = await realpath(tmpdir());
 assert.ok(pythonExecutable, "Set ECONS_TEST_PYTHON to the activated managed Python executable");
 const candidate = (value) => ({ kind: "test_id", role: null, value, exact: false });
 const condition = (kind = "always", output = null) => ({ kind, locator_candidates: [], value: null, output_ref: output, comparator: null, expected: null, timeout_ms: 10 });
 const fieldSets = {
-  companies: ["company-code", "nightly"], company: ["company-code"],
+  companies: ["company-code", "has-new-invoices"], company: ["company-code"],
   invoices: ["invoice-id", "invoice-number", "supplier", "status"],
   invoice: ["company-code", "invoice-id", "invoice-number", "supplier", "status"],
   lines: ["line-id", "description", "account", "vat-code", "amount"],
@@ -30,7 +34,7 @@ function profile() {
     cap.runtime.frame_selectors = ["iframe[title='Synthetic accounting']"];
     cap.inputs = inputs.map((key) => ({ name: key, type: "text", required: true, sensitivity: "private_runtime_only", purpose: "Synthetic identity", enum_values: [] }));
     cap.outputs = Object.entries(outputs).map(([key, type]) => ({ name: key, type, sensitivity: "private", delivery: "model_and_artifact", description: "Synthetic field evidence",
-      fields: (fieldSets[key] ?? []).map((field) => ({ name: field, type: field === "nightly" ? "boolean" : "text", required: key !== "lines" || field === "line-id" })) }));
+      fields: (fieldSets[key] ?? []).map((field) => ({ name: field, type: field === "has-new-invoices" ? "boolean" : "text", required: key !== "lines" || field === "line-id" })) }));
     const actions = [{ ...structuredClone(base.milestones[1].actions[0]), id: `open-${name}`, operation: "click", input_ref: null,
       locator_candidates: [candidate(name === "companies" ? "companies" : name === "invoices" ? "invoices-{{company-code}}" : "detail-{{invoice-id}}")], postcondition: condition("none") }];
     for (const output of cap.outputs) actions.push({
@@ -47,7 +51,7 @@ function profile() {
     cap.completion = { terminal_milestones: [name], required_outputs: Object.keys(outputs) };
     phases[name] = cap;
   }
-  return { schema_version: "econs-review-profile/v1", phases };
+  return { schema_version: "econs-review-profile/v2", phases };
 }
 
 class Locator {
@@ -85,10 +89,10 @@ class EconsTab {
   output(key) {
     if (["companies", "invoices-A", "detail-1", "detail-2"].includes(key) &&
       (key !== "companies" || this.phase !== "companies")) return new Locator([{ text: key }], this);
-    const invoiceId = this.phase === "detail-2" ? "2" : "1";
+    const invoiceId = /^detail-(.+)$/.exec(this.phase)?.[1] ?? "1";
     const item = (id) => ({ "invoice-id": id, "invoice-number": `N${id}`, supplier: "Synthetic supplier", status: id === "1" ? "green" : "red" });
     const values = {
-      companies: [{ "company-code": "A", nightly: true }, { "company-code": "EXCLUDED", nightly: true }, { "company-code": "DAY", nightly: false }],
+      companies: [{ "company-code": "A", "has-new-invoices": true }, { "company-code": "EXCLUDED", "has-new-invoices": true }, { "company-code": "DAY", "has-new-invoices": false }],
       "company-count": [{ text: "3" }], company: [{ "company-code": this.wrongCompany ? "OTHER" : this.company }],
       invoices: [item("1"), item("2")], "invoice-count": [{ text: this.countMismatch ? "3" : "2" }],
       invoice: [{ "company-code": this.company, ...item(this.wrongInvoice ? "other" : invoiceId) }],
@@ -100,8 +104,8 @@ class EconsTab {
 }
 
 async function run(tab, changes = {}) {
-  const parent = await mkdtemp(join(tmpdir(), "econs-review-test-"));
-  return collectEconsReview({ tab, profile: profile(), excludedCompanyCodes: ["EXCLUDED"], runDirectory: join(parent, "run"), pythonExecutable, ...changes });
+  const parent = await mkdtemp(join(privateTmp, "econs-review-test-"));
+  return collectEconsReview({ tab, profile: profile(), excludedCompanyCodes: ["EXCLUDED"], runDirectory: join(parent, "run"), setupDirectory: join(parent, "setups"), pythonExecutable, ...changes });
 }
 
 test("Playwright phases collect full invoice lines into a saved review, skip excluded companies and never post", async () => {
@@ -136,7 +140,7 @@ test("multiple companies are visited and repeated invoice IDs remain separate pe
   const original = tab.output.bind(tab);
   tab.output = (key) => {
     const locator = original(key);
-    if (key === "companies" && tab.phase === "companies") locator.nodes.push({ "company-code": "B", nightly: true });
+    if (key === "companies" && tab.phase === "companies") locator.nodes.push({ "company-code": "B", "has-new-invoices": true });
     if (key === "company-count") locator.nodes = [{ text: "4" }];
     return locator;
   };
@@ -228,7 +232,7 @@ test("an explicit three-invoice trial reads three from a larger verified list", 
   assert.doesNotMatch(report, /A · N4/);
 });
 
-test("an explicit client selection visits only that client, including a non-nightly client", async () => {
+test("an explicit client selection visits only that client, including a client without a new-invoice signal", async () => {
   const tab = new EconsTab();
 
   const result = await run(tab, { maxCompanies: 1, maxInvoices: 1, invoiceSelection: { DAY: ["1"] } });
@@ -360,19 +364,20 @@ function processingProfile() {
 
 class ProcessingTab extends EconsTab {
   constructor(options = {}) {
-    super(); this.options = options; this.checked = options.checked ?? false; this.checkboxValues = []; this.postCount = 0; this.mapped = false;
+    super(); this.options = options; this.checked = options.checked ?? false; this.checkboxValues = []; this.postCount = 0; this.mappedIds = new Set();
     this.playwright.getByTestId = (key) => this.output(key);
   }
   output(key) {
     const locator = super.output(key);
-    const id = this.phase === 'detail-2' ? '2' : '1';
+    const id = /^detail-(.+)$/.exec(this.phase)?.[1] ?? '1';
+    const mapped = this.mappedIds.has(id);
     if (key === 'lines') locator.nodes = [
       { 'line-id': '1', description: 'Long full source description', account: 'COST', 'vat-code': '22', amount: '10,00' },
       { 'line-id': '2', description: 'Second invoice line', account: this.options.discordant ? 'OTHER' : 'COST', 'vat-code': '22', amount: '10,00' },
-      { 'line-id': '3', description: 'Third invoice line', account: this.mapped ? 'COST' : '', 'vat-code': '22', amount: '10,00' },
+      { 'line-id': '3', description: 'Third invoice line', account: mapped ? 'COST' : '', 'vat-code': '22', amount: '10,00' },
     ];
     if (key === 'line-count') locator.nodes = [{ text: this.options.partialLines ? '4' : '3' }];
-    if (key === 'invoice' && this.mapped) locator.nodes[0].status = 'complete';
+    if (key === 'invoice' && mapped) locator.nodes[0].status = 'complete';
     if (key === 'journal') locator.nodes = [{ 'company-code': 'A', 'invoice-id': id, 'invoice-number': `N${id}`, supplier: 'Synthetic supplier', account: 'COST', net: '30,00', cost: '36,60', vat: '0,00', total: '36,60', debit: '36,60', credit: this.options.unbalanced ? '36,59' : '36,60' }];
     if (key === 'posting') locator.nodes = [{ 'company-code': 'A', 'invoice-id': id, protocol: 'SYNTHETIC-PROTOCOL' }];
     if (this.verifying && key === 'company') locator.nodes = [{ 'company-code': this.options.wrongVerifyCompany ? 'B' : 'A', view: 'non-posted' }];
@@ -381,7 +386,7 @@ class ProcessingTab extends EconsTab {
     locator.setChecked = async (value) => { this.checkboxValues.push([key, value]); if (key === 'associate-all') this.checked = value; };
     if (['open-mapping', 'confirm-mapping', 'open-journal', 'open-post', 'open-verify', 'open-exit'].includes(key)) locator.click = async () => {
       this.opened.push(key);
-      if (key === 'confirm-mapping' && !this.options.mappingFailed) this.mapped = this.checked;
+      if (key === 'confirm-mapping' && !this.options.mappingFailed && this.checked) this.mappedIds.add(id);
       if (key === 'open-post') this.postCount += 1;
       if (key === 'open-verify') this.verifying = true;
       if (key === 'open-exit') this.verifying = false;
@@ -391,6 +396,7 @@ class ProcessingTab extends EconsTab {
 }
 function processing(changes = {}) {
   return { profile: processingProfile(), classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: ['2'], reason: 'Operator-reviewed synthetic red indicator' }),
+    reviewRedException: async () => ({ eligible: false, reason: 'The model did not approve the taught exception for this synthetic invoice' }),
     reviewJournal: async () => ({ approved: true, reason: 'Ditta con indetraibilità confermata al 100%', company_code: 'A', treatment_source: 'Configurazione ditta verificata', vat_nondeductible_percent: 100 }),
     approvePosting: async () => true, ...changes };
 }
@@ -424,6 +430,152 @@ test('unapproved posting never dispatches registration', async () => {
   const result = await run(tab, { processing: processing({ approvePosting: async () => false }) });
   assert.equal(tab.postCount, 0);
   assert.equal(result.completed, 0);
+});
+
+test('a red invoice with two matching mapped lines can complete the taught exception', async () => {
+  const tab = new ProcessingTab();
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (tab.verifying && key === 'invoices') locator.nodes = [{ 'invoice-id': '1' }];
+    return locator;
+  };
+  const result = await run(tab, { invoiceSelection: { A: ['2'] }, processing: processing({
+    reviewRedException: async () => ({ eligible: true, reason: 'Two matching existing associations; complete the missing one' }),
+  }) });
+  assert.equal(result.completed, 1);
+  assert.equal(tab.postCount, 1);
+  assert.ok(tab.opened.includes('detail-2'));
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /SYNTHETIC-PROTOCOL/);
+});
+
+for (const scenario of ['one-anchor', 'discordant', 'declined']) test(`a red exception with ${scenario} never maps or registers`, async () => {
+  const tab = new ProcessingTab({ discordant: scenario === 'discordant' });
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'lines' && scenario === 'one-anchor') locator.nodes[1].account = '';
+    return locator;
+  };
+  const result = await run(tab, { invoiceSelection: { A: ['2'] }, processing: processing({
+    reviewRedException: async () => ({ eligible: scenario !== 'declined', reason: 'Model evaluation of the observed candidate' }),
+  }) });
+  assert.equal(result.status, 'processed');
+  assert.equal(result.completed, 0);
+  assert.equal(tab.postCount, 0);
+  assert.deepEqual(tab.checkboxValues, []);
+  assert.match(await readFile(result.client_reviews[0], 'utf8'), /eccezione delle due associazioni concordanti non verificata/);
+});
+
+test('an already mapped invoice registers without rewriting its mappings', async () => {
+  const tab = new ProcessingTab();
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'lines') locator.nodes[2].account = 'COST';
+    return locator;
+  };
+  const result = await run(tab, { invoiceSelection: { A: ['1'] }, processing: processing({
+    classifyInvoices: async () => ({ company_code: 'A', red_invoice_ids: [], reason: 'Reviewed selected green invoice' }),
+  }) });
+  assert.equal(result.completed, 1);
+  assert.deepEqual(tab.checkboxValues, []);
+  assert.equal(tab.opened.includes('open-mapping'), false);
+});
+
+test('new-invoice arrival signals select subsequent clients in their observed order', async () => {
+  const tab = new EconsTab();
+  const original = tab.output.bind(tab);
+  tab.output = (key) => {
+    const locator = original(key);
+    if (key === 'companies' && tab.phase === 'companies') locator.nodes = [
+      { 'company-code': 'DAY', 'has-new-invoices': false },
+      { 'company-code': 'B', 'has-new-invoices': true },
+      { 'company-code': 'A', 'has-new-invoices': true },
+    ];
+    return locator;
+  };
+  const result = await run(tab);
+  assert.equal(result.status, 'acquired');
+  assert.deepEqual(tab.opened, ['companies', 'invoices-B', 'detail-1', 'detail-2', 'invoices-A', 'detail-1', 'detail-2']);
+});
+
+test('a new process finds the installed procedure and saved registration setup without chat history', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-new-conversation-'));
+  await saveEconsSetup({ directory, profile: profile(), processingProfile: processingProfile(), excludedCompanyCodes: ['EXCLUDED'] });
+  const script = `const {loadEconsSetup}=await import(process.argv[1]); const s=await loadEconsSetup({directory:process.argv[2]}); console.log(JSON.stringify({status:s.status,profile:s.profile.schema_version,posting:s.processingProfile.schema_version,excluded:s.excludedCompanyCodes,procedure:s.procedurePath,authority:s.executionAuthorized}));`;
+  const { stdout } = await promisify(execFile)(process.execPath, ['--input-type=module', '-e', script,
+    new URL('../plugins/browser-automation/scripts/econs_setup.mjs', import.meta.url).href, directory], { cwd: tmpdir() });
+  const result = JSON.parse(stdout);
+  assert.equal(result.status, 'saved_setup');
+  assert.equal(result.profile, 'econs-review-profile/v2');
+  assert.equal(result.posting, 'econs-processing-profile/v1');
+  assert.deepEqual(result.excluded, ['EXCLUDED']);
+  assert.match(await readFile(result.procedure, 'utf8'), /almeno due righe/);
+  assert.equal(result.authority, false);
+});
+
+test('a clean installation returns the shipped procedure without requiring an old run', async () => {
+  const parent = await mkdtemp(join(privateTmp, 'econs-no-history-'));
+  const result = await loadEconsSetup({ directory: join(parent, 'absent') });
+  assert.equal(result.status, 'setup_required');
+  assert.deepEqual(result.setups, []);
+  assert.match(await readFile(result.procedurePath, 'utf8'), /Procedura condivisa/);
+});
+
+test('an ordinary collector run automatically makes its setup discoverable next time', async () => {
+  const result = await run(new EconsTab());
+  const saved = await loadEconsSetup({ directory: resolve(result.setup_path, '..') });
+  assert.equal(saved.status, 'saved_setup');
+  assert.equal(saved.setupId, result.setup_id);
+  assert.equal(saved.previousRunDirectory, resolve(result.review_path, '..', '..'));
+  assert.deepEqual(saved.excludedCompanyCodes, ['EXCLUDED']);
+});
+
+test('unfinished screen binding survives a fresh lookup with its exact next step', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-partial-setup-'));
+  const saved = await saveEconsSetup({ directory, profile: { schema_version: 'econs-review-profile/v2', phases: {} },
+    excludedCompanyCodes: null, incomplete: true, pendingStep: 'Bind the observed new-invoice arrival signal' });
+  const result = await loadEconsSetup({ directory });
+  assert.equal(result.status, 'setup_incomplete');
+  assert.equal(result.setupId, saved.setupId);
+  assert.equal(result.pendingStep, 'Bind the observed new-invoice arrival signal');
+  assert.equal(result.excludedCompanyCodes, null);
+});
+
+test('automatic setup discovery never chooses between two studios', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-two-studios-'));
+  await saveEconsSetup({ directory, label: 'Studio A', profile: profile(), excludedCompanyCodes: ['A'] });
+  await saveEconsSetup({ directory, label: 'Studio B', profile: profile(), excludedCompanyCodes: ['B'] });
+  const result = await loadEconsSetup({ directory });
+  assert.equal(result.status, 'choose_setup');
+  assert.equal(result.setups.length, 2);
+  assert.equal(result.profile, undefined);
+});
+
+test('a later read-only run retains the learned posting setup and previous run reference', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-retain-setup-'));
+  await saveEconsSetup({ directory, profile: profile(), processingProfile: processingProfile(), excludedCompanyCodes: [], lastRunDirectory: join(directory, 'prior-run') });
+  await saveEconsSetup({ directory, profile: profile(), excludedCompanyCodes: [] });
+  const result = await loadEconsSetup({ directory });
+  assert.equal(result.status, 'saved_setup');
+  assert.equal(result.processingProfile.schema_version, 'econs-processing-profile/v1');
+  assert.equal(result.previousRunDirectory, join(directory, 'prior-run'));
+});
+
+test('altered saved setup is rejected instead of silently starting from zero', async () => {
+  const directory = await mkdtemp(join(privateTmp, 'econs-altered-setup-'));
+  const saved = await saveEconsSetup({ directory, profile: profile(), excludedCompanyCodes: [] });
+  const record = JSON.parse(await readFile(saved.setupPath, 'utf8'));
+  record.payload.excludedCompanyCodes = ['CHANGED'];
+  await writeFile(saved.setupPath, JSON.stringify(record));
+  await assert.rejects(loadEconsSetup({ directory }), /saved_setup_integrity_failed/);
+});
+
+test('the old nightly flag cannot silently stand in for newly arrived invoices', () => {
+  const old = profile();
+  old.schema_version = 'econs-review-profile/v1';
+  assert.throws(() => validateEconsProfile(old), /company_new_invoice_signal_required/);
 });
 
 for (const approved of [false, true]) test(`a selected invoice posts only with current approval (${approved})`, async () => {

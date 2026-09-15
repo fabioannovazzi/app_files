@@ -1,6 +1,6 @@
 # Procedura condivisa di revisione delle fatture passive
 
-Versione della procedura: `passive-invoice-procedure/v1`.
+Versione della procedura: `passive-invoice-procedure/v2`.
 
 Questa è la procedura professionale già sviluppata per TeamSystem Studio ECONS.
 CR-42 è stato chiuso per accettazione di Fabio, senza due replay live puliti
@@ -13,17 +13,20 @@ conversazioni, i file, le credenziali o i profili del precedente Francesco.
 1. Identifica il cliente dello studio separatamente dal fornitore. Conferma
    cliente, periodo, elenco e selezione autorizzata. Conserva la lista locale di
    esclusioni dello studio; non importare quella di un altro operatore.
-2. In ECONS la selezione comprende le ditte con indicatore notturno attivo,
-   tolte le esclusioni. Per DATEV verifica l'equivalente reale oppure registra
+2. In ECONS prosegui in sequenza verso i clienti con il segnale osservato di
+   nuove fatture arrivate, tolte le esclusioni. La sola sincronizzazione notturna
+   attiva non dimostra nuove fatture. Per DATEV verifica l'equivalente reale oppure registra
    una differenza irrisolta; non inventare un indicatore o scegliere tutte le
    ditte. Il primo esempio può avere un solo cliente esplicitamente selezionato.
 3. Leggi l'intera popolazione selezionata, tutte le righe e le descrizioni
    complete, riconciliando i conteggi con totali indipendenti. Pagine visibili,
    griglie virtualizzate e descrizioni troncate non dimostrano completezza.
    Il limite del collector ECONS è 90 righe per fattura: non è una proprietà DATEV.
-4. Mantieni nel report tutti gli stati. Nel processamento ECONS i rossi sono
-   esclusi dall'esecuzione; più di due rossi consecutivi sospendono il resto del
-   cliente. Una coda di soli rossi produce eccezioni senza aprire altri dettagli.
+4. Mantieni nel report tutti gli stati. Prima di escludere una fattura rossa,
+   leggi le righe e valuta l'eccezione delle due associazioni concordanti del
+   punto 6. Se l'eccezione non è confermata, lasciala da parte. Più di due rossi
+   consecutivi sospendono il resto del cliente; una coda rossa non elimina
+   la verifica dell'eccezione sulle prime due fatture.
    Verdi e arancioni restano nella popolazione e nel report. Interpreta gli stati
    con il modello e le indicazioni professionali: nessun colore approva una
    registrazione. Non trasferire i nomi/colori ECONS a DATEV senza verificarli.

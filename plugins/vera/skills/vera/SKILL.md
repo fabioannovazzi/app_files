@@ -547,7 +547,12 @@ for the answer. Generate choices from the actual inputs; do not offer named
 frameworks, regulators, document types, output packages, or issue categories
 unless the facts cue them or the user must supply a missing custom value.
 
-Before helper scripts, run the module dependency check. From the Vera root, the
+For ECONS, first follow the browser workflow's new-conversation startup: read
+the installed procedure and inspect Vera's saved local setup with the host Node
+runtime. This lookup uses no Python and must not trigger Python provisioning.
+It requires no old conversation, CR number, tutorial or previous user prompt.
+
+Before Python helper scripts, run the module dependency check. From the Vera root, the
 delegating form is:
 
 ```bash
