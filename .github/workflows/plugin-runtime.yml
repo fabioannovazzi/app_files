@@ -61,6 +61,11 @@ jobs:
           -r plugins/journal-sampling/requirements.txt
           -r plugins/check-entries/requirements.txt
           -r plugins/archive-organization/requirements.txt
+      - name: Verify exact file capture across pathname and descriptor APIs
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_check_entries_plugin.py
+          -k "file_capture or exact_file_read or recipe_capture"
       - name: Verify local profiles, native lesson handoffs and transmission suppression
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

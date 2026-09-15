@@ -15,6 +15,7 @@ import zipfile
 from decimal import Decimal
 from io import BytesIO
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import openpyxl
@@ -336,6 +337,92 @@ def test_recipe_capture_preserves_windows_line_endings(tmp_path: Path) -> None:
     source.write_bytes(payload)
 
     assert core._captured_recipe(source) == ({"description": "reviewed"}, payload)
+
+
+@pytest.mark.parametrize("reader", ["_stable_regular_bytes", "_captured_recipe"])
+def test_file_capture_accepts_distinct_path_and_descriptor_ctime(
+    tmp_path: Path, monkeypatch: Any, reader: str
+) -> None:
+    core = load_core()
+    source = tmp_path / "source.json"
+    source.write_bytes(b'{"reviewed": true}\r\n')
+    original_fstat = os.fstat
+
+    def windows_fstat(descriptor: int) -> SimpleNamespace:
+        value = original_fstat(descriptor)
+        fields = {
+            name: getattr(value, name) for name in dir(value) if name.startswith("st_")
+        }
+        fields["st_ctime_ns"] += 1000000
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(core.os, "fstat", windows_fstat)
+    if reader == "_stable_regular_bytes":
+        result = core._stable_regular_bytes(source, label="Journal")
+    else:
+        _, result = core._captured_recipe(source)
+    assert result == source.read_bytes()
+
+
+@pytest.mark.parametrize("reader", ["_stable_regular_bytes", "_captured_recipe"])
+@pytest.mark.parametrize("field", ["st_ctime_ns", "st_ino", "st_nlink", "st_size"])
+def test_file_capture_rejects_changed_descriptor_metadata(
+    tmp_path: Path, monkeypatch: Any, reader: str, field: str
+) -> None:
+    core = load_core()
+    source = tmp_path / "source.json"
+    source.write_bytes(b'{"reviewed": true}\r\n')
+    original_fstat = os.fstat
+    calls = 0
+
+    def changed_fstat(descriptor: int) -> SimpleNamespace:
+        nonlocal calls
+        calls += 1
+        value = original_fstat(descriptor)
+        fields = {
+            name: getattr(value, name) for name in dir(value) if name.startswith("st_")
+        }
+        if calls == 2:
+            fields[field] += 1
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(core.os, "fstat", changed_fstat)
+    with pytest.raises(ValueError, match="changed while"):
+        if reader == "_stable_regular_bytes":
+            core._stable_regular_bytes(source, label="Journal")
+        else:
+            core._captured_recipe(source)
+
+
+@pytest.mark.parametrize("reader", ["_stable_regular_bytes", "_captured_recipe"])
+def test_file_capture_rejects_changed_path_ctime(
+    tmp_path: Path, monkeypatch: Any, reader: str
+) -> None:
+    core = load_core()
+    source = tmp_path / "source.json"
+    source.write_bytes(b'{"reviewed": true}\r\n')
+    original_lstat = Path.lstat
+    calls = 0
+
+    def changed_lstat(path: Path) -> Any:
+        nonlocal calls
+        value = original_lstat(path)
+        if path != source:
+            return value
+        calls += 1
+        fields = {
+            name: getattr(value, name) for name in dir(value) if name.startswith("st_")
+        }
+        if calls == 2:
+            fields["st_ctime_ns"] += 1
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(Path, "lstat", changed_lstat)
+    with pytest.raises(ValueError, match="path changed while"):
+        if reader == "_stable_regular_bytes":
+            core._stable_regular_bytes(source, label="Journal")
+        else:
+            core._captured_recipe(source)
 
 
 def load_studio_archive_core() -> Any:

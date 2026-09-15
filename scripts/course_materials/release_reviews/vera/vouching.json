@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "vouching",
-  "course_sha256": "d2b70009458485708c3d022d36ec7cf619a511a0252d9f32a587e8fc84773763",
+  "course_sha256": "d8d8390508498232aff8c9a7edebbb515f7aa51b696c5808fd4d75c18387f992",
   "reviewer": "Codex: first-use material, source-to-sample handoff and actual output review",
   "reviewed_at": "2026-09-14T18:25:17.746640+00:00",
   "review_scope": "Read all five lesson outlines and contexts, the nine-line journal and the three fictional XML invoice facts. Ten distinct locale/phase native checks execute the current teaching adapter, Journal Sampling prerequisite, Studio Archive handoff and Vouching run, within 29 passing focused checks. Reviewed the localized Markdown notes and eighteen native Excel views: five horizontal views of each distinct phase, plus the localized review-note columns for the other eight cases. All other CSV fields match within each phase; document receipt references vary by run and were traced separately. Canonical spreadsheet columns remain English. The samples and outputs are generated during execution; learner decisions, professional conclusions, voice, two-window behavior and browser widget interaction are not attested.",
@@ -329,5 +329,18 @@
       }
     ],
     "scope": "Authored lessons and inputs are unchanged. The two descriptor reads now explicitly select binary mode on Windows, preserving CRLF and control-Z bytes for exact receipts. Stable identity, single-link, size and final-path checks are unchanged. No transmission or new data exposure. Original named editorial and artifact reviews remain preserved; current native execution is established separately by the release verifier using actual JUnit records."
+  },
+  "stat_api_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-09-15T10:58:49.674408+00:00",
+    "previous_course_sha256": "d2b70009458485708c3d022d36ec7cf619a511a0252d9f32a587e8fc84773763",
+    "source_changes": [
+      {
+        "path": "plugins/check-entries/scripts/check_entries_core.py",
+        "before": "23ad48f484039bd3776a9ce3ca9c86a730cb5bb5054f2096f30a9e78c0bb8a1f",
+        "after": "7935ffdf687e031b6720a11aa8973a7710a00664fca980d4be6d7d51957d2091"
+      }
+    ],
+    "scope": "Authored lessons and inputs unchanged. CPython 3.12 Windows pathname stat aliases ctime to birthtime while descriptor stat reports change time. Cross-API comparison retains device, inode, mode, link count, size and mtime. Full ctime checks remain within before/after descriptor observations and within before/after pathname observations. Exact bytes and final-path checks remain required. No transmission or new model context. Original editorial reviews remain preserved; native execution evidence is verified separately."
   }
 }

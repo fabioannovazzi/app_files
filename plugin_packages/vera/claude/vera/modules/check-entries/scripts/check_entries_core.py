@@ -1039,7 +1039,7 @@ def _captured_recipe(path: Path | None) -> tuple[dict[str, Any], bytes]:
         before.st_mtime_ns,
         before.st_ctime_ns,
     )
-    if identity != (
+    path_identity = (
         observed_path.st_dev,
         observed_path.st_ino,
         observed_path.st_mode,
@@ -1047,7 +1047,10 @@ def _captured_recipe(path: Path | None) -> tuple[dict[str, Any], bytes]:
         observed_path.st_size,
         observed_path.st_mtime_ns,
         observed_path.st_ctime_ns,
-    ) or identity != (
+    )
+    # Windows CPython 3.12 exposes creation time via lstat but change time via
+    # fstat. Compare ctime only within the same API, retaining both full checks.
+    if identity[:-1] != path_identity[:-1] or identity != (
         after.st_dev,
         after.st_ino,
         after.st_mode,
@@ -1058,7 +1061,7 @@ def _captured_recipe(path: Path | None) -> tuple[dict[str, Any], bytes]:
     ):
         raise ValueError("Check Entries recipe changed while captured.")
     final_path = candidate.lstat()
-    if identity != (
+    if path_identity != (
         final_path.st_dev,
         final_path.st_ino,
         final_path.st_mode,
@@ -1383,17 +1386,19 @@ def _stable_regular_bytes(
         before.st_mtime_ns,
         before.st_ctime_ns,
     )
+    path_identity = (
+        observed.st_dev,
+        observed.st_ino,
+        observed.st_mode,
+        observed.st_nlink,
+        observed.st_size,
+        observed.st_mtime_ns,
+        observed.st_ctime_ns,
+    )
+    # lstat/fstat ctime have different Windows meanings; each still must remain
+    # unchanged across its own before/after observations.
     if (
-        identity
-        != (
-            observed.st_dev,
-            observed.st_ino,
-            observed.st_mode,
-            observed.st_nlink,
-            observed.st_size,
-            observed.st_mtime_ns,
-            observed.st_ctime_ns,
-        )
+        identity[:-1] != path_identity[:-1]
         or identity
         != (
             after.st_dev,
@@ -1408,7 +1413,7 @@ def _stable_regular_bytes(
     ):
         raise ValueError(f"{label} changed while it was read.")
     final = path.lstat()
-    if identity != (
+    if path_identity != (
         final.st_dev,
         final.st_ino,
         final.st_mode,
