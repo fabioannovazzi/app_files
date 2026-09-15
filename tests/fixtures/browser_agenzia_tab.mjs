@@ -56,7 +56,16 @@ class FakeLocator {
 }
 
 export class FakeAgenziaTab {
-  constructor(downloadDirectory, { pages = 1, rows = 2, failRow = null, sameDetailUrl = false, loseTabAfterDownload = false } = {}) {
+  constructor(downloadDirectory, {
+    pages = 1,
+    rows = 2,
+    failRow = null,
+    sameDetailUrl = false,
+    loseTabAfterDownload = false,
+    originalBytes = "<?xml version=\"1.0\"?><p:FatturaElettronica xmlns:p=\"urn:test\"></p:FatturaElettronica>",
+    categoryNames = null,
+    includePrint = true
+  } = {}) {
     this.loseTabAfterDownload = loseTabAfterDownload;
     this.lost = false;
     this.page = 0;
@@ -64,6 +73,12 @@ export class FakeAgenziaTab {
     this.rows = rows;
     this.failRow = failRow;
     this.sameDetailUrl = sameDetailUrl;
+    this.originalBytes = originalBytes;
+    this.categoryNames = categoryNames ?? {
+      active: "Le tue fatture emesse",
+      passive: "Le tue fatture ricevute"
+    };
+    this.includePrint = includePrint;
     this.downloadDirectory = downloadDirectory;
     this.state = "home";
     this.direction = null;
@@ -73,6 +88,7 @@ export class FakeAgenziaTab {
     this.filled = {};
     this.playwright = {
       getByRole: (role, options = {}) => new FakeLocator(this, role, options.name),
+      getByLabel: (name) => new FakeLocator(this, "textbox", name),
       waitForTimeout: async () => {},
       waitForEvent: async (event) => {
         assert.equal(event, "download");
@@ -85,7 +101,8 @@ export class FakeAgenziaTab {
 
   async url() {
     if (this.lost) throw new Error("No tab with id: private-lost-tab");
-    const suffix = this.state === "detail" ? `/detail/${this.direction}/${this.sameDetailUrl ? "same" : `${this.page}/${this.row}`}` : `/${this.state}`;
+    const recordState = this.state === "detail" || this.state === "viewer";
+    const suffix = recordState ? `/${this.state}/${this.direction}/${this.sameDetailUrl ? "same" : `${this.page}/${this.row}`}` : `/${this.state}`;
     return `https://ivaservizi.agenziaentrate.gov.it${suffix}`;
   }
 
@@ -101,10 +118,7 @@ export class FakeAgenziaTab {
     ];
 
     if (this.state === "home") {
-      for (const [direction, name] of [
-        ["active", "Le tue fatture emesse"],
-        ["passive", "Le tue fatture ricevute"]
-      ]) {
+      for (const [direction, name] of Object.entries(this.categoryNames)) {
         controls.push({
           role: "link",
           name,
@@ -158,12 +172,34 @@ export class FakeAgenziaTab {
           name: "download file fattura",
           click: async () => {
             const filename = `invoice-${this.direction}-${this.row}-${this.serial++}.xml`;
-            await writeFile(join(this.downloadDirectory, filename), "fixture");
+            await writeFile(join(this.downloadDirectory, filename), this.originalBytes);
             this.eventResolver?.({ suggestedFilename: filename });
             this.eventResolver = null;
             this.lost = this.loseTabAfterDownload;
           }
         },
+        {
+          role: "link",
+          name: "Torna alla pagina precedente",
+          click: async () => {
+            this.state = "list";
+          }
+        }
+      );
+      if (this.includePrint) {
+        controls.push({
+          role: "button",
+          name: "visualizza file fattura",
+          click: async () => {
+            this.state = "viewer";
+          }
+        });
+      }
+    }
+
+    if (this.state === "viewer") {
+      controls.push(
+        { role: "button", name: "Stampa documento", click: async () => {} },
         {
           role: "link",
           name: "Torna alla pagina precedente",

@@ -98,7 +98,7 @@
       {
         "id": "browser-session-and-invoice-prototype-status",
         "purpose": "Resume the same authorized task after a login handoff and report the actual scope and progress of individual invoice downloads",
-        "content": "The model receives the handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. For the Agenzia prototype the model reads the exact authorized date filters, direction and independent population counts; output summaries contain direction counts, pages visited, execution mode, prototype status and sanitized failure metadata. Local run revisions retain file paths, byte lengths, hashes and hashed detail identities; downloaded invoice content is not returned or transferred. Existing authorization and data disclosures govern any targeted account or business-data reading.",
+        "content": "The model receives the handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. For the Agenzia prototypes the model reads the exact authorized date filters, model-reviewed category accessible names, declared format availability and independent population counts; output summaries contain category/year counts, pages visited, format states, execution mode, prototype status, native-gap markers and sanitized failure metadata. Local append-only run revisions and attempt reports retain file paths, byte lengths, hashes, hashed detail identities, exact XML/P7M/PDF archive metadata and P7M-to-extracted-XML hash bindings; downloaded invoice content and extracted XML are not returned or transferred. Existing authorization and data disclosures govern any targeted account or business-data reading.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -220,12 +220,16 @@
     {
       "id": "explicit-execution-mode-and-durable-invoice-prototype",
       "control": "Receipt v3 defaults execution mode to unverified. Simulated or unverified runs cannot pass capability finalization; only an explicit live_connected_chrome declaration is eligible, without claiming cryptographic attestation. Real-browser fixture results remain limited to that fixture. The individual invoice runner always retains prototype status, writes initial and per-download revisions and final outputs on handled failures, rejects repeated detail identities and checks download counts against independently observed totals. These checks do not establish live Agenzia compatibility, account correctness or professional validation."
+    },
+    {
+      "id": "resumable-agenzia-artifact-acquisition",
+      "control": "The category/year acquisition runner requires a model-reviewed explicit plan with exact single-year filters, independently observed counts, and declared original/PDF availability. It verifies browser-event and stable-directory evidence, preserves XML/P7M originals byte-for-byte, extracts only CMS-encapsulated FatturaPA XML with a source hash binding, verifies a native PDF signature, and never claims P7M signature, certificate, signer, or revocation validation. Native Print to PDF remains an operator-owned native_gap and excludes the run from clean browser validation. Fresh owner-only directories, exclusive writes, append-only hash-linked revisions and attempt reports, retained-artifact verification, duplicate detail rejection, exact page/count reconciliation, and bounded page/invoice limits prevent blind overwrite or completion claims after incomplete work. The model receives only category/year aggregates, format states, native-gap markers, prototype status, owner-only report paths, and sanitized errors; invoice bytes and extracted content stay outside model context and portable bundles. Simulated tests do not establish target-site compatibility. CR-49 still requires two clean repetitions on the exact released version, including the requested category and resume evidence."
     }
   ],
   "review": {
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e2e2d2a7060ba5646a4f05f30defabaa1d80c200d5535ed0f6f5967540f52cba"
+    "source_fingerprint": "699322c55e879a1ee48d5a68daa34eff156860cecc69b69b6527be56d5809962"
   }
 }
