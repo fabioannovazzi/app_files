@@ -21,10 +21,11 @@ relevant Vera workflows without silently substituting or teaching the other plug
 <!-- VERA_OPENAI_DATEV_BEGIN -->
 ## DATEV installation trial
 
-- `datev-invoice-start`: a real Windows DATEV trial with the shipped passive-invoice
-  procedure, native host verification, saved partial progress and per-client review.
-  Read `../../datev-invoice-start/SKILL.md` before generic teaching or browser setup.
-  This is an installation adaptation route, not an unattended executor or a course.
+For a real Windows DATEV installation trial, use `datev-invoice-start` with the
+shipped passive-invoice procedure, native host verification, saved partial progress
+and per-client review. Read `../../datev-invoice-start/SKILL.md` before generic
+teaching or browser setup. This installation adaptation is separate from the
+professional course catalog below; it does not provide an unattended executor.
 <!-- VERA_OPENAI_DATEV_END -->
 
 ## Professional workflows
