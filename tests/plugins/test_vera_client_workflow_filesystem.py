@@ -12,6 +12,7 @@ from types import ModuleType
 
 import pytest
 
+from tests._plugin_cli import workflow_cli
 from tests.model_data_helpers import write_no_model_report
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -934,13 +935,9 @@ def test_client_workflow_entrypoint_requires_managed_context(
     if workflow_id == "business-planning":
         # This owner delegates parsing to the shared CLI. Test the public boundary
         # instead of requiring its argparse declaration to be physically inline.
-        import subprocess
-        import sys
-
         result = subprocess.run(
             [
-                sys.executable,
-                str(script_path),
+                *workflow_cli(script_path),
                 "--case",
                 "missing.json",
                 "--output-dir",
