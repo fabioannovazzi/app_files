@@ -1021,7 +1021,7 @@ def artifact_files(output_dir: Path) -> list[str]:
     if not output_dir.exists():
         return []
     return sorted(
-        str(path.relative_to(output_dir))
+        path.relative_to(output_dir).as_posix()
         for path in output_dir.rglob("*")
         if path.is_file()
         and path.relative_to(output_dir).parts[0]

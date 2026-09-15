@@ -62,7 +62,7 @@ def publish_snapshot(
     pointer = {
         "schema_version": 1,
         "status": status,
-        "manifest": str(manifest_path.relative_to(root)),
+        "manifest": manifest_path.relative_to(root).as_posix(),
         "manifest_sha256": _hash(manifest_path),
     }
     atomic_text(root / pointer_name, json.dumps(pointer, indent=2) + "\n")

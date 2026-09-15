@@ -44,7 +44,7 @@ jobs:
       - name: Test the release gate's failure handling
         run: |
           python -m pip install pytest jsonschema
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py tests/plugins/test_clara_claude_package.py
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_cowork_release_gate.py tests/plugins/test_clara_claude_package.py tests/plugins/test_clara_artifact_publication.py
       - name: Verify source privacy coverage and reviewed fingerprints
         run: |
           python plugins/clara/skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
