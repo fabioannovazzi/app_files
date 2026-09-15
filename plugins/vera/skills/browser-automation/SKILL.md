@@ -34,6 +34,17 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for its contracts, example capabilities, references, and validation
 commands.
 
+For TeamSystem ECONS, start from a new conversation using the module reference's
+`New-conversation startup` section. Read the shipped invoice procedure and call
+`loadEconsSetup` in the existing host Node runtime before Python setup or browser
+discovery. The operator supplies an ordinary work request, not a CR number,
+previous conversation, saved-profile path or instruction to continue. Reuse the
+automatically found setup; when absent, bind the current screen from the installed
+procedure and save partial bindings with their next step. Never require the
+operator to reteach the procedure or manually assemble its technical inputs.
+Registration requests select the processing route and its model callbacks.
+Read-only review is a separate user intent, not a fallback for missing setup.
+
 When learning is requested, follow the module's start-recording protocol before
 acting: `teaching_checkpoint.py start`, verified resume, incremental saves and a
 linked `report` at completion or interruption. Do not substitute a CR or a chat
@@ -122,6 +133,11 @@ For automatic ECONS review preparation, use the module's
 reviewed Playwright profile; on first use Vera fills only missing live screen
 bindings. Collect full invoice lines and existing account/VAT mappings into the
 populated local review, then add model-led proposals. This route does not post.
+For a small trial or selected client, use the reference's `invoiceSelection`
+argument with observed company/invoice IDs. `maxInvoices` is a safety limit on
+the selected work, not a request to take the first few invoices. State whether
+Vera will acquire a review or perform authorized registration before starting;
+do not substitute a read-only review for a request to register invoices.
 
 When asked to prepare the saved work for Fabio or a developer, follow the module’s
 `references/development-request.md`. Vera locates saved evidence in the known run,
@@ -137,9 +153,13 @@ When authorized to process ECONS purchase invoices, read the processing section
 of `references/econs-review.md` in the resolved browser-automation module. Reuse
 the acquisition profile and add the reviewed processing phases. Run
 `collectEconsReview` with its `processing` option. Vera supplies the model-led
-queue classification, journal review and posting-approval callbacks in the host
+queue classification, red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
 Node session; no separate model API is configured. Preserve the exact client's
 tax treatment and complete report, including green and orange invoices. A
+per-invoice review must confirm and save the full descriptions before opening
+the journal. `Contabilizza` alone never completes registration: require the
+separate final confirmation, protocol and checked absence from Non contab.
+Link the current client reports, including exceptions and uncertain outcomes. A
 missing binding is a local setup gap to resolve from the actual screen, not a
 reason to ask the operator to rewrite selectors or repeat the whole lesson.
 Report this as implemented workflow support until two clean runs on the target

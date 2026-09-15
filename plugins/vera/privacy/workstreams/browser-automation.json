@@ -82,7 +82,7 @@
       {
         "id": "econs-automatic-review-acquisition",
         "purpose": "Prepare an invoice review from saved, reviewed Playwright acquisition phases without accounting writes",
-        "content": "The selected Codex model can read exact authorized company codes, invoice identities and numbers, suppliers, invoice states, full line descriptions, existing accounts, VAT codes and amount text, plus review proposals and missing-field exceptions. The collector reads the declared complete population through bounded phase capabilities, checks independent counts and identities, and saves private phase outputs and the existing JSON/HTML batch review after each invoice. Existing mappings remain source evidence, not automatically endorsed proposals. No automatic anonymization or local-only model processing is claimed. The saved profile includes inspected frame selectors and allowed origins; all phases require reviewed discovery. Raw HTML, screenshots, login secrets, cookies and session URLs are outside this acquisition contract. Results remain outside Git and portable developer/capability bundles.",
+        "content": "The selected Codex model can read exact authorized company codes, invoice identities and numbers, suppliers, invoice states, full line descriptions, existing accounts, VAT codes and amount text, plus review proposals and missing-field exceptions. The collector reads the declared complete population through bounded phase capabilities, checks independent counts and identities, and saves private phase outputs and the existing JSON/HTML batch review after each invoice. Existing mappings remain source evidence, not automatically endorsed proposals. No automatic anonymization or local-only model processing is claimed. The saved profile includes inspected frame selectors and allowed origins; all phases require reviewed discovery. Raw HTML, screenshots, login secrets, cookies and session URLs are outside this acquisition contract. Results remain outside Git and portable developer/capability bundles. For an explicitly bounded trial, the local selection records authorized company codes and invoice IDs; the model selects them from observed list identities. The full source list and independent count remain checked, while only selected invoice details are acquired. Per-client source and selected counts and the limited report scope are retained; an explicit client selection can include a client without the arrival signal but never bypass studio exclusions. Ordinary batch selection uses the observed new-invoice arrival indicator rather than an enabled nightly synchronization setting. The model verifies the meaning of the actual signal when binding the company phase.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -90,7 +90,7 @@
       {
         "id": "econs-mapping-and-registration-review",
         "purpose": "Review and execute the authorized client-specific ECONS mapping and registration procedure",
-        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used.",
+        "content": "Full authorized invoice identities and lines, existing account and VAT mappings, exact client-specific pro rata basis, displayed journal amounts and accounting review reasons, posting approval, registration protocol, complete Non contab. verification population and per-client outcome reports. These values may enter the current Codex model context. They stay outside sanitized developer packs and public packages; no second model API is used. Red invoices are read within the consecutive-red bound so the model can review the taught exception against complete observed lines; an eligible model decision still requires the exact two-concordant-association and VAT checks before mapping. The current model separately reviews whether every invoice description is complete before the journal opens; its invoice-bound reason and evidence hash are saved locally. Displayed journal values are saved before journal review, including when that review is interrupted. Contabilizza and final Conferma reg. remain separate stages; a click alone does not establish a completed posting.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -99,6 +99,14 @@
         "id": "browser-session-and-invoice-prototype-status",
         "purpose": "Resume the same authorized task after a login handoff and report the actual scope and progress of individual invoice downloads",
         "content": "The model receives the handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. For the Agenzia prototype the model reads the exact authorized date filters, direction and independent population counts; output summaries contain direction counts, pages visited, execution mode, prototype status and sanitized failure metadata. Local run revisions retain file paths, byte lengths, hashes and hashed detail identities; downloaded invoice content is not returned or transferred. Existing authorization and data disclosures govern any targeted account or business-data reading.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "econs-new-conversation-local-setup",
+        "purpose": "Recover installed professional instructions and saved or partial screen bindings in a new conversation without retrieving old chats",
+        "content": "The host Node helper reads only Vera's known user-local ECONS setup directory. It saves private, hash-bound acquisition and processing profiles, allowed origins and inspected selectors, a studio label, exclusion codes, incomplete setup notes and a prior local run path. The model can read those selected local records and the shipped procedure. It does not scan chats, Downloads, browser profile storage or the rest of the disk, and performs no network calls, package installation or browser actions. Immutable revisions preserve earlier setup; a read-only run retains learned processing bindings. No invoice rows are copied into this setup store, and credentials, cookies, session URLs and reusable approval are prohibited. Prior run references lead only to local reports under the existing invoice-data boundary; saved setup never grants authority for a new posting. The store is excluded from developer packs, remote feedback and public packages.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -203,7 +211,7 @@
     },
     {
       "id": "econs-verified-processing-and-durable-attempts",
-      "control": "Processing validates reviewed phase profiles before actions; requires matching origins, current invoice identity and complete independent row counts; sets association checkboxes true; rereads mappings; verifies displayed journal arithmetic and per-client treatment review; and saves an unverified report before registration. Completion requires a protocol and absence from the same client Non contab. population. Exceptions exit through a reviewed reversible phase; failed exit stops the batch. Exact checks do not certify accounting meaning, live selectors or professional approval. Two clean target-system runs remain necessary."
+      "control": "Processing validates reviewed phase profiles before actions; requires matching origins, current invoice identity and complete independent row counts; sets association checkboxes true; rereads mappings; verifies displayed journal arithmetic and per-client treatment review; and saves an unverified report before registration. Completion requires a protocol and absence from the same client Non contab. population. Exceptions exit through a reviewed reversible phase; failed exit stops the batch. Exact checks do not certify accounting meaning, live selectors or professional approval. Two clean target-system runs remain necessary. Exact invoice identity and the current detail hash bind the model completeness review before mapping or journal navigation. Non-empty descriptions do not prove full text. Descriptions, review reason and displayed journal values are persisted before the following action or review can fail."
     },
     {
       "id": "turn-scoped-browser-handoff-and-same-tab-recovery",
@@ -218,6 +226,6 @@
     "reviewed_at": "2026-09-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1b8bff68017cb72016256950f4dd4075869a020012c74fd10e1b0132a0981fc7"
+    "source_fingerprint": "e2e2d2a7060ba5646a4f05f30defabaa1d80c200d5535ed0f6f5967540f52cba"
   }
 }

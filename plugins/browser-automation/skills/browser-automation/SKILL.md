@@ -35,6 +35,16 @@ The core uses only the Python standard library; these checks must not install
 packages or access the network. `requirements.txt` therefore declares no
 third-party runtime package.
 
+For ECONS in a new conversation, first read `references/econs-review.md` and its
+`New-conversation startup` section. `loadEconsSetup` uses only the existing host
+Node runtime and local files; it does not need Python setup. The shipped
+`references/passive-invoice-procedure.md` supplies the professional procedure.
+Do not ask for an old chat, CR number, developer pack or a "continue" prompt.
+Recover configured or incomplete bindings from Vera's known local setup store;
+read current controls only for missing or changed bindings. Save each technical
+setup checkpoint automatically. Run the Python preflights when Python helpers
+are actually needed, without replacing the shared managed interpreter.
+
 The local deterministic scripts own only dependency readiness, executable JSON
 dispatch, typed runtime inputs, structured output shape, origin bounds,
 postcondition mechanics, forbidden secret and capture fields, validation-receipt
@@ -190,6 +200,11 @@ mappings, checks identities and population counts, and saves the existing batch
 review after each invoice. This route has no posting or account-editing action.
 Complete the model-led review from those acquired values; do not endorse a
 mapping merely because it exists. Synthetic tests are not live ECONS validation.
+For a bounded trial, follow the reference's `invoiceSelection` route: select the
+requested exact invoices from observed identities. `maxInvoices` is a capacity
+check, not a sample size. Reuse the saved profile, state whether the run acquires
+a review or performs authorized processing, and expose missing processing setup
+before starting a review in response to a request to register invoices.
 
 ### Discover or change a process
 
@@ -498,9 +513,13 @@ When authorized to process ECONS purchase invoices, read the processing section
 of `references/econs-review.md` in the resolved browser-automation module. Reuse
 the acquisition profile and add the reviewed processing phases. Run
 `collectEconsReview` with its `processing` option. Vera supplies the model-led
-queue classification, journal review and posting-approval callbacks in the host
+queue classification, red-exception review, complete-invoice review, journal review and posting-approval callbacks in the host
 Node session; no separate model API is configured. Preserve the exact client's
 tax treatment and complete report, including green and orange invoices. A
+per-invoice review must confirm and save the full descriptions before opening
+the journal. `Contabilizza` alone never completes registration: require the
+separate final confirmation, protocol and checked absence from Non contab.
+Link the current client reports, including exceptions and uncertain outcomes. A
 missing binding is a local setup gap to resolve from the actual screen, not a
 reason to ask the operator to rewrite selectors or repeat the whole lesson.
 Report this as implemented workflow support until two clean runs on the target
